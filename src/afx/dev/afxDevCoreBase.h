@@ -35,16 +35,25 @@ AFX_OBJECT(afxContext)
 #ifdef _AFX_DEVICE_C
 AFX_OBJECT(afxDevice)
 {
-    afxDeviceType       type;
+    afxDeviceOrder      order;
     afxDeviceAccelor    accelor;
     afxDeviceStatus     status;
     afxBool             serving;
+
+    afxNat32            vendorId;
+    afxNat32            vendorDevId;
+    afxNat32            driverVer;
+    afxNat32            apiVer;
+
+    afxString128        devName;
+    afxUri              devUri; // "//./dev/"
 
     afxChain            classes;
 
     afxUri32            manifestUri;
     afxNat              manifestPagNo;
     afxManifest         manifest;
+
     afxModule           mdle;
     afxError            (*procCb)(afxDevice,afxThread);
     afxResult           (*ioctlCb)(afxDevice,afxNat,va_list);
@@ -120,14 +129,19 @@ AFX_OBJECT(afxService)
 #ifdef _AFX_THREAD_C
 AFX_OBJECT(afxThread)
 {
+    afxNat              unitIdx;
+    afxNat32            tid;
+    void*               osHandle;
+    afxThreadProc       procCb;
+    void*               udd[4];
+
     //afxNat          affineProcUnitIdx; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
     //afxNat          affineThrUnitIdx; // if set bit set, only such processor will can run this thread.
     afxClock            startClock;
     afxClock            lastClock;
-    afxNat              execNo;
-    afxNat              lastExecCnt;
     afxClock            execCntSwapClock;
-    afxThreadProc       procCb;
+    afxNat              lastExecCnt;
+    afxNat              execNo;
     afxBool             started;
     afxBool             exited;
     afxBool             running;
@@ -137,20 +151,17 @@ AFX_OBJECT(afxThread)
     afxBool             interruptionRequested;
     afxInt              exitCode;
 
+    afxCondition        statusCnd;
+    afxMutex            statusCndMtx;
+
     afxSlock            evSlock;
     afxArena            evArena;
     afxQueue            events;
-    afxInterlockedQueue             events2;
+    afxInterlockedQueue events2;
 
     afxChar const*      _file_;
     afxSize             _line_;
     afxChar const*      _func_;
-
-    void*               udd[4];
-
-    afxNat              unitIdx;
-    afxNat32            tid;
-    void*               osHandle;
 };
 #endif//_AFX_THREAD_C
 
@@ -159,29 +170,39 @@ AFX_OBJECT(afxSystem)
 {
     afxNat                  ptrSiz;
     afxBool                 bigEndian;
-    afxNat                  memPageSize; // The page size and the granularity of page protection and commitment.
+    afxNat                  memPageSiz; // The page size and the granularity of page protection and commitment.
     afxNat                  allocGranularity;
-    afxNat                  hwConcurrencyCap; // # of logical proc units (hardware threads)
+    afxNat                  hwThreadingCap; // # of logical proc units (hardware threads)
     afxReal                 unitsPerMeter; // the number of units in a meter.
+    afxSize                 maxMemUsage;
     afxNat                  ioBufSiz;
-    //afxNat                  primeTid;
-    //afxThread               primeThr;
+    afxNat32                primeTid;
+    afxThread               primeThr;
+
+    afxBool                 isInBootUp;
+    afxBool                 isInShutdown;
+    afxBool                 operating;
+    afxBool                 interruptionRequested;
+    afxInt                  exitCode;
+
+    afxAssertHook           assertHook; // external assertion handling function (optional)
+    afxReallocatorFn        reallocatorFn;
+    afxProfilerPushTimerFn  profilerPushTimer; // external (optional) function for tracking performance of the system that is called when a timer starts. (only called in Debug and Profile binaries; this is not called in Release)
+    afxProfilerPopTimerFn   profilerPopTimer; // external (optional) function for tracking performance of the system that is called when a timer stops. (only called in Debug and Profile binaries; this is not called in Release)
+    afxProfilerPostMarkerFn profilerPostMarker; // external (optional) function for tracking significant events in the system, to act as a marker or bookmark. (only called in Debug and Profile binaries; this is not called in Release)
 
     afxUri2048              pwd; // process working dir (usually abs/path/to/qwadro/system/$(host)/)
     afxUri2048              qwd; // root dir for Qwadro forked from pwd (usually qwadro/system/$(host)/../../)
 
     afxChain                classes;
-    afxClass              mmuMgr;
-    afxClass              strbMgr;
-    afxClass              exeMgr;
-    afxClass              thrMgr;
-    afxClass              devMgr;
-    afxClass              svcMgr;
-    afxClass              iosMgr;
-    afxClass              cdcMgr;
-    afxClass              fileMgr;
-    afxClass              archMgr;
-    afxClass              fsysMgr;
+    afxClass                mmuMgr;
+    afxClass                strbMgr;
+    afxClass                exeMgr;
+    afxClass                thrMgr;
+    afxClass                devMgr;
+    afxClass                svcMgr;
+    afxClass                cdcMgr;
+    afxClass                fsysMgr;
 
     afxStorage              defStops[9]; // [ ., system/$(host)d, system/$(host), system, code, sound, data, art, tmp ]
 
@@ -190,41 +211,29 @@ AFX_OBJECT(afxSystem)
     // avx
     struct
     {
+        afxBool             disabled;
         afxDrawSystem       dsys;
         afxModule           e2drawDll;
         afxError            (*ioctl)(afxSystem, afxModule, afxNat, void*);
     }                       avx;
-    
     // asx
     struct
     {
+        afxBool             disabled;
         afxSoundSystem      ssys;
         afxModule           e2soundDll;
         afxError            (*ioctl)(afxSystem, afxModule, afxNat, void*);
     }                       asx;
-
     // aux (shell)
     struct
     {
+        afxBool             disabled;
         afxShell            usys;
         afxModule           e2uxDll;
         afxError            (*ioctl)(afxSystem, afxModule, afxNat, void*);
     }                       aux;
 
     afxModule               e2sim;
-
-    afxSize                 maxMemUsage;
-    
-    afxAssertHook           assertHook; // external assertion handling function (optional)
-
-    afxProfilerPushTimerFn  profilerPushTimer; // external (optional) function for tracking performance of the system that is called when a timer starts. (only called in Debug and Profile binaries; this is not called in Release)
-    afxProfilerPopTimerFn   profilerPopTimer; // external (optional) function for tracking performance of the system that is called when a timer stops. (only called in Debug and Profile binaries; this is not called in Release)
-    afxProfilerPostMarkerFn profilerPostMarker; // external (optional) function for tracking significant events in the system, to act as a marker or bookmark. (only called in Debug and Profile binaries; this is not called in Release)
-
-    afxBool                 isInBootUp;
-    afxBool                 isInShutdown;
-    afxBool                 operating;
-    afxBool                 interruptionRequested;
 
     struct
     {
@@ -234,7 +243,6 @@ AFX_OBJECT(afxSystem)
             afxChain        resources;
         }                   supplyChain[1];
     }                       resourcing;
-    afxInt                  exitCode;
 };
 #endif//_AFX_SYSTEM_C
 

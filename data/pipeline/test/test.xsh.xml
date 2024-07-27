@@ -5,10 +5,23 @@
         <VertexShader>../data/pipeline/test/test.vsh</VertexShader>
     </Pipeline>
     <Rasterizer>
-        <FillMode>SOLID</FillMode>
+        <FillMode>EDGE</FillMode>
         <DepthTestEnabled></DepthTestEnabled>
         <DepthCompareOp>LESS</DepthCompareOp>
         <Transformer>../data/pipeline/test/test.xsh.xml</Transformer>
         <FragmentShader>../data/pipeline/test/test.fsh</FragmentShader>
     </Rasterizer>
+    <DrawTechnique>
+        <Pass>
+            <CullMode>BACK</CullMode>
+            <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+            <VertexShader>../data/pipeline/test/test.vsh</VertexShader>
+            
+            <FillMode>EDGE</FillMode>
+            <DepthTestEnabled></DepthTestEnabled>
+            <DepthCompareOp>LESS</DepthCompareOp>
+            <Transformer>../data/pipeline/test/test.xsh.xml</Transformer>
+            <FragmentShader>../data/pipeline/test/test.fsh</FragmentShader>
+        </Pass>
+    </DrawTechnique>
 </Qwadro>

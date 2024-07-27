@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="d3d9">
+      <UniqueIdentifier>{baad3744-868c-4fbd-9250-a78c46962dd6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d92drend.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9convrt.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9device.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9dxttex.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9dxttex_add.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\D3D9lights.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9metric.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\D3D9pipe.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9raster.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9rendst.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9texdic.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9usage.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexbuffer.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexdeclaration.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexshader.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexshaderutils.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\drvequat.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\im3dpipe.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\native.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9AtomicAllInOne.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9SubmitNoLight.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9WorldSectorAllInOne.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\wrldpipe.c">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d92drend.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9convrt.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9device.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9dxttex.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9dxttex_add.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\D3D9lights.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9metric.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\D3D9pipe.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9raster.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9rendst.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9texdic.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9usage.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexbuffer.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexdeclaration.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexshader.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexshaderdefs.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexshaderutils.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\dds.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\drvfns.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\drvmodel.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\im3dpipe.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\native.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9AtomicAllInOne.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9SubmitNoLight.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9WorldSectorAllInOne.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\pip2model.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\wrldpipe.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

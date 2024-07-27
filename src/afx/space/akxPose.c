@@ -16,10 +16,11 @@
 
 
 #define _AFX_SIM_C
-#define _AFX_POSE_C
-#define _AFX_SKELETON_C
-#include "qwadro/sim/afxSimulation.h"
-#include "qwadro/math/afxQuaternion.h"
+#define _AKX_POSE_C
+#define _AKX_SKELETON_C
+#include "../sim/dev/AkxSimDevKit.h"
+
+AKXINL akxMotive* AfxMotivateBody(akxBody bod, akxMotor moto, akxMotiveCallbacks const *callbacks);
 
 _AKX afxNat AfxGetPoseCapacity(akxPose const lp)
 {
@@ -51,17 +52,54 @@ _AKX void AfxCopyPose(akxPose pose, akxPose const from)
     }
 }
 
+_AKX afxNat AfxRunManipulatedPose(akxPose pose, afxReal startTime, afxReal duration, afxNat iterCnt, akxTrackMask* modelMask, afxNat cnt, akxBody bodies[])
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &pose, afxFcc_POSE);
+    AfxAssert(bodies);
+    afxNat rslt = 0;
+
+    afxSimulation sim = AfxGetObjectProvider(pose);
+    akxMotor moto;
+
+    if (AfxAcquireMotors(sim, startTime, duration, iterCnt, 1, &moto)) AfxThrowError();
+    else
+    {
+        AfxAssertObjects(1, &moto, afxFcc_MOTO);
+
+        for (afxNat mdlIdx = 0; mdlIdx < cnt; mdlIdx++)
+        {
+            akxBody bod = bodies[mdlIdx];
+            AfxAssertObjects(1, &bod, afxFcc_BOD);
+
+            akxMotive* intk = AfxMotivateBody(bod, moto, NIL);
+
+            if (!(intk)) AfxThrowError();
+            else
+            {
+                intk->cp.Pose = pose;
+                intk->cp.ModelMask = modelMask;
+                intk->reservedPtr = NIL;
+
+                ++rslt;
+            }
+        }
+        AfxReleaseObjects(1, &moto);
+    }
+    return rslt;
+}
+
 _AKX void AfxApplyRootMotionVectorsToPose(akxPose pose, afxV3d const translation, afxV3d const rotation)
 {
     afxTransform* t = AfxGetPoseTransform(pose, 0);
-    AfxAddV3d(t->position, t->position, translation);
+    AfxV3dAdd(t->position, t->position, translation);
 
     afxQuat rot;
-    AfxMakeQuatFromAngularVelocity(rot, rotation);
-    AfxMultiplyQuat(t->orientation, rot, t->orientation);
+    AfxQuatFromAngularVelocity(rot, rotation);
+    AfxQuatMultiply(t->orientation, rot, t->orientation);
 }
 
-_AKX void AfxAccumulateLocalTransform(akxPose LocalPose, int LocalPoseBoneIndex, int SkeletonBoneIndex, float Weight, const afxSkeleton ReferenceSkeleton, quaternion_mode Mode, const afxTransform *Transform)
+_AKX void AfxAccumulateLocalTransform(akxPose LocalPose, int LocalPoseBoneIndex, int SkeletonBoneIndex, float Weight, const afxSkeleton ReferenceSkeleton, akxQuatBlend Mode, const afxTransform *Transform)
 {
     double v10; // st7
     double v11; // st6
@@ -75,7 +113,7 @@ _AKX void AfxAccumulateLocalTransform(akxPose LocalPose, int LocalPoseBoneIndex,
     {
         if (Mode == 2)
         {
-            if (AfxSqV4d(ReferenceSkeleton->local[SkeletonBoneIndex].orientation) >= 0.0)
+            if (AfxV4dSq(ReferenceSkeleton->local[SkeletonBoneIndex].orientation) >= 0.0)
             {
                 f = Weight;
                 goto LABEL_13;
@@ -121,7 +159,7 @@ LABEL_13:
         v8->xform.orientation[1] = f * Transform->orientation[1] + v8->xform.orientation[1];
         v8->xform.orientation[2] = f * Transform->orientation[2] + v8->xform.orientation[2];
         v8->xform.orientation[3] = f * Transform->orientation[3] + v8->xform.orientation[3];
-        AfxAddScaledM3d(v8->xform.scaleShear, v8->xform.scaleShear, Transform->scaleShear, Weight);
+        AfxM3dAddScaled(v8->xform.scaleShear, v8->xform.scaleShear, Transform->scaleShear, Weight);
         v12 = v8->cnt + 1;
         v8->weight = Weight + v8->weight;
         v8->cnt = v12;
@@ -138,7 +176,7 @@ LABEL_13:
             v8->xform.position[0] = Weight * Transform->position[0];
             v8->xform.position[1] = Weight * Transform->position[1];
             v8->xform.position[2] = Weight * Transform->position[2];
-            AfxScaleM3d(Weight, Transform->scaleShear, v8->xform.scaleShear);
+            AfxM3dScale(v8->xform.scaleShear, Transform->scaleShear, Weight);
             v7 = LocalPose;
         }
 

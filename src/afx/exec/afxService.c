@@ -102,7 +102,7 @@ _AFX afxError _AfxSvcDtor(afxService svc)
         for (afxNat i = 0; i < svc->workerThrCnt; ++i)
         {
             afxResult exitCode;
-            AfxWaitForThread(svc->workers[i].thr, &exitCode);
+            AfxWaitForThreadExit(svc->workers[i].thr, &exitCode);
             AfxReleaseObjects(1, (void*)&svc->workers[i].thr);
         }
 

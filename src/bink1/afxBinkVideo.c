@@ -88,44 +88,53 @@ DLLEXPORT afxError CreateBinkTextures(afxBinkVideo *bnk)
     afxNat rasCnt = (bnk->hasAlphaPlane || (bnk->hasAlphaPlane = bnk->buffers.Frames[0][3].Allocate)) ? 4 : 3;
 
     bnk->rasUnpakOff[0] = 0;
-    bnk->rasUnpakSiz[0] = AFX_ALIGN(bnk->buffers.YABufferWidth * bnk->buffers.YABufferHeight, 64);
+    bnk->rasUnpakSiz[0] = AFX_ALIGNED_SIZEOF(bnk->buffers.YABufferWidth * bnk->buffers.YABufferHeight, 64);
     bnk->rasUnpakOff[1] = bnk->rasUnpakSiz[0];
-    bnk->rasUnpakSiz[1] = AFX_ALIGN(bnk->buffers.cRcBBufferWidth * bnk->buffers.cRcBBufferHeight, 64);
+    bnk->rasUnpakSiz[1] = AFX_ALIGNED_SIZEOF(bnk->buffers.cRcBBufferWidth * bnk->buffers.cRcBBufferHeight, 64);
     bnk->rasUnpakOff[2] = bnk->rasUnpakSiz[1] + bnk->rasUnpakSiz[0];
-    bnk->rasUnpakSiz[2] = AFX_ALIGN(bnk->buffers.cRcBBufferWidth * bnk->buffers.cRcBBufferHeight, 64);
+    bnk->rasUnpakSiz[2] = AFX_ALIGNED_SIZEOF(bnk->buffers.cRcBBufferWidth * bnk->buffers.cRcBBufferHeight, 64);
     bnk->rasUnpakOff[3] = bnk->rasUnpakSiz[2] + bnk->rasUnpakSiz[1] + bnk->rasUnpakSiz[0];
-    bnk->rasUnpakSiz[3] = bnk->hasAlphaPlane ? AFX_ALIGN(bnk->buffers.YABufferWidth * bnk->buffers.YABufferHeight, 64) : 0;
+    bnk->rasUnpakSiz[3] = bnk->hasAlphaPlane ? AFX_ALIGNED_SIZEOF(bnk->buffers.YABufferWidth * bnk->buffers.YABufferHeight, 64) : 0;
 
     afxBufferSpecification bufi = { 0 };
     bufi.siz = bnk->rasUnpakSiz[0] + bnk->rasUnpakSiz[1] + bnk->rasUnpakSiz[2] + bnk->rasUnpakSiz[3];
-    bufi.access = afxBufferAccess_W;
+    bufi.access = afxBufferAccess_W | afxBufferAccess_X | afxBufferAccess_COHERENT;
     bufi.usage = afxBufferUsage_SRC;
 
     bnk->stageBufSiz = bufi.siz;
 
     for (afxNat i = 0; i < BINKMAXFRAMEBUFFERS; ++i)
     {
-        if (AfxAcquireBuffers(bnk->dctx, 1, &bufi, &bnk->stageBuffers[i]))
-            AfxThrowError();
-
-        if (AfxAcquireRasters(bnk->dctx, rasCnt, texi, bnk->rasters[i])) AfxThrowError();
+        if (AfxAcquireBuffers(bnk->dctx, 1, &bufi, &bnk->stageBuffers[i])) AfxThrowError();
         else
         {
-            for (afxNat j = 0; j < rasCnt; j++)
+            if (AfxAcquireRasters(bnk->dctx, rasCnt, texi, bnk->rasters[i])) AfxThrowError();
+            else
             {
-                bnk->buffers.Frames[i][j].BufferPitch = AFX_ALIGN(((j == 1 || 2 == j) ? bnk->buffers.cRcBBufferWidth : bnk->buffers.YABufferWidth), 16);
+                afxByte* start = AfxMapBuffer(bnk->stageBuffers[i], 0, bnk->stageBufSiz, NIL);
+
+                for (afxNat j = 0; j < rasCnt; j++)
+                {
+                    bnk->buffers.Frames[i][j].Buffer = &start[bnk->rasUnpakOff[j]];
+                    bnk->buffers.Frames[i][j].BufferPitch = AFX_ALIGNED_SIZEOF(((j == 1 || 2 == j) ? bnk->buffers.cRcBBufferWidth : bnk->buffers.YABufferWidth), 16);
+                }
             }
         }
     }
 
-    if (err)
+    if (!err)
+    {
+        BinkRegisterFrameBuffers(bnk->bik, &bnk->buffers);
+    }
+    else
+    {
         FreeBinkTextures(bnk);
-
+    }
     return err;
 }
 
 #if !0
-void LockBinkTextures(afxBinkVideo *bnk, afxNat i)
+void LockBinkTextures(afxBinkVideo *bnk)
 {
     afxError err = AFX_ERR_NONE;
     afxNat rasCnt = bnk->hasAlphaPlane ? 4 : 3;
@@ -189,26 +198,25 @@ DLLEXPORT afxError AfxBinkPrepareFrameBlit(afxBinkVideo *bnk, avxCmdb cmdb)
     op.offset = bnk->rasUnpakOff[0];
     op.rowStride = bnk->buffers.Frames[bnk->buffers.FrameNum][0].BufferPitch;
     op.rowCnt = bnk->buffers.YABufferHeight;
-    AvxCmdUnpackRaster(cmdb, bnk->rasters[bnk->buffers.FrameNum][0], &op, bnk->stageBuffers[bnk->buffers.FrameNum]);
+    AvxCmdUnpackRaster(cmdb, bnk->rasters[bnk->buffers.FrameNum][0], bnk->stageBuffers[bnk->buffers.FrameNum], 1, &op);
     
     if (bnk->hasAlphaPlane)
     {
         op.offset = bnk->rasUnpakOff[3];
         op.rowStride = bnk->buffers.Frames[bnk->buffers.FrameNum][3].BufferPitch;
         op.rowCnt = bnk->buffers.YABufferHeight;
-        AvxCmdUnpackRaster(cmdb, bnk->rasters[bnk->buffers.FrameNum][3], &op, bnk->stageBuffers[bnk->buffers.FrameNum]);
+        AvxCmdUnpackRaster(cmdb, bnk->rasters[bnk->buffers.FrameNum][3], bnk->stageBuffers[bnk->buffers.FrameNum], 1, &op);
     }
 
     AfxGetRasterExtent(bnk->rasters[bnk->buffers.FrameNum][1], 0, op.rgn.whd);
     op.offset = bnk->rasUnpakOff[1];
     op.rowStride = bnk->buffers.Frames[bnk->buffers.FrameNum][1].BufferPitch;
     op.rowCnt = bnk->buffers.cRcBBufferHeight;
-    AvxCmdUnpackRaster(cmdb, bnk->rasters[bnk->buffers.FrameNum][1], &op, bnk->stageBuffers[bnk->buffers.FrameNum]);
+    AvxCmdUnpackRaster(cmdb, bnk->rasters[bnk->buffers.FrameNum][1], bnk->stageBuffers[bnk->buffers.FrameNum], 1, &op);
     op.offset = bnk->rasUnpakOff[2];
     op.rowStride = bnk->buffers.Frames[bnk->buffers.FrameNum][2].BufferPitch;
     op.rowCnt = bnk->buffers.cRcBBufferHeight;
-    AvxCmdUnpackRaster(cmdb, bnk->rasters[bnk->buffers.FrameNum][2], &op, bnk->stageBuffers[bnk->buffers.FrameNum]);
-
+    AvxCmdUnpackRaster(cmdb, bnk->rasters[bnk->buffers.FrameNum][2], bnk->stageBuffers[bnk->buffers.FrameNum], 1, &op);    
     return err;
 }
 
@@ -219,14 +227,14 @@ DLLEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, avxCmdb cmdb)
     ++bnk->Frame_count;
 
     AfxAssertObjects(1, &bnk->yv12ToRgbaRazr, afxFcc_RAZR);
-    AvxCmdBindRasterizer(cmdb, bnk->yv12ToRgbaRazr, NIL);
+    AvxCmdBindRasterizer(cmdb, bnk->yv12ToRgbaRazr, NIL, NIL);
 
     // Set the textures.
     //AvxCmdBindLegos(cmdb, 0, 1, &(bnk->rsrc[bnk->buffers.FrameNum].lego));
     AvxCmdBindSamplers(cmdb, 0, 0, 3, bnk->samplers);
     AvxCmdBindRasters(cmdb, 0, 0, 3, bnk->rasters[bnk->buffers.FrameNum], NIL);
 
-    AvxCmdDraw(cmdb, 0, 1, 0, 4); // tristripped quad in shader
+    AvxCmdDraw(cmdb, 4, 1, 0, 0); // tristripped quad in shader
 
     End_timer(bnk->Render_microseconds);
     return err;
@@ -239,7 +247,7 @@ static void DecompressFrame(afxBinkVideo *bnk)
     //bnk->buffers.FrameNum = outBufIdx;
 
     // Lock the textures.
-    LockBinkTextures(bnk, bnk->buffers.FrameNum);
+    //LockBinkTextures(bnk, bnk->buffers.FrameNum);
 
     End_and_start_next_timer(bnk->Render_microseconds);
 
@@ -256,7 +264,7 @@ static void DecompressFrame(afxBinkVideo *bnk)
     End_and_start_next_timer(bnk->Bink_microseconds);
 
     // Unlock the textures.
-    UnlockBinkTextures(bnk, bnk->buffers.FrameNum);
+    //UnlockBinkTextures(bnk, bnk->buffers.FrameNum);
 
     End_and_start_next_timer(bnk->Render_microseconds);
 
@@ -378,7 +386,7 @@ DLLEXPORT afxError AfxSetUpBinkPlayer(afxBinkVideo *bnk, afxDrawContext dctx)
     bnk->samplers[3] = bnk->samplers[0];
 
     afxUri uri;
-    AfxMakeUri(&uri, "../system/video/rgbOutYuv.xsh.xml?yFlipped", 0);
+    AfxMakeUri(&uri, 0, "../system/video/rgbOutYuv.xsh.xml?yFlipped", 0);
     bnk->yv12ToRgbaRazr = AfxLoadRasterizerFromXsh(dctx, NIL, &uri);
     AfxAssert(bnk->yv12ToRgbaRazr);
 

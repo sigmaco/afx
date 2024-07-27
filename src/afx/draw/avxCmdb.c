@@ -60,14 +60,14 @@ _AVX afxError _AvxCmdbStdDtor(avxCmdb cmdb)
 
     AfxAssert(cmdb->state != avxCmdbState_PENDING);
 
-    AfxRecycleCmdBuffers(TRUE, 1, &cmdb);
+    //AfxRecycleCmdBuffers(TRUE, 1, &cmdb);
 
     //if (cmdb->base.vmt->dtor && cmdb->base.vmt->dtor(cmdb))
         //AfxThrowError();
 
     //AfxAssert(!cmdb->base.idd);
 
-    AfxDeallocateArena(&cmdb->cmdArena);
+    AfxDismantleArena(&cmdb->cmdArena);
 
     return err;
 }
@@ -87,7 +87,7 @@ _AVX afxError _AvxCmdbStdCtor(avxCmdb cmdb, afxCookie const* cookie)
     cmdb->submQueMask = NIL;
     cmdb->portIdx = /*din->portIdx*/0;
     cmdb->poolIdx = poolIdx;
-    AfxAllocateArena(NIL, &cmdb->cmdArena, NIL, AfxHere());
+    AfxDeployArena(&cmdb->cmdArena, NIL, AfxHere());
 
     cmdb->disposable = TRUE;
 
@@ -243,7 +243,7 @@ _AVX afxError AfxAcquireCmdBuffers(afxDrawInput din, avxCmdbUsage usage, afxNat 
 
                     AfxPopQueue(&din->pools[poolIdx].recycQue);
 
-                    if (cnt2 >= cnt)
+                    if (cnt2 == cnt)
                         break;
                 }
 
@@ -253,10 +253,13 @@ _AVX afxError AfxAcquireCmdBuffers(afxDrawInput din, avxCmdbUsage usage, afxNat 
                     {
                         AfxThrowError();
                         AfxRecycleCmdBuffers(TRUE, cnt2, streams);
+                        cnt2 = 0;
                     }
                     else
                     {
-                        for (afxNat i = 0; i < cnt - cnt2; i++)
+                        afxNat cnt3 = cnt - cnt2;
+
+                        for (afxNat i = 0; i < cnt3; i++)
                         {
                             avxCmdb cmdb = streams[cnt2 + i];
                             AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
@@ -274,6 +277,9 @@ _AVX afxError AfxAcquireCmdBuffers(afxDrawInput din, avxCmdbUsage usage, afxNat 
                 }
 
                 AfxExitSlockExclusive(&din->pools[poolIdx].reqLock);
+
+                if (cnt2 >= cnt)
+                    break;
             }
         }
     }

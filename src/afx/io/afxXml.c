@@ -184,7 +184,7 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
 
     afxString128 tmpStr;
     AfxMakeString128(&tmpStr, tag_open);
-    tmp = (char*)AfxGetStringStorage(&tmpStr.str,0);
+    tmp = (char*)AfxGetStringData(&tmpStr.str,0);
 
     token = xml_strtok_r(tmp, " ", &rest); // skip the first value
     
@@ -214,8 +214,8 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
             start_content = &tag_open->start[position + strlen(str_name) + 2];
 
             new_attribute = AfxAllocate(1, sizeof(afxXmlAttr), 0, AfxHere());
-            AfxMakeString(&new_attribute->name, start_name, strlen(str_name));
-            AfxMakeString(&new_attribute->content, start_content, strlen(str_content));
+            AfxMakeString(&new_attribute->name, 0, start_name, strlen(str_name));
+            AfxMakeString(&new_attribute->content, 0, start_content, strlen(str_content));
 
             old_elements = get_zero_terminated_array_attributes(attributes);
             new_elements = old_elements + 1;
@@ -227,8 +227,8 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
             afxNat addedIdx;
             afxXmlTag* tag = AfxInsertArrayUnits(&xml->tempTagArr, 1, &addedIdx, NIL);
             AfxAssert(addedIdx == baseTagIdx2 + tagCnt2);
-            AfxMakeString(&tag->name, start_name, strlen(str_name));
-            AfxMakeString(&tag->content, start_content, strlen(str_content));
+            AfxMakeString(&tag->name, 0, start_name, strlen(str_name));
+            AfxMakeString(&tag->content, 0, start_content, strlen(str_content));
             ++tagCnt2;
             
 
@@ -340,7 +340,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
             _AfxXmlParseConsume(parser, 1);
 
             // Map parsed tag name
-            AfxMakeString(&tag_open, &parser->buffer[start], length);
+            AfxMakeString(&tag_open, 0, &parser->buffer[start], length);
 
             if (tag_open.start[3] == 'w')
             {
@@ -358,7 +358,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
 
         // If tag ends with '/' it's self closing, skip content lookup. Drop '/' and go to node creation
 
-        if (!(tag_open.len > 0 && '/' == tag_open.start[original_length - 1] /**(afxChar*)AfxGetStringStorage(&tag_open, original_length - 1)*/))
+        if (!(tag_open.len > 0 && '/' == tag_open.start[original_length - 1] /**(afxChar*)AfxGetStringData(&tag_open, original_length - 1)*/))
         {
             // If the content does not start with '<', a text content is assumed
 
@@ -396,7 +396,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
                         length--;
 
                     // Return mapped text
-                    AfxMakeString(&content, &parser->buffer[start], length);
+                    AfxMakeString(&content, 0, &parser->buffer[start], length);
                 }
             }
             else // <
@@ -466,7 +466,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
                         {
                             // Return mapped CDATA
 
-                            AfxMakeString(&content, &parser->buffer[start2], length2);
+                            AfxMakeString(&content, 0, &parser->buffer[start2], length2);
                         }
                     }
                     else
@@ -543,7 +543,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
 
                         // Return parsed tag name
 
-                        AfxMakeString(&tag_close, &parser->buffer[start], length);
+                        AfxMakeString(&tag_close, 0, &parser->buffer[start], length);
                     }
                 }
 
@@ -575,8 +575,8 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
             }
 
             afxXmlNode* node = AfxAllocate(1, sizeof(afxXmlNode), 0, AfxHere());
-            AfxMakeString(&node->name, tag_open.start, tag_open.len);
-            AfxMakeString(&node->content, content.start, content.len);
+            AfxMakeString(&node->name, 0, tag_open.start, tag_open.len);
+            AfxMakeString(&node->content, 0, content.start, content.len);
             node->attributes = attributes;
             node->children = children;
 
@@ -588,8 +588,8 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
             elem->tagCnt = tagCnt;
             elem->baseChildIdx = childCnt ? baseChildIdx : 0;
             elem->childCnt = childCnt;
-            AfxMakeString(&elem->name, tag_open.start, tag_open.len);
-            AfxMakeString(&elem->content, content.start, content.len);
+            AfxMakeString(&elem->name, 0, tag_open.start, tag_open.len);
+            AfxMakeString(&elem->content, 0, content.start, content.len);
 
             //AfxLogComment("%u/%u; %u/%u; %u/%u; %.*s : %.8s;", elemIdx, elem->parentIdx, elem->baseTagIdx, elem->tagCnt, elem->baseChildIdx, elem->childCnt, AfxPushString(&elem->name), 0);
 
@@ -734,6 +734,8 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxNat length)
 
             int b = 1;
         }
+        AfxDeallocateArray(&xml->tempElemArr);
+        //AfxDeallocateArray(&xml->tempTagArr);
     }
     return err;
 }
@@ -1229,11 +1231,31 @@ _AFX void AfxCleanUpXml(afxXml* xml)
     //AfxAssertType(xml, afxFcc_XML);
 
     AfxXmlNodeDelete(xml, xml->root);
+
+    if (xml->elems)
+    {
+        afxArray arr;
+        AfxWrapArray(&arr, sizeof(xml->elems[0]), xml->elemCnt, xml->elems, xml->elemCnt);
+        AfxDeallocateArray(&arr);
+    }
+
+    if (xml->tags)
+    {
+        afxArray arr;
+        AfxWrapArray(&arr, sizeof(xml->tags[0]), xml->tagCnt, xml->tags, xml->tagCnt);
+        AfxDeallocateArray(&arr);
+    }
+
+
+    if (xml->file)
+        AfxCloseStream(xml->file);
+
 }
 
 _AFX afxError AfxLoadXml(afxXml* xml, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
+    *xml = (afxXml) { 0 };
 
     //AfxEntry("uri:%.*s", AfxPushString(uri ? AfxGetUriString(uri) : &AFX_STR_EMPTY));
     afxStream file;
@@ -1248,7 +1270,7 @@ _AFX afxError AfxLoadXml(afxXml* xml, afxUri const *uri)
         if (_AfxXmlOpen(xml, file))
             AfxThrowError();
 
-        AfxCloseStream(file);
+        xml->file = file;
     }
     return err;
 }

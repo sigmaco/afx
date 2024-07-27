@@ -144,7 +144,7 @@ _AVXINL afxError AfxLegoBlueprintAddShaderContributions(avxPipelineRigBlueprint 
 
                 if (!err && !entryExisting)
                 {
-                    if (AfxLegoBlueprintAddBinding(blueprint, rsrc.binding, AFX_BIT(shdb->stage), rsrc.type, rsrc.cnt, &rsrc.name.str))
+                    if (AfxLegoBlueprintAddBinding(blueprint, rsrc.binding, AFX_BIT(shdb->stage), rsrc.type, rsrc.cnt, &rsrc.name))
                     {
                         AfxThrowError();
                     }
@@ -204,7 +204,7 @@ _AVX afxResult AfxGetLigatureEntry(avxLigature liga, afxNat set, afxIndex first,
                 decl[i].visibility = liga->totalEntries[resIdx].visibility;
                 decl[i].type = liga->totalEntries[resIdx].type;
                 decl[i].cnt = liga->totalEntries[resIdx].cnt;
-                decl[i].name = &liga->totalEntries[resIdx].name.str.str;
+                decl[i].name = &liga->totalEntries[resIdx].name.str;
                 ++rslt;
             }
         }
@@ -234,6 +234,7 @@ _AVX afxError _AvxBschStdCtor(avxLigature liga, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &liga, afxFcc_BSCH);
 
+    afxDrawContext dctx = cookie->udd[0];
     avxLigatureConfig const* cfg = ((avxLigatureConfig const*)cookie->udd[1]) + cookie->no;
     afxNat shaderCnt = cfg->shaderCnt;
     avxShader* shaders = cfg->shaders;
@@ -317,11 +318,12 @@ _AVX afxError _AvxBschStdCtor(avxLigature liga, afxCookie const* cookie)
 
                 if (!err && !entryExisting)
                 {
+#if 0
                     afxString s;
                     afxStringBase strb;
-                    AfxGetShaderStringBase(shd, &strb);
-                    AfxResolveStrings2(strb, 1, &rsrc.name, &s);
-
+                    AfxGetShaderStringBase(dctx, &strb);
+                    AfxRStrings2(strb, 1, &rsrc.name, &s);
+#endif
                     avxLigatureEntry* ent;
 
                     if (!(ent = AfxInsertArrayUnit(&entries, NIL))) AfxThrowError();
@@ -379,7 +381,7 @@ _AVX afxError _AvxBschStdCtor(avxLigature liga, afxCookie const* cookie)
                             ent->cnt = ent2->cnt;
                             ent->set = ent2->set;
 
-                            AfxMakeString8(&ent->name, &ent2->name.str.str);
+                            AfxMakeString8(&ent->name, &ent2->name.str);
                             ++entryCnt;
 
                             ++liga->totalEntryCnt;

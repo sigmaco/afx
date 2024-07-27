@@ -25,6 +25,7 @@
 #include "qwadro/draw/math/avxColor.h"
 
 typedef enum avxTexelAddress
+/// Specify behavior of sampling with texture coordinates outside an texel map.
 {
     avxTexelAddress_REPEAT, // Tile the texture at every (u,v) integer junction. For example, for u values between 0 and 3, the texture is repeated three times.
     avxTexelAddress_MIRROR, // Flip the texture at every (u,v) integer junction. For u values between 0 and 1, for example, the texture is addressed normally; between 1 and 2, the texture is flipped (mirrored); between 2 and 3, the texture is normal again; and so on.
@@ -36,6 +37,7 @@ typedef enum avxTexelAddress
 } avxTexelAddress;
 
 typedef enum avxTexelFilter
+/// Specify filters used for texel map lookups.
 {
     avxTexelFilter_POINT, // Use point sampling (aka NEAREST). Supported for Lods.
     avxTexelFilter_LINEAR, // Use linear interpolation. Supported for Lods.

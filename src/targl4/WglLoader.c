@@ -784,8 +784,8 @@ _SGL afxError SglLoadWglVmt(HMODULE opengl32, afxNat base, afxNat cnt, void* vmt
     AfxMakeString128(&tmp, 0);
     afxString name;
     afxString arbAndExt[2];
-    AfxMakeString(&arbAndExt[0], "ARB", 3);
-    AfxMakeString(&arbAndExt[1], "EXT", 3);
+    AfxMakeString(&arbAndExt[0], 0, "ARB", 3);
+    AfxMakeString(&arbAndExt[1], 0, "EXT", 3);
 
     char const **names = wglNames;
 
@@ -804,7 +804,7 @@ _SGL afxError SglLoadWglVmt(HMODULE opengl32, afxNat base, afxNat cnt, void* vmt
     for (afxNat i = 0; i < cnt; i++)
     {
         AfxAssert(names[base + i]);
-        AfxMakeString(&name, names[base + i], 0);
+        AfxMakeString(&name, 0, names[base + i], 0);
         void *sym = NIL;
 
         if (f)
@@ -826,7 +826,7 @@ _SGL afxError SglLoadWglVmt(HMODULE opengl32, afxNat base, afxNat cnt, void* vmt
                     {
                         if (echo)
                         {
-                            AfxLogY("%.3u %.*s ext found.", i, AfxPushString(&tmp.str.str));
+                            AfxLogY("%.3u %.*s ext found.", i, AfxPushString(&tmp.str));
                         }
                         break;
                     }
@@ -834,7 +834,7 @@ _SGL afxError SglLoadWglVmt(HMODULE opengl32, afxNat base, afxNat cnt, void* vmt
                     {
                         if (echo)
                         {
-                            AfxLogY("%.3u %.*s fallback found.", i, AfxPushString(&tmp.str.str));
+                            AfxLogY("%.3u %.*s fallback found.", i, AfxPushString(&tmp.str));
                         }
                         break;
                     }
@@ -862,8 +862,8 @@ _SGL afxError SglLoadGlVmt(HMODULE opengl32, afxNat base, afxNat cnt, void* vmt[
     AfxMakeString128(&tmp, 0);
     afxString name;
     afxString arbAndExt[2];
-    AfxMakeString(&arbAndExt[0], "ARB", 3);
-    AfxMakeString(&arbAndExt[1], "EXT", 3);
+    AfxMakeString(&arbAndExt[0], 0, "ARB", 3);
+    AfxMakeString(&arbAndExt[1], 0, "EXT", 3);
     
     char const **names = glVmtNames;
 
@@ -887,7 +887,7 @@ _SGL afxError SglLoadGlVmt(HMODULE opengl32, afxNat base, afxNat cnt, void* vmt[
     for (afxNat i = 0; i < cnt; i++)
     {
         AfxAssert(names[base + i]);
-        AfxMakeString(&name, names[base + i], 0);
+        AfxMakeString(&name, 0, names[base + i], 0);
         void *sym = NIL;
 
         if (f)
@@ -909,7 +909,7 @@ _SGL afxError SglLoadGlVmt(HMODULE opengl32, afxNat base, afxNat cnt, void* vmt[
                     {
                         if (i >= baseAddonIdx && echo)
                         {
-                            AfxLogY("%.3u %.*s ext found.", i, AfxPushString(&tmp.str.str));
+                            AfxLogY("%.3u %.*s ext found.", i, AfxPushString(&tmp.str));
                         }
                         break;
                     }
@@ -917,7 +917,7 @@ _SGL afxError SglLoadGlVmt(HMODULE opengl32, afxNat base, afxNat cnt, void* vmt[
                     {
                         if (i >= baseAddonIdx && echo)
                         {
-                            AfxLogY("%.3u %.*s fallback found.", i, AfxPushString(&tmp.str.str));
+                            AfxLogY("%.3u %.*s fallback found.", i, AfxPushString(&tmp.str));
                         }
                         break;
                     }

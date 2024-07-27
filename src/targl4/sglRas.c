@@ -16,7 +16,7 @@
 
 #include "sgl.h"
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
 #include "qwadro/exec/afxSystem.h"
 
 _SGL afxError _SglTexSubImage(glVmt const* gl, GLenum glTarget, afxRasterRegion const* rgn, GLenum glFmt, GLenum glType, afxAddress const src)
@@ -84,7 +84,7 @@ _SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster ras
     //afxBool const isSurface = AfxTestRasterFlags(ras, afxRasterUsage_DRAW);
     afxBool const isCubemap = AfxTestRasterFlags(ras, afxRasterFlag_CUBEMAP);
     
-    afxNat const lvlCnt = AfxCountRasterLods(ras);
+    afxNat const lvlCnt = AfxCountRasterMipmaps(ras);
     AfxAssert(lvlCnt);
 
     afxPixelLayout pfd;
@@ -213,7 +213,7 @@ _SGL afxError DpuBindAndSyncRas(sglDpu* dpu, afxNat glUnit, afxRaster ras)
             case GL_PROXY_TEXTURE_1D:
             {
                 AfxAssert(gl->TexStorage1D);
-                gl->TexStorage1D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->m.whd[0]); _SglThrowErrorOccuried();
+                gl->TexStorage1D(glTarget, AfxCountRasterMipmaps(ras), glIntFmt, ras->m.whd[0]); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_2D:
@@ -224,26 +224,26 @@ _SGL afxError DpuBindAndSyncRas(sglDpu* dpu, afxNat glUnit, afxRaster ras)
             case GL_PROXY_TEXTURE_CUBE_MAP:
             {
                 AfxAssert(gl->TexStorage2D);
-                gl->TexStorage2D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1]); _SglThrowErrorOccuried();
+                gl->TexStorage2D(glTarget, AfxCountRasterMipmaps(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1]); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_1D_ARRAY:
             case GL_PROXY_TEXTURE_1D_ARRAY:
             {
                 AfxAssert(gl->TexStorage2D);
-                gl->TexStorage2D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->m.whd[0], ras->m.whd[2]); _SglThrowErrorOccuried();
+                gl->TexStorage2D(glTarget, AfxCountRasterMipmaps(ras), glIntFmt, ras->m.whd[0], ras->m.whd[2]); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_3D:
             {
                 AfxAssert(gl->TexStorage3D);
-                gl->TexStorage3D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1], ras->m.whd[2]); _SglThrowErrorOccuried();
+                gl->TexStorage3D(glTarget, AfxCountRasterMipmaps(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1], ras->m.whd[2]); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_2D_ARRAY:
             {
                 AfxAssert(gl->TexStorage3D);
-                gl->TexStorage3D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1], ras->m.whd[2]); _SglThrowErrorOccuried();
+                gl->TexStorage3D(glTarget, AfxCountRasterMipmaps(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1], ras->m.whd[2]); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_2D_MULTISAMPLE:
@@ -282,12 +282,14 @@ _SGL afxError _DpuLoadRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, afx
     DpuBindAndSyncBuf(dpu, GL_PIXEL_UNPACK_BUFFER, NIL);
     DpuBindAndSyncRas(dpu, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
-    afxNat pixelStride = op->rowStride / op->rgn.whd[0];
-    afxNat rowLen = op->rowStride / pixelStride;
+    afxNat rowStride = op->rowStride ? op->rowStride : op->rgn.whd[0];
+    afxNat rowCnt = op->rowCnt ? op->rowCnt : op->rgn.whd[1];
+    afxNat pixelStride = rowStride / op->rgn.whd[0];
+    afxNat rowLen = rowStride / pixelStride;
 
     gl->PixelStorei(GL_UNPACK_ALIGNMENT, 1); _SglThrowErrorOccuried();
     gl->PixelStorei(GL_UNPACK_ROW_LENGTH, rowLen); _SglThrowErrorOccuried();
-    gl->PixelStorei(GL_UNPACK_IMAGE_HEIGHT, op->rowCnt); _SglThrowErrorOccuried();
+    gl->PixelStorei(GL_UNPACK_IMAGE_HEIGHT, rowCnt); _SglThrowErrorOccuried();
     _SglTexSubImage(gl, ras->glTarget, &op->rgn, ras->glFmt, ras->glType, (afxAddress const)&(src[op->offset]));
     return err;
 }
@@ -299,9 +301,11 @@ _SGL afxError _DpuStoreRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, af
     //DpuBindAndSyncBuf(dpu, GL_PIXEL_PACK_BUFFER, NIL);
     DpuBindAndSyncRas(dpu, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
-    afxNat bufSiz = op->rowStride  * op->rowCnt * op->rgn.whd[2];
-    afxNat pixelStride = op->rowStride / op->rgn.whd[0];
-    afxNat rowLen = op->rowStride / pixelStride;
+    afxNat rowStride = op->rowStride ? op->rowStride : op->rgn.whd[0];
+    afxNat rowCnt = op->rowCnt ? op->rowCnt : op->rgn.whd[1];
+    afxNat bufSiz = rowStride  * rowCnt * op->rgn.whd[2];
+    afxNat pixelStride = rowStride / op->rgn.whd[0];
+    afxNat rowLen = rowStride / pixelStride;
 
     GLuint pbo;
     GLenum pboTarget = GL_PIXEL_PACK_BUFFER;
@@ -311,7 +315,7 @@ _SGL afxError _DpuStoreRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, af
 
     gl->PixelStorei(GL_PACK_ALIGNMENT, 1); _SglThrowErrorOccuried();
     gl->PixelStorei(GL_PACK_ROW_LENGTH, rowLen); _SglThrowErrorOccuried();
-    gl->PixelStorei(GL_PACK_IMAGE_HEIGHT, op->rowCnt); _SglThrowErrorOccuried();
+    gl->PixelStorei(GL_PACK_IMAGE_HEIGHT, rowCnt); _SglThrowErrorOccuried();
 
     afxBool is3d = AfxRasterIs3d(ras);
 
@@ -333,12 +337,14 @@ _SGL afxError _DpuUnpackRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, a
     DpuBindAndSyncBuf(dpu, GL_PIXEL_UNPACK_BUFFER, buf);
     DpuBindAndSyncRas(dpu, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
-    afxNat pixelStride = op->rowStride / op->rgn.whd[0];
-    afxNat rowLen = op->rowStride / pixelStride;
+    afxNat rowStride = op->rowStride ? op->rowStride : op->rgn.whd[0];
+    afxNat rowCnt = op->rowCnt ? op->rowCnt : op->rgn.whd[1];
+    afxNat pixelStride = rowStride / op->rgn.whd[0];
+    afxNat rowLen = rowStride / pixelStride;
 
     gl->PixelStorei(GL_UNPACK_ALIGNMENT, 1); _SglThrowErrorOccuried();
     gl->PixelStorei(GL_UNPACK_ROW_LENGTH, rowLen); _SglThrowErrorOccuried();
-    gl->PixelStorei(GL_UNPACK_IMAGE_HEIGHT, op->rowCnt); _SglThrowErrorOccuried();
+    gl->PixelStorei(GL_UNPACK_IMAGE_HEIGHT, rowCnt); _SglThrowErrorOccuried();
     _SglTexSubImage(gl, ras->glTarget, &op->rgn, ras->glFmt, ras->glType, (afxAddress const)op->offset);
     return err;
 }
@@ -350,13 +356,15 @@ _SGL afxError _DpuPackRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, afx
     DpuBindAndSyncBuf(dpu, GL_PIXEL_PACK_BUFFER, buf);
     DpuBindAndSyncRas(dpu, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
-    afxNat bufSiz = op->rowStride  * op->rowCnt * op->rgn.whd[2];
-    afxNat pixelStride = op->rowStride / op->rgn.whd[0];
-    afxNat rowLen = op->rowStride / pixelStride;
+    afxNat rowStride = op->rowStride ? op->rowStride : op->rgn.whd[0];
+    afxNat rowCnt = op->rowCnt ? op->rowCnt : op->rgn.whd[1];
+    afxNat bufSiz = rowStride  * rowCnt * op->rgn.whd[2];
+    afxNat pixelStride = rowStride / op->rgn.whd[0];
+    afxNat rowLen = rowStride / pixelStride;
 
     gl->PixelStorei(GL_PACK_ALIGNMENT, 1); _SglThrowErrorOccuried();
     gl->PixelStorei(GL_PACK_ROW_LENGTH, rowLen); _SglThrowErrorOccuried();
-    gl->PixelStorei(GL_PACK_IMAGE_HEIGHT, op->rowCnt); _SglThrowErrorOccuried();
+    gl->PixelStorei(GL_PACK_IMAGE_HEIGHT, rowCnt); _SglThrowErrorOccuried();
 
     afxBool is3d = AfxRasterIs3d(ras);
 
@@ -377,9 +385,11 @@ _SGL afxError _DpuOutputRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, a
     glVmt const* gl = &dpu->gl;
     DpuBindAndSyncRas(dpu, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
-    afxNat bufSiz = op->rowStride  * op->rowCnt * op->rgn.whd[2];
-    afxNat pixelStride = op->rowStride / op->rgn.whd[0];
-    afxNat rowLen = op->rowStride / pixelStride;
+    afxNat rowStride = op->rowStride ? op->rowStride : op->rgn.whd[0];
+    afxNat rowCnt = op->rowCnt ? op->rowCnt : op->rgn.whd[1];
+    afxNat bufSiz = rowStride  * rowCnt * op->rgn.whd[2];
+    afxNat pixelStride = rowStride / op->rgn.whd[0];
+    afxNat rowLen = rowStride / pixelStride;
 
     GLuint pbo;
     GLenum pboTarget = GL_PIXEL_PACK_BUFFER;
@@ -389,7 +399,7 @@ _SGL afxError _DpuOutputRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, a
 
     gl->PixelStorei(GL_PACK_ALIGNMENT, 1); _SglThrowErrorOccuried();
     gl->PixelStorei(GL_PACK_ROW_LENGTH, rowLen); _SglThrowErrorOccuried();
-    gl->PixelStorei(GL_PACK_IMAGE_HEIGHT, op->rowCnt); _SglThrowErrorOccuried();
+    gl->PixelStorei(GL_PACK_IMAGE_HEIGHT, rowCnt); _SglThrowErrorOccuried();
 
     afxBool is3d = AfxRasterIs3d(ras);
 
@@ -412,9 +422,11 @@ _SGL afxError _DpuInputRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, af
     glVmt const* gl = &dpu->gl;
     DpuBindAndSyncRas(dpu, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
-    afxNat bufSiz = op->rowStride  * op->rowCnt * op->rgn.whd[2];
-    afxNat pixelStride = op->rowStride / op->rgn.whd[0];
-    afxNat rowLen = op->rowStride / pixelStride;
+    afxNat rowStride = op->rowStride ? op->rowStride : op->rgn.whd[0];
+    afxNat rowCnt = op->rowCnt ? op->rowCnt : op->rgn.whd[1];
+    afxNat bufSiz = rowStride  * rowCnt * op->rgn.whd[2];
+    afxNat pixelStride = rowStride / op->rgn.whd[0];
+    afxNat rowLen = rowStride / pixelStride;
 
     GLuint pbo;
     GLenum pboTarget = GL_PIXEL_UNPACK_BUFFER;
@@ -426,7 +438,7 @@ _SGL afxError _DpuInputRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, af
     gl->UnmapBuffer(pboTarget); _SglThrowErrorOccuried();
     gl->PixelStorei(GL_UNPACK_ALIGNMENT, 1); _SglThrowErrorOccuried();
     gl->PixelStorei(GL_UNPACK_ROW_LENGTH, rowLen); _SglThrowErrorOccuried();
-    gl->PixelStorei(GL_UNPACK_IMAGE_HEIGHT, op->rowCnt); _SglThrowErrorOccuried();
+    gl->PixelStorei(GL_UNPACK_IMAGE_HEIGHT, rowCnt); _SglThrowErrorOccuried();
     _SglTexSubImage(gl, ras->glTarget, &op->rgn, ras->glFmt, ras->glType, NIL);
     gl->BindBuffer(pboTarget, 0); _SglThrowErrorOccuried();
     gl->DeleteBuffers(1, &pbo); _SglThrowErrorOccuried();
@@ -454,7 +466,7 @@ _SGL afxError _SglRasDtor(afxRaster ras)
 
     if (ras->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 1, (void*)ras->glHandle);
+        _SglDctxDeleteGlRes(dctx, 1, ras->glHandle);
         ras->glHandle = 0;
     }
 

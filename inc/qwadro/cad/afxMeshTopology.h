@@ -14,50 +14,27 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_MESH_TOPOLOGY_H
-#define AFX_MESH_TOPOLOGY_H
-
-#include "qwadro/cad/afxMeshBuilder.h"
-
 /// Mesh triangle topology is described by the afxMeshTopology structure, which is pointed to by the afxMesh. 
 /// The afxMeshTopology structure provides a number of useful arrays of data, including the mesh triangulation, edge connectivity, and vertex relationships. 
 
-typedef afxNat8 afxVertexIndex8;
-typedef afxNat16 afxVertexIndex16;
-typedef afxNat32 afxVertexIndex32;
-typedef afxNat64 afxVertexIndex64;
-typedef afxVertexIndex32 afxVertexIndex;
-typedef afxNat afxFaceIndex;
-typedef afxVertexIndex8 afxIndexedTriangle8[3];
-typedef afxVertexIndex16 afxIndexedTriangle16[3];
-typedef afxVertexIndex32 afxIndexedTriangle32[3];
-typedef afxVertexIndex64 afxIndexedTriangle64[3];
-typedef afxIndexedTriangle32 afxIndexedTriangle;
+#ifndef AKX_MESH_TOPOLOGY_H
+#define AKX_MESH_TOPOLOGY_H
 
-/// The afxMeshSurface array specifies the actual triangulation of the mesh. 
-/// Each afxMeshSurface structure indexes into either the vertex index array, for the indices that make up the triangles.  
+#include "qwadro/cad/afxMeshBuilder.h"
+
+typedef afxNat8 akxVertexIndex8;
+typedef afxNat16 akxVertexIndex16;
+typedef afxNat32 akxVertexIndex32;
+typedef akxVertexIndex32 akxVertexIndex;
+typedef afxNat akxFaceIndex;
+typedef akxVertexIndex8 akxIndexedTriangle8[3];
+typedef akxVertexIndex16 akxIndexedTriangle16[3];
+typedef akxVertexIndex32 akxIndexedTriangle32[3];
+typedef akxIndexedTriangle32 akxIndexedTriangle;
+
+/// The akxMeshSurface array specifies the actual triangulation of the mesh. 
+/// Each akxMeshSurface structure indexes into either the vertex index array, for the indices that make up the triangles.  
 /// The material index indexes into the material slot array, and specifies the material used for the group of triangles. 
-
-AFX_DEFINE_STRUCT(afxMeshSurface)
-{
-    afxNat                  mtlIdx;
-    afxNat                  baseTriIdx;
-    afxNat                  triCnt;
-  //afxBox                 aabb; // added this field to ease occlusion culling.
-};
-
-AFX_DEFINE_STRUCT(afxMeshTopologyCache)
-{
-    afxLinkage              stream;
-
-    afxBuffer               buf;
-    afxNat32                base;
-    afxNat32                range;
-    afxNat32                stride;
-
-    afxMeshTopology         msht;
-    //afxNat                  idxSiz;
-};
 
 /// The afxMeshTopology structure also contains extra information about the mesh triangulation that can be useful in mesh processing. 
 /// The vertex-to-tertex map has, for each vertex in the corresponding akxVertexData, an index of the next vertex which was originally the same vertex. 
@@ -75,57 +52,63 @@ AFX_DEFINE_STRUCT(afxMeshTopologyCache)
 /// The two lowest-order bits of the value are the corresponding edge index in the corresponding triangle (ie., 00 would be the 0th edge, 01 the 1st, 10 the 2nd, and 11 is undefined). 
 /// The rest of the bits (the high-order 30 bits) specify the actual triangle index - you would multiply it by three to get its location in the vertex index arrays. 
 
-#ifdef _AFX_MESH_TOPOLOGY_C
-AFX_OBJECT(afxMeshTopology)
-{
-    afxNat                  surfCnt;
-    afxMeshSurface*         surfaces;
-  //afxBox                 aabb; // SIGMA added this field to ease occlusion culling.
-  //afxIndexBuffer          ibuf; // afxIndexBuffer --- aka triangles
-  //afxNat                  idxRgn; // if ibuf is shared among other meshes, it should be a base for sections.    
-    afxNat                  triCnt; // count of mapped vertices.
-    afxIndexedTriangle*     tris; // indices of mapped vertices.
-
-    // EXP ---
-    struct
-    {
-        afxNat              triCnt; // count of mapped vertices.
-        afxIndexedTriangle* tris; // indices of mapped vertices.
-    }*                      lods;
-    afxNat                  lodCnt;
-    // --- EXP
-
-
-    afxMeshTopologyCache    cache;
-
-    afxNat                  vtxCnt;
-    afxNat*                 vtxToVtxMap; // vtxCnt
-    afxNat*                 vtxToTriMap; // vtxCnt
-    afxIndexedTriangle*     sideToNeighborMap; // edgeCnt
-    afxNat                  jointsForTriCnt;
-    afxNat*                 jointsForTriMap;
-    afxNat                  triToJointCnt;
-    afxNat*                 triToJointMap;
-};
-#endif
-
 /// The index data for a mesh, given by a afxMeshTopology referenced by the mesh, contains all the indices for the triangles in the mesh. 
 /// These indices always describe a triangle list - that is, each group of three indices describes a single triangle - the data is not organised into strips or fans in any way. 
-/// You can put these indices into an index buffer like this:
+
+AFX_DEFINE_STRUCT(akxMeshSurface)
+{
+    afxNat              mtlIdx;
+    afxNat              baseTriIdx;
+    afxNat              triCnt;
+  //afxBox              aabb; // added this field to ease occlusion culling.
+};
+
+AFX_DEFINE_STRUCT(akxVertexIndexCache)
+{
+    afxLinkage          stream;
+    afxBuffer           buf;
+    afxNat32            base;
+    afxNat32            range;
+    afxNat32            stride; // idxSiz
+    afxMeshTopology     msht;
+};
+
+AFX_DEFINE_STRUCT(akxMeshTopologyBlueprint)
+{
+    afxNat              triCnt;
+    afxNat const*       sideToNeighborMap; // triCnt * 3
+
+    afxNat              surfCnt;
+    afxNat const*       surfToMtlMap; // surfCnt;
+    afxNat const*       baseTrisForSurfMap; // surfCnt; one per surface
+    afxNat const*       trisForSurfMap; // surfCnt; one per surface
+
+    afxNat              vtxCnt;
+    afxNat const*       vtxToVtxMap; // vtxCnt
+    afxNat const*       vtxToTriMap; // vtxCnt
+
+    afxNat              biasCnt;
+    afxNat const*       biasesForTriMap;
+    afxNat const*       triToBiasMap;
+
+    void const*         src;
+    afxNat              srcIdxSiz;
+    void*               udd;
+};
 
 AKX afxNat              AfxCountMeshIndices(afxMeshTopology msht);
 
 AKX afxNat*             AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx);
-AKX afxIndexedTriangle* AfxGetMeshTriangles(afxMeshTopology msht, afxNat baseTriIdx);
+AKX akxIndexedTriangle* AfxGetMeshTriangles(afxMeshTopology msht, afxNat baseTriIdx);
 
 AKX afxNat              AfxCountMeshTriangles(afxMeshTopology msht);
 
 AKX afxNat              AfxCountMeshTriangleEdges(afxMeshTopology msht);
 
 AKX afxNat              AfxCountMeshSurfaces(afxMeshTopology msht);
-AKX afxMeshSurface*     AfxGetMeshSurface(afxMeshTopology msht, afxNat surIdx);
+AKX akxMeshSurface*     AfxGetMeshSurface(afxMeshTopology msht, afxNat surIdx);
 
-AKX afxBool             AfxDescribeMeshCoverage(afxMeshTopology msht, afxNat surIdx, afxMeshSurface* desc);
+AKX afxBool             AfxDescribeMeshCoverage(afxMeshTopology msht, afxNat surIdx, akxMeshSurface* desc);
 
 /// By default, Qwadro always write triangle indices in counter-clockwise winding. 
 /// If you need your indices in clockwise order, or if you've manipulated your mesh vertices such that they've been mirrored in some way, 
@@ -133,40 +116,23 @@ AKX afxBool             AfxDescribeMeshCoverage(afxMeshTopology msht, afxNat sur
 
 AKX void                AfxInvertMeshWinding(afxMeshTopology msht);
 
-/// If you are merging multiple topologies, or processing material groups, sometimes it can be useful to remap the material indices in a afxMeshSurface. 
-/// Qwadro can do this for you: 
+/// If you are merging multiple topologies, or processing material groups, sometimes it can be useful to remap the material indices in a akxMeshSurface. 
+/// For each material index in the afxMeshTopology, it will lookup that index in the remapTable array and replace material index with the value. 
 
 AKX void                AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat const remapTable[]);
 
-/// For each material index in the afxMeshTopology, it will lookup that index in the remapTable array and replace material index with the value. 
 
+AKX afxError            AfxUpdateMeshIndices(afxMeshTopology msht, afxNat baseTriIdx, afxNat triCnt, void const* src, afxNat srcIdxSiz);
 
 AKX afxNat              AfxDetermineMeshIndexSize(afxMeshTopology msht);
 
-AKX afxError            AfxBufferizeMeshTopology(afxMeshTopology msht);
-
-////////////////////////////////////////////////////////////////////////////////
-// MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX_DEFINE_STRUCT(afxMeshTopologySpec)
-{
-    afxNat      triCnt;
-    afxNat      surCnt;
-    afxNat      vtxCnt;
-    
-    void const* src;
-    afxNat      srcIdxSiz;
-    
-    void        (*sur)(afxNat i, afxMeshSurface* mshs, void* udd);
-    void*       udd;
-};
-
-AKX afxError            AfxAcquireMeshTopology(afxSimulation sim, afxNat cnt, afxMeshTopologySpec const specs[], afxMeshTopology topologies[]);
+AKX afxError            AfxAssembleMeshTopology(afxSimulation sim, afxNat cnt, akxMeshTopologyBlueprint const specs[], afxMeshTopology topologies[]);
 
 AKX afxMeshTopology     AfxBuildMeshTopology(afxSimulation sim, afxMeshBuilder const* mshb, afxNat baseSurfIdx, afxNat surfCnt);
 
 AKX afxError            AfxDeserializeMeshTopologies(afxStream in, afxSimulation sim, afxNat cnt, afxMeshTopology topologies[]);
 AKX afxError            AfxSerializeMeshTopologies(afxStream out, afxNat cnt, afxMeshTopology const topologies[]);
 
-#endif//AFX_MESH_TOPOLOGY_H
+#endif//AKX_MESH_TOPOLOGY_H

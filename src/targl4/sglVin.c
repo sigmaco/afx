@@ -19,7 +19,7 @@
 
 #include "qwadro/draw/pipe/avxPipeline.h"
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/exec/afxSystem.h"
 
@@ -190,7 +190,7 @@ _SGL afxError _SglVinDtor(avxVertexInput vin)
 
     if (vin->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 7, (void*)vin->glHandle);
+        _SglDctxDeleteGlRes(dctx, 7, vin->glHandle);
         vin->glHandle = 0;
     }
 

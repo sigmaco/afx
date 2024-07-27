@@ -52,7 +52,7 @@ _SGL afxError _SglCmdbResetCb(avxCmdb cmdb)
             {
                 //AfxDeallocate(all, cmd);
                 //AfxAssertType(idd->cmdArena, afxFcc_AREN);
-                AfxRecycleArenaUnit(&idd->cmdArena, cmd, cmd->siz);
+                AfxRecycleArena(&idd->cmdArena, cmd, cmd->siz);
             }
         }
     }
@@ -60,7 +60,7 @@ _SGL afxError _SglCmdbResetCb(avxCmdb cmdb)
     AfxExhaustArena(&cmdb->m.cmdArena);
 #endif
 
-    AfxSetUpChain(&cmdb->commands, cmdb);
+    AfxDeployChain(&cmdb->commands, cmdb);
 
     return err;
 }
@@ -99,8 +99,8 @@ _SGL afxError _SglCmdbCtor(avxCmdb cmdb, afxCookie const* cookie)
     if (_AvxCmdbStdImplementation.ctor(cmdb, cookie)) AfxThrowError();
     else
     {
-        AfxSetUpChain(&cmdb->commands, cmdb);
-        AfxSetUpChain(&cmdb->echoes, cmdb);
+        AfxDeployChain(&cmdb->commands, cmdb);
+        AfxDeployChain(&cmdb->echoes, cmdb);
 
         cmdb->m.beginCb = _SglCmdbBeginCb;
         cmdb->m.endCb = _SglCmdbEndCb;

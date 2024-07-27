@@ -80,6 +80,13 @@ _AFX afxResult AfxCleanUpChainedClasses(afxChain *provisions)
     return cnt;
 }
 
+_AFXINL afxArena* AfxGetClassArena(afxClass *cls)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxTryAssertType(cls, afxFcc_CLS);
+    return &cls->arena;
+}
+
 _AFXINL afxClass* AfxGetSubClass(afxClass const *cls)
 {
     afxError err = AFX_ERR_NONE;
@@ -310,7 +317,7 @@ _AFX afxNat AfxEnumerateClassInstances(afxClass const* cls, afxNat first, afxNat
     return rslt;
 }
 
-_AFX afxNat AfxEvokeClassInstances(afxClass const* cls, afxBool(*flt)(afxObject, void*), void* fdd, afxNat first, afxNat cnt, afxObject objects[])
+_AFX afxNat AfxEvokeClassInstances(afxClass const* cls, afxBool(*f)(afxObject, void*), void* udd, afxNat first, afxNat cnt, afxObject objects[])
 {
     afxError err = AFX_ERR_NONE;
     AfxTryAssertType(cls, afxFcc_CLS);
@@ -320,29 +327,29 @@ _AFX afxNat AfxEvokeClassInstances(afxClass const* cls, afxBool(*flt)(afxObject,
     if (cls->instCnt)
     {
         AfxEnterSlockShared((void*)&cls->poolLock);
-        rslt = _AfxClsEnumInstances2(cls, FALSE, flt, fdd, first, cnt, objects);
+        rslt = _AfxClsEnumInstances2(cls, FALSE, f, udd, first, cnt, objects);
         AfxExitSlockShared((void*)&cls->poolLock);
     }
     return rslt;
 }
 
-_AFX afxNat _AfxClsInvokeInstances2(afxClass const* cls, afxBool fromLast, afxNat first, afxNat cnt, afxBool(*flt)(afxObject,void*), void* fdd, afxBool(*exec)(afxObject,void*), void *udd)
+_AFX afxNat _AfxClsInvokeInstances2(afxClass const* cls, afxBool fromLast, afxNat first, afxNat cnt, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2)
 {
     afxError err = AFX_ERR_NONE;
     AfxTryAssertType(cls, afxFcc_CLS);
-    AfxAssert(exec);
+    AfxAssert(f2);
     afxNat rslt = 0;
     afxNat i = first;
     afxObject obj;
     
-    if (!flt)
+    if (!f)
     {
         while (_AfxClsEnumInstances(cls, fromLast, i++, 1, &obj))
         {
             AfxAssertObjects(1, &obj, cls->objFcc);
             ++rslt;
 
-            if (!exec(obj, udd)) // if secondary callback doesn't feed back, break the iteration.
+            if (!f2(obj, udd2)) // if secondary callback doesn't feed back, break the iteration.
                 break;
 
             if (++rslt == cnt) // if cnt has been reached, break the iteration.
@@ -355,11 +362,11 @@ _AFX afxNat _AfxClsInvokeInstances2(afxClass const* cls, afxBool fromLast, afxNa
         {
             AfxAssertObjects(1, &obj, cls->objFcc);
 
-            if (flt(obj, fdd)) // pass only if filter has fed.
+            if (f(obj, udd)) // pass only if filter has fed.
             {
                 ++rslt;
 
-                if (!exec(obj, udd)) // if secondary callback don't feed back, break the iteration.
+                if (!f2(obj, udd2)) // if secondary callback don't feed back, break the iteration.
                     break;
 
                 if (++rslt == cnt) // if cnt has been reached, break the iteration.
@@ -370,19 +377,19 @@ _AFX afxNat _AfxClsInvokeInstances2(afxClass const* cls, afxBool fromLast, afxNa
     return rslt;
 }
 
-_AFX afxNat AfxInvokeClassInstances2(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*flt)(afxObject, void*), void* fdd, afxBool(*exec)(afxObject, void*), void *udd)
+_AFX afxNat AfxInvokeClassInstances2(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject, void*), void* udd, afxBool(*f2)(afxObject, void*), void* udd2)
 {
     afxError err = AFX_ERR_NONE;
     AfxTryAssertType(cls, afxFcc_CLS);
     AfxAssert(cnt);
-    AfxAssert(flt);
-    AfxAssert(exec);
+    AfxAssert(f);
+    AfxAssert(f2);
     afxNat rslt = 0;
 
     if (cls->instCnt)
     {
         AfxEnterSlockShared((void*)&cls->poolLock);
-        rslt = _AfxClsInvokeInstances2(cls, FALSE, first, cnt, flt, fdd, exec, udd);
+        rslt = _AfxClsInvokeInstances2(cls, FALSE, first, cnt, f, udd, f2, udd2);
         AfxExitSlockShared((void*)&cls->poolLock);
     }
     return rslt;
@@ -728,7 +735,7 @@ _AFX afxError _AfxConstructClassInstances(afxClass *cls, afxNat cnt, afxObject o
         hdr->extra = NIL;
 
         if (cls->extraSiz)
-            if (!(hdr->extra = AfxRequestArenaUnit(&cls->extraAlloc, cls->extraSiz)))
+            if (!(hdr->extra = AfxAllocateArena(&cls->extraAlloc, cls->extraSiz)))
                 AfxThrowError();
 
         cookie.no = i;
@@ -751,7 +758,7 @@ _AFX afxError _AfxConstructClassInstances(afxClass *cls, afxNat cnt, afxObject o
         }
 
         if (err && hdr->extra)
-            AfxRecycleArenaUnit(&cls->extraAlloc, hdr->extra, cls->extraSiz);
+            AfxRecycleArena(&cls->extraAlloc, hdr->extra, cls->extraSiz);
 
     }
     return err;
@@ -816,6 +823,8 @@ _AFX afxError AfxDeregisterClass(afxClass *cls)
             AfxReleaseObjects(1, (void*[]) { cls->mmu });
     }
 
+    AfxDismantleArena(&cls->arena);
+
     afxClassPlugin* ext;
     afxChain const* plugins = &cls->plugins;
     AfxChainForEveryLinkageB2F(plugins, afxClassPlugin, cls, ext)
@@ -825,7 +834,7 @@ _AFX afxError AfxDeregisterClass(afxClass *cls)
 
     if (cls->extraSiz)
     {
-        AfxDeallocateArena(&cls->extraAlloc);
+        AfxDismantleArena(&cls->extraAlloc);
         cls->extraSiz = 0;
     }
 
@@ -928,7 +937,7 @@ _AFX afxError AfxRegisterClass(afxClass* cls, afxClass* subset, afxChain* host, 
     {
         AfxSetUpSlock(&cls->poolLock);
         AfxEnterSlockExclusive(&cls->poolLock);
-        AfxSetUpPool(&cls->pool, cls->fixedSiz ? AFX_ALIGN(cls->fixedSiz + sizeof(afxObjectBase), sizeof(void*)) : 0, AfxMax(1, cls->unitsPerPage));
+        AfxSetUpPool(&cls->pool, cls->fixedSiz ? AFX_ALIGNED_SIZEOF(cls->fixedSiz + sizeof(afxObjectBase), sizeof(void*)) : 0, AfxMax(1, cls->unitsPerPage));
         AfxExitSlockExclusive(&cls->poolLock);
 
         if ((cls->mmu = cfg->mmu))
@@ -939,11 +948,14 @@ _AFX afxError AfxRegisterClass(afxClass* cls, afxClass* subset, afxChain* host, 
                 AfxThrowError();
         }
     }
+    
+    if (AfxDeployArena(&cls->arena, NIL, AfxHere()))
+        AfxThrowError();
 
-    AfxSetUpChain(&cls->supersets, cls);
+    AfxDeployChain(&cls->supersets, cls);
     AfxPushLinkage(&cls->host, host ? host : &orphanClassChain);
 
-    AfxSetUpChain(&cls->plugins, cls);
+    AfxDeployChain(&cls->plugins, cls);
     cls->extraSiz = 0;
 
     //AfxExitSlockExclusive(&cls->slock);
@@ -1133,7 +1145,7 @@ afxNat AfxRegisterClassExtension(afxClass* cls, afxClassPlugin* const ext)
             cls->extraSiz = newExtraSiz;
             AfxPushLinkage(&ext->cls, &cls->plugins);
 
-            if (AfxAllocateArena(NIL, &cls->extraAlloc, NIL, AfxHere()))
+            if (AfxDeployArena(&cls->extraAlloc, NIL, AfxHere()))
                 AfxThrowError();
         }
     }

@@ -183,13 +183,6 @@ _AFX afxBool AfxFileShouldBeFlushed(afxStream file)
     return file->idd.f.shouldBeFlushed;
 }
 
-#if 0
-_AFX afxFileSection* AfxGetFileSection(afxFile file)
-{
-    return (afxFileSection*)(((afxByte*)file->hdr) + file->hdr->secOffset);
-}
-#endif
-
 _AFX afxResult AfxFlushFile(afxStream file)
 {
     afxError err = AFX_ERR_NONE;
@@ -202,7 +195,7 @@ _AFX afxResult AfxFlushFile(afxStream file)
     return err;
 }
 
-_AFX afxError AfxReadFileString(afxStream file, afxRestring* str)
+_AFX afxError AfxReadFileString(afxStream file, afxString* str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_IOB);
@@ -210,9 +203,9 @@ _AFX afxError AfxReadFileString(afxStream file, afxRestring* str)
     AfxAssert(str);
     AfxAssert(AfxStringIsWriteable(str));
     
-    err = !fgets(str->str.buf, str->cap, file->idd.f.fd);
+    err = !fgets(str->buf, str->cap, file->idd.f.fd);
 
-    str->str.len = AfxStrlen(str->str.start);
+    str->len = AfxStrlen(str->start);
 
     return err;
 }
@@ -250,152 +243,13 @@ _AFX afxString const* AfxGetFilePathString(afxStream file)
     return AfxGetUriString(&file->idd.f.path);
 }
 
-_AFX afxResult AfxCopyFilePathString(afxStream file, afxRestring* str)
+_AFX afxResult AfxCopyFilePathString(afxStream file, afxString* str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_IOB);
     AfxAssert(file->pimpl == &fileStreamImpl);
     return AfxCopyString(str, AfxGetUriString(&file->idd.f.path));
 }
-
-#if 0
-_AFX void* LoadFileSection(afxUrdSection const* sec, void *DestinationMemory, void *Reader, afxBool fileIsByteReversed)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(sec);
-    AfxAssert(DestinationMemory);
-    AfxAssert(Reader);
-
-    void *result = 0;
-    void *Result = 0;
-
-    if (sec->expandedDataSiz)
-    {
-        afxNat alignedSiz = (sec->expandedDataSiz + 3) & 0xFFFFFFFC;
-
-        if (DestinationMemory)
-        {
-            result = DestinationMemory;
-            Result = DestinationMemory;
-        }
-        else
-        {
-            //use Section->InternalAlignment
-            Result = AfxAllocate(1, alignedSiz, sec->internalAlignment, AfxHere());
-            result = Result;
-        }
-
-        if (result)
-        {
-            if (sec->fmt)
-            {
-                afxNat v8 = AfxGetCompressionPaddingSize(sec->fmt);
-                void *v9 = AfxAllocate(1, sec->dataSiz + v8, 0, AfxHere());
-
-                if (v9)
-                {
-                    AfxReadStreamAt(Reader, sec->dataOffset, sec->dataSiz, 0, v9);
-
-                    if (!AfxDecompressData(sec->fmt, fileIsByteReversed, sec->dataSiz, v9, /*Section->first16Bit*/0, /*Section->first8Bit*/0, sec->expandedDataSiz, Result))
-                    {
-                        AfxDeallocate(Result);
-                        Result = 0;
-                    }
-                }
-
-                AfxDeallocate(v9);
-                result = Result;
-            }
-            else
-            {
-                AfxReadStreamAt(Reader, sec->dataOffset, sec->dataSiz, 0, result);
-                result = Result;
-            }
-        }
-    }
-    return result;
-}
-
-_AFX afxBool AfxOpenFileSections(afxFile file, afxNat baseSec, afxNat secCnt, void *buf[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &file, afxFcc_FILE);
-
-    AfxAssert(file->hdr);
-    AfxAssertRange(file->openSecCnt, baseSec, secCnt);
-
-    afxBool ret = TRUE;
-
-    afxUrdSection *sections = ((afxUrdSection*)((afxByte*)file->hdr + file->hdr->secOffset));
-
-    for (afxNat i = 0; i < secCnt; i++)
-    {
-        afxNat secIdx = baseSec + i;
-        afxUrdSection *sec = &sections[secIdx];
-
-        if (!file->openSections[secIdx]) AfxThrowError();
-        else
-        {
-            file->openSections[secIdx] = LoadFileSection(&sections[secIdx], buf, file, FALSE);
-            file->isUserMem[secIdx] = !!buf;
-
-            if (!(!sec->expandedDataSiz || file->openSections[secIdx]))
-                ret = FALSE;
-        }
-    }
-    return ret;
-}
-
-_AFX afxBool AfxOpenFileSection(afxFile file, afxNat secIdx, void *buf)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxOpenFileSections(file, secIdx, 1, buf ? &buf : NIL);
-}
-
-_AFX void AfxCloseFileSections(afxFile file, afxNat baseSec, afxNat secCnt)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &file, afxFcc_FILE);
-
-    afxMmu mmu = AfxGetIoContext();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-
-    AfxAssertRange(file->openSecCnt, baseSec, secCnt);
-
-    for (afxNat i = 0; i < secCnt; i++)
-    {
-        afxNat secIdx = baseSec + i;
-        AfxAssertRange(file->openSecCnt, secIdx, 1);
-
-        if (file->openSections[secIdx])
-        {
-            if (!file->isUserMem[secIdx])
-                AfxDeallocate(mmu, file->openSections[secIdx]);
-
-            file->isUserMem[secIdx] = FALSE;
-            file->marshalled[secIdx] = FALSE;
-            file->openSections[secIdx] = NIL;
-        }
-    }
-}
-
-_AFX void AfxCloseFileSection(afxFile file, afxNat secIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &file, afxFcc_FILE);
-    AfxCloseFileSections(file, secIdx, 1);
-}
-
-_AFX void AfxCloseAllFileSections(afxFile file)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &file, afxFcc_FILE);
-
-    if (file->openSecCnt)
-        AfxCloseFileSections(file, 0, file->openSecCnt);
-}
-#endif
 
 #if 0
 _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
@@ -526,17 +380,18 @@ _AFX afxStream AfxOpenFile(afxUri const* uri, afxIoFlags flags)
     *modePtr++ = '+';
     *modePtr++ = 'b';
 
+    afxNat diskId = 0;
     afxUri path;
     AfxAssert(uri);
     AfxClipUriPath(&path, uri);
     AfxAssert(!AfxUriIsBlank(&path));
     afxUri2048 uri2;
     AfxMakeUri2048(&uri2, NIL);
-    AfxResolveUri((afxFileFlags)flags, &path, &uri2.uri);
+    AfxResolveUri2((afxFileFlags)flags, &path, &uri2.uri, &diskId);
 
     AfxLogEcho("Opening file... <%.*s>('%.*s'),%x", AfxPushString(AfxGetUriString(uri)), AfxPushString(AfxGetUriString(&uri2.uri)), flags);
 
-    afxChar const *rawName = AfxGetUriStorage(&uri2.uri, 0);
+    afxChar const *rawName = AfxGetUriData(&uri2.uri, 0);
 
     if (!(idd.f.fd = fopen(rawName, mode))) AfxThrowError();
     else
@@ -550,7 +405,7 @@ _AFX afxStream AfxOpenFile(afxUri const* uri, afxIoFlags flags)
 
         AfxDuplicateUri(&idd.f.path, &uri2.uri);
 
-        if (!(file = AfxAcquireImplementedStream(ioFlags, &fileStreamImpl, &idd))) AfxThrowError();
+        if (!(file = AfxAcquireImplementedStream(diskId, ioFlags, &fileStreamImpl, &idd))) AfxThrowError();
         else
         {
 
@@ -570,13 +425,14 @@ _AFX afxStream AfxLoadFile(afxUri const* uri)
     AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));
 
+    afxNat diskId = 0;
     afxUri2048 path;
     AfxMakeUri2048(&path, NIL);
-    AfxResolveUri(afxFileFlag_R, uri, &path.uri);
+    AfxResolveUri2(afxFileFlag_R, uri, &path.uri, &diskId);
 
     AfxLogEcho("Loading file... <%.*s>('%.*s')", AfxPushString(AfxGetUriString(uri)), AfxPushString(AfxGetUriString(&path.uri)));
 
-    afxChar const *rawName = AfxGetUriStorage(&path.uri, 0);
+    afxChar const *rawName = AfxGetUriData(&path.uri, 0);
     FILE* fd;
 
     if (!(fd = fopen(rawName, "rb"))) AfxThrowError();
@@ -588,7 +444,10 @@ _AFX afxStream AfxLoadFile(afxUri const* uri)
         afxNat len = ftell(fd);
         fseek(fd, 0, SEEK_SET);
 
-        if (!(iob = AfxAcquireStream(afxIoFlag_R, len))) AfxThrowError();
+        if (diskId == AFX_INVALID_INDEX)
+            diskId = 0;
+
+        if (!(iob = AfxAcquireStream(diskId, afxIoFlag_R, len))) AfxThrowError();
         else
         {
             afxByte* buf = (afxByte*)AfxGetStreamBuffer(iob, 0);
@@ -614,7 +473,7 @@ _AFX afxError AfxReloadFile(afxStream iob, afxUri const *uri)
 
     AfxLogEcho("Reloading file %u... <%.*s>('%.*s')", AfxGetObjectId(iob), AfxPushString(AfxGetUriString(uri)), AfxPushString(AfxGetUriString(&path.uri)));
 
-    afxChar const *rawName = AfxGetUriStorage(&path.uri, 0);
+    afxChar const *rawName = AfxGetUriData(&path.uri, 0);
     FILE* fd;
 
     if (!(fd = fopen(rawName, "rb"))) AfxThrowError();
@@ -649,7 +508,7 @@ _AFX afxStream AfxWrapFile(void* fd, afxIoFlags flags)
     idd.f.fd = fd;
     idd.f.isUserFd = TRUE;
 
-    if (!(file = AfxAcquireImplementedStream(flags, &fileStreamImpl, &idd)))
+    if (!(file = AfxAcquireImplementedStream(0, flags, &fileStreamImpl, &idd)))
         AfxThrowError();
 
     return file;

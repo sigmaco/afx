@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "../dev/AvxDevKit.h"
 
 _AVX avxColorSwizzling const AFX_STD_COLOR_SWIZZLING =
 {
@@ -49,7 +49,7 @@ _AVXINL void AfxCopyColor(afxColor color, afxColor const from)
     afxError err = AFX_ERR_NONE;
     AfxAssert(color);
     AfxAssert(from);
-    AfxCopyV4d(color, from);
+    AfxV4dCopy(color, from);
 }
 
 _AVXINL void AfxMakeRgba(afxColor col, afxByte r, afxByte g, afxByte b, afxByte a)
@@ -73,7 +73,7 @@ _AVXINL void AfxSetRgba(afxColor col, afxReal r, afxReal g, afxReal b, afxReal a
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(col);
-    AfxSetV4d(col, r, g, b, a);
+    AfxV4dSet(col, r, g, b, a);
 }
 
 _AVXINL void AfxSetRgb(afxColor col, afxReal r, afxReal g, afxReal b)
@@ -105,7 +105,7 @@ _AVXINL void AfxAddColor(afxColor c, afxColor const a, afxColor const b)
     AfxAssert(c);
     AfxAssert(a);
     AfxAssert(b);
-    AfxAddV4d(c, a, b);
+    AfxV4dAdd(c, a, b);
 }
 
 _AVXINL void AfxSubColor(afxColor c, afxColor const a, afxColor const b)
@@ -114,7 +114,7 @@ _AVXINL void AfxSubColor(afxColor c, afxColor const a, afxColor const b)
     AfxAssert(c);
     AfxAssert(a);
     AfxAssert(b);
-    AfxSubV4d(c, a, b);
+    AfxV4dSub(c, a, b);
 }
 
 _AVXINL void AfxScaleColor(afxColor c, afxColor const from, afxReal lambda)
@@ -122,7 +122,7 @@ _AVXINL void AfxScaleColor(afxColor c, afxColor const from, afxReal lambda)
     afxError err = AFX_ERR_NONE;
     AfxAssert(c);
     AfxAssert(from);
-    AfxScaleV4d(c, from, lambda);
+    AfxV4dScale(c, from, lambda);
 }
 
 _AVXINL void AfxPackRgba8(afxColor const c, afxRgba8 out)

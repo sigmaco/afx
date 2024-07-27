@@ -1,0 +1,9 @@
+<map>
+    <object id='bibliotheca-uvless' pos='10.0, 10.0, 10.0' rot='0.0, 0.0, 0.0'>
+        <ScaleShear>1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0</ScaleShear>
+    </object>
+    <object id='w_mill_3age' pos='10.0, 10.0, 10.0' rot='0.0, 0.0, 0.0'>
+        <ScaleShear>1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0</ScaleShear>
+    </object>
+    
+</map>

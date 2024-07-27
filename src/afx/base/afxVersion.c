@@ -28,7 +28,7 @@ _AFX afxString const qwadroSignature = AFX_STRING(
     "              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              \n"
     "                                                                               \n"
     "                               Public Test Build                               \n"
-    "                   (c) 2017 SIGMA, Engineering In Technology                   \n"
+    "                           (c) 2017 SIGMA FEDERATION                           \n"
     "                                www.sigmaco.org                                \n"
     "                                                                               \n"
 );

@@ -87,6 +87,7 @@ AFX_OBJECT(afxFile)
 #endif
 
 #ifdef _AFX_STORAGE_C
+
 AFX_DEFINE_STRUCT(afxStorageUnit)
 {
     afxLinkage          fsys;
@@ -99,7 +100,13 @@ AFX_OBJECT(afxStorage)
 {
     afxUri8             point; // name of exchange point // AFX_FS_SYM_LEN // can't have control chars. Actually works like a variable without $().
     afxChain            storages;
+    afxChain            classes;
+    afxClass            iosCls;
+    afxClass            fileCls;
+    afxClass            archCls;
+    afxClass            urdCls;
 };
+
 #endif//_AFX_STORAGE_C
 
 #endif//AFX_DEV_IO_BASE_H

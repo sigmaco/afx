@@ -21,10 +21,10 @@
 _AFXINL void AfxComputeTriangleNormal(afxV3d const a, afxV3d const b, afxV3d const c, afxV3d n)
 {
     afxV3d t, t2;
-    AfxSubV3d(t, b, a);
-    AfxSubV3d(t2, c, a);
-    AfxCrossV3d(n, t, t2);
-    AfxNormalizeV3d(n, n);
+    AfxV3dSub(t, b, a);
+    AfxV3dSub(t2, c, a);
+    AfxV3dCross(n, t, t2);
+    AfxV3dNormalize(n, n);
 }
 
 // BaryCentric
@@ -35,13 +35,13 @@ _AFXINL void AfxBarycentricV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d 
     // Adapted from DirectXMath. Works?
 
     afxV2d p10;
-    AfxSubV2d(p10, b, a);
+    AfxV2dSub(p10, b, a);
 
     afxV2d fv;
     AfxFillV2d(fv, f);
 
     afxV2d p20;
-    AfxSubV2d(p20, c, a);
+    AfxV2dSub(p20, c, a);
 
     afxV2d gv;
     AfxFillV2d(gv, g);
@@ -58,13 +58,13 @@ _AFXINL void AfxBarycentricV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d 
     // https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec4barycentric
 
     afxV3d p10;
-    AfxSubV3d(p10, b, a);
+    AfxV3dSub(p10, b, a);
 
     afxV3d fv;
     AfxFillV3d(fv, f);
 
     afxV3d p20;
-    AfxSubV3d(p20, c, a);
+    AfxV3dSub(p20, c, a);
 
     afxV3d gv;
     AfxFillV3d(gv, g);
@@ -81,13 +81,13 @@ _AFXINL void AfxBarycentricV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d 
     // https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxvec4barycentric
 
     afxV4d p10;
-    AfxSubV4d(p10, b, a);
+    AfxV4dSub(p10, b, a);
 
     afxV4d fv;
     AfxFillV4d(fv, f);
 
     afxV4d p20;
-    AfxSubV4d(p20, c, a);
+    AfxV4dSub(p20, c, a);
 
     afxV4d gv;
     AfxFillV4d(gv, g);
@@ -105,10 +105,10 @@ _AFXINL void AfxBarycentricV2d2(afxV2d v, afxV2d const a, afxV2d const b, afxV2d
     // From DirectXMath
 
     afxV2d p10;
-    AfxSubV2d(p10, b, a);
+    AfxV2dSub(p10, b, a);
 
     afxV2d p20;
-    AfxSubV2d(p20, c, a);
+    AfxV2dSub(p20, c, a);
 
     afxV2d tmp;
     AfxMadV2d(tmp, p10, f, a);
@@ -121,10 +121,10 @@ _AFXINL void AfxBarycentricV3d2(afxV3d v, afxV3d const a, afxV3d const b, afxV3d
     // From DirectXMath
 
     afxV3d p10;
-    AfxSubV3d(p10, b, a);
+    AfxV3dSub(p10, b, a);
 
     afxV3d p20;
-    AfxSubV3d(p20, c, a);
+    AfxV3dSub(p20, c, a);
 
     afxV3d tmp;
     AfxMadV3d(tmp, p10, f, a);
@@ -137,10 +137,10 @@ _AFXINL void AfxBarycentricV4d2(afxV4d v, afxV4d const a, afxV4d const b, afxV4d
     // From DirectXMath
 
     afxV4d p10;
-    AfxSubV4d(p10, b, a);
+    AfxV4dSub(p10, b, a);
 
     afxV4d p20;
-    AfxSubV4d(p20, c, a);
+    AfxV4dSub(p20, c, a);
 
     afxV4d tmp;
     AfxMadV4d(tmp, p10, f, a);

@@ -21,59 +21,59 @@
 
 #include "qwadro/draw/math/avxViewport.h"
 #include "qwadro/draw/afxDrawDefs.h"
-#include "qwadro/draw/io/afxRaster.h"
-#include "qwadro/draw/io/afxBuffer.h"
+#include "qwadro/draw/afxRaster.h"
+#include "qwadro/draw/afxBuffer.h"
 #include "qwadro/draw/pipe/avxSampler.h"
 #include "qwadro/draw/io/afxTypography.h"
 #include "qwadro/draw/pipe/avxQueryPool.h"
 
-typedef enum afxSurfaceStoreOp
+typedef enum avxStoreOp
 /// An enumerated value indicating the load operation to perform on target surface prior to executing the render pass
 {
     /// Stores the resulting value of the render pass for this attachment.
-    afxSurfaceStoreOp_STORE,
+    avxStoreOp_STORE,
 
     /// Discards the resulting value of the render pass for this attachment.
-    afxSurfaceStoreOp_DISCARD,
+    avxStoreOp_DISCARD,
 
-    afxSurfaceStoreOp_DONT_CARE,
-} afxSurfaceStoreOp;
+    avxStoreOp_DONT_CARE,
+} avxStoreOp;
 
-typedef enum afxSurfaceLoadOp
+typedef enum avxLoadOp
 /// An enumerated value indicating the store operation to perform on target surface after executing the render pass
 {
     /// Loads the clearValue for this attachment into the render pass.
-    afxSurfaceLoadOp_CLEAR,
+    avxLoadOp_CLEAR,
 
     /// Loads the existing value for this attachment into the render pass.
-    afxSurfaceLoadOp_LOAD,
+    avxLoadOp_LOAD,
 
-    afxSurfaceLoadOp_DONT_CARE
-} afxSurfaceLoadOp;
+    avxLoadOp_DONT_CARE
+} avxLoadOp;
 
-AFX_DEFINE_STRUCT(afxClearRect)
+AFX_DEFINE_STRUCT(avxClearRect)
 {
-    afxRect             rect; /// the two-dimensional region to be cleared.
+    afxRect             area; /// the two-dimensional region to be cleared.
     afxNat32            baseLayer; /// the first layer to be cleared.
     afxNat32            layerCnt; /// the number of layers to clear.
 };
 
-AFX_DEFINE_STRUCT(afxDrawTarget)
+AFX_DEFINE_STRUCT(avxDrawTarget)
 {
-    afxSurfaceLoadOp    loadOp; /// Indicates the load operation to perform on view prior to executing the render pass.
-    afxSurfaceStoreOp   storeOp; /// The store operation to perform on view after executing the render pass.
-    afxClearValue       clearValue; /// Indicates the value to clear view to prior to executing the render pass.
+    avxLoadOp           loadOp; /// Indicates the load operation to perform on view prior to executing the render pass.
+    avxStoreOp          storeOp; /// The store operation to perform on view after executing the render pass.
+    avxClearValue       clearValue; /// Indicates the value to clear view to prior to executing the render pass.
 };
 
-AFX_DEFINE_STRUCT(afxSynthesisConfig)
+AFX_DEFINE_STRUCT(avxSynthesisConfig)
 {
     avxCanvas           canv;
     afxRect             area;
     afxNat              layerCnt;
     afxNat              rasterCnt;
-    afxDrawTarget const*rasters;
-    afxDrawTarget const*depth;
-    afxDrawTarget const*stencil;
+    avxDrawTarget const*rasters;
+    avxDrawTarget const*depth;
+    avxDrawTarget const*stencil;
 };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ AFX_DEFINE_STRUCT(afxSynthesisConfig)
 
 AVX afxCmdId                AvxCmdAdjustScissors
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxNat                  baseIdx, /// is the index of the first scissor whose state is updated by the command.
     afxNat                  cnt, /// is the number of scissors whose rectangles are updated by the command.
     afxRect const           rects[] /// is a pointer to an array of afxRect structures defining scissor rectangles.
@@ -98,7 +98,7 @@ AVX afxCmdId                AvxCmdAdjustScissors
 
 AVX afxCmdId                AvxCmdAdjustCurtains
 (
-    avxCmdb            cmdb, 
+    avxCmdb                 cmdb, 
     afxNat                  baseIdx, /// the first curtain rectangle whose state is updated by the command.
     afxNat                  cnt, /// the number of curtain rectangles updated by the command.
     afxRect const           rects[] /// an array of afxRect structures defining curtain rectangles.
@@ -111,8 +111,8 @@ AVX afxCmdId                AvxCmdAdjustCurtains
 
 AVX afxCmdId                AvxCmdBeginSynthesis
 (
-    avxCmdb            cmdb,
-    afxSynthesisConfig const*cfg /// is a pointer to a afxSynthesisConfig structure specifying details of the render pass instance to begin.
+    avxCmdb                 cmdb,
+    avxSynthesisConfig const*cfg /// is a pointer to a avxSynthesisConfig structure specifying details of the render pass instance to begin.
 );
 
 /// End a dynamic render canvas instance.
@@ -120,7 +120,7 @@ AVX afxCmdId                AvxCmdBeginSynthesis
 
 AVX afxCmdId                AvxCmdFinishSynthesis
 (
-    avxCmdb            cmdb
+    avxCmdb                 cmdb
 );
 
 /// Transition to the next pass of a render canvas.
@@ -130,7 +130,7 @@ AVX afxCmdId                AvxCmdFinishSynthesis
 
 AVX afxCmdId                AvxCmdNextPass
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxBool                 useAuxScripts /// specifies how the commands in the next subpass will be provided, in the same fashion as the corresponding parameter of vkCmdBeginRenderPass.
 );
 
@@ -138,7 +138,7 @@ AVX afxCmdId                AvxCmdNextPass
 
 AVX afxCmdId                AvxCmdDisableRasterization
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxBool                 disable /// controls whether primitives are discarded immediately before the rasterization stage.
 );
 
@@ -146,7 +146,7 @@ AVX afxCmdId                AvxCmdDisableRasterization
 
 AVX afxCmdId                AvxCmdEnableDepthBias
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxBool                 enable /// controls whether to bias fragment depth values.
 );
 
@@ -154,7 +154,7 @@ AVX afxCmdId                AvxCmdEnableDepthBias
 
 AVX afxCmdId                AvxCmdSetDepthBias
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxReal                 constFactor, /// is a scalar factor controlling the constant depth value added to each fragment.
     afxReal                 clamp, /// is the maximum (or minimum) depth bias of a fragment.
     afxReal                 slopeFactor /// is a scalar factor applied to a fragment’s slope in depth bias calculations.
@@ -164,7 +164,7 @@ AVX afxCmdId                AvxCmdSetDepthBias
 
 AVX afxCmdId                AvxCmdSetLineWidth
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxReal                 lineWidth /// is the width of rasterized line segments.
 );
 
@@ -172,7 +172,7 @@ AVX afxCmdId                AvxCmdSetLineWidth
 
 AVX afxCmdId                AvxCmdEnableDepthTest
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxBool                 enable /// specifies if the depth test is enabled.
 );
 
@@ -180,7 +180,7 @@ AVX afxCmdId                AvxCmdEnableDepthTest
 
 AVX afxCmdId                AvxCmdSetDepthCompareOp
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     avxCompareOp            op /// is a avxCompareOp value specifying the comparison operator used for the Depth Comparison step of the depth test.
 );
 
@@ -188,7 +188,7 @@ AVX afxCmdId                AvxCmdSetDepthCompareOp
 
 AVX afxCmdId                AvxCmdDisableDepthWrite
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxBool                 disable /// specifies if depth writes are disabled.
 );
 
@@ -196,7 +196,7 @@ AVX afxCmdId                AvxCmdDisableDepthWrite
 
 AVX afxCmdId                AvxCmdEnableStencilTest
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxBool                 enable /// specifies if the stencil test is enabled.
 );
 
@@ -204,7 +204,7 @@ AVX afxCmdId                AvxCmdEnableStencilTest
 
 AVX afxCmdId                AvxCmdSetStencilCompareMask
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the compare mask.
     afxNat32                compareMask /// is the new value to use as the stencil compare mask.
 );
@@ -213,7 +213,7 @@ AVX afxCmdId                AvxCmdSetStencilCompareMask
 
 AVX afxCmdId                AvxCmdSetStencilWriteMask
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the write mask, as described above for vkCmdSetStencilCompareMask.
     afxNat32                writeMask /// is the new value to use as the stencil write mask.
 );
@@ -222,7 +222,7 @@ AVX afxCmdId                AvxCmdSetStencilWriteMask
 
 AVX afxCmdId                AvxCmdSetStencilReference
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to
     afxNat32                reference /// is the new value to use as the stencil reference value.
 );
@@ -231,7 +231,7 @@ AVX afxCmdId                AvxCmdSetStencilReference
 
 AVX afxCmdId                AvxCmdEnableDepthBoundsTest
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxBool                 enable /// specifies if the depth bounds test is enabled.
 );
 
@@ -239,7 +239,7 @@ AVX afxCmdId                AvxCmdEnableDepthBoundsTest
 
 AVX afxCmdId                AvxCmdSetDepthBounds
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxV2d const            bounds /// is the minimum and maximum depth bounds.
 );
 
@@ -247,7 +247,7 @@ AVX afxCmdId                AvxCmdSetDepthBounds
 
 AVX afxCmdId                AvxCmdSetBlendConstants
 (
-    avxCmdb            cmdb,
+    avxCmdb                 cmdb,
     afxV4d const            blendConstants /// is an array of four values specifying the Rc, Gc, Bc, and Ac components of the blend constant color used in blending, depending on the blend factor.
 );
 

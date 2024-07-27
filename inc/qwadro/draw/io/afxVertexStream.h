@@ -19,7 +19,7 @@
 #ifndef AVX_VERTEX_BUFFER_H
 #define AVX_VERTEX_BUFFER_H
 
-#include "qwadro/draw/io/afxBuffer.h"
+#include "qwadro/draw/afxBuffer.h"
 #include "qwadro/draw/pipe/avxVertexInput.h"
 
 AFX_DECLARE_STRUCT(afxVertexBufferSegment);
@@ -34,20 +34,36 @@ AFX_DEFINE_STRUCT(afxVertexBufferSegment)
     afxNat32            range;
 };
 
-AFX_DEFINE_STRUCT(afxVertexBufferRoom)
+AFX_DEFINE_STRUCT(afxVertexStreamB)
 {
-    afxLinkage          vbuf;
-    afxNat32            base;
-    afxNat32            range;
+    afxLinkage          din;
+    afxBuffer           buf;
+    afxBufferAccess     bufAcc;
+    afxSize             bufSiz;
+    struct
+    {
+        afxNat32        base;
+        afxNat32        range;
+        afxNat32        stride;
+    }                   src[2];
+    /*
+    afxNat              attrCnt;
+    struct
+    {
+        afxNat          srcIdx;
+        afxNat32        offset;
+        afxVertexFormat fmt;
+    }                   attrs[];
+    */
 };
 
 AFX_OBJECT(afxVertexBuffer)
 {
-    afxChain            rooms; /// spaces that can be occupied.
-    afxSize             freeSiz;
+    afxBuffer           buf;
     afxBufferAccess     access;
     afxSize             bufSiz;
-    afxBuffer           buf;    
+    afxSize             freeSiz;
+    afxChain            rooms; /// spaces that can be occupied.
 };
 
 #endif//_AVX_VERTEX_BUFFER_C
@@ -66,7 +82,7 @@ AVX afxNat          AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
 AVX avxVertexInput  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
 AVX afxNat          AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
 
-AFX_DECLARE_STRUCT(akxVertexDataCache);
+//AFX_DECLARE_STRUCT(akxVertexCache);
 
 #ifdef _AVX_DRAW_C
 #ifdef _AVX_INDEX_BUFFER_C

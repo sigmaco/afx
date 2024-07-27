@@ -148,21 +148,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\dep_\vgl\vgl.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxBuffer.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxRaster.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\avxCamera.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawOperation.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawTechnique.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\avxCmdb.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawBridge.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawContext.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxDrawDefs.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawInput.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawOutput.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawSystem.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxUnivideo.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxPixel.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\avxShader.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawBridge.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawContext.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawDevice.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawInput.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawOutput.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\imm\avxPaint.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\io\afxBuffer.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\io\afxRaster.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\io\avxShader.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxDrawTechnique.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\avxShaderBlueprint.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxTarga.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxTxd.h" />
@@ -200,38 +200,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\dep_\vgl\vgl.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxBuffer.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxRaster.c" />
     <ClCompile Include="..\..\src\afx\draw\avxCamera.c" />
-    <ClCompile Include="..\..\src\afx\draw\afxDrawOperation.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\draw\afxDrawTechnique.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\src\afx\draw\avxCmdb.c" />
-    <ClCompile Include="..\..\src\afx\draw\afxDrawBridge.c" />
-    <ClCompile Include="..\..\src\afx\draw\afxDrawContext.c" />
     <ClCompile Include="..\..\src\afx\draw\afxDrawDefs.c" />
-    <ClCompile Include="..\..\src\afx\draw\afxDrawInput.c" />
-    <ClCompile Include="..\..\src\afx\draw\afxDrawOutput.c" />
-    <ClCompile Include="..\..\src\afx\draw\afxDrawSystem.c" />
     <ClCompile Include="..\..\src\afx\draw\afxPixel.c" />
+    <ClCompile Include="..\..\src\afx\draw\avxShader.c" />
+    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawBridge.c" />
+    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawContext.c" />
+    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawDevice.c" />
+    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawInput.c" />
+    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawOutput.c" />
+    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawSystem.c" />
     <ClCompile Include="..\..\src\afx\draw\imm\avxPaint.c" />
-    <ClCompile Include="..\..\src\afx\draw\io\afxBuffer.c" />
-    <ClCompile Include="..\..\src\afx\draw\io\afxRaster.c" />
-    <ClCompile Include="..\..\src\afx\draw\io\avxShader.c" />
+    <ClCompile Include="..\..\src\afx\draw\io\afxDrawTechnique.c" />
     <ClCompile Include="..\..\src\afx\draw\io\afxTarga.c" />
-    <ClCompile Include="..\..\src\afx\draw\io\afxTxd.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\src\afx\draw\io\afxTxd.c" />
     <ClCompile Include="..\..\src\afx\draw\io\afxTypography.c" />
     <ClCompile Include="..\..\src\afx\draw\io\afxVertexStream.c" />
     <ClCompile Include="..\..\src\afx\draw\io\afxXsh.c" />

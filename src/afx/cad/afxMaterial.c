@@ -16,17 +16,16 @@
 
 
 #define _AFX_SIM_C
-#define _AFX_SIMULATION_C
-#define _AFX_MATERIAL_C
-#include "qwadro/sim/afxSimulation.h"
-#include "qwadro/math/afxVector.h"
+#define _AKX_SIMULATION_C
+#define _AKX_MATERIAL_C
+#include "../sim/dev/AkxSimDevKit.h"
 
 _AKX void AfxColorizeMaterial(afxMaterial mtl, afxV4d const color)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
     AfxAssert(color);
-    AfxCopyV4d(mtl->color, color);
+    AfxV4dCopy(mtl->color, color);
 }
 
 _AKX void AfxShineMaterial(afxMaterial mtl, afxReal shininess)
@@ -112,7 +111,7 @@ _AKX afxMaterial AfxFindSubmaterial(afxMaterial mtl, afxString const *usage)
 
     for (afxNat i = 0; i < mtl->mapCnt; i++)
     {
-        if (0 == AfxCompareStringCi(usage, &mtl->maps[i].usage.str))
+        if (0 == AfxCompareStringCi(usage, &mtl->maps[i].usage))
         {
             afxMaterial subMtl = mtl->maps[i].sub;
             AfxTryAssertObjects(1, &subMtl, afxFcc_MTL);
@@ -137,7 +136,7 @@ _AKX void AfxRebindSubmaterial(afxMaterial mtl, afxNat mapIdx, afxMaterial subMt
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
     AfxAssert(mapIdx < mtl->mapCnt);
-    afxMaterialMap* map = &mtl->maps[mapIdx];
+    akxMaterialMap* map = &mtl->maps[mapIdx];
 
     afxMaterial subMtl2 = map->sub;
 
@@ -163,7 +162,7 @@ _AKX void AfxResetMaterialMap(afxMaterial mtl, afxNat mapIdx, afxString const* u
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
     AfxAssertRange(mtl->mapCnt, mapIdx, 1);
-    afxMaterialMap* map = &mtl->maps[mapIdx];
+    akxMaterialMap* map = &mtl->maps[mapIdx];
 
     AfxDeallocateString(&map->usage);
     AfxCloneString(&map->usage, usage);
@@ -187,11 +186,11 @@ _AKX void AfxResetMaterialMap(afxMaterial mtl, afxNat mapIdx, afxString const* u
     }
 }
 
-_AKX afxString const* AfxGetMaterialId(afxMaterial mtl)
+_AKX afxString const* AfxGetMaterialUrn(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
-    return &mtl->id.str;
+    return &mtl->urn;
 }
 
 _AKX afxError _AkxMtlDtor(afxMaterial mtl)
@@ -217,7 +216,7 @@ _AKX afxError _AkxMtlDtor(afxMaterial mtl)
     if (mtl->tex)
         AfxReleaseObjects(1, (void*[]) { mtl->tex });
 
-    AfxDeallocateString(&mtl->id);
+    AfxDeallocateString(&mtl->urn);
 
     return err;
 }
@@ -233,9 +232,9 @@ _AKX afxError _AkxMtlCtor(afxMaterial mtl, afxCookie const *cookie)
     afxRaster tex = cookie->udd[2];
     afxNat mapCnt = *((afxNat const *)cookie->udd[2]);
     
-    AfxCloneString(&mtl->id, id);
+    AfxCloneString(&mtl->urn, id);
     
-    AfxZeroV4d(mtl->color);
+    AfxV4dZero(mtl->color);
     mtl->shininess = 0.5f;
 
     afxMmu mmu = AfxGetSimulationMmu(sim);
@@ -252,11 +251,11 @@ _AKX afxError _AkxMtlCtor(afxMaterial mtl, afxCookie const *cookie)
     {
         for (afxNat i = 0; i < mapCnt; i++)
         {
-            //afxMaterialBlueprintMap *mapBp = AfxGetArrayUnit(&blueprint->maps, i);
+            //akxMaterialBlueprintMap *mapBp = AfxGetArrayUnit(&blueprint->maps, i);
             
-            afxMaterialMap *map = &mtl->maps[i];
+            akxMaterialMap *map = &mtl->maps[i];
             //AfxCloneString(&map->usage, &(mapBp->semantic.str));
-            AfxResetString(&map->usage.str);
+            AfxResetString(&map->usage);
             
 #if 0
             if (AfxUriIsBlank(&mapBp->uri.uri)) map->sub = NIL;

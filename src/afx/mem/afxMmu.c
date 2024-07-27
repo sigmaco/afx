@@ -26,7 +26,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_MMU_C
-#include "qwadro/exec/afxSystem.h"
+#include "../src/afx/dev/afxDevCoreBase.h"
 
 typedef struct _afxArbitraryChunk
 {
@@ -36,8 +36,8 @@ typedef struct _afxArbitraryChunk
     afxChar const       *file;
 #endif
     _AFX_DBG_FCC;
-    afxSimd(afxByte)  gap[16];
-    afxSimd(afxByte)  data[];
+    afxByte AFX_SIMD gap[16];
+    afxByte AFX_SIMD data[];
 } _afxArbitraryChunk;
 
 _AFX afxError _AfxInitMmu(afxThread thr)
@@ -354,7 +354,7 @@ _AFX afxMemory _AfxAllocCallback2(afxMmu mmu, afxSize cnt, afxSize siz, afxSize 
 
 _AFX void _AfxMemAllocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHere const hint)
 {
-    //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+    //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
     //AfxAssert(p);
@@ -365,7 +365,7 @@ _AFX void _AfxMemAllocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHere const
 
 _AFX void _AfxMemDeallocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHere const hint)
 {
-    //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+    //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
     //AfxAssert(p);
@@ -389,7 +389,7 @@ _AFX void _AfxMemDeallocStd(afxMmu mmu, void *p)
 
 _AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxSize align, afxHere const hint)
 {
-    //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+    //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
     //AfxAssert(p);
@@ -406,7 +406,7 @@ _AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxS
 
 _AFX void* _AfxMemAllocStd(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, afxHere const hint)
 {
-    //AfxEntry("ctx=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+    //AfxEntry("ctx=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
     AfxAssert(siz);
@@ -462,7 +462,7 @@ _AFX afxError _AfxMmuCtor(afxMmu mmu, afxCookie const* cookie)
     }
 
     AfxSetUpSlock(&mmu->memSlock);
-    AfxSetUpChain(&mmu->memChain, mmu);
+    AfxDeployChain(&mmu->memChain, mmu);
     // Choose which memocation mechanism to be used. Actumemy there's just two: standard (arbitrary) and arena.
 
     //if (mmu->cap != (afxSize)0) _AfxArenaAllCtor(ctx, paradigm);
@@ -696,7 +696,7 @@ _AFX void* AfxReallocate(void *p, afxSize siz, afxSize cnt, afxNat align, afxHer
     AfxAssert(siz);
     AfxAssert(cnt);
     AfxAssert(hint);
-    //AfxEntry("p=%p,siz=%u,hint=\"%s:%i!%s\"", p, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+    //AfxEntry("p=%p,siz=%u,hint=\"%s:%i!%s\"", p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     void *out = NIL;
 
     afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
@@ -744,7 +744,7 @@ _AFX void* AfxReallocate(void *p, afxSize siz, afxSize cnt, afxNat align, afxHer
 
 _AFX void* AfxCoallocate(afxSize cnt, afxSize siz, afxNat align, afxHere const hint)
 {
-    //AfxEntry("ctx=%p,cnt=%u,siz=%u,hint=\"%s:%i!%s\"", ctx, cnt, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+    //AfxEntry("ctx=%p,cnt=%u,siz=%u,hint=\"%s:%i!%s\"", ctx, cnt, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(siz);
@@ -770,7 +770,7 @@ _AFX void* AfxCoallocate(afxSize cnt, afxSize siz, afxNat align, afxHere const h
 
 _AFX void* AfxAllocate(afxSize cnt, afxSize siz, afxNat align, afxHere const hint)
 {
-    //AfxEntry("ctx=%p,siz=%u,cnt=%u,hint=\"%s:%i!%s\"", ctx, siz, cnt, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+    //AfxEntry("ctx=%p,siz=%u,cnt=%u,hint=\"%s:%i!%s\"", ctx, siz, cnt, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     AfxAssert(hint);
     AfxAssert(siz);

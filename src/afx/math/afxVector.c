@@ -94,30 +94,30 @@ _AFXINL void AfxFillV4d(afxV4d v, afxReal value)
 
 // Zero
 
-_AFXINL void AfxZeroV2d(afxV2d v)
+_AFXINL void AfxV2dZero(afxV2d v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    AfxCopyV2d(v, AFX_V2D_ZERO);
+    AfxV2dCopy(v, AFX_V2D_ZERO);
 }
 
-_AFXINL void AfxZeroV3d(afxV3d v)
+_AFXINL void AfxV3dZero(afxV3d v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    AfxCopyV3d(v, AFX_V3D_ZERO);
+    AfxV3dCopy(v, AFX_V3D_ZERO);
 }
 
-_AFXINL void AfxZeroV4d(afxV4d v)
+_AFXINL void AfxV4dZero(afxV4d v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    AfxCopyV4d(v, AFX_V4D_ZERO);
+    AfxV4dCopy(v, AFX_V4D_ZERO);
 }
 
 // Set
 
-_AFXINL void AfxSetV2d(afxV2d v, afxReal x, afxReal y)
+_AFXINL void AfxV2dSet(afxV2d v, afxReal x, afxReal y)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -125,7 +125,7 @@ _AFXINL void AfxSetV2d(afxV2d v, afxReal x, afxReal y)
     v[1] = y;
 }
 
-_AFXINL void AfxSetV3d(afxV3d v, afxReal x, afxReal y, afxReal z)
+_AFXINL void AfxV3dSet(afxV3d v, afxReal x, afxReal y, afxReal z)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -134,7 +134,7 @@ _AFXINL void AfxSetV3d(afxV3d v, afxReal x, afxReal y, afxReal z)
     v[2] = z;
 }
 
-_AFXINL void AfxSetV4d(afxV4d v, afxReal x, afxReal y, afxReal z, afxReal w)
+_AFXINL void AfxV4dSet(afxV4d v, afxReal x, afxReal y, afxReal z, afxReal w)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -150,7 +150,7 @@ _AFXINL void AfxResetV4d(afxV4d v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    AfxCopyV4d(v, AFX_V4D_W);
+    AfxV4dCopy(v, AFX_V4D_W);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -328,7 +328,7 @@ _AFXINL afxBool AfxV3dIsNormalized(afxV3d const v)
 
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    afxReal f = AfxMagV3d(v);
+    afxReal f = AfxV3dMag(v);
     return f >= 0.95f && f <= 1.05f;
 }
 
@@ -363,7 +363,7 @@ _AFXINL afxBool AfxV4dIsNan(afxV4d const v)
 
 // Copy
 
-_AFXINL void AfxCopyV2d(afxV2d v, afxV2d const in)
+_AFXINL void AfxV2dCopy(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -373,7 +373,7 @@ _AFXINL void AfxCopyV2d(afxV2d v, afxV2d const in)
     v[1] = in[1];
 }
 
-_AFXINL void AfxCopyV3d(afxV3d v, afxV3d const in)
+_AFXINL void AfxV3dCopy(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -384,7 +384,7 @@ _AFXINL void AfxCopyV3d(afxV3d v, afxV3d const in)
     v[2] = in[2];
 }
 
-_AFXINL void AfxCopyV4d(afxV4d v, afxV4d const in)
+_AFXINL void AfxV4dCopy(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -404,7 +404,7 @@ _AFXINL void AfxCopyArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d out[])
     AfxAssertDiffSoft(out, in);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxCopyV2d(out[i], in[i]);
+        AfxV2dCopy(out[i], in[i]);
 }
 
 _AFXINL void AfxCopyArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[])
@@ -415,7 +415,7 @@ _AFXINL void AfxCopyArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[])
     AfxAssertDiffSoft(out, in);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxCopyV3d(out[i], in[i]);
+        AfxV3dCopy(out[i], in[i]);
 }
 
 _AFXINL void AfxCopyArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[])
@@ -426,10 +426,10 @@ _AFXINL void AfxCopyArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[])
     AfxAssertDiffSoft(out, in);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxCopyV4d(out[i], in[i]);
+        AfxV4dCopy(out[i], in[i]);
 }
 
-_AFXINL void AfxCopyV3dFromV2d_(afxV3d v, afxV2d const in)
+_AFXINL void AfxV3dCopyAtv2d(afxV3d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -440,7 +440,7 @@ _AFXINL void AfxCopyV3dFromV2d_(afxV3d v, afxV2d const in)
     v[2] = AfxScalar(1);
 }
 
-_AFXINL void AfxCopyAtv4d(afxV4d v, afxV3d const in)
+_AFXINL void AfxV4dCopyAtv3d(afxV4d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -454,7 +454,7 @@ _AFXINL void AfxCopyAtv4d(afxV4d v, afxV3d const in)
 
 // Make (Combined Copy & Promote/Demote operations)
 
-_AFXINL void AfxCopyV3dFromV2d(afxV3d v, afxV2d const in)
+_AFXINL void AfxV3dCopyV2d(afxV3d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -465,7 +465,7 @@ _AFXINL void AfxCopyV3dFromV2d(afxV3d v, afxV2d const in)
     v[2] = AfxScalar(0);
 }
 
-_AFXINL void AfxCopyLtv4dFromV2d(afxV4d v, afxV2d const in)
+_AFXINL void AfxV4dCopyV2d(afxV4d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -477,7 +477,7 @@ _AFXINL void AfxCopyLtv4dFromV2d(afxV4d v, afxV2d const in)
     v[3] = AfxScalar(0);
 }
 
-_AFXINL void AfxCopyLtv4d(afxV4d v, afxV3d const in)
+_AFXINL void AfxV4dCopyV3d(afxV4d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -498,9 +498,9 @@ _AFXINL void AfxSwapV2d(afxV2d v, afxV2d other)
     AfxAssert(other);
     AfxAssert(v != other);
     afxV2d tmp;
-    AfxCopyV2d(tmp, v);
-    AfxCopyV2d(other, tmp);
-    AfxCopyV2d(v, other);
+    AfxV2dCopy(tmp, v);
+    AfxV2dCopy(other, tmp);
+    AfxV2dCopy(v, other);
 }
 
 _AFXINL void AfxSwapV3d(afxV3d v, afxV3d other)
@@ -510,9 +510,9 @@ _AFXINL void AfxSwapV3d(afxV3d v, afxV3d other)
     AfxAssert(other);
     AfxAssert(v != other);
     afxV3d tmp;
-    AfxCopyV3d(tmp, v);
-    AfxCopyV3d(other, tmp);
-    AfxCopyV3d(v, other);
+    AfxV3dCopy(tmp, v);
+    AfxV3dCopy(other, tmp);
+    AfxV3dCopy(v, other);
 }
 
 _AFXINL void AfxSwapV4d(afxV4d v, afxV4d other)
@@ -522,9 +522,9 @@ _AFXINL void AfxSwapV4d(afxV4d v, afxV4d other)
     AfxAssert(other);
     AfxAssert(v != other);
     afxV4d tmp;
-    AfxCopyV4d(tmp, v);
-    AfxCopyV4d(other, tmp);
-    AfxCopyV4d(v, other);
+    AfxV4dCopy(tmp, v);
+    AfxV4dCopy(other, tmp);
+    AfxV4dCopy(v, other);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -846,107 +846,107 @@ _AFXINL void AfxRecipV4d(afxV4d v, afxV4d const in)
 
 // Normalize
 
-_AFXINL afxReal AfxNormalizeV2d(afxV2d v, afxV2d const in)
+_AFXINL afxReal AfxV2dNormalize(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    afxReal len = AfxMagV2d(in);
+    afxReal len = AfxV2dMag(in);
 
     if (len > 0)
         len = 1.f / len;
 
-    AfxScaleV2d(v, in, len);
+    AfxV2dScale(v, in, len);
     return len;
 }
 
-_AFXINL afxReal AfxNormalizeV3d(afxV3d v, afxV3d const in)
+_AFXINL afxReal AfxV3dNormalize(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    afxReal len = AfxMagV3d(in);
+    afxReal len = AfxV3dMag(in);
 
     if (len > 0)
         len = 1.f / len;
 
-    AfxScaleV3d(v, in, len);
+    AfxV3dScale(v, in, len);
     return len;
 }
 
-_AFXINL afxReal AfxNormalizeV4d(afxV4d v, afxV4d const in)
+_AFXINL afxReal AfxV4dNormalize(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    afxReal len = AfxMagV4d(in);
+    afxReal len = AfxV4dMag(in);
 
     if (len > 0)
         len = 1.f / len;
 
-    AfxScaleV4d(v, in, len);
+    AfxV4dScale(v, in, len);
     return len;
 }
 
 // NormalizeV*d
 
-_AFXINL afxReal AfxNormalizeV3dFromV4d(afxV3d v, afxV4d const in)
+_AFXINL afxReal AfxV3dNormalizeV4d(afxV3d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    afxReal len = AfxMagV4d(in);
+    afxReal len = AfxV4dMag(in);
 
     if (len > 0)
         len = 1.f / len;
 
-    AfxScaleV3d(v, in, len);
+    AfxV3dScale(v, in, len);
     return len;
 }
 
-_AFXINL afxReal AfxNormalizeV4dFromV3d(afxV4d v, afxV3d const in)
+_AFXINL afxReal AfxV4dNormalizeV3d(afxV4d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    afxReal len = AfxMagV3d(in);
+    afxReal len = AfxV3dMag(in);
 
     if (len > 0)
         len = 1.f / len;
 
-    AfxScaleV4d(v, in, len);
+    AfxV4dScale(v, in, len);
     return len;
 }
 
 // NormalizeEst
 
-_AFXINL afxReal AfxNormalizeV2dEstimated(afxV2d v, afxV2d const in)
+_AFXINL afxReal AfxV2dNormalizeEstimated(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    afxReal len = AfxMagV2dRecip(in);
-    AfxScaleV2d(v, in, len);
+    afxReal len = AfxV2dMagRecip(in);
+    AfxV2dScale(v, in, len);
     return len;
 }
 
-_AFXINL afxReal AfxNormalizeV3dEstimated(afxV3d v, afxV3d const in)
+_AFXINL afxReal AfxV3dNormalizeEstimated(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    afxReal len = AfxMagV3dRecip(in);
-    AfxScaleV3d(v, in, len);
+    afxReal len = AfxV3dMagRecip(in);
+    AfxV3dScale(v, in, len);
     return len;
 }
 
-_AFXINL afxReal AfxNormalizeV4dEstimated(afxV4d v, afxV4d const in)
+_AFXINL afxReal AfxV4dNormalizeEstimated(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    afxReal len = AfxMagV4dRecip(in);
-    AfxScaleV4d(v, in, len);
+    afxReal len = AfxV4dMagRecip(in);
+    AfxV4dScale(v, in, len);
     return len;
 }
 
@@ -957,7 +957,7 @@ _AFXINL void AfxNormalizeArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d out[])
     AfxAssert(out);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxNormalizeV2d(out[i], in[i]);
+        AfxV2dNormalize(out[i], in[i]);
 }
 
 _AFXINL void AfxNormalizeArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[])
@@ -967,7 +967,7 @@ _AFXINL void AfxNormalizeArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[])
     AfxAssert(out);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxNormalizeV3d(out[i], in[i]);
+        AfxV3dNormalize(out[i], in[i]);
 }
 
 _AFXINL void AfxNormalizeArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[])
@@ -977,7 +977,7 @@ _AFXINL void AfxNormalizeArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[])
     AfxAssert(out);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxNormalizeV4d(out[i], in[i]);
+        AfxV4dNormalize(out[i], in[i]);
 }
 
 _AFXINL void AfxZeroOrNormalizeArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d out[])
@@ -988,12 +988,12 @@ _AFXINL void AfxZeroOrNormalizeArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d 
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        afxReal len = AfxMagV2d(in[i]);
+        afxReal len = AfxV2dMag(in[i]);
 
         if (len <= 0.0000099999997f)
-            AfxZeroV2d(out[i]);
+            AfxV2dZero(out[i]);
         else
-            AfxScaleV2d(out[i], in[i], 1.f / len);
+            AfxV2dScale(out[i], in[i], 1.f / len);
     }
 }
 
@@ -1005,12 +1005,12 @@ _AFXINL void AfxZeroOrNormalizeArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d 
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        afxReal len = AfxMagV3d(in[i]);
+        afxReal len = AfxV3dMag(in[i]);
         
         if (len <= 0.0000099999997f)
-            AfxZeroV3d(out[i]);
+            AfxV3dZero(out[i]);
         else
-            AfxScaleV3d(out[i], in[i], 1.f / len);
+            AfxV3dScale(out[i], in[i], 1.f / len);
     }
 }
 
@@ -1022,12 +1022,12 @@ _AFXINL void AfxZeroOrNormalizeArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d 
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        afxReal len = AfxMagV4d(in[i]);
+        afxReal len = AfxV4dMag(in[i]);
 
         if (len <= 0.0000099999997f)
-            AfxZeroV4d(out[i]);
+            AfxV4dZero(out[i]);
         else
-            AfxScaleV4d(out[i], in[i], 1.f / len);
+            AfxV4dScale(out[i], in[i], 1.f / len);
     }
 }
 
@@ -1037,7 +1037,7 @@ _AFXINL void AfxZeroOrNormalizeArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d 
 
 // Add
 
-_AFXINL void AfxAddV2d(afxV2d v, afxV2d const a, afxV2d const b)
+_AFXINL void AfxV2dAdd(afxV2d v, afxV2d const a, afxV2d const b)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1047,7 +1047,7 @@ _AFXINL void AfxAddV2d(afxV2d v, afxV2d const a, afxV2d const b)
     v[1] = a[1] + b[1];
 }
 
-_AFXINL void AfxAddV3d(afxV3d v, afxV3d const a, afxV3d const b)
+_AFXINL void AfxV3dAdd(afxV3d v, afxV3d const a, afxV3d const b)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1058,7 +1058,7 @@ _AFXINL void AfxAddV3d(afxV3d v, afxV3d const a, afxV3d const b)
     v[2] = a[2] + b[2];
 }
 
-_AFXINL void AfxAddV4d(afxV4d v, afxV4d const a, afxV4d const b)
+_AFXINL void AfxV4dAdd(afxV4d v, afxV4d const a, afxV4d const b)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1104,7 +1104,7 @@ _AFXINL void AfxAddScaledV4d(afxV4d v, afxV4d const a, afxV4d const b, afxReal l
 
 // Sub
 
-_AFXINL void AfxSubV2d(afxV2d v, afxV2d const a, afxV2d const b)
+_AFXINL void AfxV2dSub(afxV2d v, afxV2d const a, afxV2d const b)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1114,7 +1114,7 @@ _AFXINL void AfxSubV2d(afxV2d v, afxV2d const a, afxV2d const b)
     v[1] = a[1] - b[1];
 }
 
-_AFXINL void AfxSubV3d(afxV3d v, afxV3d const a, afxV3d const b)
+_AFXINL void AfxV3dSub(afxV3d v, afxV3d const a, afxV3d const b)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1125,7 +1125,7 @@ _AFXINL void AfxSubV3d(afxV3d v, afxV3d const a, afxV3d const b)
     v[2] = a[2] - b[2];
 }
 
-_AFXINL void AfxSubV4d(afxV4d v, afxV4d const a, afxV4d const b)
+_AFXINL void AfxV4dSub(afxV4d v, afxV4d const a, afxV4d const b)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1212,7 +1212,7 @@ _AFXINL void AfxModV4d(afxV4d v, afxV4d const a, afxV4d const b)
 
 // Scale
 
-_AFXINL void AfxScaleV2d(afxV2d v, afxV2d const a, afxReal lambda)
+_AFXINL void AfxV2dScale(afxV2d v, afxV2d const a, afxReal lambda)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1221,7 +1221,7 @@ _AFXINL void AfxScaleV2d(afxV2d v, afxV2d const a, afxReal lambda)
     v[1] = a[1] * lambda;
 }
 
-_AFXINL void AfxScaleV3d(afxV3d v, afxV3d const a, afxReal lambda)
+_AFXINL void AfxV3dScale(afxV3d v, afxV3d const a, afxReal lambda)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1231,7 +1231,7 @@ _AFXINL void AfxScaleV3d(afxV3d v, afxV3d const a, afxReal lambda)
     v[2] = a[2] * lambda;
 }
 
-_AFXINL void AfxScaleV4d(afxV4d v, afxV4d const a, afxReal lambda)
+_AFXINL void AfxV4dScale(afxV4d v, afxV4d const a, afxReal lambda)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1782,7 +1782,7 @@ _AFXINL void AfxLogV4d(afxV4d v, afxV4d const in)
 
 // Log2
 
-_AFXINL void AfxLog2V2d(afxV2d v, afxV2d const in)
+_AFXINL void AfxV2dLog2(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1791,7 +1791,7 @@ _AFXINL void AfxLog2V2d(afxV2d v, afxV2d const in)
     v[1] = AfxLog2f(in[1]);
 }
 
-_AFXINL void AfxLog2V3d(afxV3d v, afxV3d const in)
+_AFXINL void AfxV3dLog2(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1801,7 +1801,7 @@ _AFXINL void AfxLog2V3d(afxV3d v, afxV3d const in)
     v[2] = AfxLog2f(in[2]);
 }
 
-_AFXINL void AfxLog2V4d(afxV4d v, afxV4d const in)
+_AFXINL void AfxV4dLog2(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1814,7 +1814,7 @@ _AFXINL void AfxLog2V4d(afxV4d v, afxV4d const in)
 
 // Log10
 
-_AFXINL void AfxLog10V2d(afxV2d v, afxV2d const in)
+_AFXINL void AfxV2dLog10(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1823,7 +1823,7 @@ _AFXINL void AfxLog10V2d(afxV2d v, afxV2d const in)
     v[1] = AfxLog10f(in[1]);
 }
 
-_AFXINL void AfxLog10V3d(afxV3d v, afxV3d const in)
+_AFXINL void AfxV3dLog10(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1833,7 +1833,7 @@ _AFXINL void AfxLog10V3d(afxV3d v, afxV3d const in)
     v[2] = AfxLog10f(in[2]);
 }
 
-_AFXINL void AfxLog10V4d(afxV4d v, afxV4d const in)
+_AFXINL void AfxV4dLog10(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1846,7 +1846,7 @@ _AFXINL void AfxLog10V4d(afxV4d v, afxV4d const in)
 
 // Pow
 
-_AFXINL void AfxPowV2d(afxV2d v, afxV2d const in)
+_AFXINL void AfxV2dPow(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1855,7 +1855,7 @@ _AFXINL void AfxPowV2d(afxV2d v, afxV2d const in)
     v[1] = AfxPowf(in[1], in[1]);
 }
 
-_AFXINL void AfxPowV3d(afxV3d v, afxV3d const in)
+_AFXINL void AfxV3dPow(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1865,7 +1865,7 @@ _AFXINL void AfxPowV3d(afxV3d v, afxV3d const in)
     v[2] = AfxPowf(in[2], in[2]);
 }
 
-_AFXINL void AfxPowV4d(afxV4d v, afxV4d const in)
+_AFXINL void AfxV4dPow(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1878,7 +1878,7 @@ _AFXINL void AfxPowV4d(afxV4d v, afxV4d const in)
 
 // Exp
 
-_AFXINL void AfxExpV2d(afxV2d v, afxV2d const in)
+_AFXINL void AfxV2dExp(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1887,7 +1887,7 @@ _AFXINL void AfxExpV2d(afxV2d v, afxV2d const in)
     v[1] = AfxExpf(in[1]);
 }
 
-_AFXINL void AfxExpV3d(afxV3d v, afxV3d const in)
+_AFXINL void AfxV3dExp(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1897,7 +1897,7 @@ _AFXINL void AfxExpV3d(afxV3d v, afxV3d const in)
     v[2] = AfxExpf(in[2]);
 }
 
-_AFXINL void AfxExpV4d(afxV4d v, afxV4d const in)
+_AFXINL void AfxV4dExp(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1910,7 +1910,7 @@ _AFXINL void AfxExpV4d(afxV4d v, afxV4d const in)
 
 // Exp2
 
-_AFXINL void AfxExp2V2d(afxV2d v, afxV2d const in)
+_AFXINL void AfxV2dExp2(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1919,7 +1919,7 @@ _AFXINL void AfxExp2V2d(afxV2d v, afxV2d const in)
     v[1] = AfxExp2f(in[1]);
 }
 
-_AFXINL void AfxExp2V3d(afxV3d v, afxV3d const in)
+_AFXINL void AfxV3dExp2(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1929,7 +1929,7 @@ _AFXINL void AfxExp2V3d(afxV3d v, afxV3d const in)
     v[2] = AfxExp2f(in[2]);
 }
 
-_AFXINL void AfxExp2V4d(afxV4d v, afxV4d const in)
+_AFXINL void AfxV4dExp2(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1942,7 +1942,7 @@ _AFXINL void AfxExp2V4d(afxV4d v, afxV4d const in)
 
 // Exp10
 
-_AFXINL void AfxExp10V2d(afxV2d v, afxV2d const in)
+_AFXINL void AfxV2dExp10(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1951,7 +1951,7 @@ _AFXINL void AfxExp10V2d(afxV2d v, afxV2d const in)
     v[1] = AfxExp10f(in[1]);
 }
 
-_AFXINL void AfxExp10V3d(afxV3d v, afxV3d const in)
+_AFXINL void AfxV3dExp10(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1961,7 +1961,7 @@ _AFXINL void AfxExp10V3d(afxV3d v, afxV3d const in)
     v[2] = AfxExp10f(in[2]);
 }
 
-_AFXINL void AfxExp10V4d(afxV4d v, afxV4d const in)
+_AFXINL void AfxV4dExp10(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1974,7 +1974,7 @@ _AFXINL void AfxExp10V4d(afxV4d v, afxV4d const in)
 
 // Negate
 
-_AFXINL void AfxNegV2d(afxV2d v, afxV2d const in)
+_AFXINL void AfxV2dNeg(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1983,7 +1983,7 @@ _AFXINL void AfxNegV2d(afxV2d v, afxV2d const in)
     v[1] = -(in[1]);
 }
 
-_AFXINL void AfxNegV3d(afxV3d v, afxV3d const in)
+_AFXINL void AfxV3dNeg(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -1993,7 +1993,7 @@ _AFXINL void AfxNegV3d(afxV3d v, afxV3d const in)
     v[2] = -(in[2]);
 }
 
-_AFXINL void AfxNegV4d(afxV4d v, afxV4d const in)
+_AFXINL void AfxV4dNeg(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2004,7 +2004,7 @@ _AFXINL void AfxNegV4d(afxV4d v, afxV4d const in)
     v[3] = -(in[3]);
 }
 
-_AFXINL void AfxNegAtv4d(afxV4d v, afxV4d const in)
+_AFXINL void AfxV4dNegAffine(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2017,21 +2017,21 @@ _AFXINL void AfxNegAtv4d(afxV4d v, afxV4d const in)
 
 // Sum
 
-_AFXINL afxReal AfxSumV2d(afxV2d const v)
+_AFXINL afxReal AfxV2dSum(afxV2d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     return v[0] + v[1];
 }
 
-_AFXINL afxReal AfxSumV3d(afxV3d const v)
+_AFXINL afxReal AfxV3dSum(afxV3d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     return v[0] + v[1] + v[2];
 }
 
-_AFXINL afxReal AfxSumV4d(afxV4d const v)
+_AFXINL afxReal AfxV4dSum(afxV4d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2040,7 +2040,7 @@ _AFXINL afxReal AfxSumV4d(afxV4d const v)
 
 // Dot
 
-_AFXINL afxReal AfxDotV2d(afxV2d const v, afxV2d const other)
+_AFXINL afxReal AfxV2dDot(afxV2d const v, afxV2d const other)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2048,7 +2048,7 @@ _AFXINL afxReal AfxDotV2d(afxV2d const v, afxV2d const other)
     return (v[0] * other[0]) + (v[1] * other[1]);
 }
 
-_AFXINL afxReal AfxDotV3d(afxV3d const v, afxV3d const other)
+_AFXINL afxReal AfxV3dDot(afxV3d const v, afxV3d const other)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2056,7 +2056,7 @@ _AFXINL afxReal AfxDotV3d(afxV3d const v, afxV3d const other)
     return (v[0] * other[0]) + (v[1] * other[1]) + (v[2] * other[2]);
 }
 
-_AFXINL afxReal AfxDotV4d(afxV4d const v, afxV4d const other)
+_AFXINL afxReal AfxV4dDot(afxV4d const v, afxV4d const other)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2066,7 +2066,7 @@ _AFXINL afxReal AfxDotV4d(afxV4d const v, afxV4d const other)
 
 // Cross
 
-_AFXINL void AfxCrossV2d(afxV2d v, afxV2d const a, afxV2d const b)
+_AFXINL void AfxV2dCross(afxV2d v, afxV2d const a, afxV2d const b)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2080,7 +2080,7 @@ _AFXINL void AfxCrossV2d(afxV2d v, afxV2d const a, afxV2d const b)
     v[1] = (v[0] = (a[0] * b[1]) - (a[1] * b[0]));
 }
 
-_AFXINL void AfxCrossV3d(afxV3d v, afxV3d const a, afxV3d const b)
+_AFXINL void AfxV3dCross(afxV3d v, afxV3d const a, afxV3d const b)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2094,7 +2094,7 @@ _AFXINL void AfxCrossV3d(afxV3d v, afxV3d const a, afxV3d const b)
     v[2] = (a[0] * b[1]) - (a[1] * b[0]);
 }
 
-_AFXINL void AfxCrossV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c)
+_AFXINL void AfxV4dCross(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2111,71 +2111,71 @@ _AFXINL void AfxCrossV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const 
 
 // Norm
 
-_AFXINL afxReal AfxSqV2d(afxV2d const v)
+_AFXINL afxReal AfxV2dSq(afxV2d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    return AfxDotV2d(v, v);
+    return AfxV2dDot(v, v);
 }
 
-_AFXINL afxReal AfxSqV3d(afxV3d const v)
+_AFXINL afxReal AfxV3dSq(afxV3d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    return AfxDotV3d(v, v);
+    return AfxV3dDot(v, v);
 }
 
-_AFXINL afxReal AfxSqV4d(afxV4d const v)
+_AFXINL afxReal AfxV4dSq(afxV4d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    return AfxDotV4d(v, v);
+    return AfxV4dDot(v, v);
 }
 
 // Magnitude
 
-_AFXINL afxReal AfxMagV2d(afxV2d const v)
+_AFXINL afxReal AfxV2dMag(afxV2d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    return AfxSqrtf(AfxSqV2d(v));
+    return AfxSqrtf(AfxV2dSq(v));
 }
 
-_AFXINL afxReal AfxMagV3d(afxV3d const v)
+_AFXINL afxReal AfxV3dMag(afxV3d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    return AfxSqrtf(AfxSqV3d(v));
+    return AfxSqrtf(AfxV3dSq(v));
 }
 
-_AFXINL afxReal AfxMagV4d(afxV4d const v)
+_AFXINL afxReal AfxV4dMag(afxV4d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    return AfxSqrtf(AfxSqV4d(v));
+    return AfxSqrtf(AfxV4dSq(v));
 }
 
 // MagnitudeRecip
 
-_AFXINL afxReal AfxMagV2dRecip(afxV2d const v)
+_AFXINL afxReal AfxV2dMagRecip(afxV2d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    return AfxRsqrtf(AfxSqV2d(v));
+    return AfxRsqrtf(AfxV2dSq(v));
 }
 
-_AFXINL afxReal AfxMagV3dRecip(afxV3d const v)
+_AFXINL afxReal AfxV3dMagRecip(afxV3d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    return AfxRsqrtf(AfxSqV3d(v));
+    return AfxRsqrtf(AfxV3dSq(v));
 }
 
-_AFXINL afxReal AfxMagV4dRecip(afxV4d const v)
+_AFXINL afxReal AfxV4dMagRecip(afxV4d const v)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    return AfxRsqrtf(AfxSqV4d(v));
+    return AfxRsqrtf(AfxV4dSq(v));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2185,87 +2185,87 @@ _AFXINL afxReal AfxMagV4dRecip(afxV4d const v)
 // PostMultiply
 // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
 
-_AFXINL void AfxPostMultiplyV2d(afxM2d const m, afxV2d const in, afxV2d out)
+_AFXINL void AfxV2dPostMultiplyM2d(afxV2d v, afxM2d const m, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
     AfxAssert(in);
-    AfxAssert(out);
+    AfxAssert(v);
 
-    afxV4d v;
-    AfxCopyV2d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV2dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (m[0][0] * v[0]) + (m[0][1] * v[1]);
-    out[1] = (m[1][0] * v[0]) + (m[1][1] * v[1]);
+    v[0] = (m[0][0] * t[0]) + (m[0][1] * t[1]);
+    v[1] = (m[1][0] * t[0]) + (m[1][1] * t[1]);
 }
 
-_AFXINL void AfxPostMultiplyV3d(afxM3d const m, afxV3d const in, afxV3d out)
+_AFXINL void AfxV3dPostMultiplyM3d(afxV3d v, afxM3d const m, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(out);
-    AfxAssert(m);
-    AfxAssert(in);
-
-    // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
-    afxV4d v;
-    AfxCopyV3d(v, in); // batch requires a intermediate
-
-    out[0] = (m[0][0] * v[0]) + (m[0][1] * v[1]) + (m[0][2] * v[2]);
-    out[1] = (m[1][0] * v[0]) + (m[1][1] * v[1]) + (m[1][2] * v[2]);
-    out[2] = (m[2][0] * v[0]) + (m[2][1] * v[1]) + (m[2][2] * v[2]);
-}
-
-_AFXINL void AfxPostMultiplyV4d(afxM4d const m, afxV4d const in, afxV4d out)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(out);
+    AfxAssert(v);
     AfxAssert(m);
     AfxAssert(in);
 
     // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
-    afxV4d v;
-    AfxCopyV4d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV3dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (m[0][0] * v[0]) + (m[0][1] * v[1]) + (m[0][2] * v[2]) + (m[0][3] * v[3]);
-    out[1] = (m[1][0] * v[0]) + (m[1][1] * v[1]) + (m[1][2] * v[2]) + (m[1][3] * v[3]);
-    out[2] = (m[2][0] * v[0]) + (m[2][1] * v[1]) + (m[2][2] * v[2]) + (m[2][3] * v[3]);
-    out[3] = (m[3][0] * v[0]) + (m[3][1] * v[1]) + (m[3][2] * v[2]) + (m[3][3] * v[3]);
+    v[0] = (m[0][0] * t[0]) + (m[0][1] * t[1]) + (m[0][2] * t[2]);
+    v[1] = (m[1][0] * t[0]) + (m[1][1] * t[1]) + (m[1][2] * t[2]);
+    v[2] = (m[2][0] * t[0]) + (m[2][1] * t[1]) + (m[2][2] * t[2]);
 }
 
-_AFXINL void AfxPostMultiplyLtv3d(afxM4d const m, afxV3d const in, afxV3d out)
+_AFXINL void AfxV4dPostMultiplyM4d(afxV4d v, afxM4d const m, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(out);
+    AfxAssert(v);
     AfxAssert(m);
     AfxAssert(in);
 
     // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
-    afxV4d v;
-    AfxCopyV3d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV4dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (m[0][0] * v[0]) + (m[0][1] * v[1]) + (m[0][2] * v[2]);
-    out[1] = (m[1][0] * v[0]) + (m[1][1] * v[1]) + (m[1][2] * v[2]);
-    out[2] = (m[2][0] * v[0]) + (m[2][1] * v[1]) + (m[2][2] * v[2]);
+    v[0] = (m[0][0] * t[0]) + (m[0][1] * t[1]) + (m[0][2] * t[2]) + (m[0][3] * t[3]);
+    v[1] = (m[1][0] * t[0]) + (m[1][1] * t[1]) + (m[1][2] * t[2]) + (m[1][3] * t[3]);
+    v[2] = (m[2][0] * t[0]) + (m[2][1] * t[1]) + (m[2][2] * t[2]) + (m[2][3] * t[3]);
+    v[3] = (m[3][0] * t[0]) + (m[3][1] * t[1]) + (m[3][2] * t[2]) + (m[3][3] * t[3]);
 }
 
-_AFXINL void AfxPostMultiplyLtv4d(afxM3d const m, afxV4d const in, afxV4d out)
+_AFXINL void AfxV3dPostMultiplyLtm4d(afxV3d v, afxM4d const m, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(out);
+    AfxAssert(v);
+    AfxAssert(m);
+    AfxAssert(in);
+
+    // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
+    afxV4d t;
+    AfxV3dCopy(t, in); // batch requires a intermediate
+
+    v[0] = (m[0][0] * t[0]) + (m[0][1] * t[1]) + (m[0][2] * t[2]);
+    v[1] = (m[1][0] * t[0]) + (m[1][1] * t[1]) + (m[1][2] * t[2]);
+    v[2] = (m[2][0] * t[0]) + (m[2][1] * t[1]) + (m[2][2] * t[2]);
+}
+
+_AFXINL void AfxV4dPostMultiplyM3d(afxV4d v, afxM3d const m, afxV4d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(v);
     AfxAssert(m);
     AfxAssert(in);
 
     // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
     
-    // Compatible with TransposeVectorTransform4x3(in/out, 0.0, m)
+    // Compatible with TransposeVectorTransform4x3(in/v, 0.0, m)
 
-    afxV4d v;
-    AfxCopyV4d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV4dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (m[0][0] * v[0]) + (m[0][1] * v[1]) + (m[0][2] * v[2]);
-    out[1] = (m[1][0] * v[0]) + (m[1][1] * v[1]) + (m[1][2] * v[2]);
-    out[2] = (m[2][0] * v[0]) + (m[2][1] * v[1]) + (m[2][2] * v[2]);
-    out[3] = in[3];
+    v[0] = (m[0][0] * t[0]) + (m[0][1] * t[1]) + (m[0][2] * t[2]);
+    v[1] = (m[1][0] * t[0]) + (m[1][1] * t[1]) + (m[1][2] * t[2]);
+    v[2] = (m[2][0] * t[0]) + (m[2][1] * t[1]) + (m[2][2] * t[2]);
+    v[3] = in[3];
 }
 
 _AFXINL void TransposeVectorTransform4x3(afxV3d Dest, float D3, afxM4d const Transform)
@@ -2277,187 +2277,187 @@ _AFXINL void TransposeVectorTransform4x3(afxV3d Dest, float D3, afxM4d const Tra
     Dest[2] = Transform[2][0] * Dest[0] + Transform[2][1] * Dest[1] + Transform[2][2] * Dest[2] + D3 * Transform[3][2];
 }
 
-_AFXINL void AfxPostMultiplyAtv2d(afxM4d const m, afxV2d const in, afxV2d out)
+_AFXINL void AfxV2dPostMultiplyAtm4d(afxV2d v, afxM4d const m, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
     AfxAssert(in);
-    AfxAssert(out);
+    AfxAssert(v);
 
     // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
-    afxV4d v;
-    AfxCopyV3d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV3dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (m[0][0] * v[0]) + (m[0][1] * v[1]) + (m[0][2]) + (m[0][3]);
-    out[1] = (m[1][0] * v[0]) + (m[1][1] * v[1]) + (m[1][2]) + (m[1][3]);
+    v[0] = (m[0][0] * t[0]) + (m[0][1] * t[1]) + (m[0][2]) + (m[0][3]);
+    v[1] = (m[1][0] * t[0]) + (m[1][1] * t[1]) + (m[1][2]) + (m[1][3]);
 }
 
-_AFXINL void AfxPostMultiplyAtv3d(afxM4d const m, afxV3d const in, afxV3d out)
+_AFXINL void AfxV3dPostMultiplyAtm4d(afxV3d v, afxM4d const m, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(out);
+    AfxAssert(v);
     AfxAssert(m);
     AfxAssert(in);
 
     // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
-    afxV4d v;
-    AfxCopyV3d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV3dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (m[0][0] * v[0]) + (m[0][1] * v[1]) + (m[0][2] * v[2]) + (m[0][3]);
-    out[1] = (m[1][0] * v[0]) + (m[1][1] * v[1]) + (m[1][2] * v[2]) + (m[1][3]);
-    out[2] = (m[2][0] * v[0]) + (m[2][1] * v[1]) + (m[2][2] * v[2]) + (m[2][3]);
+    v[0] = (m[0][0] * t[0]) + (m[0][1] * t[1]) + (m[0][2] * t[2]) + (m[0][3]);
+    v[1] = (m[1][0] * t[0]) + (m[1][1] * t[1]) + (m[1][2] * t[2]) + (m[1][3]);
+    v[2] = (m[2][0] * t[0]) + (m[2][1] * t[1]) + (m[2][2] * t[2]) + (m[2][3]);
 }
 
-_AFXINL void AfxPostMultiplyAtv4d(afxM4d const m, afxV4d const in, afxV4d out)
+_AFXINL void AfxV4dPostMultiplyAtm4d(afxV4d v, afxM4d const m, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(out);
+    AfxAssert(v);
     AfxAssert(m);
     AfxAssert(in);
 
     // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
-    afxV4d v;
-    AfxCopyV4d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV4dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (m[0][0] * v[0]) + (m[0][1] * v[1]) + (m[0][2] * v[2]) + (m[0][3]);
-    out[1] = (m[1][0] * v[0]) + (m[1][1] * v[1]) + (m[1][2] * v[2]) + (m[1][3]);
-    out[2] = (m[2][0] * v[0]) + (m[2][1] * v[1]) + (m[2][2] * v[2]) + (m[2][3]);
-    out[3] = 1.f;
+    v[0] = (m[0][0] * t[0]) + (m[0][1] * t[1]) + (m[0][2] * t[2]) + (m[0][3]);
+    v[1] = (m[1][0] * t[0]) + (m[1][1] * t[1]) + (m[1][2] * t[2]) + (m[1][3]);
+    v[2] = (m[2][0] * t[0]) + (m[2][1] * t[1]) + (m[2][2] * t[2]) + (m[2][3]);
+    v[3] = 1.f;
 }
 
 // PreMultiply
 
-_AFXINL void AfxPreMultiplyV2d(afxM2d const m, afxV2d const in, afxV2d out)
+_AFXINL void AfxV2dPreMultiplyM2d(afxV2d v, afxV2d const in, afxM2d const m)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
-    AfxAssert(out);
+    AfxAssert(v);
 
     // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
-    afxV4d v;
-    AfxCopyV2d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV2dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (v[0] * m[0][0]) + (v[1] * m[1][0]);
-    out[1] = (v[0] * m[0][1]) + (v[1] * m[1][1]);
+    v[0] = (t[0] * m[0][0]) + (t[1] * m[1][0]);
+    v[1] = (t[0] * m[0][1]) + (t[1] * m[1][1]);
 }
 
-_AFXINL void AfxPreMultiplyV3d(afxM3d const m, afxV3d const in, afxV3d out)
+_AFXINL void AfxV3dPreMultiplyM3d(afxV3d v, afxV3d const in, afxM3d const m)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
-    AfxAssert(out);
+    AfxAssert(v);
 
     // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
-    afxV4d v;
-    AfxCopyV3d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV3dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (v[0] * m[0][0]) + (v[1] * m[1][0]) + (v[2] * m[2][0]);
-    out[1] = (v[0] * m[0][1]) + (v[1] * m[1][1]) + (v[2] * m[2][1]);
-    out[2] = (v[0] * m[0][2]) + (v[1] * m[1][2]) + (v[2] * m[2][2]);
+    v[0] = (t[0] * m[0][0]) + (t[1] * m[1][0]) + (t[2] * m[2][0]);
+    v[1] = (t[0] * m[0][1]) + (t[1] * m[1][1]) + (t[2] * m[2][1]);
+    v[2] = (t[0] * m[0][2]) + (t[1] * m[1][2]) + (t[2] * m[2][2]);
 }
 
-_AFXINL void AfxPreMultiplyV4d(afxM4d const m, afxV4d const in, afxV4d out)
+_AFXINL void AfxV4dPreMultiplyM4d(afxV4d v, afxV4d const in, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
-    AfxAssert(out);
+    AfxAssert(v);
 
     // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
-    afxV4d v;
-    AfxCopyV4d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV4dCopy(t, in); // batch requires a intermediate
 
-    // Compatible with TransposeVectorTransform4x4(out/in, m)
+    // Compatible with TransposeVectorTransform4x4(v/in, m)
 
-    out[0] = (v[0] * m[0][0]) + (v[1] * m[1][0]) + (v[2] * m[2][0]) + (v[3] * m[3][0]);
-    out[1] = (v[0] * m[0][1]) + (v[1] * m[1][1]) + (v[2] * m[2][1]) + (v[3] * m[3][1]);
-    out[2] = (v[0] * m[0][2]) + (v[1] * m[1][2]) + (v[2] * m[2][2]) + (v[3] * m[3][2]);
-    out[3] = (v[0] * m[0][3]) + (v[1] * m[1][3]) + (v[2] * m[2][3]) + (v[3] * m[3][3]);
+    v[0] = (t[0] * m[0][0]) + (t[1] * m[1][0]) + (t[2] * m[2][0]) + (t[3] * m[3][0]);
+    v[1] = (t[0] * m[0][1]) + (t[1] * m[1][1]) + (t[2] * m[2][1]) + (t[3] * m[3][1]);
+    v[2] = (t[0] * m[0][2]) + (t[1] * m[1][2]) + (t[2] * m[2][2]) + (t[3] * m[3][2]);
+    v[3] = (t[0] * m[0][3]) + (t[1] * m[1][3]) + (t[2] * m[2][3]) + (t[3] * m[3][3]);
 }
 
 // TransformTransposedPoint/Normal/Affine
 
-_AFXINL void AfxPreMultiplyLtv3d(afxM4d const m, afxV3d const in, afxV3d out)
+_AFXINL void AfxV3dPreMultiplyLtm4d(afxV3d v, afxV3d const in, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
-    AfxAssert(out);
+    AfxAssert(v);
 
     // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
-    afxV4d v;
-    AfxCopyV3d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV3dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (v[0] * m[0][0]) + (v[1] * m[1][0]) + (v[2] * m[2][0]);
-    out[1] = (v[0] * m[0][1]) + (v[1] * m[1][1]) + (v[2] * m[2][1]);
-    out[2] = (v[0] * m[0][2]) + (v[1] * m[1][2]) + (v[2] * m[2][2]);
+    v[0] = (t[0] * m[0][0]) + (t[1] * m[1][0]) + (t[2] * m[2][0]);
+    v[1] = (t[0] * m[0][1]) + (t[1] * m[1][1]) + (t[2] * m[2][1]);
+    v[2] = (t[0] * m[0][2]) + (t[1] * m[1][2]) + (t[2] * m[2][2]);
 }
 
-_AFXINL void AfxPreMultiplyLtv4d(afxM3d const m, afxV4d const in, afxV4d out)
+_AFXINL void AfxV4dPreMultiplyM3d(afxV4d v, afxV4d const in, afxM3d const m)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
-    AfxAssert(out);
+    AfxAssert(v);
 
     // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
-    afxV4d v;
-    AfxCopyV4d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV4dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (v[0] * m[0][0]) + (v[1] * m[1][0]) + (v[2] * m[2][0]);
-    out[1] = (v[0] * m[0][1]) + (v[1] * m[1][1]) + (v[2] * m[2][1]);
-    out[2] = (v[0] * m[0][2]) + (v[1] * m[1][2]) + (v[2] * m[2][2]);
-    out[3] = in[3];
+    v[0] = (t[0] * m[0][0]) + (t[1] * m[1][0]) + (t[2] * m[2][0]);
+    v[1] = (t[0] * m[0][1]) + (t[1] * m[1][1]) + (t[2] * m[2][1]);
+    v[2] = (t[0] * m[0][2]) + (t[1] * m[1][2]) + (t[2] * m[2][2]);
+    v[3] = in[3];
 }
 
-_AFXINL void AfxPreMultiplyAtv2d(afxM4d const m, afxV2d const in, afxV2d out)
+_AFXINL void AfxV2dPreMultiplyAtm4d(afxV2d v, afxV2d const in, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
-    AfxAssert(out);
+    AfxAssert(v);
 
     // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
-    afxV4d v;
-    AfxCopyV2d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV2dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (v[0] * m[0][0]) + (v[1] * m[1][0]) + (m[2][0]) + (m[3][0]);
-    out[1] = (v[0] * m[0][1]) + (v[1] * m[1][1]) + (m[2][1]) + (m[3][1]);
+    v[0] = (t[0] * m[0][0]) + (t[1] * m[1][0]) + (m[2][0]) + (m[3][0]);
+    v[1] = (t[0] * m[0][1]) + (t[1] * m[1][1]) + (m[2][1]) + (m[3][1]);
 }
 
-_AFXINL void AfxPreMultiplyAtv3d(afxM4d const m, afxV3d const in, afxV3d out)
+_AFXINL void AfxV3dPreMultiplyAtm4d(afxV3d v, afxV3d const in, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
-    AfxAssert(out);
+    AfxAssert(v);
 
     // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
-    afxV4d v;
-    AfxCopyV3d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV3dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (v[0] * m[0][0]) + (v[1] * m[1][0]) + (v[2] * m[2][0]) + (m[3][0]);
-    out[1] = (v[0] * m[0][1]) + (v[1] * m[1][1]) + (v[2] * m[2][1]) + (m[3][1]);
-    out[2] = (v[0] * m[0][2]) + (v[1] * m[1][2]) + (v[2] * m[2][2]) + (m[3][2]);
+    v[0] = (t[0] * m[0][0]) + (t[1] * m[1][0]) + (t[2] * m[2][0]) + (m[3][0]);
+    v[1] = (t[0] * m[0][1]) + (t[1] * m[1][1]) + (t[2] * m[2][1]) + (m[3][1]);
+    v[2] = (t[0] * m[0][2]) + (t[1] * m[1][2]) + (t[2] * m[2][2]) + (m[3][2]);
 }
 
-_AFXINL void AfxPreMultiplyAtv4d(afxM4d const m, afxV4d const in, afxV4d out)
+_AFXINL void AfxV4dPreMultiplyAtm4d(afxV4d v, afxV4d const in, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
-    AfxAssert(out);
+    AfxAssert(v);
 
     // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
-    afxV4d v;
-    AfxCopyV4d(v, in); // batch requires a intermediate
+    afxV4d t;
+    AfxV4dCopy(t, in); // batch requires a intermediate
 
-    out[0] = (v[0] * m[0][0]) + (v[1] * m[1][0]) + (v[2] * m[2][0]) + (m[3][0]);
-    out[1] = (v[0] * m[0][1]) + (v[1] * m[1][1]) + (v[2] * m[2][1]) + (m[3][1]);
-    out[2] = (v[0] * m[0][2]) + (v[1] * m[1][2]) + (v[2] * m[2][2]) + (m[3][2]);
-    out[3] = 1.f;
+    v[0] = (t[0] * m[0][0]) + (t[1] * m[1][0]) + (t[2] * m[2][0]) + (m[3][0]);
+    v[1] = (t[0] * m[0][1]) + (t[1] * m[1][1]) + (t[2] * m[2][1]) + (m[3][1]);
+    v[2] = (t[0] * m[0][2]) + (t[1] * m[1][2]) + (t[2] * m[2][2]) + (m[3][2]);
+    v[3] = 1.f;
 }
 
 // Assimilate
@@ -2471,11 +2471,11 @@ _AFXINL void AfxAssimilateAtv3d(afxM3d const ltm, afxV4d const atv, afxNat cnt, 
     AfxAssert(in);
     AfxAssert(out);
 
-    AfxPostMultiplyArrayedV3d(ltm, cnt, in, out);
+    AfxM3dPostMultiplyV3d(ltm, cnt, in, out);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAddV3d(out[i], atv, out[i]);
+        AfxV3dAdd(out[i], atv, out[i]);
     }
 }
 
@@ -2489,11 +2489,11 @@ _AFXINL void AfxAssimilateAtv4d(afxM3d const ltm, afxV4d const atv, afxNat cnt, 
     AfxAssert(in);
     AfxAssert(out);
 
-    AfxPostMultiplyArrayedLtv4d(ltm, cnt, in, out);
+    AfxM3dPostMultiplyLtv4d(ltm, cnt, in, out);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAddV3d(out[i], atv, out[i]);
+        AfxV3dAdd(out[i], atv, out[i]);
         out[i][3] = 1.f;
     }
 }

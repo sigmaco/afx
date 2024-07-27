@@ -15,151 +15,12 @@
  */
 
 #define _AFX_SIM_C
-#define _AFX_VERTEX_DATA_C
-#define _AFX_SIMULATION_C
+#define _AKX_VERTEX_DATA_C
+//#define _AKX_SIMULATION_C
 
 #define _AVX_DRAW_C
 #define _AVX_VERTEX_BUFFER_C
-
-#include "qwadro/cad/akxVertexData.h"
-#include "qwadro/sim/afxSimulation.h"
-#include "qwadro/math/afxMatrix.h"
-#include "qwadro/draw/pipe/avxDrawOps.h"
-#include "qwadro/mem/afxMappedString.h"
-
-_AKX afxError AkxCmdBindVertexDataCache(avxCmdb cmdb, afxNat slotIdx, akxVertexData vtd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vtd, afxFcc_VTD);
-    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
-
-    for (afxNat i = 0; i < 2; i++)
-    {
-        akxVertexDataCache const* cache = &vtd->cache[i];
-        afxVertexBuffer vbuf = AfxGetLinker(&cache->vbuf);
-
-        if (vbuf)
-        {
-            AvxCmdBindVertexSources(cmdb, i, 1, (afxBuffer[]) { AfxGetVertexBufferStorage(vbuf) }, &cache->base, &cache->range, &cache->stride);
-        }
-    }
-    return err;
-}
-
-_AKXINL void packVdCb(akxVertexDataCache* cache, akxVertexData vtd)
-{
-
-}
-
-_AKX afxError AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vtd, afxFcc_VTD);
-
-    if (vtd->cached)
-        return err;
-
-    vtd->cached = TRUE;
-
-    afxSimulation sim = AfxGetObjectProvider(vtd);
-    AfxAssertObjects(1, &sim, afxFcc_SIM);
-
-    afxString const positionals[] = { AfxString("pos"), AfxString("pvt"), AfxString("wgt") };
-    afxNat cacheSiz[2] = { 0 };
-    
-    for (afxNat i = 0; i < vtd->attrCnt; i++)
-    {
-        akxVertexDataAttr* attr = &vtd->attrs[i];
-        afxVertexFormat fmt = attr->fmt;
-        AfxAssert(fmt < afxVertexFormat_TOTAL);
-        afxVertexFormat cachedFmt = NIL;
-        afxNat cacheIdx;
-
-        afxString str;
-        AfxResolveStrings2(vtd->strb, 1, &attr->id, &str);
-
-        if (AFX_INVALID_INDEX != AfxStringsAreEqual(&str, 3, positionals))
-        {
-            if (0 == AfxCompareString(&str, &positionals[0]))
-            {
-                cachedFmt = afxVertexFormat_V3D;
-            }
-            else if (0 == AfxCompareString(&str, &positionals[1]))
-            {
-                cachedFmt = afxVertexFormat_V4B;
-            }
-            else if (0 == AfxCompareString(&str, &positionals[2]))
-            {
-                cachedFmt = afxVertexFormat_V4B;
-            }
-            else
-            {
-                // pointless
-                AfxThrowError();
-            }
-            cacheIdx = 0;
-        }
-        else
-        {
-            cacheIdx = 1;
-            cachedFmt = attr->fmt;
-        }
-
-        attr->cacheIdx = cacheIdx;
-        attr->cachedOffset = cacheSiz[cacheIdx];        
-        cacheSiz[cacheIdx] += AfxVertexFormatGetSize(cachedFmt);
-        attr->cachedFmt = cachedFmt;
-    }
-    
-    afxVertexBufferSpecification vboSpec = { 0 };
-    vboSpec.access = afxBufferAccess_W;
-    vboSpec.bufCap = AFX_ALIGN(cacheSiz[0] * vtd->vtxCnt, 64) + AFX_ALIGN(cacheSiz[1] * vtd->vtxCnt, 64);
-    afxVertexBuffer vbo;
-    AfxAcquireVertexBuffers(din, 1, &vboSpec, &vbo);
-
-    for (afxNat i = 0; i < 2; i++)
-    {
-        if (cacheSiz[i])
-        {
-            akxVertexDataCache* cache = &vtd->cache[i];
-
-            AfxPushLinkage(&cache->vbuf, &vbo->rooms);
-            cache->base = i ? vtd->cache[i - 1].range : 0;
-            cache->range = AFX_ALIGN(cacheSiz[i] * vtd->vtxCnt, 64);
-            cache->stride = cacheSiz[i];
-        }
-    }
-
-    for (afxNat j = 0; j < vtd->attrCnt; j++)
-    {
-        akxVertexDataAttr* attr = &vtd->attrs[j];
-        AfxAssert(attr->data);
-        afxVertexFormat fmt = attr->fmt;
-        AfxAssert(fmt < afxVertexFormat_TOTAL);
-
-        akxVertexDataCache* cache = &vtd->cache[attr->cacheIdx];
-        afxBuffer buf = AfxGetVertexBufferStorage(vbo);
-        AfxAssert(cache->stride);
-        AfxAssertRange(AfxGetBufferCapacity(buf), cache->base, cache->range);
-        //AfxUpdateBuffer2(buf, cache->base, cache->range, cache->stride, vtd->attrs[attrIdx].data, srcStride);
-
-        afxBufferRegion rgn;
-        rgn.base = cache->base;
-        rgn.range = cache->range;
-        rgn.stride = cache->stride;
-
-        rgn.offset = attr->cachedOffset;
-        rgn.unitSiz = AfxVertexFormatGetSize(attr->cachedFmt);
-        afxSize srcStride = AfxVertexFormatGetSize(fmt);
-        AfxAssert(srcStride);
-
-        if (attr->data)
-            AfxUpdateBufferRegion(buf, &rgn, attr->data, srcStride);
-    }
-    return err;
-}
-
-////////////////////////////////////////////////////////////////////////////////
+#include "../sim/dev/AkxSimDevKit.h"
 
 _AKX afxNat AkxFindVertexAttributes(akxVertexData vtd, afxNat cnt, afxString const id[], afxNat attrIdx[])
 {
@@ -173,8 +34,7 @@ _AKX afxNat AkxFindVertexAttributes(akxVertexData vtd, afxNat cnt, afxString con
 
     for (afxNat i = 0; i < vtd->attrCnt; i++)
     {
-        afxString str;
-        AfxResolveStrings2(vtd->strb, 1, &vtd->attrs[i].id, &str);
+        afxString str = vtd->attrs[i].id;
 
         if (0 == AfxCompareString(&id[rslt], &str))
             attrIdx[rslt++] = i;
@@ -234,6 +94,13 @@ _AKX afxNat AkxCountVertices(akxVertexData vtd)
     return vtd->vtxCnt;
 }
 
+_AKX afxNat AkxCountVertexAttributes(akxVertexData vtd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &vtd, afxFcc_VTD);
+    return vtd->attrCnt;
+}
+
 _AKX afxError AkxUpdateVertexData(akxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void const* src, afxNat32 srcStride)
 {
     afxError err = AFX_ERR_NONE;
@@ -278,6 +145,10 @@ _AKX void* AkxExposeVertexData(akxVertexData vtd, afxNat attrIdx, afxNat baseVtx
 
     afxVertexFormat fmt = vtd->attrs[attrIdx].fmt;
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
+
+    if (!vtd->attrs[attrIdx].data && !(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHere())))
+        AfxThrowError();
+
     afxByte *data = vtd->attrs[attrIdx].data;
 
     if (!data)
@@ -306,6 +177,26 @@ _AKX afxError AkxFillVertexData(akxVertexData vtd, afxNat attrIdx, afxNat baseVt
     if (!err)
     {
         AfxStream(vtxCnt, 0, unitSiz, src, vtd->attrs[attrIdx].data);
+    }
+    return err;
+}
+
+_AKX afxError AkxInvertNormalizedVertexData(akxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &vtd, afxFcc_VTD);
+    AfxAssertRange(vtd->attrCnt, attrIdx, 1);
+    AfxAssertRange(vtd->vtxCnt, baseVtx, vtxCnt);
+    AfxAssert(vtd->attrs[attrIdx].flags & akxVertexFlag_NORMALIZED);
+    
+    if (vtd->attrs[attrIdx].data)
+    {
+        afxV3d* nrm = AkxExposeVertexData(vtd, attrIdx, baseVtx);
+
+        for (afxNat i = 3; i < vtxCnt; i++)
+        {
+            AfxV3dScale(nrm[i], nrm[i], -1.f);
+        }
     }
     return err;
 }
@@ -358,7 +249,7 @@ _AKX afxError AkxZeroVertexData(akxVertexData vtd, afxNat attrIdx, afxNat baseVt
     AfxAssertRange(vtd->attrCnt, attrIdx, 1);
     AfxAssertRange(vtd->vtxCnt, baseVtx, vtxCnt);
     
-    if (AkxFillVertexData(vtd, attrIdx, baseVtx, vtxCnt, AFX_M4D_ZERO))
+    if (AkxFillVertexData(vtd, attrIdx, baseVtx, vtxCnt, AFX_V4D_ZERO))
         AfxThrowError();
 
     return err;
@@ -373,18 +264,16 @@ _AKX afxError _AkxVtdDtor(akxVertexData vtd)
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     afxMmu mmu = AfxGetSimulationMmu(sim);
 
-    for (afxNat i = 0; i < vtd->attrCnt; i++)
-    {
-        if (vtd->attrs[i].data)
-            AfxDeallocate(vtd->attrs[i].data);
-    }
-
     if (vtd->attrs)
+    {
+        for (afxNat i = 0; i < vtd->attrCnt; i++)
+        {
+            if (vtd->attrs[i].data)
+                AfxDeallocate(vtd->attrs[i].data);
+        }
+
         AfxDeallocate(vtd->attrs);
-
-    if (vtd->strb)
-        AfxReleaseObjects(1, (void*[]) { vtd->strb });
-
+    }
     return err;
 }
 
@@ -395,13 +284,9 @@ _AKX afxError _AkxVtdCtor(akxVertexData vtd, afxCookie const* cookie)
     
     afxSimulation sim = cookie->udd[0];
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxStringBase strb = cookie->udd[1];
-    akxVertexAttrSpec const* attrSpecs = cookie->udd[2];
-    akxVertexDataSpec const* spec = cookie->udd[3];
+    akxVertexAttrSpec const* attrSpecs = cookie->udd[1];
+    akxVertexDataSpec const* spec = cookie->udd[2];
     spec += cookie->no;
-
-    if ((vtd->strb = strb))
-        AfxReacquireObjects(1, &strb);
 
     afxMmu mmu = AfxGetSimulationMmu(sim);
 
@@ -427,11 +312,9 @@ _AKX afxError _AkxVtdCtor(akxVertexData vtd, afxCookie const* cookie)
             afxBool hasData = TRUE;
 
             afxString tmp;
-            AfxMakeString(&tmp, attrSpec->id, 0);
+            AfxMakeString(&tmp, 0, attrSpec->id, 0);
 
-            if (!strb)
-                AfxResetString(&attrs[i].id);
-            else if (!AfxCatalogStrings2(strb, 1, &tmp, &attrs[i].id))
+            if (!AfxRegisterMorphTags(sim, 1, &tmp, &attrs[i].id))
                 AfxThrowError();
 
             attrs[i].usage = attrSpec->usage;
@@ -444,10 +327,6 @@ _AKX afxError _AkxVtdCtor(akxVertexData vtd, afxCookie const* cookie)
             AfxAssert(attrSpec->fmt < afxVertexFormat_TOTAL);
             attrs[i].fmt = attrSpec->fmt;
             attrs[i].data = NIL;
-
-            attrs[i].cachedFmt = NIL;
-            attrs[i].cachedOffset = 0;
-            attrs[i].cacheIdx = AFX_INVALID_INDEX;
 
             afxSize vtxSiz = AfxVertexFormatGetSize(attrs[i].fmt);
 
@@ -470,7 +349,7 @@ _AKX afxClassConfig _AkxVtdMgrCfg =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AKX afxError AkxAcquireVertexDatas(afxSimulation sim, afxStringBase strb, akxVertexAttrSpec const attrSpec[], afxNat cnt, akxVertexDataSpec const specs[], akxVertexData datas[])
+_AKX afxError AkxAcquireVertexDatas(afxSimulation sim, akxVertexAttrSpec const attrSpec[], afxNat cnt, akxVertexDataSpec const specs[], akxVertexData datas[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -478,13 +357,13 @@ _AKX afxError AkxAcquireVertexDatas(afxSimulation sim, afxStringBase strb, akxVe
     AfxAssert(specs);
     AfxAssert(cnt);
 
-    if (AfxAcquireObjects(AkxGetMeshDataClass(sim), cnt, (afxObject*)datas, (void const*[]) { sim, strb, attrSpec, specs }))
+    if (AfxAcquireObjects(AkxGetMeshDataClass(sim), cnt, (afxObject*)datas, (void const*[]) { sim, attrSpec, specs }))
         AfxThrowError();
 
     return err;
 }
 
-_AKX akxVertexData AkxBuildVertexData(afxSimulation sim, afxStringBase strb, afxMeshBuilder const* mshb)
+_AKX akxVertexData AkxBuildVertexData(afxSimulation sim, afxMeshBuilder const* mshb)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -503,7 +382,7 @@ _AKX akxVertexData AkxBuildVertexData(afxSimulation sim, afxStringBase strb, afx
 
     for (afxNat i = 0; i < spec.biasCnt; i++)
     {
-        afxVertexBias const* vb = AfxGetArrayUnit(&mshb->biases, i);
+        akxVertexBias const* vb = AfxGetArrayUnit(&mshb->biases, i);
         AfxAssert(1.0 >= vb->weight);
         AfxAssertRange(mshb->artCnt, vb->pivotIdx, 1);
     }
@@ -531,7 +410,7 @@ _AKX akxVertexData AkxBuildVertexData(afxSimulation sim, afxStringBase strb, afx
     attrSpecs[2].src = mshb->uv;
     attrSpecs[2].srcStride = sizeof(mshb->uv[0]);
 
-    if (AkxAcquireVertexDatas(sim, strb, attrSpecs, 1, &spec, &vtd))
+    if (AkxAcquireVertexDatas(sim, attrSpecs, 1, &spec, &vtd))
         AfxThrowError();
 
     return vtd;
@@ -574,19 +453,19 @@ _AKX void AkxTransformVertexDatas(afxM3d const ltm, afxM3d const iltm, afxV4d co
                 {
                     if (fmt == afxVertexFormat_V4D)
                     {
-                        AfxPostMultiplyArrayedLtv4d(ltm, vtxCnt, data, data);
+                        AfxM3dPostMultiplyLtv4d(ltm, vtxCnt, data, data);
 
                         if (!deltaFlag)
                             for (afxNat k = 0; k < vtxCnt; k++)
-                                AfxAddV4d(((afxV4d*)data)[k], ((afxV4d*)data)[k], atv);
+                                AfxV4dAdd(((afxV4d*)data)[k], ((afxV4d*)data)[k], atv);
                     }
                     else if (fmt == afxVertexFormat_V3D)
                     {
-                        AfxPostMultiplyArrayedV3d(ltm, vtxCnt, data, data);
+                        AfxM3dPostMultiplyV3d(ltm, vtxCnt, data, data);
 
                         if (!deltaFlag)
                             for (afxNat k = 0; k < vtxCnt; k++)
-                                AfxAddV3d(((afxV3d*)data)[k], ((afxV3d*)data)[k], atv);
+                                AfxV3dAdd(((afxV3d*)data)[k], ((afxV3d*)data)[k], atv);
                     }
 
                     normalized = FALSE;
@@ -594,14 +473,14 @@ _AKX void AkxTransformVertexDatas(afxM3d const ltm, afxM3d const iltm, afxV4d co
 #if !0
                 else if (usage & akxVertexUsage_TAN)
                 {
-                    AfxPostMultiplyArrayedV3d(ltm, vtxCnt, data, data);
+                    AfxM3dPostMultiplyV3d(ltm, vtxCnt, data, data);
 
                     normalizedFlag = TRUE;
                     normalized = TRUE;
                 }
                 else if (usage & akxVertexUsage_BIT)
                 {
-                    AfxPostMultiplyArrayedV3d(ltm, vtxCnt, data, data);
+                    AfxM3dPostMultiplyV3d(ltm, vtxCnt, data, data);
 
                     normalizedFlag = TRUE;
                     normalized = TRUE;
@@ -610,11 +489,11 @@ _AKX void AkxTransformVertexDatas(afxM3d const ltm, afxM3d const iltm, afxV4d co
                 {
                     if (deltaFlag)
                     {
-                        AfxPostMultiplyArrayedV3d(ltm, vtxCnt, data, data);
+                        AfxM3dPostMultiplyV3d(ltm, vtxCnt, data, data);
                     }
                     else
                     {
-                        AfxPostMultiplyArrayedV3d(iltm, vtxCnt, data, data);
+                        AfxM3dPostMultiplyV3d(iltm, vtxCnt, data, data);
                     }
 
                     normalizedFlag = TRUE;
@@ -624,11 +503,11 @@ _AKX void AkxTransformVertexDatas(afxM3d const ltm, afxM3d const iltm, afxV4d co
                 {
                     if (deltaFlag)
                     {
-                        AfxPostMultiplyArrayedV3d(ltm, vtxCnt, data, data);
+                        AfxM3dPostMultiplyV3d(ltm, vtxCnt, data, data);
                     }
                     else
                     {
-                        AfxPostMultiplyArrayedV3d(iltm, vtxCnt, data, data);
+                        AfxM3dPostMultiplyV3d(iltm, vtxCnt, data, data);
                     }
 
                     normalizedFlag = TRUE;
@@ -660,18 +539,18 @@ _AKX void AkxTransformVertexDatas(afxM3d const ltm, afxM3d const iltm, afxV4d co
                         AfxThrowError(); // inoperant
 
                         if (linearFlag)
-                            AfxPostMultiplyArrayedV3d(lt, vtxCnt, data, data);
+                            AfxM3dPostMultiplyV3d(lt, vtxCnt, data, data);
 
                         if (invLinearFlag)
-                            AfxPostMultiplyArrayedV3d(ilt, vtxCnt, data, data);
+                            AfxM3dPostMultiplyV3d(ilt, vtxCnt, data, data);
 
                         if (affineFlag)
                             for (afxNat k = 0; k < vtxCnt; k++)
-                                AfxAddV3d(((afxV3d*)data)[k], ((afxV3d*)data)[k], at);
+                                AfxV3dAdd(((afxV3d*)data)[k], ((afxV3d*)data)[k], at);
 
                         if (renormalize)
                             for (afxNat k = 0; k < vtxCnt; k++)
-                                AfxNormalizeV3d(((afxV3d*)data)[k], ((afxV3d*)data)[k]);
+                                AfxV3dNormalize(((afxV3d*)data)[k], ((afxV3d*)data)[k]);
 
                         break;
                     }
@@ -680,18 +559,18 @@ _AKX void AkxTransformVertexDatas(afxM3d const ltm, afxM3d const iltm, afxV4d co
                         AfxThrowError(); // inoperant
 
                         if (linearFlag)
-                            AfxPostMultiplyArrayedLtv4d(lt, vtxCnt, data, data);
+                            AfxM3dPostMultiplyLtv4d(lt, vtxCnt, data, data);
 
                         if (invLinearFlag)
-                            AfxPostMultiplyArrayedLtv4d(ilt, vtxCnt, data, data);
+                            AfxM3dPostMultiplyLtv4d(ilt, vtxCnt, data, data);
 
                         if (affineFlag)
                             for (afxNat k = 0; k < vtxCnt; k++)
-                                AfxAddV3d(((afxV4d*)data)[k], ((afxV4d*)data)[k], at);
+                                AfxV3dAdd(((afxV4d*)data)[k], ((afxV4d*)data)[k], at);
 
                         if (renormalize)
                             for (afxNat k = 0; k < vtxCnt; k++)
-                                AfxNormalizeV4d(((afxV4d*)data)[k], ((afxV4d*)data)[k]);
+                                AfxV4dNormalize(((afxV4d*)data)[k], ((afxV4d*)data)[k]);
 
                         break;
                     }

@@ -22,7 +22,7 @@
 #ifndef AVX_CANVAS_H
 #define AVX_CANVAS_H
 
-#include "qwadro/draw/io/afxRaster.h"
+#include "qwadro/draw/afxRaster.h"
 
 AFX_DEFINE_STRUCT(afxSurfaceConfig)
 {
@@ -54,7 +54,7 @@ AVX afxError        AfxRelinkDrawBuffers(avxCanvas canv, afxNat baseSurf, afxNat
 AVX afxError        AfxRelinkDepthBuffer(avxCanvas canv, afxRaster depth);
 AVX afxError        AfxRelinkStencilBuffer(avxCanvas canv, afxRaster stencil);
 
-AVX afxError        AfxPrintDrawBuffer(avxCanvas canv, afxNat surIdx, afxRasterIo const* op, afxUri const* uri);
+AVX afxError        AfxPrintDrawBuffer(avxCanvas canv, afxNat surIdx, afxNat portIdx, afxRasterIo const* op, afxUri const* uri);
 
 AVX afxError        AfxRedoDrawBuffers(avxCanvas canv);
 

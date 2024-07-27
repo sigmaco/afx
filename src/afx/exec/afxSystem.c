@@ -30,7 +30,7 @@ extern afxBool sysReady;
 extern afxBool usysReady = FALSE;
 extern afxBool ssysReady = FALSE;
 
-_AFX afxReal64 const renderWareUnitsPerMeter = 1.f;
+_AFX afxReal64 const renderwareUnitsPerMeter = 1.f;
 extern afxChain orphanClassChain;
 
 _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie);
@@ -67,6 +67,27 @@ _AFX afxBool AfxGetSystem(afxSystem* system)
     return sysReady;
 }
 
+_AFX afxNat32 AfxGetPrimeTid(void)
+{
+    afxError err = AFX_ERR_NONE;
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    return sys->primeTid;
+}
+
+_AFX afxBool AfxGetPrimeThread(afxThread* thread)
+{
+    afxError err = AFX_ERR_NONE;
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    afxThread thr = sys->primeThr;
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+    *thread = thr;
+    return !!thr;
+}
+
 _AFX afxChain* _AfxGetSystemClassChain(void)
 {
     afxSystem sys;
@@ -87,9 +108,11 @@ _AFX afxNat AfxGetMemoryPageSize(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    return sys->memPageSize;
+    if (AfxGetSystem(&sys))
+    {
+        AfxAssertObjects(1, &sys, afxFcc_SYS);
+    }
+    return sys ? sys->memPageSiz : 0;
 }
 
 _AFX afxNat AfxGetThreadingCapacity(void)
@@ -98,7 +121,7 @@ _AFX afxNat AfxGetThreadingCapacity(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    return sys->hwConcurrencyCap;
+    return sys->hwThreadingCap;
 }
 
 _AFX afxClass* AfxGetStorageClass(void)
@@ -145,17 +168,6 @@ _AFX afxClass* AfxGetDeviceClass(void)
     return cls;
 }
 
-_AFX afxClass* AfxGetFileClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->fileMgr;
-    AfxAssertClass(cls, afxFcc_FILE);
-    return cls;
-}
-
 _AFX afxClass* AfxGetStringBaseClass(void)
 {
     afxError err = AFX_ERR_NONE;
@@ -167,17 +179,6 @@ _AFX afxClass* AfxGetStringBaseClass(void)
     return cls;
 }
 
-_AFX afxClass* AfxGetArchiveClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->archMgr;
-    AfxAssertClass(cls, afxFcc_ARC);
-    return cls;
-}
-
 _AFX afxClass* AfxGetMmuClass(void)
 {
     afxError err = AFX_ERR_NONE;
@@ -186,17 +187,6 @@ _AFX afxClass* AfxGetMmuClass(void)
     AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxClass *cls = &sys->mmuMgr;
     AfxAssertClass(cls, afxFcc_MMU);
-    return cls;
-}
-
-_AFX afxClass* AfxGetStreamClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->iosMgr;
-    AfxAssertClass(cls, afxFcc_IOB);
     return cls;
 }
 
@@ -221,14 +211,14 @@ _AFX afxUri const* AfxGetSystemDirectory(afxUri *dst)
     return dst ? AfxCopyUri(dst, qwd), dst : qwd;
 }
 
-_AFX afxString const* AfxGetSystemDirectoryString(afxRestring *dst)
+_AFX afxString const* AfxGetSystemDirectoryString(afxString *dst)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxString const* qwd = AfxGetUriString(&sys->qwd.uri);
-    return dst ? AfxCopyString(dst, qwd), &dst->str : qwd;
+    return dst ? AfxCopyString(dst, qwd), dst : qwd;
 }
 
 _AFX afxUri const* AfxGetPwd(afxUri *dst)
@@ -241,30 +231,14 @@ _AFX afxUri const* AfxGetPwd(afxUri *dst)
     return dst ? AfxCopyUri(dst, pwd), dst : pwd;
 }
 
-_AFX afxString const* AfxGetPwdString(afxRestring *dst)
+_AFX afxString const* AfxGetPwdString(afxString *dst)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxString const* pwd = AfxGetUriString(&sys->pwd.uri);
-    return dst ? AfxCopyString(dst, pwd), &dst->str : pwd;
-}
-
-_AFX afxBool _AfxThrQuitAndExecuteCb(afxThread thr, void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    (void)udd;
-    //afxInt exitCode = *(afxInt*)udd;
-
-    AfxRequestThreadInterruption(thr);
-
-    return FALSE; // dont interrupt curation
-}
-
-_AFX void _AfxInterruptionAllThreads(afxInt exitCode)
-{
-    AfxInvokeThreads(0, AFX_N32_MAX, _AfxThrQuitAndExecuteCb, &exitCode);
+    return dst ? AfxCopyString(dst, pwd), dst : pwd;
 }
 
 _AFX void AfxRequestShutdown(afxInt exitCode)
@@ -318,10 +292,38 @@ _AFX afxBool AfxEmitEvent(afxObject receiver, afxEvent* ev)
     return 0;
 }
 
-_AFX afxError _AfxDoAvxShutdown(afxSystem sys)
+_AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sys, afxFcc_SYS);
+
+    usysReady = FALSE;
+
+    if (sys->aux.usys)
+    {
+        sys->aux.ioctl(sys, sys->aux.e2uxDll, 4, NIL);
+    }
+
+    if (sys->aux.e2uxDll)
+    {
+        AfxAssertObjects(1, &sys->aux.e2uxDll, afxFcc_MDLE);
+        AfxReleaseObjects(1, &sys->aux.e2uxDll);
+    }
+    AfxZero(&sys->aux, sizeof(sys->aux));
+
+    ssysReady = FALSE;
+
+    if (sys->asx.ssys)
+    {
+        sys->asx.ioctl(sys, sys->asx.e2soundDll, 4, NIL);
+    }
+
+    if (sys->asx.e2soundDll)
+    {
+        AfxAssertObjects(1, &sys->asx.e2soundDll, afxFcc_MDLE);
+        AfxReleaseObjects(1, &sys->asx.e2soundDll);
+    }
+    AfxZero(&sys->asx, sizeof(sys->asx));
 
     if (sys->avx.dsys)
     {
@@ -338,62 +340,17 @@ _AFX afxError _AfxDoAvxShutdown(afxSystem sys)
     return err;
 }
 
-_AFX afxError _AfxDoAsxShutdown(afxSystem sys)
+_AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sys, afxFcc_SYS);
 
-    ssysReady = FALSE;
-
-    if (sys->asx.ssys)
-    {
-        sys->asx.ioctl(sys, sys->asx.e2soundDll, 4, NIL);
-    }
-
-    if (sys->asx.e2soundDll)
-    {
-        AfxAssertObjects(1, &sys->asx.e2soundDll, afxFcc_MDLE);
-        AfxReleaseObjects(1, &sys->asx.e2soundDll);
-    }
-    AfxZero(&sys->asx, sizeof(sys->asx));
-    return err;
-}
-
-_AFX afxError _AfxDoAuxShutdown(afxSystem sys)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    
-    usysReady = FALSE;
-
-    if (sys->aux.usys)
-    {
-        sys->aux.ioctl(sys, sys->aux.e2uxDll, 4, NIL);
-    }
-
-    if (sys->aux.e2uxDll)
-    {
-        AfxAssertObjects(1, &sys->aux.e2uxDll, afxFcc_MDLE);
-        AfxReleaseObjects(1, &sys->aux.e2uxDll);
-    }
-    AfxZero(&sys->aux, sizeof(sys->aux));
-    return err;
-}
-
-_AFX afxError _AfxDoAvxStartUp(afxSystem sys, afxManifest const* ini)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-
-    AfxZero(&sys->avx, sizeof(sys->avx));
-    afxBool dsysDisabled = FALSE;
-
-    if (!(AfxIniGetBool(ini, &AfxString("DrawSystem"), &AfxString("bDisabled"), &dsysDisabled) && dsysDisabled))
+    if (!(sys->avx.disabled))
     {
         AfxDbgLogf(6, NIL, "Doing the AVX start up...");
 
         afxUri uri;
-        AfxMakeUri(&uri, "e2draw", 0);
+        AfxMakeUri(&uri, 0, "e2draw", 0);
         afxModule e2drawDll = NIL;
 
         if (AfxLoadModule(&uri, NIL, &e2drawDll)) AfxThrowError();
@@ -419,23 +376,13 @@ _AFX afxError _AfxDoAvxStartUp(afxSystem sys, afxManifest const* ini)
             }
         }
     }
-    return err;
-}
 
-_AFX afxError _AfxDoAsxStartUp(afxSystem sys, afxManifest const* ini)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-
-    AfxZero(&sys->asx, sizeof(sys->asx));
-    afxBool ssysDisabled = FALSE;
-
-    if (!(AfxIniGetBool(ini, &AfxString("SoundSystem"), &AfxString("bDisabled"), &ssysDisabled) && ssysDisabled))
+    if (!(sys->asx.disabled))
     {
         AfxDbgLogf(6, NIL, "Doing the ASX start up...");
 
         afxUri uri;
-        AfxMakeUri(&uri, "e2sound", 0);
+        AfxMakeUri(&uri, 0, "e2sound", 0);
         afxModule e2soundDll = NIL;
 
         if (AfxLoadModule(&uri, NIL, &e2soundDll)) AfxThrowError();
@@ -461,39 +408,36 @@ _AFX afxError _AfxDoAsxStartUp(afxSystem sys, afxManifest const* ini)
             }
         }
     }
-    return err;
-}
 
-_AFX afxError _AfxDoAuxStartUp(afxSystem sys, afxManifest const* ini)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    AfxDbgLogf(6, NIL, "Doing the AUX start up...");
-
-    afxUri uri;
-    AfxMakeUri(&uri, "e2ux", 0);
-    afxModule e2uxDll = NIL;
-
-    if (AfxLoadModule(&uri, NIL, &e2uxDll)) AfxThrowError();
-    else
+    if (!(sys->aux.disabled))
     {
-        AfxAssertObjects(1, &e2uxDll, afxFcc_MDLE);
-        sys->aux.e2uxDll = e2uxDll;
+        AfxDbgLogf(6, NIL, "Doing the AUX start up...");
 
-        if (!(sys->aux.ioctl = AfxFindModuleSymbol(e2uxDll, "AfxSystemIoctl"))) AfxThrowError();
+        afxUri uri;
+        AfxMakeUri(&uri, 0, "e2ux", 0);
+        afxModule e2uxDll = NIL;
+
+        if (AfxLoadModule(&uri, NIL, &e2uxDll)) AfxThrowError();
         else
         {
-            if (sys->aux.ioctl(sys, e2uxDll, 3, (void*[]) { &ini, &sys->classes })) AfxThrowError();
+            AfxAssertObjects(1, &e2uxDll, afxFcc_MDLE);
+            sys->aux.e2uxDll = e2uxDll;
+
+            if (!(sys->aux.ioctl = AfxFindModuleSymbol(e2uxDll, "AfxSystemIoctl"))) AfxThrowError();
             else
             {
-                AfxAssert(sys->aux.usys);
+                if (sys->aux.ioctl(sys, e2uxDll, 3, (void*[]) { &ini, &sys->classes })) AfxThrowError();
+                else
+                {
+                    AfxAssert(sys->aux.usys);
+                }
             }
-        }
 
-        if (err)
-        {
-            AfxReleaseObjects(1, &sys->aux.e2uxDll);
-            sys->aux.e2uxDll = NIL;
+            if (err)
+            {
+                AfxReleaseObjects(1, &sys->aux.e2uxDll);
+                sys->aux.e2uxDll = NIL;
+            }
         }
     }
     return err;
@@ -514,10 +458,10 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
         if (AfxGetSystem(&sys)) AfxThrowError();
         else
         {
-            AfxDbgLogf(6, NIL, "Booting up the Qwadro Execution Ecosystem...\n");
+            AfxDbgLogf(6, NIL, "Booting up...\n");
 
             afxManifest ini;
-            //AfxSetUpIni(&ini);
+            AfxSetUpIni(&ini);
             // platform-dependent ctor will load the correct ini file.
 
             AfxAssert(TheSystem == sys);
@@ -534,17 +478,12 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
                 sys = TheSystem;
                 AfxAssertObjects(1, &sys, afxFcc_SYS);
 
-                AfxLogY("Memory page size: %d", sys->memPageSize);
-                AfxLogY("Logical processor count: %d", sys->hwConcurrencyCap);
+                AfxLogY("Memory Page Size: %d", sys->memPageSiz);
+                AfxLogY("HW Threading Capacity: %d", sys->hwThreadingCap);
 
-                if (!err && _AfxDoAvxStartUp(sys, &ini))
+                if (!err && _AfxDoSubsystemStartUp(sys, &ini))
                     AfxThrowError();
 
-                if (!err && _AfxDoAsxStartUp(sys, &ini))
-                    AfxThrowError();
-
-                if (!err && _AfxDoAuxStartUp(sys, &ini))
-                    AfxThrowError();
 
 #if 0
                 // Test path
@@ -573,14 +512,14 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
                     {
 
                         AfxMakeString(&s, "sound", 0);
-                        AfxMakeUri(&uri, "system/sound.xs", 0);
+                        AfxMakeUri(&uri, 0, "system/sound.xs", 0);
                         AfxLoadScript(&s, &uri);
                     }
 
                     if (sys->e2draw)
                     {
                         AfxMakeString(&s, "draw", 0);
-                        AfxMakeUri(&uri, "system/draw.xs", 0);
+                        AfxMakeUri(&uri, 0, "system/draw.xs", 0);
                         AfxLoadScript(&s, &uri);
                     }
 #endif
@@ -596,13 +535,7 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
 
                 if (err)
                 {
-                    if (_AfxDoAuxShutdown(sys))
-                        AfxThrowError();
-
-                    if (_AfxDoAsxShutdown(sys))
-                        AfxThrowError();
-
-                    if (_AfxDoAvxShutdown(sys))
+                    if (_AfxDoSubsystemShutdown(sys))
                         AfxThrowError();
 
                     if (_AfxDestructClassInstances(cls, 1, (void*[]) { sys }))
@@ -623,24 +556,18 @@ _AFX void AfxDoSystemShutdown(afxInt exitCode)
 
     if (AfxGetSystem(&sys))
     {
-        AfxDbgLogf(6, NIL, "Shutting down the Qwadro Execution Ecosystem...\n");
+        AfxDbgLogf(6, NIL, "Shutting down...\n");
 #if 0
         do
         {
             AfxRequestShutdown(exitCode);
-            AfxDoSystemExecution(0);
+            AfxDoThreading(0);
         } while (AfxSystemIsExecuting());
 #endif
         sysReady = FALSE;
         AfxCleanUpChainedClasses(&orphanClassChain);
 
-        if (_AfxDoAuxShutdown(sys))
-            AfxThrowError();
-
-        if (_AfxDoAsxShutdown(sys))
-            AfxThrowError();
-
-        if (_AfxDoAvxShutdown(sys))
+        if (_AfxDoSubsystemShutdown(sys))
             AfxThrowError();
 
         afxClass* cls = _AfxGetSysMgr();

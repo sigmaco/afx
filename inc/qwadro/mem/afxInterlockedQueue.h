@@ -26,15 +26,19 @@
 
 AFX_DEFINE_STRUCT(afxInterlockedQueue)
 {
+    afxAtom32*      entrySeqIdx;
+    afxByte*        entryValue;
+#if 0
     struct
     {
-        afxAtom64   seqIdx; /// Global index of the queue entry in the sequence, to detect when we are at a valid read or write pos
+        afxAtom32   seqIdx; /// Global index of the queue entry in the sequence, to detect when we are at a valid read or write pos
         afxByte     value[]; /// Value actually contained in the queue
     }*              entries; // Buffer of entries.    
+#endif
     afxNat          unitSiz;
-    afxInt64        queIdxMask; /// Mask to apply to the read/write position to clamp it to array bounds
-    afxAtom64       readPosn; /// readIndex of where we are in the sequence
-    afxAtom64       writePosn; /// writeIndex of where we are in the sequence
+    afxInt32        queIdxMask; /// Mask to apply to the read/write position to clamp it to array bounds
+    afxAtom32       readPosn; /// readIdx of where we are in the sequence
+    afxAtom32       writePosn; /// writeIdx of where we are in the sequence
 };
 
 /// Inicializa a fila afxInterlockedQueue e aloca memória para o número especificado de entradas.

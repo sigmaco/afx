@@ -19,7 +19,7 @@
 #ifndef AVX_BUFFER_OPS_H
 #define AVX_BUFFER_OPS_H
 
-#include "qwadro/draw/io/afxBuffer.h"
+#include "qwadro/draw/afxBuffer.h"
 
 AFX_DEFINE_STRUCT(afxBufferCopyOp)
 {

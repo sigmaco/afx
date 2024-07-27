@@ -17,7 +17,7 @@
 #include "sgl.h"
 
 #include "qwadro/draw/pipe/avxSampler.h"
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // SAMPLER                                                                    //
@@ -110,7 +110,7 @@ _SGL afxError _SglSampDtor(avxSampler samp)
     if (samp->glHandle)
     {
         afxDrawContext dctx = AfxGetObjectProvider(samp);
-        _SglDctxDeleteGlRes(dctx, 4, (void*)samp->glHandle);
+        _SglDctxDeleteGlRes(dctx, 4, samp->glHandle);
         samp->glHandle = 0;
     }
 

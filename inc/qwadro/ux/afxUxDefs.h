@@ -22,8 +22,8 @@
 #define AUX_UX_DEFS_H
 
 #include "qwadro/exec/afxSystem.h"
-#include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/sound/afxSoundSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
+#include "qwadro/sound/afxUnisound.h"
 
 #ifndef __e2ux__
 #   ifdef _DEBUG
@@ -85,10 +85,8 @@ typedef enum auxEventId
 
 AFX_DEFINE_STRUCT(auxEvent)
 {
+    afxEvent        base;
     auxEventId      id;
-    afxNat32        tid; // poster
-    //afxBool       posted;
-    afxBool         accepted;
     afxNat          hidPortIdx;
     afxWindow       wnd;
     afxWidget       wid;

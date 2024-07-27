@@ -14,7 +14,7 @@ Devices=Icd.Devices
 
 [Device.A4d]
 Class=SOUND
-Description=A4D Sound Acceleration Adapter
+Description=A4D Waveform Accoustics Accelerator
 PortCnt=1
 Ports=A4d.Ports
 ; device internal

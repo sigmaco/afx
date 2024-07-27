@@ -153,6 +153,9 @@
     <ClCompile Include="..\..\src\demos\sandbox\Sandbox.c" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\cadio\cadio.vcxproj">
+      <Project>{60b64922-a066-4894-90ac-66ff7a934804}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
     </ProjectReference>

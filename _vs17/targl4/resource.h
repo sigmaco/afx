@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by gl4nd.rc
+// Used by targl4.rc
 //
 
 // Next default values for new objects

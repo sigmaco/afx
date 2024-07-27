@@ -1,0 +1,13 @@
+Booting up...
+Acquiring thread...  3596 "afxSystem_w32.c:502"Mounting... <.>('E:/qwadro/afx///'),5Mounting... <s>('E:/qwadro/afx//system/'),5Mounting... <s>('E:/qwadro/afx//system64/'),7Mounting... <s>('E:/qwadro/afx//system64d/'),7Mounting... <//./c/>('E:/qwadro/afx//C://'),7Mounting... <//./e/>('E:/qwadro/afx//E://'),7Mounting... <//./f/>('E:/qwadro/afx//F://'),7Mounting... <//./g/>('E:/qwadro/afx//G://'),7Mounting... <//./h/>('E:/qwadro/afx//H://'),7Mounting... <//./i/>('E:/qwadro/afx//I://'),7Loading module... <e2coree>Memory Page Size: 4096HW Threading Capacity: 2Doing the AVX start up...Loading module... <e2draw>afxStorage.c:203
+afxStorage.c:223
+afxManifest.c:243
+Doing the ASX start up...Loading module... <e2sound>afxStorage.c:203
+afxStorage.c:223
+afxManifest.c:243
+Doing the AUX start up...Loading module... <e2ux>Acquiring HID at port 0Mounting... <c>('E:/qwadro/afx//system/'),7Entering the Thread Execution Environment 3596
+afxSoundContext.c:559
+afxClass.c:1082
+afxClass.c:1082
+(hdr)
+    Invalid

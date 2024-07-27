@@ -61,7 +61,7 @@ AFX_DEFINE_STRUCT(afxArrayInfo)
 
 #define AfxArray(type_, cap_, initialVal_) AfxAllocateArray((cap_), sizeof(type_), (initialVal_) ? ((type_ const[]){(initialVal_)}) : NIL)
 
-AFXINL afxArray     AfxWrapArray(afxNat cap, afxNat cnt, void** storage);
+AFXINL afxError     AfxWrapArray(afxArray* arr, afxNat unitSiz, afxNat cap, void* buf, afxNat cnt);
 AFXINL afxError     AfxAllocateArray(afxArray* arr, afxNat cap, afxNat unitSiz, void const* const initial);
 AFXINL void         AfxDeallocateArray(afxArray *arr);
 
@@ -79,7 +79,8 @@ AFXINL afxNat       AfxCountArrayElements(afxArray const *arr);
 
 AFXINL afxError     AfxReserveArraySpace(afxArray *arr, afxNat cap);
 
-#define             AfxForEachArrayUnit(arr_, iterIdx_, unitPtr_) for (afxNat iterIdx_ = 0; iterIdx_ < AfxCountArrayElements(arr_), (unitPtr_ = AfxGetArrayUnit(arr_, iterIdx_)); iterIdx_++)
+#define             AfxForEachArrayUnit(arr_, iterIdx_, unitPtr_) for (afxNat iterIdx_ = 0; (arr_)->cnt > iterIdx_, (unitPtr_ = AfxGetArrayUnit(arr_, iterIdx_)); iterIdx_++)
+#define             AfxForEachArrayItem(arr_, iterIdx_, unitPtr_) for (afxNat iterIdx_ = 0; (arr_)->cnt > iterIdx_, (unitPtr_ = AfxGetArrayUnit(arr_, iterIdx_)); iterIdx_++)
 
 //
 

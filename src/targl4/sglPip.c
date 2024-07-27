@@ -20,7 +20,7 @@
 #include "qwadro/draw/pipe/avxPipeline.h"
 #include "qwadro/draw/io/avxShaderBlueprint.h"
 #include "qwadro/draw/io/afxXsh.h"
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/exec/afxSystem.h"
 // OpenGL/Vulkan Continuous Integration
@@ -258,7 +258,9 @@ _SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, avxPip
                 {
                     GLint compiled = 0;
                     //gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)code.bytemap }, (GLint const[]) { code.cnt }); _SglThrowErrorOccuried();
+#if 0
                     AfxLogComment("%.*s", code.cnt, code.bytemap);
+#endif
                     gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)code.bytemap }, (GLint const[]) { code.cnt }); _SglThrowErrorOccuried();
                     gl->CompileShader(shader); _SglThrowErrorOccuried();
                     gl->GetShaderiv(shader, GL_COMPILE_STATUS, &compiled); _SglThrowErrorOccuried();
@@ -416,7 +418,7 @@ _SGL afxError _SglPipDtor(avxPipeline pip)
 
     if (pip->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 5, (void*)pip->glHandle);
+        _SglDctxDeleteGlRes(dctx, 5, pip->glHandle);
         pip->glHandle = 0;
     }
 

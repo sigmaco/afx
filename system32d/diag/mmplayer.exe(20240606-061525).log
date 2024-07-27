@@ -1,0 +1,14 @@
+Booting up...
+afxString.c:31
+afxString.c:31
+(!base || str->len > base)
+    InvalidafxString.c:31
+afxString.c:31
+(!base || str->len > base)
+    InvalidafxString.c:31
+afxString.c:31
+(!base || str->len > base)
+    InvalidafxString.c:31
+afxString.c:31
+(!base || str->len > base)
+    InvalidAcquiring thread...  5008 "afxSystem_w32.c:502"

@@ -37,24 +37,19 @@
 AFX_STATIC_ASSERT(sizeof(AFX_OBJECT(afxSystem)) > sizeof(void*), "");
 _AFX afxBool sysReady = FALSE;
 #if !0
-_AFX afxByte theSysData[AFX_ALIGN(sizeof(afxObjectBase), 16) + AFX_ALIGN(sizeof(((afxSystem)0)[0]), 16)] = { 0 };
+_AFX afxByte theSysData[AFX_ALIGNED_SIZEOF(sizeof(afxObjectBase), 16) + AFX_ALIGNED_SIZEOF(sizeof(((afxSystem)0)[0]), 16)] = { 0 };
 _AFX afxSystem TheSystem = (void*)&theSysData;
 AFX_STATIC_ASSERT(sizeof(TheSystem[0]) > sizeof(void*), "");
 AFX_STATIC_ASSERT(sizeof(theSysData) >= (sizeof(afxObjectBase) + sizeof(TheSystem[0])), "");
 #else
 _AFX afxSystem TheSystem = NIL;
 #endif
-extern afxReal64 const renderWareUnitsPerMeter;
-extern afxThread _primeThr;
-extern afxNat32 _primeTid;
+extern afxReal64 const renderwareUnitsPerMeter;
 
 extern afxClassConfig const _AfxMmuMgrCfg;
 extern afxClassConfig const _AfxMdleMgrCfg;
 extern afxClassConfig const _AfxThrMgrCfg;
-extern afxClassConfig const _AfxIosMgrCfg;
 extern afxClassConfig const _AfxCdcMgrCfg;
-//extern afxClassConfig const _AfxFileMgrCfg;
-extern afxClassConfig const _AfxArcMgrCfg;
 extern afxClassConfig const _AfxSimMgrCfg;
 extern afxClassConfig const _AfxSvcMgrCfg;
 extern afxClassConfig const _AfxDevMgrCfg;
@@ -98,7 +93,7 @@ _AFX afxResult _AfxProcessHostPlatformEvents(void)
 
     MSG msg;
     afxResult msgCnt = 0;
-    while (PeekMessageA(&(msg), NIL, 0, 0, PM_REMOVE/* | PM_NOYIELD*/))
+    while (PeekMessageA(&msg, NIL, 0, 0, PM_REMOVE | PM_NOYIELD))
     {
         ++msgCnt;
 
@@ -106,39 +101,49 @@ _AFX afxResult _AfxProcessHostPlatformEvents(void)
         {
             AfxRequestShutdown(0);
         }
+        else if (msg.message == WM_USER)
+        {
+            void(*event)(void* udd) = (void*)msg.wParam;
+
+            if (event)
+                event((void*)msg.lParam);
+        }
         else
         {
-            lastEscSt = escSt;
-            escSt = (GetKeyState(VK_ESCAPE) & 0x8000);
+            if (AfxIsPrimeThread())
+            {
+                lastEscSt = escSt;
+                escSt = (GetKeyState(VK_ESCAPE) & 0x8000);
 
-            if (GetKeyState(VK_F1))
-            {
-                AfxLogAssistence("User input requested support.");
-                AfxLogAssistence("Get help at https://sigmaco.org/");
-                system("start https://sigmaco.org");
-            }
-            else if (GetKeyState(VK_F4))
-            {
-                //AfxRequestThreadInterruption(thr);
-                AfxLogAdvertence("User input requested application break.");
-                AfxRequestShutdown(0);
-            }
-            else if (GetKeyState(VK_F5))
-            {
-                AfxLogAdvertence("User input requested application reboot.");
-                //_AfxInterruptionAllApplications();
-                //opcode = AFX_OPCODE_REBOOT;
-            }
-            else if (lastEscSt && !(escSt))
-            {
+                if (GetKeyState(VK_F1))
                 {
-                    afxString cur;
-                    AfxMakeString(&cur, "\n$ ", 0);
-                    afxString2048 buf;
-                    AfxMakeString2048(&buf, NIL);
-                    AfxPrompt(&cur, &buf.str);
-                    AfxPrint(0, buf.buf);
-                    AfxPrint(0, "\n");
+                    AfxLogAssistence("User input requested support.");
+                    AfxLogAssistence("Get help at https://sigmaco.org/");
+                    system("start https://sigmaco.org");
+                }
+                else if (GetKeyState(VK_F4))
+                {
+                    //AfxRequestThreadInterruption(thr);
+                    AfxLogAdvertence("User input requested application break.");
+                    AfxRequestShutdown(0);
+                }
+                else if (GetKeyState(VK_F5))
+                {
+                    AfxLogAdvertence("User input requested application reboot.");
+                    //_AfxInterruptionAllApplications();
+                    //opcode = AFX_OPCODE_REBOOT;
+                }
+                else if (lastEscSt && !(escSt))
+                {
+                    {
+                        afxString cur;
+                        AfxMakeString(&cur, 0, "\n$ ", 0);
+                        afxString2048 buf;
+                        AfxMakeString2048(&buf, NIL);
+                        AfxPrompt(&cur, &buf.str);
+                        AfxPrint(0, buf.buf);
+                        AfxPrint(0, "\n");
+                    }
                 }
             }
 
@@ -154,64 +159,96 @@ _AFX afxResult PrimeThreadProc(afxThread thr, afxEvent* ev)
     return 0;
 }
 
-#if 0
-_AFX afxBool DoDevService(afxDevice dev, afxThread thr)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dev, afxFcc_DEV);
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-    dev->procCb(dev, thr);
-    return 0; // continue
-}
-#endif
-
 extern afxBool _AfxThrExecuteCb(afxThread thr, void* udd);
 
-_AFX afxResult AfxDoSystemExecution(afxTime timeout)
+_AFX afxTime AfxDoThreading(afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    afxResult code = 0;
-    afxSystem sys;
-    (void)timeout;
 
-    if (!AfxGetSystem(&sys)) AfxThrowError();
-    else
+    afxTime first, last, dt;
+    AfxGetTime(&first);
+
+    do
     {
-        AfxAssertObjects(1, &sys, afxFcc_SYS);
+        SHORT escSt = 0, lastEscSt = 0;
 
-        if (AfxSystemIsExecuting())
+        MSG msg;
+        afxResult msgCnt = 0;
+        while (PeekMessageA(&msg, NIL, 0, 0, PM_REMOVE | PM_NOYIELD))
         {
-            afxResult msgCnt = _AfxProcessHostPlatformEvents();
+            ++msgCnt;
 
-            afxNat tid = AfxGetTid();
-            
-            if (tid == _primeTid)
+            if (msg.message == WM_QUIT) // PostQuitMessage()
             {
-                if (sys->avx.ioctl)
-                    sys->avx.ioctl(sys, sys->avx.e2drawDll, 0, &timeout);
+                if (AfxIsPrimeThread())
+                    AfxRequestShutdown(0);
+            }
+            else if (msg.message == WM_USER)
+            {
+                void(*event)(void* udd) = (void*)msg.wParam;
 
-                if (sys->asx.ioctl)
-                    sys->asx.ioctl(sys, sys->asx.e2soundDll, 0, &timeout);
-
-                if (sys->aux.ioctl)
-                    sys->aux.ioctl(sys, sys->aux.e2uxDll, 0, &timeout);
-
-                //AfxInvokeDevices(NIL, 0, AFX_N32_MAX, (void*)DoDevService, _primeThr);
-                //PrimeThreadProc(sys->primeThr, );
+                if (event)
+                    event((void*)msg.lParam);
             }
             else
             {
-                afxThread curr;
-                AfxGetThread(&curr);
-                _AfxThrExecuteCb(curr, &timeout);
-                //AfxInvokeThreads(0, AFX_N32_MAX, _AfxThrExecuteCb, &timeout);
+                if (AfxIsPrimeThread())
+                {
+                    afxSystem sys;
+                    AfxGetSystem(&sys);
+                    AfxAssertObjects(1, &sys, afxFcc_SYS);
+
+                    if (sys->aux.ioctl)
+                        sys->aux.ioctl(sys, sys->aux.e2uxDll, 0, &timeout);
+
+                    if (sys->asx.ioctl)
+                        sys->asx.ioctl(sys, sys->asx.e2soundDll, 0, &timeout);
+
+                    if (sys->avx.ioctl)
+                        sys->avx.ioctl(sys, sys->avx.e2drawDll, 0, &timeout);
+
+                    lastEscSt = escSt;
+                    escSt = (GetKeyState(VK_ESCAPE) & 0x8000);
+
+                    if (GetKeyState(VK_F1))
+                    {
+                        AfxLogAssistence("User input requested support.");
+                        AfxLogAssistence("Get help at https://sigmaco.org/");
+                        system("start https://sigmaco.org");
+                    }
+                    else if (GetKeyState(VK_F4))
+                    {
+                        //AfxRequestThreadInterruption(thr);
+                        AfxLogAdvertence("User input requested application break.");
+                        AfxRequestShutdown(0);
+                    }
+                    else if (GetKeyState(VK_F5))
+                    {
+                        AfxLogAdvertence("User input requested application reboot.");
+                        //_AfxInterruptionAllApplications();
+                        //opcode = AFX_OPCODE_REBOOT;
+                    }
+                    else if (lastEscSt && !(escSt))
+                    {
+                        {
+                            afxString cur;
+                            AfxMakeString(&cur, 0, "\n$ ", 0);
+                            afxString2048 buf;
+                            AfxMakeString2048(&buf, NIL);
+                            AfxPrompt(&cur, &buf.str);
+                            AfxPrint(0, buf.buf);
+                            AfxPrint(0, "\n");
+                        }
+                    }
+                }
+
+                TranslateMessage(&msg);
+                DispatchMessageA(&msg);
             }
         }
-
-        if (sys->isInShutdown)
-            code = sys->exitCode;
-    }
-    return code;
+        break; // <------
+    } while (timeout > (dt = (AfxGetTime(&last) - first)));
+    return dt;
 }
 
 _AFX void AfxStdAssertHookCallback(char const* exp, char const* file, int line)
@@ -239,7 +276,7 @@ _AFX afxError MountHostVolumes()
 
         if (0 == stat(buf, &st))
         {
-            AfxFormatUri(&urib.uri, "//./%c/", 'a' + i);
+            AfxFormatUri(&urib.uri, "%c", 'a' + i);
             AfxFormatUri(&urib2.uri, "%c:\\", 'A' + i);
             
             afxFileFlags ioFlags = NIL;
@@ -265,40 +302,40 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
     afxError err = AFX_ERR_NONE;
     
     afxUri point, location;
-    AfxMakeUri(&point, ".", 0);
-    AfxMakeUri(&location, "", 0);
+    AfxMakeUri(&point, 0, "z", 0);
+    AfxMakeUri(&location, 0, "", 0);
 
     if (AfxMountStorageUnit(&point, &location, afxFileFlag_RX)) AfxThrowError();
     else
     {
-        AfxMakeUri(&point, "system", 0);
-        AfxMakeUri(&location, "system", 0);
+        AfxMakeUri(&point, 0, "z", 0);
+        AfxMakeUri(&location, 0, "system", 0);
 
         if (AfxMountStorageUnit(&point, &location, afxFileFlag_RX)) AfxThrowError();
         else
         {
 #ifdef AFX_ISA_X86_64
 #   ifdef AFX_OS_WIN
-            AfxMakeUri(&location, "system64", 0);
+            AfxMakeUri(&location, 0, "system64", 0);
 
             if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, "system64d", 0);
+                AfxMakeUri(&location, 0, "system64d", 0);
 
                 if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX))
                     AfxThrowError();
             }
 #       endif
 #   elif defined(AFX_OS_LNX)
-            AfxMakeUri(&location, "system64x", 0);
+            AfxMakeUri(&location, 0, "system64x", 0);
 
             if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, "system64xd", 0);
+                AfxMakeUri(&location, 0, "system64xd", 0);
 
                 if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX))
                     AfxThrowError();
@@ -307,26 +344,26 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
 #   endif
 #elif defined(AFX_ISA_X86_32)
 #   ifdef AFX_OS_WIN
-            AfxMakeUri(&location, "system32", 0);
+            AfxMakeUri(&location, 0, "system32", 0);
 
             if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, "system32d", 0);
+                AfxMakeUri(&location, 0, "system32d", 0);
 
                 if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX))
                     AfxThrowError();
             }
 #       endif
 #   elif defined(AFX_OS_LNX)
-            AfxMakeUri(&location, "systemx", 0);
+            AfxMakeUri(&location, 0, "systemx", 0);
 
             if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, "system32xd", 0);
+                AfxMakeUri(&location, 0, "system32xd", 0);
 
                 if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX))
                     AfxThrowError();
@@ -391,7 +428,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     _AfxInitMmu(NIL);
 
     afxChain* classes = &sys->classes;
-    AfxSetUpChain(classes, sys);
+    AfxDeployChain(classes, sys);
     AfxRegisterClass(&sys->strbMgr, NIL, classes, &_AfxStrbMgrCfg);
 
     // setting the process working directory and the Qwadro/system working directory...
@@ -399,116 +436,45 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     afxChar buf[2048];
     GetModuleFileNameA(NIL, buf, sizeof(buf));
     AfxStrrchr(buf, '\\')[1] = '\0';
-    AfxMakeUri(&uri, buf, 0);
+    AfxMakeUri(&uri, 0, buf, 0);
     AfxMakeUri2048(&sys->pwd, &uri);
     AfxCanonicalizePath(&sys->pwd.uri, TRUE);
     GetModuleFileNameA(GetModuleHandleA("e2coree"), buf, sizeof(buf));    
     AfxStrrchr(buf, '\\')[1] = '\0';
     AfxStrcat(buf, "..\\");
-    AfxMakeUri(&uri, buf, 0);
+    AfxMakeUri(&uri, 0, buf, 0);
     AfxMakeUri2048(&sys->qwd, &uri);
     AfxCanonicalizePath(&sys->qwd.uri, TRUE);
     SetCurrentDirectoryA(AfxGetUriData(&sys->pwd.uri, 0));
 
-#ifdef AFX_OS_WIN
-    SYSTEM_INFO si;
-    GetSystemInfo(&si);
-#endif
-#if !0
-    AfxSetUpIni(ini);
-    AfxMakeUri(&uri, "system.ini", 0);
+    sys->primeTid = AfxGetTid();
+    AfxAssert(sys->primeTid);
 
-    if (AfxIniLoadFromFile(ini, &uri))
-    {
-        afxString2048 tbs;
-        AfxMakeString2048(&tbs, AfxGetUriString(&sys->pwd.uri));
-        AfxConcatenateStringL(&tbs.str, "system.ini", 0);
+    sys->maxMemUsage = cfg->maxMemUsage;
+    sys->memPageSiz = cfg->memPageSiz;
+    sys->allocGranularity = cfg->allocGranularity;
+    sys->ioBufSiz = cfg->ioBufSiz;
+    sys->unitsPerMeter = cfg->unitsToMeter;
 
-        AfxMakeUriFromString(&uri, &tbs.str.str);
-        AfxIniLoadFromFile(ini, &uri);
-    }
-    
-    afxString issSystem = AFX_STRING("System");
-
-    if (!AfxIniGetNat(ini, &issSystem, &AfxString("nIoBufferSize"), &sys->ioBufSiz) || !sys->ioBufSiz)
-    {
-        sys->ioBufSiz = BUFSIZ;
-    }
-
-    if (!AfxIniGetReal(ini, &issSystem, &AfxString("fUnitsPerMeter"), &sys->unitsPerMeter) || !sys->unitsPerMeter)
-    {
-        sys->unitsPerMeter = renderWareUnitsPerMeter;
-    }
-
-#endif
-    if (!AfxIniGetNat(ini, &issSystem, &AfxString("nHardwareThreadingCapacity"), &sys->hwConcurrencyCap) || (0 == sys->hwConcurrencyCap))
-    {
-        sys->hwConcurrencyCap =
-#ifdef AFX_OS_WIN
-            si.dwNumberOfProcessors;
-#else
-            1;
-#endif
-    }
-
-    if (!AfxIniGetNat(ini, &issSystem, &AfxString("nMemoryPageSize"), &sys->memPageSize) || (0 == sys->memPageSize))
-    {
-        sys->memPageSize =
-#ifdef AFX_OS_WIN
-            si.dwPageSize;
-#else
-            4096;
-#endif
-    }
-
-    if (!AfxIniGetNat(ini, &issSystem, &AfxString("nAllocationGranularity"), &sys->allocGranularity) || (0 == sys->allocGranularity))
-    {
-        sys->allocGranularity =
-#ifdef AFX_OS_WIN
-            si.dwAllocationGranularity;
-#else
-            4096;
-#endif
-    }
-
-
-    _primeTid = AfxGetTid();
-    AfxAssert(_primeTid);
-    sys->ioBufSiz = BUFSIZ;
-    sys->unitsPerMeter = renderWareUnitsPerMeter;
-
-
-    afxSystemConfig defCfg;
-    AfxChooseSystemConfiguration(&defCfg);
-
-    sys->assertHook = defCfg.assertHook;
-    sys->profilerPopTimer = defCfg.profilerPopTimer;
-    sys->profilerPushTimer = defCfg.profilerPushTimer;
-    sys->profilerPostMarker = defCfg.profilerPostMarker;
+    sys->assertHook = cfg->assertHook;
+    sys->profilerPopTimer = cfg->profilerPopTimer;
+    sys->profilerPushTimer = cfg->profilerPushTimer;
+    sys->profilerPostMarker = cfg->profilerPostMarker;
 
     sys->ptrSiz = sizeof(void*);
     sys->bigEndian = FALSE;
 
-    if (cfg)
-    {
-        if (cfg->assertHook)
-            sys->assertHook = cfg->assertHook;
+    //sys->genrlArenaSpace = cfg->genrlArenaSpace;
+    //sys->ioArenaSpace = cfg->ioArenaSpace;
+    sys->hwThreadingCap = cfg->hwThreadingCap;
+    sys->reallocatorFn = cfg->reallocatorFn;
 
-        if (cfg->profilerPopTimer)
-            sys->profilerPopTimer = cfg->profilerPopTimer;
-
-        if (cfg->profilerPushTimer)
-            sys->profilerPushTimer = cfg->profilerPushTimer;
-
-        if (cfg->profilerPostMarker)
-            sys->profilerPostMarker = cfg->profilerPostMarker;
-    }
 
 
     afxClassConfig clsCfg;
 
     clsCfg = _AfxThrMgrCfg;
-    clsCfg.unitsPerPage = sys->hwConcurrencyCap;
+    clsCfg.unitsPerPage = sys->hwThreadingCap;
     AfxRegisterClass(&sys->thrMgr, NIL, classes, &clsCfg); // require txu
 
     AfxRegisterClass(&sys->mmuMgr, NIL, classes, &_AfxMmuMgrCfg);
@@ -517,9 +483,6 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     //AfxRegisterClass(&sys->fileMgr, NIL, classes, &_AfxFileMgrConfig);
     AfxRegisterClass(&sys->cdcMgr, NIL, classes, &_AfxCdcMgrCfg);
 
-
-    AfxRegisterClass(&sys->iosMgr, NIL, classes, &_AfxIosMgrCfg);
-    AfxRegisterClass(&sys->archMgr, NIL, classes, &_AfxArcMgrCfg); // require iob
     AfxRegisterClass(&sys->fsysMgr, NIL, classes, &_AfxFsysMgrCfg); // require iob, arch
 
 
@@ -527,53 +490,13 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     AfxRegisterClass(&sys->devMgr, NIL, classes, &_AfxDevMgrCfg); // require mdle
 
     afxThreadConfig thrCfg = { 0 };
-    thrCfg.tid = AfxGetTid();
+    thrCfg.tid = (sys->primeTid = AfxGetTid());
     thrCfg.procCb = PrimeThreadProc;
 
-    void *p = AfxAllocate(1, 16, 0, AfxHere());
-    AfxDeallocate(p);
-    p = AfxAllocate(1, 16, 0, AfxHere());
-    AfxDeallocate(p);
-    p = AfxAllocate(1, 16, 0, AfxHere());
-    AfxDeallocate(p);
-    p = AfxAllocate(1, 16, 0, AfxHere());
-    AfxDeallocate(p);
-    p = AfxAllocate(1, 16, 0, AfxHere());
-    AfxDeallocate(p);
-    p = AfxAllocate(1, 16, 0, AfxHere());
-    AfxDeallocate(p);
-    p = AfxAllocate(1, 16, 0, AfxHere());
-    AfxDeallocate(p);
-    p = AfxAllocate(1, 16, 0, AfxHere());
-    AfxDeallocate(p);
-    p = AfxAllocate(1, 16, 0, AfxHere());
-    AfxDeallocate(p);
-    p = AfxAllocate(1, 16, 0, AfxHere());
-    void *p0 = AfxAllocate(1, 1600, 0, AfxHere());
-    void *p1 = AfxAllocate(1, 1006, 0, AfxHere());
-    void *p2 = AfxAllocate(1, 106, 0, AfxHere());
-    void *p3 = AfxAllocate(1, 16000, 0, AfxHere());
-    void *p4 = AfxAllocate(1, 1600, 0, AfxHere());
-    void *p5 = AfxAllocate(1, 16000, 0, AfxHere());
-    void *p6 = AfxAllocate(1, 16000, 0, AfxHere());
-    void *p7 = AfxAllocate(1, 16000, 0, AfxHere());
-    void *p8 = AfxAllocate(1, 16000, 0, AfxHere());
-    void *p9 = AfxAllocate(1, 10600, 0, AfxHere());
-    AfxDeallocate(p);
-    AfxDeallocate(p1);
-    AfxDeallocate(p2);
-    AfxDeallocate(p3);
-    AfxDeallocate(p4);
-    AfxDeallocate(p5);
-    AfxDeallocate(p6);
-    AfxDeallocate(p7);
-    AfxDeallocate(p8);
-    AfxDeallocate(p9);
-
-    if (AfxAcquireThread(AfxHere(), &thrCfg, &_primeThr)) AfxThrowError();
+    if (AfxAcquireThread(AfxHere(), &thrCfg, &sys->primeThr)) AfxThrowError();
     else
     {
-        AfxAssertObjects(1, &_primeThr, afxFcc_THR);
+        AfxAssertObjects(1, &sys->primeThr, afxFcc_THR);
         //sys->primeThr = primeThr;
 
         if (_AfxSysMountDefaultFileStorages(sys)) AfxThrowError();
@@ -608,14 +531,14 @@ _AFX afxError _AfxSysDtor(afxSystem sys)
     AfxAssertObjects(1, &sys, afxFcc_SYS);
 
     AfxReleaseObjects(1, &sys->e2coree);
-    AfxReleaseObjects(1, &_primeThr);
+    AfxReleaseObjects(1, &sys->primeThr);
 
     // objects will be released at class drop.
     AfxCleanUpChainedClasses(&sys->classes);
 
-    AfxDeallocateUri(&sys->pwd.uri);
+    //AfxDeallocateUri(&sys->pwd.uri);
 
-    //AfxDeallocateArena(&sys->ioArena);
+    //AfxDismantleArena(&sys->ioArena);
     //AfxReleaseObject(&(sys->memD->obj));
 
     //_AfxFreeExternalAllocations();
@@ -627,27 +550,105 @@ _AFX afxError _AfxSysDtor(afxSystem sys)
     return err;
 }
 
-_AFX void AfxChooseSystemConfiguration(afxSystemConfig* cfg)
+_AFX void AfxConfigureSystem(afxSystemConfig* config)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(cfg);
-    AfxZero(cfg, sizeof(*cfg));
+    afxSystemConfig cfg = { 0 };
 
-    cfg->assertHook = AfxStdAssertHookCallback;
+    afxUri uri;
+    afxManifest ini;
+    AfxSetUpIni(&ini);
+    AfxMakeUri(&uri, 0, "system.ini", 0);
+
+    if (AfxIniLoadFromFile(&ini, &uri))
+    {
+        afxString2048 tbs;
+        AfxMakeString2048(&tbs, TheSystem ? AfxGetUriString(&TheSystem->pwd.uri) : NIL);
+        AfxCatenateStringL(&tbs.str, "system.ini", 0);
+        
+        AfxWrapUriString(&uri, &tbs.str);
+        AfxIniLoadFromFile(&ini, &uri);
+    }
+
+#ifdef AFX_OS_WIN
+    SYSTEM_INFO si;
+    GetSystemInfo(&si);
+#endif
+
+    afxString sSystem = AFX_STRING("System");
+
+    if (!AfxIniGetNat(&ini, &sSystem, &AfxString("nIoBufferSize"), &cfg.ioBufSiz) || !cfg.ioBufSiz)
+    {
+        cfg.ioBufSiz = BUFSIZ;
+    }
+
+    if (!AfxIniGetReal(&ini, &sSystem, &AfxString("fUnitsPerMeter"), &cfg.unitsToMeter) || !cfg.unitsToMeter)
+    {
+        cfg.unitsToMeter = renderwareUnitsPerMeter;
+    }
+
+    if (!AfxIniGetNat(&ini, &sSystem, &AfxString("nHwThreadingCapacity"), &cfg.hwThreadingCap) || !cfg.hwThreadingCap)
+    {
+        cfg.hwThreadingCap =
+#ifdef AFX_OS_WIN
+            si.dwNumberOfProcessors;
+#else
+            1;
+#endif
+    }
+
+    if (!AfxIniGetNat(&ini, &sSystem, &AfxString("nMemoryPageSize"), &cfg.memPageSiz) || !cfg.memPageSiz)
+    {
+        cfg.memPageSiz =
+#ifdef AFX_OS_WIN
+            si.dwPageSize;
+#else
+            4096;
+#endif
+    }
+
+    if (!AfxIniGetNat(&ini, &sSystem, &AfxString("nAllocationGranularity"), &cfg.allocGranularity) || !cfg.allocGranularity)
+    {
+        cfg.allocGranularity =
+#ifdef AFX_OS_WIN
+            si.dwAllocationGranularity;
+#else
+            4096;
+#endif
+    }
+
+    cfg.assertHook = AfxStdAssertHookCallback;
     
-    cfg->root = NIL;
-    cfg->profilerPopTimer = NIL;
-    cfg->profilerPushTimer = NIL;
-    cfg->profilerPostMarker = NIL;
-
-    // load ini here
+    //cfg.root = NIL;
+    cfg.profilerPopTimer = NIL;
+    cfg.profilerPushTimer = NIL;
+    cfg.profilerPostMarker = NIL;
 
     //if (platform)
     {
 #ifdef AFX_OS_WIN
-        AfxZero(&cfg->platform, sizeof(cfg->platform));
-        cfg->platform.hInst = GetModuleHandle(NULL);
-        cfg->platform.hWnd = GetActiveWindow();
+        AfxZero(&cfg.platform, sizeof(cfg.platform));
+        cfg.platform.hInst = GetModuleHandle(NULL);
+        cfg.platform.hWnd = GetActiveWindow();
 #endif
     }
+
+    if (!(AfxIniGetBool(&ini, &AfxString("DrawSystem"), &AfxString("bDisabled"), &cfg.avxDisabled)))
+    {
+        cfg.avxDisabled = FALSE;
+    }
+
+    if (!(AfxIniGetBool(&ini, &AfxString("SoundSystem"), &AfxString("bDisabled"), &cfg.asxDisabled)))
+    {
+        cfg.asxDisabled = FALSE;
+    }
+
+    if (!(AfxIniGetBool(&ini, &AfxString("Shell"), &AfxString("bDisabled"), &cfg.auxDisabled)))
+    {
+        cfg.auxDisabled = FALSE;
+    }
+
+    AfxCleanUpIni(&ini);
+
+    *config = cfg;
 }

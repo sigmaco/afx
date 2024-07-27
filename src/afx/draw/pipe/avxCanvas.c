@@ -329,7 +329,7 @@ _AVX afxError AfxReadjustCanvas(avxCanvas canv, afxWhd const whd)
     return err;
 }
 
-_AVX afxError AfxPrintDrawBuffer(avxCanvas canv, afxNat surIdx, afxRasterIo const* op, afxUri const* uri)
+_AVX afxError AfxPrintDrawBuffer(avxCanvas canv, afxNat surIdx, afxNat portIdx, afxRasterIo const* op, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     /// canv must be a valid avxCanvas handle.
@@ -349,7 +349,7 @@ _AVX afxError AfxPrintDrawBuffer(avxCanvas canv, afxNat surIdx, afxRasterIo cons
             AfxAssert2(canv->whd[1] >= op->rgn.whd[1], op->rgn.whd[1]);
             AfxAssert2(canv->whd[2] >= op->rgn.whd[2], op->rgn.whd[2]);
             
-            if (AfxPrintRaster(ras, op, 1, uri))
+            if (AfxPrintRaster(ras, portIdx, op, 1, uri))
                 AfxThrowError();
         }
         else
@@ -357,7 +357,7 @@ _AVX afxError AfxPrintDrawBuffer(avxCanvas canv, afxNat surIdx, afxRasterIo cons
             afxRasterIo op2 = { 0 };
             AfxGetCanvasExtent(canv, op2.rgn.whd);
 
-            if (AfxPrintRaster(ras, &op2, 1, uri))
+            if (AfxPrintRaster(ras, portIdx, &op2, 1, uri))
                 AfxThrowError();
         }
     }

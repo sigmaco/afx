@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{6bcdd9a9-99b7-463d-a374-c29dd1c6adf1}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d92drend.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9convrt.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9device.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9dxttex.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9dxttex_add.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\D3D9lights.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9metric.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\D3D9pipe.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9raster.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9rendst.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9texdic.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9usage.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexbuffer.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexdeclaration.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexshader.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexshaderutils.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\drvequat.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\im3dpipe.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\native.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9AtomicAllInOne.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9SubmitNoLight.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9WorldSectorAllInOne.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\wrldpipe.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d92drend.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9convrt.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9device.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9dxttex.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9dxttex_add.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\D3D9lights.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9metric.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\D3D9pipe.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9raster.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9rendst.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9texdic.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9usage.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexbuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexdeclaration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexshader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexshaderdefs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\d3d9vertexshaderutils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\dds.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\drvfns.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\drvmodel.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\im3dpipe.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\native.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9AtomicAllInOne.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9SubmitNoLight.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\nodeD3D9WorldSectorAllInOne.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\pip2model.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\rwg\rwapi\d3d9\wrldpipe.h" />
+  </ItemGroup>
+</Project>

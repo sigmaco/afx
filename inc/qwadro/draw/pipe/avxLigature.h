@@ -33,7 +33,7 @@
 #ifndef AVX_BIND_SCHEMA_H
 #define AVX_BIND_SCHEMA_H
 
-#include "qwadro/draw/io/avxShader.h"
+#include "qwadro/draw/avxShader.h"
 
 AFX_DEFINE_HANDLE(avxLigature);
 
@@ -43,7 +43,7 @@ AFX_DEFINE_STRUCT(avxPipelineRigBlueprintBinding)
     afxMask                 visibility;
     avxShaderResourceType   type;
     afxNat                  cnt;
-    afxRestring             name; // 16
+    afxString             name; // 16
 };
 
 AFX_DEFINE_STRUCT(avxPipelineRigBlueprint)

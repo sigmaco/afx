@@ -22,43 +22,47 @@ _SGL void _SglCopyTexSubImage(sglDpu* dpu, GLenum glDstTarget, GLenum glSrcTarge
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
+    afxBool srcIs3d = FALSE;
+
+    if (glSrcTarget == GL_TEXTURE_3D)
+        srcIs3d = TRUE;
 
     gl->BindFramebuffer(GL_READ_FRAMEBUFFER, dpu->fboOpSrc);
-
+    
     for (afxNat i = 0; i < opCnt; i++)
     {
         afxRasterCopy const* op = &ops[i];
-        afxNat const* origin = op->srcOffset;
+        afxNat const* srcOrigin = op->srcOrigin;
         afxRasterRegion const* dstRgn = &op->dst;
 
-        _SglBindFboAttachment(gl, GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, glSrcTarget, glSrcHandle, op->srcLodIdx, op->srcBaseLayer, op->srcOffset[2]);
+        _SglBindFboAttachment(gl, GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, glSrcTarget, glSrcHandle, op->srcLodIdx, !srcIs3d ? op->srcOrigin[2] : 0, srcIs3d ? op->srcOrigin[2] : 0);
         gl->ReadBuffer(GL_COLOR_ATTACHMENT0);
 
         switch (glDstTarget)
         {
         case GL_TEXTURE_2D:
         {
-            gl->CopyTexSubImage2D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage2D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], srcOrigin[0], srcOrigin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
             break;
         }
         case GL_TEXTURE_1D_ARRAY:
         {
             for (afxNat i = dstRgn->whd[2]; i < dstRgn->whd[2]; i++)
             {
-                gl->CopyTexSubImage2D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+                gl->CopyTexSubImage2D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], i, srcOrigin[0], srcOrigin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
             }
             break;
         }
         case GL_TEXTURE_1D:
         {
-            gl->CopyTexSubImage1D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], origin[0], origin[1], dstRgn->whd[0]);
+            gl->CopyTexSubImage1D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], srcOrigin[0], srcOrigin[1], dstRgn->whd[0]);
             break;
         }
         case GL_TEXTURE_3D:
         {
             for (afxNat i = dstRgn->origin[2]; i < dstRgn->whd[2]; i++)
             {
-                gl->CopyTexSubImage3D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+                gl->CopyTexSubImage3D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], i, srcOrigin[0], srcOrigin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
             }
             break;
         }
@@ -66,7 +70,7 @@ _SGL void _SglCopyTexSubImage(sglDpu* dpu, GLenum glDstTarget, GLenum glSrcTarge
         {
             for (afxNat i = dstRgn->origin[2]; i < dstRgn->whd[2]; i++)
             {
-                gl->CopyTexSubImage3D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+                gl->CopyTexSubImage3D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], i, srcOrigin[0], srcOrigin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
             }
             break;
         }
@@ -74,7 +78,7 @@ _SGL void _SglCopyTexSubImage(sglDpu* dpu, GLenum glDstTarget, GLenum glSrcTarge
         {
             for (afxNat i = dstRgn->origin[2]; i < dstRgn->whd[2]; i++)
             {
-                gl->CopyTexSubImage3D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+                gl->CopyTexSubImage3D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], i, srcOrigin[0], srcOrigin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
             }
             break;
         }
@@ -82,14 +86,14 @@ _SGL void _SglCopyTexSubImage(sglDpu* dpu, GLenum glDstTarget, GLenum glSrcTarge
         {
             for (afxNat i = dstRgn->origin[2]; i < dstRgn->whd[2]; i++)
             {
-                gl->CopyTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+                gl->CopyTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], srcOrigin[0], srcOrigin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
             }
             break;
         }
         case GL_TEXTURE_RECTANGLE:
         {
             AfxAssert(dstRgn->lodIdx == 0);
-            gl->CopyTexSubImage2D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage2D(glDstTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], srcOrigin[0], srcOrigin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         };
         default:
             AfxThrowError();
@@ -131,7 +135,7 @@ _SGL void _DecodeCmdRasSubsample(sglDpu* dpu, _sglCmdRegenerateMipmaps const* cm
     AfxAssert(lodCnt == 1);
     AfxAssert(baseLod == 0);
 
-    afxNat rasLodCnt = AfxCountRasterLods(ras);
+    afxNat rasLodCnt = AfxCountRasterMipmaps(ras);
 
     DpuBindAndSyncRas(dpu, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
     gl->GenerateMipmap(ras->glTarget); _SglThrowErrorOccuried();

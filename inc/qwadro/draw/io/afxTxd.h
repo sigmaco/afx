@@ -21,10 +21,22 @@
 /// It then has a list of images, and each image lists its MIP levels.
 /// That's about all there is to textures. How the texture is meant to be used (ie., as a diffuse map or a normal map or something else) is not specified in the texture itself, since it might be used differently in different materials.
 
-#ifndef AFX_TXD_H
-#define AFX_TXD_H
+#ifndef AVX_TXD_H
+#define AVX_TXD_H
 
-#include "qwadro/draw/io/afxRaster.h"
+#include "qwadro/draw/afxRaster.h"
+
+AFX_DEFINE_STRUCT(afxFileChunkTxd)
+{
+    afxNat              texCnt;
+    afxUrdReference    names; // segment containing a list of texCnt strings specifying texture names.
+    afxUrdReference    rasInfos; // segment containing a list of texCnt raster infos specifying raster parameters.
+    afxUrdReference    rasData;
+    // afxString;
+    // afxRasterInfo;
+};
+
+AFX_DEFINE_HANDLE(avxTxd);
 
 AFX_DEFINE_STRUCT(afxTexture)
 {
@@ -35,29 +47,18 @@ AFX_DEFINE_STRUCT(afxTexture)
     afxRaster       ras;
 };
 
-AFX_DEFINE_HANDLE(afxTxd);
-
-#ifdef _AVX_DRAW_C
-#ifdef _AVX_TXD_C
-#ifndef _AVX_TXD_IMPL
-AFX_OBJECT(afxTxd)
-#else
-struct afxBaseTxd
-#endif
+AFX_DEFINE_STRUCT(avxTxdInfo)
 {
-    afxUri128   uri;
-    afxNat      texCnt;
-    afxString*  texName;
-    afxRaster*  rasters;
-    afxColor*   texColor;
+    afxNat                  texCnt;
+    afxString const*        names;
+    afxRasterInfo const*    rasters;
+    avxSamplerConfig const* samplers;
 };
-#endif//_AFX_TXD_C
-#endif//_AVX_DRAW_C
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError    AfxAcquireTxd(afxNat texCnt, afxString const texNames[], afxTxd* dict);
+AVX afxError    AfxAcquireTxd(afxDrawInput din, avxTxdInfo const* info, avxTxd* dict);
 
-AVX afxError    AfxLoadTxd(afxUri const* uri, afxTxd* dict);
+AVX afxError    AfxOpenTxd(afxDrawInput din, afxUri const* uri, avxTxd* dict);
 
-#endif//AFX_TXD_H
+#endif//AVX_TXD_H

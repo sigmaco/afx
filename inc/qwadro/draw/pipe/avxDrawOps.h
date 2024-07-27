@@ -70,8 +70,8 @@ AFX_DEFINE_STRUCT(afxCmd)
 
     afxCmdId(*ExecuteCommands)(avxCmdb cmdb, afxNat cnt, avxCmdb aux[]);
 
-    afxCmdId(*BindPipeline)(avxCmdb cmdb, afxNat segment, avxPipeline pip, afxFlags dynFlags);
-    afxCmdId(*BindRasterizer)(avxCmdb cmdb, avxRasterizer razr, afxFlags dynFlags);
+    afxCmdId(*BindPipeline)(avxCmdb cmdb, afxNat segment, avxPipeline pip, avxVertexInput vin, afxFlags dynFlags);
+    afxCmdId(*BindRasterizer)(avxCmdb cmdb, avxRasterizer razr, avxVertexInput vin, afxFlags dynFlags);
 
     afxCmdId(*BindBuffers)(avxCmdb cmdb, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buffers[], afxNat offset[], afxNat range[]);
     afxCmdId(*BindRasters)(avxCmdb cmdb, afxNat set, afxNat baseIdx, afxNat cnt, afxRaster rasters[], afxNat const subIdx[]);
@@ -132,7 +132,7 @@ AFX_DEFINE_STRUCT(afxCmd)
 
         afxCmdId(*SetBlendConstants)(avxCmdb cmdb, afxReal const blendConstants[4]);
 
-        afxCmdId(*BeginSynthesis)(avxCmdb cmdb, afxSynthesisConfig const*state);
+        afxCmdId(*BeginSynthesis)(avxCmdb cmdb, avxSynthesisConfig const*state);
         afxCmdId(*FinishSynthesis)(avxCmdb cmdb);
         afxCmdId(*NextPass)(avxCmdb cmdb, afxBool useAuxStreams);
     } razr;
@@ -167,6 +167,7 @@ AVX afxCmdId                AvxCmdBindPipeline
     avxCmdb                 cmdb, /// is the command buffer that the pipeline will be bound to. 
     afxNat                  segment, /// is a value specifying to which level the pipeline is bound. Binding one does not disturb the others.
     avxPipeline             pip, /// is the pipeline to be bound.
+    avxVertexInput          vin,
     afxFlags                dynamics
 );
 
@@ -178,6 +179,7 @@ AVX afxCmdId                AvxCmdBindRasterizer
 (
     avxCmdb                 cmdb, /// is the command buffer that the pipeline will be bound to. 
     avxRasterizer           razr, /// is the rasterizer to be bound.
+    avxVertexInput          vin,
     afxFlags                dynamics
 );
 
@@ -201,10 +203,10 @@ AVX afxCmdId                AvxCmdExecuteCommands
 AVX afxCmdId                AvxCmdDraw
 (
     avxCmdb                 cmdb,
-    afxNat                  firstInst, /// is the instance ID of the first instance to draw.
+    afxNat                  vtxCnt, /// is the number of vertices to draw.
     afxNat                  instCnt, /// is the number of instances to draw.
-    afxNat                  baseVtxIdx, /// is the index of the first vertex to draw.
-    afxNat                  vtxCnt /// is the number of vertices to draw.
+    afxNat                  firstVtxIdx, /// is the index of the first vertex to draw.
+    afxNat                  firstInstIdx /// is the instance ID of the first instance to draw.
 );
 
 /// Draw primitives with indirect parameters.
@@ -251,11 +253,11 @@ AVX afxCmdId                AvxCmdDrawIndirectCount
 AVX afxCmdId                AvxCmdDrawIndexed
 (
     avxCmdb                 cmdb,
-    afxNat                  vtxOff, /// is the value added to the vertex index before indexing into the vertex buffer.
-    afxNat                  firstInst, /// is the instance ID of the first instance to draw.
+    afxNat                  idxCnt, /// is the number of vertices to draw.
     afxNat                  instCnt, /// is the number of instances to draw.
     afxNat                  firstIdx, /// is the base index within the index buffer.
-    afxNat                  idxCnt /// is the number of vertices to draw.
+    afxNat                  vtxOffset, /// is the value added to the vertex index before indexing into the vertex buffer.
+    afxNat                  firstInstIdx /// is the instance ID of the first instance to draw.
 );
 
 /// Draw primitives with indirect parameters and indexed vertices.

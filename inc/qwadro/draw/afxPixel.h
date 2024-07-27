@@ -208,53 +208,55 @@ typedef enum avxFormat
     avxFormat_DXT3_sRGB,
     avxFormat_DXT5,
     avxFormat_DXT5_sRGB,
-    avxFormat_RGTC1, // RGTC1 (aka BC4)
-    avxFormat_RGTC1sn, // RGTC1 (aka BC4)
-    avxFormat_RGTC2, // RGTC2 (aka BC5)
-    avxFormat_RGTC2sn, // RGTC2 (aka BC5)
+    avxFormat_RGTC1, // RGTC1 (aka BC4 or ATI1N)
+    avxFormat_RGTC1sn, // RGTC1 (aka BC4 or ATI1N)
+    avxFormat_RGTC2, // RGTC2 (aka BC5 or ATI2N)
+    avxFormat_RGTC2sn, // RGTC2 (aka BC5 or ATI2N)
     avxFormat_BPTCuf, // BPTC (aka BC6H)
     avxFormat_BPTCf, // BPTC (aka BC6H)
     avxFormat_BPTC7, // BPTC (aka BC7)
     avxFormat_BPTC7_sRGB, // BPTC (aka BC7)
     
     avxFormat_ETC2_RGB8 = 147,
-    avxFormat_ETC2_RGB8_sRGB = 148,
-    avxFormat_ETC2_RGB8A1 = 149,
-    avxFormat_ETC2_RGB8A1_sRGB = 150,
-    avxFormat_ETC2_RGBA8 = 151,
-    avxFormat_ETC2_RGBA8_sRGB = 152,
+    avxFormat_ETC2_RGB8_sRGB,
+    avxFormat_ETC2_RGB8A1,
+    avxFormat_ETC2_RGB8A1_sRGB,
+    avxFormat_ETC2_RGBA8,
+    avxFormat_ETC2_RGBA8_sRGB,
+
     avxFormat_EAC_R11 = 153,
-    avxFormat_EAC_R11sn = 154,
-    avxFormat_EAC_R11G11 = 155,
-    avxFormat_EAC_R11G11sn = 156,
+    avxFormat_EAC_R11sn,
+    avxFormat_EAC_R11G11,
+    avxFormat_EAC_R11G11sn,
+
     avxFormat_ASTC_4x4 = 157,
-    avxFormat_ASTC_4x4_sRGB = 158,
-    avxFormat_ASTC_5x4 = 159,
-    avxFormat_ASTC_5x4_sRGB = 160,
-    avxFormat_ASTC_5x5 = 161,
-    avxFormat_ASTC_5x5_sRGB = 162,
-    avxFormat_ASTC_6x5 = 163,
-    avxFormat_ASTC_6x5_sRGB = 164,
-    avxFormat_ASTC_6x6 = 165,
-    avxFormat_ASTC_6x6_sRGB = 166,
-    avxFormat_ASTC_8x5 = 167,
-    avxFormat_ASTC_8x5_sRGB = 168,
-    avxFormat_ASTC_8x6 = 169,
-    avxFormat_ASTC_8x6_sRGB = 170,
-    avxFormat_ASTC_8x8 = 171,
-    avxFormat_ASTC_8x8_sRGB = 172,
-    avxFormat_ASTC_10x5 = 173,
-    avxFormat_ASTC_10x5_sRGB = 174,
-    avxFormat_ASTC_10x6 = 175,
-    avxFormat_ASTC_10x6_sRGB = 176,
-    avxFormat_ASTC_10x8 = 177,
-    avxFormat_ASTC_10x8_sRGB = 178,
-    avxFormat_ASTC_10x10 = 179,
-    avxFormat_ASTC_10x10_sRGB = 180,
-    avxFormat_ASTC_12x10 = 181,
-    avxFormat_ASTC_12x10_sRGB = 182,
-    avxFormat_ASTC_12x12 = 183,
-    avxFormat_ASTC_12x12_sRGB = 184,
+    avxFormat_ASTC_4x4_sRGB,
+    avxFormat_ASTC_5x4,
+    avxFormat_ASTC_5x4_sRGB,
+    avxFormat_ASTC_5x5,
+    avxFormat_ASTC_5x5_sRGB,
+    avxFormat_ASTC_6x5,
+    avxFormat_ASTC_6x5_sRGB,
+    avxFormat_ASTC_6x6,
+    avxFormat_ASTC_6x6_sRGB,
+    avxFormat_ASTC_8x5,
+    avxFormat_ASTC_8x5_sRGB,
+    avxFormat_ASTC_8x6,
+    avxFormat_ASTC_8x6_sRGB,
+    avxFormat_ASTC_8x8,
+    avxFormat_ASTC_8x8_sRGB,
+    avxFormat_ASTC_10x5,
+    avxFormat_ASTC_10x5_sRGB,
+    avxFormat_ASTC_10x6,
+    avxFormat_ASTC_10x6_sRGB,
+    avxFormat_ASTC_10x8,
+    avxFormat_ASTC_10x8_sRGB,
+    avxFormat_ASTC_10x10,
+    avxFormat_ASTC_10x10_sRGB,
+    avxFormat_ASTC_12x10,
+    avxFormat_ASTC_12x10_sRGB,
+    avxFormat_ASTC_12x12,
+    avxFormat_ASTC_12x12_sRGB,
 
     avxFormat_TOTAL
 } avxFormat;

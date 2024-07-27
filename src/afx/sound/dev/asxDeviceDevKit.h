@@ -20,7 +20,7 @@
 #define ASX_DEVICE_DEV_KIT_H
 
 #include "../src/afx/dev/afxDevCoreBase.h"
-#include "qwadro/sound/afxSoundSystem.h"
+#include "qwadro/sound/afxUnisound.h"
 
 #ifdef _ASX_SOUND_CONTEXT_C
 #ifdef _ASX_SOUND_CONTEXT_IMPL
@@ -41,6 +41,9 @@ AFX_OBJECT(afxSoundContext)
 
     //afxChain            classes;
     afxClass          buffers;
+
+    afxV3d              listener;
+    afxV3d              orientation;
 
     afxError(*waitCb)(afxSoundContext);
 

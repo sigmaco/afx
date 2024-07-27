@@ -132,7 +132,7 @@ _SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, avxLigature liga, GLuint glHan
     
     afxString32 tmp;
     AfxMakeString32(&tmp, 0);
-    afxChar const *rawName = (void const *)AfxGetStringData(&tmp.str.str, 0);
+    afxChar const *rawName = (void const *)AfxGetStringStorage(&tmp.str, 0);
 
     afxNat setCnt = liga->m.setCnt;
 
@@ -145,8 +145,8 @@ _SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, avxLigature liga, GLuint glHan
         for (afxNat j = 0; j < entryCnt; j++)
         {
             avxLigatureEntry const *entry = &liga->m.totalEntries[baseEntry + j];
-            AfxAssert(!AfxStringIsEmpty(&entry->name.str.str));
-            AfxCopyString(&tmp.str, &entry->name.str.str);
+            AfxAssert(!AfxStringIsEmpty(&entry->name.str));
+            AfxCopyString(&tmp.str, &entry->name.str);
             //AfxAssert(entry->visibility);
             //AfxAssert(entry->cnt);
 
@@ -164,7 +164,11 @@ _SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, avxLigature liga, GLuint glHan
                 {
                     gl->Uniform1i(loc, glBinding); _SglThrowErrorOccuried();
                 }
-                else AfxThrowError();
+                else
+                {
+                    //AfxThrowError();
+                    AfxLogError("Sampler unit '%s' not found in ligature %p.", rawName, liga);
+                }
                 break;
             }
             case AFX_SHD_RES_TYPE_SAMPLED_IMAGE:
@@ -175,7 +179,11 @@ _SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, avxLigature liga, GLuint glHan
                 {
                     gl->Uniform1i(loc, glBinding); _SglThrowErrorOccuried();
                 }
-                else AfxThrowError();
+                else
+                {
+                    //AfxThrowError();
+                    AfxLogError("Raster unit '%s' not found in ligature %p.", rawName, liga);
+                }
                 break;
             }
             case AFX_SHD_RES_TYPE_COMBINED_IMAGE_SAMPLER:
@@ -186,7 +194,11 @@ _SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, avxLigature liga, GLuint glHan
                 {
                     gl->Uniform1i(loc, glBinding); _SglThrowErrorOccuried();
                 }
-                else AfxThrowError();
+                else
+                {
+                    //AfxThrowError();
+                    AfxLogError("Combined raster/sampler unit '%s' not found in ligature %p.", rawName, liga);
+                }
                 break;
             }
             case AFX_SHD_RES_TYPE_CONSTANT_BUFFER:
@@ -199,7 +211,11 @@ _SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, avxLigature liga, GLuint glHan
                 {
                     gl->UniformBlockBinding(glHandle, unifBlckIdx, glBinding); _SglThrowErrorOccuried();
                 }
-                else AfxThrowError();
+                else
+                {
+                    //AfxThrowError();
+                    AfxLogError("Uniform buffer unit '%s' not found in ligature %p.", rawName, liga);
+                }
                 break;
             }
             case AFX_SHD_RES_TYPE_STORAGE_BUFFER:
@@ -210,7 +226,11 @@ _SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, avxLigature liga, GLuint glHan
                 {
                     gl->ShaderStorageBlockBinding(glHandle, storBlckIdx, glBinding); _SglThrowErrorOccuried();
                 }
-                else AfxThrowError();
+                else
+                {
+                    //AfxThrowError();
+                    AfxLogError("Storage buffer unit '%s' not found in ligature %p.", rawName, liga);
+                }
                 break;
             }
             default:

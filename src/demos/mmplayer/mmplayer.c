@@ -93,15 +93,15 @@ afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw th
 
                     afxNat annexCnt;
 
-                    afxDrawTarget dpt = { 0 };
+                    avxDrawTarget dpt = { 0 };
                     dpt.clearValue.color[0] = 0.3;
                     dpt.clearValue.color[1] = 0.1;
                     dpt.clearValue.color[2] = 0.3;
                     dpt.clearValue.color[3] = 1;
-                    dpt.loadOp = afxSurfaceLoadOp_CLEAR;
-                    dpt.storeOp = afxSurfaceStoreOp_STORE;
+                    dpt.loadOp = avxLoadOp_CLEAR;
+                    dpt.storeOp = avxStoreOp_STORE;
 
-                    afxSynthesisConfig dps = { 0 };
+                    avxSynthesisConfig dps = { 0 };
                     dps.canv = canv;
                     dps.layerCnt = 1;
                     dps.rasterCnt = 1;
@@ -181,23 +181,26 @@ afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw th
 int main(int argc, char const* argv[])
 {
     afxError err = AFX_ERR_NONE;
-    afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
+    afxResult rslt = AFX_SUCCESS;
 
     afxUri2048 uriB;
     AfxMakeUri2048(&uriB, NIL);
-    AfxFormatUri(&uriB.uri, "%s", argv[0]); // hardcoded name
 
     afxSystemConfig sysCfg;
-    AfxChooseSystemConfiguration(&sysCfg);
+    AfxConfigureSystem(&sysCfg);
     AfxDoSystemBootUp(&sysCfg);
 
+    afxNat sdevId = 0;
     afxSoundContext sctx;
-    afxSoundContextConfig sctxCfg = { 0 };
-    //AfxOpenSoundDevice(0, &sctxCfg, &sctx);
-    //AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    afxSoundContextConfig scc = { 0 };
+    AfxConfigureSoundDevice(sdevId, &scc);
+    AfxOpenSoundDevice(sdevId, &scc, &sctx);
+    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
 
-    afxDrawContextConfig dctxCfg = { 0 };        
-    AfxOpenDrawDevice(0, &dctxCfg, &dctx);
+    afxNat ddevId = 0;
+    afxDrawContextConfig dcc = { 0 };
+    AfxConfigureDrawDevice(ddevId, &dcc);
+    AfxOpenDrawDevice(ddevId, &dcc, &dctx);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
 #if 0
@@ -223,16 +226,14 @@ int main(int argc, char const* argv[])
 #endif
 
     afxDrawInputConfig dinCfg = { 0 };
-    dinCfg.proc = DrawInputProc;
+    AfxConfigureDrawInput(ddevId, &dinCfg);
     dinCfg.udd = &bnk;
-    dinCfg.cmdPoolMemStock = 4096;
-    dinCfg.estimatedSubmissionCnt = 2;
-    AfxOpenDrawInput(0, NIL, &dinCfg, &din[0]);
+    AfxOpenDrawInput(ddevId, NIL, &dinCfg, &din[0]);
     AfxAssertObjects(1, &din[0], afxFcc_DIN);
     AfxReconnectDrawInput(din[0], dctx);
 
     afxUri uri;
-    AfxMakeUri(&uri, "system/mmplayer.xss", 0);
+    AfxMakeUri(&uri, 0, "../art/world.tga", 0);
     //AfxLoadScript(NIL, &uri);
 
     AfxFormatUri(&uriB.uri, "../art/world.tga");
@@ -242,7 +243,7 @@ int main(int argc, char const* argv[])
 
     AfxAssert(dumpImg);
     AfxFormatUri(&uriB.uri, "../tmp/world2.tga");
-    AfxPrintRaster(dumpImg, NIL, 1, &uriB.uri);
+    AfxPrintRaster(dumpImg, 0, NIL, 1, &uriB.uri);
     AfxReleaseObjects(1, &dumpImg);
 
     AfxFormatUri(&uriB.uri, "desktop");
@@ -266,15 +267,21 @@ int main(int argc, char const* argv[])
     AfxAssert(!err);
 
     afxWindow wnd;
-    afxWindowConfig wndCfg = { 0 };
-    wndCfg.rc.w = bnk.whd[0];
-    wndCfg.rc.h = bnk.whd[1];
-    AfxAcquireWindow(dctx, &wndCfg, &wnd);
+    afxWindowConfig wrc = { 0 };
+    wrc.surface.pixelFmt = afxPixelFormat_RGBA8;
+    wrc.surface.pixelFmtDs[0] = afxPixelFormat_D24;
+    wrc.rc.w = bnk.whd[0];
+    wrc.rc.h = bnk.whd[1];
+    wrc.surface.bufCnt = 3;
+    AfxAcquireWindow(dctx, &wrc, &wnd);
     AfxAssertObjects(1, &wnd, afxFcc_WND);
     AfxGetWindowDrawOutput(wnd, NIL, &dout[0]);
     AfxAssert(dout[0]);
     AfxReconnectDrawOutput(dout[0], dctx);
-    AfxAdjustWindow(wnd, NIL, &wndCfg.rc);
+    AfxAdjustWindow(wnd, NIL, &wrc.rc);
+
+    AfxMakeUri(&uri, 0, "//./z/qwa-512.tga", 0);
+    AfxLoadWindowIcon(wnd, &uri);
 
     //AfxAdjustDrawOutput(dout[0], bnk.whd);
 
@@ -283,7 +290,7 @@ int main(int argc, char const* argv[])
         AfxBinkDoFrame(&bnk, TRUE, TRUE);
         DrawInputProc(din[0], (avxEvent[]) {0});
         //AfxRedrawWindow(ovy);
-        AfxDoSystemExecution(0);
+        AfxDoThreading(0);
     }
 
     AfxDropVideoBink(&bnk);

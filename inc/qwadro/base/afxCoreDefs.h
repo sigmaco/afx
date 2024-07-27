@@ -19,6 +19,34 @@
 
 #include "qwadro/base/afxPlatformDefs.h"
 
+#ifndef __e2coree__
+#   ifdef _DEBUG
+#       define AFX DLLIMPORT extern 
+#       define AFXINL DLLIMPORT EMBED
+#   else
+#       define AFX DLLIMPORT extern 
+#       define AFXINL DLLIMPORT EMBED
+#   endif
+#else
+#   ifdef _DEBUG
+#       define _AFX DLLEXPORT
+#       define AFX DLLEXPORT extern 
+#       define _AFXINL _AFX /*DLLEXPORT INLINE*/
+#       define AFXINL AFX /*DLLEXPORT EMBED*/
+#   else
+#       define _AFX DLLEXPORT
+#       define AFX DLLEXPORT extern 
+#       define _AFXINL DLLEXPORT INLINE
+#       define AFXINL DLLEXPORT EMBED
+#   endif
+#endif//__e2coree__
+
+
+#define AFX_SIMD AFX_ALIGN(AFX_SIMD_ALIGN) // make SIMD vector alignment
+#define AFX_ADDR  AFX_ALIGN(8) // make machine-dependent pointer alignment
+#define AFX_VLA(type, name, align) type __declspec(align(align)) name
+
+
 #ifdef TRUE
 #   undef TRUE
 #   undef FALSE
@@ -53,10 +81,11 @@ AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 
 // used to access or embed the struct of an handled object.
 #define AFX_OBJECT(handle_) struct handle_##_T
+#define AFX_OBJ(handle_) struct handle_##_T
 
 #define AFX_DEFINE_HANDLE(object) typedef struct object##_T* object
 #define AFX_DEFINE_STRUCT(struct_) typedef struct struct_ struct_; struct struct_
-#define AFX_DEFINE_STRUCT_SIMD(struct_) typedef struct struct_ afxSimd(struct_); afxSimd(struct struct_)
+#define AFX_DEFINE_STRUCT_SIMD(struct_) typedef struct AFX_SIMD struct_ struct_; struct AFX_SIMD struct_
 #define AFX_DEFINE_UNION(union_) typedef union union_ union_; union union_
 
 #define AFX_DECLARE_STRUCT(struct_) typedef struct struct_ struct_
@@ -74,53 +103,6 @@ AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 #define AfxGetSuperset(obj_,type_,member_) ((type_)(((afxByte*)obj_) - ((size_t)&(((type_)0)->member_))))
 
 ////////////////////////////////////////////////////////////////////////////////
-
-AFX afxNat AfxFlagsFindLsb(afxFlags mask);
-AFX afxNat AfxFlagsFindMsb(afxFlags mask);
-
-#define AfxTestBitPosition(mask_,bit_) ((mask_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
-#define AfxTestBitEnabled(mask_,bit_) (((mask_)>>(bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
-
-#define AfxTestFlags(_var_,_mask_) ((((afxFlags)(_var_)) & ((afxFlags)(_mask_))) == (afxFlags)(_mask_))
-#define AfxFlagsSet(_var_,_mask_) (((afxFlags)(_var_)) = ((afxFlags)(_mask_)))
-#define AfxFlagsMark(_var_,_mask_) (((afxFlags)(_var_)) |= ((afxFlags)(_mask_)))
-#define AfxFlagsClear(_var_,_mask_) (((afxFlags)(_var_)) &= ~((afxFlags)(_mask_)))
-
-#define AfxIndexIsInvalid(_var_) ((_var_) == AFX_INVALID_INDEX)
-#define AfxIsAligned(ptr_, byteCnt_) (((uintptr_t)(const void *)((afxSize)ptr_)) % (byteCnt_) == 0)
-
-#define AfxAbs(x_) ((0 > (x_)) ? -(x_) : (x_))
-#define AfxAbsf(x_) ((0 > (afxReal)(x_)) ? -(afxReal)(x_) : (afxReal)(x_))
-#define AfxMin(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
-#define AfxMax(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
-#define AfxMinorNonZero(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)) // minor non-zero
-#define AfxElse(a_,b_) ((a_) ? (a_) : (b_))
-
-
-#define AfxClamp(_value_, _min_, _max_) ((_value_) < (_min_) ? (_min_) : ((_value_) > (_max_) ? (_max_) : (_value_)))
-
-
-#define AfxMinf(a_,b_) AfxMin((afxReal)(a_),(afxReal)(b_))
-#define AfxMinf64(a_,b_) AfxMin((afxReal64)(a_),(afxReal64)(b_))
-#define AfxMini(a_,b_) AfxMin((afxInt)(a_),(afxInt)(b_))
-#define AfxMinu(a_,b_) AfxMin((afxNat)(a_),(afxNat)(b_))
-
-#define AfxMaxf(a_,b_) AfxMax((afxReal)(a_),(afxReal)(b_))
-#define AfxMaxf64(a_,b_) AfxMax((afxReal64)(a_),(afxReal64)(b_))
-#define AfxMaxi(a_,b_) AfxMax((afxInt)(a_),(afxInt)(b_))
-#define AfxMaxu(a_,b_) AfxMax((afxNat)(a_),(afxNat)(b_))
-
-#define AfxAtLeast(var_,min_) 
-
-#define AfxRealFromByte(by_) (((afxReal)(by_)) * (1.0 / 255.0))
-
-AFXINL afxInt    AfxRandom(void);
-AFXINL afxInt    AfxRandom2(afxInt mini, afxInt maxi);
-
-AFXINL afxReal      AfxRandomReal(void);
-AFXINL afxReal      AfxRandomReal2(afxReal mini, afxReal maxi);
-
-AFX afxChar const* errorMsg[];
 
 typedef enum afxError3
 {
@@ -259,11 +241,6 @@ AFX_DEFINE_UNION(afxUdd)
 
 
 
-#define AfxFind(first_,last_,val_) _AfxFind(first_, last_, sizeof(val_), &val_)
-AFX void const* _AfxFind(void const* first, void const* last, afxSize unitSiz, void const* val);
-
-AFX void AfxAccumulateCrc32(afxNat32 *crc, void const* data, afxSize len);
-
 
 #define AFX_FUNC( _type, _name ) _type _CALL _name // Declare a function
 #define AFX_EXTERN_FUNC( _type, _name ) extern _type  _name // // Declare an extern function
@@ -298,5 +275,60 @@ typedef afxNat aaxPluginId;
 typedef afxNat aaxPlayingId;
 typedef afxNat aaxUniqueId;
 
+
+
+AFX afxNat AfxFlagsFindLsb(afxFlags mask);
+AFX afxNat AfxFlagsFindMsb(afxFlags mask);
+
+#define AfxTestBitPosition(mask_,bit_) ((mask_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
+#define AfxTestBitEnabled(mask_,bit_) (((mask_)>>(bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
+
+#define AfxTestFlags(_var_,_mask_) ((((afxFlags)(_var_)) & ((afxFlags)(_mask_))) == (afxFlags)(_mask_))
+#define AfxFlagsSet(_var_,_mask_) (((afxFlags)(_var_)) = ((afxFlags)(_mask_)))
+#define AfxFlagsMark(_var_,_mask_) (((afxFlags)(_var_)) |= ((afxFlags)(_mask_)))
+#define AfxFlagsClear(_var_,_mask_) (((afxFlags)(_var_)) &= ~((afxFlags)(_mask_)))
+
+#define AfxIndexIsInvalid(_var_) ((_var_) == AFX_INVALID_INDEX)
+#define AfxIsAligned(ptr_, byteCnt_) (((uintptr_t)(const void *)((afxSize)ptr_)) % (byteCnt_) == 0)
+
+#define AfxAbs(x_) ((0 > (x_)) ? -(x_) : (x_))
+#define AfxAbsf(x_) ((0 > (afxReal)(x_)) ? -(afxReal)(x_) : (afxReal)(x_))
+#define AfxMin(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
+#define AfxMax(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
+#define AfxMinorNonZero(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)) // minor non-zero
+#define AfxElse(a_,b_) ((a_) ? (a_) : (b_))
+
+
+#define AfxClamp(_value_, _min_, _max_) ((_value_) < (_min_) ? (_min_) : ((_value_) > (_max_) ? (_max_) : (_value_)))
+
+
+#define AfxMinf(a_,b_) AfxMin((afxReal)(a_),(afxReal)(b_))
+#define AfxMinf64(a_,b_) AfxMin((afxReal64)(a_),(afxReal64)(b_))
+#define AfxMini(a_,b_) AfxMin((afxInt)(a_),(afxInt)(b_))
+#define AfxMinu(a_,b_) AfxMin((afxNat)(a_),(afxNat)(b_))
+
+#define AfxMaxf(a_,b_) AfxMax((afxReal)(a_),(afxReal)(b_))
+#define AfxMaxf64(a_,b_) AfxMax((afxReal64)(a_),(afxReal64)(b_))
+#define AfxMaxi(a_,b_) AfxMax((afxInt)(a_),(afxInt)(b_))
+#define AfxMaxu(a_,b_) AfxMax((afxNat)(a_),(afxNat)(b_))
+
+#define AfxAtLeast(var_,min_) 
+
+#define AfxRealFromByte(by_) (((afxReal)(by_)) * (1.0 / 255.0))
+
+AFX afxChar const* errorMsg[];
+
+
+AFXINL afxInt   AfxRandom(void);
+AFXINL afxInt   AfxRandom2(afxInt mini, afxInt maxi);
+
+AFXINL afxReal  AfxRandomReal(void);
+AFXINL afxReal  AfxRandomReal2(afxReal mini, afxReal maxi);
+
+
+#define AfxFind(first_,last_,val_) _AfxFind(first_, last_, sizeof(val_), &val_)
+AFX void const* _AfxFind(void const* first, void const* last, afxSize unitSiz, void const* val);
+
+AFX void AfxAccumulateCrc32(afxNat32 *crc, void const* data, afxSize len);
 
 #endif//AFX_CORE_DEFS_H

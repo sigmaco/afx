@@ -11,4 +11,17 @@
         <Transformer>../data/pipeline/testLighting/testLighting.xsh.xml</Transformer>
         <FragmentShader>../data/pipeline/testLighting/testLightingBlinn.fsh</FragmentShader>
     </Rasterizer>
+    <DrawTechnique>
+        <Pass id='blinn'>
+            <CullMode>BACK</CullMode>
+            <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+            <VertexShader>../data/pipeline/testLighting/testLightingBlinn.vsh</VertexShader>
+            
+            <FillMode>SOLID</FillMode>
+            <DepthTestEnabled></DepthTestEnabled>
+            <DepthCompareOp>LESS</DepthCompareOp>
+            <Transformer>../data/pipeline/testLighting/testLighting.xsh.xml</Transformer>
+            <FragmentShader>../data/pipeline/testLighting/testLightingBlinn.fsh</FragmentShader>
+        </Pass>
+    </DrawTechnique>
 </Qwadro>

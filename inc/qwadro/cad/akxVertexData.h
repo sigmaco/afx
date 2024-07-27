@@ -18,8 +18,8 @@
 /// Vertex elements, the smallest unit of a vertex, represent entities such as position, normal, or color.
 /// Vertex components are one or more vertex elements stored contiguously (interleaved per vertex) in a single memory buffer.
 
-#ifndef AFX_VERTEX_DATA_H
-#define AFX_VERTEX_DATA_H
+#ifndef AKX_VERTEX_DATA_H
+#define AKX_VERTEX_DATA_H
 
 #include "qwadro/cad/afxMeshBuilder.h"
 #include "qwadro/draw/io/afxVertexStream.h"
@@ -69,67 +69,32 @@ typedef enum akxVertexFlag
     akxVertexFlag_RESIDENT = AFX_BIT(14) // allocation for data is resident
 } akxVertexFlags;
 
-AFX_DEFINE_STRUCT(afxVertexBias)
+AFX_DEFINE_STRUCT(akxVertexCache)
+{
+    afxLinkage          vbuf;
+    avxVertexInput      vin;
+    afxBuffer           buf;
+    struct
+    {
+        afxNat32        base;
+        afxNat32        range;
+        afxNat32        stride;
+    }                   streams[2];
+};
+
+AFX_DEFINE_STRUCT(akxVertexBias)
 {
     afxNat              pivotIdx;
     afxReal             weight;
 };
 
-AFX_DEFINE_STRUCT(akxVertexDataCache)
-{
-    afxLinkage          vbuf;
-    afxNat32            base;
-    afxNat32            range;
-    afxNat32            stride;
-};
-
-#ifdef _AFX_VERTEX_DATA_C
-
-AFX_DEFINE_STRUCT(akxVertexDataAttr)
-{
-    akxVertexUsage      usage;
-    akxVertexFlags      flags;
-    afxVertexFormat     fmt;
-    union
-    {
-        void*           data;
-        afxByte*        dataBytemap;
-    };
-    afxString           id; // 8
-
-    afxNat              cacheIdx;
-    afxNat32            cachedOffset;
-    afxVertexFormat     cachedFmt;
-};
-
-AFX_OBJECT(akxVertexData)
-{
-    //afxNat              biasCnt;
-    //afxVertexBias*      biases;
-    afxNat              vtxCnt;
-    //afxVertex*          vtx; // one for each vertex
-    afxNat              attrCnt;
-    akxVertexDataAttr*  attrs;
-    afxBox             aabb;
-
-    afxBool             cached;
-    akxVertexDataCache  cache[2];
-
-    afxUri              urd;
-    afxNat              urdEntryIdx;
-
-    afxStringBase    strb;
-};
-
-#endif
-
 AFX_DEFINE_STRUCT(akxVertexDataSpec)
 {
     afxNat              vtxCnt;
-    afxVertex const*    vtxSrc;
+    akxVertex const*    vtxSrc;
     afxNat              vtxSrcStride;
     afxNat              biasCnt;
-    afxVertexBias const*biasSrc;
+    akxVertexBias const*biasSrc;
     afxNat              biasSrcStride;
     afxNat              baseAttrIdx;
     afxNat              attrCnt;
@@ -146,6 +111,7 @@ AFX_DEFINE_STRUCT(akxVertexAttrSpec)
 };
 
 AKX afxNat              AkxCountVertices(akxVertexData vtd);
+AKX afxNat              AkxCountVertexAttributes(akxVertexData vtd);
 
 AKX afxNat              AkxFindVertexAttributes(akxVertexData vtd, afxNat cnt, afxString const id[], afxNat attrIdx[]);
 
@@ -160,18 +126,16 @@ AKX afxError            AkxZeroVertexData(akxVertexData vtd, afxNat attrIdx, afx
 AKX afxError            AkxFillVertexData(akxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void const* src);
 AKX afxError            AkxUpdateVertexData(akxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void const* src, afxNat32 srcStride);
 AKX afxError            AkxNormalizeVertexData(akxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
-
-AKX afxError            AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd);
-AKX afxError            AkxCmdBindVertexDataCache(avxCmdb cmdb, afxNat slotIdx, akxVertexData vtd);
+AKX afxError            AkxInvertNormalizedVertexData(akxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AKX afxError            AkxAcquireVertexDatas(afxSimulation sim, afxStringBase strb, akxVertexAttrSpec const attrSpec[], afxNat cnt, akxVertexDataSpec const specs[], akxVertexData datas[]);
+AKX afxError            AkxAcquireVertexDatas(afxSimulation sim, akxVertexAttrSpec const attrSpec[], afxNat cnt, akxVertexDataSpec const specs[], akxVertexData datas[]);
 
-AKX akxVertexData       AkxBuildVertexData(afxSimulation sim, afxStringBase strb, afxMeshBuilder const* mshb);
+AKX akxVertexData       AkxBuildVertexData(afxSimulation sim, afxMeshBuilder const* mshb);
 
 AKX void                AkxTransformVertexDatas(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxBool renormalize, afxNat cnt, akxVertexData vtd[]);
 
-#endif//AFX_VERTEX_DATA_H
+#endif//AKX_VERTEX_DATA_H

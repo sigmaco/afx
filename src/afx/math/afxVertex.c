@@ -26,9 +26,9 @@ _AFXINL afxReal AfxGetDistanceBetweenV3d(afxV3d const v, afxV3d const other)
     AfxAssert(v);
     AfxAssert(other);
     afxV3d t;
-    AfxSubV3d(t, v, other);
+    AfxV3dSub(t, v, other);
     AfxSqrtV3d(t, t);
-    return AfxSqrtf(AfxSumV3d(t));
+    return AfxSqrtf(AfxV3dSum(t));
 }
 
 _AFXINL afxReal AfxGetAngleBetweenV3d(afxV3d const v, afxV3d const other)
@@ -39,7 +39,7 @@ _AFXINL afxReal AfxGetAngleBetweenV3d(afxV3d const v, afxV3d const other)
     AfxAssert(v);
     AfxAssert(other);
 
-    afxReal cosAngle = AfxDotV3d(v, other) * (AfxMagV3dRecip(v) * AfxMagV3dRecip(other));
+    afxReal cosAngle = AfxV3dDot(v, other) * (AfxV3dMagRecip(v) * AfxV3dMagRecip(other));
     AfxClampd(cosAngle, -1.0, 1.0);
     return AfxAcosf(cosAngle);
 }
@@ -56,9 +56,9 @@ _AFXINL void AfxExtractNormalV3dComponents(afxV3d const v, afxV3d const normal, 
     AfxAssert(parallel);
     AfxAssert(perpendicular);
 
-    afxReal scale = AfxDotV3d(v, normal);
-    AfxScaleV3d(parallel, normal, scale);
-    AfxSubV3d(perpendicular, v, parallel);
+    afxReal scale = AfxV3dDot(v, normal);
+    AfxV3dScale(parallel, normal, scale);
+    AfxV3dSub(perpendicular, v, parallel);
 }
 
 // Hermite
@@ -223,8 +223,8 @@ _AFXINL void AfxReflectV2d(afxV2d v, afxV2d const incident, afxV2d const normal)
 
     // v = incident - (2 * dot(incident, normal)) * normal
 
-    AfxFillV2d(v, AfxDotV2d(incident, normal));
-    AfxAddV2d(v, v, v);
+    AfxFillV2d(v, AfxV2dDot(incident, normal));
+    AfxV2dAdd(v, v, v);
     AfxResubV2d(v, v, normal, incident);
 }
 
@@ -237,8 +237,8 @@ _AFXINL void AfxReflectV3d(afxV3d v, afxV3d const incident, afxV3d const normal)
 
     // v = incident - (2 * dot(incident, normal)) * normal
 
-    AfxFillV3d(v, AfxDotV3d(incident, normal));
-    AfxAddV3d(v, v, v);
+    AfxFillV3d(v, AfxV3dDot(incident, normal));
+    AfxV3dAdd(v, v, v);
     AfxResubV3d(v, v, normal, incident);
 }
 
@@ -251,8 +251,8 @@ _AFXINL void AfxReflectV4d(afxV4d v, afxV3d const incident, afxV3d const normal)
 
     // v = incident - (2 * dot(incident, normal)) * normal
 
-    AfxFillV4d(v, AfxDotV3d(incident, normal));
-    AfxAddV4d(v, v, v);
+    AfxFillV4d(v, AfxV3dDot(incident, normal));
+    AfxV4dAdd(v, v, v);
     AfxResubV4d(v, v, normal, incident);
 }
 
@@ -268,7 +268,7 @@ _AFXINL void AfxRefractV2d(afxV2d v, afxV2d const incident, afxV2d const normal,
     // v = refracIdx * incident - normal * (refracIdx * dot(incident, normal) + sqrt(1 - refracIdx * refracIdx * (1 - dot(incident, normal) * dot(incident, normal))))
 
     afxV2d dot;
-    AfxFillV2d(dot, AfxDotV2d(incident, normal));
+    AfxFillV2d(dot, AfxV2dDot(incident, normal));
 
     // R = 1.0f - refracIdx * refracIdx * (1.0f - IDotN * IDotN)
 
@@ -281,7 +281,7 @@ _AFXINL void AfxRefractV2d(afxV2d v, afxV2d const incident, afxV2d const normal,
     if (AfxV2dIsLessOrEqual(R, AFX_V2D_ZERO))
     {
         // Total internal reflection
-        AfxZeroV2d(v);
+        AfxV2dZero(v);
     }
     else
     {
@@ -306,7 +306,7 @@ _AFXINL void AfxRefractV3d(afxV3d v, afxV3d const incident, afxV3d const normal,
     // v = refracIdx * incident - normal * (refracIdx * dot(incident, normal) + sqrt(1 - refracIdx * refracIdx * (1 - dot(incident, normal) * dot(incident, normal))))
 
     afxV3d dot;
-    AfxFillV3d(dot, AfxDotV3d(incident, normal));
+    AfxFillV3d(dot, AfxV3dDot(incident, normal));
 
     // R = 1.0f - refracIdx * refracIdx * (1.0f - IDotN * IDotN)
 
@@ -319,7 +319,7 @@ _AFXINL void AfxRefractV3d(afxV3d v, afxV3d const incident, afxV3d const normal,
     if (AfxV3dIsLessOrEqual(R, AFX_V3D_ZERO))
     {
         // Total internal reflection
-        AfxZeroV3d(v);
+        AfxV3dZero(v);
     }
     else
     {
@@ -344,7 +344,7 @@ _AFXINL void AfxRefractV4d(afxV4d v, afxV3d const incident, afxV3d const normal,
     // v = refracIdx * incident - normal * (refracIdx * dot(incident, normal) + sqrt(1 - refracIdx * refracIdx * (1 - dot(incident, normal) * dot(incident, normal))))
 
     afxV4d dot;
-    AfxFillV4d(dot, AfxDotV3d(incident, normal));
+    AfxFillV4d(dot, AfxV3dDot(incident, normal));
 
     // R = 1.0f - refracIdx * refracIdx * (1.0f - IDotN * IDotN)
 
@@ -357,7 +357,7 @@ _AFXINL void AfxRefractV4d(afxV4d v, afxV3d const incident, afxV3d const normal,
     if (AfxV4dIsLessOrEqual(R, AFX_V4D_ZERO))
     {
         // Total internal reflection
-        AfxZeroV4d(v);
+        AfxV4dZero(v);
     }
     else
     {

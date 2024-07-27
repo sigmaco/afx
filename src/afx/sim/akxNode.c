@@ -15,12 +15,9 @@
  */
 
 #define _AFX_SIM_C
-#define _AFX_SIMULATION_C
-#define _AFX_NODE_C
-#include "qwadro/sim/afxSimulation.h"
-#include "qwadro/math/afxQuaternion.h"
-#include "qwadro/math/afxMatrix.h"
-#include "qwadro/math/afxVector.h"
+#define _AKX_SIMULATION_C
+#define _AKX_NODE_C
+#include "../sim/dev/AkxSimDevKit.h"
 
 
 _AKXINL afxError _AfxNodDtor(akxNode nod)

@@ -32,7 +32,6 @@
     <ClInclude Include="..\..\inc\qwadro\base\afxObject.h" />
     <ClInclude Include="..\..\inc\qwadro\base\afxPlatformDefs.h" />
     <ClInclude Include="..\..\inc\qwadro\base\afxRawString.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxRestring.h" />
     <ClInclude Include="..\..\inc\qwadro\base\afxString.h" />
     <ClInclude Include="..\..\inc\qwadro\base\afxVersion.h" />
     <ClInclude Include="..\..\inc\qwadro\exec\afxAtomic.h" />
@@ -77,6 +76,7 @@
     <ClInclude Include="..\..\inc\qwadro\math\afxVector.h" />
     <ClInclude Include="..\..\inc\qwadro\math\afxVertex.h" />
     <ClInclude Include="..\..\inc\qwadro\math\afxVolume.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxWhd.h" />
     <ClInclude Include="..\..\inc\qwadro\mem\afxArena.h" />
     <ClInclude Include="..\..\inc\qwadro\mem\afxArray.h" />
     <ClInclude Include="..\..\inc\qwadro\mem\afxInterlockedQueue.h" />
@@ -121,7 +121,6 @@
     <ClCompile Include="..\..\src\afx\base\afxManifest.c" />
     <ClCompile Include="..\..\src\afx\base\afxObject.c" />
     <ClCompile Include="..\..\src\afx\base\afxRawString.c" />
-    <ClCompile Include="..\..\src\afx\base\afxRestring.c" />
     <ClCompile Include="..\..\src\afx\base\afxString.c" />
     <ClCompile Include="..\..\src\afx\base\afxVersion.c" />
     <ClCompile Include="..\..\src\afx\exec\afxAtomic_PC.c" />
@@ -151,6 +150,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\src\afx\io\afxRing.c" />
     <ClCompile Include="..\..\src\afx\io\afxSource.c" />
     <ClCompile Include="..\..\src\afx\io\afxStorage.c" />
     <ClCompile Include="..\..\src\afx\io\afxStream.c" />
@@ -164,11 +164,13 @@
     <ClCompile Include="..\..\src\afx\math\afxQuaternion.c" />
     <ClCompile Include="..\..\src\afx\math\afxRotor.c" />
     <ClCompile Include="..\..\src\afx\math\afxSimd.c" />
+    <ClCompile Include="..\..\src\afx\math\afxSphere.c" />
     <ClCompile Include="..\..\src\afx\math\afxTrigonometry.c" />
     <ClCompile Include="..\..\src\afx\math\afxVector.c" />
     <ClCompile Include="..\..\src\afx\math\afxMathOps.c" />
     <ClCompile Include="..\..\src\afx\math\afxTransform.c" />
     <ClCompile Include="..\..\src\afx\math\afxVertex.c" />
+    <ClCompile Include="..\..\src\afx\math\afxWhd.c" />
     <ClCompile Include="..\..\src\afx\mem\afxArena.c" />
     <ClCompile Include="..\..\src\afx\mem\afxArray.c" />
     <ClCompile Include="..\..\src\afx\mem\afxInterlockedQueue.c" />
@@ -273,7 +275,10 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <OmitFramePointers>false</OmitFramePointers>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link />
     <Link>
@@ -292,7 +297,10 @@
       <WarningLevel>Level4</WarningLevel>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <OmitFramePointers>false</OmitFramePointers>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link />
     <Link>

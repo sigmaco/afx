@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "dev/AvxDevKit.h"
 
 
 _AVX afxString const g_str_Qwadro = AFX_STRING("Qwadro");
@@ -420,91 +420,74 @@ _AVX afxVertexFormat AfxFindVertexFormat(afxString const *str)
     return (afxVertexFormat)-1;
 }
 
-_AVX afxString const* AfxStringifyShaderStage(avxShaderStage ss, afxRestring *out)
+_AVX afxString const* AfxStringifyShaderStage(avxShaderStage ss, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ss < avxShaderStage_TOTAL);
     AfxCopyString(out, &shaderStageString[ss]);
-    return &out->str;
+    return out;
 }
 
-_AVX afxString const* AfxStringifyFillMode(avxFillMode fm, afxRestring *out)
+_AVX afxString const* AfxStringifyFillMode(avxFillMode fm, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(fm < avxFillMode_TOTAL);
     AfxCopyString(out, &fillModeString[fm]);
-    return &out->str;
+    return out;
 }
 
-_AVX afxString const* AfxStringifyFrontFace(avxFrontFace ff, afxRestring *out)
+_AVX afxString const* AfxStringifyFrontFace(avxFrontFace ff, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ff < avxFrontFace_TOTAL);
     AfxCopyString(out, &frontFaceString[ff]);
-    return &out->str;
+    return out;
 }
 
-_AVX afxString const* AfxStringifyCullMode(avxCullMode cm, afxRestring *out)
+_AVX afxString const* AfxStringifyCullMode(avxCullMode cm, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cm < avxCullMode_TOTAL);
     AfxCopyString(out, &cullModeString[cm]);
-    return &out->str;
+    return out;
 }
 
-_AVX afxString const* AfxStringifyCompareOp(avxCompareOp co, afxRestring *out)
+_AVX afxString const* AfxStringifyCompareOp(avxCompareOp co, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(co < avxCompareOp_TOTAL);
     AfxCopyString(out, &compareOpString[co]);
-    return &out->str;
+    return out;
 }
 
-_AVX afxString const* AfxStringifyStencilOp(avxStencilOp so, afxRestring *out)
+_AVX afxString const* AfxStringifyStencilOp(avxStencilOp so, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(so < avxStencilOp_TOTAL);
     AfxCopyString(out, &stencilOpString[so]);
-    return &out->str;
+    return out;
 }
 
-_AVX afxString const* AfxStringifyLogicOp(avxLogicOp lo, afxRestring *out)
+_AVX afxString const* AfxStringifyLogicOp(avxLogicOp lo, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(lo < avxLogicOp_TOTAL);
     AfxCopyString(out, &logicOpString[lo]);
-    return &out->str;
+    return out;
 }
 
-_AVX afxString const* AfxStringifyPrimitiveTopology(avxTopology pt, afxRestring *out)
+_AVX afxString const* AfxStringifyPrimitiveTopology(avxTopology pt, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(pt < avxTopology_TOTAL);
     AfxCopyString(out, &primTopologyString[pt]);
-    return &out->str;
+    return out;
 }
 
-_AVX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxRestring *out)
+_AVX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(fmt < afxVertexFormat_TOTAL);
     AfxCopyString(out, &vtxFmtString[fmt]);
-    return &out->str;
-}
-
-_AVX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHere const hint)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(total_);
-    AfxAssert(base_);
-    AfxAssert(range_);
-
-    for (afxNat i = 0; i < 3; i++)
-    {
-        if ((err |= (!(total_[i] > base_[i] + range_[i]))))
-        {
-            AfxLogError("[%i] %s(%f) + %s(%f) is out of range [0, %f]", AFX_STRINGIFY((base_)), (base_), AFX_STRINGIFY((range_)), (range_), AFX_STRINGIFY((total_)), (total_));
-        }
-    }
-    return err;
+    return out;
 }

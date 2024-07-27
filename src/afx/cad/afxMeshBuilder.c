@@ -15,16 +15,11 @@
  */
 
 #define _AFX_SIM_C
-#define _AFX_MESH_C
-#define _AFX_VERTEX_DATA_C
+#define _AKX_MESH_C
+#define _AKX_VERTEX_DATA_C
 #define _AFX_VERTEX_BUILDER_C
-#define _AFX_MESH_TOPOLOGY_C
-#include "qwadro/cad/afxMeshBuilder.h"
-#include "qwadro/sim/afxSimulation.h"
-#include "qwadro/math/afxMatrix.h"
-#include "qwadro/math/afxQuaternion.h"
-#include "qwadro/cad/afxMeshTopology.h"
-#include "qwadro/cad/akxVertexData.h"
+#define _AKX_MESH_TOPOLOGY_C
+#include "../sim/dev/AkxSimDevKit.h"
 
 #define MaxNumWeights 8
 
@@ -39,7 +34,7 @@ struct TriWeightData
 {
     afxNat jntCnt;
     afxNat8 jntIdx[MaxNumWeights * 3];
-    afxIndexedTriangle vtxIdx;
+    akxIndexedTriangle vtxIdx;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,11 +58,11 @@ _AKX void _AfxMesh113131(afxMesh msh)
         {
             TriData->vtxIdx[vtxIdx] = OriginalIndices[triIdx * 3 + vtxIdx];
             
-            afxVertexBias* bias = &msh->vtd->biases[OriginalIndices[triIdx * 3 + vtxIdx]];
+            akxVertexBias* bias = &msh->vtd->biases[OriginalIndices[triIdx * 3 + vtxIdx]];
             
             for (afxNat vtxWgtIdx = 0; vtxWgtIdx < bias->weightCnt; ++vtxWgtIdx)
             {
-                afxVertexWeight* w = &msh->vtd->weights[bias->baseWeightIdx + vtxWgtIdx];
+                akxVertexWeight* w = &msh->vtd->weights[bias->baseWeightIdx + vtxWgtIdx];
                 
                 if (AfxFind(TriData->jntIdx, TriData->jntIdx + TriData->jntCnt, w->pivotIdx) == TriData->jntIdx + TriData->jntCnt)
                 {
@@ -144,7 +139,7 @@ afxMesh AfxAddDomeToModel(afxModel mdl, afxReal radius, afxNat32 slices)
         }
     }
 
-    afxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
+    akxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
     //AfxFillMeshSection(msh, msecIdx, numberIndices);
     afxNat32* indices = msec->indices.pool;
     msec->indices.pop = msec->indices.cap;
@@ -183,16 +178,16 @@ afxMesh AfxAddParallelepipedToModel(afxModel mdl, afxReal width, afxReal height)
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_TAN, numberVertices, 0, xy_tangents, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_NRM, numberVertices, 0, xy_normals, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_UV, numberVertices, 0, xy_texCoords, 0);
-    afxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
+    akxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
     AfxFillMeshSection(msec, numberIndices, xy_indices);
 
     afxM4d m4d;
-    AfxResetM4d(m4d);
-    AfxScalingM4d(m4d, AfxSpawnV4d(width, 10.0, height, 1.0));
+    AfxM4dReset(m4d);
+    AfxM4dScaling(m4d, AfxSpawnV4d(width, 10.0, height, 1.0));
 
     for (afxNat32 i = 0; i < numberVertices; i++)
     {
-        AfxPreMultiplyV4d(((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], ((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], m4d);
+        AfxV4dPreMultiplyM4d(((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], ((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], m4d);
     }
     return msh;
 }
@@ -251,7 +246,7 @@ afxMesh AfxAddCubeToModel(afxModel mdl, afxReal scale)
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_TAN, numberVertices, 0, cubeTangents, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_NRM, numberVertices, 0, cubeNormals, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_UV, numberVertices, 0, cubeTexCoords, 0);
-    afxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "cube"));
+    akxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "cube"));
     AfxFillMeshSection(msec, numberIndices, cubeIndices);
     return msh;
 }
@@ -307,7 +302,7 @@ _AKXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id,
 
     AfxMakeString32(&mshb->id, id);
 
-    AfxAllocateArray(&mshb->biases, artCnt, sizeof(afxVertexBias), (afxVertexBias[]) { 0 });
+    AfxAllocateArray(&mshb->biases, artCnt, sizeof(akxVertexBias), (akxVertexBias[]) { 0 });
 
     mshb->vtx = AfxAllocate(vtxCnt, sizeof(mshb->vtx[0]), NIL, AfxHere());
     AfxZero2(vtxCnt, sizeof(mshb->vtx[0]), mshb->vtx);
@@ -331,11 +326,11 @@ _AKXINL void AfxUpdateVertices(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat v
 
     for (afxNat i = 0; i < vtxCnt; i++)
     {
-        afxVertex *v = &mshb->vtx[baseVtxIdx + i];
-        //AfxCopyAtv4d(v->posn, posn[i]);
+        akxVertex *v = &mshb->vtx[baseVtxIdx + i];
+        //AfxV4dCopyAtv3d(v->posn, posn[i]);
         v->baseBiasIdx = baseBiasIdx ? baseBiasIdx[i] : 0;
         v->biasCnt = biasCnt ? biasCnt[i] : 1;
-        //AfxCopyV2d(v->uv, uv ? uv[i] : AfxSpawnV2d(0, 0));
+        //AfxV2dCopy(v->uv, uv ? uv[i] : AfxSpawnV2d(0, 0));
 
         AfxAssertRange(mshb->biases.cnt, v->baseBiasIdx, v->biasCnt);
     }
@@ -351,14 +346,14 @@ _AKXINL void AfxUpdateVertexPositions(afxMeshBuilder* mshb, afxNat baseVtxIdx, a
     if (srcStride == sizeof(posn[0]))
     {
         for (afxNat i = 0; i < vtxCnt; i++)
-            AfxCopyAtv4d(mshb->posn[baseVtxIdx + i], posn[i]);
+            AfxV4dCopyAtv3d(mshb->posn[baseVtxIdx + i], posn[i]);
     }
     else
     {
         afxByte* posnBytemap = (void*)posn;
         
         for (afxNat i = 0; i < vtxCnt; i++)
-            AfxCopyAtv4d(mshb->posn[baseVtxIdx + i], (void*)(&posnBytemap[i * srcStride]));
+            AfxV4dCopyAtv3d(mshb->posn[baseVtxIdx + i], (void*)(&posnBytemap[i * srcStride]));
     }
 }
 
@@ -378,7 +373,7 @@ _AKXINL void AfxUpdateVertexPositions4(afxMeshBuilder* mshb, afxNat baseVtxIdx, 
         afxByte* posnBytemap = (void*)posn;
 
         for (afxNat i = 0; i < vtxCnt; i++)
-            AfxCopyV4d(mshb->posn[baseVtxIdx + i], (void*)(&posnBytemap[i * srcStride]));
+            AfxV4dCopy(mshb->posn[baseVtxIdx + i], (void*)(&posnBytemap[i * srcStride]));
     }
 }
 
@@ -403,7 +398,7 @@ _AKXINL afxError AfxUpdateVertexNormals(afxMeshBuilder* mshb, afxNat baseVtxIdx,
             afxByte* nrmBytemap = (void*)nrm;
 
             for (afxNat i = 0; i < vtxCnt; i++)
-                AfxCopyV3d(mshb->nrm[baseVtxIdx + i], (void*)(&nrmBytemap[i * srcStride]));
+                AfxV3dCopy(mshb->nrm[baseVtxIdx + i], (void*)(&nrmBytemap[i * srcStride]));
         }
     }
     return err;
@@ -430,7 +425,7 @@ _AKXINL afxError AfxUpdateVertexWraps(afxMeshBuilder* mshb, afxNat baseVtxIdx, a
             afxByte* uvBytemap = (void*)uv;
 
             for (afxNat i = 0; i < vtxCnt; i++)
-                AfxCopyV2d(mshb->uv[baseVtxIdx + i], (void*)(&uvBytemap[i * srcStride]));
+                AfxV2dCopy(mshb->uv[baseVtxIdx + i], (void*)(&uvBytemap[i * srcStride]));
         }
     }
     
@@ -469,8 +464,8 @@ _AKXINL afxNat AfxAddVertexBiases(afxMeshBuilder* mshb, afxNat cnt, afxNat const
     for (afxNat i = 0; i < cnt; i++)
     {
         AfxAssert(weight && 1.f >= weight[i]);
-        AfxUpdateArrayRange(&mshb->biases, baseBiasIdx + i, 1, (const afxVertexBias[]) { { .pivotIdx = jntIdx ? jntIdx[i] : 0, .weight = weight ? weight[i] : 1.f } });
-        AfxAssertRange(mshb->artCnt, ((afxVertexBias const*)AfxGetArrayUnit(&mshb->biases, baseBiasIdx + i))->pivotIdx, 1);
+        AfxUpdateArrayRange(&mshb->biases, baseBiasIdx + i, 1, (const akxVertexBias[]) { { .pivotIdx = jntIdx ? jntIdx[i] : 0, .weight = weight ? weight[i] : 1.f } });
+        AfxAssertRange(mshb->artCnt, ((akxVertexBias const*)AfxGetArrayUnit(&mshb->biases, baseBiasIdx + i))->pivotIdx, 1);
     }
     return baseBiasIdx;
 }
@@ -488,108 +483,233 @@ _AKXINL void AfxRenameVertexPivots(afxMeshBuilder* mshb, afxNat basePivotIdx, af
     }
 }
 
-_AKX afxMesh AfxBuildCubeMesh(afxSimulation sim, afxReal scale)
+_AKX afxMesh AfxBuildCubeMesh(afxSimulation sim, afxReal scale, afxNat secCnt)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     AfxAssert(scale);
 
-    static afxV4d const cubeVertices[] =
+    static afxV3d const cubeVertices[] =
     {
-        {-1.0f,-1.0f,-1.0f, 1.0f }, {-1.0f,-1.0f, 1.0f, 1.0f }, { 1.0f,-1.0f, 1.0f, 1.0f }, { 1.0f,-1.0f,-1.0f, 1.0f },
-        {-1.0f, 1.0f,-1.0f, 1.0f }, {-1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f,-1.0f, 1.0f },
-        {-1.0f,-1.0f,-1.0f, 1.0f }, {-1.0f, 1.0f,-1.0f, 1.0f }, { 1.0f, 1.0f,-1.0f, 1.0f }, { 1.0f,-1.0f,-1.0f, 1.0f },
-        {-1.0f,-1.0f, 1.0f, 1.0f }, {-1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f,-1.0f, 1.0f, 1.0f },
-        {-1.0f,-1.0f,-1.0f, 1.0f }, {-1.0f,-1.0f, 1.0f, 1.0f }, {-1.0f, 1.0f, 1.0f, 1.0f }, {-1.0f, 1.0f,-1.0f, 1.0f },
-        { 1.0f,-1.0f,-1.0f, 1.0f }, { 1.0f,-1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 1.0f, 1.0f,-1.0f, 1.0f }
+        {-0.5f,-0.5f,-0.5f }, {-0.5f,-0.5f, 0.5f }, { 0.5f,-0.5f, 0.5f }, { 0.5f,-0.5f,-0.5f },
+        {-0.5f, 0.5f,-0.5f }, {-0.5f, 0.5f, 0.5f }, { 0.5f, 0.5f, 0.5f }, { 0.5f, 0.5f,-0.5f },
+        {-0.5f,-0.5f,-0.5f }, {-0.5f, 0.5f,-0.5f }, { 0.5f, 0.5f,-0.5f }, { 0.5f,-0.5f,-0.5f },
+        {-0.5f,-0.5f, 0.5f }, {-0.5f, 0.5f, 0.5f }, { 0.5f, 0.5f, 0.5f }, { 0.5f,-0.5f, 0.5f },
+        {-0.5f,-0.5f,-0.5f }, {-0.5f,-0.5f, 0.5f }, {-0.5f, 0.5f, 0.5f }, {-0.5f, 0.5f,-0.5f },
+        { 0.5f,-0.5f,-0.5f }, { 0.5f,-0.5f, 0.5f }, { 0.5f, 0.5f, 0.5f }, { 0.5f, 0.5f,-0.5f }
     };
 
     static afxV3d const cubeNormals[] =
     {
-        { 0.0f,-1.0f, 0.0f }, { 0.0f,-1.0f, 0.0f }, { 0.0f,-1.0f, 0.0f }, { 0.0f,-1.0f, 0.0f },
-        { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f },
-        { 0.0f, 0.0f,-1.0f }, { 0.0f, 0.0f,-1.0f }, { 0.0f, 0.0f,-1.0f }, { 0.0f, 0.0f,-1.0f },
-        { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f },
-        {-1.0f, 0.0f, 0.0f }, {-1.0f, 0.0f, 0.0f }, {-1.0f, 0.0f, 0.0f }, {-1.0f, 0.0f, 0.0f },
-        { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }
+        { 0.f,-1.f, 0.f }, { 0.f,-1.f, 0.f }, { 0.f,-1.f, 0.f }, { 0.f,-1.f, 0.f },
+        { 0.f, 1.f, 0.f }, { 0.f, 1.f, 0.f }, { 0.f, 1.f, 0.f }, { 0.f, 1.f, 0.f },
+        { 0.f, 0.f,-1.f }, { 0.f, 0.f,-1.f }, { 0.f, 0.f,-1.f }, { 0.f, 0.f,-1.f },
+        { 0.f, 0.f, 1.f }, { 0.f, 0.f, 1.f }, { 0.f, 0.f, 1.f }, { 0.f, 0.f, 1.f },
+        {-1.f, 0.f, 0.f }, {-1.f, 0.f, 0.f }, {-1.f, 0.f, 0.f }, {-1.f, 0.f, 0.f },
+        { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }
     };
 
     static afxV3d const cubeTangents[] =
     {
-        { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f },
-        { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f },
-        {-1.0f, 0.0f, 0.0f }, {-1.0f, 0.0f, 0.0f }, {-1.0f, 0.0f, 0.0f }, {-1.0f, 0.0f, 0.0f },
-        { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f },
-        { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f },
-        { 0.0f, 0.0f,-1.0f }, { 0.0f, 0.0f,-1.0f }, { 0.0f, 0.0f,-1.0f }, { 0.0f, 0.0f,-1.0f }
+        { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f },
+        { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f },
+        {-1.f, 0.f, 0.f }, {-1.f, 0.f, 0.f }, {-1.f, 0.f, 0.f }, {-1.f, 0.f, 0.f },
+        { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, { 1.f, 0.f, 0.f },
+        { 0.f, 0.f, 1.f }, { 0.f, 0.f, 1.f }, { 0.f, 0.f, 1.f }, { 0.f, 0.f, 1.f },
+        { 0.f, 0.f,-1.f }, { 0.f, 0.f,-1.f }, { 0.f, 0.f,-1.f }, { 0.f, 0.f,-1.f }
     };
 
     static afxV2d const cubeTexCoords[] =
     {
-        { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f },
-        { 0.0f, 1.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f },
-        { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 0.0f },
-        { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f }, { 1.0f, 0.0f },
-        { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f },
-        { 1.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f }
+        { 0.f, 0.f }, { 0.f, 1.f }, { 1.f, 1.f }, { 1.f, 0.f },
+        { 0.f, 1.f }, { 0.f, 0.f }, { 1.f, 0.f }, { 1.f, 1.f },
+        { 1.f, 0.f }, { 1.f, 1.f }, { 0.f, 1.f }, { 0.f, 0.f },
+        { 0.f, 0.f }, { 0.f, 1.f }, { 1.f, 1.f }, { 1.f, 0.f },
+        { 0.f, 0.f }, { 1.f, 0.f }, { 1.f, 1.f }, { 0.f, 1.f },
+        { 1.f, 0.f }, { 0.f, 0.f }, { 0.f, 1.f }, { 1.f, 1.f }
     };
 
-    static afxIndexedTriangle const tris[] = { { 0, 2, 1 }, { 0, 3, 2 }, { 4, 5, 6 }, { 4, 6, 7 }, { 8, 9, 10 }, { 8, 10, 11 }, { 12, 15, 14 }, { 12, 14, 13 }, { 16, 17, 18 }, { 16, 18, 19 }, { 20, 23, 22 }, { 20, 22, 21 } };
+    static akxIndexedTriangle const tris[] =
+    { 
+        {  0,  2,  1 }, {  0,  3,  2 }, {  4,  5,  6 },
+        {  4,  6,  7 }, {  8,  9, 10 }, {  8, 10, 11 },
+        { 12, 15, 14 }, { 12, 14, 13 }, { 16, 17, 18 },
+        { 16, 18, 19 }, { 20, 23, 22 }, { 20, 22, 21 }
+    };
 
-    afxMeshBuilder mshb;
-    AfxBeginMeshBuilding(&mshb, &AfxStaticString("cube"), AFX_COUNTOF(cubeVertices), AFX_COUNTOF(tris), 1, 1);
-    AfxRenameVertexPivots(&mshb, 0, 1, &AfxStaticString("cube"));
-    AfxAddVertexBiases(&mshb, 1, (afxNat[]) { 0 }, (afxReal[]) { 1.0 });
-    AfxUpdateVertices(&mshb, 0, AFX_COUNTOF(cubeVertices), NIL, NIL);
-    AfxUpdateVertexPositions4(&mshb, 0, AFX_COUNTOF(cubeVertices), cubeVertices, sizeof(cubeVertices[0]));
+    if (secCnt == 0) secCnt = 6;
+    else if (secCnt > 12)
+        secCnt = 12;
+
+    afxNat meshSecs[12];
+    afxNat secDiv = 12 / secCnt;
+
+    for (afxNat i = 0; i < secCnt; i++)
+        meshSecs[i] = secDiv;
+
+    akxVertexAttrSpec attrSpecs[] =
+    {
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
+            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL,
+            .src = cubeVertices,
+            .srcStride = sizeof(cubeVertices[0])
+        },
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_NRM,
+            .src = cubeNormals,
+            .srcStride = sizeof(cubeNormals[0])
+        },
+        {
+            .fmt = afxVertexFormat_V2D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_UV,
+            .src = cubeTexCoords,
+            .srcStride = sizeof(cubeTexCoords[0])
+        }
+    };
+
+    akxVertexDataSpec vtdb = { 0 };
+    vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
+    vtdb.vtxCnt = AFX_COUNTOF(cubeVertices);
     
-    for (afxNat i = 0; i < mshb.vtxCnt; i++)
-        AfxScaleV3d(mshb.posn[i], mshb.posn[i], scale);
+    akxVertexData vtd;
+    AkxAcquireVertexDatas(sim, attrSpecs, 1, &vtdb, &vtd);
 
-    AfxUpdateVertexNormals(&mshb, 0, AFX_COUNTOF(cubeNormals), cubeNormals, sizeof(cubeNormals[0]));
-    AfxUpdateVertexWraps(&mshb, 0, AFX_COUNTOF(cubeTexCoords), cubeTexCoords, sizeof(cubeTexCoords[0]));
-    AfxEmitTriangles(&mshb, 0, 0, AFX_COUNTOF(tris), tris);
+    afxMeshTopology msht;
+    akxMeshTopologyBlueprint mshtb = { 0 };
+    mshtb.triCnt = AFX_COUNTOF(tris);
+    mshtb.src = tris;
+    mshtb.srcIdxSiz = sizeof(tris[0][0]);
+    mshtb.surfCnt = secCnt;
+    mshtb.trisForSurfMap = meshSecs;
+    AfxAssembleMeshTopology(sim, 1, &mshtb, &msht);
+    
+    akxMeshBlueprint mshb = { 0 };
+    mshb.vtxCnt = AFX_COUNTOF(cubeVertices);
+    mshb.vtd = vtd;
+    mshb.topology = msht;
+    mshb.biasCnt = 1;
     
     afxMesh msh;
-    AfxBuildMeshes(sim, NIL, 1, &mshb, &msh);
-    AfxEndMeshBuilding(&mshb);
+    AfxAssembleMeshes(sim, 1, &mshb, &msh);
+    AfxReleaseObjects(1, &msht);
+    AfxReleaseObjects(1, &vtd);
+
+    afxV3d* pos = AkxExposeVertexData(vtd, 0, 0);
+
+    for (afxNat i = 0; i < mshb.vtxCnt; i++)
+        AfxV3dScale(pos[i], pos[i], scale);
 
     return msh;
 }
 
-_AKX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxReal width, afxReal height)
+_AKX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxV3d whd, afxReal slantX, afxReal slantY)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    AfxAssert(width);
-    AfxAssert(height);
+    AfxAssert(whd);
 
-    static afxV4d const vertices[] = { { -1.0f, -1.0f, 0.0f, 1.0f }, { 1.0f, -1.0f, 0.0f, 1.0f }, { -1.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f } };
-    static afxV3d const normals[] = { { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f } };
-    static afxV3d const tangents[] = { { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } };
-    static afxV2d const texCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } };
-    static afxIndexedTriangle const tris[] = { { 0, 1, 2 }, { 1, 3, 2 } };
+    if (!slantX)
+        slantX = 0.5f;
 
-    afxMeshBuilder mshb;
-    AfxBeginMeshBuilding(&mshb, &AfxStaticString("parallelepiped"), AFX_COUNTOF(vertices), AFX_COUNTOF(tris), 1, 1);
-    AfxRenameVertexPivots(&mshb, 0, 1, &AfxStaticString("parallelepiped"));
-    AfxAddVertexBiases(&mshb, 1, (afxNat[]) { 0 }, (afxReal[]) { 1.0 });
-    AfxUpdateVertices(&mshb, 0, AFX_COUNTOF(vertices), NIL, NIL);
-    AfxUpdateVertexPositions4(&mshb, 0, AFX_COUNTOF(vertices), vertices, sizeof(vertices[0]));
+    if (!slantY)
+        slantY = 0.5f;
 
-    afxM4d m;
-    AfxResetM4d(m);
-    AfxScalingM4d(m, AfxSpawnV4d(width, height, 1.0, 1.0));
+    afxNat numVertices = 8;
+    afxNat numIndices = 36; // 12 triangles * 3 vertices per triangle
 
-    AfxPostMultiplyArrayedAtv4d(m, AFX_COUNTOF(vertices), mshb.posn, mshb.posn);
+    afxReal halfWidth = whd[0] / 2.0f;
+    afxReal halfHeight = whd[1] / 2.0f;
+    afxReal halfDepth = whd[2] / 2.0f;
 
-    AfxUpdateVertexNormals(&mshb, 0, AFX_COUNTOF(normals), normals, sizeof(normals[0]));
-    AfxUpdateVertexWraps(&mshb, 0, AFX_COUNTOF(texCoords), texCoords, sizeof(texCoords[0]));
-    AfxEmitTriangles(&mshb, 0, 0, AFX_COUNTOF(tris), tris);
-    
+    // Define the 8 vertices of the parallelepiped
+    afxV3d const vertData[8] =
+    {
+        {-halfWidth - slantX, -halfHeight - slantY, -halfDepth},
+        {halfWidth - slantX, -halfHeight - slantY, -halfDepth},
+        {halfWidth - slantX, halfHeight - slantY, -halfDepth},
+        {-halfWidth - slantX, halfHeight - slantY, -halfDepth},
+        {-halfWidth + slantX, -halfHeight + slantY, halfDepth},
+        {halfWidth + slantX, -halfHeight + slantY, halfDepth},
+        {halfWidth + slantX, halfHeight + slantY, halfDepth},
+        {-halfWidth + slantX, halfHeight + slantY, halfDepth}
+    };
+
+    // Define indices for the 12 triangles of the parallelepiped
+    afxNat const indicesData[36] =
+    {
+        0, 1, 2, 2, 3, 0, // Back face
+        4, 5, 6, 6, 7, 4, // Front face
+        0, 1, 5, 5, 4, 0, // Bottom face
+        2, 3, 7, 7, 6, 2, // Top face
+        0, 3, 7, 7, 4, 0, // Left face
+        1, 2, 6, 6, 5, 1  // Right face
+    };
+
+    akxVertexAttrSpec attrSpecs[] =
+    {
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
+            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL,
+            .src = vertData,
+            .srcStride = sizeof(vertData[0])
+        },
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_NRM
+        },
+        {
+            .fmt = afxVertexFormat_V2D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_UV
+        }
+    };
+
+    akxVertexDataSpec vtdb = { 0 };
+    vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
+    vtdb.vtxCnt = numVertices;
+
+    akxVertexData vtd;
+    AkxAcquireVertexDatas(sim, attrSpecs, 1, &vtdb, &vtd);
+
+    afxV3d* nrm = AkxExposeVertexData(vtd, 1, 0);
+    afxV2d* uv = AkxExposeVertexData(vtd, 2, 0);
+
+    afxNat index = 0;
+
+    for (afxNat i = 0; i < 8; ++i)
+    {
+        nrm[index][0] = 0.0f; // Normals
+        nrm[index][1] = 0.0f;
+        nrm[index][2] = 1.0f;
+        uv[index][0] = (i % 2) ? 1.0f : 0.0f; // Texture coordinates
+        uv[index][1] = (i / 4) ? 1.0f : 0.0f;
+        index++;
+    }
+
+    afxMeshTopology msht;
+    akxMeshTopologyBlueprint mshtb = { 0 };
+    mshtb.triCnt = numIndices / 3;
+    mshtb.src = indicesData;
+    mshtb.srcIdxSiz = sizeof(indicesData[0]);
+    AfxAssembleMeshTopology(sim, 1, &mshtb, &msht);
+
+    akxMeshBlueprint mshb = { 0 };
+    mshb.vtxCnt = numVertices;
+    mshb.vtd = vtd;
+    mshb.topology = msht;
+    mshb.biasCnt = 1;
+
     afxMesh msh;
-    AfxBuildMeshes(sim, NIL, 1, &mshb, &msh);
-    AfxEndMeshBuilding(&mshb);
+    AfxAssembleMeshes(sim, 1, &mshb, &msh);
+    AfxReleaseObjects(1, &msht);
+    AfxReleaseObjects(1, &vtd);
 
     return msh;
 }
@@ -650,14 +770,14 @@ _AKX afxMesh AfxBuildDomeMesh(afxSimulation sim, afxReal radius, afxNat slices)
             texCoords[texCoordsIndex][1] = 1.0f - (afxReal)i / (afxReal)numberParallels;
 
             // use quaternion to get the tangent vector
-            AfxMakeQuatFromAxialRotation(helpQuaternion, AfxSpawnV3d(0, 1, 0), 360.0f * texCoords[texCoordsIndex][0]);
-            AfxRotationM4dFromQuat(helpMatrix, helpQuaternion);
-            //AfxPostMultiplyV3d(&tangents[tangentIndex], helpMatrix, AFX_V3D_X);
+            AfxQuatRotationFromAxis(helpQuaternion, AfxSpawnV3d(0, 1, 0), 360.0f * texCoords[texCoordsIndex][0]);
+            AfxM4dRotationFromQuat(helpMatrix, helpQuaternion);
+            //AfxV3dPostMultiplyM3d(&tangents[tangentIndex], helpMatrix, AFX_V3D_X);
         }
     }
 
     afxNat baseTriIdx = 0;
-    afxIndexedTriangle tri;
+    akxIndexedTriangle tri;
 
     for (afxNat32 i = 0; i < numberParallels; i++)
     {
@@ -680,8 +800,652 @@ _AKX afxMesh AfxBuildDomeMesh(afxSimulation sim, afxReal radius, afxNat slices)
     }
 
     afxMesh msh;
-    AfxBuildMeshes(sim, NIL, 1, &mshb, &msh);
+    AfxBuildMeshes(sim, 1, &mshb, &msh);
     //AfxEndMeshBuilding(&mshb);
+
+    return msh;
+}
+
+_AKX afxMesh AfxBuildDomeMesh2(afxSimulation sim, afxReal radius, afxNat stacks, afxNat slices, afxBool inv)
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &sim, afxFcc_SIM);
+
+    if (!radius)
+        radius = 1.f;
+
+    if (!stacks)
+        stacks = 10;
+
+    if (!slices)
+        slices = 20;
+
+    afxNat numVertices = (stacks + 1) * (slices + 1);
+    
+    akxVertexAttrSpec attrSpecs[] =
+    {
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
+            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL
+        },
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_NRM
+        },
+        {
+            .fmt = afxVertexFormat_V2D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_UV
+        }
+    };
+
+    akxVertexDataSpec vtdb = { 0 };
+    vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
+    vtdb.vtxCnt = numVertices;
+
+    akxVertexData vtd;
+    AkxAcquireVertexDatas(sim, attrSpecs, 1, &vtdb, &vtd);
+
+    afxV3d* pos = AkxExposeVertexData(vtd, 0, 0);
+    afxV3d* nrm = AkxExposeVertexData(vtd, 1, 0);
+    afxV2d* uv = AkxExposeVertexData(vtd, 2, 0);
+    afxNat index = 0;
+
+    for (afxNat i = 0; i <= stacks; ++i)
+    {
+        afxReal stackAngle = AFX_PI / 2 - i * AFX_PI / stacks; // angle from top
+        afxReal xy = radius * AfxCosf(stackAngle); // radius of current stack
+        afxReal z = radius * AfxSinf(stackAngle);  // height of current stack
+
+        for (afxNat j = 0; j <= slices; ++j)
+        {
+            afxReal sectorAngle = 2 * AFX_PI * j / slices; // angle around the stack
+            afxReal x = xy * AfxCosf(sectorAngle);
+            afxReal y = xy * AfxSinf(sectorAngle);
+
+            AfxV3dSet(pos[index], x, y, z);
+            
+            // Normal vector (normalized vertex position)
+            afxReal length = AfxSqrtf(x * x + y * y + z * z);
+            AfxV3dSet(nrm[index], x / length, y / length, z / length);
+            AfxV2dSet(uv[index], (afxReal)j / slices, (afxReal)i / stacks);
+            index++;
+        }
+    }
+
+    afxMeshTopology msht;
+#if 0 // we couldn't use trip strip at the time this code was written.
+    afxBool strip = FALSE;
+
+    if (strip)
+    {
+        afxNat numIndices = stacks * slices * 2 * 3; // 2 triangles per quad, 3 indices per triangle
+
+        akxMeshTopologyBlueprint mshtb = { 0 };
+        mshtb.triCnt = numIndices / 3;
+        AfxAssembleMeshTopology(sim, 1, &mshtb, &msht);
+
+        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+
+        // Generate indices for triangle strips
+        afxNat idx = 0;
+
+        for (afxNat i = 0; i < stacks; ++i)
+        {
+            for (afxNat j = 0; j < slices; ++j)
+            {
+                afxNat topLeft = i * (slices + 1) + j;
+                afxNat topRight = topLeft + 1;
+                afxNat bottomLeft = (i + 1) * (slices + 1) + j;
+                afxNat bottomRight = bottomLeft + 1;
+
+                // First triangle
+                tris[idx][0] = topLeft;
+                tris[idx][1] = bottomLeft;
+                tris[idx][2] = topRight;
+                idx++;
+
+                // Second triangle
+                tris[idx][0] = topRight;
+                tris[idx][1] = bottomLeft;
+                tris[idx][2] = bottomRight;
+                idx++;
+            }
+        }
+    }
+    else
+#endif
+    {
+        afxNat numIndices = stacks * slices * 6; // 6 indices per quad (2 triangles, 3 indices per triangle)
+
+        akxMeshTopologyBlueprint mshtb = { 0 };
+        mshtb.triCnt = numIndices / 3;
+        AfxAssembleMeshTopology(sim, 1, &mshtb, &msht);
+
+        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+
+        // Generate indices for triangles
+        afxNat idx = 0;
+
+        for (afxNat i = 0; i < stacks; ++i)
+        {
+            for (afxNat j = 0; j < slices; ++j)
+            {
+                afxNat topLeft = i * (slices + 1) + j;
+                afxNat topRight = topLeft + 1;
+                afxNat bottomLeft = (i + 1) * (slices + 1) + j;
+                afxNat bottomRight = bottomLeft + 1;
+
+                // First triangle
+                tris[idx][0] = topLeft;
+                tris[idx][1] = bottomLeft;
+                tris[idx][2] = topRight;
+                idx++;
+
+                // Second triangle
+                tris[idx][0] = topRight;
+                tris[idx][1] = bottomLeft;
+                tris[idx][2] = bottomRight;
+                idx++;
+            }
+        }
+    }
+
+    if (inv)
+    {
+        AfxInvertMeshWinding(msht);
+        AkxInvertNormalizedVertexData(vtd, 1, 0, numVertices);
+    }
+
+    akxMeshBlueprint mshb = { 0 };
+    mshb.vtxCnt = numVertices;
+    mshb.vtd = vtd;
+    mshb.topology = msht;
+    mshb.biasCnt = 1;
+
+    afxMesh msh;
+    AfxAssembleMeshes(sim, 1, &mshb, &msh);
+    AfxReleaseObjects(1, &msht);
+    AfxReleaseObjects(1, &vtd);
+
+    return msh;
+}
+
+_AKX afxMesh AfxBuildSphereMesh(afxSimulation sim, afxReal radius, afxNat stacks, afxNat slices, afxBool inv)
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &sim, afxFcc_SIM);
+
+    if (!radius)
+        radius = 1.f;
+
+    if (!stacks)
+        stacks = 20;
+
+    if (!slices)
+        slices = 20;
+
+    afxNat numVertices = (stacks + 1) * (slices + 1);
+
+    akxVertexAttrSpec attrSpecs[] =
+    {
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
+            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL
+        },
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_NRM
+        },
+        {
+            .fmt = afxVertexFormat_V2D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_UV
+        }
+    };
+
+    akxVertexDataSpec vtdb = { 0 };
+    vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
+    vtdb.vtxCnt = numVertices;
+
+    akxVertexData vtd;
+    AkxAcquireVertexDatas(sim, attrSpecs, 1, &vtdb, &vtd);
+
+    afxV3d* pos = AkxExposeVertexData(vtd, 0, 0);
+    afxV3d* nrm = AkxExposeVertexData(vtd, 1, 0);
+    afxV2d* uv = AkxExposeVertexData(vtd, 2, 0);
+    afxNat index = 0;
+
+    for (afxNat i = 0; i <= stacks; ++i)
+    {
+        afxReal stackAngle = AFX_PI * i / stacks; // angle from top
+        afxReal xy = radius * AfxSinf(stackAngle); // radius of current stack
+        afxReal z = radius * AfxCosf(stackAngle);  // height of current stack
+
+        for (afxNat j = 0; j <= slices; ++j)
+        {
+            afxReal sectorAngle = 2 * AFX_PI * j / slices; // angle around the stack
+            afxReal x = xy * AfxCosf(sectorAngle);
+            afxReal y = xy * AfxSinf(sectorAngle);
+
+            AfxV3dSet(pos[index], x, y, z);
+
+            // Normal vector (normalized vertex position)
+            afxReal length = AfxSqrtf(x * x + y * y + z * z);
+            AfxV3dSet(nrm[index], x / length, y / length, z / length);
+            AfxV2dSet(uv[index], (afxReal)j / slices, (afxReal)i / stacks);
+            index++;
+        }
+    }
+
+    afxMeshTopology msht;
+#if 0 // we couldn't use trip strip at the time this code was written.
+    afxBool strip = FALSE;
+
+    if (strip)
+    {
+        afxNat numIndices = stacks * slices * 2 * 3; // 2 triangles per quad, 3 indices per triangle
+
+        akxMeshTopologyBlueprint mshtb = { 0 };
+        mshtb.triCnt = numIndices / 3;
+        AfxAssembleMeshTopology(sim, 1, &mshtb, &msht);
+
+        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+
+        // Generate indices for triangle strips
+        afxNat idx = 0;
+
+        for (afxNat i = 0; i < stacks; ++i)
+        {
+            for (afxNat j = 0; j < slices; ++j)
+            {
+                afxNat topLeft = i * (slices + 1) + j;
+                afxNat topRight = topLeft + 1;
+                afxNat bottomLeft = (i + 1) * (slices + 1) + j;
+                afxNat bottomRight = bottomLeft + 1;
+
+                // First triangle
+                tris[idx][0] = topLeft;
+                tris[idx][1] = bottomLeft;
+                tris[idx][2] = topRight;
+                idx++;
+
+                // Second triangle
+                tris[idx][0] = topRight;
+                tris[idx][1] = bottomLeft;
+                tris[idx][2] = bottomRight;
+                idx++;
+            }
+        }
+    }
+    else
+#endif
+    {
+        afxNat numIndices = stacks * slices * 6; // 6 indices per quad (2 triangles, 3 indices per triangle)
+
+        akxMeshTopologyBlueprint mshtb = { 0 };
+        mshtb.triCnt = numIndices / 3;
+        AfxAssembleMeshTopology(sim, 1, &mshtb, &msht);
+
+        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+
+        // Generate indices for triangles
+        afxNat idx = 0;
+
+        for (afxNat i = 0; i < stacks; ++i)
+        {
+            for (afxNat j = 0; j < slices; ++j)
+            {
+                afxNat topLeft = i * (slices + 1) + j;
+                afxNat topRight = topLeft + 1;
+                afxNat bottomLeft = (i + 1) * (slices + 1) + j;
+                afxNat bottomRight = bottomLeft + 1;
+
+                // First triangle
+                tris[idx][0] = topLeft;
+                tris[idx][1] = bottomLeft;
+                tris[idx][2] = topRight;
+                idx++;
+
+                // Second triangle
+                tris[idx][0] = topRight;
+                tris[idx][1] = bottomLeft;
+                tris[idx][2] = bottomRight;
+                idx++;
+            }
+        }
+    }
+
+    if (inv)
+    {
+        AfxInvertMeshWinding(msht);
+        AkxInvertNormalizedVertexData(vtd, 1, 0, numVertices);
+    }
+
+    akxMeshBlueprint mshb = { 0 };
+    mshb.vtxCnt = numVertices;
+    mshb.vtd = vtd;
+    mshb.topology = msht;
+    mshb.biasCnt = 1;
+
+    afxMesh msh;
+    AfxAssembleMeshes(sim, 1, &mshb, &msh);
+    AfxReleaseObjects(1, &msht);
+    AfxReleaseObjects(1, &vtd);
+
+    return msh;
+}
+
+_AKX afxMesh AfxBuildCapsuleMesh(afxSimulation sim, afxReal radius, afxReal height, afxNat stacks, afxNat slices, afxNat cylinderSlices, afxBool inv)
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &sim, afxFcc_SIM);
+
+    if (!radius)
+        radius = 1.f; // Radius of the sphere caps
+
+    if (!height)
+        height = 2.f; // Height of the cylindrical part
+
+    if (!stacks)
+        stacks = 20; // Number of stacks for the sphere
+
+    if (!slices)
+        slices = 20; // Number of slices for the sphere
+
+    if (!cylinderSlices)
+        cylinderSlices = 36; // Number of slices for the cylinder
+
+    afxNat numVerticesSphere = (stacks + 1) * (slices + 1);
+    afxNat numVerticesCylinder = (cylinderSlices + 1) * 2; // Top and bottom circles
+    afxNat numVertices = numVerticesSphere * 2 + numVerticesCylinder; // 2 hemispheres and 1 cylinder
+    afxNat numIndicesSphere = stacks * slices * 6; // Each hemisphere has these many indices
+    afxNat numIndicesCylinder = cylinderSlices * 6; // Cylinder indices
+    afxNat numIndices = numIndicesSphere * 2 + numIndicesCylinder; // Total indices
+
+    akxVertexAttrSpec attrSpecs[] =
+    {
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
+            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL
+        },
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_NRM
+        },
+        {
+            .fmt = afxVertexFormat_V2D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_UV
+        }
+    };
+
+    akxVertexDataSpec vtdb = { 0 };
+    vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
+    vtdb.vtxCnt = numVertices;
+
+    akxVertexData vtd;
+    AkxAcquireVertexDatas(sim, attrSpecs, 1, &vtdb, &vtd);
+
+    afxV3d* pos = AkxExposeVertexData(vtd, 0, 0);
+    afxV3d* nrm = AkxExposeVertexData(vtd, 1, 0);
+    afxV2d* uv = AkxExposeVertexData(vtd, 2, 0);
+    afxNat index = 0;
+
+    // Generate spherical caps (top and bottom)
+    for (afxNat hemisphere = 0; hemisphere < 2; ++hemisphere)
+    {
+        afxReal zOffset = (hemisphere == 0) ? (height / 2) : (-height / 2);
+
+        for (afxNat i = 0; i <= stacks; ++i)
+        {
+            afxReal stackAngle = AFX_PI * i / stacks; // angle from top
+            afxReal xy = radius * sinf(stackAngle); // radius of current stack
+            afxReal z = zOffset + radius * cosf(stackAngle);  // height of current stack
+
+            if (hemisphere == 1) {
+                z = -z; // Flip z for the bottom hemisphere
+            }
+
+            for (afxNat j = 0; j <= slices; ++j)
+            {
+                afxReal sectorAngle = 2 * AFX_PI * j / slices; // angle around the stack
+                afxReal x = xy * cosf(sectorAngle);
+                afxReal y = xy * sinf(sectorAngle);
+
+                AfxV3dSet(pos[index], x, y, z);
+
+                // Normal vector (normalized vertex position)
+                afxReal length = sqrtf(x * x + y * y + z * z);
+                AfxV3dSet(nrm[index], x / length, y / length, z / length);
+                AfxV2dSet(uv[index], (afxReal)j / slices, (afxReal)i / stacks);
+                index++;
+            }
+        }
+    }
+
+    // Generate cylindrical section
+    for (afxNat i = 0; i <= 1; ++i)
+    {
+        afxReal yOffset = (i == 0) ? (-height / 2) : (height / 2); // Top and bottom circles
+
+        for (afxNat j = 0; j <= cylinderSlices; ++j)
+        {
+            afxReal angle = 2 * AFX_PI * j / cylinderSlices;
+            afxReal x = radius * cosf(angle);
+            afxReal y = yOffset;
+            afxReal z = radius * sinf(angle);
+
+            AfxV3dSet(pos[index], x, y, z);
+
+            // Normal vector (perpendicular to the cylinder surface)
+            AfxV3dSet(nrm[index], 0.f, (i == 0) ? -1.0f : 1.0f, 0.f);
+
+            AfxV2dSet(uv[index], (afxReal)j / cylinderSlices, (i == 0) ? 0.0f : 1.0f);
+            index++;
+        }
+    }
+
+    afxMeshTopology msht;
+    {
+        akxMeshTopologyBlueprint mshtb = { 0 };
+        mshtb.triCnt = numIndices / 3;
+        AfxAssembleMeshTopology(sim, 1, &mshtb, &msht);
+
+        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+
+        // Generate indices for spherical caps
+        afxNat idx = 0;
+
+        for (afxNat hemisphere = 0; hemisphere < 2; ++hemisphere)
+        {
+            for (afxNat i = 0; i < stacks; ++i)
+            {
+                for (afxNat j = 0; j < slices; ++j)
+                {
+                    afxNat topLeft = (i * (slices + 1) + j) + (hemisphere * numVerticesSphere);
+                    afxNat topRight = topLeft + 1;
+                    afxNat bottomLeft = ((i + 1) * (slices + 1) + j) + (hemisphere * numVerticesSphere);
+                    afxNat bottomRight = bottomLeft + 1;
+
+                    // First triangle
+                    tris[idx][0] = topLeft;
+                    tris[idx][1] = bottomLeft;
+                    tris[idx][2] = topRight;
+                    idx++;
+
+                    // Second triangle
+                    tris[idx][0] = topRight;
+                    tris[idx][1] = bottomLeft;
+                    tris[idx][2] = bottomRight;
+                    idx++;
+                }
+            }
+        }
+
+        // Generate indices for cylindrical section
+        for (afxNat i = 0; i < cylinderSlices; ++i)
+        {
+            afxNat topLeft = i;
+            afxNat topRight = i + 1;
+            afxNat bottomLeft = numVerticesCylinder + i;
+            afxNat bottomRight = numVerticesCylinder + i + 1;
+
+            // First triangle
+            tris[idx][0] = topLeft;
+            tris[idx][1] = bottomLeft;
+            tris[idx][2] = topRight;
+            idx++;
+
+            // Second triangle
+            tris[idx][0] = topRight;
+            tris[idx][1] = bottomLeft;
+            tris[idx][2] = bottomRight;
+            idx++;
+        }
+    }
+
+    if (inv)
+    {
+        AfxInvertMeshWinding(msht);
+        AkxInvertNormalizedVertexData(vtd, 1, 0, numVertices);
+    }
+
+    akxMeshBlueprint mshb = { 0 };
+    mshb.vtxCnt = numVertices;
+    mshb.vtd = vtd;
+    mshb.topology = msht;
+    mshb.biasCnt = 1;
+
+    afxMesh msh;
+    AfxAssembleMeshes(sim, 1, &mshb, &msh);
+    AfxReleaseObjects(1, &msht);
+    AfxReleaseObjects(1, &vtd);
+
+    return msh;
+}
+
+_AKX afxMesh AfxBuildPlaneMesh(afxSimulation sim, afxNat gridSizeX, afxNat gridSizeY, afxReal width, afxReal height)
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &sim, afxFcc_SIM);
+
+    if (!gridSizeX)
+        gridSizeX = 10;
+
+    if (!gridSizeY)
+        gridSizeY = 10;
+
+    if (!width)
+        width = 10.f;
+
+    if (!height)
+        height = 10.f;
+
+    afxNat numVertices = (gridSizeX + 1) * (gridSizeY + 1);
+    afxNat numIndices = gridSizeX * gridSizeY * 6; // Each grid cell is split into 2 triangles
+    afxReal halfWidth = width / 2.0f;
+    afxReal halfHeight = height / 2.0f;
+
+    akxVertexAttrSpec attrSpecs[] =
+    {
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
+            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL
+        },
+        {
+            .fmt = afxVertexFormat_V3D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_NRM
+        },
+        {
+            .fmt = afxVertexFormat_V2D,
+            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
+            .usage = akxVertexUsage_UV
+        }
+    };
+
+    akxVertexDataSpec vtdb = { 0 };
+    vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
+    vtdb.vtxCnt = numVertices;
+
+    akxVertexData vtd;
+    AkxAcquireVertexDatas(sim, attrSpecs, 1, &vtdb, &vtd);
+
+    afxV3d* pos = AkxExposeVertexData(vtd, 0, 0);
+    afxV3d* nrm = AkxExposeVertexData(vtd, 1, 0);
+    afxV2d* uv = AkxExposeVertexData(vtd, 2, 0);
+
+    // Generate vertices
+    afxNat index = 0;
+
+    for (afxNat y = 0; y <= gridSizeY; ++y)
+    {
+        for (afxNat x = 0; x <= gridSizeX; ++x)
+        {
+            afxReal xpos = (x / (afxReal)gridSizeX) * width - halfWidth;
+            afxReal ypos = (y / (afxReal)gridSizeY) * height - halfHeight;
+
+            // Vertex position
+            AfxV3dSet(pos[index], xpos, 0.f, ypos); // Plane is at y = 0
+            AfxV3dSet(nrm[index], 0.f, 1.f, 0.f); // Normal vector (pointing up)
+            AfxV2dSet(uv[index], x / (afxReal)gridSizeX, y / (afxReal)gridSizeY);
+            index++;
+        }
+    }
+
+    afxMeshTopology msht;
+    {
+        akxMeshTopologyBlueprint mshtb = { 0 };
+        mshtb.triCnt = numIndices / 3;
+        AfxAssembleMeshTopology(sim, 1, &mshtb, &msht);
+
+        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+
+        // Generate indices
+        afxNat idx = 0;
+
+        for (afxNat y = 0; y < gridSizeY; ++y)
+        {
+            for (afxNat x = 0; x < gridSizeX; ++x)
+            {
+                afxNat topLeft = y * (gridSizeX + 1) + x;
+                afxNat topRight = topLeft + 1;
+                afxNat bottomLeft = (y + 1) * (gridSizeX + 1) + x;
+                afxNat bottomRight = bottomLeft + 1;
+
+                // First triangle
+                tris[idx][0] = topLeft;
+                tris[idx][1] = bottomLeft;
+                tris[idx][2] = topRight;
+                idx++;
+
+                // Second triangle
+                tris[idx][0] = topRight;
+                tris[idx][1] = bottomLeft;
+                tris[idx][2] = bottomRight;
+                idx++;
+            }
+        }
+    }
+
+    akxMeshBlueprint mshb = { 0 };
+    mshb.vtxCnt = numVertices;
+    mshb.vtd = vtd;
+    mshb.topology = msht;
+    mshb.biasCnt = 1;
+
+    afxMesh msh;
+    AfxAssembleMeshes(sim, 1, &mshb, &msh);
+    AfxReleaseObjects(1, &msht);
+    AfxReleaseObjects(1, &vtd);
 
     return msh;
 }

@@ -24,7 +24,7 @@
 #define AVX_DEVICE_DEV_KIT_H
 
 #include "../src/afx/dev/afxDevCoreBase.h"
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
 
 #ifdef _AVX_DRAW_QUEUE_C
 #ifdef _AVX_DRAW_QUEUE_IMPL
@@ -68,6 +68,7 @@ AFX_OBJECT(afxDrawBridge)
     afxNat(*transferCb)(afxDrawBridge, afxFence, afxNat, afxTransferRequest const[]);
     afxNat(*presentCb)(afxDrawBridge, afxNat, afxPresentationRequest const[]);
     afxNat(*stampCb)(afxDrawBridge, afxNat, afxPresentationRequest const[], afxV2d const, afxString const*);
+    afxNat(*submCb)(afxDrawBridge ddge, afxFence fenc, afxNat cnt, avxSubmission const req[]);
 };
 #endif//_AVX_DRAW_BRIDGE_C
 
@@ -92,17 +93,20 @@ AFX_OBJECT(afxDrawContext)
     afxChain outputs;
 
     //afxChain classes;
-    afxClass queries;
-    afxClass buffers;
-    afxClass rasters;
-    afxClass shaders;
+    afxClass bufCls;
+    afxClass rasCls;
+    afxClass canvCls;
 
-    afxClass razrMgr;
-    afxClass pipMgr;
-    afxClass schemas;
-    afxClass canvases;
-    afxClass samplers;
-    afxClass vinputs;
+    afxClass vinCls;
+    afxClass ligaCls;
+    afxClass shadCls;
+    afxClass pipCls;
+    afxClass razrCls;
+
+    afxClass sampCls;
+    afxClass qrypCls;
+
+    afxStringBase   shdStrb;
 
     afxCmd const* stdCmds;
 
@@ -228,7 +232,7 @@ AFX_OBJECT(avxPipeline)
     afxNat              geoShdIdx;
     afxNat              fshdIdx;
 
-    avxTopology     primTop; /// is a option defining the primitive topology. /// avxTopology_TRI_LIST
+    avxTopology         primTop; /// is a option defining the primitive topology. /// avxTopology_TRI_LIST
     afxBool             primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
     afxNat              patchControlPoints; /// is the number of control points per patch.
     afxBool             depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE
@@ -408,7 +412,7 @@ AFX_OBJECT(_avxShader)
 AFX_OBJECT(avxShader)
 #endif
 {
-    afxUri                  uri;
+    afxUri128               uri;
     avxShaderStage          stage;
 
     afxNat                  verMajor;
@@ -423,9 +427,7 @@ AFX_OBJECT(avxShader)
 
     afxNat8                 ioDeclCnt;
     avxShaderIoChannel*     ioDecls;
-    avxTopology         topology;
-
-    afxStringBase           strb;
+    avxTopology             topology;
 };
 #endif//_AVX_SHADER_C
 

@@ -15,94 +15,20 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_MOTOR_H
-#define AFX_MOTOR_H
-
 // Terminology: Motor is an animating force or underlying purpose; intention;
 // Terminology: Puppet is a movable model of a person or animal that is used in entertainment and is typically moved either by strings controlled from above or by a hand inside it.
 
-// There are two primary objects involved in the run-time animation layer : the afxBody and the akxMotor.
+// There are two primary objects involved in the run-time animation layer : the akxBody and the akxMotor.
 // Together, they represent the two ends of the animation process.
-// The afxBody represents the state of a single model that may have some number of animations affecting it, 
+// The akxBody represents the state of a single model that may have some number of animations affecting it, 
 // whereas the akxMotor represents the state of an animation that may be affecting some number of models.
-// When your engine creates a new animating entity in the game world, you create a afxBody to accompany it.
+// When your engine creates a new animating entity in the game world, you create a akxBody to accompany it.
 // When you want to play an animation on such an instance, you create a akxMotor.
 
+#ifndef AKX_MOTOR_H
+#define AKX_MOTOR_H
+
 #include "qwadro/space/akxPose.h"
-
-AFX_DECLARE_STRUCT(akxControlledAnimation);
-AFX_DECLARE_STRUCT(akxControlledPose);
-
-AFX_DECLARE_STRUCT(akxMotorInterlinkCallbacks);
-
-typedef struct controlled_pose
-{
-    akxPose Pose; // 0
-    const akxTrackMask *ModelMask; // 4
-} controlled_pose;
-
-typedef struct controlled_animation
-{
-    struct animation_binding *Binding; // 0
-    accumulation_mode AccumulationMode; // 4
-    const akxTrackMask *TrackMask; // 8
-    const akxTrackMask *ModelMask; // 12
-} controlled_animation;
-
-AFX_DEFINE_STRUCT(akxMotive)
-{
-    akxMotor            moto;
-    afxLinkage          bod;
-    akxMotorInterlinkCallbacks const *callbacks;
-    union
-    {
-        controlled_animation ca;
-        controlled_pose      cp;
-    };
-    void*               reservedPtr;
-};
-
-AFX_DEFINE_STRUCT(akxMotorInterlinkCallbacks)
-{
-    struct controlled_animation*(*GetControlledAnimation)(akxMotive*);
-    struct controlled_pose*(*GetControlledPose)(akxMotive*);
-    afxBool(*InitializeBindingState)(akxMotive*, void*);
-    void(*AccumulateBindingState)(akxMotive*, afxNat, afxNat, akxPose*, afxReal, afxNat const*);
-    void(*BuildBindingDirect)(akxMotive*, afxNat, afxReal const*, akxPoseBuffer*, afxReal);
-    void(*AccumulateLoopTransform)(akxMotive*, afxReal, afxReal*, afxReal*, afxReal*, afxBool);
-    void(*CleanupBindingState)(akxMotive*);
-};
-
-typedef enum akxMotorFlags
-{
-    akxMotorFlags_ACTIVE = AFX_BIT(0),
-    akxMotorFlags_KILL_ONCE_COMPLETE = AFX_BIT(1),
-    akxMotorFlags_KILL_ONCE_UNUSED = AFX_BIT(2),
-    akxMotorFlags_EASE_IN = AFX_BIT(3),
-    akxMotorFlags_EASE_OUT = AFX_BIT(4),
-    akxMotorFlags_FORCE_CLAMPLED_LOOPS = AFX_BIT(5)
-} akxMotorFlags;
-
-AFX_OBJECT(akxMotor)
-{
-    akxMotorFlags   flags;
-    afxReal         currClock;
-    afxReal         dtLocalClockPending;
-    afxReal         localClock;
-    afxReal         speed;
-    afxReal         localDur;
-    afxInt          currIterIdx;
-    afxInt          iterCnt;
-    afxReal         killClock;
-    afxReal         currWeight;
-    afxReal         easeInStartClock;
-    afxReal         easeInEndClock;
-    afxNat          easeInValues;
-    afxReal         easeOutStartClock;
-    afxReal         easeOutEndClock;
-    afxNat          easeOutValues;
-    void*           userData[4];
-};
 
 // The akxMotor handle you get back when you play an animation is the handle you use to manipulate the animation during playback.
 // You can perform a number of timing and weighting operations through the akxMotor, but before we get to that, 
@@ -151,11 +77,11 @@ AKX void        AkxSelectMotorIteration(akxMotor moto, afxInt currIterIdx); // M
 AKX afxReal     AkxDetermineMotorDuration(akxMotor moto); // Find out how long this control plays for, total
 AKX afxReal     AkxDetermineMotorRemainingDuration(akxMotor moto); // Find out how long this control will continue to play for, accounting for however much time has already elapsed
 
-// Por vezes, um author vai querer parear um afxBody ou uma afxMotor no Qwadro com some application-specific structure of your own.
+// Por vezes, um author vai querer parear um akxBody ou uma afxMotor no Qwadro com some application-specific structure of your own.
 // This does not pose a problem for most Qwadro APIs, since you will always have your application specific structure handy.
 // But, for the model and control iteration APIs, you have no way of recovering this pairing for the elements you iterate over.
 
-// To alleviate this problem, Qwadro allows you to attach user-specific pointers to both the afxBody and the akxMotor objects.
+// To alleviate this problem, Qwadro allows you to attach user-specific pointers to both the akxBody and the akxMotor objects.
 // With each structure, you get an array of void pointers that you can read and write at will.
 // You retrieve the array pointers like this:
 
@@ -232,7 +158,6 @@ AKX void        AkxQueryMotorIterationState(akxMotor moto, afxBool *underflowLoo
 // you still want slight variations in time and speed of the animations. The only reason to do this is if you have extreme demands(tens of thousands of models playing the same animation), 
 // or have other reasons that you must have a single akxMotor for all the instances.
 
-//AKX akxMotor   AfxMotorCreate(afxReal currentClock, afxReal localDuration);
 AKX afxReal     AkxGetMotorTerminationClock(akxMotor moto);
 AKX afxBool     AkxMotorTerminationIsScheduled(akxMotor moto);
 AKX void        AkxEnableMotorTerminationCheck(akxMotor moto, afxBool checkComplete);
@@ -260,7 +185,7 @@ AKX afxBool     AfxMotorHasEffect(akxMotor moto);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AKX afxError    AfxAcquireMotors(afxSimulation sim, afxReal currClock, afxReal localDur, afxNat cnt, akxMotor moto[]);
+AKX afxError    AfxAcquireMotors(afxSimulation sim, afxReal currClock, afxReal localDur, afxNat iterCnt, afxNat cnt, akxMotor moto[]);
 
 AKX afxBool     AkxReleaseTerminatedMotors(afxNat cnt, akxMotor motors[]);
 
@@ -268,4 +193,4 @@ AKX afxBool     AkxReleaseUnusedMotors(afxNat cnt, akxMotor motors[]);
 
 AKX afxBool     AkxReleaseOnceUnusedMotors(afxNat cnt, akxMotor motors[]);
 
-#endif//AFX_MOTOR_H
+#endif//AKX_MOTOR_H

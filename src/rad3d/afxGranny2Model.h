@@ -1,7 +1,7 @@
 #ifndef AFX_GRANNY2_MODEL_H
 #define AFX_GRANNY2_MODEL_H
 
-#include "qwadro/sim/afxSimulation.h"
+#include "qwadro/sim/dev/afxSimulation.h"
 
 
 #define GRANNY2 DLLEXPORT

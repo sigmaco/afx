@@ -58,12 +58,16 @@ AFX_DEFINE_STRUCT(afxThreadConfig)
 
 /// functions affection the currrent caller thread.
 
+/// Test if the currently executing thread is the prime thread; the one which bootstrapped the Qwadro.
 AFX afxBool     AfxIsPrimeThread(void);
 
+/// Returns the thread unique identifier of the currently executing thread.
 AFX afxNat32    AfxGetTid(void);
 
+/// Finds a afxThread handle associated with the currently executing thread.
 AFX afxBool     AfxFindThread(afxNat32 tid, afxThread* thread);
 
+/// Returns a afxThread handle which manages the currently executing thread.
 AFX afxBool     AfxGetThread(afxThread* thread);
 
 /// Return true if the task running on this thread should be stopped. An interruption can be requested by RequestThreadInterruption().
@@ -77,24 +81,30 @@ AFX afxBool     AfxThreadShouldBeInterrupted(void);
 
 AFX void        AfxExitThread(afxInt code);
 
-/// Tells the thread's event loop to exit with return code 0 (success). Equivalent to calling AfxExitThread(0).
+/// Tells the thread's event loop to exit with return code 0 (success). 
+/// Equivalent to calling AfxExitThread(0).
 /// This function does nothing if the thread does not have an event loop.
 
 AFX void        AfxQuitThread(void);
 
-/// Yields execution of the current thread to another runnable thread, if any. Note that the operating system decides to which thread to switch.
+/// Yields execution of the current thread to another runnable thread, if any. 
+/// Note that the operating system decides to which thread to switch.
 AFX void        AfxYield(void);
 
-AFX void        AfxGetThreadFrequency(afxNat* iterNo, afxNat* lastFreq);
+
 AFX void        AfxGetThreadTime(afxReal64* ct, afxReal64* dt);
 AFX void        AfxGetThreadClock(afxClock* curr, afxClock* last);
+AFX void        AfxGetThreadFrequency(afxNat* iterNo, afxNat* lastFreq);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 AFX void**      AfxGetThreadUdd(afxThread thr);
 
-/// Begins execution of the thread by calling run(). The operating system will schedule the thread according to the priority parameter. If the thread is already running, this function does nothing.
-/// The effect of the priority parameter is dependent on the operating system's scheduling policy. In particular, the priority will be ignored on systems that do not support thread priorities (such as on Linux, see the sched_setscheduler documentation for more details).
+/// Begins execution of the thread by calling run(). 
+/// The operating system will schedule the thread according to the priority parameter. 
+/// If the thread is already running, this function does nothing.
+/// The effect of the priority parameter is dependent on the operating system's scheduling policy. 
+/// In particular, the priority will be ignored on systems that do not support thread priorities (such as on Linux, see the sched_setscheduler documentation for more details).
 
 AFX void        AfxRunThread(afxThread thr);
 
@@ -116,12 +126,12 @@ AFX afxBool     AfxThreadIsRunning(afxThread thr);
 /// Returns true if the thread is finished; otherwise returns false.
 AFX afxBool     AfxThreadIsFinished(afxThread thr);
 
-AFX afxBool     AfxGetThreadExitCode(afxThread thr, afxInt *exitCode);
+AFX afxBool     AfxGetThreadExitCode(afxThread thr, afxInt* exitCode);
 
 /// Blocks the thread until the thread associated with this afxThread object has finished execution (i.e. when it returns from run()). 
 /// This function will return true if the thread has finished. It also returns true if the thread has not been started yet.
 
-AFX afxResult   AfxWaitForThread(afxThread thr, afxResult *exitCode);
+AFX afxResult   AfxWaitForThreadExit(afxThread thr, afxResult* exitCode);
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -23,12 +23,12 @@
 
 _SGL void _DecodeCmdBindPipeline(sglDpu* dpu, _sglCmdPipeline *cmd)
 {
-    _DpuBindPipeline(dpu, cmd->pip, cmd->dynamics);
+    _DpuBindPipeline(dpu, cmd->pip, cmd->vin, cmd->dynamics);
 }
 
 _SGL void _DecodeCmdBindRasterizer(sglDpu* dpu, _sglCmdRasterizer *cmd)
 {
-    _DpuBindRasterizer(dpu, cmd->razr, cmd->dynamics);
+    _DpuBindRasterizer(dpu, cmd->razr, cmd->vin, cmd->dynamics);
 }
 
 _SGL void _DecodeCmdBindBuffers(sglDpu* dpu, _sglCmdBindBuffers const *cmd)
@@ -264,7 +264,7 @@ _SGL void _DecodeCmdDisableDepthWrite(sglDpu* dpu, _sglCmdBool const *cmd)
 _SGL void _DecodeCmdSetBlendConstants(sglDpu* dpu, _sglCmdReal4 const *cmd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxCopyV4d(dpu->nextRasterState.blendConstants, cmd->value);
+    AfxV4dCopy(dpu->nextRasterState.blendConstants, cmd->value);
     dpu->nextBlendConstUpd = TRUE;
 }
 

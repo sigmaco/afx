@@ -15,41 +15,40 @@
  */
 
 #define _AFX_SIM_C
-#define _AFX_MESH_TOPOLOGY_C
-#define _AFX_SIMULATION_C
-#include "qwadro/cad/afxMeshTopology.h"
-#include "qwadro/sim/afxSimulation.h"
-#include "qwadro/sim/akxAsset.h"
+#define _AKX_MESH_TOPOLOGY_C
+//#define _AKX_SIMULATION_C
+#include "../sim/dev/AkxSimDevKit.h"
+#include "qwadro/sim/io/akxAsset.h"
 
-_AKX afxNat AfxCountMeshSurfaces(afxMeshTopology msht)
+_AKXINL afxNat AfxCountMeshSurfaces(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->surfCnt;
 }
 
-_AKX afxNat AfxCountMeshIndices(afxMeshTopology msht)
+_AKXINL afxNat AfxCountMeshIndices(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->triCnt * 3;
 }
 
-_AKX afxNat AfxCountMeshTriangles(afxMeshTopology msht)
+_AKXINL afxNat AfxCountMeshTriangles(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->triCnt;
 }
 
-_AKX afxNat AfxCountMeshTriangleEdges(afxMeshTopology msht)
+_AKXINL afxNat AfxCountMeshTriangleEdges(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->triCnt * 3;
 }
 
-_AKX afxIndexedTriangle* AfxGetMeshTriangles(afxMeshTopology msht, afxNat baseTriIdx)
+_AKXINL akxIndexedTriangle* AfxGetMeshTriangles(afxMeshTopology msht, afxNat baseTriIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -57,7 +56,7 @@ _AKX afxIndexedTriangle* AfxGetMeshTriangles(afxMeshTopology msht, afxNat baseTr
     return &msht->tris[baseTriIdx];
 }
 
-_AKX afxNat* AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx)
+_AKXINL afxNat* AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -69,149 +68,42 @@ _AKX afxNat AfxDetermineMeshIndexSize(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
-#if 0
-    afxNat surfCnt = msht->surfCnt;
-    afxMeshSurface* surfaces = msht->surfaces;
-    AfxAssert(surfCnt);
-    afxNat triCnt = 0;
 
-    for (afxNat i = 0; i < surfCnt; i++)
+    if (!msht->minIdxSiz || !msht->maxIdxValue)
     {
-        afxMeshSurface* surface = &surfaces[i];
-        afxNat triCnt2 = surface->triCnt;
+        afxNat maxIdxValue = 0;
 
-        if (triCnt < triCnt2)
-            triCnt = triCnt2;
+        for (afxNat i = msht->triCnt; i-- > 0;)
+            for (afxNat j = 3; j-- > 0;)
+                if (maxIdxValue < msht->tris[i][j])
+                    maxIdxValue = msht->tris[i][j];
+
+        msht->maxIdxValue = maxIdxValue;
+        msht->minIdxSiz = maxIdxValue > AFX_N8_MAX ? (maxIdxValue > AFX_N16_MAX ? (maxIdxValue > AFX_N32_MAX ? sizeof(afxNat64) : sizeof(afxNat32)) : sizeof(afxNat16)) : sizeof(afxNat8);
     }
-#endif
-    afxNat majIdx = 0;
-
-    for (afxNat i = msht->triCnt; i-- > 0;)
-        for (afxNat j = 3; j-- > 0;)
-            if (majIdx < msht->tris[i][j])
-                majIdx = msht->tris[i][j];
-
-    return majIdx > AFX_N8_MAX ? (majIdx > AFX_N16_MAX ? (majIdx > AFX_N32_MAX ? sizeof(afxNat64) : sizeof(afxNat32)) : sizeof(afxNat16)) : sizeof(afxNat8);
-#if 0
-    afxNat idxCnt = triCnt * 3;
-    return idxCnt > AFX_N8_MAX ? (idxCnt > AFX_N16_MAX ? (idxCnt > AFX_N32_MAX ? sizeof(afxNat64) : sizeof(afxNat32)) : sizeof(afxNat16)) : sizeof(afxNat8);
-#endif
+    return msht->minIdxSiz;
 }
 
-_AKX afxBool AfxDescribeMeshCoverage(afxMeshTopology msht, afxNat surIdx, afxMeshSurface* desc)
+_AKXINL afxBool AfxDescribeMeshCoverage(afxMeshTopology msht, afxNat surIdx, akxMeshSurface* desc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     AfxAssertRange(msht->surfCnt, surIdx, 1);
-    afxMeshSurface *mshs = &msht->surfaces[surIdx];
+    akxMeshSurface *mshs = &msht->surfaces[surIdx];
     //AfxAssertType(mshs, afxFcc_MSHS);
     AfxAssert(desc);
     *desc = *mshs;
     return (AFX_INVALID_INDEX != mshs->mtlIdx);
 }
 
-_AKX afxMeshSurface* AfxGetMeshSurface(afxMeshTopology msht, afxNat surIdx)
+_AKXINL akxMeshSurface* AfxGetMeshSurface(afxMeshTopology msht, afxNat surIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     AfxAssertRange(msht->surfCnt, surIdx, 1);
-    afxMeshSurface *mshs = &msht->surfaces[surIdx];
+    akxMeshSurface *mshs = &msht->surfaces[surIdx];
     //AfxAssertType(mshs, afxFcc_MSHS);
     return mshs;
-}
-
-_AKX afxError AfxBufferizeMeshTopology(afxMeshTopology msht)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &msht, afxFcc_MSHT);
-    afxMeshTopologyCache* cache = &msht->cache;
-
-    if (!cache->buf)
-    {
-        afxSimulation sim = AfxGetObjectProvider(msht);
-        AfxAssertObjects(1, &sim, afxFcc_SIM);
-
-        afxNat idxSiz = AfxDetermineMeshIndexSize(msht);
-        afxNat idxCnt = AfxCountMeshIndices(msht);
-
-        afxBufferSpecification spec;
-        spec.siz = idxCnt * idxSiz;
-        spec.src = NIL;
-        spec.access = afxBufferAccess_W;
-        spec.usage = afxBufferUsage_INDEX;
-
-        if (AfxAcquireBuffers(sim->dctx, 1, &spec, &cache->buf)) AfxThrowError();
-        else
-        {
-            AfxAssertObjects(1, &cache->buf, afxFcc_BUF);
-
-            cache->base = 0;
-            cache->range = spec.siz;
-            cache->stride = cache->range / idxCnt;
-            AfxAssert(cache->stride == idxSiz);
-            //cache->idxSiz = idxSiz;
-        }
-
-        afxBuffer buf;
-
-        if ((buf = cache->buf))
-        {
-            AfxAssertObjects(1, &buf, afxFcc_BUF);
-
-            AfxAssert(cache->stride);
-            AfxAssertRange(AfxGetBufferCapacity(buf), cache->base, cache->range);
-            //AfxUpdateBuffer2(cache->buf, cache->base, cache->range, cache->stride, msht->vtxIdx, sizeof(msht->vtxIdx[0]));
-
-            afxBufferRegion rgn = { 0 };
-            rgn.base = cache->base;
-            rgn.range = cache->range;
-            rgn.stride = cache->stride;
-            
-            rgn.offset = 0;
-            rgn.unitSiz = cache->stride;
-            AfxUpdateBufferRegion(cache->buf, &rgn, msht->tris, sizeof(msht->tris[0][0]));
-
-            // debug
-            void* p = AfxMapBuffer(cache->buf, cache->base, cache->range, afxBufferAccess_W);
-
-            for (afxNat i = 0; i < msht->triCnt; i++)
-            {
-                if (idxSiz == 1)
-                {
-                    afxIndexedTriangle8 *tris = p;
-                    AfxAssert(msht->tris[i][0] == tris[i][0]);
-                    AfxAssert(msht->tris[i][1] == tris[i][1]);
-                    AfxAssert(msht->tris[i][2] == tris[i][2]);
-                }
-                else if (idxSiz == 2)
-                {
-                    afxIndexedTriangle16 *tris = p;
-                    AfxAssert(msht->tris[i][0] == tris[i][0]);
-                    AfxAssert(msht->tris[i][1] == tris[i][1]);
-                    AfxAssert(msht->tris[i][2] == tris[i][2]);
-
-                    tris[i][0] = msht->tris[i][0];
-                    tris[i][1] = msht->tris[i][1];
-                    tris[i][2] = msht->tris[i][2];
-                }
-                else if (idxSiz == 4)
-                {
-                    afxIndexedTriangle *tris = p;
-                    AfxAssert(msht->tris[i][0] == tris[i][0]);
-                    AfxAssert(msht->tris[i][1] == tris[i][1]);
-                    AfxAssert(msht->tris[i][2] == tris[i][2]);
-                }
-
-                if (err)
-                {
-                    int a = 1;
-                }
-            }
-
-            AfxUnmapBuffer(cache->buf, FALSE);
-        }
-    }
-    return err;
 }
 
 _AKX void AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat const remapTable[])
@@ -221,7 +113,7 @@ _AKX void AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat con
 
     for (afxNat i = msht->surfCnt; i-- > 0;)
     {
-        afxMeshSurface* mshs = &msht->surfaces[i];
+        akxMeshSurface* mshs = &msht->surfaces[i];
         //AfxAssertType(mshs, afxFcc_MSHS);
         afxNat mtlIdx = mshs->mtlIdx;
 
@@ -241,36 +133,36 @@ _AKX void AfxInvertMeshWinding(afxMeshTopology msht)
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
 
     afxNat triCnt = msht->triCnt;
-    afxIndexedTriangle* tris = msht->tris;
+    akxIndexedTriangle* tris = msht->tris;
     
-    for (afxNat i = 0, triCnt2 = triCnt; triCnt2-- > 0; ++i)
+    for (afxNat i = 0; i < triCnt; ++i)
     {
-        afxNat a = tris[i][0];
+        afxNat tmp = tris[i][0];
         tris[i][0] = tris[i][2];
-        tris[i][2] = a;
+        tris[i][2] = tmp;
     }
 
-    afxIndexedTriangle* neighbor = msht->sideToNeighborMap;
+    akxIndexedTriangle* adjacent = msht->sideToAdjacentMap;
 
-    if (neighbor)
+    if (adjacent)
     {
-        for (afxNat i = 0; triCnt-- > 0; ++i)
+        for (afxNat i = 0; i < triCnt; ++i)
         {
-            afxNat a = neighbor[i][0];
-            neighbor[i][0] = neighbor[i][1];
-            neighbor[i][1] = a;
+            afxNat tmp = adjacent[i][0];
+            adjacent[i][0] = adjacent[i][1];
+            adjacent[i][1] = tmp;
 
-            afxNat32 faceA = neighbor[i][0] & 0xFFFFFFFC; // the high-order 30 bits specify the actual triangle index - you would multiply it by three to get its location
-            afxNat32 edgeA = neighbor[i][0] & 0x00000003; // 00 would be the 0th edge, 01 the 1st, 10 the 2nd, and 11 is undefined
-            neighbor[i][0] = (edgeA = (edgeA == 0x01 ? 0x00 : (edgeA == 0x00 ? 0x01 : edgeA))) | faceA;
+            afxNat32 faceA = adjacent[i][0] & 0xFFFFFFFC; // the high-order 30 bits specify the actual triangle index - you would multiply it by three to get its location
+            afxNat32 edgeA = adjacent[i][0] & 0x00000003; // 00 would be the 0th edge, 01 the 1st, 10 the 2nd, and 11 is undefined
+            adjacent[i][0] = (edgeA = (edgeA == 0x01 ? 0x00 : (edgeA == 0x00 ? 0x01 : edgeA))) | faceA;
 
-            afxNat32 faceB = neighbor[i][1] & 0xFFFFFFFC; // the high-order 30 bits specify the actual triangle index - you would multiply it by three to get its location
-            afxNat32 edgeB = neighbor[i][1] & 0x00000003; // 00 would be the 0th edge, 01 the 1st, 10 the 2nd, and 11 is undefined
-            neighbor[i][1] = (edgeB = (edgeB == 0x01 ? 0x00 : (edgeB == 0x00 ? 0x01 : edgeB))) | faceB;
+            afxNat32 faceB = adjacent[i][1] & 0xFFFFFFFC; // the high-order 30 bits specify the actual triangle index - you would multiply it by three to get its location
+            afxNat32 edgeB = adjacent[i][1] & 0x00000003; // 00 would be the 0th edge, 01 the 1st, 10 the 2nd, and 11 is undefined
+            adjacent[i][1] = (edgeB = (edgeB == 0x01 ? 0x00 : (edgeB == 0x00 ? 0x01 : edgeB))) | faceB;
 
-            afxNat32 faceC = neighbor[i][2] & 0xFFFFFFFC; // the high-order 30 bits specify the actual triangle index - you would multiply it by three to get its location
-            afxNat32 edgeC = neighbor[i][2] & 0x00000003; // 00 would be the 0th edge, 01 the 1st, 10 the 2nd, and 11 is undefined
-            neighbor[i][2] = (edgeC = (edgeC == 0x01 ? 0x00 : (edgeC == 0x00 ? 0x01 : edgeC))) | faceC;
+            afxNat32 faceC = adjacent[i][2] & 0xFFFFFFFC; // the high-order 30 bits specify the actual triangle index - you would multiply it by three to get its location
+            afxNat32 edgeC = adjacent[i][2] & 0x00000003; // 00 would be the 0th edge, 01 the 1st, 10 the 2nd, and 11 is undefined
+            adjacent[i][2] = (edgeC = (edgeC == 0x01 ? 0x00 : (edgeC == 0x00 ? 0x01 : edgeC))) | faceC;
         }
     }
 }
@@ -282,13 +174,13 @@ _AKX afxError AfxUpdateMeshIndices(afxMeshTopology msht, afxNat baseTriIdx, afxN
     AfxAssertRange(msht->triCnt, baseTriIdx, triCnt);
     
     //afxNat triCnt = msht->triCnt;
-    afxIndexedTriangle* tris = AfxGetMeshTriangles(msht, baseTriIdx);
+    akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, baseTriIdx);
     
     switch (srcIdxSiz)
     {
-    case sizeof(afxVertexIndex8):
+    case sizeof(akxVertexIndex8):
     {
-        afxIndexedTriangle8 const* src3 = src;
+        akxIndexedTriangle8 const* src3 = src;
 
         for (afxNat i = 0; i < triCnt; i++)
             for (afxNat j = 0; j < 3; j++)
@@ -296,9 +188,9 @@ _AKX afxError AfxUpdateMeshIndices(afxMeshTopology msht, afxNat baseTriIdx, afxN
 
         break;
     }
-    case sizeof(afxVertexIndex16):
+    case sizeof(akxVertexIndex16):
     {
-        afxIndexedTriangle16 const* src3 = src;
+        akxIndexedTriangle16 const* src3 = src;
 
         for (afxNat i = 0; i < triCnt; i++)
             for (afxNat j = 0; j < 3; j++)
@@ -306,19 +198,9 @@ _AKX afxError AfxUpdateMeshIndices(afxMeshTopology msht, afxNat baseTriIdx, afxN
         
         break;
     }
-    case sizeof(afxVertexIndex32):
+    case sizeof(akxVertexIndex32):
     {
-        afxIndexedTriangle32 const* src3 = src;
-
-        for (afxNat i = 0; i < triCnt; i++)
-            for (afxNat j = 0; j < 3; j++)
-                tris[i][j] = src3[i][j];
-
-        break;
-    }
-    case sizeof(afxVertexIndex64):
-    {
-        afxIndexedTriangle64 const* src3 = src;
+        akxIndexedTriangle32 const* src3 = src;
 
         for (afxNat i = 0; i < triCnt; i++)
             for (afxNat j = 0; j < 3; j++)
@@ -329,6 +211,7 @@ _AKX afxError AfxUpdateMeshIndices(afxMeshTopology msht, afxNat baseTriIdx, afxN
     default:
         AfxThrowError();
     }
+
     return err;
 }
 
@@ -343,7 +226,7 @@ _AKX afxError _AkxMshtDtor(afxMeshTopology msht)
 
     for (afxNat i = msht->surfCnt; i-->0;)
     {
-        afxMeshSurface* mshs = &(msht->surfaces[i]);
+        akxMeshSurface* mshs = &(msht->surfaces[i]);
         //AfxAssertType(mshs, afxFcc_MSHS);
 
         //if (mshs->name)
@@ -356,8 +239,8 @@ _AKX afxError _AkxMshtDtor(afxMeshTopology msht)
     if (msht->triToJointMap)
         AfxDeallocate(msht->triToJointMap);
 
-    if (msht->sideToNeighborMap)
-        AfxDeallocate(msht->sideToNeighborMap);
+    if (msht->sideToAdjacentMap)
+        AfxDeallocate(msht->sideToAdjacentMap);
 
     if (msht->vtxToTriMap)
         AfxDeallocate(msht->vtxToTriMap);
@@ -381,12 +264,12 @@ _AKX afxError _AkxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
     
     afxSimulation sim = cookie->udd[0];
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxMeshTopologySpec const* spec = cookie->udd[1];
+    akxMeshTopologyBlueprint const* spec = cookie->udd[1];
     spec += cookie->no;
 
     afxMmu mmu = AfxGetSimulationMmu(sim);
 
-    afxNat surfCnt = spec->surCnt;
+    afxNat surfCnt = AfxMax(1, spec->surfCnt);
     AfxAssert(surfCnt);
 
     afxNat triCnt = spec->triCnt;
@@ -395,12 +278,12 @@ _AKX afxError _AkxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
     afxNat vtxCnt = spec->vtxCnt;
     afxNat edgeCnt = triCnt * 3;
 
-    afxIndexedTriangle* tris;
+    akxIndexedTriangle* tris;
 
     if (!(tris = AfxAllocate(triCnt, sizeof(tris[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
-        afxMeshSurface* surfaces;
+        akxMeshSurface* surfaces;
 
         if (!(surfaces = AfxAllocate(surfCnt, sizeof(surfaces[0]), 0, AfxHere()))) AfxThrowError();
         else
@@ -409,36 +292,55 @@ _AKX afxError _AkxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
             msht->surfCnt = surfCnt;
             msht->vtxCnt = vtxCnt;
 
+            msht->topology = avxTopology_TRI_LIST;
+
             msht->tris = tris;
             msht->surfaces = surfaces;
+            afxNat surTriDiv = triCnt / surfCnt;
+            afxNat baseTriIdx = 0;
 
             for (afxNat i = 0; i < surfCnt; i++)
             {
-                afxMeshSurface* mshs = &surfaces[i];
+                akxMeshSurface* mshs = &surfaces[i];
                 //AfxAssignFcc(mshs, afxFcc_MSHS);
-                mshs->baseTriIdx = 0;
-                mshs->triCnt = 0;
-                mshs->mtlIdx = AFX_INVALID_INDEX;
 
-                if (spec->sur)
-                    spec->sur(i, mshs, spec->udd);
+                if (!spec->surfToMtlMap)
+                    mshs->mtlIdx = AFX_INVALID_INDEX;
+                else
+                    mshs->mtlIdx = spec->surfToMtlMap[i];
+
+                if (spec->trisForSurfMap)
+                {
+                    mshs->baseTriIdx = spec->baseTrisForSurfMap ? spec->baseTrisForSurfMap[i] : baseTriIdx;
+                    mshs->triCnt = spec->trisForSurfMap[i];
+                    baseTriIdx += mshs->triCnt;
+                }
+                else
+                {
+                    mshs->baseTriIdx = baseTriIdx;
+                    mshs->triCnt = surTriDiv;
+                    baseTriIdx += surTriDiv;
+                }
             }
 
             msht->vtxToVtxMap = NIL; // vtxCnt
             msht->vtxToTriMap = NIL; // vtxCnt
-            msht->sideToNeighborMap = NIL; // triCnt * 3
+            msht->sideToAdjacentMap = NIL; // triCnt * 3
 
             msht->jointsForTriCnt = 0;
             msht->jointsForTriMap = NIL; // jointsForTriMap[triIdx] = num of joints influencing this triangle?
             msht->triToJointCnt = 0;
             msht->triToJointMap = NIL; // triToJointMap[jntIdx] = num of triangles influenced by this joint?
 
+            msht->maxIdxValue = 0;
+            msht->minIdxSiz = 0;
+
             if (spec->src)
                 AfxUpdateMeshIndices(msht, 0, triCnt, spec->src, spec->srcIdxSiz);
 
             // initialize cache
             {
-                afxMeshTopologyCache* cache = &msht->cache;
+                akxVertexIndexCache* cache = &msht->cache;
 
                 AfxResetLinkage(&cache->stream);
 
@@ -453,8 +355,8 @@ _AKX afxError _AkxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
 
             if (err)
             {
-                if (msht->sideToNeighborMap)
-                    AfxDeallocate(msht->sideToNeighborMap);
+                if (msht->sideToAdjacentMap)
+                    AfxDeallocate(msht->sideToAdjacentMap);
 
                 if (msht->vtxToTriMap)
                     AfxDeallocate(msht->vtxToTriMap);
@@ -472,7 +374,7 @@ _AKX afxError _AkxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
     }
     
     if (!err)
-        AfxLogEcho("Mesh topology %p built. With %u triangles (%u bytes per index) arranged in %u surfaces.", msht, msht->triCnt, AfxDetermineMeshIndexSize(msht), msht->surfCnt);
+        AfxLogEcho("Mesh topology %p built. %u triangles (%u bytesPerIdx) and %u surfaces.", msht, msht->triCnt, AfxDetermineMeshIndexSize(msht), msht->surfCnt);
 
     return err;
 }
@@ -486,17 +388,16 @@ _AKX afxClassSuballocation mshtSubs[] =
 _AKX afxClassConfig _AkxMshtMgrCfg =
 {
     .fcc = afxFcc_MSHT,
-    .name = "Mesh Topology",
+    .name = "MeshTopology",
+    .desc = "Mesh Topology",
     .fixedSiz = sizeof(AFX_OBJECT(afxMeshTopology)),
     .ctor = (void*)_AkxMshtCtor,
     .dtor = (void*)_AkxMshtDtor
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-// MASSIVE OPERATIONS                                                         //
-////////////////////////////////////////////////////////////////////////////////
 
-_AKX afxError AfxAcquireMeshTopology(afxSimulation sim, afxNat cnt, afxMeshTopologySpec const specs[], afxMeshTopology topologies[])
+_AKX afxError AfxAssembleMeshTopology(afxSimulation sim, afxNat cnt, akxMeshTopologyBlueprint const specs[], afxMeshTopology topologies[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -529,23 +430,23 @@ _AKX afxMeshTopology AfxBuildMeshTopology(afxSimulation sim, afxMeshBuilder cons
     }
 
     afxMeshTopology msht = NIL;
-    afxMeshTopologySpec spec = { 0 };
-    spec.surCnt = surfCnt;
+    akxMeshTopologyBlueprint spec = { 0 };
+    spec.surfCnt = surfCnt;
     spec.triCnt = usedTriCnt;
     spec.vtxCnt = 0;
     spec.src = NIL;
     spec.srcIdxSiz = 0;
 
-    if (AfxAcquireMeshTopology(sim, 1, &spec, &msht)) AfxThrowError();
+    if (AfxAssembleMeshTopology(sim, 1, &spec, &msht)) AfxThrowError();
     else
     {
         //AfxUpdateMeshIndices(msht, 0, spec.triCnt, );
-        afxIndexedTriangle* tris = msht->tris;
+        akxIndexedTriangle* tris = msht->tris;
         afxNat baseTriIdx = 0;
 
         for (afxNat i = 0; i < surfCnt; i++)
         {
-            afxMeshSurface* mshs = &msht->surfaces[i];
+            akxMeshSurface* mshs = &msht->surfaces[i];
             //AfxAssignTypeFcc(mshs, afxFcc_MSHS);
             mshs->mtlIdx = i;
 
@@ -594,13 +495,13 @@ _AKX afxError AfxDeserializeMeshTopologies(afxStream in, afxSimulation sim, afxN
         _afxSerializedMsht chnk = { 0 };
         AfxRead(in, 1, sizeof(chnk), &chnk, sizeof(chnk));
         
-        afxMeshTopologySpec spec = { 0 };
-        spec.surCnt = chnk.surCnt;
+        akxMeshTopologyBlueprint spec = { 0 };
+        spec.surfCnt = chnk.surCnt;
         spec.triCnt = chnk.triCnt;
 
-        AfxAcquireMeshTopology(sim, 1, &spec, &dst[i]);
+        AfxAssembleMeshTopology(sim, 1, &spec, &dst[i]);
 
-        AfxRead(in, spec.surCnt, sizeof(dst[i]->surfaces[0]), dst[i]->surfaces, sizeof(dst[i]->surfaces[0]));
+        AfxRead(in, spec.surfCnt, sizeof(dst[i]->surfaces[0]), dst[i]->surfaces, sizeof(dst[i]->surfaces[0]));
 
         AfxRead(in, spec.triCnt, sizeof(dst[i]->tris[0]), dst[i]->tris, sizeof(dst[i]->tris[0]));
     }

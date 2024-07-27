@@ -70,7 +70,7 @@ struct afxChain2
 
 // GRANT CHANGE MONITORING
 
-AFXINL void                 AfxSetUpChain(afxChain *ch, void *holder);
+AFXINL void                 AfxDeployChain(afxChain *ch, void *holder);
 
 AFXINL afxNat               AfxGetChainLength(afxChain const *ch);
 AFXINL void*                AfxGetChainHolder(afxChain const *ch);

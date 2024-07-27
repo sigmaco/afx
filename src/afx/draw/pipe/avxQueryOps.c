@@ -45,7 +45,7 @@ AVX afxCmdId AvxCmdCopyQueryResults(avxCmdb cmdb, avxQueryPool pool, afxNat base
     AfxAssertObjects(1, &pool, afxFcc_QRYP);
     AfxAssertRange(pool->cap, baseQuery, queryCnt);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssertRange(AfxGetBufferCapacity(buf), offset, stride);
+    AfxAssertRange(AfxGetBufferCapacity(buf, 0), offset, stride);
     return 0;
 }
 

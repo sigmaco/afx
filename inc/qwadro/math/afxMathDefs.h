@@ -21,6 +21,15 @@
 // Nossas rotações e orientações são representadas primariamente por "quaternion". Funções para axial rotation e Euler são apenas utilitários.
 // É totalmente vedado adulterar os princípios gigachads e heterotops do Qwadro com essas tcholices dessas game engines randômicas do mundo por responder a vontade das pessoas de querer serem eternos subcolocados..
 
+// IMPORTANT: This library WAS NOT made by a math guy. Most things here WERE NOT tested and there IS NOT any guarantee to me accurate.
+
+// IMPORTANT: Qwadro uses their OWN matrix layout, which is a combined form of 3x3 matrix, 1x3 matrix and 4x1 matrix based.
+
+// IMPORTANT: Qwadro is right handed.
+// Left vs right-handed coordinate system.
+// In a left-handed: the positive X, Y and Z axes point right, up and far/forward, respectively. Positive rotation is clockwise about the axis of rotation.
+// In a right-handed: the positive X, Y and Z axes point right, up and near/backward (negative Z axis points far/forward), respectively. Positive rotation is counterclockwise about the axis of rotation.
+
 // No Qwadro, usamos, como estilo de programação, muitos parênteses irrelevantes. 
 // Eles existem para fins didáticos mesmo, facilitando a vida de pessoas que não conhecem o princípio de precedência de PEMDAS.
 
@@ -48,22 +57,25 @@
 #define AFX_PI_OVER2    (AFX_PI / 2.0)
 #define AFX_EPSILON     DBL_EPSILON
 
-typedef afxReal         afxSimd(afxV2d[2]);
-typedef afxReal         afxSimd(afxV3d[3]);
-typedef afxReal         afxSimd(afxV4d[4]);
+//#define MFX_ALIGN_ALL
 
-typedef afxV2d          afxSimd(afxM2d[2]);
-typedef afxV3d          afxSimd(afxM3d[3]);
-typedef afxV4d          afxSimd(afxM4d[4]);
-typedef afxV4d          afxSimd(afxM4d3[3]);
-typedef afxV3d          afxSimd(afxM34[4]);
-typedef afxM34          afxSimd(afxCompactMatrix);
+#ifdef MFX_ALIGN_ALL
 
-typedef afxV4d          afxSimd(afxQuat); // 0,1,2 = imaginary, 3 = real
-typedef afxV4d          afxSimd(afxRotor); // 0,1,2 = imaginary, 3 = real
-typedef afxV4d          afxSimd(afxVector);
-typedef afxV4d          afxSimd(afxPoint);
-typedef afxM4d          afxSimd(afxMatrix);
+typedef afxReal AFX_SIMD afxV2d[2];
+typedef afxReal AFX_SIMD afxV3d[3];
+typedef afxReal AFX_SIMD afxV4d[4];
+
+typedef afxV2d  AFX_SIMD afxM2d[2]; // 2D Linear Transform (2x2 Matrix)
+typedef afxV3d  AFX_SIMD afxM3d[3]; // 3D Linear Transform (3x3 Matrix)
+typedef afxV4d  AFX_SIMD afxM4d[4];
+//typedef afxV4d  AFX_SIMD afxM4d3[3];
+typedef afxV3d  AFX_SIMD afxM4dc[4]; // non-aligned affine space.
+
+typedef afxV4d  AFX_SIMD afxQuat; // 0,1,2 = imaginary, 3 = real
+typedef afxV4d  AFX_SIMD afxRotor; // 0,1,2 = imaginary, 3 = real
+typedef afxV4d  AFX_SIMD afxVector;
+typedef afxV4d  AFX_SIMD afxPoint;
+typedef afxM4d  AFX_SIMD afxMatrix;
 
 #if !0
 AFX_STATIC_ASSERT(__alignof(afxV2d) == AFX_SIMD_ALIGN, "");
@@ -74,6 +86,29 @@ AFX_STATIC_ASSERT(__alignof(afxM3d) == AFX_SIMD_ALIGN, "");
 AFX_STATIC_ASSERT(__alignof(afxM4d) == AFX_SIMD_ALIGN, "");
 AFX_STATIC_ASSERT(sizeof(__m128) == sizeof(afxV4d), "");
 #endif
+
+#else
+
+typedef afxReal afxV2d[2];
+typedef afxReal afxV3d[3];
+typedef afxReal afxV4d[4];
+
+typedef afxV2d  afxM2d[2]; // 2D Linear Transform (2x2 Matrix)
+typedef afxV3d  afxM3d[3]; // 3D Linear Transform (3x3 Matrix)
+typedef afxV4d  afxM4d[4];
+//typedef afxV4d  afxM4d3[3];
+typedef afxV3d  afxM4dc[4]; // non-aligned affine space.
+
+typedef afxV4d  afxQuat; // 0,1,2 = imaginary, 3 = real
+typedef afxV4d  afxRotor; // 0,1,2 = imaginary, 3 = real
+typedef afxV4d  afxVector;
+typedef afxV4d  afxPoint;
+typedef afxM4d  afxMatrix;
+
+#endif
+
+typedef afxNat AFX_SIMD afxWhd[3];
+typedef afxReal AFX_SIMD afxNdc[3];
 
 AFX_DEFINE_STRUCT(afxSpace)
 /// A 3D coordinate system, expressed relative to a canonical coordinate system.

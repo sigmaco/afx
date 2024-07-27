@@ -26,14 +26,14 @@
 #include "qwadro/exec/afxFence.h"
 #include "qwadro/exec/afxSemaphore.h"
 
-typedef enum afxDeviceType
+typedef enum afxDeviceOrder
 {
-    afxDeviceType_HID = 1,
-    afxDeviceType_SIM,
-    afxDeviceType_DRAW,
-    afxDeviceType_SOUND,
-    afxDeviceType_TELECOM
-} afxDeviceType;
+    afxDeviceOrder_HID = 1,
+    afxDeviceOrder_SIM,
+    afxDeviceOrder_DRAW,
+    afxDeviceOrder_SOUND,
+    afxDeviceOrder_TELECOM
+} afxDeviceOrder;
 
 typedef enum afxDeviceAccelor
 {
@@ -62,7 +62,7 @@ typedef enum afxDeviceStatus
 
 AFX_DEFINE_STRUCT(afxDeviceInfo)
 {
-    afxDeviceType       type;
+    afxDeviceOrder      order;
     afxUri              manifestUri;
     afxString           manifestPag;
     afxNat              manifestPagNo;
@@ -78,7 +78,7 @@ AFX_DEFINE_STRUCT(afxDeviceDescription)
     afxBool             isDefault; /// Identify default device. Always false when not supported.
 };
 
-AFX afxDeviceType       AfxGetDeviceType(afxDevice dev);
+AFX afxDeviceOrder      AfxGetDeviceOrder(afxDevice dev);
 AFX afxDeviceStatus     AfxGetDeviceStatus(afxDevice dev);
 AFX afxDeviceAccelor    AfxGetDeviceAcceleration(afxDevice dev);
 
@@ -92,16 +92,16 @@ AFX void                AfxGetDeviceDriverVersion(afxDevice dev, afxNat* major, 
 AFX afxResult           AfxCallDevice(afxDevice dev, afxNat reqCode, ...);
 AFX afxError            AfxDoDeviceService(afxDevice dev);
 
-AFX afxClass*         AfxGetFenceClass(afxContext ctx);
-AFX afxClass*         AfxGetSemaphoreClass(afxContext ctx);
+AFX afxClass*           AfxGetFenceClass(afxContext ctx);
+AFX afxClass*           AfxGetSemaphoreClass(afxContext ctx);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 AFX afxDevice           AfxOpenDevice(afxUri const* manifest, ...);
 
-AFX afxBool             AfxFindDevice(afxDeviceType type, afxUri const* manifest, afxDevice* device);
+AFX afxBool             AfxFindDevice(afxDeviceOrder order, afxUri const* manifest, afxDevice* device);
 
-AFX afxError            AfxInstallClientDriver(afxDeviceType type, afxUri const* manifest, afxDevice* device);
+AFX afxError            AfxInstallClientDriver(afxDeviceOrder order, afxUri const* manifest, afxDevice* device);
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -43,12 +43,12 @@ AFX_DEFINE_STRUCT(akxSky)
     afxV3d          rotPivot;
     afxQuat         rotQuat;
     afxM4d          rotMtx;
-    avxRasterizer   skyRazr;
+    afxDrawTechnique skyDtec;
     avxVertexInput  skyVin;
     avxSampler      smp;
 };
 
-AKX afxError    AfxBuildSkybox(akxSky* sky, afxSimulation sim);
+AKX afxError    AfxBuildSkybox(akxSky* sky, afxSimulation sim, afxDrawInput din);
 
 AKX void        AfxStepSky(akxSky* sky, afxReal dt);
 

@@ -14,8 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_MESH_BUILDER_H
-#define AFX_MESH_BUILDER_H
+#ifndef AKX_MESH_BUILDER_H
+#define AKX_MESH_BUILDER_H
 
 #include "qwadro/sim/afxSimDefs.h"
 #include "qwadro/mem/afxArray.h"
@@ -27,13 +27,13 @@
 #include "qwadro/math/afxVertex.h"
 #include "qwadro/base/afxFixedString.h"
 
-AFX_DEFINE_STRUCT(afxVertex)
+AFX_DEFINE_STRUCT(akxVertex)
 {
     afxNat              baseBiasIdx;
     afxNat              biasCnt;
 };
 
-AFX_DEFINE_STRUCT(afxCoveredTriangle)
+AFX_DEFINE_STRUCT(akxCoveredTriangle)
 {
     afxNat              vtxIdx[3];
     afxNat              surfIdx;
@@ -61,7 +61,7 @@ AFX_DEFINE_STRUCT(afxMeshBuilder)
     }*                  pivots2;
 
     afxNat              vtxCnt;
-    afxVertex*          vtx;
+    akxVertex*          vtx;
     afxV4d*             posn;
     afxV3d*             nrm;
     afxV2d*             uv;
@@ -83,54 +83,13 @@ AKXINL afxNat           AfxAddVertexBiases(afxMeshBuilder* mshb, afxNat cnt, afx
 
 AKXINL void             AfxRenameVertexPivots(afxMeshBuilder* mshb, afxNat basePivotIdx, afxNat cnt, afxString const name[]);
 
-AKX afxMesh             AfxBuildCubeMesh(afxSimulation sim, afxReal scale);
-AKX afxMesh             AfxBuildParallelepipedMesh(afxSimulation sim, afxReal width, afxReal height);
+AKX afxMesh             AfxBuildCubeMesh(afxSimulation sim, afxReal scale, afxNat secCnt);
+AKX afxMesh             AfxBuildParallelepipedMesh(afxSimulation sim, afxV3d whd, afxReal slantX, afxReal slantY);
 AKX afxMesh             AfxBuildDomeMesh(afxSimulation sim, afxReal radius, afxNat slices);
 
-AFX_DEFINE_STRUCT(afxModelAssembler)
-{
-    afxSimulation _sim;
+AKX afxMesh             AfxBuildDomeMesh2(afxSimulation sim, afxReal radius, afxNat stacks, afxNat slices, afxBool inv);
+AKX afxMesh             AfxBuildSphereMesh(afxSimulation sim, afxReal radius, afxNat stacks, afxNat slices, afxBool inv);
+AKX afxMesh             AfxBuildCapsuleMesh(afxSimulation sim, afxReal radius, afxReal height, afxNat stacks, afxNat slices, afxNat cylinderSlices, afxBool inv);
+AKX afxMesh             AfxBuildPlaneMesh(afxSimulation sim, afxNat gridSizeX, afxNat gridSizeY, afxReal width, afxReal height);
 
-    afxStringBase pvtCatalog;
-    afxStringBase attrCatalog;
-    afxStringBase idCatalog;
-
-    afxArray        bones;
-    afxArray        skeletons;
-    afxArray        models;
-    afxArray        meshes;
-};
-
-AKX afxError    AfxAssembleModels(afxModelAssembler mdla, afxNat cnt, afxString const id[], afxNat sklIdx[], afxNat mshCnt[], afxNat mshIdx[][1], afxTransform init[]);
-
-// afxStringBase strb, afxMesh const meshes[], afxNat cnt, afxModelBlueprint const blueprints[]
-AKX afxError    _AfxAssembleModel(afxSimulation sim, afxModelAssembler* assembler, afxNat cnt, afxNat const blueIndices[], afxModel models[]);
-
-AKX afxError    AfxPushMeshBlueprint(afxModelAssembler mdla, afxString const* id, afxNat* blueIdx);
-
-
-
-AKX afxError    AfxPushModelBlueprint(afxModelAssembler mdla, afxNat meshCnt, afxString const* id, afxNat* blueIdx);
-
-AKX void        AfxPushModelInitialPlacement(afxModelAssembler mdla, afxTransform const* t);
-AKX void        AfxPushLinkedMesh(afxModelAssembler mdla, afxNat slotIdx, afxMesh msh);
-
-AKX afxError    AfxPushSkeletonBlueprint(afxModelAssembler mdla, afxNat boneCnt, afxString const* id, afxNat* blueIdx);
-
-AKX void        AfxPushBoneTransform(afxModelAssembler mdla, afxNat boneIdx, afxTransform const* lt);
-AKX void        AfxPushBoneWorldTransform(afxModelAssembler mdla, afxNat boneIdx, afxTransform const* wt);
-AKX void        AfxPushBoneIwtm(afxModelAssembler mdla, afxNat boneIdx, afxReal const iw[4][4]);
-AKX void        AfxPushBoneId(afxModelAssembler mdla, afxNat boneIdx, afxString const* id);
-AKX void        AfxPushBoneParent(afxModelAssembler mdla, afxNat boneIdx, afxNat parentIdx);
-
-AKX void        AfxPushBoneTransforms(afxModelAssembler mdla, afxNat boneIdx, afxTransform const* lt, afxTransform const* wt, afxReal const iw[4][4]);
-
-AKX void        AfxSetPivotNameCatalog(afxModelAssembler mdla, afxStringBase strb);
-AKX void        AfxSetVertexAttributeNameCatalog(afxModelAssembler mdla, afxStringBase strb);
-
-AKX void        AfxPushVertexData(afxModelAssembler mdla, akxVertexData vtd);
-AKX void        AddPushMeshTopology(afxModelAssembler mdla, afxMeshTopology msht);
-
-AKX afxNat      AfxBlueprintMesh(afxModelAssembler mdla, afxString const* id, afxNat vtxIdx, afxNat mshtIdx, afxNat pvtCnt);
-
-#endif//AFX_MESH_BUILDER_H
+#endif//AKX_MESH_BUILDER_H

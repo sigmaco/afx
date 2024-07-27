@@ -21,7 +21,7 @@
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxMatrix.h"
 
-_AFXINL void AfxResetAabb(afxBox bb)
+_AFXINL void AfxResetBox(afxBox bb)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(bb);
@@ -29,13 +29,13 @@ _AFXINL void AfxResetAabb(afxBox bb)
     AfxResetV4d(bb[AFX_AABB_INF]);
 }
 
-_AFXINL void AfxCopyAabb(afxBox bb, afxBox const in)
+_AFXINL void AfxCopyBox(afxBox bb, afxBox const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(bb);
     AfxAssert(in);
-    AfxCopyV4d(bb[AFX_AABB_SUP], in[AFX_AABB_SUP]);
-    AfxCopyV4d(bb[AFX_AABB_INF], in[AFX_AABB_INF]);
+    AfxV4dCopy(bb[AFX_AABB_SUP], in[AFX_AABB_SUP]);
+    AfxV4dCopy(bb[AFX_AABB_INF], in[AFX_AABB_INF]);
 }
 
 _AFXINL void AfxEncapsulateVertices(afxBox bb, afxNat cnt, afxV3d const v[])
@@ -73,8 +73,8 @@ _AFXINL void AfxEncapsulateSpheres(afxBox bb, afxNat cnt, afxSphere const sph[])
     for (afxNat i = 0; i < cnt; i++)
     {
         afxV3d range[2], radius = { sph[i].radius, sph[i].radius, sph[i].radius };
-        AfxAddV3d(range[0], sph[i].centre, radius);
-        AfxSubV3d(range[1], sph[i].centre, radius);
+        AfxV3dAdd(range[0], sph[i].centre, radius);
+        AfxV3dSub(range[1], sph[i].centre, radius);
         AfxEncapsulateVertices(bb, 2, range);
     }    
     bb[AFX_AABB_SUP][3] = (bb[AFX_AABB_INF][3] = AfxScalar(1));
@@ -128,10 +128,10 @@ _AFXINL void AfxGetAabbExtents(afxBox const bb, afxV3d extent)
     AfxAssert(bb);
     AfxAssert(extent);
 #if 0
-    AfxSubV4d(extent, bb[AFX_AABB_SUP], bb[AFX_AABB_INF]);
+    AfxV4dSub(extent, bb[AFX_AABB_SUP], bb[AFX_AABB_INF]);
 #else
     // 0.5 * (max - min)
-    AfxSubV3d(extent, bb[AFX_AABB_SUP], bb[AFX_AABB_INF]);
+    AfxV3dSub(extent, bb[AFX_AABB_SUP], bb[AFX_AABB_INF]);
     AfxHalfV3d(extent, extent);
 #endif
 }
@@ -142,7 +142,7 @@ _AFXINL void AfxGetAabbCentre(afxBox const bb, afxV4d centre)
     AfxAssert(bb);
     AfxAssert(centre);
     // 0.5 * (min + max)
-    AfxAddV3d(centre, bb[AFX_AABB_INF], bb[AFX_AABB_SUP]);
+    AfxV3dAdd(centre, bb[AFX_AABB_INF], bb[AFX_AABB_SUP]);
     AfxHalfV3d(centre, centre);
     centre[3] = 1.f;
 }
@@ -156,14 +156,14 @@ _AFXINL void AfxExtractAabbCorner(afxBox const bb, afxNat index, afxV4d corner)
 
     switch (index)
     {
-    case 0: AfxSetV4d(corner, bb[AFX_AABB_INF][0], bb[AFX_AABB_INF][1], bb[AFX_AABB_SUP][2], (afxReal)1); break;
-    case 1: AfxSetV4d(corner, bb[AFX_AABB_SUP][0], bb[AFX_AABB_INF][1], bb[AFX_AABB_SUP][2], (afxReal)1); break;
-    case 2: AfxSetV4d(corner, bb[AFX_AABB_SUP][0], bb[AFX_AABB_SUP][1], bb[AFX_AABB_SUP][2], (afxReal)1); break;
-    case 3: AfxSetV4d(corner, bb[AFX_AABB_INF][0], bb[AFX_AABB_SUP][1], bb[AFX_AABB_SUP][2], (afxReal)1); break;
-    case 4: AfxSetV4d(corner, bb[AFX_AABB_INF][0], bb[AFX_AABB_INF][1], bb[AFX_AABB_INF][2], (afxReal)1); break;
-    case 5: AfxSetV4d(corner, bb[AFX_AABB_SUP][0], bb[AFX_AABB_INF][1], bb[AFX_AABB_INF][2], (afxReal)1); break;
-    case 6: AfxSetV4d(corner, bb[AFX_AABB_SUP][0], bb[AFX_AABB_SUP][1], bb[AFX_AABB_INF][2], (afxReal)1); break;
-    case 7: AfxSetV4d(corner, bb[AFX_AABB_INF][0], bb[AFX_AABB_SUP][1], bb[AFX_AABB_INF][2], (afxReal)1); break;
+    case 0: AfxV4dSet(corner, bb[AFX_AABB_INF][0], bb[AFX_AABB_INF][1], bb[AFX_AABB_SUP][2], (afxReal)1); break;
+    case 1: AfxV4dSet(corner, bb[AFX_AABB_SUP][0], bb[AFX_AABB_INF][1], bb[AFX_AABB_SUP][2], (afxReal)1); break;
+    case 2: AfxV4dSet(corner, bb[AFX_AABB_SUP][0], bb[AFX_AABB_SUP][1], bb[AFX_AABB_SUP][2], (afxReal)1); break;
+    case 3: AfxV4dSet(corner, bb[AFX_AABB_INF][0], bb[AFX_AABB_SUP][1], bb[AFX_AABB_SUP][2], (afxReal)1); break;
+    case 4: AfxV4dSet(corner, bb[AFX_AABB_INF][0], bb[AFX_AABB_INF][1], bb[AFX_AABB_INF][2], (afxReal)1); break;
+    case 5: AfxV4dSet(corner, bb[AFX_AABB_SUP][0], bb[AFX_AABB_INF][1], bb[AFX_AABB_INF][2], (afxReal)1); break;
+    case 6: AfxV4dSet(corner, bb[AFX_AABB_SUP][0], bb[AFX_AABB_SUP][1], bb[AFX_AABB_INF][2], (afxReal)1); break;
+    case 7: AfxV4dSet(corner, bb[AFX_AABB_INF][0], bb[AFX_AABB_SUP][1], bb[AFX_AABB_INF][2], (afxReal)1); break;
     default: AfxThrowError(); break;
     }
 }
@@ -174,8 +174,8 @@ _AFXINL void AfxTransformAabb(afxBox const bb, afxM4d const m, afxBox to)
     AfxAssert(bb);
     AfxAssert(m);
     AfxAssert(to);
-    AfxResetAabb(to);
-    AfxPostMultiplyArrayedV4d(m, 2, bb, to);
+    AfxResetBox(to);
+    AfxM4dPostMultiplyV4d(m, 2, bb, to);
 }
 
 _AFXINL void AfxTransformObbs(afxM3d const ltm, afxV4d const atv, afxNat cnt, afxBox const in[], afxBox out[])
@@ -202,10 +202,10 @@ _AFXINL void AfxTransformObbs(afxM3d const ltm, afxV4d const atv, afxNat cnt, af
                 for (afxNat x = 0; x < 2; x++)
                 {
                     afxV3d tmp;
-                    AfxSetV3d(tmp, x ? in[i][AFX_AABB_SUP][0] : in[i][AFX_AABB_INF][0], y ? in[i][AFX_AABB_SUP][1] : in[i][AFX_AABB_INF][1], z ? in[i][AFX_AABB_SUP][2] : in[i][AFX_AABB_INF][2]);
+                    AfxV3dSet(tmp, x ? in[i][AFX_AABB_SUP][0] : in[i][AFX_AABB_INF][0], y ? in[i][AFX_AABB_SUP][1] : in[i][AFX_AABB_INF][1], z ? in[i][AFX_AABB_SUP][2] : in[i][AFX_AABB_INF][2]);
 
-                    AfxPostMultiplyV3d(ltm, tmp, pos);
-                    AfxAddV3d(pos, pos, atv);
+                    AfxV3dPostMultiplyM3d(pos, ltm, tmp);
+                    AfxV3dAdd(pos, pos, atv);
 
                     AfxMinV3d(min, min, pos);
                     AfxMaxV3d(max, max, pos);
@@ -220,4 +220,25 @@ _AFXINL void AfxTransformObbs(afxM3d const ltm, afxV4d const atv, afxNat cnt, af
         out[i][AFX_AABB_INF][1] = min[1];
         out[i][AFX_AABB_INF][2] = min[2];
     }
+}
+
+_AFXINL void AfxCopyBoxes(afxNat cnt, afxBox in[], afxBox out[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(out);
+    AfxAssert(in);
+
+    for (afxNat i = 0; i < cnt; i++)
+        AfxCopyBox(out[i], in[i]);
+}
+
+_AFXINL void AfxResetBoxes(afxNat cnt, afxBox boxes[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(boxes);
+    AfxAssert(cnt);
+
+    for (afxNat i = 0; i < cnt; i++)
+        AfxResetBox(boxes[i]);
 }

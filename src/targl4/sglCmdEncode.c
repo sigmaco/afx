@@ -48,7 +48,7 @@ _SGL afxCmdId FlushNextCachedPipelineBinding(avxCmdb cmdb, afxNat segment)
         cmdb->levelCaches[segment].pip.curr = next;
         cmdb->levelCaches[segment].pip.next = NIL;
 
-        _sglCmdPipeline *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+        _sglCmdPipeline *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
         AfxAssert(cmd);
         cmd->segment = segment;
         cmd->pip = next;
@@ -82,7 +82,7 @@ _SGL afxCmdId FlushCachedStuff(avxCmdb cmdb, afxNat segment)
 ////////////////////////////////////////////////////////////////////////////////
 // BIND RESOURCES
 
-_SGL afxCmdId _EncodeCmdBindPipeline(avxCmdb cmdb, afxNat segment, avxPipeline pip, afxFlags dynamics)
+_SGL afxCmdId _EncodeCmdBindPipeline(avxCmdb cmdb, afxNat segment, avxPipeline pip, avxVertexInput vin, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
 #if 0
@@ -96,17 +96,18 @@ _SGL afxCmdId _EncodeCmdBindPipeline(avxCmdb cmdb, afxNat segment, avxPipeline p
     }
 #else
 
-    _sglCmdPipeline *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdPipeline *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->segment = segment;
     cmd->pip = pip;
+    cmd->vin = vin;
     cmd->dynamics = dynamics;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, BindPipeline) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 #endif
     return 0;
 }
 
-_SGL afxCmdId _EncodeCmdBindRasterizer(avxCmdb cmdb, avxRasterizer razr, afxFlags dynamics)
+_SGL afxCmdId _EncodeCmdBindRasterizer(avxCmdb cmdb, avxRasterizer razr, avxVertexInput vin, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
 #if 0
@@ -120,9 +121,10 @@ _SGL afxCmdId _EncodeCmdBindRasterizer(avxCmdb cmdb, avxRasterizer razr, afxFlag
     }
 #else
 
-    _sglCmdRasterizer *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdRasterizer *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->razr = razr;
+    cmd->vin = vin;
     cmd->dynamics = dynamics;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, BindRasterizer) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 #endif
@@ -132,7 +134,7 @@ _SGL afxCmdId _EncodeCmdBindRasterizer(avxCmdb cmdb, avxRasterizer razr, afxFlag
 _SGL afxCmdId _EncodeCmdBindBuffers(avxCmdb cmdb, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBindBuffers *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBindBuffers *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->set = set;
     cmd->first = first;
@@ -150,7 +152,7 @@ _SGL afxCmdId _EncodeCmdBindBuffers(avxCmdb cmdb, afxNat set, afxNat first, afxN
 _SGL afxCmdId _EncodeCmdBindRasters(avxCmdb cmdb, afxNat set, afxNat first, afxNat cnt, afxRaster tex[], afxNat const subras[])
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBindRasters *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBindRasters *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->set = set;
     cmd->first = first;
@@ -168,7 +170,7 @@ _SGL afxCmdId _EncodeCmdBindRasters(avxCmdb cmdb, afxNat set, afxNat first, afxN
 _SGL afxCmdId _EncodeCmdBindSamplers(avxCmdb cmdb, afxNat set, afxNat first, afxNat cnt, avxSampler smp[])
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBindSamplers *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBindSamplers *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->set = set;
     cmd->first = first;
@@ -185,7 +187,7 @@ _SGL afxCmdId _EncodeCmdBindSamplers(avxCmdb cmdb, afxNat set, afxNat first, afx
 _SGL afxCmdId _SglEncodeCmdBindVertexSources(avxCmdb cmdb, afxNat baseSlot, afxNat cnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[], afxNat32 const stride[])
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdVertexSources *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->info[0])));
+    _sglCmdVertexSources *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->info[0])));
     AfxAssert(cmd);
     cmd->first = baseSlot;
     cmd->cnt = cnt;
@@ -205,7 +207,7 @@ _SGL afxCmdId _SglEncodeCmdBindVertexSources(avxCmdb cmdb, afxNat baseSlot, afxN
 _SGL afxCmdId _EncodeCmdBindIndexSource(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBufferRange *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBufferRange *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->buf = buf;
     cmd->offset = offset;
@@ -217,7 +219,7 @@ _SGL afxCmdId _EncodeCmdBindIndexSource(avxCmdb cmdb, afxBuffer buf, afxNat32 of
 _SGL afxCmdId _EncodeCmdBindVertexInput(avxCmdb cmdb, avxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdVertexInput *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdVertexInput *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->vin = vin;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, xfrm.BindVertexInput) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -229,7 +231,7 @@ _SGL afxCmdId _EncodeCmdBindVertexInput(avxCmdb cmdb, avxVertexInput vin)
 _SGL afxCmdId _EncodeCmdExecuteCommands(avxCmdb cmdb, afxNat cnt, avxCmdb subsets[])
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdExecCmds *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdExecCmds *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->cnt = cnt;
 
@@ -244,7 +246,7 @@ _SGL afxCmdId _EncodeCmdDraw(avxCmdb cmdb, afxNat32 vtxCnt, afxNat32 instCnt, af
     afxError err = AFX_ERR_NONE;
     FlushCachedDrawStuff(cmdb, 0);
 
-    _sglCmdDraw *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdDraw *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->data.vtxCnt = vtxCnt;
     cmd->data.instCnt = instCnt;
@@ -259,7 +261,7 @@ _SGL afxCmdId _EncodeCmdDrawIndirect(avxCmdb cmdb, afxBuffer buf, afxNat32 offse
     afxError err = AFX_ERR_NONE;
     FlushCachedDrawStuff(cmdb, 0);
 
-    _sglCmdDrawIndirect *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdDrawIndirect *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->buf = buf;
     cmd->offset = offset;
@@ -274,7 +276,7 @@ _SGL afxCmdId _EncodeCmdDrawIndirectCount(avxCmdb cmdb, afxBuffer buf, afxNat32 
     afxError err = AFX_ERR_NONE;
     FlushCachedDrawStuff(cmdb, 0);
 
-    _sglCmdDrawIndirectCnt *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdDrawIndirectCnt *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->buf = buf;
     cmd->offset = offset;
@@ -291,7 +293,7 @@ _SGL afxCmdId _EncodeCmdDrawIndexed(avxCmdb cmdb, afxNat32 idxCnt, afxNat32 inst
     afxError err = AFX_ERR_NONE;
     FlushCachedDrawIndexedStuff(cmdb, 0);
 
-    _sglCmdDrawIndexed *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdDrawIndexed *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->data.idxCnt = idxCnt;
     cmd->data.instCnt = instCnt;
@@ -307,7 +309,7 @@ _SGL afxCmdId _EncodeCmdDrawIndexedIndirect(avxCmdb cmdb, afxBuffer buf, afxNat3
     afxError err = AFX_ERR_NONE;
     FlushCachedDrawIndexedStuff(cmdb, 0);
 
-    _sglCmdDrawIndexedIndirect *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdDrawIndexedIndirect *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->buf = buf;
     cmd->offset = offset;
@@ -322,7 +324,7 @@ _SGL afxCmdId _EncodeCmdDrawIndexedIndirectCount(avxCmdb cmdb, afxBuffer buf, af
     afxError err = AFX_ERR_NONE;
     FlushCachedDrawIndexedStuff(cmdb, 0);
 
-    _sglCmdDrawIndexedIndirectCnt *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdDrawIndexedIndirectCnt *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->buf = buf;
     cmd->offset = offset;
@@ -339,7 +341,7 @@ _SGL afxCmdId _EncodeCmdDispatch(avxCmdb cmdb, afxNat grpCntX, afxNat grpCntY, a
     afxError err = AFX_ERR_NONE;
     FlushCachedDrawStuff(cmdb, 0);
 
-    _sglCmdDispatch *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdDispatch *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->data.x = grpCntX;
     cmd->data.y = grpCntY;
@@ -353,7 +355,7 @@ _SGL afxCmdId _EncodeCmdDispatchIndirect(avxCmdb cmdb, afxBuffer buf, afxNat32 o
     afxError err = AFX_ERR_NONE;
     FlushCachedDrawStuff(cmdb, 0);
 
-    _sglCmdDispatchIndirect *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdDispatchIndirect *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->buf = buf;
     cmd->offset = offset;
@@ -373,7 +375,7 @@ _SGL afxCmdId _SglEncodeCmdBufCpy(avxCmdb cmdb, afxBuffer src, afxBuffer dst, af
     AfxAssert(opCnt);
     AfxAssert(ops);
 
-    _sglCmdBufCpy *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
+    _sglCmdBufCpy *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
     cmd->src = src;
     cmd->dst = dst;
@@ -394,7 +396,7 @@ _SGL afxCmdId _SglEncodeCmdBufSet(avxCmdb cmdb, afxBuffer buf, afxNat offset, af
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(range);
 
-    _sglCmdBufSet *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBufSet *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->buf = buf;
     cmd->offset = offset;
@@ -416,7 +418,7 @@ _SGL afxCmdId _SglEncodeCmdBufRw(avxCmdb cmdb, afxBuffer buf, afxNat offset, afx
 
     if (!toHost)
     {
-        cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + range);
+        cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + range);
         AfxAssert(cmd);
         cmd->toHost = !!toHost;
         cmd->buf = buf;
@@ -429,7 +431,7 @@ _SGL afxCmdId _SglEncodeCmdBufRw(avxCmdb cmdb, afxBuffer buf, afxNat offset, afx
     }
     else
     {
-        cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+        cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
         AfxAssert(cmd);
         cmd->toHost = !!toHost;
         cmd->buf = buf;
@@ -450,7 +452,7 @@ _SGL afxCmdId _SglEncodeCmdRasCopy(avxCmdb cmdb, afxRaster src, afxRaster dst, a
     afxError err = AFX_ERR_NONE;
     AfxAssert(cmdb->m.state == avxCmdbState_RECORDING);
 
-    _sglCmdCopyRasterRegions *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
+    _sglCmdCopyRasterRegions *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
     cmd->src = src;
     cmd->dst = dst;
@@ -472,7 +474,7 @@ _SGL afxCmdId _SglEncodeCmdRasPack(avxCmdb cmdb, afxRaster ras, afxBuffer buf, a
     AfxAssert(opCnt);
     AfxAssert(ops);
 
-    _sglCmdPackRasterRegions *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
+    _sglCmdPackRasterRegions *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
     cmd->unpack = !!unpack;
     cmd->ras = ras;
@@ -491,7 +493,7 @@ _SGL afxCmdId _SglEncodeCmdRasSubsample(avxCmdb cmdb, afxRaster ras, afxNat base
     afxError err = AFX_ERR_NONE;
     AfxAssert(cmdb->m.state == avxCmdbState_RECORDING);
 
-    _sglCmdRegenerateMipmaps *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdRegenerateMipmaps *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->ras = ras;
     cmd->baseLod = baseLod;
@@ -505,7 +507,7 @@ _SGL afxCmdId _SglEncodeCmdRasSwizzle(avxCmdb cmdb, afxRaster ras, avxColorSwizz
     afxError err = AFX_ERR_NONE;
     AfxAssert(cmdb->m.state == avxCmdbState_RECORDING);
 
-    _sglCmdSwizzleRasterRegions *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + (rgnCnt * sizeof(cmd->rgn[0])));
+    _sglCmdSwizzleRasterRegions *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + (rgnCnt * sizeof(cmd->rgn[0])));
     AfxAssert(cmd);
     cmd->ras = ras;
     cmd->a = a;
@@ -524,10 +526,10 @@ _SGL afxCmdId _SglEncodeCmdRasXform(avxCmdb cmdb, afxRaster ras, afxM4d const m,
     afxError err = AFX_ERR_NONE;
     AfxAssert(cmdb->m.state == avxCmdbState_RECORDING);
 
-    _sglCmdFlipRasterRegions *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + (rgnCnt * sizeof(cmd->rgn[0])));
+    _sglCmdFlipRasterRegions *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + (rgnCnt * sizeof(cmd->rgn[0])));
     AfxAssert(cmd);
     cmd->ras = ras;
-    AfxCopyM4d(cmd->m, m);
+    AfxM4dCopy(cmd->m, m);
     cmd->rgnCnt = rgnCnt;
     AfxAssert(8 > rgnCnt);
 
@@ -543,7 +545,7 @@ _SGL afxCmdId _SglEncodeCmdRasXform(avxCmdb cmdb, afxRaster ras, afxM4d const m,
 _SGL afxCmdId _EncodeCmdAdjustViewports(avxCmdb cmdb, afxNat32 first, afxNat32 cnt, avxViewport const vp[])
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdViewport *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->vp[0])));
+    _sglCmdViewport *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->vp[0])));
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -557,7 +559,7 @@ _SGL afxCmdId _EncodeCmdAdjustViewports(avxCmdb cmdb, afxNat32 first, afxNat32 c
 _SGL afxCmdId _EncodeCmdSetPrimitiveTopology(avxCmdb cmdb, avxTopology topology)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdNat *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = topology;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, xfrm.SetPrimitiveTopology) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -566,7 +568,7 @@ _SGL afxCmdId _EncodeCmdSetPrimitiveTopology(avxCmdb cmdb, avxTopology topology)
 _SGL afxCmdId _EncodeCmdSwitchFrontFace(avxCmdb cmdb, afxBool cw)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBool *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = cw;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, xfrm.SwitchFrontFace) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -575,7 +577,7 @@ _SGL afxCmdId _EncodeCmdSwitchFrontFace(avxCmdb cmdb, afxBool cw)
 _SGL afxCmdId _EncodeCmdSetCullMode(avxCmdb cmdb, avxCullMode mode)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdNat *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = mode;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, xfrm.SetCullMode) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -584,13 +586,13 @@ _SGL afxCmdId _EncodeCmdSetCullMode(avxCmdb cmdb, avxCullMode mode)
 ////////////////////////////////////////////////////////////////////////////////
 // RASTERIZATION OPERATIONS
 
-_SGL afxCmdId _EncodeCmdBeginSynthesis(avxCmdb cmdb, afxSynthesisConfig const *state)
+_SGL afxCmdId _EncodeCmdBeginSynthesis(avxCmdb cmdb, avxSynthesisConfig const *state)
 {
     afxError err = AFX_ERR_NONE;
 
     afxNat rasCnt = state->rasterCnt;
 
-    _sglCmdBeginSynthesis *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + (rasCnt * sizeof(cmd->rasters[0])));
+    _sglCmdBeginSynthesis *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + (rasCnt * sizeof(cmd->rasters[0])));
     AfxAssert(cmd);
 
     AfxCopyRect(&cmd->area, &state->area);
@@ -605,12 +607,12 @@ _SGL afxCmdId _EncodeCmdBeginSynthesis(avxCmdb cmdb, afxSynthesisConfig const *s
     if (state->depth)
         cmd->depth = *state->depth;
     else
-        cmd->depth = (afxDrawTarget) { 0 };
+        cmd->depth = (avxDrawTarget) { 0 };
 
     if (state->stencil)
         cmd->stencil = *state->stencil;
     else
-        cmd->stencil = (afxDrawTarget) { 0 };
+        cmd->stencil = (avxDrawTarget) { 0 };
 
     cmdb->m.inRenderPass = TRUE;
 
@@ -620,7 +622,7 @@ _SGL afxCmdId _EncodeCmdBeginSynthesis(avxCmdb cmdb, afxSynthesisConfig const *s
 _SGL afxCmdId _EncodeCmdFinsihSynthesis(avxCmdb cmdb)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmd *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmd *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmdb->m.inRenderPass = FALSE;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.FinishSynthesis) / sizeof(void*)), sizeof(cmd), cmd);
@@ -629,7 +631,7 @@ _SGL afxCmdId _EncodeCmdFinsihSynthesis(avxCmdb cmdb)
 _SGL afxCmdId _EncodeCmdNextPass(avxCmdb cmdb, afxBool useAuxStreams)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdNextPass *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdNextPass *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->useAuxScripts = !!useAuxStreams;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.NextPass) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -638,7 +640,7 @@ _SGL afxCmdId _EncodeCmdNextPass(avxCmdb cmdb, afxBool useAuxStreams)
 _SGL afxCmdId _EncodeCmdDisableRasterization(avxCmdb cmdb, afxBool disable)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBool *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = disable;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.DisableRasterization) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -647,7 +649,7 @@ _SGL afxCmdId _EncodeCmdDisableRasterization(avxCmdb cmdb, afxBool disable)
 _SGL afxCmdId _EncodeCmdEnableDepthBias(avxCmdb cmdb, afxBool enable)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBool *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = enable;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.EnableDepthBias) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -656,7 +658,7 @@ _SGL afxCmdId _EncodeCmdEnableDepthBias(avxCmdb cmdb, afxBool enable)
 _SGL afxCmdId _EncodeCmdSetDepthBias(avxCmdb cmdb, afxReal constFactor, afxReal clamp, afxReal slopeFactor)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdReal3 *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdReal3 *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value[0] = constFactor;
     cmd->value[1] = clamp;
@@ -667,7 +669,7 @@ _SGL afxCmdId _EncodeCmdSetDepthBias(avxCmdb cmdb, afxReal constFactor, afxReal 
 _SGL afxCmdId _EncodeCmdSetLineWidth(avxCmdb cmdb, afxReal lineWidth)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdReal *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdReal *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = lineWidth;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.SetLineWidth) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -676,7 +678,7 @@ _SGL afxCmdId _EncodeCmdSetLineWidth(avxCmdb cmdb, afxReal lineWidth)
 _SGL afxCmdId _EncodeCmdEnableStencilTest(avxCmdb cmdb, afxBool enable)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBool *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = enable;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.EnableStencilTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -685,7 +687,7 @@ _SGL afxCmdId _EncodeCmdEnableStencilTest(avxCmdb cmdb, afxBool enable)
 _SGL afxCmdId _EncodeCmdSetStencilCompareMask(avxCmdb cmdb, afxMask faceMask, afxNat32 compareMask)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBitmaskNat32 *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->mask = faceMask;
     cmd->value = compareMask;
@@ -695,7 +697,7 @@ _SGL afxCmdId _EncodeCmdSetStencilCompareMask(avxCmdb cmdb, afxMask faceMask, af
 _SGL afxCmdId _EncodeCmdSetStencilWriteMask(avxCmdb cmdb, afxMask faceMask, afxNat32 writeMask)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBitmaskNat32 *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->mask = faceMask;
     cmd->value = writeMask;
@@ -705,7 +707,7 @@ _SGL afxCmdId _EncodeCmdSetStencilWriteMask(avxCmdb cmdb, afxMask faceMask, afxN
 _SGL afxCmdId _EncodeCmdSetStencilReference(avxCmdb cmdb, afxMask faceMask, afxNat32 reference)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBitmaskNat32 *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->mask = faceMask;
     cmd->value = reference;
@@ -715,7 +717,7 @@ _SGL afxCmdId _EncodeCmdSetStencilReference(avxCmdb cmdb, afxMask faceMask, afxN
 _SGL afxCmdId _EncodeCmdEnableDepthTest(avxCmdb cmdb, afxBool enable)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBool *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = enable;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.EnableDepthTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -724,7 +726,7 @@ _SGL afxCmdId _EncodeCmdEnableDepthTest(avxCmdb cmdb, afxBool enable)
 _SGL afxCmdId _EncodeCmdSetDepthCompareOp(avxCmdb cmdb, avxCompareOp op)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdNat *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = op;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.SetDepthCompareOp) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -733,7 +735,7 @@ _SGL afxCmdId _EncodeCmdSetDepthCompareOp(avxCmdb cmdb, avxCompareOp op)
 _SGL afxCmdId _EncodeCmdDisableDepthWrite(avxCmdb cmdb, afxBool enable)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBool *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = enable;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.DisableDepthWrite) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -742,16 +744,16 @@ _SGL afxCmdId _EncodeCmdDisableDepthWrite(avxCmdb cmdb, afxBool enable)
 _SGL afxCmdId _EncodeCmdSetBlendConstants(avxCmdb cmdb, afxV4d const blendConstants)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdReal4 *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdReal4 *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
-    AfxCopyV4d(cmd->value, blendConstants);
+    AfxV4dCopy(cmd->value, blendConstants);
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.SetBlendConstants) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
 _SGL afxCmdId _EncodeCmdAdjustScissors(avxCmdb cmdb, afxNat32 first, afxNat32 cnt, afxRect const rect[])
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdScissor *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
+    _sglCmdScissor *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -765,7 +767,7 @@ _SGL afxCmdId _EncodeCmdAdjustScissors(avxCmdb cmdb, afxNat32 first, afxNat32 cn
 _SGL afxCmdId _EncodeCmdAdjustCurtains(avxCmdb cmdb, afxBool exclusive, afxNat32 first, afxNat32 cnt, afxRect const rect[])
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdScissor *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
+    _sglCmdScissor *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -779,7 +781,7 @@ _SGL afxCmdId _EncodeCmdAdjustCurtains(avxCmdb cmdb, afxBool exclusive, afxNat32
 _SGL afxCmdId _EncodeCmdEnableDepthBoundsTest(avxCmdb cmdb, afxBool enable)
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdBool *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = enable;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.EnableDepthBoundsTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
@@ -788,9 +790,9 @@ _SGL afxCmdId _EncodeCmdEnableDepthBoundsTest(avxCmdb cmdb, afxBool enable)
 _SGL afxCmdId _EncodeCmdSetDepthBounds(avxCmdb cmdb, afxReal const bounds[2])
 {
     afxError err = AFX_ERR_NONE;
-    _sglCmdReal2 *cmd = AfxRequestArenaUnit(&cmdb->m.cmdArena, sizeof(*cmd));
+    _sglCmdReal2 *cmd = AfxAllocateArena(&cmdb->m.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
-    AfxCopyV2d(cmd->value, bounds);
+    AfxV2dCopy(cmd->value, bounds);
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, razr.SetDepthBounds) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 

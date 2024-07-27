@@ -86,7 +86,7 @@ _AVX afxCmdId AvxCmdAdjustViewports(avxCmdb cmdb, afxNat baseIdx, afxNat cnt, av
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        afxNat vpIdx = baseIdx + i;
+        afxNat vpIdx = /*baseIdx +*/ i;
         avxViewport const* vp = &viewports[vpIdx];
         AfxAssert(vp->extent[0]);
         AfxAssert(vp->extent[1]);
@@ -123,7 +123,7 @@ _AVX afxCmdId AvxCmdBindVertexSources(avxCmdb cmdb, afxNat baseSlotIdx, afxNat s
                 /// All elements of buffers must have been created with the afxBufferUsage_VERTEX flag.
                 AfxAssert(AfxTestBufferUsage(buf, afxBufferUsage_VERTEX));
 
-                afxNat bufCap = AfxGetBufferCapacity(buf);
+                afxNat bufCap = AfxGetBufferCapacity(buf, 0);
 
                 /// If sizes is not NIL, all elements of offsets must be less than the size of the corresponding element in buffers.
                 /// If sizes is not NIL, all elements of offsets plus pSizes , where sizes is not zero, must be less than or equal to the size of the corresponding element in buffers.
@@ -175,7 +175,7 @@ _AVX afxCmdId AvxCmdBindIndexSource(avxCmdb cmdb, afxBuffer buf, afxNat32 offset
         AfxAssert(AfxTestBufferUsage(buf, afxBufferUsage_INDEX));
 
         /// offset must be less than the size of buffer.
-        afxNat bufCap = AfxGetBufferCapacity(buf);
+        afxNat bufCap = AfxGetBufferCapacity(buf, 0);
         AfxAssertRange(bufCap, offset, range);
         AfxAssert(range);
 

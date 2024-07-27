@@ -20,7 +20,7 @@
 #ifndef AFX_TARGA_H
 #define AFX_TARGA_H
 
-#include "qwadro/draw/io/afxRaster.h"
+#include "qwadro/draw/afxRaster.h"
 
 // provisory as Qwadro formats are inherited from Vulkan.
 

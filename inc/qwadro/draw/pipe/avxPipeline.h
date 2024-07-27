@@ -59,6 +59,15 @@ typedef enum avxPipelineStage
     avxPipelineStage_HOST           = AFX_BIT(14), /// pseudo-stage indicating execution on the host of reads/writes of device memory. This stage is not invoked by any commands recorded in a command buffer.
     avxPipelineStage_GRAPHICS       = AFX_BIT(15), /// the execution of all graphics pipeline stages.
     avxPipelineStage_COMMANDS       = AFX_BIT(16), /// all operations performed by all commands supported on the queue it is used with.
+    avxPipelineStage_COPY           = AFX_BIT(17),
+    avxPipelineStage_RESOLVE        = AFX_BIT(18),
+    avxPipelineStage_BLIT           = AFX_BIT(19),
+    avxPipelineStage_CLEAR          = AFX_BIT(20),
+    avxPipelineStage_VERTEX_INDEX   = AFX_BIT(21),
+    avxPipelineStage_VERTEX_ATTR    = AFX_BIT(22),
+    avxPipelineStage_PRERASTER      = AFX_BIT(23),
+    avxPipelineStage_VIDDEC         = AFX_BIT(24),
+    avxPipelineStage_VIDENC         = AFX_BIT(25),
 } avxPipelineStage;
 
 typedef enum avxPipelineFlag
@@ -75,7 +84,7 @@ typedef enum avxPipelineFlag
 AFX_DEFINE_STRUCT(avxPipelineBlueprint)
 {
     avxPipelineFlags    primFlags;
-    avxTopology     primTop; /// is a option defining the primitive topology. /// avxTopology_TRI_LIST
+    avxTopology         primTop; /// is a option defining the primitive topology. /// avxTopology_TRI_LIST
     afxBool             primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
     afxNat              patchControlPoints; /// is the number of control points per patch.
     afxBool             depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE    

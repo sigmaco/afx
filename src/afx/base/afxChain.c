@@ -17,7 +17,7 @@
 #include "../src/afx/dev/afxDevCoreBase.h"
 
 
-_AFXINL void AfxSetUpChain(afxChain *ch, void *holder)
+_AFXINL void AfxDeployChain(afxChain *ch, void *holder)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ch);

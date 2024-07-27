@@ -62,6 +62,7 @@ AFX_DEFINE_STRUCT(afxXmlElement)
 
 AFX_DEFINE_STRUCT(afxXml)
 {
+    afxStream       file;
     afxXmlNode      *root;
 
     afxNat          elemCnt;

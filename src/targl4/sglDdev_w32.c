@@ -35,7 +35,7 @@
 #include <shellapi.h>
 #include <assert.h>
 
-//#define _USE_WGL_FUNCS 1
+//#define _AVOID_WGL_FUNCS 1
 
 extern afxClassConfig _SglDdgeMgrCfg;
 
@@ -55,7 +55,7 @@ _SGL afxError SglSwapBuffers(HDC hdc, wglVmt const* vmt)
 {
     afxError err = AFX_ERR_NONE;
 
-#ifndef _USE_WGL_FUNCS
+#ifndef _AVOID_WGL_FUNCS
     if (!(vmt->SwapBuffers(hdc)))
 #endif
         if (!(SwapBuffers(hdc)))
@@ -73,7 +73,7 @@ _SGL int SglChoosePixelFormat(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd, wglVmt
     afxError err = AFX_ERR_NONE;
     int fmt;
 
-#ifndef _USE_WGL_FUNCS
+#ifndef _AVOID_WGL_FUNCS
     if (!(fmt = vmt->ChoosePixelFormat(hdc, ppfd)))
 #endif
         if (!(fmt = ChoosePixelFormat(hdc, ppfd)))
@@ -87,7 +87,7 @@ _SGL BOOL SglSetPixelFormat(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * p
     afxError err = AFX_ERR_NONE;
     BOOL rslt;
 
-#ifndef _USE_WGL_FUNCS
+#ifndef _AVOID_WGL_FUNCS
     if (!(rslt = vmt->SetPixelFormat(hdc, format, ppfd)))
 #endif
         if (!(rslt = SetPixelFormat(hdc, format, ppfd)))
@@ -101,7 +101,7 @@ _SGL int SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELF
     afxError err = AFX_ERR_NONE;
     int rslt;
 
-#ifndef _USE_WGL_FUNCS
+#ifndef _AVOID_WGL_FUNCS
     if (!(rslt = vmt->DescribePixelFormat(hdc, iPixelFormat, nBytes, ppfd)))
 #endif
         if (!(rslt = DescribePixelFormat(hdc, iPixelFormat, nBytes, ppfd)))
@@ -115,7 +115,7 @@ _SGL int SglGetPixelFormat(HDC hdc, wglVmt const* vmt)
     afxError err = AFX_ERR_NONE;
     int rslt;
 
-#ifndef _USE_WGL_FUNCS
+#ifndef _AVOID_WGL_FUNCS
     if (!(rslt = vmt->GetPixelFormat(hdc)))
 #endif
         if (!(rslt = GetPixelFormat(hdc)))
@@ -241,7 +241,7 @@ _SGL afxError _SglDdevProcessResDel(afxDrawDevice ddev, afxNat unitIdx)
     return err;
 }
 
-_SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, void* gpuHandle)
+_SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, afxSize gpuHandle)
 {
     //AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
@@ -255,7 +255,7 @@ _SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, void* gpuHandle)
     sglDpu*dpu = &ddev->idd->dpus[unitIdx];
     AfxEnterSlockExclusive(&dpu->deletionLock);
     _sglDeleteGlRes delRes;
-    delRes.gpuHandlePtr = gpuHandle;
+    delRes.gpuHandle = gpuHandle;
     delRes.type = type;
     
     if (AfxPushQueue(&dpu->deletionQueue, &delRes))
@@ -375,7 +375,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                         afxNat verMajor, verMinor, verPatch;
                         PFNGLGETSTRINGPROC _glGetString;
                         SglLoadGlVmt(opengl32, offsetof(glVmt, GetString) / sizeof(void*), 1, (void**)&_glGetString, FALSE);
-                        AfxMakeString(&ver, (afxChar const*)_glGetString(GL_VERSION), 0);
+                        AfxMakeString(&ver, 0, (afxChar const*)_glGetString(GL_VERSION), 0);
                         AfxScanString(&ver, "%u.%u.%u", &verMajor, &verMinor, &verPatch);
                         dpu->verMajor = verMajor;
                         dpu->verMinor = verMinor;
@@ -614,8 +614,8 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
         //AfxScanString(&ver, "%u.%u.%u", &dpu->verMajor, &dpu->verMinor, &dpu->verPatch);
         //gl->GetIntegerv(GL_MAJOR_VERSION, (void*)&(dpu->verMajor)); _SglThrowErrorOccuried();
         //gl->GetIntegerv(GL_MINOR_VERSION, (void*)&(dpu->verMinor)); _SglThrowErrorOccuried();
-        AfxMakeString(&dpu->subsysName, (afxChar const*)gl->GetString(GL_RENDERER), 0); _SglThrowErrorOccuried();
-        AfxMakeString(&dpu->subsysVer, (afxChar const*)gl->GetString(GL_VERSION), 0); _SglThrowErrorOccuried();
+        AfxMakeString(&dpu->subsysName, 0, (afxChar const*)gl->GetString(GL_RENDERER), 0); _SglThrowErrorOccuried();
+        AfxMakeString(&dpu->subsysVer, 0, (afxChar const*)gl->GetString(GL_VERSION), 0); _SglThrowErrorOccuried();
 
         AfxDbgLogf(6, NIL, "SIGMA GL/2 Hardware-accelerated Draw Processing Unit %.03u\n\t%.*s %.*s", unitIdx, AfxPushString(&dpu->subsysName), AfxPushString(&dpu->subsysVer));
 
@@ -696,115 +696,311 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
         GLint datai;
         GLint datai2[3];
         static afxDrawDeviceLimits limits = { 0 };
-        gl->GetIntegerv(GL_MAX_SAMPLE_MASK_WORDS, &datai); _SglThrowErrorOccuried();
-        limits.maxSampleMaskWords = datai;
+
+#if 0
+        afxNat maxPushConstantsSiz;
+        afxNat maxMemAllocCnt;
+        afxNat maxSamplerAllocCnt;
+        
+        afxSize sparseAddrSpaceSiz;
+        afxNat maxBoundDescriptorSets;
+        afxNat maxPerStageDescriptorSamplers;
+        afxNat maxPerStageDescriptorUniformBuffers;
+        afxNat maxPerStageDescriptorStorageBuffers;
+        afxNat maxPerStageDescriptorSampledImages;
+        afxNat maxPerStageDescriptorStorageImages;
+        afxNat maxPerStageDescriptorInputAttachments;
+        afxNat maxPerStageResources;
+
+        // the maximum number of uniform blocks per program.The value must be at least 70.
+        // GL_MAX_COMBINED_UNIFORM_BLOCKS
+
+        // the maximum supported texture image units that can be used to access texture maps from the vertex shader and the fragment processor combined.
+        // If both the vertex shader and the fragment processing stage access the same texture image unit, then that counts as using two texture image units against this limit.
+        // The value must be at least 48.
+        //MAX_COMBINED_TEXTURE_IMAGE_UNITS
+        afxNat maxDescriptorSetSamplers;
+        afxNat maxDescriptorSetUniformBuffers;
+        afxNat maxDescriptorSetUniformBuffersDynamic;
+        afxNat maxDescriptorSetStorageBuffers;
+        afxNat maxDescriptorSetStorageBuffersDynamic;
+        // the maximum supported texture image units that can be used to access texture maps from the fragment shader. The value must be at least 16.
+        //GL_MAX_TEXTURE_IMAGE_UNITS
+        afxNat maxDescriptorSetSampledImages;
+        afxNat maxDescriptorSetStorageImages;
+        afxNat maxDescriptorSetInputAttachments;
+        afxNat maxFragCombinedOutputResources;
+        
+        afxNat subPixelPrecisionBits;
+        afxNat subTexelPrecisionBits;
+        afxNat mipmapPrecisionBits;        
+        afxNat maxDrawIndirectCnt;
+        
+        afxFlags storageRasterSampleCnts;
+        afxBool timestampComputeAndGraphics;
+        afxReal timestampPeriod;
+        afxNat discreteQueuePriorities;
+        afxBool strictLines;
+        afxBool standardSampleLocations;
+        afxSize optimalBufCopyOffsetAlign;
+        afxSize optimalBufCopyRowPitchAlign;
+        afxSize nonCoherentAtomSiz;
+#endif
+
+        //////////////////////////////////////
+        // VERTEX PROCESSING
+
+        // the maximum number of 4-component generic vertex attributes accessible to a vertex shader. The value must be at least 16.
+        gl->GetIntegerv(GL_MAX_VERTEX_ATTRIBS, &datai); _SglThrowErrorOccuried();
+        limits.maxVtxInputAttributes = datai; // at least 16
+        // the maximum number of components of output written by a vertex shader, which must be at least 64.
+        gl->GetIntegerv(GL_MAX_VERTEX_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
+        limits.maxVtxOutputCompos = datai; // at least 64
+        // the maximum number of vertex buffers that may be bound.
+        gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_BINDINGS, &datai); _SglThrowErrorOccuried();
+        limits.maxVtxInputBindings = datai;
+        // the maximum offset that may be added to a vertex binding offset.
+        gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, &datai); _SglThrowErrorOccuried();
+        limits.maxVtxInputAttributeOffset = datai;
+        // the maximum value of stride parameters to vertex array pointer-setting commands.
+        gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_STRIDE, &datai); _SglThrowErrorOccuried();
+        limits.maxVtxInputBindingStride = datai;
+
+        /////////////////////////////////////////////
+        // PRIMITIVE PROCESSING
+
+        // the maximum number of application-defined clipping distances. The value must be at least 8.
         gl->GetIntegerv(GL_MAX_CLIP_DISTANCES, &datai); _SglThrowErrorOccuried();
         limits.maxClipDistances = datai; // at least 8
+        gl->GetIntegerv(GL_MAX_CULL_DISTANCES, &datai); _SglThrowErrorOccuried();
+        limits.maxCullDistances = datai; // at least 8
+        gl->GetIntegerv(GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES, &datai); _SglThrowErrorOccuried();
+        limits.maxCombinedClipAndCullDistances = datai; // at least 8
 
+        // the maximum number of simultaneous viewports that are supported. The value must be at least 16.
         gl->GetIntegerv(GL_MAX_VIEWPORTS, &datai); _SglThrowErrorOccuried();
-        limits.maxViewports = datai; // at least 16
+        limits.maxVpCnt = datai; // at least 16
+        // the maximum supported width and height of the viewport. These must be at least as large as the visible dimensions of the display being rendered to.
         gl->GetIntegerv(GL_MAX_VIEWPORT_DIMS, datai2); _SglThrowErrorOccuried();
-        limits.maxViewportDimensions[0] = datai2[0];
-        limits.maxViewportDimensions[1] = datai2[1];
+        limits.maxVpDimensions[0] = datai2[0];
+        limits.maxVpDimensions[1] = datai2[1];
+        // the minimum and maximum viewport bounds range. The minimum range should be at least [-32768, 32767].
         gl->GetFloatv(GL_VIEWPORT_BOUNDS_RANGE, dataf2); _SglThrowErrorOccuried();
-        limits.viewportBoundsRange[0] = dataf2[0];  // at least [-32768, 32767]
-        limits.viewportBoundsRange[1] = dataf2[1];  // at least [-32768, 32767]
+        limits.vpBoundsRange[0] = dataf2[0];  // at least [-32768, 32767]
+        limits.vpBoundsRange[1] = dataf2[1];  // at least [-32768, 32767]
+        // the number of bits of sub-pixel precision which the GL uses to interpret the floating point viewport bounds. The minimum value is 0.
         gl->GetIntegerv(GL_VIEWPORT_SUBPIXEL_BITS, &datai); _SglThrowErrorOccuried();
-        limits.viewportSubPixelBits = datai; // at least 0
+        limits.vpSubPixelBits = datai; // at least 0
+        
+        // the maximum number of components of inputs read by a geometry shader, which must be at least 64.
+        gl->GetIntegerv(GL_MAX_GEOMETRY_INPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
+        limits.maxPrimInComps = datai; // at least 64
+        // the maximum number of components of outputs written by a geometry shader, which must be at least 128.
+        gl->GetIntegerv(GL_MAX_GEOMETRY_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
+        limits.maxPrimOutComps = datai; // at least 128
+
+        // the implementation-dependent maximum tessellation level (the value of MAX_TESS_GEN_LEVEL).
+        gl->GetIntegerv(GL_MAX_TESS_GEN_LEVEL, &datai); _SglThrowErrorOccuried();
+        limits.maxTessGenLvl = datai;
+        // the implementation-dependent maximum patch size (the value of MAX_PATCH_VERTICES). The patch size is initially three vertices.
+        gl->GetIntegerv(GL_MAX_PATCH_VERTICES, &datai); _SglThrowErrorOccuried();
+        limits.maxTessPatchSiz = datai;
+        gl->GetIntegerv(GL_MAX_TESS_CONTROL_INPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
+        limits.maxTessCtrlPerVtxInComps = datai;
+        gl->GetIntegerv(GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
+        limits.maxTessCtrlPerVtxOutComps = datai;
+        // The number of components of active per-patch output variables may not exceed the value of MAX_TESS_PATCH_COMPONENTS
+        gl->GetIntegerv(GL_MAX_TESS_PATCH_COMPONENTS, &datai); _SglThrowErrorOccuried();
+        limits.maxTessCtrlPerPatchOutComps = datai;
+        gl->GetIntegerv(GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
+        limits.maxTessCtrlTotalOutComps = datai;
+        gl->GetIntegerv(GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
+        limits.maxTessEvalInComps = datai;
+        gl->GetIntegerv(GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
+        limits.maxTessEvalOutComps = datai;
+
+        gl->GetIntegerv(GL_MAX_GEOMETRY_SHADER_INVOCATIONS, &datai); _SglThrowErrorOccuried();
+        limits.maxPrimShaderInvocations = datai;
+        gl->GetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES, &datai); _SglThrowErrorOccuried();
+        limits.maxPrimOutVertices = datai;
+        gl->GetIntegerv(GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
+        limits.maxPrimTotalOutComps = datai;
+
+        /////////////////////////////////////
+        // CANVAS
 
         gl->GetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &datai); _SglThrowErrorOccuried();
         limits.maxColorAttachments = datai; // at least 16384
+        // 4.3 --- the maximum width for a framebuffer that has no attachments, which must be at least 16384.
         gl->GetIntegerv(GL_MAX_FRAMEBUFFER_WIDTH, &datai); _SglThrowErrorOccuried();
-        limits.maxCanvasWidth = datai; // at least 16384
+        limits.maxCanvasWhd[0] = datai; // at least 16384
+        // 4.3 --- the maximum height for a framebuffer that has no attachments, which must be at least 16384.
         gl->GetIntegerv(GL_MAX_FRAMEBUFFER_HEIGHT, &datai); _SglThrowErrorOccuried();
-        limits.maxCanvasHeight = datai; // at least 16384
+        limits.maxCanvasWhd[1] = datai; // at least 16384
+        // 4.3 --- the maximum number of layers for a framebuffer that has no attachments, which must be at least 2048.
         gl->GetIntegerv(GL_MAX_FRAMEBUFFER_LAYERS, &datai); _SglThrowErrorOccuried();
-        limits.maxCanvasLayers = datai; // at least 2048
+        limits.maxCanvasWhd[2] = datai; // at least 2048
+         // the maximum samples in a framebuffer that has no attachments, which must be at least 4.
         gl->GetIntegerv(GL_MAX_FRAMEBUFFER_SAMPLES, &datai); _SglThrowErrorOccuried();
-        limits.canvasNoAttachmentsSampleCnts = datai; // at least 4
+        limits.canvasNoAttachmentsSampleCnts = datai;
 
-        gl->GetIntegerv(GL_MAX_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
-        limits.maxRasterDim1D = datai; // at least 1024
-        limits.maxRasterDim2D = datai; // at least 1024
-        gl->GetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
-        limits.maxRasterDim3D = datai; // at least 64
-        gl->GetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &datai); _SglThrowErrorOccuried();
-        limits.maxRasterArrayLayers = datai; // at least 256
-        gl->GetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
-        limits.maxRasterDimCube = datai; // at least 1024
-        gl->GetFloatv(GL_MAX_TEXTURE_LOD_BIAS, &dataf); _SglThrowErrorOccuried();
-        limits.maxSamplerLodBias = dataf; // at least 2.0
+        ////////////////////////////////////////////
+        // MULTISAMPLING
 
+        // the maximum number of sample mask words.
+        gl->GetIntegerv(GL_MAX_SAMPLE_MASK_WORDS, &datai); _SglThrowErrorOccuried();
+        limits.maxSampleMaskWords = datai;
+        // the maximum number of samples supported in integer format multisample buffers.
         gl->GetIntegerv(GL_MAX_INTEGER_SAMPLES, &datai); _SglThrowErrorOccuried();
         limits.sampledRasterIntegerSampleCnts = datai;
+        // the maximum number of samples in a color multisample texture.
         gl->GetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &datai); _SglThrowErrorOccuried();
         limits.sampledRasterColorSampleCnts = datai;
         limits.canvasColorSampleCnts = datai;
+        // the maximum number of samples in a multisample depth or depth-stencil texture.
         gl->GetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &datai); _SglThrowErrorOccuried();
         limits.sampledRasterDepthSampleCnts = datai;
         limits.sampledRasterStencilSampleCnts = datai;
         limits.canvasDepthSampleCnts = datai;
         limits.canvasStencilSampleCnts = datai;
 
+
+        ///////////////////////////////////////////
+        // BUFFERIZATION
+
+        // the minimum alignment in basic machine units of pointers returned from glMapBuffer and glMapBufferRange. This value must be a power of two and must be at least 64.
         gl->GetIntegerv(GL_MIN_MAP_BUFFER_ALIGNMENT, &datai); _SglThrowErrorOccuried();
         limits.minMemMapAlign = datai; // at least 64
+        // the minimum required alignment for shader storage buffer sizes and offset. The initial value is 1.
         gl->GetIntegerv(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT, &datai); _SglThrowErrorOccuried();
         limits.minStorageBufOffsetAlign = datai; // at least 64
+        // the minimum required alignment for texture buffer sizes and offset. The initial value is 1.
         gl->GetIntegerv(GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT, &datai); _SglThrowErrorOccuried();
         limits.minTexelBufOffsetAlign = datai; // at least 64
+        // the minimum required alignment for uniform buffer sizes and offset. The initial value is 1.
         gl->GetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &datai); _SglThrowErrorOccuried();
         limits.minUniformBufOffsetAlign = datai; // at least 64
 
+        // A rough estimate of the largest texture that the GL can handle. The value must be at least 1024.
+        gl->GetIntegerv(GL_MAX_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
+        limits.maxRasterDim1D = datai; // at least 1024
+        limits.maxRasterDim2D = datai; // at least 1024
+        // a rough estimate of the largest 3D texture that the GL can handle. The value must be at least 64.
+        gl->GetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
+        limits.maxRasterDim3D = datai; // at least 64
+        // the maximum number of layers allowed in an array texture, and must be at least 256.
+        gl->GetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &datai); _SglThrowErrorOccuried();
+        limits.maxRasterArrayLayers = datai; // at least 256
+        // a rough estimate of the largest cube-map texture that the GL can handle. The value must be at least 1024.
+        gl->GetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
+        limits.maxRasterDimCube = datai; // at least 1024
+
+        // The value gives the maximum number of texels allowed in the texel array of a texture buffer object. Value must be at least 65536.
+        gl->GetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE, &datai); _SglThrowErrorOccuried();
+        limits.maxTexelBufElements = datai;
+        // the maximum size in basic machine units of a uniform block, which must be at least 16384.
+        gl->GetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &datai); _SglThrowErrorOccuried();
+        limits.maxUniformBufRange = datai;
+        gl->GetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, &datai); _SglThrowErrorOccuried();
+        limits.maxStorageBufRange = datai;
+        // the minimum required alignment for texture buffer sizes and offset. The initial value is 1.
+        gl->GetIntegerv(GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT, &datai); _SglThrowErrorOccuried();
+        limits.bufferRasterGranularity = datai;
+
+        //////////////////////////////
+        // SAMPLING
+
+        // the maximum, absolute value of the texture level-of-detail bias. The value must be at least 2.0.
+        gl->GetFloatv(GL_MAX_TEXTURE_LOD_BIAS, &dataf); _SglThrowErrorOccuried();
+        limits.maxSamplerLodBias = dataf; // at least 2.0
+        gl->GetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &dataf); _SglThrowErrorOccuried();
+        limits.maxSamplerAnisotropy = dataf;
+
+        ////////////////////////////////////////////
+        // RASTERIZATION
+
+        // the smallest and largest supported sizes for antialiased points. The smallest size must be at most 1, and the largest size must be at least 1.
         gl->GetFloatv(GL_POINT_SIZE_RANGE, dataf2); _SglThrowErrorOccuried();
         limits.pointSizRange[0] = dataf2[0]; // at least 1
         limits.pointSizRange[1] = dataf2[1]; // at least 1
+        // the size difference between adjacent supported sizes for antialiased points.
         gl->GetFloatv(GL_POINT_SIZE_GRANULARITY, &dataf); _SglThrowErrorOccuried();
         limits.pointSizGranularity = dataf;
-        gl->GetFloatv(GL_SMOOTH_LINE_WIDTH_RANGE, dataf2); _SglThrowErrorOccuried();
+        // the range of widths supported for smooth (antialiased) lines.
+        gl->GetFloatv(GL_LINE_WIDTH_RANGE, dataf2); _SglThrowErrorOccuried();
         limits.lineWidthRange[0] = dataf2[0];
         limits.lineWidthRange[1] = dataf2[1];
-        gl->GetFloatv(GL_SMOOTH_LINE_WIDTH_GRANULARITY, &dataf); _SglThrowErrorOccuried();
+        // the level of quantization applied to smooth line width parameters.
+        gl->GetFloatv(GL_LINE_WIDTH_GRANULARITY, &dataf); _SglThrowErrorOccuried();
         limits.lineWidthGranularity = dataf;
 
-        gl->GetIntegerv(GL_MAX_VERTEX_ATTRIBS, &datai); _SglThrowErrorOccuried();
-        limits.maxVtxInputAttributes = datai; // at least 16
-        gl->GetIntegerv(GL_MAX_VERTEX_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
-        limits.maxVtxOutputCompos = datai; // at least 64
-        gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_BINDINGS, &datai); _SglThrowErrorOccuried();
-        limits.maxVtxInputBindings = datai;
-        gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, &datai); _SglThrowErrorOccuried();
-        limits.maxVtxInputAttributeOffset = datai;
-        gl->GetIntegerv(GL_VERTEX_BINDING_STRIDE, &datai); _SglThrowErrorOccuried();
-        limits.maxVtxInputBindingStride = datai;
+        ///////////////////////////////
+        // FRAGMENT PROCESSING
 
+        // the maximum number of components of the inputs read by the fragment shader, which must be at least 128.
         gl->GetIntegerv(GL_MAX_FRAGMENT_INPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
         limits.maxFragInComps = datai; // at least 128
+        // the maximum number of simultaneous outputs that may be written in a fragment shader. The value must be at least 8.
         gl->GetIntegerv(GL_MAX_DRAW_BUFFERS, &datai); _SglThrowErrorOccuried();
         limits.maxFragOutAttachments = datai; // at least 8
+        // the maximum number of active draw buffers when using dual-source blending. The value must be at least 1.
         gl->GetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS, &datai); _SglThrowErrorOccuried();
         limits.maxFragDualSrcAttachments = datai; // at least 1
 
+        // the minimum texel offset allowed in a texture lookup, which must be at most -8.
+        gl->GetIntegerv(GL_MIN_PROGRAM_TEXEL_OFFSET, &datai); _SglThrowErrorOccuried();
+        limits.minTexelOffset = datai; // at least 1
+        // the maximum texel offset allowed in a texture lookup, which must be at least 7.
+        gl->GetIntegerv(GL_MAX_PROGRAM_TEXEL_OFFSET, &datai); _SglThrowErrorOccuried();
+        limits.maxTexelOffset = datai; // at least 1
+        // For all instructions except textureGather, the limits are the values of MIN_PROGRAM_TEXEL_OFFSET and MAX_PROGRAM_TEXEL_OFFSET. 
+        // For the textureGather instruction, the limits are the values of MIN_PROGRAM_TEXTURE_GATHER_OFFSET and MAX_PROGRAM_TEXTURE_GATHER_OFFSET.
+        gl->GetIntegerv(GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET, &datai); _SglThrowErrorOccuried();
+        limits.minTexelGatherOffset = datai; // at least 1
+        gl->GetIntegerv(GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET, &datai); _SglThrowErrorOccuried();
+        limits.maxTexelGatherOffset = datai; // at least 1
+
+        // The built-in function interpolateAtOffset will sample variables at a specified(x, y) offset relative to the center of the pixel.The range and granularity of offsets supported by this function is implementation-dependent.
+        // If either component of the specified offset is less than the value of MIN_FRAGMENT_INTERPOLATION_OFFSET or greater than the value of MAX_FRAGMENT_INTERPOLATION_OFFSET, the position used to interpolate the variable is undefined.
+        // Not all values of offset may be supported; x and y offsets may be rounded to fixed-point values with the number of fraction bits given by the value of the implementation-dependent constant FRAGMENT_INTERPOLATION_OFFSET_BITS.
+        gl->GetFloatv(GL_MIN_FRAGMENT_INTERPOLATION_OFFSET, &dataf); _SglThrowErrorOccuried();
+        limits.minInterpolationOffset = dataf; // at least 1
+        gl->GetFloatv(GL_MAX_FRAGMENT_INTERPOLATION_OFFSET, &dataf); _SglThrowErrorOccuried();
+        limits.maxInterpolationOffset = dataf; // at least 1
+        gl->GetIntegerv(GL_FRAGMENT_INTERPOLATION_OFFSET_BITS, &datai); _SglThrowErrorOccuried();
+        limits.subPixelInterpolationOffsetBits = datai; // at least 1
+
+        ///////////////////////////////////////
+        // COMPUTING
+
+        // the number of invocations in a single local work group (i.e., the product of the three dimensions) that may be dispatched to a compute shader.
         gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &datai); _SglThrowErrorOccuried();
         limits.maxComputeWorkGroupInvocations = datai;
+        // the maximum number of work groups that may be dispatched to a compute shader. Indices 0, 1, and 2 correspond to the X, Y and Z dimensions, respectively.
         gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_COUNT, datai2); _SglThrowErrorOccuried();
         limits.maxComputeWorkGroupCnt[0] = datai2[0];
         limits.maxComputeWorkGroupCnt[1] = datai2[1];
         limits.maxComputeWorkGroupCnt[2] = datai2[2];
+        // the maximum size of a work groups that may be used during compilation of a compute shader. Indices 0, 1, and 2 correspond to the X, Y and Z dimensions, respectively.
         gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_SIZE, datai2); _SglThrowErrorOccuried();
         limits.maxComputeWorkGroupSiz[0] = datai2[0];
         limits.maxComputeWorkGroupSiz[1] = datai2[1];
         limits.maxComputeWorkGroupSiz[2] = datai2[2];
 
+        gl->GetIntegerv(GL_MAX_COMPUTE_SHARED_MEMORY_SIZE, &datai); _SglThrowErrorOccuried();
+        limits.maxComputeSharedMemorySiz = datai;
+        
+        // the maximum index that may be specified during the transfer of generic vertex attributes to the GL.
+        gl->GetIntegerv(GL_MAX_ELEMENT_INDEX, &datai); _SglThrowErrorOccuried();
+        limits.maxDrawIndexedIdxValue = datai;
 
-        gl->GetIntegerv(GL_MAX_GEOMETRY_INPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
-        limits.maxPrimInComps = datai; // at least 64
-        gl->GetIntegerv(GL_MAX_GEOMETRY_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
-        limits.maxPrimOutComps = datai; // at least 128
+
+
 
         limits.maxBoundDescriptorSets = 4;
         limits.maxPushConstantsSiz = 0;
 
-        ddev->limits = &limits;
+        ddev->limits = limits;
 
         //dthrD->thr.proc = _SglDthrProcCb;
 
@@ -893,6 +1089,7 @@ _SGL afxResult DrawThreadProc(afxThread thr, afxEvent* ev)
         }
         else
         {
+            AfxQuitThread();
             ddev->dev.serving = FALSE;
         }
         break;
@@ -907,55 +1104,121 @@ _SGL afxResult DrawThreadProc(afxThread thr, afxEvent* ev)
     return 0;
 }
 
+_SGL afxBool DrawThreadWatcher(afxDrawDevice ddev, afxObject watched, afxEvent* ev)
+{
+    afxError err = AFX_ERR_NONE;
+    
+    switch (ev->id)
+    {
+    case afxThreadEvent_RUN:
+    {
+        afxThread thr = watched;
+        AfxAssertObjects(1, &thr, afxFcc_THR);
+        afxDrawDevice ddev = AfxGetThreadUdd(thr)[0];
+        afxNat dpuIdx = (afxNat)(AfxGetThreadUdd(thr)[1]);
+
+        if (_SglBuildDpu(ddev, dpuIdx))
+        {
+            AfxThrowError();
+            AfxExitThread(err);
+        }
+        else
+        {
+            ddev->dev.serving = TRUE;
+        }
+        break;
+    }
+    case afxThreadEvent_QUIT:
+    {
+        afxThread thr = watched;
+        AfxAssertObjects(1, &thr, afxFcc_THR);
+        afxDrawDevice ddev = AfxGetThreadUdd(thr)[0];
+        afxNat dpuIdx = (afxNat)(AfxGetThreadUdd(thr)[1]);
+
+        if (_SglDestroyDpu(ddev, dpuIdx))
+        {
+            AfxThrowError();
+        }
+        else
+        {
+            AfxQuitThread();
+            ddev->dev.serving = FALSE;
+        }
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+
+    return 0;
+}
+
+_SGL afxResult DthrProc(void* udd)
+{
+    afxError err = AFX_ERR_NONE;
+    afxThread thr;
+    AfxGetThread(&thr);
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+    afxDrawDevice ddev = AfxGetThreadUdd(thr)[0];
+    afxNat dpuIdx = (afxNat)(AfxGetThreadUdd(thr)[1]);
+
+    AfxDoDeviceService(&ddev->dev);
+    return 0;
+}
+
 _SGL afxError _SglDdevStopCb(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
+    if (ddev->idd)
     {
-        for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
         {
-            afxThread dedThread = ddev->idd->dpus[i].dedThread;
-
-            afxThread thr;
-            AfxGetThread(&thr);
-
-            if (dedThread == thr)
-                return err; // do not let a DPU thread do it
-        }
-    }
-
-    AfxExhaustChainedClasses(&ddev->dev.classes);
-
-    if (ddev->idd->dpus)
-    {
-        for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
-        {
-            afxThread dedThread = ddev->idd->dpus[i].dedThread;
-
-            afxThread thr;
-            AfxGetThread(&thr);
-
-            if (dedThread != thr)
+            for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
             {
-                afxResult exitCode;
-                do AfxRequestThreadInterruption(dedThread);
-                while (!AfxWaitForThread(dedThread, &exitCode));
-                AfxReleaseObjects(1, &dedThread);
+                afxThread dedThread = ddev->idd->dpus[i].dedThread;
+
+                afxThread thr;
+                AfxGetThread(&thr);
+
+                if (dedThread == thr)
+                    return err; // do not let a DPU thread do it
             }
         }
-        AfxDeallocate(ddev->idd->dpus);
-        ddev->idd->dpus = NIL;
+
+        AfxExhaustChainedClasses(&ddev->dev.classes);
+
+        if (ddev->idd->dpus)
+        {
+            for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
+            {
+                afxThread dedThread = ddev->idd->dpus[i].dedThread;
+
+                afxThread thr;
+                AfxGetThread(&thr);
+
+                if (dedThread != thr)
+                {
+                    afxResult exitCode;
+                    do AfxRequestThreadInterruption(dedThread);
+                    while (!AfxWaitForThreadExit(dedThread, &exitCode));
+                    AfxReleaseObjects(1, &dedThread);
+                }
+            }
+            AfxDeallocate(ddev->idd->dpus);
+            ddev->idd->dpus = NIL;
+        }
+
+        UnregisterClassA(ddev->idd->wndClss.lpszClassName, ddev->idd->wndClss.hInstance);
+
+        if (ddev->idd->opengl32)
+            AfxReleaseObjects(1, &ddev->idd->opengl32);
+
+        AfxDeallocate(ddev->idd);
+        ddev->idd = NIL;
     }
-
-    UnregisterClassA(ddev->idd->wndClss.lpszClassName, ddev->idd->wndClss.hInstance);
-    
-    if (ddev->idd->opengl32)
-        AfxReleaseObjects(1, &ddev->idd->opengl32);
-
-    AfxDeallocate(ddev->idd);
-    ddev->idd = NIL;
-
     return err;
 }
 
@@ -989,7 +1252,7 @@ _SGL afxError _SglDdevStartCb(afxDrawDevice ddev)
                 ddev->idd->wndClss.hCursor = LoadCursorA(NULL, IDC_ARROW);
                 ddev->idd->wndClss.hbrBackground = NULL;
                 ddev->idd->wndClss.lpszMenuName = NULL;
-                ddev->idd->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem (c) 2017 SIGMA Technology Group --- Public Test Build";
+                ddev->idd->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration --- Draw I/O System (c) 2017 SIGMA Technology Group --- Public Test Build";
                 ddev->idd->wndClss.hIconSm = LoadIconA(NULL, IDI_SHIELD);
 
                 if (!(RegisterClassExA(&(ddev->idd->wndClss)))) AfxThrowError();
@@ -1035,6 +1298,7 @@ _SGL afxError _SglDdevStartCb(afxDrawDevice ddev)
                                 AfxAssert(ddev->dev.procCb);
                                 //ddev->dev.serving = TRUE;
                                 AfxRunThread(ddev->idd->dpus[i].dedThread);
+                                AfxObserveObjects(ddev, 1, &ddev->idd->dpus[i].dedThread);
 
                                 while (!ddev->dev.serving)
                                     AfxYield();
@@ -1198,6 +1462,7 @@ _SGL afxResult AfxDeviceIoctl(afxDrawDevice ddev, afxNat reqCode, va_list va)
         ddev->openDinCb = _SglDdevOpenDinCb;
         ddev->openDoutCb = _SglDdevOpenDoutCb;
         ddev->closeDoutCb = _SglDdevCloseDoutCb;
+        ddev->relinkDoutCb = _SglRelinkDoutCb;
         ddev->portCnt = 1;
         ddev->portCaps = portCaps;
         ddev->clipSpace = AVX_CLIP_SPACE_OPENGL;

@@ -148,19 +148,20 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\qwadro\sound\afxListener.h" />
-    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundBridge.h" />
-    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundContext.h" />
+    <ClInclude Include="..\..\inc\qwadro\sound\asxSound.h" />
     <ClInclude Include="..\..\inc\qwadro\sound\afxSoundDefs.h" />
-    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundInput.h" />
-    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundOutput.h" />
-    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundSystem.h" />
-    <ClInclude Include="..\..\inc\qwadro\sound\io\asxBank.h" />
-    <ClInclude Include="..\..\inc\qwadro\sound\io\asxTracker.h" />
-    <ClInclude Include="..\..\inc\qwadro\sound\io\afxSoundBuffer.h" />
-    <ClInclude Include="..\..\src\afx\sound\dev\asxDeviceDevKit.h" />
-    <ClInclude Include="..\..\src\afx\sound\dev\asxDevKit.h" />
-    <ClInclude Include="..\..\src\afx\sound\dev\asxHostDevKit.h" />
+    <ClInclude Include="..\..\inc\qwadro\sound\afxUnisound.h" />
+    <ClInclude Include="..\..\inc\qwadro\sound\asxBank.h" />
+    <ClInclude Include="..\..\inc\qwadro\sound\asxBuffer.h" />
+    <ClInclude Include="..\..\inc\qwadro\sound\asxTracker.h" />
+    <ClInclude Include="..\..\inc\qwadro\sound\dev\afxSoundBridge.h" />
+    <ClInclude Include="..\..\inc\qwadro\sound\dev\afxSoundContext.h" />
+    <ClInclude Include="..\..\inc\qwadro\sound\dev\afxSoundDevice.h" />
+    <ClInclude Include="..\..\inc\qwadro\sound\dev\afxSoundInput.h" />
+    <ClInclude Include="..\..\inc\qwadro\sound\dev\afxSoundOutput.h" />
+    <ClInclude Include="..\..\src\afx\sound\dev\AsxDeviceDevKit.h" />
+    <ClInclude Include="..\..\src\afx\sound\dev\AsxDevKit.h" />
+    <ClInclude Include="..\..\src\afx\sound\dev\AsxHostDevKit.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -172,15 +173,16 @@
     <ResourceCompile Include="e2sound.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\afx\sound\afxListener.c" />
-    <ClCompile Include="..\..\src\afx\sound\afxSoundBridge.c" />
-    <ClCompile Include="..\..\src\afx\sound\afxSoundContext.c" />
-    <ClCompile Include="..\..\src\afx\sound\afxSoundInput.c" />
-    <ClCompile Include="..\..\src\afx\sound\afxSoundOutput.c" />
-    <ClCompile Include="..\..\src\afx\sound\afxSoundSystem.c" />
-    <ClCompile Include="..\..\src\afx\sound\io\asxBank.c" />
-    <ClCompile Include="..\..\src\afx\sound\io\asxTracker.c" />
-    <ClCompile Include="..\..\src\afx\sound\io\afxSoundBuffer.c" />
+    <ClCompile Include="..\..\src\afx\sound\asxSound.c" />
+    <ClCompile Include="..\..\src\afx\sound\asxBank.c" />
+    <ClCompile Include="..\..\src\afx\sound\asxBuffer.c" />
+    <ClCompile Include="..\..\src\afx\sound\asxTracker.c" />
+    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundBridge.c" />
+    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundContext.c" />
+    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundDevice.c" />
+    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundInput.c" />
+    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundOutput.c" />
+    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundSystem.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

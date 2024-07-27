@@ -18,9 +18,6 @@
 #include <string.h>
 
 #include "qwadro/afxQwadro.h"
-#include "qwadro/sim/afxSimulation.h"
-#include "qwadro/sim/akxAsset.h"
-#include "qwadro/mem/afxStack.h"
 
 enum {
     STATE_LOAD_EMPTY = 0,
@@ -54,7 +51,10 @@ DLLEXPORT afxError AfxLoadAssetsFromStudiomdl(afxSimulation sim, afxFlags flags,
     int_list* tri_list = int_list_new();
 
     int allocated_weights = 1024;
-    vertex_weight* weights = malloc(sizeof(vertex_weight) * allocated_weights);
+    struct vertex_weight* weights = malloc(sizeof(struct vertex_weight) * allocated_weights);
+
+    afxArray vertices;
+    AfxAllocateArray(&vertices, 1, sizeof(struct smd_vertex), NIL);
 
     int vert_index = 0;
 
@@ -117,12 +117,15 @@ DLLEXPORT afxError AfxLoadAssetsFromStudiomdl(afxSimulation sim, afxFlags flags,
                 struct smd_vertex vert;
                 /* Swap y and z axis */
                 
-                AfxSetV3d(vert.position, x, z, y);
-                AfxSetV3d(vert.normal, nx, nz, ny);
-                AfxSetV2d(vert.uvs, u, v);
-                AfxZeroV4d(vert.color);
-                AfxZeroV3d(vert.tangent);
-                AfxZeroV3d(vert.binormal);
+                AfxV3dSet(vert.position, x, z, y);
+                AfxV3dSet(vert.normal, nx, nz, ny);
+                AfxV2dSet(vert.uvs, u, v);
+                AfxV4dZero(vert.color);
+                AfxV3dZero(vert.tangent);
+                AfxV3dZero(vert.binormal);
+
+                afxNat idx;
+                AfxInsertArrayUnits(&vertices, 1, &idx, &vert);
 
                 int vert_pos = vertex_hashtable_get(hashes, vert);
 
@@ -183,7 +186,7 @@ DLLEXPORT afxError AfxLoadAssetsFromStudiomdl(afxSimulation sim, afxFlags flags,
                     while (vert_pos >= allocated_weights)
                     {
                         allocated_weights = allocated_weights * 2;
-                        weights = realloc(weights, sizeof(vertex_weight) * allocated_weights);
+                        weights = realloc(weights, sizeof(struct vertex_weight) * allocated_weights);
                     }
 
                     weights[vert_pos] = vw;

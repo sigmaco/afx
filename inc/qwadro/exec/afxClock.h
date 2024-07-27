@@ -19,9 +19,9 @@
 
 #include "qwadro/base/afxDebug.h"
 
-AFX_DEFINE_STRUCT(afxClock)
+AFX_DEFINE_STRUCT_SIMD(afxClock)
 {
-    afxNat32 afxSimd(data[4]);
+    afxNat32 AFX_SIMD data[4];
 };
 
 /// Get the current clock state for the current thread.

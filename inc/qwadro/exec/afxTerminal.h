@@ -20,12 +20,12 @@
 #define AFX_TERMINAL_H
 
 #include "qwadro/base/afxString.h"
-#include "qwadro/base/afxRestring.h"
+#include "qwadro/base/afxString.h"
 
 AFX afxBool     AfxAcquireTerminal(void);
 AFX afxBool     AfxReleaseTerminal(void);
 
-AFX afxResult   AfxPrompt(afxString const* cur, afxRestring* buf);
+AFX afxResult   AfxPrompt(afxString const* cur, afxString* buf);
 
 AFX afxResult   AfxPrint(afxNat32 color, afxChar const* msg);
 AFX afxResult   AfxPrintf(afxNat32 color, afxChar const* msg, ...);

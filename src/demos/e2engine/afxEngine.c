@@ -2,7 +2,6 @@
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
 #include "qwadro/afxQwadro.h"
-#include "qwadro/sim/afxSimulation.h"
 
 #include "../../dep_/vgl/vgl.h"
 afxSimulation sim = NIL;
@@ -50,11 +49,11 @@ afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw th
                     AfxAssertObjects(1, &canv, afxFcc_CANV);                        
                     AfxGetCanvasExtent(canv, canvWhd);
 
-                    afxDrawTarget dt[2] = { 0 };
-                    AfxSetV4d(dt[0].clearValue.color, 0.3, 0.3, 0.3, 1.0);
+                    avxDrawTarget dt[2] = { 0 };
+                    AfxV4dSet(dt[0].clearValue.color, 0.3, 0.3, 0.3, 1.0);
                     dt[1].clearValue.depth = 1.0;
                     dt[1].clearValue.stencil = 0;
-                    afxSynthesisConfig sync = { 0 };
+                    avxSynthesisConfig sync = { 0 };
                     sync.area.w = canvWhd[0];
                     sync.area.h = canvWhd[1];
                     sync.canv = canv;
@@ -124,7 +123,7 @@ int main(int argc, char const* argv[])
     // Boot up the Qwadro
 
     afxSystemConfig sysCfg;
-    AfxChooseSystemConfiguration(&sysCfg);
+    AfxConfigureSystem(&sysCfg);
     AfxDoSystemBootUp(&sysCfg);
 
     // Acquire hardware device contexts
@@ -139,25 +138,11 @@ int main(int argc, char const* argv[])
 
     // Acquire a drawable surface
 
-    afxDrawOutput outputs[4];
-    afxDrawOutputConfig doutCfg = { 0 };
-    AfxAcquireDrawOutput(0, &doutCfg, &outputs[0]);
-    AfxAcquireDrawOutput(0, &doutCfg, &outputs[1]);
-    AfxAcquireDrawOutput(0, &doutCfg, &outputs[2]);
-    AfxAcquireDrawOutput(0, &doutCfg, &outputs[3]);
-    AfxAssertObjects(4, outputs, afxFcc_DOUT);
-    AfxReconnectDrawOutput(outputs[0], dctx);
-    AfxReconnectDrawOutput(outputs[0], dctx);
-    AfxDisconnectDrawOutput(outputs[0]);
-    AfxDisconnectDrawOutput(outputs[0]);
-    AfxDisconnectDrawOutput(outputs[0]);
-    AfxReconnectDrawOutput(outputs[0], dctx);
-    AfxDisconnectDrawOutput(outputs[0]);
-    AfxReconnectDrawOutput(outputs[0], dctx);
-    AfxReleaseObjects(4, outputs);
-
-    afxWindowConfig winCfg = { 0 };
-    AfxAcquireWindow(dctx, &winCfg, &window);
+    afxWindowConfig wrc = { 0 };
+    wrc.surface.pixelFmt = afxPixelFormat_RGBA8;
+    wrc.surface.pixelFmtDs[0] = afxPixelFormat_D32F;
+    wrc.surface.bufCnt = 2;
+    AfxAcquireWindow(dctx, &wrc, &window);
     AfxAssertObjects(1, &window, afxFcc_WND);
     AfxAdjustWindowFromNdc(window, NIL, AfxSpawnV2d(0.5, 0.5));
 
@@ -181,17 +166,17 @@ int main(int argc, char const* argv[])
     simSpec.sctx = sctx;
     simSpec.din = din;
     simSpec.unitsPerMeter = 1.f;
-    AfxSetV3d(simSpec.right, 1, 0, 0);
-    AfxSetV3d(simSpec.up, 0, 1, 0);
-    AfxSetV3d(simSpec.back, 0, 0, 1);
-    AfxZeroV3d(simSpec.origin);
+    AfxV3dSet(simSpec.right, 1, 0, 0);
+    AfxV3dSet(simSpec.up, 0, 1, 0);
+    AfxV3dSet(simSpec.back, 0, 0, 1);
+    AfxV3dZero(simSpec.origin);
     AfxAcquireSimulations(1, &simSpec, &sim);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
     // Load startup scripts
 
     afxUri uri;
-    AfxMakeUri(&uri, "system/engine.xss", 0);
+    AfxMakeUri(&uri, 0, "system/engine.xss", 0);
     //AfxLoadScript(NIL, &uri);
 
     // Run
@@ -202,7 +187,7 @@ int main(int argc, char const* argv[])
 
     while (AfxSystemIsExecuting())
     {
-        AfxDoSystemExecution(0);
+        AfxDoThreading(0);
         DrawInputProc(din, NIL);
 
         afxReal64 ct, dt;

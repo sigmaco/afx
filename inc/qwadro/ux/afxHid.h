@@ -226,36 +226,36 @@ AUX afxResult   AfxTestHidFlags(afxHid hid, afxHidFlag flags);
 AUX afxReal     AfxGetKeyPressure(afxNat port, afxKey code);
 AUX afxReal     AfxGetCombinedKeyPressure(afxNat port, afxKey lhs, afxKey rhs);
 
-AUX afxBool     AfxKeyIsPressed(afxNat port, afxKey code);
-AUX afxBool     AfxKeyWasPressed(afxNat port, afxKey code);
-AUX afxBool     AfxKeyWasReleased(afxNat port, afxKey code);
+AUX afxBool     AfxIsKeyPressed(afxNat port, afxKey code);
+AUX afxBool     AfxWasKeyPressed(afxNat port, afxKey code);
+AUX afxBool     AfxWasKeyReleased(afxNat port, afxKey code);
 
-AUX afxBool     AfxKeysWerePressed(afxNat port, afxNat cnt, afxKey const codes[]);
-AUX afxBool     AfxKeysWereReleased(afxNat port, afxNat cnt, afxKey const codes[]);
+AUX afxBool     AfxWereKeysPressed(afxNat port, afxNat cnt, afxKey const codes[]);
+AUX afxBool     AfxWereKeysReleased(afxNat port, afxNat cnt, afxKey const codes[]);
 
 AUX afxError    AfxEmulatePressedKeys(afxNat port, afxNat cnt, afxKey const key[], afxNat8 const pressure[], afxObject ovy, afxObject wid);
 
 // MOUSE ///////////////////////////////////////////////////////////////////////
 
-AUX afxBool     AfxLmbIsPressed(afxNat port);
-AUX afxBool     AfxLmbWasPressed(afxNat port);
-AUX afxBool     AfxLmbWasReleased(afxNat port);
+AUX afxBool     AfxIsLmbPressed(afxNat port);
+AUX afxBool     AfxWasLmbPressed(afxNat port);
+AUX afxBool     AfxWasLmbReleased(afxNat port);
 
-AUX afxBool     AfxRmbIsPressed(afxNat port);
-AUX afxBool     AfxRmbWasPressed(afxNat port);
-AUX afxBool     AfxRmbWasReleased(afxNat port);
+AUX afxBool     AfxIsRmbPressed(afxNat port);
+AUX afxBool     AfxWasRmbPressed(afxNat port);
+AUX afxBool     AfxWasRmbReleased(afxNat port);
 
-AUX afxBool     AfxMmbIsPressed(afxNat port);
-AUX afxBool     AfxMmbWasPressed(afxNat port);
-AUX afxBool     AfxMmbWasReleased(afxNat port);
+AUX afxBool     AfxIsMmbPressed(afxNat port);
+AUX afxBool     AfxWasMmbPressed(afxNat port);
+AUX afxBool     AfxWasMmbReleased(afxNat port);
 
-AUX afxBool     AfxXmb1IsPressed(afxNat port);
-AUX afxBool     AfxXmb1WasPressed(afxNat port);
-AUX afxBool     AfxXmb1WasReleased(afxNat port);
+AUX afxBool     AfxIsXmb1Pressed(afxNat port);
+AUX afxBool     AfxWasXmb1Pressed(afxNat port);
+AUX afxBool     AfxWasXmb1Released(afxNat port);
 
-AUX afxBool     AfxXmb2IsPressed(afxNat port);
-AUX afxBool     AfxXmb2WasPressed(afxNat port);
-AUX afxBool     AfxXmb2WasReleased(afxNat port);
+AUX afxBool     AfxIsXmb2Pressed(afxNat port);
+AUX afxBool     AfxWasXmb2Pressed(afxNat port);
+AUX afxBool     AfxWasXmb2Released(afxNat port);
 
 AUX void        AfxGetMouseMotion(afxNat port, afxReal motion[2]);
 AUX afxReal     AfxGetMouseWheelDelta(afxNat port);

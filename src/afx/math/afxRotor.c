@@ -25,7 +25,7 @@ _AFXINL void AfxSetBiv3d(afxV3d biv, afxReal b01, afxReal b02, afxReal b12)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(biv);
-    AfxSetV3d(biv, b01, b02, b12);
+    AfxV3dSet(biv, b01, b02, b12);
 }
 
 // Wedge product
@@ -45,21 +45,21 @@ _AFXINL void AfxResetRotor(afxRotor r)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
-    AfxCopyV4d(r, AFX_ROTOR_IDENTITY);
+    AfxV4dCopy(r, AFX_ROTOR_IDENTITY);
 }
 
 _AFXINL void AfxZeroRotor(afxRotor r)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
-    AfxCopyV4d(r, AFX_ROTOR_ZERO);
+    AfxV4dCopy(r, AFX_ROTOR_ZERO);
 }
 
 _AFXINL void AfxSetRotor(afxRotor r, afxReal b01, afxReal b02, afxReal b12, afxReal a)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
-    AfxSetV4d(r, b01, b02, b12, a);
+    AfxV4dSet(r, b01, b02, b12, a);
 }
 
 // computa o rotor que rotaciona um unit vector a um outro
@@ -71,7 +71,7 @@ _AFXINL void AfxMakeRotor(afxRotor r, afxV3d const from, afxV3d const to)
     AfxAssert(r);
     AfxAssert(from);
     AfxAssert(to);
-    r[3] = 1.f + AfxDotV3d(to, from);
+    r[3] = 1.f + AfxV3dDot(to, from);
     // the left side of the products have b a, not a b, so flip
     afxV3d minusb;
     AfxWedgeBiv3d(r, to, from);    
@@ -87,7 +87,7 @@ _AFXINL void AfxMakeRotorFromBiv3d(afxRotor r, afxV3d const plane, afxReal /*rad
     AfxAssert(plane);
     afxReal sina = AfxSinf(angle / 2.f);
     // O lado esquerdo dos produtos têm b a, não a b
-    AfxScaleV3d(r, plane, -sina);
+    AfxV3dScale(r, plane, -sina);
     r[3] = AfxCosf(angle / 2.f);
 }
 
@@ -138,21 +138,21 @@ _AFXINL void AfxConjugateRotor(afxRotor r, afxRotor const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
     AfxAssert(in);
-    AfxNegAtv4d(r, in);
+    AfxV4dNegAffine(r, in);
 }
 
 _AFXINL afxReal afxMagRotorSq(afxRotor const r)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
-    return AfxDotV4d(r, r);
+    return AfxV4dDot(r, r);
 }
 
 _AFXINL afxReal afxMagRotor(afxRotor const r)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
-    return AfxMagV4d(r);
+    return AfxV4dMag(r);
 }
 
 _AFXINL void AfxNormalizeRotor(afxRotor r, afxRotor const in)
@@ -176,7 +176,7 @@ _AFXINL void AfxMakeM3dFromRotor(afxM3d m, afxRotor const r)
     AfxRotateVectorByRotor(x, r, AFX_V3D_X);
     AfxRotateVectorByRotor(y, r, AFX_V3D_Y);
     AfxRotateVectorByRotor(z, r, AFX_V3D_Z);
-    AfxSetM3d(m, x, y, z);
+    AfxM3dSet(m, x, y, z);
 }
 
 // rotate a rotor by another
@@ -202,5 +202,5 @@ _AFXINL void AfxGeoRotor(afxRotor r, afxV3d const a, afxV3d const b)
     AfxAssert(b);
     afxV3d w;
     AfxWedgeBiv3d(w, a, b);
-    return AfxMakeRotorFromBiv3d(r, w, AfxDotV3d(a, b));
+    return AfxMakeRotorFromBiv3d(r, w, AfxV3dDot(a, b));
 }

@@ -15,44 +15,40 @@
  */
 
 #define _AFX_SIM_C
-#define _AFX_SIMULATION_C
-#include "qwadro/sim/afxSimulation.h"
+#define _AKX_SIMULATION_C
+#include "../dev/AkxSimDevKit.h"
+#include "qwadro/afxQwadro.h"
 #include "qwadro/sim/rendering/akxSky.h"
-#include "qwadro/draw/avxCmdb.h"
-#include "qwadro/draw/pipe/avxDrawOps.h"
-#include "qwadro/draw/pipe/avxVertexInput.h"
-#include "qwadro/math/afxQuaternion.h"
-#include "qwadro/math/afxMatrix.h"
 
 _AKX void AfxStepSky(akxSky* sky, afxReal dt)
 {
     sky->currRot += sky->rotSpeed * dt;
-    AfxMakeQuatFromAxialRotation(sky->rotQuat, sky->rotPivot, sky->currRot);
-    AfxRotationM4dFromQuat(sky->rotMtx, sky->rotQuat);
+    AfxQuatRotationFromAxis(sky->rotQuat, sky->rotPivot, sky->currRot);
+    AfxM4dRotationFromQuat(sky->rotMtx, sky->rotQuat);
 }
 
 _AKX afxError AfxDrawSky(avxCmdb cmdb, akxSky* sky)
 {
     afxError err = AFX_ERR_NONE;
 
-    AvxCmdBindRasterizer(cmdb, sky->skyRazr, NIL);
-    AvxCmdBindVertexInput(cmdb, sky->skyVin);
+    AvxCmdApplyDrawTechnique(cmdb, sky->skyDtec, 0, sky->skyVin, NIL);
+
     AvxCmdBindSamplers(cmdb, 0, 1, 1, &sky->smp);
     AvxCmdBindRasters(cmdb, 0, 1, 1, &sky->cubemap, NIL);
 
     AvxCmdBindVertexSources(cmdb, 0, 1, (afxBuffer[]) { sky->cube }, NIL, NIL, (afxNat32[]) {sizeof(afxV3d)});
     //AvxCmdResetVertexStreams(cmdb, 1, NIL, (afxNat32[]) { sizeof(afxV3d) }, NIL);
     //AvxCmdResetVertexAttributes(cmdb, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V3D }, NIL, NIL);
-    AvxCmdDraw(cmdb, 0, 1, 0, 36);
+    AvxCmdDraw(cmdb, 36, 1, 0, 0);
     return err;
 }
 
-_AKX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim)
+_AKX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim, afxDrawInput din)
 {
     afxError err = NIL;
     afxDrawContext dctx = sim->dctx;
 
-    AfxSetV3d(sky->rotPivot, 0, 0, 1);
+    AfxV3dSet(sky->rotPivot, 0, 0, 1);
     sky->cubemapColorIntensity = 1.f;
     sky->rotSpeed = 0.f;
     sky->currRot = 0.f;
@@ -61,40 +57,40 @@ _AKX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim)
     afxUri cubeUri[6];
 #if !0
 #if 0    
-    AfxMakeUri(&cubeUri[0], "../art/skybox/day/right.tga", 0);
-    AfxMakeUri(&cubeUri[1], "../art/skybox/day/left.tga", 0);
-    AfxMakeUri(&cubeUri[3], "../art/skybox/day/top.tga", 0);
-    AfxMakeUri(&cubeUri[2], "../art/skybox/day/bottom.tga", 0);
-    AfxMakeUri(&cubeUri[4], "../art/skybox/day/front.tga", 0);
-    AfxMakeUri(&cubeUri[5], "../art/skybox/day/back.tga", 0);
+    AfxMakeUri(&cubeUri[0], 0, "../art/skybox/day/right.tga", 0);
+    AfxMakeUri(&cubeUri[1], 0, "../art/skybox/day/left.tga", 0);
+    AfxMakeUri(&cubeUri[3], 0, "../art/skybox/day/top.tga", 0);
+    AfxMakeUri(&cubeUri[2], 0, "../art/skybox/day/bottom.tga", 0);
+    AfxMakeUri(&cubeUri[4], 0, "../art/skybox/day/front.tga", 0);
+    AfxMakeUri(&cubeUri[5], 0, "../art/skybox/day/back.tga", 0);
 #else
-    AfxMakeUri(&cubeUri[0], "../art/skybox/purple/right.tga", 0); // x+
-    AfxMakeUri(&cubeUri[1], "../art/skybox/purple/left.tga", 0); // x-
-    AfxMakeUri(&cubeUri[3], "../art/skybox/purple/top.tga", 0);
-    AfxMakeUri(&cubeUri[2], "../art/skybox/purple/bottom.tga", 0); // y-
-    AfxMakeUri(&cubeUri[4], "../art/skybox/purple/front.tga", 0);
-    AfxMakeUri(&cubeUri[5], "../art/skybox/purple/back.tga", 0);
+    AfxMakeUri(&cubeUri[0], 0, "../art/skybox/purple/right.tga", 0); // x+
+    AfxMakeUri(&cubeUri[1], 0, "../art/skybox/purple/left.tga", 0); // x-
+    AfxMakeUri(&cubeUri[3], 0, "../art/skybox/purple/top.tga", 0);
+    AfxMakeUri(&cubeUri[2], 0, "../art/skybox/purple/bottom.tga", 0); // y-
+    AfxMakeUri(&cubeUri[4], 0, "../art/skybox/purple/front.tga", 0);
+    AfxMakeUri(&cubeUri[5], 0, "../art/skybox/purple/back.tga", 0);
 
 #endif
 #else
-    AfxMakeUri(&cubeUri[0], "../art/skybox/envmap_interstellar/interstellar_rt.tga", 0); // x+
-    AfxMakeUri(&cubeUri[1], "../art/skybox/envmap_interstellar/interstellar_lf.tga", 0); // x-
-    AfxMakeUri(&cubeUri[3], "../art/skybox/envmap_interstellar/interstellar_up.tga", 0);
-    AfxMakeUri(&cubeUri[2], "../art/skybox/envmap_interstellar/interstellar_dn.tga", 0); // y-
-    AfxMakeUri(&cubeUri[4], "../art/skybox/envmap_interstellar/interstellar_ft.tga", 0);
-    AfxMakeUri(&cubeUri[5], "../art/skybox/envmap_interstellar/interstellar_bk.tga", 0);
+    AfxMakeUri(&cubeUri[0], 0, "../art/skybox/envmap_interstellar/interstellar_rt.tga", 0); // x+
+    AfxMakeUri(&cubeUri[1], 0, "../art/skybox/envmap_interstellar/interstellar_lf.tga", 0); // x-
+    AfxMakeUri(&cubeUri[3], 0, "../art/skybox/envmap_interstellar/interstellar_up.tga", 0);
+    AfxMakeUri(&cubeUri[2], 0, "../art/skybox/envmap_interstellar/interstellar_dn.tga", 0); // y-
+    AfxMakeUri(&cubeUri[4], 0, "../art/skybox/envmap_interstellar/interstellar_ft.tga", 0);
+    AfxMakeUri(&cubeUri[5], 0, "../art/skybox/envmap_interstellar/interstellar_bk.tga", 0);
 #endif
 
     afxUri facesUri[6];
-    AfxMakeUri(&facesUri[0], "right.tga", 0); // x+
-    AfxMakeUri(&facesUri[1], "left.tga", 0); // x-
-    AfxMakeUri(&facesUri[3], "top.tga", 0);
-    AfxMakeUri(&facesUri[2], "bottom.tga", 0); // y-
-    AfxMakeUri(&facesUri[4], "front.tga", 0);
-    AfxMakeUri(&facesUri[5], "back.tga", 0);
+    AfxMakeUri(&facesUri[0], 0, "right.tga", 0); // x+
+    AfxMakeUri(&facesUri[1], 0, "left.tga", 0); // x-
+    AfxMakeUri(&facesUri[3], 0, "top.tga", 0);
+    AfxMakeUri(&facesUri[2], 0, "bottom.tga", 0); // y-
+    AfxMakeUri(&facesUri[4], 0, "front.tga", 0);
+    AfxMakeUri(&facesUri[5], 0, "back.tga", 0);
 
     afxUri cubeDir;
-    AfxMakeUri(&cubeDir, "../art/skybox/purple", 0);
+    AfxMakeUri(&cubeDir, 0, "../art/skybox/purple", 0);
 
     sky->cubemap = AfxAssembleCubemapRasters(dctx, afxRasterUsage_SAMPLING, afxRasterFlag_CUBEMAP, &cubeDir, facesUri);
     //AfxFlipRaster(sky->cubemap, FALSE, TRUE);
@@ -161,8 +157,8 @@ _AKX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim)
     AfxAssertObjects(1, &sky->cube, afxFcc_BUF);
 
     afxUri uri;
-    AfxMakeUri(&uri, "../data/pipeline/skybox/skybox.xsh.xml", 0);
-    sky->skyRazr = AfxLoadRasterizerFromXsh(dctx, NIL, &uri);
+    AfxMakeUri(&uri, 0, "../data/pipeline/skybox/skybox.xsh.xml", 0);
+    AfxLoadDrawTechniques(din, 1, &uri, &sky->skyDtec);
     sky->type = akxSkyType_BOX;
 
     avxVertexInputStream const vinStreams[] =

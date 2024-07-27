@@ -2,7 +2,7 @@
 #include <../data/pipeline/stdView.inc>
 #include <../data/pipeline/stdMaterial.inc>
 
-UNIFORM(0, 0, sampler2D, diffuse_sampler);
+//SAMPLING_UNIT(2, 1, sampler2D, diffuse_sampler);
         
 in block
 {
@@ -30,7 +30,7 @@ void main()
     vec3 diffuse = lightDiffuse * (diff * Kd);
     
     // specular
-    vec3 viewDir = normalize(vec3(viewpoint.xyz) - sgl_v.xyz);
+    vec3 viewDir = normalize(vec3(viewPos.xyz) - sgl_v.xyz);
     vec3 reflectDir = reflect(-lightDir, norm);  
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), Ns);
     vec3 specular = lightSpecular * (spec * Ks);  

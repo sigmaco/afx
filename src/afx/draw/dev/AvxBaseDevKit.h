@@ -24,7 +24,8 @@
 #define AVX_HOST_DEV_KIT_H
 
 #include "../src/afx/dev/afxDevCoreBase.h"
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
+#include "qwadro/mem/afxInterlockedQueue.h"
 
 typedef enum _ddevReqCode
 {
@@ -49,6 +50,7 @@ AFX_DEFINE_STRUCT(afxDrawDeviceInfo)
 };
 
 #ifdef _AVX_DRAW_SYSTEM_C
+
 AFX_OBJECT(afxDrawSystem)
 {
     afxBool             ready;
@@ -58,9 +60,11 @@ AFX_OBJECT(afxDrawSystem)
     afxClass            dinEndCls;
     afxClass            dinCls;
 };
+
 #endif
 
 #ifdef _AVX_DRAW_DEVICE_C
+
 AFX_DEFINE_STRUCT(afxDrawInputEndpoint)
 {
     afxLinkage          ddev;
@@ -72,24 +76,22 @@ AFX_DEFINE_STRUCT(afxDrawInputEndpoint)
 
 AFX_OBJECT(afxDrawDevice)
 {
-    AFX_OBJECT(afxDevice) dev;
+    AFX_OBJ(afxDevice)  dev;
+    afxDrawDeviceCaps   caps;
+    afxDrawDeviceLimits limits;
+    avxClipSpace        clipSpace;
 
-    afxClass ddgeCls;
-    afxClass dctxCls;
-    afxChain openedDoutChain;
-    afxChain openedDinChain;
-    afxChain ineps;
-
-    afxDrawDeviceCaps const* caps;
-    afxDrawDeviceLimits const* limits;
     afxNat portCnt;
     afxDrawPortCaps const* portCaps;
-    
-    avxClipSpace clipSpace;
 
-    afxBool relinking;
-    afxCondition relinkedCnd;
-    afxMutex relinkedCndMtx;
+    afxClass            ddgeCls;
+    afxClass            dctxCls;
+    afxChain            openedDoutChain;
+    afxChain            openedDinChain;
+    afxChain            ineps;
+    afxBool             relinking;
+    afxCondition        relinkedCnd;
+    afxMutex            relinkedCndMtx;
 
     afxError(*stopCb)(afxDrawDevice);
     afxError(*startCb)(afxDrawDevice);
@@ -104,6 +106,7 @@ AFX_OBJECT(afxDrawDevice)
     
     struct _afxDdevIdd* idd;
 };
+
 #endif//_AVX_DRAW_DEVICE_C
 
 #ifdef _AVX_DRAW_OUTPUT_C
@@ -132,29 +135,19 @@ AFX_OBJECT(afxDrawOutput)
     afxWhd              whd;
     avxColorSpace       colorSpc; // raster color space. sRGB is the default.    
     afxPixelFormat      pixelFmt; // pixel format of raster surfaces.
-    afxPixelFormat      pixelFmtDs[2]; // pixel format for depth/stencil. D24/S8/D24S8
     afxRasterUsage      bufUsage; // raster usage
-    afxRasterUsage      bufUsageDs[2]; // raster usage for depth/stencil
     afxRasterFlags      bufFlags; // raster flags. What evil things we will do with it?
+    afxPixelFormat      pixelFmtDs[2]; // pixel format for depth/stencil. D24/S8/D24S8
+    afxRasterUsage      bufUsageDs[2]; // raster usage for depth/stencil
     afxRasterFlags      bufFlagsDs[2]; // raster flags for depth/stencil
 
     // swapchain
-    afxSlock            buffersLock;
-    afxAtom32           lockedBufCnt;
     afxAtom32           submCnt;
     afxNat              bufCnt; // usually 2 or 3; double or triple buffered.
-    afxAtom32           lastLockedBufIdx;
-    afxAtom32           lastUnlockedBufIdx;
     afxAtom32           presentingBufIdx;
-    afxChain            swapchain; // display order
-    struct
-    {
-        //afxRaster       ras; // avxCanvas // should have 1 fb for each swapchain raster.
-        avxCanvas       canv;
-        afxSemaphore    readySem;
-        afxAtom32       booked;
-        afxSlock        lck;
-    }*                  buffers;
+    avxCanvas*          canvases;
+    afxInterlockedQueue freeBuffers;
+
     afxError            (*lockCb)(afxDrawOutput, afxTime timeout, afxNat*bufIdx);
     afxError            (*unlockCb)(afxDrawOutput, afxNat cnt, afxNat const bufIdx[]);
 
@@ -188,9 +181,11 @@ AFX_OBJECT(afxDrawOutput)
     afxBool (*iddCb)(afxDrawOutput,afxNat,void*);
     struct _afxDoutIdd* idd; // alloc'ed by the driver
 };
+
 #endif//_AVX_DRAW_OUTPUT_C
 
 #ifdef _AVX_DRAW_INPUT_C
+
 AFX_OBJECT(afxDrawInput)
 {
     afxLinkage          ddev;
@@ -198,6 +193,8 @@ AFX_OBJECT(afxDrawInput)
 
     afxChain            classes;
     afxClass            camCls;
+    afxClass            dtecCls;
+    afxClass            txdCls;
     afxClass            ibuffers;
     afxClass            vbuffers;
 
@@ -213,7 +210,8 @@ AFX_OBJECT(afxDrawInput)
         afxSlock        reqLock;
         afxBool         lockedForReq;
     }*pools;
-    afxNat              poolCnt;
+    afxNat              poolCnt;    
+    afxInterlockedQueue*recycQue; // one per pool
 
     avxClipSpace        clipSpace;
 
@@ -232,9 +230,11 @@ AFX_OBJECT(afxDrawInput)
     struct _afxDinIdd*  idd;
     void*               udd; // user-defined data
 };
+
 #endif//_AVX_DRAW_INPUT_C
 
 #ifdef _AVX_CAMERA_C
+
 AFX_OBJECT(avxCamera)
 {
     afxReal             wpOverHp; // physical w/h
@@ -248,9 +248,9 @@ AFX_OBJECT(avxCamera)
     afxBool             useQuatOrient;
     afxQuat             orient;
     afxM3d              orientM3d;
-    afxV3d              pos;
     afxV3d              elevAzimRoll;
-    afxV3d              offset;
+    afxV3d              pos;
+    afxV3d              displacement;
     afxM4d              v;
     afxM4d              iv; // inverse view
     afxM4d              p;
@@ -263,9 +263,27 @@ AFX_OBJECT(avxCamera)
     afxBool     perspective; // is projection perspective or orthographic.
     afxFrustum  frustum;
 };
+
 #endif//_AVX_CAMERA_C
 
 //AFX_STATIC_ASSERT(offsetof(avxCamera, focus % AFX_CAM_ALIGN == 0, "");
+
+#ifdef _AVX_TXD_C
+
+AFX_OBJECT(avxTxd)
+{
+    afxUri128           uri;
+    afxNat              texCnt;
+    struct
+    {
+        afxString       urn;
+        afxRaster       ras;
+        avxSampler      samp;
+        afxAtom32       reqCnt;
+    }                   *texs;
+};
+
+#endif//_AVX_TXD_C
 
 AVX afxClassConfig const _AvxDqueStdImplementation;
 AVX afxClassConfig const _AvxDdgeStdImplementation;

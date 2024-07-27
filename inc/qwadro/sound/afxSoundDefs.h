@@ -76,12 +76,12 @@ AFX_DEFINE_STRUCT(asxListener) // Listener information.
     afxBool             spatialized;
 };
 
-ASXINL void AaxAcquireListener(asxListener *list)
+ASXINL void AsxResetListener(asxListener* lis)
 {
     afxError err = NIL;
-    AfxAssert(list);
-    list->scalingFactor = (afxReal32)1;
-    list->spatialized = TRUE;
+    AfxAssert(lis);
+    lis->scalingFactor = (afxReal32)1;
+    lis->spatialized = TRUE;
 }
 
 AFX_DEFINE_STRUCT(asxRamp) // volume ramp specified by end points "previous" and "next".
@@ -90,7 +90,7 @@ AFX_DEFINE_STRUCT(asxRamp) // volume ramp specified by end points "previous" and
     afxReal32 next;
 };
 
-ASXINL void AaxTakeRamp(asxRamp *ramp, afxReal prev, afxReal next)
+ASXINL void AsxSetRamp(asxRamp* ramp, afxReal prev, afxReal next)
 {
     afxError err = NIL;
     AfxAssert(ramp);
@@ -98,14 +98,14 @@ ASXINL void AaxTakeRamp(asxRamp *ramp, afxReal prev, afxReal next)
     ramp->next = (afxReal32)next;
 }
 
-ASXINL void AaxResetRamp(asxRamp *ramp)
+ASXINL void AsxResetRamp(asxRamp* ramp)
 {
     afxError err = NIL;
     AfxAssert(ramp);
-    AaxTakeRamp(ramp, 1, 1);
+    AsxSetRamp(ramp, 1, 1);
 }
 
-ASXINL void AaxCopyRamp(asxRamp *ramp, asxRamp const* in)
+ASXINL void AsxCopyRamp(asxRamp* ramp, asxRamp const* in)
 {
     afxError err = NIL;
     AfxAssert(ramp);
@@ -114,7 +114,7 @@ ASXINL void AaxCopyRamp(asxRamp *ramp, asxRamp const* in)
     ramp->next = in->next;
 }
 
-ASXINL void AaxScaleRamp(asxRamp *ramp, asxRamp const *rhs)
+ASXINL void AsxScaleRamp(asxRamp* ramp, asxRamp const* rhs)
 {
     afxError err = NIL;
     AfxAssert(ramp);
@@ -123,19 +123,12 @@ ASXINL void AaxScaleRamp(asxRamp *ramp, asxRamp const *rhs)
     ramp->next *= rhs->next;
 }
 
-ASXINL asxRamp AaxMergeRamps(asxRamp const* lhs, asxRamp const* rhs)
+ASXINL asxRamp AsxMergeRamps(asxRamp const* lhs, asxRamp const* rhs)
 {
     asxRamp rslt;
-    AaxCopyRamp(&rslt, lhs);
-    AaxScaleRamp(&rslt, rhs);
+    AsxCopyRamp(&rslt, lhs);
+    AsxScaleRamp(&rslt, rhs);
     return rslt;
 }
-
-AFX_DEFINE_STRUCT(asxChannelConfig)
-{
-    afxNat32 uNumChannels : 8;   // the number of channels, identified (deduced from channel mask) or anonymous (set directly). 
-    afxNat32 eConfigType : 4;    // a code that completes the identification of channels by uChannelMask.
-    afxNat32 uChannelMask : 20; // a bit field, whose channel identifiers depend on asxChannelConfigType (up to 20). Channel bits are defined in Speaker Config.
-};
 
 #endif//ASX_SOUND_DEFS_H

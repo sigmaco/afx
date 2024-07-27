@@ -19,7 +19,307 @@
 #define _AVX_DRAW_C
 #define _AVX_VERTEX_BUFFER_C
 #define _AVX_INDEX_BUFFER_C
-#include "qwadro/draw/afxDrawSystem.h"
+#include "../dev/AvxDevKit.h"
+
+typedef struct _rwD3D9freeVBlistEntry RxD3D9freeVBlistEntry;
+struct _rwD3D9freeVBlistEntry
+{
+    afxNat32                offset;
+    afxNat32                size;
+    void                    *vbo;
+    RxD3D9freeVBlistEntry  *next;
+    RxD3D9freeVBlistEntry  *prev;
+};
+
+typedef struct _rwD3D9createdVBlistEntry RxD3D9createdVBlistEntry;
+struct _rwD3D9createdVBlistEntry
+{
+    void        *vertexBuffer;
+    RxD3D9createdVBlistEntry  *next;
+};
+
+typedef struct _rwD3D9StrideEntry RxD3D9StrideEntry;
+struct _rwD3D9StrideEntry
+{
+    afxNat32                    stride;
+    RxD3D9freeVBlistEntry       *freelist;
+    RxD3D9createdVBlistEntry    *vblist;
+    RxD3D9StrideEntry           *next;
+};
+
+static afxNat32         DefaultVBSize = 128 * 1024;
+
+static RxD3D9StrideEntry    *StrideList = NULL;
+
+static afxSlabAllocator *StrideFreeList = NULL;
+static afxSlabAllocator *FreeVBFreeList = NULL;
+static afxSlabAllocator *CreatedVBFreeList = NULL;
+
+afxBool RwD3D9CreateVertexBuffer(afxNat32 stride, afxNat32 size, void **vertexBuffer, afxNat32 *offset)
+{
+    RxD3D9StrideEntry           *strideList;
+    RxD3D9freeVBlistEntry       *freelist;
+    RxD3D9createdVBlistEntry    *vblist;
+    afxNat32                    nextOffset;
+    afxError err;
+    AfxAssert(stride <= size);
+    AfxAssert((stride & 0x3) == 0);
+    AfxAssert(vertexBuffer);
+    AfxAssert(offset);
+    strideList = StrideList;
+
+    afxDrawContext dctx;
+
+    while (strideList) // Search for an available stride
+    {
+        RxD3D9StrideEntry  *next = strideList->next;
+
+        if (stride == strideList->stride)
+            break;
+
+        strideList = next;
+    }
+
+    if (!strideList) // create one if there isn't any
+    {
+        strideList = AfxAllocateSlab(&StrideFreeList);
+        strideList->stride = stride;
+        strideList->freelist = NULL;
+        strideList->vblist = NULL;
+
+        strideList->next = StrideList; // Add it to the begining
+        StrideList = strideList;
+    }
+
+    freelist = strideList->freelist;
+
+    while (freelist) // Search for an available free space
+    {
+        RxD3D9freeVBlistEntry   *nextFreelist = freelist->next;
+
+        if (freelist->size >= size)
+        {
+            break;
+        }
+
+        freelist = nextFreelist;
+    }
+
+    if (!freelist) // If there is not free space, create a new VB
+    {
+        freelist = AfxAllocateSlab(&FreeVBFreeList);
+        freelist->offset = 0;
+        freelist->size = (((DefaultVBSize + (stride - 1)) / stride) * stride);
+
+        if (size >= freelist->size)
+            freelist->size = size;
+
+        afxBufferSpecification spec = { 0 };
+        spec.siz = freelist->size;
+        spec.access = afxBufferAccess_W;
+        spec.usage = afxBufferUsage_VERTEX;
+
+        if (AfxAcquireBuffers(dctx, 1, &spec, &freelist->vbo))
+        {
+            AfxDeallocateSlab(&FreeVBFreeList, freelist);            
+            return FALSE;
+        }
+
+        freelist->next = strideList->freelist; // Add it to the begining
+        freelist->prev = NULL;
+
+        if (strideList->freelist)
+            strideList->freelist->prev = freelist;
+
+        strideList->freelist = freelist;
+
+        // Add an entry to the vb list
+        vblist = AfxAllocateSlab(&CreatedVBFreeList);
+        vblist->vertexBuffer = freelist->vbo;
+        vblist->next = strideList->vblist;
+        strideList->vblist = vblist;
+
+#if defined(RWDEBUG)
+        VBCreated++;
+#endif
+    }
+
+    *vertexBuffer = freelist->vbo;
+    *offset = freelist->offset;
+    nextOffset = (*offset) + size;
+
+    AfxAssert(freelist->size >= (nextOffset - freelist->offset));
+    freelist->size -= nextOffset - freelist->offset;
+    freelist->offset = nextOffset;
+
+    if (freelist->size <= 0)
+    {
+        if (freelist->prev)
+            freelist->prev->next = freelist->next;
+
+        if (freelist->next)
+            freelist->next->prev = freelist->prev;
+
+        if (strideList->freelist == freelist)
+            strideList->freelist = freelist->next;
+
+        AfxDeallocateSlab(&FreeVBFreeList, freelist);
+    }
+
+#if defined(RWDEBUG)
+    BlocksCreated++;
+    BytesReserved += size;
+#endif
+
+    return TRUE;
+}
+
+void RwD3D9DestroyVertexBuffer(afxNat32 stride, afxNat32 size, void *vertexBuffer, afxNat32 offset)
+{
+    RxD3D9StrideEntry* strideList;
+    RxD3D9freeVBlistEntry* freelist;
+    afxError err;
+    AfxAssert(stride <= size);
+    AfxAssert((stride & 0x3) == 0);
+    AfxAssert(vertexBuffer != NULL);
+
+    // Search for the stride
+    strideList = StrideList;
+
+    while (strideList )
+    {
+        RxD3D9StrideEntry* next = strideList->next;
+
+        if (stride == strideList->stride)
+            break;
+
+        strideList = next;
+    }
+
+    if (strideList)
+    {
+        // Search for an available free space to add
+        freelist = strideList->freelist;
+
+        while (freelist)
+        {
+            RxD3D9freeVBlistEntry* nextFreelist = freelist->next;
+
+            if (freelist->vbo == vertexBuffer)
+            {
+                // Could be added to the end of the free space?
+
+                if ((freelist->offset + freelist->size) == offset) break;
+                else
+                {
+                    // Could be added to the begin of the free space?
+
+                    if (offset + size == freelist->offset)
+                        break;
+                }
+            }
+            freelist = nextFreelist;
+        }
+
+        if (freelist)
+        {
+            afxBool canCompactMore = FALSE;
+            afxNat32 newoffset = offset;
+            afxNat32 newSize = size;
+            RxD3D9freeVBlistEntry* oldFreelist = freelist;
+
+            do
+            {
+                // Could be added to the end of the free space?
+
+                if ((freelist->offset + freelist->size) == newoffset) freelist->size += newSize;
+                else
+                {
+                    // Could be added to the begin of the free space?
+
+                    if (newoffset + newSize == freelist->offset)
+                    {
+                        freelist->offset = newoffset;
+                        freelist->size += newSize;
+                    }
+                }
+
+                // Could be compact more?
+                newoffset = freelist->offset;
+                newSize = freelist->size;
+                oldFreelist = freelist;
+                canCompactMore = FALSE;
+                freelist = strideList->freelist;
+
+                while (freelist)
+                {
+                    RxD3D9freeVBlistEntry* nextFreelist = freelist->next;
+
+                    if (freelist->vbo == vertexBuffer)
+                    {
+                        // Could be added to the end of the free space?
+
+                        if ((freelist->offset + freelist->size) == newoffset)
+                        {
+                            canCompactMore = TRUE;
+                            break;
+                        }
+                        else
+                        {
+                            // Could be added to the begin of the free space?
+
+                            if (newoffset + newSize == freelist->offset)
+                            {
+                                canCompactMore = TRUE;
+                                break;
+                            }
+                        }
+                    }
+                    freelist = nextFreelist;
+                }
+
+                // Remove old list
+
+                if (canCompactMore)
+                {
+                    if (oldFreelist->prev)
+                        oldFreelist->prev->next = oldFreelist->next;
+
+                    if (oldFreelist->next)
+                        oldFreelist->next->prev = oldFreelist->prev;
+
+                    if (strideList->freelist == oldFreelist)
+                        strideList->freelist = oldFreelist->next;
+
+                    AfxDeallocateSlab(&FreeVBFreeList, oldFreelist);
+                }
+            } while (canCompactMore);
+        }
+        else
+        {
+            freelist = AfxAllocateSlab(&FreeVBFreeList);
+            freelist->offset = offset;
+            freelist->size = size;
+            freelist->vbo = vertexBuffer;
+
+            // Add it to the begining
+            freelist->next = strideList->freelist;
+            freelist->prev = NULL;
+
+            if (strideList->freelist)
+                strideList->freelist->prev = freelist;
+
+            strideList->freelist = freelist;
+        }
+
+#if defined(RWDEBUG)
+        BlocksCreated--;
+        BytesReserved -= size;
+#endif
+    }
+}
+
+
 
 _AVX afxNat AfxGetVertexBufferUsage(afxVertexBuffer vbuf)
 {
@@ -83,7 +383,7 @@ _AVX afxError _AvxVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
     afxBuffer buf;
     afxBufferSpecification const bufSpec =
     {
-        .siz = AFX_ALIGN(bufSiz, 64),
+        .siz = AFX_ALIGNED_SIZEOF(bufSiz, 64),
         .access = spec->access,
         .usage = afxBufferUsage_VERTEX,
         .src = NIL
@@ -97,7 +397,7 @@ _AVX afxError _AvxVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
         vbuf->bufSiz = spec->bufCap;
         vbuf->freeSiz = vbuf->bufSiz;
 
-        AfxSetUpChain(&vbuf->rooms, vbuf);
+        AfxDeployChain(&vbuf->rooms, vbuf);
     }
     return err;
 }
@@ -201,7 +501,7 @@ _AVX afxNat AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afx
 
     afxNat stride = ibuf->idxSiz;
     afxSize size = stride * idxCnt;
-    AfxAssertRange(AfxGetBufferCapacity(ibuf->buf), 0, size);
+    AfxAssertRange(AfxGetBufferCapacity(ibuf->buf, 0), 0, size);
 
     afxNat idxCap = ibuf->idxCap;
     AfxAssertRange(idxCap, 0, idxCnt);
@@ -220,7 +520,7 @@ _AVX afxNat AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afx
         {
             if (!(idxCnt > room->idxCnt))
             {
-                alignedBaseIdx = AFX_ALIGN(room->baseIdx, (64 / stride));
+                alignedBaseIdx = AFX_ALIGNED_SIZEOF(room->baseIdx, (64 / stride));
                 padding = (alignedBaseIdx - room->baseIdx);
                 alignedCnt = padding + size;
 
@@ -292,7 +592,7 @@ _AVX afxError _AvxIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
     afxDrawContext dctx = cookie->udd[0];
     afxIndexBufferSpecification const *spec = ((afxIndexBufferSpecification const *)cookie->udd[1]) + cookie->no;
 
-    AfxSetUpChain(&ibuf->rooms, ibuf);
+    AfxDeployChain(&ibuf->rooms, ibuf);
 
     afxSize bufSiz = spec->idxSiz * spec->idxCap;
 

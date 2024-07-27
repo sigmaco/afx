@@ -25,7 +25,7 @@ void ClumpRenderBoundingBox(avxCmdb cmdb, afxBox box, afxM4d const m)
     
     for (int i = 0; i < 8; i++)
     {
-        AfxSetV3d(vtx[i].posn, i & 1 ? box[AFX_AABB_SUP][0] : box[AFX_AABB_INF][0], i & 2 ? box[AFX_AABB_SUP][1] : box[AFX_AABB_INF][1], i & 4 ? box[AFX_AABB_SUP][2] : box[AFX_AABB_INF][2]);
+        AfxV3dSet(vtx[i].posn, i & 1 ? box[AFX_AABB_SUP][0] : box[AFX_AABB_INF][0], i & 2 ? box[AFX_AABB_SUP][1] : box[AFX_AABB_INF][1], i & 4 ? box[AFX_AABB_SUP][2] : box[AFX_AABB_INF][2]);
         vtx[i].col = AfxPackArgb32(255, 196, 196, 0);
     }
 

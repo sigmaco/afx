@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/exec/afxSystem.h"
+#include "../src/afx/dev/afxDevCoreBase.h"
 
 _AFX afxNat AfxEnumeratePoolItems(afxPool const* pool, afxNat first, afxNat cnt, void *items[])
 {
@@ -613,7 +613,7 @@ _AFX void AfxSetUpPool(afxPool* pool, afxNat unitSiz, afxNat unitsPerPage)
     AfxAssert(pool);
     //AfxAssignTypeFcc(pool, afxFcc_POOL);
     pool->unitsPerPage = AfxMin(AfxMax(unitsPerPage,1), 32);
-    pool->unitSiz = AFX_ALIGN(unitSiz, sizeof(void*));
+    pool->unitSiz = AFX_ALIGNED_SIZEOF(unitSiz, sizeof(void*));
     pool->totalUsedCnt = 0;
     //pool->dataOffset = 0;
     //pool->usageOffset = pool->unitsPerPage * pool->unitSiz;

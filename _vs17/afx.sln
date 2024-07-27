@@ -67,12 +67,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rwdemo_bounding", "..\..\rw
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "platform", "platform\platform.vcxitems", "{DD12D4AC-F451-47FD-80B0-C90CEE692301}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rwd3d9dev", "rwd3d9dev\rwd3d9dev.vcxitems", "{6BCDD9A9-99B7-463D-A374-C29DD1C6ADF1}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\..\rwg\projs\rwdemo_base\rwdemo_base.vcxitems*{03f9e3b1-4fa9-44ab-9a94-37c08bc97814}*SharedItemsImports = 9
+		rwd3d9dev\rwd3d9dev.vcxitems*{6bcdd9a9-99b7-463d-a374-c29dd1c6adf1}*SharedItemsImports = 9
 		..\..\rwg\projs\rwdemo_base\rwdemo_base.vcxitems*{6c178291-429e-4b68-b6c4-987aac42b6a5}*SharedItemsImports = 4
 		..\..\rwg\projs\rwdemo_base\rwdemo_base.vcxitems*{73691ef4-77cc-43c5-86e5-2ab8c46ad002}*SharedItemsImports = 4
 		..\..\rwg\projs\rwdemo_base\rwdemo_base.vcxitems*{d30cdafa-ea06-4dd9-8d54-9d0505aa8c92}*SharedItemsImports = 4
+		rwd3d9dev\rwd3d9dev.vcxitems*{dca8ea8a-c36a-42e4-b8ad-aec28c5a6b4a}*SharedItemsImports = 4
 		platform\platform.vcxitems*{dd12d4ac-f451-47fd-80b0-c90cee692301}*SharedItemsImports = 9
 		..\..\rwg\projs\rwdemo_base\rwdemo_base.vcxitems*{ded8f510-0b28-4fa0-8166-b3eaa6392985}*SharedItemsImports = 4
 		..\..\rwg\projs\rwdemo_base\rwdemo_base.vcxitems*{ef84a715-28e9-4fff-b719-eee55b1f1164}*SharedItemsImports = 4
@@ -329,6 +333,7 @@ Global
 		{6C178291-429E-4B68-B6C4-987AAC42B6A5} = {F30B16CF-A01C-4705-84BF-7CA644475B87}
 		{EF84A715-28E9-4FFF-B719-EEE55B1F1164} = {F30B16CF-A01C-4705-84BF-7CA644475B87}
 		{DD12D4AC-F451-47FD-80B0-C90CEE692301} = {8FEC4577-39EF-4DFB-A542-3D25599F8676}
+		{6BCDD9A9-99B7-463D-A374-C29DD1C6ADF1} = {F30B16CF-A01C-4705-84BF-7CA644475B87}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5BDB9897-6A79-4E9E-B4AB-6130AF8DBD91}

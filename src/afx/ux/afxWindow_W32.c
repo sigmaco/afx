@@ -107,6 +107,69 @@ _AUX HICON _AuxCreateWin32Icon(afxTarga const* tga, afxNat xHotspot, afxNat yHot
     return handle;
 }
 
+_AUX HICON _AuxCreateWin32IconFromRaster(afxRaster ras, afxNat xHotspot, afxNat yHotspot, afxBool icon)
+// Creates an RGBA icon or cursor
+{
+    afxError err = NIL;
+    HICON handle = NIL;
+
+    afxWhd whd;
+    AfxGetRasterExtent(ras, 0, whd);
+    afxPixelFormat fmt = AfxGetRasterFormat(ras);
+    AfxAssert(fmt == afxPixelFormat_ARGB8);
+
+    BITMAPV5HEADER bi = { 0 };
+    bi.bV5Size = sizeof(bi);
+    bi.bV5Width = whd[0];
+    bi.bV5Height = -((LONG)whd[1]);
+    bi.bV5Planes = 1;
+    bi.bV5BitCount = 32;
+    bi.bV5Compression = BI_BITFIELDS;
+    bi.bV5AlphaMask = 0xff000000; // ARGB
+    bi.bV5RedMask = 0x00ff0000;
+    bi.bV5GreenMask = 0x0000ff00;
+    bi.bV5BlueMask = 0x000000ff;
+
+    afxByte* dst = NIL;
+    HDC dc = GetDC(NULL);
+    HBITMAP color = CreateDIBSection(dc, (BITMAPINFO*)&bi, DIB_RGB_COLORS, (void**)&dst, NULL, (DWORD)0);
+    ReleaseDC(NULL, dc);
+
+    if (!color) AfxThrowError();
+    else
+    {
+        afxRasterIo iop = { 0 };
+        iop.rowStride = whd[0] * (bi.bV5BitCount / 8);
+        AfxWhdCopy(iop.rgn.whd, whd);
+
+        if (AfxDumpRaster(ras, 0, 1, &iop, dst))
+            AfxThrowError();
+
+        afxDrawContext dctx = AfxGetRasterContext(ras);
+        AfxWaitForIdleDrawBridge(dctx, 0);
+
+        HBITMAP mask;
+
+        if (!(mask = CreateBitmap(whd[0], whd[1], 1, 1, NULL))) AfxThrowError();
+        else
+        {
+            ICONINFO ii = { 0 };
+            ii.fIcon = icon;
+            ii.xHotspot = xHotspot;
+            ii.yHotspot = yHotspot;
+            ii.hbmMask = mask;
+            ii.hbmColor = color;
+
+            if (!(handle = CreateIconIndirect(&ii)))
+                AfxThrowError();
+
+            DeleteObject(mask);
+        }
+        DeleteObject(color);
+    }
+    return handle;
+}
+
 _AUX LRESULT WINAPI _AuxWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     afxError err = AFX_ERR_NONE;
@@ -156,6 +219,7 @@ _AUX LRESULT WINAPI _AuxWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             {
                 AfxThrowError();
             }
+            break;
         }
         case WM_INPUT:
         {
@@ -444,8 +508,8 @@ _AUX LRESULT WINAPI _AuxWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
             afxV2d curr = { AfxScalar(points.x), AfxScalar(points.y) };
 
-            AfxSubV2d(wnd->m.cursorMove, wnd->m.cursorPos, curr);
-            AfxCopyV2d(wnd->m.cursorPos, curr);
+            AfxV2dSub(wnd->m.cursorMove, wnd->m.cursorPos, curr);
+            AfxV2dCopy(wnd->m.cursorPos, curr);
 
             afxV2d screen = { AfxScalar(wnd->m.frameRect.w), AfxScalar(wnd->m.frameRect.h) };
 
@@ -548,6 +612,7 @@ _AUX LRESULT WINAPI _AuxWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
         {
             ValidateRect(hWnd, NULL);
             //SetWindowTextA(wnd->m.wnd, AfxGetStringData(&wnd->m.caption.str, 0));
+            AfxRedrawWindow(wnd, NIL);
             return 0; // An application returns zero if it processes this message.
         }
         case WM_ERASEBKGND:
@@ -555,6 +620,7 @@ _AUX LRESULT WINAPI _AuxWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             // Flicker is usually caused by interference via WM_ERASEBKGND. 
             // If you haven't already, intercept WM_ERASEBKGND and do nothing in the regions where you are displaying OpenGL content.            
             ValidateRect(hWnd, NULL);
+            AfxRedrawWindow(wnd, NIL);
             return 1; // An application should return nonzero if it erases the background; otherwise, it should return zero.
         }
         default: break;
@@ -593,15 +659,15 @@ _AUX HWND FindShellBackgroundWindowW32(void)
     return hwnd;
 }
 
-_AUX afxError AfxChangeWindowIcon(afxWindow wnd, afxTarga* tga)
+_AUX afxError AfxChangeWindowIcon(afxWindow wnd, afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &wnd, afxFcc_WND);
     HICON hIcon = NIL;
 
-    if (tga)
+    if (ras)
     {
-        if (!(hIcon = _AuxCreateWin32Icon(tga, 0, 0, TRUE))) AfxThrowError();
+        if (!(hIcon = _AuxCreateWin32IconFromRaster(ras, 0, 0, TRUE))) AfxThrowError();
         else
         {
             
@@ -630,9 +696,22 @@ _AUX afxError AfxLoadWindowIcon(afxWindow wnd, afxUri const* uri)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &wnd, afxFcc_WND);
     AfxAssert(uri);
+    afxDrawContext dctx;
 
-    AfxThrowError();
+    if (!AfxGetDrawOutputContext(wnd->m.dout ? wnd->m.dout : wnd->m.frameDout, &dctx)) AfxThrowError();
+    else
+    {
+        afxRaster ras;
 
+        if (AfxLoadRasters(dctx, afxRasterUsage_SRC, afxRasterFlag_2D, 1, uri, &ras)) AfxThrowError();
+        else
+        {
+            if (AfxChangeWindowIcon(wnd, ras))
+                AfxThrowError();
+
+            AfxReleaseObjects(1, &ras);
+        }
+    }
     return err;
 }
 
@@ -642,6 +721,7 @@ _AUX afxBool DoutNotifyOvy(afxWindow wnd, afxNat bufIdx)
     AfxAssertObjects(1, &wnd, afxFcc_WND);
     wnd->lastBufIdx = bufIdx;
     wnd->swap = 1;
+
     return 1;
 }
 
@@ -657,7 +737,11 @@ _AUX afxError AfxRedrawWindow(afxWindow wnd, afxRect const* surr)
         {
             wnd->swap = FALSE;
             //SwapBuffers(dc);
-            DwmFlush();
+            //DwmFlush();
+
+            afxNat rate = 0;
+            AfxGetDrawOutputFrequency(wnd->m.dout, &rate);
+            AfxFormatWindowCaption(wnd, "%u --- Draw I/O System --- Qwadro Execution Ecosystem (c) 2017 SIGMA Technology --- Public Test Build", rate);
         }
     }
     return err;
@@ -722,7 +806,7 @@ _AUX afxNat AfxFormatWindowCaption(afxWindow wnd, afxChar const* fmt, ...)
     va_list va;
     va_start(va, fmt);
     afxNat len = AfxFormatStringArg(&wnd->m.caption.str, fmt, va);
-    SetWindowTextA(wnd->hWnd, AfxGetStringData(&wnd->m.caption.str.str, 0));
+    SetWindowTextA(wnd->hWnd, AfxGetStringData(&wnd->m.caption.str, 0));
     va_end(va);
     return len;
 }
@@ -924,14 +1008,14 @@ _AUX afxBool _AuxWndStdEventCb(afxWindow wnd, auxEvent *ev)
     {
     case auxEventId_KEY:
     {
-        if (AfxKeyWasPressed(0, afxKey_PRINT))
+        if (AfxWasKeyPressed(0, afxKey_PRINT))
         {
             if (wnd->m.dout)
             {
                 afxUri2048 uri;
                 AfxMakeUri2048(&uri, NIL);
                 AfxFormatUri(&uri.uri, "tmp/ss-wnd%u-%u.tga", AfxGetObjectId((void*)wnd), AfxGetTimer());
-                AfxPrintDrawOutputBuffer(wnd->m.dout, 0, &uri.uri);
+                AfxPrintDrawOutputBuffer(wnd->m.dout, 0, 0, &uri.uri);
             }
         }   
         break;
@@ -956,26 +1040,26 @@ _AUX afxError _AuxWndCtorCb(afxWindow wnd, afxCookie const *cookie)
 
     wnd->m.active = FALSE;
     wnd->m.focused = FALSE;
-    AfxZeroV2d(wnd->m.cursorPos);
-    AfxZeroV2d(wnd->m.cursorMove);
-    AfxZeroV2d(wnd->m.cursorPosNdc);
-    AfxZeroV2d(wnd->m.cursorMoveNdc);
+    AfxV2dZero(wnd->m.cursorPos);
+    AfxV2dZero(wnd->m.cursorMove);
+    AfxV2dZero(wnd->m.cursorPosNdc);
+    AfxV2dZero(wnd->m.cursorMoveNdc);
 
     AfxGetClock(&wnd->m.startClock);
     wnd->m.lastClock = wnd->m.startClock;
 
-    AfxZeroV2d(wnd->m.grabPoint);
-    AfxZeroV2d(wnd->m.hoveredPoint);
+    AfxV2dZero(wnd->m.grabPoint);
+    AfxV2dZero(wnd->m.hoveredPoint);
 
     wnd->m.grabbedWidg = NIL;
     wnd->m.hoveredWidg = NIL;
     wnd->m.focusedWidg = NIL;
 
-    AfxSetUpChain(&wnd->m.classes, wnd);
+    AfxDeployChain(&wnd->m.classes, wnd);
     AfxRegisterClass(&wnd->m.widCls, NIL, &wnd->m.classes, &_AuxWidMgrCfg);
 
     afxString s;
-    AfxMakeString(&s, usys->wndClss.lpszClassName, 0);
+    AfxMakeString(&s, 0, usys->wndClss.lpszClassName, 0);
     AfxMakeString2048(&wnd->m.caption, &s);
 
     afxBool fullscreen = FALSE;
@@ -1030,10 +1114,11 @@ _AUX afxError _AuxWndCtorCb(afxWindow wnd, afxCookie const *cookie)
             
         afxDrawOutput dout;
         afxDrawOutputConfig doutCfg = { 0 };
+        AfxConfigureDrawOutput(ddevId, &doutCfg);
 
         if (cfg)
         {
-            afxDrawOutputConfig doutCfg = cfg->surface;
+            doutCfg = cfg->surface;
         }
         else
         {

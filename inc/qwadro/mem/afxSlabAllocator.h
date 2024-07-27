@@ -36,7 +36,7 @@
 AFX_DEFINE_STRUCT(afxMemorySlabSlot)
 {
     afxMemorySlabSlot*  next;
-    afxByte AFX_PALIGN( data[] );
+    afxByte AFX_ADDR    data[];
 };
 
 AFX_DEFINE_STRUCT(afxMemorySlab)
@@ -45,7 +45,7 @@ AFX_DEFINE_STRUCT(afxMemorySlab)
     afxMemorySlab*      prev;
     afxMemorySlabSlot*  firstFree;
     afxNat              unitCnt;
-    afxByte AFX_PALIGN( units[] );
+    afxByte AFX_ADDR    units[];
 };
 
 AFX_DEFINE_STRUCT(afxSlabAllocator)

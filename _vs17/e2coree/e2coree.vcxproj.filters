@@ -174,9 +174,6 @@
     <ClInclude Include="..\..\inc\qwadro\base\afxRawString.h">
       <Filter>qwadro\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\base\afxRestring.h">
-      <Filter>qwadro\base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\base\afxString.h">
       <Filter>qwadro\base</Filter>
     </ClInclude>
@@ -245,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\mem\afxInterlockedQueue.h">
       <Filter>qwadro\mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\math\afxWhd.h">
+      <Filter>qwadro\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -387,9 +387,6 @@
     <ClCompile Include="..\..\src\afx\base\afxRawString.c">
       <Filter>qwadro\base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\base\afxRestring.c">
-      <Filter>qwadro\base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\afx\base\afxString.c">
       <Filter>qwadro\base</Filter>
     </ClCompile>
@@ -452,6 +449,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\afx\mem\afxInterlockedQueue.c">
       <Filter>qwadro\mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\io\afxRing.c">
+      <Filter>qwadro\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\math\afxSphere.c">
+      <Filter>qwadro\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\math\afxWhd.c">
+      <Filter>qwadro\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

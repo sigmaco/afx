@@ -19,14 +19,7 @@
 #include <Windows.h>
 
 #include "sgl.h"
-#include "qwadro/exec/afxTerminal.h"
-#include "qwadro/exec/afxSystem.h"
-#include "qwadro/sim/afxSimulation.h"
-#include "sgl.h"
-#include "qwadro/math/afxVector.h"
-#include "qwadro/exec/afxSystem.h"
-#include "qwadro/base/afxString.h"
-#include "qwadro/draw/io/afxVertexStream.h"
+#include "qwadro/afxQwadro.h"
 
 _SGL afxError _SglDdevCloseCb(afxDrawDevice ddev, afxDrawContext dctx)
 {
@@ -80,70 +73,70 @@ _SGL afxError _SglDdevOpenCb(afxDrawDevice ddev, afxDrawContext dctx, afxCookie 
     tmpClsConf = _SglFencMgrCfg;
     AfxRegisterClass(&dctx->m.ctx.fences, NIL, classes, &tmpClsConf);
 
-    tmpClsConf = _AvxQrypStdImplementation;
-    tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxQueryPool));
-    tmpClsConf.ctor = (void*)_SglQrypCtor;
-    tmpClsConf.dtor = (void*)_SglQrypDtor;
-    AfxRegisterClass(&dctx->m.queries, NIL, classes, &tmpClsConf);
-
-    tmpClsConf = _AvxBschStdImplementation;
-    tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxLigature));
-    tmpClsConf.ctor = (void*)_SglBschCtor;
-    tmpClsConf.dtor = (void*)_SglBschDtor;
-    AfxRegisterClass(&dctx->m.schemas, NIL, classes, &tmpClsConf);
-
-    tmpClsConf = _AvxSampStdImplementation;
-    tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxSampler));
-    tmpClsConf.ctor = (void*)_SglSampCtor;
-    tmpClsConf.dtor = (void*)_SglSampDtor;
-    AfxRegisterClass(&dctx->m.samplers, NIL, classes, &tmpClsConf);
-
     tmpClsConf = _AvxBufStdImplementation;
     tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(afxBuffer));
     tmpClsConf.ctor = (void*)_BufCtorCb;
     tmpClsConf.dtor = (void*)_BufDtorCb;
-    AfxRegisterClass(&dctx->m.buffers, NIL, classes, &tmpClsConf);
+    AfxRegisterClass(&dctx->m.bufCls, NIL, classes, &tmpClsConf);
 
     tmpClsConf = _AvxRasStdImplementation;
     tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(afxRaster));
     tmpClsConf.ctor = (void*)_SglRasCtor;
     tmpClsConf.dtor = (void*)_SglRasDtor;
-    AfxRegisterClass(&dctx->m.rasters, NIL, classes, &tmpClsConf);
+    AfxRegisterClass(&dctx->m.rasCls, NIL, classes, &tmpClsConf);
 
     tmpClsConf = _AvxCanvStdImplementation;
     tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxCanvas));
     tmpClsConf.ctor = (void*)_SglCanvCtor;
     tmpClsConf.dtor = (void*)_SglCanvDtor;
-    AfxRegisterClass(&dctx->m.canvases, NIL, classes, &tmpClsConf);
+    AfxRegisterClass(&dctx->m.canvCls, NIL, classes, &tmpClsConf);
+
+    tmpClsConf = _AvxSampStdImplementation;
+    tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxSampler));
+    tmpClsConf.ctor = (void*)_SglSampCtor;
+    tmpClsConf.dtor = (void*)_SglSampDtor;
+    AfxRegisterClass(&dctx->m.sampCls, NIL, classes, &tmpClsConf);
+
+    tmpClsConf = _AvxBschStdImplementation;
+    tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxLigature));
+    tmpClsConf.ctor = (void*)_SglBschCtor;
+    tmpClsConf.dtor = (void*)_SglBschDtor;
+    AfxRegisterClass(&dctx->m.ligaCls, NIL, classes, &tmpClsConf);
 
     tmpClsConf = _AvxVinStdImplementation;
     tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxVertexInput));
     tmpClsConf.ctor = (void*)_SglVinCtor;
     tmpClsConf.dtor = (void*)_SglVinDtor;
-    AfxRegisterClass(&dctx->m.vinputs, NIL, classes, &tmpClsConf);
+    AfxRegisterClass(&dctx->m.vinCls, NIL, classes, &tmpClsConf);
 
     tmpClsConf = _AvxShdStdImplementation;
     tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxShader));
     tmpClsConf.ctor = (void*)_SglShdCtor;
     tmpClsConf.dtor = (void*)_SglShdDtor;
-    AfxRegisterClass(&dctx->m.shaders, NIL, classes, &tmpClsConf);
+    AfxRegisterClass(&dctx->m.shadCls, NIL, classes, &tmpClsConf);
 
     tmpClsConf = _AvxPipStdImplementation;
     tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxPipeline));
     tmpClsConf.ctor = (void*)_SglPipCtor;
     tmpClsConf.dtor = (void*)_SglPipDtor;
-    AfxRegisterClass(&dctx->m.pipMgr, NIL, classes, &tmpClsConf);
+    AfxRegisterClass(&dctx->m.pipCls, NIL, classes, &tmpClsConf);
 
     tmpClsConf = _AvxRazrStdImplementation;
     tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxRasterizer));
     tmpClsConf.dtor = (void*)_SglRazrDtor;
     tmpClsConf.ctor = (void*)_SglRazrCtor;
-    AfxRegisterClass(&dctx->m.razrMgr, NIL, classes, &tmpClsConf);
+    AfxRegisterClass(&dctx->m.razrCls, NIL, classes, &tmpClsConf);
+
+    tmpClsConf = _AvxQrypStdImplementation;
+    tmpClsConf.fixedSiz = sizeof(AFX_OBJECT(avxQueryPool));
+    tmpClsConf.ctor = (void*)_SglQrypCtor;
+    tmpClsConf.dtor = (void*)_SglQrypDtor;
+    AfxRegisterClass(&dctx->m.qrypCls, NIL, classes, &tmpClsConf);
 
     afxUri uri;
-    AfxMakeUri(&uri, "system/video/sampleOutRgba.xsh.xml", 0);
-    //AfxMakeUri(&uri, "data/pipeline/rgbaToRgba.xsh.xml?yFlipped", 0);
-    //AfxMakeUri(&uri, "data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.xml", 0);
+    AfxMakeUri(&uri, 0, "//./z/video/sampleOutRgba.xsh.xml", 0);
+    //AfxMakeUri(&uri, 0, "data/pipeline/rgbaToRgba.xsh.xml?yFlipped", 0);
+    //AfxMakeUri(&uri, 0, "data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.xml", 0);
     //dctx->m.presentPip = AfxDrawContextFetchPipeline(dctx, &uri);
 
 

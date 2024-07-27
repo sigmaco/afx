@@ -30,10 +30,10 @@ typedef enum avxColorChannel
     avxColorChannel_A
 }avxColorChannel;
 
-typedef afxV4d      afxSimd(afxColor);
+typedef afxV4d      AFX_SIMD afxColor;
 
-typedef afxNat8     afxSimd(afxRgb8[3]);
-typedef afxNat8     afxSimd(afxRgba8[4]);
+typedef afxNat8     AFX_SIMD afxRgb8[3];
+typedef afxNat8     AFX_SIMD afxRgba8[4];
 
 typedef enum avxColorSpace
 {

@@ -503,7 +503,7 @@ _AUX afxError AfxEmulatePressedKeys(afxNat port, afxNat cnt, afxKey const key[],
     return err;
 }
 
-_AUX afxBool AfxKeysWereReleased(afxNat port, afxNat cnt, afxKey const codes[])
+_AUX afxBool AfxWereKeysReleased(afxNat port, afxNat cnt, afxKey const codes[])
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -524,7 +524,7 @@ _AUX afxBool AfxKeysWereReleased(afxNat port, afxNat cnt, afxKey const codes[])
     return rslt;
 }
 
-_AUX afxBool AfxKeyWasReleased(afxNat port, afxKey code)
+_AUX afxBool AfxWasKeyReleased(afxNat port, afxKey code)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -539,7 +539,7 @@ _AUX afxBool AfxKeyWasReleased(afxNat port, afxKey code)
     return rslt;
 }
 
-_AUX afxBool AfxKeysWerePressed(afxNat port, afxNat cnt, afxKey const codes[])
+_AUX afxBool AfxWereKeysPressed(afxNat port, afxNat cnt, afxKey const codes[])
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -560,7 +560,7 @@ _AUX afxBool AfxKeysWerePressed(afxNat port, afxNat cnt, afxKey const codes[])
     return rslt;
 }
 
-_AUX afxBool AfxKeyWasPressed(afxNat port, afxKey code)
+_AUX afxBool AfxWasKeyPressed(afxNat port, afxKey code)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -575,7 +575,7 @@ _AUX afxBool AfxKeyWasPressed(afxNat port, afxKey code)
     return rslt;
 }
 
-_AUX afxBool AfxKeyIsPressed(afxNat port, afxKey code)
+_AUX afxBool AfxIsKeyPressed(afxNat port, afxKey code)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -669,7 +669,7 @@ _AUX afxReal AfxGetMouseWheelDelta(afxNat port)
     return 0;
 }
 
-_AUX afxBool AfxLmbIsPressed(afxNat port)
+_AUX afxBool AfxIsLmbPressed(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -684,7 +684,7 @@ _AUX afxBool AfxLmbIsPressed(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxRmbIsPressed(afxNat port)
+_AUX afxBool AfxIsRmbPressed(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -698,7 +698,7 @@ _AUX afxBool AfxRmbIsPressed(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxMmbIsPressed(afxNat port)
+_AUX afxBool AfxIsMmbPressed(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -713,7 +713,7 @@ _AUX afxBool AfxMmbIsPressed(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxXmb1IsPressed(afxNat port)
+_AUX afxBool AfxIsXmb1Pressed(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -728,7 +728,7 @@ _AUX afxBool AfxXmb1IsPressed(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxXmb2IsPressed(afxNat port)
+_AUX afxBool AfxIsXmb2Pressed(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -743,7 +743,7 @@ _AUX afxBool AfxXmb2IsPressed(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxLmbWasPressed(afxNat port)
+_AUX afxBool AfxWasLmbPressed(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -758,7 +758,7 @@ _AUX afxBool AfxLmbWasPressed(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxRmbWasPressed(afxNat port)
+_AUX afxBool AfxWasRmbPressed(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -773,7 +773,7 @@ _AUX afxBool AfxRmbWasPressed(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxMmbWasPressed(afxNat port)
+_AUX afxBool AfxWasMmbPressed(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -788,7 +788,7 @@ _AUX afxBool AfxMmbWasPressed(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxXmb1WasPressed(afxNat port)
+_AUX afxBool AfxWasXmb1Pressed(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -803,7 +803,7 @@ _AUX afxBool AfxXmb1WasPressed(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxXmb2WasPressed(afxNat port)
+_AUX afxBool AfxWasXmb2Pressed(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -818,7 +818,7 @@ _AUX afxBool AfxXmb2WasPressed(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxLmbWasReleased(afxNat port)
+_AUX afxBool AfxWasLmbReleased(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -833,7 +833,7 @@ _AUX afxBool AfxLmbWasReleased(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxRmbWasReleased(afxNat port)
+_AUX afxBool AfxWasRmbReleased(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -848,7 +848,7 @@ _AUX afxBool AfxRmbWasReleased(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxMmbWasReleased(afxNat port)
+_AUX afxBool AfxWasMmbReleased(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -863,7 +863,7 @@ _AUX afxBool AfxMmbWasReleased(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxXmb1WasReleased(afxNat port)
+_AUX afxBool AfxWasXmb1Released(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
@@ -878,7 +878,7 @@ _AUX afxBool AfxXmb1WasReleased(afxNat port)
     return rslt;
 }
 
-_AUX afxBool AfxXmb2WasReleased(afxNat port)
+_AUX afxBool AfxWasXmb2Released(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;

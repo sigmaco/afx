@@ -16,172 +16,11 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "../dev/AvxDevKit.h"
 #include "qwadro/draw/io/avxShaderBlueprint.h"
 #include "qwadro/draw/io/afxXsh.h"
 
 AVX afxChar const *shdResTypeNames[];
-
-_AVX afxError AfxLoadGlScript(avxShaderBlueprint* bp, afxUri const* path)
-{
-    afxError err = NIL;
-
-    afxStream file;
-
-    if (!(file = AfxOpenFile(path, afxIoFlag_R))) AfxThrowError();
-    else
-    {
-        afxUri inc;
-        afxChar buf[2048] = { 0 };
-        afxNat baseChar;
-        afxString4096 src;
-        AfxMakeString4096(&src, NIL);
-        afxString2048 line;
-        AfxMakeString2048(&line, NIL);
-
-        while (!AfxReadFileString(file, &line.str))
-        {
-            afxString excerpt;
-
-            if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("#include ")))
-            {
-                afxBool fnd = AfxScanString(&line.str.str, "#include <%128[^>]>\n", buf);
-                
-                AfxMakeUri(&inc, buf, 0);
-
-                //afxChar* room = AfxInsertArrayUnits(&bp->codes, line.str.str.len + 3, &baseChar, NIL);
-                //AfxDumpString(&AfxString("// "), 0, 3, room);
-                //AfxDumpString(&line.str.str, 0, line.str.str.len, &room[3]);
-
-                if (AfxLoadGlScript(bp, &inc))
-                    AfxThrowError();
-
-                continue;
-            }
-            else
-            {
-                if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("OUT")))
-                {
-                    afxNat location = 0;
-                    afxString32 fmtName = { 0 };
-                    afxString32 varName = { 0 };
-                    afxNat fnd = AfxScanString(&line.str.str, "OUT(%u, %32[A-Za-z0-9], %32[a-zA-Z0-9_]);", &location, fmtName.buf, varName.buf);
-
-                    if (fnd == 3)
-                    {
-                        AfxMakeMutableUri(&inc, AFX_COUNTOF(buf), buf, 0);
-
-                        AfxMakeString(&fmtName.str.str, fmtName.buf, 0);
-                        AfxMakeString(&varName.str.str, varName.buf, 0);
-
-                        afxVertexFormat fmt = AfxFindVertexFormat(&fmtName.str.str);
-
-                        if (AfxShaderBlueprintDeclareInOut(bp, location, fmt, 0, &varName.str.str))
-                            AfxThrowError();
-                    }
-                }
-                
-                if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("IN")))
-                {
-                    afxNat location = 0;
-                    afxString32 fmtName = { 0 };
-                    afxString32 varName = { 0 };
-                    afxNat fnd = AfxScanString(&line.str.str, "IN(%u, %32[A-Za-z0-9], %32[a-zA-Z0-9_]);", &location, fmtName.buf, varName.buf);
-
-                    if (fnd == 3)
-                    {
-                        AfxMakeMutableUri(&inc, AFX_COUNTOF(buf), buf, 0);
-
-                        AfxMakeString(&fmtName.str.str, fmtName.buf, 0);
-                        AfxMakeString(&varName.str.str, varName.buf, 0);
-
-                        afxVertexFormat fmt = AfxFindVertexFormat(&fmtName.str.str);
-
-                        if (AfxShaderBlueprintDeclareInOut(bp, location, fmt, 0, &varName.str.str))
-                            AfxThrowError();
-                    }
-                }
-
-                {
-                    if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("SAMPLING_UNIT")))
-                    {
-                        afxNat set = 0, binding = 0, resCnt = 1;
-                        afxString32 typeName = { 0 };
-                        afxString32 varName = { 0 };
-                        afxNat fnd = AfxScanString(&line.str.str, "SAMPLING_UNIT(%u, %u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &set, &binding, typeName.buf, varName.buf);
-
-                        if (fnd == 4)
-                        {
-                            AfxMakeMutableUri(&inc, AFX_COUNTOF(buf), buf, 0);
-
-                            AfxMakeString(&typeName.str.str, typeName.buf, 0);
-                            AfxMakeString(&varName.str.str, varName.buf, 0);
-
-                            avxShaderResourceType resType = 0;
-
-                            if ((0 == AfxCompareString(&typeName.str.str, &AfxString("sampler1D"))) ||
-                                (0 == AfxCompareString(&typeName.str.str, &AfxString("sampler2D"))) ||
-                                (0 == AfxCompareString(&typeName.str.str, &AfxString("sampler3D"))) ||
-                                (0 == AfxCompareString(&typeName.str.str, &AfxString("samplerCube")))
-                                )
-                            {
-                                resType = AFX_SHD_RES_TYPE_COMBINED_IMAGE_SAMPLER;
-                            }
-
-                            if (AfxShaderBlueprintDeclareResource(bp, set, binding, resType, resCnt, &varName.str.str))
-                                AfxThrowError();
-                        }
-                    }
-                    
-                    if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("UNIFORM_UNIT")))
-                    {
-                        afxNat set = 0, binding = 0, resCnt = 1;
-                        afxString32 varName = { 0 };
-                        afxNat fnd = AfxScanString(&line.str.str, "UNIFORM_UNIT(%u, %u, %32[A-Za-z0-9_] );", &set, &binding, varName.buf);
-
-                        if (fnd == 3)
-                        {
-                            AfxMakeMutableUri(&inc, AFX_COUNTOF(buf), buf, 0);
-
-                            AfxMakeString(&varName.str.str, varName.buf, 0);
-
-                            avxShaderResourceType resType = AFX_SHD_RES_TYPE_CONSTANT_BUFFER;
-
-                            if (AfxShaderBlueprintDeclareResource(bp, set, binding, resType, resCnt, &varName.str.str))
-                                AfxThrowError();
-                        }
-                    }
-                    
-                    if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("STORAGE_UNIT")))
-                    {
-                        afxNat set = 0, binding = 0, resCnt = 1;
-                        afxString32 accessName = { 0 };
-                        afxString32 varName = { 0 };
-                        afxNat fnd = AfxScanString(&line.str.str, "STORAGE_UNIT(%u, %u, %32[A-Za-z0-9], %32[A-Za-z0-9_] );", &set, &binding, accessName.buf, varName.buf);
-
-                        if (fnd == 4)
-                        {
-                            AfxMakeMutableUri(&inc, AFX_COUNTOF(buf), buf, 0);
-
-                            AfxMakeString(&accessName.str.str, accessName.buf, 0);
-                            AfxMakeString(&varName.str.str, varName.buf, 0);
-
-                            avxShaderResourceType resType = AFX_SHD_RES_TYPE_STORAGE_BUFFER;
-
-                            if (AfxShaderBlueprintDeclareResource(bp, set, binding, resType, resCnt, &varName.str.str))
-                                AfxThrowError();
-                        }
-                    }
-                }
-            }
-
-            void* room = AfxInsertArrayUnits(&bp->codes, line.str.str.len, &baseChar, NIL);
-            AfxDumpString(&line.str.str, 0, line.str.str.len, room);
-        }
-        AfxReleaseObjects(1, &file);
-    }
-    return err;
-}
 
 _AVX afxError AfxParseXmlBackedShaderBlueprint(avxShaderBlueprint *blueprint, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
@@ -224,7 +63,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(avxShaderBlueprint *blueprint, af
                 if (0 == AfxCompareString(name, &AfxStaticString("uri")))
                 {
                     afxUri uri;
-                    AfxMakeUriFromString(&uri, content);
+                    AfxWrapUriString(&uri, content);
 
                     if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
                         AfxThrowError();
@@ -238,7 +77,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(avxShaderBlueprint *blueprint, af
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri uri;
-                AfxMakeUriFromString(&uri, &content);
+                AfxWrapUriString(&uri, &content);
 
                 if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
                     AfxThrowError();
@@ -306,9 +145,9 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(avxShaderBlueprint *blueprint, af
             fmtName.buf[0] = '\0';
             ioName.buf[0] = '\0';
             AfxScanString(&content, "%8s %32[a-z,0-9,_]", fmtName.buf, ioName.buf);
-            AfxMakeString(&fmtName.str.str, fmtName.buf, 0);
-            AfxMakeString(&ioName.str.str, ioName.buf, 0);
-            ioFormat = AfxFindVertexFormat(&fmtName.str.str);
+            AfxMakeString(&fmtName.str, 0, fmtName.buf, 0);
+            AfxMakeString(&ioName.str, 0, ioName.buf, 0);
+            ioFormat = AfxFindVertexFormat(&fmtName.str);
             AfxAssertRange(afxVertexFormat_TOTAL, ioFormat, 1);
             
             childTagCnt = AfxCountXmlTags(xml, childIdx);
@@ -333,7 +172,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(avxShaderBlueprint *blueprint, af
 
             AfxCatchError(err);
 
-            if (AfxShaderBlueprintDeclareInOut(blueprint, ioLocation, ioFormat, inStream, &ioName.str.str))
+            if (AfxShaderBlueprintDeclareInOut(blueprint, ioLocation, ioFormat, inStream, &ioName.str))
                 AfxThrowError();
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("Flag")))
@@ -586,7 +425,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(avxRasterizationConfig* config, 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxMakeUriFromString(&tempUri, &content);
+                AfxWrapUriString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->xfmrPipUri);
@@ -602,7 +441,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(avxRasterizationConfig* config, 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxMakeUriFromString(&tempUri, &content);
+                AfxWrapUriString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
                 
                 AfxResetUri(&config->xfmrPipb.shdUri[config->xfmrPipb.shdCnt]);
@@ -763,7 +602,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(avxPipelineBlueprint* config, afxNat 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxMakeUriFromString(&tempUri, &content);
+                AfxWrapUriString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
@@ -821,7 +660,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(avxPipelineBlueprint* config, afxNat 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxMakeUriFromString(&tempUri, &content);
+                AfxWrapUriString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
@@ -839,7 +678,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(avxPipelineBlueprint* config, afxNat 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxMakeUriFromString(&tempUri, &content);
+                AfxWrapUriString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
@@ -857,7 +696,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(avxPipelineBlueprint* config, afxNat 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxMakeUriFromString(&tempUri, &content);
+                AfxWrapUriString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
@@ -889,7 +728,7 @@ _AVX afxError AfxParsePipelineFromXsh(avxPipelineBlueprint* pipb, afxUri const* 
     AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));
 
-    AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
+    AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str));
 
     afxUri fext;
     AfxClipUriExtension(&fext, uri, FALSE);
@@ -930,12 +769,12 @@ _AVX afxError AfxParsePipelineFromXsh(avxPipelineBlueprint* pipb, afxUri const* 
 
                         if (!AfxUriIsBlank(&blueprint.uri.uri))
                         {
-                            AfxConcatenateStringL(&tmp.str, "?", 1);
-                            AfxConcatenateString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
+                            AfxCatenateStringL(&tmp.str, "?", 1);
+                            AfxCatenateString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
                         }
 
                         afxUri tmpUri;
-                        AfxMakeUriFromString(&tmpUri, &tmp.str);
+                        AfxWrapUriString(&tmpUri, &tmp.str);
                         AfxCopyUri(&blueprint.uri.uri, &tmpUri);
 #endif
 
@@ -987,7 +826,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
             if (0 == AfxCompareString(name, &g_str_id))
             {
                 afxUri tmpUri;
-                AfxMakeUriFromString(&tmpUri, content);
+                AfxWrapUriString(&tmpUri, content);
                 AfxDrawOperationBlueprintRename(blueprint, &tmpUri);
             }
             else
@@ -1082,7 +921,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                             else if (0 == AfxCompareString(name, &g_str_uri))
                                             {
                                                 afxUri tempUri;
-                                                AfxMakeUriFromString(&tempUri, content);
+                                                AfxWrapUriString(&tempUri, content);
 
                                                 if (AfxDrawOperationBlueprintAddShaders(blueprint, tecIdx, passIdx, 1, &tempUri))
                                                     AfxThrowError();
@@ -1099,7 +938,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                         if (content && !AfxStringIsEmpty(content))
                                         {
                                             afxUri tempUri;
-                                            AfxMakeUriFromString(&tempUri, content);
+                                            AfxWrapUriString(&tempUri, content);
 
                                             if (AfxDrawOperationBlueprintAddShaders(blueprint, tecIdx, passIdx, 1, &tempUri))
                                                 AfxThrowError();
@@ -1240,7 +1079,7 @@ _AVX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
 
                                             if (shdName)
                                             {
-                                                if (0 == AfxCompareString(shdName, AfxGetUriRestring(&blueprint.reqShaders[k])))
+                                                if (0 == AfxCompareString(shdName, AfxGetUriString(&blueprint.reqShaders[k])))
                                                 {
                                                     avxShaderBlueprint shdb;
                                                     AfxParseXmlBackedShaderBlueprint(&shdb, node11);

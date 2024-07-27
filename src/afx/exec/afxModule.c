@@ -65,7 +65,7 @@ _AFX afxNat AfxFindSymbolAddresses(afxModule mdle, afxNat cnt, afxString const n
         afxString128 fs;
         AfxMakeString128(&fs, &names[j]); // needed due to zero-terminate string-based shit M$ APIs
 
-        if ((p = (void*)GetProcAddress((HMODULE)peImgBase, AfxGetStringData(&fs.str.str, 0))))
+        if ((p = (void*)GetProcAddress((HMODULE)peImgBase, AfxGetStringData(&fs.str, 0))))
         {
             hitCnt++;
         }
@@ -75,7 +75,7 @@ _AFX afxNat AfxFindSymbolAddresses(afxModule mdle, afxNat cnt, afxString const n
             {
                 void const* rawName = peImgBase + symNames[i];
                 afxString symNameStr;
-                AfxMakeString(&symNameStr, rawName, 0);
+                AfxMakeString(&symNameStr, 0, rawName, 0);
 
                 afxNat prefixPosn, suffixPosn;
 
@@ -170,7 +170,7 @@ _AFX afxNat AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxNat cnt,
             afxString128 fs;
             AfxMakeString128(&fs, &names[j]); // needed due to zero-terminate string-based shit M$ APIs
 
-            if ((p = (void*)GetProcAddress(osHandle, AfxGetStringData(&fs.str.str, 0))))
+            if ((p = (void*)GetProcAddress(osHandle, AfxGetStringData(&fs.str, 0))))
             {
                 hitCnt++;
             }
@@ -180,7 +180,7 @@ _AFX afxNat AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxNat cnt,
                 {
                     void const* rawName = (BYTE *)osHandle + symNames[i];
                     afxString symNameStr;
-                    AfxMakeString(&symNameStr, rawName, 0);
+                    AfxMakeString(&symNameStr, 0, rawName, 0);
 
                     afxNat prefixPosn, suffixPosn;
 

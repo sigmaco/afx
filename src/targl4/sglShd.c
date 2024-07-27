@@ -15,11 +15,6 @@
  */
 
 #include "sgl.h"
-
-#include "qwadro/draw/io/avxShader.h"
-#include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/exec/afxSystem.h"
-#include "qwadro/io/afxUri.h"
 #include "qwadro/draw/io/avxShaderBlueprint.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,13 +92,13 @@ _SGL afxError _SglShdDtor(avxShader shd)
     
     if (shd->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 6, (void*)shd->glHandle);
+        _SglDctxDeleteGlRes(dctx, 6, shd->glHandle);
         shd->glHandle = 0;
     }
 
     if (shd->glProgHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 7, (void*)shd->glProgHandle);
+        _SglDctxDeleteGlRes(dctx, 7, shd->glProgHandle);
         shd->glProgHandle = 0;
     }
 

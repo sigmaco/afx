@@ -24,8 +24,8 @@ _AFXINL void AfxCopyPlane(afxPlane p, afxPlane const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
     AfxAssert(in);
-    AfxCopyV4d(p, in);
-    //AfxCopyV3d(p->normal, in->normal); // dist also will be copied
+    AfxV4dCopy(p, in);
+    //AfxV3dCopy(p->normal, in->normal); // dist also will be copied
     //p->offset = in->offset;
 }
 
@@ -34,7 +34,7 @@ _AFXINL void AfxResetPlane(afxPlane p, afxV3d const normal, afxReal dist)
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
     AfxAssert(normal);
-    afxReal invLen = AfxMagV3d(normal);
+    afxReal invLen = AfxV3dMag(normal);
     p[0] = normal[0] / invLen;
     p[1] = normal[1] / invLen;
     p[2] = normal[2] / invLen;
@@ -50,11 +50,11 @@ _AFXINL void AfxPlaneFromTriangle(afxPlane p, afxV3d const a, afxV3d const b, af
     AfxAssert(c);
 
     afxV3d ba, ca;
-    AfxSubV3d(ba, b, a);
-    AfxSubV3d(ca, c, a);
-    AfxCrossV3d(p, ba, ca);
-    AfxNormalizeV3d(p, p);
-    p[AFX_PLANE_DIST] = -AfxDotV3d(p, a);
+    AfxV3dSub(ba, b, a);
+    AfxV3dSub(ca, c, a);
+    AfxV3dCross(p, ba, ca);
+    AfxV3dNormalize(p, p);
+    p[AFX_PLANE_DIST] = -AfxV3dDot(p, a);
 }
 
 _AFXINL void AfxGetPlaneNormal(afxPlane p, afxV3d normal)
@@ -79,7 +79,7 @@ _AFXINL afxReal AfxFindPlaneDistance(afxPlane const p, afxV3d const point)
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
     AfxAssert(point);
-    return AfxDotV3d(p, point) + p[AFX_PLANE_OFFSET];
+    return AfxV3dDot(p, point) + p[AFX_PLANE_OFFSET];
 }
 
 _AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const p, afxV3d const a, afxV3d const b)
@@ -89,8 +89,8 @@ _AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const p, afxV3d co
     AfxAssert(a);
     AfxAssert(b);
     afxV3d t;
-    AfxSubV3d(t, a, b);
-    return (AfxFindPlaneDistance(p, a)) / AfxDotV3d(p, t);
+    AfxV3dSub(t, a, b);
+    return (AfxFindPlaneDistance(p, a)) / AfxV3dDot(p, t);
 }
 
 _AFXINL afxResult AfxTestPlaneAgainstAabb(afxPlane const p, afxBox const aabb)
@@ -153,7 +153,7 @@ _AFXINL afxBool AfxTestPlaneAgainstSphere(afxPlane const p, afxSphere const* s)
     AfxAssert(p);
     AfxAssert(s);
 
-    if (AfxDotV3d(s->centre, p) + p[AFX_PLANE_OFFSET] <= -s->radius)
+    if (AfxV3dDot(s->centre, p) + p[AFX_PLANE_OFFSET] <= -s->radius)
         return FALSE;
 
     return TRUE;

@@ -31,6 +31,16 @@
 #include "qwadro/ux/afxScript.h"
 #include "qwadro/ux/xss/xss.h"
 
+AFX_DEFINE_HANDLE(afxSession);
+
+AFX_DEFINE_STRUCT(afxSessionConfig)
+{
+    afxDrawContext  dctx;
+    afxSoundContext sctx;
+};
+
+AUX afxError        AfxOpenSession(afxNat userId, afxSessionConfig const* cfg, afxSession* session);
+
 AUX afxClass*       AfxGetHidClass(void);
 AUX afxClass*       AfxGetWindowClass(void);
 AUX afxClass*       AfxGetScriptClass(void);

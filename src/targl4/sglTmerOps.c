@@ -104,10 +104,10 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
         afxNat cnt = dpu->nextViewportUpdCnt;
 
         GLfloat v[SGL_MAX_VIEWPORTS][4];
-        GLfloat v2[SGL_MAX_VIEWPORTS][2];
+        GLdouble v2[SGL_MAX_VIEWPORTS][2];
         AfxAssert(SGL_MAX_VIEWPORTS >= cnt);
 
-        for (afxNat i = 0; i < SGL_MAX_VIEWPORTS; i++)
+        for (afxNat i = 0; i < vpCnt; i++)
         {
             v[i][0] = dpu->nextXformState.vps[i].offset[0];
             v[i][1] = dpu->nextXformState.vps[i].offset[1];
@@ -117,8 +117,8 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
             v2[i][0] = dpu->nextXformState.vps[i].depth[0];
             v2[i][1] = dpu->nextXformState.vps[i].depth[1];
         }
-        gl->ViewportArrayv(0, cnt, &v[0][0]); _SglThrowErrorOccuried();
-        gl->DepthRangeArrayv(0, cnt, &v2[0][0]); _SglThrowErrorOccuried();
+        gl->ViewportArrayv(0, vpCnt, &v[0][0]); _SglThrowErrorOccuried();
+        gl->DepthRangeArrayv(0, vpCnt, &v2[0][0]); _SglThrowErrorOccuried();
 #else
         if (1 < vpCnt)
         {
@@ -308,8 +308,8 @@ _SGL void _DpuBindVertexSources(sglDpu* dpu, afxNat first, afxNat cnt, sglBuffer
         AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, bindingIdx, 1);
 
         dpu->nextVinBindings.sources[bindingIdx].buf = buf;
-        dpu->nextVinBindings.sources[bindingIdx].offset = AfxMin(offset, AfxGetBufferCapacity(buf) - 1);
-        dpu->nextVinBindings.sources[bindingIdx].range = !range && buf ? AfxGetBufferCapacity(buf) - offset : range;
+        dpu->nextVinBindings.sources[bindingIdx].offset = buf ? AfxMin(offset, AfxGetBufferCapacity(buf, 0) - 1) : offset;
+        dpu->nextVinBindings.sources[bindingIdx].range = !range && buf ? AfxGetBufferCapacity(buf, 0) - offset : range;
         dpu->nextVinBindings.sources[bindingIdx].stride = stride;
         dpu->nextVinBindingsMask |= AFX_BIT(bindingIdx);
     }

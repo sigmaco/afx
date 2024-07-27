@@ -23,7 +23,7 @@
 #ifndef AVX_DEV_KIT_H
 #define AVX_DEV_KIT_H
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
 #include "AvxDeviceDevKit.h"
 #include "AvxBaseDevKit.h"
 

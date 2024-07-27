@@ -19,7 +19,7 @@
 #ifndef AVX_SHADER_BLUEPRINT_H
 #define AVX_SHADER_BLUEPRINT_H
 
-#include "qwadro/draw/io/avxShader.h"
+#include "qwadro/draw/avxShader.h"
 
 AVX void                AfxShaderBlueprintBegin(avxShaderBlueprint* blueprint, avxShaderStage stage, afxUri const *uri, afxString const *entry, afxNat estCodeLen, afxNat estIoCnt, afxNat estResCnt);
 AVX afxError            AfxShaderBlueprintEnd(avxShaderBlueprint *blueprint, afxNat cnt, avxShader shd[]);

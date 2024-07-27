@@ -64,7 +64,7 @@ _AVX void AfxDescribeRasterizerConfiguration(avxRasterizer razr, avxRasterizatio
     config->dsFmt = razr->dsFmt;
     
     if ((config->depthBoundsTestEnabled = razr->depthBoundsTestEnabled))
-        AfxCopyV2d(config->depthBounds, razr->depthBounds);
+        AfxV2dCopy(config->depthBounds, razr->depthBounds);
 
     if ((config->colorOutCnt = razr->outCnt))
         AfxCopy2(razr->outCnt, sizeof(razr->outs[0]), razr->outs, config->colorOuts);
@@ -120,7 +120,7 @@ _AVX afxBool AfxGetDepthBoundsInfo(avxRasterizer razr, afxV2d bounds) // return 
     afxBool enabled = razr->depthBoundsTestEnabled;
 
     if (enabled && bounds)
-        AfxCopyV2d(bounds, razr->depthBounds);
+        AfxV2dCopy(bounds, razr->depthBounds);
 
     return enabled;
 }
@@ -158,7 +158,7 @@ _AVX void AfxGetColorBlendConstants(avxRasterizer razr, afxV4d rgba)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
-    AfxCopyV4d(rgba, razr->blendConstants);
+    AfxV4dCopy(rgba, razr->blendConstants);
 }
 
 _AVX afxNat AfxCountColorOutputChannels(avxRasterizer razr)
@@ -336,7 +336,7 @@ _AVX afxError _AvxRazrStdCtor(avxRasterizer razr, afxCookie const* cookie)
             razr->stencilBack = rasc->stencilBack;
 
             razr->depthBoundsTestEnabled = !!rasc->depthBoundsTestEnabled;
-            AfxCopyV2d(razr->depthBounds, rasc->depthBounds);
+            AfxV2dCopy(razr->depthBounds, rasc->depthBounds);
 
             razr->dsFmt = rasc->dsFmt; // ?
 
@@ -354,7 +354,7 @@ _AVX afxError _AvxRazrStdCtor(avxRasterizer razr, afxCookie const* cookie)
 
                 // deveria ser só o blend/write, já que só podemos determinar as saídas quando assembleado com fragment shaders enquanto pipeline completo.
 
-                AfxCopyV4d(razr->blendConstants, rasc->blendConstants);
+                AfxV4dCopy(razr->blendConstants, rasc->blendConstants);
 
                 razr->logicOpEnabled = !!rasc->pixelLogicOpEnabled;
                 razr->logicOp = rasc->pixelLogicOp;
@@ -412,7 +412,7 @@ _AVX avxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, avxVertexInput 
     AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));
 
-    AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
+    AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str));
 
     afxUri fext;
     AfxClipUriExtension(&fext, uri, FALSE);
@@ -458,12 +458,12 @@ _AVX avxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, avxVertexInput 
 
                         if (!AfxUriIsBlank(&blueprint.uri.uri))
                         {
-                            AfxConcatenateStringL(&tmp.str, "?", 1);
-                            AfxConcatenateString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
+                            AfxCatenateStringL(&tmp.str, "?", 1);
+                            AfxCatenateString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
                         }
 
                         afxUri tmpUri;
-                        AfxMakeUriFromString(&tmpUri, &tmp.str);
+                        AfxWrapUriString(&tmpUri, &tmp.str);
                         AfxCopyUri(&blueprint.uri.uri, &tmpUri);
 #endif
                         config.xfmrPipb.vin = vin;

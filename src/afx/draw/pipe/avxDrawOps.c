@@ -67,7 +67,7 @@ _AVX afxString const afxDrawCmdStrings[] =
     AFX_STRING("DrawIndexedIndirectCount"),
 };
 
-_AVX afxCmdId AvxCmdBindPipeline(avxCmdb cmdb, afxNat segment, avxPipeline pip, afxFlags dynamics)
+_AVX afxCmdId AvxCmdBindPipeline(avxCmdb cmdb, afxNat segment, avxPipeline pip, avxVertexInput vin, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
     /// cmdb must be a valid avxCmdb handle.
@@ -80,10 +80,10 @@ _AVX afxCmdId AvxCmdBindPipeline(avxCmdb cmdb, afxNat segment, avxPipeline pip, 
     /// pip must be a valid avxPipeline handle.
     AfxAssertObjects(1, &pip, afxFcc_PIP);
 
-    return cmdb->stdCmds->BindPipeline(cmdb, segment, pip, dynamics);
+    return cmdb->stdCmds->BindPipeline(cmdb, segment, pip, vin, dynamics);
 }
 
-_AVX afxCmdId AvxCmdBindRasterizer(avxCmdb cmdb, avxRasterizer razr, afxFlags dynamics)
+_AVX afxCmdId AvxCmdBindRasterizer(avxCmdb cmdb, avxRasterizer razr, avxVertexInput vin, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
     /// cmdb must be a valid avxCmdb handle.
@@ -94,7 +94,7 @@ _AVX afxCmdId AvxCmdBindRasterizer(avxCmdb cmdb, avxRasterizer razr, afxFlags dy
     /// razr must be a valid avxRasterizer handle.
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
 
-    return cmdb->stdCmds->BindRasterizer(cmdb, razr, dynamics);
+    return cmdb->stdCmds->BindRasterizer(cmdb, razr, vin, dynamics);
 }
 
 _AVX afxCmdId AvxCmdBindBuffers(avxCmdb cmdb, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buffers[], afxNat offsets[], afxNat ranges[])
@@ -154,7 +154,7 @@ _AVX afxCmdId AvxCmdExecuteCommands(avxCmdb cmdb, afxNat cnt, avxCmdb aux[])
 
 // Draw
 
-_AVX afxCmdId AvxCmdDraw(avxCmdb cmdb, afxNat baseInstIdx, afxNat instCnt, afxNat baseVtxIdx, afxNat vtxCnt)
+_AVX afxCmdId AvxCmdDraw(avxCmdb cmdb, afxNat vtxCnt, afxNat instCnt, afxNat firstVtxIdx, afxNat firstInstIdx)
 {
     afxError err = AFX_ERR_NONE;
     /// cmdb must be a valid avxCmdb handle.
@@ -168,7 +168,7 @@ _AVX afxCmdId AvxCmdDraw(avxCmdb cmdb, afxNat baseInstIdx, afxNat instCnt, afxNa
 
     AfxAssert(vtxCnt);
     //AfxAssert(instCnt);
-    return cmdb->stdCmds->Draw(cmdb, vtxCnt, instCnt, baseVtxIdx, baseInstIdx);
+    return cmdb->stdCmds->Draw(cmdb, vtxCnt, instCnt, firstVtxIdx, firstInstIdx);
 }
 
 _AVX afxCmdId AvxCmdDrawIndirect(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride)
@@ -214,7 +214,7 @@ _AVX afxCmdId AvxCmdDrawIndirectCount(avxCmdb cmdb, afxBuffer buf, afxNat32 offs
     return cmdb->stdCmds->DrawIndirectCount(cmdb, buf, offset, cntBuf, cntBufOff, maxDrawCnt, stride);
 }
 
-_AVX afxCmdId AvxCmdDrawIndexed(avxCmdb cmdb, afxNat vtxOff, afxNat baseInstIdx, afxNat instCnt, afxNat baseIdx, afxNat idxCnt)
+_AVX afxCmdId AvxCmdDrawIndexed(avxCmdb cmdb, afxNat idxCnt, afxNat instCnt, afxNat firstIdx, afxNat vtxOff, afxNat firstInstIdx)
 {
     afxError err = AFX_ERR_NONE;
     /// cmdb must be a valid avxCmdb handle.
@@ -228,7 +228,7 @@ _AVX afxCmdId AvxCmdDrawIndexed(avxCmdb cmdb, afxNat vtxOff, afxNat baseInstIdx,
 
     AfxAssert(idxCnt);
     //AfxAssert(instCnt);
-    return cmdb->stdCmds->DrawIndexed(cmdb, idxCnt, instCnt, baseIdx, vtxOff, baseInstIdx);
+    return cmdb->stdCmds->DrawIndexed(cmdb, idxCnt, instCnt, firstIdx, vtxOff, firstInstIdx);
 }
 
 _AVX afxCmdId AvxCmdDrawIndexedIndirect(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride)
@@ -318,7 +318,7 @@ _AVX afxCmdId AvxCmdBindFontSIG(avxCmdb cmdb, afxNat first, afxNat cnt, afxTypog
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssert(first == 0);
     AfxAssert(cnt == 1);
-    AvxCmdBindPipeline(cmdb, 0, pip[0], NIL);
+    AvxCmdBindPipeline(cmdb, 0, pip[0], NIL, NIL);
     AvxCmdBindSamplers(cmdb, 0, 1, 1, smp);
     AvxCmdBindRasters(cmdb, 0, 1, 1, ras, NIL);
     return 0;

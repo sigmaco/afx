@@ -1,6 +1,6 @@
 [Qwadro.Icd]
 DriverDate=2024/05/08
-DriverDesc=TARGA over OpenGL 4
+DriverDesc=Truecolor Advanced Raster Graphics Accelerator
 DriverVersion=4.0.16385
 ProviderName=SIGMA Technology Group
 ProviderUrl=https://sigmaco.org
@@ -16,7 +16,7 @@ Devices=Icd.Devices
 
 [Device.Targa]
 Class=DRAW
-Description=TARGA Advanced Raster Graphics Adapter
+Description=TARGA over OpenGL 4
 PortCount=1
 Ports=Targa.Ports
 ; device internal

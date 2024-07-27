@@ -19,8 +19,8 @@
 #ifndef ASX_DEV_KIT_H
 #define ASX_DEV_KIT_H
 
-#include "qwadro/sound/afxSoundSystem.h"
-#include "asxDeviceDevKit.h"
-#include "asxHostDevKit.h"
+#include "qwadro/sound/afxUnisound.h"
+#include "AsxDeviceDevKit.h"
+#include "AsxHostDevKit.h"
 
 #endif//ASX_DEV_KIT_H

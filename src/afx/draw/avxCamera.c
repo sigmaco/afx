@@ -27,10 +27,10 @@ _AVXINL void AfxGetCameraMatrices(avxCamera cam, afxM4d v, afxM4d iv)
     AfxAssert(v || iv);
 
     if (v)
-        AfxCopyM4d(v, cam->v);
+        AfxM4dCopy(v, cam->v);
 
     if (iv)
-        AfxCopyM4d(iv, cam->iv);
+        AfxM4dCopy(iv, cam->iv);
 }
 
 _AVXINL void AfxGetCameraProjectiveMatrices(avxCamera cam, afxM4d p, afxM4d ip)
@@ -40,10 +40,10 @@ _AVXINL void AfxGetCameraProjectiveMatrices(avxCamera cam, afxM4d p, afxM4d ip)
     AfxAssert(p || ip);
 
     if (p)
-        AfxCopyM4d(p, cam->p);
+        AfxM4dCopy(p, cam->p);
 
     if (ip)
-        AfxCopyM4d(ip, cam->ip);
+        AfxM4dCopy(ip, cam->ip);
 }
 
 _AVXINL afxReal AfxGetCameraFov(avxCamera cam)
@@ -109,47 +109,47 @@ _AVXINL void AfxSetCameraDepthRangeEpsilon(avxCamera cam, afxReal epsilon)
     cam->depthRangeEpsilon = epsilon;
 }
 
-_AVXINL void AfxGetCameraDisplacement(avxCamera cam, afxV3d offset)
+_AVXINL void AfxGetCameraDisplacement(avxCamera cam, afxV3d displacement)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
-    AfxCopyV3d(offset, cam->offset);
+    AfxV3dCopy(displacement, cam->displacement);
 }
 
-_AVXINL void AfxResetCameraDisplacement(avxCamera cam, afxV3d const offset)
+_AVXINL void AfxResetCameraDisplacement(avxCamera cam, afxV3d const displacement)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
-    AfxCopyV3d(cam->offset, offset ? offset : AFX_V4D_IDENTITY);
+    AfxV3dCopy(cam->displacement, displacement ? displacement : AFX_V4D_IDENTITY);
 }
 
-_AVXINL void AfxApplyCameraDisplacement(avxCamera cam, afxV3d const offset)
+_AVXINL void AfxApplyCameraDisplacement(avxCamera cam, afxV3d const displacement)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
 
-    AfxAddV3d(cam->offset, cam->offset, offset);
+    AfxV3dAdd(cam->displacement, cam->displacement, displacement);
 }
 
 _AVXINL afxReal AfxGetCameraDistance(avxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
-    return cam->offset[2];
+    return cam->displacement[2];
 }
 
 _AVXINL void AfxSetCameraDistance(avxCamera cam, afxReal distance)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
-    cam->offset[2] = distance;
+    cam->displacement[2] = distance;
 }
 
 _AVXINL void AfxApplyCameraDistance(avxCamera cam, afxReal distance)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
-    cam->offset[2] += distance;
+    cam->displacement[2] += distance;
 }
 
 _AVXINL void AfxGetCameraOrientation(avxCamera cam, afxV3d elevAzimRoll)
@@ -157,14 +157,14 @@ _AVXINL void AfxGetCameraOrientation(avxCamera cam, afxV3d elevAzimRoll)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(elevAzimRoll);
-    AfxCopyV3d(elevAzimRoll, cam->elevAzimRoll);
+    AfxV3dCopy(elevAzimRoll, cam->elevAzimRoll);
 }
 
 _AVXINL void AfxResetCameraOrientation(avxCamera cam, afxV3d const elevAzimRoll)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
-    AfxCopyV3d(cam->elevAzimRoll, elevAzimRoll ? elevAzimRoll : AFX_V4D_IDENTITY);
+    AfxV3dCopy(cam->elevAzimRoll, elevAzimRoll ? elevAzimRoll : AFX_V4D_IDENTITY);
 }
 
 _AVXINL void AfxApplyCameraOrientation(avxCamera cam, afxV3d const elevAzimRoll)
@@ -172,7 +172,7 @@ _AVXINL void AfxApplyCameraOrientation(avxCamera cam, afxV3d const elevAzimRoll)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(elevAzimRoll);
-    AfxAddV3d(cam->elevAzimRoll, cam->elevAzimRoll, elevAzimRoll);
+    AfxV3dAdd(cam->elevAzimRoll, cam->elevAzimRoll, elevAzimRoll);
 }
 
 _AVXINL void AfxGetCameraOrientation2(avxCamera cam, afxReal* elevation, afxReal* azimuth, afxReal* roll)
@@ -205,7 +205,7 @@ _AVXINL void AfxGetCameraPosition(avxCamera cam, afxV4d point)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(point);
-    AfxCopyAtv4d(point, cam->iv[3]);
+    AfxV4dCopyAtv3d(point, cam->iv[3]);
 }
 
 _AVXINL void AfxGetCameraDirectionX(avxCamera cam, afxV3d left, afxV3d right)
@@ -215,10 +215,10 @@ _AVXINL void AfxGetCameraDirectionX(avxCamera cam, afxV3d left, afxV3d right)
     AfxAssert2(left || right, left != right);
 
     if (left)
-        AfxNegV3d(left, cam->iv[0]);
+        AfxV3dNeg(left, cam->iv[0]);
 
     if (right)
-        AfxCopyV3d(right, cam->iv[0]);
+        AfxV3dCopy(right, cam->iv[0]);
 }
 
 _AVXINL void AfxGetCameraDirectionY(avxCamera cam, afxV3d down, afxV3d up)
@@ -228,23 +228,23 @@ _AVXINL void AfxGetCameraDirectionY(avxCamera cam, afxV3d down, afxV3d up)
     AfxAssert2(down || up, down != up);
 
     if (down)
-        AfxNegV3d(down, cam->iv[1]);
+        AfxV3dNeg(down, cam->iv[1]);
 
     if (up)
-        AfxCopyV3d(up, cam->iv[1]);
+        AfxV3dCopy(up, cam->iv[1]);
 }
 
-_AVXINL void AfxGetCameraDirectionZ(avxCamera cam, afxV3d back, afxV3d fwd)
+_AVXINL void AfxGetCameraDirectionZ(avxCamera cam, afxV3d near, afxV3d far)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
-    AfxAssert2(fwd || back, fwd != back);
+    AfxAssert2(far || near, far != near);
 
-    if (back)
-        AfxCopyV3d(back, cam->iv[2]);
+    if (near)
+        AfxV3dCopy(near, cam->iv[2]);
 
-    if (fwd)
-        AfxNegV3d(fwd, cam->iv[2]);
+    if (far)
+        AfxV3dNeg(far, cam->iv[2]);
 }
 
 _AVXINL void AfxResetCamera(avxCamera cam)
@@ -256,15 +256,15 @@ _AVXINL void AfxResetCamera(avxCamera cam)
     cam->wwOverHw = 1.f;
     cam->fovY = 1.0471976f;
     cam->nearClipPlane = 0.0001f;// 0.4;
-    cam->farClipPlane = 1000.f;
+    cam->farClipPlane = 1000000.0;// 1000.f;
     cam->depthRange = avxClipBoundary_NEG_ONE_TO_ONE;
     cam->useQuatOrient = TRUE;
     cam->depthRangeEpsilon = 0.f;
-    AfxZeroV3d(cam->pos);
-    AfxResetQuat(cam->orient);
-    AfxResetM3d(cam->orientM3d);
-    AfxZeroV3d(cam->elevAzimRoll);
-    AfxZeroV3d(cam->offset);
+    AfxV3dZero(cam->pos);
+    AfxQuatReset(cam->orient);
+    AfxM3dReset(cam->orientM3d);
+    AfxV3dZero(cam->elevAzimRoll);
+    AfxV3dZero(cam->displacement);
     AfxRecomputeCameraMatrices(cam);
 }
 
@@ -285,7 +285,7 @@ _AVXINL void AfxTranslateCamera(avxCamera cam, afxV3d const motion)
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(motion);
 
-    // AfxPreMultiplyAtv3d();
+    // AfxV3dPreMultiplyAtm4d();
 
     cam->pos[0] = motion[0] * cam->iv[0][0] + cam->pos[0];
     cam->pos[1] = motion[0] * cam->iv[0][1] + cam->pos[1];
@@ -428,9 +428,9 @@ _AVXINL void AfxComputeCameraMatrices(avxCamera cam, afxM4d v, afxM4d iv)
     afxM3d a, b, c;
 
     if (!cam->useQuatOrient)
-        AfxCopyM3d(a, cam->orientM3d);
+        AfxM3dCopy(a, cam->orientM3d);
     else
-        AfxRotationM3dFromQuat(a, cam->orient);
+        AfxM3dRotationFromQuat(a, cam->orient);
 
     afxV3d cosv, sinv;
     AfxCosV3d(cosv, cam->elevAzimRoll);
@@ -445,7 +445,7 @@ _AVXINL void AfxComputeCameraMatrices(avxCamera cam, afxM4d v, afxM4d iv)
     b[2][0] = -sinv[1];
     b[2][1] = 0.f;
     b[2][2] = cosv[1];
-    AfxMultiplyM3d(c, a, b);
+    AfxM3dMultiply(c, a, b);
     b[0][0] = 1.f;
     b[0][1] = 0.f;
     b[0][2] = 0.f;
@@ -455,7 +455,7 @@ _AVXINL void AfxComputeCameraMatrices(avxCamera cam, afxM4d v, afxM4d iv)
     b[2][0] = 0.f;
     b[2][1] = sinv[0];
     b[2][2] = cosv[0];
-    AfxMultiplyM3d(a, c, b);
+    AfxM3dMultiply(a, c, b);
     b[0][0] = cosv[2];
     b[0][1] = -sinv[2];
     b[0][2] = 0.f;
@@ -465,19 +465,19 @@ _AVXINL void AfxComputeCameraMatrices(avxCamera cam, afxM4d v, afxM4d iv)
     b[2][0] = 0.f;
     b[2][1] = 0.f;
     b[2][2] = 1.f;
-    AfxMultiplyM3d(c, a, b);
+    AfxM3dMultiply(c, a, b);
 
     afxV4d at;
-    AfxPreMultiplyV3d(c, cam->pos, at);
-    at[0] = -(at[0] + cam->offset[0]);
-    at[1] = -(at[1] + cam->offset[1]);
-    at[2] = -(at[2] + cam->offset[2]);
+    AfxV3dPreMultiplyM3d(at, cam->pos, c);
+    at[0] = -(at[0] + cam->displacement[0]);
+    at[1] = -(at[1] + cam->displacement[1]);
+    at[2] = -(at[2] + cam->displacement[2]);
     at[3] = 1.f;
-    AfxMakeM4dFromM3d(v, c, at);
-    AfxClipAtm4dTransposed(iv, v);
-    AfxEnsureAtm4d(iv);
-    AfxPostMultiplyV3d(c, cam->offset, at);
-    AfxAddV3d(iv[3], at, cam->pos);
+    AfxM4dCopyM3d(v, c, at);
+    AfxM4dTransposeAtm(iv, v);
+    AfxM4dEnsureAffine(iv);
+    AfxV3dPostMultiplyM3d(at, c, cam->displacement);
+    AfxV3dAdd(iv[3], at, cam->pos);
     iv[3][3] = 1.f;
 }
 
@@ -507,9 +507,9 @@ _AVXINL void AfxFindWorldCoordinates(avxCamera cam, afxV2d const wh, afxV3d cons
     };
 
     afxV4d v2;
-    AfxPreMultiplyV4d(cam->ip, v, v2);
-    AfxPreMultiplyV4d(cam->iv, v2, v);
-    AfxScaleV3d(worldPoint, v, 1.f / v[3]);
+    AfxV4dPreMultiplyM4d(v2, v, cam->ip);
+    AfxV4dPreMultiplyM4d(v, v2, cam->iv);
+    AfxV3dScale(worldPoint, v, 1.f / v[3]);
     worldPoint[3] = 1.f;
 }
 
@@ -523,14 +523,14 @@ _AVXINL void AfxFindScreenCoordinates(avxCamera cam, afxV2d const wh, afxV4d con
     AfxAssert(screenPoint);
 
     afxV4d v, v2;
-    AfxPreMultiplyV4d(cam->v, worldPoint, v);
-    AfxPreMultiplyV4d(cam->p, v, v2);
-    AfxScaleV3d(v, v2, 1.f / v2[3]);
+    AfxV4dPreMultiplyM4d(v, worldPoint, cam->v);
+    AfxV4dPreMultiplyM4d(v2, v, cam->p);
+    AfxV3dScale(v, v2, 1.f / v2[3]);
 
     if (cam->depthRange == avxClipBoundary_NEG_ONE_TO_ONE)
         v[2] = v[2] + v[2] - 1.f;
 
-    AfxSetV3d(screenPoint, (v[0] + 1.f) * wh[0] * 0.5f, (v[1] + 1.f) * wh[1] * 0.5f, v[2]);
+    AfxV3dSet(screenPoint, (v[0] + 1.f) * wh[0] * 0.5f, (v[1] + 1.f) * wh[1] * 0.5f, v[2]);
 }
 
 _AVXINL void AfxGetCameraPickingRay(avxCamera cam, afxV2d const wh, afxV2d const cursor, afxV4d origin, afxV3d normal)
@@ -552,17 +552,17 @@ _AVXINL void AfxGetCameraPickingRay(avxCamera cam, afxV2d const wh, afxV2d const
     };
 
     afxV4d v2;
-    AfxPreMultiplyV4d(cam->ip, v, v2);
+    AfxV4dPreMultiplyM4d(v2, v, cam->ip);
     v2[3] = 0.0;
-    AfxPreMultiplyV4d(cam->iv, v2, v);
+    AfxV4dPreMultiplyM4d(v, v2, cam->iv);
     
     // should normalize or zero
-    afxReal len = AfxMagV3d(v);
+    afxReal len = AfxV3dMag(v);
 
     if (len <= 0.0000099999997f)
-        AfxZeroV3d(normal);
+        AfxV3dZero(normal);
     else
-        AfxScaleV3d(normal, v, 1.f / len);
+        AfxV3dScale(normal, v, 1.f / len);
 }
 
 _AVXINL void AfxComputeCameraRelativePlanarBases(avxCamera cam, afxBool screenOrthogonal, afxV3d const planeNormal, afxV4d const pointOnPlane, afxV3d xBasis, afxV3d yBasis)
@@ -577,14 +577,14 @@ _AVXINL void AfxComputeCameraRelativePlanarBases(avxCamera cam, afxBool screenOr
     AfxGetCameraDirectionX(cam, NIL, xBasis);
     afxV3d v;
 
-    if (!screenOrthogonal) AfxCopyV3d(v, xBasis);
+    if (!screenOrthogonal) AfxV3dCopy(v, xBasis);
     else
     {
         afxV3d up;
         afxV4d origin, camToPoint;
         AfxGetCameraPosition(cam, origin);
         AfxGetCameraDirectionY(cam, NIL, up);
-        AfxSubV4d(camToPoint, pointOnPlane, origin);
+        AfxV4dSub(camToPoint, pointOnPlane, origin);
         v[0] = up[2] * camToPoint[1] - up[1] * camToPoint[2];
         v[1] = up[0] * camToPoint[2] - up[2] * camToPoint[0];
         v[2] = up[1] * camToPoint[0] - up[0] * camToPoint[1];
@@ -595,12 +595,12 @@ _AVXINL void AfxComputeCameraRelativePlanarBases(avxCamera cam, afxBool screenOr
     yBasis[2] = (v[1] * planeNormal[0]) - (v[0] * planeNormal[1]);
 
     // should normalize or zero
-    afxReal len = AfxMagV3d(yBasis);
+    afxReal len = AfxV3dMag(yBasis);
     
     if (len <= 0.0000099999997f)
-        AfxZeroV3d(yBasis);
+        AfxV3dZero(yBasis);
     else
-        AfxScaleV3d(yBasis, yBasis, AfxRecip(len));
+        AfxV3dScale(yBasis, yBasis, AfxRecip(len));
 }
 
 _AVXINL void AfxGetCameraFrustum(avxCamera cam, afxFrustum* frustum)
@@ -618,7 +618,7 @@ _AVX afxBool AfxProcessCameraInteraction(avxCamera cam, afxNat port, afxReal64 s
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     afxBool updated = FALSE;
 
-    if (AfxLmbIsPressed(port))
+    if (AfxIsLmbPressed(port))
     {
         afxV2d delta;
         afxV3d deltaEar;
@@ -631,7 +631,7 @@ _AVX afxBool AfxProcessCameraInteraction(avxCamera cam, afxNat port, afxReal64 s
         updated = TRUE;
     }
 
-    if (AfxRmbIsPressed(port))
+    if (AfxIsRmbPressed(port))
     {
         afxV2d delta;
         afxV3d off;
@@ -663,7 +663,7 @@ _AVX afxBool AfxProcessCameraInteraction(avxCamera cam, afxNat port, afxReal64 s
         frameStep * fwdSpeed
     };
 
-    if (AfxSumV3d(v))
+    if (AfxV3dSum(v))
     {
         AfxTranslateCamera(cam, v);
         updated = TRUE;
@@ -690,7 +690,7 @@ _AVX afxBool _AvxCamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev
 
         // TODO Leva isso para o usuário
 
-        if (AfxLmbIsPressed(0))
+        if (AfxIsLmbPressed(0))
         {
             afxV2d delta;
             afxV3d deltaEar;
@@ -704,7 +704,7 @@ _AVX afxBool _AvxCamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev
 
 
 
-        if (AfxRmbIsPressed(0))
+        if (AfxIsRmbPressed(0))
         {
             afxV2d delta;
             afxV3d off;
@@ -747,8 +747,8 @@ _AVX afxError _AvxCamCtorCb(avxCamera cam, afxCookie const *cookie)
     cam->perspective = TRUE;
 
     afxM4d m, m2;
-    AfxResetM4d(m);
-    AfxResetM4d(m2);
+    AfxM4dReset(m);
+    AfxM4dReset(m2);
     AfxRecomputeFrustum(&cam->frustum, m, m2);
     
     AfxResetCamera(cam);

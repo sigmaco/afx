@@ -44,7 +44,7 @@ WORD ch[] =
     FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED,
 };
 
-_AFX afxResult AfxPrompt(afxString const* cur, afxRestring* buf)
+_AFX afxResult AfxPrompt(afxString const* cur, afxString* buf)
 {
     afxError err = NIL;
     AfxDbgLog(0, cur->start, cur->len);

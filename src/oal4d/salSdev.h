@@ -47,9 +47,9 @@
 #define _ASX_SOUND_BUFFER_C
 #define _ASX_SOUND_BUFFER_IMPL
 #define _ASX_SOUND_IMPL
-#include "qwadro/sound/afxSoundSystem.h"
+#include "qwadro/sound/afxUnisound.h"
 #include "qwadro/exec/afxSystem.h"
-#include "../src/afx/sound/dev/asxDevKit.h"
+#include "../src/afx/sound/dev/AsxDevKit.h"
 
 #ifndef ASX_DRV_SRC
 #   ifdef _DEBUG
@@ -262,14 +262,14 @@ AFX_DEFINE_STRUCT(_salQueueingExecute)
 {
     _salQueueing            hdr;
     afxNat                  itemCnt;
-    afxExecutionRequest2    afxSimd(items[]);
+    afxExecutionRequest2 AFX_SIMD items[];
 };
 
 AFX_DEFINE_STRUCT(_salQueueingTransfer)
 {
     _salQueueing            hdr;
     afxNat                  itemCnt;
-    afxTransferRequest2     afxSimd(items[]);
+    afxTransferRequest2 AFX_SIMD items[];
 };
 
 AFX_OBJECT(afxSoundContext)

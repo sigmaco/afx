@@ -19,7 +19,7 @@
 
 #include "qwadro/draw/pipe/avxPipeline.h"
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/exec/afxSystem.h"
 #include "qwadro/draw/io/afxXsh.h"

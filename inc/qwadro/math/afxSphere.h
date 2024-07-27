@@ -27,14 +27,6 @@ AFX_DEFINE_STRUCT(afxSphere)
     afxReal     radius;
 };
 
-AFXINL afxSphere* AfxSphereDeploy(afxSphere* sph, afxV3d const centre, afxReal radius)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(sph);
-    AfxAssert(centre);
-    AfxCopyV3d(sph->centre, centre);
-    sph->radius = radius;
-    return sph;
-}
+AFXINL afxSphere* AfxSphereDeploy(afxSphere* sph, afxV3d const centre, afxReal radius);
 
 #endif//AFX_SPHERE_H

@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/exec/afxSystem.h"
+#include "../src/afx/dev/afxDevCoreBase.h"
 
 _AFX afxStackPage* _AfxStackAllocateBlock(afxStack *stak)
 {

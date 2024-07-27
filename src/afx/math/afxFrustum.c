@@ -37,13 +37,13 @@ _AFXINL void AfxCopyFrustum(afxFrustum* f, afxFrustum const* in)
     AfxAssert(in);
     afxNat i;
 
-    AfxCopyV4d(f->origin, in->origin);
+    AfxV4dCopy(f->origin, in->origin);
 
     for (i = 0; i < afxCubeFace_TOTAL; i++)
         AfxCopyPlane(f->planes[i], in->planes[i]);
 
     for (i = 0; i < afxCubeCorner_TOTAL; i++)
-        AfxCopyV4d(f->corners[i], in->corners[i]);
+        AfxV4dCopy(f->corners[i], in->corners[i]);
 }
 
 _AFXINL afxBool AfxFrustumDoesCullSphere(afxFrustum const* f, afxSphere const* sph)
@@ -86,14 +86,14 @@ _AFXINL afxBool AfxFrustumDoesCullAabb(afxFrustum const* f, afxBox const aabb)
         v[3] = f->planes[i][3];
 
         afxNat out = 0;
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxV4dDot(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxV4dDot(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxV4dDot(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxV4dDot(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxV4dDot(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxV4dDot(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxV4dDot(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxV4dDot(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
         
         if (out == 8)
         {
@@ -171,18 +171,18 @@ _AFXINL void AfxRecomputeFrustumPlanes(afxFrustum* f, afxM4d const pv)
     AfxAssert(f);
     AfxAssert(pv);
     afxV3d x, y, z, w;
-    AfxSetV3d(x, pv[0][0], pv[1][0], pv[2][0]);
-    AfxSetV3d(y, pv[0][1], pv[1][1], pv[2][1]);
-    AfxSetV3d(z, pv[0][2], pv[1][2], pv[2][2]);
-    AfxSetV3d(w, pv[0][3], pv[1][3], pv[2][3]);
+    AfxV3dSet(x, pv[0][0], pv[1][0], pv[2][0]);
+    AfxV3dSet(y, pv[0][1], pv[1][1], pv[2][1]);
+    AfxV3dSet(z, pv[0][2], pv[1][2], pv[2][2]);
+    AfxV3dSet(w, pv[0][3], pv[1][3], pv[2][3]);
 
     afxV3d wMx, wPx, wMy, wPy, wMz, wPz;
-    AfxSubV3d(wMx, w, x);
-    AfxAddV3d(wPx, w, x);
-    AfxSubV3d(wMy, w, y);
-    AfxAddV3d(wPy, w, y);
-    AfxSubV3d(wMz, w, z);
-    AfxAddV3d(wPz, w, z);
+    AfxV3dSub(wMx, w, x);
+    AfxV3dAdd(wPx, w, x);
+    AfxV3dSub(wMy, w, y);
+    AfxV3dAdd(wPy, w, y);
+    AfxV3dSub(wMz, w, z);
+    AfxV3dAdd(wPz, w, z);
 
     afxReal ww = pv[3][3];
 
@@ -203,53 +203,53 @@ _AFXINL void AfxRecomputeFrustumCorners(afxFrustum* f, afxM4d const pv)
     AfxAssert(pv);
 
     afxV4d v;
-    AfxPostMultiplyV4d(pv, AFX_V4D_LBN, v);
+    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_LBN);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
-    AfxCopyV4d(f->corners[afxCubeCorner_LBN], v);
+    AfxV4dCopy(f->corners[afxCubeCorner_LBN], v);
 
-    AfxPostMultiplyV4d(pv, AFX_V4D_RBN, v);
+    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_RBN);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
-    AfxCopyV4d(f->corners[afxCubeCorner_RBN], v);
+    AfxV4dCopy(f->corners[afxCubeCorner_RBN], v);
 
-    AfxPostMultiplyV4d(pv, AFX_V4D_RTN, v);
+    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_RTN);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
-    AfxCopyV4d(f->corners[afxCubeCorner_RTN], v);
+    AfxV4dCopy(f->corners[afxCubeCorner_RTN], v);
 
-    AfxPostMultiplyV4d(pv, AFX_V4D_LTN, v);
+    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_LTN);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
-    AfxCopyV4d(f->corners[afxCubeCorner_LTN], v);
+    AfxV4dCopy(f->corners[afxCubeCorner_LTN], v);
 
-    AfxPostMultiplyV4d(pv, AFX_V4D_LBF, v);
+    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_LBF);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
-    AfxCopyV4d(f->corners[afxCubeCorner_LBF], v);
+    AfxV4dCopy(f->corners[afxCubeCorner_LBF], v);
 
-    AfxPostMultiplyV4d(pv, AFX_V4D_RBF, v);
+    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_RBF);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
-    AfxCopyV4d(f->corners[afxCubeCorner_RBF], v);
+    AfxV4dCopy(f->corners[afxCubeCorner_RBF], v);
 
-    AfxPostMultiplyV4d(pv, AFX_V4D_RTF, v);
+    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_RTF);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
-    AfxCopyV4d(f->corners[afxCubeCorner_RTF], v);
+    AfxV4dCopy(f->corners[afxCubeCorner_RTF], v);
 
-    AfxPostMultiplyV4d(pv, AFX_V4D_LTF, v);
+    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_LTF);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
-    AfxCopyV4d(f->corners[afxCubeCorner_LTF], v);
+    AfxV4dCopy(f->corners[afxCubeCorner_LTF], v);
 }
 
 _AFXINL void AfxRecomputeFrustum3(afxFrustum* f, afxM4d const pv)
@@ -269,7 +269,7 @@ _AFXINL void AfxRecomputeFrustum(afxFrustum* f, afxM4d const v, afxM4d const p)
     AfxAssert(p);
 
     afxM4d pv;
-    AfxMultiplyM4dTransposed(pv, v, p);
-    AfxPostMultiplyV4d(pv, AFX_V4D_ZERO, f->origin);
+    AfxM4dMultiplyTransposed(pv, v, p);
+    AfxV4dPostMultiplyM4d(f->origin, pv, AFX_V4D_ZERO);
     AfxRecomputeFrustum3(f, pv);
 }

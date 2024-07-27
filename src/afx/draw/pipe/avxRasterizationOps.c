@@ -299,7 +299,7 @@ _AVX afxCmdId AvxCmdAdjustCurtains(avxCmdb cmdb, afxNat baseIdx, afxNat cnt, afx
     return cmdb->stdCmds->razr.AdjustCurtains(cmdb, baseIdx, cnt, rects);
 }
 
-_AVX afxCmdId AvxCmdBeginSynthesis(avxCmdb cmdb, afxSynthesisConfig const* cfg)
+_AVX afxCmdId AvxCmdBeginSynthesis(avxCmdb cmdb, avxSynthesisConfig const* cfg)
 {
     afxError err = AFX_ERR_NONE;
     /// cmdb must be a valid avxCmdb handle.
@@ -311,9 +311,9 @@ _AVX afxCmdId AvxCmdBeginSynthesis(avxCmdb cmdb, afxSynthesisConfig const* cfg)
     /// This command must only be called outside of a video coding scope.
     AfxAssert(!cmdb->inVideoCoding);
     
-    /// cfg must be a valid pointer to a valid afxSynthesisConfig structure.
+    /// cfg must be a valid pointer to a valid avxSynthesisConfig structure.
     AfxAssert(cfg);
-    afxSynthesisConfig cfg2 = *cfg;
+    avxSynthesisConfig cfg2 = *cfg;
     avxCanvas canv = cfg->canv;
 
     if (canv)
@@ -332,22 +332,22 @@ _AVX afxCmdId AvxCmdBeginSynthesis(avxCmdb cmdb, afxSynthesisConfig const* cfg)
 
     if (cfg->depth)
     {
-        AfxAssertBounds(cfg->depth->loadOp, afxSurfaceLoadOp_CLEAR, afxSurfaceLoadOp_DONT_CARE);
-        AfxAssertBounds(cfg->depth->storeOp, afxSurfaceStoreOp_STORE, afxSurfaceStoreOp_DONT_CARE);
+        AfxAssertBounds(cfg->depth->loadOp, avxLoadOp_CLEAR, avxLoadOp_DONT_CARE);
+        AfxAssertBounds(cfg->depth->storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
     }
 
     if (cfg->stencil)
     {
-        AfxAssertBounds(cfg->stencil->loadOp, afxSurfaceLoadOp_CLEAR, afxSurfaceLoadOp_DONT_CARE);
-        AfxAssertBounds(cfg->stencil->storeOp, afxSurfaceStoreOp_STORE, afxSurfaceStoreOp_DONT_CARE);
+        AfxAssertBounds(cfg->stencil->loadOp, avxLoadOp_CLEAR, avxLoadOp_DONT_CARE);
+        AfxAssertBounds(cfg->stencil->storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
     }
 
     for (afxNat i = 0; i < cfg->rasterCnt; i++)
     {
         AfxAssert(cfg->rasters);
 
-        AfxAssertBounds(cfg->rasters[i].loadOp, afxSurfaceLoadOp_CLEAR, afxSurfaceLoadOp_DONT_CARE);
-        AfxAssertBounds(cfg->rasters[i].storeOp, afxSurfaceStoreOp_STORE, afxSurfaceStoreOp_DONT_CARE);
+        AfxAssertBounds(cfg->rasters[i].loadOp, avxLoadOp_CLEAR, avxLoadOp_DONT_CARE);
+        AfxAssertBounds(cfg->rasters[i].storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
     }
 
     return cmdb->stdCmds->razr.BeginSynthesis(cmdb, &cfg2);

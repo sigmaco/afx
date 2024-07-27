@@ -15,9 +15,6 @@
  */
 
 #include "sgl.h"
-#include "qwadro/draw/pipe/avxCanvas.h"
-#include "qwadro/draw/afxDrawOutput.h"
-#include "qwadro/draw/afxDrawSystem.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // FRAME BUFFER                                                               //
@@ -231,7 +228,7 @@ _SGL afxError _SglReadjustCanvasCb(avxCanvas canv, afxWhd const whd)
         {
             AfxAssertObjects(1, &ras, afxFcc_RAS);
             AfxGetRasterExtent(ras, 0, surWhd);
-            AfxMinWhd(minWhd, minWhd, surWhd);
+            AfxWhdMin(minWhd, minWhd, surWhd);
         }
     }
 
@@ -278,7 +275,7 @@ _SGL afxError _SglCanvDtor(avxCanvas canv)
 
     if (canv->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 3, (void*)canv->glHandle);
+        _SglDctxDeleteGlRes(dctx, 3, canv->glHandle);
         canv->glHandle = 0;
     }
 

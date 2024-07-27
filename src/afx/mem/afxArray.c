@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/exec/afxSystem.h"
+#include "../src/afx/dev/afxDevCoreBase.h"
 
 #if !0
 
@@ -135,6 +135,16 @@ _AFXINL afxError AfxAllocateArray(afxArray* arr, afxNat cap, afxNat unitSiz, voi
         AfxFill2(cap, unitSiz, initial, arr->bytemap);
     }
     return err;
+}
+
+_AFXINL afxError AfxWrapArray(afxArray* arr, afxNat unitSiz, afxNat cap, void* buf, afxNat cnt)
+{
+    afxError err = AFX_ERR_NONE;
+    *arr = (afxArray) { 0 };
+    arr->unitSiz = unitSiz;
+    arr->cap = cap;
+    arr->bytemap = buf;
+    arr->cnt = cnt;
 }
 
 // AfxOptimizeArray() - Requests the removal of unused capacity.

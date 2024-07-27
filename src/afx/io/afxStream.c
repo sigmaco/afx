@@ -232,7 +232,7 @@ _AFX afxError AfxAdjustStreamBuffer(afxStream iob, afxNat siz)
     if (iob->idd.m.isUserBuf) AfxThrowError();
     else
     {
-        if ((siz > iob->idd.m.bufCap) || (!iob->idd.m.buf))
+        if ((siz > iob->idd.m.bufCap) || (!iob->idd.m.buf) || !siz)
         {
             void const *oldData = iob->idd.m.buf;
             afxByte *start;
@@ -245,14 +245,14 @@ _AFX afxError AfxAdjustStreamBuffer(afxStream iob, afxNat siz)
             }
             else
             {
-                alignedSiz = AFX_ALIGN(siz, AfxGetIoBufferSize());                
+                alignedSiz = AFX_ALIGNED_SIZEOF(siz, AfxGetIoBufferSize());                
                 //void *start;
 
                 if (!(start = AfxAllocate(1, alignedSiz, 0, AfxHere()))) AfxThrowError();
                 else
                 {
                     if (oldData)
-                        AfxCopy2(1, AfxGetStreamLength(iob), oldData, start);
+                        AfxCopy2(AfxGetStreamLength(iob), 1, oldData, start);
                 }
             }
 
@@ -1159,6 +1159,7 @@ _AFX afxResult _AfxIosDtor(afxStream iob)
     if (!iob->idd.m.isUserBuf && iob->idd.m.buf)
     {
         AfxAdjustStreamBuffer(iob, 0);
+        AfxAssert(!iob->idd.m.buf);
     }
 
     return err;
@@ -1168,9 +1169,10 @@ _AFX afxError _AfxIosCtor(afxStream iob, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
 
-    afxIoFlags flags = *((afxIoFlags const*)cookie->udd[0]);
-    _afxIobImpl const* pimpl = cookie->udd[1];
-    _afxIobIdd const* idd = cookie->udd[2];
+    afxStorage disk = cookie->udd[0];
+    afxIoFlags flags = *((afxIoFlags const*)cookie->udd[1]);
+    _afxIobImpl const* pimpl = cookie->udd[2];
+    _afxIobIdd const* idd = cookie->udd[3];
 
     AfxAssignTypeFcc(iob, afxFcc_IOB);
     iob->flags = flags ? flags : afxIoFlag_RWX;
@@ -1197,7 +1199,7 @@ _AFX afxError _AfxIosCtor(afxStream iob, afxCookie const* cookie)
     return err;
 }
 
-_AFX afxClassConfig const _AfxIosMgrCfg =
+_AFX afxClassConfig const _AfxIosClsCfg =
 {
     .fcc = afxFcc_IOB,
     .name = "Stream",
@@ -1209,21 +1211,26 @@ _AFX afxClassConfig const _AfxIosMgrCfg =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxStream AfxAcquireImplementedStream(afxIoFlags flags, _afxIobImpl const* pimpl, _afxIobIdd const* idd)
+_AFX afxStream AfxAcquireImplementedStream(afxNat diskId, afxIoFlags flags, _afxIobImpl const* pimpl, _afxIobIdd const* idd)
 {
     afxError err = AFX_ERR_NONE;
+    //AfxAssert(diskId != AFX_INVALID_INDEX);
+    afxStream iob = NIL;
+    afxStorage disk;
 
-    afxClass* cls = AfxGetStreamClass();
-    AfxAssertClass(cls, afxFcc_IOB);
-    afxStream iob;
+    if (!AfxGetStorage(diskId != AFX_INVALID_INDEX ? diskId : 0, &disk)) AfxThrowError();
+    else
+    {
+        afxClass* cls = (afxClass*)AfxGetStreamClass(disk);
+        AfxAssertClass(cls, afxFcc_IOB);
 
-    if (AfxAcquireObjects(cls, 1, (afxObject*)&iob, (void const*[]) { &flags, pimpl, idd }))
-        AfxThrowError();
-
+        if (AfxAcquireObjects(cls, 1, (afxObject*)&iob, (void const*[]) { disk, &flags, pimpl, idd }))
+            AfxThrowError();
+    }
     return iob;
 }
 
-_AFX afxStream AfxAcquireStream(afxIoFlags flags, afxNat bufCap)
+_AFX afxStream AfxAcquireStream(afxNat diskId, afxIoFlags flags, afxNat bufCap)
 {
     afxError err = AFX_ERR_NONE;
     afxStream iob;
@@ -1233,7 +1240,7 @@ _AFX afxStream AfxAcquireStream(afxIoFlags flags, afxNat bufCap)
     idd.m.buf = NIL;
     idd.m.isUserBuf = FALSE;
 
-    if (!(iob = AfxAcquireImplementedStream(flags, &stdStreamImpl, &idd)))
+    if (!(iob = AfxAcquireImplementedStream(diskId, flags, &stdStreamImpl, &idd)))
         AfxThrowError();
 
     return iob;
@@ -1252,7 +1259,7 @@ _AFX afxStream AfxOpenStream(afxIoFlags flags, void const* start, afxSize siz)
 
     if (!siz) AfxThrowError();
     else if (!start) AfxThrowError();
-    else if (!(iob = AfxAcquireImplementedStream(flags, &stdStreamImpl, &idd)))
+    else if (!(iob = AfxAcquireImplementedStream(0, flags, &stdStreamImpl, &idd)))
         AfxThrowError();
 
     return iob;

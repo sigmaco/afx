@@ -1,0 +1,7 @@
+Booting up...
+Acquiring thread...  2420 "afxSystem_w32.c:502"Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\afx\system'),5Mounting... <//./z/>('E:\qwadro\afx\system32'),7Mounting... <//./z/>('E:\qwadro\afx\system32d'),7Mounting... <//./c/>('C:\'),7Mounting... <//./e/>('E:\'),7Mounting... <//./f/>('F:\'),7Mounting... <//./g/>('G:\'),7Mounting... <//./h/>('H:\'),7Mounting... <//./i/>('I:\'),7Loading module... <e2coree>Memory Page Size: 4096HW Threading Capacity: 2Doing the AVX start up...Loading module... <e2draw>Loading module... <targl4.dll>Installable client driver discovered.
+	Device: TARGA over OpenGL 4
+	Driver: Truecolor Advanced Raster Graphics Accelerator
+	Version: 4.0.16385
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+Doing the ASX start up...Loading module... <e2sound>

@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
 
-#include "qwadro/draw/math/avxViewport.h"
+#include "../dev/AvxDevKit.h"
 
 _AVXINL void AfxZeroRect(afxRect* rc)
 {

@@ -134,7 +134,7 @@ AUX afxError        AfxAdjustWindowSurfaceFromNdc(afxWindow wnd, afxV2d const of
 /// Sets the afxWindow's icon in the Shell.
 
 AUX afxError        AfxLoadWindowIcon(afxWindow wnd, afxUri const* uri);
-AUX afxError        AfxChangeWindowIcon(afxWindow wnd, afxTarga* tga);
+AUX afxError        AfxChangeWindowIcon(afxWindow wnd, afxRaster ras);
 
 AUX afxClass*       AfxGetWidgetClass(afxWindow wnd);
 AUX afxNat          AfxEnumerateWidgets(afxWindow wnd, afxNat first, afxNat cnt, afxWidget widgets[]);
@@ -143,7 +143,5 @@ AUX afxNat          AfxEnumerateWidgets(afxWindow wnd, afxNat first, afxNat cnt,
 
 AUX afxError        AfxAcquireWindow(afxDrawContext dctx, afxWindowConfig const* cfg, afxWindow* window);
 AUX afxError        AfxAcquireChildWindow(afxWindow wnd, afxRect const* pos);
-
-AUX afxClass*       AfxGetWindowClass(void);
 
 #endif//AUX_WINDOW_H

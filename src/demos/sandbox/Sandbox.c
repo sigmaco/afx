@@ -15,13 +15,14 @@
 
 #ifdef ENABLE_DRAW
 #include "qwadro/sim/rendering/akxRenderer.h"
+#include "qwadro/sim/rendering/akxTerrain.h"
 #endif
 #include "../../dep_/vgl/vgl.h"
 
 afxBool readyToRender = FALSE;
 afxScript TheApp;
 afxWindow window;
-afxBody cubeBod = NIL;
+akxBody cubeBod = NIL;
 afxModel cubeMdl = NIL;
 afxMesh cube = NIL;
 const afxReal CameraSpeed = 30.0f;
@@ -31,7 +32,8 @@ afxDrawContext dctx = NIL;
 akxRenderer rnd = NIL;
 akxAnimation ani = NIL;
 avxCamera cam = NIL;
-afxBody bod = NIL;
+akxBody bod = NIL;
+akxTerrain ter = NIL;
 
 void *vg = NIL;
 
@@ -74,15 +76,16 @@ afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw th
                     {
                         afxReal64 ct, dt;
                         //AfxGetApplicationTime(TheApp, &ct, &dt);
-                        AkxCmdDrawBodies(cmdb, rnd, dt, 1, &bod);
+                        //AkxCmdDrawBodies(cmdb, rnd, dt, 1, &bod);
                     }
 
-                    //if (cubeBod)
-                      //  AkxCmdDrawBodies(cmdb, rnd, 1, &cubeBod);
+                    AkxDrawTerrain(ter, rnd, cmdb);
+
+                    AkxBeginSceneCapture(rnd, cam, sim, cmdb);
 
                     AkxCmdDrawTestIndexed(cmdb, rnd);
 
-                    AfxDrawSky(cmdb, &rnd->sky);
+                    //AfxDrawSky(cmdb, &rnd->sky);
 
                     afxWhd canvWhd;
                     AfxGetCanvasExtent(canv, canvWhd);
@@ -103,7 +106,7 @@ afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw th
                             AfxThrowError();
                     }
 
-                    AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx);
+                    //AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx);
                 }
 
                 afxSemaphore dscrCompleteSem = NIL;
@@ -121,7 +124,7 @@ afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw th
     return FALSE;
 }
 
-afxBool CamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+afxBool CamEventFilter(afxObject *obj, afxObject *watched, auxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     avxCamera cam = (void*)obj;
@@ -138,7 +141,7 @@ afxBool CamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 
         // TODO Leva isso para o usuário
 
-        if (AfxLmbIsPressed(0))
+        if (AfxIsLmbPressed(0))
         {
             afxV2d delta;
             afxV3d deltaEar;
@@ -150,7 +153,7 @@ afxBool CamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
             AfxApplyCameraOrientation(cam, deltaEar);
         }
 
-        if (AfxRmbIsPressed(0))
+        if (AfxIsRmbPressed(0))
         {
             afxV2d delta;
             afxV3d off;
@@ -198,7 +201,7 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
         MovementThisFrame * ForwardSpeed
     };
 
-    if (AfxSumV3d(v))
+    if (AfxV3dSum(v))
         AfxTranslateCamera(cam, v);
 #else
     //AfxProcessCameraInteraction(cam, 0, CameraSpeed, DeltaTime);
@@ -239,8 +242,13 @@ int main(int argc, char const* argv[])
     // Boot up the Qwadro
 
     afxSystemConfig sysCfg;
-    AfxChooseSystemConfiguration(&sysCfg);
+    AfxConfigureSystem(&sysCfg);
     AfxDoSystemBootUp(&sysCfg);
+
+    afxUri pointUri, endpointUri;
+    AfxMakeUri(&pointUri, 0, "art", 0);
+    AfxMakeUri(&endpointUri, 0, "art", 0);
+    AfxMountStorageUnit(&pointUri, &endpointUri, afxFileFlag_RX);
 
     // Acquire hardware device contexts
 
@@ -250,8 +258,11 @@ int main(int argc, char const* argv[])
 
     // Acquire a drawable surface
     
-    afxWindowConfig wndCfg = { 0 };
-    AfxAcquireWindow(dctx, &wndCfg, &window);
+    afxWindowConfig wrc = { 0 };
+    wrc.surface.pixelFmt = afxPixelFormat_ARGB8;
+    wrc.surface.pixelFmtDs[0] = afxPixelFormat_D24;
+    wrc.surface.bufCnt = 3;
+    AfxAcquireWindow(dctx, &wrc, &window);
     AfxAdjustWindowFromNdc(window, NIL, AfxSpawnV3d(0.5, 0.5, 1));
 
 #if 0
@@ -270,10 +281,10 @@ int main(int argc, char const* argv[])
     simSpec.dctx = dctx;
     simSpec.din = NIL;
     simSpec.unitsPerMeter = 1.f;
-    AfxSetV3d(simSpec.right, 1, 0, 0);
-    AfxSetV3d(simSpec.up, 0, 1, 0);
-    AfxSetV3d(simSpec.back, 0, 0, 1);
-    AfxZeroV3d(simSpec.origin);
+    AfxV3dSet(simSpec.right, 1, 0, 0);
+    AfxV3dSet(simSpec.up, 0, 1, 0);
+    AfxV3dSet(simSpec.back, 0, 0, 1);
+    AfxV3dZero(simSpec.origin);
     AfxAcquireSimulations(1, &simSpec, &sim);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
@@ -284,142 +295,92 @@ int main(int argc, char const* argv[])
     rndConf.dinProc = DrawInputProc;
     AkxAcquireRenderers(sim, 1, &rnd, &rndConf);
 
+    AfxAcquireTerrain(sim, &ter);
+
     // Load assets
 
     afxUri uriMap2;
     afxString str;
     afxModel mdl;
-    //AfxAcquireSky();
-
-    //AfxFormatUri(&uri, "%.*s/scenario/zero/zero.obj", AfxPushString(AfxApplication_GetArtDirectory(app)));
-    //afxArray assets;
-    //AfxDeployArray(&assets, NIL, 0, sizeof(void*));
-    //AfxLoadAssets(sim, &uri);
-
     afxUri uriMap;
-    AfxMakeUri(&uriMap, "../art/actor/hellknight/hellknight.md5mesh", 0);
-    //AfxSimulationLoadMD5Assets(sim, &uriMap, NIL);
 
-    //AfxFindResources(cad2, afxFcc_MDL, 1, &uriMap2, &mdl);
-    //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
-
-    //AfxMakeUri(&uriMap, "../art/scenario/cod-mw3/ny_manhattan/ny_manhattan.obj", 0);
-    //AfxMakeUri(&uriMap, "../art/scenario/control-statiopn/uploads_files_3580612_control+statiopn.obj", 0);
-    //AfxMakeUri(&uriMap, "../art/scenario/cs_rio/cs_rio_base.obj", 0);
-    //AfxMakeUri(&uriMap, "../art/scenario/resdogs/resdogs.obj", 0);
-    //AfxMakeUri(&uriMap, "../art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
-    //AfxMakeUri(&uriMap, "../art/scenario/gtabr/gtabr.obj", 0);
-    //AfxMakeUri(&uriMap, "../art/f16/f16.obj", 0);
-    //AfxMakeUri(&uriMap, "../art/scenario/bibliotheca/bibliotheca-uvless.obj", 0);
-    //AfxMakeUri(&uriMap, "../art/scenario/zero/zero.obj", 0);
-    //AfxMakeUri(&uriMap, "../art/scenario/SpaceStation/SpaceStation.obj", 0);
-    AfxMakeUri(&uriMap, "../art/object/container/container.obj", 0);
-    //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
-
-    //AfxMakeUri(&uriMap, "../art/building/fort/SPC_Fort_Center.gr2", 0);
-    AfxMakeUri(&uriMap, "../art/building/mill/w_mill_3age.gr2", 0);
-    //AfxMakeUri(&uriMap, "../art/actor/p_explorer.gr2", 0);
-    mdl = AkxLoadModelsFromGrn3d2(sim, &uriMap, 0); // .m4d
-
-
-    akxAsset cad;
-    //AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
-    //AfxLoadAssetsFromMd5(sim, NIL, 1, &uriMap, &cad);
-
-    afxV3d atv;
-    afxM3d ltm, iltm;
-    AfxComputeBasisConversion(sim, 1.0, AFX_V3D_X, AFX_V3D_Y, AFX_V3D_Z, AFX_V3D_ZERO, ltm, iltm, atv);
-    //AfxTransformAssets(ltm, iltm, atv, 1e-5f, 1e-5f, 3, 1, &cad); // renormalize e reordene triângulos
-    //AfxTransformModels(ltm, iltm, 1e-5f, atv, 1e-5f, 3, 1, &mdl);
-
-    AfxClipUriTarget(&uriMap2, &uriMap);
-    //AfxFindResources(cad, afxFcc_MDL, 1, AfxGetUriString(&uriMap2), &mdl);
-    //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
-    // TODO FetchModel(/dir/to/file)
+    //AfxMakeUri(&uriMap, 0, "//./art/scenario/cod-mw3/ny_manhattan/ny_manhattan.obj", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/scenario/control-statiopn/uploads_files_3580612_control+statiopn.obj", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/scenario/cs_rio/cs_rio_base.obj", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/scenario/resdogs/resdogs.obj", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/scenario/gtabr/gtabr.obj", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/f16/f16.obj", 0);
+    AfxMakeUri(&uriMap, 0, "//./art/scenario/bibliotheca/bibliotheca-uvless.obj", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/scenario/zero/zero.obj", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/scenario/SpaceStation/SpaceStation.obj", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/object/container/container.obj", 0);
+    mdl = AfxLoadAssetsFromWavefrontObj(sim, &uriMap);
 
     AfxAcquireBodies(mdl, 1, &bod);
     AfxAssert(bod);
 
-    AfxMakeUri(&uriMap, "../art/building/mill/w_mill_3age_idle.gr2", 0);
-    //AfxMakeUri(&uriMap, "art/actor/knockout_recover.gr2", 0);
+    //AfxMakeUri(&uriMap, "//./art/building/fort/SPC_Fort_Center.gr2", 0);
+    AfxMakeUri(&uriMap, 0, "//./art/building/mill/w_mill_3age.gr2", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/building/mill/west_mill_age3_damaged.gr2", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/actor/p_explorer.gr2", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/actor/pixo_run.gr2", 0);
+    mdl = AkxLoadModelsFromGrn3d2(sim, &uriMap, 0); // .m4d
+
+    afxV3d atv;
+    afxM3d ltm, iltm;
+    AfxComputeBasisConversion(sim, 1.0, AFX_V3D_X, AFX_V3D_Y, AFX_V3D_Z, AFX_V3D_ZERO, ltm, iltm, atv);
+    //AfxTransformModels(ltm, iltm, 1e-5f, atv, 1e-5f, 3, 1, &mdl);
+
+    AfxAcquireBodies(mdl, 1, &bod);
+    AfxAssert(bod);
+
+    AfxMakeUri(&uriMap, 0, "//./art/building/mill/w_mill_3age_idle.gr2", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/building/mill/west_mill_age3_limping_idle.gr2", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/actor/knockout_recover.gr2", 0);
+    //AfxMakeUri(&uriMap, 0, "//./art/actor/pixo_run.gr2", 0);
     ani = AkxLoadAnimationsFromGrn3d2(sim, &uriMap, 0); // .k4d
 
 
 
-    akxMotor moto = AfxRunAnimation(bod, 0, ani);
+    akxMotor moto;
+    AfxRunAnimation(ani, 0, 0, 1, &bod);
+    //AfxRunAnimation(ani, 0, 0, 1, &bod);
     //akxMotor moto2 = AfxRunAnimation(bod, 0, ani);
 
-    if (moto)
-        AkxAdjustMotorIterations(moto, 0);
     //AkxAdjustMotorIterations(moto2, 0);
     //AkxReleaseOnceUnusedMotors(1, &moto);
 
-    cube = AfxBuildCubeMesh(sim, -200.0);
-    //cube = AfxBuildParallelepipedMesh(sim, 100, 100);
-    //cube = AfxBuildParallelepipedMesh(sim, AfxSpawnV3d(100, 100, 10));
-    //cube = AfxBuildDomeMesh(sim, 100.0, 4);
-
+    //cube = AfxBuildCubeMesh(sim, 10.0, 0);
+    //cube = AfxBuildDomeMesh2(sim, 100.0, 10, 20, TRUE);
+    cube = AfxBuildSphereMesh(sim, 100.0, 20, 20, TRUE);
+    //cube = AfxBuildCapsuleMesh(sim, 1, 50.0, 20, 20, 36, FALSE);
+    //cube = AfxBuildPlaneMesh(sim, 10, 10, 1000, 1000);
+    //cube = AfxBuildParallelepipedMesh(sim, AfxSpawnV3d(100, 10, 100), 0.5, 0.5);
+    
     afxStringBase strb;
     AfxAcquireStringCatalogs(1, &strb);
 
-    afxModelBlueprint mdlb = { 0 };
+    akxModelBlueprint mdlb = { 0 };
     mdlb.meshes = &cube;
     mdlb.rigCnt = 1;
     AfxMakeString32(&mdlb.id, &AfxStaticString("cube"));
-    mdlb.skl = AfxGetModelSkeleton(mdl);
-    mdlb.strb = strb;
+    
+    akxSkeletonBlueprint sklb = { 0 };
+    AfxAssembleSkeletons(sim, 1, &sklb, &mdlb.skl);
+
     AfxAssembleModel(sim, 1, &mdlb, &cubeMdl);
     AfxAcquireBodies(cubeMdl, 1, &cubeBod);
+
 #if 0
     mdl = AfxSimulationFindModel(sim, &str);
     body = AfxSimulationAcquireBody(sim, &str, NIL, mdl);
     AfxAssert(body);
 #endif
     //AfxCopyStringLiteral(&str, 0, "zero");
-    //afxBody body2;
+    //akxBody body2;
     //AfxAcquireBody(&body2, sim, &str, AfxFindModel(sim, &str));
     //AfxAssert(body2);
-
-    AfxMakeUri(&uriMap, "tmp/test.skl", 0);
-    afxStream fs = AfxOpenFile(&uriMap, afxIoFlag_W);
-    _afxMddFileData hdr = { 0 };
-#if 0
-    afxSize firstSklOffset = AfxGetStreamPosn(fs);
-    AfxSerializeSkeletons(fs, 1, (void*[]) { AfxGetModelSkeleton(mdl) });
-    hdr.sklCnt = 1;
-    hdr.sklDirBaseOffset = firstSklOffset;
-#endif
-
-#if 0
-    afxSize firstMshtOffset = AfxGetStreamPosn(fs);
-    AfxSerializeMeshTopologies(fs, 1, (void*[]) { AfxGetMeshTopology(cube) });
-    hdr.mshtCnt = 1;
-    hdr.mshtDirBaseOffset = firstMshtOffset;
-#endif
-
-#if 0
-    AfxWriteStream(fs, sizeof(hdr), 0, &hdr);
-    AfxReleaseObjects(1, &fs);
-
-    fs = AfxOpenFile(&uriMap, afxIoFlag_R);
-    AfxSeekStreamFromEnd(fs, sizeof(hdr));
-    AfxReadStream(fs, sizeof(hdr), 1, &hdr);
-#endif
-
-#if 0
-    AfxAssert(hdr.sklCnt);
-    AfxSeekStreamFromBegin(fs, hdr.sklDirBaseOffset);
-    afxSkeleton skl;
-    AfxDeserializeSkeletons(fs, sim, 1, &skl);
-#endif
-
-#if 0
-    AfxSeekStreamFromBegin(fs, hdr.mshtDirBaseOffset);
-    afxMeshTopology msht;
-    AfxDeserializeMeshTopologies(fs, sim, 1, &msht);
-#endif
-
-    AfxReleaseObjects(1, &fs);
 
     // Acquire a view point
 
@@ -446,7 +407,7 @@ int main(int argc, char const* argv[])
     // Load startup scripts
 
     afxUri uri;
-    AfxMakeUri(&uri, "system/sandbox.xss", 0);
+    AfxMakeUri(&uri, 0, "//./z/sandbox.xss", 0);
     //AfxLoadScript(NIL, &uri);
 
     // Run
@@ -457,12 +418,13 @@ int main(int argc, char const* argv[])
 
     while (AfxSystemIsExecuting())
     {
-        AfxDoSystemExecution(0);
         DrawInputProc(rnd->din, NIL);
 
         afxReal64 ct, dt;
         AfxStepWindow(window, &ct, &dt);
         UpdateFrameMovement(dt);
+
+        AfxDoThreading(0);
     }
 
     AvxReleaseGraphic(vg);

@@ -38,7 +38,7 @@ _AFXINL afxResult _AfxClsTestObjFccRecursive(afxClass const *cls, afxFcc fcc)
 _AFXINL afxResult AfxTestObjectFcc(afxObject obj, afxFcc fcc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(obj, afxFcc_OBJ);
+    //AfxAssertType(obj, afxFcc_OBJ);
     AfxAssert(fcc);
     afxClass const* cls = AfxGetObjectClass(obj);
 
@@ -204,6 +204,55 @@ _AFXINL afxObjectFlags AfxClearObjectFlags(afxObject obj, afxObjectFlags flags)
     return (hdr->flags &= ~flags);
 }
 
+_AFXINL afxError AfxAllocateInstanceData(afxObject obj, afxNat cnt, afxObjectStash const stashes[])
+{
+    afxError err = AFX_ERR_NONE;
+    afxClass* cls = AfxGetObjectClass(obj);
+    afxArena* aren = AfxGetClassArena(cls);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxObjectStash const* stash = &stashes[i];
+        afxNat alignedSiz = AFX_ALIGNED_SIZEOF(stash->siz, AfxMax(sizeof(void*), stash->align));
+        void* p = stash->cnt ? AfxAllocateArena(aren, AfxMax(1, stash->cnt) * alignedSiz) : NIL;
+
+        if (stash->cnt && !p)
+        {
+            AfxThrowError();
+
+            for (afxNat j = i; j-- > 0;)
+            {
+                afxObjectStash const* stash2 = &stashes[j];
+                afxNat alignedSiz = AFX_ALIGNED_SIZEOF(stash2->siz, AfxMax(sizeof(void*), stash2->align));
+                AfxRecycleArena(aren, *stash2->var, AfxMax(1, stash2->cnt) * alignedSiz);
+            }
+        }
+        *stash->var = p;
+    }
+    return err;
+}
+
+_AFXINL afxError AfxDeallocateInstanceData(afxObject obj, afxNat cnt, afxObjectStash const stashes[])
+{
+    afxError err = AFX_ERR_NONE;
+    afxClass* cls = AfxGetObjectClass(obj);
+    afxArena* aren = AfxGetClassArena(cls);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxObjectStash const* stash = &stashes[i];
+        AfxAssert(*stash->var);
+        void* p = *stash->var;
+        
+        if (p)
+        {
+            afxNat alignedSiz = AFX_ALIGNED_SIZEOF(stash->siz, AfxMax(sizeof(void*), stash->align));
+            AfxRecycleArena(aren, p, AfxMax(1, stash->cnt) * alignedSiz);
+        }
+        *stash->var = NIL;
+    }
+    return err;
+}
 _AFX void AfxResetEventFilter(afxObject obj, afxBool(*filter)(afxObject,afxObject,afxEvent*))
 {
     afxError err = AFX_ERR_NONE;
@@ -269,7 +318,7 @@ _AFX afxError AfxInstallWatcher(afxObject obj, afxObject watcher)
             if (!(hdr->watchers = AfxAllocate(1, sizeof(*hdr->watchers), 0, AfxHere()))) AfxThrowError();
             else
             {
-                AfxSetUpChain(hdr->watchers, obj);
+                AfxDeployChain(hdr->watchers, obj);
             }
         }
 
@@ -280,7 +329,7 @@ _AFX afxError AfxInstallWatcher(afxObject obj, afxObject watcher)
                 if (!(filterInst->watching = AfxAllocate(1, sizeof(*filterInst->watching), 0, AfxHere()))) AfxThrowError();
                 else
                 {
-                    AfxSetUpChain(filterInst->watching, watcher);
+                    AfxDeployChain(filterInst->watching, watcher);
                 }
             }
 
@@ -357,6 +406,99 @@ _AFX afxBool AfxDeinstallWatcher(afxObject obj, afxObject watcher)
         break;
     }
     return rslt;
+}
+
+_AFX afxError AfxObserveObjects(afxObject watcher, afxNat cnt, afxObject objects[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(objects);
+    AfxAssert(cnt);
+
+    for (afxNat objIdx = 0; objIdx < cnt; objIdx++)
+    {
+        afxObject obj = objects[objIdx];
+        afxObjectBase* hdr = (afxObjectBase*)obj;
+        --hdr;
+        AfxAssertType(hdr, afxFcc_OBJ);
+        afxObjectBase* filterInst = (afxObjectBase*)watcher;
+        --filterInst;
+        AfxAssertType(filterInst, afxFcc_OBJ);
+        AfxLogEcho("Installing watcher <%p> for %p...", watcher, obj);
+        //AfxAssert(fn);
+
+        afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev) = filterInst->eventFilter;
+
+        while (fn)
+        {
+            afxEventFilter *flt;
+
+            if (hdr->watchers)
+            {
+                AfxChainForEveryLinkage(hdr->watchers, afxEventFilter, watched, flt)
+                {
+                    AfxAssert(AfxGetLinker(&flt->watched) == obj);
+
+                    if (AfxGetLinker(&flt->holder) == watcher)
+                        break; // already exists
+                }
+            }
+            else
+            {
+                if (!(hdr->watchers = AfxAllocate(1, sizeof(*hdr->watchers), 0, AfxHere()))) AfxThrowError();
+                else
+                {
+                    AfxDeployChain(hdr->watchers, obj);
+                }
+            }
+
+            if (!err)
+            {
+                if (!filterInst->watching)
+                {
+                    if (!(filterInst->watching = AfxAllocate(1, sizeof(*filterInst->watching), 0, AfxHere()))) AfxThrowError();
+                    else
+                    {
+                        AfxDeployChain(filterInst->watching, watcher);
+                    }
+                }
+
+                if (!err)
+                {
+                    if (!(flt = AfxAllocate(1, sizeof(*flt), 0, AfxHere()))) AfxThrowError();
+                    else
+                    {
+                        AfxPushLinkage(&flt->holder, filterInst->watching);
+                        AfxPushLinkage(&flt->watched, hdr->watchers);
+                    }
+                }
+            }
+
+            if (err)
+            {
+                if (hdr->watchers && hdr->watchers->cnt == 0)
+                {
+                    AfxDeallocate(hdr->watchers);
+                    hdr->watchers = NIL;
+                }
+
+                if (filterInst->watching && filterInst->watching->cnt == 0)
+                {
+                    AfxDeallocate(filterInst->watching);
+                    filterInst->watching = NIL;
+                }
+            }
+            break;
+        }
+
+        if (err)
+        {
+            for (afxNat i = objIdx; i-- > 0;)
+                AfxDeinstallWatcher(objects[i], watcher);
+
+            break;
+        }
+    }
+    return err;
 }
 
 _AFX afxBool AfxNotifyObject(afxObject obj, afxEvent* ev)

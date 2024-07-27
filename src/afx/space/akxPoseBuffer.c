@@ -15,8 +15,8 @@
  */
 
 #define _AFX_SIM_C
-#define _AFX_WORLD_POSE_C
-#include "qwadro/sim/afxSimulation.h"
+#define _AKX_POSE_BUFFER_C
+#include "../sim/dev/AkxSimDevKit.h"
 
 _AKX afxM4d* AfxPoseBufferGetWorldMatrixArray(akxPoseBuffer const wp)
 {

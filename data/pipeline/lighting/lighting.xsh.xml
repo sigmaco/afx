@@ -15,4 +15,18 @@
         <Transformer>../data/pipeline/lighting/lighting.xsh.xml</Transformer>
         <FragmentShader>../data/pipeline/lighting/lighting.fsh</FragmentShader>
     </Rasterizer>
+    <DrawTechnique>
+        <Pass id='lighting'>
+            <CullMode>BACK</CullMode>
+            <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+            <VertexShader>../data/pipeline/lighting/lighting.vsh</VertexShader>
+            
+            <FillMode>SOLID</FillMode>
+            <DepthTestEnabled></DepthTestEnabled>
+            <DepthWriteEnabled></DepthWriteEnabled>
+            <DepthCompareOp>LESS</DepthCompareOp>
+            <Transformer>../data/pipeline/lighting/lighting.xsh.xml</Transformer>
+            <FragmentShader>../data/pipeline/lighting/lighting.fsh</FragmentShader>
+        </Pass>
+    </DrawTechnique>
 </Qwadro>

@@ -22,7 +22,24 @@
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxBox.h"
 
-typedef afxV4d afxSimd(afxPlane);
+/// The orientation of the the floor plane with respect to the X,Y,Z axes, and which axes represent the side, front and up vectors as a basis for rotations.
+/// afxFloorPlane is used in to orient the Game Object 3D Viewer in Wwise, and in the transformation of geometry instances in Wwise Spatial Audio.
+typedef enum afxFloorPlane
+{
+    /// The floor is oriented along the ZX-plane. 
+    /// The front vector points towards +Z, the up vector towards +Y, and the side vector towards +X.
+    afxFloorPlane_XZ, // the default
+
+    /// The floor is oriented along the XY-plane. 
+    /// The front vector points towards +X, the up vector towards +Z, and the side vector towards +Y.
+    afxFloorPlane_XY,
+
+    /// The floor is oriented along the YZ-plane. 
+    /// The front vector points towards +Y, the up vector towards +X, and the side vector towards +Z.
+    afxFloorPlane_YZ
+} afxFloorPlane;
+
+typedef afxV4d AFX_SIMD afxPlane;
 
 #define AFX_PLANE_OFFSET 3
 #define AFX_PLANE_DIST 3

@@ -53,6 +53,7 @@ struct afxSegment
 
 #define AfxSpawnSegment(off_,siz_,stride_) (afxSegment){ .off = (afxSize)(off_), .siz = (afxSize)(siz_), .stride = (afxSize)(stride_) }
 
+#if 0
 AFXINL void AfxMakeSegment(afxSegment *seg, afxSize off, afxSize siz, afxSize stride)
 {
     afxError err = AFX_ERR_NONE;
@@ -61,6 +62,7 @@ AFXINL void AfxMakeSegment(afxSegment *seg, afxSize off, afxSize siz, afxSize st
     seg->siz = siz;
     seg->stride = stride ? stride : siz;
 }
+#endif
 
 typedef enum afxAllocationFlags
 {
@@ -229,7 +231,7 @@ AFX void                    AfxFill2(afxSize cnt, afxSize siz, void const* value
 AFX void                    AfxZero(void* p, afxSize siz);
 AFX void                    AfxZero2(afxSize cnt, afxSize siz, void *p);
 
-#define AFX_ALIGN(operand_,alignment_) ((operand_ + (alignment_ - 1)) & ~(alignment_ - 1))
+#define AFX_ALIGNED_SIZEOF(operand_,alignment_) ((operand_ + (alignment_ - 1)) & ~(alignment_ - 1))
 
 //#define AFX_ZERO(chnk_) AfxZero2((chnk_), sizeof(*(chnk_)))
 //#define AFX_FILL(chnk_, val_) AfxFill2((chnk_), sizeof(*(chnk_)), (val_))

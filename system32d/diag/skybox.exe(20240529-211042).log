@@ -1,0 +1,5 @@
+Booting up...
+Acquiring thread...  6216 "afxSystem_w32.c:502"afxString.c:31
+afxString.c:31
+(str->len >= base)
+    Invalid

@@ -14,22 +14,13 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_WORLD_POSE_H
-#define AFX_WORLD_POSE_H
-
-#include "qwadro/math/afxMathDefs.h"
-
-AFX_DEFINE_HANDLE(akxPoseBuffer);
-
-AFX_OBJECT(akxPoseBuffer)
-{
-    afxNat      matCnt;
-    afxM4d*     world;
-    afxM4d*     composite;
-};
-
 /// O objeto akxPoseBuffer é um buffer usado para manter o estado de um afxSkeleton de afxModel como expressado no "world space". 
 /// Você pode criar uma akxPoseBuffer assim: 
+
+#ifndef AKX_POSE_BUFFER_H
+#define AKX_POSE_BUFFER_H
+
+#include "qwadro/math/afxMathDefs.h"
 
 AKX afxError    AfxAcquirePoseBuffers(afxSimulation sim, afxNat cnt, afxNat const artCnt[], afxBool const excludeComposite[], akxPoseBuffer wp[]);
 
@@ -58,4 +49,4 @@ AKX afxM4d*     AfxGetCompositeMatrices(akxPoseBuffer const wp, afxNat baseArtId
 AKX afxM4d*     AfxPoseBufferGetWorldMatrixArray(akxPoseBuffer const wp);
 AKX afxM4d*     AfxPoseBufferGetCompositeMatrixArray(akxPoseBuffer const wp);
 
-#endif//AFX_WORLD_POSE_H
+#endif//AKX_POSE_BUFFER_H

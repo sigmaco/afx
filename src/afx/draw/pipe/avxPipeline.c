@@ -134,17 +134,24 @@ _AVX afxError _AvxPipStdDtor(avxPipeline pip)
     if (pip->stages)
     {
         for (afxNat i = pip->stageCnt; i-- > 0;)
+        {
+            AfxAssertObjects(1, &pip->stages[i].shd, afxFcc_SHD);
             AfxReleaseObjects(1, &pip->stages[i].shd);
-
+        }
         AfxDeallocate(pip->stages);
     }
 
     if (pip->liga)
+    {
+        AfxAssertObjects(1, &pip->liga, afxFcc_BSCH);
         AfxReleaseObjects(1, &pip->liga);
+    }
 
     if (pip->vin)
+    {
+        AfxAssertObjects(1, &pip->vin, afxFcc_VIN);
         AfxReleaseObjects(1, &pip->vin);
-
+    }
     return err;
 }
 
@@ -294,10 +301,10 @@ _AVX afxError _AvxPipStdCtor(avxPipeline pip, afxCookie const* cookie)
                     AfxAssertObjects(1, &pip->stages[stageIdx].shd, afxFcc_SHD);
                     afxStringBase strb;
 
-                    if (!AfxGetShaderStringBase(pip->stages[stageIdx].shd, &strb)) AfxThrowError();
+                    if (!AfxGetShaderStringBase(dctx, &strb)) AfxThrowError();
                     else
                     {
-                        if (!AfxCatalogStrings2(strb, 1, &pipb->shdFn[i], &pip->stages[stageIdx].fn.str.str))
+                        if (!AfxCatalogStrings(strb, 1, &pipb->shdFn[i], &pip->stages[stageIdx].fn.str))
                             AfxThrowError();
                     }
                 }
@@ -367,7 +374,7 @@ _AVX afxError AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, avxPipelineB
     return err;
 }
 
-_AVX avxPipeline AfxLoadPipelineFromXsh(afxDrawContext dctx, avxVertexInput vin, afxUri const* uri)
+_AVX avxPipeline AfxLoadPipelineFromXsh_(afxDrawContext dctx, avxVertexInput vin, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

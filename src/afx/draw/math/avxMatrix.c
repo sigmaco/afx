@@ -16,6 +16,7 @@
 
 // This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
 
+#include "../dev/AvxDevKit.h"
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/draw/math/avxMatrix.h"
 #include "qwadro/math/afxMathDefs.h"
@@ -111,7 +112,7 @@ _AVXINL void AfxCubemapMatrix_Direct3D(afxM4d m, afxNat face)
 {
     afxError err = NIL;
     AfxAssert(m);
-    AfxZeroM4d(m);
+    AfxM4dZero(m);
 
     switch (face)
     {
@@ -158,7 +159,7 @@ _AVXINL void AfxCubemapMatrix_OpenGL(afxM4d m, afxNat face)
 {
     afxError err = NIL;
     AfxAssert(m);
-    AfxZeroM4d(m);
+    AfxM4dZero(m);
 
     switch (face)
     {
@@ -215,26 +216,26 @@ _AVXINL void AfxComputeLookToMatrix(afxM4d m, afxV3d const eye, afxV3d const dir
         // Should be compatible with XMMATRIX XMMatrixLookToLH(FXMVECTOR EyePosition, FXMVECTOR EyeDirection, FXMVECTOR UpDirection)
 
         afxV4d x, y, z;
-        AfxNormalizeV3d(z, dir);
+        AfxV3dNormalize(z, dir);
         z[3] = 0;
-        AfxCrossV3d(x, up, z);
+        AfxV3dCross(x, up, z);
         x[3] = 0;
-        AfxNormalizeV3d(x, x);
-        AfxCrossV3d(y, z, x);
+        AfxV3dNormalize(x, x);
+        AfxV3dCross(y, z, x);
         y[3] = 0;
 
         afxV3d negEye;
-        AfxNegV3d(negEye, eye);
+        AfxV3dNeg(negEye, eye);
 
-        afxV4d const w = { AfxDotV3d(x, negEye), AfxDotV3d(y, negEye), AfxDotV3d(z, negEye), (afxReal)1 };
-        AfxSetM4d(m, x, y, z, w);
+        afxV4d const w = { AfxV3dDot(x, negEye), AfxV3dDot(y, negEye), AfxV3dDot(z, negEye), (afxReal)1 };
+        AfxM4dSet(m, x, y, z, w);
     }
     else // OpenGL/Vulkan/Qwadro
     {
         // Should be compatible with glLookTo
 
         afxV3d target;
-        AfxAddV3d(target, eye, dir);
+        AfxV3dAdd(target, eye, dir);
         AfxComputeLookAtMatrix(m, eye, target, up, FALSE);
     }
 }
@@ -252,7 +253,7 @@ _AVXINL void AfxComputeLookAtMatrix(afxM4d m, afxV3d const eye, afxV3d const tar
         // Should be compatible with XMMATRIX XMMatrixLookAtLH(FXMVECTOR EyePosition, FXMVECTOR FocusPosition, FXMVECTOR UpDirection)
 
         afxV4d dir;
-        AfxSubV3d(dir, target, eye);
+        AfxV3dSub(dir, target, eye);
         AfxComputeLookToMatrix(m, eye, dir, up, clip);
     }
     else // OpenGL/Vulkan/Qwadro
@@ -260,20 +261,20 @@ _AVXINL void AfxComputeLookAtMatrix(afxM4d m, afxV3d const eye, afxV3d const tar
         // Should be compatible with glLookAt
 
         afxV4d dir;
-        AfxSubV3d(dir, eye, target);
+        AfxV3dSub(dir, eye, target);
         AfxComputeLookToMatrix(m, eye, dir, up, clip);
 
         afxV4d f, u, s;
-        AfxSubV3d(f, target, eye);
-        AfxNormalizeV3d(f, f);
-        AfxCrossV3d(s, f, up);
-        AfxCrossV3d(u, s, f);
-        AfxNegV3d(f, f);
+        AfxV3dSub(f, target, eye);
+        AfxV3dNormalize(f, f);
+        AfxV3dCross(s, f, up);
+        AfxV3dCross(u, s, f);
+        AfxV3dNeg(f, f);
         s[3] = 0.f;
         u[3] = 0.f;
         f[3] = 0.f;
-        afxV4d w = { -AfxDotV3d(s, eye), -AfxDotV3d(u, eye), AfxDotV3d(f, eye), 1.f };
-        AfxSetM4d(m, s, u, f, w);
+        afxV4d w = { -AfxV3dDot(s, eye), -AfxV3dDot(u, eye), AfxV3dDot(f, eye), 1.f };
+        AfxM4dSet(m, s, u, f, w);
     }
 }
 
@@ -287,7 +288,7 @@ _AVXINL void AfxComputeOrthographicMatrix(afxM4d m, afxV2d const extent, afxReal
     AfxAssert(!AfxRealIsEqual(extent[0], 0.0f, 0.00001f));
     AfxAssert(!AfxRealIsEqual(extent[1], 0.0f, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
-    AfxResetM4d(m);
+    AfxM4dReset(m);
 
     if (clip->nonRh)
     {
@@ -328,7 +329,7 @@ _AVXINL void AfxComputeOffcenterOrthographicMatrix(afxM4d m, afxReal left, afxRe
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
-    AfxResetM4d(m);
+    AfxM4dReset(m);
 
     AfxAssert(!AfxRealIsEqual(right, left, 0.00001f));
     AfxAssert(!AfxRealIsEqual(top, bottom, 0.00001f));
@@ -429,7 +430,7 @@ _AVXINL void AfxComputePerspectiveMatrix(afxM4d m, afxV2d const extent, afxReal 
     AfxAssert(!AfxRealIsEqual(extent[1], 0.0f, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
     AfxAssert(near > 0.f && far > 0.f);
-    AfxZeroM4d(m);
+    AfxM4dZero(m);
 
     if (clip->nonRh)
     {
@@ -478,7 +479,7 @@ _AVXINL void AfxComputeFovPerspectiveMatrix(afxM4d m, afxReal fovY, afxReal aspe
     AfxAssert(!AfxRealIsEqual(aspectRatio, 0.0f, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
     AfxAssert(near > 0.f && far > 0.f);
-    AfxZeroM4d(m);
+    AfxM4dZero(m);
 
     if (clip->nonRh)
     {
@@ -537,7 +538,7 @@ _AVXINL void AfxComputeOffcenterPerspectiveMatrix(afxM4d m, afxReal left, afxRea
     AfxAssert(!AfxRealIsEqual(top, bottom, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
     AfxAssert(near > 0.f && far > 0.f);
-    AfxZeroM4d(m);
+    AfxM4dZero(m);
 
     if (clip->nonRh)
     {
@@ -616,7 +617,7 @@ _AVXINL void AfxComputeRenderWareViewM4d(afxM4d m, afxM4d const cam)
     AfxAssert(cam);
 
     afxM4d inv;
-    AfxInvertM4d(cam, inv);
+    AfxM4dInvert(inv, cam);
     m[0][0] = -inv[0][0];
     m[0][1] = inv[0][1];
     m[0][2] = inv[0][2];

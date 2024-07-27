@@ -21,8 +21,8 @@
 
 #include "qwadro/draw/math/avxViewport.h"
 #include "qwadro/draw/afxDrawDefs.h"
-#include "qwadro/draw/io/afxRaster.h"
-#include "qwadro/draw/io/afxBuffer.h"
+#include "qwadro/draw/afxRaster.h"
+#include "qwadro/draw/afxBuffer.h"
 #include "qwadro/draw/pipe/avxSampler.h"
 #include "qwadro/draw/io/afxTypography.h"
 #include "qwadro/draw/pipe/avxQueryPool.h"
@@ -57,7 +57,7 @@ AFX_DEFINE_STRUCT(avxVertexInputPoint) /// vertex attribute input stream
 
 AVX afxCmdId            AvxCmdAdjustViewports
 (
-    avxCmdb        cmdb,
+    avxCmdb             cmdb,
     afxNat              baseIdx, /// is the index of the first viewport whose parameters are updated by the command.
     afxNat              cnt, /// is the number of viewports whose parameters are updated by the command.
     avxViewport const   viewports[] /// is a pointer to an array of avxViewport structures specifying viewport parameters.
@@ -76,7 +76,7 @@ AVX afxCmdId            AvxCmdAdjustViewports
 
 AVX afxCmdId            AvxCmdBindVertexSources
 (
-    avxCmdb        cmdb,
+    avxCmdb             cmdb,
     afxNat              baseSlotIdx, /// is the index of the first vertex input binding whose state is updated by the command.
     afxNat              slotCnt, /// is the number of vertex input bindings whose state is updated by the command.
     afxBuffer           buffers[], /// is an array of buffer handles.
@@ -90,7 +90,7 @@ AVX afxCmdId            AvxCmdBindVertexSources
 
 AVX afxCmdId            AvxCmdBindIndexSource
 (
-    avxCmdb        cmdb,
+    avxCmdb             cmdb,
     afxBuffer           buf, /// is the buffer being bound.
     afxNat32            offset, /// is the starting offset in bytes within buffer used in index buffer address calculations.
     afxNat32            range, /// is the size in bytes of index data bound from buffer.
@@ -102,15 +102,15 @@ AVX afxCmdId            AvxCmdBindIndexSource
 
 AVX afxCmdId            AvxCmdSetPrimitiveTopology
 (
-    avxCmdb        cmdb,
-    avxTopology     topology /// specifies the primitive topology to use for drawing.
+    avxCmdb             cmdb,
+    avxTopology         topology /// specifies the primitive topology to use for drawing.
 );
 
 /// Set front face orientation dynamically for a command buffer.
 
 AVX afxCmdId            AvxCmdSwitchFrontFace
 (
-    avxCmdb        cmdb,
+    avxCmdb             cmdb,
     afxBool             cw /// is a value specifying the front-facing triangle orientation to be used for culling.
 );
 
@@ -118,7 +118,7 @@ AVX afxCmdId            AvxCmdSwitchFrontFace
 
 AVX afxCmdId            AvxCmdSetCullMode
 (
-    avxCmdb        cmdb,
+    avxCmdb             cmdb,
     avxCullMode         mode /// specifies the cull mode property to use for drawing.
 );
 

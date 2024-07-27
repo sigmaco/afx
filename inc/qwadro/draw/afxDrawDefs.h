@@ -70,8 +70,6 @@ AFX_DEFINE_HANDLE(avxCanvas);
 AFX_DEFINE_HANDLE(avxCamera);
 AFX_DEFINE_HANDLE(afxTypography);
 
-typedef afxNat afxSimd(afxWhd[3]);
-typedef afxReal afxSimd(afxNdc[3]);
 
 typedef afxNat32 afxCmdId;
 
@@ -127,9 +125,9 @@ typedef enum avxStencilOp
     avxStencilOp_KEEP = 0,
     avxStencilOp_ZERO = 1,
     avxStencilOp_REPLACE = 2,
-    avxStencilOp_INC_AND_CLAMP = 3,
-    avxStencilOp_DEC_AND_CLAMP = 4,
-    avxStencilOp_INVERT = 5,
+    avxStencilOp_INC_N_CLAMP = 3,
+    avxStencilOp_DEC_N_CLAMP = 4,
+    avxStencilOp_INV = 5,
     avxStencilOp_INC_AND_WRAP = 6,
     avxStencilOp_DEC_AND_WRAP = 7,
 
@@ -169,8 +167,8 @@ typedef enum avxCullMode
 {
     avxCullMode_NONE, /// specifies that no triangles are discarded.
     avxCullMode_FRONT   = AFX_BIT(0), /// specifies that front-facing triangles are discarded.
-    avxCullMode_BACK  = AFX_BIT(1), /// specifies that back-facing triangles are discarded.
-    avxCullMode_BOTH  = avxCullMode_FRONT | avxCullMode_BACK, /// specifies that all triangles are discarded.
+    avxCullMode_BACK    = AFX_BIT(1), /// specifies that back-facing triangles are discarded.
+    avxCullMode_BOTH    = avxCullMode_FRONT | avxCullMode_BACK, /// specifies that all triangles are discarded.
     
     avxCullMode_TOTAL
 } avxCullMode;
@@ -289,13 +287,13 @@ typedef enum
     /// B = Bs0 × Sb + Bd × Db
     /// A = As0 × Sa + Ad × Da
 
-    avxBlendOp_SUBTRACT,
+    avxBlendOp_SUB,
     /// R = Rs0 × Sr - Rd × Dr
     /// G = Gs0 × Sg - Gd × Dg
     /// B = Bs0 × Sb - Bd × Db
     /// A = As0 × Sa - Ad × Da
 
-    avxBlendOp_REVERSE_SUBTRACT,
+    avxBlendOp_REV_SUB,
     /// R = Rd × Dr - Rs0 × Sr
     /// G = Gd × Dg - Gs0 × Sg
     /// B = Bd × Db - Bs0 × Sb
@@ -436,83 +434,18 @@ AVX avxFillMode             AfxFindFillMode(afxString const *str);
 AVX avxShaderStage          AfxFindShaderStage(afxString const *str);
 AVX afxVertexFormat         AfxFindVertexFormat(afxString const *str);
 
-AVX afxString const*        AfxStringifyPrimitiveTopology(avxTopology pt, afxRestring *out);
-AVX afxString const*        AfxStringifyLogicOp(avxLogicOp f, afxRestring *out);
-AVX afxString const*        AfxStringifyStencilOp(avxStencilOp f, afxRestring *out);
-AVX afxString const*        AfxStringifyCompareOp(avxCompareOp f, afxRestring *out);
-AVX afxString const*        AfxStringifyCullMode(avxCullMode cm, afxRestring *out);
-AVX afxString const*        AfxStringifyFrontFace(avxFrontFace ff, afxRestring *out);
-AVX afxString const*        AfxStringifyFillMode(avxFillMode fm, afxRestring *out);
-AVX afxString const*        AfxStringifyShaderStage(avxShaderStage ss, afxRestring *out);
-AVX afxString const*        AfxStringifyVertexFormat(afxVertexFormat fmt, afxRestring *out);
+AVX afxString const*        AfxStringifyPrimitiveTopology(avxTopology pt, afxString *out);
+AVX afxString const*        AfxStringifyLogicOp(avxLogicOp f, afxString *out);
+AVX afxString const*        AfxStringifyStencilOp(avxStencilOp f, afxString *out);
+AVX afxString const*        AfxStringifyCompareOp(avxCompareOp f, afxString *out);
+AVX afxString const*        AfxStringifyCullMode(avxCullMode cm, afxString *out);
+AVX afxString const*        AfxStringifyFrontFace(avxFrontFace ff, afxString *out);
+AVX afxString const*        AfxStringifyFillMode(avxFillMode fm, afxString *out);
+AVX afxString const*        AfxStringifyShaderStage(avxShaderStage ss, afxString *out);
+AVX afxString const*        AfxStringifyVertexFormat(afxVertexFormat fmt, afxString *out);
 
 AVX afxNat AfxVertexFormatGetSize(afxVertexFormat fmt);
 
 AVX afxResult       AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSiz, afxSize *vecSiz, afxSize *siz);
-
-AVX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHere const hint);
-//#define                     AfxAssertWhd(max_,base_,range_) _AfxAssertWhd((max_),(base_),(range_))
-
-AVXINL void AfxMinWhd(afxNat whd[3], afxNat const a[3], afxNat const b[3])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(whd);
-    AfxAssert(a);
-    AfxAssert(b);
-    whd[0] = a[0] < b[0] ? a[0] : b[0];
-    whd[1] = a[1] < b[1] ? a[1] : b[1];
-    whd[2] = a[2] < b[2] ? a[2] : b[2];
-}
-
-AVXINL void AfxMaxWhd(afxNat whd[3], afxNat const a[3], afxNat const b[3])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(whd);
-    AfxAssert(a);
-    AfxAssert(b);
-    whd[0] = a[0] > b[0] ? a[0] : b[0];
-    whd[1] = a[1] > b[1] ? a[1] : b[1];
-    whd[2] = a[2] > b[2] ? a[2] : b[2];
-}
-
-AVXINL afxNat AfxMagWhd(afxNat const whd[3])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(whd);
-    return whd[0] * whd[1] * whd[2];
-}
-
-AVXINL void AfxZeroWhd(afxNat whd[3])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(whd);
-    whd[0] = 0;
-    whd[1] = 0;
-    whd[2] = 0;
-}
-
-AVXINL void AfxCopyWhd(afxNat whd[3], afxNat const in[3])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(whd);
-    AfxAssert(in);
-    whd[0] = in[0];
-    whd[1] = in[1];
-    whd[2] = in[2];
-}
-
-AVXINL void AfxClampWhd(afxNat whd[3], afxNat const in[3], afxNat const min[3], afxNat const max[3])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(whd);
-    AfxAssert(in);
-    AfxAssert(min);
-    AfxAssert(max);
-    AfxAssert(min[0] <= max[0]);
-    AfxAssert(min[1] <= max[1]);
-    AfxAssert(min[2] <= max[2]);
-    AfxMaxWhd(whd, min, in);
-    AfxMinWhd(whd, max, whd);
-}
 
 #endif//AVX_DRAW_DEFS_H

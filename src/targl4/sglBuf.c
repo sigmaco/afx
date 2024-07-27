@@ -15,9 +15,7 @@
  */
 
 #include "sgl.h"
-#include "qwadro/draw/io/afxBuffer.h"
-#include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
 
 #if 0
 _SGL void _AfxStdUbufImplUnmap(afxBuffer buf)
@@ -163,6 +161,32 @@ _SGL afxError _DpuLoadBuf(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat ran
     return err;
 }
 
+_SGL afxError _DpuLoadBuf2(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat range, afxNat dstStride, afxByte const* src, afxNat srcStride)
+{
+    afxError err = AFX_ERR_NONE;
+    glVmt const* gl = &dpu->gl;
+    GLenum glTarget = GL_COPY_WRITE_BUFFER;
+    GLenum glAccess = GL_MAP_WRITE_BIT;
+    DpuBindAndSyncBuf(dpu, glTarget, buf);
+
+    if (dstStride > 1 || srcStride > 1)
+    {
+        afxByte* dst = gl->MapBufferRange(glTarget, offset, range, glAccess); _SglThrowErrorOccuried();
+
+        if (!dst) AfxThrowError();
+        else
+        {
+            AfxStream(range / AfxMax(1, AfxMin(srcStride, dstStride)), srcStride, dstStride, src, dst);
+            gl->UnmapBuffer(glTarget); _SglThrowErrorOccuried();
+        }
+    }
+    else
+    {
+        gl->BufferSubData(glTarget, offset, range, src); _SglThrowErrorOccuried();
+    }
+    return err;
+}
+
 _SGL afxError _DpuStoreBuf(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat range, afxByte* dst)
 {
     afxError err = AFX_ERR_NONE;
@@ -170,6 +194,32 @@ _SGL afxError _DpuStoreBuf(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat ra
     GLenum glTarget = GL_COPY_READ_BUFFER;
     DpuBindAndSyncBuf(dpu, glTarget, buf);
     gl->GetBufferSubData(glTarget, offset, range, dst); _SglThrowErrorOccuried();
+    return err;
+}
+
+_SGL afxError _DpuStoreBuf2(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat range, afxNat srcStride, afxByte* dst, afxNat dstStride)
+{
+    afxError err = AFX_ERR_NONE;
+    glVmt const* gl = &dpu->gl;
+    GLenum glTarget = GL_COPY_READ_BUFFER;
+    GLenum glAccess = GL_MAP_READ_BIT;
+    DpuBindAndSyncBuf(dpu, glTarget, buf);
+
+    if (dstStride > 1 || srcStride > 1)
+    {
+        void* src = gl->MapBufferRange(glTarget, offset, range, glAccess); _SglThrowErrorOccuried();
+
+        if (!src) AfxThrowError();
+        else
+        {
+            AfxStream(range / AfxMax(1, AfxMin(srcStride, dstStride)), srcStride, dstStride, src, dst);
+            gl->UnmapBuffer(glTarget); _SglThrowErrorOccuried();
+        }
+    }
+    else
+    {
+        gl->GetBufferSubData(glTarget, offset, range, dst); _SglThrowErrorOccuried();
+    }
     return err;
 }
 
@@ -193,6 +243,29 @@ _SGL afxError _DpuOutputBuf(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat r
     return err;
 }
 
+_SGL afxError _DpuOutputBuf2(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat range, afxNat srcStride, afxStream out, afxSize at, afxNat dstStride)
+{
+    afxError err = AFX_ERR_NONE;
+    glVmt const* gl = &dpu->gl;
+    GLenum glTarget = GL_COPY_READ_BUFFER;
+    GLenum glAccess = GL_MAP_READ_BIT;
+    DpuBindAndSyncBuf(dpu, glTarget, buf);
+
+    void* src = gl->MapBufferRange(glTarget, offset, range, glAccess); _SglThrowErrorOccuried();
+
+    if (!src) AfxThrowError();
+    else
+    {
+        if (dstStride > 1 || srcStride > 1)
+            AfxWriteStreamAt2(out, at, range, dstStride, src, srcStride);
+        else
+            AfxWriteStreamAt(out, at, range, 0, src);
+
+        gl->UnmapBuffer(glTarget); _SglThrowErrorOccuried();
+    }
+    return err;
+}
+
 _SGL afxError _DpuInputBuf(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat range, afxStream in, afxSize at)
 {
     afxError err = AFX_ERR_NONE;
@@ -207,6 +280,30 @@ _SGL afxError _DpuInputBuf(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat ra
     else
     {
         AfxReadStreamAt(in, at, range, 0, dst);
+        gl->UnmapBuffer(glTarget); _SglThrowErrorOccuried();
+        //gl->FlushMappedBufferRange(glTarget, op->dstOffset, op->range); _SglThrowErrorOccuried();
+    }
+    return err;
+}
+
+_SGL afxError _DpuInputBuf2(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat range, afxNat dstStride, afxStream in, afxSize at, afxNat srcStride)
+{
+    afxError err = AFX_ERR_NONE;
+    glVmt const* gl = &dpu->gl;
+    GLenum glTarget = GL_COPY_WRITE_BUFFER;
+    GLenum glAccess = GL_MAP_WRITE_BIT;
+    DpuBindAndSyncBuf(dpu, glTarget, buf);
+
+    afxByte* dst = gl->MapBufferRange(glTarget, offset, range, glAccess); _SglThrowErrorOccuried();
+
+    if (!dst) AfxThrowError();
+    else
+    {
+        if (dstStride > 1 || srcStride > 1)
+            AfxReadStreamAt2(in, at, range, srcStride, dst, dstStride);
+        else
+            AfxReadStreamAt(in, at, range, 0, dst);
+
         gl->UnmapBuffer(glTarget); _SglThrowErrorOccuried();
         //gl->FlushMappedBufferRange(glTarget, op->dstOffset, op->range); _SglThrowErrorOccuried();
     }
@@ -234,7 +331,7 @@ _SGL afxError _DpuRemapBuf(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat ra
         AfxAssert(!buf->m.bytemap);
 
 #if !0
-        if (range == AfxGetBufferCapacity(buf))
+        if (range == AfxGetBufferCapacity(buf, 0))
         {
             if (!(buf->m.access & afxBufferAccess_R))
             {
@@ -350,7 +447,7 @@ _SGL afxError _BufDtorCb(afxBuffer buf)
 
     if (buf->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 0, (void*)buf->glHandle);
+        _SglDctxDeleteGlRes(dctx, 0, buf->glHandle);
         buf->glHandle = 0;
     }
 
@@ -416,7 +513,10 @@ _SGL afxError _BufCtorCb(afxBuffer buf, afxCookie const* cookie)
 
         if (spec->src)
         {
-            if (AfxUpdateBuffer(buf, 0, buf->m.cap, spec->src))
+            afxBufferIo iop = { 0 };
+            iop.range = buf->m.cap;
+
+            if (AfxUpdateBuffer(buf, 0, 1, &iop, spec->src))
                 AfxThrowError();
         }
 

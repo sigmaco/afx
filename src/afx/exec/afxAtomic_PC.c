@@ -14,12 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../src/afx/dev/afxDevCoreBase.h"
-
-#ifdef AFX_OS_WIN
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
 #endif
+
+#include "../src/afx/dev/afxDevCoreBase.h"
 
 #ifdef AFX_OS_WIN
 
@@ -48,7 +48,7 @@ _AFXINL afxInt64 AfxAddAtom64(afxAtom64* dst, afxInt64 value) { return Interlock
 _AFXINL afxInt64 AfxSubAtom64(afxAtom64* dst, afxInt64 value) { return InterlockedExchangeAdd64(dst, -value) - value; }
 _AFXINL afxInt64 AfxAndAtom64(afxAtom64* dst, afxInt64 value) { return InterlockedAnd64(dst, value) & value; }
 _AFXINL afxInt64 AfxOrAtom64(afxAtom64* dst, afxInt64 value) { return InterlockedOr64(dst, value) | value; }
-_AFXINL afxBool AfxCasAtom64(afxAtom64* dst, afxInt64* expected, afxInt64 proposed) { return InterlockedCompareExchange64(dst, proposed, *expected) == *expected ? 1 : 0; }
+_AFXINL afxBool AfxCasAtom64(afxAtom64* dst, afxInt64* expected, afxInt64 proposed) { afxInt64 exp = *expected;  return InterlockedCompareExchange64(dst, proposed, exp) == exp ? 1 : 0; }
 
 _AFXINL void* AfxLoadAtomPtr(afxAtomPtr* src) { return (void*)*src; }
 

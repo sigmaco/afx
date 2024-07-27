@@ -18,8 +18,7 @@
 #define AFX_BINK_VIDEO_H
 
 #include "qwadro/ux/afxUxDefs.h"
-#include "qwadro/draw/io/afxRaster.h"
-#include "qwadro/draw/io/afxBuffer.h"
+#include "qwadro/draw/afxUnivideo.h"
 #include "qwadro/exec/afxSystem.h"
 
 AFX_DEFINE_STRUCT(avxBinkSummary)

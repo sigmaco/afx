@@ -14,10 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_MODEL_H
-#define AFX_MODEL_H
+#ifndef AKX_MODEL_H
+#define AKX_MODEL_H
 
-#include "afxMesh.h"
+#include "qwadro/cad/afxMesh.h"
 #include "qwadro/space/afxSkeleton.h"
 
 /// O objeto afxModel descreve uma coleção de afxMesh'es que são todas ligadas ao mesmo afxSkeleton.
@@ -25,29 +25,7 @@
 /// Um ator seria um modelo, assim seria um veículo, ou mesmo uma edificação inteira se essa fossa modelada como uma hierarquia singular.
 /// Um afxModel completo é feito de um afxSkeleton e um conjunto de afxMesh'es, ambos dos quais podem ser acessados diretamente da estrutura do afxModel.
 
-#ifdef _AFX_MODEL_C
-AFX_DEFINE_STRUCT(afxMeshRig)
-{
-    afxMesh             msh;
-    afxMaterial         txd;
-    afxNat*             biasToJointMap; // to assembled skeleton.
-    afxNat*             biasFromJointMap; // from original skeleton.
-    afxSkeleton         sklOrig;
-};
-
-AFX_OBJECT(afxModel)
-{
-    afxSkeleton         skl;
-    afxNat              rigCnt;
-    afxMeshRig*         rigs;
-    afxBox             aabb;
-    afxTransform        displacement;
-    afxString           id; // 32
-    afxStringBase       strb;
-};
-#endif
-
-AFX_DEFINE_STRUCT(afxModelBlueprint)
+AFX_DEFINE_STRUCT(akxModelBlueprint)
 /// Data needed for model assembly
 {
     afxString32         id;
@@ -55,15 +33,14 @@ AFX_DEFINE_STRUCT(afxModelBlueprint)
     afxTransform        displacement;
     afxNat              rigCnt;
     afxMesh*            meshes;
-    afxStringBase       strb;
 };
 
-AKX afxBool             AfxGetModelId(afxModel mdl, afxString* id);
+AKX afxBool             AfxGetModelUrn(afxModel mdl, afxString* id);
 
 AKX afxSkeleton         AfxGetModelSkeleton(afxModel mdl);
 
 AKX void                AfxComputeModelDisplacement(afxModel mdl, afxM4d m);
-AKX void                AfxUpdateModelDisplacement(afxModel mdl, afxTransform const* xform);
+AKX void                AfxUpdateModelDisplacement(afxModel mdl, afxTransform const* t);
 
 AKX afxNat              AfxCountModelRigs(afxModel mdl);
 AKX afxNat              AfxCountRiggedMeshes(afxModel mdl);
@@ -71,7 +48,7 @@ AKX afxNat              AfxEnumerateRiggedMeshes(afxModel mdl, afxNat baseRig, a
 AKX afxError            AfxRigMeshes(afxModel mdl, afxSkeleton origSkl, afxNat baseRig, afxNat rigCnt, afxMesh const meshes[]);
 
 AKX afxBool             AfxRiggedMeshIsTransplanted(afxModel mdl, afxNat rigIdx);
-AKX afxSkeleton         AfxGetRiggedMeshDonor(afxModel mdl, afxNat rigIdx);
+AKX afxSkeleton         AfxGetRiggedMeshSkeleton(afxModel mdl, afxNat rigIdx);
 
 AKX afxMaterial         AfxGetRiggedMeshTxd(afxModel mdl, afxNat rigIdx);
 AKX void                AfxSetRiggedMeshTxd(afxModel mdl, afxNat rigIdx, afxMaterial mtl);
@@ -84,8 +61,8 @@ AKX void                AfxComputeRiggedMeshMatrices(afxModel mdl, afxNat rigIdx
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AKX afxError            AfxAssembleModel(afxSimulation sim, afxNat cnt, afxModelBlueprint const blueprints[], afxModel models[]);
+AKX afxError            AfxAssembleModel(afxSimulation sim, afxNat cnt, akxModelBlueprint const blueprints[], afxModel models[]);
 
 AKX void                AfxTransformModels(afxM3d const ltm, afxM3d const iltm, afxReal ltmTol, afxV3d const atv, afxReal atvTol, afxFlags flags, afxNat cnt, afxModel models[]);
 
-#endif//AFX_MODEL_H
+#endif//AKX_MODEL_H

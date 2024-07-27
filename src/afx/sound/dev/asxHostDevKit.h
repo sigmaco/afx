@@ -20,7 +20,7 @@
 #define ASX_HOST_DEV_KIT_H
 
 #include "../src/afx/dev/afxDevCoreBase.h"
-#include "qwadro/sound/afxSoundSystem.h"
+#include "qwadro/sound/afxUnisound.h"
 
 typedef enum _sdevReqCode
 {

@@ -20,7 +20,7 @@
 #include <string.h>
 
 #define _AFX_ARENA_C
-#include "qwadro/exec/afxSystem.h"
+#include "../src/afx/dev/afxDevCoreBase.h"
 
 AFX_DEFINE_STRUCT(afxArenaCleanup)
 {
@@ -127,47 +127,47 @@ _AFX void AfxArenaDtor(afxArena* aren);
  *
  * Returns 0 on failure.
  */
-_AFX afxSize AfxAddArenaCleanup(afxArena* aren, void(*action)(void *data,void*extra), void *data,void*extra);
+_AFX afxSize AfxPushArenaCleanup(afxArena* aren, void(*action)(void *data,void*extra), void *data,void*extra);
 
 /*
  * Remove cleanup, both action and data must match exactly.
  */
-_AFX void AfxRemoveArenaCleanup(afxArena* aren, void(*action)(void *,void*), void *data);
+_AFX afxBool AfxPopArenaCleanup(afxArena* aren, void(*action)(void *,void*), void *data);
 
 /*
  * Allocate SIZE bytes of memory inside REGION.  The memory is
  * deallocated when AfxExhaustArena is called for this aren.
  */
-_AFX void *AfxRequestArenaUnit(afxArena* aren, afxSize size);
+_AFX void *AfxAllocateArena(afxArena* aren, afxSize size);
 
 /** Allocate array with integer overflow checks, in aren */
-_AFX void *AfxRequestArenaUnits(afxArena* aren, afxSize num, afxSize size);
+_AFX void *AfxCoallocateArena(afxArena* aren, afxSize num, afxSize size);
 
 /*
  * Allocate SIZE bytes of memory inside REGION and copy INIT into it.
  * The memory is deallocated when AfxExhaustArena is called for this
  * aren.
  */
-_AFX void *AfxRequestArenaStorage(afxArena* aren, const void *init, afxSize size);
+_AFX void *AfxAllocateArenaCopied(afxArena* aren, afxSize size, const void *init);
 
 /**
  * Allocate array (with integer overflow check on sizes), and init with
  * the given array copied into it.  Allocated in the aren
  */
-_AFX void *AfxRequestArenaStorages(afxArena* aren, const void *init, afxSize num, afxSize size);
+_AFX void *AfxCoallocateArenaCopied(afxArena* aren, afxSize num, afxSize size, const void *init);
 
 /*
  * Allocate SIZE bytes of memory inside REGION that are initialized to
  * 0.  The memory is deallocated when AfxExhaustArena is called for
  * this aren.
  */
-_AFX void *AfxRequestZeroedArenaUnit(afxArena* aren, afxSize size);
+_AFX void *AfxAllocateArenaZeroed(afxArena* aren, afxSize size);
 
 /**
  * Allocate array (with integer overflow check on sizes), and zero it.
  * Allocated in the aren.
  */
-_AFX void *AfxRequestZeroedArenaUnits(afxArena* aren, afxSize num, afxSize size);
+_AFX void *AfxCoallocateArenaZeroed(afxArena* aren, afxSize num, afxSize size);
 
 /*
  * Run the cleanup actions and free all memory associated with REGION.
@@ -184,7 +184,7 @@ _AFX char *AfxArenaDuplicateString(afxArena* aren, const char *string);
  * Recycle an allocated memory block. Pass size used to alloc it.
  * Does nothing if recycling is not enabled for the aren.
  */
-_AFX void AfxRecycleArenaUnit(afxArena* aren, void *block, afxSize size);
+_AFX void AfxRecycleArena(afxArena* aren, void *block, afxSize size);
 
 /*
  * Print some REGION statistics to OUT.
@@ -220,19 +220,16 @@ _AFX void AfxLogArenaStats(afxArena* aren);
 #endif /* PACKED_STRUCTS */
 /* #define CHECK_DOUBLE_FREE 0 */ /* set to 1 to perform expensive check for double recycle() */
 
-static void* alloc_region_base(afxArena* result, afxSize initial_cleanupCnt)
+_AFX void* AfxArenaCtor2(afxArena* result, afxSize chunkSiz, afxSize largeItemSiz, afxSize initial_cleanupCnt, int recycle)
 {
     afxError err = AFX_ERR_NONE;
-    //afxArena result = (afxArena )allocator(sizeof(AFX_OBJECT(afxArena)));
-    
-    if (!result)
-        return NIL;
 
     result->totalAllocated = 0;
     result->smallItems = 0;
     result->largeItems = 0;
     result->chunkCnt = 1;
     result->unusedSpace = 0;
+    result->recycleEnabled = !!recycle;
     result->recycleBin = NIL;
     result->recycleSiz = 0;
     result->largeList = NIL;
@@ -247,46 +244,10 @@ static void* alloc_region_base(afxArena* result, afxSize initial_cleanupCnt)
     AfxAssert(initial_cleanupCnt > 0);
     result->maxCleanupCnt = initial_cleanupCnt;
     result->cleanupCnt = 0;
-    result->cleanups = (afxArenaCleanup *)AfxAllocate(result->maxCleanupCnt, sizeof(afxArenaCleanup), 0, AfxHere());
-    
-    if (!result->cleanups)
-    {
-
-        return NIL;
-    }
+    result->cleanups = NIL;
 
     result->chunkSiz = DEFAULT_CHUNK_SIZE;
     result->largeItemSiz = DEFAULT_LARGE_OBJECT_SIZE;
-    return result;
-}
-
-_AFX void* AfxArenaCtor(afxArena* result)
-{
-    /*afxArena result =*/ alloc_region_base(result, DEFAULT_INITIAL_CLEANUP_SIZE);
-
-    if (!result)
-        return NIL;
-
-    result->data = (char *)AfxAllocate(1, result->chunkSiz, 0, AfxHere());
-
-    if (!result->data)
-    {
-        AfxDeallocate(result->cleanups);
-        //deallocator(result);
-        return NIL;
-    }
-    result->initialData = result->data;
-
-    return result;
-}
-
-_AFX void* AfxArenaCtor2(afxArena* result, afxSize chunkSiz, afxSize largeItemSiz, afxSize initial_cleanup_size, int recycle)
-{
-    afxError err = AFX_ERR_NONE;
-    /*afxArena result = */alloc_region_base(result, initial_cleanup_size);
-
-    if (!result)
-        return NIL;
 
     AfxAssert(largeItemSiz <= chunkSiz);
     result->chunkSiz = chunkSiz;
@@ -294,6 +255,7 @@ _AFX void* AfxArenaCtor2(afxArena* result, afxSize chunkSiz, afxSize largeItemSi
 
     if (result->chunkSiz > 0)
     {
+#if 0
         result->data = (char *)AfxAllocate(1, result->chunkSiz, 0, AfxHere());
 
         if (!result->data)
@@ -303,33 +265,23 @@ _AFX void* AfxArenaCtor2(afxArena* result, afxSize chunkSiz, afxSize largeItemSi
             return NIL;
         }
         result->initialData = result->data;
-    }
-
-    if (recycle)
-    {
-        result->recycleBin = AfxAllocate(result->largeItemSiz, sizeof(afxArenaRecycleItem*), 0, AfxHere());
-
-        if (!result->recycleBin)
-        {
-            AfxArenaDtor(result);
-            return NIL;
-        }
-        AfxZero2(result->largeItemSiz, sizeof(afxArenaRecycleItem*), result->recycleBin);
+#endif
     }
     return result;
 }
 
 _AFX void AfxArenaDtor(afxArena* aren)
 {
-    
-
     if (!aren)
         return;
 
     afxMmu mmu = aren->mmu;
 
     AfxExhaustArena(aren);
-    AfxDeallocate(aren->cleanups);
+
+    if (aren->cleanups)
+        AfxDeallocate(aren->cleanups);
+
     AfxDeallocate(aren->initialData);
 
     if (aren->recycleBin)
@@ -349,36 +301,45 @@ _AFX void AfxArenaDtor(afxArena* aren)
     //deallocator(aren);
 }
 
-_AFX afxSize AfxAddArenaCleanup(afxArena* aren, void(*action)(void *data, void*extra), void *data, void *extra)
+_AFX afxSize AfxPushArenaCleanup(afxArena* aren, void(*action)(void *data, void*extra), void *data, void *extra)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(action);
-    afxArenaCleanup *cleanups;
+    afxArenaCleanup *cleanups = aren->cleanups;
 
-    if (aren->cleanupCnt >= aren->maxCleanupCnt)
+    if (!cleanups || (aren->cleanupCnt >= aren->maxCleanupCnt))
     {
-        cleanups = (afxArenaCleanup *)AfxAllocate(2 * aren->maxCleanupCnt, sizeof(afxArenaCleanup), 0, AfxHere());
+        afxNat maxCleanupCnt = (aren->cleanupCnt >= aren->maxCleanupCnt) ? 2 * aren->maxCleanupCnt : aren->maxCleanupCnt;
 
-        if (!cleanups)
-            return 0;
+        cleanups = (afxArenaCleanup *)AfxAllocate(maxCleanupCnt, sizeof(afxArenaCleanup), 0, AfxHere());
 
-        AfxCopy2(aren->cleanupCnt, sizeof(afxArenaCleanup), aren->cleanups, cleanups);
-        AfxDeallocate(aren->cleanups);
-
-        aren->cleanups = cleanups;
-        aren->maxCleanupCnt *= 2;
+        if (!cleanups) AfxThrowError();
+        else
+        {
+            if (aren->cleanups)
+            {
+                AfxCopy2(aren->cleanupCnt, sizeof(afxArenaCleanup), aren->cleanups, cleanups);
+                AfxDeallocate(aren->cleanups);
+            }
+            aren->cleanups = cleanups;
+            aren->maxCleanupCnt = maxCleanupCnt;
+        }
     }
 
-    cleanups = aren->cleanups;
-    cleanups[aren->cleanupCnt].action = action;
-    cleanups[aren->cleanupCnt].data = data;
-    cleanups[aren->cleanupCnt].extra = extra;
+    if (!err)
+    {
+        cleanups = aren->cleanups;
+        cleanups[aren->cleanupCnt].action = action;
+        cleanups[aren->cleanupCnt].data = data;
+        cleanups[aren->cleanupCnt].extra = extra;
 
-    ++aren->cleanupCnt;
-    return aren->cleanupCnt;
+        ++aren->cleanupCnt;
+        return aren->cleanupCnt;
+    }
+    return 0;
 }
 
-_AFX void AfxRemoveArenaCleanup(afxArena* aren, void(*action)(void *,void*), void *data)
+_AFX afxBool AfxPopArenaCleanup(afxArena* aren, void(*action)(void *,void*), void *data)
 {
     afxSize i;
 
@@ -390,7 +351,7 @@ _AFX void AfxRemoveArenaCleanup(afxArena* aren, void(*action)(void *,void*), voi
         {
             aren->cleanupCnt--;
             cleanups[i] = cleanups[aren->cleanupCnt];
-            return;
+            break;
         }
     }
 }
@@ -400,15 +361,12 @@ _AFX void _AfxArenDeallocBlockCleanupAction(void *data, void*extra)
     AfxDeallocate(data);
 }
 
-_AFX void* AfxRequestArenaUnit(afxArena* aren, afxSize size)
+_AFX void* AfxAllocateArena(afxArena* aren, afxSize size)
 {
+    afxError err = NIL;
     afxSize aligned_size;
-    void *result;
-
-    if (size == 0)
-    {
-        size = 1;
-    }
+    AfxAssert(size);
+    void *result = NIL;
 
     aligned_size = _AFX_ARENA_ALIGN_UP(size, ALIGNMENT);
 
@@ -416,27 +374,29 @@ _AFX void* AfxRequestArenaUnit(afxArena* aren, afxSize size)
     {
         result = AfxAllocate(1, sizeof(afxArenaLargeItem) + size, 0, AfxHere());
 
-        if (!result)
-            return NIL;
+        if (!result) AfxThrowError();
+        else
+        {
+            ((afxArenaLargeItem*)result)->prev = NIL;
+            ((afxArenaLargeItem*)result)->next = aren->largeList;
+            //((afxArenaLargeItem*)result)->siz = size; // afx
 
-        ((afxArenaLargeItem*)result)->prev = NIL;
-        ((afxArenaLargeItem*)result)->next = aren->largeList;
-        //((afxArenaLargeItem*)result)->siz = size; // afx
+            afxArenaLargeItem *largeList = aren->largeList;
 
-        afxArenaLargeItem *largeList = aren->largeList;
+            if (largeList)
+                largeList->prev = (afxArenaLargeItem*)result;
 
-        if (largeList)
-            largeList->prev = (afxArenaLargeItem*)result;
+            aren->largeList = (afxArenaLargeItem*)result;
 
-        aren->largeList = (afxArenaLargeItem*)result;
+            aren->totalAllocated += size;
+            ++aren->largeItems;
 
-        aren->totalAllocated += size;
-        ++aren->largeItems;
-
-        return (char *)result + sizeof(afxArenaLargeItem);
+            return (char *)result + sizeof(afxArenaLargeItem);
+        }
+        return 0;
     }
 
-    afxArenaRecycleItem **recycleBin = (afxArenaRecycleItem**)aren->recycleBin;
+    afxArenaRecycleItem** recycleBin = (afxArenaRecycleItem**)aren->recycleBin;
 
     if (recycleBin && recycleBin[aligned_size])
     {
@@ -447,58 +407,78 @@ _AFX void* AfxRequestArenaUnit(afxArena* aren, afxSize size)
         return result;
     }
 
+    if (!aren->initialData)
+    {
+        aren->initialData = (char *)AfxAllocate(1, aren->chunkSiz, 0, AfxHere());
+
+        if (!aren->initialData)
+        {
+            AfxThrowError();
+            return 0;
+        }
+        aren->data = aren->initialData;
+    }
+
     if (aren->allocated + aligned_size > aren->chunkSiz)
     {
         void *chunk = AfxAllocate(1, aren->chunkSiz, 0, AfxHere());
         afxSize wasted;
 
-        if (!chunk)
-            return NIL;
+        if (!chunk) AfxThrowError();
+        else
+        {
+            wasted = (aren->chunkSiz - aren->allocated) & (~(ALIGNMENT - 1));
 
-        wasted = (aren->chunkSiz - aren->allocated) & (~(ALIGNMENT - 1));
-
-        if (
+            if (
 #ifndef PACKED_STRUCTS
-            wasted >= ALIGNMENT
+                wasted >= ALIGNMENT
 #else
-            wasted >= SIZEOF_VOIDP
+                wasted >= SIZEOF_VOIDP
 #endif
-            )
-        {
-            /* put wasted part in recycle bin for later use */
-            aren->totalAllocated += wasted;
-            ++aren->smallItems;
-            AfxRecycleArenaUnit(aren, aren->data + aren->allocated, wasted);
-            aren->allocated += wasted;
-        }
+                )
+            {
+                /* put wasted part in recycle bin for later use */
+                aren->totalAllocated += wasted;
+                ++aren->smallItems;
+                AfxRecycleArena(aren, aren->data + aren->allocated, wasted);
+                aren->allocated += wasted;
+            }
 
-        ++aren->chunkCnt;
-        aren->unusedSpace += aren->chunkSiz - aren->allocated;
+            ++aren->chunkCnt;
+            aren->unusedSpace += aren->chunkSiz - aren->allocated;
 
-        if (!AfxAddArenaCleanup(aren, _AfxArenDeallocBlockCleanupAction, chunk, aren))
-        {
-            AfxDeallocate(chunk);
-            aren->chunkCnt--;
-            aren->unusedSpace -= aren->chunkSiz - aren->allocated;
-            return NIL;
+            if (!AfxPushArenaCleanup(aren, _AfxArenDeallocBlockCleanupAction, chunk, aren))
+            {
+                AfxThrowError();
+                AfxDeallocate(chunk);
+                aren->chunkCnt--;
+                aren->unusedSpace -= aren->chunkSiz - aren->allocated;
+                return NIL;
+            }
+
+            if (!err)
+            {
+                aren->allocated = 0;
+                aren->data = (char *)chunk;
+            }
         }
-        aren->allocated = 0;
-        aren->data = (char *)chunk;
     }
 
-    result = aren->data + aren->allocated;
-    aren->allocated += aligned_size;
+    if (!err)
+    {
+        result = aren->data + aren->allocated;
+        aren->allocated += aligned_size;
 
-    aren->totalAllocated += aligned_size;
-    aren->unusedSpace += aligned_size - size;
-    ++aren->smallItems;
-
+        aren->totalAllocated += aligned_size;
+        aren->unusedSpace += aligned_size - size;
+        ++aren->smallItems;
+    }
     return result;
 }
 
-_AFX void* AfxRequestArenaStorage(afxArena* aren, const void *init, afxSize size)
+_AFX void* AfxAllocateArenaCopied(afxArena* aren, afxSize size, const void *init)
 {
-    void *result = AfxRequestArenaUnit(aren, size);
+    void *result = AfxAllocateArena(aren, size);
 
     if (!result)
         return NIL;
@@ -507,9 +487,9 @@ _AFX void* AfxRequestArenaStorage(afxArena* aren, const void *init, afxSize size
     return result;
 }
 
-_AFX void* AfxRequestZeroedArenaUnit(afxArena* aren, afxSize size)
+_AFX void* AfxAllocateArenaZeroed(afxArena* aren, afxSize size)
 {
-    void *result = AfxRequestArenaUnit(aren, size);
+    void *result = AfxAllocateArena(aren, size);
 
     if (!result)
         return NIL;
@@ -518,34 +498,34 @@ _AFX void* AfxRequestZeroedArenaUnit(afxArena* aren, afxSize size)
     return result;
 }
 
-_AFX void* AfxRequestArenaStorages(afxArena* aren, const void *init, afxSize num, afxSize size)
+_AFX void* AfxCoallocateArenaCopied(afxArena* aren, afxSize num, afxSize size, const void* init)
 {
     if ((num >= _AFX_ARENA_NO_OVERFLOW || size >= _AFX_ARENA_NO_OVERFLOW) && num > 0 && SIZE_MAX / num < size)
     {
-        AfxLogError("AfxRequestArenaStorages failed because of integer overflow");
+        AfxLogError("AfxCoallocateArenaCopied failed because of integer overflow");
         exit(1);
     }
-    return AfxRequestArenaStorage(aren, init, num*size);
+    return AfxAllocateArenaCopied(aren, num*size, init);
 }
 
-_AFX void* AfxRequestZeroedArenaUnits(afxArena* aren, afxSize num, afxSize size)
+_AFX void* AfxCoallocateArenaZeroed(afxArena* aren, afxSize num, afxSize size)
 {
     if ((num >= _AFX_ARENA_NO_OVERFLOW || size >= _AFX_ARENA_NO_OVERFLOW) && num > 0 && SIZE_MAX / num < size)
     {
-        AfxLogError("AfxRequestZeroedArenaUnits failed because of integer overflow");
+        AfxLogError("AfxCoallocateArenaZeroed failed because of integer overflow");
         exit(1);
     }
-    return AfxRequestZeroedArenaUnit(aren, num*size);
+    return AfxAllocateArenaZeroed(aren, num*size);
 }
 
-_AFX void* AfxRequestArenaUnits(afxArena* aren, afxSize num, afxSize size)
+_AFX void* AfxCoallocateArena(afxArena* aren, afxSize num, afxSize size)
 {
     if ((num >= _AFX_ARENA_NO_OVERFLOW || size >= _AFX_ARENA_NO_OVERFLOW) && num > 0 && SIZE_MAX / num < size)
     {
-        AfxLogError("AfxRequestArenaUnits failed because of integer overflow");
+        AfxLogError("AfxCoallocateArena failed because of integer overflow");
         exit(1);
     }
-    return AfxRequestArenaUnit(aren, num*size);
+    return AfxAllocateArena(aren, num*size);
 }
 
 _AFX void AfxExhaustArena(afxArena* aren)
@@ -553,16 +533,18 @@ _AFX void AfxExhaustArena(afxArena* aren)
     afxError err = AFX_ERR_NONE;
     afxSize i;
     AfxAssert(aren);
-    AfxAssert(aren->cleanups);
 
-    i = aren->cleanupCnt;
-    afxArenaCleanup *cleanups = aren->cleanups;
-
-    while (i > 0)
+    if (aren->cleanups)
     {
-        --i;
-        AfxAssert(cleanups[i].action);
-        cleanups[i].action(cleanups[i].data, cleanups[i].extra);
+        i = aren->cleanupCnt;
+        afxArenaCleanup *cleanups = aren->cleanups;
+
+        while (i > 0)
+        {
+            --i;
+            AfxAssert(cleanups[i].action);
+            cleanups[i].action(cleanups[i].data, cleanups[i].extra);
+        }
     }
 
     if (aren->recycleBin)
@@ -598,21 +580,30 @@ _AFX void AfxExhaustArena(afxArena* aren)
 
 _AFX char* AfxArenaDuplicateString(afxArena* aren, const char *string)
 {
-    return (char *)AfxRequestArenaStorage(aren, string, strlen(string) + 1);
+    return (char *)AfxAllocateArenaCopied(aren, strlen(string) + 1, string);
 }
 
-_AFX void AfxRecycleArenaUnit(afxArena* aren, void *block, afxSize size)
+_AFX void AfxRecycleArena(afxArena* aren, void *block, afxSize size)
 {
     afxError err = AFX_ERR_NONE;
     afxSize aligned_size;
+    AfxAssert(size);
+
+    if (!aren->recycleBin && aren->recycleEnabled)
+    {
+        aren->recycleBin = AfxAllocate(aren->largeItemSiz, sizeof(afxArenaRecycleItem*), 0, AfxHere());
+
+        if (!aren->recycleBin)
+        {
+            AfxThrowError();
+            return;
+        }
+        AfxZero2(aren->largeItemSiz, sizeof(afxArenaRecycleItem*), aren->recycleBin);
+    }
 
     if (!block || !aren->recycleBin)
         return;
 
-    if (size == 0)
-    {
-        size = 1;
-    }
     aligned_size = _AFX_ARENA_ALIGN_UP(size, ALIGNMENT);
 
     if (aligned_size < aren->largeItemSiz)
@@ -674,7 +665,7 @@ _AFX void AfxDumpArenaStats(afxArena* aren, afxStream out)
         (unsigned long)aren->chunkCnt,
         (unsigned long)aren->cleanupCnt,
         (unsigned long)aren->recycleSiz);
-    AfxWriteStream(out, AfxGetStringLength(&str.str.str), 0, AfxGetStringData(&str.str.str, 0));
+    AfxWriteStream(out, AfxGetStringLength(&str.str), 0, AfxGetStringData(&str.str, 0));
 
     if (aren->recycleBin)
     {
@@ -693,7 +684,7 @@ _AFX void AfxDumpArenaStats(afxArena* aren, afxStream out)
             if (i%ALIGNMENT == 0 && i != 0)
             {
                 AfxFormatString(&str.str, " %lu", (unsigned long)count);
-                AfxWriteStream(out, AfxGetStringLength(&str.str.str), 0, AfxGetStringData(&str.str.str, 0));
+                AfxWriteStream(out, AfxGetStringLength(&str.str), 0, AfxGetStringData(&str.str, 0));
             }
         }
     }
@@ -753,7 +744,7 @@ _AFX void AfxLogArenaStats(afxArena* aren)
     AfxLogAdvertence("memory: %s", buf);
 }
 
-_AFX void AfxDeallocateArena(afxArena* aren)
+_AFX void AfxDismantleArena(afxArena* aren)
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssertType(aren, afxFcc_AREN);
@@ -761,7 +752,7 @@ _AFX void AfxDeallocateArena(afxArena* aren)
     AfxArenaDtor(aren);   
 }
 
-_AFX afxError AfxAllocateArena(afxMmu mmu, afxArena* aren, afxArenaSpecification const *spec, afxHere const hint)
+_AFX afxError AfxDeployArena(afxArena* aren, afxArenaSpecification const *spec, afxHere const hint)
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssert(spec);
@@ -773,7 +764,7 @@ _AFX afxError AfxAllocateArena(afxMmu mmu, afxArena* aren, afxArenaSpecification
     afxBool recycle = spec && spec->recycle ? spec->recycle : TRUE;
 
     //AfxAssignTypeFcc(aren, afxFcc_AREN);
-    aren->mmu = mmu;
+    aren->mmu = NIL;
 
     aren->hint[0] = hint[0];
     aren->hint[1] = hint[1];

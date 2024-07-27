@@ -28,6 +28,7 @@
 #include "qwadro/io/afxArchive.h"
 #include "qwadro/io/afxFile.h"
 #include "qwadro/io/afxStream.h"
+#include "qwadro/io/afxUrd.h"
 #include "qwadro/io/afxUri.h"
 
 #if 0
@@ -97,6 +98,8 @@ AFX_DEFINE_STRUCT(afxFileInfo)
     After the mount command has finished, the directory that is specified becomes the root directory of the newly mounted file system.
 */
 
+AFX afxBool             AfxGetStorage(afxNat diskId, afxStorage* disk);
+
 AFX afxStorage          AfxFindStorage(afxUri const* point);
 
 AFX afxError            AfxMountStorageUnit(afxUri const* point, afxUri const* endpoint, afxFileFlags ioFlags);
@@ -109,6 +112,12 @@ AFX afxNat              AfxFindStorageUnit(afxStorage fsys, afxUri const* endpoi
 AFX afxError            AfxResolveUri(afxFileFlags permissions, afxUri const *in, afxUri *out);
 AFX afxError            AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri const in[], afxUri out[]);
 
+AFX afxError AfxResolveUri2(afxFileFlags permissions, afxUri const *in, afxUri *out, afxNat* diskId);
+
 AFX afxError            AfxFindFiles(afxUri const* pattern, afxBool(*callback)(afxUri const*, void*), void* udd);
+
+AFX afxClass const*     AfxGetStreamClass(afxStorage fsys);
+AFX afxClass const*     AfxGetFileClass(afxStorage fsys);
+AFX afxClass const*     AfxGetArchiveClass(afxStorage fsys);
 
 #endif//AFX_STORAGE_H

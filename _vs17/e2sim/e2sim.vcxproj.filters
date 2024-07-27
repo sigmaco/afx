@@ -19,47 +19,14 @@
     <Filter Include="_dll">
       <UniqueIdentifier>{fe663df2-10e0-4928-bb9a-fa629e25f8fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="qwadro\sim\dev">
+      <UniqueIdentifier>{1e27dc36-48a4-496a-8816-35c094791f1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\sim\io">
+      <UniqueIdentifier>{c1ee4467-3804-466e-9c94-af0a4913deb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\afx\sim\afxSimulation.c">
-      <Filter>qwadro\sim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\cad\afxMaterial.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\cad\afxMesh.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\cad\afxMeshBuilder.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\cad\afxMeshTopology.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\cad\afxModel.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\space\_BuildGenericVmt.c">
-      <Filter>qwadro\space</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\space\_MotiveVmt.c">
-      <Filter>qwadro\space</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\space\_SampleTrackVmt.c">
-      <Filter>qwadro\space</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\space\_Vmt.c">
-      <Filter>qwadro\space</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\space\afxCurve.c">
-      <Filter>qwadro\space</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\space\afxCurveOps_Cpu.c">
-      <Filter>qwadro\space</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\space\afxSkeleton.c">
-      <Filter>qwadro\space</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\afx\space\akxMotor.c">
       <Filter>qwadro\space</Filter>
     </ClCompile>
@@ -72,22 +39,7 @@
     <ClCompile Include="..\..\src\afx\space\akxPose.c">
       <Filter>qwadro\space</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\space\afxBody.c">
-      <Filter>qwadro\space</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\space\afxMotion.c">
-      <Filter>qwadro\space</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\cad\akxVertexData.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\afx\sim\akxNode.c">
-      <Filter>qwadro\sim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\sim\akxEntity.c">
-      <Filter>qwadro\sim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\sim\akxAsset.c">
       <Filter>qwadro\sim</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\afx\sim\rendering\akxLighting.c">
@@ -99,34 +51,64 @@
     <ClCompile Include="..\..\src\afx\sim\rendering\akxSky.c">
       <Filter>qwadro\sim\rendering</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\afx\sim\dev\afxSimulation.c">
+      <Filter>qwadro\sim\dev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\sim\dev\_MotiveVmt.c">
+      <Filter>qwadro\sim\dev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\sim\dev\_SampleTrackVmt.c">
+      <Filter>qwadro\sim\dev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\sim\dev\_Vmt.c">
+      <Filter>qwadro\sim\dev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\sim\dev\_BuildGenericVmt.c">
+      <Filter>qwadro\sim\dev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\sim\io\akxAsset.c">
+      <Filter>qwadro\sim\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\sim\dev\_CurveOps_Cpu.c">
+      <Filter>qwadro\sim\dev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\space\akxBody.c">
+      <Filter>qwadro\space</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\space\akxMotion.c">
+      <Filter>qwadro\space</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\sim\rendering\akxTerrain.c">
+      <Filter>qwadro\sim\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\cad\afxMaterial.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\cad\afxMesh.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\cad\afxMeshTopology.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\cad\afxModel.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\cad\afxMeshBuilder.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\cad\akxVertexData.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\space\afxCurve.c">
+      <Filter>qwadro\space</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\space\afxSkeleton.c">
+      <Filter>qwadro\space</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\qwadro\sim\afxSimulation.h">
-      <Filter>qwadro\sim</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>_dll</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\cad\afxMesh.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\cad\afxMeshBuilder.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\cad\afxMeshTopology.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\cad\afxModel.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\cad\afxMaterial.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\space\afxCurve.h">
-      <Filter>qwadro\space</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\space\afxSkeleton.h">
-      <Filter>qwadro\space</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\space\akxMotor.h">
       <Filter>qwadro\space</Filter>
@@ -140,25 +122,10 @@
     <ClInclude Include="..\..\inc\qwadro\space\akxPose.h">
       <Filter>qwadro\space</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\space\afxBody.h">
-      <Filter>qwadro\space</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\space\afxMotion.h">
-      <Filter>qwadro\space</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\sim\afxSimDefs.h">
       <Filter>qwadro\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\cad\akxVertexData.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\sim\akxNode.h">
-      <Filter>qwadro\sim</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sim\akxEntity.h">
-      <Filter>qwadro\sim</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sim\akxAsset.h">
       <Filter>qwadro\sim</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\sim\rendering\akxLighting.h">
@@ -169,6 +136,54 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\sim\rendering\akxSky.h">
       <Filter>qwadro\sim\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sim\dev\afxSimulation.h">
+      <Filter>qwadro\sim\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\afx\sim\dev\AkxCadDevKit.h">
+      <Filter>qwadro\sim\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\afx\sim\dev\AkxSimDevKit.h">
+      <Filter>qwadro\sim\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\afx\sim\dev\AkxSpatialDevKit.h">
+      <Filter>qwadro\sim\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sim\io\akxAsset.h">
+      <Filter>qwadro\sim\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\space\akxBody.h">
+      <Filter>qwadro\space</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\space\akxMotion.h">
+      <Filter>qwadro\space</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sim\rendering\akxTerrain.h">
+      <Filter>qwadro\sim\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\cad\afxMaterial.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\cad\afxMesh.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\cad\afxMeshTopology.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\cad\afxModel.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\cad\afxMeshBuilder.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\cad\akxVertexData.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\space\afxCurve.h">
+      <Filter>qwadro\space</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\space\afxSkeleton.h">
+      <Filter>qwadro\space</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

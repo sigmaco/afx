@@ -71,7 +71,7 @@ struct md5_bbox_t
 struct md5_mesh_t
 {
     struct md5_vertex_t *vertices;
-    afxIndexedTriangle *triangles;
+    akxIndexedTriangle *triangles;
     struct md5_weight_t *weights;
 
     unsigned int num_verts;
@@ -428,78 +428,7 @@ void PrepareMesh(const struct md5_mesh_t *mesh, const struct md5_joint_t *skelet
     }
 }
 
-struct cadbData
-{
-    afxUri const* name;
-    afxNat meshCnt;
-    afxMesh* meshes;
-    struct md5_mesh_t* meshNames;
-    afxModel mdl;
-    afxSkeleton skl;
-};
-
-DLLEXPORT void CadbGetInfoMd5(void* data2, afxNat *typeCnt, afxNat* resCnt, afxUri* name)
-{
-    struct cadbData* data = data2;
-
-    afxNat cnt = 0;
-
-    if (data->meshCnt)
-        ++cnt;
-
-    if (data->skl)
-        ++cnt;
-
-    if (data->mdl)
-        ++cnt;
-
-    if (typeCnt)
-        *typeCnt = cnt;
-
-    if (resCnt)
-        *resCnt = data->meshCnt + 1 + 1;
-
-    if (name)
-        AfxClipUriPath(name, data->name);
-
-}
-
-DLLEXPORT void CadbGetTypeInfoMd5(void* data2, afxNat setIdx, afxFcc* resType, afxNat* resCnt)
-{
-    struct cadbData* data = data2;
-
-    if (resType)
-        *resType = setIdx == 0 ? afxFcc_MSH : setIdx == 1 ? afxFcc_MDL : setIdx == 2 ? afxFcc_SKL : NIL;
-
-    if (resCnt)
-        *resCnt = (setIdx == 0) ? data->meshCnt : (setIdx == 1) ? 1 : (setIdx == 2) ? 1 : 0;
-}
-
-DLLEXPORT void* CadbGetResourceInfoMd5(void* data2, afxFcc type, afxNat resIdx, afxUri* name)
-{
-    struct cadbData* data = data2;
-
-    if (name)
-    {
-        if (type != afxFcc_MSH)
-            AfxClipUriTarget(name, data->name);
-        else
-            AfxMakeUri(name, &data->meshNames[resIdx].shader, 0);
-    }
-
-    if (type == afxFcc_MSH)
-        return (data->meshes[resIdx]);
-
-    if (type == afxFcc_MDL)
-        return data->mdl;
-
-    if (type == afxFcc_SKL)
-        return data->skl;
-
-    return NIL;
-}
-
-DLLEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxNat cnt, afxUri const file[], akxAsset cad[])
+DLLEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxUri const* file)
 {
     afxError err = AFX_ERR_NONE;
     
@@ -512,308 +441,291 @@ DLLEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxNa
     afxStringBase strb;
     AfxAcquireStringCatalogs(1, &strb);
 
+    afxUri mdlName;
     afxUri2048 uri2;
     AfxMakeUri2048(&uri2, NIL);
+    AfxClipUriTarget(&mdlName, file);
+    AfxResolveUri(afxFileFlag_R, file, &uri2.uri);
 
-    for (afxNat y = 0; y < cnt; y++)
+    if (!(fp = fopen(AfxGetUriData(&uri2.uri, 0), "rb"))) AfxThrowError();
+    else
     {
-        AfxResolveUri(afxFileFlag_R, &file[y], &uri2.uri);
+        struct md5_model_t md5;
 
-        if (!(fp = fopen(AfxGetUriStorage(&uri2.uri, 0), "rb"))) AfxThrowError();
-        else
+        while (!feof(fp) && !err)
         {
-            struct md5_model_t md5;
+            //AfxLogEcho(buff);
+            /* Read whole line */
+            fgets(buff, sizeof(buff), fp);
 
-            while (!feof(fp) && !err)
+            if (sscanf(buff, " MD5Version %d", &version) == 1)
             {
-                //AfxLogEcho(buff);
-                /* Read whole line */
-                fgets(buff, sizeof(buff), fp);
-
-                if (sscanf(buff, " MD5Version %d", &version) == 1)
+                if (version != 10)
                 {
-                    if (version != 10)
-                    {
-                        /* Bad version */
-                        AfxLogError("Error: bad model version\n");
-                        fclose(fp);
-                        return 0;
-                    }
-                }
-                else if (sscanf(buff, " numJoints %d", &md5.num_joints) == 1)
-                {
-                    if (md5.num_joints > 0)
-                    {
-                        /* Allocate memory for base skeleton joints */
-                        md5.baseSkel = AfxAllocate(md5.num_joints, sizeof(struct md5_joint_t), 0, AfxHere());
-                    }
-                }
-                else if (sscanf(buff, " numMeshes %d", &md5.num_meshes) == 1)
-                {
-                    if (md5.num_meshes > 0)
-                    {
-                        /* Allocate memory for meshes */
-                        md5.meshes = AfxAllocate(md5.num_meshes, sizeof(struct md5_mesh_t), 0, AfxHere());
-                    }
-                }
-                else if (strncmp(buff, "joints {", 8) == 0)
-                {
-                    /* Read each joint */
-                    for (i = 0; i < md5.num_joints; ++i)
-                    {
-                        struct md5_joint_t *joint = &md5.baseSkel[i];
-
-                        /* Read whole line */
-                        fgets(buff, sizeof(buff), fp);
-
-                        if (sscanf(buff, "%s %d ( %f %f %f ) ( %f %f %f )",
-                            joint->name, &joint->parent, &joint->pos[0],
-                            &joint->pos[1], &joint->pos[2], &joint->orient[0],
-                            &joint->orient[1], &joint->orient[2]) == 8)
-                        {
-                            /* Compute the w component */
-                            Quat_computeW(joint->orient);
-                        }
-                    }
-                }
-                else if (strncmp(buff, "mesh {", 6) == 0)
-                {
-                    struct md5_mesh_t *mesh = &md5.meshes[curr_mesh];
-                    int vert_index = 0;
-                    int tri_index = 0;
-                    int weight_index = 0;
-                    float fdata[4];
-                    int idata[3];
-
-                    while ((buff[0] != '}') && !feof(fp))
-                    {
-                        /* Read whole line */
-                        fgets(buff, sizeof(buff), fp);
-
-                        if (strstr(buff, "shader "))
-                        {
-                            int quote = 0, j = 0;
-
-                            /* Copy the shader name whithout the quote marks */
-                            for (i = 0; i < (int)sizeof(buff) && (quote < 2); ++i)
-                            {
-                                if (buff[i] == '\"')
-                                    quote++;
-
-                                if ((quote == 1) && (buff[i] != '\"'))
-                                {
-                                    mesh->shader[j] = buff[i];
-                                    j++;
-                                }
-                            }
-                        }
-                        else if (sscanf(buff, " numverts %d", &mesh->num_verts) == 1)
-                        {
-                            if (mesh->num_verts > 0)
-                            {
-                                /* Allocate memory for vertices */
-                                mesh->vertices = AfxAllocate(mesh->num_verts, sizeof(mesh->vertices[0]), 0, AfxHere());
-                            }
-
-                            //if (mesh->num_verts > max_verts)
-                                //max_verts = mesh->num_verts;
-                        }
-                        else if (sscanf(buff, " numtris %d", &mesh->num_tris) == 1)
-                        {
-                            if (mesh->num_tris > 0)
-                            {
-                                /* Allocate memory for triangles */
-                                mesh->triangles = AfxAllocate(mesh->num_tris, sizeof(mesh->triangles[0]), 0, AfxHere());
-                            }
-
-                            //if (mesh->num_tris > max_tris)
-                                //max_tris = mesh->num_tris;
-                        }
-                        else if (sscanf(buff, " numweights %d", &mesh->num_weights) == 1)
-                        {
-                            if (mesh->num_weights > 0)
-                            {
-                                /* Allocate memory for vertex weights */
-                                mesh->weights = AfxAllocate(mesh->num_weights, sizeof(mesh->weights[0]), 0, AfxHere());
-                            }
-                        }
-                        else if (sscanf(buff, " vert %d ( %f %f ) %d %d", &vert_index,
-                            &fdata[0], &fdata[1], &idata[0], &idata[1]) == 5)
-                        {
-                            /* Copy vertex data */
-                            mesh->vertices[vert_index].st[0] = fdata[0];
-                            mesh->vertices[vert_index].st[1] = fdata[1];
-                            mesh->vertices[vert_index].start = idata[0];
-                            mesh->vertices[vert_index].count = idata[1];
-                        }
-                        else if (sscanf(buff, " tri %d %d %d %d", &tri_index, &idata[0], &idata[1], &idata[2]) == 4)
-                        {
-                            /* Copy triangle data */
-                            mesh->triangles[tri_index][0] = idata[0];
-                            mesh->triangles[tri_index][1] = idata[1];
-                            mesh->triangles[tri_index][2] = idata[2];
-                        }
-                        else if (sscanf(buff, " weight %d %d %f ( %f %f %f )", &weight_index, &idata[0], &fdata[3], &fdata[0], &fdata[1], &fdata[2]) == 6)
-                        {
-                            /* Copy vertex data */
-                            mesh->weights[weight_index].joint = idata[0];
-                            mesh->weights[weight_index].bias = fdata[3];
-                            mesh->weights[weight_index].pos[0] = fdata[0];
-                            mesh->weights[weight_index].pos[1] = fdata[1];
-                            mesh->weights[weight_index].pos[2] = fdata[2];
-                        }
-                    }
-
-                    curr_mesh++;
+                    /* Bad version */
+                    AfxLogError("Error: bad model version\n");
+                    fclose(fp);
+                    return 0;
                 }
             }
-
-            afxArray meshRes;
-            AfxAllocateArray(&meshRes, md5.num_meshes, sizeof(afxMeshBuilder), NIL);
-            AfxReserveArraySpace(&meshRes, md5.num_meshes);
-
-            for (afxNat i = 0; i < md5.num_meshes; i++)
+            else if (sscanf(buff, " numJoints %d", &md5.num_joints) == 1)
             {
-                struct md5_mesh_t *mesh = &md5.meshes[i];
-
-                afxNat mshIdx;
-                afxMeshBuilder* mshb = AfxInsertArrayUnits(&meshRes, 1, &mshIdx, NIL);
-                AfxBeginMeshBuilding(mshb, &AfxStaticString(mesh->shader), mesh->num_verts, mesh->num_tris, 1, md5.num_joints);
-                
-                for (afxNat j = 0; j < md5.num_joints; j++)
+                if (md5.num_joints > 0)
                 {
-                    struct md5_joint_t *jnt = &md5.baseSkel[j];
-
-                    afxString str;
-                    afxTransform t;
-                    AfxMakeString(&str, jnt->name, 0);
-                    AfxRenameVertexPivots(mshb, j, 1, &str);
+                    /* Allocate memory for base skeleton joints */
+                    md5.baseSkel = AfxAllocate(md5.num_joints, sizeof(struct md5_joint_t), 0, AfxHere());
                 }
-
-                AfxReserveArraySpace(&mshb->biases, mesh->num_weights);
-
-                for (afxNat j = 0; j < mesh->num_weights; j++)
+            }
+            else if (sscanf(buff, " numMeshes %d", &md5.num_meshes) == 1)
+            {
+                if (md5.num_meshes > 0)
                 {
-                    struct md5_weight_t *w = &mesh->weights[j];
-                    AfxAssertRange(md5.num_joints, w->joint, 1);
-                    AfxAddVertexBiases(mshb, 1, (afxNat const[]) { w->joint }, (afxReal const[]) { w->bias });
+                    /* Allocate memory for meshes */
+                    md5.meshes = AfxAllocate(md5.num_meshes, sizeof(struct md5_mesh_t), 0, AfxHere());
                 }
-                
-                for (afxNat j = 0; j < mesh->num_verts; j++)
+            }
+            else if (strncmp(buff, "joints {", 8) == 0)
+            {
+                /* Read each joint */
+                for (i = 0; i < md5.num_joints; ++i)
                 {
-                    struct md5_vertex_t *v = &mesh->vertices[j];
-                    afxV4d vp = { 0, 0, 0, 1 };
+                    struct md5_joint_t *joint = &md5.baseSkel[i];
 
-                    afxNat baseBiasIdx = v->start;
-                    afxNat biasCnt = v->count;
+                    /* Read whole line */
+                    fgets(buff, sizeof(buff), fp);
 
-                    for (afxNat k = 0; k < v->count; k++)
+                    if (sscanf(buff, "%s %d ( %f %f %f ) ( %f %f %f )",
+                        joint->name, &joint->parent, &joint->pos[0],
+                        &joint->pos[1], &joint->pos[2], &joint->orient[0],
+                        &joint->orient[1], &joint->orient[2]) == 8)
                     {
-                        struct md5_weight_t *w = &mesh->weights[v->start + k];
-                        AfxAssertRange(md5.num_joints, w->joint, 1);
-                        AfxAddV3d(vp, vp, w->pos);
+                        /* Compute the w component */
+                        Quat_computeW(joint->orient);
                     }
-                    AfxAssert(v->start == baseBiasIdx);
-                    AfxAssert(v->count == biasCnt);
-                    AfxUpdateVertices(mshb, j, 1, &baseBiasIdx, &biasCnt);
-                    AfxUpdateVertexPositions4(mshb, j, 1, &vp, sizeof(vp));
-                    AfxUpdateVertexWraps(mshb, j, 1, &v->st, sizeof(v->st));
-                    AfxCatchError(err);
+                }
+            }
+            else if (strncmp(buff, "mesh {", 6) == 0)
+            {
+                struct md5_mesh_t *mesh = &md5.meshes[curr_mesh];
+                int vert_index = 0;
+                int tri_index = 0;
+                int weight_index = 0;
+                float fdata[4];
+                int idata[3];
+
+                while ((buff[0] != '}') && !feof(fp))
+                {
+                    /* Read whole line */
+                    fgets(buff, sizeof(buff), fp);
+
+                    if (strstr(buff, "shader "))
+                    {
+                        int quote = 0, j = 0;
+
+                        /* Copy the shader name whithout the quote marks */
+                        for (i = 0; i < (int)sizeof(buff) && (quote < 2); ++i)
+                        {
+                            if (buff[i] == '\"')
+                                quote++;
+
+                            if ((quote == 1) && (buff[i] != '\"'))
+                            {
+                                mesh->shader[j] = buff[i];
+                                j++;
+                            }
+                        }
+                    }
+                    else if (sscanf(buff, " numverts %d", &mesh->num_verts) == 1)
+                    {
+                        if (mesh->num_verts > 0)
+                        {
+                            /* Allocate memory for vertices */
+                            mesh->vertices = AfxAllocate(mesh->num_verts, sizeof(mesh->vertices[0]), 0, AfxHere());
+                        }
+
+                        //if (mesh->num_verts > max_verts)
+                            //max_verts = mesh->num_verts;
+                    }
+                    else if (sscanf(buff, " numtris %d", &mesh->num_tris) == 1)
+                    {
+                        if (mesh->num_tris > 0)
+                        {
+                            /* Allocate memory for triangles */
+                            mesh->triangles = AfxAllocate(mesh->num_tris, sizeof(mesh->triangles[0]), 0, AfxHere());
+                        }
+
+                        //if (mesh->num_tris > max_tris)
+                            //max_tris = mesh->num_tris;
+                    }
+                    else if (sscanf(buff, " numweights %d", &mesh->num_weights) == 1)
+                    {
+                        if (mesh->num_weights > 0)
+                        {
+                            /* Allocate memory for vertex weights */
+                            mesh->weights = AfxAllocate(mesh->num_weights, sizeof(mesh->weights[0]), 0, AfxHere());
+                        }
+                    }
+                    else if (sscanf(buff, " vert %d ( %f %f ) %d %d", &vert_index,
+                        &fdata[0], &fdata[1], &idata[0], &idata[1]) == 5)
+                    {
+                        /* Copy vertex data */
+                        mesh->vertices[vert_index].st[0] = fdata[0];
+                        mesh->vertices[vert_index].st[1] = fdata[1];
+                        mesh->vertices[vert_index].start = idata[0];
+                        mesh->vertices[vert_index].count = idata[1];
+                    }
+                    else if (sscanf(buff, " tri %d %d %d %d", &tri_index, &idata[0], &idata[1], &idata[2]) == 4)
+                    {
+                        /* Copy triangle data */
+                        mesh->triangles[tri_index][0] = idata[0];
+                        mesh->triangles[tri_index][1] = idata[1];
+                        mesh->triangles[tri_index][2] = idata[2];
+                    }
+                    else if (sscanf(buff, " weight %d %d %f ( %f %f %f )", &weight_index, &idata[0], &fdata[3], &fdata[0], &fdata[1], &fdata[2]) == 6)
+                    {
+                        /* Copy vertex data */
+                        mesh->weights[weight_index].joint = idata[0];
+                        mesh->weights[weight_index].bias = fdata[3];
+                        mesh->weights[weight_index].pos[0] = fdata[0];
+                        mesh->weights[weight_index].pos[1] = fdata[1];
+                        mesh->weights[weight_index].pos[2] = fdata[2];
+                    }
                 }
 
-                AfxEmitTriangles(mshb, 0, 0, mesh->num_tris, mesh->triangles);
+                curr_mesh++;
             }
+        }
 
-            afxArray meshes;
-            AfxAllocateArray(&meshes, md5.num_meshes, sizeof(afxMesh), NIL);
-            AfxReserveArraySpace(&meshes, md5.num_meshes);
+        afxNat parentIdx[256];
+        afxString pivots[256];
+        afxTransform locals[256];
+        akxSkeletonBlueprint sklb = { 0 };
+        AfxMakeString32(&sklb.id, &mdlName.str);
+        sklb.jointCnt = md5.num_joints;
+        sklb.local = locals;
+        sklb.jointId = pivots;
+        sklb.parentIdx = parentIdx;
 
-            if (AfxBuildMeshes(sim, strb, md5.num_meshes, meshRes.data, meshes.data))
-                AfxThrowError();
+        for (afxNat j = 0; j < md5.num_joints; j++)
+        {
+            struct md5_joint_t *jnt = &md5.baseSkel[j];
 
-            AfxTryAssertObjects(md5.num_meshes, meshes.data, afxFcc_MSH);
-            meshes.cnt = md5.num_meshes;
+            AfxMakeString(&pivots[j], 0, jnt->name, 0);
+            parentIdx[j] = jnt->parent;
+            AfxSetTransformWithIdentityCheck(&locals[j], jnt->pos, jnt->orient, AFX_M3D_IDENTITY);
+        }
 
-            for (afxNat i = 0; i < md5.num_meshes; i++)
+        afxSkeleton skl;
+        AfxAssembleSkeletons(sim, 1, &sklb, &skl);
+        AfxTryAssertObjects(1, &skl, afxFcc_SKL);
+
+        afxNat totVtxCnt = 0;
+        afxNat totTriCnt = 0;
+
+        for (afxNat i = 0; i < md5.num_meshes; i++)
+        {
+            struct md5_mesh_t *mesh = &md5.meshes[i];
+
+            totVtxCnt += mesh->num_verts;
+            totTriCnt += mesh->num_tris;
+
+        }
+
+        afxArray meshRes;
+        AfxAllocateArray(&meshRes, md5.num_meshes, sizeof(afxMeshBuilder), NIL);
+        AfxReserveArraySpace(&meshRes, md5.num_meshes);
+
+        for (afxNat i = 0; i < md5.num_meshes; i++)
+        {
+            struct md5_mesh_t *mesh = &md5.meshes[i];
+
+            afxNat mshIdx;
+            afxMeshBuilder* mshb = AfxInsertArrayUnits(&meshRes, 1, &mshIdx, NIL);
+            AfxBeginMeshBuilding(mshb, &AfxStaticString(mesh->shader), mesh->num_verts, mesh->num_tris, 1, md5.num_joints);
+            
+            for (afxNat j = 0; j < md5.num_joints; j++)
             {
-                afxMeshBuilder* mshb = AfxGetArrayUnit(&meshRes, i);
-                AfxEndMeshBuilding(mshb);
-            }
-
-            afxString tmp;
-            afxUri nameUri;
-            afxTransform wt;
-            AfxResetTransform(&wt);
-            afxSkeletonBuilder sklb;
-            AfxClipUriTarget(&uri2.uri, &nameUri);
-            AfxBeginSkeletonBuilding(&sklb, md5.num_joints, AfxGetUriString(&nameUri), NIL);
-
-            for (afxNat i = 0; i < md5.num_joints; i++)
-            {
-                struct md5_joint_t *jnt = &md5.baseSkel[i];
+                struct md5_joint_t *jnt = &md5.baseSkel[j];
 
                 afxString str;
                 afxTransform t;
-                AfxMakeString(&str, jnt->name, 0);
-                AfxSetTransformWithIdentityCheck(&t, jnt->pos, jnt->orient, AFX_M3D_IDENTITY);
-                AfxResetBone(&sklb, i, &str, jnt->parent, &t, &wt, -1.0);
+                AfxMakeString(&str, 0, jnt->name, 0);
+                AfxRenameVertexPivots(mshb, j, 1, &str);
             }
 
-            afxSkeleton skl;
-            AfxBuildSkeletons(sim, strb, 1, &sklb, &skl);
-            AfxTryAssertObjects(1, &skl, afxFcc_SKL);
+            AfxReserveArraySpace(&mshb->biases, mesh->num_weights);
 
-            AfxEndSkeletonBuilding(&sklb);
-
-            afxModel mdl;
-            afxModelBlueprint mdlb = { 0 };
-            mdlb.meshes = meshes.data;
-            mdlb.skl = skl;
-            mdlb.rigCnt = md5.num_meshes;
-            AfxResetTransform(&mdlb.displacement);
-            AfxMakeString32(&mdlb.id, AfxGetUriString(&nameUri));
-            mdlb.strb = strb;
-            AfxAssembleModel(sim, 1, &mdlb, &mdl);
-            AfxTryAssertObjects(1, &mdl, afxFcc_MDL);
-
-            akxAssetBuilder cadb = { 0 };
-            cadb.GetInfo = CadbGetInfoMd5;
-            cadb.GetResourceInfo = CadbGetResourceInfoMd5;
-            cadb.GetTypeInfo = CadbGetTypeInfoMd5;
-
-            struct cadbData cadbD = { 0 };
-            cadbD.name = &file[y];
-            cadbD.meshCnt = md5.num_meshes;
-            cadbD.meshes = meshes.data;
-            cadbD.meshNames = meshRes.data;
-            cadbD.mdl = mdl;
-            cadbD.skl = skl;
-
-            if (AfxBuildAssets(sim, &cadb, 1, (void*[]) { &cadbD }, cad))
-                AfxThrowError();
-
-            AfxDeallocateArray(&meshRes);
-            AfxReleaseObjects(md5.num_meshes, meshes.data);
-            AfxDeallocateArray(&meshes);
-            AfxReleaseObjects(1, &skl);
-            AfxReleaseObjects(1, (void*[]) { mdl });
-
-
-            for (afxNat i = 0; i < skl->jointCnt; i++)
+            for (afxNat j = 0; j < mesh->num_weights; j++)
             {
-                //afxSkeletonBone *bone = &skl->bones[i];
-                //bone = bone;
+                struct md5_weight_t *w = &mesh->weights[j];
+                AfxAssertRange(md5.num_joints, w->joint, 1);
+                AfxAddVertexBiases(mshb, 1, (afxNat const[]) { w->joint }, (afxReal const[]) { w->bias });
             }
 
-            akxPose lp;
-            AfxAcquirePoses(sim, 1, &skl->jointCnt, &lp);
-            AfxComputeRestLocalPose(skl, 0, skl->jointCnt, lp);
-            akxPoseBuffer wp;
-            AfxAcquirePoseBuffers(sim, 1, &skl->jointCnt, NIL, &wp);
-            AfxComputeRestPoseBuffer(skl, 0, skl->jointCnt, AFX_M4D_IDENTITY, wp);
+            for (afxNat j = 0; j < mesh->num_verts; j++)
+            {
+                struct md5_vertex_t *v = &mesh->vertices[j];
+                afxV4d vp = { 0, 0, 0, 1 };
 
-            fclose(fp);
+                afxNat baseBiasIdx = v->start;
+                afxNat biasCnt = v->count;
+
+                for (afxNat k = 0; k < v->count; k++)
+                {
+                    struct md5_weight_t *w = &mesh->weights[v->start + k];
+                    AfxAssertRange(md5.num_joints, w->joint, 1);
+                    AfxV3dAdd(vp, vp, w->pos);
+                }
+                AfxAssert(v->start == baseBiasIdx);
+                AfxAssert(v->count == biasCnt);
+                AfxUpdateVertices(mshb, j, 1, &baseBiasIdx, &biasCnt);
+                AfxUpdateVertexPositions4(mshb, j, 1, &vp, sizeof(vp));
+                AfxUpdateVertexWraps(mshb, j, 1, &v->st, sizeof(v->st));
+                AfxCatchError(err);
+            }
+
+            AfxEmitTriangles(mshb, 0, 0, mesh->num_tris, mesh->triangles);
         }
+
+        afxArray meshes;
+        AfxAllocateArray(&meshes, md5.num_meshes, sizeof(afxMesh), NIL);
+        AfxReserveArraySpace(&meshes, md5.num_meshes);
+
+        if (AfxBuildMeshes(sim, strb, md5.num_meshes, meshRes.data, meshes.data))
+            AfxThrowError();
+
+        AfxTryAssertObjects(md5.num_meshes, meshes.data, afxFcc_MSH);
+        meshes.cnt = md5.num_meshes;
+
+        for (afxNat i = 0; i < md5.num_meshes; i++)
+        {
+            afxMeshBuilder* mshb = AfxGetArrayUnit(&meshRes, i);
+            AfxEndMeshBuilding(mshb);
+        }
+
+        afxString tmp;
+        afxUri nameUri;
+        afxTransform wt;
+        AfxResetTransform(&wt);
+        AfxClipUriTarget(&uri2.uri, &nameUri);
+        afxModel mdl;
+        akxModelBlueprint mdlb = { 0 };
+        mdlb.meshes = meshes.data;
+        mdlb.skl = skl;
+        mdlb.rigCnt = md5.num_meshes;
+        AfxResetTransform(&mdlb.displacement);
+        AfxMakeString32(&mdlb.id, AfxGetUriString(&nameUri));
+        mdlb.strb = strb;
+        AfxAssembleModel(sim, 1, &mdlb, &mdl);
+        AfxTryAssertObjects(1, &mdl, afxFcc_MDL);
+
+        AfxDeallocateArray(&meshRes);
+        AfxReleaseObjects(md5.num_meshes, meshes.data);
+        AfxDeallocateArray(&meshes);
+        AfxReleaseObjects(1, &skl);
+        AfxReleaseObjects(1, (void*[]) { mdl });
+
+        fclose(fp);
     }
     return err;
 }

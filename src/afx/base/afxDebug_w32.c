@@ -32,9 +32,7 @@
 #pragma comment (lib, "dwmapi")
 #endif
 
-#include "qwadro/exec/afxSystem.h"
-#include "qwadro/exec/afxCondition.h"
-#include "qwadro/exec/afxTerminal.h"
+#include "../src/afx/dev/afxDevCoreBase.h"
 
 extern afxString const qwadroSignature;
 
@@ -67,7 +65,15 @@ AFX_DEFINE_STRUCT(afxDebugger)
     .conOutHnd = INVALID_HANDLE_VALUE
 };
 
-AFXINL afxResult _AfxDbgLogFn(afxNat ch, afxChar const* msg, afxNat len)
+ _AFXINL afxChar const* _AfxDbgTrimFilename(afxChar const* path)
+{
+    afxChar const* start = (afxChar const*)path, *p = (afxChar const*)path;
+    while (*(p)++);
+    while (--(p) != start && *(p) != (afxChar)'/' && *(p) != (afxChar)'\\' && *(p) != (afxChar)':');
+    return((*(p) == (afxChar)'/' || *(p) == (afxChar)'\\' || *(p) == (afxChar)':') ? (afxChar const*)++p : NIL);
+}
+
+_AFXINL afxResult _AfxDbgLogFn(afxNat ch, afxChar const* msg, afxNat len)
 {
     WORD tattr = 0;
     afxNat color = 0;
@@ -111,7 +117,7 @@ AFXINL afxResult _AfxDbgLogFn(afxNat ch, afxChar const* msg, afxNat len)
     return 1;
 }
 
-afxResult AfxDbgLogf(afxNat ch, afxHere const hint, afxChar const* msg, ...)
+_AFXINL afxResult AfxDbgLogf(afxNat ch, afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -121,9 +127,9 @@ afxResult AfxDbgLogf(afxNat ch, afxHere const hint, afxChar const* msg, ...)
         if ((ch % 10) >= 7)
         {
 #ifdef AFX_ISA_X86_64
-            len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const * const)hint[0]), hint[1]);
+            len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const * const)hint[0]), hint[1]);
 #else
-            len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const * const)hint[0]), (int)hint[1]);
+            len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const * const)hint[0]), (int)hint[1]);
 #endif
         }
 
@@ -147,7 +153,7 @@ afxResult AfxDbgLogf(afxNat ch, afxHere const hint, afxChar const* msg, ...)
     return 0;
 }
 
-afxResult AfxDbgLog(afxNat ch, afxChar const* msg, afxNat len)
+_AFXINL afxResult AfxDbgLog(afxNat ch, afxChar const* msg, afxNat len)
 {
     if (_AfxDbgLock())
     {
@@ -198,9 +204,9 @@ void AfxLogComment_(afxHere const hint, afxChar const* msg, ...)
         else
         {
 #ifdef AFX_ISA_X86_64
-            len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
+            len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const *const)hint[0]), hint[1]);
 #else
-            len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
+            len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
 #endif
         }
 
@@ -237,9 +243,9 @@ void AfxLogEcho_(afxHere const hint, afxChar const* msg, ...)
         else
         {
 #ifdef AFX_ISA_X86_64
-            len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
+            len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const *const)hint[0]), hint[1]);
 #else
-            len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
+            len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
 #endif
         }
 
@@ -270,9 +276,9 @@ void AfxLogAssistence_(afxHere const hint, afxChar const* msg, ...)
         int len;
 
 #ifdef AFX_ISA_X86_64
-        len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
+        len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const *const)hint[0]), hint[1]);
 #else
-        len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
+        len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
 #endif
 
         int len2;
@@ -302,9 +308,9 @@ void AfxLogAdvertence_(afxHere const hint, afxChar const* msg, ...)
         int len;
 
 #ifdef AFX_ISA_X86_64
-        len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
+        len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const *const)hint[0]), hint[1]);
 #else
-        len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
+        len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
 #endif
 
         int len2;
@@ -334,9 +340,9 @@ void AfxLogError_(afxHere const hint, afxChar const* msg, ...)
         int len;
 
 #ifdef AFX_ISA_X86_64
-        len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const * const)hint[0]), hint[1]);
+        len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const * const)hint[0]), hint[1]);
 #else
-        len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const * const)hint[0]), (int)hint[1]);
+        len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const * const)hint[0]), (int)hint[1]);
 #endif
 
         int len2;
@@ -359,7 +365,7 @@ void AfxLogError_(afxHere const hint, afxChar const* msg, ...)
 }
 #endif
 
-afxResult _AfxDbgUnlock(void)
+_AFXINL afxResult _AfxDbgUnlock(void)
 {
     afxResult rslt;
 
@@ -385,7 +391,7 @@ afxResult _AfxDbgUnlock(void)
     return rslt;
 }
 
-afxResult _AfxDbgLock(void)
+_AFXINL afxResult _AfxDbgLock(void)
 {
     afxResult rslt;
 
@@ -417,12 +423,12 @@ afxResult _AfxDbgLock(void)
     return rslt;
 }
 
-afxBool _AfxDbgIsAttached(void)
+_AFXINL afxBool _AfxDbgIsAttached(void)
 {
     return debugger.running;
 }
 
-afxResult _AfxDbgDetach(void)
+_AFXINL afxResult _AfxDbgDetach(void)
 {
     if (_AfxDbgLock())
     {
@@ -441,7 +447,7 @@ afxResult _AfxDbgDetach(void)
     return 0;
 }
 
-afxResult _AfxDbgAttach(afxChar const* file)
+_AFXINL afxResult _AfxDbgAttach(afxChar const* file)
 {
     (void)file;
     afxError err = AFX_ERR_NONE;
@@ -547,7 +553,7 @@ afxResult _AfxDbgAttach(afxChar const* file)
     return FALSE;
 }
 
-_AFX void AfxCatchError_(afxError err_, afxHere const hint)
+_AFXINL void AfxCatchError_(afxError err_, afxHere const hint)
 {
     afxError err = NIL;
     AfxAssert(err_);

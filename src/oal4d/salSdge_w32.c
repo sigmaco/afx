@@ -27,7 +27,7 @@ _A4D void* _AfxDqueRequestArenaSpace(afxSoundBridge sdge, afxNat queIdx, afxNat 
 
     AfxEnterSlockExclusive(&sque->m.workArenaSlock);
 
-    void *block = AfxRequestArenaUnit(&sque->m.workArena, siz);
+    void *block = AfxAllocateArena(&sque->m.workArena, siz);
 
     if (!block)
         AfxThrowError();
@@ -48,7 +48,7 @@ _A4D void _AfxDqueRecycleArenaSpace(afxSoundBridge sdge, afxNat queIdx, void *bl
 
     AfxAssert(block);
 
-    AfxRecycleArenaUnit(&sque->m.workArena, block, siz);
+    AfxRecycleArena(&sque->m.workArena, block, siz);
 
     AfxExitSlockExclusive(&sque->m.workArenaSlock);
 }

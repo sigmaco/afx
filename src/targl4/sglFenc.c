@@ -19,7 +19,7 @@
 
 #include "qwadro/draw/pipe/avxPipeline.h"
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/exec/afxSystem.h"
 
@@ -142,7 +142,7 @@ _SGL afxError _SglFencDtor(afxFence fenc)
 
     if (fenc->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 9, fenc->glHandle);
+        _SglDctxDeleteGlRes(dctx, 9, (afxSize)fenc->glHandle);
         fenc->glHandle = 0;
     }
 

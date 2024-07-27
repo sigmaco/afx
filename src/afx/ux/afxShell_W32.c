@@ -187,7 +187,7 @@ _AUX afxError AfxSystemIoctl(afxSystem sys, afxModule mdle, afxNat reqCode, void
         TheShell.wndClss.hCursor = LoadCursorA(NULL, IDC_ARROW);
         TheShell.wndClss.hbrBackground = NULL;
         TheShell.wndClss.lpszMenuName = NULL;
-        TheShell.wndClss.lpszClassName = "Unified Shell --- Qwadro Execution Ecosystem (c) 2017 SIGMA --- Public Test Build";
+        TheShell.wndClss.lpszClassName = "Unified User Experience Infrastructure --- Qwadro Execution Ecosystem (c) 2017 SIGMA --- Public Test Build";
         TheShell.wndClss.hIconSm = LoadIconA(NULL, IDI_SHIELD);
 
         if (!(RegisterClassExA(&TheShell.wndClss))) AfxThrowError();
@@ -215,17 +215,17 @@ _AUX afxError AfxSystemIoctl(afxSystem sys, afxModule mdle, afxNat reqCode, void
                 TheShell.m.stdHid = hid;
 
                 afxUri point, location;
-                AfxMakeUri(&point, "code", 0);
-                AfxMakeUri(&location, "system", 0);
+                AfxMakeUri(&point, 0, "code", 0);
+                AfxMakeUri(&location, 0, "system", 0);
 
                 if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
                 else
                 {
                     afxUri uri;
-                    AfxMakeUri(&uri, "system/qwadro.xss", 0);
+                    AfxMakeUri(&uri, 0, "system/qwadro.xss", 0);
 
                     afxString s;
-                    AfxMakeString(&s, "qwadro", 0);
+                    AfxMakeString(&s, 0, "qwadro", 0);
                     //AfxLoadScript(&s, &uri);
 
                     if (err)
@@ -268,8 +268,8 @@ _AUX afxError AfxSystemIoctl(afxSystem sys, afxModule mdle, afxNat reqCode, void
         AfxExhaustClass(&TheShell.m.hidCls);
 
         afxUri point, location;
-        AfxMakeUri(&point, "code", 0);
-        AfxMakeUri(&location, "system", 0);
+        AfxMakeUri(&point, 0, "code", 0);
+        AfxMakeUri(&location, 0, "system", 0);
         AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);
 
         UnregisterClassA(TheShell.wndClss.lpszClassName, TheShell.wndClss.hInstance);

@@ -131,8 +131,8 @@ AFXINL afxNat           AfxGetStreamBufferCap(afxStream const iob);
 
 AFX _afxIobImpl const   stdStreamImpl;
 
-AFX afxStream           AfxAcquireImplementedStream(afxIoFlags flags, _afxIobImpl const* pimpl, _afxIobIdd const* idd);
-AFX afxStream           AfxAcquireStream(afxIoFlags flags, afxNat bufCap);
+AFX afxStream           AfxAcquireImplementedStream(afxNat diskId, afxIoFlags flags, _afxIobImpl const* pimpl, _afxIobIdd const* idd);
+AFX afxStream           AfxAcquireStream(afxNat diskId, afxIoFlags flags, afxNat bufCap);
 
 AFX afxStream           AfxLoadFile(afxUri const *uri); // will upload the entire file data into RAM and close the file.
 AFX afxError            AfxReloadFile(afxStream iob, afxUri const *uri);

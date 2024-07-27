@@ -50,43 +50,7 @@ typedef enum afxFileFlags
 }
 afxFileFlags;
 
-AFX_DEFINE_STRUCT(afxFileReference)
-{
-    afxNat              secIdx;
-    afxSize             offset;
-};
-
-AFX_DEFINE_STRUCT(afxFileSection)
-{
-    afxSize             dataOffset;
-    afxNat              codec; // codec used to compress this section
-    afxNat              encSiz; // compressed size
-    afxNat              decSiz; // uncompressed size
-    afxNat              intAlign;
-};
-
-AFX_DEFINE_STRUCT(afxFileHeader)
-{
-    afxNat              ver;
-    afxNat              totalSiz;
-    afxNat32            crc32;
-    afxNat              secOffset;
-    afxNat              secCnt;
-    afxFileReference    rootObjectTypeDef;
-    afxFileReference    rootObject;
-    afxNat              typeTag;
-    afxNat              extraTags[4];
-    afxNat              stringDatabaseCrc;
-    afxNat              reserved[3];
-};
-
-AFX_DEFINE_STRUCT(afxFileMagicValue)
-{
-    afxNat              magicVal[4];
-    afxNat              hdrSiz;
-    afxNat              hdrFmt;
-    afxNat              reserved[2];
-};
+AFX_DEFINE_HANDLE(afxFile);
 
 AFX void*                   AfxGetFileDescriptor(afxStream file);
 
@@ -97,9 +61,9 @@ AFX afxUri const*           AfxGetFilePath(afxStream file);
 AFX afxResult               AfxCopyFilePath(afxStream file, afxUri* uri);
 
 AFX afxString const*        AfxGetFilePathString(afxStream file);
-AFX afxResult               AfxCopyFilePathString(afxStream file, afxRestring *str);
+AFX afxResult               AfxCopyFilePathString(afxStream file, afxString *str);
 
-AFX afxError                AfxReadFileString(afxStream file, afxRestring* str);
+AFX afxError                AfxReadFileString(afxStream file, afxString* str);
 
 AFX afxResult               AfxFlushFile(afxStream file);
 AFX afxBool                 AfxFileShouldBeFlushed(afxStream file);

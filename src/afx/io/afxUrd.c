@@ -33,83 +33,73 @@
 #define HIBYTE(w) ((afxByte)(((afxNat16)(w) >> 8) & 0xFF))
 
 ////////////////////////////////////////////////////////////////////////////////
-// Writer
+
+#pragma pack(push, 1)
+
+AFX_DEFINE_STRUCT(_afxUrdHdr)
+{
+    afxNat32        fcc; // 'u', 'r', 'd', '\0'
+    afxNat32        len;
+    afxNat32        ver;
+    afxNat32        mach; // 'l', 'e', '3', '2'
+    afxNat32        crc32;
+    afxNat32        baseSegOffset;
+    afxNat32        segCnt;
+    afxUrdReference rootObj; // 't', 'x', 'd', '\0'; 'a', 'n', 'd', '\0'; 'm', 'd', 'd', '\0'
+};
+
+AFX_DEFINE_STRUCT(_afxUrdChunkTxd)
+{
+    afxNat32        fcc; // 't', 'x', 'd', '\0'
+    afxNat32        len;
+    afxNat32        ver;
+    afxNat          texCnt;
+    afxNat          rasCnt;
+    // afxString    texUrns[texCnt];
+    // ---
+};
+
+AFX_DEFINE_STRUCT(_afxUrdChunkTex)
+{
+    afxNat      rasCnt;
+    //afxNat      rasRasIdx[rasCnt];
+    //afxNat      rasUsage[rasCnt];
+};
+
+AFX_DEFINE_STRUCT(_afxUrdChunkRas)
+{
+    afxNat          fmt;
+    afxNat32        whd[3];
+    afxNat          lodCnt;
+    afxNat          flags;
+    afxNat          usage;
+};
+
+#pragma pack(pop)
+
+AFX_DEFINE_STRUCT(afxUrdSegment)
+{
+    afxNat          decSiz; // uncompressed size
+    afxNat          encSiz; // compressed size
+    afxNat          codec; // codec used to compress this section
+    afxNat          intAlign;
+    afxNat32        baseDataOffset;
+};
+
+AFX_OBJECT(afxUrd)
+{
+    _afxUrdHdr      hdr;
+    afxNat          openSegCnt;
+    afxUrdSegment** openSegs;
+    afxBool         revBytes;
+    afxBool8*       marshalled;
+    afxBool8*       userBuffered;
+    void*           convBuf;
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////
-// Writer
-////////////////////////////////////////////////////////////////////////////////
-
-
-_AFX void Reverse32_(int Count, void *BufferInit)
-{
-    afxNat32 *v2; // ecx
-    int v3; // edx
-
-    v2 = BufferInit;
-    if (Count / 4)
-    {
-        v3 = Count / 4;
-        do
-        {
-            *v2 = (((*v2 << 16) | *v2 & 0xFF00) << 8) | (((*v2 >> 16) | *v2 & 0xFF0000u) >> 8);
-            ++v2;
-            --v3;
-        } while (v3);
-    }
-}
-
-#if 0
-_AFX void Reverse16(int Count, void *BufferInit)
-{
-    int v2; // eax
-    afxNat16 *v3; // ecx
-    int v4; // eax
-    int v5; // edx
-    int v6; // esi
-    __int16 v7; // dx
-
-    v2 = Count / 2;
-    v3 = BufferInit;
-    if (Count / 2 % 2)
-    {
-        if (v2)
-        {
-            v6 = Count / 2;
-            do
-            {
-                //LOBYTE(v7) = *v3 >> 8;
-                //HIBYTE(v7) = *v3;
-                ++v3;
-                --v6;
-                *(v3 - 1) = v7;
-            } while (v6);
-        }
-    }
-    else
-    {
-        v4 = v2 / 2;
-        if (v4)
-        {
-            v5 = v4;
-            do
-            {
-                *(afxNat32*)v3 = (*(afxNat32*)v3 << 8) ^ ((*(afxNat32*)v3 << 8) ^ (*(afxNat32*)v3 >> 8)) & 0xFF00FF;
-                v3 += 2;
-                --v5;
-            } while (v5);
-        }
-    }
-}
-#endif
-
-_AFX void ReverseSection(int First16Bit, int First8Bit, int End, void *BufferInit)
-{
-    Reverse32_(First16Bit, BufferInit);
-    //Reverse16(First8Bit - First16Bit, (char *)BufferInit + First16Bit);
-}
-
-_AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemory, void *Reader, afxBool fileIsByteReversed)
+_AFX void* LoadFileSection2(afxUrdSegment const *Section, void *DestinationMemory, void *Reader, afxBool fileIsByteReversed)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(Section);
@@ -119,9 +109,9 @@ _AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemor
     void *result = 0;
     void *Result = 0;
 
-    if (Section->expandedDataSiz)
+    if (Section->decSiz)
     {
-        afxNat alignedSiz = (Section->expandedDataSiz + 3) & 0xFFFFFFFC;
+        afxNat alignedSiz = (Section->decSiz + 3) & 0xFFFFFFFC;
 
         if (DestinationMemory)
         {
@@ -137,16 +127,16 @@ _AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemor
 
         if (result)
         {
-            if (Section->fmt)
+            if (Section->codec)
             {
-                afxNat v8 = AfxGetCompressionPaddingSize(Section->fmt);
-                void *v9 = AfxAllocate(1, Section->dataSiz + v8, 0, AfxHere());
+                afxNat v8 = AfxGetCompressionPaddingSize(Section->codec);
+                void *v9 = AfxAllocate(1, Section->encSiz + v8, 0, AfxHere());
 
                 if (v9)
                 {
-                    AfxReadStreamAt(Reader, Section->dataOffset, Section->dataSiz, 0, v9);
+                    AfxReadStreamAt(Reader, Section->baseDataOffset, Section->encSiz, 0, v9);
 
-                    if (!AfxDecompressData(Section->fmt, fileIsByteReversed, Section->dataSiz, v9, /*Section->first16Bit*/0, /*Section->first8Bit*/0, Section->expandedDataSiz, Result))
+                    if (!AfxDecompressData(Section->codec, fileIsByteReversed, Section->encSiz, v9, 0, 0, Section->decSiz, Result))
                     {
                         AfxDeallocate(Result);
                         Result = 0;
@@ -158,7 +148,7 @@ _AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemor
             }
             else
             {
-                AfxReadStreamAt(Reader, Section->dataOffset, Section->dataSiz, 0, result);
+                AfxReadStreamAt(Reader, Section->baseDataOffset, Section->encSiz, 0, result);
                 result = Result;
             }
         }
@@ -168,104 +158,106 @@ _AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemor
 
 _AFX void* AfxDecodeUrdReference(void const **sections, afxUrdReference const* ref)
 {
-    return (char *)sections[ref->secIdx] + ref->offset;
+    return (afxByte*)sections[ref->segIdx] + ref->offset;
 }
 
-_AFX afxNat AfxFindUrdSectionOfLoadedObject(afxUrd urd, void const* obj)
-{
-    afxNat secCnt = urd->hdr->secCnt;    
-    afxNat result = 0;
-
-    if (!secCnt)
-        return -1;
-
-    afxUrdSection** sections = urd->sections;
-    afxNat *expandedDataSiz = &((afxUrdSection*)&(((afxByte*)urd->hdr)[urd->hdr->secOffset]))->expandedDataSiz;
-
-    while (obj < *sections || obj >= (char *)*sections + *expandedDataSiz)
-    {
-        ++result;
-        ++sections;
-        expandedDataSiz += 11;
-
-        if (result >= secCnt)
-            return -1;
-    }
-    return result;
-}
-
-_AFX afxBool AfxOpenUrdSections(afxUrd urd, afxNat baseIdx, afxNat secCnt, void *buf[])
+_AFX afxBool AfxOpenUrdSegments(afxUrd urd, afxNat firstSeg, afxNat secCnt, void *buf[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
-
-    AfxAssert(urd->hdr);
-    AfxAssertRange(urd->secCnt, baseIdx, secCnt);
-
+    AfxAssertRange(urd->hdr.segCnt, firstSeg, secCnt);
     afxBool ret = TRUE;
 
-    afxUrdSection *sections = ((afxUrdSection*)((afxByte*)urd->hdr + urd->hdr->secOffset));
+    afxUrdSegment* segs = ((afxUrdSegment*)((afxByte*)urd->hdr.baseSegOffset));
 
     for (afxNat i = 0; i < secCnt; i++)
     {
-        afxUrdSection *sec = &sections[baseIdx + i];
+        afxUrdSegment* seg = &segs[firstSeg + i];
 
-        urd->isUserMem[baseIdx + i] = !!buf;
+        urd->userBuffered[firstSeg + i] = !!buf;
 
-        if (!(!sec->expandedDataSiz || urd->sections[baseIdx + i]))
+        if (!(!seg->decSiz || urd->openSegs[firstSeg + i]))
             ret = FALSE;
     }
     return ret;
 }
 
-_AFX afxBool AfxOpenUrdSection(afxUrd urd, afxNat secIdx, void *buf)
+_AFX afxBool AfxOpenUrdSegment(afxUrd urd, afxNat segIdx, void* buf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
-    return AfxOpenUrdSections(urd, secIdx, 1, buf ? &buf : NIL);
+    return AfxOpenUrdSegments(urd, segIdx, 1, buf ? &buf : NIL);
 }
 
-_AFX void AfxCloseUrdSections(afxUrd urd, afxNat baseIdx, afxNat secCnt)
+_AFX void AfxCloseUrdSegments(afxUrd urd, afxNat firstSeg, afxNat segCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
+    AfxAssertRange(urd->hdr.segCnt, firstSeg, segCnt);
 
-    AfxAssertRange(urd->secCnt, baseIdx, secCnt);
-
-    for (afxNat i = 0; i < secCnt; i++)
+    for (afxNat i = 0; i < segCnt; i++)
     {
-        if (urd->sections[baseIdx + i])
+        if (urd->openSegs[firstSeg + i])
         {
-            if (!urd->isUserMem[baseIdx + i])
-                AfxDeallocate(urd->sections[baseIdx + i]);
+            if (!urd->userBuffered[firstSeg + i])
+                AfxDeallocate(urd->openSegs[firstSeg + i]);
 
-            urd->isUserMem[baseIdx + i] = FALSE;
-            urd->marshalled[baseIdx + i] = FALSE;
-            urd->sections[baseIdx + i] = NIL;
+            urd->userBuffered[firstSeg + i] = FALSE;
+            urd->marshalled[firstSeg + i] = FALSE;
+            urd->openSegs[firstSeg + i] = NIL;
         }
     }
 }
 
-_AFX void AfxCloseUrdSection(afxUrd urd, afxNat secIdx)
+_AFX void AfxCloseAllUrdSegments(afxUrd urd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
-    AfxCloseUrdSections(urd, secIdx, 1);
+    AfxCloseUrdSegments(urd, 0, urd->openSegCnt);
 }
 
-_AFX void AfxCloseAllUrdSections(afxUrd urd)
+_AFX afxError _AfxUrdDtorCb(afxUrd urd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
-    AfxCloseUrdSections(urd, 0, urd->secCnt);
+
+    AfxCloseAllUrdSegments(urd);
+
+    if (urd->openSegs)
+        AfxDeallocate(urd->openSegs);
+    
+    if (urd->convBuf)
+        AfxDeallocate(urd->convBuf);
+
+    return err;
 }
+
+_AFX afxError _AfxUrdCtorCb(void *cache, afxNat idx, afxUrd urd, void const *paradigms)
+{
+    afxError err = AFX_ERR_NONE;
+
+
+
+    return err;
+}
+
+_AFX afxClassConfig _AfxUrdClsCfg =
+{
+    .fcc = afxFcc_URD,
+    .name = "URD",
+    .desc = "Uniform Resource Dictionary",
+    .fixedSiz = sizeof(AFX_OBJECT(afxUrd)),
+    .ctor = (void*)_AfxUrdCtorCb,
+    .dtor = (void*)_AfxUrdDtorCb
+};
+
+////////////////////////////////////////////////////////////////////////////////
 
 _AFX afxUrd AfxBuildUrd(afxUri const *path)
 {
     afxError err = AFX_ERR_NONE;
     afxUrd urd = NIL;
 
-    //AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
     afxStream file;
 
     if (!(file = AfxOpenFile(path, afxIoFlag_R))) AfxThrowError();
@@ -274,7 +266,7 @@ _AFX afxUrd AfxBuildUrd(afxUri const *path)
         AfxAssertObjects(1, &file, afxFcc_FILE);
 
         //if (AfxAcquireObjects(AfxGetUrdClass(), NIL, 1, NIL, (afxHandle**)&urd, AfxHere()))
-            AfxThrowError();
+        AfxThrowError();
 
         AfxReleaseObjects(1, (void*) { file });
     }
@@ -288,7 +280,6 @@ _AFX afxUrd AfxAcquireUrd(afxUri const *path)
     afxError err = AFX_ERR_NONE;
     afxUrd urd = NIL;
 
-    //AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
     afxStream file;
 
     if (!(file = AfxOpenFile(path, afxIoFlag_R))) AfxThrowError();
@@ -297,48 +288,10 @@ _AFX afxUrd AfxAcquireUrd(afxUri const *path)
         AfxAssertObjects(1, &file, afxFcc_FILE);
 
         //if (AfxAcquireObjects(AfxGetUrdClass(), NIL, 1, NIL, (afxHandle**)&urd, AfxHere()))
-            AfxThrowError();
+        AfxThrowError();
 
         AfxReleaseObjects(1, (void*) { file });
     }
 
     return urd;
 }
-
-_AFX afxError _AfxUrdDtor(afxUrd urd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &urd, afxFcc_URD);
-
-    AfxCloseAllUrdSections(urd);
-
-    if (urd->sections)
-        AfxDeallocate(urd->sections);
-    
-    if (urd->conversionBuf)
-        AfxDeallocate(urd->conversionBuf);
-
-    if (urd->hdr)
-        AfxDeallocate(urd->hdr);
-
-    if (urd->srcMagicVal)
-        AfxDeallocate(urd->srcMagicVal);
-
-    return err;
-}
-
-_AFX afxError _AfxUrdCtor(void *cache, afxNat idx, afxUrd urd, void const *paradigms)
-{
-    afxError err = AFX_ERR_NONE;
-
-    return err;
-}
-
-_AFX afxClassConfig _AfxUrdMgrCfg =
-{
-    .fcc = afxFcc_URD,
-    .name = "Uniform Resource Dictionary",
-    .fixedSiz = sizeof(AFX_OBJECT(afxUrd)),
-    .ctor = (void*)_AfxUrdCtor,
-    .dtor = (void*)_AfxUrdDtor
-};

@@ -1,0 +1,17 @@
+<Qwadro>
+    <Pipeline>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
+        <VertexShader>//./z/video/gui.vsh</VertexShader>
+    </Pipeline>    
+    <Rasterizer>
+        <FillMode>SOLID</FillMode>
+        <Transformer>//./z/video/gui.xsh.xml</Transformer>
+        <FragmentShader>//./z/video/gui.fsh</FragmentShader>
+    </Rasterizer>
+    <Rasterizer id='aa'>
+        <FillMode>SOLID</FillMode>
+        <Transformer>//./z/video/gui.xsh.xml</Transformer>
+        <FragmentShader>//./z/video/gui_edge_aa.fsh</FragmentShader>
+    </Rasterizer>
+</Qwadro>

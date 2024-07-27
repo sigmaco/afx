@@ -51,7 +51,7 @@
 #   define VLD_FORCE_ENABLE
 #endif
 
-#if 0
+#if !0
 #if (defined(_WIN64) || defined(_WIN32))
 #   ifdef VLD_FORCE_ENABLE
 #       include <vld.h>
@@ -100,38 +100,23 @@
 #   error "Unsupported endianess"
 #endif
 
-//#define DLLIMPORT __declspec(dllimport)
-//#define DLLEXPORT __declspec(dllexport)
-//#define _AFXINLINE __forceinline
-//#define _AFXEMBED extern __forceinline
+#ifdef AFX_ISA_X86_64
+#   define AFX_ISA_SSE
+#   define AFX_ISA_SSE2
+#endif
+
 #define AFXCALL __cdecl
 
 #define DLLIMPORT __declspec(dllimport)
 #define DLLEXPORT __declspec(dllexport)
-#define INLINE __forceinline
-#define EMBED extern __forceinline
 
-#ifndef __e2coree__
-#   ifdef _DEBUG
-#       define AFX DLLIMPORT extern 
-#       define AFXINL DLLIMPORT EMBED
-#   else
-#       define AFX DLLIMPORT extern 
-#       define AFXINL DLLIMPORT EMBED
-#   endif
+#if defined(_WIN32) 
+#   define INLINE __forceinline
 #else
-#   ifdef _DEBUG
-#       define _AFX DLLEXPORT
-#       define AFX DLLEXPORT extern 
-#       define _AFXINL DLLEXPORT EMBED
-#       define AFXINL DLLEXPORT EMBED
-#   else
-#       define _AFX DLLEXPORT
-#       define AFX DLLEXPORT extern 
-#       define _AFXINL DLLEXPORT EMBED
-#       define AFXINL DLLEXPORT EMBED
-#   endif
-#endif//__e2coree__
+#   define INLINE inline __attribute__((always_inline))
+#endif
+
+#define EMBED extern INLINE
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -159,12 +144,13 @@
 #   endif
 #endif
 
-#define afxAligned(align, var)  __declspec(align(align))
-#define afxSimd(x) __declspec(align(AFX_SIMD_ALIGN)) x
-//#define AFX_ALIGN(x, align) __declspec(align(align)) x
-#define AFX_VALIGN(x) __declspec(align(AFX_SIMD_ALIGN)) x // make SIMD vector alignment
-#define AFX_PALIGN(x) __declspec(align(sizeof(void*))) x // make machine-dependent pointer alignment
-#define AFX_VLA(type, name, align) type __declspec(align(align)) name
+#define AFX_SIMD_ALIGN 16u
+
+#if defined(_WIN32) && !defined(__MINGW32__)
+#  define AFX_ALIGN(...) __declspec(align(__VA_ARGS__))
+#else
+#  define AFX_ALIGN(...) __attribute__((aligned(__VA_ARGS__)))
+#endif
 
 typedef int8_t          afxInt8;
 typedef int16_t         afxInt16;
@@ -237,8 +223,6 @@ typedef afxChar16   afxC16;
 typedef afxChar32   afxC32;
 
 ////////////////////////////////////////////////////////////////////////////////
-
-#define AFX_SIMD_ALIGN 16u
 
 #define AFX_BYTE_SIZE 8
 #define AFX_CHAR_SIZE 8

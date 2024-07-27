@@ -37,10 +37,10 @@ AVX void            AfxTranslateCamera(avxCamera cam, afxV3d const motion);
 /// Call AfxGetCameraPosition() to get the world-space position of a camera (taking into account its displacement).
 AVX void            AfxGetCameraPosition(avxCamera cam, afxV4d origin);
 
-/// Get the world-space vector that points to the camera's left/right, down/up, back/fwd direction.
+/// Get the world-space vector that points to the camera's left/right, down/up, near/far direction.
 AVX void            AfxGetCameraDirectionX(avxCamera cam, afxV3d left, afxV3d right);
 AVX void            AfxGetCameraDirectionY(avxCamera cam, afxV3d down, afxV3d up);
-AVX void            AfxGetCameraDirectionZ(avxCamera cam, afxV3d back, afxV3d fwd);
+AVX void            AfxGetCameraDirectionZ(avxCamera cam, afxV3d near, afxV3d far);
 
 /// Once computed, you can use the frustum volume of the camera to apply culling techniques.
 AVX void            AfxGetCameraFrustum(avxCamera cam, afxFrustum *frustum);
@@ -67,9 +67,9 @@ AVX void            AfxSetCameraAspectRatios(avxCamera cam, afxReal physAspectRa
 
 /// The offset vector has horizontal and vertical offsets as its first two components (respectively), 
 /// and the distance from camera as its third component.
-AVX void            AfxGetCameraDisplacement(avxCamera cam, afxV3d offset);
-AVX void            AfxResetCameraDisplacement(avxCamera cam, afxV3d const offset);
-AVX void            AfxApplyCameraDisplacement(avxCamera cam, afxV3d const offset);
+AVX void            AfxGetCameraDisplacement(avxCamera cam, afxV3d displacement);
+AVX void            AfxResetCameraDisplacement(avxCamera cam, afxV3d const displacement);
+AVX void            AfxApplyCameraDisplacement(avxCamera cam, afxV3d const displacement);
 
 /// These methods are useful to make a camera zoom in/out on a specific target. 
 AVX afxReal         AfxGetCameraDistance(avxCamera cam);
@@ -107,6 +107,9 @@ AVX void            AfxComputeCameraRelativePlanarBases(avxCamera cam, afxBool s
 /// which is actually not the direction orthogonal to perfect horizontal motion (unless the character is at the very center of the screen).
 
 AVX afxBool         AfxProcessCameraInteraction(avxCamera cam, afxNat port, afxReal64 speed, afxReal64 dt);
+
+AVX afxBool         AvxBeginSceneCapture(avxCamera cam);
+AVX afxBool         AvxEndSceneCapture(avxCamera cam);
 
 ////////////////////////////////////////////////////////////////////////////////
 

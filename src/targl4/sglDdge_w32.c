@@ -17,15 +17,7 @@
 #define _AVX_DRAW_C
 #define _AVX_DRAW_SYSTEM_C
 #include "sgl.h"
-
-#include "qwadro/exec/afxSystem.h"
-#include "qwadro/sim/afxSimulation.h"
-#include "qwadro/draw/pipe/avxDrawOps.h"
-
-#define _CRT_SECURE_NO_WARNINGS 1
-#define WIN32_LEAN_AND_MEAN 1
-#include <Windows.h>
-#include <dwmapi.h>
+#include "qwadro/sim/rendering/akxRenderer.h"
 
 // RENDERING SCOPE
  
@@ -64,11 +56,11 @@ _SGL void _DpuFinishSynthesis(sglDpu* dpu)
     }
 }
 
-_SGL void _DpuBeginSynthesis(sglDpu* dpu, avxCanvas canv, afxRect const* area, afxNat layerCnt, afxNat cCnt, afxDrawTarget const* c, afxDrawTarget const* d, afxDrawTarget const* s, afxBool defFbo)
+_SGL void _DpuBeginSynthesis(sglDpu* dpu, avxCanvas canv, afxRect const* area, afxNat layerCnt, afxNat cCnt, avxDrawTarget const* c, avxDrawTarget const* d, avxDrawTarget const* s, afxBool defFbo)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
-    afxDrawTarget const* dt;
+    avxDrawTarget const* dt;
     
     //_DpuBindAndSyncCanv(gl, bindCanv, TRUE, GL_READ_FRAMEBUFFER, canv);
     _DpuBindAndSyncCanv(dpu, /*(dpu->activeRasterState.pass.canv != canv)*/TRUE, TRUE, GL_DRAW_FRAMEBUFFER, canv);
@@ -82,18 +74,18 @@ _SGL void _DpuBeginSynthesis(sglDpu* dpu, avxCanvas canv, afxRect const* area, a
 
             switch (dt->loadOp)
             {
-            case afxSurfaceLoadOp_CLEAR:
+            case avxLoadOp_CLEAR:
             {
                 afxReal const *color = dt->clearValue.color;
                 gl->ClearColor(color[0], color[1], color[2], color[3]); _SglThrowErrorOccuried();
                 gl->Clear(GL_COLOR_BUFFER_BIT); _SglThrowErrorOccuried();
                 break;
             }
-            case afxSurfaceLoadOp_LOAD:
+            case avxLoadOp_LOAD:
             {
                 break;
             }
-            case afxSurfaceLoadOp_DONT_CARE:
+            case avxLoadOp_DONT_CARE:
             {
                 afxWhd whd;
                 AfxGetCanvasExtent(canv, whd);
@@ -130,21 +122,21 @@ _SGL void _DpuBeginSynthesis(sglDpu* dpu, avxCanvas canv, afxRect const* area, a
 
             switch (dt->storeOp)
             {
-            case afxSurfaceStoreOp_STORE:
+            case avxStoreOp_STORE:
             {
                 enabledToDraw[enabledToDrawCnt] = GL_COLOR_ATTACHMENT0 + i;
                 enabledToDrawCnt++;
                 storeBitmask |= AFX_BIT(i);
                 break;
             }
-            case afxSurfaceStoreOp_DISCARD:
+            case avxStoreOp_DISCARD:
             {
                 enabledToDraw[enabledToDrawCnt] = GL_NONE;
                 enabledToDrawCnt++;
                 storeBitmask |= AFX_BIT(8 + i);
                 break;
             }
-            case afxSurfaceStoreOp_DONT_CARE:
+            case avxStoreOp_DONT_CARE:
             default:
             {
                 enabledToDraw[enabledToDrawCnt] = GL_NONE;
@@ -170,17 +162,17 @@ _SGL void _DpuBeginSynthesis(sglDpu* dpu, avxCanvas canv, afxRect const* area, a
 
             switch (dt->loadOp)
             {
-            case afxSurfaceLoadOp_CLEAR:
+            case avxLoadOp_CLEAR:
             {
                 afxReal const *color = dt->clearValue.color;
                 gl->ClearBufferfv(GL_COLOR, i, color); _SglThrowErrorOccuried();
                 break;
             }
-            case afxSurfaceLoadOp_LOAD:
+            case avxLoadOp_LOAD:
             {
                 break;
             }
-            case afxSurfaceLoadOp_DONT_CARE:
+            case avxLoadOp_DONT_CARE:
             default:
             {
                 enabledToDontLoad[enabledToDontLoadCnt] = GL_COLOR_ATTACHMENT0 + i;
@@ -215,7 +207,7 @@ _SGL void _DpuBeginSynthesis(sglDpu* dpu, avxCanvas canv, afxRect const* area, a
 
             if (dt)
             {
-                if (dt->loadOp == afxSurfaceLoadOp_CLEAR)
+                if (dt->loadOp == avxLoadOp_CLEAR)
                 {
                     if (!combinedDs)
                     {
@@ -235,7 +227,7 @@ _SGL void _DpuBeginSynthesis(sglDpu* dpu, avxCanvas canv, afxRect const* area, a
 
             if (dt)
             {
-                if (dt->loadOp == afxSurfaceLoadOp_CLEAR)
+                if (dt->loadOp == avxLoadOp_CLEAR)
                 {
                     GLint sCv = dt->clearValue.stencil;
                     gl->ClearBufferiv(GL_STENCIL, 0, &sCv); _SglThrowErrorOccuried();
@@ -247,7 +239,7 @@ _SGL void _DpuBeginSynthesis(sglDpu* dpu, avxCanvas canv, afxRect const* area, a
 
 // STATE SETTING
 
-_SGL void _DpuBindPipeline(sglDpu* dpu, avxPipeline pip, afxFlags dynamics)
+_SGL void _DpuBindPipeline(sglDpu* dpu, avxPipeline pip, avxVertexInput vin, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextPip = pip;
@@ -258,7 +250,7 @@ _SGL void _DpuBindPipeline(sglDpu* dpu, avxPipeline pip, afxFlags dynamics)
     }
     else
     {
-        dpu->nextVin = pip->m.vin;
+        dpu->nextVin = vin ? vin : pip->m.vin;
 
         dpu->nextXformState.primTop = pip->m.primTop;
         dpu->nextXformState.primRestartEnabled = pip->m.primRestartEnabled;
@@ -271,7 +263,7 @@ _SGL void _DpuBindPipeline(sglDpu* dpu, avxPipeline pip, afxFlags dynamics)
     }
 }
 
-_SGL void _DpuBindRasterizer(sglDpu* dpu, avxRasterizer razr, afxFlags dynamics)
+_SGL void _DpuBindRasterizer(sglDpu* dpu, avxRasterizer razr, avxVertexInput vin, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -302,7 +294,7 @@ _SGL void _DpuBindRasterizer(sglDpu* dpu, avxRasterizer razr, afxFlags dynamics)
         }
 
         if ((dpu->nextRasterState.depthBoundsTestEnabled = config.depthBoundsTestEnabled))
-            AfxCopyV2d(dpu->nextRasterState.depthBounds, config.depthBounds);
+            AfxV2dCopy(dpu->nextRasterState.depthBounds, config.depthBounds);
 
         if ((dpu->nextRasterState.depthTestEnabled = config.depthTestEnabled))
         {
@@ -343,7 +335,7 @@ _SGL void _DpuBindRasterizer(sglDpu* dpu, avxRasterizer razr, afxFlags dynamics)
 
     dpu->nextRazr = razr;
 
-    _DpuBindPipeline(dpu, AfxGetRasterizerPipeline(razr), dynamics);
+    _DpuBindPipeline(dpu, AfxGetRasterizerPipeline(razr), vin, dynamics);
 }
 
 // RESOURCE BINDING
@@ -464,13 +456,13 @@ _SGL void _SglFlushResourcingStateChanges(sglDpu* dpu)
                 else
                 {
                     DpuBindAndSyncBuf(dpu, glTarget, buf);
-                    bufSiz = AfxGetBufferCapacity(buf);
+                    bufSiz = AfxGetBufferCapacity(buf, 0);
 
                     if (offset || range)
                     {
                         AfxAssert(range);
                         AfxAssertRange(bufSiz, offset, range);
-                        gl->BindBufferRange(glTarget, glUnit, buf->glHandle, offset, AFX_ALIGN(range, 16)); _SglThrowErrorOccuried();
+                        gl->BindBufferRange(glTarget, glUnit, buf->glHandle, offset, AFX_ALIGNED_SIZEOF(range, 16)); _SglThrowErrorOccuried();
                     }
                     else
                     {
@@ -975,6 +967,13 @@ _SGL void _DpuCmdUpdateUniformMatrix(sglDpu* dpu, _sglCmdUniformMatrixEXT const*
 
 // QUEUE STUFF
 
+_SGL afxError _DpuExecSubmCallback(sglDpu* dpu, afxDrawBridge ddge, afxNat queIdx, _sglQueueingWork* subm)
+{
+    afxError err = AFX_ERR_NONE;
+    subm->subm.f(dpu, ddge, queIdx, subm->subm.udd);
+    return err;
+}
+
 _SGL afxError _DpuExecSubm(sglDpu* dpu, afxDrawBridge ddge, afxNat queIdx, _sglQueueingExecute* subm)
 {
     afxError err = AFX_ERR_NONE;
@@ -1072,7 +1071,12 @@ _SGL afxError _DpuExecSubmTransfer(sglDpu* dpu, afxDrawBridge ddge, afxNat queId
             {
             case afxFcc_BUF: // raw to buf
             {
-                if (_DpuLoadBuf(dpu, req->data.buf, req->data.offset, req->data.range, &(((afxByte*)req->data.src)[req->data.dataOff])))
+                if (req->data.op.dstStride > 1 || req->data.op.srcStride > 1)
+                {
+                    if (_DpuLoadBuf2(dpu, req->data.buf, req->data.op.dstOffset, req->data.op.range, req->data.op.dstStride, &(((afxByte*)req->data.src)[req->data.op.srcOffset]), req->data.op.srcStride))
+                        AfxThrowError();
+                }
+                else if (_DpuLoadBuf(dpu, req->data.buf, req->data.op.dstOffset, req->data.op.range, &(((afxByte*)req->data.src)[req->data.op.srcOffset])))
                     AfxThrowError();
 
                 break;
@@ -1094,7 +1098,12 @@ _SGL afxError _DpuExecSubmTransfer(sglDpu* dpu, afxDrawBridge ddge, afxNat queId
             {
             case NIL: // buf to raw
             {
-                if (_DpuStoreBuf(dpu, req->data.buf, req->data.offset, req->data.range, &(((afxByte*)req->data.dst)[req->data.dataOff])))
+                if (req->data.op.dstStride > 1 || req->data.op.srcStride > 1)
+                {
+                    if (_DpuStoreBuf2(dpu, req->data.buf, req->data.op.srcOffset, req->data.op.range, req->data.op.srcStride, &(((afxByte*)req->data.dst)[req->data.op.dstOffset]), req->data.op.dstStride))
+                        AfxThrowError();
+                }
+                else if (_DpuStoreBuf(dpu, req->data.buf, req->data.op.srcOffset, req->data.op.range, &(((afxByte*)req->data.dst)[req->data.op.dstOffset])))
                     AfxThrowError();
 
                 break;
@@ -1108,7 +1117,12 @@ _SGL afxError _DpuExecSubmTransfer(sglDpu* dpu, afxDrawBridge ddge, afxNat queId
             }
             case afxFcc_IOB: // buf to iob
             {
-                if (_DpuOutputBuf(dpu, req->data.buf, req->data.offset, req->data.range, req->data.iob, req->data.dataOff))
+                if (req->data.op.dstStride > 1 || req->data.op.srcStride > 1)
+                {
+                    if (_DpuOutputBuf2(dpu, req->data.buf, req->data.op.srcOffset, req->data.op.range, req->data.op.srcStride, req->data.iob, req->data.op.dstOffset, req->data.op.dstStride))
+                        AfxThrowError();
+                }
+                else if (_DpuOutputBuf(dpu, req->data.buf, req->data.op.srcOffset, req->data.op.range, req->data.iob, req->data.op.dstOffset))
                     AfxThrowError();
 
                 break;
@@ -1152,7 +1166,12 @@ _SGL afxError _DpuExecSubmTransfer(sglDpu* dpu, afxDrawBridge ddge, afxNat queId
             {
             case afxFcc_BUF: // iob to buf
             {
-                if (_DpuInputBuf(dpu, req->data.buf, req->data.offset, req->data.range, req->data.iob, req->data.dataOff))
+                if (req->data.op.dstStride > 1 || req->data.op.srcStride > 1)
+                {
+                    if (_DpuInputBuf2(dpu, req->data.buf, req->data.op.dstOffset, req->data.op.range, req->data.op.dstStride, req->data.iob, req->data.op.srcOffset, req->data.op.srcStride))
+                        AfxThrowError();
+                }
+                else if (_DpuInputBuf(dpu, req->data.buf, req->data.op.dstOffset, req->data.op.range, req->data.iob, req->data.op.srcOffset))
                     AfxThrowError();
 
                 break;
@@ -1211,7 +1230,7 @@ _SGL afxError _DpuExecSubmStamp(sglDpu* dpu, afxDrawBridge ddge, afxNat queIdx, 
         afxRect area = { 0 };
         area.extent[0] = whd[0];
         area.extent[1] = whd[1];
-        afxDrawTarget const dt = { .loadOp = afxSurfaceLoadOp_LOAD,.storeOp = afxSurfaceStoreOp_STORE };
+        avxDrawTarget const dt = { .loadOp = avxLoadOp_LOAD,.storeOp = avxStoreOp_STORE };
         _DpuBeginSynthesis(dpu, canv, &area, whd[2], 1, &dt, NIL, NIL, FALSE);
 
         avxViewport vp;
@@ -1220,10 +1239,10 @@ _SGL afxError _DpuExecSubmStamp(sglDpu* dpu, afxDrawBridge ddge, afxNat queIdx, 
         vp.depth[1] = 1;
         _DpuSetViewports(dpu, 0, 1, &vp);
 
-        _DpuBindRasterizer(dpu, dctx->fntRazr, NIL);
+        _DpuBindRasterizer(dpu, dctx->fntRazr, NIL, NIL);
 
         akxViewConstants vc;
-        AfxResetM4d(vc.v);
+        AfxM4dReset(vc.v);
         AfxComputeOffcenterOrthographicMatrix(vc.p, 0, vp.extent[0], 0, vp.extent[1], -1.f, 1.f, &AVX_CLIP_SPACE_OPENGL);
         //AfxComputeBasicOrthographicMatrix(vc.p, vp.extent[0] / vp.extent[1], 1.0, 3.0, &AVX_CLIP_SPACE_OPENGL);
         DpuBufRw(dpu, dctx->fntUnifBuf, 0, sizeof(vc), FALSE, &vc);
@@ -1235,15 +1254,15 @@ _SGL afxError _DpuExecSubmStamp(sglDpu* dpu, afxDrawBridge ddge, afxNat queIdx, 
 
         afxReal x = subm->origin[0];
         afxReal y = subm->origin[1];
-        afxNat numchar = subm->caption.str.str.len;
+        afxNat numchar = subm->caption.str.len;
         afxReal r = 1, g = 1, b = 1;
         afxReal x2 = x;
 
-        _DpuRemapBuf(dpu, dctx->fntDataBuf, 0, AfxGetBufferCapacity(dctx->fntDataBuf), afxBufferAccess_W);
+        _DpuRemapBuf(dpu, dctx->fntDataBuf, 0, AfxGetBufferCapacity(dctx->fntDataBuf, 0), afxBufferAccess_W);
         afxReal* verts = (void*)dctx->fntDataBuf->m.bytemap;// AfxMapBuffer(dctx->fntDataBuf, 0, 2048, afxBufferAccess_W, TRUE); // TODO map directly
         void const* bufStart = verts;
 
-        for (char const *ptr = subm->caption.str.str.start, i = 0; *ptr != '\0'; ptr++)
+        for (char const *ptr = subm->caption.str.start, i = 0; *ptr != '\0'; ptr++)
         {
             // Decrement 'y' for any CR's
             if (*ptr == '\n')
@@ -1307,7 +1326,7 @@ _SGL void* _AfxDqueRequestArenaSpace(afxDrawBridge ddge, afxNat queIdx, afxNat s
 
     AfxEnterSlockExclusive(&dque->m.workArenaSlock);
 
-    void *block = AfxRequestArenaUnit(&dque->m.workArena, siz);
+    void *block = AfxAllocateArena(&dque->m.workArena, siz);
 
     if (!block)
         AfxThrowError();
@@ -1328,7 +1347,7 @@ _SGL void _AfxDqueRecycleArenaSpace(afxDrawBridge ddge, afxNat queIdx, void *blo
 
     AfxAssert(block);
 
-    AfxRecycleArenaUnit(&dque->m.workArena, block, siz);
+    AfxRecycleArena(&dque->m.workArena, block, siz);
 
     AfxExitSlockExclusive(&dque->m.workArenaSlock);
 }
@@ -1421,6 +1440,136 @@ _SGL afxBool _DdgeProcCb(afxDrawBridge ddge, afxThread thr)
         }
     }
     return TRUE;
+}
+
+_SGL afxNat _SglDdgeRequestSubmCb(afxDrawBridge ddge, afxFence fenc, afxNat cnt, avxSubmission const req[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+    AfxAssert(cnt);
+    AfxAssert(req);
+    afxNat queIdx2 = AFX_INVALID_INDEX;
+    afxBool queued = FALSE;
+    afxNat iterFailCnt = 0;
+
+    do
+    {
+        for (afxNat queIdx = 0; queIdx < ddge->m.queCnt; queIdx++)
+        {
+            afxDrawQueue dque = ddge->m.queues[queIdx];
+
+            if (AfxTryLockMutex(&dque->m.workChnMtx))
+            {
+                for (afxNat i = 0; i < cnt; i++)
+                {
+                    _sglQueueingWork* subm;
+                    afxNat queuingSiz = 0;
+                    
+                    switch (req[i].submType)
+                    {
+                    case 0:
+                    {
+                        queuingSiz = sizeof(*subm);
+                        subm = _AfxDqueRequestArenaSpace(ddge, queIdx, queuingSiz);
+                        *subm = (_sglQueueingWork) { 0 };
+                        subm->hdr.siz = queuingSiz;
+                        AfxGetTime(&subm->hdr.pushTime);
+                        subm->hdr.exec = (void*)_DpuExecSubmCallback;
+                        subm->subm.f = req[i].f;
+                        subm->subm.udd = req[i].udd;
+                        break;
+                    }
+                    case avxSubmission_WORK:
+                    {
+                        queuingSiz = sizeof(*subm) + sizeof(((avxSubmissionData*)0)->work);
+                        subm = _AfxDqueRequestArenaSpace(ddge, queIdx, queuingSiz);
+                        *subm = (_sglQueueingWork) { 0 };
+                        subm->hdr.siz = queuingSiz;
+                        AfxGetTime(&subm->hdr.pushTime);
+                        subm->hdr.exec = (void*)_DpuExecSubm;
+                        avxSubmissionData* data = &subm->data[0];
+                        data->work = req[i].data->work;
+                        AfxAssertObjects(data->work.cmdbCnt, &data->work.cmdbs, afxFcc_CMDB);
+
+                        for (afxNat j = 0; j < data->work.cmdbCnt; j++)
+                        {
+                            AfxIncAtom32(&data->work.cmdbs[j]->m.submCnt);
+                            data->work.cmdbs[j]->m.state = avxCmdbState_PENDING;
+                        }
+                        break;
+                    }
+                    case avxSubmission_PRESENT:
+                    {
+                        queuingSiz = sizeof(*subm) + sizeof(((avxSubmissionData*)0)->present);
+                        subm = _AfxDqueRequestArenaSpace(ddge, queIdx, queuingSiz);
+                        *subm = (_sglQueueingWork) { 0 };
+                        subm->hdr.siz = queuingSiz;
+                        AfxGetTime(&subm->hdr.pushTime);
+                        subm->hdr.exec = (void*)_DpuExecSubmPresent;
+                        avxSubmissionData* data = &subm->data[0];
+                        data->present = req[i].data->present;
+
+                        for (afxNat j = 0; j < data->present.bufCnt; j++)
+                        {
+                            afxDrawOutput dout = data->present.outputs[j];
+                            AfxAssertObjects(1, &dout, afxFcc_DOUT);
+                            AfxIncAtom32(&dout->submCnt);
+                        }
+                        break;
+                    }
+                    case avxSubmission_TRANSFER:
+                    {
+                        queuingSiz = sizeof(*subm) + sizeof(((avxSubmissionData*)0)->transfer);
+                        subm = _AfxDqueRequestArenaSpace(ddge, queIdx, queuingSiz);
+                        *subm = (_sglQueueingWork) { 0 };
+                        subm->hdr.siz = queuingSiz;
+                        AfxGetTime(&subm->hdr.pushTime);
+                        subm->hdr.exec = (void*)_DpuExecSubmTransfer;
+                        avxSubmissionData* data = &subm->data[0];
+                        data->transfer = req[i].data->transfer;
+                        break;
+                    }
+                    case avxSubmission_MAPPING:
+                    {
+                        queuingSiz = sizeof(*subm) + sizeof(((avxSubmissionData*)0)->map);
+                        subm = _AfxDqueRequestArenaSpace(ddge, queIdx, queuingSiz);
+                        *subm = (_sglQueueingWork) { 0 };
+                        subm->hdr.siz = queuingSiz;
+                        AfxGetTime(&subm->hdr.pushTime);
+                        subm->hdr.exec = (void*)_DpuExecuteSubmMmap;
+                        avxSubmissionData* data = &subm->data[0];
+                        data->map = req[i].data->map;
+                        
+                        for (afxNat j = 0; j < data->present.bufCnt; j++)
+                        {
+                            AfxIncAtom32(&data->map.buf->m.pendingRemap);
+                        }
+                        break;
+                    }
+                    default:
+                    {
+                        AfxThrowError();
+                        break;
+                    }
+                    };
+
+                    if (!err)
+                        AfxPushLinkage(&subm->hdr.chain, &dque->m.workChn);
+                }
+
+                AfxUnlockMutex(&dque->m.workChnMtx);
+                queued = TRUE;
+                queIdx2 = queIdx;
+                break;
+            }
+        }
+
+        if (queued) break;
+        else AfxYield();
+
+    } while (1);
+
+    return queIdx2;
 }
 
 _SGL afxNat _SglDdgeEnqueueExecuteCb(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxExecutionRequest const req[])
@@ -1598,7 +1747,7 @@ _SGL afxNat _SglDdgeEnqueueStampCb(afxDrawBridge ddge, afxNat cnt, afxPresentati
                 AfxGetTime(&subm->hdr.pushTime);
                 subm->itemCnt = cnt;
 
-                AfxCopyV2d(subm->origin, origin);
+                AfxV2dCopy(subm->origin, origin);
                 AfxMakeString4096(&subm->caption, caption);
 
                 for (afxNat i = 0; i < cnt; i++)
@@ -1690,6 +1839,7 @@ _SGL afxError _SglDdgeCtor(afxDrawBridge ddge, afxCookie const* cookie)
     if (_AvxDdgeStdImplementation.ctor(ddge, cookie)) AfxThrowError();
     else
     {
+        ddge->m.submCb = _SglDdgeRequestSubmCb;
         ddge->m.executeCb = _SglDdgeEnqueueExecuteCb;
         ddge->m.transferCb = _SglDdgeEnqueueTransferCb;
         ddge->m.presentCb = _SglDdgeEnqueuePresentCb;

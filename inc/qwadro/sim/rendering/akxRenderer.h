@@ -19,8 +19,32 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "qwadro/space/afxBody.h"
+#include "qwadro/space/akxBody.h"
 #include "qwadro/sim/rendering/akxSky.h"
+
+AFX_DEFINE_STRUCT(akxProto)
+{
+    afxString32     name;
+    afxUri128       mdd;
+    afxUri128       txd;
+    afxUri128       andUri;
+
+    afxModel        mdl;
+    afxRaster       ras;
+    akxAnimation    ani;
+};
+
+AFX_DEFINE_STRUCT(akxPlacement)
+{
+    afxNat          id;
+    afxTransform    t;
+};
+
+AKX afxError AkxRegisterPrototype(afxNat* protoId, afxString const* name, afxUri const* mdd, afxUri const* txd, afxUri const* and);
+
+AKX afxError AkxSpawnEntity(afxNat protoId, afxTransform const* t);
+
+AKX afxError AkxSpawnAnimatedEntity(afxNat protoId, afxTransform const* t);
 
 AFX_DEFINE_STRUCT(akxViewConstants) // frame
 {
@@ -44,7 +68,7 @@ AFX_DEFINE_STRUCT(akxShaderConstants) // pass
     afxV3d wirecolor;
 };
 
-AFX_DEFINE_STRUCT(afxMaterialConstants)
+AFX_DEFINE_STRUCT(akxMaterialConstants)
 {
     //afxColor    Ka; // ambient color
     afxV3d  Kd; // diffuse color
@@ -83,7 +107,7 @@ AFX_OBJECT(akxRenderer)
     {
         akxViewConstants    viewConstants;
         akxShaderConstants  shaderConstants;
-        afxMaterialConstants materialConstants;
+        akxMaterialConstants materialConstants;
         akxInstanceConstants  objConstants;
         afxBuffer           viewConstantsBuffer; // p, v
         afxBuffer           shdConstantsBuffer;
@@ -104,15 +128,16 @@ AFX_OBJECT(akxRenderer)
 
     afxBuffer  testIbo;
     afxBuffer testVbo;
-    avxRasterizer testRazr;
 
-    avxRasterizer    rigidBodyRazr;
-    avxRasterizer    skinnedBodyRazr;
+    afxDrawTechnique    testDtec;
+    afxDrawTechnique    bodyDtec;
+    afxDrawTechnique    blinnTestRazrDtec;
+    afxDrawTechnique    tutCamUtilDtec;
+    afxDrawTechnique    lightingDtec;
 
-    avxRasterizer    blinnTestRazr;
-    avxRasterizer    tutCamUtil;
-    
-    avxRasterizer lighting;
+    avxVertexInput      rigidVin;
+    avxVertexInput      skinnedVin;
+    avxVertexInput      testVin;
 
     akxPose      lp;
     akxPoseBuffer wp;
@@ -143,9 +168,17 @@ AKX afxError AkxCmdEndSceneRendering(avxCmdb cmdb, akxRenderer rnd);
 
 AKX afxError AfxRendererSetStar(akxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
 
-AKX afxError AkxCmdDrawBodies(avxCmdb cmdb, akxRenderer rnd, afxReal dt, afxNat cnt, afxBody bodies[]);
+AKX afxError AkxCmdDrawBodies(avxCmdb cmdb, akxRenderer rnd, afxReal dt, afxNat cnt, akxBody bodies[]);
 
 AKX afxError AkxCmdDrawTestIndexed(avxCmdb cmdb, akxRenderer rnd);
+
+
+AKX afxError            AfxBufferizeMeshTopology(afxMeshTopology msht);
+
+AKX afxError            AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd);
+AKX afxError            AkxCmdBindVertexDataCache(avxCmdb cmdb, afxNat slotIdx, akxVertexData vtd);
+
+AKX afxError AkxBeginSceneCapture(akxRenderer scn, avxCamera cam, afxSimulation sim, avxCmdb cmdb);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //

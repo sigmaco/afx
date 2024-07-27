@@ -275,7 +275,7 @@ _A4D afxError _SalBuildSpu(afxSoundDevice sdev, afxNat unitIdx)
 
                 afxStream fd;
                 afxUri uri;
-                AfxMakeUri(&uri, "system/qwadroDeepNote", 0);
+                AfxMakeUri(&uri, 0, "//./z/boot", 0);
                 fd = AfxOpenFile(&uri, afxIoFlag_R);
 
                 afxNat dataSiz = AfxMeasureStream(fd);
@@ -291,10 +291,11 @@ _A4D afxError _SalBuildSpu(afxSoundDevice sdev, afxNat unitIdx)
                 afxNat iState;
                 do
                 {
-                    Sleep(100);
+                    //Sleep(100);
                     // Get Source State
                     al->GetSourcei(uiSource, AL_SOURCE_STATE, (ALCint*)&iState);
-                    break;
+                    AfxYield();
+                    //break;
                 } while (iState == AL_PLAYING);
 
                 al->SourceStop(uiSource);
@@ -321,6 +322,8 @@ _A4D afxError _SalDestroySpu(afxSoundDevice sdev, afxNat unitIdx)
 
     spu->alc.DestroyContext(spu->alctx);
     spu->alc.CloseDevice(spu->alcdev);
+    spu->alctx = NIL;
+    spu->alcdev = NIL;
 
     return err;
 }
@@ -354,10 +357,9 @@ _A4D afxResult SoundThreadProc(afxThread thr, afxEvent* ev)
         {
             AfxThrowError();
         }
-        else
-        {
-            sdev->dev.serving = FALSE;
-        }
+
+        sdev->dev.serving = FALSE;
+        AfxQuitThread();
         break;
     }
     default:
@@ -435,33 +437,51 @@ _A4D afxError _SalSdevStopCb(afxSoundDevice sdev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-
-    AfxExhaustChainedClasses(&sdev->dev.classes);
-
-    if (sdev->idd->spus)
+    
+    if (sdev->idd)
     {
-        for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
         {
-            afxThread dedThread = sdev->idd->spus[i].dedThread;
-
-            if (dedThread)
+            for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
             {
-                afxResult exitCode;
-                AfxRequestThreadInterruption(dedThread);
-                AfxWaitForThread(dedThread, &exitCode);
-                AfxReleaseObjects(1, &dedThread);
-}
+                afxThread dedThread = sdev->idd->spus[i].dedThread;
+
+                afxThread thr;
+                AfxGetThread(&thr);
+
+                if (dedThread == thr)
+                    return err; // do not let a SPU thread do it
+            }
         }
-        AfxDeallocate(sdev->idd->spus);
-        sdev->idd->spus = NIL;
+
+        AfxExhaustChainedClasses(&sdev->dev.classes);
+
+        if (sdev->idd->spus)
+        {
+            for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
+            {
+                afxThread dedThread = sdev->idd->spus[i].dedThread;
+
+                afxThread thr;
+                AfxGetThread(&thr);
+
+                if (dedThread != thr)
+                {
+                    afxResult exitCode;
+                    do AfxRequestThreadInterruption(dedThread);
+                    while (!AfxWaitForThreadExit(dedThread, &exitCode));
+                    AfxReleaseObjects(1, &dedThread);
+                }
+            }
+            AfxDeallocate(sdev->idd->spus);
+            sdev->idd->spus = NIL;
+        }
+
+        if (sdev->idd->openal32)
+            AfxReleaseObjects(1, &sdev->idd->openal32);
+
+        AfxDeallocate(sdev->idd);
+        sdev->idd = NIL;
     }
-
-    if (sdev->idd->openal32)
-        AfxReleaseObjects(1, &sdev->idd->openal32);
-
-    AfxDeallocate(sdev->idd);
-    sdev->idd = NIL;
-
     return err;
 }
 
@@ -545,16 +565,21 @@ _A4D afxError _SalSdevProcCb(afxSoundDevice sdev, afxThread thr)
     {
         if (_SalSdevStartCb(sdev)) // start or resume
             AfxThrowError();
+        else
+        {
+            AfxAssert(AfxSoundDeviceIsRunning(sdev));
+        }
     }
 
     if (!err)
     {
-        AfxAssert(AfxSoundDeviceIsRunning(sdev));
-
-        for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
+        if (AfxSoundDeviceIsRunning(sdev))
         {
-            if (_SalSdevExecSpuCb(sdev, i, thr))
-                AfxThrowError();
+            for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
+            {
+                if (_SalSdevExecSpuCb(sdev, i, thr))
+                    AfxThrowError();
+            }
         }
     }
 
@@ -563,7 +588,7 @@ _A4D afxError _SalSdevProcCb(afxSoundDevice sdev, afxThread thr)
         if (_SalSdevStopCb(sdev)) // suspend or stop
             AfxThrowError();
 
-        AfxAssert(!AfxSoundDeviceIsRunning(sdev));
+        //AfxAssert(!AfxSoundDeviceIsRunning(sdev));
     }
     return err;
 }

@@ -36,49 +36,49 @@ typedef struct zip zip;
 typedef struct
 {
     afxNat32 signature; // 0x04034B50
-    afxNat16 versionNeededToExtract; // unsupported
-    afxNat16 generalPurposeBitFlag; // unsupported
-    afxNat16 compressionMethod;
+    afxNat16 verNeededToExtract; // unsupported
+    afxNat16 genrlPurposeBitFlag; // unsupported
+    afxNat16 codec;
     afxNat16 lastModFileTime;
     afxNat16 lastModFileDate;
     afxNat32 crc32;
-    afxNat32 compressedSize;
-    afxNat32 uncompressedSize;
-    afxNat16 fileNameLength;
-    afxNat16 extraFieldLength; // unsupported
+    afxNat32 encSiz;
+    afxNat32 decSiz;
+    afxNat16 fileNameLen;
+    afxNat16 extraFieldLen; // unsupported
 } _afxZipSerializedLocalEntryHdr; // local file record
 
 typedef struct
 {
     afxNat32 signature; // 0x02014B50
-    afxNat16 versionMadeBy; // unsupported
-    afxNat16 versionNeededToExtract; // unsupported
-    afxNat16 generalPurposeBitFlag; // unsupported
-    afxNat16 compressionMethod; // 0-store,8-deflate
+    afxNat16 verMadeBy; // unsupported
+    afxNat16 verNeededToExtract; // unsupported
+    afxNat16 genrlPurposeBitFlag; // unsupported
+    afxNat16 codec; // 0-store,8-deflate
     afxNat16 lastModFileTime;
     afxNat16 lastModFileDate;
     afxNat32 crc32;
-    afxNat32 compressedSize;
-    afxNat32 uncompressedSize;
-    afxNat16 fileNameLength;
-    afxNat16 extraFieldLength; // unsupported
-    afxNat16 fileCommentLength; // unsupported
-    afxNat16 diskNumberStart; // unsupported
-    afxNat16 internalFileAttributes; // unsupported
-    afxNat32 externalFileAttributes; // unsupported
-    afxNat32 relativeOffsetOflocalHeader;
+    afxNat32 encSiz;
+    afxNat32 decSiz;
+    afxNat16 fileNameLen;
+    afxNat16 extraFieldLen; // unsupported
+    afxNat16 fileCommentLen; // unsupported
+    afxNat16 diskNumStart; // unsupported
+    afxNat16 internalFileAttrs; // unsupported
+    afxNat32 externalFileAttrs; // unsupported
+    afxNat32 relativeOffsetOfLocalHdr;
 } _afxZipSerializedCdEntryHdr; // global file record
 
 typedef struct
 {
     afxNat32 signature; // 0x06054b50
-    afxNat16 diskNumber; // unsupported
-    afxNat16 centralDirectoryDiskNumber; // unsupported
+    afxNat16 diskNum; // unsupported
+    afxNat16 centralDirDiskNum; // unsupported
     afxNat16 numEntriesThisDisk; // unsupported
     afxNat16 numEntries;
-    afxNat32 centralDirectorySize;
-    afxNat32 centralDirectoryOffset;
-    afxNat16 zipCommentLength;
+    afxNat32 centralDirSiz;
+    afxNat32 centralDirOffset;
+    afxNat16 zipCommentLen;
     // Followed by .ZIP file comment (variable size)
 } _afxZipSerializedCdHdr;
 
@@ -162,15 +162,15 @@ _AFX afxError _AfxZipFindAndReadCdHdr(afxStream file, _afxZipSerializedCdHdr *en
 
                         _afxZipSerializedCdHdr *e = endRecord;
                         AfxLogComment("signature: 0x%X", e->signature); // 0x06054b50
-                        AfxLogComment("diskNumber: %d", e->diskNumber); // unsupported
-                        AfxLogComment("centralDirectoryDiskNumber: %d", e->centralDirectoryDiskNumber); // unsupported
+                        AfxLogComment("diskNum: %d", e->diskNum); // unsupported
+                        AfxLogComment("centralDirDiskNum: %d", e->centralDirDiskNum); // unsupported
                         AfxLogComment("numEntriesThisDisk: %d", e->numEntriesThisDisk); // unsupported
                         AfxLogComment("numEntries: %d", e->numEntries);
-                        AfxLogComment("centralDirectorySize: %u %#x", e->centralDirectorySize, e->centralDirectorySize);
-                        AfxLogComment("centralDirectoryOffset: %u %#x", e->centralDirectoryOffset, e->centralDirectoryOffset);
-                        AfxLogComment("zipCommentLength: %d", e->zipCommentLength);
+                        AfxLogComment("centralDirSiz: %u %#x", e->centralDirSiz, e->centralDirSiz);
+                        AfxLogComment("centralDirOffset: %u %#x", e->centralDirOffset, e->centralDirOffset);
+                        AfxLogComment("zipCommentLength: %d", e->zipCommentLen);
 
-                        if (endRecord->diskNumber || endRecord->centralDirectoryDiskNumber || endRecord->numEntries != endRecord->numEntriesThisDisk)
+                        if (endRecord->diskNum || endRecord->centralDirDiskNum || endRecord->numEntries != endRecord->numEntriesThisDisk)
                         {
                             AfxThrowError();
                             AfxLogError("Qwadro doesn't support splitted Zips.");
@@ -191,7 +191,7 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
 
     afxStream ios = arc->file;
 
-    if (AfxSeekStreamFromBegin(ios, endRecord->centralDirectoryOffset)) AfxThrowError();
+    if (AfxSeekStreamFromBegin(ios, endRecord->centralDirOffset)) AfxThrowError();
     else
     {
         for (afxInt i = 0; i < endRecord->numEntries; i++)
@@ -204,51 +204,51 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
             {
                 _afxZipSerializedCdEntryHdr *g = &fileHdr;
                 AfxLogComment("signature: %u %#x", g->signature, g->signature); // 0x02014B50
-                AfxLogComment("versionMadeBy: %u %#x", g->versionMadeBy, g->versionMadeBy); // unsupported
-                AfxLogComment("versionNeededToExtract: %u %#x", g->versionNeededToExtract, g->versionNeededToExtract); // unsupported
-                AfxLogComment("generalPurposeBitFlag: %u %#x", g->generalPurposeBitFlag, g->generalPurposeBitFlag); // unsupported
-                AfxLogComment("compressionMethod: %u %#x", g->compressionMethod, g->compressionMethod); // 0-store,8-deflate
+                AfxLogComment("verMadeBy: %u %#x", g->verMadeBy, g->verMadeBy); // unsupported
+                AfxLogComment("verNeededToExtract: %u %#x", g->verNeededToExtract, g->verNeededToExtract); // unsupported
+                AfxLogComment("genrlPurposeBitFlag: %u %#x", g->genrlPurposeBitFlag, g->genrlPurposeBitFlag); // unsupported
+                AfxLogComment("codec: %u %#x", g->codec, g->codec); // 0-store,8-deflate
                 AfxLogComment("lastModFileTime: %u %#x", g->lastModFileTime, g->lastModFileTime);
                 AfxLogComment("lastModFileDate: %u %#x", g->lastModFileDate, g->lastModFileDate);
                 AfxLogComment("crc32: %#x", g->crc32);
-                AfxLogComment("compressedSize: %u", g->compressedSize);
-                AfxLogComment("uncompressedSize: %u", g->uncompressedSize);
-                AfxLogComment("fileNameLength: %u", g->fileNameLength);
-                AfxLogComment("textraFieldLength: %u", g->extraFieldLength); // unsupported
-                AfxLogComment("fileCommentLength: %u", g->fileCommentLength); // unsupported
-                AfxLogComment("diskNumberStart: %u", g->diskNumberStart); // unsupported
-                AfxLogComment("internalFileAttributes: %#x", g->internalFileAttributes); // unsupported
-                AfxLogComment("externalFileAttributes: %#x", g->externalFileAttributes); // unsupported
-                AfxLogComment("relativeOffsetOflocalHeader: %u %#x", g->relativeOffsetOflocalHeader, g->relativeOffsetOflocalHeader);
+                AfxLogComment("encSiz: %u", g->encSiz);
+                AfxLogComment("decSiz: %u", g->decSiz);
+                AfxLogComment("fileNameLen: %u", g->fileNameLen);
+                AfxLogComment("textraFieldLen: %u", g->extraFieldLen); // unsupported
+                AfxLogComment("fileCommentLen: %u", g->fileCommentLen); // unsupported
+                AfxLogComment("diskNumStart: %u", g->diskNumStart); // unsupported
+                AfxLogComment("internalFileAttributes: %#x", g->internalFileAttrs); // unsupported
+                AfxLogComment("externalFileAttributes: %#x", g->externalFileAttrs); // unsupported
+                AfxLogComment("relativeOffsetOfLocalHdr: %u %#x", g->relativeOffsetOfLocalHdr, g->relativeOffsetOfLocalHdr);
 
                 if (fileHdr.signature != 0x02014B50) AfxThrowError();
                 else
                 {
-                    AfxAssert(fileHdr.fileNameLength);
+                    AfxAssert(fileHdr.fileNameLen);
 
-                    if (fileHdr.fileNameLength + 1 >= _AFX_Z_BUFSIZ) AfxThrowError();
+                    if (fileHdr.fileNameLen + 1 >= _AFX_Z_BUFSIZ) AfxThrowError();
                     else
                     {
                         // filename
                         char filename[_AFX_Z_BUFSIZ / 3];
 
-                        if (AfxReadStream(ios, fileHdr.fileNameLength, 0, filename)) AfxThrowError();
+                        if (AfxReadStream(ios, fileHdr.fileNameLen, 0, filename)) AfxThrowError();
                         else
                         {
-                            filename[fileHdr.fileNameLength] = '\0'; // NULL terminate
+                            filename[fileHdr.fileNameLen] = '\0'; // NULL terminate
                             
                             afxUri path;
-                            AfxMakeUri(&path, filename, fileHdr.fileNameLength);
+                            AfxMakeUri(&path, 0, filename, fileHdr.fileNameLen);
 
                             // extra block
                             unsigned char extra[_AFX_Z_BUFSIZ / 3] = { '\0' };
 
-                            if (fileHdr.extraFieldLength)
+                            if (fileHdr.extraFieldLen)
                             {
-                                if (AfxReadStream(ios, fileHdr.extraFieldLength, 0, extra))
+                                if (AfxReadStream(ios, fileHdr.extraFieldLen, 0, extra))
                                     AfxThrowError();
 
-                                extra[fileHdr.extraFieldLength] = '\0';
+                                extra[fileHdr.extraFieldLen] = '\0';
                             }
                             
                             if (!err)
@@ -256,12 +256,12 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
                                 // comment block
                                 char comment[_AFX_Z_BUFSIZ / 3] = { '\0' };
 
-                                if (fileHdr.fileCommentLength)
+                                if (fileHdr.fileCommentLen)
                                 {
-                                    if (AfxReadStream(ios, fileHdr.fileCommentLength, 0, comment))
+                                    if (AfxReadStream(ios, fileHdr.fileCommentLen, 0, comment))
                                         AfxThrowError();
 
-                                    comment[fileHdr.fileCommentLength] = '\0'; // NULL terminate
+                                    comment[fileHdr.fileCommentLen] = '\0'; // NULL terminate
                                 }
 
                                 if (!err)
@@ -269,7 +269,7 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
                                     // seek to local file header, then skip file header + filename + extra field length
                                     afxNat16 localFileNameLength, localExtraFieldLength;
 
-                                    if (AfxSeekStreamFromBegin(ios, fileHdr.relativeOffsetOflocalHeader + sizeof(_afxZipSerializedLocalEntryHdr) - sizeof(localFileNameLength) - sizeof(localExtraFieldLength))) AfxThrowError();
+                                    if (AfxSeekStreamFromBegin(ios, fileHdr.relativeOffsetOfLocalHdr + sizeof(_afxZipSerializedLocalEntryHdr) - sizeof(localFileNameLength) - sizeof(localExtraFieldLength))) AfxThrowError();
                                     else
                                     {
                                         if (AfxReadStream(ios, sizeof(localFileNameLength), 0, &localFileNameLength)) AfxThrowError();
@@ -278,7 +278,7 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
                                             if (AfxReadStream(ios, sizeof(localExtraFieldLength), 0, &localExtraFieldLength)) AfxThrowError();
                                             else
                                             {
-                                                if (AfxSeekStreamFromBegin(ios, fileHdr.relativeOffsetOflocalHeader + sizeof(_afxZipSerializedLocalEntryHdr) + localFileNameLength + localExtraFieldLength)) AfxThrowError();
+                                                if (AfxSeekStreamFromBegin(ios, fileHdr.relativeOffsetOfLocalHdr + sizeof(_afxZipSerializedLocalEntryHdr) + localFileNameLength + localExtraFieldLength)) AfxThrowError();
                                                 else
                                                 {
                                                     AfxLogComment("Archived item %u, %lu %#lx", i, (unsigned long)AfxGetStreamPosn(ios), (unsigned long)AfxGetStreamPosn(ios));
@@ -287,8 +287,8 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
                                                         break; // keep going while callback returns ok
 
                                                     AfxSeekStreamFromBegin(ios, offset); // return to position
-                                                    AfxAdvanceStream(ios, sizeof(_afxZipSerializedCdEntryHdr) + g->fileNameLength); // skip entry
-                                                    AfxAdvanceStream(ios, g->extraFieldLength + g->fileCommentLength); // skip entry
+                                                    AfxAdvanceStream(ios, sizeof(_afxZipSerializedCdEntryHdr) + g->fileNameLen); // skip entry
+                                                    AfxAdvanceStream(ios, g->extraFieldLen + g->fileCommentLen); // skip entry
                                                 }
                                             }
                                         }
@@ -311,9 +311,9 @@ _AFX afxError _AfxZipReadEntryData(afxStream file, _afxZipSerializedCdEntryHdr *
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_IOB);
 
-    if (header->compressionMethod == 0) // Store
+    if (header->codec == 0) // Store
     {
-        if (AfxReadStream(file, header->uncompressedSize, 0, &out))
+        if (AfxReadStream(file, header->decSiz, 0, &out))
             AfxThrowError();
     }
     else
@@ -350,11 +350,11 @@ _AFX afxError _AfxZipReadCdEntryCallback(afxArchive arc, afxNat idx, _afxZipSeri
     afxStream ios = arc->file;
 
     e->offset = AfxGetStreamPosn(ios);
-    e->uncompressedSize = header->uncompressedSize;
-    e->compressedSize = header->compressedSize;
-    e->codec = header->compressionMethod;
+    e->uncompressedSize = header->decSiz;
+    e->compressedSize = header->encSiz;
+    e->codec = header->codec;
     e->crc32 = header->crc32;
-    AfxLogEcho("%04d/%02d/%02d %02d:%02d:%02d #%04u %.*s", ZYEAR(header->lastModFileDate), ZMONTH(header->lastModFileDate), ZDAY(header->lastModFileDate), ZHOUR(header->lastModFileTime), ZMINUTE(header->lastModFileTime), ZSECOND(header->lastModFileTime), idx, AfxPushString(&path->str.str));
+    AfxLogEcho("%04d/%02d/%02d %02d:%02d:%02d #%04u %.*s", ZYEAR(header->lastModFileDate), ZMONTH(header->lastModFileDate), ZDAY(header->lastModFileDate), ZHOUR(header->lastModFileTime), ZMINUTE(header->lastModFileTime), ZSECOND(header->lastModFileTime), idx, AfxPushString(&path->str));
     return err;
 }
 
@@ -463,7 +463,7 @@ _AFX afxError AfxForkArchivedFile(afxArchive arc, afxNat idx, afxStream *ios)
     afxNat size = e->codec == 0 ? e->uncompressedSize : e->compressedSize;
     afxStream ios2;
 
-    if (!(ios2 = AfxAcquireStream(afxIoFlag_RWX, size))) AfxThrowError();
+    if (!(ios2 = AfxAcquireStream(0, afxIoFlag_RWX, size))) AfxThrowError();
     else
     {
         *ios = ios2;
@@ -507,7 +507,7 @@ _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxNat idx, afxStream *in)
     afxNat size = e->codec == 0 ? e->uncompressedSize : e->compressedSize;
     afxStream in2;
 
-    if (!(in2 = AfxAcquireStream(afxIoFlag_RWX, size))) AfxThrowError();
+    if (!(in2 = AfxAcquireStream(0, afxIoFlag_RWX, size))) AfxThrowError();
     else
     {
         *in = in2;
@@ -600,7 +600,8 @@ _AFX afxError _AfxArcCtor(afxArchive arc, afxCookie const *cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &arc, afxFcc_ARC);
 
-    arc->file = cookie->udd[0];
+    afxStorage fsys = cookie->udd[0];
+    arc->file = cookie->udd[1];
 
     AfxAllocateArray(&arc->entries, 1, sizeof(_afxZipEntry), NIL);
 
@@ -617,7 +618,7 @@ _AFX afxError _AfxArcDtor(afxArchive arc)
     return err;
 }
 
-_AFX afxClassConfig const _AfxArcMgrCfg =
+_AFX afxClassConfig const _AfxArcClsCfg =
 {
     .fcc = afxFcc_ARC,
     .name = "Archive",
@@ -635,20 +636,23 @@ _AFX afxArchive AfxOpenArchive(afxUri const* uri, afxFileFlags const flags, afxE
     AfxAssert(uri);
     afxArchive arc = NIL;
 
-    afxClass* cls = AfxGetArchiveClass();
-    AfxAssertClass(cls, afxFcc_ARC);
-    
     afxStream file = AfxOpenFile(uri, (flags & afxIoFlag_RWX));
 
     if (!file) AfxThrowError();
     else
 {
+        afxStorage fsys = AfxGetObjectProvider(file);
+        afxNat diskId = AfxGetObjectId(fsys);
+
+        afxClass* cls = (afxClass*)AfxGetArchiveClass(fsys);
+        AfxAssertClass(cls, afxFcc_ARC);
+    
         _afxZipSerializedCdHdr cdHdr = { 0 };
 
         if (_AfxZipFindAndReadCdHdr(file, &cdHdr)) AfxThrowError();
         else
         {
-            if (AfxAcquireObjects(cls, 1, (afxObject*)&arc, (void const*[]) { file, &flags })) AfxThrowError();
+            if (AfxAcquireObjects(cls, 1, (afxObject*)&arc, (void const*[]) { fsys, file, &flags })) AfxThrowError();
             else
             {
                 AfxReserveArraySpace(&arc->entries, cdHdr.numEntries);

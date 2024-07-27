@@ -75,10 +75,10 @@ _AVX afxCmdId AvxCmdCopyBuffer(avxCmdb cmdb, afxBuffer src, afxNat srcOffset, af
 
     /// The srcOffset member of each element of pRegions must be less than the size of src.
     /// The size member of each element of pRegions must be less than or equal to the size of src minus srcOffset.
-    AfxAssertRange(AfxGetBufferCapacity(src), srcOffset, range);
+    AfxAssertRange(AfxGetBufferCapacity(src, 0), srcOffset, range);
     /// The dstOffset member of each element of pRegions must be less than the size of dst.
     /// The size member of each element of pRegions must be less than or equal to the size of dst minus dstOffset.
-    AfxAssertRange(AfxGetBufferCapacity(dst), dstOffset, range);
+    AfxAssertRange(AfxGetBufferCapacity(dst, 0), dstOffset, range);
 
     AfxAssert(srcOffset % sizeof(afxNat32) == 0);
     AfxAssert(dstOffset % sizeof(afxNat32) == 0);
@@ -110,7 +110,7 @@ _AVX afxCmdId AvxCmdFillBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afxNa
     
     /// offset must be less than the size of buf.
     /// If range is not equal to zero, range must be less than or equal to the size of dst minus offset.
-    AfxAssertRange(AfxGetBufferCapacity(buf), offset, range);
+    AfxAssertRange(AfxGetBufferCapacity(buf, 0), offset, range);
 
     /// offset must be a multiple of 4.
     AfxAssert(offset % sizeof(afxNat32) == 0);
@@ -140,7 +140,7 @@ _AVX afxCmdId AvxCmdClearBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afxN
 
     /// offset must be less than the size of buf.
     /// If range is not equal to zero, range must be less than or equal to the size of dst minus offset.
-    AfxAssertRange(AfxGetBufferCapacity(buf), offset, range);
+    AfxAssertRange(AfxGetBufferCapacity(buf, 0), offset, range);
 
     /// offset must be a multiple of 4.
     AfxAssert(offset % sizeof(afxNat32) == 0);
@@ -170,7 +170,7 @@ _AVX afxCmdId AvxCmdUpdateBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afx
 
     /// offset must be less than the size of buf.
     /// If range is not equal to zero, range must be less than or equal to the size of buf minus offset.
-    AfxAssertRange(AfxGetBufferCapacity(buf), offset, range);
+    AfxAssertRange(AfxGetBufferCapacity(buf, 0), offset, range);
 
     /// offset must be a multiple of 4.
     AfxAssert(offset % sizeof(afxNat32) == 0);
@@ -202,7 +202,7 @@ _AVX afxCmdId AvxCmdDumpBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afxNa
 
     /// offset must be less than the size of buf.
     /// If range is not equal to zero, range must be less than or equal to the size of buf minus offset.
-    AfxAssertRange(AfxGetBufferCapacity(buf), offset, range);
+    AfxAssertRange(AfxGetBufferCapacity(buf, 0), offset, range);
 
     /// offset must be a multiple of 4.
     AfxAssert(offset % sizeof(afxNat32) == 0);

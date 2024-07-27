@@ -19,7 +19,7 @@
 
 #include "qwadro/draw/pipe/avxPipeline.h"
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxUnivideo.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/exec/afxSystem.h"
 
@@ -49,7 +49,7 @@ _SGL void _DpuCopyQueryResults(sglDpu* dpu, avxQueryPool pool, afxNat baseQuery,
     AfxAssertObjects(1, &pool, afxFcc_QRYP);
     AfxAssertRange(pool->m.cap, baseQuery, queryCnt);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssertRange(AfxGetBufferCapacity(buf), offset, stride);
+    AfxAssertRange(AfxGetBufferCapacity(buf, 0), offset, stride);
     glVmt const* gl = &dpu->gl;
     GLenum pname = (flags & afxQueryResultFlag_WAIT) ? GL_QUERY_RESULT : GL_QUERY_RESULT_NO_WAIT;
 
@@ -150,7 +150,7 @@ _SGL afxError _SglQrypDtor(avxQueryPool qryp)
     {
         for (afxNat i = 0; i < qryp->m.cap; i++)
         {
-            _SglDctxDeleteGlRes(dctx, 10, (void*)qryp->glHandle[i]);
+            _SglDctxDeleteGlRes(dctx, 10, qryp->glHandle[i]);
         }
         qryp->glHandle = 0;
     }

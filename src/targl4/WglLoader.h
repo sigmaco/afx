@@ -27,7 +27,7 @@
 #include "gl/glad_wgl.h"
 
 #include <windows.h>
-//#include "qwadro/draw/afxDrawSystem.h"
+//#include "qwadro/draw/afxUnivideo.h"
 //#include "qwadro/draw/avxCmdb.h"
 #include "qwadro/base/afxCoreDefs.h"
 

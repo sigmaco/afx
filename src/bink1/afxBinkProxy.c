@@ -127,9 +127,9 @@ static void LoadLibNow(void)
         afxUri uri;
 #ifdef AFX_OS_WIN
 #ifdef AFX_OS_WIN64
-        AfxMakeUri(&uri, "../system64/binkw64.dl_", 0);
+        AfxMakeUri(&uri, 0, "../system64/binkw64.dl_", 0);
 #else
-        AfxMakeUri(&uri, "../system32/binkw32.dl_", 0);
+        AfxMakeUri(&uri, 0, "../system32/binkw32.dl_", 0);
 #endif
 #endif
 

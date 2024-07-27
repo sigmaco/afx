@@ -40,9 +40,9 @@ AFX_DEFINE_STRUCT(afxBox)
 };
 */
 
-AFXINL void         AfxResetAabb(afxBox bb); // make identity
+AFXINL void         AfxResetBox(afxBox bb); // make identity
 
-AFXINL void         AfxCopyAabb(afxBox bb, afxBox const in);
+AFXINL void         AfxCopyBox(afxBox bb, afxBox const in);
 
 /// Automaticallly constructs an AABB from a list of vertex positions only.
 AFXINL void         AfxRecomputeAabb(afxBox bb, afxNat cnt, afxV3d const points[]);
@@ -64,7 +64,9 @@ AFXINL afxBool      AfxAabbContainsSpheres(afxBox const bb, afxNat cnt, afxSpher
 
 /// Given an AABB in local space, transform to world space
 AFXINL void         AfxTransformAabb(afxBox const bb, afxM4d const m, afxBox to);
-
 AFXINL void         AfxTransformObbs(afxM3d const ltm, afxV4d const atv, afxNat cnt, afxBox const in[], afxBox out[]);
+
+AFXINL void         AfxCopyBoxes(afxNat cnt, afxBox in[], afxBox out[]);
+AFXINL void         AfxResetBoxes(afxNat cnt, afxBox boxes[]);
 
 #endif//AFX_BOX_H

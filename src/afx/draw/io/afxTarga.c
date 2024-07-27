@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "../dev/AvxDevKit.h"
 
 typedef struct _afxTgaImg
 {
@@ -26,6 +26,7 @@ typedef struct _afxTgaImg
 } _afxTgaImg;
 
 #pragma pack(push, 1)
+
 AFX_DEFINE_STRUCT(_afxStreamTgaHdr)
 {
     afxNat8     idLen; // This field identifies the number of bytes contained in Field 6, the Image ID Field. The maximum number of characters is 255. A value of zero indicates that no Image ID field is included with the image.
@@ -50,26 +51,43 @@ AFX_DEFINE_STRUCT(afxTargaLayerHdr)
 
 AFX_DEFINE_STRUCT(afxTargaLodHdr)
 {
-    afxNat      lodSiz;
-    afxNat      layerSiz; // sizeof layer for this LOD
+    afxNat32            lodSiz; // whole size of this LOD.
+    afxNat32            rowStride;
+    afxNat32            zSiz; // sizeof each layer for this LOD
+    afxNat32            zStride;
 };
 
 AFX_DEFINE_STRUCT(afxTargaFileHdr)
 {
-    afxFcc          fcc; // = tga4
-    afxNat          udd[2];
-    afxTargaFlags   flags;
-    afxTargaCodec   codec;
-    afxPixelFormat  fmt;
-    afxNat          lodCnt;
-    afxWhd          origin;
-    afxWhd          whd;
-    // data
-    afxSize         offset; // where start (above this header) the raster data // for each lod, sizeof lod is rowLen * whd[1] * whd[2] * layerCnt 
-    afxNat          encSiz;
-    afxNat          decSiz;
-    afxNat          rowStride; // bytes per row/scanline (W usually aligned/padded to some memory boundary)
-    afxNat          depthStride;
+    afxNat32            chunkId; // Originally "tga4", a FCC standing for "Targa for Qwadro" file format.
+    afxNat32            chunkSiz; // sizeof chunk data
+    afxNat32            chunkVer; // ISV-specific FCC related to software used to stream out this file.
+    // chunk meta info
+    afxNat16            baseLod;
+    afxNat16            lodCnt;
+    afxNat32            origin[3];
+    afxNat32            whd[3];
+    afxPixelFormat      fmt;
+    afxTargaFlags       flags;
+    // chunk data info
+    afxUrdReference     data; // where start (above this header) the raster data // for each lod, sizeof lod is rowLen * whd[1] * whd[2] * layerCnt 
+    afxTargaCodec       codec; // codec used to compress
+    afxNat32            encSiz; // compressed size
+    afxNat32            decSiz; // uncompressed size
+    afxNat32            rowStride; // bytes per row/scanline (W usually aligned/padded to some memory boundary)
+    afxNat32            depthStride;
+    afxNat32            extraLen;
+    // extraLen-long chunk of ISV-extra data (if it has any).
+#if 0
+    struct
+    {
+        afxFileReference    data; // where start (above this header) the raster data // for each lod, sizeof lod is rowLen * whd[1] * whd[2] * layerCnt 
+        afxNat32            encSiz; // compressed size
+        afxNat32            decSiz; // uncompressed size
+        afxNat32                rowStride; // bytes per row/scanline (W usually aligned/padded to some memory boundary)
+        afxNat32            depthStride;
+    } lod[];
+#endif
 };
 
 #pragma pack(pop)
@@ -166,7 +184,7 @@ _AVX afxBool AfxSetUpTarga(afxTarga* tga, afxRaster ras, afxRasterIo const* op, 
     else if (ras)
     {
         AfxGetRasterExtent(ras, 0, tga->whd);
-        afxNat maxLodCnt = AfxCountRasterLods(ras);
+        afxNat maxLodCnt = AfxCountRasterMipmaps(ras);
 
         tga->lodCnt = AfxMin(AfxMax(1, lodCnt), maxLodCnt);
 
@@ -193,11 +211,8 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
     afxNat bkpOff = AfxGetStreamPosn(in);
     AfxReadStream(in, sizeof(hdr3), 0, &hdr3);
 
-    if (hdr3.fcc == AFX_MAKE_FCC('t', 'g', 'a', '4')) // Try read as the SIGMA-engineered Targa format.
+    if (hdr3.chunkId == AFX_MAKE_FCC('t', 'g', 'a', '4')) // Try read as the SIGMA-engineered Targa format.
     {
-        tga->udd[0] = hdr3.udd[0];
-        tga->udd[1] = hdr3.udd[1];
-
         tga->lodCnt = hdr3.lodCnt;
         tga->origin[0] = hdr3.origin[0];
         tga->origin[1] = hdr3.origin[1];
@@ -213,7 +228,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
         tga->flags = hdr3.flags;
         tga->depthStride = hdr3.depthStride;
         tga->rowStride = hdr3.rowStride;
-        tga->data.offset = hdr3.offset;
+        tga->data.offset = hdr3.data.offset;
     }
     else // Try read as the Truevision standard TGA format.
     {
@@ -548,7 +563,7 @@ _AVX afxBool AfxEndTargaOutput(afxTarga* tga, afxStream out)
     hdr3.decSiz = tga->decSiz;
     hdr3.encSiz = tga->encSiz;
     hdr3.depthStride = tga->depthStride;
-    hdr3.fcc = AFX_MAKE_FCC('t', 'g', 'a', '\0');
+    hdr3.chunkId = AFX_MAKE_FCC('t', 'g', 'a', '4');
     hdr3.flags = tga->flags;
     hdr3.fmt = tga->fmt;
     hdr3.lodCnt = tga->lodCnt;
@@ -559,9 +574,7 @@ _AVX afxBool AfxEndTargaOutput(afxTarga* tga, afxStream out)
     hdr3.whd[1] = tga->whd[1];
     hdr3.whd[2] = tga->whd[2];
     hdr3.rowStride = tga->rowStride;
-    hdr3.udd[0] = tga->udd[0];
-    hdr3.udd[1] = tga->udd[1];
-    hdr3.offset = tga->data.offset;
+    hdr3.data.offset = tga->data.offset;
 
     if (AfxWriteStream(out, sizeof(hdr3), 0, &hdr3))
         AfxThrowError();
@@ -1182,7 +1195,7 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
     return err;
 }
 
-_AVX afxError AfxPrintRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCnt, afxUri const* uri)
+_AVX afxError AfxPrintRaster(afxRaster ras, afxNat portIdx, afxRasterIo const* op, afxNat lodCnt, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -1219,9 +1232,13 @@ _AVX afxError AfxPrintRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCnt
         iop.rowCnt = iop.rgn.whd[1];
         iop.offset = AfxGetStreamPosn(file);
 
-        AfxDownloadRaster(ras, &iop, lodCnt, file);
+        AfxDownloadRaster(ras, portIdx, 1, &iop, file);
+
         tga.data.offset = iop.offset;
         AfxEndTargaOutput(&tga, file);
+
+        afxDrawContext dctx = AfxGetRasterContext(ras);
+        AfxWaitForIdleDrawBridge(dctx, 0); // we need to wait for completation before releasing the stream.
 
         AfxReleaseObjects(1, &file);
     }
@@ -1255,7 +1272,7 @@ _AVX afxError AfxReloadRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCn
         AfxGetRasterExtent(ras, 0, iop.rgn.whd);
     }
 
-    afxStream ios = AfxAcquireStream(afxIoFlag_R, 0);
+    afxStream ios = AfxAcquireStream(0, afxIoFlag_R, 0);
 
     if (AfxReloadFile(ios, uri)) AfxThrowError();
     else
@@ -1286,7 +1303,8 @@ _AVX afxError AfxLoadRasters(afxDrawContext dctx, afxRasterUsage usage, afxRaste
 {
     afxError err = AFX_ERR_NONE;
 
-    afxStream ios = AfxAcquireStream(afxIoFlag_R, 0);
+    afxNat portIdx = 0;
+    afxStream ios = AfxAcquireStream(0, afxIoFlag_R, 0);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -1332,8 +1350,11 @@ _AVX afxError AfxLoadRasters(afxDrawContext dctx, afxRasterUsage usage, afxRaste
                     op.rgn.whd[0] = tga.whd[0];
                     op.rgn.whd[1] = tga.whd[1];
                     op.rgn.whd[2] = tga.whd[2];
+                    op.rowStride = tga.whd[0];
+                    op.rowCnt = tga.whd[1];
                     
-                    AfxUpdateRaster(rasters[i], &op, tga.data);
+                    AfxUpdateRaster(rasters[i], portIdx, 1, &op, tga.data);
+                    AfxWaitForIdleDrawBridge(dctx, portIdx);
                 }
 
 
@@ -1342,6 +1363,7 @@ _AVX afxError AfxLoadRasters(afxDrawContext dctx, afxRasterUsage usage, afxRaste
             }
         }
     }
+    AfxWaitForIdleDrawBridge(dctx, portIdx);
     AfxReleaseObjects(1, &ios);
     return err;
 }
@@ -1349,7 +1371,9 @@ _AVX afxError AfxLoadRasters(afxDrawContext dctx, afxRasterUsage usage, afxRaste
 _AVX afxError AfxAssembleRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const* dir, afxNat cnt, afxUri const layers[], afxRaster* ras)
 {
     afxError err = AFX_ERR_NONE;
-    afxStream ios = AfxAcquireStream(afxIoFlag_R, 0);
+    afxStream ios = AfxAcquireStream(0, afxIoFlag_R, 0);
+
+    afxNat portIdx = 0;
 
     afxUri2048 urib;
     AfxMakeUri2048(&urib, NIL);
@@ -1402,9 +1426,13 @@ _AVX afxError AfxAssembleRasters(afxDrawContext dctx, afxRasterUsage usage, afxR
                     op.rgn.whd[0] = tga.whd[0];
                     op.rgn.whd[1] = tga.whd[1];
                     op.rgn.whd[2] = 1;
+                    op.rowStride = tga.whd[0];
+                    op.rowCnt = tga.whd[1];
                     
-                    if (AfxUpdateRaster(*ras, &op, tga.data))
+                    if (AfxUpdateRaster(*ras, portIdx, 1, &op, tga.data))
                         AfxThrowError();
+
+                    AfxWaitForIdleDrawBridge(dctx, portIdx);
                 }
 
                 if (tga.data)
@@ -1413,6 +1441,7 @@ _AVX afxError AfxAssembleRasters(afxDrawContext dctx, afxRasterUsage usage, afxR
         }
     }
 
+    AfxWaitForIdleDrawBridge(dctx, portIdx);
     AfxReleaseObjects(1, &ios);
     return err;
 }

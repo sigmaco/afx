@@ -90,7 +90,7 @@ afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw th
     return FALSE;
 }
 
-afxBool CamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+afxBool CamEventFilter(afxObject *obj, afxObject *watched, auxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     avxCamera cam = (void*)obj;
@@ -107,7 +107,7 @@ afxBool CamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 
         // TODO Leva isso para o usuário
 
-        if (AfxLmbIsPressed(0))
+        if (AfxIsLmbPressed(0))
         {
             afxV2d delta;
             afxV3d deltaEar;
@@ -119,7 +119,7 @@ afxBool CamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
             AfxApplyCameraOrientation(cam, deltaEar);
         }
 
-        if (AfxRmbIsPressed(0))
+        if (AfxIsRmbPressed(0))
         {
             afxV2d delta;
             afxV3d off;
@@ -184,7 +184,7 @@ int main(int argc, char const* argv[])
     // Boot up the Qwadro
 
     afxSystemConfig sysCfg;
-    AfxChooseSystemConfiguration(&sysCfg);
+    AfxConfigureSystem(&sysCfg);
     AfxDoSystemBootUp(&sysCfg);
 
     // Acquire hardware device contexts
@@ -195,8 +195,11 @@ int main(int argc, char const* argv[])
 
     // Acquire a drawable surface
 
-    afxWindowConfig wndCfg = { 0 };
-    AfxAcquireWindow(dctx, &wndCfg, &window);
+    afxWindowConfig wrc = { 0 };
+    wrc.surface.pixelFmt = afxPixelFormat_RGBA8;
+    wrc.surface.pixelFmtDs[0] = afxPixelFormat_D32F;
+    wrc.surface.bufCnt = 2;
+    AfxAcquireWindow(dctx, &wrc, &window);
     AfxAdjustWindowFromNdc(window, NIL, AfxSpawnV2d(0.5, 0.5));
 
     AfxGetWindowDrawOutput(window, NIL, &dout);
@@ -208,7 +211,7 @@ int main(int argc, char const* argv[])
 #if 0
 
     afxUri uri, uri2;
-    AfxMakeUri(&uri, "art", 0);
+    AfxMakeUri(&uri, 0, "art", 0);
     AfxMakeUri(&uri2, "art/mnt.zip", 0);
     rslt = AfxMountStorageUnit(&uri, &uri2, afxFileFlag_R);
     AfxAssert(rslt == 1);
@@ -240,10 +243,10 @@ int main(int argc, char const* argv[])
     simSpec.dctx = dctx;
     simSpec.din = NIL;
     simSpec.unitsPerMeter = 1.f;
-    AfxSetV3d(simSpec.right, 1, 0, 0);
-    AfxSetV3d(simSpec.up, 0, 1, 0);
-    AfxSetV3d(simSpec.back, 0, 0, 1);
-    AfxZeroV3d(simSpec.origin);
+    AfxV3dSet(simSpec.right, 1, 0, 0);
+    AfxV3dSet(simSpec.up, 0, 1, 0);
+    AfxV3dSet(simSpec.back, 0, 0, 1);
+    AfxV3dZero(simSpec.origin);
     AfxAcquireSimulations(1, &simSpec, &sim);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
@@ -273,12 +276,13 @@ int main(int argc, char const* argv[])
 
     while (AfxSystemIsExecuting())
     {
-        AfxDoSystemExecution(0);
         DrawInputProc(rnd->din, NIL);
 
         afxReal64 ct, dt;
         AfxStepWindow(window, &ct, &dt);
         UpdateFrameMovement(dt);
+
+        AfxDoThreading(0);
     }
 
     Sleep(1000);

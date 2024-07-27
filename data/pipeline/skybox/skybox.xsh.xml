@@ -14,14 +14,16 @@
     </Rasterizer>
     <DrawTechnique>
         <Pass>
-            <FillMode>SOLID</FillMode>
             <CullMode>BACK</CullMode>
+            <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+            <VertexShader>../data/pipeline/skybox/skybox.vsh</VertexShader>
+            
+            <FillMode>SOLID</FillMode>
             <DepthTestEnabled></DepthTestEnabled>
             <DepthWriteEnabled></DepthWriteEnabled>
             <DepthCompareOp>LEQUAL</DepthCompareOp>
-            <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-            <Shader>../data/pipeline/skybox/skybox.vsh</Shader>
-            <Shader>../data/pipeline/skybox/skybox.fsh</Shader>
+            <Transformer>../data/pipeline/skybox/skybox.xsh.xml</Transformer>
+            <FragmentShader>../data/pipeline/skybox/sampleOutRgbaCube.fsh</FragmentShader>
         </Pass>
     </DrawTechnique>
 </Qwadro>

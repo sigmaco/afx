@@ -15,8 +15,6 @@
  */
 
 #include "sgl.h"
-#include "qwadro/afxQwadro.h"
-#include "qwadro/draw/afxDrawInput.h"
 
 extern afxClassConfig _SglCmdbMgrCfg;
 

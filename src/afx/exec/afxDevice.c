@@ -111,11 +111,11 @@ _AFX afxModule AfxGetDeviceModule(afxDevice dev)
     return mdle;
 }
 
-_AFX afxDeviceType AfxGetDeviceType(afxDevice dev)
+_AFX afxDeviceOrder AfxGetDeviceOrder(afxDevice dev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dev, afxFcc_DEV);
-    return dev->type;
+    return dev->order;
 }
 
 _AFX afxDeviceStatus AfxGetDeviceStatus(afxDevice dev)
@@ -194,9 +194,9 @@ _AFX afxError _AfxDevCtor(afxDevice dev, afxCookie const* cookie)
     afxDeviceInfo const* info = (afxDeviceInfo const*)cookie->udd[1] + cookie->no;
     AfxAssert(info);
 
-    AfxSetUpChain(&dev->classes, dev);
+    AfxDeployChain(&dev->classes, dev);
 
-    dev->type = info->type;
+    dev->order = info->order;
     AfxMakeUri32(&dev->manifestUri, &info->manifestUri);
     
     if (AfxUriIsBlank(&dev->manifestUri.uri)) AfxThrowError();
@@ -313,14 +313,14 @@ _AFX afxClassConfig const _AfxDevMgrCfg =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxInvokeDevices(afxDeviceType type, afxNat first, afxNat cnt, afxBool(*f)(afxDevice, void*), void *udd)
+_AFX afxNat AfxInvokeDevices(afxDeviceOrder order, afxNat first, afxNat cnt, afxBool(*f)(afxDevice, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxResult rslt = 0;
 
-    if (!type)
+    if (!order)
     {
         afxClass* cls = AfxGetDeviceClass();
         AfxAssertClass(cls, afxFcc_DEV);
@@ -330,10 +330,10 @@ _AFX afxNat AfxInvokeDevices(afxDeviceType type, afxNat first, afxNat cnt, afxBo
     {
         afxDevice dev;
         afxNat i = first;
-        while (AfxEnumerateDevices(type, i, 1, &dev))
+        while (AfxEnumerateDevices(order, i, 1, &dev))
         {
             AfxAssertObjects(1, &dev, afxFcc_DEV);
-            AfxAssert(dev->type == type);
+            AfxAssert(dev->order == order);
 
             ++rslt;
 
@@ -346,7 +346,7 @@ _AFX afxNat AfxInvokeDevices(afxDeviceType type, afxNat first, afxNat cnt, afxBo
     return rslt;
 }
 
-_AFX afxNat AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, afxDevice devices[])
+_AFX afxNat AfxEnumerateDevices(afxDeviceOrder order, afxNat first, afxNat cnt, afxDevice devices[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
@@ -355,7 +355,7 @@ _AFX afxNat AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, af
     afxClass* cls = AfxGetDeviceClass();
     AfxAssertClass(cls, afxFcc_DEV);
 
-    if (!type)
+    if (!order)
         rslt = AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)devices);
     else
     {
@@ -365,7 +365,7 @@ _AFX afxNat AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, af
         {
             AfxAssertObjects(1, &dev, afxFcc_DEV);
 
-            if (dev->type == type)
+            if (dev->order == order)
             {
                 devices[rslt] = dev;
                 ++rslt;
@@ -378,12 +378,12 @@ _AFX afxNat AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, af
     return rslt;
 }
 
-_AFX afxNat AfxCountDevices(afxDeviceType type)
+_AFX afxNat AfxCountDevices(afxDeviceOrder order)
 {
     afxError err = AFX_ERR_NONE;
     afxNat rslt = 0;
 
-    if (!type)
+    if (!order)
     {
         afxClass* cls = AfxGetDeviceClass();
         AfxAssertClass(cls, afxFcc_DEV);
@@ -393,10 +393,10 @@ _AFX afxNat AfxCountDevices(afxDeviceType type)
     {
         afxNat i = 0;
         afxDevice dev;
-        while (AfxEnumerateDevices(type, i, 1, &dev))
+        while (AfxEnumerateDevices(order, i, 1, &dev))
         {
             AfxAssertObjects(1, &dev, afxFcc_DEV);
-            AfxAssert(dev->type == type);
+            AfxAssert(dev->order == order);
             ++rslt;
             ++i;
         }
@@ -404,7 +404,7 @@ _AFX afxNat AfxCountDevices(afxDeviceType type)
     return rslt;
 }
 
-_AFX afxBool AfxFindDevice(afxDeviceType type, afxUri const* manifest, afxDevice* device)
+_AFX afxBool AfxFindDevice(afxDeviceOrder order, afxUri const* manifest, afxDevice* device)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert2(manifest, device);
@@ -415,10 +415,10 @@ _AFX afxBool AfxFindDevice(afxDeviceType type, afxUri const* manifest, afxDevice
 
     afxNat i = 0;
     afxDevice dev;
-    while (AfxEnumerateDevices(type, i, 1, &dev))
+    while (AfxEnumerateDevices(order, i, 1, &dev))
     {
         AfxAssertObjects(1, &dev, afxFcc_DEV);
-        AfxAssert(!type || (dev->type == type));
+        AfxAssert(!order || (dev->order == order));
 
         afxUri tmp;
         AfxClipUriFile(&tmp, &dev->manifestUri.uri);

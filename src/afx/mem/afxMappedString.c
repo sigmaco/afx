@@ -14,65 +14,80 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+#include "../src/afx/dev/afxDevCoreBase.h"
 
-#define _CRT_SECURE_NO_WARNINGS 1
-#include <stdarg.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdio.h>
-#include "qwadro/exec/afxSystem.h"
-
-_AFX afxNat AfxResolveStrings2(afxStringBase strc, afxNat cnt, afxString const in[], afxString out[])
+_AFX afxNat AfxDecatalogStrings(afxStringBase strc, afxNat cnt, afxString const strings[])
 {
     afxError err = NIL;
-    AfxTryAssertObjects(1, &strc, afxFcc_STRB);
     afxNat rslt = 0;
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        if (!in || !in[i].len)
-            AfxResetString(&out[i]);
-        else
-            AfxMakeString(&out[i], &strc->buf.bytemap[in[i].offset], in[i].len), ++rslt;
+        if (strings[i].len)
+        {
+            afxReferencedString* ref;
+            AfxChainForEveryLinkage(&strc->strings, afxReferencedString, strb, ref)
+            {
+                if (0 == AfxCompareStringCi(&ref->str, &strings[i]))
+                {
+                    if (0 == (--ref->refCnt))
+                    {
+                        AfxPopLinkage(&ref->strb);
+                        AfxDeallocate(ref);
+                    }
+                    ++rslt;
+                    break;
+                }
+            }
+        }
     }
     return rslt;
 }
 
-_AFX afxNat AfxCatalogStrings2(afxStringBase strc, afxNat cnt, afxString const in[], afxString out[])
+_AFX afxNat AfxCatalogStrings(afxStringBase strc, afxNat cnt, afxString const in[], afxString out[])
 {
     afxError err = NIL;
     afxNat rslt = 0;
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        afxString const* src = &in[i];
-        afxNat srcLen = src->len;
-
-        if (srcLen)
+        if (in[i].len)
         {
-            void const* dataStart = NIL;
+            afxBool found = FALSE;
 
-            if (strc->buf.cnt)
-                dataStart = AfxStrnstr(strc->buf.data, strc->buf.cnt, src->start, srcLen);
-
-            if (!dataStart)
+            afxReferencedString* ref;
+            AfxChainForEveryLinkage(&strc->strings, afxReferencedString, strb, ref)
             {
-                afxNat firstCh;
-
-                if (!(dataStart = AfxInsertArrayUnits(&strc->buf, srcLen, &firstCh, NIL))) AfxThrowError();
-                else
+                if (0 == AfxCompareStringCi(&ref->str, &in[i]))
                 {
-                    AfxCopy2(srcLen, sizeof(afxChar), src->start, (void*)dataStart);
+                    out[i] = ref->str;
+                    out[i].cap = 0;
+                    found = TRUE;
+                    ++ref->refCnt;
+                    ++rslt;
+                    break;
                 }
             }
 
-            if (!err)
+            if (!found)
             {
-                AfxMakeString(&out[i], (void*)((afxSize)dataStart - (afxSize)strc->buf.data), srcLen);
-                out[i].offset = (afxSize)dataStart - (afxSize)strc->buf.data;
-                out[i].len = srcLen;
-                ++strc->cnt;
-                ++rslt;
+                ref = AfxAllocate(1, sizeof(*ref) + (sizeof(ref->data[0]) * in[i].len), 0, AfxHere());
+
+                if (!ref)
+                {
+                    AfxThrowError();
+                    AfxResetString(&out[i]);
+                }
+                else
+                {
+                    AfxPushLinkage(&ref->strb, &strc->strings);
+                    AfxMakeString(&ref->str, in[i].len, ref->data, in[i].len);
+                    AfxCopyString(&ref->str, &in[i]);
+                    ref->refCnt = 1;
+                    out[i] = ref->str;
+                    out[i].cap = 0;
+                    ++rslt;
+                }
             }
         }
         else
@@ -89,9 +104,10 @@ _AFX afxError _AfxStrcCtor(afxStringBase strc, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &strc, afxFcc_STRB);
     
-    strc->cnt = 0;
-    strc->strings = NIL;
-    AfxAllocateArray(&strc->buf, 1, sizeof(afxChar), NIL);
+    AfxDeployChain(&strc->strings, strc);
+    strc->first = NIL;
+
+    //AfxSetUpPool(&strc, sizeof(afxMappedString), 32);
 
     return err;
 }
@@ -101,10 +117,14 @@ _AFX afxError _AfxStrcDtor(afxStringBase strc)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &strc, afxFcc_STRB);
 
-    if (strc->strings)
-        AfxDeallocate(strc->strings);
-
-    AfxDeallocateArray(&strc->buf);
+    afxNat rslt = 0;
+    afxReferencedString* ref;
+    AfxChainForEveryLinkage(&strc->strings, afxReferencedString, strb, ref)
+    {
+        AfxPopLinkage(&ref->strb);
+        AfxDeallocate(ref);
+        ++rslt;
+    }
 
     return err;
 }

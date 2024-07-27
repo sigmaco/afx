@@ -120,14 +120,14 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
 {
     afxNat strLen = strLenTotal;
     const char *pch, *start = str, *end = str + strLen;
-    *url = (url_field_t) { 0 };
+    //*url = (url_field_t) { 0 };
 
     if (str && str[0] && strLen)
     {
         url->href = str;
         url->hrefsiz = strLen;// strlen(str);
 
-        pch = memchr(str, ':', strLen);   /* parse schema */
+        pch = memchr(str, ':', (end - str));   /* parse schema */
 
         if (pch && pch[1] == '/' && pch[2] == '/')
         {
@@ -136,11 +136,11 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
             strLen -= url->schemasiz;
             str = pch + 3;
 
-            pch = memchr(str, '@', strLen);   /* parse user info */
+            pch = memchr(str, '@', (end - str));   /* parse user info */
 
             if (pch)
             {
-                pch = memchr(str, ':', strLen);
+                pch = memchr(str, ':', (end - str));
 
                 if (pch)
                 {
@@ -149,7 +149,7 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
                     strLen -= url->usersiz;
 
                     str = pch + 1;
-                    pch = memchr(str, '@', strLen);
+                    pch = memchr(str, '@', (end - str));
 
                     if (pch)
                     {
@@ -166,7 +166,7 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
             if (str[0] == '[')        /* parse host info */
             {
                 str++;
-                pch = memchr(str, ']', strLen);
+                pch = memchr(str, ']', (end - str));
 
                 if (pch)
                 {
@@ -178,14 +178,14 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
                     if (str[0] == ':')
                     {
                         str++;
-                        pch = memchr(str, '/', strLen);
+                        pch = memchr(str, '/', (end - str));
 
                         if (pch)
                         {
                             url->port = str;
                             url->portsiz = pch - str;
                             strLen -= url->portsiz;
-                            str = pch + 1;
+                            str = pch /*+ 1*/;
                         }
                         else
                         {
@@ -202,8 +202,8 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
             else
             {
                 const char *pch_slash;
-                pch = memchr(str, ':', strLen);
-                pch_slash = memchr(str, '/', strLen);
+                pch = memchr(str, ':', (end - str));
+                pch_slash = memchr(str, '/', (end - str));
 
                 if (pch && (!pch_slash || (pch_slash && pch < pch_slash)))
                 {
@@ -211,14 +211,14 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
                     url->hostsiz = pch - str;
                     strLen -= url->hostsiz;
                     str = pch + 1;
-                    pch = memchr(str, '/', strLen);
+                    pch = memchr(str, '/', (end - str));
 
                     if (pch)
                     {
                         url->port = str;
                         url->portsiz = pch - str;
                         strLen -= url->portsiz;
-                        str = pch + 1;
+                        str = pch /*+ 1*/;
                     }
                     else
                     {
@@ -230,14 +230,14 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
                 }
                 else
                 {
-                    pch = memchr(str, '/', strLen);
+                    pch = memchr(str, '/', (end - str));
 
                     if (pch)
                     {
                         url->host = str;
                         url->hostsiz = pch - str;
                         strLen -= url->hostsiz;
-                        str = pch + 1;
+                        str = pch/* + 1*/;
                     }
                     else
                     {
@@ -254,16 +254,16 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
         if (str[0]) /* parse path, query and fragment */
         {
             url->path = str;
-            pch = memchr(str, '?', strLen);
+            pch = memchr(str, '?', (end - str));
 
             if (pch) // has query
             {
                 //url->path = str;
-                url->pathsiz = pch - url->path;
+                url->pathsiz = pch - str;
                 strLen -= url->pathsiz;
                 str = pch/* + 1*/;
                 url->query = pch;
-                pch = memchr(str, '#', strLen);
+                pch = memchr(str, '#', (end - str));
 
                 if (pch) // has fragment
                 {
@@ -293,12 +293,12 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
                 url->query = 0;
                 url->querysiz = 0;
                 strLen -= url->querysiz;
-                pch = memchr(str, '#', strLen);
+                pch = memchr(str, '#', (end - str));
 
                 if (pch) // has fragment but no query
                 {
                     //url->path = str;
-                    url->pathsiz = pch - url->path;
+                    url->pathsiz = pch - str;
                     strLen -= url->pathsiz;
                     str = pch/* + 1*/;
                     url->fragment = pch;
@@ -311,12 +311,11 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
                     // doesnt has fragment nor query
 
                     //url->path = str;
-                    url->pathsiz = strLen - (str - start);//strlen(str);
+                    url->pathsiz = (end - str);//strlen(str);
                     strLen -= url->pathsiz;
                     //str = str + strLen - (str - start);//strlen(str);
                     url->fragment = 0;
                     url->fragsiz = 0;
-                    strLen -= url->fragsiz;
                 }
             }
 
@@ -402,190 +401,404 @@ __fail:
     return 1;
 }
 
-// READ-ONLY METHODS //////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 
-_AFXINL afxResult AfxCompareUriString(afxUri const *uri, afxString const *str)
+#define _URI_AUTH_LEN(uri) (uri->user + uri->host + uri->port)
+#define _URI_PATH_LEN(uri) (uri->root + uri->dir + uri->fname + uri->fext) 
+#define _URI_REQ_LEN(uri) (_URI_PATH_LEN(uri) + uri->query) 
+
+#define _URI_AUTH_OFF(uri) (uri->schem)
+#define _URI_PATH_OFF(uri) (uri->schem + _URI_AUTH_LEN(uri)) 
+#define _URI_QUERY_OFF(uri) (_URI_PATH_OFF(uri) + uri->root + uri->dir + uri->fname + uri->fext) 
+#define _URI_FRAG_OFF(uri) (_URI_QUERY_OFF(uri) + uri->query) 
+
+_AFXINL void const* AfxGetUriData(afxUri const* uri, afxNat base)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    AfxAssert(str);
-
-    afxString const *strA = AfxGetUriString(uri);
-
-    return AfxCompareString(strA, str);
+    return AfxGetStringData(&uri->str, base);
 }
 
-_AFXINL afxResult AfxCompareUriStringCi(afxUri const *uri, afxString const *str)
+_AFXINL afxNat AfxGetUriLength(afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    AfxAssert(str);
-
-    afxString const *strA = AfxGetUriString(uri);
-
-    return AfxCompareStringCi(strA, str);
+    return uri->schem + uri->user/* + uri->pass*/ + uri->host + uri->port + _URI_REQ_LEN(uri) + uri->frag;
 }
 
-_AFXINL afxResult AfxCompareUri(afxUri const *uri, afxUri const *other)
+_AFXINL afxNat AfxGetPathLength(afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    AfxAssert(other);
-
-    afxString const *strA = AfxGetUriString(uri), *strB = AfxGetUriString(other);
-    return AfxCompareString(strA, strB);
+    return _URI_PATH_LEN(uri);
 }
 
-_AFXINL afxResult AfxCompareUriCi(afxUri const *uri, afxUri const *other)
+_AFXINL afxNat AfxGetUriRequestLength(afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    AfxAssert(other);
-
-    afxString const *strA = AfxGetUriString(uri), *strB = AfxGetUriString(other);
-
-    return AfxCompareStringCi(strA, strB);
+    return _URI_REQ_LEN(uri);
 }
 
-_AFXINL afxRestring* AfxGetUriRestring(afxUri *uri)
+_AFXINL afxString const* AfxGetUriString(afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    return &(uri->str);
+    return &uri->str;
 }
 
-_AFXINL afxString const* AfxGetUriString(afxUri const *uri)
+_AFXINL afxString* AfxGetUriString2(afxUri* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    return &(uri->str.str);
+    return &uri->str;
 }
 
-_AFXINL void* AfxGetUriStorage(afxUri *uri, afxNat base)
+// TESTING
+
+_AFXINL afxBool AfxUriIsEditable(afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    return AfxGetStringStorage(&(uri->str), base);
+    return AfxStringIsWriteable(&uri->str);
 }
 
-_AFXINL void const* AfxGetUriData(afxUri const *uri, afxNat base)
+_AFXINL afxBool AfxUriIsBlank(afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    return AfxGetStringData(&(uri->str.str), base);
+    return 0 == (uri->schem + uri->user/* + uri->pass*/ + uri->host + uri->port + uri->root + uri->dir + uri->fname + uri->fext + uri->query + uri->frag);
 }
 
-_AFXINL afxNat AfxMeasureUri(afxUri const* uri)
+// COMPARISON
+
+_AFXINL afxResult AfxCompareUriString(afxUri const* uri, afxString const *str)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert2(uri, str);
+    return AfxCompareString(AfxGetUriString(uri), str);
+}
+
+_AFXINL afxResult AfxCompareUriStringCi(afxUri const* uri, afxString const *str)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert2(uri, str);
+    return AfxCompareStringCi(AfxGetUriString(uri), str);
+}
+
+_AFXINL afxResult AfxCompareUri(afxUri const* uri, afxUri const *other)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert2(uri, other);
+    return AfxCompareString(AfxGetUriString(uri), AfxGetUriString(other));
+}
+
+_AFXINL afxResult AfxCompareUriCi(afxUri const* uri, afxUri const *other)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert2(uri, other);
+    return AfxCompareUriStringCi(uri, AfxGetUriString(other));
+}
+
+// CHANGE
+
+_AFXINL void AfxResetUri(afxUri* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    return uri->schem + uri->user + uri->pass + uri->host + uri->port + uri->dir + uri->fname + uri->fext + uri->query + uri->frag;
+    AfxResetString(&uri->str);
+    uri->schem = 0;
+    uri->user = 0;
+    //uri->pass = 0;
+    uri->host = 0;
+    uri->port = 0;
+    uri->dir = 0;
+    uri->root = 0;
+    uri->fname = 0;
+    uri->fext = 0;
+    uri->query = 0;
+    uri->frag = 0;
 }
 
-_AFXINL afxNat AfxMeasurePath(afxUri const* uri)
+_AFXINL void AfxClearUri(afxUri* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    return uri->dir + uri->fname + uri->fext;
+    AfxClearString(&uri->str);
+    uri->schem = 0;
+    uri->user = 0;
+    //uri->pass = 0;
+    uri->host = 0;
+    uri->port = 0;
+    uri->root = 0;
+    uri->dir = 0;
+    uri->fname = 0;
+    uri->fext = 0;
+    uri->query = 0;
+    uri->frag = 0;
 }
 
-_AFXINL afxNat AfxMeasureUriRequest(afxUri const* uri)
+_AFXINL void AfxMakeUri(afxUri* uri, afxNat cap, void const* start, afxNat len)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    return uri->dir + uri->fname + uri->fext + uri->query/* + uri->frag*/;
+    AfxMakeString(&uri->str, cap, (void*)start, len);
+    AfxReparseUri(uri);
+    int a = 1;
 }
+
+_AFXINL afxNat AfxWrapUriString(afxUri* uri, afxString const* src)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxReflectString(src, &uri->str);
+    AfxReparseUri(uri);
+    return AfxGetUriLength(uri);
+}
+
+_AFXINL afxNat AfxWrapUriStringRange(afxUri* uri, afxString const* src, afxNat offset, afxNat len)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxMakeUri(uri, 0, AfxGetStringData(src, offset), len);
+    AfxReparseUri(uri);
+    return AfxGetUriLength(uri);
+}
+
+_AFXINL void AfxReplicateUri(afxUri* uri, afxUri const *in)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxAssert(in);
+    AfxReflectString(&in->str, &uri->str);
+    uri->schem = in->schem;
+    uri->user = in->user;
+    //uri->pass = in->pass;
+    uri->host = in->host;
+    uri->port = in->port;
+    uri->root = in->root;
+    uri->dir = in->dir;
+    uri->fname = in->fname;
+    uri->fext = in->fext;
+    uri->query = in->query;
+    uri->frag = in->frag;
+}
+
+_AFXINL afxError AfxCopyUri(afxUri* uri, afxUri const *src)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxAssert(AfxUriIsEditable(uri));
+    AfxAssert(src);
+    afxNat clampedOff = 0;
+
+    if ((clampedOff = AfxCopyString(&uri->str, &src->str)))
+    {
+        AfxThrowError();
+    }
+    AfxReparseUri(uri); // Strings can have differently sized buffers. So we recalc it instead of just copy offsets and ranges.
+    return err;
+}
+
+_AFXINL void AfxFormatUriArg(afxUri* uri, afxChar const *fmt, va_list args)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxAssert(AfxUriIsEditable(uri));
+
+    if (!fmt) AfxClearUri(uri);
+    else
+    {
+        afxString *str = AfxGetUriString2(uri);
+        AfxAssert(str);
+        AfxAssert(fmt);
+        AfxFormatStringArg(str, fmt, args);
+        AfxTransformPathString(str, FALSE);
+        AfxReparseUri(uri);
+        //AfxCanonicalizePath(uri, FALSE);
+    }
+}
+
+_AFXINL void AfxFormatUri(afxUri* uri, afxChar const *fmt, ...)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxAssert(AfxUriIsEditable(uri));
+
+    if (!fmt) AfxClearUri(uri);
+    else
+    {
+        va_list args;
+        va_start(args, fmt);
+        AfxFormatUriArg(uri, fmt, args);
+        va_end(args);
+    }
+}
+
+// EXTRACTION
 
 _AFXINL afxNat AfxPickUriScheme(afxUri const* uri, afxUri* scheme)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    AfxAssert(scheme);    
+    AfxAssert(scheme);
     AfxResetUri(scheme);
+    AfxExcerptString(&uri->str, 0, (scheme->schem = uri->schem), &scheme->str);
+    return scheme->schem;
+}
+
+_AFXINL afxNat AfxPickUriAuthority(afxUri const* uri, afxUri* user, afxUri* host, afxUri* port)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(user || host || port);
+    AfxAssert(uri);
+    afxNat totalLen = 0;
     afxNat offset = 0;
-    afxNat len = (scheme->schem = uri->schem);
-    //afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
-    //AfxMakeRestring(&scheme->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
-    AfxExcerptRestring(&uri->str, offset, len, &scheme->str);
-    return len;
-}
 
-_AFXINL afxNat AfxPickUriUserInfo(afxUri const* uri, afxUri* usr, afxUri* pass)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxAssert(usr || pass);
-    afxNat totalLen = 0;
-
-    if (usr)
+    if (user)
     {
-        AfxResetUri(usr);
-        afxNat offset = uri->schem;
-        afxNat len = (usr->user = uri->user);
-        //afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
-        //AfxMakeRestring(&usr->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
-        AfxExcerptRestring(&uri->str, offset, len, &usr->str);
-        totalLen += len;
+        AfxResetUri(user);
+        offset = uri->schem;
+        totalLen += uri->user;
+        user->user = uri->user;
+        AfxExcerptString(&uri->str, offset, totalLen, &user->str);
     }
-
-    if (pass)
-    {
-        AfxResetUri(pass);
-        afxNat offset = uri->schem + uri->user;
-        afxNat len = (pass->pass = uri->pass);
-        //afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
-        //AfxMakeRestring(&pass->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
-        AfxExcerptRestring(&uri->str, offset, len, &pass->str);
-        totalLen += len;
-    }
-    return totalLen;
-}
-
-_AFXINL afxNat AfxPickUriAuthority(afxUri const* uri, afxUri* host, afxUri* port)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(host || port);
-    AfxAssert(uri);
-    afxNat totalLen = 0;
 
     if (host)
     {
-        AfxAssert(host);
-        AfxResetUri(host);
-        afxNat offset = uri->schem + uri->user + uri->pass;
-        afxNat len = (host->host = uri->host);
-        //afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
-        //AfxMakeRestring(&host->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
-        AfxExcerptRestring(&uri->str, offset, len, &host->str);
-        totalLen += len;
+        if (host != user)
+        {
+            AfxResetUri(host);
+            offset = uri->schem + uri->user;
+            totalLen = uri->host;
+        }
+        else totalLen += uri->host;
+
+        host->host = uri->host;
+        AfxExcerptString(&uri->str, offset, totalLen, &host->str);
     }
 
     if (port)
     {
-        AfxResetUri(port);
-        afxNat offset = uri->schem + uri->user + uri->pass + uri->host;
-        afxNat len = (port->port = uri->port);
-        //afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
-        //AfxMakeRestring(&port->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
-        AfxExcerptRestring(&uri->str, offset, len, &port->str);
-        totalLen += len;
+        if (port != host)
+        {
+            AfxResetUri(port);
+            offset = uri->schem + uri->user + uri->host;
+            totalLen = uri->port;
+        }
+        else totalLen += uri->port;
+
+        port->port = uri->port;
+        AfxExcerptString(&uri->str, offset, totalLen, &port->str);
     }
     return totalLen;
 }
 
-_AFXINL afxNat AfxClipUriDirectory(afxUri* uri, afxUri const* from)
+_AFXINL afxNat AfxPickUriQuery(afxUri const* uri, afxBool skipSep, afxUri* query)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxAssert(query);
+    AfxResetUri(query);
+    afxNat additive = skipSep && uri->query ? 1 : 0;
+    AfxExcerptString(&uri->str, _URI_QUERY_OFF(uri) + additive, (uri->query - additive), &query->str);
+    return query->query;
+}
+
+_AFXINL afxNat AfxPickUriFragment(afxUri const* uri, afxBool skipSep, afxUri* frag)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxAssert(frag);
+    AfxResetUri(frag);
+    afxNat additive = skipSep && uri->frag ? 1 : 0;
+    AfxExcerptString(&uri->str, _URI_FRAG_OFF(uri) + additive, (uri->frag - additive), &frag->str);
+    return frag->frag;
+}
+
+_AFXINL afxNat AfxClipPathDirectory(afxUri* uri, afxUri const* from)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(from);
     AfxAssert(uri);
     afxUri t;
     AfxResetUri(&t);
-    afxNat offset = from->schem + from->user + from->pass + from->host + from->port;
+    afxNat offset = from->schem + from->user/* + from->pass*/ + from->host + from->port + from->root;
     afxNat len = (t.dir = from->dir);
     //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
-    //AfxMakeRestring(&dir->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
-    AfxExcerptRestring(&from->str, offset, len, &t.str);
+    //AfxMakeString(&dir->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
+    AfxExcerptString(&from->str, offset, len, &t.str);
     *uri = t;
+    return len;
+}
+
+_AFXINL afxNat AfxClipPathDirectory2(afxUri* uri, afxUri const* from, afxNat seg)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(from);
+    AfxAssert(uri);
+    afxUri t;
+    AfxResetUri(&t);
+    afxNat offset = from->schem + from->user/* + from->pass*/ + from->host + from->port + from->root;
+    afxNat len = (t.dir = from->dir);
+    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
+    //AfxMakeString(&dir->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
+    
+    afxChar const* p = AfxGetUriData(from, offset);
+    afxChar const* p2 = p;
+    afxNat i = 0;
+    afxNat len2 = 0;
+    afxChar ch;
+    while ((ch = *p2++))
+    {
+        len2++;
+
+        if ((ch == '/' || ch == '\\') && (++i > seg || !p2[0]))
+            break;
+
+        if (len2 > len)
+            break;
+    }
+
+    AfxExcerptString(&from->str, offset, len2, &t.str);
+    t.dir = len2;
+    *uri = t;
+    return len2;
+}
+
+_AFXINL afxNat AfxSplitPath(afxUri const* uri, afxUri* root, afxUri* path)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    afxUri t;
+    AfxResetUri(&t);
+    afxNat offset = _URI_PATH_OFF(uri);
+    afxNat len = _URI_PATH_LEN(uri);
+
+    if (root)
+    {
+        AfxResetUri(root);
+        AfxExcerptString(&uri->str, offset, uri->root, &root->str);
+        root->root = uri->root;
+    }
+
+    if (!path) len = uri->root;
+    else
+    {
+        if (path != root)
+        {
+            AfxResetUri(path);
+            len -= uri->root;
+            AfxExcerptString(&uri->str, offset + uri->root, len, &path->str);
+        }
+        else
+        {
+            AfxExcerptString(&uri->str, offset, len, &path->str);
+        }
+        path->dir = uri->dir;
+        path->fname = uri->fname;
+        path->fext = uri->fext;
+    }
     return len;
 }
 
@@ -596,11 +809,11 @@ _AFXINL afxNat AfxClipUriTarget(afxUri* uri, afxUri const* from)
     AfxAssert(uri);
     afxUri t;
     AfxResetUri(&t);
-    afxNat offset = from->schem + from->user + from->pass + from->host + from->port + from->dir;
+    afxNat offset = from->schem + from->user/* + from->pass*/ + from->host + from->port + from->root + from->dir;
     afxNat len = (t.fname = from->fname);
     //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
-    //AfxMakeRestring(&name->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
-    AfxExcerptRestring(&from->str, offset, len, &t.str);
+    //AfxMakeString(&name->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
+    AfxExcerptString(&from->str, offset, len, &t.str);
     *uri = t;
     return len;
 }
@@ -623,11 +836,11 @@ _AFXINL afxNat AfxClipUriExtension(afxUri* uri, afxUri const* from, afxBool skip
     AfxAssert(uri);
     AfxResetUri(uri);
     afxNat additive = skipDot && from->fext ? 1 : 0;
-    afxNat offset = from->schem + from->user + from->pass + from->host + from->port + from->dir + from->fname + additive;
+    afxNat offset = from->schem + from->user/* + from->pass*/ + from->host + from->port + from->root + from->dir + from->fname + additive;
     afxNat len = (uri->fext = from->fext - additive);
     //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
-    //AfxMakeRestring(&ext->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
-    AfxExcerptRestring(&from->str, offset, len, &uri->str);
+    //AfxMakeString(&ext->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
+    AfxExcerptString(&from->str, offset, len, &uri->str);
     return len;
 }
 
@@ -637,11 +850,11 @@ _AFXINL afxNat AfxClipUriFile(afxUri* uri, afxUri const* from)
     AfxAssert(from);
     AfxAssert(uri);
     AfxResetUri(uri);
-    afxNat offset = from->schem + from->user + from->pass + from->host + from->port + from->dir;
+    afxNat offset = from->schem + from->user/* + from->pass*/ + from->host + from->port + from->root + from->dir;
     afxNat len = (uri->fname = from->fname) + (uri->fext = from->fext);
     //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
-    //AfxMakeRestring(&uri->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
-    AfxExcerptRestring(&from->str, offset, len, &uri->str);
+    //AfxMakeString(&uri->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
+    AfxExcerptString(&from->str, offset, len, &uri->str);
     return len;
 }
 
@@ -650,30 +863,51 @@ _AFXINL afxNat AfxClipUriPath(afxUri* uri, afxUri const* from)
     afxError err = AFX_ERR_NONE;
     AfxAssert(from);
     AfxAssert(uri);
-    afxUri t;
-    AfxResetUri(&t);
-    afxNat offset = from->schem + from->user + from->pass + from->host + from->port;
-    afxNat len = (t.dir = from->dir) + (t.fname = from->fname) + (t.fext = from->fext);
-    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
-    //AfxMakeRestring(&uri->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
-    AfxExcerptRestring(&from->str, offset, len, &t.str);
-    *uri = t;
+    AfxResetUri(uri);
+    afxNat offset = from->schem + from->user/* + from->pass*/ + from->host + from->port;
+    afxNat len = (uri->root = from->root) + (uri->dir = from->dir) + (uri->fname = from->fname) + (uri->fext = from->fext);
+    AfxExcerptString(&from->str, _URI_PATH_OFF(from), len, &uri->str);
     return len;
 }
 
-_AFXINL afxNat AfxClipUriQuery(afxUri* uri, afxUri const* from, afxBool skipSep)
+_AFX afxNat AfxClipPath2(afxUri* uri, afxUri const* from, afxNat seg)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(from);
     AfxAssert(uri);
-    AfxResetUri(uri);
-    afxNat additive = skipSep && from->query ? 1 : 0;
-    afxNat offset = from->schem + from->user + from->pass + from->host + from->port + from->dir + from->fname + from->fext + additive;
-    afxNat len = (uri->query = from->query - additive);
-    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
-    //AfxMakeRestring(&query->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
-    AfxExcerptRestring(&from->str, offset, len, &uri->str);
-    return len;
+    afxNat offset = _URI_PATH_OFF(from);
+    afxNat len = _URI_PATH_LEN(from);
+
+    afxChar const* p = AfxGetUriData(from, offset);
+    afxChar const* p2 = p;
+    afxNat i = 0;
+    afxNat len2 = 0;
+    afxChar pch;
+    while ((pch = *p2++))
+    {
+        len2++;
+
+        if (((pch == '/' || pch == '\\') && (++i > seg || !p2[0])))
+            break;
+        
+        if ((len2 >= len))
+            break;
+    }
+
+    afxUri t;
+    AfxResetUri(&t);
+
+    if (len2)
+    {
+        AfxExcerptString(&from->str, offset, len2, &t.str);
+
+        if (i)
+            t.dir = len2;
+        else
+            t.fname = len2;
+    }
+    *uri = t;
+    return len2;
 }
 
 _AFXINL afxNat AfxGetUriQueryString(afxUri const* uri, afxBool skipSep, afxString* query)
@@ -682,136 +916,342 @@ _AFXINL afxNat AfxGetUriQueryString(afxUri const* uri, afxBool skipSep, afxStrin
     AfxAssert(uri);
     AfxAssert(query);
     afxUri tmp;
-    AfxClipUriQuery(&tmp, uri, skipSep);
+    AfxPickUriQuery(uri, skipSep, &tmp);
     AfxReflectString(AfxGetUriString(&tmp), query);
     return query->len;
 }
 
-_AFXINL afxNat AfxClipUriFragment(afxUri* uri, afxUri const* from, afxBool skipSep)
+_AFXINL afxNat _AfxGetPathDriveNo_W32(afxUri const* uri)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+
+    afxUri path;
+    AfxClipUriPath(&path, uri);
+    afxByte const* p = AfxGetUriData(&path, 0);
+
+    if (p && p[0] && p[1] == ':')
+    {
+        afxChar l = *p;
+        
+        if (*p >= 'a' && l <= 'z')
+            return l - 'a';
+
+        if (l >= 'A' && l <= 'Z')
+            return l - 'A';
+    }
+    return AFX_INVALID_INDEX;
+}
+
+_AFXINL afxNat AfxGetPathDriveNo(afxUri const* uri)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    return _AfxGetPathDriveNo_W32(uri);
+}
+
+#define IsNetDrive(no_) FALSE
+
+_AFXINL afxBool AfxPathIsNetwork_W32(afxUri const* uri)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    afxBool rslt = FALSE;
+
+    afxUri path;
+    AfxClipUriPath(&path, uri);
+    afxByte const* p = AfxGetUriData(&path, 0);
+
+    if (p)
+    {
+        afxNat no;
+
+        if (*p == '\\' && p[1] == '\\' && p[2] != '?' || (no = _AfxGetPathDriveNo_W32(uri), IsNetDrive(no)))
+            rslt = TRUE;
+    }
+    return rslt;
+}
+
+_AFXINL afxBool _AfxPathIsRelative_W32(afxUri const* uri)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+
+    afxUri path;
+    afxNat len = AfxClipUriPath(&path, uri);
+    afxByte const* data = AfxGetUriData(&path, 0);
+
+    return !len || !data[0] || (data[0] != '\\' && AFX_INVALID_INDEX == AfxGetPathDriveNo(&path));
+}
+
+_AFXINL afxBool AfxPathIsRelative(afxUri const* uri)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+
+    afxUri path;
+    afxNat len = AfxClipUriPath(&path, uri);
+    afxByte const* data = AfxGetUriData(&path, 0);
+
+    return !len || !data[0] || (data[0] != '/' && (data[0] != '\\' && AFX_INVALID_INDEX == AfxGetPathDriveNo(&path)));
+}
+
+_AFXINL afxNat SpanRoot(afxChar const* start, afxNat pathLen)
+{
+    afxNat rslt = 0;
+    afxNat sepCnt = 0;
+    afxNat dot = FALSE;
+    afxNat letter = FALSE;
+    afxChar const* p = start;
+    afxNat i = 0;
+
+    while (pathLen < i)
+    {
+        afxChar ch = *p++;
+
+        if ((ch == '/' || ch == '\\'))
+        {
+            ++sepCnt;
+
+            if (sepCnt == 1 && letter) break;
+            else if (dot)
+            {
+                if (sepCnt == 4)
+                    break;
+            }
+        }
+        else if (i == 1 && ch == ':' && sepCnt == 0 && AfxIsalpha(start[0]))
+        {
+            letter = TRUE;
+        }
+        else if (i == 2 && ch == '.' && sepCnt == 2)
+        {
+            dot = TRUE;
+        }
+        i++;
+    }
+
+    if (dot)
+        rslt += 1; // '.'
+    else if (letter)
+        rslt += 2; // "C:"
+
+    rslt += sepCnt;
+    
+    return rslt;
+}
+
+_AFXINL afxNat SpanRoot2(afxChar const* start, afxNat pathLen)
+{
+    afxNat rslt = 0;
+    afxNat sepCnt = 0;
+    afxNat dot = FALSE;
+    afxNat letter = FALSE;
+    afxChar const* p = start;
+    afxNat i = 0;
+
+    while (pathLen < i)
+    {
+        afxChar ch = *p++;
+
+        if ((ch == '/' || ch == '\\'))
+        {
+            ++sepCnt;
+
+            if (sepCnt == 1 && letter) break;
+            else if (dot)
+            {
+                if (sepCnt == 4)
+                    break;
+            }
+        }
+        else if (i == 1 && ch == ':' && sepCnt == 0 && AfxIsalpha(start[0]))
+        {
+            letter = TRUE;
+        }
+        else if (i == 2 && ch == '.' && sepCnt == 2)
+        {
+            dot = TRUE;
+        }
+        i++;
+    }
+
+    if (dot)
+        rslt += 1; // '.'
+    else if (letter)
+        rslt += 2; // "C:"
+
+    rslt += sepCnt;
+
+    return rslt;
+}
+
+_AFXINL afxChar* SkipPathRoot(afxUri const* uri)
+{
+    afxChar const* p = AfxGetUriData(uri, 0);
+    
+}
+
+_AFXINL afxBool _AfxPathIsRoot_W32(afxUri const* uri)
+{
+    /*
+        Returns TRUE for paths such as "", "X:" or "\\server\share". 
+        Paths such as "..\path2" or "\\server" return FALSE.
+    */
+
+    afxError err = NIL;
+    AfxAssert(uri);
+    afxBool rslt = FALSE;
+    afxChar const* p = AfxGetUriData(uri, 0);
+
+    if (p && *p)
+    {
+        if (AfxIsalpha(*p) && p[1] == ':' && p[2] == '\\' && !p[3])
+            return TRUE;
+
+        if (*p == '\\')
+        {
+            if (!p[1])
+                return TRUE;
+
+            if (p[1] == '\\')
+            {
+                afxChar const* v5 = (p + 2);
+
+                if (p[2] != '?')
+                {
+                    afxNat i = 0;
+
+                    while (*v5)
+                    {
+                        if (*v5 == '\\' && (++i > 1 || !v5[1]))
+                            return rslt;
+
+                        v5 = v5++;
+                    }
+                    rslt = TRUE;
+                }
+            }
+        }
+    }
+    return rslt;
+}
+
+_AFXINL afxBool AfxPathIsRoot(afxUri const* uri)
+{
+    afxError err = NIL;
+    AfxAssert(uri);
+    return _AfxPathIsRoot_W32(uri);
+}
+
+
+
+_AFXINL afxBool AfxPathIsDevice(afxUri const* uri)
+{
+    afxError err = NIL;
+    AfxAssert(uri);
+    afxBool rslt = FALSE;
+    
+    afxUri host, path, dev;
+    AfxClipUriPath(&host, uri);
+    AfxClipUriPath(&path, uri);
+    AfxClipPathDirectory(&dev, uri);
+    afxChar const* h = AfxGetUriData(&host, 0);
+    afxChar const* p = AfxGetUriData(&path, 0);
+
+    if (0 == AfxCompareUriString(&host, &AfxString("//.")))
+    {
+        afxChar const* v5 = p;
+        afxNat i = 0;
+
+        while (*v5)
+        {
+            if (*v5 == '/' && (++i > 1 || !v5[1]))
+                return rslt;
+
+            v5 = v5++;
+        }
+    }
+    return rslt;
+}
+
+_AFXINL afxNat AfxClipUriDevice(afxUri* uri, afxUri const* from)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(from);
     AfxAssert(uri);
-    AfxResetUri(uri);
-    afxNat additive = skipSep && from->frag ? 1 : 0;
-    afxNat offset = from->schem + from->user + from->pass + from->host + from->port + from->dir + from->fname + from->fext + from->query + additive;
-    afxNat len = (uri->frag = from->frag - additive);
-    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
-    //AfxMakeRestring(&frag->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
-    AfxExcerptRestring(&from->str, offset, len, &uri->str);
+    afxUri t;
+    AfxResetUri(&t);
+    afxNat len = 0;
+    afxUri dev;
+
+    afxNat devLen = 0;
+
+    if (!(devLen = AfxClipPathDirectory2(&dev, from, 3))) AfxResetUri(uri);
+    else
+    {
+        if (AfxCompareStringRange(&AfxString("//./"), 0, &dev.str, 4)) AfxResetUri(uri);
+        else
+        {
+            len = AfxGetUriLength(&dev);
+            AfxAssert(from->schem + from->user/* + from->pass*/ == 0);
+            AfxExcerptString(&from->str, from->schem + from->user/* + from->pass*/, len, &t.str);
+            t.dir = AfxGetUriLength(&dev);
+            *uri = t;
+        }
+    }
     return len;
 }
 
-_AFXINL afxError AfxCopyUriDirectory(afxUri *uri, afxUri const *src)
+_AFXINL afxBool _AfxPathIsServer_W32(afxUri const* uri)
 {
-    afxError err = AFX_ERR_NONE;
+    // Returns TRUE if the string is a valid path for a server only (no share name), or FALSE otherwise.
+
+    afxError err = NIL;
     AfxAssert(uri);
-    AfxAssert(src);
+    afxBool rslt = FALSE;
+    afxChar const* p = AfxGetUriData(uri, 0);
 
-    afxUri excerpt;
-    AfxClipUriDirectory(&excerpt, src);
+    if (p)
+    {
+        afxChar const* v2 = NIL;
 
-    if (AfxCopyUri(uri, &excerpt))
-        AfxThrowError();
+        if (*p == '\\' && p[1] == '\\' && p[2] != '?')
+        {
+            rslt = TRUE;
+            v2 = p + 2;
+        }
 
-    return err;
+        if (rslt && AfxStrchr(v2, '\\'))
+            rslt = FALSE;
+    }
+    return rslt;
 }
 
-_AFXINL afxError AfxCopyUriFile(afxUri *uri, afxUri const *src)
+_AFXINL afxBool AfxPathIsServer(afxUri const* uri)
 {
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxAssert(src);
-
-    afxUri excerpt;
-    AfxClipUriFile(&excerpt, src);
-
-    if (AfxCopyUri(uri, &excerpt))
-        AfxThrowError();
-
-    return err;
+    return _AfxPathIsServer_W32(uri);
 }
 
-_AFXINL afxError AfxCopyUriTarget(afxUri *uri, afxUri const *src)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxAssert(src);
-
-    afxUri excerpt;
-    AfxClipUriTarget(&excerpt, src);
-
-    if (AfxCopyUri(uri, &excerpt))
-        AfxThrowError();
-
-    return err;
-}
-
-_AFXINL afxError AfxCopyUriExtension(afxUri *uri, afxUri const *src, afxBool skipDot)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxAssert(src);
-
-    afxUri excerpt;
-    AfxClipUriExtension(&excerpt, src, skipDot);
-
-    if (AfxCopyUri(uri, &excerpt))
-        AfxThrowError();
-
-    return err;
-}
-
-_AFXINL afxError AfxCopyUriPath(afxUri *uri, afxUri const *src)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxAssert(src);
-
-    afxUri excerpt;
-    AfxClipUriPath(&excerpt, src);
-
-    if (AfxCopyUri(uri, &excerpt))
-        AfxThrowError();
-
-    return err;
-}
-
-_AFXINL afxError AfxCopyUriQuery(afxUri *uri, afxUri const *src, afxBool skipSep)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxAssert(src);
-
-    afxUri excerpt;
-    AfxClipUriQuery(&excerpt, src, skipSep);
-
-    if (AfxCopyUri(uri, &excerpt))
-        AfxThrowError();
-
-    return err;
-}
-
-_AFXINL afxBool AfxPathIsRelative(afxUri const *uri)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-
-    afxUri excerpt;
-    AfxClipUriPath(&excerpt, uri);
-    afxByte const* data = AfxGetUriData(&excerpt, 0);
-
-    return (!data || (data[0] != '/' && data[1] != ':'));
-}
-
-_AFXINL afxBool AfxIsUriAbsolute(afxUri const *uri)
+_AFXINL afxBool AfxIsUriAbsolute(afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
     return !AfxPathIsRelative(uri);
 }
 
-_AFXINL afxBool AfxIsBaseOfUri(afxUri const *uri, afxUri const* other)
+_AFXINL afxBool AfxIsUriToDevice(afxUri const* uri)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    afxUri hostPort;
+    AfxPickUriAuthority(uri, NIL, &hostPort, &hostPort);
+    AfxCompareUriString(&hostPort, &AfxString("//."));
+    //AfxClipPathDirectory();
+    return AfxCompareStringCil(&uri->str, uri->schem, "//.", 0) && AfxCompareStringCil(&uri->str, uri->schem + uri->host, "/", 0);
+}
+
+_AFXINL afxBool AfxIsBaseOfUri(afxUri const* uri, afxUri const* other)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(other);
@@ -819,21 +1259,7 @@ _AFXINL afxBool AfxIsBaseOfUri(afxUri const *uri, afxUri const* other)
 
     AfxThrowError();
 
-
-}
-
-_AFXINL afxBool AfxUriIsEditable(afxUri const *uri)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    return AfxStringIsWriteable(&uri->str);
-}
-
-_AFXINL afxBool AfxUriIsBlank(afxUri const *uri)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    return 0 == (uri->schem + uri->user + uri->pass + uri->host + uri->port + uri->dir + uri->fname + uri->fext + uri->query + uri->frag);
+    return err;
 }
 
 _AFXINL afxResult _AfxFindUriQueryAttribute(afxString *attr, afxString *value, void* data)
@@ -842,7 +1268,7 @@ _AFXINL afxResult _AfxFindUriQueryAttribute(afxString *attr, afxString *value, v
     AfxAssert(attr);
     AfxAssert(value);
     AfxAssert(data);
-    struct { afxString const* key; afxRestring* dst; afxBool success; } *data2 = data;
+    struct { afxString const* key; afxString* dst; afxBool success; } *data2 = data;
 
     if (0 == AfxCompareString(data2->key, attr))
     {
@@ -853,7 +1279,7 @@ _AFXINL afxResult _AfxFindUriQueryAttribute(afxString *attr, afxString *value, v
     return 1; // continue
 }
 
-_AFXINL afxResult AfxUriForEachQueryKey(afxUri const *uri, afxResult(*f)(afxString *attr, afxString *value, void* data), void* data)
+_AFXINL afxResult AfxUriForEachQueryKey(afxUri const* uri, afxResult(*f)(afxString *attr, afxString *value, void* data), void* data)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
@@ -861,7 +1287,7 @@ _AFXINL afxResult AfxUriForEachQueryKey(afxUri const *uri, afxResult(*f)(afxStri
     afxResult cnt = 0;
 
     afxUri query2;
-    AfxClipUriQuery(&query2, uri, FALSE);
+    AfxPickUriQuery(uri, FALSE, &query2);
     afxChar const* query = AfxGetUriData(&query2,0);
 #if 0
     afxString64 attr;
@@ -903,7 +1329,7 @@ _AFXINL afxResult AfxUriForEachQueryKey(afxUri const *uri, afxResult(*f)(afxStri
     return cnt;
 }
 
-_AFXINL afxResult AfxUriMapQueryPairs(afxUri const *uri, afxNat base, afxNat cnt, afxString keys[], afxString values[])
+_AFXINL afxResult AfxUriMapQueryPairs(afxUri const* uri, afxNat base, afxNat cnt, afxString keys[], afxString values[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
@@ -914,7 +1340,7 @@ _AFXINL afxResult AfxUriMapQueryPairs(afxUri const *uri, afxNat base, afxNat cnt
     afxResult rslt = 0;
 
     afxUri query2;
-    AfxClipUriQuery(&query2, uri, FALSE);
+    AfxPickUriQuery(uri, FALSE, &query2);
     afxChar const* start = AfxGetUriData(&query2,0);
     afxChar const *chr = start;
 
@@ -925,30 +1351,20 @@ _AFXINL afxResult AfxUriMapQueryPairs(afxUri const *uri, afxNat base, afxNat cnt
     return rslt;
 }
 
-_AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
+_AFXINL void AfxTransformPathString(afxString* str, afxBool out)
 {
-    // c:\shit\\\by\\M$\foo.poo -> /c/shit/by/M$/unshitted/foo.poo
-
     afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxAssert(AfxUriIsEditable(uri));
-    afxUri path, query, frag;
-    
-    afxChar const dirSep = 0/*microshit*/ ? '\\' : '/';
+    AfxAssert(str);
+    afxNat srcLen = AfxGetStringLength(str);
 
-    if (AfxClipUriPath(&path, uri))
+    if (srcLen)
     {
-        AfxClipUriQuery(&query, uri, FALSE);
-        AfxClipUriFragment(&frag, uri, FALSE);
-
-        afxRestring *pathStr = AfxGetUriRestring(&path);
-
-        // TODO move query and fragment to end of path, once normalization never increase size of string.
-
         afxChar *ptr, *end;
         afxInt len;
         afxChar dst[4096];
-        afxChar const *src2 = AfxGetStringData(&pathStr->str, 0);
+        afxChar const *src2 = AfxGetStringData(str, 0);
+
+        afxChar const dirSep = out ? '\\' : '/';
 
         // Check for maximum filename length
         if (!src2)
@@ -957,31 +1373,62 @@ _AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
             return;
         }
 
-        // Remove drive letter from filename (e.g. c:)
-        
-        if (!microshit)
-            if (src2[0] != 0 && src2[1] == ':')
-                src2 += 2;
-        
-        // Initialize buffer
         ptr = dst;
-        end = dst + sizeof(dst);
 
-#if 0
-        // Add current directory to filename if relative path
-        if (src2[0] == '/' || src2[0] == '\\')
+        if (srcLen > 1)
         {
-            struct thread *t = self();
-            // Do not add current directory if it is root directory
-            len = strlen(t->curdir);
-
-            if (len > 1)
+            if (!out) // overwrite C: by //./c
             {
-                memcpy(p, t->curdir, len);
-                p += len;
+                if (AfxIsalpha(src2[0]) && src2[1] == ':')
+                {
+                    dst[0] = '/';
+                    dst[1] = '/';
+                    dst[2] = '.';
+                    dst[3] = '/';
+                    dst[4] = AfxTolower(src2[0]);
+                    src2 += 2;
+                    ptr = &dst[5];
+
+                    if (srcLen > 2 && (src2[0] == '\\' || src2[0] == '/'))
+                    {
+                        *ptr++ = '/';
+                        src2++;
+                    }
+                }
+            }
+
+            if (srcLen > 4)
+            {
+                if (src2[0] == '/' && src2[1] == '/' && src2[2] == '.' && src2[3] == '/' && AfxIsalpha(src2[4]))
+                {
+                    if (!out)
+                    {
+                        dst[0] = src2[0];
+                        dst[1] = src2[1];
+                        dst[2] = src2[2];
+                        dst[3] = src2[3];
+                        dst[4] = AfxTolower(src2[4]);
+                        src2 += 5;
+                        ptr = &dst[5];
+                    }
+                    else  // to WIN32
+                    {
+                        dst[0] = AfxToupper(src2[4]);
+                        dst[1] = ':';
+                        ptr = &dst[2];
+                        src2 += 5;
+
+                        if (srcLen > 5 && (src2[0] == '\\' || src2[0] == '/'))
+                        {
+                            *ptr++ = '\\';
+                            src2++;
+                        }
+                    }
+                }
             }
         }
-#endif
+
+        end = dst + sizeof(dst);
 
         while (src2[0])
         {
@@ -995,7 +1442,6 @@ _AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
                     AfxThrowError(); //errno = ENAMETOOLONG;
                     return;
                 }
-
                 *ptr++ = /*'/'*/dirSep;
             }
 
@@ -1003,11 +1449,9 @@ _AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
             len = 0;
             while (src2[0] && src2[0] != '/' && src2[0] != '\\')
             {
-                // We do not allow control characters in filenames
-                if (src2[0] > 0 && src2[0] < ' ')
+                if (src2[0] > 0 && src2[0] < ' ') // is a ctrl char?
                 {
                     AfxThrowError(); //errno = EINVAL;
-
                     AfxCatchError(err);
                     return;
                 }
@@ -1022,10 +1466,13 @@ _AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
             }
 
             // Handle empty name parts and '.' and '..'
-            if (len == 0 && src2[-1] != '/' && src2[-1] != '\\') ptr--;
-            else if (len == 1 && src2[-1] == '.') ptr -= 2;
+            if (len == 0 && src2[0] && (src2[-1] == '/' || src2[-1] == '\\'))
+                ptr--;
+            else if (len == 1 && src2[-1] == '.')
+                ptr -= 2;
             else if (len == 2 && src2[-1] == '.' && src2[-2] == '.')
             {
+#if !0
                 ptr -= 4;
 
                 if (ptr < dst)
@@ -1033,6 +1480,17 @@ _AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
                     AfxThrowError(); //errno = EINVAL;
                     return;
                 }
+#else
+                if (!(ptr - 4 < dst))
+                {
+                    ptr -= 4;
+                }
+                else
+                {
+                    ptr -= 2;
+                    break;
+                }
+#endif
                 while (ptr[0] != '/' && ptr[0] != '\\') ptr--;
             }
         }
@@ -1040,7 +1498,7 @@ _AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
         // Convert empty filename to /
         if (ptr == dst)
         {
-            *ptr++ = /*'/'*/dirSep;
+            //*ptr++ = /*'/'*/dirSep;
         }
 
         // Terminate string
@@ -1052,10 +1510,32 @@ _AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
 
         *ptr = 0;
 
-        _AfxWriteString(pathStr, 0, dst, ptr - dst); // TODO move query and fragment to end of path, once normalization never increase size of string.
-        afxByte *_bytemap = AfxGetStringStorage(pathStr, 0);
-        _bytemap[ptr - dst] = '\0';
-        uri->str.str.len = /*uri->str._range -*/ (ptr - dst); // se os seguintes componentes foram escritos incorretamente, mova isto para depois da concatenação deles.
+        _AfxWriteString(str, 0, dst, AfxMin(ptr - &dst[0], str->cap)); // TODO move query and fragment to end of path, once normalization never increase size of string.
+        afxChar *_bytemap = AfxGetStringStorage(str, 0);
+        //_bytemap[ptr - dst] = '\0';
+        str->len = /*uri->str._range -*/ (ptr - dst); // se os seguintes componentes foram escritos incorretamente, mova isto para depois da concatenação deles.
+    }
+}
+
+_AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
+{
+    // c:\shit\\\by\\M$\foo.poo -> /c/shit/by/M$/unshitted/foo.poo
+
+    //return;
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxAssert(AfxUriIsEditable(uri));
+    afxUri path, query, frag;
+    
+    if (AfxClipUriPath(&path, uri))
+    {
+        AfxPickUriQuery(uri, FALSE, &query);
+        AfxPickUriFragment(uri, FALSE, &frag);
+
+        afxString* pathStr = AfxGetUriString2(&path);
+
+        // TODO move query and fragment to end of path, once normalization never increase size of string.
+        AfxTransformPathString(pathStr, microshit);
 #if 0
         uri->dir.base = path.;
         uri->dir.range;
@@ -1065,265 +1545,832 @@ _AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
         uri->ext.range;
 #endif
         if (query.query)
-            AfxConcatenateString(pathStr, AfxGetUriString(&query));
+            AfxCatenateString(pathStr, AfxGetUriString(&query));
 
         if (frag.frag)
-            AfxConcatenateString(pathStr, AfxGetUriString(&frag));
+            AfxCatenateString(pathStr, AfxGetUriString(&frag));
 
         AfxReparseUri(uri);
     }
 }
 
-_AFXINL void AfxReparseUri(afxUri *uri)
+#define URI_MAX 2083
+
+struct uri {
+    char *scheme;
+    afxNat schOff;
+    afxNat schLen;
+    char *auth;
+    afxNat authOff;
+    afxNat authLen;
+    char *user;
+    afxNat userOff;
+    afxNat userLen;
+    char *passwd;
+    afxNat passOff;
+    afxNat passLen;
+    char *host;
+    afxNat hostOff;
+    afxNat hostLen;
+    char *port;
+    afxNat portOff;
+    afxNat portLen;
+    char *path;
+    afxNat pathOff;
+    afxNat pathLen;
+    char *root;
+    afxNat rootOff;
+    afxNat rootLen;
+    char *dir;
+    afxNat dirOff;
+    afxNat dirLen;
+    char *file;
+    afxNat fileOff;
+    afxNat fileLen;
+    char *fext;
+    afxNat fextOff;
+    afxNat fextLen;
+    char *query;
+    afxNat queryOff;
+    afxNat queryLen;
+    char *fragment;
+    afxNat fragOff;
+    afxNat fragLen;
+    //char buf[URI_MAX + 1 + 1];
+};
+
+int uriparse(const char *src, afxNat srcLen, struct uri *uri)
 {
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
+    *uri = (struct uri){ 0 };
+    //uri->schOff = AFX_INVALID_INDEX;
+    //uri->userOff = AFX_INVALID_INDEX;
+    //uri->passOff = AFX_INVALID_INDEX;
+    //uri->hostOff = AFX_INVALID_INDEX;
+    //uri->portOff = AFX_INVALID_INDEX;
+    //uri->pathOff = AFX_INVALID_INDEX;
+    //uri->queryOff = AFX_INVALID_INDEX;
+    //uri->fragOff = AFX_INVALID_INDEX;
 
-    afxChar* data = AfxGetStringStorage(&uri->str, 0);
+    if (!srcLen)
+        srcLen = AfxStrlen(src);
 
-    url_field_t split = { 0 };
-    _AfxUrlParseRaw(data, AfxGetStringLength(&uri->str.str), &split);
-
-    uri->schem = split.schemasiz;
-    uri->user = split.usersiz;
-    uri->pass = split.passsiz;
-    uri->host = split.hostsiz;
-    uri->port = split.portsiz;
-    uri->dir = split.fdirsiz;
-    uri->fname = split.fobjsiz - split.fextsiz;
-    uri->fext = split.fextsiz;
-    uri->query = split.querysiz;
-    uri->frag = split.fragsiz;
-
-    if (split.fobjsiz)
+    uri->path = src; // assumed to be a path
+    char ch;
+    int i = 0, len = 0, st = 0;
+    while (i <= srcLen)
     {
-        if (data[uri->schem + uri->user + uri->pass + uri->host + uri->port + uri->dir] == '/' || data[uri->schem + uri->user + uri->pass + uri->host + uri->port + uri->dir] == '\\') // '\\' is unneeded once it is already normalized
+        if (i < srcLen)
+            ch = src[i], len++;
+        else
+            ch = NIL;
+
+        if (st == 0)
         {
-            uri->fname--, uri->dir++;
-            split.fobjsiz--, split.fdirsiz++;
+            if (ch == '/')
+            {
+                st = 5;
+            }
+            else if (!ch)
+            {
+                uri->pathLen = len;
+                break;
+            }
+            else if (ch == '?')
+            {
+                uri->query = src;
+                uri->queryOff = i;
+                len = 1;
+                st = 6;
+            }
+            else if (ch == ':')
+            {
+                uri->path = NIL;
+                uri->scheme = src;
+                uri->schLen = len;
+                len = 0;
+                st = 1;
+            }
+            else if (ch == '#')
+            {
+                uri->fragment = src;
+                uri->fragOff = i;
+                len = 1;
+                st = 7;
+            }
+        
+        }
+        else if (st == 1)
+        {
+            if (ch != '/')
+            {
+                if (!ch)
+                {
+                    uri->authLen = len;
+                    len = 1;
+                    break;
+                }
+
+                if (len == 1)
+                {
+                    uri->path = &src[i];
+                    uri->pathOff = i;
+                    st = 5;
+                }
+                else if (len == 2)
+                {
+                    uri->path = uri->auth;
+                    uri->pathOff = uri->authOff;
+                    uri->auth = NIL;
+                    uri->authOff = 0;
+                    st = 5;
+                }
+            }
+            else
+            {
+                if (len == 1)
+                {
+                    uri->auth = &src[i];
+                    uri->authOff = i;
+                }
+                else if (len > 2) // a third / would be a path
+                {
+                    uri->authLen = len - 1;
+                    uri->path = &src[i];
+                    uri->pathOff = i;
+                    len = 1;
+                    st = 5;
+                }
+            }
+        }
+        else if (st == 5)
+        {
+            if (!ch)
+            {
+                uri->pathLen = len;
+                len = 1;
+                break;
+            }
+            else if (ch == '?')
+            {
+                uri->pathLen = len - 1;
+                uri->query = &src[i];
+                uri->queryOff = i;
+                len = 1;
+                st = 6;
+            }
+            else if (ch == '#')
+            {
+                uri->pathLen = len - 1;
+                uri->fragment = &src[i];
+                uri->fragOff = i;
+                len = 1;
+                st = 7;
+            }
+        }
+        else if (st == 6)
+        {
+            if (!ch)
+            {
+                uri->queryLen = len;
+                break;
+            }
+            else if (ch == '#')
+            {
+                uri->queryLen = len - 1;
+                uri->fragment = &src[i];
+                uri->fragOff = i;
+                len = 1;
+                st = 7;
+            }
+        }
+        else if (st == 7)
+        {
+            if (!ch)
+            {
+                uri->fragLen = len;
+                len = 0;
+                break;
+            }
+        }
+        i++;
+    }
+
+    if (uri->pathLen)
+    {
+        i = uri->pathLen;
+        afxChar* start = (afxChar*)uri->path;
+
+        if (start[0] == '/')
+        {
+            uri->root = uri->path;
+            uri->rootLen = 1;
+
+            if (uri->pathLen >= 5 &&
+                start[1] == '/' &&
+                start[2] == '.' &&
+                start[3] == '/' &&
+                AfxIsalpha(start[4]))
+            {
+                uri->rootLen = 5;
+                i = 5;
+
+                while (i < uri->pathLen)
+                {
+                    ch = start[i];
+
+                    if (AfxIsalnum(ch)) ++uri->rootLen;
+                    else
+                    {
+                        if (ch == '/')
+                        {
+                            uri->dirOff = i;
+                            uri->dir = &start[i];
+                            uri->dirLen = uri->pathLen - uri->rootLen;
+                        }
+                        break;
+                    }
+                    i++;
+                }
+            }
+            else
+            {
+                i = 1;
+
+                while (i < uri->pathLen)
+                {
+                    ch = start[i];
+
+                    if (ch == '/')
+                    {
+                        uri->dirOff = i;
+                        uri->dir = &start[i];
+                        uri->dirLen = uri->pathLen - uri->rootLen;
+                        break;
+                    }
+                    i++;
+                }
+            }
+        }
+
+        start = uri->path + uri->rootLen;
+        len = uri->pathLen - uri->rootLen;
+        afxBool noExt = FALSE;
+        char last = NIL;
+
+        i = 0;
+        while (i < len)
+        {
+            ch = start[i];
+
+            if (ch == '/')
+            {
+                if (!uri->dir)
+                {
+                    uri->dirOff = i;
+                    //uri->dir = (char*)start - uri->path;
+                    uri->dirLen = uri->pathLen - uri->rootLen;
+                }
+                break;
+            }
+            else if (ch == '.')
+            {
+
+            }
+            else if (ch == ' ')
+            {
+                noExt = TRUE;
+            }
+            i++;
+            last = ch;
+        }
+
+
+
+        while (i)
+        {
+            i--;
+            ch = start[i];
+
+            if (ch == '/')
+            {
+                uri->dir = uri->root + i;
+                uri->dirOff = uri->rootOff + i;
+                uri->dirLen = len - i;
+
+                if (i)
+                {
+                    uri->file = uri->dir + uri->dirLen;
+                    uri->fileOff = uri->dirOff + uri->dirLen;
+                    uri->fileLen = i;
+                }
+                break;
+            }
+            else if (ch == '.')
+            {
+                // dir/name.file.ext
+                // dir/.
+                // dir/dir/..
+
+                if (i)
+                {
+                    if (len - i > 1)
+                    {
+                        uri->fext = &start[i];
+                        uri->fextOff = i;
+                        uri->fextLen = len - i;
+                    }
+                    else
+                    {
+                        uri->file = &start[i];
+                        uri->fileOff = i;
+                        uri->fileLen = len;
+                    }
+                }
+
+                if (i == 0 && len > 1)
+                {
+                    uri->file = &start[i];
+                    uri->fileOff = i;
+                    uri->fileLen = len;
+                    break;
+                }
+                else
+                {
+                    if (len > i && (start[i - 1] == '/' || start[i - 1] == '.')) // if /. or ..
+                    {
+
+                    }
+                    else
+                    {
+                        uri->fext = &start[i];
+                        uri->fextOff = i;
+                        uri->fextLen = len;
+                        break;
+                    }
+                }
+            }
+            else if (ch == ' ')
+            {
+                noExt = TRUE;
+            }
+        }
+
+    }
+    return 0;
+
+    int rc = EXIT_SUCCESS;
+    int i0 = 0, state = 0, open = -1, offset = 0, length = 0, ipv6 = 0;
+    char cur = src[0];
+    uri->path = src; // always assumed to be a path
+    open = 5;
+    while (i < srcLen && cur && !rc)
+    {
+        length += 1;
+
+        switch (state)
+        {
+        case 0: // scheme or path            
+            if (':' == cur)
+            {
+                //cur = 0;
+                uri->path = NIL;
+                uri->scheme = src;
+                uri->schLen = length;
+                length = 0;
+                state = 1;
+                open = 0;
+            }
+            else if ('/' == cur)
+            {
+                state = 5;
+                continue;
+            }
+            else if ('?' == cur)
+            {
+                state = 6;
+                continue;
+            }
+            else if ('#' == cur)
+            {
+                state = 7;
+                continue;
+            }
+            break;
+        case 1: // q, f, p
+            if (1 == length)
+            {
+                if ('?' == cur)
+                {
+                    state = 6; // parse q, f or continue
+                    continue;
+                }
+                else if ('#' == cur)
+                {
+                    state = 7; // parse f
+                    continue;
+                }
+                else
+                {
+                    if ('/' != cur)
+                    {
+                        state = 5;
+                    }
+                    else
+                    {
+                        uri->auth = &src[i];
+                        uri->authOff = i;
+                        uri->authLen = 0;
+                    }
+                }
+            }
+            else if (2 == length)
+            {
+                if ('/' != cur) // if the 2nd char isn't an auth sep (or it's a MS-DOS sep), then it's a path.
+                {
+                    uri->path = uri->auth;
+                    uri->pathOff = uri->authOff;
+                    uri->pathLen = 0;
+
+                    uri->auth = NIL;
+                    uri->authOff = 0;
+                    uri->authLen = 0;
+
+                    open = 5;
+                    state = 6; // parse q, f or continue
+                    continue;
+                }
+            }
+            else if (3 == length)
+            {
+                if ('/' == cur)
+                {
+                    length = 1;
+                    state = 5;
+                    continue;
+                }
+                else if ('[' == cur) // begin of IPv6 host
+                {
+                    uri->host = &src[i + offset];
+                    uri->hostOff = i;
+                    uri->hostLen = 0;
+                    length = 1;
+                    open = 3;
+                    state = 4;
+                    continue;
+                }
+                else
+                {
+                    uri->user = &src[i + offset];
+                    uri->userOff = i;
+                    uri->userLen = 0;
+                    length = 1;
+                    state = 2;
+                    open = 1;
+                }
+            }
+            break;
+        case 2: // begin of password
+            if (':' == cur)
+            {
+                if (open == 1)
+                    uri->userLen = i - 1 - uri->userOff;
+
+                uri->passwd = &src[i + offset/* + 1*/];
+                uri->passOff = i;
+                uri->passLen = 0;
+                //cur = 0;
+                length = 1;
+                state = 3;
+                open = 2;
+            }
+            else if ('@' == cur)
+            {
+                state = 3;
+                continue;
+            }
+            else if ('/' == cur)
+            {
+                state = 5;
+                continue;
+            }
+            else if ('?' == cur)
+            {
+                state = 6;
+                continue;
+            }
+            else if ('#' == cur)
+            {
+                state = 7;
+                continue;
+            }
+            break;
+        case 3: // begin of host
+            if ('@' == cur)
+            {
+                if (open == 2)
+                    uri->passLen = i - uri->passOff;
+                else if (open == 1)
+                    uri->userLen = i - uri->userOff;
+
+                uri->hostOff = i + 1;
+                uri->host = &src[uri->hostOff];
+                uri->hostLen = 0;
+                open = 3;
+
+                //cur = 0;
+                length = 0;
+                state = 4;
+            }
+            else if ('/' == cur)
+            {
+                uri->host = uri->user;
+                uri->hostOff = uri->userOff;
+                uri->hostLen = uri->userLen;
+                uri->userOff = 0;
+                uri->userLen = 0;
+                uri->user = NULL;
+                uri->port = uri->passwd;
+                uri->portOff = uri->passOff;
+                uri->portLen = uri->passLen;
+                uri->passOff = 0;
+                uri->passLen = 0;
+                uri->passwd = NULL;
+                state = 5;
+                continue;
+            }
+            else if ('?' == cur)
+            {
+                state = 6;
+                continue;
+            }
+            else if ('#' == cur)
+            {
+                state = 7;
+                continue;
+            }
+            break;
+        case 4: // port or next
+            if (1 == length && '[' == cur) // begin of IPv6 host
+            {
+                ipv6 = 1;
+            }
+            else if (ipv6 && 3 < length && ']' == cur) // end of IPv6 host
+            {
+                ipv6 = 0;
+            }
+
+            if (!ipv6 && ':' == cur) // begin of port
+            {
+                uri->port = &src[i + offset/* + 1*/];
+                uri->portOff = i;
+                uri->portLen = 1;
+                //cur = 0;
+                length = 1;
+                state = 5;
+                open = 4;
+            }
+            else if ('/' == cur)
+            {
+                state = 5;
+                continue;
+            }
+            else if ('?' == cur)
+            {
+                state = 6;
+                continue;
+            }
+            else if ('#' == cur)
+            {
+                state = 7;
+                continue;
+            }
+            break;
+        case 5: // path
+            if ('/' == cur || '\\' == cur) // begin of path
+            {
+                if (open == 4)
+                    uri->portLen = i - 1 - uri->portOff;
+                
+                //
+                state = 6;
+
+                if (open != 5)
+                {
+                    uri->path = &src[i + offset];
+                    uri->pathOff = i;
+                    open = 5, length = 1;
+                }
+            }
+            else if ('?' == cur)
+            {
+                state = 6;
+                continue;
+            }
+            else if ('#' == cur)
+            {
+                state = 7;
+                continue;
+            }
+            break;
+        case 6: // query or fragment
+            if ('?' == cur)
+            {
+                if (open == 5)
+                    uri->pathLen = i - 1 - uri->pathOff;
+
+                uri->query = &src[i + offset/* + 1*/];
+                uri->queryOff = i;
+                //uri->queryLen = length;
+                //cur = 0;
+                length = 0;
+                state = 7;
+                open = 6;
+            }
+            else if ('#' == cur)
+            {
+                state = 7;
+                continue;
+            }
+            break;
+        case 7: // fragment
+            if ('#' == cur)
+            {
+                if (open == 6)
+                    uri->queryLen = i - 1 - uri->queryOff;
+                else if (open == 5)
+                    uri->pathLen = i - 1 - uri->pathOff;
+
+                uri->fragment = &src[i + offset/* + 1*/];
+                uri->fragOff = i;
+                uri->fragLen = 0;
+                //cur = 0;
+                length = 0;
+                state = 8;
+                open = 7;
+            }
+        default:
+            break;
+        }
+        //uri->buf[i + offset] = cur;
+        i += 1;
+        cur = src[i];
+    }
+
+    if (open == 7)
+        uri->fragLen = length;
+    else if (open == 6)
+        uri->queryLen = length;
+    else if (open == 5)
+        uri->pathLen = length - 1;
+    else if (open == 4)
+        uri->portLen = length;
+    else if (open == 3)
+        uri->hostLen = length;
+    else if (open == 2)
+        uri->passLen = length;
+    else if (open == 1)
+        uri->userLen = length;
+    else if (open == 0)
+        uri->schLen = length;
+
+    if (!uri->host && uri->user) // begin of host
+    {
+        uri->host = uri->user;
+        uri->hostOff = uri->userOff;
+        uri->hostLen = uri->userLen;
+        uri->userOff = 0;
+        uri->userLen = 0;
+        uri->user = NULL;
+
+        if (!uri->port && uri->passwd) // begin of port
+        {
+            uri->port = uri->passwd;
+            uri->portOff = uri->passOff;
+            uri->portLen = uri->passLen;
+            uri->passOff = 0;
+            uri->passLen = 0;
+            uri->passwd = NULL;
         }
     }
+    return rc;
 }
 
-_AFXINL void AfxFormatUriArg(afxUri *uri, afxChar const *fmt, va_list args)
+_AFXINL void AfxReparseUri(afxUri* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
-    AfxAssert(AfxUriIsEditable(uri));
-    afxRestring *str = AfxGetUriRestring(uri);
-    AfxAssert(str);
-    AfxAssert(fmt);
-    AfxFormatStringArg(str, fmt, args);
-    AfxReparseUri(uri);
-    //AfxCanonicalizePath(uri, FALSE);
-}
 
-_AFXINL void AfxFormatUri(afxUri *uri, afxChar const *fmt, ...)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxAssert(AfxUriIsEditable(uri));
-
-    if (!fmt) AfxClearUri(uri);
+    if (!AfxGetStringLength(&uri->str))
+    {
+        uri->schem = 0;
+        uri->user = 0;
+        //uri->pass = 0;
+        uri->host = 0;
+        uri->port = 0;
+        uri->root = 0;
+        uri->dir = 0;
+        uri->fname = 0;
+        uri->fext = 0;
+        uri->query = 0;
+        uri->frag = 0;
+    }
     else
     {
-        va_list args;
-        va_start(args, fmt);
-        AfxFormatUriArg(uri, fmt, args);
-        va_end(args);
-    }
-}
+        afxChar const* data = AfxGetStringData(&uri->str, 0);
+        afxNat dataLen = AfxGetStringLength(&uri->str);
+        afxChar const* p = data;
+#if 0
+        struct uri split2 = { 0 };
+        uriparse(p, 0, &split2);
+        uriparse("E:/a/b/c.ext", 0, &split2);
+        uriparse("://sigmaco.org", 0, &split2);
+        uriparse("https://sigmaco.org", 0, &split2);
+        uriparse("https://sigmaco.org/p/a", 0, &split2);
+        uriparse("https://sigmaco.org/p/a?q", 0, &split2);
+        uriparse("https://sigmaco.org/p/a#f", 0, &split2);
+        uriparse("https://sigmaco.org/p/a?q#f", 0, &split2);
+        uriparse("//./e/dir/file.ext", 0, &split2);
+        uriparse("file.ext", 0, &split2);
+        uriparse("/e/dir/file.ext", 0, &split2);
+        uriparse("/./e/dir/file.ext", 0, &split2);
+        uriparse(".ext", 0, &split2);
+        uriparse("/", 0, &split2);
+        uriparse("https://sigmaco.org/p/a?q#f", 0, &split2);
+        uriparse(p, 0, &split2);
 
-_AFXINL afxError AfxCopyUri(afxUri *uri, afxUri const *src)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(src);
-    AfxAssert(uri);
-    AfxAssert(AfxUriIsEditable(uri));
-    afxNat clampedOff = 0;
 
-    if ((clampedOff = AfxCopyString(&uri->str, &src->str.str)))
-    {
-        AfxThrowError();
-        
-    }
-    AfxReparseUri(uri); // Strings can have differently sized buffers. So we recalc it instead of just copy offsets and ranges.
-    return err;
-}
+#endif
 
-_AFXINL void AfxReplicateUri(afxUri *uri, afxUri const *in)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(in);
-    AfxAssert(uri);
+        url_field_t split = { 0 };
 
-    AfxResetUri(uri);
-    AfxReflectString(&(in->str.str), &(uri->str.str));
+        if (dataLen)
+            _AfxUrlParseRaw(data, dataLen, &split);
 
-    uri->schem = in->schem;
-    uri->user = in->user;
-    uri->pass = in->pass;
-    uri->host = in->host;
-    uri->port = in->port;
-    uri->dir = in->dir;
-    uri->fname = in->fname;
-    uri->fext = in->fext;
-    uri->query = in->query;
-    uri->frag = in->frag;
-}
+        uri->schem = split.schemasiz;
+        uri->user = split.usersiz;
+        //uri->pass = split.passsiz;
+        uri->user += split.passsiz;
 
-_AFXINL afxNat AfxParseUri(afxUri* uri, afxString const* from)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxAssert(from);
+        uri->host = split.hostsiz;
+        uri->port = split.portsiz;
+        uri->root = 0;
+        uri->dir = split.fdirsiz;
+        uri->fname = split.fobjsiz - split.fextsiz;
+        uri->fext = split.fextsiz;
+        uri->query = split.querysiz;
+        uri->frag = split.fragsiz;
 
-    afxChar const* data = AfxGetStringData(from, 0);
-
-    url_field_t split = { 0 };
-    _AfxUrlParseRaw(data, AfxGetStringLength(from), &split);
-
-    uri->schem = split.schemasiz;
-    uri->user = split.usersiz;
-    uri->pass = split.passsiz;
-    uri->host = split.hostsiz;
-    uri->port = split.portsiz;
-    uri->dir = split.fdirsiz;
-    uri->fname = split.fobjsiz - split.fextsiz;
-    uri->fext = split.fextsiz;
-    uri->query = split.querysiz;
-    uri->frag = split.fragsiz;
-
-    if (split.fobjsiz)
-    {
-        if (data[uri->schem + uri->user + uri->pass + uri->host + uri->port + uri->dir] == '/' || data[uri->schem + uri->user + uri->pass + uri->host + uri->port + uri->dir] == '\\') // '\\' is unneeded once it is already normalized
+        if (!split.hostsiz && split.fdirsiz)
         {
-            uri->fname--, uri->dir++;
-            split.fobjsiz--, split.fdirsiz++;
+            afxNat dirOff = uri->schem + uri->user + uri->host + uri->port;
+
+            if (data[dirOff] == '/')
+            {
+                uri->root = 1;
+                uri->dir -= 1;
+                dirOff += 1;
+                
+                if (split.fdirsiz >= 4 && data[dirOff] == '/' && data[dirOff + 1] == '.' && data[dirOff + 2] == '/' && AfxIsalpha(data[dirOff + 3]))
+                {
+                    afxNat len = split.fdirsiz - 4;
+                    afxNat i = 4;
+
+                    while (1)
+                    {
+                        char ch = data[dirOff + i];
+                        afxBool breake = FALSE;
+
+                        if (AfxIsalnum(ch)) ++i;
+                        else breake = TRUE;
+
+                        if (i == len || breake)
+                        {
+                            uri->root += i;
+                            uri->dir -= i;
+                            break;
+                        }
+                    }
+                }
+            }
         }
-    }
 
-    AfxResetUri(uri);
-    AfxReflectString(from, &uri->str.str);
-    return AfxMeasureUri(uri);
-}
+        if (split.fobjsiz)
+        {
+            afxChar const* data = AfxGetStringData(&uri->str, 0);
 
-_AFXINL afxNat AfxMakeUriFromString(afxUri *uri, afxString const *src)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    
-    AfxResetUri(uri);
-    AfxReflectString(src, &uri->str.str);
-    AfxReparseUri(uri);
-    //AfxCanonicalizePath(uri);  // can't change static data, will cause access violation
-    return AfxMeasureUri(uri);
-}
-
-_AFXINL afxNat AfxMakeUriFromRestring(afxUri *uri, afxRestring const *src)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-
-    AfxResetUri(uri);
-    AfxReflectRestring(src, &uri->str);
-    AfxReparseUri(uri);
-    //AfxCanonicalizePath(uri, FALSE);  // can't change static data, will cause access violation
-    return AfxMeasureUri(uri);
-}
-
-_AFXINL afxNat AfxMakeUriFromStringRange(afxUri *uri, afxString const *src, afxNat offset, afxNat len)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-
-    AfxResetUri(uri);
-    afxNat len2 = AfxExcerptString(src, offset, len, &uri->str.str);
-    AfxReparseUri(uri);
-    //AfxCanonicalizePath(uri);  // can't change static data, will cause access violation
-    return len2;
-}
-
-_AFXINL afxNat AfxMakeUriFromRestringRange(afxUri *uri, afxRestring const *src, afxNat offset, afxNat len)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-
-    AfxResetUri(uri);
-    afxNat len2 = AfxExcerptString(&src->str, offset, len, &uri->str.str);
-    uri->str.cap = src->cap;
-    AfxReparseUri(uri);
-    //AfxCanonicalizePath(uri, FALSE);  // can't change static data, will cause access violation
-    return len2;
-}
-
-_AFXINL void AfxMakeUri(afxUri *uri, void const *start, afxNat len)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxResetUri(uri);
-    AfxMakeString(&uri->str.str, start, len);
-
-    if (uri->str.str.len)
-        AfxReparseUri(uri);
-
-    //AfxCanonicalizePath(uri); // can't change static data, it will cause access violation
-}
-
-_AFXINL void AfxMakeMutableUri(afxUri *uri, afxNat cap, void *start, afxNat len)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    AfxResetUri(uri);
-    AfxMakeRestring(&uri->str, cap, start, len);
-    AfxAssert(AfxUriIsEditable(uri));
-
-    if (uri->str.str.len)
-    {
-        AfxReparseUri(uri);
-        //AfxCanonicalizePath(uri, FALSE);
+            if (data[uri->schem + uri->user + uri->host + uri->port + uri->root + uri->dir] == '/' || data[uri->schem + uri->user + uri->host + uri->port + uri->root + uri->dir] == '\\') // '\\' is unneeded once it is already normalized
+            {
+                uri->fname--, uri->dir++;
+                split.fobjsiz--, split.fdirsiz++;
+            }
+        }
+        int a = 1;
     }
 }
 
-_AFXINL void AfxResetUri(afxUri *uri)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
 
-    AfxResetRestring(&uri->str);
 
-    uri->schem = 0;
-    uri->user = 0;
-    uri->pass = 0;
-    uri->host = 0;
-    uri->port = 0;
-    uri->dir = 0;
-    uri->fname = 0;
-    uri->fext = 0;
-    uri->query = 0;
-    uri->frag = 0;
-}
-
-_AFXINL void AfxClearUri(afxUri *uri)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-
-    AfxClearString(&uri->str);
-
-    uri->schem = 0;
-    uri->user = 0;
-    uri->pass = 0;
-    uri->host = 0;
-    uri->port = 0;
-    uri->dir = 0;
-    uri->fname = 0;
-    uri->fext = 0;
-    uri->query = 0;
-    uri->frag = 0;
-}
-
-_AFXINL void AfxDeallocateUri(afxUri *uri)
+_AFXINL void AfxDeallocateUri(afxUri* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
@@ -1346,7 +2393,7 @@ _AFXINL afxError AfxAllocateUri(afxUri* uri, afxNat cap, void const *start, afxN
 }
 
 #if 0
-_AFXINL afxError AfxReallocateUri(afxUri *uri, afxNat cap, void const *start, afxNat range)
+_AFXINL afxError AfxReallocateUri(afxUri* uri, afxNat cap, void const *start, afxNat range)
 {
     afxError err = AFX_ERR_NONE;
     void *buf = NIL;
@@ -1372,48 +2419,6 @@ _AFXINL afxError AfxReallocateUri(afxUri *uri, afxNat cap, void const *start, af
 }
 #endif
 
-_AFXINL afxError AfxDuplicateUriPath(afxUri* uri, afxUri const *in)
-{
-    afxError err = AFX_ERR_NONE;
-
-    if (!in) AfxResetUri(uri);
-    else
-    {
-        AfxAssert(in);
-        afxUri excerpt;
-        afxNat len = AfxClipUriPath(&excerpt, in);
-
-        if (!len) AfxResetUri(uri);
-        else
-        {
-            if (AfxDuplicateUri(uri, &excerpt))
-                AfxThrowError();
-        }
-    }
-    return err;
-}
-
-_AFXINL afxError AfxDuplicateUriObject(afxUri* uri, afxUri const *in)
-{
-    afxError err = AFX_ERR_NONE;
-
-    if (!in) AfxResetUri(uri);
-    else
-    {
-        AfxAssert(in);
-        afxUri excerpt;
-        afxNat len = AfxClipUriTarget(&excerpt, in);
-
-        if (!len) AfxResetUri(uri);
-        else
-        {
-            if (AfxDuplicateUri(uri, &excerpt))
-                AfxThrowError();
-        }
-    }
-    return err;
-}
-
 _AFXINL afxError AfxDuplicateUri(afxUri* uri, afxUri const *in)
 {
     afxError err = AFX_ERR_NONE;
@@ -1422,13 +2427,13 @@ _AFXINL afxError AfxDuplicateUri(afxUri* uri, afxUri const *in)
     else
     {
         AfxAssert(in);
-        afxNat len = AfxMeasureUri(in);
+        afxNat len = AfxGetUriLength(in);
 
         if (!len) AfxResetUri(uri);
         else
         {
             AfxAssert(len);
-            void const *strData = AfxGetStringData(&in->str.str, 0);
+            void const *strData = AfxGetStringData(&in->str, 0);
             AfxAssert(strData);
 
             if (AfxAllocateUri(uri, 0, strData, len))
@@ -1443,7 +2448,7 @@ _AFX afxUri* AfxMakeUri8(afxUri8 *uri, afxUri const* src)
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
     uri->buf[0] = '\0';
-    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
+    AfxMakeUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
 
     if (src)
         AfxCopyUri(&uri->uri, src);
@@ -1456,7 +2461,7 @@ _AFX afxUri* AfxMakeUri32(afxUri32 *uri, afxUri const* src)
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
     uri->buf[0] = '\0';
-    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
+    AfxMakeUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
 
     if (src)
         AfxCopyUri(&uri->uri, src);
@@ -1469,7 +2474,7 @@ _AFX afxUri* AfxMakeUri128(afxUri128 *uri, afxUri const* src)
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
     uri->buf[0] = '\0';
-    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
+    AfxMakeUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
 
     if (src)
         AfxCopyUri(&uri->uri, src);
@@ -1482,94 +2487,10 @@ _AFX afxUri* AfxMakeUri2048(afxUri2048 *uri, afxUri const* src)
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
     uri->buf[0] = '\0';
-    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
+    AfxMakeUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
 
     if (src)
         AfxCopyUri(&uri->uri, src);
 
-    return &uri->uri;
-}
-
-#define _AFX_FIXED_URI_FMT(_uriType_) \
-{ \
-afxError err = AFX_ERR_NONE; \
-AfxAssert(uri); \
-uri->buf[0] = '\0'; \
-AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0); \
-\
-if (fmt) \
-{ \
-va_list args; \
-va_start(args, fmt); \
-AfxFormatUriArg(uri, fmt, args); \
-va_end(args); \
-} \
-}
-
-_AFXINL afxUri* AfxFormatUri8(afxUri8 *uri, afxChar const *fmt, ...)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    uri->buf[0] = '\0';
-    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
-
-    if (fmt)
-    {
-        va_list args;
-        va_start(args, fmt);
-        AfxFormatUriArg(&uri->uri, fmt, args);
-        va_end(args);
-    }
-    return &uri->uri;
-}
-
-_AFXINL afxUri* AfxFormatUri32(afxUri32 *uri, afxChar const *fmt, ...)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    uri->buf[0] = '\0';
-    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
-
-    if (fmt)
-    {
-        va_list args;
-        va_start(args, fmt);
-        AfxFormatUriArg(&uri->uri, fmt, args);
-        va_end(args);
-    }
-    return &uri->uri;
-}
-
-_AFXINL afxUri* AfxFormatUri128(afxUri128 *uri, afxChar const *fmt, ...)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    uri->buf[0] = '\0';
-    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
-
-    if (fmt)
-    {
-        va_list args;
-        va_start(args, fmt);
-        AfxFormatUriArg(&uri->uri, fmt, args);
-        va_end(args);
-    }
-    return &uri->uri;
-}
-
-_AFXINL afxUri* AfxFormatUri2048(afxUri2048 *uri, afxChar const *fmt, ...)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(uri);
-    uri->buf[0] = '\0';
-    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
-
-    if (fmt)
-    {
-        va_list args;
-        va_start(args, fmt);
-        AfxFormatUriArg(&uri->uri, fmt, args);
-        va_end(args);
-    }
     return &uri->uri;
 }

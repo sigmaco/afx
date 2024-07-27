@@ -18,8 +18,7 @@
 #define AFX_BINK_PROXY_H
 
 #include "qwadro/ux/afxUxDefs.h"
-#include "qwadro/draw/io/afxRaster.h"
-#include "qwadro/draw/io/afxBuffer.h"
+#include "qwadro/draw/afxUnivideo.h"
 #include "qwadro/exec/afxSystem.h"
 
 #ifdef _AFX_BINK_VIDEO_C

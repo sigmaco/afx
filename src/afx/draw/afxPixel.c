@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/draw/afxDrawSystem.h"
+#include "dev/AvxDevKit.h"
 
 afxNat32 const sRgb8ToRealLut[256] =
 // lookup table for unorm8 srgb -> float conversion

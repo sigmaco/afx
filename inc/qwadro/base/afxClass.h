@@ -141,6 +141,8 @@ AFX_DEFINE_STRUCT(afxClass)
     afxSlock        poolLock;
     afxNat          unitsPerPage; // when pool gets empty, the class will try to resizes storage pages to this value. If zero, the new page will be set to the size of the first batch allocation when pool was zero.
     
+    afxArena        arena; // used to allocate class/struct suballocations for members.
+
     afxError        (*ctor)(afxObject obj, afxCookie const* cookie); // void to avoid warnings
     afxError        (*dtor)(afxObject obj);
     afxError        (*ioAlways)(afxStream iob, afxObject obj); // called after the reading of plugin stream data is finished(useful to set up plugin data for plugins that found no data in the stream, but that cannot set up the data during the ctor callback)
@@ -170,21 +172,24 @@ AFX afxNat          AfxCountClassInstances(afxClass const* cls);
 AFX afxNat          AfxGetClassInstanceFixedSize(afxClass const* cls);
 AFX afxNat          AfxGetClassInstanceStrictFixedSize(afxClass const* cls);
 
-AFX afxClass*       AfxGetSubClass(afxClass const* cls);
-AFX afxObject       AfxGetClassInstance(afxClass const* cls, afxNat32 uniqueId);
+AFXINL afxArena*    AfxGetClassArena(afxClass *cls);
+
+AFXINL afxClass*    AfxGetSubClass(afxClass const* cls);
+AFXINL afxObject    AfxGetClassInstance(afxClass const* cls, afxNat32 uniqueId);
 
 AFX afxNat          AfxEnumerateClassInstances(afxClass const* cls, afxNat first, afxNat cnt, afxObject objects[]);
-AFX afxNat          AfxEvokeClassInstances(afxClass const* cls, afxBool(*flt)(afxObject,void*), void* fdd, afxNat first, afxNat cnt, afxObject objects[]);
+
+AFX afxNat          AfxEvokeClassInstances(afxClass const* cls, afxBool(*f)(afxObject,void*), void* udd, afxNat first, afxNat cnt, afxObject objects[]);
 
 /// The AfxInvokeClassInstances2() function is used to apply the given callback function to all objects in the specified class.
 /// If any invocation of the callback function returns a failure status the interation is terminated. However, AfxInvokeClassInstances2 will still return successfully.
-AFX afxNat          AfxInvokeClassInstances(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void *udd);
+AFX afxNat          AfxInvokeClassInstances(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void* udd);
 
 /// The AfxInvokeClassInstances2() function is used to apply the given callback function to all objects in the specified class using another callback as filter.
 /// If any invocation of the exec() callback function returns a failure status the iteration is terminated.
 /// If a invocation of the flt() callback function returns non-zero the object is passed to the exec() callback.
 /// However, AfxInvokeClassInstances2 will return count of objects that passed in flt() callback.
-AFX afxNat          AfxInvokeClassInstances2(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*flt)(afxObject,void*), void* fdd, afxBool(*exec)(afxObject,void*), void *udd);
+AFX afxNat          AfxInvokeClassInstances2(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2);
 
 AFX afxError        _AfxDeallocateClassInstances(afxClass* cls, afxNat cnt, afxObject objects[]);
 AFX afxError        _AfxAllocateClassInstances(afxClass* cls, afxNat cnt, afxObject objects[]);

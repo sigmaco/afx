@@ -14,8 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_LIGHT_H
-#define AFX_LIGHT_H
+#ifndef AKX_LIGHT_H
+#define AKX_LIGHT_H
 
 #include "qwadro/sim/akxNode.h"
 #include "qwadro/mem/afxArray.h"
@@ -47,7 +47,7 @@ typedef enum akxLightFlag
     akxLightFlag_REV_CULL_FACE  = AFX_BIT(3), // false
 } akxLightFlags;
 
-#ifdef _AFX_LIGHT_C
+#ifdef _AKX_LIGHT_C
 AFX_OBJECT(akxLight)
 {
     afxReal     distFadeBegin; // 40.f
@@ -112,7 +112,7 @@ AFX_OBJECT(akxLight)
         } dir;
     };
 };
-#endif//_AFX_LIGHT_C
+#endif//_AKX_LIGHT_C
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
@@ -122,4 +122,4 @@ AKX afxError    AfxAcquireDirectionalLights(afxSimulation sim, afxNat cnt, afxNa
 AKX afxError    AfxAcquireOmniLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
 AKX afxError    AfxAcquireSpotLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
 
-#endif//AFX_LIGHT_H
+#endif//AKX_LIGHT_H

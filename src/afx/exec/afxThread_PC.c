@@ -20,8 +20,6 @@
 #define _AFX_THREAD_C
 #include "../src/afx/dev/afxDevCoreBase.h"
 
-_AFX afxNat32 _primeTid = NIL;
-_AFX afxThread _primeThr = NIL;
 AFX_THREAD_LOCAL static afxNat32 _currTid = 0;
 AFX_THREAD_LOCAL static afxThread _currThr = NIL;
 
@@ -34,7 +32,8 @@ _AFX afxNat32 AfxGetTid(void)
 #error "";
 #endif
     //return _currTid;
-    return GetCurrentThreadId();
+    //return GetCurrentThreadId();
+    return _currTid ? _currTid : (_currTid = GetCurrentThreadId());
 }
 
 _AFX void AfxYield(void)
@@ -92,22 +91,13 @@ _AFX afxBool AfxGetThread(afxThread* thread)
 #endif
 }
 
-_AFX afxBool AfxGetPrimeThread(afxThread* thread)
-{
-    afxError err = AFX_ERR_NONE;
-    afxThread thr = _primeThr;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-    *thread = thr;
-    return !!thr;
-}
-
 _AFX afxBool AfxIsPrimeThread(void)
 {
 #if 0
     afxThread curr, prime;
     return (AfxGetThread(&curr) && AfxGetPrimeThread(&prime) && (curr == prime));
 #else
-    return (_currTid == _primeTid);
+    return (AfxGetTid() == AfxGetPrimeTid());
 #endif
 }
 
@@ -116,14 +106,16 @@ _AFXINL void _AfxGetThreadFrequency(afxThread thr, afxNat* execNo, afxNat* lastF
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &thr, afxFcc_THR);
     AfxAssert(execNo);
-    AfxAssert(lastFreq);
     *execNo = thr->execNo;
+    AfxAssert(lastFreq);
     *lastFreq = thr->lastExecCnt;
 }
 
 _AFX void AfxGetThreadFrequency(afxNat* execNo, afxNat* lastFreq)
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssert(lastFreq);
+    AfxAssert(execNo);
     afxThread thr;
     AfxGetThread(&thr);
     AfxAssertObjects(1, &thr, afxFcc_THR);
@@ -162,10 +154,11 @@ _AFXINL void _AfxGetThreadTime(afxThread thr, afxReal64* ct, afxReal64* dt)
     afxReal64 dt2 = AfxGetSecondsElapsed(&thr->lastClock, &currClock);
     thr->lastClock = currClock;
     AfxAssert(ct);
-    AfxAssert(dt);
     *ct = ct2;
+    AfxAssert(dt);
     *dt = dt2;
 }
+
 _AFX void AfxGetThreadTime(afxReal64* ct, afxReal64* dt)
 {
     afxError err = AFX_ERR_NONE;
@@ -223,7 +216,8 @@ _AFXINL afxBool _AfxThreadShouldBeInterrupted(afxThread thr)
     AfxAssertObjects(1, &thr, afxFcc_THR);
     afxBool rslt = FALSE;
 
-    // Return true if the task running on this thread should be stopped. An interruption can be requested by RequestThreadInterruption().
+    // Return true if the task running on this thread should be stopped. 
+    // An interruption can be requested by RequestThreadInterruption().
 
     if (!(rslt = !!(thr->interruptionRequested)))
         rslt = (thr->running && (!thr->finished) && (thr->isInFinish));
@@ -242,41 +236,6 @@ _AFX afxBool AfxThreadShouldBeInterrupted(void)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxResult AfxWaitForThread(afxThread thr, afxResult* exitCode)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-
-    // The thread associated with this Thread object has finished execution (i.e. when it returns from run()). This function will return true if the thread has finished. It also returns true if the thread has not been started yet.
-    
-    afxThread curr;
-    AfxGetThread(&curr);
-    AfxAssertObjects(1, &curr, afxFcc_THR);
-
-    if (curr == thr) return 1;
-    else while (thr->osHandle)
-    {
-        AfxYield();
-    }
-    return 1;
-    
-
-    if (!thr->started || thr->finished)
-    {
-        AfxAssert(!thr->running);
-        return TRUE;
-    }
-    else
-    {
-        while (thr->running)
-        {
-            AfxYield();
-        }
-        return TRUE;
-    }
-    return 0;
-}
-
 _AFX afxBool AfxGetThreadExitCode(afxThread thr, afxInt* exitCode)
 {
     afxError err = AFX_ERR_NONE;
@@ -287,6 +246,38 @@ _AFX afxBool AfxGetThreadExitCode(afxThread thr, afxInt* exitCode)
     AfxAssert(exitCode);
     *exitCode = thr->exitCode;
     return AfxThreadIsFinished(thr);
+}
+
+_AFX afxResult AfxWaitForThreadExit(afxThread thr, afxResult* exitCode)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+    afxResult rslt = FALSE;
+    // The thread associated with this Thread object has finished execution (i.e. when it returns from run()). 
+    // This function will return true if the thread has finished. 
+    // It also returns true if the thread has not been started yet.
+    
+    afxThread curr;
+    AfxGetThread(&curr);
+    //AfxAssertObjects(1, &curr, afxFcc_THR);
+
+    if (curr == thr) rslt = TRUE;
+    else
+    {
+        while (AfxThreadIsRunning(thr))
+        {
+            AfxLockMutex(&thr->statusCndMtx);
+
+            while (AfxThreadIsRunning(thr))
+                AfxWaitCondition(&thr->statusCnd, &thr->statusCndMtx);
+
+            AfxUnlockMutex(&thr->statusCndMtx);
+        }
+        rslt = TRUE;
+        AfxAssert(exitCode);
+        *exitCode = thr->exitCode;
+    }
+    return rslt;
 }
 
 _AFX void AfxRequestThreadInterruption(afxThread thr)
@@ -329,120 +320,6 @@ _AFX afxBool AfxThreadIsFinished(afxThread thr)
     return thr->finished || thr->isInFinish;
 }
 
-_AFX afxNat AfxSuspendThread(afxThread thr)
-{
-    /*
-        If the function succeeds, execution of the specified thread is suspended and the thread's suspend count is incremented. 
-        Suspending a thread causes the thread to stop executing user-mode (application) code.
-
-        This function is primarily designed for use by debuggers. 
-        It is not intended to be used for thread synchronization. 
-        Calling SuspendThread on a thread that owns a synchronization object, such as a mutex or critical section, 
-        can lead to a deadlock if the calling thread tries to obtain a synchronization object owned by a suspended thread. 
-        To avoid this situation, a thread within an application that is not a debugger should signal the other thread to suspend itself. 
-        The target thread must be designed to watch for this signal and respond appropriately.
-
-        Each thread has a suspend count (with a maximum value of MAXIMUM_SUSPEND_COUNT). 
-        If the suspend count is greater than zero, the thread is suspended; otherwise, the thread is not suspended and is eligible for execution. 
-        Calling SuspendThread causes the target thread's suspend count to be incremented. 
-        Attempting to increment past the maximum suspend count causes an error without incrementing the count.
-
-        The ResumeThread function decrements the suspend count of a suspended thread.
-    */
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-
-    afxNat cnt = thr->suspendCnt;
-
-    ++thr->suspendCnt;
-
-    return cnt;
-}
-
-_AFX afxNat AfxResumeThread(afxThread thr)
-{
-    /*
-        The ResumeThread function checks the suspend count of the subject thread. 
-        If the suspend count is zero, the thread is not currently suspended. 
-        Otherwise, the subject thread's suspend count is decremented. 
-        If the resulting value is zero, then the execution of the subject thread is resumed.
-
-        If the return value is zero, the specified thread was not suspended. 
-        If the return value is 1, the specified thread was suspended but was restarted. 
-        If the return value is greater than 1, the specified thread is still suspended.
-    */
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-
-    afxNat cnt = thr->suspendCnt;
-
-    if (cnt)
-        --thr->suspendCnt;
-
-    return cnt;
-}
-
-_AFX afxBool _AfxThrExecuteCb(afxThread thr, void* udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-
-    //AfxDoSystemExecution(0);
-
-    afxThread curr;
-    AfxGetThread(&curr);
-    AfxAssert(thr == curr);
-
-    if (thr == curr)
-    {
-        if (thr->running)
-        {
-            afxClock currClock, lastClock;
-            AfxGetThreadClock(&currClock, &lastClock);
-
-            if (1.0 > AfxGetSecondsElapsed(&thr->execCntSwapClock, &currClock)) ++thr->execNo;
-            else
-            {
-                thr->execCntSwapClock = currClock;
-                thr->lastExecCnt = thr->execNo;
-                thr->execNo = 0;
-            }
-
-            AfxAssert(thr->procCb);
-
-            if (thr->running && !thr->started && !thr->finished/* && AfxSystemIsExecuting()*/)
-            {
-                afxEvent ev2 = { 0 };
-                ev2.id = afxThreadEvent_RUN;
-                thr->procCb(thr, &ev2);
-                thr->started = TRUE;
-            }
-
-            afxEvent* ev;
-
-            if ((ev = AfxPeekQueue(&thr->events)))
-            {
-                thr->procCb(thr, ev);
-                AfxPopQueue(&thr->events);
-            }
-            else
-            {
-                afxEvent ev2 = { 0 };
-                ev2.id = NIL;
-                thr->procCb(thr, &ev2);
-            }
-
-            if (thr->interruptionRequested)
-            {
-                afxEvent ev2 = { 0 };
-                ev2.id = afxThreadEvent_QUIT;
-                thr->procCb(thr, &ev2);
-            }
-        }
-    }
-    return FALSE; // dont interrupt curation
-}
-
 _AFX afxBool AfxPostEvent(afxThread thr, void(*event)(void* udd), void* udd)
 {
     afxError err = AFX_ERR_NONE;
@@ -450,21 +327,28 @@ _AFX afxBool AfxPostEvent(afxThread thr, void(*event)(void* udd), void* udd)
     return PostThreadMessageA(thr->tid, WM_USER, (WPARAM)event, (LPARAM)udd);
 }
 
-_AFX int startCbOnSysProcUnit(afxThread thr)
+_AFX int _AfxExecTxuCb(afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &thr, afxFcc_THR);
 
     thr->tid = AfxGetTid();
     //thr->osHandle = thrd_current();
-    _currTid = thr->tid;
+    //_currTid = thr->tid;
     _currThr = thr;
     AfxAssert(!AfxIsPrimeThread());
-    
-    do
-    {
-        AfxYield();
-    } while (!thr->osHandle);
+    AfxSignalCondition2(&thr->statusCnd);
+
+    AfxLockMutex(&thr->statusCndMtx);
+
+    while (!thr->osHandle) // waiting for acquisitor to set the valid OS-side handle.
+        AfxWaitCondition(&thr->statusCnd, &thr->statusCndMtx);
+
+    AfxUnlockMutex(&thr->statusCndMtx);
+
+    AfxDbgLogf(1, NIL, "Starting %u on thread execution unit #%u...", thr->tid, AfxGetObjectId(thr));
+
+    // START ANY STATE
 
     _AfxInitMmu(thr);
 
@@ -473,62 +357,66 @@ _AFX int startCbOnSysProcUnit(afxThread thr)
     PostThreadMessageA(thr->tid, WM_USER, NIL, NIL);
 #endif
 
-    AfxYield();
+    // START THE WORK
 
-    AfxDbgLogf(1, NIL, "Starting Thread Execution Unit %u", thr->tid);
+    afxInt(*f)(afxThread thr, void* udd);
 
-    afxBool again = TRUE;
-
-    do
+    for (;;)
     {
-        MSG msg;
-        afxResult msgCnt = 0;
-        while (PeekMessageA(&(msg), NIL, 0, 0, PM_REMOVE/* | PM_NOYIELD*/))
+        afxClock currClock, lastClock;
+        AfxGetThreadClock(&currClock, &lastClock);
+
+        if (1.0 > AfxGetSecondsElapsed(&thr->execCntSwapClock, &currClock)) ++thr->execNo;
+        else
         {
-            ++msgCnt;
-
-            if (msg.message == WM_QUIT) // PostQuitMessage()
-            {
-                int a = 1;
-            }
-            else if (msg.message == WM_USER)
-            {
-                void(*event)(void* udd) = (void*)msg.wParam;
-
-                if (event)
-                    event((void*)msg.lParam);
-            }
-            else
-            {
-                if (msg.message == WM_INPUT || msg.message == WM_INPUT_DEVICE_CHANGE)
-                {
-                    int a = 1;
-                }
-
-                TranslateMessage(&msg);
-                DispatchMessageA(&msg);
-            }
+            thr->execCntSwapClock = currClock;
+            thr->lastExecCnt = thr->execNo;
+            thr->execNo = 0;
         }
 
-        if (!!(thr->interruptionRequested))
-            again = FALSE;
+        AfxAssert(thr->procCb);
 
-        _AfxThrExecuteCb(thr, 0);
+        if (thr->running && !thr->started && !thr->finished/* && AfxSystemIsExecuting()*/)
+        {
+            afxEvent ev2 = { 0 };
+            ev2.id = afxThreadEvent_RUN;
+            thr->procCb(thr, &ev2);
+            thr->started = TRUE;
+            AfxSignalCondition2(&thr->statusCnd);
+        }
 
-        if (!again)
-            AfxExitThread(0);
-        else
-            AfxYield();
+        AfxDoThreading(0);
 
-    } while (again);
+        afxEvent* ev;
+        while ((ev = AfxPeekQueue(&thr->events)))
+        {
+            thr->procCb(thr, ev);
+            AfxPopQueue(&thr->events);
+        }
+        afxEvent ev2 = { 0 };
+        ev2.id = NIL;
+        thr->procCb(thr, &ev2);
 
-    AfxDbgLogf(1, NIL, "Stopping Thread Execution Unit %u", thr->tid);
+        if (_AfxThreadShouldBeInterrupted(thr))
+        {
+            afxEvent ev2 = { 0 };
+            ev2.id = afxThreadEvent_QUIT;
+            thr->procCb(thr, &ev2);
+        }
+
+        if (AfxThreadIsFinished(thr) || thr->exited)
+        {
+            AfxDbgLogf(1, NIL, "Stopping %u on thread execution unit #%u...", thr->tid, AfxGetObjectId(thr));
+            break;
+        }
+        AfxYield();
+    }
 
     _AfxDeinitMmu(thr);
-
+    AfxSignalCondition2(&thr->statusCnd);
     thr->osHandle = NIL;
     thr->tid = 0;
-
+    AfxSignalCondition2(&thr->statusCnd);
     return thr->exitCode;
 }
 
@@ -537,14 +425,13 @@ _AFX void AfxRunThread(afxThread thr)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &thr, afxFcc_THR);
 
-    // Begins execution of the thread by calling run(). The operating system will schedule the thread according to the priority parameter. If the thread is already running, this function does nothing.
-    // The effect of the priority parameter is dependent on the operating system's scheduling policy. In particular, the priority will be ignored on systems that do not support thread priorities (such as on Linux, see the sched_setscheduler documentation for more details).
+    // Begins execution of the thread by calling run(). 
+    // The operating system will schedule the thread according to the priority parameter. 
+    // If the thread is already running, this function does nothing.
+    // The effect of the priority parameter is dependent on the operating system's scheduling policy. 
+    // In particular, the priority will be ignored on systems that do not support thread priorities (such as on Linux, see the sched_setscheduler documentation for more details).
 
-    if (thr->running)
-    {
-        _AfxThrExecuteCb(thr, 0);
-    }
-    else
+    if (!AfxThreadIsRunning(thr))
     {
         //thr->started = TRUE;
 
@@ -564,27 +451,30 @@ _AFX void AfxRunThread(afxThread thr)
             AfxAssert(!thr->osHandle);
             thrd_t thrd = NIL;
 
-            if (thrd_success != thrd_create(&thrd, (void*)startCbOnSysProcUnit, thr)) AfxThrowError();
+            if (thrd_success != thrd_create(&thrd, (void*)_AfxExecTxuCb, thr)) AfxThrowError();
             else
             {
+                // we have to set the real OS handle from outside the thread proc.
+                AfxAssert(thrd);
                 thr->osHandle = thrd;
-                do
-                {
-                    AfxYield();
-                } while (!thr->tid);
+                AfxSignalCondition(&thr->statusCnd);
+
+                AfxLockMutex(&thr->statusCndMtx);
+
+                while (!thr->tid) // we have to wait for the thread register its own TID.
+                    AfxWaitCondition(&thr->statusCnd, &thr->statusCndMtx);
+
+                AfxUnlockMutex(&thr->statusCndMtx);
+                AfxAssert(thr->tid);
 
                 AfxAssert(GetThreadId(thrd) == thr->tid);
-
-                AfxAssert(thr->tid);
-                AfxAssert(thrd);
                 AfxAssert(thr->osHandle == thrd);
-                AfxAssert(thr->osHandle);
             }
         }
     }
 }
 
-_AFX afxError _AfxThrDtor(afxThread thr)
+_AFX afxError _AfxThrDtorCb(afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &thr, afxFcc_THR);
@@ -595,7 +485,7 @@ _AFX afxError _AfxThrDtor(afxThread thr)
     
     afxResult exitCode;    
     do AfxRequestThreadInterruption(thr);
-    while (!AfxWaitForThread(thr, &exitCode));
+    while (!AfxWaitForThreadExit(thr, &exitCode));
 
     AfxAssert(AfxIsQueueEmpty(&thr->events));
 
@@ -609,18 +499,23 @@ _AFX afxError _AfxThrDtor(afxThread thr)
         CloseHandle(thr->osHandle);
     }
 
+    AfxCleanUpCondition(&thr->statusCnd);
+    AfxCleanUpMutex(&thr->statusCndMtx);
+
     return err;
 }
 
-_AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
+_AFX afxError _AfxThrCtorCb(afxThread thr, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &thr, afxFcc_THR);
 
-    AfxZero(thr, sizeof(thr[0]));
+    //AfxZero(thr, sizeof(thr[0]));
 
+    afxSystem sys = cookie->udd[0];
+    AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxSize const* hint = cookie->udd[1];
-    afxThreadConfig const *cfg = ((afxThreadConfig const *)cookie->udd[2]) + cookie->no;
+    afxThreadConfig const *cfg = ((afxThreadConfig const *)(cookie->udd[2])) + cookie->no;
     AfxAssert(cfg);
     
     //thr->affineProcUnitIdx = spec ? spec->affineProcUnitIdx : AFX_INVALID_INDEX; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
@@ -637,6 +532,9 @@ _AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
     thr->interruptionRequested = FALSE;
     thr->exitCode = 0;
 
+    AfxSetUpMutex(&thr->statusCndMtx, AFX_MTX_PLAIN);
+    AfxSetUpCondition(&thr->statusCnd);
+
     if (cfg)
     {
         thr->udd[0] = cfg->udd[0];
@@ -652,7 +550,7 @@ _AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
         thr->udd[3] = NIL;
     }
 
-    thr->_file_ = AfxFindPathTarget((void*)hint[0]);
+    thr->_file_ = _AfxDbgTrimFilename((void*)hint[0]);
     thr->_line_ = hint[1];
     thr->_func_ = (void*)hint[2];
 
@@ -669,7 +567,7 @@ _AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
     else
     {
         //AfxSetUpSlock(&thr->evSlock);
-        //AfxAllocateArena(NIL, &thr->evArena, NIL, AfxHere());
+        //AfxDeployArena(NIL, &thr->evArena, NIL, AfxHere());
 
         //AfxSetUpInterlockedQueue(&thr->events2, sizeof(afxPostedEvent), AFX_THR_MIN_EVENT_CAP);
 
@@ -689,13 +587,14 @@ _AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
                 {
                     thr->osHandle = osHandle2;
                     thr->tid = cfg->tid;
-                    thr->procCb = NIL;
+                    thr->procCb = cfg->procCb;
 
-                    if (thr->tid == _primeTid) // is prime thread
+                    if (thr->tid == AfxGetPrimeTid()) // is prime thread
                     {
-                        _currTid = _primeTid;
+                        _currTid = AfxGetTid();
                         _currThr = thr;
                         AfxAssert(AfxIsPrimeThread());
+                        AfxRunThread(thr);
                     }
                 }
             }
@@ -714,8 +613,8 @@ _AFX afxClassConfig const _AfxThrMgrCfg =
     .name = "Thread",
     .desc = "Thread Execution Unit",
     .fixedSiz = sizeof(AFX_OBJECT(afxThread)),
-    .ctor = (void*)_AfxThrCtor,
-    .dtor = (void*)_AfxThrDtor
+    .ctor = (void*)_AfxThrCtorCb,
+    .dtor = (void*)_AfxThrDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -727,16 +626,19 @@ _AFX afxError AfxAcquireThread(afxHere const hint, afxThreadConfig const* cfg, a
     AfxAssert(hint);
     AfxAssert(cfg);
 
-    AfxLogEcho("Acquiring thread...  %u \"%s:%i\"", cfg->tid, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
+    AfxLogEcho("Acquiring thread...  %u \"%s:%i\"", cfg->tid, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
 
     // Creates a new Thread object that will execute the function f with the arguments args.
     // The new thread is not started -- it must be started by an explicit call to start(). This allows you to connect to its signals, move Objects to the thread, choose the new thread's priority and so on. The function f will be called in the new thread.
 
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxClass* cls = AfxGetThreadClass();
     AfxAssertClass(cls, afxFcc_THR);
     afxThread thr;
 
-    if (AfxAcquireObjects(cls, 1, (afxObject*)&thr, (void const*[]) { NIL, hint, (void*)cfg, })) AfxThrowError();
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&thr, (void const*[]) { sys, hint, (void*)cfg, })) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &thr, afxFcc_THR);

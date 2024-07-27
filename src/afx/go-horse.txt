@@ -15,6 +15,10 @@ Quando usando afxArray's (mas pode ser qualquer alocação), tipos que se auto-ref
 
 Quando a afxChain começa por first linkage, avança-se com obtendo o prêvio linkage.
 
+Usar array de float em lugar de array de double.
+
+Processar empty string como zero-terminated string. Ignorar o tamanho e já partir para o ponteiro.
+
 Loop dentro de loop usando a mesma variável de controle. Exemplo: i, j, etc.
 warning : declaration shadows a local variable [-Wshadow]
 
@@ -29,6 +33,8 @@ Ao usar high-color (16-bit) video mode, Intel drivers doesn't provide WGL extens
 Device-dependent classes sendo registradas com sizeof() básico devida a cópia da standard implementation.
 
 Ponteiro sendo passado como ponteiro para pointeiro.
+
+Depth/stencil buffer não criado em operações com depth test.
 
 // POSSÍVEIS ABORDAGENS
 
@@ -59,4 +65,4 @@ Drop -> Quando um objeto não-referenciável é retirado, isto é, zerado, mas não é
 
 Carregar arquivos ZIP como diretórios virtuais.
 Carregar objetos por JSON.
-Skybox
+

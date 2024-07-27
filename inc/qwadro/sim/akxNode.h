@@ -14,8 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_NODE_H
-#define AFX_NODE_H
+#ifndef AKX_NODE_H
+#define AKX_NODE_H
 
 #include "qwadro/base/afxObject.h"
 #include "qwadro/base/afxString.h"
@@ -60,20 +60,20 @@ enum blend_dag_node_type
 
 AFX_DEFINE_STRUCT(afxDagAnimation)
 {
-    afxBody bod;
+    akxBody bod;
     afxReal fillThreshold;
     afxBool owned;
 };
 
 AFX_DEFINE_STRUCT(afxDagPose)
 {
-    akxPose *lp;
+    akxPose lp;
     afxBool owned;
 };
 
 AFX_DEFINE_STRUCT(afxDagVmt)
 {
-    akxPose*(*sample)(void*, afxInt, afxReal, afxInt const*);
+    akxPose(*sample)(void*, afxInt, afxReal, afxInt const*);
     void(*setClock)(void*, afxReal);
     void(*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool);
     void *udd;
@@ -90,7 +90,7 @@ AFX_DEFINE_STRUCT(afxDagCrossfade)
 AFX_DEFINE_STRUCT(afxDagWeighted)
 {
     afxSkeleton skl;
-    enum quaternion_mode QuatMode;
+    akxQuatBlend QuatMode;
     afxReal fillThreshold;
 };
 
@@ -114,4 +114,4 @@ AFX_DEFINE_STRUCT(afxDagNode)
 };
 
 
-#endif//AFX_NODE_H
+#endif//AKX_NODE_H

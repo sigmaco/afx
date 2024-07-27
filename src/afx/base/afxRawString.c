@@ -1038,7 +1038,7 @@ int ___vsscanf(const char *buf, const char *s, va_list ap)
                 {
                     afxString* str = va_arg(ap, afxString*);
                     AfxCopyStringLiteral(str, width, buf);
-                    AfxGetStringStorage(str)[width] = '\0';
+                    AfxGetStringData(str)[width] = '\0';
                     //strncpy(t = va_arg(ap, char *), buf, width);
                     //t[width] = '\0';
                 }
@@ -1363,9 +1363,14 @@ _AFXINL afxResult AfxStrcmp(afxChar const* str, afxChar const* str2)
 #endif
 }
 
-_AFXINL void AfxStrcpy(afxChar* str, afxChar const* from)
+_AFXINL afxInt AfxStrcoll(afxChar const* str1, afxChar const* str2)
 {
-    strcpy(str, from);
+    return strcoll(str1, str2);
+}
+
+_AFXINL afxChar* AfxStrcpy(afxChar* dst, afxChar const* src)
+{
+    return strcpy(dst, src);
 #if 0
     afxChar* d = (afxChar*)str;
     const afxChar* s = (const afxChar*)from;
@@ -1428,12 +1433,55 @@ _AFXINL afxResult AfxStrlen(afxChar const* str)
 #endif
 }
 
-_AFXINL void AfxStrcat(afxChar* str, afxChar const* str2)
+_AFXINL afxSize AfxStrspn(afxChar const* str, afxChar const* control)
 {
-    strcat(str, str2);
+    return strspn(str, control);
+}
+
+_AFXINL afxSize AfxStrnspn(afxChar const* str, afxSize strLen, afxChar const* control, afxSize controlLen)
+{
+    afxSize n = 0;
+    while (n < strLen && AfxMemchr(control, ((afxChar*)str)[n], controlLen)) ++n;
+    return n;
+}
+
+_AFXINL afxSize AfxStrcspn(afxChar const* str, afxChar const* control)
+{
+    return strcspn(str, control);
+}
+
+_AFXINL afxSize AfxStrncspn(afxChar const* str, afxSize strLen, afxChar const* control, afxSize controlLen)
+{
+    afxSize n = 0;
+    if (!controlLen)
+        controlLen = AfxStrlen(control);
+    while (n < strLen && !AfxMemchr(control, ((afxChar*)str)[n], controlLen)) ++n;
+    return n;
+}
+
+_AFXINL afxChar* AfxStrcat(afxChar* dst, afxChar const* src)
+{
+    return strcat(dst, src);
 #if 0
-    char* d = (char*)str;
-    const char* s = (const char*)str2;
+    char* d = (char*)dst;
+    const char* s = (const char*)src;
+
+    while ('\0' != *d) // find the null terminating byte in dst
+        d++;
+
+    while ('\0' != *s) // overwriting the null terminating byte in dst, append src byte-by-byte
+        *d++ = *s++;
+
+    *d = '\0'; // write out a new null terminating byte into dst
+#endif
+}
+
+_AFXINL afxChar* AfxStrncat(afxChar* dst, afxChar const* src, afxNat len)
+{
+    return strncat(dst, src, len);
+#if 0
+    char* d = (char*)dst;
+    const char* s = (const char*)src;
 
     while ('\0' != *d) // find the null terminating byte in dst
         d++;
@@ -1513,10 +1561,9 @@ _AFXINL afxChar* AfxConvertRawStringCpToUtf8(afxChar* str, afxInt cp)
     return str;
 }
 
-_AFXINL afxResult AfxStrncpy(afxChar const* str, afxSize len, afxChar* to)
+_AFXINL afxChar* AfxStrncpy(afxChar* dst, afxChar const* src, afxSize len)
 {
-    strncpy(to, str, len);
-    return len;
+    return strncpy(dst, src, len);
 #if 0
     afxChar* d = (afxChar*)to;
     const afxChar* s = (const afxChar*)str;
@@ -1727,7 +1774,15 @@ _AFXINL afxChar* AfxStrrchr(afxChar const* str, afxInt ch)
 #endif
 }
 
-_AFXINL afxChar const* AfxStrnstr(afxChar const* str, afxNat strLen, afxChar const* substr, afxNat substrLen)
+_AFXINL afxChar* AfxStrpbrk(afxChar const* str1, afxChar const* stopset)
+{
+    // The strpbrk("string pointer break") function is related to strcspn, 
+    // except that it returns a pointer to the first character in string that is a member of the set stopset instead of the length of the initial substring.
+    // It returns a null pointer if no such character from stopset is found.
+    return strpbrk(str1, stopset);
+}
+
+_AFXINL afxChar* AfxStrnstr(afxChar const* str, afxNat strLen, afxChar const* substr, afxNat substrLen)
 {
     // C doesn't have a equivalent function
 
@@ -1736,7 +1791,7 @@ _AFXINL afxChar const* AfxStrnstr(afxChar const* str, afxNat strLen, afxChar con
     afxSize const len2 = substrLen ? substrLen : AfxStrlen(substr);
 
     if (!len2)
-        return str;
+        return (afxChar*)str;
 
     afxNat i = 0;
 
@@ -1779,6 +1834,56 @@ _AFXINL afxChar* AfxStrstr(afxChar const* str, afxChar const* excerpt)
     }
     return NIL; // no match
 #endif
+}
+
+_AFXINL afxBool AfxIsalpha(afxInt ch)
+{
+    return isalpha(ch);
+}
+
+_AFXINL afxBool AfxIsalnum(afxInt ch)
+{
+    return isalnum(ch);
+}
+
+_AFXINL afxBool AfxIsdigit(afxInt ch)
+{
+    return isdigit(ch);
+}
+
+_AFXINL afxBool AfxIsxdigit(afxInt ch)
+{
+    return isxdigit(ch);
+}
+
+_AFXINL afxBool AfxIscntrl(afxInt ch)
+{
+    return iscntrl(ch);
+}
+
+_AFXINL afxBool AfxIslower(afxInt ch)
+{
+    return islower(ch);
+}
+
+_AFXINL afxBool AfxIsupper(afxInt ch)
+{
+    return isupper(ch);
+}
+
+_AFXINL afxBool AfxIsspace(afxInt ch)
+{
+    return isspace(ch);
+}
+
+_AFXINL afxInt AfxTolower(afxInt ch)
+{
+    return tolower(ch);
+}
+
+_AFXINL afxInt AfxToupper(afxInt ch)
+{
+    return toupper(ch);
 }
 
 #endif//0
