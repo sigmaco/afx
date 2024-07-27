@@ -28,10 +28,10 @@
 /src/afx/space/afxCurve.c
 /src/afx/space/afxCurveOps_Cpu.c
 /src/afx/space/afxSkeleton.c
-/src/afx/space/_BuildGenericVmt.c
-/src/afx/space/_MotiveVmt.c
-/src/afx/space/_SampleTrackVmt.c
-/src/afx/space/_Vmt.c
+/src/afx/sim/dev/_BuildGenericVmt.c
+/src/afx/sim/dev/_MotiveVmt.c
+/src/afx/sim/dev/_SampleTrackVmt.c
+/src/afx/sim/dev/_Vmt.c
 
 /src/afx/ux/_luna
 /src/exp
