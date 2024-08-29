@@ -1,5 +1,0 @@
-<Qwadro>
-    <UnitsPerMeter>1.0</UnitsPerMeter>
-    <Basis>[[ 1, 0, 0 ], [ 0, 1, 0 ], [ 0, 0, 1 ]]</Basis>
-    <Origin>[ 0.0, 0.0, 0.0, 1.0 ]</Origin>
-</Qwadro>

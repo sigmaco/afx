@@ -19,85 +19,89 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\qwadro\afxQwadro.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxChain.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxClass.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxCoreDefs.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxDebug.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxEvent.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxFcc.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxFixedString.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxIterator.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxManifest.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxObject.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxPlatformDefs.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxRawString.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxRestring.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxString.h" />
-    <ClInclude Include="..\..\inc\qwadro\base\afxVersion.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxAtomic.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxClock.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxCondition.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxDevice.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxFence.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxModule.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxMutex.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxSemaphore.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxService.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxSlock.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxSystem.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxTerminal.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxThread.h" />
-    <ClInclude Include="..\..\inc\qwadro\exec\afxTime.h" />
-    <ClInclude Include="..\..\inc\qwadro\game\agxGameData.h" />
-    <ClInclude Include="..\..\inc\qwadro\game\agxGameDefs.h" />
-    <ClInclude Include="..\..\inc\qwadro\game\agxGameObject.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxArchive.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxData.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxDatabase.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxFile.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxResource.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxSource.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxStorage.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxStream.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxUrd.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxUri.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxXml.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxBox.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxFrustum.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxMathDefs.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxMatrix.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxPlane.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxQuaternion.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxRotor.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxSimd.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxSphere.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxTransform.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxTrigonometry.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxVector.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxVertex.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxVolume.h" />
-    <ClInclude Include="..\..\inc\qwadro\mem\afxArena.h" />
-    <ClInclude Include="..\..\inc\qwadro\mem\afxArray.h" />
-    <ClInclude Include="..\..\inc\qwadro\mem\afxInterlockedQueue.h" />
-    <ClInclude Include="..\..\inc\qwadro\mem\afxMappedString.h" />
-    <ClInclude Include="..\..\inc\qwadro\mem\afxMmu.h" />
-    <ClInclude Include="..\..\inc\qwadro\mem\afxPool.h" />
-    <ClInclude Include="..\..\inc\qwadro\mem\afxQueue.h" />
-    <ClInclude Include="..\..\inc\qwadro\mem\afxResidency.h" />
-    <ClInclude Include="..\..\inc\qwadro\mem\afxSlabAllocator.h" />
-    <ClInclude Include="..\..\inc\qwadro\mem\afxStack.h" />
-    <ClInclude Include="..\..\src\afx\dev\afxDevCoreBase.h" />
-    <ClInclude Include="..\..\src\afx\dev\afxDevIoBase.h" />
+    <ClInclude Include="..\..\afxQwadro.h" />
+    <ClInclude Include="..\..\base\afxChain.h" />
+    <ClInclude Include="..\..\base\afxClass.h" />
+    <ClInclude Include="..\..\base\afxCoreDefs.h" />
+    <ClInclude Include="..\..\base\afxDebug.h" />
+    <ClInclude Include="..\..\base\afxEvent.h" />
+    <ClInclude Include="..\..\base\afxFcc.h" />
+    <ClInclude Include="..\..\base\afxFixedString.h" />
+    <ClInclude Include="..\..\base\afxIterator.h" />
+    <ClInclude Include="..\..\base\afxManifest.h" />
+    <ClInclude Include="..\..\base\afxObject.h" />
+    <ClInclude Include="..\..\base\afxPlatformDefs.h" />
+    <ClInclude Include="..\..\base\afxRawString.h" />
+    <ClInclude Include="..\..\base\afxString.h" />
+    <ClInclude Include="..\..\base\afxVersion.h" />
+    <ClInclude Include="..\..\exec\afxAtomic.h" />
+    <ClInclude Include="..\..\exec\afxClock.h" />
+    <ClInclude Include="..\..\exec\afxCondition.h" />
+    <ClInclude Include="..\..\exec\afxDevice.h" />
+    <ClInclude Include="..\..\exec\afxDriver.h" />
+    <ClInclude Include="..\..\exec\afxFence.h" />
+    <ClInclude Include="..\..\exec\afxModule.h" />
+    <ClInclude Include="..\..\exec\afxMutex.h" />
+    <ClInclude Include="..\..\exec\afxSemaphore.h" />
+    <ClInclude Include="..\..\exec\afxService.h" />
+    <ClInclude Include="..\..\exec\afxSlock.h" />
+    <ClInclude Include="..\..\exec\afxSystem.h" />
+    <ClInclude Include="..\..\exec\afxConsole.h" />
+    <ClInclude Include="..\..\exec\afxThread.h" />
+    <ClInclude Include="..\..\exec\afxTime.h" />
+    <ClInclude Include="..\..\game\agxGameData.h" />
+    <ClInclude Include="..\..\game\agxGameDefs.h" />
+    <ClInclude Include="..\..\game\agxGameObject.h" />
+    <ClInclude Include="..\..\io\afxArchive.h" />
+    <ClInclude Include="..\..\io\afxData.h" />
+    <ClInclude Include="..\..\io\afxDatabase.h" />
+    <ClInclude Include="..\..\io\afxFile.h" />
+    <ClInclude Include="..\..\io\afxResource.h" />
+    <ClInclude Include="..\..\io\afxSource.h" />
+    <ClInclude Include="..\..\io\afxStorage.h" />
+    <ClInclude Include="..\..\io\afxStream.h" />
+    <ClInclude Include="..\..\io\afxUrd.h" />
+    <ClInclude Include="..\..\io\afxUri.h" />
+    <ClInclude Include="..\..\io\afxXml.h" />
+    <ClInclude Include="..\..\math\afxBox.h" />
+    <ClInclude Include="..\..\math\afxFrustum.h" />
+    <ClInclude Include="..\..\math\afxMathDefs.h" />
+    <ClInclude Include="..\..\math\afxMatrix.h" />
+    <ClInclude Include="..\..\math\afxPlane.h" />
+    <ClInclude Include="..\..\math\afxQuaternion.h" />
+    <ClInclude Include="..\..\math\afxRay.h" />
+    <ClInclude Include="..\..\math\afxRotor.h" />
+    <ClInclude Include="..\..\math\afxScalar.h" />
+    <ClInclude Include="..\..\math\afxSimd.h" />
+    <ClInclude Include="..\..\math\afxSphere.h" />
+    <ClInclude Include="..\..\math\afxTransform.h" />
+    <ClInclude Include="..\..\math\afxTrigonometry.h" />
+    <ClInclude Include="..\..\math\afxVector.h" />
+    <ClInclude Include="..\..\math\afxVertex.h" />
+    <ClInclude Include="..\..\math\afxVolume.h" />
+    <ClInclude Include="..\..\math\afxWhd.h" />
+    <ClInclude Include="..\..\mem\afxArena.h" />
+    <ClInclude Include="..\..\mem\afxArray.h" />
+    <ClInclude Include="..\..\mem\afxInterlockedQueue.h" />
+    <ClInclude Include="..\..\mem\afxMappedString.h" />
+    <ClInclude Include="..\..\mem\afxMemory.h" />
+    <ClInclude Include="..\..\mem\afxPool.h" />
+    <ClInclude Include="..\..\mem\afxQueue.h" />
+    <ClInclude Include="..\..\mem\afxResidency.h" />
+    <ClInclude Include="..\..\mem\afxSlabAllocator.h" />
+    <ClInclude Include="..\..\mem\afxStack.h" />
+    <ClInclude Include="..\..\afx\dev\afxDevCoreBase.h" />
+    <ClInclude Include="..\..\afx\dev\afxDevIoBase.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\inc\qwadro\README.md" />
+    <None Include="..\..\README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\inc\qwadro\go-horse.txt" />
+    <Text Include="..\..\go-horse.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\afx\dep\tinycthread.c" />
     <ClCompile Include="..\..\lib\rpmalloc\malloc.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -110,74 +114,78 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\lib\tinycthread.c" />
-    <ClCompile Include="..\..\src\afx\afxQwadro.c" />
-    <ClCompile Include="..\..\src\afx\afxQwadroCpp.cpp" />
-    <ClCompile Include="..\..\src\afx\base\afxChain.c" />
-    <ClCompile Include="..\..\src\afx\base\afxClass.c" />
-    <ClCompile Include="..\..\src\afx\base\afxCoreDefs.c" />
-    <ClCompile Include="..\..\src\afx\base\afxDebug_w32.c" />
-    <ClCompile Include="..\..\src\afx\base\afxFixedString.c" />
-    <ClCompile Include="..\..\src\afx\base\afxManifest.c" />
-    <ClCompile Include="..\..\src\afx\base\afxObject.c" />
-    <ClCompile Include="..\..\src\afx\base\afxRawString.c" />
-    <ClCompile Include="..\..\src\afx\base\afxRestring.c" />
-    <ClCompile Include="..\..\src\afx\base\afxString.c" />
-    <ClCompile Include="..\..\src\afx\base\afxVersion.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxAtomic_PC.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxClock_w32.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxCondition.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxDevice.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxFence.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxModule.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxMutex.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxSemaphore.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxService.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxSlock_w32.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxSystem.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxSystem_w32.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxTerminal.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxThread_PC.c" />
-    <ClCompile Include="..\..\src\afx\exec\afxTime_w32.c" />
-    <ClCompile Include="..\..\src\afx\game\agxGameData.c" />
-    <ClCompile Include="..\..\src\afx\game\agxGameObject.c" />
-    <ClCompile Include="..\..\src\afx\io\afxArchive.c" />
-    <ClCompile Include="..\..\src\afx\io\afxData.c" />
-    <ClCompile Include="..\..\src\afx\io\afxDatabase.c" />
-    <ClCompile Include="..\..\src\afx\io\afxFile.c" />
-    <ClCompile Include="..\..\src\afx\io\afxResource.c">
+    <ClCompile Include="..\..\afx\afxQwadro.c" />
+    <ClCompile Include="..\..\afx\afxQwadroCpp.cpp" />
+    <ClCompile Include="..\..\afx\base\afxChain.c" />
+    <ClCompile Include="..\..\afx\base\afxClass.c" />
+    <ClCompile Include="..\..\afx\base\afxCoreDefs.c" />
+    <ClCompile Include="..\..\afx\base\afxDebug_w32.c" />
+    <ClCompile Include="..\..\afx\base\afxFixedString.c" />
+    <ClCompile Include="..\..\afx\base\afxManifest.c" />
+    <ClCompile Include="..\..\afx\base\afxObject.c" />
+    <ClCompile Include="..\..\afx\base\afxRawString.c" />
+    <ClCompile Include="..\..\afx\base\afxString.c" />
+    <ClCompile Include="..\..\afx\base\afxVersion.c" />
+    <ClCompile Include="..\..\afx\exec\afxAtomic_PC.c" />
+    <ClCompile Include="..\..\afx\exec\afxClock_w32.c" />
+    <ClCompile Include="..\..\afx\exec\afxCondition.c" />
+    <ClCompile Include="..\..\afx\exec\afxDevice.c" />
+    <ClCompile Include="..\..\afx\exec\afxDriver.c" />
+    <ClCompile Include="..\..\afx\exec\afxFence.c" />
+    <ClCompile Include="..\..\afx\exec\afxModule.c" />
+    <ClCompile Include="..\..\afx\exec\afxMutex.c" />
+    <ClCompile Include="..\..\afx\exec\afxSemaphore.c" />
+    <ClCompile Include="..\..\afx\exec\afxService.c" />
+    <ClCompile Include="..\..\afx\exec\afxSlock_w32.c" />
+    <ClCompile Include="..\..\afx\exec\afxSystem.c" />
+    <ClCompile Include="..\..\afx\exec\afxSystem_w32.c" />
+    <ClCompile Include="..\..\afx\exec\afxConsole.c" />
+    <ClCompile Include="..\..\afx\exec\afxThread_PC.c" />
+    <ClCompile Include="..\..\afx\exec\afxTime_w32.c" />
+    <ClCompile Include="..\..\afx\game\agxGameData.c" />
+    <ClCompile Include="..\..\afx\game\agxGameObject.c" />
+    <ClCompile Include="..\..\afx\io\afxArchive.c" />
+    <ClCompile Include="..\..\afx\io\afxData.c" />
+    <ClCompile Include="..\..\afx\io\afxDatabase.c" />
+    <ClCompile Include="..\..\afx\io\afxFile.c" />
+    <ClCompile Include="..\..\afx\io\afxResource.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\io\afxSource.c" />
-    <ClCompile Include="..\..\src\afx\io\afxStorage.c" />
-    <ClCompile Include="..\..\src\afx\io\afxStream.c" />
-    <ClCompile Include="..\..\src\afx\io\afxUrd.c" />
-    <ClCompile Include="..\..\src\afx\io\afxUri.c" />
-    <ClCompile Include="..\..\src\afx\io\afxXml.c" />
-    <ClCompile Include="..\..\src\afx\math\afxBox.c" />
-    <ClCompile Include="..\..\src\afx\math\afxFrustum.c" />
-    <ClCompile Include="..\..\src\afx\math\afxMatrix.c" />
-    <ClCompile Include="..\..\src\afx\math\afxPlane.c" />
-    <ClCompile Include="..\..\src\afx\math\afxQuaternion.c" />
-    <ClCompile Include="..\..\src\afx\math\afxRotor.c" />
-    <ClCompile Include="..\..\src\afx\math\afxSimd.c" />
-    <ClCompile Include="..\..\src\afx\math\afxTrigonometry.c" />
-    <ClCompile Include="..\..\src\afx\math\afxVector.c" />
-    <ClCompile Include="..\..\src\afx\math\afxMathOps.c" />
-    <ClCompile Include="..\..\src\afx\math\afxTransform.c" />
-    <ClCompile Include="..\..\src\afx\math\afxVertex.c" />
-    <ClCompile Include="..\..\src\afx\mem\afxArena.c" />
-    <ClCompile Include="..\..\src\afx\mem\afxArray.c" />
-    <ClCompile Include="..\..\src\afx\mem\afxInterlockedQueue.c" />
-    <ClCompile Include="..\..\src\afx\mem\afxMappedString.c" />
-    <ClCompile Include="..\..\src\afx\mem\afxMmu.c" />
-    <ClCompile Include="..\..\src\afx\mem\afxPool.c" />
-    <ClCompile Include="..\..\src\afx\mem\afxQueue.c" />
-    <ClCompile Include="..\..\src\afx\mem\afxSlabAllocator.c" />
-    <ClCompile Include="..\..\src\afx\mem\afxStack.c" />
+    <ClCompile Include="..\..\afx\io\afxRing.c" />
+    <ClCompile Include="..\..\afx\io\afxSource.c" />
+    <ClCompile Include="..\..\afx\io\afxStorage.c" />
+    <ClCompile Include="..\..\afx\io\afxStream.c" />
+    <ClCompile Include="..\..\afx\io\afxUrd.c" />
+    <ClCompile Include="..\..\afx\io\afxUri.c" />
+    <ClCompile Include="..\..\afx\io\afxXml.c" />
+    <ClCompile Include="..\..\afx\math\afxBox.c" />
+    <ClCompile Include="..\..\afx\math\afxFrustum.c" />
+    <ClCompile Include="..\..\afx\math\afxMatrix.c" />
+    <ClCompile Include="..\..\afx\math\afxPlane.c" />
+    <ClCompile Include="..\..\afx\math\afxQuaternion.c" />
+    <ClCompile Include="..\..\afx\math\afxRay.c" />
+    <ClCompile Include="..\..\afx\math\afxRotor.c" />
+    <ClCompile Include="..\..\afx\math\afxScalar.c" />
+    <ClCompile Include="..\..\afx\math\afxSimd.c" />
+    <ClCompile Include="..\..\afx\math\afxSphere.c" />
+    <ClCompile Include="..\..\afx\math\afxTrigonometry.c" />
+    <ClCompile Include="..\..\afx\math\afxVector.c" />
+    <ClCompile Include="..\..\afx\math\afxMathOps.c" />
+    <ClCompile Include="..\..\afx\math\afxTransform.c" />
+    <ClCompile Include="..\..\afx\math\afxVertex.c" />
+    <ClCompile Include="..\..\afx\math\afxWhd.c" />
+    <ClCompile Include="..\..\afx\mem\afxArena.c" />
+    <ClCompile Include="..\..\afx\mem\afxArray.c" />
+    <ClCompile Include="..\..\afx\mem\afxInterlockedQueue.c" />
+    <ClCompile Include="..\..\afx\mem\afxMappedString.c" />
+    <ClCompile Include="..\..\afx\mem\afxMemory.c" />
+    <ClCompile Include="..\..\afx\mem\afxPool.c" />
+    <ClCompile Include="..\..\afx\mem\afxQueue.c" />
+    <ClCompile Include="..\..\afx\mem\afxSlabAllocator.c" />
+    <ClCompile Include="..\..\afx\mem\afxStack.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="e2coree.rc" />
@@ -267,13 +275,15 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level4</WarningLevel>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <OmitFramePointers>false</OmitFramePointers>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link />
     <Link>
@@ -287,12 +297,15 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level4</WarningLevel>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <OmitFramePointers>false</OmitFramePointers>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link />
     <Link>
@@ -309,8 +322,8 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
@@ -324,7 +337,8 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>

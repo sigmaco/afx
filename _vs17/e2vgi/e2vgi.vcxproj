@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{2D93C9E6-A8BD-40E6-8FFE-CD15319B0241}</ProjectGuid>
+    <RootNamespace>e2vgi</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>e2vgi</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)d\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)d\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__e2vgi__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link />
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__e2vgi__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Link />
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>__e2vgi__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+    </ClCompile>
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>__e2vgi__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+    </ClCompile>
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\dep_\vgl\vgl.h" />
+    <ClInclude Include="..\..\afx\dev\AvxContextImplKit.h" />
+    <ClInclude Include="..\..\afx\dev\AvxDeviceImplKit.h" />
+    <ClInclude Include="..\..\afx\dev\AvxImplKit.h" />
+    <ClInclude Include="..\..\afx\dev\AvxInputImplKit.h" />
+    <ClInclude Include="..\..\cad\afxMesh.h" />
+    <ClInclude Include="..\..\cad\afxMeshBuilder.h" />
+    <ClInclude Include="..\..\cad\afxMeshTopology.h" />
+    <ClInclude Include="..\..\cad\akxVertexData.h" />
+    <ClInclude Include="..\..\draw\afxBuffer.h" />
+    <ClInclude Include="..\..\draw\afxCamera.h" />
+    <ClInclude Include="..\..\draw\afxDrawTechnique.h" />
+    <ClInclude Include="..\..\draw\afxRaster.h" />
+    <ClInclude Include="..\..\draw\afxDrawDefs.h" />
+    <ClInclude Include="..\..\draw\afxPixel.h" />
+    <ClInclude Include="..\..\draw\dev\afxDrawBridge.h" />
+    <ClInclude Include="..\..\draw\dev\afxDrawContext.h" />
+    <ClInclude Include="..\..\draw\dev\afxDrawInput.h" />
+    <ClInclude Include="..\..\draw\dev\afxDrawOutput.h" />
+    <ClInclude Include="..\..\draw\dev\afxDrawSystem.h" />
+    <ClInclude Include="..\..\draw\dev\avxCmdb.h" />
+    <ClInclude Include="..\..\draw\imm\avxPaint.h" />
+    <ClInclude Include="..\..\draw\io\afxTarga.h" />
+    <ClInclude Include="..\..\draw\io\afxTxd.h" />
+    <ClInclude Include="..\..\draw\io\afxTypography.h" />
+    <ClInclude Include="..\..\draw\io\afxVertexStream.h" />
+    <ClInclude Include="..\..\draw\io\afxXsh.h" />
+    <ClInclude Include="..\..\draw\pipe\avxLigature.h" />
+    <ClInclude Include="..\..\draw\pipe\avxBufferOps.h" />
+    <ClInclude Include="..\..\draw\pipe\avxCanvas.h" />
+    <ClInclude Include="..\..\draw\pipe\avxDrawOps.h" />
+    <ClInclude Include="..\..\draw\pipe\avxPipeline.h" />
+    <ClInclude Include="..\..\draw\pipe\avxQueryOps.h" />
+    <ClInclude Include="..\..\draw\pipe\avxQueryPool.h" />
+    <ClInclude Include="..\..\draw\pipe\avxRasterizationOps.h" />
+    <ClInclude Include="..\..\draw\pipe\avxRasterizer.h" />
+    <ClInclude Include="..\..\draw\pipe\avxRasterOps.h" />
+    <ClInclude Include="..\..\draw\pipe\avxSampler.h" />
+    <ClInclude Include="..\..\draw\pipe\avxShader.h" />
+    <ClInclude Include="..\..\draw\pipe\avxTransformationOps.h" />
+    <ClInclude Include="..\..\draw\pipe\avxVertexInput.h" />
+    <ClInclude Include="..\..\math\afxColor.h" />
+    <ClInclude Include="..\..\math\afxViewport.h" />
+    <ClInclude Include="..\..\math\avxMatrix.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\e2coree\e2coree.vcxproj">
+      <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2vgi.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\dep_\vgl\vgl.c" />
+    <ClCompile Include="..\..\afx\cad\afxMesh.c" />
+    <ClCompile Include="..\..\afx\cad\afxMeshBuilder.c" />
+    <ClCompile Include="..\..\afx\cad\afxMeshTopology.c" />
+    <ClCompile Include="..\..\afx\cad\akxVertexData.c" />
+    <ClCompile Include="..\..\afx\draw\afxBuffer.c" />
+    <ClCompile Include="..\..\afx\draw\afxCamera.c" />
+    <ClCompile Include="..\..\afx\draw\afxDrawTechnique.c" />
+    <ClCompile Include="..\..\afx\draw\afxRaster.c" />
+    <ClCompile Include="..\..\afx\draw\afxDrawDefs.c" />
+    <ClCompile Include="..\..\afx\draw\afxPixel.c" />
+    <ClCompile Include="..\..\afx\draw\dev\afxDrawBridge.c" />
+    <ClCompile Include="..\..\afx\draw\dev\afxDrawContext.c" />
+    <ClCompile Include="..\..\afx\draw\dev\afxDrawInput.c" />
+    <ClCompile Include="..\..\afx\draw\dev\afxDrawOutput.c" />
+    <ClCompile Include="..\..\afx\draw\dev\afxDrawSystem.c" />
+    <ClCompile Include="..\..\afx\draw\dev\avxCmdb.c" />
+    <ClCompile Include="..\..\afx\draw\imm\avxPaint.c" />
+    <ClCompile Include="..\..\afx\draw\io\afxTarga.c" />
+    <ClCompile Include="..\..\afx\draw\io\afxTxd.c" />
+    <ClCompile Include="..\..\afx\draw\io\afxTypography.c" />
+    <ClCompile Include="..\..\afx\draw\io\afxVertexStream.c" />
+    <ClCompile Include="..\..\afx\draw\io\afxXsh.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxLigature.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxBufferOps.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxCanvas.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxDrawOps.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxPipeline.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxQueryOps.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxQueryPool.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxRasterizationOps.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxRasterizer.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxRasterOps.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxSampler.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxShader.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxTransformationOps.c" />
+    <ClCompile Include="..\..\afx\draw\pipe\avxVertexInput.c" />
+    <ClCompile Include="..\..\afx\math\afxColor.c" />
+    <ClCompile Include="..\..\afx\math\afxViewport.c" />
+    <ClCompile Include="..\..\afx\math\avxMatrix.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

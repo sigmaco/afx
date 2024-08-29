@@ -1,7 +1,0 @@
-Booting up the Qwadro Execution Ecosystem...
-Setting up SystemSetting up String BaseafxManifest.c:306
-1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.Setting up ThreadSetting up Memory Management UnitSetting up ServiceSetting up CodecSetting up StreamSetting up ArchiveSetting up StorageSetting up ModuleSetting up DeviceAcquiring thread...  7160 "afxSystem_w32.c:500"Mounting storage unit... <.>('E:/qwadro/afx///'),5Mounting storage unit... <system>('E:/qwadro/afx//system/'),5Mounting storage unit... <system>('E:/qwadro/afx//system32/'),7Mounting storage unit... <system>('E:/qwadro/afx//system32d/'),7Loading module... <system/e2coree.dll>Memory page size: 4096Logical processor count: 2Establishing the Qwadro Sound System...Loading module... <e2sound.dll>Setting up SoundSystemSetting up SoundDevice[Device]Setting up SoundOutputSetting up SoundInputEstablishing the Qwadro Draw System...Loading module... <e2draw.dll>Setting up DrawSystemSetting up CameraSetting up DrawStreamSetting up DrawBrigeSetting up DrawDevice[Device]Setting up DrawOutputSetting up DrawInputafxDevice.c:229
-afxManager.c:492
-afxManager.c:475
-afxManager<DrawDevice, Device>ConstructingObject(007a8ff0)afxManager<DrawDevice>::ConstructObject(007a8ff0)afxManager.c:537
-afxManager.c:771
