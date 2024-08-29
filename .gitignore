@@ -18,23 +18,24 @@
 /art/object/backpack
 
 /_vs17/.vs
+/_vs17/**/.vs
 /_vs17/**/Debug
 /_vs17/**/Release
 
-/src/afx/space/akxAnimation.c
-/src/afx/space/akxMotor.c
-/src/afx/space/afxMotion.c
-/src/afx/space/afxBody.c
-/src/afx/space/afxCurve.c
-/src/afx/space/afxCurveOps_Cpu.c
-/src/afx/space/afxSkeleton.c
-/src/afx/sim/dev/_BuildGenericVmt.c
-/src/afx/sim/dev/_MotiveVmt.c
-/src/afx/sim/dev/_SampleTrackVmt.c
-/src/afx/sim/dev/_Vmt.c
+/afx/sim/afxAnimation.c
+/afx/sim/afxMotor.c
+/afx/sim/afxMotion.c
+/afx/sim/afxBody.c
+/afx/math/afxCurve.c
+/afx/sim/dev/_CurveOps_Cpu.c
+/afx/cad/afxSkeleton.c
+/afx/sim/dev/_BuildGenericVmt.c
+/afx/sim/dev/_MotiveVmt.c
+/afx/sim/dev/_SampleTrackVmt.c
+/afx/sim/dev/_Vmt.c
 
-/src/afx/ux/_luna
-/src/exp
-/src/bink1/dep
-/src/cadio/dep
-/src/rad3d/dep
+/afx/ux/_luna
+/afx/exp
+/afx/bink1/dep
+/afx/cadio/dep
+/afx/rad3d/dep

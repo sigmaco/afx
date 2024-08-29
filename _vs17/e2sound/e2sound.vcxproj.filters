@@ -13,52 +13,52 @@
     <Filter Include="qwadro\sound\dev">
       <UniqueIdentifier>{db2f4866-1478-42dd-9379-98482c0fec87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="qwadro\dev">
+      <UniqueIdentifier>{f463a819-43bc-4d32-b102-eda27636a384}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>_dll</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundDefs.h">
+    <ClInclude Include="..\..\sound\afxSoundDefs.h">
       <Filter>qwadro\sound</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\dev\afxSoundInput.h">
+    <ClInclude Include="..\..\sound\dev\afxSoundInput.h">
       <Filter>qwadro\sound\dev</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\dev\afxSoundOutput.h">
+    <ClInclude Include="..\..\sound\dev\afxSoundOutput.h">
       <Filter>qwadro\sound\dev</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\dev\afxSoundBridge.h">
+    <ClInclude Include="..\..\sound\dev\afxSoundBridge.h">
       <Filter>qwadro\sound\dev</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\dev\afxSoundContext.h">
+    <ClInclude Include="..\..\sound\dev\afxSoundContext.h">
       <Filter>qwadro\sound\dev</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\dev\afxSoundDevice.h">
-      <Filter>qwadro\sound\dev</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\asxBuffer.h">
+    <ClInclude Include="..\..\sound\asxTracker.h">
       <Filter>qwadro\sound</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\asxTracker.h">
+    <ClInclude Include="..\..\sound\asxBank.h">
       <Filter>qwadro\sound</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\asxBank.h">
+    <ClInclude Include="..\..\sound\asxSound.h">
       <Filter>qwadro\sound</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\asxSound.h">
+    <ClInclude Include="..\..\sound\afxWaveform.h">
       <Filter>qwadro\sound</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\afx\sound\dev\AsxHostDevKit.h">
+    <ClInclude Include="..\..\sound\dev\afxSoundSystem.h">
       <Filter>qwadro\sound\dev</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\afx\sound\dev\AsxDevKit.h">
-      <Filter>qwadro\sound\dev</Filter>
+    <ClInclude Include="..\..\afx\dev\AsxContextImplKit.h">
+      <Filter>qwadro\dev</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\afx\sound\dev\AsxDeviceDevKit.h">
-      <Filter>qwadro\sound\dev</Filter>
+    <ClInclude Include="..\..\afx\dev\AsxDeviceImplKit.h">
+      <Filter>qwadro\dev</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\afxUnisound.h">
-      <Filter>qwadro\sound</Filter>
+    <ClInclude Include="..\..\afx\dev\AsxImplKit.h">
+      <Filter>qwadro\dev</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -67,34 +67,31 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundOutput.c">
+    <ClCompile Include="..\..\afx\sound\dev\afxSoundOutput.c">
       <Filter>qwadro\sound\dev</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundSystem.c">
+    <ClCompile Include="..\..\afx\sound\dev\afxSoundSystem.c">
       <Filter>qwadro\sound\dev</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundBridge.c">
+    <ClCompile Include="..\..\afx\sound\dev\afxSoundBridge.c">
       <Filter>qwadro\sound\dev</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundContext.c">
+    <ClCompile Include="..\..\afx\sound\dev\afxSoundContext.c">
       <Filter>qwadro\sound\dev</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundInput.c">
+    <ClCompile Include="..\..\afx\sound\dev\afxSoundInput.c">
       <Filter>qwadro\sound\dev</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\sound\dev\afxSoundDevice.c">
-      <Filter>qwadro\sound\dev</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\sound\asxBuffer.c">
+    <ClCompile Include="..\..\afx\sound\asxTracker.c">
       <Filter>qwadro\sound</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\sound\asxTracker.c">
+    <ClCompile Include="..\..\afx\sound\asxBank.c">
       <Filter>qwadro\sound</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\sound\asxBank.c">
+    <ClCompile Include="..\..\afx\sound\asxSound.c">
       <Filter>qwadro\sound</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\sound\asxSound.c">
+    <ClCompile Include="..\..\afx\sound\afxWaveform.c">
       <Filter>qwadro\sound</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,8 +1,0 @@
-<Qwadro>
-    <Simulation>
-        <Material name=''>
-            <Map name='' uri='/path/to/submaterial' />
-            <Texture uri='path/to/tex' />
-        </Material>
-    </Simulation>
-</Qwadro>

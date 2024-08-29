@@ -1,9 +1,0 @@
-
-<Simulation>
-    <Material>
-        <Map name='usage' uri=''/>
-        <Texture></Texture>
-        <Color hex='ffffff'/>
-        <Shininess>1.0</Shininess>
-    </Material>
-</Simulation>

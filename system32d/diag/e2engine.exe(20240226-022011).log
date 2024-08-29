@@ -1,7 +1,0 @@
-Booting up Qwadro Execution Ecosystem...
-Installing Basic I/O System
-afxSystem.c:163
-
-afxSystem.c:163
-(((afxResult)(1)) == _AfxAssertObjects((1), (afxObject const*)(&sys),(afxFcc_SYS)))
-    Invalid

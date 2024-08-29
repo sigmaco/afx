@@ -1,3 +1,0 @@
-Booting up the Qwadro Execution Ecosystem...
-Setting up SystemafxManifest.c:215
-1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.Setting up ThreadSetting up Memory Management UnitSetting up Autonomous ServiceSetting up CodecSetting up String BaseSetting up StreamSetting up ArchiveSetting up StorageSetting up ModuleSetting up DeviceSetting up HIDSetting up Keyboard[HID]Setting up Mouse[HID]Setting up Controller[HID]Setting up Environment

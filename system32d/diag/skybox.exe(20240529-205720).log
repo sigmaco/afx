@@ -1,7 +1,0 @@
-Booting up...
-Acquiring thread...  7428 "afxSystem_w32.c:502"afxString.c:146
-afxString.c:146
-<base>6 + <len>6 is out of capacity <maxRange>6.afxString.c:308
-afxString.c:308
-(b)
-    Invalid

@@ -1,1 +1,0 @@
-#include "../techid/afxRoqVideo.h"

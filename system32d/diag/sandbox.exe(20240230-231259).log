@@ -1,5 +1,0 @@
-afxSystem.c:574
-afxSystem.c:107
-afxSystem.c:107
-(((afxResult)(1)) == _AfxAssertObjects((1), (afxObject const*)(&sys),(afxFcc_SYS)))
-    Invalid

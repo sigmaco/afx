@@ -1,9 +1,0 @@
-Booting up Qwadro Execution Ecosystem...
-Setting up SystemafxManifest.c:215
-1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.Setting up TXUEntering the Thread Execution Environment 8368
-Setting up Memory Management UnitSetting up ThreadSetting up Autonomous ServiceSetting up CodecSetting up String BaseSetting up StreamSetting up ArchiveSetting up StorageSetting up ModuleSetting up DeviceSetting up HIDSetting up Keyboard[HID]Setting up Mouse[HID]Setting up Controller[HID]Setting up EnvironmentMemory page size: 4096Logical processor count: 1Mounting storage unit... <.>('E:/qwadro/afx///'),5Mounting storage unit... <system>('E:/qwadro/afx//system/'),5Mounting storage unit... <system>('E:/qwadro/afx//system32/'),7Mounting storage unit... <system>('E:/qwadro/afx//system32d/'),7Loading module... <system/e2coree.dll>Acquiring keyboard at port 0Setting up the Qwadro Sound System...
-Loading module... <e2sound.dll>afxSystem.c:599
-Cleaning up Environment.Cleaning up Controller[HID].Cleaning up Mouse[HID].Cleaning up Keyboard[HID]. %u orphan objects.Cleaning up HID.Cleaning up Device.Cleaning up Module. %u orphan objects.Cleaning up Storage. %u orphan objects.Cleaning up Archive.Cleaning up Stream.Cleaning up String Base.Cleaning up Codec.Cleaning up Autonomous Service.Cleaning up Thread.Cleaning up Memory Management Unit. %u orphan objects.Cleaning up TXU. %u orphan objects.afxSystem.c:107
-afxSystem.c:107
-(((afxResult)(1)) == _AfxAssertObjects((1), (afxObject const*)(&sys),(afxFcc_SYS)))
-    Invalid
