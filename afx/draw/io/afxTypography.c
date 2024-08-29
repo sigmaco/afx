@@ -20,7 +20,7 @@
 //#define _AVX_DRAW_CONTEXT_C
 #define _AFX_TYPOGRAPHY_C
 #include "../../dev/AvxImplKit.h"
-#include "qwadro/draw/io/afxTypography.h"
+#include "qwadro/inc/draw/io/afxTypography.h"
 
 static afxByte const utf8d[] =
 {

@@ -19,8 +19,8 @@
 #define _AVX_DRAW_C
 #define _AVX_TXD_C
 #include "../../dev/AvxImplKit.h"
-#include "qwadro/draw/dev/afxDrawSystem.h"
-#include "qwadro/draw/io/afxTxd.h"
+#include "qwadro/inc/draw/dev/afxDrawSystem.h"
+#include "qwadro/inc/draw/io/afxTxd.h"
 #include <d3d9.h>
 
 #define MAKECHUNKID(vendorID, chunkID) (((vendorID & 0xFFFFFF) << 8) | (chunkID & 0xFF))

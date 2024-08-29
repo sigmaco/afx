@@ -23,7 +23,7 @@
 #ifndef AVX_IMPL_KIT_H
 #define AVX_IMPL_KIT_H
 
-#include "qwadro/draw/dev/afxDrawSystem.h"
+#include "qwadro/inc/draw/dev/afxDrawSystem.h"
 #include "AvxContextImplKit.h"
 #include "AvxInputImplKit.h"
 #include "AvxDeviceImplKit.h"

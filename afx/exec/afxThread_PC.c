@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/afx/dep/tinycthread.h"
+#include "../dep/tinycthread.h"
 
 #define _AFX_CORE_C
 #define _AFX_THREAD_C

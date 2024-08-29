@@ -18,8 +18,8 @@
 
 #define _AFX_DRAW_TECHNIQUE_C
 #include "../dev/AvxImplKit.h"
-#include "qwadro/draw/io/afxXsh.h"
-#include "qwadro/draw/afxDrawTechnique.h"
+#include "qwadro/inc/draw/io/afxXsh.h"
+#include "qwadro/inc/draw/afxDrawTechnique.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

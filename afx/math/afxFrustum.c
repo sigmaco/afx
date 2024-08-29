@@ -16,9 +16,9 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/math/afxFrustum.h"
-#include "qwadro/math/afxMatrix.h"
-#include "qwadro/math/afxPlane.h"
+#include "qwadro/inc/math/afxFrustum.h"
+#include "qwadro/inc/math/afxMatrix.h"
+#include "qwadro/inc/math/afxPlane.h"
 
 _AFX afxV4d const AFX_V4D_LBN = { -1, -1, -1, 1 };
 _AFX afxV4d const AFX_V4D_RBN = { 1, -1, -1, 1 };

@@ -20,7 +20,7 @@
 #define ASX_DEVICE_IMPL_KIT_H
 
 #include "../dev/afxDevCoreBase.h"
-#include "qwadro/sound/dev/afxSoundSystem.h"
+#include "qwadro/inc/sound/dev/afxSoundSystem.h"
 
 AFX_DEFINE_STRUCT(afxSoundDeviceInfo)
 {

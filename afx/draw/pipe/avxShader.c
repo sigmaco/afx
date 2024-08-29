@@ -17,7 +17,7 @@
 #define _AVX_DRAW_C
 #define _AVX_SHADER_C
 #include "../../dev/AvxImplKit.h"
-#include "qwadro/draw/io/afxXsh.h"
+#include "qwadro/inc/draw/io/afxXsh.h"
 
 _AVX afxError AfxLoadGlScript(afxUri const* path, afxArray* fCode, afxArray* fInOuts, afxArray* fResources)
 {

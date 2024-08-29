@@ -2,7 +2,7 @@
 #ifdef __cplusplus
 extern "C"
 {
-#include "qwadro/afxQwadro.h"
+#include "qwadro/inc/afxQwadro.h"
 }
 #endif
 

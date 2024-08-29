@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/math/afxTrigonometry.h"
+#include "qwadro/inc/math/afxTrigonometry.h"
 
 _AFXINL void AfxComputeTriangleNormal(afxV3d const a, afxV3d const b, afxV3d const c, afxV3d n)
 {

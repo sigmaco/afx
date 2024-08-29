@@ -22,9 +22,9 @@
 #define AUX_BASE_OBJECTS_H
 
 #include "../dev/afxDevCoreBase.h"
-#include "qwadro/ux/afxUxDefs.h"
-#include "qwadro/math/afxViewport.h"
-#include "qwadro/ux/afxShell.h"
+#include "qwadro/inc/ux/afxUxDefs.h"
+#include "qwadro/inc/math/afxViewport.h"
+#include "qwadro/inc/ux/afxShell.h"
 
 typedef struct afxDesktop afxDesktop;
 

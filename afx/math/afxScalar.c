@@ -16,9 +16,9 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/math/afxScalar.h"
-#include "qwadro/math/afxTransform.h"
-#include "qwadro/math/afxMatrix.h"
+#include "qwadro/inc/math/afxScalar.h"
+#include "qwadro/inc/math/afxTransform.h"
+#include "qwadro/inc/math/afxMatrix.h"
 
 _AFXINL afxBool AfxIsGreaterThanEpsilon(afxReal value) // if not, it is less or equal
 {

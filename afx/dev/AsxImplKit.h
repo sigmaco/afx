@@ -19,7 +19,7 @@
 #ifndef ASX_IMPL_KIT_H
 #define ASX_IMPL_KIT_H
 
-#include "qwadro/sound/dev/afxSoundSystem.h"
+#include "qwadro/inc/sound/dev/afxSoundSystem.h"
 #include "AsxContextImplKit.h"
 #include "AsxDeviceImplKit.h"
 

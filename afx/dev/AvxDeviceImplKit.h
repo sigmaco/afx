@@ -24,9 +24,9 @@
 #define AVX_DEVICE_IMPL_KIT_H
 
 #include "../dev/afxDevCoreBase.h"
-#include "qwadro/draw/dev/afxDrawSystem.h"
-#include "qwadro/mem/afxInterlockedQueue.h"
-#include "qwadro/mem/afxSlabAllocator.h"
+#include "qwadro/inc/draw/dev/afxDrawSystem.h"
+#include "qwadro/inc/mem/afxInterlockedQueue.h"
+#include "qwadro/inc/mem/afxSlabAllocator.h"
 
 typedef enum _ddevReqCode
 {

@@ -22,8 +22,8 @@
 #include "AmxPuppetImplKit.h"
 #include "AmxCadImplKit.h"
 #include "../dev/afxDevCoreBase.h"
-#include "qwadro/sim/dev/afxPragmaSystem.h"
-#include "qwadro/sim/dev/afxSimulation.h"
+#include "qwadro/inc/sim/dev/afxPragmaSystem.h"
+#include "qwadro/inc/sim/dev/afxSimulation.h"
 
 #ifdef _AMX_SIMULATION_C
 AFX_OBJECT(afxSimulation)
