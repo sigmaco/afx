@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/draw/imm/avxPaint.h"
+#include "qwadro/inc/draw/imm/avxPaint.h"
 
 void ClumpRenderBoundingBox(avxCmdb cmdb, afxBox box, afxM4d const m)
 {

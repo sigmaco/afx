@@ -19,7 +19,7 @@
 #ifndef AFX_DEV_IO_BASE_H
 #define AFX_DEV_IO_BASE_H
 
-#include "qwadro/exec/afxSystem.h"
+#include "qwadro/inc/exec/afxSystem.h"
 
 #ifdef _AFX_ARCHIVE_C
 AFX_OBJECT(afxArchive)

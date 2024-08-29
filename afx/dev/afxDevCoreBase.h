@@ -19,7 +19,7 @@
 #ifndef AFX_DEV_CORE_BASE_H
 #define AFX_DEV_CORE_BASE_H
 
-#include "qwadro/exec/afxSystem.h"
+#include "qwadro/inc/exec/afxSystem.h"
 
 #ifdef _AFX_CONTEXT_C
 AFX_OBJECT(afxContext)

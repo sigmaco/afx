@@ -172,17 +172,17 @@
   <ItemGroup>
     <ClInclude Include="..\..\afx\dev\AuxImplKit.h" />
     <ClInclude Include="..\..\afx\dev\AuxShellImplKit.h" />
-    <ClInclude Include="..\..\ux\afxKeyboard.h" />
-    <ClInclude Include="..\..\ux\afxMouse.h" />
-    <ClInclude Include="..\..\ux\afxScript.h" />
-    <ClInclude Include="..\..\ux\afxGamepad.h" />
-    <ClInclude Include="..\..\ux\afxHid.h" />
-    <ClInclude Include="..\..\ux\afxSession.h" />
-    <ClInclude Include="..\..\ux\afxTerminal.h" />
-    <ClInclude Include="..\..\ux\afxWindow.h" />
-    <ClInclude Include="..\..\ux\afxShell.h" />
-    <ClInclude Include="..\..\ux\afxUxDefs.h" />
-    <ClInclude Include="..\..\ux\afxWidget.h" />
+    <ClInclude Include="..\..\inc\ux\afxKeyboard.h" />
+    <ClInclude Include="..\..\inc\ux\afxMouse.h" />
+    <ClInclude Include="..\..\inc\ux\afxScript.h" />
+    <ClInclude Include="..\..\inc\ux\afxGamepad.h" />
+    <ClInclude Include="..\..\inc\ux\afxHid.h" />
+    <ClInclude Include="..\..\inc\ux\afxSession.h" />
+    <ClInclude Include="..\..\inc\ux\afxTerminal.h" />
+    <ClInclude Include="..\..\inc\ux\afxWindow.h" />
+    <ClInclude Include="..\..\inc\ux\afxShell.h" />
+    <ClInclude Include="..\..\inc\ux\afxUxDefs.h" />
+    <ClInclude Include="..\..\inc\ux\afxWidget.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

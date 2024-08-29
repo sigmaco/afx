@@ -18,7 +18,7 @@
 #define _AMX_TERRAIN_C
 #define _AMX_SIMULATION_C
 #include "../../dev/AmxImplKit.h"
-#include "qwadro/sim/rendering/akxTerrain.h"
+#include "qwadro/inc/sim/rendering/akxTerrain.h"
 
 #define terrain_num_vertices 1089
 #define terrain_num_colors 1089

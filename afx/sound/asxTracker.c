@@ -17,7 +17,7 @@
 #define _ASX_SOUND_C
 #define _ASX_TRACKER_C
 #include "../dev/AsxImplKit.h"
-#include "qwadro/sound/asxTracker.h"
+#include "qwadro/inc/sound/asxTracker.h"
 
 _ASXINL afxSoundContext AsxGetTrackerContext(asxTracker trax)
 {

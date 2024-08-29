@@ -17,8 +17,8 @@
 #define _AFX_SIM_C
 #define _AMX_SIMULATION_C
 #include "../../dev/AmxImplKit.h"
-#include "qwadro/afxQwadro.h"
-#include "qwadro/sim/rendering/akxSky.h"
+#include "qwadro/inc/afxQwadro.h"
+#include "qwadro/inc/sim/rendering/akxSky.h"
 
 _AMX void AfxStepSky(akxSky* sky, afxReal dt)
 {

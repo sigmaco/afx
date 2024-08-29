@@ -17,11 +17,11 @@
 // This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
 
 #include "../dev/AvxImplKit.h"
-#include "qwadro/math/afxMatrix.h"
-#include "qwadro/math/avxMatrix.h"
-#include "qwadro/math/afxMathDefs.h"
-#include "qwadro/math/afxVector.h"
-#include "qwadro/math/afxPlane.h"
+#include "qwadro/inc/math/afxMatrix.h"
+#include "qwadro/inc/math/avxMatrix.h"
+#include "qwadro/inc/math/afxMathDefs.h"
+#include "qwadro/inc/math/afxVector.h"
+#include "qwadro/inc/math/afxPlane.h"
 
 avxClipSpace const  AVX_CLIP_SPACE_QWADRO =
 {

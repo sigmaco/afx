@@ -16,11 +16,11 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/math/afxMatrix.h"
-#include "qwadro/math/afxScalar.h"
-#include "qwadro/math/afxVector.h"
-#include "qwadro/math/afxPlane.h"
-#include "qwadro/io/afxStream.h"
+#include "qwadro/inc/math/afxMatrix.h"
+#include "qwadro/inc/math/afxScalar.h"
+#include "qwadro/inc/math/afxVector.h"
+#include "qwadro/inc/math/afxPlane.h"
+#include "qwadro/inc/io/afxStream.h"
 
 // Memory layout: row-major
 

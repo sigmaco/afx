@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/math/afxSphere.h"
+#include "qwadro/inc/math/afxSphere.h"
 
 _AFXINL afxSphere* AfxSphereDeploy(afxSphere* sph, afxV3d const centre, afxReal radius)
 {

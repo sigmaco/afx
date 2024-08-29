@@ -16,8 +16,8 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/math/afxTransform.h"
-#include "qwadro/math/afxMatrix.h"
+#include "qwadro/inc/math/afxTransform.h"
+#include "qwadro/inc/math/afxMatrix.h"
 
 /// Converting a Float to a Half-Float
 /// The following routines describe how to convert a single-precision floating-point number to a half-float value, and vice versa.  

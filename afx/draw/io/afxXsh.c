@@ -17,7 +17,7 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #include "../../dev/AvxImplKit.h"
-#include "qwadro/draw/io/afxXsh.h"
+#include "qwadro/inc/draw/io/afxXsh.h"
 
 AVX afxChar const *shdResTypeNames[];
 

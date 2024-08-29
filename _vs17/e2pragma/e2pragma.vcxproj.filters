@@ -101,64 +101,64 @@
     <ClInclude Include="resource.h">
       <Filter>_dll</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\afxSimDefs.h">
+    <ClInclude Include="..\..\inc\sim\afxSimDefs.h">
       <Filter>qwadro\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\akxNode.h">
+    <ClInclude Include="..\..\inc\sim\akxNode.h">
       <Filter>qwadro\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\rendering\akxLighting.h">
+    <ClInclude Include="..\..\inc\sim\rendering\akxLighting.h">
       <Filter>qwadro\sim\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\rendering\akxRenderer.h">
+    <ClInclude Include="..\..\inc\sim\rendering\akxRenderer.h">
       <Filter>qwadro\sim\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\rendering\akxSky.h">
+    <ClInclude Include="..\..\inc\sim\rendering\akxSky.h">
       <Filter>qwadro\sim\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\dev\afxSimulation.h">
+    <ClInclude Include="..\..\inc\sim\dev\afxSimulation.h">
       <Filter>qwadro\sim\dev</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\io\akxAsset.h">
+    <ClInclude Include="..\..\inc\sim\io\akxAsset.h">
       <Filter>qwadro\sim\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\rendering\akxTerrain.h">
+    <ClInclude Include="..\..\inc\sim\rendering\akxTerrain.h">
       <Filter>qwadro\sim\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\math\afxCurve.h">
+    <ClInclude Include="..\..\inc\math\afxCurve.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cad\afxPoseBuffer.h">
+    <ClInclude Include="..\..\inc\cad\afxPoseBuffer.h">
       <Filter>qwadro\cad</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cad\afxSkeleton.h">
+    <ClInclude Include="..\..\inc\cad\afxSkeleton.h">
       <Filter>qwadro\cad</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cad\afxMaterial.h">
+    <ClInclude Include="..\..\inc\cad\afxMaterial.h">
       <Filter>qwadro\cad</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cad\afxModel.h">
+    <ClInclude Include="..\..\inc\cad\afxModel.h">
       <Filter>qwadro\cad</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cad\afxPose.h">
+    <ClInclude Include="..\..\inc\cad\afxPose.h">
       <Filter>qwadro\cad</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\afxMotor.h">
+    <ClInclude Include="..\..\inc\sim\afxMotor.h">
       <Filter>qwadro\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\afxMotion.h">
+    <ClInclude Include="..\..\inc\sim\afxMotion.h">
       <Filter>qwadro\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\afxBody.h">
+    <ClInclude Include="..\..\inc\sim\afxBody.h">
       <Filter>qwadro\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\afxAnimation.h">
+    <ClInclude Include="..\..\inc\sim\afxAnimation.h">
       <Filter>qwadro\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\dev\afxPragmaSystem.h">
+    <ClInclude Include="..\..\inc\sim\dev\afxPragmaSystem.h">
       <Filter>qwadro\sim\dev</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sim\dev\afxPragmaBridge.h">
+    <ClInclude Include="..\..\inc\sim\dev\afxPragmaBridge.h">
       <Filter>qwadro\sim\dev</Filter>
     </ClInclude>
     <ClInclude Include="..\..\afx\dev\AmxCadImplKit.h">

@@ -24,7 +24,7 @@
 #define AVX_CONTEXT_IMPL_KIT_H
 
 #include "../dev/afxDevCoreBase.h"
-#include "qwadro/draw/dev/afxDrawSystem.h"
+#include "qwadro/inc/draw/dev/afxDrawSystem.h"
 
 #ifdef _AVX_CMD_BUFFER_C
 #ifdef _AVX_CMD_BUFFER_IMPL

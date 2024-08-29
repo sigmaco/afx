@@ -20,7 +20,7 @@
 #define _AVX_PIPELINE_C
 #define _AVX_RASTERIZER_C
 #include "../../dev/AvxImplKit.h"
-#include "qwadro/draw/io/afxXsh.h"
+#include "qwadro/inc/draw/io/afxXsh.h"
 
  // OpenGL/Vulkan Continuous Integration
 

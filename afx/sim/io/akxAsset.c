@@ -19,7 +19,7 @@
 #define _AVX_MODEL_C
 #define _AMX_SIMULATION_C
 #include "../../dev/AmxImplKit.h"
-#include "qwadro/sim/io/akxAsset.h"
+#include "qwadro/inc/sim/io/akxAsset.h"
 
 #if 0
 

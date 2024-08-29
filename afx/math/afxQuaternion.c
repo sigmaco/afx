@@ -16,10 +16,10 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/math/afxScalar.h"
-#include "qwadro/math/afxQuaternion.h"
-#include "qwadro/math/afxMatrix.h"
-#include "qwadro/math/afxVector.h"
+#include "qwadro/inc/math/afxScalar.h"
+#include "qwadro/inc/math/afxQuaternion.h"
+#include "qwadro/inc/math/afxMatrix.h"
+#include "qwadro/inc/math/afxVector.h"
 
 _AFX afxQuat const AFX_QUAT_ZERO = { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(0) };
 _AFX afxQuat const AFX_QUAT_IDENTITY = { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(1) };

@@ -21,7 +21,7 @@
 #ifndef AUX_DEV_KIT_H
 #define AUX_DEV_KIT_H
 
-#include "qwadro/ux/afxShell.h"
+#include "qwadro/inc/ux/afxShell.h"
 #include "AuxShellImplKit.h"
 
 #endif//AUX_DEV_KIT_H

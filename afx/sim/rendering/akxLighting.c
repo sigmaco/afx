@@ -17,7 +17,7 @@
 #define _AFX_SIM_C
 #define _AMX_LIGHT_C
 #include "../../dev/AmxImplKit.h"
-#include "qwadro/sim/rendering/akxLighting.h"
+#include "qwadro/inc/sim/rendering/akxLighting.h"
 
 _AMX afxError _AfxLitDtor(akxLight lit)
 {

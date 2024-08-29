@@ -152,16 +152,16 @@
     <ClInclude Include="..\..\afx\dev\AsxContextImplKit.h" />
     <ClInclude Include="..\..\afx\dev\AsxDeviceImplKit.h" />
     <ClInclude Include="..\..\afx\dev\AsxImplKit.h" />
-    <ClInclude Include="..\..\sound\asxSound.h" />
-    <ClInclude Include="..\..\sound\afxSoundDefs.h" />
-    <ClInclude Include="..\..\sound\asxBank.h" />
-    <ClInclude Include="..\..\sound\afxWaveform.h" />
-    <ClInclude Include="..\..\sound\asxTracker.h" />
-    <ClInclude Include="..\..\sound\dev\afxSoundBridge.h" />
-    <ClInclude Include="..\..\sound\dev\afxSoundContext.h" />
-    <ClInclude Include="..\..\sound\dev\afxSoundInput.h" />
-    <ClInclude Include="..\..\sound\dev\afxSoundOutput.h" />
-    <ClInclude Include="..\..\sound\dev\afxSoundSystem.h" />
+    <ClInclude Include="..\..\inc\sound\asxSound.h" />
+    <ClInclude Include="..\..\inc\sound\afxSoundDefs.h" />
+    <ClInclude Include="..\..\inc\sound\asxBank.h" />
+    <ClInclude Include="..\..\inc\sound\afxWaveform.h" />
+    <ClInclude Include="..\..\inc\sound\asxTracker.h" />
+    <ClInclude Include="..\..\inc\sound\dev\afxSoundBridge.h" />
+    <ClInclude Include="..\..\inc\sound\dev\afxSoundContext.h" />
+    <ClInclude Include="..\..\inc\sound\dev\afxSoundInput.h" />
+    <ClInclude Include="..\..\inc\sound\dev\afxSoundOutput.h" />
+    <ClInclude Include="..\..\inc\sound\dev\afxSoundSystem.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

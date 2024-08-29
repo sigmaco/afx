@@ -16,8 +16,8 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/math/afxVector.h"
-#include "qwadro/math/afxPlane.h"
+#include "qwadro/inc/math/afxVector.h"
+#include "qwadro/inc/math/afxPlane.h"
 
 _AFXINL void AfxPlaneCopy(afxPlane p, afxPlane const in)
 {

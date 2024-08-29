@@ -19,7 +19,7 @@
 #ifndef AMX_PUPPET_IMPL_KIT_H
 #define AMX_PUPPET_IMPL_KIT_H
 
-#include "qwadro/sim/dev/afxSimulation.h"
+#include "qwadro/inc/sim/dev/afxSimulation.h"
 
 #ifdef _AMX_BODY_C
 AFX_OBJECT(afxBody)
