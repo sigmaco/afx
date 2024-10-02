@@ -1,0 +1,879 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                         QWADRO Application Framework                        
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class initialized.
+ Acquiring Core Execution System...
+ Constructing instance 00000000002a13c0 of Core Execution System class.
+ afxSystem.c:1186?_AfxSysCtor(sys=00000000002a13c0)
+ MemContext class initialized.
+ Point "." rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/..".
+ Point "system" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64".
+ Point "art" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../art".
+ Point "data" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../data".
+ Point "sound" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../sound".
+ Thread class initialized.
+ Module class initialized.
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000002a13c0,uri=system/e2coree.dll)
+ Acquiring Module...
+ Constructing instance 00000000002a4640 of Module class.
+ afxModule.c:129?_AfxMdleCtor(uri:system/e2coree.dll)
+ Object 00000000002a4640[mdle]^1 acquired.
+ I/O Stream class initialized.
+ Archive class initialized.
+ Resource class initialized.
+ Uniform Resource Dictionary class initialized.
+ HID class initialized.
+ Keyboard class initialized.
+ Mouse class initialized.
+ Draw System class initialized.
+ Application class initialized.
+ afxKeyboard.c:154?AfxSystemAcquireKeyboard(sys=00000000002a13c0,port=0)
+ Acquiring Keyboard...
+ Constructing instance 00000000002a4780 of Keyboard : HID class.
+ Constructing instance 00000000002a4780 of HID class.
+ afxHid.c:46?_AfxHidCtor(hid=00000000002a4780)
+ Constructing instance 00000000002a4780 of Keyboard class.
+ afxKeyboard.c:182?_AfxKbdCtor(kbd=00000000002a4780)
+ Object 00000000002a4780[kbd]^1 acquired.
+ Object 00000000002a13c0[sys]^1 acquired.
+ afxDrawSystem.c:171?AfxSystemAcquireDrawSystem(sys=00000000002a13c0)
+ Acquiring Draw System...
+ Constructing instance 00000000002a6f80 of Draw System class.
+ afxDrawSystem.c:250?_AfxDsysCtor(dsys=00000000002a6f80)
+ Draw Driver class initialized.
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000002a13c0,uri=e2draw.icd)
+ Acquiring Module...
+ Constructing instance 00000000002a85e0 of Module class.
+ afxModule.c:129?_AfxMdleCtor(uri:e2draw.icd)
+ Object 00000000002a85e0[mdle]^1 acquired.
+ afxDrawDriver.c:46?AfxDrawSystemRegisterDriver(dsys=00000000002a6f80,mdle=00000000002a85e0,spec=00000000001cdd70)
+ Acquiring Draw Driver...
+ Constructing instance 00000000002a9170 of Draw Driver class.
+ afxDrawDriver.c:79?_AfxDdrvCtor(ddrv=00000000002a9170)
+ Draw Context class initialized.
+New draw driver registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+ ad88888ba   88    ,ad8888ba,     ,ad8888ba,   88           
+d8"     "8b  88   d8"'    `"8b   d8"'    `"8b  88           
+Y8,          88  d8'            d8'            88           
+`Y8aaaaa,    88  88             88             88           
+  `"""""8b,  88  88      88888  88      88888  88
+        `8b  88  Y8,        88  Y8,        88  88           
+Y8a     a8P  88   Y8a.    .a88   Y8a.    .a88  88           
+ "Y88888P"   88    `"Y88888P"     `"Y88888P"   88888888888  
+ Object 00000000002a9170[ddrv]^1 acquired.
+ Loading draw ICDs...
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000002a13c0,uri=e2draw.icd)
+ Reacquired. (mdle)00000000002a85e0^3
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000002a13c0,uri=e2newton.icd)
+ Acquiring Module...
+ Constructing instance 00000000002ab680 of Module class.
+ afxModule.c:129?_AfxMdleCtor(uri:e2newton.icd)
+ Object 00000000002ab680[mdle]^1 acquired.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterDrawDrivers not found.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterTextureCodecs not found.
+ Object 00000000002a6f80[dsys]^1 acquired.
+ afxDrawContext.c:227?AfxDrawSystemAcquireContext(dsys=00000000002a6f80,spec=00000000001ce6d0)
+ Acquiring Draw Context...
+ Constructing instance 00000000002ac1e0 of Draw Context class.
+ sglDrawContext.c:617?_AfxDctxCtor(dctx=00000000002ac1e0)
+ Listing all available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Draw Script class initialized.
+ Draw Input class initialized.
+ Draw Engine class initialized.
+ Buffer class initialized.
+ Vertex Buffer class initialized.
+ Index Buffer class initialized.
+ Sampler class initialized.
+ Texture class initialized.
+ Surface class initialized.
+ Canvas class initialized.
+ Pipeline Module class initialized.
+ Pipeline Rig class initialized.
+ Pipeline class initialized.
+ Lego class initialized.
+ Draw Output class initialized.
+ sglDrawEngine.c:1952?_AfxDrawContextAcquireEngine(dctx=00000000002ac1e0)
+ Acquiring Draw Engine...
+ Constructing instance 00000000002b0f60 of Draw Engine class.
+ sglDrawEngine.c:1997?_AfxDengCtor(deng=00000000002b0f60)
+ afxThread.c:680?AfxSystemAcquireThread(sys=00000000002a13c0,start=000007feec4d99a0,udd=00000000002b0f60,exec=000007feec4d9230,hint="sglDrawEngine.c:2009!_AfxDengCtor")
+ Acquiring Thread...
+ Constructing instance 00000000002b2850 of Thread class.
+ afxThread.c:745?_AfxThrCtor(00000000002b2850)
+ Object 00000000002b2850[thr]^1 acquired.
+ afxUniformPipelineDescriptor.c:603?_AfxDrawContextUploadPipelineUrd(dctx=00000000002ac1e0,uri=data/pipeline/rgbaToRgbaYFlipped.pip.urd)
+ afxUniformPipelineDescriptor.c:559?_AfxLoadAndParsePipelineUrd(dctx=00000000002ac1e0)
+ afxUrd.c:1054?AfxSystemUploadUrd(uri=data/pipeline/rgbaToRgbaYFlipped.pip.urdp)
+ Acquiring Uniform Resource Dictionary...
+ Constructing instance 00000000002b2e60 of Uniform Resource Dictionary class.
+ afxUrd.c:1036?_AfxUrdCtor(uri:data/pipeline/rgbaToRgbaYFlipped.pip.urd)
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000002a13c0,uri:data/pipeline/rgbaToRgbaYFlipped.pip.urd,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 00000000002b2f70 of I/O Stream class.
+ Acquired. (ios)00000000002b2f70^1 <-> "E:/qwadro/afx/data/pipeline/rgbaToRgbaYFlipped.pip.urd"
+ Object 00000000002b2f70[ios]^1 acquired.
+ Destroying I/O Stream... 00000000002b2f70[ios]^0
+ Destructing instance 00000000002b2f70 of I/O Stream class.
+ I/O Stream destroyed. 00000000002b2f70[ios]
+ Object 00000000002b2e60[urd]^1 acquired.
+ Destroying Uniform Resource Dictionary... 00000000002b2e60[urd]^0
+ Destructing instance 00000000002b2e60 of Uniform Resource Dictionary class.
+ afxUrd.c:1019?_AfxUrdDtor(urd=00000000002b2e60)
+ Uniform Resource Dictionary destroyed. 00000000002b2e60[urd]
+ Acquiring Pipeline...
+ Constructing instance 00000000002b95e0 of Pipeline : Resource class.
+ Constructing instance 00000000002b95e0 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=00000000002b95e0)
+ Constructing instance 00000000002b95e0 of Pipeline class.
+ sglPipeline.c:556?_AfxPipCtor(pip=00000000002b95e0)
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=00000000002ac1e0,code=00000000001c4af0,len=627)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=00000000002ac1e0,code=00000000001c4af0,len=627)
+ Acquiring Pipeline Module...
+ Constructing instance 00000000002bc770 of Pipeline Module class.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=00000000002bc770)
+ Object 00000000002bc770[pipm]^1 acquired.
+ Taking connection 00000000002b9778 connecting 00000000002bc770?pipm#1 to holder 00000000002b95e0?pip#1.
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=00000000002ac1e0,code=00000000001c5b10,len=398)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=00000000002ac1e0,code=00000000001c5b10,len=398)
+ Acquiring Pipeline Module...
+ Constructing instance 00000000002bec40 of Pipeline Module class.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=00000000002bec40)
+ Object 00000000002bec40[pipm]^1 acquired.
+ Taking connection 00000000002b97d8 connecting 00000000002bec40?pipm#1 to holder 00000000002b95e0?pip#1.
+ Acquiring Pipeline Rig...
+ Constructing instance 00000000002b2e60 of Pipeline Rig class.
+ sglPipelineRig.c:100?_AfxPiprCtor(pipr=00000000002b2e60)
+ Object 00000000002b2e60[pipa]^1 acquired.
+ Object 00000000002b95e0[pip]^1 acquired.
+ sglSampler.c:84?_AfxDrawContextAcquireSampler(dctx=00000000002ac1e0,spec=00000000001cd760)
+ Acquiring Sampler...
+ Constructing instance 00000000002b3dd0 of Sampler class.
+ sglSampler.c:131?_AfxSmpCtor(smp=00000000002b3dd0)
+ Object 00000000002b3dd0[smp]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 00000000002b9fb0 of Lego class.
+ sglLego.c:68?_AfxLegoCtor(lego=00000000002b9fb0)
+ Object 00000000002b9fb0[bset]^1 acquired.
+ Object 00000000002b0f60[deng]^1 acquired.
+ afxThread.c:662?AfxThreadStart(thr=00000000002b2850)
+ Object 00000000002ac1e0[dctx]^1 acquired.
+ afxApplication.c:385?AfxSystemAcquireApplication(sys=0000f5d3506a9bab,spec=0000000000000000)
+ sglDrawEngine.c:20?_SglGlCtxW32Create(dctx=00000000002ac1e0,shareCtx=0000000000000000,phwnd=00000000002b18b8,phdc=00000000002b18c0,phrc=00000000002b18d0)
+ Acquiring Application...
+ Constructing instance 00000000002b4d50 of Application class.
+ afxApplication.c:472?_AfxAppCtor(app=00000000002b4d50)
+ afxMouse.c:223?AfxSystemAcquireMouse(sys=00000000002a13c0,port=0)
+ Acquiring Mouse...
+ Constructing instance 00000000002b3fa0 of Mouse : HID class.
+ Constructing instance 00000000002b3fa0 of HID class.
+ afxHid.c:46?_AfxHidCtor(hid=00000000002b3fa0)
+ Constructing instance 00000000002b3fa0 of Mouse class.
+ afxMouse.c:250?_AfxMseCtor(mse=00000000002b3fa0)
+ Object 00000000002b3fa0[mse]^1 acquired.
+ Taking connection 00000000002b4e28 connecting 00000000002b3fa0?mse#1 to holder 00000000002b4d50?app#1.
+ afxMemContext.c:532?AfxSystemAcquireMemContext(sys=00000000002a13c0,strategy=00000000001ce080,hint="afxApplication.c:507!_AfxAppCtor")
+ Acquiring MemContext...
+ Constructing instance 00000000002b56a0 of MemContext class.
+ afxMemContext.c:285?_AfxAllCtor(mctx=00000000002b56a0)
+ Object 00000000002b56a0[mctx]^1 acquired.
+ Taking connection 00000000002b4dd0 connecting 00000000002b56a0?mctx#1 to holder 00000000002b4d50?app#1.
+ sglDrawInput.c:203?_AfxDrawContextAcquireInput(dctx=00000000002ac1e0,spec=00000000001ce050)
+ Acquiring Draw Input...
+ Constructing instance 00000000002b69e0 of Draw Input class.
+ sglDrawInput.c:252?_AfxDinCtor(din=00000000002b69e0)
+ afxMemContext.c:532?AfxSystemAcquireMemContext(sys=00000000002a13c0,strategy=00000000001cd850,hint="sglDrawInput.c:287!_AfxDinCtor")
+ Acquiring MemContext...
+ Constructing instance 00000000002b6bf0 of MemContext class.
+ afxMemContext.c:285?_AfxAllCtor(mctx=00000000002b6bf0)
+ Object 00000000002b6bf0[mctx]^1 acquired.
+ Object 00000000002b69e0[din]^1 acquired.
+ Taking connection 00000000002b5360 connecting 00000000002b69e0?din#1 to holder 00000000002b4d50?app#1.
+ Widget class initialized.
+ Simulation class initialized.
+ Object 00000000002b4d50[app]^1 acquired.
+ afxApplication.c:337?AfxApplicationExecute(app=00000000002b4d50)
+ Skybox.c:546?AfxEnterApplication(app=00000000002b4d50)
+ afxSimulation.c:431?AfxApplicationAcquireSimulation(app=00000000002b4d50,bounding=[[0.000000,0.000000,0.000000,1.000000],[0.000000,0.000000,0.000000,1.000000]])
+ Acquiring Simulation...
+ Constructing instance 000000000032b300 of Simulation class.
+ afxSimulation.c:373?_AfxSimCtor(sim=000000000032b300)
+ Material class initialized.
+ Mesh class initialized.
+ Node class initialized.
+ Skeleton class initialized.
+ Model class initialized.
+ Body class initialized.
+ Entity class initialized.
+ Camera class initialized.
+ Light class initialized.
+ Object 000000000032b300[sim]^1 acquired.
+ afxDrawOutput.c:92?AfxDrawContextAcquireOutput(dctx=00000000002ac1e0,extent=00000000001ce530,spec=00000000001ce388)
+ sglDrawOutput.c:281?_AfxDrawContextAcquireOutput(dctx=00000000002ac1e0,extent=00000000001ce530,spec=00000000001ce388)
+ Acquiring Draw Output...
+ Constructing instance 00000000042f9820 of Draw Output class.
+ sglDrawOutput.c:462?_AfxDoutCtor(dout=00000000042f9820)
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=00000000002ac1e0,fmt=4,whd=[720,480,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 00000000042fd160 of Surface : Texture class.
+ Constructing instance 00000000042fd160 of Texture : Resource class.
+ Constructing instance 00000000042fd160 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=00000000042fd160)
+ Constructing instance 00000000042fd160 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=00000000042fd160)
+ Constructing instance 00000000042fd160 of Surface class.
+ sglSurface.c:102?_AfxSurfCtor(surf=00000000042fd160)
+ Object 00000000042fd160[surf]^1 acquired.
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=00000000002ac1e0,fmt=4,whd=[720,480,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 00000000042f6660 of Surface : Texture class.
+ Constructing instance 00000000042f6660 of Texture : Resource class.
+ Constructing instance 00000000042f6660 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=00000000042f6660)
+ Constructing instance 00000000042f6660 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=00000000042f6660)
+ Constructing instance 00000000042f6660 of Surface class.
+ sglSurface.c:102?_AfxSurfCtor(surf=00000000042f6660)
+ Object 00000000042f6660[surf]^1 acquired.
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=00000000002ac1e0,fmt=4,whd=[720,480,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000004491df0 of Surface : Texture class.
+ Constructing instance 0000000004491df0 of Texture : Resource class.
+ Constructing instance 0000000004491df0 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=0000000004491df0)
+ Constructing instance 0000000004491df0 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=0000000004491df0)
+ Constructing instance 0000000004491df0 of Surface class.
+ sglSurface.c:102?_AfxSurfCtor(surf=0000000004491df0)
+ Object 0000000004491df0[surf]^1 acquired.
+ sglDrawOutput.c:415?_AfxStdDoutImplCtor(dout=00000000042f9820,uri=window)
+ sglDrawOutput.c:339?_AfxStdDoutImplCtorWnd(dout=00000000042f9820)
+ sglDriver.c:737?_SglLoadVmt(vmt=00000000002b18d8,verMajor=3,verMinor=3)
+ QWADRO Draw System (OpenGL/Vulkan Continuous Integration (Intel(R) HD Graphics v3.3.0))
+ afxThread.c:637?AfxThreadRun(thr=00000000002b2850)
+ Extent readjusted. (dout)00000000042f9820 -> 720, 0.375000 of 1920; 480 0.444444 of 1080
+ Extent readjusted. (dout)00000000042f9820 -> 1912, 0.995833 of 1920; 1053 0.975000 of 1080
+ Object 00000000042f9820[dout]^1 acquired.
+ sglDrawInput.c:203?_AfxDrawContextAcquireInput(dctx=00000000002ac1e0,spec=00000000001ce358)
+ Acquiring Draw Input...
+ Constructing instance 0000000004311920 of Draw Input class.
+ sglDrawInput.c:252?_AfxDinCtor(din=0000000004311920)
+ afxMemContext.c:532?AfxSystemAcquireMemContext(sys=00000000002a13c0,strategy=00000000001cdb80,hint="sglDrawInput.c:287!_AfxDinCtor")
+ Acquiring MemContext...
+ Constructing instance 00000000042fd6b0 of MemContext class.
+ afxMemContext.c:285?_AfxAllCtor(mctx=00000000042fd6b0)
+ Object 00000000042fd6b0[mctx]^1 acquired.
+ Object 0000000004311920[din]^1 acquired.
+ afxCamera.c:276?AfxSimulationAcquireCamera(sim=000000000032b300,name=viewer,perspective=1)
+ Acquiring Camera...
+ Constructing instance 00000000045c6400 of Camera : Node class.
+ Constructing instance 00000000045c6400 of Node class.
+ Constructing instance 00000000045c6400 of Camera class.
+ afxCamera.c:305?_AfxCamCtor(cam=00000000045c6400)
+ Object 00000000045c6400[cam]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ sglTexture.c:983?_AfxDrawContextBuildTextures(dctx=00000000002ac1e0,fmt=3,whd=[2048,2048,1],lodCnt=1,usage=40000000)
+ Acquiring Texture...
+ Constructing instance 00000000042f0320 of Texture : Resource class.
+ Constructing instance 00000000042f0320 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=00000000042f0320)
+ Constructing instance 00000000042f0320 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=00000000042f0320)
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000002a13c0,uri:art/skybox/blue/right.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 0000000002e0ada0 of I/O Stream class.
+ Acquired. (ios)0000000002e0ada0^1 <-> "E:/qwadro/afx/art/skybox/blue/right.tga"
+ Object 0000000002e0ada0[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 0000000002e0ada0[ios]^0
+ Destructing instance 0000000002e0ada0 of I/O Stream class.
+ I/O Stream destroyed. 0000000002e0ada0[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000002a13c0,uri:art/skybox/blue/left.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 0000000002e0ada0 of I/O Stream class.
+ Acquired. (ios)0000000002e0ada0^1 <-> "E:/qwadro/afx/art/skybox/blue/left.tga"
+ Object 0000000002e0ada0[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 0000000002e0ada0[ios]^0
+ Destructing instance 0000000002e0ada0 of I/O Stream class.
+ I/O Stream destroyed. 0000000002e0ada0[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000002a13c0,uri:art/skybox/blue/top.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 0000000002e0ada0 of I/O Stream class.
+ Acquired. (ios)0000000002e0ada0^1 <-> "E:/qwadro/afx/art/skybox/blue/top.tga"
+ Object 0000000002e0ada0[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 0000000002e0ada0[ios]^0
+ Destructing instance 0000000002e0ada0 of I/O Stream class.
+ I/O Stream destroyed. 0000000002e0ada0[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000002a13c0,uri:art/skybox/blue/bottom.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 0000000002e0ada0 of I/O Stream class.
+ Acquired. (ios)0000000002e0ada0^1 <-> "E:/qwadro/afx/art/skybox/blue/bottom.tga"
+ Object 0000000002e0ada0[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 0000000002e0ada0[ios]^0
+ Destructing instance 0000000002e0ada0 of I/O Stream class.
+ I/O Stream destroyed. 0000000002e0ada0[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000002a13c0,uri:art/skybox/blue/back.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 0000000002e0ada0 of I/O Stream class.
+ Acquired. (ios)0000000002e0ada0^1 <-> "E:/qwadro/afx/art/skybox/blue/back.tga"
+ Object 0000000002e0ada0[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 0000000002e0ada0[ios]^0
+ Destructing instance 0000000002e0ada0 of I/O Stream class.
+ I/O Stream destroyed. 0000000002e0ada0[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000002a13c0,uri:art/skybox/blue/front.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 0000000002e0ada0 of I/O Stream class.
+ Acquired. (ios)0000000002e0ada0^1 <-> "E:/qwadro/afx/art/skybox/blue/front.tga"
+ Object 0000000002e0ada0[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 0000000002e0ada0[ios]^0
+ Destructing instance 0000000002e0ada0 of I/O Stream class.
+ I/O Stream destroyed. 0000000002e0ada0[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ Object 00000000042f0320[tex]^1 acquired.
+ afxUniformPipelineDescriptor.c:603?_AfxDrawContextUploadPipelineUrd(dctx=00000000002ac1e0,uri=data/pipeline/skybox.pip.urd)
+ afxUniformPipelineDescriptor.c:559?_AfxLoadAndParsePipelineUrd(dctx=00000000002ac1e0)
+ afxUrd.c:1054?AfxSystemUploadUrd(uri=data/pipeline/skybox.pip.urdp)
+ Acquiring Uniform Resource Dictionary...
+ Constructing instance 0000000004315f50 of Uniform Resource Dictionary class.
+ afxUrd.c:1036?_AfxUrdCtor(uri:data/pipeline/skybox.pip.urd)
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000002a13c0,uri:data/pipeline/skybox.pip.urd,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 0000000002e0ada0 of I/O Stream class.
+ Acquired. (ios)0000000002e0ada0^1 <-> "E:/qwadro/afx/data/pipeline/skybox.pip.urd"
+ Object 0000000002e0ada0[ios]^1 acquired.
+ Destroying I/O Stream... 0000000002e0ada0[ios]^0
+ Destructing instance 0000000002e0ada0 of I/O Stream class.
+ I/O Stream destroyed. 0000000002e0ada0[ios]
+ Object 0000000004315f50[urd]^1 acquired.
+ Destroying Uniform Resource Dictionary... 0000000004315f50[urd]^0
+ Destructing instance 0000000004315f50 of Uniform Resource Dictionary class.
+ afxUrd.c:1019?_AfxUrdDtor(urd=0000000004315f50)
+ Uniform Resource Dictionary destroyed. 0000000004315f50[urd]
+ Acquiring Pipeline...
+ Constructing instance 0000000002e41c00 of Pipeline : Resource class.
+ Constructing instance 0000000002e41c00 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=0000000002e41c00)
+ Constructing instance 0000000002e41c00 of Pipeline class.
+ sglPipeline.c:556?_AfxPipCtor(pip=0000000002e41c00)
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=00000000002ac1e0,code=00000000001c3ae0,len=1708)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=00000000002ac1e0,code=00000000001c3ae0,len=1708)
+ Acquiring Pipeline Module...
+ Constructing instance 0000000004390de0 of Pipeline Module class.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=0000000004390de0)
+ Object 0000000004390de0[pipm]^1 acquired.
+ Taking connection 0000000002e41d98 connecting 0000000004390de0?pipm#1 to holder 0000000002e41c00?pip#1.
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=00000000002ac1e0,code=00000000001c4b00,len=402)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=00000000002ac1e0,code=00000000001c4b00,len=402)
+ Acquiring Pipeline Module...
+ Constructing instance 0000000004390f00 of Pipeline Module class.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=0000000004390f00)
+ Object 0000000004390f00[pipm]^1 acquired.
+ Taking connection 0000000002e41df8 connecting 0000000004390f00?pipm#1 to holder 0000000002e41c00?pip#1.
+ Acquiring Pipeline Rig...
+ Constructing instance 0000000002e0ada0 of Pipeline Rig class.
+ sglPipelineRig.c:100?_AfxPiprCtor(pipr=0000000002e0ada0)
+ Object 0000000002e0ada0[pipa]^1 acquired.
+ Object 0000000002e41c00[pip]^1 acquired.
+ sglSampler.c:84?_AfxDrawContextAcquireSampler(dctx=00000000002ac1e0,spec=00000000001cc810)
+ Acquiring Sampler...
+ Constructing instance 00000000045d1310 of Sampler class.
+ sglSampler.c:131?_AfxSmpCtor(smp=00000000045d1310)
+ Object 00000000045d1310[smp]^1 acquired.
+ sglCanvas.c:256?_AfxDrawContextAcquireCanvas(dctx=00000000002ac1e0,extent=[1912,1053,1],surfaceCnt=2)
+ Acquiring Canvas...
+ Constructing instance 0000000004470680 of Canvas class.
+ sglCanvas.c:339?_AfxCanvCtor(canv=0000000004470680)
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=00000000002ac1e0,fmt=24,whd=[1912,1053,1],usage=32)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 000000000294ef60 of Surface : Texture class.
+ Constructing instance 000000000294ef60 of Texture : Resource class.
+ Constructing instance 000000000294ef60 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=000000000294ef60)
+ Constructing instance 000000000294ef60 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=000000000294ef60)
+ Constructing instance 000000000294ef60 of Surface class.
+ sglSurface.c:102?_AfxSurfCtor(surf=000000000294ef60)
+ Object 000000000294ef60[surf]^1 acquired.
+ Object 0000000004470680[canv]^1 acquired.
+ Acquiring Buffer...
+ Constructing instance 00000000042fd910 of Buffer class.
+ sglBuffer.c:323?_AfxBufCtor(buf=00000000042fd910)
+ Object 00000000042fd910[buf]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 00000000045c6840 of Lego class.
+ sglLego.c:68?_AfxLegoCtor(lego=00000000045c6840)
+ Object 00000000045c6840[bset]^1 acquired.
+ sglCanvas.c:256?_AfxDrawContextAcquireCanvas(dctx=00000000002ac1e0,extent=[1912,1053,1],surfaceCnt=2)
+ Acquiring Canvas...
+ Constructing instance 0000000004470aa0 of Canvas class.
+ sglCanvas.c:339?_AfxCanvCtor(canv=0000000004470aa0)
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=00000000002ac1e0,fmt=24,whd=[1912,1053,1],usage=32)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000002e4a5f0 of Surface : Texture class.
+ Constructing instance 0000000002e4a5f0 of Texture : Resource class.
+ Constructing instance 0000000002e4a5f0 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=0000000002e4a5f0)
+ Constructing instance 0000000002e4a5f0 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=0000000002e4a5f0)
+ Constructing instance 0000000002e4a5f0 of Surface class.
+ sglSurface.c:102?_AfxSurfCtor(surf=0000000002e4a5f0)
+ Object 0000000002e4a5f0[surf]^1 acquired.
+ Object 0000000004470aa0[canv]^1 acquired.
+ Acquiring Buffer...
+ Constructing instance 00000000045c6b90 of Buffer class.
+ sglBuffer.c:323?_AfxBufCtor(buf=00000000045c6b90)
+ Object 00000000045c6b90[buf]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 0000000002e4a8e0 of Lego class.
+ sglLego.c:68?_AfxLegoCtor(lego=0000000002e4a8e0)
+ Object 0000000002e4a8e0[bset]^1 acquired.
+ sglDrawScript.c:394?_AfxDrawInputAcquireScript(din=0000000004311920)
+ Acquiring Draw Script...
+ Constructing instance 00000000042f9310 of Draw Script class.
+ sglDrawScript.c:412?_AfxDscrCtor(dscr=00000000042f9310)
+ Object 00000000042f9310[dib]^1 acquired.
+ sglCanvas.c:160?_AfxStdCanvImplDtor(canv=0000000004470680)
+ sglTexture.c:481?_SglTexImplDtor(img=00000000042fd160)
+ ADV sglTexture.c:360?SglTexImageInit
+    tex 0000000000000de1, gl/target 32856, gl/intFmt 6408, gl/fmt 5121, gl/type 6408
+ tex 00000000042fd160, instanced.
+ ADV sglTexture.c:360?SglTexImageInit
+    tex 0000000000000de1, gl/target 35056, gl/intFmt 34041, gl/fmt 34042, gl/type 34041
+ tex 000000000294ef60, instanced.
+ canv 0000000004470680, reinstanced.
+ Shader 0000000004390de0 reinstanced.
+ Shader 0000000004390f00 reinstanced.
+ Draw pipeline 0000000002e41c00 reinstanced.
+ buf 00000000042fd910, instanced.
+ Sampler 00000000045d1310 reinstanced.
+ ADV sglTexture.c:360?SglTexImageInit
+    tex 0000000000008513, gl/target 32849, gl/intFmt 6407, gl/fmt 5121, gl/type 6407
+ tex 00000000042f0320, instanced.
+ Shader 00000000002bc770 reinstanced.
+ Shader 00000000002bec40 reinstanced.
+ Draw pipeline 00000000002b95e0 reinstanced.
+ Sampler 00000000002b3dd0 reinstanced.
+ ADV afxSystem.c:993?AfxSystemProcess
+    User input requested application break.
+ afxThread.c:591?AfxThreadRequestInterruption(thr=00000000002b2850)
+ afxApplication.c:310?AfxApplicationExit(app=00000000002b4d50)
+ Skybox.c:601?AfxLeaveApplication(app=00000000002b4d50)
+ Destroying Draw Input... 0000000004311920[din]^0
+ Destructing instance 0000000004311920 of Draw Input class.
+ sglDrawInput.c:215?_AfxDinDtor(din=0000000004311920)
+ Draw Input destroyed. 0000000004311920[din]
+ aaaaaaaaaaaa
+ Destroying Application... 00000000002b4d50[app]^0
+ Dropping connection 00000000002b5360 from 00000000002b69e0?din#1 to holder 00000000002b4d50?app#0.
+ Dropping connection 00000000002b4dd0 from 00000000002b56a0?mctx#1 to holder 00000000002b4d50?app#0.
+ Dropping connection 00000000002b4e28 from 00000000002b3fa0?mse#1 to holder 00000000002b4d50?app#0.
+ Destructing instance 00000000002b4d50 of Application class.
+ afxApplication.c:399?_AfxAppDtor(app=00000000002b4d50)
+ Deinitializing Simulation class...
+ Destroying Simulation... 000000000032b300[sim]^0
+ Destructing instance 000000000032b300 of Simulation class.
+ afxSimulation.c:360?_AfxSimDtor(sim=000000000032b300)
+ Deinitializing Light class...
+ Light class deinitialized.
+ Deinitializing Camera class...
+ Destroying Camera... 00000000045c6400[cam]^0
+ Destructing instance 00000000045c6400 of Camera class.
+ afxCamera.c:297?_AfxCamDtor(cam=00000000045c6400)
+ Destructing instance 00000000045c6400 of Camera : Node class.
+ Destructing instance 00000000045c6400 of Node class.
+ Camera destroyed. 00000000045c6400[cam]
+ Camera class deinitialized.
+ Deinitializing Entity class...
+ Entity class deinitialized.
+ Deinitializing Body class...
+ Body class deinitialized.
+ Deinitializing Model class...
+ Model class deinitialized.
+ Deinitializing Skeleton class...
+ Skeleton class deinitialized.
+ Deinitializing Node class...
+ Node class deinitialized.
+ Deinitializing Mesh class...
+ Mesh class deinitialized.
+ Deinitializing Material class...
+ Material class deinitialized.
+ Simulation destroyed. 000000000032b300[sim]
+ Simulation class deinitialized.
+ Deinitializing Widget class...
+ Widget class deinitialized.
+ Application destroyed. 00000000002b4d50[app]
+ Destroying Draw System... 00000000002a6f80[dsys]^0
+ Destructing instance 00000000002a6f80 of Draw System class.
+ afxDrawSystem.c:183?_AfxDsysDtor(dsys=00000000002a6f80)
+ Deinitializing Draw Driver class...
+ Destroying Draw Driver... 00000000002a9170[ddrv]^0
+ Destructing instance 00000000002a9170 of Draw Driver class.
+ afxDrawDriver.c:66?_AfxDdrvDtor(ddrv=00000000002a9170)
+ Deinitializing Draw Context class...
+ Destroying Draw Context... 00000000002ac1e0[dctx]^0
+ Destructing instance 00000000002ac1e0 of Draw Context class.
+ sglDrawContext.c:536?_AfxDctxDtor(dctx=00000000002ac1e0)
+ Deinitializing Draw Output class...
+ Destroying Draw Output... 00000000042f9820[dout]^0
+ Destructing instance 00000000042f9820 of Draw Output class.
+ sglDrawOutput.c:301?_AfxDoutDtor(dout=00000000042f9820)
+ Extent readjusted. (dout)00000000042f9820 -> 1912, 0.995833 of 1920; 1053 0.975000 of 1080
+ sglDrawOutput.c:255?_AfxDoutDropAllSurfaces(dout=00000000042f9820)
+ Destroying Surface... 0000000004491df0[surf]^0
+ Destructing instance 0000000004491df0 of Surface class.
+ sglSurface.c:69?_AfxSurfDtor(surf=0000000004491df0)
+ Destructing instance 0000000004491df0 of Surface : Texture class.
+ Destructing instance 0000000004491df0 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=0000000004491df0)
+ Destructing instance 0000000004491df0 of Texture : Resource class.
+ Destructing instance 0000000004491df0 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=0000000004491df0)
+ Surface destroyed. 0000000004491df0[surf]
+ Draw Output destroyed. 00000000042f9820[dout]
+ Draw Output class deinitialized.
+ Deinitializing Lego class...
+ Destroying Lego... 0000000002e4a8e0[bset]^0
+ Destructing instance 0000000002e4a8e0 of Lego class.
+ sglLego.c:51?_AfxLegoDtor(pipa=0000000002e4a8e0)
+ Lego destroyed. 0000000002e4a8e0[bset]
+ Destroying Lego... 00000000045c6840[bset]^0
+ Destructing instance 00000000045c6840 of Lego class.
+ sglLego.c:51?_AfxLegoDtor(pipa=00000000045c6840)
+ Lego destroyed. 00000000045c6840[bset]
+ Destroying Lego... 00000000002b9fb0[bset]^0
+ Destructing instance 00000000002b9fb0 of Lego class.
+ sglLego.c:51?_AfxLegoDtor(pipa=00000000002b9fb0)
+ Lego destroyed. 00000000002b9fb0[bset]
+ Lego class deinitialized.
+ Deinitializing Pipeline class...
+ Destroying Pipeline... 0000000002e41c00[pip]^0
+ Dropping connection 0000000002e41df8 from 0000000004390f00?pipm#1 to holder 0000000002e41c00?pip#0.
+ Dropping connection 0000000002e41d98 from 0000000004390de0?pipm#1 to holder 0000000002e41c00?pip#0.
+ Destructing instance 0000000002e41c00 of Pipeline class.
+ sglPipeline.c:485?_AfxPipDtor(pip=0000000002e41c00)
+ Destroying Pipeline Rig... 0000000002e0ada0[pipa]^0
+ Destructing instance 0000000002e0ada0 of Pipeline Rig class.
+ sglPipelineRig.c:82?_AfxPiprDtor(pipr=0000000002e0ada0)
+ Pipeline Rig destroyed. 0000000002e0ada0[pipa]
+ Destructing instance 0000000002e41c00 of Pipeline : Resource class.
+ Destructing instance 0000000002e41c00 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=0000000002e41c00)
+ Pipeline destroyed. 0000000002e41c00[pip]
+ Destroying Pipeline... 00000000002b95e0[pip]^0
+ Dropping connection 00000000002b97d8 from 00000000002bec40?pipm#1 to holder 00000000002b95e0?pip#0.
+ Dropping connection 00000000002b9778 from 00000000002bc770?pipm#1 to holder 00000000002b95e0?pip#0.
+ Destructing instance 00000000002b95e0 of Pipeline class.
+ sglPipeline.c:485?_AfxPipDtor(pip=00000000002b95e0)
+ Destroying Pipeline Rig... 00000000002b2e60[pipa]^0
+ Destructing instance 00000000002b2e60 of Pipeline Rig class.
+ sglPipelineRig.c:82?_AfxPiprDtor(pipr=00000000002b2e60)
+ Pipeline Rig destroyed. 00000000002b2e60[pipa]
+ Destructing instance 00000000002b95e0 of Pipeline : Resource class.
+ Destructing instance 00000000002b95e0 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=00000000002b95e0)
+ Pipeline destroyed. 00000000002b95e0[pip]
+ Pipeline class deinitialized.
+ Deinitializing Pipeline Rig class...
+ Pipeline Rig class deinitialized.
+ Deinitializing Pipeline Module class...
+ Destroying Pipeline Module... 0000000004390f00[pipm]^0
+ Destructing instance 0000000004390f00 of Pipeline Module class.
+ Pipeline Module destroyed. 0000000004390f00[pipm]
+ Destroying Pipeline Module... 0000000004390de0[pipm]^0
+ Destructing instance 0000000004390de0 of Pipeline Module class.
+ Pipeline Module destroyed. 0000000004390de0[pipm]
+ Destroying Pipeline Module... 00000000002bec40[pipm]^0
+ Destructing instance 00000000002bec40 of Pipeline Module class.
+ Pipeline Module destroyed. 00000000002bec40[pipm]
+ Destroying Pipeline Module... 00000000002bc770[pipm]^0
+ Destructing instance 00000000002bc770 of Pipeline Module class.
+ Pipeline Module destroyed. 00000000002bc770[pipm]
+ Pipeline Module class deinitialized.
+ Deinitializing Canvas class...
+ Destroying Canvas... 0000000004470aa0[canv]^0
+ Destructing instance 0000000004470aa0 of Canvas class.
+ sglCanvas.c:317?_AfxCanvDtor(canv=0000000004470aa0)
+ sglCanvas.c:291?_AfxCanvDropAllSurfaces(canv=0000000004470aa0)
+ Destroying Surface... 00000000042f6660[surf]^0
+ Destructing instance 00000000042f6660 of Surface class.
+ sglSurface.c:69?_AfxSurfDtor(surf=00000000042f6660)
+ Destructing instance 00000000042f6660 of Surface : Texture class.
+ Destructing instance 00000000042f6660 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=00000000042f6660)
+ Destructing instance 00000000042f6660 of Texture : Resource class.
+ Destructing instance 00000000042f6660 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=00000000042f6660)
+ Surface destroyed. 00000000042f6660[surf]
+ Destroying Surface... 0000000002e4a5f0[surf]^0
+ Destructing instance 0000000002e4a5f0 of Surface class.
+ sglSurface.c:69?_AfxSurfDtor(surf=0000000002e4a5f0)
+ Destructing instance 0000000002e4a5f0 of Surface : Texture class.
+ Destructing instance 0000000002e4a5f0 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=0000000002e4a5f0)
+ Destructing instance 0000000002e4a5f0 of Texture : Resource class.
+ Destructing instance 0000000002e4a5f0 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=0000000002e4a5f0)
+ Surface destroyed. 0000000002e4a5f0[surf]
+ Canvas destroyed. 0000000004470aa0[canv]
+ Destroying Canvas... 0000000004470680[canv]^0
+ Destructing instance 0000000004470680 of Canvas class.
+ sglCanvas.c:317?_AfxCanvDtor(canv=0000000004470680)
+ sglCanvas.c:291?_AfxCanvDropAllSurfaces(canv=0000000004470680)
+ Destroying Surface... 00000000042fd160[surf]^0
+ Destructing instance 00000000042fd160 of Surface class.
+ sglSurface.c:69?_AfxSurfDtor(surf=00000000042fd160)
+ Destructing instance 00000000042fd160 of Surface : Texture class.
+ Destructing instance 00000000042fd160 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=00000000042fd160)
+ Destructing instance 00000000042fd160 of Texture : Resource class.
+ Destructing instance 00000000042fd160 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=00000000042fd160)
+ Surface destroyed. 00000000042fd160[surf]
+ Destroying Surface... 000000000294ef60[surf]^0
+ Destructing instance 000000000294ef60 of Surface class.
+ sglSurface.c:69?_AfxSurfDtor(surf=000000000294ef60)
+ Destructing instance 000000000294ef60 of Surface : Texture class.
+ Destructing instance 000000000294ef60 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=000000000294ef60)
+ Destructing instance 000000000294ef60 of Texture : Resource class.
+ Destructing instance 000000000294ef60 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=000000000294ef60)
+ Surface destroyed. 000000000294ef60[surf]
+ Canvas destroyed. 0000000004470680[canv]
+ Canvas class deinitialized.
+ Deinitializing Surface class...
+ Surface class deinitialized.
+ Deinitializing Texture class...
+ Destroying Texture... 00000000042f0320[tex]^0
+ Destructing instance 00000000042f0320 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=00000000042f0320)
+ Destructing instance 00000000042f0320 of Texture : Resource class.
+ Destructing instance 00000000042f0320 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=00000000042f0320)
+ Texture destroyed. 00000000042f0320[tex]
+ Texture class deinitialized.
+ Deinitializing Sampler class...
+ Destroying Sampler... 00000000045d1310[smp]^0
+ Destructing instance 00000000045d1310 of Sampler class.
+ sglSampler.c:104?_AfxSmpDtor(smp=00000000045d1310)
+ Sampler destroyed. 00000000045d1310[smp]
+ Destroying Sampler... 00000000002b3dd0[smp]^0
+ Destructing instance 00000000002b3dd0 of Sampler class.
+ sglSampler.c:104?_AfxSmpDtor(smp=00000000002b3dd0)
+ Sampler destroyed. 00000000002b3dd0[smp]
+ Sampler class deinitialized.
+ Deinitializing Index Buffer class...
+ Index Buffer class deinitialized.
+ Deinitializing Vertex Buffer class...
+ Vertex Buffer class deinitialized.
+ Deinitializing Buffer class...
+ Destroying Buffer... 00000000045c6b90[buf]^0
+ Destructing instance 00000000045c6b90 of Buffer class.
+ sglBuffer.c:292?_AfxBufDtor(buf=00000000045c6b90)
+ Buffer destroyed. 00000000045c6b90[buf]
+ Destroying Buffer... 00000000042fd910[buf]^0
+ Destructing instance 00000000042fd910 of Buffer class.
+ sglBuffer.c:292?_AfxBufDtor(buf=00000000042fd910)
+ Buffer destroyed. 00000000042fd910[buf]
+ Buffer class deinitialized.
+ Deinitializing Draw Engine class...
+ Destroying Draw Engine... 00000000002b0f60[deng]^0
+ Destructing instance 00000000002b0f60 of Draw Engine class.
+ sglDrawEngine.c:1969?_AfxDengDtor(deng=00000000002b0f60)
+ Destroying Thread... 00000000002b2850[thr]^0
+ Destructing instance 00000000002b2850 of Thread class.
+ afxThread.c:706?_AfxThrDtor(thr=00000000002b2850)
+ Thread destroyed. 00000000002b2850[thr]
+ Draw Engine destroyed. 00000000002b0f60[deng]
+ Draw Engine class deinitialized.
+ Deinitializing Draw Input class...
+ Destroying Draw Input... 00000000002b69e0[din]^0
+ Destructing instance 00000000002b69e0 of Draw Input class.
+ sglDrawInput.c:215?_AfxDinDtor(din=00000000002b69e0)
+ Draw Input destroyed. 00000000002b69e0[din]
+ Draw Input class deinitialized.
+ Deinitializing Draw Script class...
+ Destroying Draw Script... 00000000042f9310[dib]^0
+ Destructing instance 00000000042f9310 of Draw Script class.
+ sglDrawScript.c:427?_AfxDscrDtor(dscr=00000000042f9310)
+ Draw Script destroyed. 00000000042f9310[dib]
+ Draw Script class deinitialized.
+ Draw Context destroyed. 00000000002ac1e0[dctx]
+ Draw Context class deinitialized.
+ Draw Driver destroyed. 00000000002a9170[ddrv]
+ Draw Driver class deinitialized.
+ Draw System destroyed. 00000000002a6f80[dsys]
+ Destroying Core Execution System... 00000000002a13c0[sys]^0
+ Destructing instance 00000000002a13c0 of Core Execution System class.
+ afxSystem.c:1132?_AfxSysDtor(sys=00000000002a13c0)
+ Point "sound" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../sound".
+ Point "data" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../data".
+ Point "art" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../art".
+ Point "system" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64".
+ Point "." rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/..".
+ Destroying Keyboard... 00000000002a4780[kbd]^0
+ Destructing instance 00000000002a4780 of Keyboard class.
+ afxKeyboard.c:172?_AfxKbdDtor(kbd=00000000002a4780)
+ Destructing instance 00000000002a4780 of Keyboard : HID class.
+ Destructing instance 00000000002a4780 of HID class.
+ afxHid.c:37?_AfxHidDtor(hid=00000000002a4780)
+ Keyboard destroyed. 00000000002a4780[kbd]
+ Destroying Module... 00000000002a4640[mdle]^0
+ Destructing instance 00000000002a4640 of Module class.
+ afxModule.c:115?_AfxMdleDtor(mdle=00000000002a4640)
+ Module destroyed. 00000000002a4640[mdle]
+ Deinitializing Application class...
+ Application class deinitialized.
+ Deinitializing Draw System class...
+ Draw System class deinitialized.
+ Deinitializing Mouse class...
+ Destroying Mouse... 00000000002b3fa0[mse]^0
+ Destructing instance 00000000002b3fa0 of Mouse class.
+ afxMouse.c:241?_AfxMseDtor(mse=00000000002b3fa0)
+ Destructing instance 00000000002b3fa0 of Mouse : HID class.
+ Destructing instance 00000000002b3fa0 of HID class.
+ afxHid.c:37?_AfxHidDtor(hid=00000000002b3fa0)
+ Mouse destroyed. 00000000002b3fa0[mse]
+ Mouse class deinitialized.
+ Deinitializing Keyboard class...
+ Keyboard class deinitialized.
+ Deinitializing HID class...
+ HID class deinitialized.
+ Deinitializing Uniform Resource Dictionary class...
+ Uniform Resource Dictionary class deinitialized.
+ Deinitializing Resource class...
+ Resource class deinitialized.
+ Deinitializing Archive class...
+ Archive class deinitialized.
+ Deinitializing I/O Stream class...
+ I/O Stream class deinitialized.
+ Deinitializing Module class...
+ Destroying Module... 00000000002ab680[mdle]^0
+ Destructing instance 00000000002ab680 of Module class.
+ afxModule.c:115?_AfxMdleDtor(mdle=00000000002ab680)
+ Module destroyed. 00000000002ab680[mdle]
+ Destroying Module... 00000000002a85e0[mdle]^0
+ Destructing instance 00000000002a85e0 of Module class.
+ afxModule.c:115?_AfxMdleDtor(mdle=00000000002a85e0)
+ Module destroyed. 00000000002a85e0[mdle]
+ Module class deinitialized.
+ Deinitializing Thread class...
+ Thread class deinitialized.
+ Deinitializing MemContext class...
+ Destroying MemContext... 00000000042fd6b0[mctx]^0
+ Destructing instance 00000000042fd6b0 of MemContext class.
+ afxMemContext.c:265?_AfxAllDtor(mctx=00000000042fd6b0)
+ MemContext destroyed. 00000000042fd6b0[mctx]
+ Destroying MemContext... 00000000002b6bf0[mctx]^0
+ Destructing instance 00000000002b6bf0 of MemContext class.
+ afxMemContext.c:265?_AfxAllDtor(mctx=00000000002b6bf0)
+ MemContext destroyed. 00000000002b6bf0[mctx]
+ Destroying MemContext... 00000000002b56a0[mctx]^0
+ Destructing instance 00000000002b56a0 of MemContext class.
+ afxMemContext.c:265?_AfxAllDtor(mctx=00000000002b56a0)
+ MemContext destroyed. 00000000002b56a0[mctx]
+ MemContext class deinitialized.
+ Core Execution System destroyed. 00000000002a13c0[sys]

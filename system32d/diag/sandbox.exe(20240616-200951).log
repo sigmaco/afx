@@ -1,0 +1,1435 @@
+Booting up...
+Acquiring thread...  7940 "afxSystem_w32.c:496"Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\afx\system'),5Mounting... <//./z/>('E:\qwadro\afx\system32'),7Mounting... <//./z/>('E:\qwadro\afx\system32d'),7Mounting... <//./c/>('C:\'),7Mounting... <//./e/>('E:\'),7Mounting... <//./f/>('F:\'),7Mounting... <//./g/>('G:\'),7Mounting... <//./h/>('H:\'),7Mounting... <//./i/>('I:\'),7Loading module... <e2coree>Memory Page Size: 4096HW Threading Capacity: 2Doing the AVX start up...Loading module... <e2draw>Loading module... <targl4.dll>Installable client driver discovered.
+	Device: TARGA over OpenGL 4
+	Driver: Truecolor Advanced Raster Graphics Accelerator
+	Version: 4.0.16385
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+Doing the ASX start up...Loading module... <e2sound>Loading module... <oal4d.dll>Installable client driver discovered.
+	Device: A4D Waveform Accoustics Accelerator
+	Driver: A4D over OpenAL 1
+	Version: 0.1.1514
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+Doing the AUX start up...Loading module... <e2ux>Acquiring HID at port 0Mounting... <//./c/>('E:\qwadro\afx\system'),7Entering the Thread Execution Environment 7940
+Mounting... <//./art/>('E:\qwadro\afx\art'),5Loading module... <opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008Acquiring thread...  0 "sglDdev_w32.c:1295"Entering the Thread Execution Environment 4684
+Starting 4684 on thread execution unit #1...Entering the Thread Execution Environment 7940
+Installing watcher <005a9308> for 005a2ff8...Entering the Thread Execution Environment 4684
+Creating transient OpenGL context000 wglMakeContextCurrentARB core found.000 wglGetCurrentReadDCARB core found.000 wglCreateContextAttribsARB core found.000 wglChoosePixelFormatARB core found.000 wglSwapIntervalEXT core found.000 wglGetExtensionsStringARB core found.Creating definitive OpenGL context000 wglMakeContextCurrentARB core found.000 wglGetCurrentReadDCARB core found.000 wglCreateContextAttribsARB core found.000 wglChoosePixelFormatARB core found.000 wglSwapIntervalEXT core found.000 wglGetExtensionsStringARB core found.391 glReleaseShaderCompiler core found.392 glShaderBinary core found.393 glGetShaderPrecisionFormat core found.394 glDepthRangef core found.395 glClearDepthf core found.396 glGetProgramBinary core found.397 glProgramBinary core found.398 glProgramParameteri core found.399 glUseProgramStages core found.400 glActiveShaderProgram core found.401 glCreateShaderProgramv core found.402 glBindProgramPipeline core found.403 glDeleteProgramPipelines core found.404 glGenProgramPipelines core found.405 glIsProgramPipeline core found.406 glGetProgramPipelineiv core found.407 glProgramUniform1i core found.408 glProgramUniform1iv core found.409 glProgramUniform1f core found.410 glProgramUniform1fv core found.411 glProgramUniform1d core found.412 glProgramUniform1dv core found.413 glProgramUniform1ui core found.414 glProgramUniform1uiv core found.415 glProgramUniform2i core found.416 glProgramUniform2iv core found.417 glProgramUniform2f core found.418 glProgramUniform2fv core found.419 glProgramUniform2d core found.420 glProgramUniform2dv core found.421 glProgramUniform2ui core found.422 glProgramUniform2uiv core found.423 glProgramUniform3i core found.424 glProgramUniform3iv core found.425 glProgramUniform3f core found.426 glProgramUniform3fv core found.427 glProgramUniform3d core found.428 glProgramUniform3dv core found.429 glProgramUniform3ui core found.430 glProgramUniform3uiv core found.431 glProgramUniform4i core found.432 glProgramUniform4iv core found.433 glProgramUniform4f core found.434 glProgramUniform4fv core found.435 glProgramUniform4d core found.436 glProgramUniform4dv core found.437 glProgramUniform4ui core found.438 glProgramUniform4uiv core found.439 glProgramUniformMatrix2fv core found.440 glProgramUniformMatrix3fv core found.441 glProgramUniformMatrix4fv core found.442 glProgramUniformMatrix2dv core found.443 glProgramUniformMatrix3dv core found.444 glProgramUniformMatrix4dv core found.445 glProgramUniformMatrix2x3fv core found.446 glProgramUniformMatrix3x2fv core found.447 glProgramUniformMatrix2x4fv core found.448 glProgramUniformMatrix4x2fv core found.449 glProgramUniformMatrix3x4fv core found.450 glProgramUniformMatrix4x3fv core found.451 glProgramUniformMatrix2x3dv core found.452 glProgramUniformMatrix3x2dv core found.453 glProgramUniformMatrix2x4dv core found.454 glProgramUniformMatrix4x2dv core found.455 glProgramUniformMatrix3x4dv core found.456 glProgramUniformMatrix4x3dv core found.457 glValidateProgramPipeline core found.458 glGetProgramPipelineInfoLog core found.459 glVertexAttribL1d core found.460 glVertexAttribL2d core found.461 glVertexAttribL3d core found.462 glVertexAttribL4d core found.463 glVertexAttribL1dv core found.464 glVertexAttribL2dv core found.465 glVertexAttribL3dv core found.466 glVertexAttribL4dv core found.467 glVertexAttribLPointer core found.468 glGetVertexAttribLdv core found.469 glViewportArrayv core found.470 glViewportIndexedf core found.471 glViewportIndexedfv core found.472 glScissorArrayv core found.473 glScissorIndexed core found.474 glScissorIndexedv core found.475 glDepthRangeArrayv core found.476 glDepthRangeIndexed core found.477 glGetFloati_v core found.478 glGetDoublei_v core found.479 glDrawArraysInstancedBaseInstance core found.480 glDrawElementsInstancedBaseInstance core found.481 glDrawElementsInstancedBaseVertexBaseInstance core found.482 glGetInternalformativ core found.483 glGetActiveAtomicCounterBufferiv core found.484 glBindImageTexture core found.485 glMemoryBarrier core found.486 glTexStorage1D core found.487 glTexStorage2D core found.488 glTexStorage3D core found.489 glDrawTransformFeedbackInstanced core found.490 glDrawTransformFeedbackStreamInstanced core found.493 glDispatchCompute core found.494 glDispatchComputeIndirect core found.496 glFramebufferParameteri core found.497 glGetFramebufferParameteriv core found.498 glGetInternalformati64v core found.503 glInvalidateFramebuffer core found.504 glInvalidateSubFramebuffer core found.505 glMultiDrawArraysIndirect core found.506 glMultiDrawElementsIndirect core found.507 glGetProgramInterfaceiv core found.508 glGetProgramResourceIndex core found.509 glGetProgramResourceName core found.510 glGetProgramResourceiv core found.511 glGetProgramResourceLocation core found.512 glGetProgramResourceLocationIndex core found.513 glShaderStorageBlockBinding core found.514 glTexBufferRange core found.515 glTexStorage2DMultisample core found.516 glTexStorage3DMultisample core found.518 glBindVertexBuffer core found.519 glVertexAttribFormat core found.520 glVertexAttribIFormat core found.521 glVertexAttribLFormat core found.522 glVertexAttribBinding core found.523 glVertexBindingDivisor core found.524 glDebugMessageControl core found.525 glDebugMessageInsert core found.526 glDebugMessageCallback core found.527 glGetDebugMessageLog core found.528 glPushDebugGroup core found.529 glPopDebugGroup core found.530 glObjectLabel core found.531 glGetObjectLabel core found.532 glObjectPtrLabel core found.533 glGetObjectPtrLabel core found.534 glBufferStorage core found.543 glClipControlEXT ext found.551 glNamedBufferStorageEXT ext found.589 glTextureBufferRangeEXT ext found.606 glTextureParameteriEXT ext found.641 glMemoryBarrierByRegion core found.644 glGetGraphicsResetStatusARB ext found.645 glGetnCompressedTexImageARB ext found.646 glGetnTexImageARB ext found.647 glGetnUniformdvARB ext found.648 glGetnUniformfvARB ext found.649 glGetnUniformivARB ext found.650 glGetnUniformuivARB ext found.651 glReadnPixelsARB ext found.677 381 1920 1080 96 96 32 1 36 36 51 60 1 SIGMA GL/2 Hardware-accelerated Draw Processing Unit 000
+	Intel(R) HD Graphics 4.0.0 - Build 10.18.10.5161sglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:775
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:777
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:875
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:904
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:977
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:980
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:985
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:990
+GL: INVAL_PARAMEntering the Thread Execution Environment 7940
+Uploading pipeline '//./z/video/sampleOutRgba.xsh.xml'Loading file... <//./z/video/sampleOutRgba.xsh.xml>('E:\qwadro\afx\system\video\sampleOutRgba.xsh.xml')Node 'DepthWriteEnabled' not handled.../system/video/sampleOutRgba.xsh.xmlUploading pipeline '../system/video/sampleOutRgba.xsh.xml'Loading file... <../system/video/sampleOutRgba.xsh.xml>('../system/video/sampleOutRgba.xsh.xml')../system/video/uvOutTristripQuad.vsh../system/video/sampleOutRgba2d.fshOpening file... <../system/video/uvOutTristripQuad.vsh>('../system/video/uvOutTristripQuad.vsh'),1Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+const vec4 gsQuadPos[4] = vec4[](vec4(-1, 1, 0, 1), vec4(-1,-1, 0, 1), vec4(1, 1, 0, 1), vec4(1,-1, 0, 1));
+const vec2 gsQuadUv[4] = vec2[](vec2(0, 1), vec2(0, 0), vec2(1, 1), vec2(1, 0));
+
+out block
+{
+    vec2 uv0;
+} sgl_v;
+
+void main()
+{
+    // draw a full coverage quad based on two tristripped triangles (4 indices). AfxDraw(0, 1, 0, 4)
+    
+    gl_Position = gsQuadPos[gl_VertexID];
+    sgl_v.uv0 = gsQuadUv[gl_VertexID];
+}
+Opening file... <../system/video/sampleOutRgba2d.fsh>('../system/video/sampleOutRgba2d.fsh'),1Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+SAMPLING_UNIT(0, 0, sampler2D, samp);
+
+in block
+{
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = texture(samp, sgl_v.uv0);
+}
+afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>afxDrawOutput 000 adjusted. <952, 1920, 0.496> 1.881423 <506, 1080, 0.469>Entering the Thread Execution Environment 4684
+sglDdev_w32.c:122
+Hardware-side buffer 04e13bd8 ready. 34962, 1, 4Hardware-side buffer 04e13c78 ready. 34963, 2, 8Entering the Thread Execution Environment 7940
+Uploading pipeline '../data/pipeline/test/test.xsh.xml'Loading file... <../data/pipeline/test/test.xsh.xml>('../data/pipeline/test/test.xsh.xml')../data/pipeline/test/test.xsh.xmlUploading pipeline '../data/pipeline/test/test.xsh.xml'Loading file... <../data/pipeline/test/test.xsh.xml>('../data/pipeline/test/test.xsh.xml')../data/pipeline/test/test.vsh../data/pipeline/test/test.fshOpening file... <../data/pipeline/test/test.vsh>('../data/pipeline/test/test.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+IN(0, vec3, a_xyz);
+
+void main()
+{
+    vec4 pos = p * v * vec4(a_xyz, 1.0);
+    gl_Position = pos;
+}
+Opening file... <../data/pipeline/test/test.fsh>('../data/pipeline/test/test.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = vec4(0.5, 0.5, 0.5, 1.0);
+}
+afxUri.c:1479
+Reloading file 0... <../art/skybox/purple/right.tga>('../art/skybox/purple/right.tga')Entering the Thread Execution Environment 4684
+Hardware-side raster 005ad5c8 ready. 8513, 8051, [2048,2048,6]Entering the Thread Execution Environment 7940
+afxUri.c:1479
+Reloading file 0... <../art/skybox/purple/left.tga>('../art/skybox/purple/left.tga')afxUri.c:1479
+Reloading file 0... <../art/skybox/purple/bottom.tga>('../art/skybox/purple/bottom.tga')afxUri.c:1479
+Reloading file 0... <../art/skybox/purple/top.tga>('../art/skybox/purple/top.tga')afxUri.c:1479
+Reloading file 0... <../art/skybox/purple/front.tga>('../art/skybox/purple/front.tga')afxUri.c:1479
+Reloading file 0... <../art/skybox/purple/back.tga>('../art/skybox/purple/back.tga')Entering the Thread Execution Environment 4684
+Hardware-side buffer 04e1db50 ready. 34962, 3, 4Entering the Thread Execution Environment 7940
+Uploading pipeline '../data/pipeline/skybox/skybox.xsh.xml'Loading file... <../data/pipeline/skybox/skybox.xsh.xml>('../data/pipeline/skybox/skybox.xsh.xml')Node 'DepthWriteEnabled' not handled.../data/pipeline/skybox/skybox.xsh.xmlUploading pipeline '../data/pipeline/skybox/skybox.xsh.xml'Loading file... <../data/pipeline/skybox/skybox.xsh.xml>('../data/pipeline/skybox/skybox.xsh.xml')../data/pipeline/skybox/skybox.vsh../data/pipeline/skybox/sampleOutRgbaCube.fshOpening file... <../data/pipeline/skybox/skybox.vsh>('../data/pipeline/skybox/skybox.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+IN(0, vec3, a_xyz);
+
+const vec3 points[] =
+{
+    {-1.0, 1.0,-1.0 },
+    {-1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0, 1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+
+    {-1.0,-1.0, 1.0 },
+    {-1.0,-1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+    {-1.0, 1.0, 1.0 },
+    {-1.0,-1.0, 1.0 },
+
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+
+    {-1.0,-1.0, 1.0 },
+    {-1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0,-1.0, 1.0 },
+    {-1.0,-1.0, 1.0 },
+
+    {-1.0, 1.0,-1.0 },
+    { 1.0, 1.0,-1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    {-1.0, 1.0, 1.0 },
+    {-1.0, 1.0,-1.0 },
+
+    {-1.0,-1.0,-1.0 },
+    {-1.0,-1.0, 1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    {-1.0,-1.0, 1.0 },
+    { 1.0,-1.0, 1.0 }
+};
+
+out block
+{
+    vec3 uvw0;
+} sgl_v;
+
+void main()
+{
+    vec3 xyz = points[gl_VertexID];
+    sgl_v.uvw0 = xyz;
+    
+    // Convert cubemap coordinates into Vulkan coordinate space
+    sgl_v.uvw0.xy *= -1.0;
+    
+    // Remove translation from view matrix
+    vec4 pos = p * mat4(mat3(v)) * vec4(xyz, 1.0);
+    
+    gl_Position = pos.xyww;
+}
+Opening file... <../data/pipeline/skybox/sampleOutRgbaCube.fsh>('../data/pipeline/skybox/sampleOutRgbaCube.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+SAMPLING_UNIT(0, 1, samplerCube, samp);
+
+in block
+{
+    vec3 uvw0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = texture(samp, sgl_v.uvw0);
+}
+Uploading pipeline '../data/pipeline/body/body.xsh.xml?rigid'Loading file... <../data/pipeline/body/body.xsh.xml>('../data/pipeline/body/body.xsh.xml')Node 'DepthWriteEnabled' not handled.Node 'Rasterizer' not handled.../data/pipeline/body/body.fshOpening file... <../data/pipeline/body/body.fsh>('../data/pipeline/body/body.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(2, 0, sgl_mtl)
+{
+    vec3  Kd;
+    vec3  Ks;
+    float Ns;
+    float d;
+    float Ni;
+    int   illum;
+};
+
+UNIFORM(0, 0, sampler2D, diffuse_sampler);
+        
+in block
+{
+    vec3 xyz;
+    vec3 nrm;
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, FragColor);
+
+const vec3 lightPosition = vec3(10, 10, 10);
+const vec3 lightAmbient = vec3(0.1, 0.1, 0.1);
+const vec3 lightDiffuse = vec3(0.5, 0.5, 0.5);
+const vec3 lightSpecular = vec3(0.5, 0.5, 0.5);
+
+void main()
+{
+    // ambient
+    vec3 ambient = lightAmbient;
+    
+    // diffuse 
+    vec3 norm = normalize(sgl_v.nrm);
+    vec3 lightDir = normalize(lightPosition - sgl_v.xyz);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = lightDiffuse * (diff * Kd);
+    
+    // specular
+    vec3 viewDir = normalize(vec3(viewpoint.xyz) - sgl_v.xyz);
+    vec3 reflectDir = reflect(-lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), Ns);
+    vec3 specular = lightSpecular * (spec * Ks);  
+        
+    vec3 result = ambient + diffuse + specular;
+    FragColor = vec4(result, 1.0);
+}
+Uploading pipeline '../data/pipeline/body/body.xsh.xml?skinned'Loading file... <../data/pipeline/body/body.xsh.xml>('../data/pipeline/body/body.xsh.xml')Node 'DepthWriteEnabled' not handled.Node 'Rasterizer' not handled.../data/pipeline/body/body.fshOpening file... <../data/pipeline/body/body.fsh>('../data/pipeline/body/body.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(2, 0, sgl_mtl)
+{
+    vec3  Kd;
+    vec3  Ks;
+    float Ns;
+    float d;
+    float Ni;
+    int   illum;
+};
+
+UNIFORM(0, 0, sampler2D, diffuse_sampler);
+        
+in block
+{
+    vec3 xyz;
+    vec3 nrm;
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, FragColor);
+
+const vec3 lightPosition = vec3(10, 10, 10);
+const vec3 lightAmbient = vec3(0.1, 0.1, 0.1);
+const vec3 lightDiffuse = vec3(0.5, 0.5, 0.5);
+const vec3 lightSpecular = vec3(0.5, 0.5, 0.5);
+
+void main()
+{
+    // ambient
+    vec3 ambient = lightAmbient;
+    
+    // diffuse 
+    vec3 norm = normalize(sgl_v.nrm);
+    vec3 lightDir = normalize(lightPosition - sgl_v.xyz);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = lightDiffuse * (diff * Kd);
+    
+    // specular
+    vec3 viewDir = normalize(vec3(viewpoint.xyz) - sgl_v.xyz);
+    vec3 reflectDir = reflect(-lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), Ns);
+    vec3 specular = lightSpecular * (spec * Ks);  
+        
+    vec3 result = ambient + diffuse + specular;
+    FragColor = vec4(result, 1.0);
+}
+Uploading pipeline '../data/pipeline/testLighting/testLighting.xsh.xml?blinn'Loading file... <../data/pipeline/testLighting/testLighting.xsh.xml>('../data/pipeline/testLighting/testLighting.xsh.xml')../data/pipeline/testLighting/testLighting.xsh.xmlUploading pipeline '../data/pipeline/testLighting/testLighting.xsh.xml'Loading file... <../data/pipeline/testLighting/testLighting.xsh.xml>('../data/pipeline/testLighting/testLighting.xsh.xml')../data/pipeline/testLighting/testLightingBlinn.vsh../data/pipeline/testLighting/testLightingBlinn.fshOpening file... <../data/pipeline/testLighting/testLightingBlinn.vsh>('../data/pipeline/testLighting/testLightingBlinn.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(3, 0, sgl_obj)
+{
+    mat4 m;
+    mat4 w[32];
+};
+
+IN(0, vec3, in_pos);
+IN(3, vec3, in_nrm);
+
+out block
+{
+    vec4 posn;
+    vec3 nrm;
+} sgl_out;
+
+void main()
+{
+    sgl_out.posn = v * m * vec4(in_pos, 1);
+    mat3 n = mat3(transpose(inverse(m))); // gambiarra
+    sgl_out.nrm = normalize(n * in_nrm);
+
+    gl_Position = p * v * m * vec4(in_pos, 1);
+}
+Opening file... <../data/pipeline/testLighting/testLightingBlinn.fsh>('../data/pipeline/testLighting/testLightingBlinn.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(2, 0, sgl_mtl)
+{
+    vec3  Kd;
+    vec3  Ks;
+    float Ns;
+    float d;
+    float Ni;
+    int   illum;
+};
+
+in block
+{
+    vec4 posn;
+    vec3 nrm;
+} sgl_in;
+
+OUT(0, vec4, out_rgba0);
+
+vec4 litSrc0Pos = vec4(100, 1000, 0, 1);
+vec4 litProd0Ambi = vec4(0.1, 0.1, 0.1, 1);
+vec4 litProd0Diff = vec4(0.9, 0.8, 0.7, 1);
+vec4 litProd0Spec = vec4(0.1, 0.1, 0.1, 1);
+vec4 litModelAmbi = vec4(1, 1, 1, 1);
+vec4 mtlAmbi = vec4(0.1, 0.1, 0.1, 1);
+float mltShinisses = 10;
+
+void main (void)
+{ 
+    // calculate light diffusion
+    vec3 light = normalize(litSrc0Pos.xyz - sgl_in.posn.xyz); 
+    vec3 view = normalize(-sgl_in.posn.xyz); 
+    vec3 normal = normalize(sgl_in.nrm); 
+
+    // calculate ambience
+    vec4 ambient = litProd0Ambi;
+    vec4 global = mtlAmbi * litModelAmbi;
+
+    // get vector to light
+    vec4 diffuse = litProd0Diff * max(dot(sgl_in.nrm, light), 0.0);
+    diffuse = clamp(diffuse, 0.0, 1.0);
+
+    // Blinn specular variation
+    vec3 halfDir = normalize(light + view);
+    float spec = pow(max(dot(normal, halfDir), 0.0), mltShinisses * 0.2);
+    vec4 specular = litProd0Spec * spec;
+    specular = clamp(specular, 0.0, 1.0);
+
+    // do calculations on every fragment
+    out_rgba0 = global + ambient + diffuse + specular;
+}
+Uploading pipeline '../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml?tutCamUtil'Loading file... <../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>('../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml')Node 'DepthWriteEnabled' not handled.../data/pipeline/tutCamUtil/tutCamUtil.xsh.xmlUploading pipeline '../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml'Loading file... <../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>('../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml')../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh../data/pipeline/tutCamUtil/tutCamUtil.fshOpening file... <../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh>('../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(3, 0, sgl_obj)
+{
+    mat4 m;
+    mat4 w[32];
+};
+
+IN(0, vec3, in_pos);
+IN(3, vec3, in_nrm);
+IN(6, vec2, in_uv0);
+
+out block
+{
+    vec2 uv0;
+    vec3 rgba0;
+} sgl_out;
+
+float3 DirFromLight = vec3(100, 100, 0);
+float4 LightColour = vec4(0.9, 0.9, 0.9, 1);
+float4 AmbientColour = vec4(0.1, 0.1, 0.1, 0.1);
+
+void main()
+{
+    float4 WorldPos = m * vec4(in_pos, 1);
+    float4 ViewPos  = v * WorldPos;
+    float4 ClipPos  = p * ViewPos;
+
+    float4 InNormal  = float4( in_nrm, 0);
+    float3 ObjNormal = vec4(m * InNormal).xyz;
+
+    sgl_out.uv0     = in_uv0;
+    sgl_out.rgba0  = vec3(LightColour * dot(vec4(ObjNormal,0), vec4(DirFromLight,0)) + AmbientColour);
+
+    gl_Position = ClipPos;
+}
+Opening file... <../data/pipeline/tutCamUtil/tutCamUtil.fsh>('../data/pipeline/tutCamUtil/tutCamUtil.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+in block
+{
+    vec2 uv0;
+    vec3 rgba0;
+} sgl_in;
+
+OUT(0, vec4, out_rgba0);
+
+SAMPLING_UNIT(0, 1, sampler2D, diffuse_texture);
+
+void main (void)
+{ 
+    float3 DiffuseSamp = vec3(1, 1, 1); //texture( diffuse_texture, sgl_in.uv0 );
+    DiffuseSamp *= sgl_in.rgba0;
+
+    out_rgba0 = float4(DiffuseSamp, 1);
+}
+afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidUploading pipeline '../data/pipeline/lighting/lighting.xsh.xml?lighting'Loading file... <../data/pipeline/lighting/lighting.xsh.xml>('../data/pipeline/lighting/lighting.xsh.xml')Node 'DepthWriteEnabled' not handled.../data/pipeline/lighting/lighting.xsh.xmlUploading pipeline '../data/pipeline/lighting/lighting.xsh.xml'Loading file... <../data/pipeline/lighting/lighting.xsh.xml>('../data/pipeline/lighting/lighting.xsh.xml')../data/pipeline/lighting/lighting.vshNode 'Input' not handled.Node 'Input' not handled.Node 'Input' not handled.../data/pipeline/lighting/lighting.fshOpening file... <../data/pipeline/lighting/lighting.vsh>('../data/pipeline/lighting/lighting.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(3, 0, sgl_obj)
+{
+    mat4 m;
+    mat4 w[32];
+};
+
+IN(0, vec3, in_pos);
+IN(3, vec3, in_nrm);
+IN(6, vec2, in_uv0);
+
+out block
+{
+    vec4 posn;
+    vec3 nrm;
+    vec2 uv0;
+} sgl_out;
+
+void main()
+{
+    sgl_out.posn = m * vec4(in_pos, 1);
+    sgl_out.nrm = in_nrm;
+    sgl_out.uv0 = in_uv0;
+    gl_Position = p * v * m * vec4(in_pos, 1);
+}
+Opening file... <../data/pipeline/lighting/lighting.fsh>('../data/pipeline/lighting/lighting.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(2, 0, sgl_mtl)
+{
+    vec3  Kd;
+    vec3  Ks;
+    float Ns;
+    float d;
+    float Ni;
+    int   illum;
+};
+
+SAMPLING_UNIT(2, 1, sampler2D, floorTexture);
+
+vec3 lightPos = vec3(100, 100, 0);
+int blinn = 1;
+
+in block
+{
+    vec4 posn;
+    vec3 nrm;
+    vec2 uv0;
+} sgl_in;
+
+OUT(0, vec4, out_rgba0);
+
+void main (void)
+{ 
+    vec3 color = vec3(0.5,0.5,0.5);//texture(floorTexture, sgl_in.uv0).rgb;
+    
+    // ambient
+    vec3 ambient = 0.05 * color;
+    
+    // diffuse
+    vec3 lightDir = normalize(lightPos - vec3(sgl_in.posn));
+    vec3 normal = normalize(sgl_in.nrm);
+    float diff = max(dot(lightDir, normal), 0.0);
+    vec3 diffuse = diff * color;
+    
+    // specular
+    vec3 viewDir = vec3(normalize(viewPos - sgl_in.posn));
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = 0.0;
+    
+    if(blinn == 1)
+    {
+        vec3 halfwayDir = normalize(lightDir + viewDir);  
+        spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+    }
+    else
+    {
+        vec3 reflectDir = reflect(-lightDir, normal);
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
+    }
+    
+    vec3 specular = vec3(0.3) * spec; // assuming bright white light color
+    out_rgba0 = vec4(ambient + diffuse + specular, 1.0);
+}
+afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    Invalidglus_wavefront.c:859
+MTL NAME //./art/scenario/gtabr/gtabr.mtlglus_wavefront.c:291
+MTL FNAME //./art/scenario/gtabr/gtabr.mtlSkeleton <gtabr> assembled at 0ecc7358.
+    Listing 1 joints..:      0 <> 4294967295Model <gtabr> assembled. 04da8248
+    1 joints for 1 rigged meshes.
+Mesh topology 0ecbea70 built. With 49046 triangles (4 bytes per index) arranged in 11 surfaces.Rigid Mesh <> assembled at 0ecc73f8.
+    147138 vertices with 3 attributes.
+    49046 triangles (4 bytes per index) arranged in 11 surfaces.
+    Listing 1 biases..:      0 <>   0afxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:276
+afxGranny2Model.c:276
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidSkeleton <grannyRootBone> assembled at 0ecc7538.
+    Listing 143 joints..:      0 <grannyRootBone> 4294967295      1 <persp>   0      2 <top>   0      3 <front>   0      4 <spineCurve>   0      5 <HeadControl>   0      6 <persp1>   0      7 <WalkCam>   0      8 <side>   0      9 <pixoMesh>   0     10 <R_heel>   0     11 <R_toe>  10     12 <L_heel>   0     13 <L_toe>  12     14 <lattice_bases>   0     15 <ffd2LatticeGroup>  14     16 <ffd1LatticeGroup>  14     17 <locator4>  11     18 <locator6>  11     19 <locator7>  13     20 <locator3>  13     21 <ffd2Base>  15     22 <ffd1Base>  16     23 <Spine1>   0     24 <R_hipSwivel>  23     25 <R_hip>  24     26 <R_knee>  25     27 <L_hipSwivel>  23     28 <L_hip>  27     29 <L_knee>  28     30 <R_Foot>  26     31 <select_R_heel1>  30     32 <polySurface3>  31     33 <Spine2>  23     34 <Spine3>  33     35 <Spine4>  34     36 <Spine5>  35     37 <Spine6>  36     38 <Spine7>  37     39 <Chest>  38     40 <L_clav1>  39     41 <L_clav2>  40     42 <L_clav3>  41     43 <L_shoulder>  42     44 <R_clav1>  39     45 <R_clav2>  44     46 <R_clav3>  45     47 <R_shoulder>  46     48 <R_elbow>  47     49 <L_elbow>  43     50 <annotationLocator1>  10     51 <annotationLocator2>  12     52 <ChestControl>   0     53 <R_hip_spinner>  24     54 <R_foot_spinner>  26     55 <R_knee_spinner>  26     56 <L_knee_spinner>  29     57 <L_foot_spinner>  29     58 <L_hip_spinner>  27     59 <R_meta>  10     60 <L_meta>  12     61 <locator9>  39     62 <locator1>  39     63 <L_clav_spinner>  42     64 <L_shoulder_spinner>  43     65 <R_clav_spinner>  46     66 <R_shlder_spinner>  47     67 <R_elbow_spinner>  48     68 <L_elbow_spinner>  49     69 <L_Foot>  29     70 <R_foot_lock>  50     71 <L_foot_lock>  51     72 <neck00>  39     73 <neck01>  72     74 <neck02>  73     75 <Head>  74     76 <L_FootMid>  69     77 <R_FootMid>  30     78 <locator5>  59     79 <locator2>  60     80 <HipControl>   0     81 <neckBase>  52     82 <R_FootBall>  77     83 <L_FootBall>  76     84 <head_end>  75     85 <locator8>  73     86 <R_ulna>  48     87 <R_wrist>  86     88 <R_hand>  87     89 <R_middle_carpal>  88     90 <L_ulna>  49     91 <L_wrist>  90     92 <L_hand>  91     93 <L_middle_carpal>  92     94 <L_ring_carpal>  92     95 <R_ring_carpal>  88     96 <R_index_carpal>  88     97 <L_index_carpal>  92     98 <R_pinky_carpal>  88     99 <L_pinky_carpal>  92    100 <L_hipControl>  80    101 <R_hipControl>  80    102 <L_thumb_Carpal>  92    103 <R_thumb_Carpal>  88    104 <neckMid>  81    105 <R_thumb_medial> 103    106 <L_thumb_medial> 102    107 <R_Toe>  82    108 <L_Toe>  83    109 <R_middle_medial>  89    110 <L_middle_medial>  93    111 <L_index_medial>  97    112 <R_index_medial>  96    113 <R_ring_medial>  95    114 <L_ring_medial>  94    115 <R_pinky_medial>  98    116 <L_pinky_medial>  99    117 <L_ring_distal> 114    118 <R_ring_distal> 113    119 <L_middle_distal> 110    120 <R_middle_distal> 109    121 <R_thumb_distal> 105    122 <R_index_distal> 112    123 <L_index_distal> 111    124 <L_thumb_distal> 106    125 <L_pinky_distal> 116    126 <R_pinky_distal> 115    127 <L_ring_end> 117    128 <R_ring_end> 118    129 <L_middle_end> 119    130 <R_middle_end> 120    131 <R_thumb_end> 121    132 <R_index_end> 122    133 <L_index_end> 123    134 <L_thumb_end> 124    135 <L_pinky_end> 125    136 <R_pinky_end> 126    137 <polySurface8>  32    138 <transform8> 137    139 <pCube1>  69    140 <polySurface16>  69    141 <transform10> 139    142 <transform11> 140Model <grannyRootBone> assembled. 04da8770
+    143 joints for 1 rigged meshes.
+afxGranny2Model.c:169
+Mesh topology 0ecc3018 built. With 9689 triangles (2 bytes per index) arranged in 5 surfaces.Skinned Mesh <pixoMeshShape> assembled at 0ecc75d8.
+    11311 vertices with 5 attributes.
+    9689 triangles (2 bytes per index) arranged in 5 surfaces.
+    Listing 80 biases..:      0 <R_Foot>   0      1 <R_knee>   0      2 <Head>   0      3 <neck02>   0      4 <Chest>   0      5 <R_FootBall>   0      6 <R_FootMid>   0      7 <R_shoulder>   0      8 <R_clav2>   0      9 <R_clav3>   0     10 <R_clav1>   0     11 <L_shoulder>   0     12 <R_elbow>   0     13 <L_elbow>   0     14 <R_hand>   0     15 <R_hip>   0     16 <L_hip>   0     17 <R_foot_spinner>   0     18 <R_elbow_spinner>   0     19 <L_elbow_spinner>   0     20 <R_hipSwivel>   0     21 <L_hipSwivel>   0     22 <R_hip_spinner>   0     23 <L_hip_spinner>   0     24 <R_knee_spinner>   0     25 <L_knee_spinner>   0     26 <Spine1>   0     27 <R_shlder_spinner>   0     28 <L_shoulder_spinner>   0     29 <R_clav_spinner>   0     30 <L_clav_spinner>   0     31 <L_clav3>   0     32 <R_wrist>   0     33 <R_pinky_distal>   0     34 <R_pinky_medial>   0     35 <R_pinky_carpal>   0     36 <R_ring_distal>   0     37 <R_ring_medial>   0     38 <R_ring_carpal>   0     39 <R_middle_medial>   0     40 <R_middle_carpal>   0     41 <R_middle_distal>   0     42 <R_index_end>   0     43 <R_index_carpal>   0     44 <R_index_medial>   0     45 <R_thumb_medial>   0     46 <R_thumb_distal>   0     47 <R_thumb_Carpal>   0     48 <neck00>   0     49 <neck01>   0     50 <Spine6>   0     51 <Spine7>   0     52 <L_clav1>   0     53 <L_clav2>   0     54 <Spine2>   0     55 <Spine3>   0     56 <Spine5>   0     57 <Spine4>   0     58 <L_Foot>   0     59 <L_knee>   0     60 <L_FootBall>   0     61 <L_FootMid>   0     62 <L_foot_spinner>   0     63 <L_hand>   0     64 <L_wrist>   0     65 <L_pinky_distal>   0     66 <L_pinky_medial>   0     67 <L_pinky_carpal>   0     68 <L_ring_distal>   0     69 <L_ring_medial>   0     70 <L_ring_carpal>   0     71 <L_middle_medial>   0     72 <L_middle_carpal>   0     73 <L_middle_distal>   0     74 <L_index_end>   0     75 <L_index_medial>   0     76 <L_index_carpal>   0     77 <L_thumb_medial>   0     78 <L_thumb_distal>   0     79 <L_thumb_Carpal>   0

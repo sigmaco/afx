@@ -210,7 +210,7 @@ _AMXINL void AfxComputeRiggedMeshMatrices(afxModel mdl, afxNat rigIdx, afxPoseBu
     AfxAssert(totalBiasCnt >= chosenBiasCnt);
 
     afxM4d* w = AfxGetWorldMatrices(posb, 0);
-    afxM4d* iw = AfxGetSkeletonIwMatrices(mdl->rigs[rigIdx].sklOrig, 0);
+    afxM4d* iw = AfxGetSkeletonMatrices(mdl->rigs[rigIdx].sklOrig, 0);
     afxNat const* mapping = AfxGetRiggedMeshBiasToJointMapping(mdl, rigIdx);
     afxNat const* mappingOrig = AfxGetRiggedMeshBiasFromJointMapping(mdl, rigIdx);
 
@@ -262,14 +262,14 @@ _AMX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseRig, af
                         afxString* biasTags = AfxGetMeshBiasTags(msh, 0);
                         afxNat biasMappedCnt = 0;
 
-                        if (biasCnt != (biasMappedCnt = AfxFindJoints(skl, biasCnt, biasTags, biasToJointMap)))
+                        if (biasCnt != (biasMappedCnt = AfxFindSkeletonJoints(skl, biasCnt, biasTags, biasToJointMap)))
                         {
                             //AfxLogAdvertence("%u biases mapped to joints from %u", biasMappedCnt, biasCnt);
                         }
 
                         if (transplanted)
                         {
-                            if (biasCnt != (biasMappedCnt = AfxFindJoints(skl, biasCnt, biasTags, biasFromJointMap)))
+                            if (biasCnt != (biasMappedCnt = AfxFindSkeletonJoints(skl, biasCnt, biasTags, biasFromJointMap)))
                             {
                                 //AfxLogAdvertence("%u joints to biases mapped from %u", biasMappedCnt, biasCnt);
                             }
@@ -465,7 +465,7 @@ _AMX afxError _AmxMdlCtorCb(afxModel mdl, void** args, afxNat invokeNo)
     {
         afxString s;
         AfxGetModelUrn(mdl, &s);
-        afxNat jntCnt = AfxCountJoints(mdl->skl, 0);
+        afxNat jntCnt = AfxCountSkeletonJoints(mdl->skl, 0);
         AfxLogEcho("Animable model <%.*s> assembled at %p. %u mesh rigs for %u joints.", AfxPushString(&s), mdl, mdl->rigCnt, jntCnt);
     }
     return err;
@@ -483,7 +483,7 @@ _AMX afxClassConfig _AmxMdlClsCfg =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AfxAssembleModel(afxSimulation sim, afxNat cnt, akxModelBlueprint const blueprints[], afxModel models[])
+_AMX afxError AfxAssembleModels(afxSimulation sim, afxNat cnt, akxModelBlueprint const blueprints[], afxModel models[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);

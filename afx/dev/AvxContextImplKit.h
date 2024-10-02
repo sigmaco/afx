@@ -23,8 +23,8 @@
 #ifndef AVX_CONTEXT_IMPL_KIT_H
 #define AVX_CONTEXT_IMPL_KIT_H
 
-#include "../dev/afxDevCoreBase.h"
-#include "qwadro/inc/draw/dev/afxDrawSystem.h"
+#include "../dev/afxExecImplKit.h"
+#include "qwadro/inc/draw/afxDrawSystem.h"
 
 #ifdef _AVX_CMD_BUFFER_C
 #ifdef _AVX_CMD_BUFFER_IMPL
@@ -40,7 +40,7 @@ AFX_OBJECT(avxCmdb)
     afxAtom32           submCnt; /// number of submissions
     afxMask64           submQueMask; /// one for each queue where this cmdb was submitted into.
 
-    afxNat              portIdx;
+    afxNat              portId;
     afxNat              poolIdx;
     afxArena            cmdArena; /// owned by dctx data for specific port
     afxBool             disposable; /// if true, at execution end, it is moved to invalid state and considered in recycle chain.
@@ -58,7 +58,7 @@ AFX_DEFINE_STRUCT(afxRasterSlot)
     afxRaster       ras; /// the texture subresource that will be output to for this color attachment.
     afxRaster       resolve; /// the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
     afxBool         managed;
-    afxPixelFormat  fmt; /// the format of the image that will be used for the attachment.
+    avxFormat       fmt; /// the format of the image that will be used for the attachment.
     afxRasterUsage  usage; /// additional properties of the attachment.
     afxRasterFlags  flags;
     afxNat          sampleCnt; /// the number of samples of the image.
@@ -165,7 +165,7 @@ AFX_OBJECT(avxSampler)
 #endif
 {
     afxNat32                crc;
-    avxYuvSamplerConfig     cfg;
+    avxYuvSamplerInfo     cfg;
     afxBool                 yuv;
 };
 #endif
@@ -223,7 +223,7 @@ AFX_OBJECT(avxRasterizer)
     afxBool                 depthTestEnabled; /// controls whether depth testing is enabled. /// FALSE
     avxCompareOp            depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. /// avxCompareOp_LESS
     afxBool                 depthWriteDisabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
-    afxPixelFormat          dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
+    avxFormat               dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
     // depth bounds test
     afxBool                 depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled. /// FALSE
     afxV2d                  depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
@@ -258,12 +258,13 @@ AFX_OBJECT(_avxBuffer)
 AFX_OBJECT(afxBuffer)
 #endif
 {
-    afxNat          cap;
+    afxNat          bufCap;
     afxBufferUsage  usage;
-    afxBufferAccess access;
-    afxByte*        bytemap;
+    afxBufferFlags  flags;
     void*           udd;
 
+    afxByte*        bytemap;
+    afxBool         sysmemBuffered;
     afxSize         mappedOffset;
     afxNat          mappedRange;
     afxFlags        mappedFlags;
@@ -280,7 +281,7 @@ AFX_DEFINE_STRUCT(afxSubraster)
     afxNat              lodCnt;
     afxNat              baseLayer;
     afxNat              layerCnt;
-    afxPixelFormat      fmt;
+    avxFormat           fmt;
     avxColorSwizzling   swizzling;
     afxRasterFlags      flags;
 };
@@ -293,7 +294,7 @@ AFX_OBJECT(afxRaster)
     afxRasterFlags      flags;
     afxRasterUsage      usage;
     void*               udd;
-    afxPixelFormat      fmt;
+    avxFormat           fmt;
     afxWhd              whd; // extent of image
     afxNat              lodCnt; // mip level cnt
     afxNat              sampleCnt; // 1, 2, 4, 8, 16, 32, or 64.

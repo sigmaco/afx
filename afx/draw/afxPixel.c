@@ -37,7 +37,28 @@ afxNat32 const sRgb8ToRealLut[256] =
     0x3f5f11ee, 0x3f612ef2, 0x3f634eef, 0x3f6571ec, 0x3f6797e1, 0x3f69c0d8, 0x3f6beccb, 0x3f6e1bc2, 0x3f704db6, 0x3f7282b1, 0x3f74baae, 0x3f76f5b3, 0x3f7933b9, 0x3f7b74cb, 0x3f7db8e0, 0x3f800000,
 };
 
-afxPfd const pfds[] =
+#define PFD(fmt_, bpp_, stride_, compCnt_, bpcR_, bpcG_, bpcB_, bpcA_, flags_) pfds[fmt_] = (avxFormatDescription){ .bpp = bpp_, .stride = stride_, .compCnt = compCnt_, .bpc[0] = bpcR_, .bpc[1] = bpcG_, .bpc[2] = bpcB_, .bpc[3] = bpcA_, .flags = flags_ }
+#define PFD_COMPRESSED(fmt_, bpp_, stride_, compCnt_, bpc, swizzle, defaults, normalized, tof, features) pfds[fmt_] = (avxFormatDescription){ .bpp = bpp_, .stride = stride_, .compCnt = compCnt_ }
+
+_AVX avxFormatDescription pfds[avxFormat_TOTAL] =
+{
+    {
+        .bpp = 0,
+        .stride = 0,
+        .compCnt = 0,
+        .type = { avxFormatComponent_UNK, avxFormatComponent_UNK, avxFormatComponent_UNK, avxFormatComponent_UNK },
+        .swizzle = { 0, 0, 0, 0 },
+        .defaults = { 0, 0, 0, 0 },
+        .isNormalized = { 0, 0, 0, 0 },
+        .tof = { 0, 0, 0, 0 },
+        .bpc = { 0, 0, 0, 0 },
+        .bcWh = { 0, 0 },
+        .flags = NIL
+    },
+};
+
+#if 0
+avxFormatDescription const pfds[] =
 {
     {
         .type = { afxPixelElementType_FLOAT, afxPixelElementType_FLOAT, afxPixelElementType_FLOAT, afxPixelElementType_FLOAT },
@@ -88,6 +109,7 @@ afxPfd const pfds[] =
         .bcWh = { 1, 1 }
     }
 };
+#endif
 
 #if 0
 struct
@@ -108,71 +130,71 @@ lays[] =
     { },
 
     // sampleable & drawable
-    GL_R8, // afxPixelFormat_R8
-    GL_RG8, // afxPixelFormat_RG8
-    GL_RGB8, // afxPixelFormat_RGB8
-    GL_RGBA8, // afxPixelFormat_RGBA8
-    GL_RGB565, // afxPixelFormat_R5G6B5
-    GL_SRGB8_ALPHA8, // afxPixelFormat_RGBA8_SRGB
-    GL_RGB5_A1, // afxPixelFormat_RGB5A1
-    GL_RGBA4, // afxPixelFormat_RGBA4
-    GL_RGB10_A2, // afxPixelFormat_RGB10A2
+    GL_R8, // avxFormat_R8
+    GL_RG8, // avxFormat_RG8
+    GL_RGB8, // avxFormat_RGB8
+    GL_RGBA8, // avxFormat_RGBA8
+    GL_RGB565, // avxFormat_R5G6B5
+    GL_SRGB8_ALPHA8, // avxFormat_RGBA8_SRGB
+    GL_RGB5_A1, // avxFormat_RGB5A1
+    GL_RGBA4, // avxFormat_RGBA4
+    GL_RGB10_A2, // avxFormat_RGB10A2
 
 
     // sampleable
-    GL_R8_SNORM, // afxPixelFormat_R8_SN
-    GL_RG8_SNORM, // afxPixelFormat_RG8_SN
-    GL_RGB8_SNORM, // afxPixelFormat_RGB8_SN
-    GL_RGBA8_SNORM, // afxPixelFormat_RGBA8_SN
+    GL_R8_SNORM, // avxFormat_R8_SN
+    GL_RG8_SNORM, // avxFormat_RG8_SN
+    GL_RGB8_SNORM, // avxFormat_RGB8_SN
+    GL_RGBA8_SNORM, // avxFormat_RGBA8_SN
 
-    GL_R16F, // afxPixelFormat_R16R
-    GL_RG16F, // afxPixelFormat_RG16R
-    GL_RGB16F, // afxPixelFormat_RGB16R
-    GL_RGBA16F, // afxPixelFormat_RGBA16R
+    GL_R16F, // avxFormat_R16R
+    GL_RG16F, // avxFormat_RG16R
+    GL_RGB16F, // avxFormat_RGB16R
+    GL_RGBA16F, // avxFormat_RGBA16R
 
-    GL_SRGB8, // afxPixelFormat_RGB8_SRGB
-    GL_RGB9_E5, // afxPixelFormat_RGB9E5
-    GL_R11F_G11F_B10F, // afxPixelFormat_RG11B10R
+    GL_SRGB8, // avxFormat_RGB8_SRGB
+    GL_RGB9_E5, // avxFormat_RGB9E5
+    GL_R11F_G11F_B10F, // avxFormat_RG11B10R
 
     // drawable
-    GL_R8UI, // afxPixelFormat_R8U
-    GL_RG8UI, // afxPixelFormat_RG8U
-    GL_RGBA8UI, // afxPixelFormat_RGBA8U
+    GL_R8UI, // avxFormat_R8U
+    GL_RG8UI, // avxFormat_RG8U
+    GL_RGBA8UI, // avxFormat_RGBA8U
 
-    GL_R8I, // afxPixelFormat_R8I
-    GL_RG8I, // afxPixelFormat_RG8I
-    GL_RGBA8I, // afxPixelFormat_RGBA8I
+    GL_R8I, // avxFormat_R8I
+    GL_RG8I, // avxFormat_RG8I
+    GL_RGBA8I, // avxFormat_RGBA8I
 
-    GL_R16UI, // afxPixelFormat_R16_UN
-    GL_RG16UI, // afxPixelFormat_RG16_UN
-    GL_RGBA16UI, // afxPixelFormat_RGBA16_UN
+    GL_R16UI, // avxFormat_R16_UN
+    GL_RG16UI, // avxFormat_RG16_UN
+    GL_RGBA16UI, // avxFormat_RGBA16_UN
 
-    GL_R16I, // afxPixelFormat_R16I
-    GL_RG16I, // afxPixelFormat_RG16I
-    GL_RGBA16I, // afxPixelFormat_RGBA16I
+    GL_R16I, // avxFormat_R16I
+    GL_RG16I, // avxFormat_RG16I
+    GL_RGBA16I, // avxFormat_RGBA16I
 
-    GL_R32UI, // afxPixelFormat_R32U
-    GL_RG32UI, // afxPixelFormat_RG32U
-    GL_RGBA32UI, // afxPixelFormat_RGBA32U
+    GL_R32UI, // avxFormat_R32U
+    GL_RG32UI, // avxFormat_RG32U
+    GL_RGBA32UI, // avxFormat_RGBA32U
 
-    GL_R32I, // afxPixelFormat_R32I
-    GL_RG32I, // afxPixelFormat_RG32I
-    GL_RGBA32I, // afxPixelFormat_RGBA32I
+    GL_R32I, // avxFormat_R32I
+    GL_RG32I, // avxFormat_RG32I
+    GL_RGBA32I, // avxFormat_RGBA32I
 
-    GL_RGB10_A2UI, // afxPixelFormat_RGB10A2U
+    GL_RGB10_A2UI, // avxFormat_RGB10A2U
 
     // drawable special
-    GL_DEPTH_COMPONENT16, // afxPixelFormat_D16
-    GL_DEPTH_COMPONENT24, // afxPixelFormat_D24
-    GL_DEPTH_COMPONENT32F, // afxPixelFormat_D32R
-    GL_DEPTH24_STENCIL8, // afxPixelFormat_D24S8
-    GL_DEPTH32F_STENCIL8, // afxPixelFormat_D32RS8
+    GL_DEPTH_COMPONENT16, // avxFormat_D16
+    GL_DEPTH_COMPONENT24, // avxFormat_D24
+    GL_DEPTH_COMPONENT32F, // avxFormat_D32R
+    GL_DEPTH24_STENCIL8, // avxFormat_D24S8
+    GL_DEPTH32F_STENCIL8, // avxFormat_D32RS8
 
     // ?
-    GL_R32F, // afxPixelFormat_R32R
-    GL_RG32F, // afxPixelFormat_RG32R
-    GL_RGB32F, // afxPixelFormat_RGB32R
-    GL_RGBA32F, // afxPixelFormat_RGBA32R
+    GL_R32F, // avxFormat_R32R
+    GL_RG32F, // avxFormat_RG32R
+    GL_RGB32F, // avxFormat_RGB32R
+    GL_RGBA32F, // avxFormat_RGBA32R
 
     GL_RGB8UI,
     GL_RGB8I,
@@ -186,108 +208,169 @@ lays[] =
 };
 #endif
 
+#if 0
 afxPixelLayout layouts[] =
 {
     {   0, {  0,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // reserved for NIL argumentation giving system a chance to a best choise when user doesn't care about pixel format robustness.
 
-    {   8, {  8,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_R8,
-    {  16, {  8,  8,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RG8,
-    {  24, {  8,  8,  8,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RGB8,
-    {  32, {  8,  8,  8,  8 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RGBA8,
+    {   8, {  8,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_R8,
+    {  16, {  8,  8,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_RG8,
+    {  24, {  8,  8,  8,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_RGB8,
+    {  32, {  8,  8,  8,  8 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_RGBA8,
 
-    {  16, {  8,  8,  0,  0 }, {  0,  8,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_GR8,
-    {  24, {  8,  8,  8,  0 }, {  0,  8, 16,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_BGR8,
-    {  32, {  8,  8,  8,  8 }, {  0,  8, 16, 24 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_BGRA8,
+    {  16, {  8,  8,  0,  0 }, {  0,  8,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_GR8,
+    {  24, {  8,  8,  8,  0 }, {  0,  8, 16,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_BGR8,
+    {  32, {  8,  8,  8,  8 }, {  0,  8, 16, 24 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_BGRA8,
 
-    {  32, { 32,  0,  0,  0 }, {  0,  0,  0,  0 }, 1, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_R32R,
-    {  64, { 32, 32,  0,  0 }, {  0,  0,  0,  0 }, 1, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RG32R,
-    {  96, { 32, 32, 32,  0 }, {  0,  0,  0,  0 }, 1, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RGB32R,
-    { 128, { 32, 32, 32, 32 }, {  0,  0,  0,  0 }, 1, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RGBA32R,
+    {  32, { 32,  0,  0,  0 }, {  0,  0,  0,  0 }, 1, 0, 0, 0, 0, 0, 0 }, // avxFormat_R32R,
+    {  64, { 32, 32,  0,  0 }, {  0,  0,  0,  0 }, 1, 0, 0, 0, 0, 0, 0 }, // avxFormat_RG32R,
+    {  96, { 32, 32, 32,  0 }, {  0,  0,  0,  0 }, 1, 0, 0, 0, 0, 0, 0 }, // avxFormat_RGB32R,
+    { 128, { 32, 32, 32, 32 }, {  0,  0,  0,  0 }, 1, 0, 0, 0, 0, 0, 0 }, // avxFormat_RGBA32R,
 
-    {  24, {  8,  8,  8,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RGB8_SRGB,
-    {  32, {  8,  8,  8,  8 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RGBA8_SRGB,
-    {  32, {  9,  9,  9,  5 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RGB9E5,
+    {  24, {  8,  8,  8,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_RGB8_SRGB,
+    {  32, {  8,  8,  8,  8 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_RGBA8_SRGB,
+    {  32, {  9,  9,  9,  5 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_RGB9E5,
 
-    {  16, {  4,  4,  4,  4 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RGBA4,
-    {  16, {  5,  5,  5,  1 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RGB5A1,
-    {  16, {  5,  6,  5,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_R5G6B5,
-    {  32, { 10, 10, 10,  2 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // afxPixelFormat_RGB10A2,
+    {  16, {  4,  4,  4,  4 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_RGBA4,
+    {  16, {  5,  5,  5,  1 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_RGB5A1,
+    {  16, {  5,  6,  5,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_R5G6B5,
+    {  32, { 10, 10, 10,  2 }, {  0,  0,  0,  0 }, 0, 0, 0, 0, 0, 0, 0 }, // avxFormat_RGB10A2,
 
-    {   8, {  8,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 1, 0, 0, 0, 0 }, // afxPixelFormat_S8,
-    {  16, { 16,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 1, 0, 0, 0, 0, 0 }, // afxPixelFormat_D16,
-    {  24, { 24,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 1, 0, 0, 0, 0, 0 }, // afxPixelFormat_D24,
-    {  32, { 32,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 1, 0, 0, 0, 0, 0 }, // afxPixelFormat_D32,
-    {  32, { 32,  0,  0,  0 }, {  0,  0,  0,  0 }, 1, 1, 0, 0, 0, 0, 0 }, // afxPixelFormat_D32F,
-    {  32, { 24,  8,  0,  0 }, {  0,  0,  0,  0 }, 0, 1, 1, 0, 0, 0, 0 }, // afxPixelFormat_D24S8,
-    {  40, { 32,  8,  0,  0 }, {  0,  0,  0,  0 }, 1, 1, 1, 0, 0, 0, 0 }, // afxPixelFormat_D32FS8,
+    {   8, {  8,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 1, 0, 0, 0, 0 }, // avxFormat_S8,
+    {  16, { 16,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 1, 0, 0, 0, 0, 0 }, // avxFormat_D16,
+    {  24, { 24,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 1, 0, 0, 0, 0, 0 }, // avxFormat_D24,
+    {  32, { 32,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 1, 0, 0, 0, 0, 0 }, // avxFormat_D32,
+    {  32, { 32,  0,  0,  0 }, {  0,  0,  0,  0 }, 1, 1, 0, 0, 0, 0, 0 }, // avxFormat_D32F,
+    {  32, { 24,  8,  0,  0 }, {  0,  0,  0,  0 }, 0, 1, 1, 0, 0, 0, 0 }, // avxFormat_D24S8,
+    {  40, { 32,  8,  0,  0 }, {  0,  0,  0,  0 }, 1, 1, 1, 0, 0, 0, 0 }, // avxFormat_D32FS8,
 
-    {  64, {  0,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 1, 0, 0, 0 }, // afxPixelFormat_RGB_DXT1,
-    {  64, {  0,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 1, 0, 0, 0 }, // afxPixelFormat_RGBA_DXT1,
-    { 128, {  0,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 1, 0, 0, 0 }, // afxPixelFormat_RGBA_DXT3,
-    { 128, {  0,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 1, 0, 0, 0 }, // afxPixelFormat_RGBA_DXT5,
+    {  64, {  0,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 1, 0, 0, 0 }, // avxFormat_RGB_DXT1,
+    {  64, {  0,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 1, 0, 0, 0 }, // avxFormat_RGBA_DXT1,
+    { 128, {  0,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 1, 0, 0, 0 }, // avxFormat_RGBA_DXT3,
+    { 128, {  0,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 1, 0, 0, 0 }, // avxFormat_RGBA_DXT5,
 };
+#endif
 
-_AVXINL void AfxDescribePixelFormat(afxPixelFormat fmt, afxPixelLayout *layout)
+_AVXINL void AfxDescribePixelFormat(avxFormat fmt, avxFormatDescription* pfd)
 {
     afxError err = NIL;
     AfxAssert(fmt);
-    AfxAssert(layout);
-    AfxAssert(afxPixelFormat_TOTAL > fmt);
-    *layout = layouts[fmt];
+    AfxAssert(pfd);
+    AfxAssert(avxFormat_TOTAL > fmt);
+
+    PFD(avxFormat_RGB8un, 24, 3, 3, 8, 8, 8, 0, avxFormatFlag_DRAW);
+    PFD(avxFormat_BGR8un, 24, 3, 3, 8, 8, 8, 0, avxFormatFlag_DRAW);
+
+    PFD(avxFormat_RGBA8un, 32, 4, 4, 8, 8, 8, 8, avxFormatFlag_DRAW);
+    PFD(avxFormat_BGRA8un, 32, 4, 4, 8, 8, 8, 8, avxFormatFlag_DRAW);
+    PFD(avxFormat_ABGR8un, 32, 4, 4, 8, 8, 8, 8, avxFormatFlag_DRAW);
+
+    PFD(avxFormat_RGBA4un, 16, 2, 4, 4, 4, 4, 4, avxFormatFlag_DRAW);
+
+    PFD_COMPRESSED(avxFormat_DXT1un, 16, 8, 3, 0, 0, 0, 0, 0, 0);
+
+
+    *pfd = pfds[fmt];
 }
 
-_AVXINL afxNat AfxGetBpp(afxPixelFormat fmt)
+_AVXINL afxNat AfxGetBpp(avxFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
-    AfxAssert(afxPixelFormat_TOTAL > fmt);
-    return layouts[fmt].bpp;
+    AfxAssert(avxFormat_TOTAL > fmt);
+    
+    PFD(avxFormat_RGB8un, 24, 3, 3, 8, 8, 8, 0, avxFormatFlag_DRAW);
+    PFD(avxFormat_BGR8un, 24, 3, 3, 8, 8, 8, 0, avxFormatFlag_DRAW);
+
+    PFD(avxFormat_RGBA8un, 32, 4, 4, 8, 8, 8, 8, avxFormatFlag_DRAW);
+    PFD(avxFormat_BGRA8un, 32, 4, 4, 8, 8, 8, 8, avxFormatFlag_DRAW);
+    PFD(avxFormat_ABGR8un, 32, 4, 4, 8, 8, 8, 8, avxFormatFlag_DRAW);
+
+    PFD(avxFormat_RGBA4un, 16, 2, 4, 4, 4, 4, 4, avxFormatFlag_DRAW);
+    
+
+    return pfds[fmt].bpp;
 }
 
-_AVXINL afxBool AfxPixelFormatIsCombinedDepthStencil(afxPixelFormat fmt)
+#define PFD_D(fmt_,bpp_,stride_, bpc_) pfds[fmt_] = (avxFormatDescription){ .bpp = bpp_, .stride = stride_, .compCnt = 1, .bpc[0] = bpc_, .flags = avxFormatFlag_DEPTH }
+#define PFD_S(fmt_,bpp_,stride_, bpc_) pfds[fmt_] = (avxFormatDescription){ .bpp = bpp_, .stride = stride_, .compCnt = 1, .bpc[0] = bpc_, .flags = avxFormatFlag_STENCIL }
+#define PFD_DS(fmt_,bpp_,stride_, bpcD_, bpcS_) pfds[fmt_] = (avxFormatDescription){ .bpp = bpp_, .stride = stride_, .compCnt = 2, .bpc[0] = bpcD_, .bpc[1] = bpcS_, .flags = avxFormatFlag_DEPTH | avxFormatFlag_STENCIL }
+
+_AVXINL afxBool AfxIsPixelFormatCombinedDepthStencil(avxFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
-    AfxAssert(afxPixelFormat_TOTAL > fmt);
-    return layouts[fmt].depth && layouts[fmt].stencil;
+    AfxAssert(avxFormat_TOTAL > fmt);
+
+    PFD_D(avxFormat_D16un, 16, 2, 16);
+    PFD_D(avxFormat_X8D24un, 32, 4, 24);
+    PFD_D(avxFormat_D32f, 32, 4, 32);
+    PFD_S(avxFormat_S8u, 8, 1, 8);
+    PFD_DS(avxFormat_D16unS8u, 24, 3, 16, 8);
+    PFD_DS(avxFormat_D24unS8u, 32, 4, 24, 8);
+    PFD_DS(avxFormat_D32fS8u, 64, 8, 32, 8);
+
+    switch (fmt)
+    {
+    case avxFormat_D16unS8u:
+    case avxFormat_D24unS8u:
+    case avxFormat_D32fS8u:
+        return TRUE;
+    default: break;
+    }
+    return FALSE;
 }
 
-_AVXINL afxBool AfxPixelFormatIsDepth(afxPixelFormat fmt)
+_AVXINL afxBool AfxIsPixelFormatDepth(avxFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
-    AfxAssert(afxPixelFormat_TOTAL > fmt);
-    return layouts[fmt].depth;
+    AfxAssert(avxFormat_TOTAL > fmt);
+
+    switch (fmt)
+    {
+    case avxFormat_D16un:
+    case avxFormat_X8D24un:
+    case avxFormat_D32f:
+    case avxFormat_D16unS8u:
+    case avxFormat_D24unS8u:
+    case avxFormat_D32fS8u:
+        return TRUE;
+    default: break;
+    }
+    return FALSE;
 }
 
-_AVXINL afxBool AfxPixelFormatIsStencil(afxPixelFormat fmt)
+_AVXINL afxBool AfxIsPixelFormatStencil(avxFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
-    AfxAssert(afxPixelFormat_TOTAL > fmt);
-    return layouts[fmt].stencil;
+    AfxAssert(avxFormat_TOTAL > fmt);
+
+    switch (fmt)
+    {
+    case avxFormat_S8u:
+    case avxFormat_D16unS8u:
+    case avxFormat_D24unS8u:
+    case avxFormat_D32fS8u:
+        return TRUE;
+    default: break;
+    }
+    return FALSE;
 }
 
-_AVXINL afxBool AfxPixelFormatIsReal(afxPixelFormat fmt)
+_AVXINL afxBool AfxIsSrgb(avxFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
-    AfxAssert(afxPixelFormat_TOTAL > fmt);
-    return layouts[fmt].real;
+    AfxAssert(avxFormat_TOTAL > fmt);
+    return pfds[fmt].flags & avxFormatFlag_sRGB;
 }
 
-_AVXINL afxBool AfxPixelFormatIsSrgb(afxPixelFormat fmt)
+_AVXINL afxBool AfxIsPixelFormatCompressed(avxFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
-    AfxAssert(afxPixelFormat_TOTAL > fmt);
-    return fmt == afxPixelFormat_RGB8_SRGB || fmt == afxPixelFormat_RGBA8_SRGB;
-}
-
-_AVXINL afxBool AfxPixelFormatIsCompressed(afxPixelFormat fmt)
-{
-    afxError err = NIL;
-    AfxAssert(fmt);
-    AfxAssert(afxPixelFormat_TOTAL > fmt);
-    return layouts[fmt].block;
+    AfxAssert(avxFormat_TOTAL > fmt);
+    return fmt >= avxFormat_DXT1un && fmt <= avxFormat_ASTC_12x12_sRGB;
 }

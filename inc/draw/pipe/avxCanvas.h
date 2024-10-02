@@ -22,7 +22,7 @@
 #ifndef AVX_CANVAS_H
 #define AVX_CANVAS_H
 
-#include "qwadro/inc/draw/afxRaster.h"
+#include "qwadro/inc/draw/io/afxRaster.h"
 
 typedef enum afxCanvasFlag
 {
@@ -33,7 +33,7 @@ typedef enum afxCanvasFlag
 
 AFX_DEFINE_STRUCT(afxSurfaceConfig)
 {
-    afxPixelFormat  fmt; // layout
+    avxFormat       fmt; // layout
     afxNat          sampleCnt; // layout
     afxRasterUsage  rasUsage;
     afxRasterFlags  rasFlags;
@@ -46,13 +46,11 @@ AVX afxError        AfxReadjustCanvas(avxCanvas canv, afxWhd const whd);
 
 AVX void            AfxCountDrawBufferSlots(avxCanvas canv, afxNat* slotCnt, afxNat* colorSlotCnt);
 
-AVX afxBool         AfxGetDepthBufferSlot(avxCanvas canv, afxNat* slotIdx);
-AVX afxBool         AfxGetStencilBufferSlot(avxCanvas canv, afxNat* slotIdx);
+AVX afxBool         AfxGetDepthBufferSlots(avxCanvas canv, afxNat* dSlotIdx, afxNat* sSlotIdx);
 
-AVX afxBool         AfxGetDrawBuffers(avxCanvas canv, afxNat baseSlot, afxNat cnt, afxRaster rasters[]);
-AVX afxBool         AfxGetColorBuffer(avxCanvas canv, afxNat slotIdx, afxRaster* buf);
-AVX afxBool         AfxGetDepthBuffer(avxCanvas canv, afxRaster* buf);
-AVX afxBool         AfxGetStencilBuffer(avxCanvas canv, afxRaster* buf);
+AVX afxBool         AfxGetDrawBuffers(avxCanvas canv, afxNat baseSlotIdx, afxNat cnt, afxRaster rasters[]);
+AVX afxBool         AfxGetColorBuffers(avxCanvas canv, afxNat baseSlotIdx, afxNat cnt, afxRaster rasters[]);
+AVX afxBool         AfxGetDepthBuffers(avxCanvas canv, afxRaster* depth, afxRaster* stencil);
 
 // must be compatible with format, have at least sampleCnt, and not be less extent than canvas.
 AVX afxError        AfxRelinkDrawBuffers(avxCanvas canv, afxNat baseSlot, afxNat cnt, afxRaster rasters[]);

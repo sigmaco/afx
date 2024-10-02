@@ -245,7 +245,7 @@ _AVX afxError _AvxRazrStdDtor(avxRasterizer razr)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
 
-    afxDrawContext dctx = AfxGetParent(razr);
+    afxDrawContext dctx = AfxGetProvider(razr);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     
     if (razr->pip)

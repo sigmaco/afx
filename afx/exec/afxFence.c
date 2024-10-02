@@ -20,13 +20,13 @@
 #define _AFX_DEVICE_C
 #define _AFX_CONTEXT_C
 #define _AFX_FENCE_C
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 _AFX afxContext AfxGetFenceContext(afxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &fenc, afxFcc_FENC);
-    afxContext ctx = AfxGetParent(fenc);
+    afxContext ctx = AfxGetProvider(fenc);
     //AfxAssertObjects(1, &ctx, afxFcc_CTX);
     AfxAssert(ctx);
     return ctx;
@@ -38,7 +38,7 @@ _AFX afxDevice AfxGetFenceDevice(afxFence fenc)
     AfxAssertObjects(1, &fenc, afxFcc_FENC);
     afxContext ctx = AfxGetFenceContext(fenc);
     AfxAssert(ctx);
-    afxDevice dev = AfxGetParent(ctx);
+    afxDevice dev = AfxGetProvider(ctx);
     //AfxAssertObjects(1, &ctx, afxFcc_CTX);
     AfxAssert(dev);
     return dev;

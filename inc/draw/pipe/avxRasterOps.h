@@ -19,16 +19,16 @@
 #ifndef AVX_RASTER_OPS_H
 #define AVX_RASTER_OPS_H
 
-#include "qwadro/inc/draw/afxRaster.h"
+#include "qwadro/inc/draw/io/afxRaster.h"
 #include "qwadro/inc/draw/pipe/avxSampler.h"
 
 AFX_DEFINE_UNION(avxClearValue)
 {
     union
     {
-        afxV4d      color;
-        afxInt      colori[4];
-        afxNat      colorn[4];
+        afxV4d      rgba;
+        afxInt      rgbai[4];
+        afxNat      rgban[4];
     };
     struct
     {

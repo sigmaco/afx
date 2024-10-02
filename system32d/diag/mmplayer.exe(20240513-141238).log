@@ -1,0 +1,1641 @@
+Booting up the Qwadro Execution Ecosystem...
+Registering... SystemRegistering... String Basemalign 5C39B0
+realign 5E5400
+malign 5C3A80
+afxManifest.c:327
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.realign 5F3EE0
+realign 5E5450
+malign 5C39B0
+realign 5F26E0
+realign 5F3FC0
+realign 5F4FA0
+realign 5C39B0
+realign 5F27B0
+realign 5C39B0
+realign 5F27B0
+realign 5F4FA0
+realign 5F5070
+realign 5F5150
+malign 5F27B0
+realign 5C39B0
+realign 5F4FA0
+realign 5F5090
+realign 5F5180
+realign 5F4FA0
+realign 5F50A0
+malign 5F27B0
+realign 5F4FA0
+Registering... ThreadRegistering... Memory Management UnitRegistering... ServiceRegistering... CodecRegistering... StreamRegistering... ArchiveRegistering... StorageRegistering... ModuleRegistering... DeviceAcquiring thread...  7628 "afxSystem_w32.c:523"realign 5E5450
+malign 5F51A0
+malign 5F54B0
+realign 5E54A0
+malign 5F5870
+Mounting... <.>('E:/qwadro/afx///'),5malign 5F2630
+malign 5E8E00
+Mounting... <system>('E:/qwadro/afx//system/'),5malign 5F27B0
+malign 5F3FC0
+Mounting... <system>('E:/qwadro/afx//system32/'),7malign 5F5B70
+malign 5F4020
+Mounting... <system>('E:/qwadro/afx//system32d/'),7malign 5F5BE0
+malign 5F4080
+Mounting... <//./c/>('C:\'),7malign 5F5C50
+malign 5E04B0
+Mounting... <//./e/>('E:\'),7malign 5F5CC0
+malign 5E04F0
+Mounting... <//./f/>('F:\'),7malign 5F5D30
+malign 5E0540
+Mounting... <//./g/>('G:\'),7malign 5F5DA0
+malign 5E0580
+realign 5F40E0
+malign 5F36B0
+Mounting... <//./h/>('H:\'),7malign 5F5E30
+malign 5E05D0
+Mounting... <//./i/>('I:\'),7malign 5F5EA0
+malign 5E0610
+Mounting... <//./z/>('Z:\'),7malign 5F5F10
+malign 5E0660
+Loading module... <e2coree.dll>realign 5E54A0
+malign 5F39B0
+Memory page size: 4096Logical processor count: 2Doing the AVX start up...Loading module... <e2draw>Registering... DrawSystemRegistering... CameraRegistering... DrawDevice[Device]Registering... DrawOutputRegistering... DrawInputmalign 5F6E10
+realign 5F3C10
+realign 5E54F0
+malign 5F6E10
+realign 5F3CE0
+realign 5E8E60
+realign 5F6E10
+realign 5F5F80
+realign 5DB660
+realign 5F6E10
+realign 5F3DA0
+realign 5F3E40
+realign 5F6E10
+realign 5F3DA0
+realign 5F7FC0
+realign 5F3DA0
+realign 5F7FC0
+realign 5F3DA0
+realign 5F7FC0
+realign 5F3DA0
+realign 5F7FC0
+realign 5F8100
+realign 5F3CE0
+malign 5F6E10
+realign 5F3DF0
+realign 5F8100
+malign 5F6E10
+realign 5F3CE0
+realign 5F8220
+realign 5F8340
+realign 5F8100
+realign 5F8230
+realign 5F8380
+realign 5F8100
+realign 5F8260
+realign 5F83C0
+realign 5F8100
+realign 5F8280
+realign 5F8400
+realign 5F8100
+realign 5F8250
+realign 5F83F0
+realign 5F8590
+realign 5F8250
+realign 5F8420
+realign 5F8600
+realign 5F8250
+realign 5F8440
+malign 5F3C10
+realign 5F3D90
+realign 5E54F0
+malign 5F3C10
+realign 5F8E50
+realign 5E8E60
+realign 5F3E50
+realign 5F5F80
+realign 5DB660
+realign 5F3C10
+realign 5F8F10
+realign 5F3C10
+realign 5F8F10
+realign 5F3C10
+realign 5F8F10
+realign 5F8FF0
+realign 5F90D0
+realign 5F8F10
+realign 5F9000
+realign 5F9100
+realign 5F8F10
+realign 5F9200
+realign 5F9060
+malign 5F8E50
+realign 5F3C10
+realign 5F9170
+malign 5F8E50
+realign 5F9060
+realign 5F9290
+realign 5F9120
+realign 5F9250
+realign 5F9380
+realign 5F9120
+realign 5F9280
+realign 5F93F0
+realign 5F9120
+realign 5F92A0
+realign 5F9430
+realign 5F9120
+realign 5F92C0
+realign 5F9120
+realign 5F9470
+realign 5F9270
+realign 5F9430
+realign 5F95F0
+realign 5F9270
+realign 5F9460
+realign 5F9660
+realign 5F9270
+realign 5F9490
+realign 5F9650
+realign 5F9060
+realign 5F9650
+malign 5F8E50
+realign 5F9060
+realign 5F9120
+realign 5E54F0
+malign 5F9650
+malign 5F9370
+realign 5F4140
+malign 5F9C50
+realign 5F8E50
+realign 5E5400
+malign 5F9370
+realign 5F9D50
+realign 5E8E60
+realign 5F3E50
+realign 5F5F80
+realign 5DB660
+realign 5F9370
+realign 5F9E10
+realign 5F9370
+realign 5F9E10
+realign 5F9370
+realign 5F9E10
+realign 5F9370
+realign 5F9E10
+realign 5F9F00
+realign 5F9370
+realign 5F9E10
+realign 5F9F10
+realign 5F9370
+realign 5F9D50
+malign 5F9370
+realign 5FA060
+realign 5F9370
+malign 5F9D50
+realign 5F9E10
+realign 5FA120
+realign 5FA240
+realign 5FA370
+realign 5FA120
+realign 5FA280
+realign 5FA3E0
+realign 5FA120
+realign 5FA290
+realign 5FA410
+realign 5FA120
+realign 5FA2C0
+realign 5FA460
+realign 5FA120
+realign 5F9D50
+realign 5FA270
+realign 5F9D50
+realign 5FA270
+realign 5FA440
+realign 5FA630
+realign 5FA270
+realign 5FA480
+realign 5F9D50
+realign 5FA120
+realign 5FA350
+realign 5FA580
+malign 5F9370
+realign 5FA120
+realign 5FA1F0
+Loading module... <targl4.dll>realign 5F41A0
+malign 5FA430
+Installable client driver discovered.
+	Device: TARGA Advanced Raster Graphics Adapter
+	Driver: TARGA over OpenGL 4
+	Version: 4.0.16385
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+malign 5E5400
+Registering... DrawContextmalign 5DB6E0
+Loading module... <opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008malign 5FD530
+Acquiring thread...  0 "sglDdev_w32.c:1083"malign 5F8780
+Starting Thread Execution Unit 2720Doing the ASX start up...Loading module... <e2sound>realign 5F6E30
+malign 5F8F10
+Registering... SoundSystemRegistering... SoundDevice[Device]Registering... SoundOutputRegistering... SoundInputmalign 5F3C10
+realign 5F9440
+realign 5E5900
+malign 5F3C10
+realign 603330
+realign 5E8F60
+realign 5F6E90
+realign 5F5FF0
+realign 5DBE60
+realign 608C90
+realign 608D20
+realign 606520
+realign 610BE0
+realign 615490
+realign 619570
+realign 61FD50
+realign 620E30
+realign 624720
+realign 62AC10
+realign 62E500
+realign 632600
+realign 637F50
+realign 69CD60
+malign 603330
+realign 61FD50
+realign 6A9E70
+malign 603330
+realign 620E30
+realign 6B36A0
+realign 6B37C0
+realign 6B3C20
+realign 6B3790
+Creating transient OpenGL contextrealign 6B3C20
+realign 2812400
+realign 2816550
+realign 2816AB0
+realign 281D420
+realign 2850620
+realign 2868FB0
+realign 2850620
+realign 2875140
+realign 287CAE0
+realign 2883880
+realign 2886A40
+realign 2888C80
+realign 30932E0
+realign 3093090
+000 wglMakeContextCurrentARB core found.realign 3093290
+000 wglGetCurrentReadDCARB core found.000 wglCreateContextAttribsARB core found.000 wglChoosePixelFormatARB core found.000 wglSwapIntervalEXT core found.000 wglGetExtensionsStringARB core found.realign 637180
+malign 6034E0
+Creating definitive OpenGL contextmalign 3094A00
+realign 603330
+realign 636F50
+malign 620E30
+realign 6B3790
+realign 2872030
+realign 2FA04A0
+realign 287C010
+realign 5DBE60
+realign 620E30
+realign 2881B80
+realign 620E30
+realign 2881B80
+realign 30DFF50
+000 wglMakeContextCurrentARB core found.000 wglGetCurrentReadDCARB core found.000 wglCreateContextAttribsARB core found.000 wglChoosePixelFormatARB core found.000 wglSwapIntervalEXT core found.000 wglGetExtensionsStringARB core found.391 glReleaseShaderCompiler core found.392 glShaderBinary core found.393 glGetShaderPrecisionFormat core found.realign 619640
+394 glDepthRangef core found.395 glClearDepthf core found.396 glGetProgramBinary core found.397 glProgramBinary core found.realign 2FD6860
+398 glProgramParameteri core found.399 glUseProgramStages core found.400 glActiveShaderProgram core found.401 glCreateShaderProgramv core found.402 glBindProgramPipeline core found.realign 620E30
+403 glDeleteProgramPipelines core found.realign 2830510
+404 glGenProgramPipelines core found.405 glIsProgramPipeline core found.406 glGetProgramPipelineiv core found.407 glProgramUniform1i core found.408 glProgramUniform1iv core found.realign 2881B80
+409 glProgramUniform1f core found.realign 2830510
+410 glProgramUniform1fv core found.realign 2883330
+411 glProgramUniform1d core found.412 glProgramUniform1dv core found.413 glProgramUniform1ui core found.414 glProgramUniform1uiv core found.415 glProgramUniform2i core found.realign 2881B80
+realign 2FA9680
+416 glProgramUniform2iv core found.malign 620E30
+realign 2FD6860
+realign 3092870
+417 glProgramUniform2f core found.malign 620E30
+realign 2881B80
+realign 2FA9680
+418 glProgramUniform2fv core found.419 glProgramUniform2d core found.420 glProgramUniform2dv core found.421 glProgramUniform2ui core found.422 glProgramUniform2uiv core found.423 glProgramUniform3i core found.realign 3092870
+424 glProgramUniform3iv core found.425 glProgramUniform3f core found.426 glProgramUniform3fv core found.427 glProgramUniform3d core found.428 glProgramUniform3dv core found.429 glProgramUniform3ui core found.430 glProgramUniform3uiv core found.431 glProgramUniform4i core found.432 glProgramUniform4iv core found.433 glProgramUniform4f core found.434 glProgramUniform4fv core found.435 glProgramUniform4d core found.436 glProgramUniform4dv core found.437 glProgramUniform4ui core found.438 glProgramUniform4uiv core found.439 glProgramUniformMatrix2fv core found.440 glProgramUniformMatrix3fv core found.441 glProgramUniformMatrix4fv core found.442 glProgramUniformMatrix2dv core found.443 glProgramUniformMatrix3dv core found.444 glProgramUniformMatrix4dv core found.realign 2870800
+445 glProgramUniformMatrix2x3fv core found.446 glProgramUniformMatrix3x2fv core found.realign 6B3790
+realign 3003F60
+447 glProgramUniformMatrix2x4fv core found.448 glProgramUniformMatrix4x2fv core found.449 glProgramUniformMatrix3x4fv core found.450 glProgramUniformMatrix4x3fv core found.451 glProgramUniformMatrix2x3dv core found.452 glProgramUniformMatrix3x2dv core found.453 glProgramUniformMatrix2x4dv core found.realign 30040B0
+454 glProgramUniformMatrix4x2dv core found.realign 3001F70
+455 glProgramUniformMatrix3x4dv core found.realign 3003F60
+456 glProgramUniformMatrix4x3dv core found.457 glValidateProgramPipeline core found.458 glGetProgramPipelineInfoLog core found.459 glVertexAttribL1d core found.460 glVertexAttribL2d core found.461 glVertexAttribL3d core found.462 glVertexAttribL4d core found.463 glVertexAttribL1dv core found.464 glVertexAttribL2dv core found.465 glVertexAttribL3dv core found.466 glVertexAttribL4dv core found.467 glVertexAttribLPointer core found.468 glGetVertexAttribLdv core found.469 glViewportArrayv core found.470 glViewportIndexedf core found.471 glViewportIndexedfv core found.realign 30040D0
+472 glScissorArrayv core found.realign 28AF090
+realign 3003F60
+473 glScissorIndexed core found.realign 6B3790
+474 glScissorIndexedv core found.475 glDepthRangeArrayv core found.476 glDepthRangeIndexed core found.477 glGetFloati_v core found.realign 28AF090
+478 glGetDoublei_v core found.realign 3003F60
+realign 30DDF70
+realign 3003F60
+realign 28AF090
+realign 3003F60
+479 glDrawArraysInstancedBaseInstance core found.480 glDrawElementsInstancedBaseInstance core found.481 glDrawElementsInstancedBaseVertexBaseInstance core found.realign 28AF090
+realign 3003F60
+482 glGetInternalformativ core found.Loading module... <oal4d.dll>483 glGetActiveAtomicCounterBufferiv core found.484 glBindImageTexture core found.485 glMemoryBarrier core found.486 glTexStorage1D core found.487 glTexStorage2D core found.488 glTexStorage3D core found.489 glDrawTransformFeedbackInstanced core found.Installable client driver discovered.
+	Device: A4D Sound Acceleration Adapter
+	Driver: A4D over OpenAL 1
+	Version: 0.1.1514
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+490 glDrawTransformFeedbackStreamInstanced core found.malign 28AF090
+Registering... SoundBrige493 glDispatchCompute core found.Registering... SoundContextmalign 301DE70
+494 glDispatchComputeIndirect core found.496 glFramebufferParameteri core found.497 glGetFramebufferParameteriv core found.Loading module... <openal32.dll>498 glGetInternalformati64v core found.realign 2FCF020
+503 glInvalidateFramebuffer core found.504 glInvalidateSubFramebuffer core found.505 glMultiDrawArraysIndirect core found.506 glMultiDrawElementsIndirect core found.507 glGetProgramInterfaceiv core found.508 glGetProgramResourceIndex core found.509 glGetProgramResourceName core found.510 glGetProgramResourceiv core found.511 glGetProgramResourceLocation core found.512 glGetProgramResourceLocationIndex core found.513 glShaderStorageBlockBinding core found.514 glTexBufferRange core found.515 glTexStorage2DMultisample core found.516 glTexStorage3DMultisample core found.518 glBindVertexBuffer core found.519 glVertexAttribFormat core found.520 glVertexAttribIFormat core found.521 glVertexAttribLFormat core found.522 glVertexAttribBinding core found.523 glVertexBindingDivisor core found.524 glDebugMessageControl core found.525 glDebugMessageInsert core found.526 glDebugMessageCallback core found.527 glGetDebugMessageLog core found.malign 28AF210
+528 glPushDebugGroup core found.529 glPopDebugGroup core found.530 glObjectLabel core found.531 glGetObjectLabel core found.532 glObjectPtrLabel core found.533 glGetObjectPtrLabel core found.534 glBufferStorage core found.543 glClipControlEXT ext found.malign 28AF480
+Acquiring thread...  0 "salSdev_w32.c:448"realign 2FD8B80
+malign 2875140
+551 glNamedBufferStorageEXT ext found.589 glTextureBufferRangeEXT ext found.606 glTextureParameteriEXT ext found.641 glMemoryBarrierByRegion core found.644 glGetGraphicsResetStatusARB ext found.645 glGetnCompressedTexImageARB ext found.malign 2829A40
+646 glGetnTexImageARB ext found.647 glGetnUniformdvARB ext found.648 glGetnUniformfvARB ext found.649 glGetnUniformivARB ext found.The audience is listeningmalign 61FD50
+650 glGetnUniformuivARB ext found.Starting Thread Execution Unit 8912realign 620E30
+651 glReadnPixelsARB ext found.realign 5E5450
+malign 624720
+realign 6B36A0
+realign 281E910
+realign 5F7100
+realign 30A3A20
+realign 5DC1E0
+realign 624720
+677 381 1920 1080 96 96 32 1 36 36 51 60 1 realign 6A9E70
+realign 2FA9680
+SIGMA GL/2 Hardware-accelerated Draw Processing Unit 000
+	Intel(R) HD Graphics 4.0.0 - Build 10.18.10.5161realign 6A9E70
+realign 3019FA0
+malign 3019AC0
+sglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMrealign 619EB0
+realign 301AF10
+realign 301B2C0
+sglDdev_w32.c:751
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:777
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:787
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:789
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:793
+GL: INVAL_PARAMrealign 301D600
+realign 301EDB0
+realign 301D590
+realign 3024250
+realign 30A7B10
+realign 302AFB0
+malign 301EF00
+realign 301EFD0
+realign 302B0C0
+malign 301EF00
+realign 301F090
+realign 302B1E0
+realign 302AFB0
+realign 302B0D0
+realign 302B200
+realign 3002680
+realign 302AFB0
+realign 302B110
+realign 302B280
+realign 302AFB0
+realign 302B140
+realign 302B2D0
+realign 302AFB0
+realign 302B150
+realign 302B2A0
+realign 30DDF70
+realign 302B2A0
+realign 302B460
+realign 302B640
+realign 302B2A0
+realign 302B4A0
+realign 302B6B0
+realign 302B2A0
+realign 302B460
+realign 302AFB0
+realign 302B460
+malign 301F090
+realign 301EF00
+realign 302AFB0
+Doing the AUX start up...Loading module... <e2ux>Registering... ShellRegistering... HIDRegistering... Controller[HID]Registering... WindowRegistering... Scriptmalign 2FCF7A0
+Acquiring HID at port 0realign 30E8CA0
+malign 30F0180
+Mounting... <code>('E:/qwadro/afx//system/'),7malign 303BE70
+malign 30602D0
+Entering the Thread Execution Environment 7628
+realign 30E8D90
+malign 30F2BB0
+malign 30F0820
+malign 30F92C0
+malign 30FA300
+malign 305A810
+Registering... DrawQueueRegistering... DrawBridgerealign 30E8D40
+malign 5F3EE0
+malign 30E8E30
+realign 30E8E80
+malign 30FAB50
+malign 30F0960
+malign 30FAFD0
+malign 30FC020
+malign 30F0AB0
+malign 30FC860
+malign 30FD8B0
+malign 30F0BF0
+malign 3027450
+malign 30FE0F0
+Registering... SemaphoreRegistering... FenceRegistering... Query PoolRegistering... LigatureRegistering... SamplerRegistering... BufferRegistering... RasterRegistering... CanvasRegistering... Vertex InputRegistering... ShaderRegistering... PipelineRegistering... RasterizerUploading pipeline 'system/video/sampleOutRgba.xsh.xml'Loading file... <system/video/sampleOutRgba.xsh.xml>('E:/qwadro/afx//system//video/sampleOutRgba.xsh.xml')realign 30E8DE0
+malign 3039D50
+malign 3028490
+realign 3056370
+recoalign 305A860
+recoalign 305A8A0
+realign 301A960
+recoalign 305A8F0
+recoalign 305A930
+malign 3061210
+malign 30612C0
+malign 3061310
+realign 30E8F70
+realign 30611B0
+realign 30387B0
+recoalign 305A930
+recoalign 305A9C0
+malign 3056370
+realign 30E8FC0
+realign 619F90
+recoalign 305A8F0
+recoalign 305AA50
+malign 30563D0
+realign 30E9010
+realign 3040BD0
+recoalign 305A980
+recoalign 305AAA0
+malign 3056440
+malign 30564A0
+malign 30612C0
+realign 30E8F20
+realign 310B580
+malign 30564A0
+realign 30611B0
+realign 310E570
+recoalign 305ABC0
+recoalign 305AC00
+malign 3056440
+realign 3061420
+malign 310B5F0
+realign 30E90B0
+realign 31121B0
+recoalign 305A860
+recoalign 305AC50
+malign 30613C0
+malign 30611B0
+malign 3061470
+realign 30E9100
+realign 2FCF900
+realign 30175E0
+recoalign 3118380
+recoalign 31183D0
+malign 310B720
+realign 30E91A0
+realign 3119370
+recoalign 305A860
+recoalign 3118410
+malign 310B790
+realign 30E91F0
+realign 311FE40
+recoalign 31184A0
+recoalign 31184F0
+malign 310B7F0
+malign 310B860
+malign 30613C0
+realign 30E91A0
+realign 309ACB0
+malign 310B860
+realign 3061580
+realign 30175E0
+recoalign 31184F0
+recoalign 3118530
+malign 310B7F0
+realign 30615D0
+malign 310B8C0
+realign 30E91F0
+realign 311BFD0
+recoalign 3118580
+recoalign 31185C0
+malign 3061580
+malign 3061630
+malign 3061680
+realign 30E90B0
+realign 3039EC0
+realign 311FE40
+recoalign 31185C0
+recoalign 3118610
+malign 310B930
+realign 30E9240
+realign 311BFD0
+recoalign 305AB70
+recoalign 3118460
+malign 310B990
+realign 30E9010
+realign 288B640
+recoalign 31186A0
+recoalign 31186E0
+malign 310BA00
+malign 310BA60
+malign 3061210
+realign 30E9290
+realign 5F4FA0
+malign 310BA60
+realign 3061630
+realign 3110E70
+recoalign 3118730
+recoalign 3118770
+malign 310BA00
+realign 30616E0
+malign 310BB30
+realign 3061630
+realign 311DC20
+recoalign 31187C0
+recoalign 3118800
+realign 3110E70
+recoalign 3118850
+recoalign 3118890
+malign 310BBA0
+realign 30E91F0
+realign 311DC20
+recoalign 31187C0
+recoalign 31188E0
+malign 310BC00
+realign 30E9010
+realign 311DF10
+recoalign 3118920
+recoalign 3118970
+malign 310BC70
+realign 3061730
+malign 310BCD0
+realign 3061790
+realign 3120730
+recoalign 3118650
+recoalign 31189B0
+malign 3061580
+malign 30611B0
+malign 3061370
+realign 30E9060
+realign 30F6270
+realign 311DC20
+recoalign 31189B0
+recoalign 31186E0
+malign 310BD40
+realign 30E9010
+realign 311DF80
+recoalign 3118580
+recoalign 3118A00
+malign 310BDA0
+realign 30E92E0
+realign 31289F0
+recoalign 3118A40
+recoalign 3118A90
+malign 310BE10
+realign 3061580
+malign 310BE70
+realign 3060330
+realign 300F700
+recoalign 3118AD0
+recoalign 3118B20
+realign 311E000
+recoalign 3118B60
+recoalign 3118BB0
+malign 310BF40
+realign 30E92E0
+realign 311A720
+recoalign 3118AD0
+recoalign 3118C40
+malign 310BFB0
+realign 30E9010
+realign 311E000
+recoalign 3118C80
+recoalign 3118CD0
+malign 310C010
+realign 30617E0
+realign 311A8F0
+recoalign 3118D10
+recoalign 3118D60
+malign 310C080
+realign 30611B0
+malign 310C0E0
+realign 3060390
+realign 311A3B0
+recoalign 305AAE0
+recoalign 305AB30
+malign 3061630
+malign 30617E0
+malign 3061840
+realign 30E8ED0
+realign 301EF00
+realign 302A2E0
+recoalign 305AB30
+recoalign 305AAA0
+malign 310C150
+realign 30E91F0
+realign 302A780
+recoalign 305AAE0
+recoalign 3118BF0
+malign 310C1B0
+realign 30E9240
+realign 310E570
+recoalign 3118650
+recoalign 3118DA0
+malign 310C220
+realign 3061630
+realign 302A2E0
+recoalign 3118DF0
+recoalign 3118E30
+malign 310C280
+realign 30617E0
+malign 310C2F0
+realign 310C350
+malign 310C3C0
+realign 302A7F0
+malign 30F3F40
+Node 'DepthWriteEnabled' not handled.../system/video/sampleOutRgba.xsh.xmlUploading pipeline '../system/video/sampleOutRgba.xsh.xml'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../system/video/sampleOutRgba.xsh.xml>('../system/video/sampleOutRgba.xsh.xml')realign 30E8DE0
+malign 3026EC0
+malign 311A3B0
+realign 310C420
+recoalign 3118E80
+recoalign 3118EC0
+realign 301A960
+recoalign 3118F10
+recoalign 3118F50
+malign 3061630
+malign 3061260
+malign 3061790
+realign 30E9240
+realign 3061890
+realign 30387B0
+recoalign 3118F50
+recoalign 3118FA0
+malign 310C420
+realign 30E91F0
+realign 61A060
+recoalign 3118F10
+recoalign 3118FE0
+malign 310C490
+realign 30E8FC0
+realign 303F440
+recoalign 3119030
+recoalign 3119070
+malign 310C4F0
+malign 310E580
+malign 3061260
+realign 30E91F0
+realign 310E5F0
+malign 310E580
+realign 3061890
+realign 3030C30
+recoalign 3119070
+recoalign 31190C0
+malign 310E650
+realign 3061630
+malign 310E6C0
+realign 30E8FC0
+realign 31121B0
+recoalign 3118E80
+recoalign 3119100
+malign 3061890
+malign 30618F0
+malign 3061940
+realign 30E9010
+realign 2FCF810
+realign 5C39B0
+recoalign 3119100
+recoalign 3119150
+malign 310E5F0
+realign 30E92E0
+realign 3039D50
+recoalign 3118E80
+recoalign 3119190
+malign 310E720
+realign 30E9330
+realign 5C39B0
+recoalign 31191E0
+recoalign 3119220
+malign 310E790
+malign 310E7F0
+malign 30618F0
+realign 30E92E0
+realign 309ACB0
+malign 310E7F0
+realign 3061890
+realign 3039D50
+recoalign 3119220
+recoalign 3119270
+malign 310E790
+realign 30619A0
+malign 310E860
+realign 30E9330
+realign 5C39B0
+recoalign 31192B0
+recoalign 3119300
+malign 3061890
+malign 30619F0
+malign 3061A50
+realign 30E8FC0
+realign 5F4FA0
+realign 3039D50
+recoalign 3119300
+recoalign 311C210
+malign 310E8C0
+realign 30E9380
+realign 288B640
+recoalign 31192B0
+recoalign 311C250
+malign 310E930
+realign 30E93D0
+realign 3110DF0
+recoalign 311C2A0
+recoalign 311C2E0
+malign 310E990
+malign 310EA00
+malign 30619F0
+realign 30E9380
+realign 302D310
+malign 310EA00
+realign 3061890
+realign 30175E0
+recoalign 311C2E0
+recoalign 311C330
+malign 310E990
+realign 3061AA0
+malign 310EA60
+realign 3061890
+realign 3110DF0
+recoalign 311C370
+recoalign 311C3C0
+realign 30175E0
+recoalign 311C400
+recoalign 311C450
+malign 310EAD0
+realign 30E9330
+realign 3110DF0
+recoalign 311C370
+recoalign 311C490
+malign 310EB30
+realign 30E93D0
+realign 30175E0
+recoalign 311C4E0
+recoalign 311C520
+malign 310EBA0
+realign 3061B00
+malign 310EC00
+realign 3061B50
+realign 3110DF0
+recoalign 311C570
+recoalign 311C5B0
+malign 3061890
+malign 3061BB0
+malign 3061C00
+realign 30E93D0
+realign 30F6270
+realign 30175E0
+recoalign 311C5B0
+recoalign 311C600
+malign 310EC70
+realign 30E9330
+realign 3110DF0
+recoalign 311C570
+recoalign 311C640
+malign 310ECD0
+realign 30E9420
+realign 30F2800
+recoalign 311C690
+recoalign 311C6D0
+malign 310ED40
+realign 3061BB0
+malign 310EDA0
+realign 3060390
+realign 300F700
+recoalign 311C720
+recoalign 311C760
+realign 310F570
+recoalign 311C7B0
+recoalign 311C7F0
+malign 310EE10
+realign 30E9420
+realign 311D1F0
+recoalign 311C720
+recoalign 311C840
+malign 310EE70
+realign 30E9330
+realign 310F570
+recoalign 311C880
+recoalign 311C8D0
+malign 310EEE0
+realign 3061B50
+realign 311D1F0
+recoalign 311C910
+recoalign 311C960
+malign 310EF40
+realign 3061890
+malign 310EFB0
+realign 3060330
+realign 310F570
+recoalign 311C9A0
+recoalign 311C9F0
+malign 3061B50
+malign 3061C60
+malign 3061CB0
+realign 30E9330
+realign 301EFD0
+realign 311D1F0
+recoalign 311C9F0
+recoalign 311CA30
+malign 310F010
+realign 30E9420
+realign 310F570
+recoalign 311C9A0
+recoalign 311CA80
+Entering the Thread Execution Environment 8912
+0  - OpenAL SoftEntering the Thread Execution Environment 7628
+malign 310F080
+realign 30E9470
+realign 311D1F0
+recoalign 311CAC0
+recoalign 311CB10
+malign 310F0E0
+realign 3061C60
+realign 310F570
+recoalign 311CB50
+recoalign 311CBA0
+malign 310F150
+realign 3061B50
+malign 310F1B0
+realign 310F220
+malign 310F280
+realign 311D1F0
+malign 30F3F40
+../system/video/uvOutTristripQuad.vsh../system/video/sampleOutRgba2d.fshrealign 30E9330
+malign 3110DF0
+realign 30E93D0
+malign 3026EC0
+malign 5DC560
+realign 30E9380
+malign 5C39B0
+malign 310C490
+malign 303F440
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/uvOutTristripQuad.vsh>('../system/video/uvOutTristripQuad.vsh'),1malign 310C420
+realign 30E8FC0
+malign 3039D50
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 3060330
+realign 309ACB0
+realign 309A7F0
+realign 5C3B40
+realign 30387B0
+realign 3038860
+realign 301F090
+realign 301F160
+realign 620E30
+realign 6B36A0
+realign 30A7B10
+realign 30A75F0
+realign 3030C30
+realign 305D4E0
+realign 31121B0
+realign 288B640
+realign 30175E0
+realign 3017730
+realign 288B640
+realign 30175E0
+realign 3017760
+realign 304F9B0
+realign 30175E0
+realign 30F2800
+realign 30175E0
+realign 30F2800
+realign 30175E0
+realign 30F2800
+realign 311D700
+realign 311DAF0
+realign 311DF20
+realign 311D700
+realign 311DB90
+realign 3103970
+realign 311D700
+realign 311DBF0
+realign 3103970
+realign 311D700
+realign 311DC10
+realign 3103970
+realign 311D700
+realign 311DC20
+realign 3103970
+realign 311D700
+realign 311DCB0
+realign 3103970
+malign 311D700
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+const vec4 gsQuadPos[4] = vec4[](vec4(-1, 1, 0, 1), vec4(-1,-1, 0, 1), vec4(1, 1, 0, 1), vec4(1,-1, 0, 1));
+const vec2 gsQuadUv[4] = vec2[](vec2(0, 1), vec2(0, 0), vec2(1, 1), vec2(1, 0));
+
+out block
+{
+    vec2 uv0;
+} sgl_v;
+
+void main()
+{
+    // draw a full coverage quad based on two tristripped triangles (4 indices). AfxDraw(0, 1, 0, 4)
+    
+    gl_Position = gsQuadPos[gl_VertexID];
+    sgl_v.uv0 = gsQuadUv[gl_VertexID];
+}
+malign 310C420
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/sampleOutRgba2d.fsh>('../system/video/sampleOutRgba2d.fsh'),1malign 310E580
+realign 30E8FC0
+malign 3039D50
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 3060330
+realign 309A7F0
+realign 309ACB0
+realign 5C3B40
+realign 3038860
+realign 30387B0
+realign 301F160
+realign 301F090
+realign 620E30
+realign 6B36A0
+realign 30A75F0
+realign 30A7B10
+realign 3030C30
+realign 305D4E0
+realign 31121B0
+realign 288B640
+realign 30175E0
+realign 3017730
+realign 288B640
+realign 30175E0
+realign 3017760
+realign 304F9B0
+realign 30175E0
+realign 30F2800
+realign 30175E0
+realign 30F2800
+realign 30175E0
+realign 30F2800
+realign 311DCE0
+realign 31049A0
+realign 311DCE0
+realign 3060330
+malign 31192B0
+realign 3103970
+realign 311DCE0
+realign 3103970
+realign 311DCE0
+realign 3103970
+realign 311DCE0
+realign 3103970
+realign 3061B50
+realign 311DCE0
+realign 3103970
+realign 311DCE0
+realign 3103970
+realign 311DCE0
+realign 3103970
+malign 311DCE0
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+SAMPLING_UNIT(0, 0, sampler2D, samp);
+
+in block
+{
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = texture(samp, sgl_v.uv0);
+}
+malign 3060390
+malign 3119300
+malign 3061CB0
+realign 30E8FC0
+malign 6B36A0
+realign 309ACB0
+realign 3102940
+malign 2FCF810
+malign 3061B50
+realign 30E8ED0
+malign 288B640
+realign 30E9060
+malign 3102940
+Registering... Vertex Buffermalign 3039D50
+malign 30E9290
+Registering... CmdBufferRegistering... CmdBufferLoading file... <system/mmplayer.xss>('E:/qwadro/afx//system//mmplayer.xss')realign 30E90B0
+malign 311E1A0
+malign 30175E0
+require "core" for FileSystem
+
+class Main {
+  construct new() {
+    System.print("new game")
+  }
+
+  init() {
+    System.print("init game")
+  }
+  
+  quit() {
+      System.print("quit game")
+  }
+
+  step(dt) {
+    //System.print("update game")
+  }
+
+  draw(din, event) {
+    System.print("draw game")
+  }
+}
+
+var Game = Main.new()
+System.print(". game")
+Loading file... <code/core.xs>('E:/qwadro/afx//system//core.xs')malign 31031A0
+afxScript.c:408
+afxScript.c:408
+(!xRslt)
+    Invalidrealign 30E90B0
+malign 311E1A0
+malign 30F2800
+afxStorage.c:203
+afxStorage.c:223
+Reloading file 0... <art/world.tga>('art/world.tga')afxFile.c:622
+afxTarga.c:1293
+mmplayer.c:235
+mmplayer.c:237
+mmplayer.c:237
+(dumpImg)
+    InvalidafxTarga.c:1188
+afxTarga.c:1188
+(((afxResult)(1)) == _AfxAssertObjects((1), (afxObject const*)(&ras),(afxFcc_RAS)))
+    InvalidafxStorage.c:203
+afxStorage.c:223
+Opening file... <tmp/world2.tga>('tmp/world2.tga'),2afxFile.c:543
+afxTarga.c:1191
+Loading module... <../system32/binkw32.dl_>realign 5DC6E0
+malign 311E1A0
+Entering the Thread Execution Environment 8912
+1  - Generic SoftwareListing devices available with ALC_ENUMERATE_ALL_EXT0  - OpenAL Soft on Alto-falantes (VIA HD Audio(Compatible))1  - OpenAL Soft on Headphone (VIA HD Audio(Compatible))2  - Generic Software on Alto-falantes (VIA HD Audio(Compatible))3  - Generic Software on Headphone (VIA HD Audio(Compatible))Listing available capture devices:0  - OpenAL Soft on Mixagem estÃ©reo (VIA HD Audio(Compatible))1  - OpenAL Soft on Microfone (VIA HD Audio(Compatible))Entering the Thread Execution Environment 7628
+Uploading pipeline 'system/video/rgbOutYuv.xsh.xml?yFlipped'Entering the Thread Execution Environment 8912
+2  - OpenAL Soft on Entrada (VIA HD Audio(Compatible))3  - Mixagem estéreo (VIA HD Audio(CEntering the Thread Execution Environment 7628
+Loading file... <system/video/rgbOutYuv.xsh.xml>('E:/qwadro/afx//system//video/rgbOutYuv.xsh.xml')realign 30EBA90
+malign 31056B0
+malign 3105820
+Entering the Thread Execution Environment 8912
+4  - Microfone (VIA HD Audio(CompatiEntering the Thread Execution Environment 7628
+realign 310BA00
+recoalign 305AAE0
+recoalign 305AB30
+realign 301A960
+recoalign 305AAA0
+recoalign 305AB70
+realign 30385A0
+recoalign 305A860
+recoalign 305ABC0
+malign 310BA00
+realign 30EBAE0
+realign 61A060
+recoalign 305AAA0
+recoalign 305AC00
+malign 310BA60
+realign 30EBB30
+realign 3111070
+recoalign 305A980
+recoalign 305A8F0
+malign 310B990
+realign 310E790
+realign 3030C30
+recoalign 305AA50
+recoalign 305A930
+malign 310B930
+realign 310E7F0
+malign 310B8C0
+realign 30EBB30
+realign 31121B0
+recoalign 305AAE0
+recoalign 305A9C0
+malign 310E790
+malign 310E840
+malign 310E8A0
+realign 30EBAE0
+realign 310E8F0
+realign 30F2A50
+recoalign 305A9C0
+recoalign 305A8A0
+malign 310B7F0
+realign 30EBB80
+realign 3105E60
+recoalign 305AAE0
+recoalign 311C210
+malign 310B860
+realign 30EBBD0
+realign 3105FF0
+recoalign 311C250
+recoalign 311C2A0
+malign 310B790
+realign 310E840
+Entering the Thread Execution Environment 8912
+5  - Entrada (VIA HD Audio(CompatiblEntering the Thread Execution Environment 7628
+malign 310B720
+realign 30EBBD0
+realign 31061A0
+recoalign 311C2E0
+recoalign 311C330
+realign 3105E60
+recoalign 311C370
+recoalign 311C3C0
+malign 310B5F0
+realign 30EBB30
+realign 3106060
+recoalign 311C2E0
+recoalign 311C400
+malign 3056440
+realign 30EBB80
+realign 3106270
+recoalign 311C450
+recoalign 311C490
+malign 30564A0
+realign 310E790
+realign 3105E60
+recoalign 311C4E0
+recoalign 311C520
+malign 30563D0
+realign 310E9A0
+malign 3056370
+realign 310E790
+realign 3109E00
+recoalign 311C570
+recoalign 311C5B0
+malign 310EA00
+malign 310EA50
+malign 310EAB0
+realign 30EBC20
+realign 3124CB0
+realign 3128770
+recoalign 311C6D0
+recoalign 311C720
+malign 3124D10
+realign 30EBCC0
+realign 310FC50
+recoalign 311C570
+recoalign 311C760
+malign 3124DE0
+realign 30EBD10
+realign 310FF20
+recoalign 311C7B0
+recoalign 311C840
+malign 3124E50
+realign 310EA00
+realign 3110580
+recoalign 311C880
+recoalign 311C8D0
+malign 3124EB0
+realign 310EB60
+malign 3124F20
+realign 310EA00
+malign 3124F80
+realign 3110890
+malign 5C3B40
+Node 'DepthWriteEnabled' not handled.../system/video/rgbOutYuv.xsh.xml?yFlippedUploading pipeline '../system/video/rgbOutYuv.xsh.xml?yFlipped'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../system/video/rgbOutYuv.xsh.xml>('../system/video/rgbOutYuv.xsh.xml')realign 30EBA90
+malign 31056B0
+malign 312C290
+realign 3124FF0
+recoalign 311C910
+recoalign 311C960
+realign 301A960
+recoalign 311C9A0
+recoalign 311C9F0
+realign 30385A0
+recoalign 311CA30
+recoalign 311CA80
+malign 3124FF0
+realign 30EBD10
+realign 61A060
+recoalign 311C9A0
+recoalign 311CAC0
+malign 3125050
+realign 30EBCC0
+realign 3111070
+recoalign 311CB10
+recoalign 311CB50
+malign 31250C0
+realign 310E790
+realign 31121B0
+recoalign 311CBA0
+recoalign 311CBE0
+malign 3125120
+realign 310EBB0
+malign 3125190
+realign 30EBCC0
+realign 3017820
+recoalign 311C910
+recoalign 311CC30
+malign 310E790
+malign 310EC10
+malign 310EC60
+realign 30EBD10
+realign 310ECC0
+realign 30F2A50
+recoalign 311CC30
+recoalign 311CC70
+malign 31251F0
+realign 30EBD60
+realign 3128770
+recoalign 311C910
+recoalign 311CCC0
+malign 3125260
+realign 30EBE50
+realign 310FE20
+recoalign 311CD00
+recoalign 311CDE0
+malign 3125330
+realign 310ED70
+malign 3125400
+realign 30EBE50
+realign 3138960
+recoalign 311CEB0
+recoalign 311CF00
+realign 313B610
+recoalign 311CF90
+recoalign 311CFD0
+malign 3125460
+realign 30EBCC0
+realign 313B800
+recoalign 311CEB0
+recoalign 311D020
+malign 31254D0
+realign 30EBD60
+realign 313BA20
+recoalign 311D060
+recoalign 311D0B0
+malign 3125530
+realign 310EE20
+realign 313B610
+recoalign 311D0F0
+recoalign 311D140
+malign 31255A0
+realign 310EE70
+malign 3125600
+realign 310EE20
+realign 313B870
+recoalign 311D180
+recoalign 313BB10
+malign 310EED0
+malign 310EF20
+malign 310EF80
+realign 30EBE50
+realign 3125670
+realign 313CAF0
+recoalign 313BB10
+recoalign 313BB50
+malign 31256D0
+realign 30EBD60
+realign 313B610
+recoalign 311D180
+recoalign 313BBA0
+malign 3125740
+realign 30EBCC0
+realign 313CAF0
+recoalign 313BBE0
+recoalign 313BC30
+malign 31257A0
+realign 310EF20
+realign 313B610
+Entering the Thread Execution Environment 8912
+Opening file... <system/qwadroDeepNote>('E:/qwadro/afx//system//qwadroDeepNote'),1Entering the Thread Execution Environment 7628
+recoalign 313BC70
+recoalign 313BCC0
+malign 3125870
+realign 310EED0
+malign 31258E0
+realign 310EF20
+malign 3125940
+realign 313CAF0
+malign 3128980
+../system/video/uvOutTristripQuadInvY.vsh../system/video/rgbOutYuvSigma.fshmalign 5DC860
+realign 3060630
+malign 310FE20
+malign 303C180
+realign 3125940
+malign 3040BD0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/uvOutTristripQuadInvY.vsh>('../system/video/uvOutTristripQuadInvY.vsh'),1malign 303C1F0
+realign 30E9380
+malign 31056B0
+Entering the Thread Execution Environment 8912
+malign 3125810
+Entering the Thread Execution Environment 7628
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 5F4140
+realign 3060690
+malign 313B920
+realign 309A7F0
+realign 309AA10
+realign 5C3B40
+realign 30385A0
+realign 30389C0
+realign 301F090
+realign 301F160
+realign 620E30
+realign 3111070
+realign 30A7B10
+realign 30A75F0
+realign 31121B0
+realign 305E250
+realign 31121B0
+realign 3017820
+realign 313EE70
+realign 3138960
+realign 313EE70
+realign 3138960
+realign 313EE70
+realign 304FE40
+realign 313EE70
+realign 313F0E0
+realign 313F3B0
+realign 313EE70
+realign 313F160
+realign 313F4A0
+realign 313EE70
+realign 313F260
+realign 30E9380
+realign 313F680
+realign 313FAB0
+realign 313DE40
+realign 313E330
+realign 313E830
+realign 313DE40
+realign 313E340
+realign 313E850
+realign 313DE40
+realign 313E360
+realign 313E880
+realign 313DE40
+realign 313E370
+realign 313E900
+realign 313DE40
+realign 313E430
+malign 313EA20
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+const vec4 gsQuadPos[4] = vec4[](vec4(-1, 1, 0, 1), vec4(-1,-1, 0, 1), vec4(1, 1, 0, 1), vec4(1,-1, 0, 1));
+const vec2 gsQuadUvFlippedY[4] = vec2[](vec2(0, 0), vec2(0, 1), vec2(1, 0), vec2(1, 1));
+// flipped V only
+
+out block
+{
+    vec2 uv0;
+} sgl_v;
+
+void main()
+{
+    // draw a full coverage quad based on two tristripped triangles (4 indices). AfxDraw(0, 1, 0, 4)
+    gl_Position = gsQuadPos[gl_VertexID];
+    sgl_v.uv0 = gsQuadUvFlippedY[gl_VertexID];
+}
+malign 3125870
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/rgbOutYuvSigma.fsh>('../system/video/rgbOutYuvSigma.fsh'),1Entering the Thread Execution Environment 8912
+malign 7090050
+Entering the Thread Execution Environment 7628
+malign 3125810
+realign 30E9380
+malign 31056B0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 3060690
+realign 309AA10
+realign 309A7F0
+realign 5C3B40
+realign 30389C0
+realign 30385A0
+realign 301F160
+realign 301F090
+realign 620E30
+realign 3111070
+realign 30A75F0
+realign 30A7B10
+realign 31121B0
+realign 305E250
+realign 31121B0
+realign 3017820
+realign 313B920
+realign 3138960
+realign 313B920
+realign 3138960
+realign 313DE40
+realign 304FE40
+realign 313DE40
+realign 313E0B0
+realign 313E380
+realign 313E650
+realign 313DE40
+realign 313E180
+realign 313E520
+realign 313DE40
+realign 313E260
+realign 3060690
+malign 311D180
+realign 313F010
+realign 5DC8E0
+malign 311D0F0
+realign 313DE40
+realign 3128980
+malign 311D140
+realign 313E2B0
+realign 313F010
+realign 313DE40
+realign 313E2E0
+realign 313F010
+realign 313DE40
+realign 313E300
+realign 310EF20
+realign 313F010
+realign 313DE40
+realign 313E310
+realign 313F010
+realign 313DE40
+realign 313E330
+realign 313F010
+realign 313DE40
+realign 313E3C0
+realign 313F010
+realign 313DE40
+realign 313E420
+malign 313CE10
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+SAMPLING_UNIT(0, 0, sampler2D, samp0);
+SAMPLING_UNIT(0, 1, sampler2D, samp1);
+SAMPLING_UNIT(0, 2, sampler2D, samp2);
+
+in block
+{
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    vec3 yuv;
+    yuv.x = texture(samp0, sgl_v.uv0).r;
+    yuv.y = texture(samp2, sgl_v.uv0).r - 0.5;
+    yuv.z = texture(samp1, sgl_v.uv0).r - 0.5;
+    
+    vec3 rgb = mat3( 1, 1, 1, 0, -0.34414, 1.772, 1.402, -0.71414, 0) * yuv;
+    sgl_rgba = vec4(rgb, 1);
+}
+malign 5C3B40
+malign 311D060
+malign 311D0B0
+malign 311CEB0
+malign 310EED0
+realign 309A7F0
+realign 313D400
+malign 620E30
+malign 310EF20
+afxStorage.c:203
+afxStorage.c:223
+afxBinkVideo.c:305
+afxBinkVideo.c:305
+(bik)
+    Invalidrealign 30EBC20
+malign 305E250
+afxBuffer.c:451
+sglBuf.c:368
+afxClass.c:685
+afxClass.c:749

@@ -19,8 +19,8 @@
 #ifndef AMX_CAD_IMPL_KIT_H
 #define AMX_CAD_IMPL_KIT_H
 
-//#include "../dev/afxDevCoreBase.h"
-#include "qwadro/inc/sim/dev/afxPragmaSystem.h"
+//#include "../dev/afxExecImplKit.h"
+#include "qwadro/inc/sim/dev/afxComboSystem.h"
 
 #ifdef _AMX_MATERIAL_C
 

@@ -1,0 +1,40 @@
+// This technology is part of Qwadro (c) 2017 SIGMA Federation
+require "core" for Storage, Stream
+
+class Main {
+  construct new() {
+    System.print("new");
+  }
+
+  init() {
+    System.print("init");
+    //Storage.Mount("tmp", "system/tmp", "rwx");
+    var f = Stream.OpenFile("tmp/camera.lua", "rwx");
+    f.Seek(10, 0);
+    f.Write("stdout", 6, 0);
+    f.Close();
+  }
+
+  update() {
+    System.print("update");
+  }
+
+  draw(dt) {
+    System.print("draw");
+  }
+  
+
+}
+
+Storage.Mount("code", "code", "rx");
+Storage.Mount("sound", "sound", "rx");
+Storage.Mount("data", "data", "rx");
+Storage.Mount("art", "art", "rx");
+Storage.Mount("tmp", "tmp", "rwx");
+
+var Game = Main.new();
+System.print(".");
+var file = Stream.OpenFile("tmp/camera.lua", "rwx");
+file.Seek(1, 0);
+file.Close();
+

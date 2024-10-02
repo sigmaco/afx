@@ -98,7 +98,7 @@ _AUX afxError _AuxSshDtorCb(afxShell ssh)
         AfxReleaseObjects(1, &ssh->stdHid);
 
     AfxAssert(!ssh->idd);
-    AfxCleanUpChainedClasses(&ssh->dev.classes);
+    AfxDeregisterChainedClasses(&ssh->dev.classes);
 
     afxUri location;
     AfxMakeUri(&location, 0, "system", 0);
@@ -112,8 +112,8 @@ _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxNat invokeNo)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ssh, afxFcc_SSH);
 
-    afxDriver icd = args[0];
-    AfxAssertObjects(1, &icd, afxFcc_ICD);
+    afxModule icd = args[0];
+    AfxAssertObjects(1, &icd, afxFcc_MDLE);
     afxShellInfo const* info = ((afxShellInfo const *)args[1]) + invokeNo;
     AfxAssert(info);
 
@@ -197,7 +197,7 @@ _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxNat invokeNo)
 
             if (err)
             {
-                AfxCleanUpChainedClasses(&ssh->dev.classes);
+                AfxDeregisterChainedClasses(&ssh->dev.classes);
             }
         }
     }
@@ -252,10 +252,10 @@ _AUX afxBool AfxGetShell(afxNat sshId, afxShell* shell)
     return !!ssh;
 }
 
-_AUX afxError _AuxRegisterShells(afxDriver icd, afxNat cnt, afxShellInfo const infos[], afxShell shells[])
+_AUX afxError _AuxRegisterShells(afxModule icd, afxNat cnt, afxShellInfo const infos[], afxShell shells[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &icd, afxFcc_ICD);
+    AfxAssertObjects(1, &icd, afxFcc_MDLE);
     AfxAssert(shells);
 
     afxClass* cls = (afxClass*)AuxGetShellClass();
@@ -266,10 +266,10 @@ _AUX afxError _AuxRegisterShells(afxDriver icd, afxNat cnt, afxShellInfo const i
     if (cls->pool.totalUsedCnt >= cls->maxInstCnt) AfxThrowError();
     else
     {
-        if (_AfxAllocateClassInstances(cls, cnt, (afxObject*)shells)) AfxThrowError();
+        if (_AfxAllocateObjects(cls, cnt, (afxObject*)shells)) AfxThrowError();
         else
         {
-            if (_AfxConstructClassInstances(cls, cnt, (afxObject*)shells, (void*[]) { icd, (void*)infos }))
+            if (_AfxConstructObjects(cls, cnt, (afxObject*)shells, (void*[]) { icd, (void*)infos }))
             {
                 AfxThrowError();
             }
@@ -280,7 +280,7 @@ _AUX afxError _AuxRegisterShells(afxDriver icd, afxNat cnt, afxShellInfo const i
             }
             else
             {
-                _AfxDeallocateClassInstances(cls, cnt, (afxObject*)shells);
+                _AfxDeallocateObjects(cls, cnt, (afxObject*)shells);
             }
         }
     }

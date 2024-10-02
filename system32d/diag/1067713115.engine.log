@@ -1,0 +1,42 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 0fd1d874 by 00000000 over 00000000 with 0fd1a770)
+ afxClass<Basic I/O System>::ConstructObject(0063f160)
+ afxSystem.c:1068
+  _AfxSysCtor(sys=0063f160)
+ Installing Thread Execution Unit at 0063f56c by 0063f184 over 00000000 with 003ade00)
+ Entering the Thread Execution Environment 7304
+ afxClass<Thread Execution Unit>::ConstructObject(0063fc20)
+ afxTxu.c:397
+  _AfxTxuCtor(0063fc20)
+ Installing Memory Management Unit at 0063f198 by 0063f184 over 00000000 with 0fd1a044)
+ Installing Module at 0063f25c by 0063f184 over 00000000 with 0fd1a5d4)
+ Installing Thread at 0063f4a8 by 0063f184 over 00000000 with 0fd1a7a0)
+ Installing Service at 0063f630 by 0063f184 over 00000000 with 0fcf7b3c)
+ Installing File at 0063f87c by 0063f184 over 00000000 with 0fd1a574)
+ Installing I/O Stream at 0063f7b8 by 0063f184 over 00000000 with 0fd1a728)
+ Installing Archive at 0063f940 by 0063f184 over 00000000 with 0fd1a000)
+ Installing Application at 0063f6f4 by 0063f184 over 00000000 with 0fcf2334)
+ Installing Keyboard at 0063f320 by 0063f184 over 00000000 with 0fd1a5a4)
+ Installing Mouse at 0063f3e4 by 0063f184 over 00000000 with 0fd1a604)
+ Installing Simulation at 0063fa04 by 0063f184 over 00000000 with 0fd1b1d0)
+ [!] afxSystem.c:1170?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1171?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(0063fd20)

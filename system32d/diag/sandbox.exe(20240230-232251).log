@@ -1,0 +1,23 @@
+Booting up Qwadro Execution Ecosystem...
+Setting up SystemafxManifest.c:215
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.Setting up TXUEntering the Thread Execution Environment 3820
+Setting up Memory Management UnitSetting up ThreadSetting up Autonomous ServiceSetting up CodecSetting up String BaseSetting up StreamSetting up ArchiveSetting up StorageSetting up ModuleSetting up DeviceSetting up HIDSetting up Keyboard[HID]Setting up Mouse[HID]Setting up Controller[HID]Setting up EnvironmentMemory page size: 4096Logical processor count: 1Mounting storage unit... <.>('E:/qwadro/afx///'),5Mounting storage unit... <system>('E:/qwadro/afx//system/'),5Mounting storage unit... <system>('E:/qwadro/afx//system32/'),7Mounting storage unit... <system>('E:/qwadro/afx//system32d/'),7Loading module... <system/e2coree.dll>Acquiring keyboard at port 0Setting up the Qwadro Sound System...
+Loading module... <e2sound.dll>Setting up Unified Accoustics Experience InfrastructureSetting up Sound Bridge[TXU]Setting up Sound Thread[Thread]Setting up Sound Device[Device]Installing client driver <oal4d.inf>...Installable client driver <oal4d.inf> discovered.
+	Product: 
+	Version: 0.0.0
+	Description: 
+	Vendor: 
+	Website: 
+	Loading ICD <oal4d.inf> executable and linkable file <oal4d.dll>...Loading module... <oal4d.dll>afxDevice.c:166
+afxManager.c:550
+afxManager.c:533
+afxManager<Sound Device, Device>ConstructingObject(004e6b80)afxManager<Sound Device>::ConstructObject(004e6b80)afxManager.c:597
+afxManager.c:803
+afxPool.c:452
+afxSoundSystem.c:298
+Installing client driver <sgl4d.inf>...Cleaning up Sound Device[Device]. 1 lost objects.afxSoundSystem.c:153
+afxArray.c:109
+afxArray.c:109
+(arr)
+    InvalidafxManager.c:387
+Destructing instance 004e6b80 of Sound Device class.Destructing instance 004e6b80 of Sound Device : Device class.

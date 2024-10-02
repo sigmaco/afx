@@ -22,6 +22,7 @@
 
 #include "qwadro/inc/base/afxObject.h"
 #include "qwadro/inc/io/afxUri.h"
+#include "qwadro/inc/base/afxManifest.h"
 
 typedef enum afxModuleType
 {
@@ -43,10 +44,12 @@ AFX afxResult           AfxFindModuleSymbols(afxModule mdle, afxNat cnt, afxChar
 
 AFX afxNat              AfxFindSymbolAddresses(afxModule mdle, afxNat cnt, afxString const names[], void* addresses[]);
 
-AFX void                AfxGetModuleVendor(afxModule mdle, afxString const* name);
-AFX void                AfxGetModuleVersion(afxModule mdle, afxNat *major, afxNat *minor, afxNat *patch);
+AFX void                AfxGetModuleInfo(afxModule icd, afxString* product, afxString* vendor, afxString* description);
+AFX void                AfxGetModuleVersion(afxModule icd, afxNat* verMajor, afxNat* verMinor, afxNat* verPatch);
 
 AFX void*               AfxGetModuleIdd(afxModule mdle);
+
+AFX afxManifest const*  AfxGetModuleManifest(afxModule icd);
 
 ////////////////////////////////////////////////////////////////////////////////
 

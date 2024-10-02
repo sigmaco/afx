@@ -21,8 +21,8 @@
 
 #include "AmxPuppetImplKit.h"
 #include "AmxCadImplKit.h"
-#include "../dev/afxDevCoreBase.h"
-#include "qwadro/inc/sim/dev/afxPragmaSystem.h"
+#include "../dev/afxExecImplKit.h"
+#include "qwadro/inc/sim/dev/afxComboSystem.h"
 #include "qwadro/inc/sim/dev/afxSimulation.h"
 
 #ifdef _AMX_SIMULATION_C
@@ -31,7 +31,7 @@ AFX_OBJECT(afxSimulation)
     afxBool running;
 
     afxNat exuCnt;
-    afxPragmaBridge* exus;
+    afxComboBridge* exus;
 
     afxChain        classes;
     afxClass      bodies;
@@ -79,7 +79,7 @@ AFX_OBJECT(afxSimulation)
 };
 #endif//_AMX_SIMULATION_C
 
-AFX_DEFINE_STRUCT(afxPragmaDeviceInfo)
+AFX_DEFINE_STRUCT(afxComboDeviceInfo)
 {
     afxDeviceInfo           dev;
     afxNat                  portCnt;
@@ -91,25 +91,25 @@ AFX_DEFINE_STRUCT(afxPragmaDeviceInfo)
     afxClassConfig const*   sinClsCfg;
     afxClassConfig const*   soutClsCfg;
 
-    afxError(*stopCb)(afxPragmaDevice);
-    afxError(*startCb)(afxPragmaDevice);
-    afxError(*openSimCb)(afxPragmaDevice, afxSimulation, void** udd, afxNat invokeNo); // unused if a custom dctx ctor is installed.
-    afxError(*closeSimCb)(afxPragmaDevice, afxSimulation); // unused if a custom dctx ctor is installed.
+    afxError(*stopCb)(afxComboDevice);
+    afxError(*startCb)(afxComboDevice);
+    afxError(*openSimCb)(afxComboDevice, afxSimulation, void** udd, afxNat invokeNo); // unused if a custom dctx ctor is installed.
+    afxError(*closeSimCb)(afxComboDevice, afxSimulation); // unused if a custom dctx ctor is installed.
 
-    afxError(*closeMdgeCb)(afxPragmaDevice, afxPragmaBridge);
-    afxError(*openMdgeCb)(afxPragmaDevice, afxPragmaBridge, afxPragmaBridgeConfig const*);
+    afxError(*closeMdgeCb)(afxComboDevice, afxComboBridge);
+    afxError(*openMdgeCb)(afxComboDevice, afxComboBridge, afxComboBridgeConfig const*);
 };
 
 #ifdef _AMX_MATH_DEVICE_C
-AFX_OBJECT(afxPragmaDevice)
+AFX_OBJECT(afxComboDevice)
 {
     AFX_OBJECT(afxDevice) dev;
 
     afxClass            mdgeCls;
     afxClass            simCls;
 
-    afxPragmaDeviceCaps const* caps;
-    afxPragmaDeviceLimits const* limits;
+    afxComboDeviceCaps const* caps;
+    afxComboDeviceLimits const* limits;
     afxNat              portCnt;
     afxPragmaPortCaps*    portCaps;
 
@@ -117,13 +117,13 @@ AFX_OBJECT(afxPragmaDevice)
     afxCondition        relinkedCnd;
     afxMutex            relinkedCndMtx;
 
-    afxError(*stopCb)(afxPragmaDevice);
-    afxError(*startCb)(afxPragmaDevice);
-    afxError(*openSimCb)(afxPragmaDevice, afxSimulation, void** udd, afxNat invokeNo); // unused if a custom dctx ctor is installed.
-    afxError(*closeSimCb)(afxPragmaDevice, afxSimulation); // unused if a custom dctx ctor is installed.
+    afxError(*stopCb)(afxComboDevice);
+    afxError(*startCb)(afxComboDevice);
+    afxError(*openSimCb)(afxComboDevice, afxSimulation, void** udd, afxNat invokeNo); // unused if a custom dctx ctor is installed.
+    afxError(*closeSimCb)(afxComboDevice, afxSimulation); // unused if a custom dctx ctor is installed.
 
-    afxError(*closeMdgeCb)(afxPragmaDevice, afxPragmaBridge);
-    afxError(*openMdgeCb)(afxPragmaDevice, afxPragmaBridge, afxPragmaBridgeConfig const*);
+    afxError(*closeMdgeCb)(afxComboDevice, afxComboBridge);
+    afxError(*openMdgeCb)(afxComboDevice, afxComboBridge, afxComboBridgeConfig const*);
 
     struct _afxSdevIdd* idd;
 };
@@ -136,7 +136,7 @@ AFX_OBJECT(_amxMathQueue)
 AFX_OBJECT(afxMathQueue)
 #endif
 {
-    afxPragmaBridge mdge; // owner bridge
+    afxComboBridge mdge; // owner bridge
     afxSimulation sim; // owner context
     afxBool immediate; // 0 = deferred, 1 = immediate
     afxBool closed; // can't enqueue
@@ -155,7 +155,7 @@ AFX_OBJECT(afxMathQueue)
 #ifdef _AMX_MATH_BRIDGE_IMPL
 AFX_OBJECT(_amxMathBridge)
 #else
-AFX_OBJECT(afxPragmaBridge)
+AFX_OBJECT(afxComboBridge)
 #endif
 {
     afxSimulation sim; // owner
@@ -166,20 +166,20 @@ AFX_OBJECT(afxPragmaBridge)
     afxChain classes;
     afxClass mqueCls;
 
-    afxError(*waitCb)(afxPragmaBridge, afxNat);
-    afxNat(*submitCb)(afxPragmaBridge, amxSubmission const*, afxNat, avxCmdb[]);
-    afxNat(*submCb)(afxPragmaBridge mdge, afxFence fenc, afxNat cnt, amxQueueOp const req[]);
+    afxError(*waitCb)(afxComboBridge, afxNat);
+    afxNat(*submitCb)(afxComboBridge, amxSubmission const*, afxNat, avxCmdb[]);
+    afxNat(*submCb)(afxComboBridge mdge, afxFence fenc, afxNat cnt, amxQueueOp const req[]);
 };
 #endif//_AMX_MATH_BRIDGE_C
 
 AMX afxReal _AkxGetAllowedLodErrorFadingFactor(afxSimulation sim);
-AMX afxError _AmxRegisterPragmaDevices(afxDriver icd, afxNat cnt, afxPragmaDeviceInfo const infos[], afxPragmaDevice devices[]);
+AMX afxError _AmxRegisterComboDevices(afxModule icd, afxNat cnt, afxComboDeviceInfo const infos[], afxComboDevice devices[]);
 
-AMX afxClass const* _AmxGetMathQueueClass(afxPragmaBridge mdge);
-AMX afxNat _AmxCountMathQueues(afxPragmaBridge mdge, afxNat baseQueIdx);
-AMX afxBool _AmxGetMathQueue(afxPragmaBridge mdge, afxNat queIdx, afxMathQueue* queue);
-AMX afxError _AmxWaitForIdleMathQueue(afxPragmaBridge mdge, afxNat queIdx);
-AMX afxError _AmxWaitForIdleMathBridge(afxPragmaBridge mdge);
+AMX afxClass const* _AmxGetMathQueueClass(afxComboBridge mdge);
+AMX afxNat _AmxCountMathQueues(afxComboBridge mdge, afxNat baseQueIdx);
+AMX afxBool _AmxGetMathQueue(afxComboBridge mdge, afxNat queIdx, afxMathQueue* queue);
+AMX afxError _AmxWaitForIdleMathQueue(afxComboBridge mdge, afxNat queIdx);
+AMX afxError _AmxWaitForIdleMathBridge(afxComboBridge mdge);
 
 AMX afxClassConfig const _AmxSimStdImplementation;
 AMX afxClassConfig const _AmxMdgeStdImplementation;

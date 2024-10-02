@@ -25,11 +25,11 @@
 // AFX
 #include "qwadro/inc/exec/afxSystem.h"
 // AVX
-#include "qwadro/inc/draw/dev/afxDrawSystem.h"
+#include "qwadro/inc/draw/afxDrawSystem.h"
 // ASX
 #include "qwadro/inc/sound/dev/afxSoundSystem.h"
 // AMX
-#include "qwadro/inc/sim/dev/afxPragmaSystem.h"
+#include "qwadro/inc/sim/dev/afxComboSystem.h"
 // AUX
 #include "qwadro/inc/ux/afxShell.h"
 // AKX

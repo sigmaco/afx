@@ -43,6 +43,28 @@ AFX_DEFINE_STRUCT(_afxStreamTgaHdr)
     afxNat8     descriptor; // Bits 3-0: These bits specify the number of attribute bits per pixel. Bits 5 & 4: These bits are used to indicate the order in which pixel data is transferred from the file to the screen. Bit 4 is for left - to - right ordering and bit 5 is for topto - bottom ordering as shown below.
 };
 
+AFX_DEFINE_STRUCT(afxTarga)
+{
+    afxTargaFlags   flags; // 0x01 = Cubemap
+    avxFormat       fmt; // raw pixel format or texel block compressed format (aka S3TC/DXT/ASTC)
+    afxNat          baseLod;
+    afxNat          lodCnt;
+    afxWhd          origin;
+    afxWhd          whd;
+    union
+    {
+        afxSize     offset; // where start (above this header) the raster data // for each lod, sizeof lod is rowLen * whd[1] * whd[2] * layerCnt 
+        void const* src;
+        void*       dst;
+    }               data;
+    afxTargaCodec   codec; // storage compression (not pixel compression), for example, RLE.
+    afxNat          encSiz; // the size in bytes of stored image data. If not compressed by any codec, encSize is same as decSize.
+    afxNat          decSiz; // the size in bytes of the image subresource. size includes any extra memory that is required based on rowStride.
+    afxNat          rowStride; // bytes per row/scanline (W usually aligned/padded to some memory boundary)
+    afxNat          depthStride; // bytes per layer or (3D) slice.
+    afxNat          udd[2];
+};
+
 AFX_DEFINE_STRUCT(afxTargaLayerHdr)
 {
     afxSize     offset;
@@ -67,10 +89,10 @@ AFX_DEFINE_STRUCT(afxTargaFileHdr)
     afxNat16            lodCnt;
     afxNat32            origin[3];
     afxNat32            whd[3];
-    afxPixelFormat      fmt;
+    avxFormat           fmt;
     afxTargaFlags       flags;
     // chunk data info
-    afxUrdReference     data; // where start (above this header) the raster data // for each lod, sizeof lod is rowLen * whd[1] * whd[2] * layerCnt 
+    afxUrdOrigin     data; // where start (above this header) the raster data // for each lod, sizeof lod is rowLen * whd[1] * whd[2] * layerCnt 
     afxTargaCodec       codec; // codec used to compress
     afxNat32            encSiz; // compressed size
     afxNat32            decSiz; // uncompressed size
@@ -90,7 +112,537 @@ AFX_DEFINE_STRUCT(afxTargaFileHdr)
 #endif
 };
 
+typedef struct dxt1_block {
+    afxNat16 Color0;
+    afxNat16 Color1;
+    afxNat8 Row[4];
+} dxt1_block;
+
+typedef struct dxt3_block {
+    afxNat16 AlphaRow[4];
+    afxNat16 Color0;
+    afxNat16 Color1;
+    afxNat8 Row[4];
+} dxt3_block;
+
+typedef struct dxt5_block {
+    afxNat8 Alpha[2];
+    afxNat8 AlphaBitmap[6];
+    afxNat16 Color0;
+    afxNat16 Color1;
+    afxNat8 Row[4];
+} dxt5_block;
+
+typedef struct texel_block4x4 {
+    // row x col
+    afxV4d Texel[4][4];
+} texel_block4x4;
+
 #pragma pack(pop)
+
+inline void flip_block_s3tc(afxByte* BlockDst, afxByte const* BlockSrc, avxFormat fmt, afxBool HeightTwo)
+{
+    afxError err = NIL;
+    // There is no distinction between RGB and RGBA in DXT-compressed textures, it is used only to tell OpenGL how to interpret the data.
+    // Moreover, in DXT1 (which does not contain an alpha channel), transparency can be emulated using Color0 and Color1 on a per-compression-block basis.
+    // There is no difference in how textures with and without transparency are laid out in the file, so they can be flipped using the same method.
+
+    switch (fmt)
+    {
+    case avxFormat_DXT1un:
+    case avxFormat_DXT1_sRGB:
+    case avxFormat_DXT1Aun:
+    case avxFormat_DXT1A_sRGB:
+    {
+        dxt1_block* Src = (dxt1_block*)BlockSrc;
+        dxt1_block* Dst = (dxt1_block*)BlockDst;
+
+        if (HeightTwo)
+        {
+            Dst->Color0 = Src->Color0;
+            Dst->Color1 = Src->Color1;
+            Dst->Row[0] = Src->Row[1];
+            Dst->Row[1] = Src->Row[0];
+            Dst->Row[2] = Src->Row[2];
+            Dst->Row[3] = Src->Row[3];
+        }
+        else
+        {
+            Dst->Color0 = Src->Color0;
+            Dst->Color1 = Src->Color1;
+            Dst->Row[0] = Src->Row[3];
+            Dst->Row[1] = Src->Row[2];
+            Dst->Row[2] = Src->Row[1];
+            Dst->Row[3] = Src->Row[0];
+        }
+        break;
+    }
+    case avxFormat_DXT3un:
+    case avxFormat_DXT3_sRGB:
+    {
+        dxt3_block* Src = (dxt3_block*)BlockSrc;
+        dxt3_block* Dst = (dxt3_block*)BlockDst;
+
+        if (HeightTwo)
+        {
+            Dst->AlphaRow[0] = Src->AlphaRow[1];
+            Dst->AlphaRow[1] = Src->AlphaRow[0];
+            Dst->AlphaRow[2] = Src->AlphaRow[2];
+            Dst->AlphaRow[3] = Src->AlphaRow[3];
+            Dst->Color0 = Src->Color0;
+            Dst->Color1 = Src->Color1;
+            Dst->Row[0] = Src->Row[1];
+            Dst->Row[1] = Src->Row[0];
+            Dst->Row[2] = Src->Row[2];
+            Dst->Row[3] = Src->Row[3];
+        }
+        else
+        {
+            Dst->AlphaRow[0] = Src->AlphaRow[3];
+            Dst->AlphaRow[1] = Src->AlphaRow[2];
+            Dst->AlphaRow[2] = Src->AlphaRow[1];
+            Dst->AlphaRow[3] = Src->AlphaRow[0];
+            Dst->Color0 = Src->Color0;
+            Dst->Color1 = Src->Color1;
+            Dst->Row[0] = Src->Row[3];
+            Dst->Row[1] = Src->Row[2];
+            Dst->Row[2] = Src->Row[1];
+            Dst->Row[3] = Src->Row[0];
+        }
+        break;
+    }
+    case avxFormat_DXT5un:
+    case avxFormat_DXT5_sRGB:
+    {
+        dxt5_block* Src = (dxt5_block*)BlockSrc;
+        dxt5_block* Dst = (dxt5_block*)BlockDst;
+
+        if (HeightTwo)
+        {
+            Dst->Alpha[0] = Src->Alpha[0];
+            Dst->Alpha[1] = Src->Alpha[1];
+            // the values below are bitmasks used to retrieve alpha values according to the DXT specification
+            // 0xF0 == 0b11110000 and 0xF == 0b1111
+            Dst->AlphaBitmap[0] = ((Src->AlphaBitmap[1] & 0xF0) >> 4) + ((Src->AlphaBitmap[2] & 0xF) << 4);
+            Dst->AlphaBitmap[1] = ((Src->AlphaBitmap[2] & 0xF0) >> 4) + ((Src->AlphaBitmap[0] & 0xF) << 4);
+            Dst->AlphaBitmap[2] = ((Src->AlphaBitmap[0] & 0xF0) >> 4) + ((Src->AlphaBitmap[1] & 0xF) << 4);
+            Dst->AlphaBitmap[3] = Src->AlphaBitmap[3];
+            Dst->AlphaBitmap[4] = Src->AlphaBitmap[4];
+            Dst->AlphaBitmap[5] = Src->AlphaBitmap[5];
+            Dst->Color0 = Src->Color0;
+            Dst->Color1 = Src->Color1;
+            Dst->Row[0] = Src->Row[1];
+            Dst->Row[1] = Src->Row[0];
+            Dst->Row[2] = Src->Row[2];
+            Dst->Row[3] = Src->Row[3];
+        }
+        else
+        {
+            Dst->Alpha[0] = Src->Alpha[0];
+            Dst->Alpha[1] = Src->Alpha[1];
+            // the values below are bitmasks used to retrieve alpha values according to the DXT specification
+            // 0xF0 == 0b11110000 and 0xF == 0b1111
+            Dst->AlphaBitmap[0] = ((Src->AlphaBitmap[4] & 0xF0) >> 4) + ((Src->AlphaBitmap[5] & 0xF) << 4);
+            Dst->AlphaBitmap[1] = ((Src->AlphaBitmap[5] & 0xF0) >> 4) + ((Src->AlphaBitmap[3] & 0xF) << 4);
+            Dst->AlphaBitmap[2] = ((Src->AlphaBitmap[3] & 0xF0) >> 4) + ((Src->AlphaBitmap[4] & 0xF) << 4);
+            Dst->AlphaBitmap[3] = ((Src->AlphaBitmap[1] & 0xF0) >> 4) + ((Src->AlphaBitmap[2] & 0xF) << 4);
+            Dst->AlphaBitmap[4] = ((Src->AlphaBitmap[2] & 0xF0) >> 4) + ((Src->AlphaBitmap[0] & 0xF) << 4);
+            Dst->AlphaBitmap[5] = ((Src->AlphaBitmap[0] & 0xF0) >> 4) + ((Src->AlphaBitmap[1] & 0xF) << 4);
+            Dst->Color0 = Src->Color0;
+            Dst->Color1 = Src->Color1;
+            Dst->Row[0] = Src->Row[3];
+            Dst->Row[1] = Src->Row[2];
+            Dst->Row[2] = Src->Row[1];
+            Dst->Row[3] = Src->Row[0];
+        }
+        break;
+    }
+    default: AfxThrowError();
+    }
+}
+
+inline void flip_s3tc(afxByte* dst, afxByte const* src, afxNat srcSiz, afxNat rowStride, afxNat rowCnt, avxFormat fmt)
+{
+    if (rowCnt == 1) AfxCopy(dst, src, srcSiz);
+    else
+    {
+        afxSize XBlocks = rowStride <= 4 ? 1 : rowStride / 4;
+
+        avxFormatDescription pfd;
+        AfxDescribePixelFormat(fmt, &pfd);
+        afxNat blockSiz = pfd.stride;
+
+        if (rowCnt == 2)
+        {
+            for (afxSize i = 0; i < XBlocks; ++i) // block iterator
+                flip_block_s3tc(dst + i * blockSiz, src + i * blockSiz, fmt, TRUE);
+        }
+        else
+        {
+            afxSize MaxYBlock = rowCnt / 4 - 1;
+
+            for (afxSize j = 0; j <= MaxYBlock; ++j) // row iterator
+                for (afxSize i = 0; i < XBlocks; ++i) // block iterator
+                    flip_block_s3tc(dst + (MaxYBlock - j) * blockSiz * XBlocks + i * blockSiz, src + j * blockSiz * XBlocks + i * blockSiz, fmt, FALSE);
+        }
+    }
+}
+
+inline void flip(afxByte* dst, afxByte const* src, afxNat srcSiz, afxNat rowStride, afxNat rowCnt)
+{
+    for (afxNat y = 0; y < rowCnt; ++y)
+    {
+        afxNat OffsetDst = rowStride * y;
+        afxNat OffsetSrc = srcSiz - (rowStride * (y + 1));
+        AfxCopy(dst + OffsetDst, src + OffsetSrc, rowStride);
+    }
+}
+
+uint16_t rgbTo565(uint8_t r, uint8_t g, uint8_t b)
+{
+    return ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3);
+}
+
+// Compute color distance squared
+uint32_t colorDistanceSquared(uint8_t r0, uint8_t g0, uint8_t b0, uint8_t r1, uint8_t g1, uint8_t b1)
+{
+    int dr = r0 - r1;
+    int dg = g0 - g1;
+    int db = b0 - b1;
+    return dr * dr + dg * dg + db * db;
+}
+
+// Compress a single 4x4 block of RGBA data to DXT1 format
+void compressDXT1(const uint8_t* src, uint8_t* dest, afxNat pixelStride)
+{
+    uint8_t r[16], g[16], b[16];
+    uint8_t minR = 255, minG = 255, minB = 255;
+    uint8_t maxR = 0, maxG = 0, maxB = 0;
+
+    // Collect color values and find min/max colors
+    for (int i = 0; i < 16; ++i) {
+        r[i] = src[i * pixelStride + 0];
+        g[i] = src[i * pixelStride + 1];
+        b[i] = src[i * pixelStride + 2];
+        if (r[i] < minR) minR = r[i];
+        if (g[i] < minG) minG = g[i];
+        if (b[i] < minB) minB = b[i];
+        if (r[i] > maxR) maxR = r[i];
+        if (g[i] > maxG) maxG = g[i];
+        if (b[i] > maxB) maxB = b[i];
+    }
+
+    // Compute two endpoint colors
+    uint16_t color0 = rgbTo565(minR, minG, minB);
+    uint16_t color1 = rgbTo565(maxR, maxG, maxB);
+
+    // Pack color endpoints into the destination
+    dest[0] = color0 & 0xFF;
+    dest[1] = (color0 >> 8) & 0xFF;
+    dest[2] = color1 & 0xFF;
+    dest[3] = (color1 >> 8) & 0xFF;
+
+    // Compute color index table
+    uint8_t indexTable[16];
+    for (int i = 0; i < 16; ++i) {
+        uint32_t dist0 = colorDistanceSquared(r[i], g[i], b[i], minR, minG, minB);
+        uint32_t dist1 = colorDistanceSquared(r[i], g[i], b[i], maxR, maxG, maxB);
+        indexTable[i] = (dist0 < dist1) ? 0 : 1;
+    }
+
+    // Pack indices into the remaining 4 bytes of the destination
+    dest[4] = (indexTable[0] | (indexTable[1] << 2) | (indexTable[2] << 4) | (indexTable[3] << 6));
+    dest[5] = (indexTable[4] | (indexTable[5] << 2) | (indexTable[6] << 4) | (indexTable[7] << 6));
+    dest[6] = (indexTable[8] | (indexTable[9] << 2) | (indexTable[10] << 4) | (indexTable[11] << 6));
+    dest[7] = (indexTable[12] | (indexTable[13] << 2) | (indexTable[14] << 4) | (indexTable[15] << 6));
+}
+
+// Compress a single 4x4 block of RGBA data to DXT3 format
+void compressDXT3(const uint8_t* src, uint8_t* dest, afxNat pixelStride)
+{
+    uint8_t alpha[16];
+    uint8_t r[16], g[16], b[16];
+    uint8_t minR = 255, minG = 255, minB = 255;
+    uint8_t maxR = 0, maxG = 0, maxB = 0;
+
+    // Collect alpha values and color values
+    for (int i = 0; i < 16; ++i)
+    {
+        alpha[i] = src[i * pixelStride + 3];
+        r[i] = src[i * pixelStride + 0];
+        g[i] = src[i * pixelStride + 1];
+        b[i] = src[i * pixelStride + 2];
+        if (r[i] < minR) minR = r[i];
+        if (g[i] < minG) minG = g[i];
+        if (b[i] < minB) minB = b[i];
+        if (r[i] > maxR) maxR = r[i];
+        if (g[i] > maxG) maxG = g[i];
+        if (b[i] > maxB) maxB = b[i];
+    }
+
+    // Compute two endpoint colors
+    uint16_t color0 = rgbTo565(minR, minG, minB);
+    uint16_t color1 = rgbTo565(maxR, maxG, maxB);
+
+    // Pack alpha values into the first 8 bytes of the destination
+    for (int i = 0; i < 4; ++i) {
+        dest[i * 2 + 0] = alpha[i * 4 + 0];
+        dest[i * 2 + 1] = alpha[i * 4 + 1] | (alpha[i * 4 + 2] << 4);
+    }
+
+    // Pack color endpoints into the next 8 bytes of the destination
+    dest[8] = color0 & 0xFF;
+    dest[9] = (color0 >> 8) & 0xFF;
+    dest[10] = color1 & 0xFF;
+    dest[11] = (color1 >> 8) & 0xFF;
+
+    // Compute color index table
+    uint8_t indexTable[16];
+    for (int i = 0; i < 16; ++i) {
+        uint32_t dist0 = colorDistanceSquared(r[i], g[i], b[i], minR, minG, minB);
+        uint32_t dist1 = colorDistanceSquared(r[i], g[i], b[i], maxR, maxG, maxB);
+        indexTable[i] = (dist0 < dist1) ? 0 : 1;
+    }
+
+    // Pack indices into the remaining 4 bytes of the destination
+    dest[12] = (indexTable[0] | (indexTable[1] << 2) | (indexTable[2] << 4) | (indexTable[3] << 6));
+    dest[13] = (indexTable[4] | (indexTable[5] << 2) | (indexTable[6] << 4) | (indexTable[7] << 6));
+    dest[14] = (indexTable[8] | (indexTable[9] << 2) | (indexTable[10] << 4) | (indexTable[11] << 6));
+    dest[15] = (indexTable[12] | (indexTable[13] << 2) | (indexTable[14] << 4) | (indexTable[15] << 6));
+}
+
+// Compress a single 4x4 block of RGBA data to DXT5 format
+void compressDXT5(const uint8_t* src, uint8_t* dest, afxNat pixelStride)
+{
+    uint8_t alpha[16];
+    uint8_t r[16], g[16], b[16];
+    uint8_t minR = 255, minG = 255, minB = 255;
+    uint8_t maxR = 0, maxG = 0, maxB = 0;
+
+    // Collect alpha values and color values
+    for (int i = 0; i < 16; ++i)
+    {
+        alpha[i] = src[i * pixelStride + 3];
+        r[i] = src[i * pixelStride + 0];
+        g[i] = src[i * pixelStride + 1];
+        b[i] = src[i * pixelStride + 2];
+        if (r[i] < minR) minR = r[i];
+        if (g[i] < minG) minG = g[i];
+        if (b[i] < minB) minB = b[i];
+        if (r[i] > maxR) maxR = r[i];
+        if (g[i] > maxG) maxG = g[i];
+        if (b[i] > maxB) maxB = b[i];
+    }
+
+    // Compute two endpoint colors
+    uint16_t color0 = rgbTo565(minR, minG, minB);
+    uint16_t color1 = rgbTo565(maxR, maxG, maxB);
+
+    // Compute alpha endpoints
+    uint8_t alpha0 = alpha[0];
+    uint8_t alpha1 = alpha[0];
+
+    for (int i = 1; i < 16; ++i)
+    {
+        if (alpha[i] < alpha0) alpha0 = alpha[i];
+        if (alpha[i] > alpha1) alpha1 = alpha[i];
+    }
+
+    // Pack alpha values
+    uint32_t alphaBlock = 0;
+    for (int i = 0; i < 16; ++i)
+    {
+        uint8_t alphaVal = alpha[i];
+        uint8_t index = 0;
+        if (alphaVal > alpha1) {
+            index = 0;
+        }
+        else if (alphaVal > (2 * alpha0 + alpha1) / 3) {
+            index = 1;
+        }
+        else if (alphaVal > (alpha0 + 2 * alpha1) / 3) {
+            index = 2;
+        }
+        else {
+            index = 3;
+        }
+        alphaBlock |= (index << (i * 3));
+    }
+
+    dest[0] = alphaBlock & 0xFF;
+    dest[1] = (alphaBlock >> 8) & 0xFF;
+    dest[2] = (alphaBlock >> 16) & 0xFF;
+    dest[3] = (alphaBlock >> 24) & 0xFF;
+
+    // Pack color endpoints
+    dest[4] = color0 & 0xFF;
+    dest[5] = (color0 >> 8) & 0xFF;
+    dest[6] = color1 & 0xFF;
+    dest[7] = (color1 >> 8) & 0xFF;
+
+    // Compute color index table
+    uint8_t indexTable[16];
+    for (int i = 0; i < 16; ++i) {
+        uint32_t dist0 = colorDistanceSquared(r[i], g[i], b[i], minR, minG, minB);
+        uint32_t dist1 = colorDistanceSquared(r[i], g[i], b[i], maxR, maxG, maxB);
+        indexTable[i] = (dist0 < dist1) ? 0 : 1;
+    }
+
+    // Pack indices
+    dest[8] = (indexTable[0] | (indexTable[1] << 2) | (indexTable[2] << 4) | (indexTable[3] << 6));
+    dest[9] = (indexTable[4] | (indexTable[5] << 2) | (indexTable[6] << 4) | (indexTable[7] << 6));
+    dest[10] = (indexTable[8] | (indexTable[9] << 2) | (indexTable[10] << 4) | (indexTable[11] << 6));
+    dest[11] = (indexTable[12] | (indexTable[13] << 2) | (indexTable[14] << 4) | (indexTable[15] << 6));
+}
+
+#define BLOCK_SIZE 16    // Size of a DXT block in bytes
+#define BLOCK_WIDTH 4    // Width of a DXT block in pixels
+#define BLOCK_HEIGHT 4   // Height of a DXT block in pixels
+#define PIXEL_SIZE 4     // RGBA (4 bytes per pixel)
+
+// Compress a RGBA texel array to DXT1
+void compressDXT1Array(afxByte* dst, afxByte const* src, afxNat srcSiz, afxNat rowStride, afxNat rowCnt)
+{
+    afxNat width = rowStride;
+    int numBlocksX = (width + BLOCK_WIDTH - 1) / BLOCK_WIDTH;
+    int numBlocksY = (rowCnt + BLOCK_HEIGHT - 1) / BLOCK_HEIGHT;
+
+    for (int by = 0; by < numBlocksY; ++by)
+    {
+        for (int bx = 0; bx < numBlocksX; ++bx)
+        {
+            uint8_t block[BLOCK_WIDTH * BLOCK_HEIGHT * PIXEL_SIZE];
+            uint8_t compressedBlock[BLOCK_SIZE];
+
+            // Gather block data
+            for (int y = 0; y < BLOCK_HEIGHT; ++y)
+            {
+                for (int x = 0; x < BLOCK_WIDTH; ++x)
+                {
+                    int srcX = bx * BLOCK_WIDTH + x;
+                    int srcY = by * BLOCK_HEIGHT + y;
+
+                    if (srcX < width && srcY < rowCnt)
+                    {
+                        int srcIndex = (srcY * width + srcX) * PIXEL_SIZE;
+                        int blockIndex = (y * BLOCK_WIDTH + x) * PIXEL_SIZE;
+                        AfxCopy(block + blockIndex, src + srcIndex, PIXEL_SIZE);
+                    }
+                    else {
+                        // Out of bounds, use transparent black
+                        int blockIndex = (y * BLOCK_WIDTH + x) * PIXEL_SIZE;
+                        AfxZero(block + blockIndex, PIXEL_SIZE);
+                    }
+                }
+            }
+
+            // Compress the block
+            compressDXT1(block, compressedBlock, 3);
+
+            // Store compressed block in destination
+            int blockIndex = (by * numBlocksX + bx) * BLOCK_SIZE;
+            AfxCopy(dst + blockIndex, compressedBlock, BLOCK_SIZE);
+        }
+    }
+}
+
+// Compress a RGBA texel array to DXT3
+void compressDXT3Array(afxByte* dst, afxByte const* src, afxNat srcSiz, afxNat rowStride, afxNat rowCnt)
+{
+    afxNat width = rowStride;
+    int numBlocksX = (width + BLOCK_WIDTH - 1) / BLOCK_WIDTH;
+    int numBlocksY = (rowCnt + BLOCK_HEIGHT - 1) / BLOCK_HEIGHT;
+
+    for (int by = 0; by < numBlocksY; ++by)
+    {
+        for (int bx = 0; bx < numBlocksX; ++bx)
+        {
+            uint8_t block[BLOCK_WIDTH * BLOCK_HEIGHT * PIXEL_SIZE];
+            uint8_t compressedBlock[BLOCK_SIZE];
+
+            // Gather block data
+            for (int y = 0; y < BLOCK_HEIGHT; ++y)
+            {
+                for (int x = 0; x < BLOCK_WIDTH; ++x)
+                {
+                    int srcX = bx * BLOCK_WIDTH + x;
+                    int srcY = by * BLOCK_HEIGHT + y;
+
+                    if (srcX < width && srcY < rowCnt)
+                    {
+                        int srcIndex = (srcY * width + srcX) * PIXEL_SIZE;
+                        int blockIndex = (y * BLOCK_WIDTH + x) * PIXEL_SIZE;
+                        AfxCopy(block + blockIndex, src + srcIndex, PIXEL_SIZE);
+                    }
+                    else {
+                        // Out of bounds, use transparent black
+                        int blockIndex = (y * BLOCK_WIDTH + x) * PIXEL_SIZE;
+                        AfxZero(block + blockIndex, PIXEL_SIZE);
+                    }
+                }
+            }
+
+            // Compress the block
+            compressDXT3(block, compressedBlock, 4);
+
+            // Store compressed block in destination
+            int blockIndex = (by * numBlocksX + bx) * BLOCK_SIZE;
+            AfxCopy(dst + blockIndex, compressedBlock, BLOCK_SIZE);
+        }
+    }
+}
+
+// Compress a RGBA texel array to DXT5
+void compressDXT5Array(afxByte* dst, afxByte const* src, afxNat srcSiz, afxNat rowStride, afxNat rowCnt)
+{
+    afxNat width = rowStride;
+    int numBlocksX = (width + BLOCK_WIDTH - 1) / BLOCK_WIDTH;
+    int numBlocksY = (rowCnt + BLOCK_HEIGHT - 1) / BLOCK_HEIGHT;
+
+    for (int by = 0; by < numBlocksY; ++by)
+    {
+        for (int bx = 0; bx < numBlocksX; ++bx)
+        {
+            uint8_t block[BLOCK_WIDTH * BLOCK_HEIGHT * PIXEL_SIZE];
+            uint8_t compressedBlock[BLOCK_SIZE];
+
+            // Gather block data
+            for (int y = 0; y < BLOCK_HEIGHT; ++y)
+            {
+                for (int x = 0; x < BLOCK_WIDTH; ++x)
+                {
+                    int srcX = bx * BLOCK_WIDTH + x;
+                    int srcY = by * BLOCK_HEIGHT + y;
+
+                    if (srcX < width && srcY < rowCnt)
+                    {
+                        int srcIndex = (srcY * width + srcX) * PIXEL_SIZE;
+                        int blockIndex = (y * BLOCK_WIDTH + x) * PIXEL_SIZE;
+                        AfxCopy(block + blockIndex, src + srcIndex, PIXEL_SIZE);
+                    }
+                    else {
+                        // Out of bounds, use transparent black
+                        int blockIndex = (y * BLOCK_WIDTH + x) * PIXEL_SIZE;
+                        AfxZero(block + blockIndex, PIXEL_SIZE);
+                    }
+                }
+            }
+
+            // Compress the block
+            compressDXT5(block, compressedBlock, 4);
+
+            // Store compressed block in destination
+            int blockIndex = (by * numBlocksX + bx) * BLOCK_SIZE;
+            AfxCopy(dst + blockIndex, compressedBlock, BLOCK_SIZE);
+        }
+    }
+}
+
+
+
+
+
+
 
 void DecompressRleChunk(afxStream stream, afxNat width, afxNat height, afxNat bpp, afxByte *dst)
 {
@@ -208,7 +760,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
 {
     afxError err = NIL;
     afxTargaFileHdr hdr3;
-    afxNat bkpOff = AfxGetStreamPosn(in);
+    afxNat bkpOff = AfxAskStreamPosn(in);
     AfxReadStream(in, sizeof(hdr3), 0, &hdr3);
 
     if (hdr3.chunkId == AFX_MAKE_FCC('t', 'g', 'a', '4')) // Try read as the SIGMA-engineered Targa format.
@@ -232,13 +784,13 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
     }
     else // Try read as the Truevision standard TGA format.
     {
-        AfxSeekStreamFromBegin(in, bkpOff);
+        AfxSeekStream(in, bkpOff, afxSeekOrigin_BEGIN);
         _afxStreamTgaHdr hdr2;
 
         if (AfxReadStream(in, sizeof(hdr2), 0, &hdr2)) AfxThrowError();
         else
         {
-            tga->data.offset = AfxGetStreamPosn(in);
+            tga->data.offset = AfxAskStreamPosn(in);
 
             tga->udd[0] = NIL;
             tga->udd[1] = NIL;
@@ -258,7 +810,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
             case 32:
                 tga->rowStride = tga->whd[0] * 4;
                 tga->decSiz = tga->rowStride * tga->whd[1];
-                tga->fmt = afxPixelFormat_BGRA8;
+                tga->fmt = avxFormat_BGRA8;
 
                 switch (hdr2.imgType)
                 {
@@ -276,7 +828,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
             case 24:
                 tga->rowStride = tga->whd[0] * 3;
                 tga->decSiz = tga->rowStride * tga->whd[1];
-                tga->fmt = afxPixelFormat_BGR8;
+                tga->fmt = avxFormat_BGR8;
 
                 switch (hdr2.imgType)
                 {
@@ -294,7 +846,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
             case 16:
                 tga->rowStride = tga->whd[0] * 2;
                 tga->decSiz = tga->rowStride * tga->whd[1];
-                tga->fmt = afxPixelFormat_RGBA4;
+                tga->fmt = avxFormat_RGBA4;
 
                 switch (hdr2.imgType)
                 {
@@ -312,7 +864,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
             case 15:
                 tga->rowStride = tga->whd[0] * 2;
                 tga->decSiz = tga->rowStride * tga->whd[1];
-                tga->fmt = hdr2.descriptor & 0x3 ? afxPixelFormat_RGB5A1 : afxPixelFormat_R5G6B5;
+                tga->fmt = hdr2.descriptor & 0x3 ? avxFormat_RGB5A1 : avxFormat_R5G6B5;
 
                 switch (hdr2.imgType)
                 {
@@ -332,7 +884,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                 {
                     tga->rowStride = tga->whd[0] * 1;
                     tga->decSiz = tga->rowStride * tga->whd[1];
-                    tga->fmt = afxPixelFormat_R8;
+                    tga->fmt = avxFormat_R8;
 
                     switch (hdr2.imgType)
                     {
@@ -364,7 +916,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                     case 32:
                         tga->rowStride = tga->whd[0] * 4;
                         tga->decSiz = tga->rowStride * tga->whd[1];
-                        tga->fmt = afxPixelFormat_BGRA8;
+                        tga->fmt = avxFormat_BGRA8;
 
                         switch (hdr2.imgType)
                         {
@@ -382,7 +934,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                     case 24:
                         tga->rowStride = tga->whd[0] * 3;
                         tga->decSiz = tga->rowStride * tga->whd[1];
-                        tga->fmt = afxPixelFormat_BGR8;
+                        tga->fmt = avxFormat_BGR8;
 
                         switch (hdr2.imgType)
                         {
@@ -400,7 +952,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                     case 16:
                         tga->rowStride = tga->whd[0] * 2;
                         tga->decSiz = tga->rowStride * tga->whd[1];
-                        tga->fmt = afxPixelFormat_RGBA4;
+                        tga->fmt = avxFormat_RGBA4;
 
                         switch (hdr2.imgType)
                         {
@@ -418,7 +970,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                     case 15:
                         tga->rowStride = tga->whd[0] * 2;
                         tga->decSiz = tga->rowStride * tga->whd[1];
-                        tga->fmt = hdr2.descriptor & 0x3 ? afxPixelFormat_RGB5A1 : afxPixelFormat_R5G6B5;
+                        tga->fmt = hdr2.descriptor & 0x3 ? avxFormat_RGB5A1 : avxFormat_R5G6B5;
 
                         switch (hdr2.imgType)
                         {
@@ -436,7 +988,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                     case 8:
                         tga->rowStride = tga->whd[0] * 1;
                         tga->decSiz = tga->rowStride * tga->whd[1];
-                        tga->fmt = afxPixelFormat_R8;
+                        tga->fmt = avxFormat_R8;
 
                         switch (hdr2.imgType)
                         {
@@ -508,30 +1060,28 @@ _AVX afxBool AfxBeginTargaOutput(afxTarga* tga, afxStream out)
 
     switch (tga->fmt)
     {
-    case afxPixelFormat_R8:
-    case afxPixelFormat_S8:
+    case avxFormat_R8:
+    case avxFormat_S8:
         hdr2.bpp = 8; break;
-    case afxPixelFormat_RG8:
-    case afxPixelFormat_GR8:
-    case afxPixelFormat_D16:
+    case avxFormat_RG8:
+    case avxFormat_D16:
+    case avxFormat_RGBA4:
+    case avxFormat_RGB5A1:
+    case avxFormat_R5G6B5:
         hdr2.bpp = 16; break;
-    case afxPixelFormat_RGB8:
-    case afxPixelFormat_BGR8:
-    case afxPixelFormat_RGB8_SRGB:
-    case afxPixelFormat_RGBA4:
-    case afxPixelFormat_RGB5A1:
-    case afxPixelFormat_R5G6B5:
-    case afxPixelFormat_D24:
+    case avxFormat_RGB8:
+    case avxFormat_BGR8:
+    case avxFormat_RGB8_sRGB:
         hdr2.bpp = 24; break;
-    case afxPixelFormat_RGBA8:
-    case afxPixelFormat_BGRA8:
-    case afxPixelFormat_RGBA8_SRGB:
-    case afxPixelFormat_R32F:
-    case afxPixelFormat_RGB9E5:
-    case afxPixelFormat_RGB10A2:
-    case afxPixelFormat_D32:
-    case afxPixelFormat_D32F:
-    case afxPixelFormat_D24S8:
+    case avxFormat_RGBA8:
+    case avxFormat_BGRA8:
+    case avxFormat_RGBA8_sRGB:
+    case avxFormat_R32f:
+    case avxFormat_E5BGR9uf:
+    case avxFormat_A2RGB10:
+    case avxFormat_D32f:
+    case avxFormat_D24S8:
+    case avxFormat_X8D24:
         hdr2.bpp = 32; break;
     default: AfxThrowError(); break;
     }
@@ -668,7 +1218,7 @@ _AVX afxBool TGA_Load(afxStream in, _afxTgaImg* img)
         {
             if (hdr.paletteType)
             {
-                afxByte *buf = NIL;
+                afxByte *indices = NIL;
                 afxByte *palette = NIL;
 
                 switch (hdr.paletteBpp)
@@ -681,13 +1231,13 @@ _AVX afxBool TGA_Load(afxStream in, _afxTgaImg* img)
                         if (AfxReadStream(in, hdr.paletteLen * sizeof(afxNat32), 0, palette)) AfxThrowError();
                         else
                         {
-                            if (!(buf = AfxAllocate(hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
+                            if (!(indices = AfxAllocate(hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
                             else
                             {
                                 if (hdr.imgType == 9)
-                                    DecompressRleChunk(in, hdr.width, hdr.height, hdr.bpp, buf);
+                                    DecompressRleChunk(in, hdr.width, hdr.height, hdr.bpp, indices);
                                 else
-                                    if (AfxReadStream(in, hdr.width * hdr.height, 0, buf))
+                                    if (AfxReadStream(in, hdr.width * hdr.height, 0, indices))
                                         AfxThrowError();
 
                                 if (!(img->data = AfxAllocate(hdr.width * hdr.height, sizeof(afxNat32), AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
@@ -695,10 +1245,10 @@ _AVX afxBool TGA_Load(afxStream in, _afxTgaImg* img)
                                 {
                                     for (i = 0; i < hdr.width * hdr.height; i++)
                                     {
-                                        img->data[4 * i + 0] = palette[4 * buf[i] + 0];
-                                        img->data[4 * i + 1] = palette[4 * buf[i] + 1];
-                                        img->data[4 * i + 2] = palette[4 * buf[i] + 2];
-                                        img->data[4 * i + 3] = palette[4 * buf[i] + 3]; // <
+                                        img->data[4 * i + 0] = palette[4 * indices[i] + 0];
+                                        img->data[4 * i + 1] = palette[4 * indices[i] + 1];
+                                        img->data[4 * i + 2] = palette[4 * indices[i] + 2];
+                                        img->data[4 * i + 3] = palette[4 * indices[i] + 3]; // <
                                     }
                                     hdr.bpp = 32;
                                 }
@@ -715,13 +1265,13 @@ _AVX afxBool TGA_Load(afxStream in, _afxTgaImg* img)
                         if (AfxReadStream(in, hdr.paletteLen * 3, 0, palette)) AfxThrowError();
                         else
                         {
-                            if (!(buf = AfxAllocate(hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
+                            if (!(indices = AfxAllocate(hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
                             else
                             {
                                 if (hdr.imgType == 9)
-                                    DecompressRleChunk(in, hdr.width, hdr.height, hdr.bpp, buf);
+                                    DecompressRleChunk(in, hdr.width, hdr.height, hdr.bpp, indices);
                                 else
-                                    if (AfxReadStream(in, hdr.width * hdr.height, 0, buf))
+                                    if (AfxReadStream(in, hdr.width * hdr.height, 0, indices))
                                         AfxThrowError();
 
                                 if (!(img->data = AfxAllocate(hdr.width * hdr.height, 3 * sizeof(afxByte), AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
@@ -729,9 +1279,9 @@ _AVX afxBool TGA_Load(afxStream in, _afxTgaImg* img)
                                 {
                                     for (i = 0; i < hdr.width * hdr.height; i++)
                                     {
-                                        img->data[3 * i + 0] = palette[3 * buf[i] + 0];
-                                        img->data[3 * i + 1] = palette[3 * buf[i] + 1];
-                                        img->data[3 * i + 2] = palette[3 * buf[i] + 2];
+                                        img->data[3 * i + 0] = palette[3 * indices[i] + 0];
+                                        img->data[3 * i + 1] = palette[3 * indices[i] + 1];
+                                        img->data[3 * i + 2] = palette[3 * indices[i] + 2];
                                     }
                                     hdr.bpp = 24;
                                 }
@@ -749,20 +1299,20 @@ _AVX afxBool TGA_Load(afxStream in, _afxTgaImg* img)
                         if (AfxReadStream(in, hdr.paletteLen * sizeof(afxNat16), 0, palette)) AfxThrowError();
                         else
                         {
-                            if (!(buf = AfxAllocate(hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
+                            if (!(indices = AfxAllocate(hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
                             else
                             {
                                 if (hdr.imgType == 9)
-                                    DecompressRleChunk(in, hdr.width, hdr.height, hdr.bpp, buf);
+                                    DecompressRleChunk(in, hdr.width, hdr.height, hdr.bpp, indices);
                                 else
-                                    if (AfxReadStream(in, hdr.width * hdr.height, 0, buf))
+                                    if (AfxReadStream(in, hdr.width * hdr.height, 0, indices))
                                         AfxThrowError();
 
                                 if (!(img->data = AfxAllocate(hdr.width * hdr.height, sizeof(afxNat16), AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
                                 else
                                 {
                                     for (i = 0; i < hdr.width * hdr.height; i++)
-                                        ((afxNat16*)img->data)[i] = ((afxNat16*)palette)[buf[i]];
+                                        ((afxNat16*)img->data)[i] = ((afxNat16*)palette)[indices[i]];
 
                                     hdr.bpp = 16;
                                 }
@@ -774,8 +1324,8 @@ _AVX afxBool TGA_Load(afxStream in, _afxTgaImg* img)
                 default: AfxThrowError(); break;
                 }
                 
-                if (buf)
-                    AfxDeallocate(buf);
+                if (indices)
+                    AfxDeallocate(indices);
 
                 if (palette)
                     AfxDeallocate(palette);
@@ -870,7 +1420,7 @@ typedef struct _afxTga
 {
     afxNat width, height, depth;
     afxByte* data;
-    afxPixelFormat fmt; // Format of the TGA image. Can be: _TARGA_RGB, _TARGA_RGBA, _TARGA_LUMINANCE.
+    avxFormat fmt; // Format of the TGA image. Can be: _TARGA_RGB, _TARGA_RGBA, _TARGA_LUMINANCE.
     afxRasterUsage usage;
     afxRasterFlags flags;
     afxNat imgCnt;
@@ -887,14 +1437,14 @@ _AVXINL void _AfxTgaSwapColorChannel(afxInt width, afxInt height, afxNat format,
         return;
     }
 
-    if (format == afxPixelFormat_BGRA8 || format == afxPixelFormat_RGBA8)
+    if (format == avxFormat_BGRA8 || format == avxFormat_RGBA8)
     {
         bytesPerPixel = 4;
     }
     else
     {
         afxError err = NIL;
-        AfxAssert(format == afxPixelFormat_BGR8 || format == afxPixelFormat_RGB8);
+        AfxAssert(format == avxFormat_BGR8 || format == avxFormat_RGB8);
     }
 
     // swap the R and B values to get RGB since the bitmap color format is in BGR
@@ -928,15 +1478,15 @@ _AVX afxError _AfxTgaSave(afxMmu mmu, afxStream stream, const _afxTga* tga)
 
     switch (tga->fmt)
     {
-    case afxPixelFormat_R8:
+    case avxFormat_R8:
         bitsPerPixel = 8;
         break;
-    case afxPixelFormat_RGB8:
-    case afxPixelFormat_BGR8:
+    case avxFormat_RGB8:
+    case avxFormat_BGR8:
         bitsPerPixel = 24;
         break;
-    case afxPixelFormat_RGBA8:
-    case afxPixelFormat_BGRA8:
+    case avxFormat_RGBA8:
+    case avxFormat_BGRA8:
         bitsPerPixel = 32;
         break;
     default:
@@ -967,7 +1517,7 @@ _AVX afxError _AfxTgaSave(afxMmu mmu, afxStream stream, const _afxTga* tga)
     {
         AfxCopy2(data, tga->data, pixelSiz, tga->width * tga->height);
 
-        if (!((tga->fmt == afxPixelFormat_GR8) || (tga->fmt == afxPixelFormat_BGR8) || (tga->fmt == afxPixelFormat_BGRA8)))
+        if (!((tga->fmt == avxFormat_RG8) || (tga->fmt == avxFormat_BGR8) || (tga->fmt == avxFormat_BGRA8)))
             _AfxTgaSwapColorChannel(tga->width, tga->height, tga->fmt, data);
 
         if (AfxWriteStream(stream, tga->width * tga->height * pixelSiz, 0, data))
@@ -1033,11 +1583,11 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
             case 32:
             {
                 if (header.imageSpec.pixelDepth == 32)
-                    tga->fmt = bgrToRgb ? afxPixelFormat_RGBA8 : afxPixelFormat_BGRA8;
+                    tga->fmt = bgrToRgb ? avxFormat_RGBA8 : avxFormat_BGRA8;
                 else if (header.imageSpec.pixelDepth == 24)
-                    tga->fmt = bgrToRgb ? afxPixelFormat_RGB8 : afxPixelFormat_BGR8;
+                    tga->fmt = bgrToRgb ? avxFormat_RGB8 : avxFormat_BGR8;
                 else
-                    tga->fmt = afxPixelFormat_R8;
+                    tga->fmt = avxFormat_R8;
 
                 break;
             }
@@ -1061,7 +1611,7 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
                             if (header.colorMapSpec.entrySiz == 24 || header.colorMapSpec.entrySiz == 32)
                             {
                                 if (bgrToRgb)
-                                    _AfxTgaSwapColorChannel(header.colorMapSpec.nofEntries, 1, header.colorMapSpec.entrySiz == 24 ? afxPixelFormat_BGR8 : afxPixelFormat_BGRA8, colorMap);
+                                    _AfxTgaSwapColorChannel(header.colorMapSpec.nofEntries, 1, header.colorMapSpec.entrySiz == 24 ? avxFormat_BGR8 : avxFormat_BGRA8, colorMap);
                             }
                         }
 
@@ -1156,11 +1706,11 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
                             else
                             {
                                 if (header.colorMapSpec.entrySiz == 32)
-                                    tga->fmt = afxPixelFormat_BGRA8;
+                                    tga->fmt = avxFormat_BGRA8;
                                 else if (header.colorMapSpec.entrySiz == 24)
-                                    tga->fmt = afxPixelFormat_BGR8;
+                                    tga->fmt = avxFormat_BGR8;
                                 else
-                                    tga->fmt = afxPixelFormat_R8;
+                                    tga->fmt = avxFormat_R8;
 
                                 // Copy color values from the color map into the image data.
 
@@ -1195,58 +1745,216 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
     return err;
 }
 
-_AVX afxError AfxPrintRaster(afxRaster ras, afxNat portIdx, afxRasterIo const* op, afxNat lodCnt, afxUri const* uri)
+#if 0
+_AVX afxError AfxPrintRaster(afxRaster ras, afxRasterIo const* iop, afxNat lodCnt, afxUri const* uri, afxNat portId)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    afxStream file;
+    
+    afxFile file;
 
-    if (AfxOpenFile(uri, afxIoFlag_W, &file)) AfxThrowError();
+    if (AfxOpen(uri, afxFileFlag_W, &file)) AfxThrowError();
     else
     {
-        afxRasterIo iop = { 0 };
+        afxStream files = AfxGetFileStream(file);
 
-        if (op)
+        afxNat maxLodCnt = AfxCountRasterMipmaps(ras);
+        AfxAssertRange(maxLodCnt, 0, lodCnt);
+
+        afxRasterIo iop2 = { 0 };
+
+        if (iop)
         {
-            afxWhd whd;
-            AfxGetRasterExtent(ras, op->rgn.lodIdx, whd);
-            iop.rgn = op->rgn;
+            afxWhd maxWhd;
+            AfxGetRasterExtent(ras, iop->rgn.lodIdx, maxWhd);
+            AfxAssertRange(maxLodCnt, iop->rgn.lodIdx, lodCnt);
+            AfxAssertRangeWhd(maxWhd, iop->rgn.origin, iop->rgn.whd);
+            
+            iop2.rgn = iop->rgn;
+            iop2.rgn.lodIdx = AfxClamp(iop->rgn.lodIdx, 0, maxLodCnt - 1);
 
-            iop.rgn.origin[0] = AfxMin(iop.rgn.origin[0], whd[0] - 1);
-            iop.rgn.origin[1] = AfxMin(iop.rgn.origin[1], whd[1] - 1);
-            iop.rgn.origin[2] = AfxMin(iop.rgn.origin[2], whd[2] - 1);
-            iop.rgn.whd[0] = AfxMin(AfxMax(1, iop.rgn.whd[0]), whd[0]);
-            iop.rgn.whd[1] = AfxMin(AfxMax(1, iop.rgn.whd[1]), whd[1]);
-            iop.rgn.whd[2] = AfxMin(AfxMax(1, iop.rgn.whd[2]), whd[2]);
+            iop2.rgn.origin[0] = AfxMin(iop->rgn.origin[0], maxWhd[0] - 1);
+            iop2.rgn.origin[1] = AfxMin(iop->rgn.origin[1], maxWhd[1] - 1);
+            iop2.rgn.origin[2] = AfxMin(iop->rgn.origin[2], maxWhd[2] - 1);
+
+            afxWhd maxRgnWhd;
+            AfxWhdSub(maxRgnWhd, maxWhd, iop2.rgn.origin);
+            
+            iop2.rgn.whd[0] = AfxMin(AfxMax(1, iop->rgn.whd[0]), maxWhd[0]);
+            iop2.rgn.whd[1] = AfxMin(AfxMax(1, iop->rgn.whd[1]), maxWhd[1]);
+            iop2.rgn.whd[2] = AfxMin(AfxMax(1, iop->rgn.whd[2]), maxWhd[2]);
+
+            AfxWhdClamp(iop2.rgn.whd, iop->rgn.whd, AFX_WHD_IDENTITY, maxRgnWhd);
         }
         else
         {
-            AfxGetRasterExtent(ras, 0, iop.rgn.whd);
+            AfxGetRasterExtent(ras, 0, iop2.rgn.whd);
         }
 
+        lodCnt = AfxMin(AfxMax(1, lodCnt ? lodCnt : maxLodCnt), maxLodCnt);
+
         afxTarga tga;
-        AfxSetUpTarga(&tga, ras, &iop, 1);
-        AfxBeginTargaOutput(&tga, file);
+        AfxSetUpTarga(&tga, ras, &iop2, 1);
+        AfxBeginTargaOutput(&tga, files);
 
-        iop.rowStride = tga.rowStride;
-        iop.rowCnt = iop.rgn.whd[1];
-        iop.offset = AfxGetStreamPosn(file);
+        iop2.rowStride = tga.rowStride;
+        iop2.rowCnt = iop2.rgn.whd[1];
+        iop2.offset = AfxAskStreamPosn(files);
 
-        AfxDownloadRaster(ras, portIdx, 1, &iop, file);
+        AfxDownloadRaster(ras, 1, &iop2, files, portId);
 
-        tga.data.offset = iop.offset;
-        AfxEndTargaOutput(&tga, file);
+        tga.data.offset = iop2.offset;
+        AfxEndTargaOutput(&tga, files);
 
         afxDrawContext dctx = AfxGetRasterContext(ras);
-        AfxWaitForDrawBridge(dctx, 0); // we need to wait for completation before releasing the stream.
+        AfxWaitForDrawBridge(dctx, 0, AFX_TIME_INFINITE); // we need to wait for completation before releasing the stream.
 
         AfxReleaseObjects(1, &file);
     }
 
     return err;
 }
+#endif
 
-_AVX afxError AfxReloadRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCnt, afxUri const* uri)
+_AVX afxError _AfxPrintRasterToTarga(afxRaster ras, afxRasterIo const* iop, afxNat lodCnt, afxStream out, afxNat portId)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
+
+    afxRasterLayout layout;
+    AfxQueryRasterLayout(ras, 0, 0, &layout);
+    avxFormat fmt = AfxGetRasterFormat(ras);
+    avxFormatDescription pfd;
+    AfxDescribePixelFormat(fmt, &pfd);
+
+    // begin file
+
+    afxNat fsegCnt = 1;
+    urdSegment fsegs[2] = { 0 };
+    urdRoot froot = { 0 };
+    urdTrunk_Targa ftrunk = { 0 };
+
+    froot.hdr.fcc = afxFcc_URD;
+    ftrunk.trunk.hdr.fcc = afxFcc_TGA;
+
+    // record the TGA 2000 header
+
+    _afxStreamTgaHdr hdr2;
+
+    switch (fmt)
+    {
+    case avxFormat_R8: // 8-bit
+    case avxFormat_S8:
+        hdr2.bpp = 8; break;
+    case avxFormat_RG8: // 16-bit
+    case avxFormat_D16:
+    case avxFormat_RGBA4:
+    case avxFormat_RGB5A1:
+    case avxFormat_R5G6B5:
+        hdr2.bpp = 16; break;
+    case avxFormat_RGB8: // 24-bit
+    case avxFormat_BGR8:
+    case avxFormat_RGB8_sRGB:
+        hdr2.bpp = 24; break;
+    case avxFormat_RGBA8: // 32-bit
+    case avxFormat_BGRA8:
+    case avxFormat_RGBA8_sRGB:
+    case avxFormat_R32f:
+    case avxFormat_E5BGR9uf:
+    case avxFormat_A2RGB10:
+    case avxFormat_D32f:
+    case avxFormat_D24S8:
+    case avxFormat_X8D24:
+        hdr2.bpp = 32; break;
+    //default: AfxThrowError(); break;
+    }
+
+    hdr2.bpp = pfd.bpp;
+
+    hdr2.idLen = 0;
+    hdr2.paletteType = 0;
+    hdr2.imgType = hdr2.bpp == 8 ? 3 : 2;
+    hdr2.paletteBase = 0;
+    hdr2.paletteLen = 0;
+    hdr2.paletteBpp = 0;
+    hdr2.originOffX = iop->rgn.origin[0];
+    hdr2.originOffY = iop->rgn.origin[1];
+    hdr2.width = iop->rgn.whd[0];
+    hdr2.height = iop->rgn.whd[1];
+    hdr2.bpp = hdr2.bpp;
+    hdr2.descriptor = 0;
+
+    if (AfxWriteStream(out, sizeof(hdr2), 0, &hdr2))
+        AfxThrowError();
+
+    // write data for each segment
+        
+    fsegs[0].start = AfxAskStreamPosn(out);
+        
+    afxRasterIo iopTmp = *iop;
+
+    for (afxNat i = 0; i < lodCnt; i++)
+    {
+        afxRasterLayout lodLayout;
+        AfxQueryRasterLayout(ras, i, 0, &lodLayout);
+
+        iopTmp.rgn.lodIdx = i;
+        iopTmp.offset = AfxAskStreamPosn(out);
+        iopTmp.rowStride = 0;// lodLayout.rowStride;
+
+        if (AfxDownloadRaster(ras, 1, &iopTmp, out, portId))
+            AfxThrowError();
+
+        AfxWhdHalf(iopTmp.rgn.origin, iopTmp.rgn.origin);
+        AfxWhdHalf(iopTmp.rgn.whd, iopTmp.rgn.whd);
+    }
+
+    fsegs[0].encSiz = AfxAskStreamPosn(out) - fsegs[0].start;
+    fsegs[0].decSiz = fsegs[0].encSiz;
+
+    //AfxWriteUrdSegment(out, );
+    //AfxRecordUrdSegment(out, fsegs[0].start, decSiz, decAlign);
+
+    ftrunk.data.segIdx = 0;
+    ftrunk.data.offset = 0;
+
+    // record descriptor for each segment
+
+    ftrunk.trunk.baseSegOff = AfxAskStreamPosn(out);
+    ftrunk.trunk.segCnt = fsegCnt;
+
+    for (afxNat i = 0; i < fsegCnt; i++)
+    {
+        if (AfxWriteStream(out, sizeof(fsegs[0]), 0, &fsegs[i]))
+            AfxThrowError();
+    }
+
+    // record trunk descriptor
+
+    ftrunk.baseLod = iop->rgn.lodIdx;
+    ftrunk.lodCnt = lodCnt;
+    ftrunk.fmt = fmt;
+    AfxWhdCopy(ftrunk.xyz, iop->rgn.origin);
+    AfxWhdCopy(ftrunk.whd, iop->rgn.whd);
+
+    if (AfxTestRasterFlags(ras, afxRasterFlag_CUBEMAP))
+        ftrunk.flags |= afxTargaFlag_CUBEMAP;
+
+    if (AfxTestRasterFlags(ras, afxRasterFlag_3D))
+        ftrunk.flags |= afxTargaFlag_3D;
+
+    if (AfxWriteStream(out, sizeof(ftrunk), 0, &ftrunk))
+        AfxThrowError();
+
+    // record root descriptor
+
+    if (AfxWriteStream(out, sizeof(froot), 0, &froot))
+        AfxThrowError();
+
+    return err;
+}
+
+_AVX afxError AfxReloadRaster(afxRaster ras, afxNat opCnt, afxRasterIo const ops[], afxNat lodCnt, afxUri const* uri, afxNat portId)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -1254,11 +1962,11 @@ _AVX afxError AfxReloadRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCn
     afxRasterIo iop = { 0 };
 
     afxWhd whd;
-    AfxGetRasterExtent(ras, op->rgn.lodIdx, whd);
+    AfxGetRasterExtent(ras, ops->rgn.lodIdx, whd);
 
-    if (op)
+    if (ops)
     {
-        iop.rgn = op->rgn;
+        iop.rgn = ops->rgn;
 
         iop.rgn.origin[0] = AfxMin(iop.rgn.origin[0], whd[0] - 1);
         iop.rgn.origin[1] = AfxMin(iop.rgn.origin[1], whd[1] - 1);
@@ -1273,7 +1981,10 @@ _AVX afxError AfxReloadRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCn
     }
 
     afxStream ios;
-    AfxAcquireStream(0, afxIoFlag_R, 0, &ios);
+    afxStreamInfo iobi = { 0 };
+    iobi.usage = afxStreamUsage_FILE;
+    iobi.flags = afxStreamFlag_READABLE;
+    AfxAcquireStream(1, &iobi, &ios);
 
     if (AfxReloadFile(ios, uri)) AfxThrowError();
     else
@@ -1300,14 +2011,22 @@ _AVX afxError AfxReloadRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCn
     return err;
 }
 
-_AVX afxError AfxLoadRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster rasters[])
+_AVX afxError AfxLoadRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo const info[], afxUri const uri[], afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(rasters);
+    AfxAssert(info);
+    AfxAssert(uri);
+    AfxAssert(cnt);
 
-    afxNat portIdx = 0;
-    afxStream ios;
-    AfxAcquireStream(0, afxIoFlag_R, 0, &ios);
-
+    afxNat portId = 0;
+    afxStream file = NIL;
+    afxStreamInfo iobi = { 0 };
+    iobi.usage = afxStreamUsage_FILE;
+    iobi.flags = afxStreamFlag_READABLE;
+    AfxAcquireStream(1, &iobi, &file);
+    
     afxArray tgas;
     afxNat firstArrel;
     AfxAllocateArray(&tgas, cnt, sizeof(_afxTgaImg), (_afxTgaImg[]) { 0 });
@@ -1318,34 +2037,33 @@ _AVX afxError AfxLoadRasters(afxDrawContext dctx, afxRasterUsage usage, afxRaste
     {
         for (afxNat i = 0; i < cnt; i++)
         {
-            if (AfxReloadFile(ios, &uri[i])) AfxThrowError();
+            if (AfxReloadFile(file, &uri[i])) AfxThrowError();
             else
             {
-                if (TGA_Load(ios, &tga[i]))
+                if (TGA_Load(file, &tga[i]))
                 {
                     AfxThrowError();
                     rasters[i] = NIL;
                 }
                 else
                 {
-                    afxPixelFormat fmt;
+                    avxFormat fmt;
 
                     if (tga[i].bpp == 32)
-                        fmt = afxPixelFormat_BGRA8;
+                        fmt = avxFormat_BGRA8;
                     else if (tga[i].bpp == 24)
-                        fmt = afxPixelFormat_BGR8;
+                        fmt = avxFormat_BGR8;
                     else
-                        fmt = afxPixelFormat_R8;
+                        fmt = avxFormat_R8;
 
                     afxRasterInfo rasi = { 0 };
-                    rasi.fmt = fmt;
-                    rasi.lodCnt = 1;
-                    rasi.sampleCnt = 1;
-                    rasi.usage = usage;
-                    rasi.flags = flags;
-                    rasi.whd[0] = tga[i].whd[0];
-                    rasi.whd[1] = tga[i].whd[1];
-                    rasi.whd[2] = tga[i].whd[2];
+                    rasi.fmt = info[i].fmt ? info[i].fmt : fmt;
+                    rasi.lodCnt = info[i].lodCnt;
+                    rasi.usage = info[i].usage;
+                    rasi.flags = info[i].flags;
+                    rasi.whd[0] = AfxMax(1, AfxMax(info[i].whd[0], tga[i].whd[0]));
+                    rasi.whd[1] = AfxMax(1, AfxMax(info[i].whd[1], tga[i].whd[1]));
+                    rasi.whd[2] = AfxMax(1, AfxMax(info[i].whd[2], tga[i].whd[2]));
 
                     if (AfxAcquireRasters(dctx, 1, &rasi, &rasters[i]))
                     {
@@ -1358,16 +2076,17 @@ _AVX afxError AfxLoadRasters(afxDrawContext dctx, afxRasterUsage usage, afxRaste
                         op.rgn.whd[0] = tga[i].whd[0];
                         op.rgn.whd[1] = tga[i].whd[1];
                         op.rgn.whd[2] = tga[i].whd[2];
+                        op.offset = 0;
                         op.rowStride = tga[i].whd[0];
                         op.rowCnt = tga[i].whd[1];
 
-                        AfxUpdateRaster(rasters[i], portIdx, 1, &op, tga[i].data);
+                        AfxUpdateRaster(rasters[i], 1, &op, tga[i].data, portId);
                     }
                 }
             }
         }
 
-        AfxWaitForDrawBridge(dctx, portIdx);
+        AfxWaitForDrawBridge(dctx, portId, AFX_TIME_INFINITE);
 
         for (afxNat i = 0; i < tgas.cnt; i++)
         {
@@ -1379,18 +2098,25 @@ _AVX afxError AfxLoadRasters(afxDrawContext dctx, afxRasterUsage usage, afxRaste
     }
 
     AfxDeallocateArray(&tgas);
-    AfxReleaseObjects(1, &ios);
+
+    if (file)
+        AfxReleaseObjects(1, &file);
 
     return err;
 }
 
-_AVX afxError AfxAssembleRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const* dir, afxNat cnt, afxUri const layers[], afxRaster* ras)
+_AVX afxError AfxAssembleRasters(afxDrawContext dctx, afxRasterInfo const* info, afxUri const* dir, afxNat cnt, afxUri const layers[], afxRaster* ras)
 {
     afxError err = AFX_ERR_NONE;
-    afxStream ios;
-    AfxAcquireStream(0, afxIoFlag_R, 0, &ios);
+    
 
-    afxNat portIdx = 0;
+    afxStream file = NIL;
+    afxStreamInfo iobi = { 0 };
+    iobi.usage = afxStreamUsage_FILE;
+    iobi.flags = afxStreamFlag_READABLE;
+    AfxAcquireStream(1, &iobi, &file);
+
+    afxNat portId = 0;
 
     afxUri2048 urib;
     AfxMakeUri2048(&urib, NIL);
@@ -1407,31 +2133,32 @@ _AVX afxError AfxAssembleRasters(afxDrawContext dctx, afxRasterUsage usage, afxR
         {
             AfxFormatUri(&urib.uri, "%.*s/%.*s", AfxPushString(AfxGetUriString(dir)), AfxPushString(AfxGetUriString(&layers[i])));
 
-            if (AfxReloadFile(ios, &urib.uri)) AfxThrowError();
+            if (AfxReloadFile(file, &urib.uri)) AfxThrowError();
             else
             {
-                AfxRewindStream(ios);
+                AfxRewindStream(file);
 
-                if (TGA_Load(ios, &tga[i])) AfxThrowError();
+                if (TGA_Load(file, &tga[i])) AfxThrowError();
                 else
                 {
-                    afxPixelFormat fmt;
+                    avxFormat fmt;
 
                     if (tga[i].bpp == 32)
-                        fmt = afxPixelFormat_BGRA8;
+                        fmt = avxFormat_BGRA8;
                     else if (tga[i].bpp == 24)
-                        fmt = afxPixelFormat_BGR8;
+                        fmt = avxFormat_BGR8;
                     else
-                        fmt = afxPixelFormat_R8;
+                        fmt = avxFormat_R8;
 
                     if (i == 0)
                     {
                         afxRasterInfo rasi = { 0 };
-                        rasi.fmt = fmt;
+                        rasi = *info;
+
+                        if (!rasi.fmt)
+                            rasi.fmt = fmt;
+
                         rasi.lodCnt = 1;
-                        rasi.sampleCnt = 1;
-                        rasi.usage = usage;
-                        rasi.flags = flags;
                         rasi.whd[0] = tga[i].whd[0];
                         rasi.whd[1] = tga[i].whd[1];
                         rasi.whd[2] = cnt;
@@ -1450,11 +2177,13 @@ _AVX afxError AfxAssembleRasters(afxDrawContext dctx, afxRasterUsage usage, afxR
                         op.rgn.whd[0] = tga[i].whd[0];
                         op.rgn.whd[1] = tga[i].whd[1];
                         op.rgn.whd[2] = 1;
-                        op.rowStride = tga[i].whd[0];
-                        op.rowCnt = tga[i].whd[1];
+                        //op.rowStride = tga[i].whd[0] * (tga[i].bpp / AFX_BYTE_SIZE);
+                        //op.rowCnt = tga[i].whd[1];
 
-                        if (AfxUpdateRaster(*ras, portIdx, 1, &op, tga[i].data))
+                        if (AfxUpdateRaster(*ras, 1, &op, tga[i].data, portId))
                             AfxThrowError();
+
+                        AfxWaitForDrawBridge(dctx, portId, AFX_TIME_INFINITE);
 
                         int a = 1;
                     }
@@ -1462,7 +2191,6 @@ _AVX afxError AfxAssembleRasters(afxDrawContext dctx, afxRasterUsage usage, afxR
             }
         }
 
-        AfxWaitForDrawBridge(dctx, portIdx);
 
         for (afxNat i = 0; i < tgas.cnt; i++)
         {
@@ -1474,7 +2202,9 @@ _AVX afxError AfxAssembleRasters(afxDrawContext dctx, afxRasterUsage usage, afxR
     }
 
     AfxDeallocateArray(&tgas);
-    AfxReleaseObjects(1, &ios);
+
+    if (file)
+        AfxReleaseObjects(1, &file);
     
     return err;
 }

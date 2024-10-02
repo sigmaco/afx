@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+// This code is part of SIGMA Future Storage.
 
 #ifndef AFX_DATA_H
 #define AFX_DATA_H
@@ -50,6 +50,6 @@ AFX afxBool AfxDecompressData(afxCompressionType type, afxBool fileIsByteReverse
 AFX afxError    AfxEncode(afxCodec cdc, void const* src, afxNat srcLen, void* dst, afxNat dstLen);
 AFX afxError    AfxDecode(afxCodec cdc, void const* src, afxNat srcLen, void* dst, afxNat dstLen);
 
-AFX void        AfxDecodeStream(afxStream stream, afxNat len, afxNat byteCnt, afxByte *dst);
+//AFX void        AfxDecodeStream(afxStream stream, afxNat len, afxNat byteCnt, afxByte *dst);
 
 #endif//AFX_DATA_H

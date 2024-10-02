@@ -19,7 +19,7 @@
 #ifndef ASX_CONTEXT_IMPL_KIT_H
 #define ASX_CONTEXT_IMPL_KIT_H
 
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 #include "qwadro/inc/sound/dev/afxSoundSystem.h"
 
 #ifdef _ASX_WAVEFORM_C

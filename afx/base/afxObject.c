@@ -15,7 +15,7 @@
  */
 
 //#define _AFX_SYSTEM_C
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 // SLOTS incorporados diretamente no espaço de array estavam crashando e gerando anomalias de corrupção de leitura/escrita e alocação.
 // Quando optado por operar por slots alocados individualmente e arranjados como pointeiros, o problema foi resolvido.
@@ -128,7 +128,7 @@ _AFXINL afxBool AfxDoesObjectInherit(afxObject obj, afxClass const* cls)
     return FALSE;
 }
 
-_AFXINL void* AfxGetParent(afxObject obj)
+_AFXINL void* AfxGetProvider(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase const* hdr = (afxObjectBase*)obj;

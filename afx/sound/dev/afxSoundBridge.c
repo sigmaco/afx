@@ -25,7 +25,7 @@ _ASX afxSoundDevice AfxGetSoundBridgeDevice(afxSoundBridge sdge)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdge, afxFcc_SDGE);
-    afxSoundDevice sdev = AfxGetParent(sdge);
+    afxSoundDevice sdev = AfxGetProvider(sdge);
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
     return sdev;
 }
@@ -195,7 +195,7 @@ _ASX afxError _AsxSdgeStdDtorCb(afxSoundBridge sdge)
 
     AfxAssertObjects(sdge->queCnt, sdge->queues, afxFcc_SQUE);
     AfxReleaseObjects(sdge->queCnt, sdge->queues);
-    AfxCleanUpChainedClasses(&sdge->classes);
+    AfxDeregisterChainedClasses(&sdge->classes);
     AfxDeallocate(sdge->queues);
 
     return err;
@@ -279,7 +279,7 @@ _ASX afxError _AsxSdgeStdCtorCb(afxSoundBridge sdge, void** args, afxNat invokeN
     }
 
     if (err)
-        AfxCleanUpChainedClasses(&sdge->classes);
+        AfxDeregisterChainedClasses(&sdge->classes);
 
     return err;
 }

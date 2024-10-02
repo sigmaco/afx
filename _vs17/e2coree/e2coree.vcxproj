@@ -19,7 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\afxQwadro.h" />
+    <ClInclude Include="..\..\afx\xss\xssCommon.h" />
+    <ClInclude Include="..\..\afx\xss\xssCompiler.h" />
+    <ClInclude Include="..\..\afx\xss\xssCore.h" />
+    <ClInclude Include="..\..\afx\xss\xssDebug.h" />
+    <ClInclude Include="..\..\afx\xss\xssMath.h" />
+    <ClInclude Include="..\..\afx\xss\xssOpcodes.h" />
+    <ClInclude Include="..\..\afx\xss\xssOptMeta.h" />
+    <ClInclude Include="..\..\afx\xss\xssOptRandom.h" />
+    <ClInclude Include="..\..\afx\xss\xssPrimitive.h" />
+    <ClInclude Include="..\..\afx\xss\xssUtils.h" />
+    <ClInclude Include="..\..\afx\xss\xssValue.h" />
+    <ClInclude Include="..\..\afx\xss\xssVm.h" />
+    <ClInclude Include="..\..\inc\afxQwadro.h" />
     <ClInclude Include="..\..\inc\base\afxChain.h" />
     <ClInclude Include="..\..\inc\base\afxClass.h" />
     <ClInclude Include="..\..\inc\base\afxCoreDefs.h" />
@@ -38,7 +50,6 @@
     <ClInclude Include="..\..\inc\exec\afxClock.h" />
     <ClInclude Include="..\..\inc\exec\afxCondition.h" />
     <ClInclude Include="..\..\inc\exec\afxDevice.h" />
-    <ClInclude Include="..\..\inc\exec\afxDriver.h" />
     <ClInclude Include="..\..\inc\exec\afxFence.h" />
     <ClInclude Include="..\..\inc\exec\afxModule.h" />
     <ClInclude Include="..\..\inc\exec\afxMutex.h" />
@@ -56,6 +67,7 @@
     <ClInclude Include="..\..\inc\io\afxData.h" />
     <ClInclude Include="..\..\inc\io\afxDatabase.h" />
     <ClInclude Include="..\..\inc\io\afxFile.h" />
+    <ClInclude Include="..\..\inc\io\afxIoBridge.h" />
     <ClInclude Include="..\..\inc\io\afxResource.h" />
     <ClInclude Include="..\..\inc\io\afxSource.h" />
     <ClInclude Include="..\..\inc\io\afxStorage.h" />
@@ -90,11 +102,19 @@
     <ClInclude Include="..\..\inc\mem\afxResidency.h" />
     <ClInclude Include="..\..\inc\mem\afxSlabAllocator.h" />
     <ClInclude Include="..\..\inc\mem\afxStack.h" />
-    <ClInclude Include="..\..\afx\dev\afxDevCoreBase.h" />
-    <ClInclude Include="..\..\afx\dev\afxDevIoBase.h" />
+    <ClInclude Include="..\..\afx\dev\afxExecImplKit.h" />
+    <ClInclude Include="..\..\afx\dev\afxIoImplKit.h" />
+    <ClInclude Include="..\..\inc\xss\afxScript.h" />
+    <ClInclude Include="..\..\inc\xss\xss.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\afx\xss\xssCore.xss" />
+    <None Include="..\..\afx\xss\xssCore.xss.inc" />
+    <None Include="..\..\afx\xss\xssOptMeta.xss" />
+    <None Include="..\..\afx\xss\xssOptMeta.xss.inc" />
+    <None Include="..\..\afx\xss\xssOptRandom.xss" />
+    <None Include="..\..\afx\xss\xssOptRandom.xss.inc" />
     <None Include="..\..\README.md" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +122,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\afx\dep\tinycthread.c" />
+    <ClCompile Include="..\..\afx\io\afxIoBridge.c" />
+    <ClCompile Include="..\..\afx\xss\afxScript.c" />
+    <ClCompile Include="..\..\afx\xss\xssCompiler.c" />
+    <ClCompile Include="..\..\afx\xss\xssCore.c" />
+    <ClCompile Include="..\..\afx\xss\xssDebug.c" />
+    <ClCompile Include="..\..\afx\xss\xssOptMeta.c" />
+    <ClCompile Include="..\..\afx\xss\xssOptRandom.c" />
+    <ClCompile Include="..\..\afx\xss\xssPrimitive.c" />
+    <ClCompile Include="..\..\afx\xss\xssUtils.c" />
+    <ClCompile Include="..\..\afx\xss\xssValue.c" />
+    <ClCompile Include="..\..\afx\xss\xssVm.c" />
     <ClCompile Include="..\..\lib\rpmalloc\malloc.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -128,18 +159,17 @@
     <ClCompile Include="..\..\afx\base\afxVersion.c" />
     <ClCompile Include="..\..\afx\exec\afxAtomic_PC.c" />
     <ClCompile Include="..\..\afx\exec\afxClock_w32.c" />
-    <ClCompile Include="..\..\afx\exec\afxCondition.c" />
+    <ClCompile Include="..\..\afx\exec\afxCondition_PC.c" />
     <ClCompile Include="..\..\afx\exec\afxDevice.c" />
-    <ClCompile Include="..\..\afx\exec\afxDriver.c" />
     <ClCompile Include="..\..\afx\exec\afxFence.c" />
-    <ClCompile Include="..\..\afx\exec\afxModule.c" />
-    <ClCompile Include="..\..\afx\exec\afxMutex.c" />
+    <ClCompile Include="..\..\afx\exec\afxModule_w32.c" />
+    <ClCompile Include="..\..\afx\exec\afxMutex_PC.c" />
     <ClCompile Include="..\..\afx\exec\afxSemaphore.c" />
     <ClCompile Include="..\..\afx\exec\afxService.c" />
     <ClCompile Include="..\..\afx\exec\afxSlock_w32.c" />
     <ClCompile Include="..\..\afx\exec\afxSystem.c" />
     <ClCompile Include="..\..\afx\exec\afxSystem_w32.c" />
-    <ClCompile Include="..\..\afx\exec\afxConsole.c" />
+    <ClCompile Include="..\..\afx\exec\afxConsole_w32.c" />
     <ClCompile Include="..\..\afx\exec\afxThread_PC.c" />
     <ClCompile Include="..\..\afx\exec\afxTime_w32.c" />
     <ClCompile Include="..\..\afx\game\agxGameData.c" />

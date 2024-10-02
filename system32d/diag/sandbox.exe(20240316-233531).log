@@ -1,0 +1,114 @@
+Booting up the Qwadro Execution Ecosystem...
+Setting up SystemafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxManifest.c:215
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.afxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up ThreadafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up Memory Management UnitafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up ServiceafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up CodecafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up String BaseafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up StreamafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up ArchiveafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up StorageafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up ModuleafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up DeviceafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up HIDafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidSetting up ShellafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidAcquiring thread...  4900 "afxSystem_w32.c:489"afxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:32
+afxThread_w32.c:32
+(GetCurrentThreadId() == _currTid)
+    InvalidafxThread_w32.c:99
+afxThread_w32.c:99
+(((afxResult)(1)) == _AfxAssertObjects((1), (afxObject const*)(&thr),(afxFcc_THR)))
+    InvalidafxThread_w32.c:647
+afxThread_w32.c:647
+(AfxIsPrimeThread())
+    InvalidafxManager.c:527
+afxManager.c:573
+afxManager.c:795
+afxPool.c:452
+afxThread_w32.c:690
+afxSystem_w32.c:489
+Cleaning up Shell.Cleaning up HID.Cleaning up Device.Cleaning up Module.Cleaning up Storage.Cleaning up Archive.Cleaning up Stream.Cleaning up String Base.Cleaning up Codec.Cleaning up Service.Cleaning up Memory Management Unit.Cleaning up Thread.afxManager.c:527
+afxManager.c:573
+afxSystem.c:412
+afxManager.c:889
+afxManager.c:889
+(hdr)
+    InvalidafxManager.c:891
+afxManager.c:891
+(mgr)
+    InvalidafxManager.c:87
+afxManager.c:87
+(mgr)
+    Invalid

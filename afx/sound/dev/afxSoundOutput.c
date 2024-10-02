@@ -30,7 +30,7 @@ _ASX afxSoundDevice AfxGetSoundOutputDevice(afxSoundOutput sout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sout, afxFcc_SOUT);
-    afxSoundDevice sdev = AfxGetParent(sout);
+    afxSoundDevice sdev = AfxGetProvider(sout);
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
     return sdev;
 }

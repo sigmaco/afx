@@ -56,7 +56,7 @@ _AVX afxError _AvxVinStdDtor(avxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vin, afxFcc_VIN);
-    //afxDrawContext dctx = AfxGetParent(vin);
+    //afxDrawContext dctx = AfxGetProvider(vin);
     
     if (vin->streams)
         AfxDeallocate(vin->streams);

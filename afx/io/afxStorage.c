@@ -24,21 +24,11 @@
 
 #define _AFX_CORE_C
 #define _AFX_STORAGE_C
-#include "../dev/afxDevIoBase.h"
+#include "../dev/afxIoImplKit.h"
 
-extern afxClassConfig const _AfxIosClsCfg;
-//extern afxClassConfig const _AfxFileClsCfg;
+extern afxClassConfig const _AfxFileClsCfg;
 extern afxClassConfig const _AfxArcClsCfg;
 extern afxClassConfig const _AfxUrdClsCfg;
-
-_AFX afxClass const* AfxGetStreamClass(afxStorage fsys)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fsys, afxFcc_FSYS);
-    afxClass const* cls = &fsys->iosCls;
-    AfxAssertClass(cls, afxFcc_IOB);
-    return cls;
-}
 
 _AFX afxClass const* AfxGetFileClass(afxStorage fsys)
 {
@@ -86,6 +76,156 @@ _AFX afxClass const* AfxGetArchiveClass(afxStorage fsys)
  directory do not necessarily have the same permissions as that directory.
 
  ******************************************************************************/
+
+_AFX afxError AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags, afxBool(*proc)(void* udd, afxUri const* uri), void* udd)
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AfxAssertObjects(1, &sys, afxFcc_SYS);
+
+    AfxAssert(pattern);
+    AfxAssert(flags);
+    AfxAssert(proc);
+
+    AfxAssert(!AfxUriIsBlank(pattern));
+
+    // diskIds[i] = AFX_INVALID_INDEX;
+
+    afxFileFlags ioPerms = flags ? flags & AFX_FILE_PERM_MASK : afxFileFlag_RX;
+    afxBool resolved = FALSE;
+    struct stat st;
+
+    unsigned short flagsToTest = NIL;
+
+    if (AfxTestFlags(ioPerms, afxFileFlag_R))
+        flagsToTest |= _S_IREAD;
+
+    if (AfxTestFlags(ioPerms, afxFileFlag_W))
+        flagsToTest |= _S_IWRITE;
+
+    //if (AfxTestFlags(ioPerms, afxIoFlag_X))
+        //flagsToTest |= _S_IEXEC;
+
+#if 0
+    if (fileStr)
+        flagsToTest |= _S_IFREG;
+    else if (dirStr)
+        flagsToTest |= _S_IFDIR;
+#endif
+
+    afxString const *srcStr = AfxGetUriString(pattern);
+    afxUri2048 out;
+    AfxMakeUri2048(&out, NIL);
+    afxString const *dstStr = AfxGetUriString(&out.uri);
+    afxChar const* srcData = AfxGetStringData(srcStr, 0);
+    afxChar const* dstData = AfxGetStringStorage(dstStr, 0);
+
+    afxUri dev, path;
+    AfxSplitPath(pattern, &dev, &path);
+
+    if (!dev.root)
+    {
+        AfxCopyUri(&out.uri, pattern);
+
+        if (stat(dstData, &(st)))
+            AfxThrowError();
+        else
+        {
+            if (!((st.st_mode & flagsToTest) == flagsToTest))
+                AfxThrowError();
+        }
+        resolved = TRUE;
+    }
+    else
+    {
+        afxString const *pathStr = AfxGetUriString(&path);
+
+        srcData = AfxGetStringData(pathStr, 0);
+
+        afxBool hasWildcard = (AFX_INVALID_INDEX != AfxFindFirstChar(pathStr, 0, '*'));
+
+        if (hasWildcard)
+        {
+            afxStorage fsys;
+
+            if (AfxFindStorage(&dev, &fsys))
+            {
+                AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+
+                afxStorageUnit const* fsto;
+                AfxIterateLinkage(afxStorageUnit, fsto, &fsys->storages, fsys)
+                {
+                    if ((fsto->flags & ioPerms) == ioPerms)
+                    {
+                        HANDLE fh;
+                        WIN32_FIND_DATAA wfd;
+
+                        AfxFormatUri(&out.uri, "%.*s/%.*s\0", AfxPushString(AfxGetUriString(&fsto->rootPath)), AfxPushString(pathStr));
+                        AfxCanonicalizePath(&out.uri, AFX_OS_WIN);
+
+                        if (INVALID_HANDLE_VALUE != (fh = FindFirstFileA(AfxGetUriData(&out.uri, 0), &(wfd))))
+                        {
+                            do
+                            {
+                                afxUri found;
+                                AfxMakeUri(&found, 0, wfd.cFileName, 0);
+
+                                if (!proc(udd, &found))
+                                    break;
+
+                            } while (FindNextFileA(fh, &wfd));
+                            FindClose(fh);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            afxStorage fsys;
+
+            if (AfxFindStorage(&dev, &fsys))
+            {
+                AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+
+                afxStorageUnit const* fsto;
+                AfxIterateLinkage(afxStorageUnit, fsto, &fsys->storages, fsys)
+                {
+                    if ((fsto->flags & ioPerms) == ioPerms)
+                    {
+                        AfxFormatUri(&out.uri, "%.*s/%.*s\0", AfxPushString(AfxGetUriString(&fsto->rootPath)), AfxPushString(pathStr));
+                        AfxCanonicalizePath(&out.uri, AFX_OS_WIN);
+                        //AfxLogEcho(dstData);
+
+                        if (!stat(dstData, &(st)) || (ioPerms & afxFileFlag_W) || hasWildcard)
+                        {
+                            if (((st.st_mode & flagsToTest) == flagsToTest) || ioPerms & afxFileFlag_W || hasWildcard)
+                            {
+                                resolved = TRUE;
+                                //diskIds[i] = AfxGetObjectId(fsys);
+
+
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!resolved)
+                AfxThrowError(); // unresolved.
+        }
+        //AfxLogAdvertence("%x %x %x %x %x", st.st_mode & _S_IFREG, st.st_mode & _S_IFDIR, st.st_mode & _S_IREAD, st.st_mode & _S_IWRITE, st.st_mode & _S_IEXEC);
+    }
+
+    //      if (!resolved)
+    //            AfxCopyUri(&out[i], &in[i]);
+    
+    return err;
+}
 
 _AFX afxError AfxResolveUris2(afxFileFlags const permissions, afxNat cnt, afxUri const in[], afxUri out[], afxNat diskIds[])
 {
@@ -157,7 +297,7 @@ _AFX afxError AfxResolveUris2(afxFileFlags const permissions, afxNat cnt, afxUri
 
             afxStorage fsys;
                 
-            if ((fsys = AfxFindStorage2(&dev)))
+            if (AfxFindStorage(&dev, &fsys))
             {
                 AfxAssertObjects(1, &fsys, afxFcc_FSYS);
 
@@ -228,37 +368,164 @@ _AFX afxError AfxResolveUri2(afxFileFlags permissions, afxUri const *in, afxUri 
     return err;
 }
 
-_AFX afxError AfxFindFiles(afxUri const* pattern, afxBool(*callback)(afxUri const*, void*), void* udd)
+_AFX afxNat AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*callback)(void* udd, afxUri const* path, afxUri const* osPath), void* udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(pattern);
     AfxAssert(callback);
-    afxUri2048 pathBuf;
-    AfxMakeUri2048(&pathBuf, NIL);
-    AfxResolveUri(afxFileFlag_RX, pattern, &pathBuf.uri);
+    afxNat rslt = 0;
+
     /*
     "art://./actor/";
     "//./art/actor/";
     "system://./e2draw.dll";
     "//./system/e2draw.dll";
     */
-    HANDLE fh;
-    WIN32_FIND_DATAA wfd;
 
-    if ((fh = FindFirstFileA(AfxGetUriData(&pathBuf.uri, 0), &(wfd))))
+    afxFileFlags ioPerms = flags ? flags & AFX_FILE_PERM_MASK : afxFileFlag_RX;
+    afxBool resolved = FALSE;
+
+    unsigned short flagsToTest = NIL;
+
+    if (AfxTestFlags(ioPerms, afxFileFlag_R))
+        flagsToTest |= _S_IREAD;
+
+    if (AfxTestFlags(ioPerms, afxFileFlag_W))
+        flagsToTest |= _S_IWRITE;
+
+    afxUri dev, path;
+    AfxSplitPath(pattern, &dev, &path);
+    afxStorage disk;
+
+    if (AfxUriIsBlank(&dev) || !(AfxFindStorage(&dev, &disk)))
+        disk = NIL;
+
+    afxBool hasWildcard = (AFX_INVALID_INDEX != AfxFindFirstChar(&path.str, 0, '*'));
+
+    afxUri2048 resolvedUrl, baseUrl;
+    AfxMakeUri2048(&resolvedUrl, NIL);
+    AfxMakeUri2048(&baseUrl, NIL);
+
+    afxUri dir;
+    AfxClipPathDirectory(&dir, &path);
+
+    if (disk)
     {
-        do
+        afxStorageUnit const* fsto;
+        AfxIterateLinkage(afxStorageUnit, fsto, &disk->storages, fsys)
         {
-            afxUri found;
-            AfxMakeUri(&found, 0, wfd.cFileName, 0);
+            if ((fsto->flags & ioPerms) == ioPerms)
+            {
+                AfxFormatUri(&resolvedUrl.uri, "%.*s/%.*s", AfxPushString(AfxGetUriString(&fsto->rootPath)), AfxPushString(&path.str));
+                AfxCanonicalizePath(&resolvedUrl.uri, AFX_OS_WIN);
 
-            if (!callback(&found, udd))
+                if (hasWildcard)
+                {
+                    HANDLE fh;
+                    WIN32_FIND_DATAA wfd;
+
+                    if (INVALID_HANDLE_VALUE != (fh = FindFirstFileA(AfxGetUriData(&resolvedUrl.uri, 0), &(wfd))))
+                    {
+                        do
+                        {
+                            afxUri found;
+                            AfxMakeUri(&found, 0, wfd.cFileName, 0);
+
+                            if (dev.str.len && dir.str.len)
+                                AfxFormatUri(&baseUrl.uri, "%.*s/%.*s/%.*s", AfxPushString(&dev.str), AfxPushString(&dir.str), AfxPushString(&found.str));
+                            else if (dev.str.len)
+                                AfxFormatUri(&baseUrl.uri, "%.*s/%.*s", AfxPushString(&dev.str), AfxPushString(&found.str));
+                            else if (dir.str.len)
+                                AfxFormatUri(&baseUrl.uri, "%.*s/%.*s", AfxPushString(&dir.str), AfxPushString(&found.str));
+                            else
+                                AfxFormatUri(&baseUrl.uri, "%.*s", AfxPushString(&found.str));
+
+                            AfxFormatUri(&resolvedUrl.uri, "%.*s/%.*s/%.*s", AfxPushString(AfxGetUriString(&fsto->rootPath)), AfxPushString(&dir.str), AfxPushString(&found.str));
+                            AfxCanonicalizePath(&resolvedUrl.uri, AFX_OS_WIN);
+
+                            resolved = TRUE;
+                            rslt++;
+
+                            if (!callback(udd, &baseUrl.uri, &resolvedUrl.uri))
+                                break;
+
+                        } while (FindNextFileA(fh, &wfd));
+                        FindClose(fh);
+                    }
+                }
+                else
+                {
+                    struct stat st;
+
+                    if (!stat(resolvedUrl.uri.str.start, &(st)) || (ioPerms & afxFileFlag_W) || hasWildcard)
+                    {
+                        if (((st.st_mode & flagsToTest) == flagsToTest) || ioPerms & afxFileFlag_W || hasWildcard)
+                        {
+                            if (dev.str.len && path.str.len)
+                                AfxFormatUri(&baseUrl.uri, "%.*s/%.*s", AfxPushString(&dev.str), AfxPushString(&path.str));
+                            else
+                                AfxFormatUri(&baseUrl.uri, "%.*s", AfxPushString(&path.str));
+
+                            resolved = TRUE;
+                            rslt++;
+
+                            if (!callback(udd, &baseUrl.uri, &resolvedUrl.uri))
+                                break;
+                        }
+                    }
+                }
+            }
+
+            if (resolved)
                 break;
-
-        } while (FindNextFileA(fh, &wfd));
-        FindClose(fh);
+        }
     }
-    return err;
+    else
+    {
+        afxUri2048 szPattern;
+        AfxMakeUri2048(&szPattern, pattern);
+        AfxCanonicalizePath(&szPattern.uri, AFX_OS_WIN);
+
+        HANDLE fh;
+        WIN32_FIND_DATAA wfd;
+
+        if (INVALID_HANDLE_VALUE != (fh = FindFirstFileA(AfxGetUriData(&szPattern.uri, 0), &wfd)))
+        {
+            do
+            {
+                afxUri found;
+                AfxMakeUri(&found, 0, wfd.cFileName, 0);
+
+                if (dev.str.len && dir.str.len)
+                    AfxFormatUri(&baseUrl.uri, "%.*s/%.*s/%.*s", AfxPushString(&dev.str), AfxPushString(&dir.str), AfxPushString(&found.str));
+                else if (dev.str.len)
+                    AfxFormatUri(&baseUrl.uri, "%.*s/%.*s", AfxPushString(&dev.str), AfxPushString(&found.str));
+                else if (dir.str.len)
+                    AfxFormatUri(&baseUrl.uri, "%.*s/%.*s", AfxPushString(&dir.str), AfxPushString(&found.str));
+                else
+                    AfxFormatUri(&baseUrl.uri, "%.*s", AfxPushString(&found.str));
+
+                if (dev.str.len && dir.str.len)
+                    AfxFormatUri(&resolvedUrl.uri, "%.*s/%.*s/%.*s", AfxPushString(&dev.str), AfxPushString(&dir.str), AfxPushString(&found.str));
+                else if (dev.str.len)
+                    AfxFormatUri(&resolvedUrl.uri, "%.*s/%.*s", AfxPushString(&dev.str), AfxPushString(&found.str));
+                else if (dir.str.len)
+                    AfxFormatUri(&resolvedUrl.uri, "%.*s/%.*s", AfxPushString(&dir.str), AfxPushString(&found.str));
+                else
+                    AfxFormatUri(&resolvedUrl.uri, "%.*s", AfxPushString(&found.str));
+
+                AfxCanonicalizePath(&resolvedUrl.uri, AFX_OS_WIN);
+
+                rslt++;
+
+                if (!callback(udd, &found, &resolvedUrl.uri))
+                    break;
+
+            } while (FindNextFileA(fh, &wfd));
+            FindClose(fh);
+        }
+    }
+    return rslt;
 }
 
 _AFX afxNat AfxFindStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFileFlags ioFlags)
@@ -455,11 +722,12 @@ _AFX afxError _AfxFsysCtorCb(afxStorage fsys, void** args, afxNat invokeNo)
 
     AfxDeployChain(&fsys->storages, fsys);
     AfxDeployChain(&fsys->classes, fsys);
+    AfxDeployChain(&fsys->fileChain, fsys);
 
     if (_MountStorageUnit(fsys, endpoint, ioFlags)) AfxThrowError();
     else
     {
-        AfxRegisterClass(&fsys->iosCls, NIL, &fsys->classes, &_AfxIosClsCfg);
+        //AfxRegisterClass(&fsys->fileCls, (afxClass*)AfxGetStreamClass(), &fsys->classes, &_AfxFileClsCfg);
         AfxRegisterClass(&fsys->archCls, NIL, &fsys->classes, &_AfxArcClsCfg); // require iob
         AfxRegisterClass(&fsys->urdCls, NIL, &fsys->classes, &_AfxUrdClsCfg);
 
@@ -473,7 +741,7 @@ _AFX afxError _AfxFsysDtorCb(afxStorage fsys)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &fsys, afxFcc_FSYS);
 
-    AfxCleanUpChainedClasses(&fsys->classes);
+    AfxDeregisterChainedClasses(&fsys->classes);
 
     afxStorageUnit* fsto;
     AfxIterateLinkage(afxStorageUnit, fsto, &fsys->storages, fsys)
@@ -482,6 +750,7 @@ _AFX afxError _AfxFsysDtorCb(afxStorage fsys)
     }
     
     AfxAssert(AfxChainIsEmpty(&fsys->storages));
+    AfxAssert(AfxChainIsEmpty(&fsys->fileChain));
 
     return err;
 }
@@ -490,13 +759,33 @@ _AFX afxClassConfig const _AfxFsysMgrCfg =
 {
     .fcc = afxFcc_FSYS,
     .name = "Storage",
-    .desc = "I/O Storage System",
+    .desc = "Data Storage Device",
     .fixedSiz = sizeof(AFX_OBJECT(afxStorage)),
     .ctor = (void*)_AfxFsysCtorCb,
     .dtor = (void*)_AfxFsysDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+
+_AFX afxNat AfxInvokeStorages(afxNat first, afxNat cnt, afxBool(*f)(afxStorage, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(f);
+    afxClass* cls = AfxGetStorageClass();
+    AfxAssertClass(cls, afxFcc_FSYS);
+    return AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
+}
+
+_AFX afxNat AfxEnumerateStorages(afxNat first, afxNat cnt, afxStorage systems[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(systems);
+    afxClass* cls = AfxGetStorageClass();
+    AfxAssertClass(cls, afxFcc_FSYS);
+    return AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)systems);
+}
 
 _AFX afxError AfxMountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFileFlags ioFlags)
 {
@@ -506,7 +795,7 @@ _AFX afxError AfxMountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFil
     AfxAssert(ioFlags);
     afxStorage fsys = NIL;
 
-    if (!(fsys = AfxFindStorage(diskId)))
+    if (!AfxGetStorage(diskId, &fsys))
     {
         afxClass* cls = AfxGetStorageClass();
         AfxAssertClass(cls, afxFcc_FSYS);
@@ -533,8 +822,7 @@ _AFX afxError AfxDismountStorageUnit(afxChar diskId, afxUri const* endpoint, afx
     AfxAssert(ioFlags);
     afxStorage fsys;
     
-    if (!(fsys = AfxFindStorage(diskId)))
-        AfxThrowError();
+    if (!AfxGetStorage(diskId, &fsys)) AfxThrowError();
     else
     {
         afxStorageUnit* fsto;
@@ -555,77 +843,58 @@ _AFX afxError AfxDismountStorageUnit(afxChar diskId, afxUri const* endpoint, afx
     return err;
 }
 
-_AFX afxBool AfxGetStorage(afxNat diskNo, afxStorage* disk)
+_AFX afxBool AfxGetStorage(afxChar diskId, afxStorage* disk)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diskNo != AFX_INVALID_INDEX);
-    afxStorage fsys = NIL;
-    while (AfxEnumerateStorages(diskNo, 1, &fsys))
-    {
-        AfxAssertObjects(1, &fsys, afxFcc_FSYS);
-        AfxAssert(disk);
-        *disk = fsys;
-        break;
-    }
-    return !!fsys;
-}
+    afxBool rslt = FALSE;
 
-_AFX afxStorage AfxFindStorage(afxChar diskId)
-{
-    afxError err = AFX_ERR_NONE;
     AfxAssert((diskId >= 'a' && diskId <= 'z') || (diskId >= 'A' && diskId <= 'Z'));
-    afxStorage fsys = NIL;
-
     diskId = (afxChar)AfxTolower(diskId);
 
     afxNat i = 0;
+    afxStorage fsys;
     while (AfxEnumerateStorages(i, 1, &fsys))
     {
+        AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+
         if (fsys->diskId == diskId)
+        {
+            AfxAssert(disk);
+            *disk = fsys;
+            rslt = TRUE;
             break;
-
+        }
         ++i;
-        fsys = NIL;
     }
-    AfxTryAssertObjects(1, &fsys, afxFcc_FSYS);
-    return fsys;
+    return rslt;
 }
 
-_AFX afxStorage AfxFindStorage2(afxUri const* dev)
+_AFX afxBool AfxFindStorage(afxUri const* uri, afxStorage* disk)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dev);
-    afxStorage fsys = NIL;
+    AfxAssert(uri);
+    afxBool rslt = FALSE;
 
-    afxNat i = 0;
-    while (AfxEnumerateStorages(i, 1, &fsys))
+    afxUri dev, path;
+    AfxSplitPath(uri, &dev, &path);
+
+    if (!AfxUriIsBlank(&dev))
     {
-        if (0 == AfxCompareStringRangeCi(&dev->str, 0, &fsys->baseUrl.uri.str, 5))
-            break;
+        afxNat i = 0;
+        afxStorage fsys;
+        while (AfxEnumerateStorages(i, 1, &fsys))
+        {
+            AfxAssertObjects(1, &fsys, afxFcc_FSYS);
 
-        ++i;
-        fsys = NIL;
+            if (0 == AfxCompareStringRangeCi(&dev.str, 0, &fsys->baseUrl.uri.str, 5))
+            {
+                AfxAssert(disk);
+                *disk = fsys;
+                rslt = TRUE;
+                break;
+            }
+            ++i;
+        }
     }
-    AfxTryAssertObjects(1, &fsys, afxFcc_FSYS);
-    return fsys;
-}
-
-_AFX afxNat AfxInvokeStorages(afxNat first, afxNat cnt, afxBool(*f)(afxStorage, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(f);
-    afxClass* cls = AfxGetStorageClass();
-    AfxAssertClass(cls, afxFcc_FSYS);
-    return AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
-}
-
-_AFX afxNat AfxEnumerateStorages(afxNat first, afxNat cnt, afxStorage systems[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(systems);
-    afxClass* cls = AfxGetStorageClass();
-    AfxAssertClass(cls, afxFcc_FSYS);
-    return AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)systems);
+    return rslt;
 }

@@ -1,0 +1,18 @@
+Booting up...
+Acquiring thread...  7684 "afxSystem_w32.c:499"Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\afx\system'),5Mounting... <//./z/>('E:\qwadro\afx\system32'),7Mounting... <//./z/>('E:\qwadro\afx\system32d'),7Mounting... <//./c/>('C:\'),7Mounting... <//./e/>('E:\'),7Mounting... <//./f/>('F:\'),7Mounting... <//./g/>('G:\'),7Mounting... <//./h/>('H:\'),7Mounting... <//./i/>('I:\'),7Loading module... <e2coree>Memory Page Size: 4096HW Threading Capacity: 2Doing the AVX start up...Loading module... <e2draw>Doing the ASX start up...Loading module... <e2sound>Doing the AUX start up...Loading module... <e2ux>Acquiring HID at port 0Mounting... <//./c/>('E:\qwadro\afx\system'),7Loading driver... <oal4d.dll>afxDriver.c:146
+afxClass.c:682
+afxClass.c:740
+afxClass.c:995
+afxPool.c:452
+afxDriver.c:281
+Entering the Thread Execution Environment 7684
+afxSoundContext.c:580
+afxSoundContext.c:598
+afxDrawContext.c:786
+afxDrawContext.c:804
+afxDrawInput.c:698
+afxDrawInput.c:713
+afxChain.c:270
+afxChain.c:270
+(lnk)
+    Invalid

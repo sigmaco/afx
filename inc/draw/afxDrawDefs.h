@@ -21,7 +21,7 @@
 
 #include "qwadro/inc/exec/afxSystem.h"
 
-#ifndef __e2vgi__
+#ifndef __e2draw__
 #   ifdef _DEBUG
 #       define AVX DLLIMPORT extern 
 #       define AVXINL DLLIMPORT EMBED
@@ -41,7 +41,7 @@
 #       define _AVXINL DLLEXPORT INLINE
 #       define AVXINL DLLEXPORT EMBED
 #   endif
-#endif//__e2vgi__
+#endif//__e2draw__
 
 // Object handles defined by SIGMA Draw System
 
@@ -79,7 +79,7 @@ AFX_DEFINE_HANDLE(afxSkeleton);
 
 AFX_DEFINE_HANDLE(afxMaterial);
 AFX_DEFINE_HANDLE(afxMesh);
-AFX_DEFINE_HANDLE(akxVertexData);
+AFX_DEFINE_HANDLE(afxGeometry);
 AFX_DEFINE_HANDLE(afxMeshTopology);
 AFX_DEFINE_HANDLE(afxModel);
 

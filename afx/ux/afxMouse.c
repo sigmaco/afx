@@ -269,6 +269,7 @@ _AUX afxError AfxEmulateMouseMotion(afxSession ses, afxNat seat, afxReal const m
         ev.ev.siz = sizeof(ev);
         ev.id = auxEventId_AXIS;
         ev.wnd = wnd;
+        ev.seat = seat;
         AfxAssertObjects(1, &wnd, afxFcc_WND);
         AfxEmitEvent(wnd, (void*)&ev);
     }
@@ -290,7 +291,7 @@ _AUX afxError AfxEmulateMouseWheelAction(afxSession ses, afxNat seat, afxReal de
         ev.ev.siz = sizeof(ev);
         ev.id = auxEventId_WHEEL;
         ev.wnd = wnd;
-        ev.seat = 0;
+        ev.seat = seat;
         AfxEmitEvent(wnd, (void*)&ev);
     }
     return err;
@@ -356,9 +357,38 @@ _AUX afxError AfxEmulateMouseButtonActions(afxSession ses, afxNat seat, afxNat c
                 ev.ev.siz = sizeof(ev);
                 ev.id = evtype;
                 ev.wnd = wnd;
-                ev.seat = 0;
+                ev.seat = seat;
                 AfxEmitEvent(wnd, (void*)&ev);
             }
+        }
+    }
+    return err;
+}
+
+_AUX afxError AfxReleaseMouseButtons(afxSession ses, afxNat seat, afxWindow wnd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ses, afxFcc_SES);
+
+    if (seat < ses->seatCnt)
+    {
+        afxNat cnt = ses->seats[seat].buttonCnt;
+        AfxAssert(cnt);
+
+        for (afxNat i = 0; i < cnt; i++)
+        {
+            auxEventId evtype = auxEventId_LMB + i;
+            
+            ses->seats[seat].mbState[1][i] = ses->seats[seat].mbState[0][i];
+            ses->seats[seat].mbState[0][i] = FALSE;
+
+            auxEvent ev = { 0 };
+            ev.ev.id = afxEvent_UX;
+            ev.ev.siz = sizeof(ev);
+            ev.id = evtype;
+            ev.wnd = wnd;
+            ev.seat = seat;
+            AfxEmitEvent(wnd, (void*)&ev);
         }
     }
     return err;

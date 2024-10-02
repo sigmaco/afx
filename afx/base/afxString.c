@@ -19,7 +19,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 _AFX afxString strEmptyData = AFX_STRING("");
 _AFX afxString const AFX_STR_EMPTY = AFX_STRING("");

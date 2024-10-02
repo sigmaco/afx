@@ -21,8 +21,8 @@
 
 #include "qwadro/inc/math/afxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
-#include "qwadro/inc/draw/afxRaster.h"
-#include "qwadro/inc/draw/afxBuffer.h"
+#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/afxBuffer.h"
 #include "qwadro/inc/draw/pipe/avxSampler.h"
 #include "qwadro/inc/draw/io/afxTypography.h"
 #include "qwadro/inc/draw/pipe/avxQueryPool.h"
@@ -43,7 +43,7 @@ AFX_DEFINE_STRUCT(avxVertexInputPoint) /// vertex attribute input stream
     afxNat              srcSlotIdx; /// is the binding number which this attribute takes its data from.
     afxVertexFormat     fmt; /// is the size and type of the vertex attribute data.
     afxNat32            offset; /// is a byte offset of this attribute relative to the start of an element in the vertex input binding.
-    //akxVertexUsage      usage; /// special flags used to opportunistic optimization
+    //afxVertexUsage      usage; /// special flags used to opportunistic optimization
 };
 
   //////////////////////////////////////////////////////////////////////////////

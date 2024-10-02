@@ -16,7 +16,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_SERVICE_C
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 _AFX afxError AfxDoService(afxService svc, afxTime timeout)
 {

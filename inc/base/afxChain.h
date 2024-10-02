@@ -99,6 +99,10 @@ AFXINL afxNat   AfxPushLinkage(afxLinkage *lnk, afxChain *ch);
 AFXINL afxNat   AfxPushBackLinkage(afxLinkage *lnk, afxChain *ch);
 AFXINL void     AfxPopLinkage(afxLinkage *lnk);
 
+
+AFXINL afxNat AfxLinkBehind(afxLinkage* lnk, afxLinkage* next);
+AFXINL afxNat AfxLinkAhead(afxLinkage* lnk, afxLinkage* prev);
+
 AFXINL void* AfxGetLinker(afxLinkage const *lnk); // linker is the chain holder
 
 AFXINL afxChain* AfxGetChain(afxLinkage const *lnk);

@@ -212,5 +212,6 @@ AUX afxBool         AfxWereKeysPressed(afxSession ses, afxNat seat, afxNat cnt, 
 AUX afxBool         AfxWereKeysReleased(afxSession ses, afxNat seat, afxNat cnt, afxKey const codes[]);
 
 AUX afxError        AfxEmulatePressedKeys(afxSession ses, afxNat seat, afxNat cnt, afxKey const key[], afxNat8 const pressure[], afxWindow wnd);
+AUX afxError        AfxReleaseAllKeys(afxSession ses, afxNat seat, afxWindow wnd);
 
 #endif//AUX_KEYBOARD_H

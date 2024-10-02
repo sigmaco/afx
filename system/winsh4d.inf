@@ -1,0 +1,31 @@
+[Qwadro.Icd]
+DriverDate=2024/05/08
+DriverVer=0.1.2
+Vendor=SIGMA Technology Group
+Href=https://sigmaco.org
+FeatureScore=1
+Service=user
+DllFile=winsh4d.dll
+Devices=Icd.Devices
+
+[Icd.Devices]
+=Device.Dwm
+=Device.Kbd
+=Device.Mse
+=Device.Gpad
+
+[Device.Dwm]
+Class=SHELL
+Description=Desktop Window Manager
+
+[Device.Kbd]
+Class=HID
+Description=HID Keyboard
+
+[Device.Mse]
+Class=HID
+Description=HID Mouse
+
+[Device.Gpad]
+Class=HID
+Description=HID Gamepad

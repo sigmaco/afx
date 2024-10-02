@@ -45,9 +45,39 @@ _AUX afxError AfxEmulatePressedKeys(afxSession ses, afxNat seat, afxNat cnt, afx
             ev.ev.id = afxEvent_UX;
             ev.ev.siz = sizeof(ev);
             ev.id = auxEventId_KEY;
-            ev.seat = 0;
+            ev.seat = seat;
             ev.wnd = wnd;
             AfxEmitEvent(wnd, (void*)&ev.ev);
+        }
+    }
+    return err;
+}
+
+_AUX afxError AfxReleaseAllKeys(afxSession ses, afxNat seat, afxWindow wnd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ses, afxFcc_SES);
+
+    if (seat < ses->seatCnt)
+    {
+        afxNat cnt = ses->seats[seat].keyCnt;
+        AfxAssert(cnt);
+
+        for (afxNat i = 0; i < cnt; i++)
+        {
+            if (ses->seats[seat].keyState[0][i])
+            {
+                ses->seats[seat].keyState[1][i] = ses->seats[seat].keyState[0][i];
+                ses->seats[seat].keyState[0][i] = 0x00;
+
+                auxEvent ev = { 0 };
+                ev.ev.id = afxEvent_UX;
+                ev.ev.siz = sizeof(ev);
+                ev.id = auxEventId_KEY;
+                ev.seat = seat;
+                ev.wnd = wnd;
+                AfxEmitEvent(wnd, (void*)&ev.ev);
+            }
         }
     }
     return err;

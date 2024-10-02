@@ -32,7 +32,7 @@
 #pragma comment (lib, "dwmapi")
 #endif
 
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 extern afxString const qwadroSignature;
 
@@ -497,7 +497,7 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
             }
         }
 
-        if (debugger.dump || !file[0])
+        if (debugger.dump || (!file || !file[0]))
         {
             //setbuf(debugger.dump);
             debugger.running = 1;

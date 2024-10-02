@@ -21,6 +21,7 @@
 
 #include "qwadro/inc/math/afxScalar.h"
 
+AFX afxWhd const AFX_WHD_ZERO;
 AFX afxWhd const AFX_WHD_IDENTITY;
 
 #define AfxWhd(x_, y_, z_) (afxWhd const){ (afxNat)x_, (afxNat)y_, (afxNat)z_ }
@@ -36,6 +37,7 @@ AFXINL void     AfxWhdCopy(afxWhd whd, afxWhd const in);
 AFXINL void     AfxWhdMin(afxWhd whd, afxWhd const a, afxWhd const b);
 AFXINL void     AfxWhdMax(afxWhd whd, afxWhd const a, afxWhd const b);
 AFXINL void     AfxWhdClamp(afxWhd whd, afxWhd const in, afxWhd const min, afxWhd const max);
+AFXINL void     AfxWhdClampOffset(afxWhd whd, afxWhd const origin, afxWhd const extent);
 
 AFXINL afxBool  AfxWhdIsZero(afxWhd const whd);
 AFXINL afxBool  AfxWhdAreEquals(afxWhd const whd, afxWhd const other);

@@ -24,7 +24,7 @@
 #include <string.h>
 
 #define _AFX_URD_C
-#include "../dev/afxDevIoBase.h"
+#include "../dev/afxIoImplKit.h"
 #include "qwadro/inc/io/afxUrd.h"
 
 #define LOWORD(l) ((afxNat16)(l))
@@ -34,186 +34,399 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#pragma pack(push, 1)
-
-AFX_DEFINE_STRUCT(_afxUrdHdr)
-{
-    afxNat32        fcc; // 'u', 'r', 'd', '\0'
-    afxNat32        len;
-    afxNat32        ver;
-    afxNat32        mach; // 'l', 'e', '3', '2'
-    afxNat32        crc32;
-    afxNat32        baseSegOffset;
-    afxNat32        segCnt;
-    afxUrdReference rootObj; // 't', 'x', 'd', '\0'; 'a', 'n', 'd', '\0'; 'm', 'd', 'd', '\0'
-};
-
-AFX_DEFINE_STRUCT(_afxUrdChunkTxd)
-{
-    afxNat32        fcc; // 't', 'x', 'd', '\0'
-    afxNat32        len;
-    afxNat32        ver;
-    afxNat          texCnt;
-    afxNat          rasCnt;
-    // afxString    texUrns[texCnt];
-    // ---
-};
-
-AFX_DEFINE_STRUCT(_afxUrdChunkTex)
-{
-    afxNat      rasCnt;
-    //afxNat      rasRasIdx[rasCnt];
-    //afxNat      rasUsage[rasCnt];
-};
-
-AFX_DEFINE_STRUCT(_afxUrdChunkRas)
-{
-    afxNat          fmt;
-    afxNat32        whd[3];
-    afxNat          lodCnt;
-    afxNat          flags;
-    afxNat          usage;
-};
-
-#pragma pack(pop)
-
-AFX_DEFINE_STRUCT(afxUrdSegment)
-{
-    afxNat          decSiz; // uncompressed size
-    afxNat          encSiz; // compressed size
-    afxNat          codec; // codec used to compress this section
-    afxNat          intAlign;
-    afxNat32        baseDataOffset;
-};
-
 AFX_OBJECT(afxUrd)
 {
-    _afxUrdHdr      hdr;
-    afxNat          openSegCnt;
-    afxUrdSegment** openSegs;
-    afxBool         revBytes;
-    afxBool8*       marshalled;
-    afxBool8*       userBuffered;
-    void*           convBuf;
+    afxUri128   uri;
+    urdRoot     froot;
+    urdSegment* fsegs;
+    afxNat      segCnt;
+    afxByte**   segBufs;
+    afxNat*     segRefCnt;
+    void*       convBuf;
+};
+
+AFX_DEFINE_STRUCT(urdBuilder)
+{
+    afxFcc      trunkFcc;
+    afxNat      segCnt;
+    afxChain    segments;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX void* LoadFileSection2(afxUrdSegment const *Section, void *DestinationMemory, void *Reader, afxBool fileIsByteReversed)
+_AFX afxBool AfxWriteNextSeriesHeader(afxStream out, urdMark const* hdr)
 {
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(Section);
-    AfxAssert(DestinationMemory);
-    AfxAssert(Reader);
+    return !(AfxWriteStream(out, 1, sizeof(*hdr), hdr));
+}
 
-    void *result = 0;
-    void *Result = 0;
+_AFX afxBool AfxReadNextSeriesHeader(afxStream in, urdMark* hdr)
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &in, afxFcc_IOB);
+    AfxAssert(hdr);
+    return !(AfxReadStream(in, sizeof(*hdr), 0, hdr));
+}
 
-    if (Section->decSiz)
+#define RWLIBRARYIDPACK( _version, _buildNum ) ( ( ( ( (_version)-0x30000U ) & 0x3ff00U ) << 14 ) | ( ( (_version)&0x0003fU ) << 16 ) | ( (_buildNum)&0xffffU ) )
+#define RWLIBRARYIDUNPACKVERSION( _libraryID ) ( ( ( ( ( _libraryID ) >> 14 ) & 0x3ff00U ) + 0x30000U ) | ( ( ( _libraryID ) >> 16 ) & 0x0003fU ) )
+#define RWLIBRARYIDUNPACKBUILDNUM( _libraryID ) ( (_libraryID)&0xffffU )
+
+_AFX afxBool AfxFetchNextStreamChunk(afxStream in, afxNat32 id, urdMark* hdr)
+{
+    // compatible with RwStreamFindChunk()
+    afxError err = NIL;
+    AfxAssertObjects(1, &in, afxFcc_IOB);
+    AfxAssert(hdr);
+    AfxAssert(id);
+    afxBool rslt = FALSE;
+
+#pragma pack(push, 1)
+    struct
     {
-        afxNat alignedSiz = (Section->decSiz + 3) & 0xFFFFFFFC;
+        afxNat32 type;
+        afxNat32 length;
+        afxNat32 libraryID;
+    } mark = { 0 };
 
-        if (DestinationMemory)
+    struct
+    {
+        afxNat32 type; // chunk ID - see \ref RwStreamFindChunk.
+        afxNat32 length; // length of the chunk data in bytes.
+        afxNat32 version; // version of the chunk data. See RwEngineGetVersion.
+        afxNat32 buildNum; // build number of the RenderWare libraries previously used to stream out the data.
+        afxBool32 isComplex;
+    } chunkHdrInfo = { 0 };
+#pragma pack(pop)
+
+    while (!AfxHasStreamReachedEnd(in))
+    {
+        if (AfxReadStream(in, sizeof(mark), 0, &mark))
         {
-            result = DestinationMemory;
-            Result = DestinationMemory;
+            AfxThrowError();
+            break;
+        }
+
+        chunkHdrInfo.type = mark.type;
+        chunkHdrInfo.length = mark.length;
+        chunkHdrInfo.isComplex = TRUE;
+
+        if (!(mark.libraryID & 0xffff0000)) // Check for old RW library ID
+        {
+            // Just contains old-style version number
+            chunkHdrInfo.version = mark.libraryID << 8;
+            chunkHdrInfo.buildNum = 0;
         }
         else
         {
-            //use Section->InternalAlignment
-            Result = AfxAllocate(1, alignedSiz, 0, AfxHere());
-            result = Result;
+            // Unpack new RW library ID
+            chunkHdrInfo.version = (((((mark.libraryID) >> 14) & 0x3ff00U) + 0x30000U) | (((mark.libraryID) >> 16) & 0x0003fU));
+            chunkHdrInfo.buildNum = ((mark.libraryID) & 0xffffU);
         }
 
-        if (result)
+        if (chunkHdrInfo.type == id)
         {
-            if (Section->codec)
-            {
-                afxNat v8 = AfxGetCompressionPaddingSize(Section->codec);
-                void *v9 = AfxAllocate(1, Section->encSiz + v8, 0, AfxHere());
+            hdr->siz = chunkHdrInfo.length;
+            hdr->ver = chunkHdrInfo.version;
+            rslt = TRUE;
+            break;
+        }
 
-                if (v9)
-                {
-                    AfxReadStreamAt(Reader, Section->baseDataOffset, Section->encSiz, 0, v9);
-
-                    if (!AfxDecompressData(Section->codec, fileIsByteReversed, Section->encSiz, v9, 0, 0, Section->decSiz, Result))
-                    {
-                        AfxDeallocate(Result);
-                        Result = 0;
-                    }
-                }
-
-                AfxDeallocate(v9);
-                result = Result;
-            }
-            else
-            {
-                AfxReadStreamAt(Reader, Section->baseDataOffset, Section->encSiz, 0, result);
-                result = Result;
-            }
+        if (chunkHdrInfo.length && AfxAdvanceStream(in, chunkHdrInfo.length))
+        {
+            AfxThrowError();
+            break;
         }
     }
-    return result;
+    return rslt;
 }
 
-_AFX void* AfxDecodeUrdReference(void const **sections, afxUrdReference const* ref)
+_AFX afxNat AfxMeasureSerializableExtensions(afxObject obj)
 {
-    return (afxByte*)sections[ref->segIdx] + ref->offset;
+    afxError err = NIL;
+    AfxAssert(obj);
+    afxNat size = 0;
+
+    afxClass const* cls = AfxGetClass(obj);
+    afxInstanceExtension* entry = AFX_REBASE(AfxGetFirstLinkage(&cls->plugins), afxInstanceExtension, cls);
+    AfxAssert(entry->cls.chain->holder == cls);
+
+    while (entry)
+    {
+        if (entry->ioSizCb)
+        {
+            afxNat thisSize;
+
+            if (thisSize = (entry->ioSizCb(obj, ((afxByte*)obj) + entry->objOff, entry->objSiz)))
+                size += (thisSize + sizeof(urdMark));
+        }
+        entry = AFX_REBASE(AfxGetNextLinkage(&entry->cls), afxInstanceExtension, cls);
+        AfxAssert(entry->cls.chain->holder == cls);
+    }
+    return size;
 }
 
-_AFX afxBool AfxOpenUrdSegments(afxUrd urd, afxNat firstSeg, afxNat secCnt, void *buf[])
+_AFX afxError AfxStoreSerializableExtensions(afxStream out, afxObject obj)
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &out, afxFcc_IOB);
+    AfxAssert(obj);
+
+    urdMark hdr =
+    {
+        .fcc = afxChunkId_EXTENSION,
+        .siz = AfxMeasureSerializableExtensions(obj),
+        .ver = NIL
+    };
+
+    if (!AfxWriteNextSeriesHeader(out, &hdr))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    afxClass const* cls = AfxGetClass(obj);
+    afxInstanceExtension* entry = AFX_REBASE(AfxGetFirstLinkage(&cls->plugins), afxInstanceExtension, cls);
+    AfxAssert(entry->cls.chain->holder == cls);
+
+    while (entry)
+    {
+        if (entry->ioSizCb && entry->ioWriteCb)
+        {
+            afxNat size;
+
+            if ((size = entry->ioSizCb(obj, ((afxByte*)obj) + entry->objOff, entry->objSiz)))
+            {
+                hdr.fcc = entry->pluginId;
+                hdr.siz = size;
+
+                if (!AfxWriteNextSeriesHeader(out, &hdr))
+                {
+                    AfxThrowError();
+                    return FALSE;
+                }
+                else if (entry->ioWriteCb(out, obj, ((afxByte*)obj) + entry->objOff, entry->objSiz))
+                {
+                    AfxThrowError();
+                    return FALSE;
+                }
+            }
+        }
+        entry = AFX_REBASE(AfxGetNextLinkage(&entry->cls), afxInstanceExtension, cls);
+        AfxAssert(entry->cls.chain->holder == cls);
+    }
+    return TRUE;
+}
+
+_AFX afxError AfxLoadSerializedExtensions(afxStream in, urdMark const* hdr, afxObject obj)
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &in, afxFcc_IOB);
+    AfxAssert(hdr);
+    AfxAssert(obj);
+    AfxAssert(hdr->fcc == afxChunkId_EXTENSION);
+
+    afxNat len = hdr->siz;
+
+    afxClass const* cls = AfxGetClass(obj);
+
+    urdMark sub;
+
+    while (len)
+    {
+        if (!AfxReadNextSeriesHeader(in, &sub))
+        {
+            AfxThrowError();
+            break;
+        }
+
+        afxInstanceExtension* entry = AFX_REBASE(AfxGetFirstLinkage(&cls->plugins), afxInstanceExtension, cls);
+        AfxAssert(entry->cls.chain->holder == cls);
+        afxBool found = FALSE;
+
+        while (entry)
+        {
+            if (entry->pluginId == sub.fcc)
+            {
+                found = TRUE;
+                break;
+            }
+            entry = AFX_REBASE(AfxGetNextLinkage(&entry->cls), afxInstanceExtension, cls);
+            AfxAssert(entry->cls.chain->holder == cls);
+        }
+
+        if (found && entry->ioReadCb)
+        {
+            if (entry->ioReadCb(in, obj, ((afxByte*)obj) + entry->objOff, entry->objSiz))
+            {
+                AfxThrowError();
+                return FALSE;
+            }
+        }
+        else if (AfxAdvanceStream(in, sub.siz))
+        {
+            AfxThrowError();
+            return FALSE;
+        }
+
+        len -= (sub.siz + sizeof(urdMark));
+    }
+
+    afxInstanceExtension* entry = AFX_REBASE(AfxGetFirstLinkage(&cls->plugins), afxInstanceExtension, cls);
+    AfxAssert(entry->cls.chain->holder == cls);
+
+    while (entry)
+    {
+        if (entry->ioAlwaysCb && entry->ioAlwaysCb(in, obj, ((afxByte*)obj) + entry->objOff, entry->objSiz))
+        {
+            AfxThrowError();
+            return FALSE;
+        }
+        entry = AFX_REBASE(AfxGetNextLinkage(&entry->cls), afxInstanceExtension, cls);
+        AfxAssert(entry->cls.chain->holder == cls);
+    }
+    return TRUE;
+}
+
+_AFX afxError AfxSkipSerializedExtensions(afxStream in, urdMark const* hdr)
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &in, afxFcc_IOB);
+    AfxAssert(hdr);
+    AfxAssert(hdr->fcc == afxChunkId_EXTENSION);
+
+    afxNat len = hdr->siz;
+
+    while (len > 0)
+    {
+        urdMark sub;
+
+        if (!AfxReadNextSeriesHeader(in, &sub))
+        {
+            AfxThrowError();
+            return FALSE;
+        }
+        else if (AfxAdvanceStream(in, sub.siz))
+        {
+            AfxThrowError();
+            return FALSE;
+        }
+        else
+            len -= (sub.siz + sizeof(urdMark));
+    }
+    return err;
+}
+
+_AFX afxBool AfxTrackFileSegment(afxUrd urd, void const* object, afxNat* segIdx)
+{
+    afxError err = NIL;
+    afxBool rslt = FALSE;
+    afxByte** maps = urd->segBufs;
+
+    for (afxNat i = 0; i < urd->segCnt; i++)
+    {
+        if ((object >= maps[i]) && (object <= maps[i] + urd->fsegs[i].decSiz))
+        {
+            AfxAssert(segIdx);
+            *segIdx = i;
+            rslt = TRUE;
+            break;
+        }
+    }
+    return rslt;
+}
+
+_AFX void* AfxResolveUrdReference(afxUrd urd, afxUrdOrigin const* ref)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
-    AfxAssertRange(urd->hdr.segCnt, firstSeg, secCnt);
-    afxBool ret = TRUE;
+    AfxAssert(ref);
+    AfxAssertRange(urd->segCnt, ref->segIdx, 1);
+    AfxAssertRange(urd->fsegs[ref->segIdx].decSiz, ref->offset, 1);
+    return (ref->segIdx < urd->segCnt) && (ref->offset < urd->fsegs[ref->segIdx].decSiz) ? urd->segBufs[ref->segIdx] + ref->offset : NIL;
+}
 
-    afxUrdSegment* segs = ((afxUrdSegment*)((afxByte*)urd->hdr.baseSegOffset));
+_AFX afxBool AfxOpenUrdSegments(afxUrd urd, afxNat firstSeg, afxNat secCnt, afxStream in)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &urd, afxFcc_URD);
+    AfxAssertRange(urd->segCnt, firstSeg, secCnt);
+    afxBool ret = TRUE;
 
     for (afxNat i = 0; i < secCnt; i++)
     {
-        afxUrdSegment* seg = &segs[firstSeg + i];
+        afxNat segIdx = firstSeg + i;
+        urdSegment* seg = &urd->fsegs[segIdx];
 
-        urd->userBuffered[firstSeg + i] = !!buf;
-
-        if (!(!seg->decSiz || urd->openSegs[firstSeg + i]))
+        if (!(!seg->decSiz || urd->segBufs[segIdx]))
             ret = FALSE;
+
+        if (urd->segRefCnt[segIdx])
+        {
+            AfxAssert(urd->segBufs[segIdx]);
+            ++urd->segRefCnt[segIdx];
+        }
+        else if (seg->decSiz)
+        {
+            afxNat decSizAligned = (seg->decSiz + 3) & 0xFFFFFFFC;
+
+            if (!(urd->segBufs[segIdx] = AfxAllocate(1, decSizAligned, seg->decAlign, AfxHere()))) AfxThrowError();
+            else
+            {
+                if (!seg->codec)
+                {
+                    AfxReadStreamAt(in, seg->start, seg->encSiz, 0, urd->segBufs[segIdx]);
+                }
+                else
+                {
+                    void* buf;
+
+                    if (!(buf = AfxAllocate(1, seg->encSiz, seg->encAlign, AfxHere()))) AfxThrowError();
+                    else
+                    {
+                        if (AfxReadStreamAt(in, seg->start, seg->encSiz, 0, buf)) AfxThrowError();
+                        else
+                        {
+                            //AfxDecodeStream(in, seg->start, seg->decAlign, seg->encSiz / seg->encAlign);
+                        }
+                    }
+                }
+
+                urd->segRefCnt[segIdx] = 1;
+
+                if (err && urd->segBufs[segIdx])
+                {
+                    AfxDeallocate(urd->segBufs[segIdx]);
+                    urd->segBufs[segIdx] = NIL;
+                    urd->segRefCnt[segIdx] = 0;
+                }
+            }
+        }
     }
     return ret;
-}
-
-_AFX afxBool AfxOpenUrdSegment(afxUrd urd, afxNat segIdx, void* buf)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &urd, afxFcc_URD);
-    return AfxOpenUrdSegments(urd, segIdx, 1, buf ? &buf : NIL);
 }
 
 _AFX void AfxCloseUrdSegments(afxUrd urd, afxNat firstSeg, afxNat segCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
-    AfxAssertRange(urd->hdr.segCnt, firstSeg, segCnt);
+    AfxAssertRange(urd->segCnt, firstSeg, segCnt);
 
     for (afxNat i = 0; i < segCnt; i++)
     {
-        if (urd->openSegs[firstSeg + i])
-        {
-            if (!urd->userBuffered[firstSeg + i])
-                AfxDeallocate(urd->openSegs[firstSeg + i]);
+        afxNat segIdx = firstSeg + i;
 
-            urd->userBuffered[firstSeg + i] = FALSE;
-            urd->marshalled[firstSeg + i] = FALSE;
-            urd->openSegs[firstSeg + i] = NIL;
+        if (urd->segRefCnt[segIdx])
+        {
+            AfxAssert(urd->segBufs[segIdx]);
+
+            if (--urd->segRefCnt[segIdx] == 0)
+            {
+                AfxDeallocate(urd->segBufs[segIdx]);
+                urd->segBufs[segIdx] = NIL;
+                urd->segRefCnt[segIdx] = 0;
+            }
         }
     }
-}
-
-_AFX void AfxCloseAllUrdSegments(afxUrd urd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &urd, afxFcc_URD);
-    AfxCloseUrdSegments(urd, 0, urd->openSegCnt);
 }
 
 _AFX afxError _AfxUrdDtorCb(afxUrd urd)
@@ -221,23 +434,62 @@ _AFX afxError _AfxUrdDtorCb(afxUrd urd)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
 
-    AfxCloseAllUrdSegments(urd);
+    AfxCloseUrdSegments(urd, 0, urd->segCnt);
 
-    if (urd->openSegs)
-        AfxDeallocate(urd->openSegs);
-    
+    afxObjectStash const stashes[] =
+    {
+        {
+            .cnt = urd->segCnt,
+            .var = (void*)&urd->segRefCnt
+        },
+        {
+            .cnt = urd->segCnt,
+            .var = (void*)&urd->segBufs
+        }
+    };
+    AfxDeallocateInstanceData(urd, AFX_COUNTOF(stashes), stashes);
+
     if (urd->convBuf)
         AfxDeallocate(urd->convBuf);
 
     return err;
 }
 
-_AFX afxError _AfxUrdCtorCb(void *cache, afxNat idx, afxUrd urd, void const *paradigms)
+_AFX afxError _AfxUrdCtorCb(afxUrd urd, void** args, afxNat invokeNo)
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &urd, afxFcc_URD);
 
+    afxStorage disk = args[0];
+    afxNat segCnt = *(afxNat*)(args[1]);
+    afxNat trunkId = *(afxNat*)(args[2]);
 
+    urd->segCnt = segCnt;
 
+    afxObjectStash const stashes[] =
+    {
+        {
+            .cnt = urd->segCnt,
+            .var = (void*)&urd->segRefCnt
+        },
+        {
+            .cnt = urd->segCnt,
+            .var = (void*)&urd->segBufs
+        }
+    };
+
+    if (AfxAllocateInstanceData(urd, AFX_COUNTOF(stashes), stashes)) AfxThrowError();
+    else
+    {
+        for (afxNat i = 0; i < segCnt; i++)
+        {
+            urd->segBufs[i] = NIL;
+            urd->segRefCnt[i] = 0;
+        }
+
+        if (err)
+            AfxDeallocateInstanceData(urd, AFX_COUNTOF(stashes), stashes);
+    }
     return err;
 }
 
@@ -260,8 +512,8 @@ _AFX afxUrd AfxBuildUrd(afxUri const *path)
 
     afxStream file;
 
-    if (AfxOpenFile(path, afxIoFlag_R, &file)) AfxThrowError();
-    else
+    //if (AfxOpenFile(path, afxIoFlag_R, &file)) AfxThrowError();
+    //else
     {
         AfxAssertObjects(1, &file, afxFcc_FILE);
 
@@ -274,24 +526,79 @@ _AFX afxUrd AfxBuildUrd(afxUri const *path)
     return urd;
 }
 
-_AFX afxUrd AfxAcquireUrd(afxUri const *path)
+_AFX afxError AfxAcquireUrd(afxNat segCnt, afxFcc trunkId, void* resvd, afxUrd* urd)
 {
-    //AfxEntry("uri=%.*s", AfxPushString(AfxGetUriString(path)));
     afxError err = AFX_ERR_NONE;
-    afxUrd urd = NIL;
+    afxUrd urd2 = NIL;
 
-    afxStream file;
+    afxClass* cls = 0;// (afxClass*)AfxGetUrdClass();
+    AfxAssertClass(cls, afxFcc_URD);
 
-    if (AfxOpenFile(path, afxIoFlag_R, &file)) AfxThrowError();
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&urd2, (void const*[]) { NIL, &segCnt, &trunkId })) AfxThrowError();
     else
     {
-        AfxAssertObjects(1, &file, afxFcc_FILE);
+        AfxAssertObjects(1, &urd2, afxFcc_URD);
 
-        //if (AfxAcquireObjects(AfxGetUrdClass(), NIL, 1, NIL, (afxHandle**)&urd, AfxHere()))
-        AfxThrowError();
 
-        AfxReleaseObjects(1, (void*) { file });
     }
+    return err;
+}
 
-    return urd;
+_AFX afxError AfxLoadUrd(afxStream in, afxFcc trunkId, afxUrd* urd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &in, afxFcc_IOB);
+    AfxAssert(AfxIsStreamReadable(in));
+    afxResource rs;
+    
+    urdRoot root;
+    if (AfxSeekStream(in, sizeof(root), afxSeekOrigin_END)) AfxThrowError();
+    else
+    {
+        urdTrunk trunk;
+        if (AfxReadStream(in, sizeof(root), 0, &root)) AfxThrowError();
+        else if (root.hdr.fcc != afxFcc_URD) AfxThrowError();
+        else if (AfxSeekStream(in, root.trunkOff, afxSeekOrigin_BEGIN)) AfxThrowError();
+        else if (AfxReadStream(in, sizeof(trunk), 0, &trunk)) AfxThrowError();
+        {
+            if (trunkId && trunk.hdr.fcc != (afxNat32)trunkId) AfxThrowError();
+            else
+            {
+                urdSegment segs[256];
+                AfxAssert(trunk.hdr.siz > trunk.segCnt * sizeof(segs[0]));
+
+                if (AfxReadStreamAt(in, trunk.baseSegOff, trunk.segCnt * sizeof(segs[0]), 0, &segs[0])) AfxThrowError();
+                else
+                {
+                    if (AfxAcquireUrd(trunk.segCnt, trunkId, NIL, urd)) AfxThrowError();
+                    else
+                    {
+
+                    }
+                }
+            }
+        }
+    }
+    return err;
+}
+
+_AFX afxError AfxOpenUrd(afxUri const* uri, afxFcc trunkId, afxUrd* urd)
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxStream iob;
+    afxStreamInfo iobi = { 0 };
+    iobi.usage = afxStreamUsage_FILE;
+    iobi.flags = afxStreamFlag_READABLE;
+    AfxAcquireStream(1, &iobi, &iob);
+
+    if (AfxReopenFile(iob, uri, afxFileFlag_RX)) AfxThrowError();
+    else
+    {
+        if (AfxLoadUrd(iob, trunkId, urd))
+            AfxThrowError();
+
+        AfxReleaseObjects(1, &iob);
+    }
+    return err;
 }

@@ -1,0 +1,322 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 000007fed6cbaeb0 by 0000000000000000 over 0000000000000000 with 000007fed6cb7950)
+ afxClass<Basic I/O System>::ConstructObject(00000000002d2120)
+ afxSystem.c:1067
+  _AfxSysCtor(sys=00000000002d2120)
+ Installing Thread Execution Unit at 00000000002d27b8 by 00000000002d2150 over 0000000000000000 with 000000000016d950)
+ Installing Memory Management Unit at 00000000002d2178 by 00000000002d2150 over 0000000000000000 with 000007fed6cb7080)
+ Installing Module at 00000000002d22b8 by 00000000002d2150 over 0000000000000000 with 000007fed6cb7720)
+ Installing Thread at 00000000002d2678 by 00000000002d2150 over 0000000000000000 with 000007fed6cb79a8)
+ Installing Service at 00000000002d28f8 by 00000000002d2150 over 0000000000000000 with 000007fed6c445c8)
+ Installing File at 00000000002d2cb8 by 00000000002d2150 over 0000000000000000 with 000007fed6cb7670)
+ Installing I/O Stream at 00000000002d2b78 by 00000000002d2150 over 0000000000000000 with 000007fed6cb78e0)
+ Installing Archive at 00000000002d2df8 by 00000000002d2150 over 0000000000000000 with 000007fed6cb7000)
+ Installing Application at 00000000002d2a38 by 00000000002d2150 over 0000000000000000 with 000007fed6c2e9e8)
+ Installing Keyboard at 00000000002d23f8 by 00000000002d2150 over 0000000000000000 with 000007fed6cb76c8)
+ Installing Mouse at 00000000002d2538 by 00000000002d2150 over 0000000000000000 with 000007fed6cb7778)
+ Installing Simulation at 00000000002d2f38 by 00000000002d2150 over 0000000000000000 with 000007fed6cb8638)
+ Entering the Thread Execution Environment 4294967295
+ [!] afxSystem.c:1164?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1165?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(00000000002cca20)
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ afxArena.c:768
+  AfxAllocateArena(aren=00000000002d30e0)
+ afxArena.c:769
+  AfxAllocateArena(spec=0000000000000000,hint="afxSystem.c:1217!_AfxSysCtor")
+ afxSystem.c:822
+  AfxMountStoragePoints(6,000000000016dcc0)
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>3 + <1>1 is out of capacity <str->len>3.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>3 + <1>1 is out of capacity <str->len>3.
+ ERR afxUri.c:1215?AfxNormalizePath
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>43 + <1>1 is out of capacity <str->len>43.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>43 + <1>1 is out of capacity <str->len>43.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>52 + <1>1 is out of capacity <str->len>52.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>52 + <1>1 is out of capacity <str->len>52.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ Point "system" 5 mounted -> "E:/qwadro/afx/system64".
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>49 + <1>1 is out of capacity <str->len>49.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>49 + <1>1 is out of capacity <str->len>49.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>48 + <1>1 is out of capacity <str->len>48.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>48 + <1>1 is out of capacity <str->len>48.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>47 + <1>1 is out of capacity <str->len>47.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>47 + <1>1 is out of capacity <str->len>47.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>47 + <1>1 is out of capacity <str->len>47.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>47 + <1>1 is out of capacity <str->len>47.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>4 + <1>1 is out of capacity <str->len>4.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>4 + <1>1 is out of capacity <str->len>4.
+ ERR afxUri.c:1215?AfxNormalizePath
+  
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>18 + <1>1 is out of capacity <str->len>18.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>18 + <1>1 is out of capacity <str->len>18.
+ afxModule.c:151
+  AfxAcquireModules(cnt=1,mdle=00000000002d3090,uri=000000000016dbc8)
+ afxClass<Module>::ConstructObject(00000000002bb0d0)
+ afxModule.c:94
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ ERR afxString.c:465?_AfxWriteString
+  
+ ERR afxString.c:465?_AfxWriteString
+  (cap >= len)
+    Invalid
+ ERR afxString.c:467?_AfxWriteString
+  
+ ERR afxString.c:467?_AfxWriteString
+  (len <= effectiveCap)
+    Invalid
+ ERR afxString.c:547?AfxAppendString
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>34 + <1>1 is out of capacity <str->len>34.
+ ERR afxString.c:47?AfxGetStringData
+  
+ ERR afxString.c:47?AfxGetStringData
+  <base>34 + <1>1 is out of capacity <str->len>34.
+ E:/qwadro/afx/system64/e2coree.dll
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ afxKeyboard.c:299
+  AfxAcquireKeyboards(cnt=1,port=000000000016d8f4,kbd=00000000002d3098)
+ afxClass<Keyboard>::ConstructObject(00000000002d6300)
+ afxKeyboard.c:250
+  _AfxKbdCtor(kbd=00000000002d6300)

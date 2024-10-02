@@ -26,7 +26,7 @@
 #define AMX_MATERIAL_H
 
 #include "qwadro/inc/sim/afxSimDefs.h"
-#include "qwadro/inc/draw/afxRaster.h"
+#include "qwadro/inc/draw/io/afxRaster.h"
 #include "qwadro/inc/base/afxFixedString.h"
 
 AMX afxString const*AfxGetMaterialUrn(afxMaterial mtl);

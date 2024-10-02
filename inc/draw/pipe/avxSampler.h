@@ -62,7 +62,7 @@ typedef enum avxYuvModelConversion
     */
 } avxYuvModelConversion;
 
-AFX_DEFINE_STRUCT(avxSamplerConfig)
+AFX_DEFINE_STRUCT(avxSamplerInfo)
 {
     avxTexelFilter          magFilter; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified. Aka upsampling filter.
     avxTexelFilter          minFilter; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions. Aka downsampling filter.
@@ -79,10 +79,10 @@ AFX_DEFINE_STRUCT(avxSamplerConfig)
     afxBool                 unnormalizedCoords;
 };
 
-AFX_DEFINE_STRUCT(avxYuvSamplerConfig)
+AFX_DEFINE_STRUCT(avxYuvSamplerInfo)
 {
-    avxSamplerConfig        base;
-    afxPixelFormat          fmt;
+    avxSamplerInfo          base;
+    avxFormat               fmt;
     avxYuvModelConversion   ycbcrModel;
     afxBool                 useNarrowRange;
     avxColorSwizzling       components;
@@ -92,16 +92,16 @@ AFX_DEFINE_STRUCT(avxYuvSamplerConfig)
     afxBool                 forceExplicitReconstruction;
 };
 
-AVX void            AfxDescribeSampler(avxSampler samp, avxSamplerConfig* config);
+AVX void            AfxDescribeSampler(avxSampler samp, avxSamplerInfo* config);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerConfig const cfg[], avxSampler samplers[]);
-AVX afxError        AfxAcquireYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerConfig const cfg[], avxSampler samplers[]);
+AVX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxError        AfxAcquireYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[]);
 
-AVX afxBool         AfxFindSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerConfig const cfg[], avxSampler samplers[]);
-AVX afxBool         AfxFindYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerConfig const cfg[], avxSampler samplers[]);
+AVX afxBool         AfxFindSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxBool         AfxFindYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[]);
 
-AVX void            AfxDescribeDefaultSampler(avxSamplerConfig* config);
+AVX void            AfxDescribeDefaultSampler(avxSamplerInfo* config);
 
 #endif//AVX_SAMPLER_H

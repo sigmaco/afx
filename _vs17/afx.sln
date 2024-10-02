@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.33423.255
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "e2coree", "e2coree\e2coree.vcxproj", "{973A60FF-EA6C-4D62-A302-BF610CABAB8C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "e2vgi", "e2vgi\e2vgi.vcxproj", "{2D93C9E6-A8BD-40E6-8FFE-CD15319B0241}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "e2draw", "e2draw\e2draw.vcxproj", "{2D93C9E6-A8BD-40E6-8FFE-CD15319B0241}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "e2pragma", "e2pragma\e2pragma.vcxproj", "{0F78F3C8-D287-4A15-A69B-208B85C038F4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "e2combo", "e2combo\e2combo.vcxproj", "{0F78F3C8-D287-4A15-A69B-208B85C038F4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "e2sound", "e2sound\e2sound.vcxproj", "{1685D511-3934-4F31-B8A3-AFA740F612B3}"
 EndProject

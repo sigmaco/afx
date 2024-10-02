@@ -1,0 +1,5 @@
+Booting up...
+Acquiring thread...  8460 "afxSystem_w32.c:502"Mounting... <//././>('E:/qwadro/afx/'),5afxString.c:482
+afxString.c:482
+(effectiveRange == len2)
+    InvalidMounting... <//./syst>('E:/qwadro/afx/system'),5

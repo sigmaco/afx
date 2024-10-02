@@ -21,7 +21,7 @@
 #ifndef AUX_BASE_OBJECTS_H
 #define AUX_BASE_OBJECTS_H
 
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 #include "qwadro/inc/ux/afxUxDefs.h"
 #include "qwadro/inc/math/afxViewport.h"
 #include "qwadro/inc/ux/afxShell.h"
@@ -376,10 +376,9 @@ AUX afxClassConfig const _AuxMseStdImplementation;
 AUX afxClassConfig const _AuxHidStdImplementation;
 AUX afxClassConfig const _AuxWndStdImplementation;
 AUX afxClassConfig const _AuxSesStdImplementation;
-AUX afxClassConfig const _AuxXssStdImplementation;
 AUX afxClassConfig const _AuxWidStdImplementation;
 
-AUX afxError _AuxRegisterShells(afxDriver icd, afxNat cnt, afxShellInfo const infos[], afxShell shells[]);
-AUX afxError _AuxRegisterHids(afxDriver icd, afxNat cnt, afxHidInfo const infos[], afxHid hids[]);
+AUX afxError _AuxRegisterShells(afxModule icd, afxNat cnt, afxShellInfo const infos[], afxShell shells[]);
+AUX afxError _AuxRegisterHids(afxModule icd, afxNat cnt, afxHidInfo const infos[], afxHid hids[]);
 
 #endif//AUX_BASE_OBJECTS_H

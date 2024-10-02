@@ -53,41 +53,48 @@ _AVX void AfxGetCanvasExtent(avxCanvas canv, afxWhd whd)
     whd[2] = canv->whd[2];
 }
 
-_AVX afxBool AfxGetDepthBufferSlot(avxCanvas canv, afxNat* slotIdx)
+_AVX afxBool AfxGetDepthBufferSlots(avxCanvas canv, afxNat* dSlotIdx, afxNat* sSlotIdx)
 {
     afxError err = AFX_ERR_NONE;
     /// canv must be a valid avxCanvas handle.
     AfxAssertObjects(1, &canv, afxFcc_CANV);
-    afxNat surfIdx2 = canv->dsSlotIdx[0];
-    AfxAssert(slotIdx);
-    *slotIdx = surfIdx2;
-    return (surfIdx2 != AFX_INVALID_INDEX);
+    AfxAssert(dSlotIdx || sSlotIdx);
+    afxBool rslt = 0;
+
+    if (dSlotIdx)
+    {
+        *dSlotIdx = canv->dsSlotIdx[0];
+
+        if (canv->dsSlotIdx[0] != AFX_INVALID_INDEX)
+            ++rslt;
+    }
+
+    if (sSlotIdx)
+    {
+        *sSlotIdx = canv->dsSlotIdx[1];
+
+        if (canv->dsSlotIdx[1] != AFX_INVALID_INDEX)
+            ++rslt;
+    }
+    return rslt;
 }
 
-_AVX afxBool AfxGetStencilBufferSlot(avxCanvas canv, afxNat* slotIdx)
+_AVX afxBool AfxGetDrawBuffers(avxCanvas canv, afxNat baseSlotIdx, afxNat cnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     /// canv must be a valid avxCanvas handle.
     AfxAssertObjects(1, &canv, afxFcc_CANV);
-    afxNat surfIdx2 = canv->dsSlotIdx[1];
-    AfxAssert(slotIdx);
-    *slotIdx = surfIdx2;
-    return (surfIdx2 != AFX_INVALID_INDEX);
-}
-
-_AVX afxBool AfxGetDrawBuffers(avxCanvas canv, afxNat baseSlot, afxNat cnt, afxRaster rasters[])
-{
-    afxError err = AFX_ERR_NONE;
-    /// canv must be a valid avxCanvas handle.
-    AfxAssertObjects(1, &canv, afxFcc_CANV);
-    AfxAssertRange(canv->slotCnt, baseSlot, cnt);
+    AfxAssertRange(canv->slotCnt, baseSlotIdx, cnt);
     AfxAssert(rasters);
     afxBool rslt = 0;
     afxRaster ras;
     
+    baseSlotIdx = AfxMin(baseSlotIdx, canv->slotCnt - 1);
+    cnt = AfxMax(cnt, canv->slotCnt - baseSlotIdx);
+
     for (afxNat i = 0; i < cnt; i++)
     {
-        afxNat slotIdx = baseSlot + i;
+        afxNat slotIdx = baseSlotIdx + i;
         
         if ((ras = canv->slots[slotIdx].ras))
         {
@@ -99,65 +106,56 @@ _AVX afxBool AfxGetDrawBuffers(avxCanvas canv, afxNat baseSlot, afxNat cnt, afxR
     return rslt;
 }
 
-_AVX afxBool AfxGetColorBuffer(avxCanvas canv, afxNat slotIdx, afxRaster* buf)
+_AVX afxBool AfxGetColorBuffers(avxCanvas canv, afxNat baseSlotIdx, afxNat cnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     /// canv must be a valid avxCanvas handle.
     AfxAssertObjects(1, &canv, afxFcc_CANV);
-    AfxAssertRange(canv->colorCnt, slotIdx, 1);
-    afxRaster ras = NIL;
+    AfxAssertRange(canv->colorCnt, baseSlotIdx, cnt);
 
-    if (slotIdx >= canv->colorCnt) AfxThrowError();
-    else
-    {
-        if (AfxGetDrawBuffers(canv, slotIdx, 1, &ras))
-        {
-            AfxAssertObjects(1, &ras, afxFcc_RAS);
-        }
-    }
-    AfxAssert(buf);
-    *buf = ras;
-    return !!ras;
+    baseSlotIdx = AfxMin(baseSlotIdx, canv->colorCnt - 1);
+    cnt = AfxMax(cnt, canv->colorCnt - baseSlotIdx);
+
+    afxBool rslt = AfxGetDrawBuffers(canv, baseSlotIdx, cnt, rasters);
+    AfxAssertObjects(rslt, rasters, afxFcc_RAS);
+    return rslt;
 }
 
-_AVX afxBool AfxGetDepthBuffer(avxCanvas canv, afxRaster* buf)
+_AVX afxBool AfxGetDepthBuffers(avxCanvas canv, afxRaster* depth, afxRaster* stencil)
 {
     afxError err = AFX_ERR_NONE;
     /// canv must be a valid avxCanvas handle.
     AfxAssertObjects(1, &canv, afxFcc_CANV);
+    AfxAssert(depth || stencil);
+    afxBool rslt = 0;
     afxRaster ras = NIL;
-    afxNat bufIdx;
-
-    if (AfxGetDepthBufferSlot(canv, &bufIdx))
+    afxNat dSlotIdx = AFX_INVALID_HANDLE, sSlotIdx = AFX_INVALID_HANDLE;
+    
+    if (AfxGetDepthBufferSlots(canv, &dSlotIdx, &sSlotIdx))
     {
-        if (AfxGetDrawBuffers(canv, bufIdx, 1, &ras))
+        if (depth)
         {
-            AfxAssertObjects(1, &ras, afxFcc_RAS);
-            AfxAssert(buf);
-            *buf = ras;
+            if (AfxGetDrawBuffers(canv, dSlotIdx, 1, &ras))
+            {
+                AfxAssertObjects(1, &ras, afxFcc_RAS);
+                *depth = ras;
+                ++rslt;
+            }
+            else *depth = NIL;
+        }
+
+        if (stencil)
+        {
+            if (AfxGetDrawBuffers(canv, sSlotIdx, 1, &ras))
+            {
+                AfxAssertObjects(1, &ras, afxFcc_RAS);
+                *stencil = ras;
+                ++rslt;
+            }
+            else *stencil = NIL;
         }
     }
-    return !!ras;
-}
-
-_AVX afxBool AfxGetStencilBuffer(avxCanvas canv, afxRaster* buf)
-{
-    afxError err = AFX_ERR_NONE;
-    /// canv must be a valid avxCanvas handle.
-    AfxAssertObjects(1, &canv, afxFcc_CANV);
-    afxRaster ras = NIL;
-    afxNat bufIdx;
-
-    if (AfxGetStencilBufferSlot(canv, &bufIdx))
-    {
-        if (AfxGetDrawBuffers(canv, bufIdx, 1, &ras))
-        {
-            AfxAssertObjects(1, &ras, afxFcc_RAS);
-            AfxAssert(buf);
-            *buf = ras;
-        }
-    }
-    return !!ras;
+    return rslt;
 }
 
 _AVX afxError _AvxRelinkDrawBuffersCb(avxCanvas canv, afxBool managed, afxNat baseSlot, afxNat cnt, afxRaster rasters[])
@@ -251,7 +249,7 @@ _AVX afxError AfxRelinkDepthBuffer(avxCanvas canv, afxRaster depth)
     AfxTryAssertObjects(1, &depth, afxFcc_RAS);
     afxNat slotIdx;
 
-    if (!AfxGetDepthBufferSlot(canv, &slotIdx)) AfxThrowError();
+    if (!AfxGetDepthBufferSlots(canv, &slotIdx, NIL)) AfxThrowError();
     else
     {
         if (AfxRelinkDrawBuffers(canv, slotIdx, 1, &depth))
@@ -268,7 +266,7 @@ _AVX afxError AfxRelinkStencilBuffer(avxCanvas canv, afxRaster stencil)
     AfxTryAssertObjects(1, &stencil, afxFcc_RAS);
     afxNat slotIdx;
 
-    if (!AfxGetStencilBufferSlot(canv, &slotIdx)) AfxThrowError();
+    if (!AfxGetDepthBufferSlots(canv, NIL, &slotIdx)) AfxThrowError();
     else
     {
         if (AfxRelinkDrawBuffers(canv, slotIdx, 1, &stencil))
@@ -327,7 +325,7 @@ _AVX afxError AfxPrintDrawBuffer(avxCanvas canv, afxNat slotIdx, afxNat portIdx,
             AfxAssert2(canv->whd[1] >= op->rgn.whd[1], op->rgn.whd[1]);
             AfxAssert2(canv->whd[2] >= op->rgn.whd[2], op->rgn.whd[2]);
             
-            if (AfxPrintRaster(ras, portIdx, op, 1, uri))
+            if (AfxPrintRaster(ras, op, 1, uri, portIdx))
                 AfxThrowError();
         }
         else
@@ -335,7 +333,7 @@ _AVX afxError AfxPrintDrawBuffer(avxCanvas canv, afxNat slotIdx, afxNat portIdx,
             afxRasterIo op2 = { 0 };
             AfxGetCanvasExtent(canv, op2.rgn.whd);
 
-            if (AfxPrintRaster(ras, portIdx, &op2, 1, uri))
+            if (AfxPrintRaster(ras, &op2, 1, uri, portIdx))
                 AfxThrowError();
         }
     }
@@ -348,7 +346,7 @@ _AVX afxError AfxRedoDrawBuffers(avxCanvas canv)
     /// canv must be a valid avxCanvas handle.
     AfxAssertObjects(1, &canv, afxFcc_CANV);
 
-    afxDrawContext dctx = AfxGetParent(canv);
+    afxDrawContext dctx = AfxGetProvider(canv);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     afxRasterInfo texi = { 0 };
@@ -367,7 +365,7 @@ _AVX afxError AfxRedoDrawBuffers(avxCanvas canv)
                 AfxRelinkDrawBuffers(canv, i, 1, NIL);
 
             texi.fmt = surf->fmt;
-            texi.sampleCnt = surf->sampleCnt;
+            texi.lodCnt = surf->sampleCnt;
             texi.usage = surf->usage | afxRasterUsage_DRAW;
             afxRaster ras;
 
@@ -453,20 +451,20 @@ _AVX afxError _AvxCanvStdCtor(avxCanvas canv, void** args, afxNat invokeNo)
             AfxAssert(sur->fmt);
             AfxAssert(sur->sampleCnt);
 
-            if (AfxPixelFormatIsDepth(sur->fmt))
+            if (AfxIsPixelFormatDepth(sur->fmt))
             {
                 if (depthInIdx == AFX_INVALID_INDEX)
                     ++slotCnt;
 
                 depthInIdx = i;
 
-                if ((combinedDs = AfxPixelFormatIsCombinedDepthStencil(sur->fmt)))
+                if ((combinedDs = AfxIsPixelFormatCombinedDepthStencil(sur->fmt)))
                     stencilInIdx = depthInIdx;
 
                 continue;
             }
 
-            if (AfxPixelFormatIsStencil(sur->fmt))
+            if (AfxIsPixelFormatStencil(sur->fmt))
             {
                 if (stencilInIdx == AFX_INVALID_INDEX)
                     ++slotCnt;

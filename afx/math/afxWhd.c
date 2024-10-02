@@ -21,6 +21,7 @@
 #include "qwadro/inc/math/afxMatrix.h"
 #include "qwadro/inc/math/afxWhd.h"
 
+_AFX afxWhd const AFX_WHD_ZERO = { 0, 0, 0 };
 _AFX afxWhd const AFX_WHD_IDENTITY = { 1, 1, 1 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,6 +88,16 @@ _AFXINL void AfxWhdClamp(afxWhd whd, afxWhd const in, afxWhd const min, afxWhd c
     whd[0] = AfxClamp(in[0], min[0], max[0]);
     whd[1] = AfxClamp(in[1], min[1], max[1]);
     whd[2] = AfxClamp(in[2], min[2], max[2]);
+}
+
+_AFXINL void AfxWhdClampOffset(afxWhd whd, afxWhd const origin, afxWhd const extent)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(whd);
+    AfxAssert(origin);
+    whd[0] = AfxMin(origin[0], extent[0] - 1);
+    whd[1] = AfxMin(origin[1], extent[1] - 1);
+    whd[2] = AfxMin(origin[2], extent[2] - 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -180,9 +191,9 @@ _AFXINL void AfxWhdHalf(afxWhd whd, afxWhd const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(whd);
     AfxAssert(in);
-    whd[0] = in[0] / 2;
-    whd[1] = in[1] / 2;
-    whd[2] = in[2] / 2;
+    whd[0] = AfxMax(in[0] ? 1 : 0, in[0] >> 1);
+    whd[1] = AfxMax(in[1] ? 1 : 0, in[1] >> 1);
+    whd[2] = AfxMax(in[2] ? 1 : 0, in[2] >> 1);
 }
 
 _AFXINL afxNat AfxWhdSum(afxWhd const whd)

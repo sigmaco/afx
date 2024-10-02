@@ -20,7 +20,7 @@
 #define _AVX_SAMPLER_C
 #include "../../dev/AvxImplKit.h"
 
-_AVX void AfxDescribeSampler(avxSampler samp, avxSamplerConfig* spec)
+_AVX void AfxDescribeSampler(avxSampler samp, avxSamplerInfo* spec)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(spec);
@@ -53,7 +53,7 @@ _AVX afxError _AvxSampStdCtor(avxSampler samp, void** args, afxNat invokeNo)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &samp, afxFcc_SAMP);
 
-    avxYuvSamplerConfig const *cfg = ((avxYuvSamplerConfig const *)args[1]) + invokeNo;
+    avxYuvSamplerInfo const *cfg = ((avxYuvSamplerInfo const *)args[1]) + invokeNo;
     afxBool yuv = args[2] ? *(afxBool const*)args[2] : FALSE;
 
     AfxAssert(cfg);
@@ -65,7 +65,7 @@ _AVX afxError _AvxSampStdCtor(avxSampler samp, void** args, afxNat invokeNo)
     AfxAssert(cfg[0].base.uvw[2] < avxTexelAddress_TOTAL);
 
     samp->crc = 0;
-    //AfxAccumulateCrc32(&samp->crc, cfg, yuv ? sizeof(avxYuvSamplerConfig) : sizeof(avxSamplerConfig));
+    //AfxAccumulateCrc32(&samp->crc, cfg, yuv ? sizeof(avxYuvSamplerInfo) : sizeof(avxSamplerInfo));
 
     samp->yuv = !!yuv;
 
@@ -90,7 +90,7 @@ _AVX afxClassConfig const _AvxSampStdImplementation =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerConfig const cfg[], avxSampler samplers[])
+_AVX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerInfo const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -116,7 +116,7 @@ _AVX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerConf
     return err;
 }
 
-_AVX afxError AfxAcquireYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerConfig const cfg[], avxSampler samplers[])
+_AVX afxError AfxAcquireYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -170,7 +170,7 @@ _AVXINL afxBool _AvxFindSampCb(avxSampler samp, struct findSampCb* udd)
     return TRUE; // continue
 };
 
-_AVX afxBool AfxFindSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerConfig const cfg[], avxSampler samplers[])
+_AVX afxBool AfxFindSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerInfo const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -181,7 +181,7 @@ _AVX afxBool AfxFindSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerConfig c
     return rslt;
 }
 
-_AVX afxBool AfxFindYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerConfig const cfg[], avxSampler samplers[])
+_AVX afxBool AfxFindYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -192,11 +192,11 @@ _AVX afxBool AfxFindYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerCo
     return rslt;
 }
 
-AVX void AfxDescribeDefaultSampler(avxSamplerConfig* config)
+AVX void AfxDescribeDefaultSampler(avxSamplerInfo* config)
 {
     afxError err = NIL;
     AfxAssert(config);
-    static avxSamplerConfig const def =
+    static avxSamplerInfo const def =
     {
         .magFilter = avxTexelFilter_LINEAR,
         .minFilter = avxTexelFilter_POINT,

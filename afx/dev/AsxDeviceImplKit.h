@@ -19,7 +19,7 @@
 #ifndef ASX_DEVICE_IMPL_KIT_H
 #define ASX_DEVICE_IMPL_KIT_H
 
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 #include "qwadro/inc/sound/dev/afxSoundSystem.h"
 
 AFX_DEFINE_STRUCT(afxSoundDeviceInfo)
@@ -216,6 +216,6 @@ ASX afxClassConfig const _AsxSqueStdImplementation;
 ASX afxClassConfig const _AsxSdgeStdImplementation;
 ASX afxClassConfig const _AsxSctxStdImplementation;
 
-ASX afxError _AsxRegisterSoundDevices(afxDriver icd, afxNat cnt, afxSoundDeviceInfo const infos[], afxSoundDevice devices[]);
+ASX afxError _AsxRegisterSoundDevices(afxModule icd, afxNat cnt, afxSoundDeviceInfo const infos[], afxSoundDevice devices[]);
 
 #endif//ASX_DEVICE_IMPL_KIT_H

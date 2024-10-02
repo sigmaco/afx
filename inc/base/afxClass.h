@@ -106,7 +106,7 @@ AFX_DEFINE_STRUCT(afxObjectChunk)
     afxNat      siz;
 };
 
-AFX_DEFINE_STRUCT(afxClassPlugin)
+AFX_DEFINE_STRUCT(afxInstanceExtension)
 {
     afxLinkage      cls;
     afxNat          pluginId;
@@ -119,7 +119,7 @@ AFX_DEFINE_STRUCT(afxClassPlugin)
     afxError        (*ioRightsCb)(afxStream iob, afxObject obj, void* ext, afxNat siz, void* data); // called after the reading of plugin stream data is finished, and the object finalised, if and only if the object's rights id was equal to that of the plugin registering the call.
     afxError        (*ioWriteCb)(afxStream iob, afxObject obj, void* ext, afxNat siz); // writes extension data to a binary stream.
     afxError        (*ioReadCb)(afxStream iob, afxObject obj, void* ext, afxNat siz); // reads extension data from a binary stream.
-    afxSize         (*ioSizCb)(afxStream iob, afxObject obj, void* ext, afxNat siz); // determines the binary size of the extension data.
+    afxSize         (*ioSizCb)(afxObject obj, void* ext, afxNat siz); // determines the binary size of the extension data.
 };
 
 AFX_DEFINE_STRUCT(afxClassVmt)
@@ -197,13 +197,13 @@ AFX afxNat          AfxInvokeClassInstances(afxClass const* cls, afxNat first, a
 /// However, AfxInvokeClassInstances2 will return count of objects that passed in flt() callback.
 AFX afxNat          AfxInvokeClassInstances2(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2);
 
-AFX afxError        _AfxDeallocateClassInstances(afxClass* cls, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxAllocateClassInstances(afxClass* cls, afxNat cnt, afxObject objects[]);
+AFX afxError        _AfxDeallocateObjects(afxClass* cls, afxNat cnt, afxObject objects[]);
+AFX afxError        _AfxAllocateObjects(afxClass* cls, afxNat cnt, afxObject objects[]);
 AFX afxError        _AfxAllocateClassInstancesAt(afxClass* cls, afxNat base, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxDestructClassInstances(afxClass* cls, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxConstructClassInstances(afxClass* cls, afxNat cnt, afxObject objects[], void** udd);
+AFX afxError        _AfxDestructObjects(afxClass* cls, afxNat cnt, afxObject objects[]);
+AFX afxError        _AfxConstructObjects(afxClass* cls, afxNat cnt, afxObject objects[], void** udd);
 
-AFX afxResult       AfxCleanUpChainedClasses(afxChain* ch);
+AFX afxResult       AfxDeregisterChainedClasses(afxChain* ch);
 AFX afxResult       AfxExhaustChainedClasses(afxChain* ch);
 AFX afxChain*       _AfxGetOrphanClasses(void);
 

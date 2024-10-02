@@ -1,0 +1,27 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 000007fee85abeb0 by 0000000000000000 over 0000000000000000 with 000007fee85a8950)
+ 000007fee85abf58 wdlocked by 6300
+ 000007fee85abf58 wdunlocked by 6300
+ 000007fee85abf58 wdlocked by 6300
+ afxClass<Basic I/O System>::ConstructObject(0000000000462120)
+ afxSystem.c:1067
+  _AfxSysCtor(sys=0000000000462120)
+ Installing Thread Execution Unit at 00000000004627b8 by 0000000000462150 over 0000000000000000 with 000000000022dd90)
+ 0000000000462860 wdlocked by 6300
+ 0000000000462860 wdunlocked by 6300

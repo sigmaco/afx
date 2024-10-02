@@ -23,7 +23,7 @@ _ASXINL afxSoundContext AfxGetWaveContext(afxWaveform wav)
 {
     afxError err;
     AfxAssertObjects(1, &wav, afxFcc_WAV);
-    afxSoundContext sctx = AfxGetParent(wav);
+    afxSoundContext sctx = AfxGetProvider(wav);
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
     return sctx;
 }
@@ -199,17 +199,21 @@ _ASX afxError AsxLoadWaves(afxSoundContext sctx, afxNat cnt, afxUri const uris[]
     for (afxNat fIdx = 0; fIdx < cnt; fIdx++)
     {
         afxStream iob;
-        AfxLoadFile(&uris[fIdx], &iob);
+        afxStreamInfo iobi = { 0 };
+        iobi.usage = afxStreamUsage_FILE;
+        iobi.flags = afxStreamFlag_READABLE;
+        AfxAcquireStream(1, &iobi, &iob);
+        AfxReloadFile(iob, &uris[fIdx]);
 
-        AfxSeekStream(iob, 22, afxSeekMode_ABSOLUTE);
+        AfxSeekStream(iob, 22, afxSeekOrigin_BEGIN);
         afxNat16 chCnt;
         AfxReadStream(iob, sizeof(chCnt), 0, &chCnt);
         afxNat32 sampRate;
         AfxReadStream(iob, sizeof(sampRate), 0, &sampRate);
-        AfxSeekStream(iob, 34, afxSeekMode_ABSOLUTE);
+        AfxSeekStream(iob, 34, afxSeekOrigin_BEGIN);
         afxNat16 bps;
         AfxReadStream(iob, sizeof(bps), 0, &bps);
-        AfxSeekStream(iob, 40, afxSeekMode_ABSOLUTE);
+        AfxSeekStream(iob, 40, afxSeekOrigin_BEGIN);
         afxNat32 dataSiz;
         AfxReadStream(iob, sizeof(dataSiz), 0, &dataSiz);
 

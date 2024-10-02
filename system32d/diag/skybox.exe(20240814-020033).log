@@ -1,0 +1,191 @@
+Booting...
+Acquiring...  Thread Execution Unit 7328 @ afxSystem_w32.c:444Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... Executable And Linkage Module <e2coree.dll>Memory Page Size: 4096HW Threading Capacity: 2Loading... Executable And Linkage Module <e2draw.dll>Loading... Executable And Linkage Module <e2combo.dll>Loading... Executable And Linkage Module <e2sound.dll>Loading... Executable And Linkage Module <e2mmux.dll>Loading... Executable And Linkage Module <//./z/eaxzal1.dll>Loading... Installable Client Driver <//./z//eaxzal1.dll>	<//./amigal1/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/galileo.dll>Loading... Installable Client Driver <//./z//galileo.dll>	<//./combo/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/tarzgl4.dll>Loading... Installable Client Driver <//./z//tarzgl4.dll>	<//./targl3/>("")  0.0.0 	<//./targl4/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/winsh4d.dll>Loading... Installable Client Driver <//./z//winsh4d.dll>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 7328
+Loading... Executable And Linkage Module <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY17) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL32.c:1559
+GL: INVAL_PARAMzglInterop_WGL32.c:1561
+GL: INVAL_PARAMzglInterop_WGL32.c:1659
+GL: INVAL_PARAMzglInterop_WGL32.c:1688
+GL: INVAL_PARAMzglInterop_WGL32.c:1761
+GL: INVAL_PARAMzglInterop_WGL32.c:1764
+GL: INVAL_PARAMzglInterop_WGL32.c:1769
+GL: INVAL_PARAMzglInterop_WGL32.c:1774
+GL: INVAL_PARAMAcquiring...  Thread Execution Unit 0 @ zglDrawBridge.c:1798Entering the Thread Execution Environment 2660
+Starting 2660 on thread execution unit #1...Entering the Thread Execution Environment 7328
+Reopening... <//./z/video/uvOutTristripQuad.vsh>Entering the Thread Execution Environment 2660
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 7328
+Reopening... <//./z/video/stdEnv.inc>Reopening... <//./z/video/sampleOutRgba2d.fsh>Reopening... <//./z/video/stdEnv.inc>afxClass.c:898
+afxClass.c:898
+(cfg->fcc)
+    InvalidafxClass.c:921
+afxClass.c:921
+(cfg->name && cfg->name[0])
+    InvalidMounting... <//./d/>('E:\qwadro\repo\bangitk\tmp'),7afxDrawOutput.c:225
+afxDrawOutput.c:225
+(whd[0])(952) is out of range [1, 269032862]afxDrawOutput.c:226
+afxDrawOutput.c:226
+(whd[1])(506) is out of range [1, 269032917]Window_W32.c:692
+afxWindow.c:186
+afxWindow.c:295
+afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>Reopening... <../art/skybox/purple/right.tga>Entering the Thread Execution Environment 2660
+Hardware-side raster 007d0088 ready. 8c1a, 8051, [2048,2048,6]Entering the Thread Execution Environment 7328
+Reopening... <../art/skybox/purple/left.tga>Reopening... <../art/skybox/purple/bottom.tga>Reopening... <../art/skybox/purple/top.tga>Reopening... <../art/skybox/purple/front.tga>Reopening... <../art/skybox/purple/back.tga>Reopening... <../data/pipeline/skybox/skybox.xsh.xml>../data/pipeline/skybox/skybox.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/skybox/sampleOutRgbaCube.fshReopening... <../data/pipeline/skybox/skybox.vsh>Entering the Thread Execution Environment 2660
+Hardware-side buffer 05b79298 ready. 34962, 1, 4Entering the Thread Execution Environment 7328
+Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/skybox/sampleOutRgbaCube.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../art/skybox/purple/purple.txd>Entering the Thread Execution Environment 2660
+Hardware-side raster 007d0238 ready. de1, 83f0, [2048,2048,1]zglInterop_WGL32.c:1447
+API ERROR HIGH 1282 GL error GL_INVALID_OPERATIONzglRaster.c:92
+GL: INVAL_OPEntering the Thread Execution Environment 7328
+Reopening... <../tmp/test-txd-dump-tex0.tga>afxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidEntering the Thread Execution Environment 2660
+zglInterop_WGL32.c:1447
+API ERROR HIGH 1281 GL error GL_INVALID_VALUEzglCanvas.c:34
+GL: INVAL_VALUEzglInterop_WGL32.c:1447
+API ERROR HIGH 1286 GL error GL_INVALID_FRAMEBUFFER_OPERATION: framebuffer 1, "" is not completezglRaster.c:541
+GL: 1286afxStream.c:425
+afxStream.c:425
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidHardware-side raster 007d0160 ready. de1, 83f0, [2048,2048,1]zglInterop_WGL32.c:1447
+API ERROR HIGH 1282 GL error GL_INVALID_OPERATIONzglRaster.c:92
+GL: INVAL_OPEntering the Thread Execution Environment 7328
+Reopening... <../tmp/test-txd-dump-tex1.tga>afxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidEntering the Thread Execution Environment 2660
+zglInterop_WGL32.c:1447
+API ERROR HIGH 1281 GL error GL_INVALID_VALUEzglCanvas.c:34
+GL: INVAL_VALUEzglInterop_WGL32.c:1447
+API ERROR HIGH 1286 GL error GL_INVALID_FRAMEBUFFER_OPERATION: framebuffer 1, "" is not completezglRaster.c:541
+GL: 1286afxStream.c:425
+afxStream.c:425
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidHardware-side raster 007d03e8 ready. de1, 83f0, [2048,2048,1]zglInterop_WGL32.c:1447
+API ERROR HIGH 1282 GL error GL_INVALID_OPERATIONzglRaster.c:92
+GL: INVAL_OPEntering the Thread Execution Environment 7328
+Reopening... <../tmp/test-txd-dump-tex2.tga>afxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidEntering the Thread Execution Environment 2660
+zglInterop_WGL32.c:1447
+API ERROR HIGH 1281 GL error GL_INVALID_VALUEzglCanvas.c:34
+GL: INVAL_VALUEzglInterop_WGL32.c:1447
+API ERROR HIGH 1286 GL error GL_INVALID_FRAMEBUFFER_OPERATION: framebuffer 1, "" is not completezglRaster.c:541
+GL: 1286afxStream.c:425
+afxStream.c:425
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidHardware-side raster 007d0310 ready. de1, 83f0, [2048,2048,1]zglInterop_WGL32.c:1447
+API ERROR HIGH 1282 GL error GL_INVALID_OPERATIONzglRaster.c:92
+GL: INVAL_OPEntering the Thread Execution Environment 7328
+Reopening... <../tmp/test-txd-dump-tex3.tga>afxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidEntering the Thread Execution Environment 2660
+zglInterop_WGL32.c:1447
+API ERROR HIGH 1281 GL error GL_INVALID_VALUEzglCanvas.c:34
+GL: INVAL_VALUEzglInterop_WGL32.c:1447
+API ERROR HIGH 1286 GL error GL_INVALID_FRAMEBUFFER_OPERATION: framebuffer 1, "" is not completezglRaster.c:541
+GL: 1286afxStream.c:425
+afxStream.c:425
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidHardware-side raster 007d0598 ready. de1, 83f0, [2048,2048,1]zglInterop_WGL32.c:1447
+API ERROR HIGH 1282 GL error GL_INVALID_OPERATIONzglRaster.c:92
+GL: INVAL_OPEntering the Thread Execution Environment 7328
+Reopening... <../tmp/test-txd-dump-tex4.tga>afxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidEntering the Thread Execution Environment 2660
+zglInterop_WGL32.c:1447
+API ERROR HIGH 1281 GL error GL_INVALID_VALUEzglCanvas.c:34
+GL: INVAL_VALUEzglInterop_WGL32.c:1447
+API ERROR HIGH 1286 GL error GL_INVALID_FRAMEBUFFER_OPERATION: framebuffer 1, "" is not completezglRaster.c:541
+GL: 1286afxStream.c:425
+afxStream.c:425
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidHardware-side raster 007d0748 ready. de1, 83f0, [2048,2048,1]zglInterop_WGL32.c:1447
+API ERROR HIGH 1282 GL error GL_INVALID_OPERATIONzglRaster.c:92
+GL: INVAL_OPEntering the Thread Execution Environment 7328
+Reopening... <../tmp/test-txd-dump-tex5.tga>afxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    InvalidEntering the Thread Execution Environment 2660
+zglInterop_WGL32.c:1447
+API ERROR HIGH 1281 GL error GL_INVALID_VALUEzglCanvas.c:34
+GL: INVAL_VALUEzglInterop_WGL32.c:1447
+API ERROR HIGH 1286 GL error GL_INVALID_FRAMEBUFFER_OPERATION: framebuffer 1, "" is not completezglRaster.c:541
+GL: 1286afxStream.c:425
+afxStream.c:425
+(AfxStreamIsWriteable(iob))
+    InvalidafxStream.c:362
+afxStream.c:362
+(AfxStreamIsWriteable(iob))
+    Invalid

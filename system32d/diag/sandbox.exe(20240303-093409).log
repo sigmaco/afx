@@ -1,0 +1,614 @@
+Booting up the Qwadro Execution Ecosystem...
+Setting up SystemafxManifest.c:215
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.Setting up ThreadSetting up Memory Management UnitSetting up Autonomous ServiceSetting up CodecSetting up String BaseSetting up StreamSetting up ArchiveSetting up StorageSetting up ModuleSetting up DeviceSetting up HIDSetting up Keyboard[HID]Setting up Mouse[HID]Setting up Controller[HID]Setting up EnvironmentAcquiring thread...  8316 "afxSystem_w32.c:500"Mounting storage unit... <.>('E:/qwadro/afx///'),5Mounting storage unit... <system>('E:/qwadro/afx//system/'),5Mounting storage unit... <system>('E:/qwadro/afx//system32/'),7Mounting storage unit... <system>('E:/qwadro/afx//system32d/'),7Loading module... <system/e2coree.dll>Memory page size: 4096Logical processor count: 2Setting up the Qwadro Sound System...Loading module... <e2sound.dll>Setting up SoundSystemSetting up Sound Device[Device]Installing client driver <oal4d.inf>...Installable client driver <oal4d.inf> discovered.
+	Product: 
+	Version: 0.0.0
+	Description: 
+	Vendor: 
+	Website: 
+	Loading ICD <oal4d.inf> executable and linkable file <oal4d.dll>...Loading module... <oal4d.dll>Setting up Sound ContextAcquiring thread...  0 "salSdev.c:534"The audience is listeningStarting Thread Execution Unit 6432Installing client driver <sgl4d.inf>...Setting up the Qwadro Draw System...Loading module... <e2draw.dll>Setting up Unified Video Graphics InfrastructureSetting up CameraSetting up DrawDevice[Device]Setting up DrawOutputSetting up DrawInputInstalling client driver <oal4d.inf>...Installing client driver <sgl4d.inf>...Installable client driver <sgl4d.inf> discovered.
+	Product: SIGMA GL/2
+	Version: 0.0.0
+	Description: SIGMA-engineered continuously integrated OpenGL/Vulkan Video Graphics Infrastructure
+	Vendor: SIGMA Technology Group
+	Website: www.sigmaco.org
+	Loading ICD <sgl4d.inf> executable and linkable file <sgl4d.dll>...Loading module... <sgl4d.dll>Setting up DrawBrigeSetting up DrawContextSetting up GPU Synchronization SemaphoreSetting up GPU Synchronization FenceSetting up Query PoolListing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008Acquiring thread...  0 "sglDdev_w32.c:1203"Starting Thread Execution Unit 8960Setting up the Environment...Acquiring keyboard at port 0Acquiring mouse at port 0Mounting storage unit... <code>('E:/qwadro/afx//system/'),7Loading file... <system/qwadro.xss>('E:/qwadro/afx//system//qwadro.xss')// This technology is part of Qwadro (c) 2017 SIGMA Federation
+require "core" for Storage, Stream
+
+class Main {
+  construct new() {
+    System.print("new");
+  }
+
+  init() {
+    System.print("init");
+    //Storage.Mount("tmp", "system/tmp", "rwx");
+    var f = Stream.OpenFile("tmp/camera.lua", "rwx");
+    f.Seek(10, 0);
+    f.Write("stdout", 6, 0);
+    f.Close();
+  }
+
+  update() {
+    System.print("update");
+  }
+
+  draw(dt) {
+    System.print("draw");
+  }
+  
+
+}
+
+Storage.Mount("code", "code", "rx");
+Storage.Mount("sound", "sound", "rx");
+Storage.Mount("data", "data", "rx");
+Storage.Mount("art", "art", "rx");
+Storage.Mount("tmp", "tmp", "rwx");
+
+var Game = Main.new();
+System.print(".");
+var file = Stream.OpenFile("tmp/camera.lua", "rwx");
+file.Seek(1, 0);
+file.Close();
+
+Loading file... <code/core.xs>('E:/qwadro/afx//system//core.xs')Mounting storage unit... <code>('E:/qwadro/afx//code/'),5Mounting storage unit... <sound>('E:/qwadro/afx//sound/'),5Mounting storage unit... <data>('E:/qwadro/afx//data/'),5Mounting storage unit... <art>('E:/qwadro/afx//art/'),5Mounting storage unit... <tmp>('E:/qwadro/afx//tmp/'),7new
+.
+Opening file... <tmp/camera.lua>('E:/qwadro/afx//tmp//camera.lua'),7Entering the Thread Execution Environment 8316
+Setting up LegoSetting up SamplerSetting up BufferSetting up RasterSetting up CanvasSetting up Vertex InputSetting up ShaderSetting up RasterizerSetting up PipelineSetting up DrawStreamSetting up DrawStreamUploading pipeline 'system/video/sampleOutRgba.xsh.xml'Loading file... <system/video/sampleOutRgba.xsh.xml>('E:/qwadro/afx//system//video/sampleOutRgba.xsh.xml')system/video/uvOutTristripQuad.vshsystem/video/sampleOutRgba.xsh.xmlUploading pipeline 'system/video/sampleOutRgba.xsh.xml'Loading file... <system/video/sampleOutRgba.xsh.xml>('E:/qwadro/afx//system//video/sampleOutRgba.xsh.xml')Node 'DepthWriteEnabled' not handled.system/video/sampleOutRgba2d.fshOpening file... <system/video/uvOutTristripQuad.vsh>('E:/qwadro/afx//system//video/uvOutTristripQuad.vsh'),1Opening file... <system/video/stdEnv.inc>('E:/qwadro/afx//system//video/stdEnv.inc'),1Opening file... <system/video/sampleOutRgba2d.fsh>('E:/qwadro/afx//system//video/sampleOutRgba2d.fsh'),1Opening file... <system/video/stdEnv.inc>('E:/qwadro/afx//system//video/stdEnv.inc'),1pÇZReloading file 1... <system/video/font-256.tga>('E:/qwadro/afx//system//video/font-256.tga')Entering the Thread Execution Environment 8960
+Creating transient OpenGL context000 wglCreateContextAttribsARB core found.000 wglChoosePixelFormatARB core found.000 wglSwapIntervalEXT core found.000 wglGetExtensionsStringARB core found.Creating definitive OpenGL context000 wglCreateContextAttribsARB core found.000 wglChoosePixelFormatARB core found.000 wglSwapIntervalEXT core found.000 wglGetExtensionsStringARB core found.391 glReleaseShaderCompiler core found.392 glShaderBinary core found.393 glGetShaderPrecisionFormat core found.394 glDepthRangef core found.395 glClearDepthf core found.396 glGetProgramBinary core found.397 glProgramBinary core found.398 glProgramParameteri core found.399 glUseProgramStages core found.400 glActiveShaderProgram core found.401 glCreateShaderProgramv core found.402 glBindProgramPipeline core found.403 glDeleteProgramPipelines core found.404 glGenProgramPipelines core found.405 glIsProgramPipeline core found.406 glGetProgramPipelineiv core found.407 glProgramUniform1i core found.408 glProgramUniform1iv core found.409 glProgramUniform1f core found.410 glProgramUniform1fv core found.411 glProgramUniform1d core found.412 glProgramUniform1dv core found.413 glProgramUniform1ui core found.414 glProgramUniform1uiv core found.415 glProgramUniform2i core found.416 glProgramUniform2iv core found.417 glProgramUniform2f core found.418 glProgramUniform2fv core found.419 glProgramUniform2d core found.420 glProgramUniform2dv core found.421 glProgramUniform2ui core found.422 glProgramUniform2uiv core found.423 glProgramUniform3i core found.424 glProgramUniform3iv core found.425 glProgramUniform3f core found.426 glProgramUniform3fv core found.427 glProgramUniform3d core found.428 glProgramUniform3dv core found.429 glProgramUniform3ui core found.430 glProgramUniform3uiv core found.431 glProgramUniform4i core found.432 glProgramUniform4iv core found.433 glProgramUniform4f core found.434 glProgramUniform4fv core found.435 glProgramUniform4d core found.436 glProgramUniform4dv core found.437 glProgramUniform4ui core found.438 glProgramUniform4uiv core found.439 glProgramUniformMatrix2fv core found.440 glProgramUniformMatrix3fv core found.441 glProgramUniformMatrix4fv core found.442 glProgramUniformMatrix2dv core found.443 glProgramUniformMatrix3dv core found.444 glProgramUniformMatrix4dv core found.445 glProgramUniformMatrix2x3fv core found.446 glProgramUniformMatrix3x2fv core found.447 glProgramUniformMatrix2x4fv core found.448 glProgramUniformMatrix4x2fv core found.449 glProgramUniformMatrix3x4fv core found.450 glProgramUniformMatrix4x3fv core found.451 glProgramUniformMatrix2x3dv core found.452 glProgramUniformMatrix3x2dv core found.453 glProgramUniformMatrix2x4dv core found.454 glProgramUniformMatrix4x2dv core found.455 glProgramUniformMatrix3x4dv core found.456 glProgramUniformMatrix4x3dv core found.457 glValidateProgramPipeline core found.458 glGetProgramPipelineInfoLog core found.459 glVertexAttribL1d core found.460 glVertexAttribL2d core found.461 glVertexAttribL3d core found.462 glVertexAttribL4d core found.463 glVertexAttribL1dv core found.464 glVertexAttribL2dv core found.465 glVertexAttribL3dv core found.466 glVertexAttribL4dv core found.467 glVertexAttribLPointer core found.468 glGetVertexAttribLdv core found.469 glViewportArrayv core found.470 glViewportIndexedf core found.471 glViewportIndexedfv core found.472 glScissorArrayv core found.473 glScissorIndexed core found.474 glScissorIndexedv core found.475 glDepthRangeArrayv core found.476 glDepthRangeIndexed core found.477 glGetFloati_v core found.478 glGetDoublei_v core found.479 glDrawArraysInstancedBaseInstance core found.480 glDrawElementsInstancedBaseInstance core found.481 glDrawElementsInstancedBaseVertexBaseInstance core found.482 glGetInternalformativ core found.483 glGetActiveAtomicCounterBufferiv core found.484 glBindImageTexture core found.485 glMemoryBarrier core found.486 glTexStorage1D core found.487 glTexStorage2D core found.488 glTexStorage3D core found.489 glDrawTransformFeedbackInstanced core found.490 glDrawTransformFeedbackStreamInstanced core found.493 glDispatchCompute core found.494 glDispatchComputeIndirect core found.496 glFramebufferParameteri core found.497 glGetFramebufferParameteriv core found.498 glGetInternalformati64v core found.503 glInvalidateFramebuffer core found.504 glInvalidateSubFramebuffer core found.505 glMultiDrawArraysIndirect core found.506 glMultiDrawElementsIndirect core found.507 glGetProgramInterfaceiv core found.508 glGetProgramResourceIndex core found.509 glGetProgramResourceName core found.510 glGetProgramResourceiv core found.511 glGetProgramResourceLocation core found.512 glGetProgramResourceLocationIndex core found.513 glShaderStorageBlockBinding core found.514 glTexBufferRange core found.515 glTexStorage2DMultisample core found.516 glTexStorage3DMultisample core found.518 glBindVertexBuffer core found.519 glVertexAttribFormat core found.520 glVertexAttribIFormat core found.521 glVertexAttribLFormat core found.522 glVertexAttribBinding core found.523 glVertexBindingDivisor core found.524 glDebugMessageControl core found.525 glDebugMessageInsert core found.526 glDebugMessageCallback core found.527 glGetDebugMessageLog core found.528 glPushDebugGroup core found.529 glPopDebugGroup core found.530 glObjectLabel core found.531 glGetObjectLabel core found.532 glObjectPtrLabel core found.533 glGetObjectPtrLabel core found.534 glBufferStorage core found.543 glClipControlEXT ext found.551 glNamedBufferStorageEXT ext found.589 glTextureBufferRangeEXT ext found.606 glTextureParameteriEXT ext found.641 glMemoryBarrierByRegion core found.644 glGetGraphicsResetStatusARB ext found.645 glGetnCompressedTexImageARB ext found.646 glGetnTexImageARB ext found.647 glGetnUniformdvARB ext found.648 glGetnUniformfvARB ext found.649 glGetnUniformivARB ext found.650 glGetnUniformuivARB ext found.651 glReadnPixelsARB ext found.677 381 1920 1080 96 96 32 1 36 36 51 60 1 Opening the SIGMA GL/2 Drawing Execution Port 000
+	Intel(R) HD Graphics 4.0.0 - Build 10.18.10.5161sglDdev_w32.c:283
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMEntering the Thread Execution Environment 8316
+Uploading pipeline 'system/video/font.xsh.xml?instanced'Loading file... <system/video/font.xsh.xml>('E:/qwadro/afx//system//video/font.xsh.xml')system/video/font.vshsystem/video/font.xsh.xml?instancedUploading pipeline 'system/video/font.xsh.xml?instanced'Loading file... <system/video/font.xsh.xml>('E:/qwadro/afx//system//video/font.xsh.xml')Node 'DepthWriteEnabled' not handled.system/video/font.fshOpening file... <system/video/font.vsh>('E:/qwadro/afx//system//video/font.vsh'),1Opening file... <system/video/stdEnv.inc>('E:/qwadro/afx//system//video/stdEnv.inc'),1Opening file... <system/video/stdView.inc>('E:/qwadro/afx//system//video/stdView.inc'),1Opening file... <system/video/font.fsh>('E:/qwadro/afx//system//video/font.fsh'),1Opening file... <system/video/stdEnv.inc>('E:/qwadro/afx//system//video/stdEnv.inc'),1ê≥GSetting up ApplicationSetting up Vertex BufferSetting up WidgetSetting up OverlayLoading file... <system/sandbox.xss>('E:/qwadro/afx//system//sandbox.xss')require "core" for Keyboard, Mouse
+require "draw" for Camera
+
+class Main {
+  construct new() {
+    System.print("new game")
+  }
+
+  init() {
+    System.print("init game")
+  }
+  
+  quit() {
+      System.print("quit game")
+  }
+
+  step(dt) {
+    
+    // 4 = A
+    // 7 = D
+    // 20 = Q
+    // 8 = E
+    // 26 = W
+    // 22 = S
+    var r = 0//(Keyboard.KeyIsPressed(0, 4) ? -1 : 0.0) + (Keyboard.KeyIsPressed(0, 7) ? 1 : 0.0);
+    var u = 0//(Keyboard.GetKeyPressure(0, 20) ? -1 : 0.0) + (Keyboard.GetKeyPressure(0, 8) ? 1 : 0.0);
+    var f = 0//(Keyboard.GetKeyPressure(0, 26) ? -1 : 0.0) + (Keyboard.GetKeyPressure(0, 22) ? 1 : 0.0);
+    
+    r = Keyboard.GetKeyPressure(0, 4)
+    r = r * dt
+    
+    var cam = Camera.Get(0)
+    
+    //if (r > 0)
+    
+        //System.print("(dt)")
+        cam.ApplyMotion(r, dt * u, dt * f)
+        //System.print("update game")
+        //System.print("(dt)")
+        //System.print("(r)")
+    
+  }
+
+  draw(din, event) {
+    System.print("draw game")
+  }
+}
+
+var Game = Main.new()
+System.print(". game")
+Entering the Thread Execution Environment 8960
+sglDdev_w32.c:686
+GL: INVAL_PARAMEntering the Thread Execution Environment 8316
+Loading file... <code/draw.xs>('E:/qwadro/afx//system//draw.xs')new game
+. game
+Setting up SimulationSetting up MaterialSetting up Mesh TopologySetting up Vertex DataSetting up MeshSetting up SkeletonSetting up ModelSetting up MotionSetting up AnimationSetting up MotorSetting up BodySetting up EntitySetting up LightSetting up CAD AssetSetting up RendererEntering the Thread Execution Environment 8960
+sglDdev_w32.c:283
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:712
+GL: INVAL_PARAMEntering the Thread Execution Environment 8316
+DOUT#000 readapted. 1.776903p 1.777778r 1.000000wDOUT#000 adjusted. <1279, 0.000000 of 719> <1, 0.000000 of 1279>Entering the Thread Execution Environment 8960
+sglDdev_w32.c:283
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:722
+GL: INVAL_PARAMEntering the Thread Execution Environment 8316
+DOUT#000 adjusted. <960, 0.000000 of 540> <2, 0.000000 of 960>Entering the Thread Execution Environment 8960
+sglDdev_w32.c:283
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMEntering the Thread Execution Environment 8316
+Setting up Vertex BufferUploading pipeline 'data/pipeline/test/test.xsh.xml'Loading file... <data/pipeline/test/test.xsh.xml>('E:/qwadro/afx//data//pipeline/test/test.xsh.xml')data/pipeline/test/test.vshdata/pipeline/test/test.xsh.xmlUploading pipeline 'data/pipeline/test/test.xsh.xml'Loading file... <data/pipeline/test/test.xsh.xml>('E:/qwadro/afx//data//pipeline/test/test.xsh.xml')Node 'DepthWriteEnabled' not handled.data/pipeline/test/test.fshOpening file... <data/pipeline/test/test.vsh>('E:/qwadro/afx//data//pipeline/test/test.vsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Entering the Thread Execution Environment 8960
+sglDdev_w32.c:724
+GL: INVAL_PARAMEntering the Thread Execution Environment 8316
+Opening file... <data/pipeline/test/test.fsh>('E:/qwadro/afx//data//pipeline/test/test.fsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1˙6Reloading file 2... <art/skybox/purple/right.tga>('E:/qwadro/afx//art//skybox/purple/right.tga')Entering the Thread Execution Environment 8960
+sglDdev_w32.c:283
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:728
+GL: INVAL_PARAMsglDdev_w32.c:135
+sglDdev_w32.c:135
+(rc == dpu->glrc)
+    InvalidEntering the Thread Execution Environment 6432
+0  - Generic SoftwareListing devices available with ALC_ENUMERATE_ALL_EXT0  - Generic Software on Alto-falantes (VIA HD Audio(Compatible))1  - Generic Software on Headphone (VIA HD Audio(Compatible))Listing available capture devices:0  - Mixagem estÈreo (VIA HD Audio(C1  - Microfone (VIA HD Audio(CompatiOpening file... <system/qwadroDeepNote>('E:/qwadro/afx//system//qwadroDeepNote'),1Entering the Thread Execution Environment 8316
+Reloading file 2... <art/skybox/purple/left.tga>('E:/qwadro/afx//art//skybox/purple/left.tga')Reloading file 2... <art/skybox/purple/bottom.tga>('E:/qwadro/afx//art//skybox/purple/bottom.tga')Reloading file 2... <art/skybox/purple/top.tga>('E:/qwadro/afx//art//skybox/purple/top.tga')Reloading file 2... <art/skybox/purple/front.tga>('E:/qwadro/afx//art//skybox/purple/front.tga')Reloading file 2... <art/skybox/purple/back.tga>('E:/qwadro/afx//art//skybox/purple/back.tga')Uploading pipeline 'data/pipeline/skybox/skybox.xsh.xml'Loading file... <data/pipeline/skybox/skybox.xsh.xml>('E:/qwadro/afx//data//pipeline/skybox/skybox.xsh.xml')data/pipeline/skybox/skybox.vshdata/pipeline/skybox/skybox.xsh.xmlUploading pipeline 'data/pipeline/skybox/skybox.xsh.xml'Loading file... <data/pipeline/skybox/skybox.xsh.xml>('E:/qwadro/afx//data//pipeline/skybox/skybox.xsh.xml')Node 'DepthWriteEnabled' not handled.data/pipeline/skybox/sampleOutRgbaCube.fshOpening file... <data/pipeline/skybox/skybox.vsh>('E:/qwadro/afx//data//pipeline/skybox/skybox.vsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/skybox/sampleOutRgbaCube.fsh>('E:/qwadro/afx//data//pipeline/skybox/sampleOutRgbaCube.fsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1¿ˆ7Uploading pipeline 'data/pipeline/body/body.xsh.xml?rigid'Loading file... <data/pipeline/body/body.xsh.xml>('E:/qwadro/afx//data//pipeline/body/body.xsh.xml')data/pipeline/body/rigidBody.vshdata/pipeline/body/body.xsh.xmlUploading pipeline 'data/pipeline/body/body.xsh.xml'Loading file... <data/pipeline/body/body.xsh.xml>('E:/qwadro/afx//data//pipeline/body/body.xsh.xml')Node 'DepthWriteEnabled' not handled.data/pipeline/body/body.fshOpening file... <data/pipeline/body/rigidBody.vsh>('E:/qwadro/afx//data//pipeline/body/rigidBody.vsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdObject.inc>('E:/qwadro/afx//data//pipeline/stdObject.inc'),1Opening file... <data/pipeline/body/body.fsh>('E:/qwadro/afx//data//pipeline/body/body.fsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdMaterial.inc>('E:/qwadro/afx//data//pipeline/stdMaterial.inc'),1∞-8Uploading pipeline 'data/pipeline/body/body.xsh.xml?skinned'Loading file... <data/pipeline/body/body.xsh.xml>('E:/qwadro/afx//data//pipeline/body/body.xsh.xml')data/pipeline/body/skinnedBody.vshdata/pipeline/body/body.xsh.xmlUploading pipeline 'data/pipeline/body/body.xsh.xml'Loading file... <data/pipeline/body/body.xsh.xml>('E:/qwadro/afx//data//pipeline/body/body.xsh.xml')Node 'DepthWriteEnabled' not handled.data/pipeline/body/body.fshOpening file... <data/pipeline/body/skinnedBody.vsh>('E:/qwadro/afx//data//pipeline/body/skinnedBody.vsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdObject.inc>('E:/qwadro/afx//data//pipeline/stdObject.inc'),1Opening file... <data/pipeline/body/body.fsh>('E:/qwadro/afx//data//pipeline/body/body.fsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdMaterial.inc>('E:/qwadro/afx//data//pipeline/stdMaterial.inc'),1`O8Uploading pipeline 'data/pipeline/testLighting/testLighting.xsh.xml?blinn'Loading file... <data/pipeline/testLighting/testLighting.xsh.xml>('E:/qwadro/afx//data//pipeline/testLighting/testLighting.xsh.xml')data/pipeline/testLighting/testLightingBlinn.vshdata/pipeline/testLighting/testLighting.xsh.xmlUploading pipeline 'data/pipeline/testLighting/testLighting.xsh.xml'Loading file... <data/pipeline/testLighting/testLighting.xsh.xml>('E:/qwadro/afx//data//pipeline/testLighting/testLighting.xsh.xml')Node 'DepthWriteEnabled' not handled.data/pipeline/testLighting/testLightingBlinn.fshOpening file... <data/pipeline/testLighting/testLightingBlinn.vsh>('E:/qwadro/afx//data//pipeline/testLighting/testLightingBlinn.vsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdObject.inc>('E:/qwadro/afx//data//pipeline/stdObject.inc'),1Opening file... <data/pipeline/testLighting/testLightingBlinn.fsh>('E:/qwadro/afx//data//pipeline/testLighting/testLightingBlinn.fsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdMaterial.inc>('E:/qwadro/afx//data//pipeline/stdMaterial.inc'),1Uploading pipeline 'data/pipeline/tutCamUtil/tutCamUtil.xsh.xml?tutCamUtil'Loading file... <data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>('E:/qwadro/afx//data//pipeline/tutCamUtil/tutCamUtil.xsh.xml')data/pipeline/tutCamUtil/tutCamUtilRigid.vshdata/pipeline/tutCamUtil/tutCamUtil.xsh.xmlUploading pipeline 'data/pipeline/tutCamUtil/tutCamUtil.xsh.xml'Loading file... <data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>('E:/qwadro/afx//data//pipeline/tutCamUtil/tutCamUtil.xsh.xml')Node 'DepthWriteEnabled' not handled.data/pipeline/tutCamUtil/tutCamUtil.fshOpening file... <data/pipeline/tutCamUtil/tutCamUtilRigid.vsh>('E:/qwadro/afx//data//pipeline/tutCamUtil/tutCamUtilRigid.vsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdObject.inc>('E:/qwadro/afx//data//pipeline/stdObject.inc'),1Opening file... <data/pipeline/tutCamUtil/tutCamUtil.fsh>('E:/qwadro/afx//data//pipeline/tutCamUtil/tutCamUtil.fsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Uploading pipeline 'data/pipeline/lighting/lighting.xsh.xml?lighting'Loading file... <data/pipeline/lighting/lighting.xsh.xml>('E:/qwadro/afx//data//pipeline/lighting/lighting.xsh.xml')data/pipeline/lighting/lighting.vshdata/pipeline/lighting/lighting.xsh.xmlNode 'Input' not handled.Node 'Input' not handled.Node 'Input' not handled.Uploading pipeline 'data/pipeline/lighting/lighting.xsh.xml'Loading file... <data/pipeline/lighting/lighting.xsh.xml>('E:/qwadro/afx//data//pipeline/lighting/lighting.xsh.xml')Node 'DepthWriteEnabled' not handled.data/pipeline/lighting/lighting.fshOpening file... <data/pipeline/lighting/lighting.vsh>('E:/qwadro/afx//data//pipeline/lighting/lighting.vsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdObject.inc>('E:/qwadro/afx//data//pipeline/stdObject.inc'),1Opening file... <data/pipeline/lighting/lighting.fsh>('E:/qwadro/afx//data//pipeline/lighting/lighting.fsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdMaterial.inc>('E:/qwadro/afx//data//pipeline/stdMaterial.inc'),1afxGranny2Model.c:239
+afxGranny2Model.c:239
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:239
+afxGranny2Model.c:239
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:239
+afxGranny2Model.c:239
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:239
+afxGranny2Model.c:239
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:239
+afxGranny2Model.c:239
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidafxGranny2Model.c:239
+afxGranny2Model.c:239
+(Bone->LocalTransform.Flags == t.flags)
+    InvalidSkeleton <Bone_main> assembled. 08394870
+    Listing 10 joints:	0 <Bone_main> -1	1 <Mill> 0	2 <Bone_hitpointbar> 0	3 <Bone_Upper_mill> 0	4 <Upper Mill> 3	5 <Bone_Flag_Civ> 3	6 <Bone_Mill_Blades> 3	7 <Mill Blades> 6	8 <Bone_Mill_Wheel> 3	9 <Mill Wheel> 8Model <Bone_main> assembled. 08398fc0
+    10 joints for 4 rigged meshes.
+Mesh topology 083bea20 built. With 139 triangles (2 bytes per index) arranged in 1 surfaces.Rigid Mesh <Mill> assembled. 083beba0
+    524 vertices with 3 attributes.
+    139 triangles (2 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases:
+    0 <Mill> 0Mesh topology 083beab8 built. With 126 triangles (2 bytes per index) arranged in 2 surfaces.Rigid Mesh <Upper Mill> assembled. 083bec1c
+    472 vertices with 3 attributes.
+    126 triangles (2 bytes per index) arranged in 2 surfaces.
+    Listing 1 biases:
+    0 <Upper Mill> 0Mesh topology 083bbe60 built. With 70 triangles (2 bytes per index) arranged in 1 surfaces.Rigid Mesh <Mill Blades> assembled. 083b8510
+    278 vertices with 3 attributes.
+    70 triangles (2 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases:
+    0 <Mill Blades> 0Mesh topology 083bbef8 built. With 20 triangles (1 bytes per index) arranged in 1 surfaces.Rigid Mesh <Mill Wheel> assembled. 083b858c
+    58 vertices with 3 attributes.
+    20 triangles (1 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases:
+    0 <Mill Wheel> 0Motion <Bone_main> assembled. 08408760
+    Listing 6 transform circuits:	0 <Bone_Flag_Civ> cdcdcdcd	1 <Bone_Mill_Blades> cdcdcdcd	2 <Bone_Mill_Wheel> cdcdcdcd	3 <Bone_Upper_mill> cdcdcdcd	4 <Bone_hitpointbar> cdcdcdcd	5 <Bone_main> cdcdcdcdMesh topology 08399f20 built. With 12 triangles (4 bytes per index) arranged in 1 surfaces.Rigid Mesh <> assembled. 0839a0a0
+    24 vertices with 3 attributes.
+    12 triangles (1 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases:
+    0 <> 0afxModel.c:223
+Pivot '' not found in the destination skeleton.Model <cube> assembled. 083990a0
+    10 joints for 1 rigged meshes.
+Opening file... <tmp/test.skl>('E:/qwadro/afx//tmp//test.skl'),2afxStream.c:347
+afxStream.c:347
+(cur == iob->idd.m.posn)
+    InvalidafxStream.c:347
+afxStream.c:347
+(cur == iob->idd.m.posn)
+    InvalidOpening file... <tmp/test.skl>('E:/qwadro/afx//tmp//test.skl'),1afxHandle<005a9350>::InstallEventFilter(0839a1e0)Entering the Thread Execution Environment 8960
+sglDdev_w32.c:111
+afxRaster 08340fa0 hardware-side data instanced. Target de1, format 8058, whd [960,540,1]afxRaster 0847cba0 hardware-side data instanced. Target de1, format 81a6, whd [960,540,1]afxCanvas 08479180 hardware-side data instanced.sglBufOps.c:99
+sglBufOps.c:99
+(cmd->buf->glAccess & glAccess)
+    InvalidafxBuffer 08352960 hardware-side data instanced. glTarget 35345, glHandle 1, offset 0, range 2112, stride 0, usage 500Opening file... <data/pipeline/testLighting/testLightingBlinn.vsh>('E:/qwadro/afx//data//pipeline/testLighting/testLightingBlinn.vsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdObject.inc>('E:/qwadro/afx//data//pipeline/stdObject.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(3, 0, sgl_obj)
+{
+    mat4 m;
+    mat4 w[32];
+};
+
+IN(0, vec3, in_pos);
+IN(3, vec3, in_nrm);
+
+out block
+{
+    vec4 posn;
+    vec3 nrm;
+} sgl_out;
+
+void main()
+{
+    sgl_out.posn = v * m * vec4(in_pos, 1);
+    mat3 n = mat3(transpose(inverse(m))); // gambiarra
+    sgl_out.nrm = normalize(n * in_nrm);
+
+    gl_Position = p * v * m * vec4(in_pos, 1);
+}
+Opening file... <data/pipeline/testLighting/testLightingBlinn.fsh>('E:/qwadro/afx//data//pipeline/testLighting/testLightingBlinn.fsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1Opening file... <data/pipeline/stdMaterial.inc>('E:/qwadro/afx//data//pipeline/stdMaterial.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(2, 0, sgl_mtl)
+{
+    vec3  Kd;
+    vec3  Ks;
+    float Ns;
+    float d;
+    float Ni;
+    int   illum;
+};
+
+in block
+{
+    vec4 posn;
+    vec3 nrm;
+} sgl_in;
+
+OUT(0, vec4, out_rgba0);
+
+vec4 litSrc0Pos = vec4(100, 1000, 0, 1);
+vec4 litProd0Ambi = vec4(0.1, 0.1, 0.1, 1);
+vec4 litProd0Diff = vec4(0.9, 0.8, 0.7, 1);
+vec4 litProd0Spec = vec4(0.1, 0.1, 0.1, 1);
+vec4 litModelAmbi = vec4(1, 1, 1, 1);
+vec4 mtlAmbi = vec4(0.1, 0.1, 0.1, 1);
+float mltShinisses = 10;
+
+void main (void)
+{ 
+    // calculate light diffusion
+    vec3 light = normalize(litSrc0Pos.xyz - sgl_in.posn.xyz); 
+    vec3 view = normalize(-sgl_in.posn.xyz); 
+    vec3 normal = normalize(sgl_in.nrm); 
+
+    // calculate ambience
+    vec4 ambient = litProd0Ambi;
+    vec4 global = mtlAmbi * litModelAmbi;
+
+    // get vector to light
+    vec4 diffuse = litProd0Diff * max(dot(sgl_in.nrm, light), 0.0);
+    diffuse = clamp(diffuse, 0.0, 1.0);
+
+    // Blinn specular variation
+    vec3 halfDir = normalize(light + view);
+    float spec = pow(max(dot(normal, halfDir), 0.0), mltShinisses * 0.2);
+    vec4 specular = litProd0Spec * spec;
+    specular = clamp(specular, 0.0, 1.0);
+
+    // do calculations on every fragment
+    out_rgba0 = global + ambient + diffuse + specular;
+}
+afxPipeline 08384d80 hardware-side data instanced.afxBuffer 083529d4 hardware-side data instanced. glTarget 34962, glHandle 2, offset 0, range 6336, stride 12, usage 88e4afxBuffer 08352bd0 hardware-side data instanced. glTarget 34963, glHandle 3, offset 0, range 834, stride 2, usage 88e4afxBuffer 08352764 hardware-side data instanced. glTarget 35345, glHandle 4, offset 0, range 0, stride 0, usage 88e8afxBuffer 08352c44 hardware-side data instanced. glTarget 34962, glHandle 5, offset 0, range 5696, stride 12, usage 88e4afxBuffer 08352d00 hardware-side data instanced. glTarget 34963, glHandle 6, offset 0, range 756, stride 2, usage 88e4afxBuffer 08352d74 hardware-side data instanced. glTarget 34962, glHandle 7, offset 0, range 3392, stride 12, usage 88e4afxBuffer 08352e40 hardware-side data instanced. glTarget 34963, glHandle 8, offset 0, range 420, stride 2, usage 88e4afxBuffer 08352eb4 hardware-side data instanced. glTarget 34962, glHandle 9, offset 0, range 704, stride 12, usage 88e4afxBuffer 08352f70 hardware-side data instanced. glTarget 34963, glHandle 10, offset 0, range 60, stride 1, usage 88e4Opening file... <data/pipeline/test/test.vsh>('E:/qwadro/afx//data//pipeline/test/test.vsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+IN(0, vec3, a_xyz);
+
+void main()
+{
+    vec4 pos = p * v * vec4(a_xyz, 1.0);
+    gl_Position = pos;
+}
+Opening file... <data/pipeline/test/test.fsh>('E:/qwadro/afx//data//pipeline/test/test.fsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = vec4(0.5, 0.5, 0.5, 1.0);
+}
+afxPipeline 08358130 hardware-side data instanced.afxBuffer 08352340 hardware-side data instanced. glTarget 34962, glHandle 11, offset 0, range 0, stride 12, usage 88e4afxBuffer 083523b4 hardware-side data instanced. glTarget 34963, glHandle 12, offset 0, range 24, stride 4, usage 88e4Opening file... <data/pipeline/skybox/skybox.vsh>('E:/qwadro/afx//data//pipeline/skybox/skybox.vsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1Opening file... <data/pipeline/stdView.inc>('E:/qwadro/afx//data//pipeline/stdView.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+IN(0, vec3, a_xyz);
+
+const vec3 points[] =
+{
+    {-1.0, 1.0,-1.0 },
+    {-1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0, 1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+
+    {-1.0,-1.0, 1.0 },
+    {-1.0,-1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+    {-1.0, 1.0, 1.0 },
+    {-1.0,-1.0, 1.0 },
+
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+
+    {-1.0,-1.0, 1.0 },
+    {-1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0,-1.0, 1.0 },
+    {-1.0,-1.0, 1.0 },
+
+    {-1.0, 1.0,-1.0 },
+    { 1.0, 1.0,-1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    {-1.0, 1.0, 1.0 },
+    {-1.0, 1.0,-1.0 },
+
+    {-1.0,-1.0,-1.0 },
+    {-1.0,-1.0, 1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    {-1.0,-1.0, 1.0 },
+    { 1.0,-1.0, 1.0 }
+};
+
+out block
+{
+    vec3 uvw0;
+} sgl_v;
+
+void main()
+{
+    vec3 xyz = points[gl_VertexID];
+    sgl_v.uvw0 = xyz;
+    
+    // Convert cubemap coordinates into Vulkan coordinate space
+    sgl_v.uvw0.xy *= -1.0;
+    
+    // Remove translation from view matrix
+    vec4 pos = p * mat4(mat3(v)) * vec4(xyz, 1.0);
+    
+    gl_Position = pos.xyww;
+}
+Opening file... <data/pipeline/skybox/sampleOutRgbaCube.fsh>('E:/qwadro/afx//data//pipeline/skybox/sampleOutRgbaCube.fsh'),1Opening file... <data/pipeline/stdEnv.inc>('E:/qwadro/afx//data//pipeline/stdEnv.inc'),1#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+SAMPLING_UNIT(0, 1, samplerCube, samp);
+
+in block
+{
+    vec3 uvw0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = texture(samp, sgl_v.uvw0);
+}
+afxPipeline 08358210 hardware-side data instanced.afxBuffer 08352480 hardware-side data instanced. glTarget 34962, glHandle 13, offset 0, range 0, stride 12, usage 88e4afxRaster 0847cc70 hardware-side data instanced. Target 8513, format 8051, whd [2048,2048,1]afxSampler 0835ff90 hardware-side data instanced.sglBufOps.c:99
+sglBufOps.c:99
+(cmd->buf->glAccess & glAccess)
+    InvalidafxBuffer 083526f0 hardware-side data instanced. glTarget 35345, glHandle 14, offset 0, range 2112, stride 0, usage 500afxBuffer 083524f4 hardware-side data instanced. glTarget 35345, glHandle 15, offset 0, range 0, stride 0, usage 88e8Entering the Thread Execution Environment 8316
+DOUT#000 adjusted. <1920, 0.000000 of 1022> <1, 0.000000 of 1920>Entering the Thread Execution Environment 8960
+afxRaster 08340fa0 hardware-side data instanced. Target de1, format 8058, whd [1920,1022,1]afxRaster 0847cba0 hardware-side data instanced. Target de1, format 81a6, whd [1920,1022,1]afxCanvas 048432b0 hardware-side data instanced.Entering the Thread Execution Environment 8316
+DOUT#000 adjusted. <960, 0.000000 of 540> <2, 0.000000 of 960>Entering the Thread Execution Environment 8960
+sglCanv.c:102
+sglCanv.c:102
+(!bound)
+    InvalidafxRaster 08340fa0 hardware-side data instanced. Target de1, format 8058, whd [960,540,1]afxRaster 0847cba0 hardware-side data instanced. Target de1, format 81a6, whd [960,540,1]afxCanvas 048432b0 hardware-side data instanced.sglDdev_w32.c:283
+API ERROR HIGH 1282 GL error GL_INVALID_OPERATIONsglDxge_w32.c:203
+GL: INVAL_OP

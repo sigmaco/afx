@@ -84,13 +84,16 @@ _AMX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
     {
         AfxAssertObjects(1, &tex, afxFcc_RAS);
 
-        afxDrawInput din = AfxGetParent(mtl);
+        afxDrawInput din = AfxGetProvider(mtl);
         AfxAssertObjects(1, &din, afxFcc_DIN);
 
         afxDrawContext dctx;
         AfxGetDrawInputContext(din, &dctx);
 
-        if (AfxLoadRasters(dctx, afxRasterUsage_SAMPLING, NIL, 1, tex, &mtl->tex)) AfxThrowError();
+        afxRasterInfo rasi = { 0 };
+        rasi.usage = afxRasterUsage_SAMPLING;
+
+        if (AfxLoadRasters(dctx, 1, &rasi, &tex[0], &mtl->tex)) AfxThrowError();
         else
         {
             AfxAssertObjects(1, &mtl->tex, afxFcc_RAS);

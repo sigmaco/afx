@@ -299,7 +299,7 @@ _AVX afxCmdId AvxCmdAdjustCurtains(avxCmdb cmdb, afxNat baseIdx, afxNat cnt, afx
     return cmdb->stdCmds->razr.AdjustCurtains(cmdb, baseIdx, cnt, rects);
 }
 
-_AVX afxCmdId AvxCmdBeginDrawScope(avxCmdb cmdb, avxSynthesisConfig const* cfg)
+_AVX afxCmdId AvxCmdCommenceDrawScope(avxCmdb cmdb, avxDrawScope const* cfg)
 {
     afxError err = AFX_ERR_NONE;
     /// cmdb must be a valid avxCmdb handle.
@@ -311,9 +311,9 @@ _AVX afxCmdId AvxCmdBeginDrawScope(avxCmdb cmdb, avxSynthesisConfig const* cfg)
     /// This command must only be called outside of a video coding scope.
     AfxAssert(!cmdb->inVideoCoding);
     
-    /// cfg must be a valid pointer to a valid avxSynthesisConfig structure.
+    /// cfg must be a valid pointer to a valid avxDrawScope structure.
     AfxAssert(cfg);
-    avxSynthesisConfig cfg2 = *cfg;
+    avxDrawScope cfg2 = *cfg;
     avxCanvas canv = cfg->canv;
 
     if (canv)
@@ -350,10 +350,10 @@ _AVX afxCmdId AvxCmdBeginDrawScope(avxCmdb cmdb, avxSynthesisConfig const* cfg)
         AfxAssertBounds(cfg->rasters[i].storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
     }
 
-    return cmdb->stdCmds->razr.BeginDrawScope(cmdb, &cfg2);
+    return cmdb->stdCmds->razr.CommenceDrawScope(cmdb, &cfg2);
 }
 
-_AVX afxCmdId AvxCmdEndDrawScope(avxCmdb cmdb)
+_AVX afxCmdId AvxCmdConcludeDrawScope(avxCmdb cmdb)
 {
     afxError err = AFX_ERR_NONE;
     /// cmdb must be a valid avxCmdb handle.
@@ -365,7 +365,7 @@ _AVX afxCmdId AvxCmdEndDrawScope(avxCmdb cmdb)
     /// This command must only be called outside of a video coding scope.
     AfxAssert(!cmdb->inVideoCoding);
 
-    return cmdb->stdCmds->razr.EndDrawScope(cmdb);
+    return cmdb->stdCmds->razr.ConcludeDrawScope(cmdb);
 }
 
 _AVX afxCmdId AvxCmdNextPass(avxCmdb cmdb, afxBool useAuxScripts)

@@ -181,11 +181,11 @@ AMX afxError    AkxCmdDrawBodies(avxCmdb cmdb, akxRenderer rnd, afxReal dt, afxN
 AMX afxError    AkxCmdDrawTestIndexed(avxCmdb cmdb, akxRenderer rnd);
 
 
-AMX afxError    AfxBufferizeMeshTopology(afxDrawInput din, afxMeshTopology msht);
+AMX afxError    AfxBufferizeMesh(afxDrawInput din, afxMesh msh);
 
-AMX afxError    AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd);
+AMX afxError    AkxBufferizeVertexData(afxDrawInput din, afxGeometry vtd);
 
-AMX afxError    AkxCmdBindVertexDataCache(avxCmdb cmdb, afxNat slotIdx, akxVertexData vtd);
+AMX afxError    AkxCmdBindVertexDataCache(avxCmdb cmdb, afxNat slotIdx, afxGeometry vtd);
 
 AMX afxError    AkxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation sim, avxCmdb cmdb);
 

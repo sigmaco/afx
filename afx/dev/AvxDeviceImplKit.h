@@ -23,8 +23,8 @@
 #ifndef AVX_DEVICE_IMPL_KIT_H
 #define AVX_DEVICE_IMPL_KIT_H
 
-#include "../dev/afxDevCoreBase.h"
-#include "qwadro/inc/draw/dev/afxDrawSystem.h"
+#include "../dev/afxExecImplKit.h"
+#include "qwadro/inc/draw/afxDrawSystem.h"
 #include "qwadro/inc/mem/afxInterlockedQueue.h"
 #include "qwadro/inc/mem/afxSlabAllocator.h"
 
@@ -70,6 +70,7 @@ AFX_OBJECT(afxDrawDevice)
     avxClipSpace        clipSpace;
 
     afxClass            dthrCls;
+    afxClass            dqueCls;
     afxClass            dexuCls;
     afxClass            dctxCls;
     afxClass            doutCls;
@@ -94,6 +95,7 @@ AFX_OBJECT(_avxDrawQueue)
 AFX_OBJECT(afxDrawQueue)
 #endif
 {
+    afxNat          portId;
     afxDrawBridge   dexu; // owner bridge
     afxDrawContext  dctx; // owner context
     afxBool         immediate; // 0 = deferred, 1 = immediate
@@ -114,6 +116,11 @@ AFX_OBJECT(afxDrawQueue)
     afxQueue        cmdbRecycQue;
     afxSlock        cmdbReqLock;
     afxBool         cmdbLockedForReq;
+
+    afxError        (*waitCb)(afxDrawQueue,afxTime);
+    afxError        (*submitCb)(afxDrawQueue, avxSubmission const*, afxNat, avxCmdb[]);
+    afxError        (*transferCb)(afxDrawQueue, avxTransference const*, afxNat, void const*);
+    afxError        (*submCb)(afxDrawQueue, afxFence fenc, afxNat cnt, avxQueueOp const req[]);
 };
 #endif//_AVX_DRAW_QUEUE_C
 
@@ -126,18 +133,13 @@ AFX_OBJECT(afxDrawBridge)
 {
     afxDrawContext  dctx; // owner
     afxNat          exuIdx;
-    afxNat          portIdx;
+    afxNat          portId;
+    
+    afxNat          baseQueIdx; // indexed in draw context's queue array.
     afxNat          queCnt; // common queues? (non-private)
-    afxDrawQueue*   queues;
-
-    afxChain        classes;
-    afxClass        dqueCls;
-
+    
     afxError        (*waitCb)(afxDrawBridge, afxNat);
     afxError        (*pingCb)(afxDrawBridge, afxNat);
-    afxNat          (*submitCb)(afxDrawBridge, avxSubmission const*, afxNat, avxCmdb[]);
-    afxNat          (*transferCb)(afxDrawBridge, avxTransference const*, afxNat, void const*);
-    afxNat          (*submCb)(afxDrawBridge dexu, afxFence fenc, afxNat cnt, avxQueueOp const req[]);
 };
 #endif//_AVX_DRAW_BRIDGE_C
 
@@ -151,15 +153,16 @@ AFX_OBJECT(_avxDrawContext)
 AFX_OBJECT(afxDrawContext)
 #endif
 {
-    AFX_OBJECT(afxContext) ctx;
-    afxBool running;
+    AFX_OBJ(afxContext) ctx;
+    afxBool             running;
+    afxNat              exuCnt;
+    afxDrawBridge*      exus;
+    afxNat              queCnt;
+    afxDrawQueue*       queues;
+    afxChain            inputs;
+    afxChain            outputs;
+
     afxArena aren;
-
-    afxNat exuCnt;
-    afxDrawBridge* exus;
-
-    afxChain inputs;
-    afxChain outputs;
 
     //afxChain classes;
     afxClass bufCls;
@@ -181,7 +184,7 @@ AFX_OBJECT(afxDrawContext)
 
     avxClipSpace clipSpace;
 
-    afxError(*waitCb)(afxDrawContext);
+    afxError(*waitCb)(afxDrawContext,afxTime);
 
     struct _afxDctxIdd* idd;
     void* udd; // user-defined data
@@ -237,10 +240,10 @@ AFX_OBJECT(afxDrawOutput)
     afxReal64           wwOverHw; // window w/h
     afxBool             resizing;
     avxColorSpace       colorSpc; // raster color space. sRGB is the default.    
-    afxPixelFormat      pixelFmt; // pixel format of raster surfaces.
+    avxFormat           pixelFmt; // pixel format of raster surfaces.
     afxRasterUsage      bufUsage; // raster usage
     afxRasterFlags      bufFlags; // raster flags. What evil things we will do with it?
-    afxPixelFormat      pixelFmtDs[2]; // pixel format for depth/stencil. D24/S8/D24S8
+    avxFormat           pixelFmtDs[2]; // pixel format for depth/stencil. D24/S8/D24S8
     afxRasterUsage      bufUsageDs[2]; // raster usage for depth/stencil
     afxRasterFlags      bufFlagsDs[2]; // raster flags for depth/stencil
 
@@ -252,7 +255,7 @@ AFX_OBJECT(afxDrawOutput)
 
     afxError            (*lockCb)(afxDrawOutput, afxTime timeout, afxNat*bufIdx);
     afxError            (*unlockCb)(afxDrawOutput, afxNat cnt, afxNat const bufIdx[]);
-    afxError            (*presentCb)(afxDrawOutput,afxNat bufIdx,afxSize unk);
+    afxError            (*presentCb)(afxDrawOutput,afxNat bufIdx, afxNat queCnt, afxDrawQueue queues[]);
 
     // endpoint
     afxVideoEndpoint    endp;
@@ -311,12 +314,12 @@ AFX_OBJECT(afxDrawInput)
     afxClass            camCls;
     afxClass            dtecCls;
     afxClass            txdCls;
+    afxClass            texCls;
     afxClass            ibuffers;
     afxClass            vbuffers;
     
     afxClass            mshCls;
-    afxClass            vtdCls;
-    afxClass            mshtCls;
+    afxClass            geomCls;
 
     void*               vbMgr;
 
@@ -346,18 +349,19 @@ AVX afxClassConfig const _AvxDexuStdImplementation;
 AVX afxClassConfig const _AvxDctxStdImplementation;
 AVX afxClassConfig const _AvxCmdbStdImplementation;
 
-AVX afxClass const* _AvxGetDrawQueueClass(afxDrawBridge dexu);
+AVX afxClass const* _AvxGetDrawQueueClass(afxDrawDevice ddev);
 AVX afxClass const* _AvxGetDrawBridgeClass(afxDrawDevice ddev);
 AVX afxClass const* _AvxGetDrawThreadClass(afxDrawDevice ddev);
 //AVX afxNat _AvxCountDrawQueues(afxDrawBridge dexu, afxNat baseQueIdx);
-AVX afxBool _AvxGetDrawQueue(afxDrawBridge dexu, afxNat queIdx, afxDrawQueue* queue);
-AVX afxError _AvxWaitForIdleDrawQueue(afxDrawBridge dexu, afxNat queIdx);
-AVX afxError _AvxWaitForIdleDrawBridge(afxDrawBridge dexu);
+AVX afxError _AvxWaitForEmptyDrawQueue(afxDrawQueue dque, afxTime timeout);
+AVX afxError _AvxWaitForIdleDrawBridge(afxDrawBridge dexu, afxTime timeout);
 
-AVX afxError _AvxRegisterDrawDevices(afxDriver icd, afxNat cnt, afxDrawDeviceInfo const infos[], afxDrawDevice devices[]);
+AVX afxClass const* _AvxGetDrawBatchClass(afxDrawQueue dque);
+
+AVX afxError _AvxRegisterDrawDevices(afxModule icd, afxNat cnt, afxDrawDeviceInfo const infos[], afxDrawDevice devices[]);
 
 AVX afxError _AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd const whd);
-AVX afxError _AvxPresentDrawOutput(afxDrawOutput dout, afxNat bufIdx, afxSize unk);
+AVX afxError _AvxPresentDrawOutput(afxDrawOutput dout, afxNat bufIdx, afxNat queCnt, afxDrawQueue queues[]);
 
 AVX afxClassConfig const _AvxDqueStdImplementation;
 AVX afxClassConfig const _AvxDexuStdImplementation;

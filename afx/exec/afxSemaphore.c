@@ -20,13 +20,13 @@
 #define _AFX_DEVICE_C
 #define _AFX_CONTEXT_C
 #define _AFX_SEMAPHORE_C
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 _AFX void* AfxGetSemaphoreContext(afxSemaphore sem)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sem, afxFcc_SEM);
-    void* ctx = AfxGetParent(sem);
+    void* ctx = AfxGetProvider(sem);
     //AfxAssertObjects(1, &ctx, afxFcc_CTX);
     return ctx;
 }

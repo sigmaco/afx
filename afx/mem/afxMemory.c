@@ -26,7 +26,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_MMU_C
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 typedef struct _afxArbitraryChunk
 {
@@ -338,10 +338,25 @@ _AFX afxError AfxMemoryEnableDebugging(afxMmu mmu, afxNat level)
     return err;
 }
 
+_AFX afxError AfxMapMemory(afxMemory mem, afxSize offset, afxNat range, afxFlags flags, void** var)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &mem, afxFcc_MMU);
+
+    return err;
+}
+
+_AFX afxError AfxUnmapMemory(afxMemory mem, afxSize offset, afxNat range)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &mem, afxFcc_MMU);
+
+    return err;
+}
+
 _AFX afxError _AfxMmuCtor(afxMmu mmu, void** args, afxNat invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     afxAllocationStrategy const *as = args[0] ? ((afxAllocationStrategy const*)args[0]) + invokeNo : NIL;
@@ -384,7 +399,6 @@ _AFX afxError _AfxMmuCtor(afxMmu mmu, void** args, afxNat invokeNo)
 _AFX afxError _AfxMmuDtor(afxMmu mmu)
 {
     afxError err = AFX_ERR_NONE;
-
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     mmu->dbgLevel = 3;
@@ -410,18 +424,42 @@ _AFX afxClassConfig const _AfxMmuMgrCfg =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireMmus(afxNat cnt, afxHere const hint, afxAllocationStrategy const strategy[], afxMmu mmus[])
+_AFX afxError AfxAcquireMemory(afxMemoryFlags flags, afxSize siz, afxUri const* uri, afxHere const hint, afxMemory* memory)
 {
     afxError err = AFX_ERR_NONE;
 
     afxClass* cls = AfxGetMmuClass();
     AfxAssertClass(cls, afxFcc_MMU);
+    afxMemory mem = NIL;
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)mmus, (void const*[]) { strategy, hint }))
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&mem, (void const*[]) { NIL, &siz, hint }))
         AfxThrowError();
 
     return err;
 }
+
+_AFX afxError AfxOpenMemory(afxMemoryFlags flags, afxUri const* uri, afxHere const hint, afxMemory* memory)
+{
+    afxError err = AFX_ERR_NONE;
+
+    return err;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // MEMORY API
 

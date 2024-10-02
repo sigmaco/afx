@@ -1,0 +1,42 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 0fbe093c by 00000000 over 00000000 with 0fbdd770)
+ ERR afxClass.c:663?AfxIdentifyObject
+  
+ ERR afxClass.c:663?AfxIdentifyObject
+  (pool)
+    Invalid
+ ERR afxClass.c:728?AfxAcquireObjects
+  
+ ERR afxClass.c:728?AfxAcquireObjects
+  (idx == AfxIdentifyObject(obj[i]))
+    Invalid
+ ERR afxSystem.c:1264?AfxBootUpBasicIoSystem
+  
+ ERR mmplayer.c:282?main
+  
+ ERR mmplayer.c:282?main
+  (((afxResult)(1)) == _AfxAssertObjects((1), (afxHandle const*)(&sys),(AFX_FCC_SYS)))
+    Invalid
+ afxContext.c:209
+  AfxAcquireContexts(cnt=10,app=0031f520,strategy=00000000)
+ ERR afxContext.c:214?AfxAcquireContexts
+  
+ ERR afxContext.c:214?AfxAcquireContexts
+  (((afxResult)(1)) == _AfxAssertObjects((1), (afxHandle const*)(&sys),(AFX_FCC_SYS)))
+    Invalid

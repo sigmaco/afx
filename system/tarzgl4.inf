@@ -1,0 +1,57 @@
+[Qwadro.Icd]
+DriverDate=2024/05/08
+DriverVer=4.0.16385
+Vendor=SIGMA Technology Group
+Href=https://sigmaco.org
+FeatureScore=1
+Service=video
+DllFile=tarzgl4.dll
+Devices=Icd.Devices
+
+[Icd.Devices]
+=Device.Targl3
+=Device.Targl4
+=Device.Magma
+
+[Device.Targl3]
+Class=DRAW
+Description=Truecolor Advanced Raster Graphics Accelerator
+PortCount=1
+Ports=Targa.Ports
+; device internal
+GlVerMajor=3
+GlVerMinor=2
+GlslVer=400 core
+RobustContext=1
+DebugContext=1
+DebugOutput=1
+DebugOutputSync=1
+HwAccelarationPrefered=1
+HwAccelerationRequired=1
+EchoSymbols=1
+EchoSymbolsWsi=1
+OpenglDll=opengl32.dll
+DpuCount=1
+
+[Device.Targl4]
+Class=DRAW
+Description=Truecolor Advanced Raster Graphics Accelerator
+PortCount=1
+Ports=Targa.Ports
+; device internal
+GlVerMajor=4
+GlVerMinor=0
+GlslVer=400 core
+RobustContext=1
+DebugContext=1
+DebugOutput=1
+DebugOutputSync=1
+HwAccelarationPrefered=1
+HwAccelerationRequired=1
+EchoSymbols=1
+EchoSymbolsWsi=1
+OpenglDll=opengl32.dll
+DpuCount=1
+
+[Targa.Ports]
+=Targa.Port0

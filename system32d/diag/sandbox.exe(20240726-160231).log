@@ -1,0 +1,31 @@
+Booting up...
+Acquiring thread...  5508 "afxSystem_w32.c:433"Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\afx\system'),5Mounting... <//./z/>('E:\qwadro\afx\system32'),7Mounting... <//./z/>('E:\qwadro\afx\system32d'),7Mounting... <//./c/>('C:\'),7Mounting... <//./e/>('E:\'),7Mounting... <//./f/>('F:\'),7Mounting... <//./g/>('G:\'),7Mounting... <//./h/>('H:\'),7Mounting... <//./i/>('I:\'),7Loading module... <e2coree>Memory Page Size: 4096HW Threading Capacity: 2Doing the AVX start up...Loading module... <e2draw>Doing the AMX start up...Loading module... <e2sim>Doing the ASX start up...Loading module... <e2sound>Doing the AUX start up...Loading module... <e2mmux>Loading installable client driver... <amigal1.dll>	<//./amigal1/>("amigal1")
+	Accoustics Immersion Accelerator 0.1.1514
+	SIGMA Technology Group <https://sigmaco.org>
+Loading installable client driver... <emathya.dll>afxDevice.c:95
+	<//./emathya/>("emathya")
+	Math Computation Accelerator 0.1.2
+	SIGMA Technology Group <https://sigmaco.org>
+Loading installable client driver... <sh4dwin.dll>afxDevice.c:95
+Mounting... <//./d/>('E:\qwadro\afx\system'),7	<//./dwm/>("sh4dwin")
+	Desktop Window Manager 0.1.2
+	SIGMA Technology Group <https://sigmaco.org>
+	<//./kbd/>("sh4dwin")
+	HID Keyboard 0.1.2
+	SIGMA Technology Group <https://sigmaco.org>
+	<//./mse/>("sh4dwin")
+	HID Mouse 0.1.2
+	SIGMA Technology Group <https://sigmaco.org>
+	<//./gpad/>("sh4dwin")
+	HID Gamepad 0.1.2
+	SIGMA Technology Group <https://sigmaco.org>
+Loading installable client driver... <targl4.dll>afxDrawSystem.c:459
+afxClass.c:682
+afxClass.c:740
+afxDrawSystem.c:459
+afxClass.c:682
+afxClass.c:740
+afxClass.c:1091
+afxClass.c:1091
+(hdr)
+    Invalid

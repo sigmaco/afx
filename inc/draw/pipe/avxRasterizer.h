@@ -134,7 +134,7 @@ AFX_DEFINE_STRUCT(avxColorBlendConfig)
 
 AFX_DEFINE_STRUCT(avxColorOutputChannel)
 {
-    afxPixelFormat          fmt; /// Surface format compatible with pixel output.
+    avxFormat               fmt; /// Surface format compatible with pixel output.
     afxBool                 blendEnabled; /// controls whether blending is enabled for the corresponding color attachment. If blending is not enabled, the source fragment’s color for that attachment is passed through unmodified. FALSE
     avxColorBlendConfig     blendConfig; /// Describes how the color or alpha components of a fragment are blended.
     avxRgbaMask             discardMask; /// NIL = write all
@@ -187,7 +187,7 @@ AFX_DEFINE_STRUCT(avxRasterizationConfig)
     afxBool                 depthTestEnabled; /// controls whether depth testing is enabled. FALSE
     avxCompareOp            depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. avxCompareOp_LESS
     afxBool                 depthWriteDisabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. FALSE
-    afxPixelFormat          dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
+    avxFormat               dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
     // depth bounds test
     afxBool                 depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled.
     afxV2d                  depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]

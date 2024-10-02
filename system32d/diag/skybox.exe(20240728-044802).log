@@ -1,0 +1,118 @@
+Booting up...
+Acquiring thread...  4132 "afxSystem_w32.c:432"Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\afx\system'),5Mounting... <//./z/>('E:\qwadro\afx\system32'),7Mounting... <//./z/>('E:\qwadro\afx\system32d'),7Mounting... <//./c/>('C:\'),7Mounting... <//./e/>('E:\'),7Mounting... <//./f/>('F:\'),7Mounting... <//./g/>('G:\'),7Mounting... <//./h/>('H:\'),7Mounting... <//./i/>('I:\'),7Loading module... <e2coree>Memory Page Size: 4096HW Threading Capacity: 2Doing the AVX start up...Loading module... <e2vgi>Doing the AMX start up...Loading module... <e2pragma>Doing the ASX start up...Loading module... <e2sound>Doing the AUX start up...Loading module... <e2mmux>Loading installable client driver... <amigal1.dll>	<//./amigal1/>("amigal1")
+	Accoustics Immersion Accelerator 0.1.1514
+	SIGMA Technology Group <https://sigmaco.org>
+Loading installable client driver... <emathya.dll>afxDevice.c:95
+	<//./emathya/>("emathya")
+	Math Computation Accelerator 0.1.2
+	SIGMA Technology Group <https://sigmaco.org>
+Loading installable client driver... <sh4dwin.dll>afxDevice.c:95
+Mounting... <//./d/>('E:\qwadro\afx\system'),7	<//./dwm/>("sh4dwin")
+	Desktop Window Manager 0.1.2
+	SIGMA Technology Group <https://sigmaco.org>
+	<//./kbd/>("sh4dwin")
+	HID Keyboard 0.1.2
+	SIGMA Technology Group <https://sigmaco.org>
+	<//./mse/>("sh4dwin")
+	HID Mouse 0.1.2
+	SIGMA Technology Group <https://sigmaco.org>
+	<//./gpad/>("sh4dwin")
+	HID Gamepad 0.1.2
+	SIGMA Technology Group <https://sigmaco.org>
+Loading installable client driver... <targl4.dll>	<//./targl3/>("targl4")
+	Truecolor Advanced Raster Graphics Accelerator 4.0.16385
+	SIGMA Technology Group <https://sigmaco.org>
+	<//./targl4/>("targl4")
+	Truecolor Advanced Raster Graphics Accelerator 4.0.16385
+	SIGMA Technology Group <https://sigmaco.org>
+Entering the Thread Execution Environment 4132
+afxClass.c:887
+afxClass.c:887
+(cfg->fcc)
+    InvalidafxClass.c:910
+afxClass.c:910
+(cfg->name && cfg->name[0])
+    InvalidMounting... <//./d/>('E:\qwadro\afx\system'),7Loading module... <opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005sglInterop_WGL32.c:1566
+GL: INVAL_PARAMsglInterop_WGL32.c:1568
+GL: INVAL_PARAMsglInterop_WGL32.c:1666
+GL: INVAL_PARAMsglInterop_WGL32.c:1695
+GL: INVAL_PARAMsglInterop_WGL32.c:1768
+GL: INVAL_PARAMsglInterop_WGL32.c:1771
+GL: INVAL_PARAMsglInterop_WGL32.c:1776
+GL: INVAL_PARAMsglInterop_WGL32.c:1781
+GL: INVAL_PARAM#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008sglInterop_WGL32.c:1566
+GL: INVAL_PARAMsglInterop_WGL32.c:1568
+GL: INVAL_PARAMsglInterop_WGL32.c:1666
+GL: INVAL_PARAMsglInterop_WGL32.c:1695
+GL: INVAL_PARAMsglInterop_WGL32.c:1768
+GL: INVAL_PARAMsglInterop_WGL32.c:1771
+GL: INVAL_PARAMsglInterop_WGL32.c:1776
+GL: INVAL_PARAMsglInterop_WGL32.c:1781
+GL: INVAL_PARAM#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008sglInterop_WGL32.c:1566
+GL: INVAL_PARAMsglInterop_WGL32.c:1568
+GL: INVAL_PARAMsglInterop_WGL32.c:1666
+GL: INVAL_PARAMsglInterop_WGL32.c:1695
+GL: INVAL_PARAMsglInterop_WGL32.c:1768
+GL: INVAL_PARAMsglInterop_WGL32.c:1771
+GL: INVAL_PARAMsglInterop_WGL32.c:1776
+GL: INVAL_PARAMsglInterop_WGL32.c:1781
+GL: INVAL_PARAM#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008sglInterop_WGL32.c:1566
+GL: INVAL_PARAMsglInterop_WGL32.c:1568
+GL: INVAL_PARAMsglInterop_WGL32.c:1666
+GL: INVAL_PARAMsglInterop_WGL32.c:1695
+GL: INVAL_PARAMsglInterop_WGL32.c:1768
+GL: INVAL_PARAMsglInterop_WGL32.c:1771
+GL: INVAL_PARAMsglInterop_WGL32.c:1776
+GL: INVAL_PARAMsglInterop_WGL32.c:1781
+GL: INVAL_PARAMAcquiring thread...  0 "sglDrawBridge.c:1863"Entering the Thread Execution Environment 3960
+Starting 3960 on thread execution unit #1...SIGMA GL/2 Draw Execution Unit 000
+	 Entering the Thread Execution Environment 4132
+Opening file... <../system/video/uvOutTristripQuad.vsh>('../system/video/uvOutTristripQuad.vsh'),1Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1Opening file... <../system/video/sampleOutRgba2d.fsh>('../system/video/sampleOutRgba2d.fsh'),1Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>Draw output 000 adjusted. 952x506 1920x1080 0.496x0.469 1.881423afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>Entering the Thread Execution Environment 3960
+Hardware-side buffer 0584f1f0 ready. 34962, 1, 4Entering the Thread Execution Environment 4132
+Loading file... <../data/pipeline/test/test.xsh.xml>('../data/pipeline/test/test.xsh.xml')Entering the Thread Execution Environment 3960
+Hardware-side buffer 04c60938 ready. 34963, 2, 8Entering the Thread Execution Environment 4132
+../data/pipeline/test/test.vsh../data/pipeline/test/test.fshOpening file... <../data/pipeline/test/test.vsh>('../data/pipeline/test/test.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/test/test.fsh>('../data/pipeline/test/test.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1afxUri.c:1480
+Reloading file 0... <../art/skybox/purple/right.tga>('../art/skybox/purple/right.tga')afxUri.c:1480
+Reloading file 0... <../art/skybox/purple/left.tga>('../art/skybox/purple/left.tga')Entering the Thread Execution Environment 3960
+Hardware-side raster 006d26c8 ready. 8513, 8051, [2048,2048,6]Entering the Thread Execution Environment 4132
+afxUri.c:1480
+Reloading file 0... <../art/skybox/purple/bottom.tga>('../art/skybox/purple/bottom.tga')afxUri.c:1480
+Reloading file 0... <../art/skybox/purple/top.tga>('../art/skybox/purple/top.tga')afxUri.c:1480
+Reloading file 0... <../art/skybox/purple/front.tga>('../art/skybox/purple/front.tga')afxUri.c:1480
+Reloading file 0... <../art/skybox/purple/back.tga>('../art/skybox/purple/back.tga')Entering the Thread Execution Environment 3960
+Hardware-side buffer 04c6c840 ready. 34962, 3, 4Entering the Thread Execution Environment 4132
+Loading file... <../data/pipeline/skybox/skybox.xsh.xml>('../data/pipeline/skybox/skybox.xsh.xml')../data/pipeline/skybox/skybox.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/skybox/sampleOutRgbaCube.fshOpening file... <../data/pipeline/skybox/skybox.vsh>('../data/pipeline/skybox/skybox.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/skybox/sampleOutRgbaCube.fsh>('../data/pipeline/skybox/sampleOutRgbaCube.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Loading file... <../data/pipeline/body/body.xsh.xml>('../data/pipeline/body/body.xsh.xml')../data/pipeline/body/rigidBody.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/body/body.fsh../data/pipeline/body/skinnedBody.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/body/body.fshOpening file... <../data/pipeline/body/rigidBody.vsh>('../data/pipeline/body/rigidBody.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1Opening file... <../data/pipeline/body/body.fsh>('../data/pipeline/body/body.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidOpening file... <../data/pipeline/body/skinnedBody.vsh>('../data/pipeline/body/skinnedBody.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidafxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidOpening file... <../data/pipeline/body/body.fsh>('../data/pipeline/body/body.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidLoading file... <../data/pipeline/testLighting/testLighting.xsh.xml>('../data/pipeline/testLighting/testLighting.xsh.xml')../data/pipeline/testLighting/testLightingBlinn.vshNode 'Transformer' not handled.../data/pipeline/testLighting/testLightingBlinn.fshOpening file... <../data/pipeline/testLighting/testLightingBlinn.vsh>('../data/pipeline/testLighting/testLightingBlinn.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1Opening file... <../data/pipeline/testLighting/testLightingBlinn.fsh>('../data/pipeline/testLighting/testLightingBlinn.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidLoading file... <../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>('../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml')../data/pipeline/tutCamUtil/tutCamUtilRigid.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/tutCamUtil/tutCamUtil.fsh../data/pipeline/tutCamUtil/tutCamUtilSkinned.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/tutCamUtil/tutCamUtil.fshOpening file... <../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh>('../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1Opening file... <../data/pipeline/tutCamUtil/tutCamUtil.fsh>('../data/pipeline/tutCamUtil/tutCamUtil.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidOpening file... <../data/pipeline/tutCamUtil/tutCamUtilSkinned.vsh>('../data/pipeline/tutCamUtil/tutCamUtilSkinned.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1Opening file... <../data/pipeline/tutCamUtil/tutCamUtil.fsh>('../data/pipeline/tutCamUtil/tutCamUtil.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidLoading file... <../data/pipeline/lighting/lighting.xsh.xml>('../data/pipeline/lighting/lighting.xsh.xml')../data/pipeline/lighting/lighting.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/lighting/lighting.fshOpening file... <../data/pipeline/lighting/lighting.vsh>('../data/pipeline/lighting/lighting.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1Opening file... <../data/pipeline/lighting/lighting.fsh>('../data/pipeline/lighting/lighting.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidInstalling watcher <0f5ff968> for 05842a68...Entering the Thread Execution Environment 3960
+Hardware-side raster 006d2290 ready. de1, 8058, [952,506,1]Hardware-side raster 006d21b8 ready. de1, 81a6, [952,506,1]avxCanvas 05a78418 hardware-side data instanced.Hardware-side buffer 0f7b8268 ready. 35345, 4, 10Opening file... <../data/pipeline/skybox/skybox.vsh>('../data/pipeline/skybox/skybox.vsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1Opening file... <../data/pipeline/skybox/sampleOutRgbaCube.fsh>('../data/pipeline/skybox/sampleOutRgbaCube.fsh'),1Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1avxPipeline 0304bc58 hardware-side data instanced.Hardware-side sampler 0f7b7e48 ready.Entering the Thread Execution Environment 4132
+sglCanvas.c:33
+GL: INVAL_OPsglDrawOutput_GDI32.c:92
+GL: 1286Skybox.c:84
+Entering the Thread Execution Environment 3960
+Hardware-side raster 006d2440 ready. de1, 8058, [952,506,1]Hardware-side raster 006d2368 ready. de1, 81a6, [952,506,1]avxCanvas 05a784b8 hardware-side data instanced.Hardware-side buffer 05a9f860 ready. 35345, 5, 10Entering the Thread Execution Environment 4132
+sglCanvas.c:33
+GL: INVAL_OPsglDrawOutput_GDI32.c:92
+GL: 1286

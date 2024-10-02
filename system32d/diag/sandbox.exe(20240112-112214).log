@@ -1,0 +1,113 @@
+
+ afxDebug_w32.c:394
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Qwadro Execution Ecosystem at 0f5be720...
+ afxClass<Qwadro Execution Ecosystem>::ConstructObject(00511990)
+ afxSystem_w32.c:300
+  _AfxSysCtor(sys=00511990)
+ Installing Thread Execution Unit at 005120d0 by 005119d8...
+ Entering the Thread Execution Environment 5212
+ afxClass<Thread Execution Unit>::ConstructObject(00510390)
+ afxTxu_w32.c:399
+  _AfxTxuCtor(00510390)
+ Installing Memory Management Unit at 005119ec by 005119d8...
+ Installing Thread at 0051200c by 005119d8...
+ Installing Device at 00512194 by 005119d8...
+ Installing Autonomous Service at 00512258 by 005119d8...
+ Installing File at 005124a4 by 005119d8...
+ Installing I/O Stream at 0051231c by 005119d8...
+ Installing Codec at 005123e0 by 005119d8...
+ Installing File Archive at 00512568 by 005119d8 over 005124a4...
+ Installing Executable & Linkable Module at 00511b74 by 005119d8...
+ Installing Installable Client Driver at 00511c38 by 005119d8 over 00511b74...
+ Installing File System at 0051262c by 005119d8...
+ Installing Application at 005127b4 by 005119d8...
+ Installing Human Input Device at 00511cfc by 005119d8 over 00512194...
+ Installing Keyboard at 00511dc0 by 005119d8 over 00511cfc...
+ Installing Mouse at 00511e84 by 005119d8 over 00511cfc...
+ Installing Controller at 00511f48 by 005119d8 over 00511cfc...
+ Installing String Catalog at 00511ab0 by 005119d8...
+ Installing Simulation at 005126f0 by 005119d8...
+ [!] afxSystem_w32.c:413?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:414?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(00510490)
+ afxArena.c:768
+  AfxAllocateArena(aren=005128e0)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem_w32.c:427!_AfxSysCtor")
+ afxClass<File System>::ConstructObject(005143c0)
+ Storage point "." 5 mounted -> "E:\qwadro\afx\\\".
+ afxClass<File System>::ConstructObject(00514448)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system\".
+ afxClass<File System>::ConstructObject(005144d0)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system\w32\".
+ afxClass<File System>::ConstructObject(00514558)
+ Storage point "code" 5 mounted -> "E:\qwadro\afx\\code\".
+ afxClass<File System>::ConstructObject(005145e0)
+ Storage point "sound" 5 mounted -> "E:\qwadro\afx\\sound\".
+ afxClass<File System>::ConstructObject(00514668)
+ Storage point "data" 5 mounted -> "E:\qwadro\afx\\data\".
+ afxClass<File System>::ConstructObject(005147a0)
+ Storage point "art" 5 mounted -> "E:\qwadro\afx\\art\".
+ afxClass<File System>::ConstructObject(00514828)
+ Storage point "tmp" 7 mounted -> "E:\qwadro\afx\\tmp\".
+ afxModule.c:243
+  AfxMountLoadableModules(cnt=1,modules=005128b0,uri=001fdc34)
+ afxClass<Executable & Linkable Module>::ConstructObject(00515c30)
+ afxModule.c:153
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system/w32/e2coree.dll
+ E:/qwadro/afx/system/e2coree.dll
+ ERR afxFileSystem.c:192?AfxResolveUris
+  
+ ERR afxFileSystem.c:212?AfxResolveUri
+  
+ ERR afxModule.c:183?_AfxMdleCtor
+  
+ ERR afxClass.c:487?_AfxClsRunSubsetCtor
+  
+ ERR afxClass.c:784?AfxAcquireObjects
+  
+ ERR afxModule.c:264?AfxMountLoadableModules
+  
+ ERR afxClass.c:841?AfxReleaseObjects
+  
+ ERR afxClass.c:841?AfxReleaseObjects
+  (cnt)
+    Invalid
+ ERR afxSystem_w32.c:452?_AfxSysCtor
+  
+ ERR afxClass.c:849?AfxReleaseObjects
+  
+ ERR afxClass.c:849?AfxReleaseObjects
+  (inst)
+    Invalid
+ Dismantling Memory Management Unit object (#0) 00510490...
+ Destructing instance 00510490 of Memory Management Unit class.
+ ERR afxClass.c:487?_AfxClsRunSubsetCtor
+  
+ ERR afxClass.c:784?AfxAcquireObjects
+  
+ ERR afxSystem.c:509?AfxBootUpSystem
+  
+ ERR afxSystem.c:65?_AfxGetDsysData
+  
+ ERR afxSystem.c:65?_AfxGetDsysData
+  (((afxResult)(1)) == _AfxAssertObjects((1), (afxObject const*)(&sys),(afxFcc_SYS)))
+    Invalid

@@ -1,0 +1,17 @@
+Booting up...
+Acquiring thread...  7552 "afxSystem_w32.c:499"Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\afx\system'),5Mounting... <//./z/>('E:\qwadro\afx\system32'),7Mounting... <//./z/>('E:\qwadro\afx\system32d'),7Mounting... <//./c/>('C:\'),7Mounting... <//./e/>('E:\'),7Mounting... <//./f/>('F:\'),7Mounting... <//./g/>('G:\'),7Mounting... <//./h/>('H:\'),7Mounting... <//./i/>('I:\'),7Loading module... <e2coree>Memory Page Size: 4096HW Threading Capacity: 2Doing the AVX start up...Loading module... <e2draw>Doing the ASX start up...Loading module... <e2sound>Doing the AUX start up...Loading module... <e2ux>Acquiring HID at port 0Mounting... <//./c/>('E:\qwadro\afx\system'),7Loading driver... <oal4d.dll>afxDriver.c:146
+afxClass.c:682
+afxClass.c:740
+afxClass.c:995
+afxPool.c:452
+afxDriver.c:281
+Loading driver... <targl4.dll>afxDevice.c:181
+afxClass.c:682
+afxClass.c:665
+afxClass<DrawDevice, Device>ConstructingObject(004a0458)afxClass<DrawDevice>::ConstructObject(004a0458)afxClass.c:740
+afxDrawSystem.c:227
+afxClass.c:578
+afxClass.c:578
+(cnt)
+    InvalidafxPool.c:452
+sglDdev_w32.c:1552

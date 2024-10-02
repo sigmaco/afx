@@ -83,7 +83,7 @@ AFX_DEFINE_STRUCT(afxDeviceDescription)
     afxBool             isDefault; /// Identify default device. Always false when not supported.
 };
 
-AFX afxDriver           AfxGetDeviceDriver(afxDevice dev);
+AFX afxModule           AfxGetDeviceDriver(afxDevice dev);
 
 AFX afxDeviceType       AfxGetDeviceType(afxDevice dev);
 AFX afxDeviceStatus     AfxGetDeviceStatus(afxDevice dev);

@@ -14,7 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+  //////////////////////////////////////////////////////////////////////////////
+ // Qwadro Data Access And Storage Infrastructure                            //
+//////////////////////////////////////////////////////////////////////////////
+
+// This code is part of SIGMA Future Storage.
 
 #ifndef AFX_FILE_H
 #define AFX_FILE_H
@@ -22,7 +26,7 @@
 #include "qwadro/inc/io/afxStream.h"
 #include "qwadro/inc/io/afxUri.h"
 
-typedef enum afxFileFlags
+typedef enum afxFileFlag
 {
     // permissions
     afxFileFlag_R       = AFX_BIT(0), // Readable
@@ -47,36 +51,18 @@ typedef enum afxFileFlags
     afxFileFlag_E       = AFX_BIT(12), // Encrypted. The data is encrypted. For a file, all data streams in the file are encrypted. This is used by SIGMA Future Storage.
     afxFileFlag_O       = AFX_BIT(13), // Offline. The data isn't available immediately. This flag indicates that the data is physically moved to remote/offline storage. This is used by SIGMA Future Storage.
     afxFileFlag_S       = AFX_BIT(14), // Sparse. The data is a sparse file. Empty ranges (zeroed ranges) are generated dynamically by some algorithm. This is used by SIGMA Future Storage.
-}
-afxFileFlags;
+} afxFileFlags;
 
-AFX_DEFINE_HANDLE(afxFile);
+AFX afxError        AfxReadFileString(afxStream file, afxString* str);
 
-AFX void*                   AfxGetFileDescriptor(afxStream file);
+AFX afxResult       AfxFlushFileCache(afxStream file);
 
-//AFX afxError                AfxReopenFile(afxFile file, afxRwx const rwx, afxUri const *uri);
-//AFX afxError                AfxReloadFile(afxFile file, afxRwx const rwx, afxUri const *uri);
+AFX afxBool         AfxTestFileFlags(afxStream file, afxFileFlags flags);
 
-AFX afxUri const*           AfxGetFilePath(afxStream file);
-AFX afxResult               AfxCopyFilePath(afxStream file, afxUri* uri);
+AFX afxBool         AfxGetFileUri(afxStream file, afxUri* location);
+AFX afxBool         AfxGetResolvedFileUri(afxStream file, afxUri* location);
 
-AFX afxString const*        AfxGetFilePathString(afxStream file);
-AFX afxResult               AfxCopyFilePathString(afxStream file, afxString *str);
-
-AFX afxError                AfxReadFileString(afxStream file, afxString* str);
-
-AFX afxResult               AfxFlushFile(afxStream file);
-AFX afxBool                 AfxFileShouldBeFlushed(afxStream file);
-
-AFX afxError                AfxBufferizeFile(afxFile file, afxNat siz);
-
-AFX afxBool                 AfxFileIsVirtual(afxFile file);
-AFX afxBool                 AfxFileIsTemporary(afxFile file);
-AFX afxBool                 AfxFileIsSparse(afxFile file);
-AFX afxBool                 AfxFileIsCompressed(afxFile file);
-AFX afxBool                 AfxFileIsEncrypted(afxFile file);
-AFX afxBool                 AfxFileIsArchive(afxFile file);
-AFX afxBool                 AfxFileIsHidden(afxFile file);
-AFX afxBool                 AfxFileIsReserved(afxFile file);
+AFX afxError        AfxReopenFile(afxStream file, afxUri const* uri, afxFileFlags flags);
+AFX afxError        AfxReloadFile(afxStream file, afxUri const* uri); // will upload the entire file data into RAM and close the file.
 
 #endif//AFX_FILE_H

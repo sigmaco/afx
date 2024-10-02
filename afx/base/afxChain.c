@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 
 _AFXINL void AfxDeployChain(afxChain *ch, void *holder)
@@ -24,7 +24,8 @@ _AFXINL void AfxDeployChain(afxChain *ch, void *holder)
     ch->holder = holder;
     ch->cnt = 0;
     afxLinkage* anchor = &(ch->anchor);
-    anchor->next = (anchor->prev = anchor);
+    anchor->next = anchor;
+    anchor->prev = anchor;
     anchor->chain = ch;
 }
 
@@ -107,6 +108,56 @@ _AFXINL void AfxResetLinkage(afxLinkage *lnk)
     lnk->chain = NIL;
 }
 
+_AFXINL afxNat AfxLinkAhead(afxLinkage* lnk, afxLinkage* prev)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(lnk);
+    afxNat lnkIdx;
+
+    if (!prev)
+    {
+        lnk->next = lnk;
+        lnk->prev = lnk;
+        lnk->chain = NIL;
+        lnkIdx = AFX_INVALID_INDEX;
+    }
+    else
+    {
+        lnk->next = prev->next;
+        lnk->prev = prev;
+        prev->next->prev = lnk;
+        prev->next = lnk;
+
+        lnkIdx = (lnk->chain = prev->chain) ? lnk->chain->cnt++ : AFX_INVALID_INDEX;
+    }
+    return lnkIdx;
+}
+
+_AFXINL afxNat AfxLinkBehind(afxLinkage* lnk, afxLinkage* next)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(lnk);
+    afxNat lnkIdx;
+
+    if (!next)
+    {
+        lnk->next = lnk;
+        lnk->prev = lnk;
+        lnk->chain = NIL;
+        lnkIdx = AFX_INVALID_INDEX;
+    }
+    else
+    {
+        lnk->prev = next->prev;
+        lnk->next = next;
+        next->prev->next = lnk;
+        next->prev = lnk;
+
+        lnkIdx = (lnk->chain = next->chain) ? lnk->chain->cnt++ : AFX_INVALID_INDEX;
+    }
+    return lnkIdx;
+}
+
 _AFXINL afxNat AfxPushLinkage(afxLinkage *lnk, afxChain *ch)
 {
     afxError err = AFX_ERR_NONE;
@@ -115,17 +166,18 @@ _AFXINL afxNat AfxPushLinkage(afxLinkage *lnk, afxChain *ch)
 
     if (!(lnk->chain = ch))
     {
-        lnk->next = (lnk->prev = lnk);
+        lnk->next = lnk;
+        lnk->prev = lnk;
         lnkIdx = AFX_INVALID_INDEX;
     }
     else
     {
         afxInt cnt = ++ch->cnt;
         ch->cnt = 0;
-        afxLinkage *anchor = &(ch)->anchor;
-        lnk->next = (anchor)->next;
+        afxLinkage *anchor = &ch->anchor;
+        lnk->next = anchor->next;
         lnk->prev = anchor;
-        (anchor)->next->prev = lnk;
+        anchor->next->prev = lnk;
         anchor->next = lnk;
         lnkIdx = (ch->cnt = cnt);
     }
@@ -147,10 +199,10 @@ _AFXINL afxNat AfxPushBackLinkage(afxLinkage *lnk, afxChain *ch)
     {
         afxInt cnt = ++ch->cnt;
         ch->cnt = 0;
-        afxLinkage *anchor = &(ch)->anchor;
-        lnk->prev = (anchor)->prev;
+        afxLinkage *anchor = &ch->anchor;
+        lnk->prev = anchor->prev;
         lnk->next = anchor;
-        (anchor)->prev->next = lnk;
+        anchor->prev->next = lnk;
         anchor->prev = lnk;
         lnkIdx = (ch->cnt = cnt);
     }
@@ -165,8 +217,8 @@ _AFXINL void AfxPopLinkage(afxLinkage *lnk)
     afxChain* ch = lnk->chain;
     afxInt cnt = ch ? cnt = --ch->cnt, ch->cnt = 0 : 0;
 
-    afxLinkage* prev = (lnk)->prev;
-    afxLinkage* next = (lnk)->next;
+    afxLinkage* prev = lnk->prev;
+    afxLinkage* next = lnk->next;
     prev->next = next;
     next->prev = prev;
     lnk->next = (lnk->prev = lnk);

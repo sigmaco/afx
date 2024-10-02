@@ -1,0 +1,359 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 67ab37dc by 00000000 over 00000000 with 67ab11c0)
+ afxClass<Basic I/O System>::ConstructObject(00708090)
+ afxSystem.c:1007
+  _AfxSysCtor(sys=00708090)
+ Installing Context at 007080cc by 007080b8 over 00000000 with 67ab17a4)
+ Installing Module at 0070818c by 007080b8 over 00000000 with 67ab1080)
+ Installing Thread at 007083cc by 007080b8 over 00000000 with 67ab11f0)
+ Installing File at 0070854c by 007080b8 over 00000000 with 67ab1314)
+ Installing Archive at 0070860c by 007080b8 over 00000000 with 67ab12e4)
+ Installing Application at 0070848c by 007080b8 over 00000000 with 67ab1000)
+ Installing Keyboard at 0070824c by 007080b8 over 00000000 with 67ab1344)
+ Installing Mouse at 0070830c by 007080b8 over 00000000 with 67ab1374)
+ Installing Draw System at 007086cc by 007080b8 over 00000000 with 67ab2074)
+ [!] afxSystem.c:1091?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1092?_AfxSysCtor
+  Logical processor count: 2
+ afxContext.c:209
+  AfxAcquireContexts(cnt=1,app=0070878c,strategy=001fe168)
+ afxClass<Context>::ConstructObject(007088f0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=007088f0)
+ afxArena.c:767
+  AfxAcquireArena(aren=007087e8)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="afxSystem.c:1144!_AfxSysCtor")
+ afxSystem.c:752
+  AfxMountStoragePoints(6,001fe2c0)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:169
+  AfxAcquireModules(cnt=1,mdle=007087b8,uri=001fe1f8)
+ afxClass<Module>::ConstructObject(0070d560)
+ afxModule.c:125
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:317
+  AfxAcquireKeyboards(cnt=1,kbd=007087bc,port=001fe140)
+ afxClass<Keyboard>::ConstructObject(0070d9a0)
+ afxKeyboard.c:281
+  _AfxKbdCtor(kbd=0070d9a0)
+ Entering the Threading Execution Environment  0
+ afxContext.c:209
+  AfxAcquireContexts(cnt=10,app=001ff168,strategy=00000000)
+ afxClass<Context>::ConstructObject(0070e400)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070e400)
+ afxClass<Context>::ConstructObject(0070e500)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070e500)
+ afxClass<Context>::ConstructObject(0070e620)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070e620)
+ afxClass<Context>::ConstructObject(0070e6c0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070e6c0)
+ afxClass<Context>::ConstructObject(0070e7f0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070e7f0)
+ afxClass<Context>::ConstructObject(0070e920)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070e920)
+ afxClass<Context>::ConstructObject(0070ea70)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070ea70)
+ afxClass<Context>::ConstructObject(0070e9c0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070e9c0)
+ afxClass<Context>::ConstructObject(0070eb10)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070eb10)
+ afxClass<Context>::ConstructObject(0070ebb0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070ebb0)
+ Dismantling Context object (#0) 0070e400...
+ Destructing instance 0070e400 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070e400)
+ [!] afxPool.c:438?AfxDeallocatePoolUnit
+  Deallocate page 0070ec50, data 007088c0, usage 00703ea0
+ Dismantling Context object (#0) 0070e500...
+ Destructing instance 0070e500 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070e500)
+ Dismantling Context object (#0) 0070e620...
+ Destructing instance 0070e620 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070e620)
+ Dismantling Context object (#0) 0070e6c0...
+ Destructing instance 0070e6c0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070e6c0)
+ Dismantling Context object (#0) 0070e7f0...
+ Destructing instance 0070e7f0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070e7f0)
+ Dismantling Context object (#0) 0070e920...
+ Destructing instance 0070e920 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070e920)
+ Dismantling Context object (#0) 0070ea70...
+ Destructing instance 0070ea70 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070ea70)
+ Dismantling Context object (#0) 0070e9c0...
+ Destructing instance 0070e9c0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070e9c0)
+ Dismantling Context object (#0) 0070eb10...
+ Destructing instance 0070eb10 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070eb10)
+ Dismantling Context object (#0) 0070ebb0...
+ Destructing instance 0070ebb0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070ebb0)
+ afxContext.c:209
+  AfxAcquireContexts(cnt=10,app=001ff168,strategy=00000000)
+ afxClass<Context>::ConstructObject(007088f0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=007088f0)
+ afxClass<Context>::ConstructObject(0070ec50)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=0070ec50)
+ afxClass<Context>::ConstructObject(00710650)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710650)
+ afxClass<Context>::ConstructObject(007106f0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=007106f0)
+ afxClass<Context>::ConstructObject(00710a00)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710a00)
+ afxClass<Context>::ConstructObject(00710aa0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710aa0)
+ afxClass<Context>::ConstructObject(00710b40)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710b40)
+ afxClass<Context>::ConstructObject(00710be0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710be0)
+ afxClass<Context>::ConstructObject(00710c80)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710c80)
+ afxClass<Context>::ConstructObject(00710d20)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710d20)
+ Dismantling Context object (#0) 007088f0...
+ Destructing instance 007088f0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=007088f0)
+ [!] afxPool.c:438?AfxDeallocatePoolUnit
+  Deallocate page 00710880, data 007088c0, usage 00703ea0
+ Dismantling Context object (#0) 0070ec50...
+ Destructing instance 0070ec50 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=0070ec50)
+ Dismantling Context object (#0) 00710650...
+ Destructing instance 00710650 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710650)
+ Dismantling Context object (#0) 007106f0...
+ Destructing instance 007106f0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=007106f0)
+ Dismantling Context object (#0) 00710a00...
+ Destructing instance 00710a00 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710a00)
+ Dismantling Context object (#0) 00710aa0...
+ Destructing instance 00710aa0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710aa0)
+ Dismantling Context object (#0) 00710b40...
+ Destructing instance 00710b40 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710b40)
+ Dismantling Context object (#0) 00710be0...
+ Destructing instance 00710be0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710be0)
+ Dismantling Context object (#0) 00710c80...
+ Destructing instance 00710c80 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710c80)
+ Dismantling Context object (#0) 00710d20...
+ Destructing instance 00710d20 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710d20)
+ afxContext.c:209
+  AfxAcquireContexts(cnt=10,app=001ff168,strategy=00000000)
+ afxClass<Context>::ConstructObject(00710dc0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710dc0)
+ afxClass<Context>::ConstructObject(00710e60)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710e60)
+ afxClass<Context>::ConstructObject(00710f00)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710f00)
+ afxClass<Context>::ConstructObject(00710fa0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710fa0)
+ afxClass<Context>::ConstructObject(00711040)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00711040)
+ afxClass<Context>::ConstructObject(007110e0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=007110e0)
+ afxClass<Context>::ConstructObject(00711180)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00711180)
+ afxClass<Context>::ConstructObject(00711220)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00711220)
+ afxClass<Context>::ConstructObject(007112c0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=007112c0)
+ afxClass<Context>::ConstructObject(00711360)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00711360)
+ Dismantling Context object (#0) 00710dc0...
+ Destructing instance 00710dc0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710dc0)
+ [!] afxPool.c:438?AfxDeallocatePoolUnit
+  Deallocate page 007129c0, data 00710d90, usage 00703ea0
+ Dismantling Context object (#0) 00710e60...
+ Destructing instance 00710e60 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710e60)
+ Dismantling Context object (#0) 00710f00...
+ Destructing instance 00710f00 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710f00)
+ Dismantling Context object (#0) 00710fa0...
+ Destructing instance 00710fa0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710fa0)
+ Dismantling Context object (#0) 00711040...
+ Destructing instance 00711040 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00711040)
+ Dismantling Context object (#0) 007110e0...
+ Destructing instance 007110e0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=007110e0)
+ Dismantling Context object (#0) 00711180...
+ Destructing instance 00711180 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00711180)
+ Dismantling Context object (#0) 00711220...
+ Destructing instance 00711220 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00711220)
+ Dismantling Context object (#0) 007112c0...
+ Destructing instance 007112c0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=007112c0)
+ Dismantling Context object (#0) 00711360...
+ Destructing instance 00711360 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00711360)
+ afxContext.c:209
+  AfxAcquireContexts(cnt=10,app=001ff168,strategy=00000000)
+ afxClass<Context>::ConstructObject(00710dc0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00710dc0)
+ afxClass<Context>::ConstructObject(00711400)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00711400)
+ afxClass<Context>::ConstructObject(007114a0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=007114a0)
+ afxClass<Context>::ConstructObject(00711540)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00711540)
+ afxClass<Context>::ConstructObject(007115e0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=007115e0)
+ afxClass<Context>::ConstructObject(00711680)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00711680)
+ afxClass<Context>::ConstructObject(00711720)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00711720)
+ afxClass<Context>::ConstructObject(007117c0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=007117c0)
+ afxClass<Context>::ConstructObject(00711860)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00711860)
+ afxClass<Context>::ConstructObject(00711900)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00711900)
+ Dismantling Context object (#0) 00710dc0...
+ Destructing instance 00710dc0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00710dc0)
+ [!] afxPool.c:438?AfxDeallocatePoolUnit
+  Deallocate page 00710760, data 00710d90, usage 00703ea0
+ Dismantling Context object (#0) 00711400...
+ Destructing instance 00711400 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00711400)
+ Dismantling Context object (#0) 007114a0...
+ Destructing instance 007114a0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=007114a0)
+ Dismantling Context object (#0) 00711540...
+ Destructing instance 00711540 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00711540)
+ Dismantling Context object (#0) 007115e0...
+ Destructing instance 007115e0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=007115e0)
+ Dismantling Context object (#0) 00711680...
+ Destructing instance 00711680 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00711680)
+ Dismantling Context object (#0) 00711720...
+ Destructing instance 00711720 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00711720)
+ Dismantling Context object (#0) 007117c0...
+ Destructing instance 007117c0 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=007117c0)
+ Dismantling Context object (#0) 00711860...
+ Destructing instance 00711860 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00711860)
+ Dismantling Context object (#0) 00711900...
+ Destructing instance 00711900 of Context class.
+ afxContext.c:149
+  _AfxCtxDtor(ctx=00711900)

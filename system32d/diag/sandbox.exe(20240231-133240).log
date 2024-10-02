@@ -1,0 +1,50 @@
+Booting up the Qwadro Execution Ecosystem...
+Setting up SystemafxManifest.c:215
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.Setting up ThreadEntering the Thread Execution Environment 5516
+Setting up Memory Management UnitSetting up Autonomous ServiceSetting up CodecSetting up String BaseSetting up StreamSetting up ArchiveSetting up StorageSetting up ModuleSetting up DeviceSetting up HIDSetting up Keyboard[HID]Setting up Mouse[HID]Setting up Controller[HID]Setting up EnvironmentMemory page size: 4096Logical processor count: 1Mounting storage unit... <.>('E:/qwadro/afx///'),5Mounting storage unit... <system>('E:/qwadro/afx//system/'),5Mounting storage unit... <system>('E:/qwadro/afx//system32/'),7Mounting storage unit... <system>('E:/qwadro/afx//system32d/'),7Loading module... <system/e2coree.dll>Setting up the Environment...Acquiring keyboard at port 0Mounting storage unit... <code>('E:/qwadro/afx//system/'),7Loading file... <system/qwadro.xss>('E:/qwadro/afx//system//qwadro.xss')// This technology is part of Qwadro (c) 2017 SIGMA Federation
+require "core" for Storage, Stream
+
+class Main {
+  construct new() {
+    System.print("new");
+  }
+
+  init() {
+    System.print("init");
+    //Storage.Mount("tmp", "system/tmp", "rwx");
+    var f = Stream.OpenFile("tmp/camera.lua", "rwx");
+    f.Seek(10, 0);
+    f.Write("stdout", 6, 0);
+    f.Close();
+  }
+
+  update() {
+    System.print("update");
+  }
+
+  draw(dt) {
+    System.print("draw");
+  }
+  
+
+}
+
+Storage.Mount("code", "code", "rx");
+Storage.Mount("sound", "sound", "rx");
+Storage.Mount("data", "data", "rx");
+Storage.Mount("art", "art", "rx");
+Storage.Mount("tmp", "tmp", "rwx");
+
+var Game = Main.new();
+System.print(".");
+var file = Stream.OpenFile("tmp/camera.lua", "rwx");
+file.Seek(1, 0);
+file.Close();
+
+Loading file... <code/core.xs>('E:/qwadro/afx//system//core.xs')Mounting storage unit... <code>('E:/qwadro/afx//code/'),5Mounting storage unit... <sound>('E:/qwadro/afx//sound/'),5Mounting storage unit... <data>('E:/qwadro/afx//data/'),5Mounting storage unit... <art>('E:/qwadro/afx//art/'),5Mounting storage unit... <tmp>('E:/qwadro/afx//tmp/'),7new
+.
+Opening file... <tmp/camera.lua>('E:/qwadro/afx//tmp//camera.lua'),7afxSystem.c:834
+Cleaning up Environment. 1 lost objects.afxManager.c:851
+afxManager.c:851
+(base)
+    InvalidafxDebug_w32.c:559
