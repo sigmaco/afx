@@ -86,8 +86,6 @@ The quadridimensional world approximation extensions.
 Before Qwadro become an whole execution ecosystem, it was an old project experimenting with what a simulation would be like where time-space (see, time over space) were manipulated in unconventional ways. From there became its name, which is an acronym for Tetradimensional/Quadridimensional World Approximation.
 The old project was a experiment to test the possibility of our real world be in fact some type of simulation. We discovered interesting things about the "behavior and fabric of the reality", but it is too complex concept to explain.
 
-Such as RenderWare, Qwadro forces the use of the so-called "right-handed coordination system", where positive X advances to right, positive Y advances to up and positive Z advances to front.
-
 In Qwadro, a matrix is neither row-major nor column-major. Their matrices are hybrids. The upper 3x3 submatrix (where linear operations occur) is column-major, while the translation set is row-major. Yes, that madness there. Different from what you will expect in the war of row-major (Direct3D) vs. column-major (OpenGL). Qwadro is the definitive supremacy.
 
 This is a complicated approach because it mixes both OpenGL and Direct3D concepts, functions, and operations at the same time. Writing AMX was hell because of this, and not all functions have been tested yet.
