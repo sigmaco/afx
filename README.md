@@ -116,6 +116,6 @@ This project is published under [Qwadro License][license].
 
 Qwadro is, and its portions are, (c) 2017 SIGMA FEDERATION. All rights reserved; to its elaborators and collaborators.
 
-[license]: https://github.com/sigmaco/qwadro/blob/master/LICENSE
+[license]: https://github.com/sigmaco/qwadro/blob/master/LICENSE.txt
 [contributors]: https://github.com/sigmaco/qwadro/graphs/contributors
 [contribute-guide]: https://github.com/sigmaco/qwadro/blob/master/docs/CONTRIBUTING.md
