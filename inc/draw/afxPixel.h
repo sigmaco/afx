@@ -19,39 +19,37 @@
 
 #include "qwadro/inc/draw/afxDrawDefs.h"
 
-typedef enum afxPixelElementType
-{
-    afxPixelElementType_UNKNOWN,
-    afxPixelElementType_UNUSED,
-    afxPixelElementType_UNORM,
-    afxPixelElementType_SNORM,
-    afxPixelElementType_UINT,
-    afxPixelElementType_SINT,
-    afxPixelElementType_FLOAT,
-    afxPixelElementType_SSCALED,
-    afxPixelElementType_USCALED,
-    afxPixelElementType_SFIXED,
-} afxPixelElementType;
-
 typedef enum avxFormat
 /// Available pixel formats.
 /// Despite being read as vectors, pixels are stored as packs. Do not see channels as vector units.
+/// non-specified types are expected to be natural number (unsigned int). R = real number (float). I = integer (int)
 {
-    avxFormat_UNDEFINED,
+    avxFormat_UNDEFINED, // nil; used to autoselection when viable.
 
-    avxFormat_RG4 = 1, // pack 8
-    avxFormat_RGBA4, // pack 16
-    avxFormat_BGRA4, // pack 16
-    avxFormat_R5G6B5, // pack 16
-    avxFormat_B5G6R5, // pack 16
-    avxFormat_RGB5A1, // pack 16
-    avxFormat_BGR5A1, // pack 16
-    avxFormat_A1RGB5, // pack 16
+    avxFormat_RG4un = 1, // pack 8
+    avxFormat_RG4 = avxFormat_RG4un,
+    avxFormat_RGBA4un, // pack 16
+    avxFormat_RGBA4 = avxFormat_RGBA4un,
+    avxFormat_BGRA4un, // pack 16
+    avxFormat_BGRA4 = avxFormat_BGRA4un,
+    
+    avxFormat_R5G6B5un, // pack 16
+    avxFormat_R5G6B5 = avxFormat_R5G6B5un,
+    avxFormat_B5G6R5un, // pack 16
+    avxFormat_B5G6R5 = avxFormat_B5G6R5un,
+    
+    avxFormat_RGB5A1un, // pack 16
+    avxFormat_RGB5A1 = avxFormat_RGB5A1un,
+    avxFormat_BGR5A1un, // pack 16
+    avxFormat_BGR5A1 = avxFormat_BGR5A1un,
+    avxFormat_A1RGB5un, // pack 16
+    avxFormat_A1RGB5 = avxFormat_A1RGB5un,
 
     // omitted color type is unsigned normalized (UN); omitted.
     // omitted float qualifier is signed.
 
-    avxFormat_R8 = 9,
+    avxFormat_R8un = 9,
+    avxFormat_R8 = avxFormat_R8un,
     avxFormat_R8sn,
     avxFormat_R8us,
     avxFormat_R8ss,
@@ -59,7 +57,8 @@ typedef enum avxFormat
     avxFormat_R8i,
     avxFormat_R8_sRGB,
     
-    avxFormat_RG8 = 16,
+    avxFormat_RG8un = 16,
+    avxFormat_RG8 = avxFormat_RG8un,
     avxFormat_RG8sn,
     avxFormat_RG8us,
     avxFormat_RG8ss,
@@ -67,7 +66,8 @@ typedef enum avxFormat
     avxFormat_RG8i,
     avxFormat_RG8_sRGB,
 
-    avxFormat_RGB8 = 23,
+    avxFormat_RGB8un = 23,
+    avxFormat_RGB8 = avxFormat_RGB8un,
     avxFormat_RGB8sn,
     avxFormat_RGB8us,
     avxFormat_RGB8ss,
@@ -75,7 +75,8 @@ typedef enum avxFormat
     avxFormat_RGB8i,
     avxFormat_RGB8_sRGB,
     
-    avxFormat_BGR8,
+    avxFormat_BGR8un,
+    avxFormat_BGR8 = avxFormat_BGR8un,
     avxFormat_BGR8sn,
     avxFormat_BGR8us,
     avxFormat_BGR8ss,
@@ -83,7 +84,8 @@ typedef enum avxFormat
     avxFormat_BGR8i,
     avxFormat_BGR8_sRGB,
 
-    avxFormat_RGBA8 = 37,
+    avxFormat_RGBA8un = 37,
+    avxFormat_RGBA8 = avxFormat_RGBA8un,
     avxFormat_RGBA8sn,
     avxFormat_RGBA8us,
     avxFormat_RGBA8ss,
@@ -91,7 +93,8 @@ typedef enum avxFormat
     avxFormat_RGBA8i,
     avxFormat_RGBA8_sRGB,
 
-    avxFormat_BGRA8 = 44,
+    avxFormat_BGRA8un = 44,
+    avxFormat_BGRA8 = avxFormat_BGRA8un,
     avxFormat_BGRA8sn,
     avxFormat_BGRA8us,
     avxFormat_BGRA8ss,
@@ -99,7 +102,8 @@ typedef enum avxFormat
     avxFormat_BGRA8i,
     avxFormat_BGRA8_sRGB,
 
-    avxFormat_ABGR8 = 51, // pack 32
+    avxFormat_ABGR8un = 51, // pack 32
+    avxFormat_ABGR8 = avxFormat_ABGR8un,
     avxFormat_ABGR8sn, // pack 32
     avxFormat_ABGR8us, // pack 32
     avxFormat_ABGR8ss, // pack 32
@@ -107,21 +111,24 @@ typedef enum avxFormat
     avxFormat_ABGR8i, // pack 32
     avxFormat_ABGR8_sRGB, // pack 32
 
-    avxFormat_A2RGB10 = 58, // pack 32
+    avxFormat_A2RGB10un = 58, // pack 32
+    avxFormat_A2RGB10 = avxFormat_A2RGB10un,
     avxFormat_A2RGB10sn, // pack 32
     avxFormat_A2RGB10us, // pack 32
     avxFormat_A2RGB10ss, // pack 32
     avxFormat_A2RGB10u, // pack 32
     avxFormat_A2RGB10i, // pack 32
     
-    avxFormat_A2BGR10 = 64, // pack 32
+    avxFormat_A2BGR10un = 64, // pack 32
+    avxFormat_A2BGR10 = avxFormat_A2BGR10un,
     avxFormat_A2BGR10sn, // pack 32
     avxFormat_A2BGR10us, // pack 32
     avxFormat_A2BGR10ss, // pack 32
     avxFormat_A2BGR10u, // pack 32
     avxFormat_A2BGR10i, // pack 32
 
-    avxFormat_R16 = 70,
+    avxFormat_R16un = 70,
+    avxFormat_R16 = avxFormat_R16un,
     avxFormat_R16sn,
     avxFormat_R16us,
     avxFormat_R16ss,
@@ -129,7 +136,8 @@ typedef enum avxFormat
     avxFormat_R16i,    
     avxFormat_R16f,
     
-    avxFormat_RG16 = 77,
+    avxFormat_RG16un = 77,
+    avxFormat_RG16 = avxFormat_RG16un,
     avxFormat_RG16sn,
     avxFormat_RG16us,
     avxFormat_RG16ss,
@@ -137,7 +145,8 @@ typedef enum avxFormat
     avxFormat_RG16i,
     avxFormat_RG16f,
         
-    avxFormat_RGB16 = 84,
+    avxFormat_RGB16un = 84,
+    avxFormat_RGB16 = avxFormat_RGB16un,
     avxFormat_RGB16sn,
     avxFormat_RGB16us,
     avxFormat_RGB16ss,
@@ -145,7 +154,8 @@ typedef enum avxFormat
     avxFormat_RGB16i,
     avxFormat_RGB16f,
     
-    avxFormat_RGBA16 = 91,
+    avxFormat_RGBA16un = 91,
+    avxFormat_RGBA16 = avxFormat_RGBA16un,
     avxFormat_RGBA16sn,
     avxFormat_RGBA16us,
     avxFormat_RGBA16ss,
@@ -186,47 +196,69 @@ typedef enum avxFormat
     avxFormat_RGBA64f,
 
     avxFormat_B10GR11uf = 122, // unsigned float --- pack 32
+    avxFormat_B10GR11 = avxFormat_B10GR11uf,
     avxFormat_E5BGR9uf, // unsigned float --- pack 32
+    avxFormat_E5BGR9 = avxFormat_E5BGR9uf,
 
     // omitted stencil type is unsigned int (U).
     // omitted depth type is unsigned normalized (UN), when int, or signed float (SF), when float.
 
-    avxFormat_D16 = 124, // Dun
-    avxFormat_X8D24, // Dun --- pack 32
+    avxFormat_D16un = 124, // Dun
+    avxFormat_D16 = avxFormat_D16un,
+    avxFormat_X8D24un, // Dun --- pack 32
+    avxFormat_X8D24 = avxFormat_X8D24un,
+    avxFormat_D24 = avxFormat_X8D24,
     avxFormat_D32f, // Df
-    avxFormat_S8, // Su
-    avxFormat_D16S8, // Dun, Su
-    avxFormat_D24S8, // Dun
-    avxFormat_D32fS8, // Df, Su
+    avxFormat_D32 = avxFormat_D32f,
+    avxFormat_S8u, // Su
+    avxFormat_S8 = avxFormat_S8u,
+    avxFormat_D16unS8u, // Dun, Su
+    avxFormat_D16S8 = avxFormat_D16unS8u,
+    avxFormat_D24unS8u, // Dun
+    avxFormat_D24S8 = avxFormat_D24unS8u,
+    avxFormat_D32fS8u, // Df, Su
+    avxFormat_D32S8 = avxFormat_D32fS8u,
 
     // S3TC/DXT1 (BC1), S3TC/DXT3 (BC2) and S3TC/DXT5 (BC3)
-    avxFormat_DXT1 = 131,
+    avxFormat_DXT1un = 131,
+    avxFormat_DXT1 = avxFormat_DXT1un,
     avxFormat_DXT1_sRGB,
-    avxFormat_DXT1A,
+    avxFormat_DXT1Aun,
+    avxFormat_DXT1A = avxFormat_DXT1Aun,
     avxFormat_DXT1A_sRGB,
-    avxFormat_DXT3,
+    avxFormat_DXT3un,
+    avxFormat_DXT3 = avxFormat_DXT3un,
     avxFormat_DXT3_sRGB,
-    avxFormat_DXT5,
+    avxFormat_DXT5un,
+    avxFormat_DXT5 = avxFormat_DXT5un,
     avxFormat_DXT5_sRGB,
-    avxFormat_RGTC1, // RGTC1 (aka BC4 or ATI1N)
+    avxFormat_RGTC1un, // RGTC1 (aka BC4 or ATI1N)
+    avxFormat_RGTC1 = avxFormat_RGTC1un,
     avxFormat_RGTC1sn, // RGTC1 (aka BC4 or ATI1N)
-    avxFormat_RGTC2, // RGTC2 (aka BC5 or ATI2N)
+    avxFormat_RGTC2un, // RGTC2 (aka BC5 or ATI2N)
+    avxFormat_RGTC2 = avxFormat_RGTC2un,
     avxFormat_RGTC2sn, // RGTC2 (aka BC5 or ATI2N)
     avxFormat_BPTCuf, // BPTC (aka BC6H)
     avxFormat_BPTCf, // BPTC (aka BC6H)
-    avxFormat_BPTC7, // BPTC (aka BC7)
+    avxFormat_BPTC7un, // BPTC (aka BC7)
+    avxFormat_BPTC7 = avxFormat_BPTC7un,
     avxFormat_BPTC7_sRGB, // BPTC (aka BC7)
     
-    avxFormat_ETC2_RGB8 = 147,
+    avxFormat_ETC2_RGB8un = 147,
+    avxFormat_ETC2_RGB8 = avxFormat_ETC2_RGB8un,
     avxFormat_ETC2_RGB8_sRGB,
-    avxFormat_ETC2_RGB8A1,
+    avxFormat_ETC2_RGB8A1un,
+    avxFormat_ETC2_RGB8A1 = avxFormat_ETC2_RGB8A1un,
     avxFormat_ETC2_RGB8A1_sRGB,
-    avxFormat_ETC2_RGBA8,
+    avxFormat_ETC2_RGBA8un,
+    avxFormat_ETC2_RGBA8 = avxFormat_ETC2_RGBA8un,
     avxFormat_ETC2_RGBA8_sRGB,
 
-    avxFormat_EAC_R11 = 153,
+    avxFormat_EAC_R11un = 153,
+    avxFormat_EAC_R11 = avxFormat_EAC_R11un,
     avxFormat_EAC_R11sn,
-    avxFormat_EAC_R11G11,
+    avxFormat_EAC_R11G11un,
+    avxFormat_EAC_R11G11 = avxFormat_EAC_R11G11un,
     avxFormat_EAC_R11G11sn,
 
     avxFormat_ASTC_4x4 = 157,
@@ -261,116 +293,58 @@ typedef enum avxFormat
     avxFormat_TOTAL
 } avxFormat;
 
-typedef enum afxPixelFormat
-/// Available pixel formats.
-/// Despite being read as vectors, pixels are stored as packs. Do not see channels as vector units.
+typedef enum avxFormatComponent
 {
-    // non-specified types are expected to be natural number (unsigned int). R = real number (float). I = integer (int)
+    avxFormatComponent_UNK,
+    avxFormatComponent_UNUSED,
+    avxFormatComponent_UNORM,
+    avxFormatComponent_SNORM,
+    avxFormatComponent_UINT,
+    avxFormatComponent_SINT,
+    avxFormatComponent_FLOAT,
+    avxFormatComponent_SSCALED,
+    avxFormatComponent_USCALED,
+    avxFormatComponent_SFIXED,
+} avxFormatComponent;
 
-    afxPixelFormat_R8 = 1,
-    afxPixelFormat_RG8,
-    afxPixelFormat_RGB8,
-    afxPixelFormat_RGBA8, // AAAAAAAA BBBBBBBB GGGGGGGG RRRRRRRR
-    afxPixelFormat_ABGR8 = afxPixelFormat_RGBA8, // [ R, G, B, A ]
-
-    afxPixelFormat_GR8,
-    afxPixelFormat_BGR8,
-    afxPixelFormat_BGRA8, // AAAAAAAA RRRRRRRR GGGGGGGG BBBBBBBB
-    afxPixelFormat_ARGB8 = afxPixelFormat_BGRA8, // [ B, G, R, A ]
-
-    afxPixelFormat_R32F,
-    afxPixelFormat_RG32F,
-    afxPixelFormat_RGB32F,
-    afxPixelFormat_RGBA32F,
-
-    afxPixelFormat_RGB8_SRGB,
-    afxPixelFormat_RGBA8_SRGB, // A is not color, so it is always linear.
-    afxPixelFormat_RGB9E5,
-
-    afxPixelFormat_RGBA4,
-    afxPixelFormat_RGB5A1,
-    afxPixelFormat_R5G6B5,
-    afxPixelFormat_RGB10A2,
-
-    afxPixelFormat_S8,
-    afxPixelFormat_D16,
-    afxPixelFormat_D24,
-    afxPixelFormat_D32,
-    afxPixelFormat_D32F,
-    afxPixelFormat_D24S8,
-    afxPixelFormat_D32FS8,
-
-    afxPixelFormat_DXT1,
-    afxPixelFormat_DXT1A,
-    afxPixelFormat_DXT3,
-    afxPixelFormat_DXT5,
-
-    afxPixelFormat_TOTAL
-} afxPixelFormat;
-
-typedef enum afxPixelFlag
+typedef enum avxFormatFlag
 {
-    AFX_PIXEL_FLAG_REAL = AFX_BIT(0),
-    AFX_PIXEL_FLAG_DEPTH = AFX_BIT(1),
-    AFX_PIXEL_FLAG_SIGNED = AFX_BIT(2),
-    AFX_PIXEL_FLAG_NORMALIZED = AFX_BIT(3),
-    AFX_PIXEL_FLAG_COMPRESSED = AFX_BIT(4),
-    AFX_PIXEL_FLAG_INDEXED = AFX_BIT(5),
-    AFX_PIXEL_FLAG_LUMINANCE = AFX_BIT(6),
-} afxPixelFlag;
+    avxFormatFlag_DRAW       = AFX_BIT(0),
+    avxFormatFlag_DEPTH      = AFX_BIT(1),
+    avxFormatFlag_STENCIL    = AFX_BIT(2),
 
-AFX_DEFINE_STRUCT(afxPixelFormatSpecification)
-{
-    afxNat  stride; // bytes per pixel
-    afxNat  bpp[4];
-    afxNat  shift[4];
-    afxNat  swizzle[4];
-};
+    avxFormatFlag_sRGB       = AFX_BIT(3),
+    avxFormatFlag_COMPRESSED = AFX_BIT(4),
+    avxFormatFlag_SUBSAMPLED = AFX_BIT(5),
+    avxFormatFlag_LUMINANCE  = AFX_BIT(6),
+    avxFormatFlag_NORMALIZED = AFX_BIT(7),
+} avxFormatFlags;
 
-AFX_DEFINE_STRUCT(afxPfd)
+AFX_DEFINE_STRUCT(avxFormatDescription)
 /// Pixel format descriptor
 {
     afxNat32            bpp; /// bits per pixel
-    afxNat32            bypp; /// bytes per pixel
+    afxNat32            stride; /// bytes per pixel
     afxNat32            compCnt; /// number of components
-    afxPixelElementType type[4];
-    afxNat32            defaults[4]; /// Default values for missing components.
+    avxFormatComponent  type[4];
     afxNat32            swizzle[4]; /// swizzle per component
-    afxNat32            bpc[4]; /// bits per component
+    afxNat32            defaults[4]; /// Default values for missing components.
     afxBool             isNormalized[4];
     afxReal             tof[4]; /// To float scale factor
+    afxNat32            bpc[4]; /// bits per component
     afxNat32            bcWh[2];
-    afxBool             isSrgb;
-    afxBool             isBc;
-    afxBool             isSubsampled;
-    afxBool             isLuminance;    
+    avxFormatFlags      flags;
 };
 
-AFX_DEFINE_STRUCT(afxPixelLayout)
-{
-    afxNat  bpp; // bis per pixel
-    afxNat  bpc[4]; // bits per component. { R/D/S/I, RG/DS, RGB, RGBA/RGBE }
-    afxNat  shift[4]; // bit shift per component
-    afxBool real;
-    afxBool depth;
-    afxBool stencil;
-    afxBool block;
-    afxBool unused2;
-    afxBool unused3;
-    afxBool unused4;
-    //afxBool unused5;
-};
+AVXINL void     AfxDescribePixelFormat(avxFormat fmt, avxFormatDescription* pfd);
 
-AVXINL void     AfxDescribePixelFormat(afxPixelFormat fmt, afxPixelLayout *layout);
+AVXINL afxNat   AfxGetBpp(avxFormat fmt);
 
-AVXINL afxNat   AfxGetBpp(afxPixelFormat fmt);
-
-AVXINL afxBool  AfxPixelFormatIsDepth(afxPixelFormat fmt);
-AVXINL afxBool  AfxPixelFormatIsStencil(afxPixelFormat fmt);
-AVXINL afxBool  AfxPixelFormatIsCombinedDepthStencil(afxPixelFormat fmt);
-AVXINL afxBool  AfxPixelFormatIsReal(afxPixelFormat fmt);
-AVXINL afxBool  AfxPixelFormatIsSrgb(afxPixelFormat fmt);
-AVXINL afxBool  AfxPixelFormatIsCompressed(afxPixelFormat fmt);
+AVXINL afxBool  AfxIsPixelFormatDepth(avxFormat fmt);
+AVXINL afxBool  AfxIsPixelFormatStencil(avxFormat fmt);
+AVXINL afxBool  AfxIsPixelFormatCombinedDepthStencil(avxFormat fmt);
+AVXINL afxBool  AfxIsSrgb(avxFormat fmt);
+AVXINL afxBool  AfxIsPixelFormatCompressed(avxFormat fmt);
 
 
 

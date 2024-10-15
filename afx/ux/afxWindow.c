@@ -41,9 +41,12 @@ _AUX afxError AfxLoadWindowIcon(afxWindow wnd, afxUri const* uri)
     if (!AfxGetDrawOutputContext(wnd->dout ? wnd->dout : wnd->frameDout, &dctx)) AfxThrowError();
     else
     {
+        afxRasterInfo rasi = { 0 };
+        rasi.usage = afxRasterUsage_SRC;
+        rasi.flags = afxRasterFlag_2D;
         afxRaster ras;
 
-        if (AfxLoadRasters(dctx, afxRasterUsage_SRC, afxRasterFlag_2D, 1, uri, &ras)) AfxThrowError();
+        if (AfxLoadRasters(dctx, 1, &rasi, &uri[0], &ras)) AfxThrowError();
         else
         {
             if (AfxChangeWindowIcon(wnd, ras))
@@ -327,7 +330,7 @@ _AUX afxBool _AuxWndStdEventCb(afxWindow wnd, auxEvent *ev)
     {
     case auxEventId_KEY:
     {
-        if (AfxWasKeyPressed(AfxGetParent(wnd), 0, afxKey_PRINT))
+        if (AfxWasKeyPressed(AfxGetProvider(wnd), 0, afxKey_PRINT))
         {
             if (wnd->dout)
             {
@@ -401,7 +404,7 @@ _AUX afxError _AuxWndDtorCb(afxWindow wnd)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &wnd, afxFcc_WND);
 
-    AfxCleanUpChainedClasses(&wnd->classes);
+    AfxDeregisterChainedClasses(&wnd->classes);
 
     //AfxReleaseObjects(1, &wnd->m.dout);
 
@@ -434,8 +437,8 @@ _AUX afxError AfxConfigureWindow(afxSession ses, afxWindowConfig* cfg, afxV2d co
     cfg->frame.doNotClip = FALSE;
     cfg->frame.presentAlpha = avxPresentAlpha_PREMUL;
     AfxConfigureDrawOutput(cfg->ddevId, &cfg->surface);
-    cfg->surface.pixelFmt = afxPixelFormat_ARGB8;
-    cfg->surface.pixelFmtDs[0] = afxPixelFormat_D24;
+    cfg->surface.pixelFmt = avxFormat_BGRA8;
+    cfg->surface.pixelFmtDs[0] = avxFormat_X8D24;
     cfg->surface.bufFlags = afxRasterUsage_DRAW | afxRasterUsage_SAMPLING;
     cfg->surface.bufFlagsDs[0] = afxRasterUsage_DRAW | afxRasterUsage_SAMPLING;
 

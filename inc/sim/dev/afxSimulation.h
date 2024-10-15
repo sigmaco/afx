@@ -25,12 +25,9 @@
 #ifndef AMX_SIMULATION_H
 #define AMX_SIMULATION_H
 
-#include "qwadro/inc/base/afxClass.h"
 #include "qwadro/inc/sim/rendering/akxLighting.h"
 
 #include "qwadro/inc/sim/afxAnimation.h"
-#include "qwadro/inc/draw/dev/afxDrawInput.h"
-#include "qwadro/inc/draw/dev/afxDrawContext.h"
 #include "qwadro/inc/sim/afxMotor.h"
 #include "qwadro/inc/sim/afxMotion.h"
 #include "qwadro/inc/sim/rendering/akxRenderer.h"
@@ -72,7 +69,7 @@ AMX afxStringBase   AfxGetModelUrnStringBase(afxSimulation sim);
 AMX afxNat          AfxCountMathBridges(afxSimulation sim, afxNat baseBridIdx);
 AMX afxNat          AfxCountMathQueues(afxSimulation sim, afxNat portIdx, afxNat baseQueIdx);
 
-AMX afxBool         AfxGetMathBridge(afxSimulation sim, afxNat portIdx, afxPragmaBridge* bridge);
+AMX afxBool         AfxGetMathBridge(afxSimulation sim, afxNat portIdx, afxComboBridge* bridge);
 AMX afxBool         AfxGetMathQueue(afxSimulation sim, afxNat portIdx, afxNat queIdx, afxMathQueue* queue);
 
 AMX afxError        AfxWaitForSimulation(afxSimulation sim, afxNat portIdx, afxNat firstQueIdx, afxNat queCnt);

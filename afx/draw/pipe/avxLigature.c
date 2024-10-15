@@ -75,7 +75,7 @@ _AVX afxError _AvxLigaStdDtorCb(avxLigature liga)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &liga, afxFcc_BSCH);
 
-    afxDrawContext dctx = AfxGetParent(liga);
+    afxDrawContext dctx = AfxGetProvider(liga);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     if (liga->sets)

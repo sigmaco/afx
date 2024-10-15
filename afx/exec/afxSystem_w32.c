@@ -32,7 +32,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 AFX_STATIC_ASSERT(sizeof(AFX_OBJECT(afxSystem)) > sizeof(void*), "");
 _AFX afxBool sysReady = FALSE;
@@ -53,10 +53,11 @@ extern afxClassConfig const _AfxThrMgrCfg;
 extern afxClassConfig const _AfxCdcMgrCfg;
 extern afxClassConfig const _AfxSimMgrCfg;
 extern afxClassConfig const _AfxSvcMgrCfg;
+extern afxClassConfig const _AfxIosClsCfg;
 extern afxClassConfig const _AfxFsysMgrCfg;
 extern afxClassConfig const _AfxStrbMgrCfg;
 extern afxClassConfig const _AfxShMgrCfg;
-
+extern afxClassConfig const _AfxXexuStdImplementation;
 
 _AFX void Start_us_count(afxNat64* out_count)
 {
@@ -235,6 +236,7 @@ _AFX afxError MountHostVolumes()
     }
 
     int a = 0;
+    return err;
 }
 
 _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
@@ -266,6 +268,10 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
                     AfxThrowError();
             }
 #       endif
+            AfxMakeUri(&location, 0, "C:\\Windows\\System32", 0);
+
+            if (AfxMountStorageUnit('c', &location, afxFileFlag_RX))
+                AfxThrowError();
 #   elif defined(AFX_OS_LNX)
             AfxMakeUri(&location, 0, "system64x", 0);
 
@@ -294,6 +300,11 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
                     AfxThrowError();
             }
 #       endif
+
+            AfxMakeUri(&location, 0, "C:\\Windows\\SysWow64", 0);
+
+            if (AfxMountStorageUnit('c', &location, afxFileFlag_RX))
+                AfxThrowError();
 #   elif defined(AFX_OS_LNX)
             AfxMakeUri(&location, 0, "systemx", 0);
 
@@ -344,7 +355,7 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
         }
     }
 #endif
-    MountHostVolumes();
+    //MountHostVolumes();
     return err;
 }
 
@@ -362,7 +373,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxNat invokeNo)
 
     afxChain* classes = &sys->classes;
     AfxDeployChain(classes, sys);
-    AfxRegisterClass(&sys->strbMgr, NIL, classes, &_AfxStrbMgrCfg);
+    AfxRegisterClass(&sys->strbCls, NIL, classes, &_AfxStrbMgrCfg);
 
     // setting the process working directory and the Qwadro/system working directory...
     afxUri uri;
@@ -408,23 +419,27 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxNat invokeNo)
 
     clsCfg = _AfxThrMgrCfg;
     clsCfg.unitsPerPage = sys->hwThreadingCap;
-    AfxRegisterClass(&sys->thrMgr, NIL, classes, &clsCfg); // require txu
+    AfxRegisterClass(&sys->thrCls, NIL, classes, &clsCfg); // require txu
 
-    AfxRegisterClass(&sys->mmuMgr, NIL, classes, &_AfxMmuMgrCfg);
+    AfxRegisterClass(&sys->mmuCls, NIL, classes, &_AfxMmuMgrCfg);
 
-    AfxRegisterClass(&sys->svcMgr, NIL, classes, &_AfxSvcMgrCfg);
+    AfxRegisterClass(&sys->svcCls, NIL, classes, &_AfxSvcMgrCfg);
     //AfxRegisterClass(&sys->fileMgr, NIL, classes, &_AfxFileMgrConfig);
-    AfxRegisterClass(&sys->cdcMgr, NIL, classes, &_AfxCdcMgrCfg);
+    AfxRegisterClass(&sys->cdcCls, NIL, classes, &_AfxCdcMgrCfg);
 
-    AfxRegisterClass(&sys->fsysMgr, NIL, classes, &_AfxFsysMgrCfg); // require iob, arch
+    AfxRegisterClass(&sys->iosCls, NIL, classes, &_AfxIosClsCfg);
 
-    AfxRegisterClass(&sys->exeMgr, NIL, classes, &_AfxMdleMgrCfg);
-    AfxRegisterClass(&sys->icdCls, &sys->exeMgr, classes, &_AfxIcdClsCfg);
+    AfxRegisterClass(&sys->fsysCls, NIL, classes, &_AfxFsysMgrCfg); // require iob, arch
+
+    AfxRegisterClass(&sys->mdleCls, NIL, classes, &_AfxMdleMgrCfg);
+    //AfxRegisterClass(&sys->icdCls, &sys->exeMgr, classes, &_AfxIcdClsCfg);
     
     clsCfg = _AfxDevBaseImplementation;
     clsCfg.ctor = NIL; // must be called by specialized device constructor. It is needed to perform nested specialized device creation.
     AfxRegisterClass(&sys->devCls, NIL, classes, &clsCfg);
 
+    clsCfg = _AfxXexuStdImplementation;
+    AfxRegisterClass(&sys->xexuCls, NIL, classes, &clsCfg);
 
     afxThreadConfig thrCfg = { 0 };
     thrCfg.tid = (sys->primeTid = AfxGetTid());
@@ -443,11 +458,14 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxNat invokeNo)
             AfxFormatUri(&urib.uri, "e2coree");
             afxModule e2coree;
 
-            if (AfxLoadModule(&urib.uri, NIL, &e2coree)) AfxThrowError();
+            if (AfxLoadModule(&urib.uri, AFX_BIT(8), &e2coree)) AfxThrowError();
             else
             {
                 AfxAssertObjects(1, &e2coree, afxFcc_MDLE);
                 sys->e2coree = e2coree;
+
+                if (AfxAcquireIoBridge(&cfg->mainIoBridge, &sys->primeExu))
+                    AfxThrowError();
 
                 if (err)
                     AfxReleaseObjects(1, &sys->e2coree);
@@ -456,7 +474,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxNat invokeNo)
     }
 
     if (err)
-        AfxCleanUpChainedClasses(&sys->classes);
+        AfxDeregisterChainedClasses(&sys->classes);
 
     return err;
 }
@@ -470,7 +488,7 @@ _AFX afxError _AfxSysDtor(afxSystem sys)
     AfxReleaseObjects(1, &sys->primeThr);
 
     // objects will be released at class drop.
-    AfxCleanUpChainedClasses(&sys->classes);
+    AfxDeregisterChainedClasses(&sys->classes);
 
     //AfxDeallocateUri(&sys->pwd.uri);
 
@@ -493,17 +511,17 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
 
     afxUri uri;
     afxManifest ini;
-    AfxSetUpIni(&ini);
+    AfxDeployManifest(&ini);
     AfxMakeUri(&uri, 0, "system.ini", 0);
 
-    if (AfxIniLoadFromFile(&ini, &uri))
+    if (AfxLoadInitializationFile(&ini, &uri))
     {
         afxString2048 tbs;
         AfxMakeString2048(&tbs, TheSystem ? AfxGetUriString(&TheSystem->pwd.uri) : NIL);
         AfxCatenateStringL(&tbs.str, "system.ini", 0);
         
         AfxWrapUriString(&uri, &tbs.str);
-        AfxIniLoadFromFile(&ini, &uri);
+        AfxLoadInitializationFile(&ini, &uri);
     }
 
 #ifdef AFX_OS_WIN
@@ -513,17 +531,17 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
 
     afxString sSystem = AFX_STRING("System");
 
-    if (!AfxIniGetNat(&ini, &sSystem, &AfxString("nIoBufferSize"), &cfg.ioBufSiz) || !cfg.ioBufSiz)
+    if (!AfxGetInitializationNat(&ini, &sSystem, &AfxString("nIoBufferSize"), &cfg.ioBufSiz) || !cfg.ioBufSiz)
     {
         cfg.ioBufSiz = BUFSIZ;
     }
 
-    if (!AfxIniGetReal(&ini, &sSystem, &AfxString("fUnitsPerMeter"), &cfg.unitsToMeter) || !cfg.unitsToMeter)
+    if (!AfxGetInitializationReal(&ini, &sSystem, &AfxString("fUnitsPerMeter"), &cfg.unitsToMeter) || !cfg.unitsToMeter)
     {
         cfg.unitsToMeter = renderwareUnitsPerMeter;
     }
 
-    if (!AfxIniGetNat(&ini, &sSystem, &AfxString("nHwThreadingCapacity"), &cfg.hwThreadingCap) || !cfg.hwThreadingCap)
+    if (!AfxGetInitializationNat(&ini, &sSystem, &AfxString("nHwThreadingCapacity"), &cfg.hwThreadingCap) || !cfg.hwThreadingCap)
     {
         cfg.hwThreadingCap =
 #ifdef AFX_OS_WIN
@@ -533,7 +551,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
 #endif
     }
 
-    if (!AfxIniGetNat(&ini, &sSystem, &AfxString("nMemoryPageSize"), &cfg.memPageSiz) || !cfg.memPageSiz)
+    if (!AfxGetInitializationNat(&ini, &sSystem, &AfxString("nMemoryPageSize"), &cfg.memPageSiz) || !cfg.memPageSiz)
     {
         cfg.memPageSiz =
 #ifdef AFX_OS_WIN
@@ -543,7 +561,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
 #endif
     }
 
-    if (!AfxIniGetNat(&ini, &sSystem, &AfxString("nAllocationGranularity"), &cfg.allocGranularity) || !cfg.allocGranularity)
+    if (!AfxGetInitializationNat(&ini, &sSystem, &AfxString("nAllocationGranularity"), &cfg.allocGranularity) || !cfg.allocGranularity)
     {
         cfg.allocGranularity =
 #ifdef AFX_OS_WIN
@@ -569,22 +587,22 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
 #endif
     }
 
-    if (!(AfxIniGetBool(&ini, &AfxString("DrawSystem"), &AfxString("bDisabled"), &cfg.avxDisabled)))
+    if (!(AfxGetInitializationBool(&ini, &AfxString("DrawSystem"), &AfxString("bDisabled"), &cfg.avxDisabled)))
     {
         cfg.avxDisabled = FALSE;
     }
 
-    if (!(AfxIniGetBool(&ini, &AfxString("SoundSystem"), &AfxString("bDisabled"), &cfg.asxDisabled)))
+    if (!(AfxGetInitializationBool(&ini, &AfxString("SoundSystem"), &AfxString("bDisabled"), &cfg.asxDisabled)))
     {
         cfg.asxDisabled = FALSE;
     }
 
-    if (!(AfxIniGetBool(&ini, &AfxString("Shell"), &AfxString("bDisabled"), &cfg.auxDisabled)))
+    if (!(AfxGetInitializationBool(&ini, &AfxString("Shell"), &AfxString("bDisabled"), &cfg.auxDisabled)))
     {
         cfg.auxDisabled = FALSE;
     }
 
-    AfxCleanUpIni(&ini);
+    AfxDismantleManifest(&ini);
 
     *config = cfg;
 }

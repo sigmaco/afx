@@ -1,0 +1,75 @@
+
+ afxDebug.c:386?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<Basic I/O System>::Mount(5099e7cc, 00000000, 00000000, 5099c1c0)
+ afxClass<Basic I/O System>::ConstructObject(0024f110)
+ afxSystem.c:1006?_AfxSysCtor(sys=0024f110)
+ afxClass<Context>::Mount(0024f12c, 0024f118, 00000000, 5099c7a0)
+ afxClass<Module>::Mount(0024f1ec, 0024f118, 00000000, 5099c080)
+ afxClass<Thread>::Mount(0024f42c, 0024f118, 00000000, 5099c1f0)
+ afxClass<File>::Mount(0024f5ac, 0024f118, 00000000, 5099c310)
+ afxClass<Archive>::Mount(0024f66c, 0024f118, 00000000, 5099c2e0)
+ afxClass<Application>::Mount(0024f4ec, 0024f118, 00000000, 5099c000)
+ afxClass<Keyboard>::Mount(0024f2ac, 0024f118, 00000000, 5099c340)
+ afxClass<Mouse>::Mount(0024f36c, 0024f118, 00000000, 5099c370)
+ afxClass<Draw System>::Mount(0024f72c, 0024f118, 00000000, 5099d070)
+ ADV afxSystem.c:1090?_AfxSysCtor
+    Memory page size: 4096
+ ADV afxSystem.c:1091?_AfxSysCtor
+    Logical processor count: 2
+ afxContext.c:202?AfxAcquireContexts(cnt=1,app=0024f7ec,strategy=0043e63c)
+ afxClass<Context>::ConstructObject(0024f950)
+ afxContext.c:166?_AfxCtxCtor(ctx=0024f950)
+ afxArena.c:767?AfxAcquireArena(aren=0024f848)
+ afxArena.c:768?AfxAcquireArena(spec=00000000,hint="afxSystem.c:1143!_AfxSysCtor")
+ afxSystem.c:750?AfxMountStoragePoints(6,0043e794)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:170?AfxAcquireModules(cnt=1,mdle=0024f818,uri=0043e6cc)
+ afxClass<Module>::ConstructObject(0023b460)
+ afxModule.c:126?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxKeyboard.c:317?AfxAcquireKeyboards(cnt=1,kbd=0024f81c,port=0043e614)
+ afxClass<Keyboard>::ConstructObject(00252d10)
+ afxKeyboard.c:281?_AfxKbdCtor(kbd=00252d10)
+ afxClass<Draw System>::ConstructObject(00255040)
+ afxDrawSystem.c:635?_AfxDsysCtor(dsys=00255040)
+ afxClass<Draw Thread>::Mount(0025546c, 00255098, 00000000, 0043f154)
+ afxClass<Installable Client (Draw) Driver>::Mount(002550ac, 00255098, 00000000, 0043f124)
+ afxClass<Draw Device>::Mount(0025516c, 00255098, 00000000, 0043f0f4)
+ afxClass<Draw Context>::Mount(0025522c, 00255098, 00000000, 0043f0c4)
+ afxClass<Draw Output>::Mount(002552ec, 00255098, 00000000, 0043f094)
+ afxClass<Draw Input>::Mount(002553ac, 00255098, 00000000, 0043f064)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+ Truecolor Targa texture serializer installed!
+ afxModule.c:170?AfxAcquireModules(cnt=1,mdle=00255540,uri=0043efec)
+ afxClass<Module>::ConstructObject(0023b560)
+ afxModule.c:126?_AfxMdleCtor(uri:e2draw.icd)
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(00258940)
+ afxDrawSystem.c:261?_AfxDdrvCtor(ddrv=00258940)
+ ERR afxString.c:631?AfxExcerptString
+    (parent)
+    Nil
+ ERR afxString.c:74?AfxGetStringSize
+    (str)
+    Nil

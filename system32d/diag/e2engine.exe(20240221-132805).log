@@ -1,0 +1,597 @@
+
+ afxDebug_w32.c:360
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+                   (c) 2017 SIGMA, Engineering In Technology                   
+                                www.sigmaco.org                                
+                                                                               
+Booting up Qwadro Execution Ecosystem...
+ Installing Qwadro Execution Ecosystem at 0f3932b8...
+ ERR afxConfig.c:216?AfxIniLoadFromFile
+  1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.
+ Installing Thread Execution Unit at 004e37c8 by 004e3088...
+ Entering the Thread Execution Environment 3644
+ Installing Memory Management Unit at 004e309c by 004e3088...
+ Installing Thread at 004e36fc by 004e3088...
+ Installing Device at 004e3894 by 004e3088...
+ Installing Autonomous Service at 004e3960 by 004e3088...
+ Installing I/O Stream at 004e3a2c by 004e3088...
+ Installing Codec at 004e3af8 by 004e3088...
+ Installing File Archive at 004e3c90 by 004e3088...
+ Installing Executable & Linkable Module at 004e3234 by 004e3088...
+ Installing Installable Client Driver at 004e3300 by 004e3088...
+ Installing File System at 004e3d5c by 004e3088...
+ Installing Human Input Device at 004e33cc by 004e3088 over 004e3894...
+ Installing Keyboard at 004e3498 by 004e3088 over 004e33cc...
+ Installing Mouse at 004e3564 by 004e3088 over 004e33cc...
+ Installing Controller at 004e3630 by 004e3088 over 004e33cc...
+ Installing String Catalog at 004e3168 by 004e3088...
+ [!] afxSystem_w32.c:458?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:459?_AfxSysCtor
+  Logical processor count: 1
+ Mounting file system... <.>(''),5.
+ Mounting file system... <system>('system'),5.
+ Mounting file system... <system>('system32'),7.
+ Mounting file system... <system>('system32d'),7.
+ Mounting file system... <code>('code'),5.
+ Mounting file system... <sound>('sound'),5.
+ Mounting file system... <data>('data'),5.
+ Mounting file system... <art>('art'),5.
+ Mounting file system... <tmp>('tmp'),7.
+ Loading executable... <system/e2coree.dll>
+ E:\qwadro\afx\\system32d\/e2coree.dll
+ Acquiring keyboard at port 0
+ Loading executable... <e2sound.dll>
+ Installing SIGMA Sound System at 0f8fb028 by 004e3088...
+ Installing Sound Bridge at 004e6b18 by 004e6b04 over 004e37c8...
+ Installing Sound Thread at 004e6be4 by 004e6b04 over 004e36fc...
+ Installing Sound Device at 004e6cb0 by 004e6b04 over 004e3894...
+ Loading executable... <e2draw.dll>
+ Installing SIGMA Draw System at 002ea8c0 by 004e3088...
+ Installing Draw Bridge at 004e81dc by 004e81c8 over 004e37c8...
+ Installing Draw Thread at 004e82a8 by 004e81c8 over 004e36fc...
+ Installing Draw Device at 004e8374 by 004e81c8 over 004e3894...
+ E:\qwadro\afx\\system32d\/*.inf
+ Installing client driver <oal4d.inf>...
+ [!] afxIcd.c:128?_AfxIcdCtor
+  Installable client driver <oal4d.inf> discovered.
+	Product: 
+	Version: 0.0.0
+	Description: 
+	Vendor: 
+	Website: 
+	
+ [!] afxIcd.c:134?_AfxIcdCtor
+  Loading ICD <oal4d.inf> executable and linkable file <oal4d.dll>...
+ Loading executable... <oal4d.dll>
+ Created. (mtx)004e9230
+ Installing Sound Context at 004e8fc0 by 004e8e90...
+ 0  - Generic Software
+ Listing devices available with ALC_ENUMERATE_ALL_EXT
+ 0  - Generic Software on Alto-falantes (VIA HD Audio(Compatible))
+ 1  - Generic Software on Headphone (VIA HD Audio(Compatible))
+ Listing available capture devices:
+ 0  - Mixagem estéreo (VIA HD Audio(C
+ 1  - Microfone (VIA HD Audio(Compati
+ 000 alEnable core found.
+ 001 alDisable core found.
+ 002 alIsEnabled core found.
+ 003 alGetString core found.
+ 004 alGetBooleanv core found.
+ 005 alGetIntegerv core found.
+ 006 alGetFloatv core found.
+ 007 alGetDoublev core found.
+ 008 alGetBoolean core found.
+ 009 alGetInteger core found.
+ 010 alGetFloat core found.
+ 011 alGetDouble core found.
+ 012 alGetError core found.
+ 013 alIsExtensionPresent core found.
+ 014 alGetProcAddress core found.
+ 015 alGetEnumValue core found.
+ 016 alListenerf core found.
+ 017 alListener3f core found.
+ 018 alListenerfv core found.
+ 019 alListeneri core found.
+ 020 alListener3i core found.
+ 021 alListeneriv core found.
+ 022 alGetListenerf core found.
+ 023 alGetListener3f core found.
+ 024 alGetListenerfv core found.
+ 025 alGetListeneri core found.
+ 026 alGetListener3i core found.
+ 027 alGetListeneriv core found.
+ 028 alGenSources core found.
+ 029 alDeleteSources core found.
+ 030 alIsSource core found.
+ 031 alSourcef core found.
+ 032 alSource3f core found.
+ 033 alSourcefv core found.
+ 034 alSourcei core found.
+ 035 alSource3i core found.
+ 036 alSourceiv core found.
+ 037 alGetSourcef core found.
+ 038 alGetSource3f core found.
+ 039 alGetSourcefv core found.
+ 040 alGetSourcei core found.
+ 041 alGetSource3i core found.
+ 042 alGetSourceiv core found.
+ 043 alSourcePlayv core found.
+ 044 alSourceStopv core found.
+ 045 alSourceRewindv core found.
+ 046 alSourcePausev core found.
+ 047 alSourcePlay core found.
+ 048 alSourceStop core found.
+ 049 alSourceRewind core found.
+ 050 alSourcePause core found.
+ 051 alSourceQueueBuffers core found.
+ 052 alSourceUnqueueBuffers core found.
+ 053 alGenBuffers core found.
+ 054 alDeleteBuffers core found.
+ 055 alIsBuffer core found.
+ 056 alBufferData core found.
+ 057 alBufferf core found.
+ 058 alBuffer3f core found.
+ 059 alBufferfv core found.
+ 060 alBufferi core found.
+ 061 alBuffer3i core found.
+ 062 alBufferiv core found.
+ 063 alGetBufferf core found.
+ 064 alGetBuffer3f core found.
+ 065 alGetBufferfv core found.
+ 066 alGetBufferi core found.
+ 067 alGetBuffer3i core found.
+ 068 alGetBufferiv core found.
+ Opening file... <sound/qwadroDeepNote44kHz>,1
+ E:\qwadro\afx\\sound\/qwadroDeepNote44kHz
+ [!] afxSoundSystem.c:301?_AfxSdevCtor
+  The audience is listening
+ Installing client driver <sgl4d.inf>...
+ [!] afxIcd.c:128?_AfxIcdCtor
+  Installable client driver <sgl4d.inf> discovered.
+	Product: SIGMA GL/2
+	Version: 0.0.0
+	Description: SIGMA-engineered continuously integrated OpenGL/Vulkan Video Graphics Infrastructure
+	Vendor: SIGMA Technology Group
+	Website: www.sigmaco.org
+	
+ [!] afxIcd.c:134?_AfxIcdCtor
+  Loading ICD <sgl4d.inf> executable and linkable file <sgl4d.dll>...
+ Loading executable... <sgl4d.dll>
+ Created. (mtx)005379bc
+ Installing Draw Script at 00538234 by 00537340...
+ Installing Draw Queue at 00538168 by 00537340...
+ Installing Draw Context at 00537470 by 00537340...
+ Installing Draw Output at 0053753c by 00537340...
+ Installing Draw Input at 00537608 by 00537340...
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Creating transient OpenGL context
+ 000 wglCreateContextAttribsARB core found.
+ 000 wglChoosePixelFormatARB core found.
+ 000 wglSwapIntervalEXT core found.
+ 000 wglGetExtensionsStringARB core found.
+ Creating definitive OpenGL context
+ 000 wglCreateContextAttribsARB core found.
+ 000 wglChoosePixelFormatARB core found.
+ 000 wglSwapIntervalEXT core found.
+ 000 wglGetExtensionsStringARB core found.
+ 391 glReleaseShaderCompiler core found.
+ 392 glShaderBinary core found.
+ 393 glGetShaderPrecisionFormat core found.
+ 394 glDepthRangef core found.
+ 395 glClearDepthf core found.
+ 396 glGetProgramBinary core found.
+ 397 glProgramBinary core found.
+ 398 glProgramParameteri core found.
+ 399 glUseProgramStages core found.
+ 400 glActiveShaderProgram core found.
+ 401 glCreateShaderProgramv core found.
+ 402 glBindProgramPipeline core found.
+ 403 glDeleteProgramPipelines core found.
+ 404 glGenProgramPipelines core found.
+ 405 glIsProgramPipeline core found.
+ 406 glGetProgramPipelineiv core found.
+ 407 glProgramUniform1i core found.
+ 408 glProgramUniform1iv core found.
+ 409 glProgramUniform1f core found.
+ 410 glProgramUniform1fv core found.
+ 411 glProgramUniform1d core found.
+ 412 glProgramUniform1dv core found.
+ 413 glProgramUniform1ui core found.
+ 414 glProgramUniform1uiv core found.
+ 415 glProgramUniform2i core found.
+ 416 glProgramUniform2iv core found.
+ 417 glProgramUniform2f core found.
+ 418 glProgramUniform2fv core found.
+ 419 glProgramUniform2d core found.
+ 420 glProgramUniform2dv core found.
+ 421 glProgramUniform2ui core found.
+ 422 glProgramUniform2uiv core found.
+ 423 glProgramUniform3i core found.
+ 424 glProgramUniform3iv core found.
+ 425 glProgramUniform3f core found.
+ 426 glProgramUniform3fv core found.
+ 427 glProgramUniform3d core found.
+ 428 glProgramUniform3dv core found.
+ 429 glProgramUniform3ui core found.
+ 430 glProgramUniform3uiv core found.
+ 431 glProgramUniform4i core found.
+ 432 glProgramUniform4iv core found.
+ 433 glProgramUniform4f core found.
+ 434 glProgramUniform4fv core found.
+ 435 glProgramUniform4d core found.
+ 436 glProgramUniform4dv core found.
+ 437 glProgramUniform4ui core found.
+ 438 glProgramUniform4uiv core found.
+ 439 glProgramUniformMatrix2fv core found.
+ 440 glProgramUniformMatrix3fv core found.
+ 441 glProgramUniformMatrix4fv core found.
+ 442 glProgramUniformMatrix2dv core found.
+ 443 glProgramUniformMatrix3dv core found.
+ 444 glProgramUniformMatrix4dv core found.
+ 445 glProgramUniformMatrix2x3fv core found.
+ 446 glProgramUniformMatrix3x2fv core found.
+ 447 glProgramUniformMatrix2x4fv core found.
+ 448 glProgramUniformMatrix4x2fv core found.
+ 449 glProgramUniformMatrix3x4fv core found.
+ 450 glProgramUniformMatrix4x3fv core found.
+ 451 glProgramUniformMatrix2x3dv core found.
+ 452 glProgramUniformMatrix3x2dv core found.
+ 453 glProgramUniformMatrix2x4dv core found.
+ 454 glProgramUniformMatrix4x2dv core found.
+ 455 glProgramUniformMatrix3x4dv core found.
+ 456 glProgramUniformMatrix4x3dv core found.
+ 457 glValidateProgramPipeline core found.
+ 458 glGetProgramPipelineInfoLog core found.
+ 459 glVertexAttribL1d core found.
+ 460 glVertexAttribL2d core found.
+ 461 glVertexAttribL3d core found.
+ 462 glVertexAttribL4d core found.
+ 463 glVertexAttribL1dv core found.
+ 464 glVertexAttribL2dv core found.
+ 465 glVertexAttribL3dv core found.
+ 466 glVertexAttribL4dv core found.
+ 467 glVertexAttribLPointer core found.
+ 468 glGetVertexAttribLdv core found.
+ 469 glViewportArrayv core found.
+ 470 glViewportIndexedf core found.
+ 471 glViewportIndexedfv core found.
+ 472 glScissorArrayv core found.
+ 473 glScissorIndexed core found.
+ 474 glScissorIndexedv core found.
+ 475 glDepthRangeArrayv core found.
+ 476 glDepthRangeIndexed core found.
+ 477 glGetFloati_v core found.
+ 478 glGetDoublei_v core found.
+ 479 glDrawArraysInstancedBaseInstance core found.
+ 480 glDrawElementsInstancedBaseInstance core found.
+ 481 glDrawElementsInstancedBaseVertexBaseInstance core found.
+ 482 glGetInternalformativ core found.
+ 483 glGetActiveAtomicCounterBufferiv core found.
+ 484 glBindImageTexture core found.
+ 485 glMemoryBarrier core found.
+ 486 glTexStorage1D core found.
+ 487 glTexStorage2D core found.
+ 488 glTexStorage3D core found.
+ 489 glDrawTransformFeedbackInstanced core found.
+ 490 glDrawTransformFeedbackStreamInstanced core found.
+ 493 glDispatchCompute core found.
+ 494 glDispatchComputeIndirect core found.
+ 496 glFramebufferParameteri core found.
+ 497 glGetFramebufferParameteriv core found.
+ 498 glGetInternalformati64v core found.
+ 503 glInvalidateFramebuffer core found.
+ 504 glInvalidateSubFramebuffer core found.
+ 505 glMultiDrawArraysIndirect core found.
+ 506 glMultiDrawElementsIndirect core found.
+ 507 glGetProgramInterfaceiv core found.
+ 508 glGetProgramResourceIndex core found.
+ 509 glGetProgramResourceName core found.
+ 510 glGetProgramResourceiv core found.
+ 511 glGetProgramResourceLocation core found.
+ 512 glGetProgramResourceLocationIndex core found.
+ 513 glShaderStorageBlockBinding core found.
+ 514 glTexBufferRange core found.
+ 515 glTexStorage2DMultisample core found.
+ 516 glTexStorage3DMultisample core found.
+ 518 glBindVertexBuffer core found.
+ 519 glVertexAttribFormat core found.
+ 520 glVertexAttribIFormat core found.
+ 521 glVertexAttribLFormat core found.
+ 522 glVertexAttribBinding core found.
+ 523 glVertexBindingDivisor core found.
+ 524 glDebugMessageControl core found.
+ 525 glDebugMessageInsert core found.
+ 526 glDebugMessageCallback core found.
+ 527 glGetDebugMessageLog core found.
+ 528 glPushDebugGroup core found.
+ 529 glPopDebugGroup core found.
+ 530 glObjectLabel core found.
+ 531 glGetObjectLabel core found.
+ 532 glObjectPtrLabel core found.
+ 533 glGetObjectPtrLabel core found.
+ 534 glBufferStorage core found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  543 glClipControlEXT ext found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  551 glNamedBufferStorageEXT ext found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  589 glTextureBufferRangeEXT ext found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  606 glTextureParameteriEXT ext found.
+ 641 glMemoryBarrierByRegion core found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  644 glGetGraphicsResetStatusARB ext found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  645 glGetnCompressedTexImageARB ext found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  646 glGetnTexImageARB ext found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  647 glGetnUniformdvARB ext found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  648 glGetnUniformfvARB ext found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  649 glGetnUniformivARB ext found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  650 glGetnUniformuivARB ext found.
+ [!] sglDdrv_w32.c:820?SglLoadOpenGlVmt
+  651 glReadnPixelsARB ext found.
+ Listing #187 "core" GL supported extensions.
+ 000 GL_EXT_blend_minmax ext found.
+ 001 GL_EXT_blend_subtract ext found.
+ 002 GL_EXT_blend_color ext found.
+ 003 GL_EXT_abgr ext found.
+ 004 GL_EXT_texture3D ext found.
+ 005 GL_EXT_clip_volume_hint ext found.
+ 006 GL_EXT_compiled_vertex_array ext found.
+ 007 GL_SGIS_texture_edge_clamp ext found.
+ 008 GL_SGIS_generate_mipmap ext found.
+ 009 GL_EXT_draw_range_elements ext found.
+ 010 GL_SGIS_texture_lod ext found.
+ 011 GL_EXT_rescale_normal ext found.
+ 012 GL_EXT_packed_pixels ext found.
+ 013 GL_EXT_texture_edge_clamp ext found.
+ 014 GL_EXT_separate_specular_color ext found.
+ 015 GL_ARB_multitexture ext found.
+ 016 GL_ARB_map_buffer_alignment ext found.
+ 017 GL_ARB_conservative_depth ext found.
+ 018 GL_EXT_texture_env_combine ext found.
+ 019 GL_EXT_bgra ext found.
+ 020 GL_EXT_blend_func_separate ext found.
+ 021 GL_EXT_secondary_color ext found.
+ 022 GL_EXT_fog_coord ext found.
+ 023 GL_EXT_texture_env_add ext found.
+ 024 GL_ARB_texture_cube_map ext found.
+ 025 GL_ARB_transpose_matrix ext found.
+ 026 GL_ARB_internalformat_query ext found.
+ 027 GL_ARB_internalformat_query2 ext found.
+ 028 GL_ARB_texture_env_add ext found.
+ 029 GL_IBM_texture_mirrored_repeat ext found.
+ 030 GL_EXT_multi_draw_arrays ext found.
+ 031 GL_SUN_multi_draw_arrays ext found.
+ 032 GL_NV_blend_square ext found.
+ 033 GL_ARB_texture_compression ext found.
+ 034 GL_3DFX_texture_compression_FXT1 ext found.
+ 035 GL_EXT_texture_filter_anisotropic ext found.
+ 036 GL_ARB_texture_border_clamp ext found.
+ 037 GL_ARB_point_parameters ext found.
+ 038 GL_ARB_texture_env_combine ext found.
+ 039 GL_ARB_texture_env_dot3 ext found.
+ 040 GL_ARB_texture_env_crossbar ext found.
+ 041 GL_EXT_texture_compression_s3tc ext found.
+ 042 GL_ARB_shadow ext found.
+ 043 GL_ARB_window_pos ext found.
+ 044 GL_EXT_shadow_funcs ext found.
+ 045 GL_EXT_stencil_wrap ext found.
+ 046 GL_ARB_vertex_program ext found.
+ 047 GL_EXT_texture_rectangle ext found.
+ 048 GL_ARB_fragment_program ext found.
+ 049 GL_EXT_stencil_two_side ext found.
+ 050 GL_ATI_separate_stencil ext found.
+ 051 GL_ARB_vertex_buffer_object ext found.
+ 052 GL_EXT_texture_lod_bias ext found.
+ 053 GL_ARB_occlusion_query ext found.
+ 054 GL_ARB_fragment_shader ext found.
+ 055 GL_ARB_shader_objects ext found.
+ 056 GL_ARB_shading_language_100 ext found.
+ 057 GL_ARB_texture_non_power_of_two ext found.
+ 058 GL_ARB_vertex_shader ext found.
+ 059 GL_NV_texgen_reflection ext found.
+ 060 GL_ARB_point_sprite ext found.
+ 061 GL_ARB_fragment_program_shadow ext found.
+ 062 GL_EXT_blend_equation_separate ext found.
+ 063 GL_ARB_depth_texture ext found.
+ 064 GL_ARB_texture_rectangle ext found.
+ 065 GL_ARB_draw_buffers ext found.
+ 066 GL_ARB_color_buffer_float ext found.
+ 067 GL_ARB_half_float_pixel ext found.
+ 068 GL_ARB_texture_float ext found.
+ 069 GL_ARB_pixel_buffer_object ext found.
+ 070 GL_EXT_framebuffer_object ext found.
+ 071 GL_ARB_draw_instanced ext found.
+ 072 GL_ARB_half_float_vertex ext found.
+ 073 GL_ARB_occlusion_query2 ext found.
+ 074 GL_EXT_draw_buffers2 ext found.
+ 075 GL_WIN_swap_hint ext found.
+ 076 GL_EXT_texture_sRGB ext found.
+ 077 GL_ARB_multisample ext found.
+ 078 GL_EXT_packed_float ext found.
+ 079 GL_EXT_texture_shared_exponent ext found.
+ 080 GL_ARB_texture_rg ext found.
+ 081 GL_ARB_texture_compression_rgtc ext found.
+ 082 GL_NV_conditional_render ext found.
+ 083 GL_ARB_texture_swizzle ext found.
+ 084 GL_EXT_texture_swizzle ext found.
+ 085 GL_ARB_texture_gather ext found.
+ 086 GL_ARB_sync ext found.
+ 087 GL_ARB_framebuffer_sRGB ext found.
+ 088 GL_EXT_packed_depth_stencil ext found.
+ 089 GL_ARB_depth_buffer_float ext found.
+ 090 GL_EXT_transform_feedback ext found.
+ 091 GL_ARB_transform_feedback2 ext found.
+ 092 GL_ARB_draw_indirect ext found.
+ 093 GL_EXT_framebuffer_blit ext found.
+ 094 GL_EXT_framebuffer_multisample ext found.
+ 095 GL_ARB_framebuffer_object ext found.
+ 096 GL_ARB_framebuffer_no_attachments ext found.
+ 097 GL_EXT_texture_array ext found.
+ 098 GL_EXT_texture_integer ext found.
+ 099 GL_ARB_map_buffer_range ext found.
+ 100 GL_ARB_texture_buffer_range ext found.
+ 101 GL_EXT_texture_buffer ext found.
+ 102 GL_EXT_texture_snorm ext found.
+ 103 GL_ARB_blend_func_extended ext found.
+ 104 GL_INTEL_performance_queries ext found.
+ 105 GL_INTEL_performance_query ext found.
+ 106 GL_ARB_copy_buffer ext found.
+ 107 GL_ARB_sampler_objects ext found.
+ 108 GL_NV_primitive_restart ext found.
+ 109 GL_ARB_seamless_cube_map ext found.
+ 110 GL_ARB_uniform_buffer_object ext found.
+ 111 GL_ARB_depth_clamp ext found.
+ 112 GL_ARB_vertex_array_bgra ext found.
+ 113 GL_ARB_shader_bit_encoding ext found.
+ 114 GL_ARB_draw_buffers_blend ext found.
+ 115 GL_ARB_geometry_shader4 ext found.
+ 116 GL_EXT_geometry_shader4 ext found.
+ 117 GL_ARB_texture_query_lod ext found.
+ 118 GL_ARB_explicit_attrib_location ext found.
+ 119 GL_ARB_draw_elements_base_vertex ext found.
+ 120 GL_ARB_instanced_arrays ext found.
+ 121 GL_ARB_base_instance ext found.
+ 122 GL_ARB_fragment_coord_conventions ext found.
+ 123 GL_EXT_gpu_program_parameters ext found.
+ 124 GL_ARB_texture_buffer_object_rgb32 ext found.
+ 125 GL_ARB_texture_rgb10_a2ui ext found.
+ 126 GL_ARB_texture_multisample ext found.
+ 127 GL_ARB_vertex_type_2_10_10_10_rev ext found.
+ 128 GL_ARB_timer_query ext found.
+ 129 GL_ARB_tessellation_shader ext found.
+ 130 GL_ARB_vertex_array_object ext found.
+ 131 GL_ARB_provoking_vertex ext found.
+ 132 GL_ARB_sample_shading ext found.
+ 133 GL_ARB_texture_cube_map_array ext found.
+ 134 GL_EXT_gpu_shader4 ext found.
+ 135 GL_ARB_gpu_shader5 ext found.
+ 136 GL_ARB_gpu_shader_fp64 ext found.
+ 137 GL_ARB_shader_subroutine ext found.
+ 138 GL_ARB_transform_feedback3 ext found.
+ 139 GL_ARB_get_program_binary ext found.
+ 140 GL_ARB_separate_shader_objects ext found.
+ 141 GL_ARB_shader_precision ext found.
+ 142 GL_ARB_vertex_attrib_64bit ext found.
+ 143 GL_ARB_viewport_array ext found.
+ 144 GL_ARB_transform_feedback_instanced ext found.
+ 145 GL_ARB_compressed_texture_pixel_storage ext found.
+ 146 GL_ARB_shader_atomic_counters ext found.
+ 147 GL_ARB_shading_language_packing ext found.
+ 148 GL_ARB_shading_language_420pack ext found.
+ 149 GL_ARB_texture_storage ext found.
+ 150 GL_EXT_texture_storage ext found.
+ 151 GL_ARB_vertex_attrib_binding ext found.
+ 152 GL_ARB_multi_draw_indirect ext found.
+ 153 GL_ARB_program_interface_query ext found.
+ 154 GL_ARB_texture_storage_multisample ext found.
+ 155 GL_ARB_buffer_storage ext found.
+ 156 GL_ARB_debug_output ext found.
+ 157 GL_KHR_debug ext found.
+ 158 GL_ARB_arrays_of_arrays ext found.
+ 159 GL_INTEL_map_texture ext found.
+ 160 GL_ARB_texture_compression_bptc ext found.
+ 161 GL_ARB_ES2_compatibility ext found.
+ 162 GL_ARB_ES3_compatibility ext found.
+ 163 GL_ARB_robustness ext found.
+ 164 GL_EXT_texture_sRGB_decode ext found.
+ 165 GL_KHR_blend_equation_advanced ext found.
+ 166 GL_EXT_shader_integer_mix ext found.
+ 167 GL_ARB_stencil_texturing ext found.
+ 168 WGL_EXT_depth_float ext found.
+ 169 WGL_ARB_buffer_region ext found.
+ 170 WGL_ARB_extensions_string ext found.
+ 171 WGL_ARB_make_current_read ext found.
+ 172 WGL_ARB_pixel_format ext found.
+ 173 WGL_ARB_pbuffer ext found.
+ 174 WGL_EXT_extensions_string ext found.
+ 175 WGL_EXT_swap_control ext found.
+ 176 WGL_EXT_swap_control_tear ext found.
+ 177 WGL_ARB_multisample ext found.
+ 178 WGL_ARB_pixel_format_float ext found.
+ 179 WGL_ARB_framebuffer_sRGB ext found.
+ 180 WGL_ARB_create_context ext found.
+ 181 WGL_ARB_create_context_profile ext found.
+ 182 WGL_EXT_pixel_format_packed_float ext found.
+ 183 WGL_EXT_create_context_es_profile ext found.
+ 184 WGL_EXT_create_context_es2_profile ext found.
+ 185 WGL_NV_DX_interop ext found.
+ 186 WGL_ARB_create_context_robustness ext found.
+ [!] sglDdrv_w32.c:2110?_SglBuildDpu
+  677 381 1920 1080 96 96 32 1 36 36 51 60 1 
+ Opening the SIGMA GL/2 Drawing Execution Port 000
+	Intel(R) HD Graphics 4.0.0 - Build 10.18.10.5161
+ [$] sglDdrv_w32.c:2136?_SglBuildDpu
+  WGL_EXT_depth_float WGL_ARB_buffer_region WGL_ARB_extensions_string WGL_ARB_make_current_read WGL_ARB_pixel_format WGL_ARB_pbuffer WGL_EXT_extensions_string WGL_EXT_swap_control WGL_EXT_swap_control_tear WGL_ARB_multisample WGL_ARB_pixel_format_float WGL_ARB_framebuffer_sRGB WGL_ARB_create_context WGL_ARB_create_context_profile WGL_EXT_pixel_format_packed_float WGL_EXT_create_context_es_profile WGL_EXT_create_context_es2_profile WGL_NV_DX_interop WGL_ARB_create_context_robustness 
+ ERR sglDdrv_w32.c:1806?_glDbgMsgCb
+  API ERROR HIGH 1280 GL error GL_INVALID_ENUM
+ ERR sglDdrv_w32.c:2267?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDdrv_w32.c:1806?_glDbgMsgCb
+  API ERROR HIGH 1280 GL error GL_INVALID_ENUM
+ ERR sglDdrv_w32.c:2293?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDdrv_w32.c:1806?_glDbgMsgCb
+  API ERROR HIGH 1280 GL error GL_INVALID_ENUM
+ ERR sglDdrv_w32.c:2303?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDdrv_w32.c:1806?_glDbgMsgCb
+  API ERROR HIGH 1280 GL error GL_INVALID_ENUM
+ ERR sglDdrv_w32.c:2305?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDdrv_w32.c:1806?_glDbgMsgCb
+  API ERROR HIGH 1280 GL error GL_INVALID_ENUM
+ ERR sglDdrv_w32.c:2309?_SglBuildDpu
+  GL: INVAL_PARAM
+ Loading file... <system/qwadro.xs>
+ E:\qwadro\afx\\system32d\/qwadro.xs
+ E:\qwadro\afx\\system32\/qwadro.xs
+ E:\qwadro\afx\\system\/qwadro.xs
+ new
+ 
+
+ .
+ 
+
+ Opening file... <Èúð>,7
+ ERR afxFileSystem.c:152?AfxResolveUris
+  
+ ERR afxFileSystem.c:210?AfxResolveUri
+  
+ ERR afxFile.c:562?AfxOpenFile
+  
+ init
+ 
+
+ Mounting file system... <tmp>('../tmp'),6.
+ ERR afxFileSystem.c:261?_AfxFsysCtor
+  
+ ERR afxClass.c:499?_AfxClsRunSubsetCtor
+  
+ ERR afxClass.c:796?AfxAcquireObjects
+  
+ ERR afxFileSystem.c:356?AfxMountFileSystem
+  

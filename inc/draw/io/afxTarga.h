@@ -20,7 +20,7 @@
 #ifndef AFX_TARGA_H
 #define AFX_TARGA_H
 
-#include "qwadro/inc/draw/afxRaster.h"
+#include "qwadro/inc/draw/io/afxRaster.h"
 
 // provisory as Qwadro formats are inherited from Vulkan.
 
@@ -37,44 +37,28 @@ typedef enum afxTargaFlag
     afxTargaFlag_Y_FLIPPED, // horizontal origin is top to bottom.
     afxTargaFlag_CUBEMAP, // layered image is treated as cubemap.
     afxTargaFlag_3D, // depth is treated as 3D depth instead of layers.
+    afxTargaFlag_LAYER_MAJOR
 } afxTargaFlags;
 
-AFX_DEFINE_STRUCT(afxTarga)
+#pragma pack(push, 1)
+
+AFX_DEFINE_STRUCT(urdTrunk_Targa)
 {
-    afxTargaFlags   flags; // 0x01 = Cubemap
-    afxPixelFormat  fmt; // raw pixel format or texel block compressed format (aka S3TC/DXT/ASTC)
-    afxNat          baseLod;
-    afxNat          lodCnt;
-    afxWhd          origin;
-    afxWhd          whd;
-    union
-    {
-        afxSize     offset; // where start (above this header) the raster data // for each lod, sizeof lod is rowLen * whd[1] * whd[2] * layerCnt 
-        void const* src;
-        void*       dst;
-    }               data;
-    afxTargaCodec   codec; // storage compression (not pixel compression), for example, RLE.
-    afxNat          encSiz; // the size in bytes of stored image data. If not compressed by any codec, encSize is same as decSize.
-    afxNat          decSiz; // the size in bytes of the image subresource. size includes any extra memory that is required based on rowStride.
-    afxNat          rowStride; // bytes per row/scanline (W usually aligned/padded to some memory boundary)
-    afxNat          depthStride; // bytes per layer or (3D) slice.
-    afxNat          udd[2];
+    urdTrunk        trunk; // base trunk
+    // Targa structure
+    afxNat32        fmt;
+    afxNat32        flags;
+    afxNat32        resvd;
+    afxNat32        xyz[3];
+    afxNat16        baseLod;
+    afxNat32        whd[3];
+    afxNat16        lodCnt;
+    afxNat32        rowStride; // bytes per row/scanline (W usually aligned/padded to some memory boundary)
+    afxNat32        depthStride;
+    afxUrdOrigin    data;
+    afxNat32        udd[4];
 };
 
-// (x,y,z,layer) are in texel coordinates
-// address(x, y, z, layer) = layer * arrayPitch + z * depthPitch + y * rowPitch + x * elementSize + offset
-
-// (x,y,z,layer) are in compressed texel block coordinates
-// address(x, y, z, layer) = layer * arrayPitch + z * depthPitch + y * rowPitch + x * compressedTexelBlockByteSize + offset;
-
-AVX afxBool     AfxPrepareTarga(afxTarga* tga, afxRaster ras);
-AVX afxBool     AfxReadTarga(afxTarga* tga, afxStream in);
-AVX afxError    AfxReadTargaData(afxTarga* tga, afxStream in, void* dst);
-
-AVX afxError    AfxWriteTarga(afxTarga* tga, void const* src, afxStream out);
-
-AVX afxBool     AfxSetUpTarga(afxTarga* tga, afxRaster ras, afxRasterIo const* op, afxNat lodCnt);
-AVX afxBool     AfxBeginTargaOutput(afxTarga* tga, afxStream out);
-AVX afxBool     AfxEndTargaOutput(afxTarga* tga, afxStream out);
+#pragma pack(pop)
 
 #endif//AFX_TARGA_H

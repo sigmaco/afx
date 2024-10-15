@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 _AFXINL afxError AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxNat unitSiz, afxNat cap)
 {

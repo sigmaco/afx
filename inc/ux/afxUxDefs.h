@@ -22,7 +22,7 @@
 #define AUX_UX_DEFS_H
 
 #include "qwadro/inc/exec/afxSystem.h"
-#include "qwadro/inc/draw/dev/afxDrawSystem.h"
+#include "qwadro/inc/draw/afxDrawSystem.h"
 #include "qwadro/inc/sound/dev/afxSoundSystem.h"
 
 #ifndef __e2mmux__
@@ -51,7 +51,6 @@ AFX_DEFINE_HANDLE(afxWidget);
 AFX_DEFINE_HANDLE(afxScript);
 AFX_DEFINE_HANDLE(afxSession);
 AFX_DEFINE_HANDLE(afxTerminal);
-AFX_DEFINE_HANDLE(afxHandle);
 
 typedef enum auxEventId
 {

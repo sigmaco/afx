@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+// This code is part of SIGMA Future Storage.
 
 // In QWADRO, URI is a type of string specialized in dealing with file paths.
 // It provides an object representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
@@ -138,13 +138,13 @@ AFXINL afxError         AfxDuplicateUriObject(afxUri* uri, afxUri const *in);
 // Extraction
 
 // Make a new URI excerpting another URI. Return the length of exceprt.
-AFXINL afxNat           AfxPickUriScheme(afxUri const* uri, afxUri* schem); // "https"
+AFXINL afxNat           AfxExcerptUriSchema(afxUri const* uri, afxUri* schem); // "https"
 
 /// Gets the Domain Name System (DNS) host name or IP address and the port number for a server.
-AFXINL afxNat           AfxPickUriAuthority(afxUri const* uri, afxUri* user, afxUri* host, afxUri* port);
+AFXINL afxNat           AfxExcerptUriAuthority(afxUri const* uri, afxUri* user, afxUri* host, afxUri* port);
 
-AFXINL afxNat           AfxPickUriQuery(afxUri const* uri, afxBool skipSep, afxUri* query);
-AFXINL afxNat           AfxPickUriFragment(afxUri const* uri, afxBool skipSep, afxUri* frag);
+AFXINL afxNat           AfxExcerptUriQuery(afxUri const* uri, afxBool skipSep, afxUri* query);
+AFXINL afxNat           AfxExcerptUriFragment(afxUri const* uri, afxBool skipSep, afxUri* frag);
 
 AFXINL afxNat           AfxClipUriPath(afxUri* uri, afxUri const* from);
 AFXINL afxNat           AfxClipPath2(afxUri* uri, afxUri const* from, afxNat seg);
@@ -175,6 +175,9 @@ AFXINL afxNat AfxPickPath(afxUri const* uri, afxUri root, afxUri dir, afxUri fil
 AFXINL afxNat AfxTrimPath(afxUri const* uri, afxBool root, afxBool dir, afxBool file, afxBool ext);
 AFXINL afxNat AfxSplitPath(afxUri const* uri, afxUri* root, afxUri* path);
 AFXINL afxNat AfxPopPathRoot(afxUri* uri);
+
+AFXINL afxNat AfxExcerptPathBase(afxUri const* uri, afxUri* base); // Excerpts the //./dev/dir/to/
+AFXINL afxNat AfxExcerptPathSegments(afxUri const* uri, afxUri* root, afxUri* dir, afxUri* file, afxUri* ext);
 
 // require initalized URI.
 

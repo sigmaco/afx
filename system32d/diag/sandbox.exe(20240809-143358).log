@@ -1,0 +1,103 @@
+Booting...
+Acquiring...  Thread Execution Unit 7812 @ afxSystem_w32.c:442Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... Executable And Linkage Module <e2coree.dll>Memory Page Size: 4096HW Threading Capacity: 2Loading... Executable And Linkage Module <e2draw.dll>Loading... Executable And Linkage Module <e2combo.dll>Loading... Executable And Linkage Module <e2sound.dll>Loading... Executable And Linkage Module <e2mmux.dll>Loading... Executable And Linkage Module <//./z/eaxzal1.dll>Loading... Installable Client Driver <//./z//eaxzal1.dll>	<//./amigal1/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/galileo.dll>Loading... Installable Client Driver <//./z//galileo.dll>	<//./combo/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/tarzgl4.dll>Loading... Installable Client Driver <//./z//tarzgl4.dll>	<//./targl3/>("")  0.0.0 	<//./targl4/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/winsh4d.dll>Loading... Installable Client Driver <//./z//winsh4d.dll>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 7812
+Loading... Executable And Linkage Module <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL32.c:1559
+GL: INVAL_PARAMzglInterop_WGL32.c:1561
+GL: INVAL_PARAMzglInterop_WGL32.c:1659
+GL: INVAL_PARAMzglInterop_WGL32.c:1688
+GL: INVAL_PARAMzglInterop_WGL32.c:1761
+GL: INVAL_PARAMzglInterop_WGL32.c:1764
+GL: INVAL_PARAMzglInterop_WGL32.c:1769
+GL: INVAL_PARAMzglInterop_WGL32.c:1774
+GL: INVAL_PARAMAcquiring...  Thread Execution Unit 0 @ zglDrawBridge.c:1713Entering the Thread Execution Environment 8668
+Starting 8668 on thread execution unit #1...Entering the Thread Execution Environment 7812
+Reopening... <//./z/video/uvOutTristripQuad.vsh>Entering the Thread Execution Environment 8668
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5161Entering the Thread Execution Environment 7812
+Reopening... <//./z/video/stdEnv.inc>Reopening... <//./z/video/sampleOutRgba2d.fsh>Reopening... <//./z/video/stdEnv.inc>afxClass.c:898
+afxClass.c:898
+(cfg->fcc)
+    InvalidafxClass.c:921
+afxClass.c:921
+(cfg->name && cfg->name[0])
+    InvalidMounting... <//./d/>('E:\qwadro\repo\bangitk\tmp'),7Mounting... <//./a/>('E:\qwadro\repo\bangitk\art'),5afxDrawOutput.c:225
+afxDrawOutput.c:225
+(whd[0])(952) is out of range [1, 5103410]afxDrawOutput.c:226
+afxDrawOutput.c:226
+(whd[1])(506) is out of range [1, 5103465]Window_W32.c:682
+afxWindow.c:186
+afxWindow.c:295
+afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>Reopening... <../data/pipeline/test/test.xsh.xml>Entering the Thread Execution Environment 8668
+Hardware-side buffer 04f58180 ready. 34962, 1, 4Entering the Thread Execution Environment 7812
+../data/pipeline/test/test.vsh../data/pipeline/test/test.fshReopening... <../data/pipeline/test/test.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/test/test.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../art/skybox/purple/right.tga>Entering the Thread Execution Environment 8668
+Hardware-side raster 00612848 ready. 8513, 8051, [2048,2048,6]Entering the Thread Execution Environment 7812
+Reopening... <../art/skybox/purple/left.tga>Reopening... <../art/skybox/purple/bottom.tga>Reopening... <../art/skybox/purple/top.tga>Reopening... <../art/skybox/purple/front.tga>Reopening... <../art/skybox/purple/back.tga>Entering the Thread Execution Environment 8668
+Hardware-side buffer 05b43628 ready. 34962, 2, 4Entering the Thread Execution Environment 7812
+Reopening... <../data/pipeline/skybox/skybox.xsh.xml>../data/pipeline/skybox/skybox.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/skybox/sampleOutRgbaCube.fshReopening... <../data/pipeline/skybox/skybox.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/skybox/sampleOutRgbaCube.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/body/body.xsh.xml>../data/pipeline/body/rigidBody.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/body/body.fsh../data/pipeline/body/skinnedBody.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/body/body.fshReopening... <../data/pipeline/body/rigidBody.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>Reopening... <../data/pipeline/body/body.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidReopening... <../data/pipeline/body/skinnedBody.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidafxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidReopening... <../data/pipeline/body/body.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidReopening... <../data/pipeline/testLighting/testLighting.xsh.xml>../data/pipeline/testLighting/testLightingBlinn.vshNode 'Transformer' not handled.../data/pipeline/testLighting/testLightingBlinn.fshReopening... <../data/pipeline/testLighting/testLightingBlinn.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>Reopening... <../data/pipeline/testLighting/testLightingBlinn.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidReopening... <../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>../data/pipeline/tutCamUtil/tutCamUtilRigid.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/tutCamUtil/tutCamUtil.fsh../data/pipeline/tutCamUtil/tutCamUtilSkinned.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/tutCamUtil/tutCamUtil.fshReopening... <../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>Reopening... <../data/pipeline/tutCamUtil/tutCamUtil.fsh>Reopening... <../data/pipeline/stdEnv.inc>afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidReopening... <../data/pipeline/tutCamUtil/tutCamUtilSkinned.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>Reopening... <../data/pipeline/tutCamUtil/tutCamUtil.fsh>Reopening... <../data/pipeline/stdEnv.inc>afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidReopening... <../data/pipeline/lighting/lighting.xsh.xml>../data/pipeline/lighting/lighting.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/lighting/lighting.fshReopening... <../data/pipeline/lighting/lighting.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>Reopening... <../data/pipeline/lighting/lighting.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidEntering the Thread Execution Environment 8668
+Hardware-side buffer 05b43e08 ready. 34962, 3, 4Hardware-side buffer 05b43eb0 ready. 34963, 4, 8Entering the Thread Execution Environment 7812
+glus_wavefront.c:859
+MTL NAME //./art/scenario/bibliotheca/bibliotheca.mtlglus_wavefront.c:291
+MTL FNAME //./art/scenario/bibliotheca/bibliotheca.mtlSkeleton <bibliotheca-uvless> assembled at 04f58428.
+    Listing 1 joints..:      0 <> 4294967295Animable model <bibliotheca-uvless> assembled at 05b3a858. 1 mesh rigs for 1 joints.Mesh topology 05b50a30 built. 23152 triangles (4 bytesPerIdx) and 1 surfaces.Rigid Mesh <> assembled at 05b39be8.
+    69456 vertices with 3 attributes.
+    1 triangles (4 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases..:      0 <>   0Mesh 05b39be8 linked to model 05b3a858.
+    Listing 1 bias-joint mapping..:      0 --> 0 <-- 0 <> Skeleton <Bone_main> assembled at 04f58390.
+    Listing 10 joints..:      0 <Bone_main> 4294967295      1 <Mill>   0      2 <Bone_hitpointbar>   0      3 <Bone_Upper_mill>   0      4 <Upper Mill>   3      5 <Bone_Flag_Civ>   3      6 <Bone_Mill_Blades>   3      7 <Mill Blades>   6      8 <Bone_Mill_Wheel>   3      9 <Mill Wheel>   8Animable model <Bone_main> assembled at 07324e50. 4 mesh rigs for 10 joints.Mesh topology 05b3a610 built. 139 triangles (2 bytesPerIdx) and 1 surfaces.Rigid Mesh <Mill> assembled at 05b89718.
+    524 vertices with 3 attributes.
+    1 triangles (2 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases..:      0 <Mill>   0Mesh 05b89718 linked to model 07324e50.
+    Listing 1 bias-joint mapping..:      0 --> 1 <-- 1 <Mill> Mesh topology 05b4fcd0 built. 126 triangles (2 bytesPerIdx) and 2 surfaces.Rigid Mesh <Upper Mill> assembled at 05b897b8.
+    472 vertices with 3 attributes.
+    2 triangles (2 bytes per index) arranged in 2 surfaces.
+    Listing 1 biases..:      0 <Upper Mill>   0Mesh 05b897b8 linked to model 07324e50.
+    Listing 1 bias-joint mapping..:      0 --> 4 <-- 4 <Upper Mill> Mesh topology 05b917c8 built. 70 triangles (2 bytesPerIdx) and 1 surfaces.Rigid Mesh <Mill Blades> assembled at 05b89858.
+    278 vertices with 3 attributes.
+    1 triangles (2 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases..:      0 <Mill Blades>   0Mesh 05b89858 linked to model 07324e50.
+    Listing 1 bias-joint mapping..:      0 --> 7 <-- 7 <Mill Blades> Mesh topology 05b8d7f0 built. 20 triangles (1 bytesPerIdx) and 1 surfaces.Rigid Mesh <Mill Wheel> assembled at 05b898f8.
+    58 vertices with 3 attributes.
+    1 triangles (1 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases..:      0 <Mill Wheel>   0Mesh 05b898f8 linked to model 07324e50.
+    Listing 1 bias-joint mapping..:      0 --> 9 <-- 9 <Mill Wheel> Motion <Bone_main> assembled. 05b87808
+    Listing 6 transform circuits:	0 <Bone_Flag_Civ> cdcdcdcd	1 <Bone_Mill_Blades> cdcdcdcd	2 <Bone_Mill_Wheel> cdcdcdcd	3 <Bone_Upper_mill> cdcdcdcd	4 <Bone_hitpointbar> cdcdcdcd	5 <Bone_main> cdcdcdcdMesh topology 05b8d420 built. 800 triangles (4 bytesPerIdx) and 1 surfaces.Rigid Mesh <> assembled at 05b89998.
+    441 vertices with 3 attributes.
+    1 triangles (4 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases..:      0 <>   0Skeleton <> assembled at 04f58f70.
+    Listing 1 joints..:      0 <> 4294967295Mesh 05b89998 linked to model 05b9bde8.
+    Listing 1 bias-joint mapping..:      0 --> 0 <-- 0 <> Animable model <cube> assembled at 05b9bde8. 1 mesh rigs for 1 joints.Installing watcher <05b65858> for 0591f148...Entering the Thread Execution Environment 8668
+Hardware-side raster 00612920 ready. de1, 8229, [512,512,1]Hardware-side buffer 05b44000 ready. 34962, 5, 4Hardware-side buffer 05b43f58 ready. 34963, 6, 8Hardware-side buffer 05b44150 ready. 34962, 7, 4Hardware-side buffer 05b440a8 ready. 34963, 8, 8Hardware-side buffer 05b442a0 ready. 34962, 9, 4Hardware-side buffer 05b441f8 ready. 34963, 10, 8Hardware-side buffer 05b443f0 ready. 34962, 11, 4Hardware-side buffer 05b44348 ready. 34963, 12, 8Hardware-side buffer 05b44498 ready. 34962, 13, 4Hardware-side buffer 0732cda0 ready. 34963, 14, 8Entering the Thread Execution Environment 7812
+akxRenderer.c:87
+Entering the Thread Execution Environment 8668
+Hardware-side buffer 0732ce48 ready. 34962, 15, 4Hardware-side buffer 0732cef0 ready. 34963, 16, 8Hardware-side raster 00612410 ready. de1, 8058, [952,506,1]Hardware-side raster 00612338 ready. de1, 88f0, [952,506,1]avxCanvas 05b3b3d0 hardware-side data instanced.Hardware-side buffer 05b43970 ready. 35345, 17, 10Reopening... <../data/pipeline/test/test.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/test/test.fsh>Reopening... <../data/pipeline/stdEnv.inc>avxPipeline 01d9ddb0 hardware-side data instanced.Hardware-side buffer 05b43b68 ready. 35345, 18, 10Reopening... <../data/pipeline/lighting/lighting.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>Reopening... <../data/pipeline/lighting/lighting.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:490
+afxString.c:490
+(effectiveRange == len2)
+    InvalidzglLigature.c:221
+Uniform buffer unit 'sgl_mtl' not found in ligature 0053c928.zglLigature.c:204
+Combined raster/sampler unit 'floorTexture' not found in ligature 0053c928.avxPipeline 05b84f90 hardware-side data instanced.Hardware-side buffer 05b43580 ready. 34963, 19, 8Hardware-side raster 00612698 ready. de1, 8058, [952,506,1]Hardware-side raster 00612770 ready. de1, 88f0, [952,506,1]avxCanvas 05b3b4f0 hardware-side data instanced.Hardware-side buffer 05b436d0 ready. 35345, 20, 10Hardware-side buffer 05b438c8 ready. 35345, 21, 10Hardware-side raster 006125c0 ready. de1, 8058, [952,506,1]Hardware-side raster 006124e8 ready. de1, 88f0, [952,506,1]avxCanvas 05b3b460 hardware-side data instanced.Entering the Thread Execution Environment 7812
+Draw output 000 adjusted. 952x511 1920x1080 0.496x0.473 1.863014Draw output 000 adjusted. 952x518 1920x1080 0.496x0.480 1.837838Draw output 000 adjusted. 952x523 1920x1080 0.496x0.484 1.820268Draw output 000 adjusted. 952x529 1920x1080 0.496x0.490 1.799622Draw output 000 adjusted. 952x536 1920x1080 0.496x0.496 1.776119Draw output 000 adjusted. 952x543 1920x1080 0.496x0.503 1.753223Draw output 000 adjusted. 952x550 1920x1080 0.496x0.509 1.730909Draw output 000 adjusted. 952x556 1920x1080 0.496x0.515 1.712230Draw output 000 adjusted. 952x563 1920x1080 0.496x0.521 1.690941Draw output 000 adjusted. 952x568 1920x1080 0.496x0.526 1.676056Draw output 000 adjusted. 952x573 1920x1080 0.496x0.531 1.661431Draw output 000 adjusted. 952x578 1920x1080 0.496x0.535 1.647059Draw output 000 adjusted. 952x581 1920x1080 0.496x0.538 1.638554Draw output 000 adjusted. 952x587 1920x1080 0.496x0.544 1.621806Draw output 000 adjusted. 952x591 1920x1080 0.496x0.547 1.610829Draw output 000 adjusted. 952x596 1920x1080 0.496x0.552 1.597315Draw output 000 adjusted. 952x598 1920x1080 0.496x0.554 1.591973Draw output 000 adjusted. 952x601 1920x1080 0.496x0.556 1.584027Draw output 000 adjusted. 952x603 1920x1080 0.496x0.558 1.578773Draw output 000 adjusted. 952x605 1920x1080 0.496x0.560 1.573554Draw output 000 adjusted. 952x606 1920x1080 0.496x0.561 1.570957Draw output 000 adjusted. 952x607 1920x1080 0.496x0.562 1.568369Draw output 000 adjusted. 952x608 1920x1080 0.496x0.563 1.565789Entering the Thread Execution Environment 8668
+Hardware-side raster 00612770 ready. de1, 8058, [952,608,1]Hardware-side raster 00612698 ready. de1, 88f0, [952,608,1]avxCanvas 05b3b4f0 hardware-side data instanced.Hardware-side raster 006124e8 ready. de1, 8058, [952,608,1]Hardware-side raster 006125c0 ready. de1, 88f0, [952,608,1]avxCanvas 05b3b460 hardware-side data instanced.Hardware-side raster 00612338 ready. de1, 8058, [952,608,1]Hardware-side raster 00612410 ready. de1, 88f0, [952,608,1]avxCanvas 05b3b3d0 hardware-side data instanced.

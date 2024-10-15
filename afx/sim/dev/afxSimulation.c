@@ -20,13 +20,13 @@
 
 extern afxClassConfig const _AfxNodMgrCfg;
 
-extern afxClassConfig const _AkxBodMgrCfg;
-extern afxClassConfig const _AkxAniMgrCfg;
-extern afxClassConfig const _AkxMotMgrCfg;
-extern afxClassConfig const _AkxMotoMgrCfg;
+extern afxClassConfig const _AmxBodMgrCfg;
+extern afxClassConfig const _AmxAniMgrCfg;
+extern afxClassConfig const _AmxMotMgrCfg;
+extern afxClassConfig const _AmxMotoMgrCfg;
 extern afxClassConfig const _AfxLitMgrCfg;
 extern afxClassConfig const _AfxRndMgrCfg;
-extern afxClassConfig const _AkxTerClsCfg;
+extern afxClassConfig const _AmxTerClsCfg;
 
 extern afxClassConfig const _AmxSklClsCfg;
 extern afxClassConfig const _AmxPoseClsCfg;
@@ -259,7 +259,7 @@ _AMX afxNat AfxCountMathBridges(afxSimulation sim, afxNat baseBridIdx)
     return sim->exuCnt - baseBridIdx;
 }
 
-_AMX afxBool AfxGetMathBridge(afxSimulation sim, afxNat portIdx, afxPragmaBridge* bridge)
+_AMX afxBool AfxGetMathBridge(afxSimulation sim, afxNat portIdx, afxComboBridge* bridge)
 {
     afxError err = AFX_ERR_NONE;
     /// sim must be a valid afxSimulation handle.
@@ -271,9 +271,9 @@ _AMX afxBool AfxGetMathBridge(afxSimulation sim, afxNat portIdx, afxPragmaBridge
     if (!(rslt = (portIdx < sim->exuCnt))) AfxThrowError();
     else
     {
-        afxPragmaBridge mdge = sim->exus[portIdx];
+        afxComboBridge mdge = sim->exus[portIdx];
         AfxAssertObjects(1, &mdge, afxFcc_MDGE);
-        /// bridge must be a valid pointer to a afxPragmaBridge handle.
+        /// bridge must be a valid pointer to a afxComboBridge handle.
         *bridge = mdge;
     }
     return rslt;
@@ -287,7 +287,7 @@ _AMX afxBool AfxGetMathQueue(afxSimulation sim, afxNat portIdx, afxNat queIdx, a
     /// portIdx must be one of the bridge indices specified when device was created.
     AfxAssertRange(sim->exuCnt, portIdx, 1);
     afxBool rslt = FALSE;
-    afxPragmaBridge mdge;
+    afxComboBridge mdge;
 
     if (!AfxGetMathBridge(sim, portIdx, &mdge)) AfxThrowError();
     else
@@ -315,7 +315,7 @@ _AMX afxNat AfxCountMathQueues(afxSimulation sim, afxNat portIdx, afxNat baseQue
     /// portIdx must be a valid index to a bridge.
     AfxAssertRange(sim->exuCnt, portIdx, 1);
     afxNat queCnt = 0;
-    afxPragmaBridge mdge;
+    afxComboBridge mdge;
 
     if (!AfxGetMathBridge(sim, portIdx, &mdge)) AfxThrowError();
     else
@@ -340,7 +340,7 @@ _AMX afxError AfxWaitForSimulation(afxSimulation sim, afxNat portIdx, afxNat fir
 
         if (portIdx != AFX_INVALID_INDEX)
         {
-            afxPragmaBridge mdge = sim->exus[portIdx];
+            afxComboBridge mdge = sim->exus[portIdx];
             AfxAssertObjects(1, &mdge, afxFcc_MDGE);
 
             afxNat queCnt2 = _AmxCountMathQueues(mdge, firstQueIdx) - queCnt;
@@ -352,7 +352,7 @@ _AMX afxError AfxWaitForSimulation(afxSimulation sim, afxNat portIdx, afxNat fir
         }
         else for (afxNat i = 0; i < mdgeCnt; i++)
         {
-            afxPragmaBridge mdge = sim->exus[i];
+            afxComboBridge mdge = sim->exus[i];
             AfxAssertObjects(1, &mdge, afxFcc_MDGE);
             
             afxNat queCnt2 = _AmxCountMathQueues(mdge, firstQueIdx) - queCnt;
@@ -374,7 +374,7 @@ _AMX afxError _AmxSimDtorCb(afxSimulation sim)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
-    AfxCleanUpChainedClasses(&sim->classes);
+    AfxDeregisterChainedClasses(&sim->classes);
 
     return err;
 }
@@ -460,12 +460,12 @@ _AMX afxError _AmxSimCtorCb(afxSimulation sim, void** args, afxNat invokeNo)
         tmpClsConf = _AmxMdlClsCfg;
         AfxRegisterClass(&sim->mdlCls, NIL, classes, &tmpClsConf); // require skl, msh
 
-        AfxRegisterClass(&sim->motMgr, NIL, classes, &_AkxMotMgrCfg);
-        AfxRegisterClass(&sim->aniMgr, NIL, classes, &_AkxAniMgrCfg); // require mot
-        AfxRegisterClass(&sim->motors, NIL, classes, &_AkxMotoMgrCfg);
-        AfxRegisterClass(&sim->bodies, NIL, classes, &_AkxBodMgrCfg); // require moto
+        AfxRegisterClass(&sim->motMgr, NIL, classes, &_AmxMotMgrCfg);
+        AfxRegisterClass(&sim->aniMgr, NIL, classes, &_AmxAniMgrCfg); // require mot
+        AfxRegisterClass(&sim->motors, NIL, classes, &_AmxMotoMgrCfg);
+        AfxRegisterClass(&sim->bodies, NIL, classes, &_AmxBodMgrCfg); // require moto
         
-        AfxRegisterClass(&sim->terCls, NIL, classes, &_AkxTerClsCfg); // require all
+        AfxRegisterClass(&sim->terCls, NIL, classes, &_AmxTerClsCfg); // require all
 
         AfxRegisterClass(&sim->lights, NIL, classes, &_AfxLitMgrCfg);
 
@@ -477,7 +477,7 @@ _AMX afxError _AmxSimCtorCb(afxSimulation sim, void** args, afxNat invokeNo)
 
     if (err)
     {
-        AfxCleanUpChainedClasses(&sim->classes);
+        AfxDeregisterChainedClasses(&sim->classes);
     }
     return err;
 }
@@ -494,7 +494,7 @@ _AMX afxClassConfig const _AmxSimStdImplementation =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxNat AfxInvokeSimulations(afxPragmaDevice mdev, afxNat first, afxNat cnt, afxBool(*f)(afxSimulation, void*), void *udd)
+_AMX afxNat AfxInvokeSimulations(afxComboDevice mdev, afxNat first, afxNat cnt, afxBool(*f)(afxSimulation, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdev, afxFcc_MDEV);
@@ -505,7 +505,7 @@ _AMX afxNat AfxInvokeSimulations(afxPragmaDevice mdev, afxNat first, afxNat cnt,
     return AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AMX afxNat AfxEvokeSimulations(afxPragmaDevice mdev, afxBool(*flt)(afxSimulation, void*), void* fdd, afxNat first, afxNat cnt, afxSimulation simulations[])
+_AMX afxNat AfxEvokeSimulations(afxComboDevice mdev, afxBool(*flt)(afxSimulation, void*), void* fdd, afxNat first, afxNat cnt, afxSimulation simulations[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdev, afxFcc_MDEV);
@@ -517,7 +517,7 @@ _AMX afxNat AfxEvokeSimulations(afxPragmaDevice mdev, afxBool(*flt)(afxSimulatio
     return AfxEvokeClassInstances(cls, (void*)flt, fdd, first, cnt, (afxObject*)simulations);
 }
 
-_AMX afxNat AfxEnumerateSimulations(afxPragmaDevice mdev, afxNat first, afxNat cnt, afxSimulation simulations[])
+_AMX afxNat AfxEnumerateSimulations(afxComboDevice mdev, afxNat first, afxNat cnt, afxSimulation simulations[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdev, afxFcc_MDEV);
@@ -531,9 +531,9 @@ _AMX afxNat AfxEnumerateSimulations(afxPragmaDevice mdev, afxNat first, afxNat c
 _AMX afxError AfxAcquireSimulations(afxNat mdevId, akxSimulationConfig const* cfg, afxSimulation* simulation)
 {
     afxError err = AFX_ERR_NONE;
-    afxPragmaDevice mdev;
+    afxComboDevice mdev;
 
-    if (!(AfxGetPragmaDevice(mdevId, &mdev))) AfxThrowError();
+    if (!(AfxGetComboDevice(mdevId, &mdev))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &mdev, afxFcc_MDEV);
@@ -556,9 +556,9 @@ _AMX afxError AfxConfigureSimulation(afxNat mdevId, akxSimulationConfig* cfg)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(mdevId != AFX_INVALID_INDEX);
-    afxPragmaDevice mdev;
+    afxComboDevice mdev;
 
-    if (!(AfxGetPragmaDevice(mdevId, &mdev))) AfxThrowError();
+    if (!(AfxGetComboDevice(mdevId, &mdev))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &mdev, afxFcc_MDEV);

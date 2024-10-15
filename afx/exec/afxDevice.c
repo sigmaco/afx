@@ -19,7 +19,7 @@
 #define _AFX_DRIVER_C
 #define _AFX_DEVICE_C
 #define _AFX_CONTEXT_C
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 afxString devTypeString[] =
 {
@@ -44,12 +44,12 @@ afxString devAccelString[] =
     AFX_STRING("DSP")
 };
 
-_AFX afxDriver AfxGetDeviceDriver(afxDevice dev)
+_AFX afxModule AfxGetDeviceDriver(afxDevice dev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dev, afxFcc_DEV);
-    afxDriver icd = AfxGetLinker(&dev->icd);
-    AfxAssertObjects(1, &icd, afxFcc_ICD);
+    afxModule icd = AfxGetLinker(&dev->icd);
+    AfxAssertObjects(1, &icd, afxFcc_MDLE);
     return icd;
 }
 
@@ -92,8 +92,7 @@ _AFX afxResult AfxCallDevice(afxDevice dev, afxNat reqCode, ...)
     AfxAssertObjects(1, &dev, afxFcc_DEV);
     afxResult rslt = NIL;
 
-    if (!dev->ioctlCb) AfxThrowError();
-    else
+    if (dev->ioctlCb)
     {
         va_list va;
         va_start(va, reqCode);
@@ -129,7 +128,7 @@ _AFX afxError _AfxDevDtorCb(afxDevice dev)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dev, afxFcc_DEV);
 
-    AfxCleanUpChainedClasses(&dev->classes);
+    AfxDeregisterChainedClasses(&dev->classes);
     AfxAssert(AfxChainIsEmpty(&dev->classes));
     
     AfxPopLinkage(&dev->icd);
@@ -142,8 +141,8 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxNat invokeNo)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dev, afxFcc_DEV);
 
-    afxDriver icd = args[0];
-    AfxAssertObjects(1, &icd, afxFcc_ICD);
+    afxModule icd = args[0];
+    AfxAssertObjects(1, &icd, afxFcc_MDLE);
     afxDeviceInfo const* info = (afxDeviceInfo const*)(args[1]) + invokeNo;
     AfxAssert(info);
 
@@ -162,25 +161,25 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxNat invokeNo)
     if (AfxUriIsBlank(&dev->urn.uri)) AfxThrowError();
     else
     {
-        afxManifest const* ini = AfxGetDriverManifest(icd);
+        //afxManifest const* ini = AfxGetModuleManifest(icd);
 
         afxNat pagIdx = info->manifestPagNo;
 
-        //if (!AfxFindManifestPage(ini, &info->manifestPag, &pagIdx)) AfxThrowError();
+        //if (!AfxFindInitializationSection(ini, &info->manifestPag, &pagIdx)) AfxThrowError();
         //else
         {
 
             afxString s;
 
-            if (!AfxFindManifestPage(ini, &AfxString("Qwadro.Icd"), &pagIdx)) AfxThrowError();
-            else
+            //if (!AfxFindInitializationSection(ini, &AfxString("Qwadro.Icd"), &pagIdx)) AfxThrowError();
+            //else
             {
                 afxString128 s128;
                 AfxMakeString128(&s128, NIL);
                 AfxFormatString(&s128.str, "Device.%.*s", AfxPushString(&dev->urn.uri.str));
 
-                if (!AfxFindManifestPage(ini, &s128.str, &pagIdx))
-                    AfxThrowError();
+                //if (!AfxFindInitializationSection(ini, &s128.str, &pagIdx))
+                //    AfxThrowError();
 
                 dev->manifestPagNo = pagIdx;
 
@@ -190,10 +189,10 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxNat invokeNo)
                 {
                     afxString devDesc = { 0 };
 #if !0
-                    if (!AfxFindManifestRecord(ini, dev->manifestPagNo, &AfxString("Description"), &recIdx) ||
-                        !AfxGetManifestString(ini, dev->manifestPagNo, recIdx, &devDesc))
+                    //if (!AfxFindInitializationRecord(ini, dev->manifestPagNo, &AfxString("Description"), &recIdx) ||
+                    //    !AfxGetManifestString(ini, dev->manifestPagNo, recIdx, &devDesc))
                     {
-                        AfxThrowError();
+                    //    AfxThrowError();
                         AfxResetString(&devDesc);
                     }
 #endif
@@ -204,7 +203,7 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxNat invokeNo)
                         dev->ioctlCb = info->ioctl;
                         
                         if (!dev->ioctlCb)
-                            dev->ioctlCb = AfxFindModuleSymbol(&icd->mdle, "AfxDeviceIoctl");
+                            dev->ioctlCb = AfxFindModuleSymbol(icd, "AfxDeviceIoctl");
 
                         //if (!dev->ioctlCb) AfxThrowError();
                         //else

@@ -1,0 +1,98 @@
+
+ afxDebug_w32.c:394
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Qwadro Execution Ecosystem at 0f79e720...
+ afxClass<Qwadro Execution Ecosystem>::ConstructObject(005e0210)
+ afxSystem_w32.c:300
+  _AfxSysCtor(sys=005e0210)
+ Installing Thread Execution Unit at 005e0950 by 005e0258...
+ Entering the Thread Execution Environment 688
+ afxClass<Thread Execution Unit>::ConstructObject(005e1250)
+ afxTxu_w32.c:399
+  _AfxTxuCtor(005e1250)
+ Installing Memory Management Unit at 005e026c by 005e0258...
+ Installing Thread at 005e088c by 005e0258...
+ Installing Device at 005e0a14 by 005e0258...
+ Installing Autonomous Service at 005e0ad8 by 005e0258...
+ Installing File at 005e0d24 by 005e0258...
+ Installing I/O Stream at 005e0b9c by 005e0258...
+ Installing Codec at 005e0c60 by 005e0258...
+ Installing File Archive at 005e0de8 by 005e0258 over 005e0d24...
+ Installing Executable & Linkable Module at 005e03f4 by 005e0258...
+ Installing Installable Client Driver at 005e04b8 by 005e0258 over 005e03f4...
+ Installing Storage Point at 005e0eac by 005e0258...
+ Installing Application at 005e1034 by 005e0258...
+ Installing Human Input Device at 005e057c by 005e0258 over 005e0a14...
+ Installing Keyboard at 005e0640 by 005e0258 over 005e057c...
+ Installing Mouse at 005e0704 by 005e0258 over 005e057c...
+ Installing Controller at 005e07c8 by 005e0258 over 005e057c...
+ Installing String Catalog at 005e0330 by 005e0258...
+ Installing Simulation at 005e0f70 by 005e0258...
+ [!] afxSystem_w32.c:413?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:414?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(005e1360)
+ afxArena.c:768
+  AfxAllocateArena(aren=005e1160)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem_w32.c:427!_AfxSysCtor")
+ afxClass<Storage Point>::ConstructObject(005e3e30)
+ Storage point "." 5 mounted -> "E:\qwadro\afx\\\".
+ afxClass<Storage Point>::ConstructObject(005e3eb8)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system\".
+ afxClass<Storage Point>::ConstructObject(005e3f40)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system\w32\".
+ afxClass<Storage Point>::ConstructObject(005e3fc8)
+ Storage point "code" 5 mounted -> "E:\qwadro\afx\\code\".
+ afxClass<Storage Point>::ConstructObject(005e4050)
+ Storage point "sound" 5 mounted -> "E:\qwadro\afx\\sound\".
+ afxClass<Storage Point>::ConstructObject(005e40d8)
+ Storage point "data" 5 mounted -> "E:\qwadro\afx\\data\".
+ afxClass<Storage Point>::ConstructObject(005e4210)
+ Storage point "art" 5 mounted -> "E:\qwadro\afx\\art\".
+ afxClass<Storage Point>::ConstructObject(005e4298)
+ Storage point "tmp" 7 mounted -> "E:\qwadro\afx\\tmp\".
+ afxModule.c:243
+  AfxMountLoadableModules(cnt=1,modules=005e1130,uri=0022e058)
+ afxClass<Executable & Linkable Module>::ConstructObject(005e4640)
+ afxModule.c:153
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system/w32/e2coree.dll
+ afxKeyboard.c:290
+  AfxAcquireKeyboards(cnt=1,port=0022df10,keyboards=005e1134)
+ afxClass<Keyboard, Human Input Device>ConstructingObject(005e4a00)
+ afxClass<Human Input Device, Device>ConstructingObject(005e4a00)
+ afxClass<Device>::ConstructObject(005e4a00)
+ afxClass<Human Input Device>::ConstructObject(005e4a00)
+ afxClass<Keyboard>::ConstructObject(005e4a00)
+ afxKeyboard.c:241
+  _AfxKbdCtor(kbd=005e4a00)
+ afxDrawSystem.c:233
+  _AfxDsysCtor(dsys=005e5330)
+ Installing Draw Device at 005e5838 by 005e538c over 005e0a14...
+ Installing Draw Context at 005e5464 by 005e538c...
+ Installing Draw Output at 005e55ec by 005e538c...
+ Installing Draw Input at 005e5774 by 005e538c...
+ Installing Draw Thread at 005e53a0 by 005e538c over 005e088c...
+ Loading draw ICD system/e2draw.icd
+ afxClass<Installable Client Driver, Executable & Linkable Module>ConstructingObject(005e5980)
+ afxClass<Executable & Linkable Module>::ConstructObject(005e5980)
+ afxModule.c:153
+  _AfxMdleCtor(uri:system/e2draw.icd)
+ E:/qwadro/afx/system/w32/e2draw.icd
+ afxClass<Installable Client Driver>::ConstructObject(005e5980)

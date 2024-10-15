@@ -1,0 +1,118 @@
+Booting up the Qwadro Execution Ecosystem...
+Setting up SystemafxManifest.c:215
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.Setting up ThreadEntering the Thread Execution Environment 9444
+Setting up Memory Management UnitSetting up Autonomous ServiceSetting up CodecSetting up String BaseSetting up StreamSetting up ArchiveSetting up StorageSetting up ModuleSetting up DeviceSetting up HIDSetting up Keyboard[HID]Setting up Mouse[HID]Setting up Controller[HID]Setting up EnvironmentMemory page size: 4096Logical processor count: 1Mounting storage unit... <.>('E:/qwadro/afx///'),5Mounting storage unit... <system>('E:/qwadro/afx//system/'),5Mounting storage unit... <system>('E:/qwadro/afx//system32/'),7Mounting storage unit... <system>('E:/qwadro/afx//system32d/'),7Loading module... <system/e2coree.dll>Setting up the Qwadro Sound System...Loading module... <e2sound.dll>Setting up Unified 4D Accoustics Experience InfrastructureSetting up Sound Device[Device]Installing client driver <oal4d.inf>...Installable client driver <oal4d.inf> discovered.
+	Product: 
+	Version: 0.0.0
+	Description: 
+	Vendor: 
+	Website: 
+	Loading ICD <oal4d.inf> executable and linkable file <oal4d.dll>...Loading module... <oal4d.dll>Setting up Sound ContextAcquiring thread...  0 "salSdev.c:541"The audience is listeningEntering the Thread Execution Environment 7272
+Starting Thread Execution Unit 7272Entering the Thread Execution Environment 9444
+Installing client driver <sgl4d.inf>...Setting up the Qwadro Draw System...Entering the Thread Execution Environment 7272
+Stopping Thread Execution Unit 7272Entering the Thread Execution Environment 9444
+Loading module... <e2draw.dll>Setting up Unified Video Graphics InfrastructureSetting up CameraSetting up DrawDevice[Device]Setting up DrawOutputSetting up DrawInputInstalling client driver <oal4d.inf>...Installing client driver <sgl4d.inf>...Installable client driver <sgl4d.inf> discovered.
+	Product: SIGMA GL/2
+	Version: 0.0.0
+	Description: SIGMA-engineered continuously integrated OpenGL/Vulkan Video Graphics Infrastructure
+	Vendor: SIGMA Technology Group
+	Website: www.sigmaco.org
+	Loading ICD <sgl4d.inf> executable and linkable file <sgl4d.dll>...Loading module... <sgl4d.dll>Setting up DrawBrigeSetting up DrawContextSetting up GPU Synchronization SemaphoreSetting up GPU Synchronization FenceSetting up Query PoolListing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008Acquiring thread...  0 "sglDdev_w32.c:2789"Setting up the Environment...Acquiring keyboard at port 0Mounting storage unit... <code>('E:/qwadro/afx//system/'),7Entering the Thread Execution Environment 8188
+Starting Thread Execution Unit 8188Stopping Thread Execution Unit 8188Entering the Thread Execution Environment 9444
+Loading file... <system/qwadro.xss>('E:/qwadro/afx//system//qwadro.xss')// This technology is part of Qwadro (c) 2017 SIGMA Federation
+require "core" for Storage, Stream
+
+class Main {
+  construct new() {
+    System.print("new");
+  }
+
+  init() {
+    System.print("init");
+    //Storage.Mount("tmp", "system/tmp", "rwx");
+    var f = Stream.OpenFile("tmp/camera.lua", "rwx");
+    f.Seek(10, 0);
+    f.Write("stdout", 6, 0);
+    f.Close();
+  }
+
+  update() {
+    System.print("update");
+  }
+
+  draw(dt) {
+    System.print("draw");
+  }
+  
+
+}
+
+Storage.Mount("code", "code", "rx");
+Storage.Mount("sound", "sound", "rx");
+Storage.Mount("data", "data", "rx");
+Storage.Mount("art", "art", "rx");
+Storage.Mount("tmp", "tmp", "rwx");
+
+var Game = Main.new();
+System.print(".");
+var file = Stream.OpenFile("tmp/camera.lua", "rwx");
+file.Seek(1, 0);
+file.Close();
+
+Loading file... <code/core.xs>('E:/qwadro/afx//system//core.xs')Mounting storage unit... <code>('E:/qwadro/afx//code/'),5Mounting storage unit... <sound>('E:/qwadro/afx//sound/'),5Mounting storage unit... <data>('E:/qwadro/afx//data/'),5Mounting storage unit... <art>('E:/qwadro/afx//art/'),5Mounting storage unit... <tmp>('E:/qwadro/afx//tmp/'),7new
+.
+Opening file... <tmp/camera.lua>('E:/qwadro/afx//tmp//camera.lua'),7Acquiring thread...  9444 "afxSystem.c:803"Setting up LegoSetting up SamplerSetting up BufferSetting up RasterSetting up CanvasSetting up Vertex InputSetting up ShaderSetting up RasterizerSetting up PipelineSetting up DrawStreamUploading pipeline 'system/video/sampleOutRgba.xsh.xml'Loading file... <system/video/sampleOutRgba.xsh.xml>('E:/qwadro/afx//system//video/sampleOutRgba.xsh.xml')system/video/uvOutTristripQuad.vshsystem/video/sampleOutRgba.xsh.xmlUploading pipeline 'system/video/sampleOutRgba.xsh.xml'Loading file... <system/video/sampleOutRgba.xsh.xml>('E:/qwadro/afx//system//video/sampleOutRgba.xsh.xml')Node 'DepthWriteEnabled' not handled.system/video/sampleOutRgba2d.fshOpening file... <system/video/uvOutTristripQuad.vsh>('E:/qwadro/afx//system//video/uvOutTristripQuad.vsh'),1Opening file... <system/video/stdEnv.inc>('E:/qwadro/afx//system//video/stdEnv.inc'),1Opening file... <system/video/sampleOutRgba2d.fsh>('E:/qwadro/afx//system//video/sampleOutRgba2d.fsh'),1Opening file... <system/video/stdEnv.inc>('E:/qwadro/afx//system//video/stdEnv.inc'),1ðOsReloading file 1... <system/video/font-256.tga>('E:/qwadro/afx//system//video/font-256.tga')Uploading pipeline 'system/video/font.xsh.xml?instanced'Loading file... <system/video/font.xsh.xml>('E:/qwadro/afx//system//video/font.xsh.xml')system/video/font.vshsystem/video/font.xsh.xml?instancedUploading pipeline 'system/video/font.xsh.xml?instanced'Loading file... <system/video/font.xsh.xml>('E:/qwadro/afx//system//video/font.xsh.xml')Node 'DepthWriteEnabled' not handled.system/video/font.fshOpening file... <system/video/font.vsh>('E:/qwadro/afx//system//video/font.vsh'),1Opening file... <system/video/stdEnv.inc>('E:/qwadro/afx//system//video/stdEnv.inc'),1Opening file... <system/video/stdView.inc>('E:/qwadro/afx//system//video/stdView.inc'),1Opening file... <system/video/font.fsh>('E:/qwadro/afx//system//video/font.fsh'),1Opening file... <system/video/stdEnv.inc>('E:/qwadro/afx//system//video/stdEnv.inc'),1 ksSetting up ApplicationAcquiring thread...  0 "afxApplication.c:344"Acquiring mouse at port 0Setting up Vertex BufferSetting up WidgetLoading file... <system/sandbox.xss>('E:/qwadro/afx//system//sandbox.xss')require "core" for Keyboard, Mouse
+require "draw" for Camera
+
+class Main {
+  construct new() {
+    System.print("new game")
+  }
+
+  init() {
+    System.print("init game")
+  }
+  
+  quit() {
+      System.print("quit game")
+  }
+
+  step(dt) {
+    
+    // 4 = A
+    // 7 = D
+    // 20 = Q
+    // 8 = E
+    // 26 = W
+    // 22 = S
+    var r = 0//(Keyboard.KeyIsPressed(0, 4) ? -1 : 0.0) + (Keyboard.KeyIsPressed(0, 7) ? 1 : 0.0);
+    var u = 0//(Keyboard.GetKeyPressure(0, 20) ? -1 : 0.0) + (Keyboard.GetKeyPressure(0, 8) ? 1 : 0.0);
+    var f = 0//(Keyboard.GetKeyPressure(0, 26) ? -1 : 0.0) + (Keyboard.GetKeyPressure(0, 22) ? 1 : 0.0);
+    
+    r = Keyboard.GetKeyPressure(0, 4)
+    r = r * dt
+    
+    var cam = Camera.Get(0)
+    
+    //if (r > 0)
+    
+        //System.print("(dt)")
+        cam.ApplyMotion(r, dt * u, dt * f)
+        //System.print("update game")
+        //System.print("(dt)")
+        //System.print("(r)")
+    
+  }
+
+  draw(din, event) {
+    System.print("draw game")
+  }
+}
+
+var Game = Main.new()
+System.print(". game")
+Loading file... <code/draw.xs>('E:/qwadro/afx//system//draw.xs')new game
+. game
+Entering the Thread Execution Environment 4348
+Starting Thread Execution Unit 4348Setting up SimulationSetting up MaterialSetting up Mesh TopologySetting up Vertex DataSetting up MeshSetting up SkeletonSetting up ModelSetting up MotionSetting up AnimationSetting up MotorSetting up BodySetting up EntitySetting up LightSetting up CAD AssetSetting up Renderer

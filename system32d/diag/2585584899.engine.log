@@ -1,0 +1,3157 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 0f9e090c by 00000000 over 00000000 with 0f9dd770)
+ afxClass<Basic I/O System>::ConstructObject(006b8090)
+ afxSystem.c:1019
+  _AfxSysCtor(sys=006b8090)
+ Installing Context at 006b80cc by 006b80b8 over 00000000 with 0f9dd074)
+ Installing Module at 006b8190 by 006b80b8 over 00000000 with 0f9dd604)
+ Installing Thread at 006b83dc by 006b80b8 over 00000000 with 0f9dd7a0)
+ Installing File at 006b8564 by 006b80b8 over 00000000 with 0f9dd5a4)
+ Installing Archive at 006b8628 by 006b80b8 over 00000000 with 0f9dd030)
+ Installing Application at 006b84a0 by 006b80b8 over 00000000 with 0f9dd000)
+ Installing Keyboard at 006b8254 by 006b80b8 over 00000000 with 0f9dd5d4)
+ Installing Mouse at 006b8318 by 006b80b8 over 00000000 with 0f9dd634)
+ Installing Draw I/O System at 006b86ec by 006b80b8 over 00000000 with 0f9de0a0)
+ Installing Simulation at 006b87b0 by 006b80b8 over 00000000 with 0f9de218)
+ [!] afxSystem.c:1104?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1105?_AfxSysCtor
+  Logical processor count: 2
+ afxContext.c:197
+  AfxAcquireContexts(cnt=1,app=006b8874,strategy=0024e1b8)
+ afxClass<Context>::ConstructObject(006b89e0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006b89e0)
+ afxArena.c:767
+  AfxAcquireArena(aren=006b88d0)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="afxSystem.c:1157!_AfxSysCtor")
+ afxSystem.c:762
+  AfxMountStoragePoints(6,0024e310)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:139
+  AfxAcquireModules(cnt=1,mdle=006b88a0,uri=0024e248)
+ afxClass<Module>::ConstructObject(006bd650)
+ afxModule.c:95
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:287
+  AfxAcquireKeyboards(cnt=1,port=0024e190,kbd=006b88a4)
+ afxClass<Keyboard>::ConstructObject(006bda90)
+ afxKeyboard.c:251
+  _AfxKbdCtor(kbd=006bda90)
+ Entering the Threading Execution Environment  0
+ afxContext.c:197
+  AfxAcquireContexts(cnt=10,app=0024f250,strategy=00000000)
+ afxClass<Context>::ConstructObject(006be4f0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be4f0)
+ afxClass<Context>::ConstructObject(006be5f0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be5f0)
+ afxClass<Context>::ConstructObject(006be710)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be710)
+ afxClass<Context>::ConstructObject(006be7b0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be7b0)
+ afxClass<Context>::ConstructObject(006be8e0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be8e0)
+ afxClass<Context>::ConstructObject(006bea10)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006bea10)
+ afxClass<Context>::ConstructObject(006beb60)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006beb60)
+ afxClass<Context>::ConstructObject(006beab0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006beab0)
+ afxClass<Context>::ConstructObject(006bec00)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006bec00)
+ afxClass<Context>::ConstructObject(006beca0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006beca0)
+ Dismantling Context object (#0) 006be4f0...
+ Destructing instance 006be4f0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be4f0)
+ Dismantling Context object (#0) 006be5f0...
+ Destructing instance 006be5f0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be5f0)
+ Dismantling Context object (#0) 006be710...
+ Destructing instance 006be710 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be710)
+ Dismantling Context object (#0) 006be7b0...
+ Destructing instance 006be7b0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be7b0)
+ Dismantling Context object (#0) 006be8e0...
+ Destructing instance 006be8e0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be8e0)
+ Dismantling Context object (#0) 006bea10...
+ Destructing instance 006bea10 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006bea10)
+ Dismantling Context object (#0) 006beb60...
+ Destructing instance 006beb60 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006beb60)
+ Dismantling Context object (#0) 006beab0...
+ Destructing instance 006beab0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006beab0)
+ Dismantling Context object (#0) 006bec00...
+ Destructing instance 006bec00 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006bec00)
+ Dismantling Context object (#0) 006beca0...
+ Destructing instance 006beca0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006beca0)
+ afxContext.c:197
+  AfxAcquireContexts(cnt=10,app=0024f250,strategy=00000000)
+ afxClass<Context>::ConstructObject(006be550)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be550)
+ afxClass<Context>::ConstructObject(006be5f0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be5f0)
+ afxClass<Context>::ConstructObject(006be690)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be690)
+ afxClass<Context>::ConstructObject(006be730)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be730)
+ afxClass<Context>::ConstructObject(006be7d0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be7d0)
+ afxClass<Context>::ConstructObject(006be870)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be870)
+ afxClass<Context>::ConstructObject(006be910)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be910)
+ afxClass<Context>::ConstructObject(006be9b0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be9b0)
+ afxClass<Context>::ConstructObject(006bea50)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006bea50)
+ afxClass<Context>::ConstructObject(006be490)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be490)
+ Dismantling Context object (#0) 006be550...
+ Destructing instance 006be550 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be550)
+ Dismantling Context object (#0) 006be5f0...
+ Destructing instance 006be5f0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be5f0)
+ Dismantling Context object (#0) 006be690...
+ Destructing instance 006be690 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be690)
+ Dismantling Context object (#0) 006be730...
+ Destructing instance 006be730 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be730)
+ Dismantling Context object (#0) 006be7d0...
+ Destructing instance 006be7d0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be7d0)
+ Dismantling Context object (#0) 006be870...
+ Destructing instance 006be870 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be870)
+ Dismantling Context object (#0) 006be910...
+ Destructing instance 006be910 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be910)
+ Dismantling Context object (#0) 006be9b0...
+ Destructing instance 006be9b0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be9b0)
+ Dismantling Context object (#0) 006bea50...
+ Destructing instance 006bea50 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006bea50)
+ Dismantling Context object (#0) 006be490...
+ Destructing instance 006be490 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be490)
+ afxContext.c:197
+  AfxAcquireContexts(cnt=10,app=0024f250,strategy=00000000)
+ afxClass<Context>::ConstructObject(006bec70)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006bec70)
+ afxClass<Context>::ConstructObject(006bed10)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006bed10)
+ afxClass<Context>::ConstructObject(006be490)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be490)
+ afxClass<Context>::ConstructObject(006be530)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be530)
+ afxClass<Context>::ConstructObject(006be5d0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be5d0)
+ afxClass<Context>::ConstructObject(006be670)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be670)
+ afxClass<Context>::ConstructObject(006be710)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be710)
+ afxClass<Context>::ConstructObject(006be7b0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be7b0)
+ afxClass<Context>::ConstructObject(006be850)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be850)
+ afxClass<Context>::ConstructObject(006be9b0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be9b0)
+ Dismantling Context object (#0) 006bec70...
+ Destructing instance 006bec70 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006bec70)
+ Dismantling Context object (#0) 006bed10...
+ Destructing instance 006bed10 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006bed10)
+ Dismantling Context object (#0) 006be490...
+ Destructing instance 006be490 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be490)
+ Dismantling Context object (#0) 006be530...
+ Destructing instance 006be530 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be530)
+ Dismantling Context object (#0) 006be5d0...
+ Destructing instance 006be5d0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be5d0)
+ Dismantling Context object (#0) 006be670...
+ Destructing instance 006be670 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be670)
+ Dismantling Context object (#0) 006be710...
+ Destructing instance 006be710 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be710)
+ Dismantling Context object (#0) 006be7b0...
+ Destructing instance 006be7b0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be7b0)
+ Dismantling Context object (#0) 006be850...
+ Destructing instance 006be850 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be850)
+ Dismantling Context object (#0) 006be9b0...
+ Destructing instance 006be9b0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be9b0)
+ afxContext.c:197
+  AfxAcquireContexts(cnt=10,app=0024f250,strategy=00000000)
+ afxClass<Context>::ConstructObject(006be550)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be550)
+ afxClass<Context>::ConstructObject(006be5f0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be5f0)
+ afxClass<Context>::ConstructObject(006be690)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be690)
+ afxClass<Context>::ConstructObject(006be730)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be730)
+ afxClass<Context>::ConstructObject(006be7d0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be7d0)
+ afxClass<Context>::ConstructObject(006be870)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be870)
+ afxClass<Context>::ConstructObject(006be910)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be910)
+ afxClass<Context>::ConstructObject(006be9b0)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be9b0)
+ afxClass<Context>::ConstructObject(006bea50)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006bea50)
+ afxClass<Context>::ConstructObject(006be490)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=006be490)
+ Dismantling Context object (#0) 006be550...
+ Destructing instance 006be550 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be550)
+ Dismantling Context object (#0) 006be5f0...
+ Destructing instance 006be5f0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be5f0)
+ Dismantling Context object (#0) 006be690...
+ Destructing instance 006be690 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be690)
+ Dismantling Context object (#0) 006be730...
+ Destructing instance 006be730 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be730)
+ Dismantling Context object (#0) 006be7d0...
+ Destructing instance 006be7d0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be7d0)
+ Dismantling Context object (#0) 006be870...
+ Destructing instance 006be870 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be870)
+ Dismantling Context object (#0) 006be910...
+ Destructing instance 006be910 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be910)
+ Dismantling Context object (#0) 006be9b0...
+ Destructing instance 006be9b0 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be9b0)
+ Dismantling Context object (#0) 006bea50...
+ Destructing instance 006bea50 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006bea50)
+ Dismantling Context object (#0) 006be490...
+ Destructing instance 006be490 of Context class.
+ afxContext.c:137
+  _AfxCtxDtor(ctx=006be490)
+ afxClass<Draw I/O System>::ConstructObject(006be490)
+ afxDrawSystem.c:678
+  _AfxDsysCtor(dsys=006be490)
+ Installing Draw Thread at 006be8d0 by 006be4e8 over 00000000 with 0024ecbc)
+ Installing Installable Client (Draw) Driver at 006be4fc by 006be4e8 over 00000000 with 0024ec8c)
+ Installing Draw Device at 006be5c0 by 006be4e8 over 00000000 with 0024ec5c)
+ Installing Draw Context at 006be684 by 006be4e8 over 00000000 with 0024ec2c)
+ Installing Draw Output at 006be748 by 006be4e8 over 00000000 with 0024ebfc)
+ Installing Draw Input at 006be80c by 006be4e8 over 00000000 with 0024ebcc)
+ Loading draw ICD system/e2draw.icd
+ afxModule.c:139
+  AfxAcquireModules(cnt=1,mdle=0024ea60,uri=0024ea68)
+ afxClass<Module>::ConstructObject(006bd6ac)
+ afxModule.c:95
+  _AfxMdleCtor(uri:e2draw.icd)
+ Entering the Threading Execution Environment  1
+ afxSystem.c:1000
+  startCbOnSysProcUnit(Threading Execution Environment 1 started)
+ Entering the Threading Execution Environment  0
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(006c0e40)
+ afxDrawSystem.c:390
+  _AfxDdrvCtor(ddrv=006c0e40)
+Installing 'e2draw.icd' ICD on draw system 006be490...
+	OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Draw Device at 006c0e54 by 006c0e40 over 006be5c0 with 0024e18c)
+ afxClass<Draw Device, Draw Device>ConstructingObject(006c0fe0)
+ afxClass<Draw Device>::ConstructObject(006c0fe0)
+ afxDrawSystem.c:330
+  _AfxDdevCtor(ddev=006c0fe0)
+ Installing Draw Context at 006c0ff4 by 006c0fe0 over 006be684 with 0f59d104)
+ Installing Draw Output at 006c10b8 by 006c0fe0 over 006be748 with 0f59d238)
+ Installing Draw Input at 006c117c by 006c0fe0 over 006be80c with 0f59d208)
+ afxClass<Draw Device>::ConstructObject(006c0fe0)
+ sglDrawDriver.c:2314
+  _SglDdevCtor(ddev=006c0fe0)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Creating temp OpenGL context
+ Creating definitive OpenGL context
+ 000 glCullFace core found.
+ 001 glFrontFace core found.
+ 002 glHint core found.
+ 003 glLineWidth core found.
+ 004 glPointSize core found.
+ 005 glPolygonMode core found.
+ 006 glScissor core found.
+ 007 glTexParameterf core found.
+ 008 glTexParameterfv core found.
+ 009 glTexParameteri core found.
+ 010 glTexParameteriv core found.
+ 011 glTexImage1D core found.
+ 012 glTexImage2D core found.
+ 013 glDrawBuffer core found.
+ 014 glClear core found.
+ 015 glClearColor core found.
+ 016 glClearStencil core found.
+ 017 glClearDepth core found.
+ 018 glStencilMask core found.
+ 019 glColorMask core found.
+ 020 glDepthMask core found.
+ 021 glDisable core found.
+ 022 glEnable core found.
+ 023 glFinish core found.
+ 024 glFlush core found.
+ 025 glBlendFunc core found.
+ 026 glLogicOp core found.
+ 027 glStencilFunc core found.
+ 028 glStencilOp core found.
+ 029 glDepthFunc core found.
+ 030 glPixelStoref core found.
+ 031 glPixelStorei core found.
+ 032 glReadBuffer core found.
+ 033 glReadPixels core found.
+ 034 glGetBooleanv core found.
+ 035 glGetDoublev core found.
+ 036 glGetError core found.
+ 037 glGetFloatv core found.
+ 038 glGetIntegerv core found.
+ 039 glGetString core found.
+ 040 glGetTexImage core found.
+ 041 glGetTexParameterfv core found.
+ 042 glGetTexParameteriv core found.
+ 043 glGetTexLevelParameterfv core found.
+ 044 glGetTexLevelParameteriv core found.
+ 045 glIsEnabled core found.
+ 046 glDepthRange core found.
+ 047 glViewport core found.
+ 048 glDrawArrays core found.
+ 049 glDrawElements core found.
+ 050 glGetPointerv core found.
+ 051 glPolygonOffset core found.
+ 052 glCopyTexImage1D core found.
+ 053 glCopyTexImage2D core found.
+ 054 glCopyTexSubImage1D core found.
+ 055 glCopyTexSubImage2D core found.
+ 056 glTexSubImage1D core found.
+ 057 glTexSubImage2D core found.
+ 058 glBindTexture core found.
+ 059 glDeleteTextures core found.
+ 060 glGenTextures core found.
+ 061 glIsTexture core found.
+ 062 glDrawRangeElements core found.
+ 063 glTexImage3D core found.
+ 064 glTexSubImage3D core found.
+ 065 glCopyTexSubImage3D core found.
+ 066 glActiveTexture core found.
+ 067 glSampleCoverage core found.
+ 068 glCompressedTexImage3D core found.
+ 069 glCompressedTexImage2D core found.
+ 070 glCompressedTexImage1D core found.
+ 071 glCompressedTexSubImage3D core found.
+ 072 glCompressedTexSubImage2D core found.
+ 073 glCompressedTexSubImage1D core found.
+ 074 glGetCompressedTexImage core found.
+ 075 glBlendFuncSeparate core found.
+ 076 glMultiDrawArrays core found.
+ 077 glMultiDrawElements core found.
+ 078 glPointParameterf core found.
+ 079 glPointParameterfv core found.
+ 080 glPointParameteri core found.
+ 081 glPointParameteriv core found.
+ 082 glBlendColor core found.
+ 083 glBlendEquation core found.
+ 084 glGenQueries core found.
+ 085 glDeleteQueries core found.
+ 086 glIsQuery core found.
+ 087 glBeginQuery core found.
+ 088 glEndQuery core found.
+ 089 glGetQueryiv core found.
+ 090 glGetQueryObjectiv core found.
+ 091 glGetQueryObjectuiv core found.
+ 092 glBindBuffer core found.
+ 093 glDeleteBuffers core found.
+ 094 glGenBuffers core found.
+ 095 glIsBuffer core found.
+ 096 glBufferData core found.
+ 097 glBufferSubData core found.
+ 098 glGetBufferSubData core found.
+ 099 glMapBuffer core found.
+ 100 glUnmapBuffer core found.
+ 101 glGetBufferParameteriv core found.
+ 102 glGetBufferPointerv core found.
+ 103 glBlendEquationSeparate core found.
+ 104 glDrawBuffers core found.
+ 105 glStencilOpSeparate core found.
+ 106 glStencilFuncSeparate core found.
+ 107 glStencilMaskSeparate core found.
+ 108 glAttachShader core found.
+ 109 glBindAttribLocation core found.
+ 110 glCompileShader core found.
+ 111 glCreateProgram core found.
+ 112 glCreateShader core found.
+ 113 glDeleteProgram core found.
+ 114 glDeleteShader core found.
+ 115 glDetachShader core found.
+ 116 glDisableVertexAttribArray core found.
+ 117 glEnableVertexAttribArray core found.
+ 118 glGetActiveAttrib core found.
+ 119 glGetActiveUniform core found.
+ 120 glGetAttachedShaders core found.
+ 121 glGetAttribLocation core found.
+ 122 glGetProgramiv core found.
+ 123 glGetProgramInfoLog core found.
+ 124 glGetShaderiv core found.
+ 125 glGetShaderInfoLog core found.
+ 126 glGetShaderSource core found.
+ 127 glGetUniformLocation core found.
+ 128 glGetUniformfv core found.
+ 129 glGetUniformiv core found.
+ 130 glGetVertexAttribdv core found.
+ 131 glGetVertexAttribfv core found.
+ 132 glGetVertexAttribiv core found.
+ 133 glGetVertexAttribPointerv core found.
+ 134 glIsProgram core found.
+ 135 glIsShader core found.
+ 136 glLinkProgram core found.
+ 137 glShaderSource core found.
+ 138 glUseProgram core found.
+ 139 glUniform1f core found.
+ 140 glUniform2f core found.
+ 141 glUniform3f core found.
+ 142 glUniform4f core found.
+ 143 glUniform1i core found.
+ 144 glUniform2i core found.
+ 145 glUniform3i core found.
+ 146 glUniform4i core found.
+ 147 glUniform1fv core found.
+ 148 glUniform2fv core found.
+ 149 glUniform3fv core found.
+ 150 glUniform4fv core found.
+ 151 glUniform1iv core found.
+ 152 glUniform2iv core found.
+ 153 glUniform3iv core found.
+ 154 glUniform4iv core found.
+ 155 glUniformMatrix2fv core found.
+ 156 glUniformMatrix3fv core found.
+ 157 glUniformMatrix4fv core found.
+ 158 glValidateProgram core found.
+ 159 glVertexAttrib1d core found.
+ 160 glVertexAttrib1dv core found.
+ 161 glVertexAttrib1f core found.
+ 162 glVertexAttrib1fv core found.
+ 163 glVertexAttrib1s core found.
+ 164 glVertexAttrib1sv core found.
+ 165 glVertexAttrib2d core found.
+ 166 glVertexAttrib2dv core found.
+ 167 glVertexAttrib2f core found.
+ 168 glVertexAttrib2fv core found.
+ 169 glVertexAttrib2s core found.
+ 170 glVertexAttrib2sv core found.
+ 171 glVertexAttrib3d core found.
+ 172 glVertexAttrib3dv core found.
+ 173 glVertexAttrib3f core found.
+ 174 glVertexAttrib3fv core found.
+ 175 glVertexAttrib3s core found.
+ 176 glVertexAttrib3sv core found.
+ 177 glVertexAttrib4Nbv core found.
+ 178 glVertexAttrib4Niv core found.
+ 179 glVertexAttrib4Nsv core found.
+ 180 glVertexAttrib4Nub core found.
+ 181 glVertexAttrib4Nubv core found.
+ 182 glVertexAttrib4Nuiv core found.
+ 183 glVertexAttrib4Nusv core found.
+ 184 glVertexAttrib4bv core found.
+ 185 glVertexAttrib4d core found.
+ 186 glVertexAttrib4dv core found.
+ 187 glVertexAttrib4f core found.
+ 188 glVertexAttrib4fv core found.
+ 189 glVertexAttrib4iv core found.
+ 190 glVertexAttrib4s core found.
+ 191 glVertexAttrib4sv core found.
+ 192 glVertexAttrib4ubv core found.
+ 193 glVertexAttrib4uiv core found.
+ 194 glVertexAttrib4usv core found.
+ 195 glVertexAttribPointer core found.
+ 196 glUniformMatrix2x3fv core found.
+ 197 glUniformMatrix3x2fv core found.
+ 198 glUniformMatrix2x4fv core found.
+ 199 glUniformMatrix4x2fv core found.
+ 200 glUniformMatrix3x4fv core found.
+ 201 glUniformMatrix4x3fv core found.
+ 202 glColorMaski core found.
+ 203 glGetBooleani_v core found.
+ 204 glGetIntegeri_v core found.
+ 205 glEnablei core found.
+ 206 glDisablei core found.
+ 207 glIsEnabledi core found.
+ 208 glBeginTransformFeedback core found.
+ 209 glEndTransformFeedback core found.
+ 210 glBindBufferRange core found.
+ 211 glBindBufferBase core found.
+ 212 glTransformFeedbackVaryings core found.
+ 213 glGetTransformFeedbackVarying core found.
+ 214 glClampColor core found.
+ 215 glBeginConditionalRender core found.
+ 216 glEndConditionalRender core found.
+ 217 glVertexAttribIPointer core found.
+ 218 glGetVertexAttribIiv core found.
+ 219 glGetVertexAttribIuiv core found.
+ 220 glVertexAttribI1i core found.
+ 221 glVertexAttribI2i core found.
+ 222 glVertexAttribI3i core found.
+ 223 glVertexAttribI4i core found.
+ 224 glVertexAttribI1ui core found.
+ 225 glVertexAttribI2ui core found.
+ 226 glVertexAttribI3ui core found.
+ 227 glVertexAttribI4ui core found.
+ 228 glVertexAttribI1iv core found.
+ 229 glVertexAttribI2iv core found.
+ 230 glVertexAttribI3iv core found.
+ 231 glVertexAttribI4iv core found.
+ 232 glVertexAttribI1uiv core found.
+ 233 glVertexAttribI2uiv core found.
+ 234 glVertexAttribI3uiv core found.
+ 235 glVertexAttribI4uiv core found.
+ 236 glVertexAttribI4bv core found.
+ 237 glVertexAttribI4sv core found.
+ 238 glVertexAttribI4ubv core found.
+ 239 glVertexAttribI4usv core found.
+ 240 glGetUniformuiv core found.
+ 241 glBindFragDataLocation core found.
+ 242 glGetFragDataLocation core found.
+ 243 glUniform1ui core found.
+ 244 glUniform2ui core found.
+ 245 glUniform3ui core found.
+ 246 glUniform4ui core found.
+ 247 glUniform1uiv core found.
+ 248 glUniform2uiv core found.
+ 249 glUniform3uiv core found.
+ 250 glUniform4uiv core found.
+ 251 glTexParameterIiv core found.
+ 252 glTexParameterIuiv core found.
+ 253 glGetTexParameterIiv core found.
+ 254 glGetTexParameterIuiv core found.
+ 255 glClearBufferiv core found.
+ 256 glClearBufferuiv core found.
+ 257 glClearBufferfv core found.
+ 258 glClearBufferfi core found.
+ 259 glGetStringi core found.
+ 260 glIsRenderbuffer core found.
+ 261 glBindRenderbuffer core found.
+ 262 glDeleteRenderbuffers core found.
+ 263 glGenRenderbuffers core found.
+ 264 glRenderbufferStorage core found.
+ 265 glGetRenderbufferParameteriv core found.
+ 266 glIsFramebuffer core found.
+ 267 glBindFramebuffer core found.
+ 268 glDeleteFramebuffers core found.
+ 269 glGenFramebuffers core found.
+ 270 glCheckFramebufferStatus core found.
+ 271 glFramebufferTexture1D core found.
+ 272 glFramebufferTexture2D core found.
+ 273 glFramebufferTexture3D core found.
+ 274 glFramebufferRenderbuffer core found.
+ 275 glGetFramebufferAttachmentParameteriv core found.
+ 276 glGenerateMipmap core found.
+ 277 glBlitFramebuffer core found.
+ 278 glRenderbufferStorageMultisample core found.
+ 279 glFramebufferTextureLayer core found.
+ 280 glMapBufferRange core found.
+ 281 glFlushMappedBufferRange core found.
+ 282 glBindVertexArray core found.
+ 283 glDeleteVertexArrays core found.
+ 284 glGenVertexArrays core found.
+ 285 glIsVertexArray core found.
+ 286 glDrawArraysInstanced core found.
+ 287 glDrawElementsInstanced core found.
+ 288 glTexBuffer core found.
+ 289 glPrimitiveRestartIndex core found.
+ 290 glCopyBufferSubData core found.
+ 291 glGetUniformIndices core found.
+ 292 glGetActiveUniformsiv core found.
+ 293 glGetActiveUniformName core found.
+ 294 glGetUniformBlockIndex core found.
+ 295 glGetActiveUniformBlockiv core found.
+ 296 glGetActiveUniformBlockName core found.
+ 297 glUniformBlockBinding core found.
+ 298 glDrawElementsBaseVertex core found.
+ 299 glDrawRangeElementsBaseVertex core found.
+ 300 glDrawElementsInstancedBaseVertex core found.
+ 301 glMultiDrawElementsBaseVertex core found.
+ 302 glProvokingVertex core found.
+ 303 glFenceSync core found.
+ 304 glIsSync core found.
+ 305 glDeleteSync core found.
+ 306 glClientWaitSync core found.
+ 307 glWaitSync core found.
+ 308 glGetInteger64v core found.
+ 309 glGetSynciv core found.
+ 310 glGetInteger64i_v core found.
+ 311 glGetBufferParameteri64v core found.
+ 312 glFramebufferTexture core found.
+ 313 glTexImage2DMultisample core found.
+ 314 glTexImage3DMultisample core found.
+ 315 glGetMultisamplefv core found.
+ 316 glSampleMaski core found.
+ 317 glBindFragDataLocationIndexed core found.
+ 318 glGetFragDataIndex core found.
+ 319 glGenSamplers core found.
+ 320 glDeleteSamplers core found.
+ 321 glIsSampler core found.
+ 322 glBindSampler core found.
+ 323 glSamplerParameteri core found.
+ 324 glSamplerParameteriv core found.
+ 325 glSamplerParameterf core found.
+ 326 glSamplerParameterfv core found.
+ 327 glSamplerParameterIiv core found.
+ 328 glSamplerParameterIuiv core found.
+ 329 glGetSamplerParameteriv core found.
+ 330 glGetSamplerParameterIiv core found.
+ 331 glGetSamplerParameterfv core found.
+ 332 glGetSamplerParameterIuiv core found.
+ 333 glQueryCounter core found.
+ 334 glGetQueryObjecti64v core found.
+ 335 glGetQueryObjectui64v core found.
+ 336 glVertexAttribDivisor core found.
+ 337 glVertexAttribP1ui core found.
+ 338 glVertexAttribP1uiv core found.
+ 339 glVertexAttribP2ui core found.
+ 340 glVertexAttribP2uiv core found.
+ 341 glVertexAttribP3ui core found.
+ 342 glVertexAttribP3uiv core found.
+ 343 glVertexAttribP4ui core found.
+ 344 glVertexAttribP4uiv core found.
+ 345 glMinSampleShading core found.
+ 346 glBlendEquationi core found.
+ 347 glBlendEquationSeparatei core found.
+ 348 glBlendFunci core found.
+ 349 glBlendFuncSeparatei core found.
+ 350 glDrawArraysIndirect core found.
+ 351 glDrawElementsIndirect core found.
+ 352 glUniform1d core found.
+ 353 glUniform2d core found.
+ 354 glUniform3d core found.
+ 355 glUniform4d core found.
+ 356 glUniform1dv core found.
+ 357 glUniform2dv core found.
+ 358 glUniform3dv core found.
+ 359 glUniform4dv core found.
+ 360 glUniformMatrix2dv core found.
+ 361 glUniformMatrix3dv core found.
+ 362 glUniformMatrix4dv core found.
+ 363 glUniformMatrix2x3dv core found.
+ 364 glUniformMatrix2x4dv core found.
+ 365 glUniformMatrix3x2dv core found.
+ 366 glUniformMatrix3x4dv core found.
+ 367 glUniformMatrix4x2dv core found.
+ 368 glUniformMatrix4x3dv core found.
+ 369 glGetUniformdv core found.
+ 370 glGetSubroutineUniformLocation core found.
+ 371 glGetSubroutineIndex core found.
+ 372 glGetActiveSubroutineUniformiv core found.
+ 373 glGetActiveSubroutineUniformName core found.
+ 374 glGetActiveSubroutineName core found.
+ 375 glUniformSubroutinesuiv core found.
+ 376 glGetUniformSubroutineuiv core found.
+ 377 glGetProgramStageiv core found.
+ 378 glPatchParameteri core found.
+ 379 glPatchParameterfv core found.
+ 380 glBindTransformFeedback core found.
+ 381 glDeleteTransformFeedbacks core found.
+ 382 glGenTransformFeedbacks core found.
+ 383 glIsTransformFeedback core found.
+ 384 glPauseTransformFeedback core found.
+ 385 glResumeTransformFeedback core found.
+ 386 glDrawTransformFeedback core found.
+ 387 glDrawTransformFeedbackStream core found.
+ 388 glBeginQueryIndexed core found.
+ 389 glEndQueryIndexed core found.
+ 390 glGetQueryIndexediv core found.
+ 391 glReleaseShaderCompiler core found.
+ 392 glShaderBinary core found.
+ 393 glGetShaderPrecisionFormat core found.
+ 394 glDepthRangef core found.
+ 395 glClearDepthf core found.
+ 396 glGetProgramBinary core found.
+ 397 glProgramBinary core found.
+ 398 glProgramParameteri core found.
+ 399 glUseProgramStages core found.
+ 400 glActiveShaderProgram core found.
+ 401 glCreateShaderProgramv core found.
+ 402 glBindProgramPipeline core found.
+ 403 glDeleteProgramPipelines core found.
+ 404 glGenProgramPipelines core found.
+ 405 glIsProgramPipeline core found.
+ 406 glGetProgramPipelineiv core found.
+ 407 glProgramUniform1i core found.
+ 408 glProgramUniform1iv core found.
+ 409 glProgramUniform1f core found.
+ 410 glProgramUniform1fv core found.
+ 411 glProgramUniform1d core found.
+ 412 glProgramUniform1dv core found.
+ 413 glProgramUniform1ui core found.
+ 414 glProgramUniform1uiv core found.
+ 415 glProgramUniform2i core found.
+ 416 glProgramUniform2iv core found.
+ 417 glProgramUniform2f core found.
+ 418 glProgramUniform2fv core found.
+ 419 glProgramUniform2d core found.
+ 420 glProgramUniform2dv core found.
+ 421 glProgramUniform2ui core found.
+ 422 glProgramUniform2uiv core found.
+ 423 glProgramUniform3i core found.
+ 424 glProgramUniform3iv core found.
+ 425 glProgramUniform3f core found.
+ 426 glProgramUniform3fv core found.
+ 427 glProgramUniform3d core found.
+ 428 glProgramUniform3dv core found.
+ 429 glProgramUniform3ui core found.
+ 430 glProgramUniform3uiv core found.
+ 431 glProgramUniform4i core found.
+ 432 glProgramUniform4iv core found.
+ 433 glProgramUniform4f core found.
+ 434 glProgramUniform4fv core found.
+ 435 glProgramUniform4d core found.
+ 436 glProgramUniform4dv core found.
+ 437 glProgramUniform4ui core found.
+ 438 glProgramUniform4uiv core found.
+ 439 glProgramUniformMatrix2fv core found.
+ 440 glProgramUniformMatrix3fv core found.
+ 441 glProgramUniformMatrix4fv core found.
+ 442 glProgramUniformMatrix2dv core found.
+ 443 glProgramUniformMatrix3dv core found.
+ 444 glProgramUniformMatrix4dv core found.
+ 445 glProgramUniformMatrix2x3fv core found.
+ 446 glProgramUniformMatrix3x2fv core found.
+ 447 glProgramUniformMatrix2x4fv core found.
+ 448 glProgramUniformMatrix4x2fv core found.
+ 449 glProgramUniformMatrix3x4fv core found.
+ 450 glProgramUniformMatrix4x3fv core found.
+ 451 glProgramUniformMatrix2x3dv core found.
+ 452 glProgramUniformMatrix3x2dv core found.
+ 453 glProgramUniformMatrix2x4dv core found.
+ 454 glProgramUniformMatrix4x2dv core found.
+ 455 glProgramUniformMatrix3x4dv core found.
+ 456 glProgramUniformMatrix4x3dv core found.
+ 457 glValidateProgramPipeline core found.
+ 458 glGetProgramPipelineInfoLog core found.
+ 459 glVertexAttribL1d core found.
+ 460 glVertexAttribL2d core found.
+ 461 glVertexAttribL3d core found.
+ 462 glVertexAttribL4d core found.
+ 463 glVertexAttribL1dv core found.
+ 464 glVertexAttribL2dv core found.
+ 465 glVertexAttribL3dv core found.
+ 466 glVertexAttribL4dv core found.
+ 467 glVertexAttribLPointer core found.
+ 468 glGetVertexAttribLdv core found.
+ 469 glViewportArrayv core found.
+ 470 glViewportIndexedf core found.
+ 471 glViewportIndexedfv core found.
+ 472 glScissorArrayv core found.
+ 473 glScissorIndexed core found.
+ 474 glScissorIndexedv core found.
+ 475 glDepthRangeArrayv core found.
+ 476 glDepthRangeIndexed core found.
+ 477 glGetFloati_v core found.
+ 478 glGetDoublei_v core found.
+ 479 glDrawArraysInstancedBaseInstance core found.
+ 480 glDrawElementsInstancedBaseInstance core found.
+ 481 glDrawElementsInstancedBaseVertexBaseInstance core found.
+ 482 glGetInternalformativ core found.
+ 483 glGetActiveAtomicCounterBufferiv core found.
+ 484 glBindImageTexture core found.
+ 485 glMemoryBarrier core found.
+ 486 glTexStorage1D core found.
+ 487 glTexStorage2D core found.
+ 488 glTexStorage3D core found.
+ 489 glDrawTransformFeedbackInstanced core found.
+ 490 glDrawTransformFeedbackStreamInstanced core found.
+ 493 glDispatchCompute core found.
+ 494 glDispatchComputeIndirect core found.
+ 496 glFramebufferParameteri core found.
+ 497 glGetFramebufferParameteriv core found.
+ 498 glGetInternalformati64v core found.
+ 503 glInvalidateFramebuffer core found.
+ 504 glInvalidateSubFramebuffer core found.
+ 505 glMultiDrawArraysIndirect core found.
+ 506 glMultiDrawElementsIndirect core found.
+ 507 glGetProgramInterfaceiv core found.
+ 508 glGetProgramResourceIndex core found.
+ 509 glGetProgramResourceName core found.
+ 510 glGetProgramResourceiv core found.
+ 511 glGetProgramResourceLocation core found.
+ 512 glGetProgramResourceLocationIndex core found.
+ 513 glShaderStorageBlockBinding core found.
+ 514 glTexBufferRange core found.
+ 515 glTexStorage2DMultisample core found.
+ 516 glTexStorage3DMultisample core found.
+ 518 glBindVertexBuffer core found.
+ 519 glVertexAttribFormat core found.
+ 520 glVertexAttribIFormat core found.
+ 521 glVertexAttribLFormat core found.
+ 522 glVertexAttribBinding core found.
+ 523 glVertexBindingDivisor core found.
+ 524 glDebugMessageControl core found.
+ 525 glDebugMessageInsert core found.
+ 526 glDebugMessageCallback core found.
+ 527 glGetDebugMessageLog core found.
+ 528 glPushDebugGroup core found.
+ 529 glPopDebugGroup core found.
+ 530 glObjectLabel core found.
+ 531 glGetObjectLabel core found.
+ 532 glObjectPtrLabel core found.
+ 533 glGetObjectPtrLabel core found.
+ 534 glBufferStorage core found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  543 glClipControlEXT ext found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  551 glNamedBufferStorageEXT ext found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  589 glTextureBufferRangeEXT ext found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  606 glTextureParameteriEXT ext found.
+ 641 glMemoryBarrierByRegion core found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  644 glGetGraphicsResetStatusARB ext found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  645 glGetnCompressedTexImageARB ext found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  646 glGetnTexImageARB ext found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  647 glGetnUniformdvARB ext found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  648 glGetnUniformfvARB ext found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  649 glGetnUniformivARB ext found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  650 glGetnUniformuivARB ext found.
+ [!] sglDrawDriver.c:797?SglLoadOpenGlVmt
+  651 glReadnPixelsARB ext found.
+ Listing #187 "core" GL supported extensions.
+ 000 GL_EXT_blend_minmax ext found.
+ 001 GL_EXT_blend_subtract ext found.
+ 002 GL_EXT_blend_color ext found.
+ 003 GL_EXT_abgr ext found.
+ 004 GL_EXT_texture3D ext found.
+ 005 GL_EXT_clip_volume_hint ext found.
+ 006 GL_EXT_compiled_vertex_array ext found.
+ 007 GL_SGIS_texture_edge_clamp ext found.
+ 008 GL_SGIS_generate_mipmap ext found.
+ 009 GL_EXT_draw_range_elements ext found.
+ 010 GL_SGIS_texture_lod ext found.
+ 011 GL_EXT_rescale_normal ext found.
+ 012 GL_EXT_packed_pixels ext found.
+ 013 GL_EXT_texture_edge_clamp ext found.
+ 014 GL_EXT_separate_specular_color ext found.
+ 015 GL_ARB_multitexture ext found.
+ 016 GL_ARB_map_buffer_alignment ext found.
+ 017 GL_ARB_conservative_depth ext found.
+ 018 GL_EXT_texture_env_combine ext found.
+ 019 GL_EXT_bgra ext found.
+ 020 GL_EXT_blend_func_separate ext found.
+ 021 GL_EXT_secondary_color ext found.
+ 022 GL_EXT_fog_coord ext found.
+ 023 GL_EXT_texture_env_add ext found.
+ 024 GL_ARB_texture_cube_map ext found.
+ 025 GL_ARB_transpose_matrix ext found.
+ 026 GL_ARB_internalformat_query ext found.
+ 027 GL_ARB_internalformat_query2 ext found.
+ 028 GL_ARB_texture_env_add ext found.
+ 029 GL_IBM_texture_mirrored_repeat ext found.
+ 030 GL_EXT_multi_draw_arrays ext found.
+ 031 GL_SUN_multi_draw_arrays ext found.
+ 032 GL_NV_blend_square ext found.
+ 033 GL_ARB_texture_compression ext found.
+ 034 GL_3DFX_texture_compression_FXT1 ext found.
+ 035 GL_EXT_texture_filter_anisotropic ext found.
+ 036 GL_ARB_texture_border_clamp ext found.
+ 037 GL_ARB_point_parameters ext found.
+ 038 GL_ARB_texture_env_combine ext found.
+ 039 GL_ARB_texture_env_dot3 ext found.
+ 040 GL_ARB_texture_env_crossbar ext found.
+ 041 GL_EXT_texture_compression_s3tc ext found.
+ 042 GL_ARB_shadow ext found.
+ 043 GL_ARB_window_pos ext found.
+ 044 GL_EXT_shadow_funcs ext found.
+ 045 GL_EXT_stencil_wrap ext found.
+ 046 GL_ARB_vertex_program ext found.
+ 047 GL_EXT_texture_rectangle ext found.
+ 048 GL_ARB_fragment_program ext found.
+ 049 GL_EXT_stencil_two_side ext found.
+ 050 GL_ATI_separate_stencil ext found.
+ 051 GL_ARB_vertex_buffer_object ext found.
+ 052 GL_EXT_texture_lod_bias ext found.
+ 053 GL_ARB_occlusion_query ext found.
+ 054 GL_ARB_fragment_shader ext found.
+ 055 GL_ARB_shader_objects ext found.
+ 056 GL_ARB_shading_language_100 ext found.
+ 057 GL_ARB_texture_non_power_of_two ext found.
+ 058 GL_ARB_vertex_shader ext found.
+ 059 GL_NV_texgen_reflection ext found.
+ 060 GL_ARB_point_sprite ext found.
+ 061 GL_ARB_fragment_program_shadow ext found.
+ 062 GL_EXT_blend_equation_separate ext found.
+ 063 GL_ARB_depth_texture ext found.
+ 064 GL_ARB_texture_rectangle ext found.
+ 065 GL_ARB_draw_buffers ext found.
+ 066 GL_ARB_color_buffer_float ext found.
+ 067 GL_ARB_half_float_pixel ext found.
+ 068 GL_ARB_texture_float ext found.
+ 069 GL_ARB_pixel_buffer_object ext found.
+ 070 GL_EXT_framebuffer_object ext found.
+ 071 GL_ARB_draw_instanced ext found.
+ 072 GL_ARB_half_float_vertex ext found.
+ 073 GL_ARB_occlusion_query2 ext found.
+ 074 GL_EXT_draw_buffers2 ext found.
+ 075 GL_WIN_swap_hint ext found.
+ 076 GL_EXT_texture_sRGB ext found.
+ 077 GL_ARB_multisample ext found.
+ 078 GL_EXT_packed_float ext found.
+ 079 GL_EXT_texture_shared_exponent ext found.
+ 080 GL_ARB_texture_rg ext found.
+ 081 GL_ARB_texture_compression_rgtc ext found.
+ 082 GL_NV_conditional_render ext found.
+ 083 GL_ARB_texture_swizzle ext found.
+ 084 GL_EXT_texture_swizzle ext found.
+ 085 GL_ARB_texture_gather ext found.
+ 086 GL_ARB_sync ext found.
+ 087 GL_ARB_framebuffer_sRGB ext found.
+ 088 GL_EXT_packed_depth_stencil ext found.
+ 089 GL_ARB_depth_buffer_float ext found.
+ 090 GL_EXT_transform_feedback ext found.
+ 091 GL_ARB_transform_feedback2 ext found.
+ 092 GL_ARB_draw_indirect ext found.
+ 093 GL_EXT_framebuffer_blit ext found.
+ 094 GL_EXT_framebuffer_multisample ext found.
+ 095 GL_ARB_framebuffer_object ext found.
+ 096 GL_ARB_framebuffer_no_attachments ext found.
+ 097 GL_EXT_texture_array ext found.
+ 098 GL_EXT_texture_integer ext found.
+ 099 GL_ARB_map_buffer_range ext found.
+ 100 GL_ARB_texture_buffer_range ext found.
+ 101 GL_EXT_texture_buffer ext found.
+ 102 GL_EXT_texture_snorm ext found.
+ 103 GL_ARB_blend_func_extended ext found.
+ 104 GL_INTEL_performance_queries ext found.
+ 105 GL_INTEL_performance_query ext found.
+ 106 GL_ARB_copy_buffer ext found.
+ 107 GL_ARB_sampler_objects ext found.
+ 108 GL_NV_primitive_restart ext found.
+ 109 GL_ARB_seamless_cube_map ext found.
+ 110 GL_ARB_uniform_buffer_object ext found.
+ 111 GL_ARB_depth_clamp ext found.
+ 112 GL_ARB_vertex_array_bgra ext found.
+ 113 GL_ARB_shader_bit_encoding ext found.
+ 114 GL_ARB_draw_buffers_blend ext found.
+ 115 GL_ARB_geometry_shader4 ext found.
+ 116 GL_EXT_geometry_shader4 ext found.
+ 117 GL_ARB_texture_query_lod ext found.
+ 118 GL_ARB_explicit_attrib_location ext found.
+ 119 GL_ARB_draw_elements_base_vertex ext found.
+ 120 GL_ARB_instanced_arrays ext found.
+ 121 GL_ARB_base_instance ext found.
+ 122 GL_ARB_fragment_coord_conventions ext found.
+ 123 GL_EXT_gpu_program_parameters ext found.
+ 124 GL_ARB_texture_buffer_object_rgb32 ext found.
+ 125 GL_ARB_texture_rgb10_a2ui ext found.
+ 126 GL_ARB_texture_multisample ext found.
+ 127 GL_ARB_vertex_type_2_10_10_10_rev ext found.
+ 128 GL_ARB_timer_query ext found.
+ 129 GL_ARB_tessellation_shader ext found.
+ 130 GL_ARB_vertex_array_object ext found.
+ 131 GL_ARB_provoking_vertex ext found.
+ 132 GL_ARB_sample_shading ext found.
+ 133 GL_ARB_texture_cube_map_array ext found.
+ 134 GL_EXT_gpu_shader4 ext found.
+ 135 GL_ARB_gpu_shader5 ext found.
+ 136 GL_ARB_gpu_shader_fp64 ext found.
+ 137 GL_ARB_shader_subroutine ext found.
+ 138 GL_ARB_transform_feedback3 ext found.
+ 139 GL_ARB_get_program_binary ext found.
+ 140 GL_ARB_separate_shader_objects ext found.
+ 141 GL_ARB_shader_precision ext found.
+ 142 GL_ARB_vertex_attrib_64bit ext found.
+ 143 GL_ARB_viewport_array ext found.
+ 144 GL_ARB_transform_feedback_instanced ext found.
+ 145 GL_ARB_compressed_texture_pixel_storage ext found.
+ 146 GL_ARB_shader_atomic_counters ext found.
+ 147 GL_ARB_shading_language_packing ext found.
+ 148 GL_ARB_shading_language_420pack ext found.
+ 149 GL_ARB_texture_storage ext found.
+ 150 GL_EXT_texture_storage ext found.
+ 151 GL_ARB_vertex_attrib_binding ext found.
+ 152 GL_ARB_multi_draw_indirect ext found.
+ 153 GL_ARB_program_interface_query ext found.
+ 154 GL_ARB_texture_storage_multisample ext found.
+ 155 GL_ARB_buffer_storage ext found.
+ 156 GL_ARB_debug_output ext found.
+ 157 GL_KHR_debug ext found.
+ 158 GL_ARB_arrays_of_arrays ext found.
+ 159 GL_INTEL_map_texture ext found.
+ 160 GL_ARB_texture_compression_bptc ext found.
+ 161 GL_ARB_ES2_compatibility ext found.
+ 162 GL_ARB_ES3_compatibility ext found.
+ 163 GL_ARB_robustness ext found.
+ 164 GL_EXT_texture_sRGB_decode ext found.
+ 165 GL_KHR_blend_equation_advanced ext found.
+ 166 GL_EXT_shader_integer_mix ext found.
+ 167 GL_ARB_stencil_texturing ext found.
+ 168 WGL_EXT_depth_float ext found.
+ 169 WGL_ARB_buffer_region ext found.
+ 170 WGL_ARB_extensions_string ext found.
+ 171 WGL_ARB_make_current_read ext found.
+ 172 WGL_ARB_pixel_format ext found.
+ 173 WGL_ARB_pbuffer ext found.
+ 174 WGL_EXT_extensions_string ext found.
+ 175 WGL_EXT_swap_control ext found.
+ 176 WGL_EXT_swap_control_tear ext found.
+ 177 WGL_ARB_multisample ext found.
+ 178 WGL_ARB_pixel_format_float ext found.
+ 179 WGL_ARB_framebuffer_sRGB ext found.
+ 180 WGL_ARB_create_context ext found.
+ 181 WGL_ARB_create_context_profile ext found.
+ 182 WGL_EXT_pixel_format_packed_float ext found.
+ 183 WGL_EXT_create_context_es_profile ext found.
+ 184 WGL_EXT_create_context_es2_profile ext found.
+ 185 WGL_NV_DX_interop ext found.
+ 186 WGL_ARB_create_context_robustness ext found.
+ [!] sglDrawDriver.c:2000?_SglBuildDpu
+  677 381 1920 1080 96 96 32 1 36 36 51 60 1 
+ Opening the GL/2 Drawing Execution Port 000
+	Intel(R) HD Graphics 4.0.0 - Build 10.18.10.5161
+ [$] sglDrawDriver.c:2029?_SglBuildDpu
+  WGL_EXT_depth_float WGL_ARB_buffer_region WGL_ARB_extensions_string WGL_ARB_make_current_read WGL_ARB_pixel_format WGL_ARB_pbuffer WGL_EXT_extensions_string WGL_EXT_swap_control WGL_EXT_swap_control_tear WGL_ARB_multisample WGL_ARB_pixel_format_float WGL_ARB_framebuffer_sRGB WGL_ARB_create_context WGL_ARB_create_context_profile WGL_EXT_pixel_format_packed_float WGL_EXT_create_context_es_profile WGL_EXT_create_context_es2_profile WGL_NV_DX_interop WGL_ARB_create_context_robustness 
+ ERR sglDrawDriver.c:2091?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDrawDriver.c:2117?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDrawDriver.c:2127?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDrawDriver.c:2129?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDrawDriver.c:2133?_SglBuildDpu
+  GL: INVAL_PARAM
+ Creating temp OpenGL context
+ Creating definitive OpenGL context
+ [!] sglDrawDriver.c:2000?_SglBuildDpu
+  677 381 1920 1080 96 96 32 1 36 36 51 60 1 
+ Opening the GL/2 Drawing Execution Port 001
+	Intel(R) HD Graphics 4.0.0 - Build 10.18.10.5161
+ [$] sglDrawDriver.c:2029?_SglBuildDpu
+  WGL_EXT_depth_float WGL_ARB_buffer_region WGL_ARB_extensions_string WGL_ARB_make_current_read WGL_ARB_pixel_format WGL_ARB_pbuffer WGL_EXT_extensions_string WGL_EXT_swap_control WGL_EXT_swap_control_tear WGL_ARB_multisample WGL_ARB_pixel_format_float WGL_ARB_framebuffer_sRGB WGL_ARB_create_context WGL_ARB_create_context_profile WGL_EXT_pixel_format_packed_float WGL_EXT_create_context_es_profile WGL_EXT_create_context_es2_profile WGL_NV_DX_interop WGL_ARB_create_context_robustness 
+ ERR sglDrawDriver.c:2091?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDrawDriver.c:2117?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDrawDriver.c:2127?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDrawDriver.c:2129?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDrawDriver.c:2133?_SglBuildDpu
+  GL: INVAL_PARAM
+Draw device '
+           :::::::::::     :::     :::::::::   ::::::::      :::               
+               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             
+               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            
+               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           
+               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           
+               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           
+               ###     ###     ### ###    ###  ########  ###     ###           
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               ' <'targa'> discovered on draw system 006be490.
+ E:/qwadro/afx/system32/*.icd
+ ERR afxSystem.c:682?AfxResolveUris
+  
+ ERR afxSystem.c:702?AfxResolveUri
+  
+ Loading draw ICD e2newton.icd
+ afxModule.c:139
+  AfxAcquireModules(cnt=1,mdle=0024e044,uri=0024e04c)
+ afxClass<Module>::ConstructObject(006bd708)
+ afxModule.c:95
+  _AfxMdleCtor(uri:e2newton.icd)
+ Dismantling Module object (#0) 006bd708...
+ Destructing instance 006bd708 of Module class.
+ afxModule.c:74
+  _AfxMdleDtor(mdle=006bd708)
+ afxDrawThread.c:163
+  AfxAcquireDrawThreads(cnt=1,dthr=0024ed1c,config=00000000)
+ afxClass<Draw Thread>::ConstructObject(040df640)
+ afxDrawThread.c:139
+  _AfxDthrCtor(dthr=040df640)
+ afxThread.c:924
+  AfxAcquireThreads(cnt=1,thr=040df640,config=0024e7dc,hint="afxDrawThread.c:155!_AfxDthrCtor")
+ afxClass<Thread>::ConstructObject(0403bbf0)
+ afxThread.c:870
+  _AfxThrCtor(0403bbf0)
+ afxThread.c:800
+  AfxSetThreadAffinity(thr=0403bbf0)
+ afxThread.c:811
+  AfxRunThread(thr=0403bbf0)
+ afxDrawContext.c:334
+  AfxAcquireDrawContexts(cnt=1,config=0024f1a8)
+ afxClass<Draw Context, Draw Context>ConstructingObject(044e3340)
+ afxClass<Draw Context>::ConstructObject(044e3340)
+ afxClass<Draw Context>::ConstructObject(044e3340)
+ sglDrawContext.c:151
+  _SglDctxCtor(dctx=044e3340)
+ afxArena.c:767
+  AfxAcquireArena(aren=044e3360)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="sglDrawContext.c:173!_SglDctxCtor")
+ Installing Buffer at 044e34ac by 044e3348 over 00000000 with 0024eb9c)
+ Installing Texture at 044e33e8 by 044e3348 over 00000000 with 0024eb9c)
+ Installing Surface at 044e3570 by 044e3348 over 00000000 with 0024eb9c)
+ Installing Sampler at 044e3a08 by 044e3348 over 00000000 with 0024eb9c)
+ Installing Canvas at 044e3944 by 044e3348 over 00000000 with 0024eb9c)
+ Installing Lego at 044e3880 by 044e3348 over 00000000 with 0024eb9c)
+ Installing Shader at 044e3634 by 044e3348 over 00000000 with 0024eb9c)
+ Installing Pipeline at 044e37bc by 044e3348 over 00000000 with 0024eb9c)
+ Installing Rasterizer at 044e36f8 by 044e3348 over 00000000 with 0024eb9c)
+ Installing Draw Queue at 02af6fb4 by 044e3348 over 00000000 with 0f59d1d8)
+ Installing Draw Script at 02af7078 by 044e3348 over 00000000 with 0f59d268)
+ afxClass<Draw Queue>::ConstructObject(02b64320)
+ sglDrawQueue.c:2607
+  _SglDqueCtor(dque=02b64320)
+ afxArena.c:767
+  AfxAcquireArena(aren=02b6436c)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="sglDrawQueue.c:2624!_SglDqueCtor")
+ afxClass<Draw Queue>::ConstructObject(02b643f0)
+ sglDrawQueue.c:2607
+  _SglDqueCtor(dque=02b643f0)
+ afxArena.c:767
+  AfxAcquireArena(aren=02b6443c)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="sglDrawQueue.c:2624!_SglDqueCtor")
+ Installing Draw Queue at 02af7140 by 044e3348 over 00000000 with 0f59d1d8)
+ Installing Draw Script at 02af7204 by 044e3348 over 00000000 with 0f59d268)
+ afxClass<Draw Queue>::ConstructObject(03f503f0)
+ sglDrawQueue.c:2607
+  _SglDqueCtor(dque=03f503f0)
+ afxArena.c:767
+  AfxAcquireArena(aren=03f5043c)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="sglDrawQueue.c:2624!_SglDqueCtor")
+ afxClass<Draw Queue>::ConstructObject(03f504c0)
+ sglDrawQueue.c:2607
+  _SglDqueCtor(dque=03f504c0)
+ afxArena.c:767
+  AfxAcquireArena(aren=03f5050c)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="sglDrawQueue.c:2624!_SglDqueCtor")
+ Uploading pipeline 'data/pipeline/rgbaToRgba.xsh.xml?yFlipped'
+ afxXml.c:1313
+  AfxLoadXml(uri:data/pipeline/rgbaToRgba.xsh.xml)
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024e47c,uri=0024e5f8,flags=24e484)
+ afxClass<File>::ConstructObject(040205b0)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ afxStream.c:608
+  AfxAcquireStream(ios=040205b0,flags=1,start=00000000,len=0)
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/2; Shader : null;
+ 12/11; 0/0; 0/0; Stage : null;
+ 13/11; 0/0; 0/0; Include : null;
+ 14/11; 5/1; 0/0; In : null;
+ 11/0; 4/1; 12/3; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/1; 0/0; Resource : null;
+ 19/15; 8/1; 0/0; Out : null;
+ 15/0; 6/1; 16/4; Shader : null;
+ 21/20; 0/0; 0/0; Stage : null;
+ 22/20; 0/0; 0/0; Include : null;
+ 23/20; 10/1; 0/0; Resource : null;
+ 24/20; 11/1; 0/0; Out : null;
+ 20/0; 9/1; 21/4; Shader : null;
+ 26/25; 0/0; 0/0; Stage : null;
+ 27/25; 0/0; 0/0; Include : null;
+ 28/25; 13/1; 0/0; Resource : null;
+ 29/25; 14/1; 0/0; Out : null;
+ 25/0; 12/1; 26/4; Shader : null;
+ 31/30; 0/0; 0/0; Stage : null;
+ 32/30; 0/0; 0/0; Include : null;
+ 33/30; 16/1; 0/0; Resource : null;
+ 34/30; 17/1; 0/0; Out : null;
+ 30/0; 15/1; 31/4; Shader : null;
+ 36/35; 0/0; 0/0; CullMode : null;
+ 37/35; 0/0; 0/0; FrontFace : null;
+ 38/35; 0/0; 0/0; PrimitiveTopology : null;
+ 39/35; 0/0; 0/0; Shader : null;
+ 40/35; 0/0; 0/0; Shader : null;
+ 41/35; 0/0; 0/0; Rasterizer : null;
+ 35/0; 0/0; 36/6; Pipeline : null;
+ 43/42; 0/0; 0/0; CullMode : null;
+ 44/42; 0/0; 0/0; FrontFace : null;
+ 45/42; 0/0; 0/0; PrimitiveTopology : null;
+ 46/42; 0/0; 0/0; Shader : null;
+ 47/42; 0/0; 0/0; Shader : null;
+ 48/42; 0/0; 0/0; Rasterizer : null;
+ 42/0; 18/1; 43/6; Pipeline : null;
+ 50/49; 0/0; 0/0; FillMode : null;
+ 51/49; 0/0; 0/0; DepthTestEnabled : null;
+ 52/49; 0/0; 0/0; DepthWriteEnabled : null;
+ 53/49; 0/0; 0/0; DepthCompareOp : null;
+ 49/0; 0/0; 50/4; Rasterizer : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/0; 4/1; 12/3; Shader : null;
+ 12/11; 0/0; 0/0; Stage : null;
+ 13/11; 0/0; 0/0; Include : null;
+ 14/11; 5/1; 0/0; In : null;
+ 15/0; 6/1; 16/4; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/1; 0/0; Resource : null;
+ 19/15; 8/1; 0/0; Out : null;
+ 20/0; 9/1; 21/4; Shader : null;
+ 21/20; 0/0; 0/0; Stage : null;
+ 22/20; 0/0; 0/0; Include : null;
+ 23/20; 10/1; 0/0; Resource : null;
+ 24/20; 11/1; 0/0; Out : null;
+ 25/0; 12/1; 26/4; Shader : null;
+ 26/25; 0/0; 0/0; Stage : null;
+ 27/25; 0/0; 0/0; Include : null;
+ 28/25; 13/1; 0/0; Resource : null;
+ 29/25; 14/1; 0/0; Out : null;
+ 30/0; 15/1; 31/4; Shader : null;
+ 31/30; 0/0; 0/0; Stage : null;
+ 32/30; 0/0; 0/0; Include : null;
+ 33/30; 16/1; 0/0; Resource : null;
+ 34/30; 17/1; 0/0; Out : null;
+ 35/0; 0/0; 36/6; Pipeline : null;
+ 36/35; 0/0; 0/0; CullMode : null;
+ 37/35; 0/0; 0/0; FrontFace : null;
+ 38/35; 0/0; 0/0; PrimitiveTopology : null;
+ 39/35; 0/0; 0/0; Shader : null;
+ 40/35; 0/0; 0/0; Shader : null;
+ 41/35; 0/0; 0/0; Rasterizer : null;
+ 42/0; 18/1; 43/6; Pipeline : null;
+ 43/42; 0/0; 0/0; CullMode : null;
+ 44/42; 0/0; 0/0; FrontFace : null;
+ 45/42; 0/0; 0/0; PrimitiveTopology : null;
+ 46/42; 0/0; 0/0; Shader : null;
+ 47/42; 0/0; 0/0; Shader : null;
+ 48/42; 0/0; 0/0; Rasterizer : null;
+ 49/0; 0/0; 50/4; Rasterizer : null;
+ 50/49; 0/0; 0/0; FillMode : null;
+ 51/49; 0/0; 0/0; DepthTestEnabled : null;
+ 52/49; 0/0; 0/0; DepthWriteEnabled : null;
+ 53/49; 0/0; 0/0; DepthCompareOp : null;
+ # 0, @ 0, [ 0, 0 ], [ 1, 11 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 12, 3 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 15, 2 ], Shader : null;
+ # 3, @ 0, [ 3, 1 ], [ 17, 2 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 19, 3 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 9, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 12, 1 ], [ 30, 4 ], Shader : null;
+ # 8, @ 0, [ 15, 1 ], [ 34, 4 ], Shader : null;
+ # 9, @ 0, [ 0, 0 ], [ 38, 6 ], Pipeline : null;
+ # 10, @ 0, [ 18, 1 ], [ 44, 6 ], Pipeline : null;
+ # 11, @ 0, [ 0, 0 ], [ 50, 4 ], Rasterizer : null;
+ # 12, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 1, [ 1, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 21, @ 4, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 8, 1 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 10, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 11, 1 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 32, @ 7, [ 13, 1 ], [ 0, 0 ], Resource : null;
+ # 33, @ 7, [ 14, 1 ], [ 0, 0 ], Out : null;
+ # 34, @ 8, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 36, @ 8, [ 16, 1 ], [ 0, 0 ], Resource : null;
+ # 37, @ 8, [ 17, 1 ], [ 0, 0 ], Out : null;
+ # 38, @ 9, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 39, @ 9, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 9, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 42, @ 9, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 43, @ 9, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 44, @ 10, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 45, @ 10, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 46, @ 10, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 47, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 48, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 49, @ 10, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 50, @ 11, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 51, @ 11, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 52, @ 11, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 53, @ 11, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ Dismantling File object (#0) 040205b0...
+ Destructing instance 040205b0 of File class.
+ ERR afxPool.c:444?AfxDeallocatePoolUnit
+  
+ ERR afxPool.c:503?AfxDeallocatePoolUnit
+  
+ ERR afxPool.c:503?AfxDeallocatePoolUnit
+  (!AfxGetPoolUnit(pool, idx, 0))
+    Invalid
+ data/pipeline/rgbaToRgba.xsh.xml?vsFlippedY
+ data/pipeline/rgbaToRgba.xsh.xml?fs
+ data/pipeline/rgbaToRgba.xsh.xml
+ Uploading shader 'data/pipeline/rgbaToRgba.xsh.xml?vsFlippedY'
+ afxXml.c:1313
+  AfxLoadXml(uri:data/pipeline/rgbaToRgba.xsh.xml)
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024e0c4,uri=0024e1a0,flags=24e0cc)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=1,start=00000000,len=0)
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/2; Shader : null;
+ 12/11; 0/0; 0/0; Stage : null;
+ 13/11; 0/0; 0/0; Include : null;
+ 14/11; 5/1; 0/0; In : null;
+ 11/0; 4/1; 12/3; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/1; 0/0; Resource : null;
+ 19/15; 8/1; 0/0; Out : null;
+ 15/0; 6/1; 16/4; Shader : null;
+ 21/20; 0/0; 0/0; Stage : null;
+ 22/20; 0/0; 0/0; Include : null;
+ 23/20; 10/1; 0/0; Resource : null;
+ 24/20; 11/1; 0/0; Out : null;
+ 20/0; 9/1; 21/4; Shader : null;
+ 26/25; 0/0; 0/0; Stage : null;
+ 27/25; 0/0; 0/0; Include : null;
+ 28/25; 13/1; 0/0; Resource : null;
+ 29/25; 14/1; 0/0; Out : null;
+ 25/0; 12/1; 26/4; Shader : null;
+ 31/30; 0/0; 0/0; Stage : null;
+ 32/30; 0/0; 0/0; Include : null;
+ 33/30; 16/1; 0/0; Resource : null;
+ 34/30; 17/1; 0/0; Out : null;
+ 30/0; 15/1; 31/4; Shader : null;
+ 36/35; 0/0; 0/0; CullMode : null;
+ 37/35; 0/0; 0/0; FrontFace : null;
+ 38/35; 0/0; 0/0; PrimitiveTopology : null;
+ 39/35; 0/0; 0/0; Shader : null;
+ 40/35; 0/0; 0/0; Shader : null;
+ 41/35; 0/0; 0/0; Rasterizer : null;
+ 35/0; 0/0; 36/6; Pipeline : null;
+ 43/42; 0/0; 0/0; CullMode : null;
+ 44/42; 0/0; 0/0; FrontFace : null;
+ 45/42; 0/0; 0/0; PrimitiveTopology : null;
+ 46/42; 0/0; 0/0; Shader : null;
+ 47/42; 0/0; 0/0; Shader : null;
+ 48/42; 0/0; 0/0; Rasterizer : null;
+ 42/0; 18/1; 43/6; Pipeline : null;
+ 50/49; 0/0; 0/0; FillMode : null;
+ 51/49; 0/0; 0/0; DepthTestEnabled : null;
+ 52/49; 0/0; 0/0; DepthWriteEnabled : null;
+ 53/49; 0/0; 0/0; DepthCompareOp : null;
+ 49/0; 0/0; 50/4; Rasterizer : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/0; 4/1; 12/3; Shader : null;
+ 12/11; 0/0; 0/0; Stage : null;
+ 13/11; 0/0; 0/0; Include : null;
+ 14/11; 5/1; 0/0; In : null;
+ 15/0; 6/1; 16/4; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/1; 0/0; Resource : null;
+ 19/15; 8/1; 0/0; Out : null;
+ 20/0; 9/1; 21/4; Shader : null;
+ 21/20; 0/0; 0/0; Stage : null;
+ 22/20; 0/0; 0/0; Include : null;
+ 23/20; 10/1; 0/0; Resource : null;
+ 24/20; 11/1; 0/0; Out : null;
+ 25/0; 12/1; 26/4; Shader : null;
+ 26/25; 0/0; 0/0; Stage : null;
+ 27/25; 0/0; 0/0; Include : null;
+ 28/25; 13/1; 0/0; Resource : null;
+ 29/25; 14/1; 0/0; Out : null;
+ 30/0; 15/1; 31/4; Shader : null;
+ 31/30; 0/0; 0/0; Stage : null;
+ 32/30; 0/0; 0/0; Include : null;
+ 33/30; 16/1; 0/0; Resource : null;
+ 34/30; 17/1; 0/0; Out : null;
+ 35/0; 0/0; 36/6; Pipeline : null;
+ 36/35; 0/0; 0/0; CullMode : null;
+ 37/35; 0/0; 0/0; FrontFace : null;
+ 38/35; 0/0; 0/0; PrimitiveTopology : null;
+ 39/35; 0/0; 0/0; Shader : null;
+ 40/35; 0/0; 0/0; Shader : null;
+ 41/35; 0/0; 0/0; Rasterizer : null;
+ 42/0; 18/1; 43/6; Pipeline : null;
+ 43/42; 0/0; 0/0; CullMode : null;
+ 44/42; 0/0; 0/0; FrontFace : null;
+ 45/42; 0/0; 0/0; PrimitiveTopology : null;
+ 46/42; 0/0; 0/0; Shader : null;
+ 47/42; 0/0; 0/0; Shader : null;
+ 48/42; 0/0; 0/0; Rasterizer : null;
+ 49/0; 0/0; 50/4; Rasterizer : null;
+ 50/49; 0/0; 0/0; FillMode : null;
+ 51/49; 0/0; 0/0; DepthTestEnabled : null;
+ 52/49; 0/0; 0/0; DepthWriteEnabled : null;
+ 53/49; 0/0; 0/0; DepthCompareOp : null;
+ # 0, @ 0, [ 0, 0 ], [ 1, 11 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 12, 3 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 15, 2 ], Shader : null;
+ # 3, @ 0, [ 3, 1 ], [ 17, 2 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 19, 3 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 9, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 12, 1 ], [ 30, 4 ], Shader : null;
+ # 8, @ 0, [ 15, 1 ], [ 34, 4 ], Shader : null;
+ # 9, @ 0, [ 0, 0 ], [ 38, 6 ], Pipeline : null;
+ # 10, @ 0, [ 18, 1 ], [ 44, 6 ], Pipeline : null;
+ # 11, @ 0, [ 0, 0 ], [ 50, 4 ], Rasterizer : null;
+ # 12, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 1, [ 1, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 21, @ 4, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 8, 1 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 10, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 11, 1 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 32, @ 7, [ 13, 1 ], [ 0, 0 ], Resource : null;
+ # 33, @ 7, [ 14, 1 ], [ 0, 0 ], Out : null;
+ # 34, @ 8, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 36, @ 8, [ 16, 1 ], [ 0, 0 ], Resource : null;
+ # 37, @ 8, [ 17, 1 ], [ 0, 0 ], Out : null;
+ # 38, @ 9, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 39, @ 9, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 9, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 42, @ 9, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 43, @ 9, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 44, @ 10, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 45, @ 10, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 46, @ 10, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 47, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 48, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 49, @ 10, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 50, @ 11, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 51, @ 11, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 52, @ 11, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 53, @ 11, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024dbd0,uri=0024ddf8,flags=24dbdc)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=5,start=00000000,len=0)
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxShader.c:395
+  AfxBuildShaders(cnt=1,shd=0024df80,blueprint=0024dfb4)
+ afxClass<Shader>::ConstructObject(04028670)
+ sglShader.c:148
+  _SglShdCtor(shd=04028670)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+        
+        const mat4 m = mat4(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        
+        layout(location = 0) in vec2 a_xy;
+        
+        out block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        void main()
+        {
+            gl_Position = vec4(a_xy, 0.0, 1.0);
+            sgl_v.uv0 = vec2(m * vec4(gl_Position.xy * 0.5 + 0.5, 0, 1)).xy;
+        }
+       
+ Uploading shader 'data/pipeline/rgbaToRgba.xsh.xml?fs'
+ afxXml.c:1313
+  AfxLoadXml(uri:data/pipeline/rgbaToRgba.xsh.xml)
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024e0c4,uri=0024e1a0,flags=24e0cc)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=1,start=00000000,len=0)
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/2; Shader : null;
+ 12/11; 0/0; 0/0; Stage : null;
+ 13/11; 0/0; 0/0; Include : null;
+ 14/11; 5/1; 0/0; In : null;
+ 11/0; 4/1; 12/3; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/1; 0/0; Resource : null;
+ 19/15; 8/1; 0/0; Out : null;
+ 15/0; 6/1; 16/4; Shader : null;
+ 21/20; 0/0; 0/0; Stage : null;
+ 22/20; 0/0; 0/0; Include : null;
+ 23/20; 10/1; 0/0; Resource : null;
+ 24/20; 11/1; 0/0; Out : null;
+ 20/0; 9/1; 21/4; Shader : null;
+ 26/25; 0/0; 0/0; Stage : null;
+ 27/25; 0/0; 0/0; Include : null;
+ 28/25; 13/1; 0/0; Resource : null;
+ 29/25; 14/1; 0/0; Out : null;
+ 25/0; 12/1; 26/4; Shader : null;
+ 31/30; 0/0; 0/0; Stage : null;
+ 32/30; 0/0; 0/0; Include : null;
+ 33/30; 16/1; 0/0; Resource : null;
+ 34/30; 17/1; 0/0; Out : null;
+ 30/0; 15/1; 31/4; Shader : null;
+ 36/35; 0/0; 0/0; CullMode : null;
+ 37/35; 0/0; 0/0; FrontFace : null;
+ 38/35; 0/0; 0/0; PrimitiveTopology : null;
+ 39/35; 0/0; 0/0; Shader : null;
+ 40/35; 0/0; 0/0; Shader : null;
+ 41/35; 0/0; 0/0; Rasterizer : null;
+ 35/0; 0/0; 36/6; Pipeline : null;
+ 43/42; 0/0; 0/0; CullMode : null;
+ 44/42; 0/0; 0/0; FrontFace : null;
+ 45/42; 0/0; 0/0; PrimitiveTopology : null;
+ 46/42; 0/0; 0/0; Shader : null;
+ 47/42; 0/0; 0/0; Shader : null;
+ 48/42; 0/0; 0/0; Rasterizer : null;
+ 42/0; 18/1; 43/6; Pipeline : null;
+ 50/49; 0/0; 0/0; FillMode : null;
+ 51/49; 0/0; 0/0; DepthTestEnabled : null;
+ 52/49; 0/0; 0/0; DepthWriteEnabled : null;
+ 53/49; 0/0; 0/0; DepthCompareOp : null;
+ 49/0; 0/0; 50/4; Rasterizer : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/0; 4/1; 12/3; Shader : null;
+ 12/11; 0/0; 0/0; Stage : null;
+ 13/11; 0/0; 0/0; Include : null;
+ 14/11; 5/1; 0/0; In : null;
+ 15/0; 6/1; 16/4; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/1; 0/0; Resource : null;
+ 19/15; 8/1; 0/0; Out : null;
+ 20/0; 9/1; 21/4; Shader : null;
+ 21/20; 0/0; 0/0; Stage : null;
+ 22/20; 0/0; 0/0; Include : null;
+ 23/20; 10/1; 0/0; Resource : null;
+ 24/20; 11/1; 0/0; Out : null;
+ 25/0; 12/1; 26/4; Shader : null;
+ 26/25; 0/0; 0/0; Stage : null;
+ 27/25; 0/0; 0/0; Include : null;
+ 28/25; 13/1; 0/0; Resource : null;
+ 29/25; 14/1; 0/0; Out : null;
+ 30/0; 15/1; 31/4; Shader : null;
+ 31/30; 0/0; 0/0; Stage : null;
+ 32/30; 0/0; 0/0; Include : null;
+ 33/30; 16/1; 0/0; Resource : null;
+ 34/30; 17/1; 0/0; Out : null;
+ 35/0; 0/0; 36/6; Pipeline : null;
+ 36/35; 0/0; 0/0; CullMode : null;
+ 37/35; 0/0; 0/0; FrontFace : null;
+ 38/35; 0/0; 0/0; PrimitiveTopology : null;
+ 39/35; 0/0; 0/0; Shader : null;
+ 40/35; 0/0; 0/0; Shader : null;
+ 41/35; 0/0; 0/0; Rasterizer : null;
+ 42/0; 18/1; 43/6; Pipeline : null;
+ 43/42; 0/0; 0/0; CullMode : null;
+ 44/42; 0/0; 0/0; FrontFace : null;
+ 45/42; 0/0; 0/0; PrimitiveTopology : null;
+ 46/42; 0/0; 0/0; Shader : null;
+ 47/42; 0/0; 0/0; Shader : null;
+ 48/42; 0/0; 0/0; Rasterizer : null;
+ 49/0; 0/0; 50/4; Rasterizer : null;
+ 50/49; 0/0; 0/0; FillMode : null;
+ 51/49; 0/0; 0/0; DepthTestEnabled : null;
+ 52/49; 0/0; 0/0; DepthWriteEnabled : null;
+ 53/49; 0/0; 0/0; DepthCompareOp : null;
+ # 0, @ 0, [ 0, 0 ], [ 1, 11 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 12, 3 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 15, 2 ], Shader : null;
+ # 3, @ 0, [ 3, 1 ], [ 17, 2 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 19, 3 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 9, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 12, 1 ], [ 30, 4 ], Shader : null;
+ # 8, @ 0, [ 15, 1 ], [ 34, 4 ], Shader : null;
+ # 9, @ 0, [ 0, 0 ], [ 38, 6 ], Pipeline : null;
+ # 10, @ 0, [ 18, 1 ], [ 44, 6 ], Pipeline : null;
+ # 11, @ 0, [ 0, 0 ], [ 50, 4 ], Rasterizer : null;
+ # 12, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 1, [ 1, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 21, @ 4, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 8, 1 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 10, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 11, 1 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 32, @ 7, [ 13, 1 ], [ 0, 0 ], Resource : null;
+ # 33, @ 7, [ 14, 1 ], [ 0, 0 ], Out : null;
+ # 34, @ 8, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 36, @ 8, [ 16, 1 ], [ 0, 0 ], Resource : null;
+ # 37, @ 8, [ 17, 1 ], [ 0, 0 ], Out : null;
+ # 38, @ 9, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 39, @ 9, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 9, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 42, @ 9, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 43, @ 9, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 44, @ 10, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 45, @ 10, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 46, @ 10, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 47, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 48, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 49, @ 10, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 50, @ 11, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 51, @ 11, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 52, @ 11, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 53, @ 11, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024dbd0,uri=0024ddf8,flags=24dbdc)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=5,start=00000000,len=0)
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxShader.c:395
+  AfxBuildShaders(cnt=1,shd=0024df80,blueprint=0024dfb4)
+ afxClass<Shader>::ConstructObject(04028704)
+ sglShader.c:148
+  _SglShdCtor(shd=04028704)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+        
+        uniform sampler2D samp;
+
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uv0);
+        }
+       
+ Uploading pipeline 'data/pipeline/rgbaToRgba.xsh.xml'
+ afxXml.c:1313
+  AfxLoadXml(uri:data/pipeline/rgbaToRgba.xsh.xml)
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024de1c,uri=0024df88,flags=24de24)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=1,start=00000000,len=0)
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/2; Shader : null;
+ 12/11; 0/0; 0/0; Stage : null;
+ 13/11; 0/0; 0/0; Include : null;
+ 14/11; 5/1; 0/0; In : null;
+ 11/0; 4/1; 12/3; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/1; 0/0; Resource : null;
+ 19/15; 8/1; 0/0; Out : null;
+ 15/0; 6/1; 16/4; Shader : null;
+ 21/20; 0/0; 0/0; Stage : null;
+ 22/20; 0/0; 0/0; Include : null;
+ 23/20; 10/1; 0/0; Resource : null;
+ 24/20; 11/1; 0/0; Out : null;
+ 20/0; 9/1; 21/4; Shader : null;
+ 26/25; 0/0; 0/0; Stage : null;
+ 27/25; 0/0; 0/0; Include : null;
+ 28/25; 13/1; 0/0; Resource : null;
+ 29/25; 14/1; 0/0; Out : null;
+ 25/0; 12/1; 26/4; Shader : null;
+ 31/30; 0/0; 0/0; Stage : null;
+ 32/30; 0/0; 0/0; Include : null;
+ 33/30; 16/1; 0/0; Resource : null;
+ 34/30; 17/1; 0/0; Out : null;
+ 30/0; 15/1; 31/4; Shader : null;
+ 36/35; 0/0; 0/0; CullMode : null;
+ 37/35; 0/0; 0/0; FrontFace : null;
+ 38/35; 0/0; 0/0; PrimitiveTopology : null;
+ 39/35; 0/0; 0/0; Shader : null;
+ 40/35; 0/0; 0/0; Shader : null;
+ 41/35; 0/0; 0/0; Rasterizer : null;
+ 35/0; 0/0; 36/6; Pipeline : null;
+ 43/42; 0/0; 0/0; CullMode : null;
+ 44/42; 0/0; 0/0; FrontFace : null;
+ 45/42; 0/0; 0/0; PrimitiveTopology : null;
+ 46/42; 0/0; 0/0; Shader : null;
+ 47/42; 0/0; 0/0; Shader : null;
+ 48/42; 0/0; 0/0; Rasterizer : null;
+ 42/0; 18/1; 43/6; Pipeline : null;
+ 50/49; 0/0; 0/0; FillMode : null;
+ 51/49; 0/0; 0/0; DepthTestEnabled : null;
+ 52/49; 0/0; 0/0; DepthWriteEnabled : null;
+ 53/49; 0/0; 0/0; DepthCompareOp : null;
+ 49/0; 0/0; 50/4; Rasterizer : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/0; 4/1; 12/3; Shader : null;
+ 12/11; 0/0; 0/0; Stage : null;
+ 13/11; 0/0; 0/0; Include : null;
+ 14/11; 5/1; 0/0; In : null;
+ 15/0; 6/1; 16/4; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/1; 0/0; Resource : null;
+ 19/15; 8/1; 0/0; Out : null;
+ 20/0; 9/1; 21/4; Shader : null;
+ 21/20; 0/0; 0/0; Stage : null;
+ 22/20; 0/0; 0/0; Include : null;
+ 23/20; 10/1; 0/0; Resource : null;
+ 24/20; 11/1; 0/0; Out : null;
+ 25/0; 12/1; 26/4; Shader : null;
+ 26/25; 0/0; 0/0; Stage : null;
+ 27/25; 0/0; 0/0; Include : null;
+ 28/25; 13/1; 0/0; Resource : null;
+ 29/25; 14/1; 0/0; Out : null;
+ 30/0; 15/1; 31/4; Shader : null;
+ 31/30; 0/0; 0/0; Stage : null;
+ 32/30; 0/0; 0/0; Include : null;
+ 33/30; 16/1; 0/0; Resource : null;
+ 34/30; 17/1; 0/0; Out : null;
+ 35/0; 0/0; 36/6; Pipeline : null;
+ 36/35; 0/0; 0/0; CullMode : null;
+ 37/35; 0/0; 0/0; FrontFace : null;
+ 38/35; 0/0; 0/0; PrimitiveTopology : null;
+ 39/35; 0/0; 0/0; Shader : null;
+ 40/35; 0/0; 0/0; Shader : null;
+ 41/35; 0/0; 0/0; Rasterizer : null;
+ 42/0; 18/1; 43/6; Pipeline : null;
+ 43/42; 0/0; 0/0; CullMode : null;
+ 44/42; 0/0; 0/0; FrontFace : null;
+ 45/42; 0/0; 0/0; PrimitiveTopology : null;
+ 46/42; 0/0; 0/0; Shader : null;
+ 47/42; 0/0; 0/0; Shader : null;
+ 48/42; 0/0; 0/0; Rasterizer : null;
+ 49/0; 0/0; 50/4; Rasterizer : null;
+ 50/49; 0/0; 0/0; FillMode : null;
+ 51/49; 0/0; 0/0; DepthTestEnabled : null;
+ 52/49; 0/0; 0/0; DepthWriteEnabled : null;
+ 53/49; 0/0; 0/0; DepthCompareOp : null;
+ # 0, @ 0, [ 0, 0 ], [ 1, 11 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 12, 3 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 15, 2 ], Shader : null;
+ # 3, @ 0, [ 3, 1 ], [ 17, 2 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 19, 3 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 9, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 12, 1 ], [ 30, 4 ], Shader : null;
+ # 8, @ 0, [ 15, 1 ], [ 34, 4 ], Shader : null;
+ # 9, @ 0, [ 0, 0 ], [ 38, 6 ], Pipeline : null;
+ # 10, @ 0, [ 18, 1 ], [ 44, 6 ], Pipeline : null;
+ # 11, @ 0, [ 0, 0 ], [ 50, 4 ], Rasterizer : null;
+ # 12, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 1, [ 1, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 21, @ 4, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 8, 1 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 10, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 11, 1 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 32, @ 7, [ 13, 1 ], [ 0, 0 ], Resource : null;
+ # 33, @ 7, [ 14, 1 ], [ 0, 0 ], Out : null;
+ # 34, @ 8, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 36, @ 8, [ 16, 1 ], [ 0, 0 ], Resource : null;
+ # 37, @ 8, [ 17, 1 ], [ 0, 0 ], Out : null;
+ # 38, @ 9, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 39, @ 9, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 9, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 42, @ 9, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 43, @ 9, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 44, @ 10, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 45, @ 10, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 46, @ 10, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 47, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 48, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 49, @ 10, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 50, @ 11, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 51, @ 11, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 52, @ 11, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 53, @ 11, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxClass<Rasterizer>::ConstructObject(02b633b0)
+ sglRasterizer.c:834
+  _SglRasCtor(ras=02b633b0)
+ afxClass<Pipeline>::ConstructObject(02b718a0)
+ sglPipeline.c:515
+  _SglPipCtor(pip=02b718a0)
+ afxClass<Lego>::ConstructObject(03ff6e20)
+ sglPipelineRig.c:279
+  _SglLegoCtor(lego=03ff6e20)
+ afxSampler.c:46
+  AfxAcquireSamplers(cnt=1,samp=044e3adc,config=0024ec30)
+ afxClass<Sampler>::ConstructObject(0403bcf0)
+ sglSampler.c:129
+  _SglSampCtor(samp=0403bcf0)
+ afxClass<Buffer>::ConstructObject(02af2970)
+ sglBuffer.c:316
+  _SglBufCtor(buf=02af2970)
+ ERR afxClass.c:848?_AfxAssertObjects
+  
+ ERR afxClass.c:848?_AfxAssertObjects
+  (var_)
+    Invalid
+ ERR mmplayer.c:300?main
+  
+ ERR mmplayer.c:300?main
+  (((afxResult)(1)) == _AfxAssertObjects((1), (afxHandle const*)(&dsys),(afxFcc_DCTX)))
+    Invalid
+ afxApplication.c:367
+  AfxAcquireApplications(cnt=1,app=0024f164,config=0024f144)
+ afxClass<Application>::ConstructObject(02b4e570)
+ afxApplication.c:269
+  _AfxAppCtor(app=02b4e570)
+ afxThread.c:924
+  AfxAcquireThreads(cnt=1,thr=02b4e648,config=0024ecb8,hint="afxApplication.c:279!_AfxAppCtor")
+ afxClass<Thread>::ConstructObject(0403be00)
+ afxThread.c:870
+  _AfxThrCtor(0403be00)
+ afxMouse.c:482
+  AfxAcquireMouses(cnt=1,port=0024ecc4,mse=02b4e650)
+ afxClass<Mouse>::ConstructObject(04020300)
+ afxMouse.c:441
+  _AfxMseCtor(mse=04020300)
+ afxDrawInput.c:199
+  AfxOpenDrawInputs(cnt=1,config=0024eca4,)
+ afxClass<Draw Input, Draw Input>ConstructingObject(02b6f4a0)
+ afxClass<Draw Input>::ConstructObject(02b6f4a0)
+ afxClass<Draw Input>::ConstructObject(02b6f4a0)
+ Installing Widget at 02b4e584 by 02b4e570 over 00000000 with 0f9de110)
+ afxApplication.c:187
+  AfxRunApplication(app=02b4e570)
+ afxThread.c:811
+  AfxRunThread(thr=0403be00)
+ mmplayer.c:105
+  AfxEnterApplication(app=02b4e570)
+ afxStream.c:608
+  AfxAcquireStream(ios=0024ebf8,flags=7,start=00000000,len=0)
+ afxFile.c:346
+  AfxReloadFile(uri=00a37150,flags=5)
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024eb1c,uri=00a37150,flags=24eb24)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/art/world.tga
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=5,start=00000000,len=0)
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxTexture.c:762
+  AfxBuildTextures(texb=0024ebd4,cnt=1,data=0024ec40,tex=00a3701c)
+ afxClass<Texture>::ConstructObject(03f480a0)
+ sglTexture.c:918
+  _SglTexCtor(tex=03f480a0)
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024e900,uri=00a37150,flags=24e90c)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/tmp/world2.tga
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=2,start=00000000,len=0)
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ Dismantling Texture object (#0) 03f480a0...
+ Destructing instance 03f480a0 of Texture class.
+ sglTexture.c:895
+  _SglTexDtor(tex=03f480a0)
+ ERR afxPool.c:444?AfxDeallocatePoolUnit
+  
+ ERR afxPool.c:503?AfxDeallocatePoolUnit
+  
+ ERR afxPool.c:503?AfxDeallocatePoolUnit
+  (!AfxGetPoolUnit(pool, idx, 0))
+    Invalid
+ afxDrawOutput.c:585
+  AfxOpenDrawOutputs(cnt=1,config=0024ed90,dout=00a37020)
+ afxClass<Draw Output, Draw Output>ConstructingObject(02b7bcb0)
+ afxClass<Draw Output>::ConstructObject(02b7bcb0)
+ afxClass<Draw Output>::ConstructObject(02b7bcb0)
+ sglDrawOutput.c:279
+  _SglDoutCtor(dout=02b7bcb0)
+ Draw output (02b7bcb0) porportions readjusted. P 1.776903, R 1.777778 W -NaN
+ Draw output (02b7bcb0) porportions readjusted. P 1.776903, R 1.777778 W 1.778859
+ afxDrawOutput.c:372
+  AfxRegenerateDrawOutputBuffers(dout=02b7bcb0)
+ Draw output (02b7bcb0) extent readjusted to 1279x719; 0:0% of 45035112x1.
+ Draw output (02b7bcb0) porportions readjusted. P 1.776903, R 1.777778 W 1.844702
+ afxDrawOutput.c:372
+  AfxRegenerateDrawOutputBuffers(dout=02b7bcb0)
+ Draw output (02b7bcb0) extent readjusted to 1271x689; 0:0% of 1x0.
+ Draw output (02b7bcb0) porportions readjusted. P 1.776903, R 1.777778 W 1.778859
+ afxDrawOutput.c:372
+  AfxRegenerateDrawOutputBuffers(dout=02b7bcb0)
+ Draw output (02b7bcb0) extent readjusted to 1279x719; 0:0% of 7116776x647.
+ Draw output (02b7bcb0) porportions readjusted. P 1.776903, R 1.777778 W 1.844702
+ afxDrawOutput.c:372
+  AfxRegenerateDrawOutputBuffers(dout=02b7bcb0)
+ Draw output (02b7bcb0) extent readjusted to 1271x689; 0:0% of 0x0.
+ afxDrawOutput.c:372
+  AfxRegenerateDrawOutputBuffers(dout=02b7bcb0)
+ afxClass<Texture>::ConstructObject(03f48160)
+ sglTexture.c:918
+  _SglTexCtor(tex=03f48160)
+ afxDrawInput.c:199
+  AfxOpenDrawInputs(cnt=1,config=0024ed18,)
+ afxClass<Draw Input, Draw Input>ConstructingObject(03f519c0)
+ afxClass<Draw Input>::ConstructObject(03f519c0)
+ afxClass<Draw Input>::ConstructObject(03f519c0)
+ afxModule.c:139
+  AfxAcquireModules(cnt=1,mdle=00a37060,uri=0024ebbc)
+ afxClass<Module>::ConstructObject(006bd708)
+ afxModule.c:95
+  _AfxMdleCtor(uri:binkw32.dll)
+ afxSampler.c:46
+  AfxAcquireSamplers(cnt=1,samp=00a37130,config=0024ec10)
+ afxClass<Sampler>::ConstructObject(0403bf00)
+ sglSampler.c:129
+  _SglSampCtor(samp=0403bf00)
+ Uploading pipeline 'data/pipeline/yv12ToRgba.xsh.xml'
+ afxXml.c:1313
+  AfxLoadXml(uri:data/pipeline/yv12ToRgba.xsh.xml)
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024e59c,uri=0024e718,flags=24e5a4)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/yv12ToRgba.xsh.xml
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=1,start=00000000,len=0)
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/8; 4/1; 0/0; In : null;
+ 8/0; 3/1; 9/3; Shader : null;
+ 13/12; 0/0; 0/0; Stage : null;
+ 14/12; 0/0; 0/0; Include : null;
+ 12/0; 5/1; 13/2; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/2; 0/0; Resource : null;
+ 19/15; 9/2; 0/0; Resource : null;
+ 20/15; 11/2; 0/0; Resource : null;
+ 21/15; 13/1; 0/0; Out : null;
+ 15/0; 6/1; 16/6; Shader : null;
+ 23/22; 0/0; 0/0; Stage : null;
+ 24/22; 0/0; 0/0; Include : null;
+ 25/22; 15/2; 0/0; Resource : null;
+ 26/22; 17/2; 0/0; Resource : null;
+ 27/22; 19/2; 0/0; Resource : null;
+ 28/22; 21/1; 0/0; Out : null;
+ 22/0; 14/1; 23/6; Shader : null;
+ 30/29; 0/0; 0/0; Stage : null;
+ 31/29; 0/0; 0/0; Include : null;
+ 32/29; 23/2; 0/0; Resource : null;
+ 33/29; 25/2; 0/0; Resource : null;
+ 34/29; 27/2; 0/0; Resource : null;
+ 35/29; 29/1; 0/0; Out : null;
+ 29/0; 22/1; 30/6; Shader : null;
+ 37/36; 0/0; 0/0; Stage : null;
+ 38/36; 0/0; 0/0; Include : null;
+ 39/36; 31/2; 0/0; Resource : null;
+ 40/36; 33/2; 0/0; Resource : null;
+ 41/36; 35/2; 0/0; Resource : null;
+ 42/36; 37/1; 0/0; Out : null;
+ 36/0; 30/1; 37/6; Shader : null;
+ 44/43; 0/0; 0/0; Stage : null;
+ 45/43; 0/0; 0/0; Include : null;
+ 46/43; 39/2; 0/0; Resource : null;
+ 47/43; 41/2; 0/0; Resource : null;
+ 48/43; 43/2; 0/0; Resource : null;
+ 49/43; 45/1; 0/0; Out : null;
+ 43/0; 38/1; 44/6; Shader : null;
+ 51/50; 0/0; 0/0; CullMode : null;
+ 52/50; 0/0; 0/0; FrontFace : null;
+ 53/50; 0/0; 0/0; PrimitiveTopology : null;
+ 54/50; 0/0; 0/0; Shader : null;
+ 55/50; 0/0; 0/0; Shader : null;
+ 56/50; 0/0; 0/0; Rasterizer : null;
+ 50/0; 0/0; 51/6; Pipeline : null;
+ 58/57; 0/0; 0/0; FillMode : null;
+ 59/57; 0/0; 0/0; DepthTestEnabled : null;
+ 60/57; 0/0; 0/0; DepthWriteEnabled : null;
+ 61/57; 0/0; 0/0; DepthCompareOp : null;
+ 57/0; 0/0; 58/4; Rasterizer : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/3; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/8; 4/1; 0/0; In : null;
+ 12/0; 5/1; 13/2; Shader : null;
+ 13/12; 0/0; 0/0; Stage : null;
+ 14/12; 0/0; 0/0; Include : null;
+ 15/0; 6/1; 16/6; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/2; 0/0; Resource : null;
+ 19/15; 9/2; 0/0; Resource : null;
+ 20/15; 11/2; 0/0; Resource : null;
+ 21/15; 13/1; 0/0; Out : null;
+ 22/0; 14/1; 23/6; Shader : null;
+ 23/22; 0/0; 0/0; Stage : null;
+ 24/22; 0/0; 0/0; Include : null;
+ 25/22; 15/2; 0/0; Resource : null;
+ 26/22; 17/2; 0/0; Resource : null;
+ 27/22; 19/2; 0/0; Resource : null;
+ 28/22; 21/1; 0/0; Out : null;
+ 29/0; 22/1; 30/6; Shader : null;
+ 30/29; 0/0; 0/0; Stage : null;
+ 31/29; 0/0; 0/0; Include : null;
+ 32/29; 23/2; 0/0; Resource : null;
+ 33/29; 25/2; 0/0; Resource : null;
+ 34/29; 27/2; 0/0; Resource : null;
+ 35/29; 29/1; 0/0; Out : null;
+ 36/0; 30/1; 37/6; Shader : null;
+ 37/36; 0/0; 0/0; Stage : null;
+ 38/36; 0/0; 0/0; Include : null;
+ 39/36; 31/2; 0/0; Resource : null;
+ 40/36; 33/2; 0/0; Resource : null;
+ 41/36; 35/2; 0/0; Resource : null;
+ 42/36; 37/1; 0/0; Out : null;
+ 43/0; 38/1; 44/6; Shader : null;
+ 44/43; 0/0; 0/0; Stage : null;
+ 45/43; 0/0; 0/0; Include : null;
+ 46/43; 39/2; 0/0; Resource : null;
+ 47/43; 41/2; 0/0; Resource : null;
+ 48/43; 43/2; 0/0; Resource : null;
+ 49/43; 45/1; 0/0; Out : null;
+ 50/0; 0/0; 51/6; Pipeline : null;
+ 51/50; 0/0; 0/0; CullMode : null;
+ 52/50; 0/0; 0/0; FrontFace : null;
+ 53/50; 0/0; 0/0; PrimitiveTopology : null;
+ 54/50; 0/0; 0/0; Shader : null;
+ 55/50; 0/0; 0/0; Shader : null;
+ 56/50; 0/0; 0/0; Rasterizer : null;
+ 57/0; 0/0; 58/4; Rasterizer : null;
+ 58/57; 0/0; 0/0; FillMode : null;
+ 59/57; 0/0; 0/0; DepthTestEnabled : null;
+ 60/57; 0/0; 0/0; DepthWriteEnabled : null;
+ 61/57; 0/0; 0/0; DepthCompareOp : null;
+ # 0, @ 0, [ 0, 0 ], [ 1, 11 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 12, 3 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 15, 2 ], Shader : null;
+ # 3, @ 0, [ 3, 1 ], [ 17, 3 ], Shader : null;
+ # 4, @ 0, [ 5, 1 ], [ 20, 2 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 6 ], Shader : null;
+ # 6, @ 0, [ 14, 1 ], [ 28, 6 ], Shader : null;
+ # 7, @ 0, [ 22, 1 ], [ 34, 6 ], Shader : null;
+ # 8, @ 0, [ 30, 1 ], [ 40, 6 ], Shader : null;
+ # 9, @ 0, [ 38, 1 ], [ 46, 6 ], Shader : null;
+ # 10, @ 0, [ 0, 0 ], [ 52, 6 ], Pipeline : null;
+ # 11, @ 0, [ 0, 0 ], [ 58, 4 ], Rasterizer : null;
+ # 12, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 1, [ 1, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 3, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 2 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 26, @ 5, [ 11, 2 ], [ 0, 0 ], Resource : null;
+ # 27, @ 5, [ 13, 1 ], [ 0, 0 ], Out : null;
+ # 28, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 6, [ 15, 2 ], [ 0, 0 ], Resource : null;
+ # 31, @ 6, [ 17, 2 ], [ 0, 0 ], Resource : null;
+ # 32, @ 6, [ 19, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 6, [ 21, 1 ], [ 0, 0 ], Out : null;
+ # 34, @ 7, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 35, @ 7, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 36, @ 7, [ 23, 2 ], [ 0, 0 ], Resource : null;
+ # 37, @ 7, [ 25, 2 ], [ 0, 0 ], Resource : null;
+ # 38, @ 7, [ 27, 2 ], [ 0, 0 ], Resource : null;
+ # 39, @ 7, [ 29, 1 ], [ 0, 0 ], Out : null;
+ # 40, @ 8, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 41, @ 8, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 42, @ 8, [ 31, 2 ], [ 0, 0 ], Resource : null;
+ # 43, @ 8, [ 33, 2 ], [ 0, 0 ], Resource : null;
+ # 44, @ 8, [ 35, 2 ], [ 0, 0 ], Resource : null;
+ # 45, @ 8, [ 37, 1 ], [ 0, 0 ], Out : null;
+ # 46, @ 9, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 47, @ 9, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 48, @ 9, [ 39, 2 ], [ 0, 0 ], Resource : null;
+ # 49, @ 9, [ 41, 2 ], [ 0, 0 ], Resource : null;
+ # 50, @ 9, [ 43, 2 ], [ 0, 0 ], Resource : null;
+ # 51, @ 9, [ 45, 1 ], [ 0, 0 ], Out : null;
+ # 52, @ 10, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 53, @ 10, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 54, @ 10, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 55, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 56, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 57, @ 10, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 58, @ 11, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 59, @ 11, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 60, @ 11, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 61, @ 11, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ data/pipeline/yv12ToRgba.xsh.xml?vs
+ data/pipeline/yv12ToRgba.xsh.xml?fsSigma
+ data/pipeline/yv12ToRgba.xsh.xml
+ Uploading shader 'data/pipeline/yv12ToRgba.xsh.xml?vs'
+ afxXml.c:1313
+  AfxLoadXml(uri:data/pipeline/yv12ToRgba.xsh.xml)
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024e1e4,uri=0024e2c0,flags=24e1ec)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/yv12ToRgba.xsh.xml
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=1,start=00000000,len=0)
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/8; 4/1; 0/0; In : null;
+ 8/0; 3/1; 9/3; Shader : null;
+ 13/12; 0/0; 0/0; Stage : null;
+ 14/12; 0/0; 0/0; Include : null;
+ 12/0; 5/1; 13/2; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/2; 0/0; Resource : null;
+ 19/15; 9/2; 0/0; Resource : null;
+ 20/15; 11/2; 0/0; Resource : null;
+ 21/15; 13/1; 0/0; Out : null;
+ 15/0; 6/1; 16/6; Shader : null;
+ 23/22; 0/0; 0/0; Stage : null;
+ 24/22; 0/0; 0/0; Include : null;
+ 25/22; 15/2; 0/0; Resource : null;
+ 26/22; 17/2; 0/0; Resource : null;
+ 27/22; 19/2; 0/0; Resource : null;
+ 28/22; 21/1; 0/0; Out : null;
+ 22/0; 14/1; 23/6; Shader : null;
+ 30/29; 0/0; 0/0; Stage : null;
+ 31/29; 0/0; 0/0; Include : null;
+ 32/29; 23/2; 0/0; Resource : null;
+ 33/29; 25/2; 0/0; Resource : null;
+ 34/29; 27/2; 0/0; Resource : null;
+ 35/29; 29/1; 0/0; Out : null;
+ 29/0; 22/1; 30/6; Shader : null;
+ 37/36; 0/0; 0/0; Stage : null;
+ 38/36; 0/0; 0/0; Include : null;
+ 39/36; 31/2; 0/0; Resource : null;
+ 40/36; 33/2; 0/0; Resource : null;
+ 41/36; 35/2; 0/0; Resource : null;
+ 42/36; 37/1; 0/0; Out : null;
+ 36/0; 30/1; 37/6; Shader : null;
+ 44/43; 0/0; 0/0; Stage : null;
+ 45/43; 0/0; 0/0; Include : null;
+ 46/43; 39/2; 0/0; Resource : null;
+ 47/43; 41/2; 0/0; Resource : null;
+ 48/43; 43/2; 0/0; Resource : null;
+ 49/43; 45/1; 0/0; Out : null;
+ 43/0; 38/1; 44/6; Shader : null;
+ 51/50; 0/0; 0/0; CullMode : null;
+ 52/50; 0/0; 0/0; FrontFace : null;
+ 53/50; 0/0; 0/0; PrimitiveTopology : null;
+ 54/50; 0/0; 0/0; Shader : null;
+ 55/50; 0/0; 0/0; Shader : null;
+ 56/50; 0/0; 0/0; Rasterizer : null;
+ 50/0; 0/0; 51/6; Pipeline : null;
+ 58/57; 0/0; 0/0; FillMode : null;
+ 59/57; 0/0; 0/0; DepthTestEnabled : null;
+ 60/57; 0/0; 0/0; DepthWriteEnabled : null;
+ 61/57; 0/0; 0/0; DepthCompareOp : null;
+ 57/0; 0/0; 58/4; Rasterizer : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/3; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/8; 4/1; 0/0; In : null;
+ 12/0; 5/1; 13/2; Shader : null;
+ 13/12; 0/0; 0/0; Stage : null;
+ 14/12; 0/0; 0/0; Include : null;
+ 15/0; 6/1; 16/6; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/2; 0/0; Resource : null;
+ 19/15; 9/2; 0/0; Resource : null;
+ 20/15; 11/2; 0/0; Resource : null;
+ 21/15; 13/1; 0/0; Out : null;
+ 22/0; 14/1; 23/6; Shader : null;
+ 23/22; 0/0; 0/0; Stage : null;
+ 24/22; 0/0; 0/0; Include : null;
+ 25/22; 15/2; 0/0; Resource : null;
+ 26/22; 17/2; 0/0; Resource : null;
+ 27/22; 19/2; 0/0; Resource : null;
+ 28/22; 21/1; 0/0; Out : null;
+ 29/0; 22/1; 30/6; Shader : null;
+ 30/29; 0/0; 0/0; Stage : null;
+ 31/29; 0/0; 0/0; Include : null;
+ 32/29; 23/2; 0/0; Resource : null;
+ 33/29; 25/2; 0/0; Resource : null;
+ 34/29; 27/2; 0/0; Resource : null;
+ 35/29; 29/1; 0/0; Out : null;
+ 36/0; 30/1; 37/6; Shader : null;
+ 37/36; 0/0; 0/0; Stage : null;
+ 38/36; 0/0; 0/0; Include : null;
+ 39/36; 31/2; 0/0; Resource : null;
+ 40/36; 33/2; 0/0; Resource : null;
+ 41/36; 35/2; 0/0; Resource : null;
+ 42/36; 37/1; 0/0; Out : null;
+ 43/0; 38/1; 44/6; Shader : null;
+ 44/43; 0/0; 0/0; Stage : null;
+ 45/43; 0/0; 0/0; Include : null;
+ 46/43; 39/2; 0/0; Resource : null;
+ 47/43; 41/2; 0/0; Resource : null;
+ 48/43; 43/2; 0/0; Resource : null;
+ 49/43; 45/1; 0/0; Out : null;
+ 50/0; 0/0; 51/6; Pipeline : null;
+ 51/50; 0/0; 0/0; CullMode : null;
+ 52/50; 0/0; 0/0; FrontFace : null;
+ 53/50; 0/0; 0/0; PrimitiveTopology : null;
+ 54/50; 0/0; 0/0; Shader : null;
+ 55/50; 0/0; 0/0; Shader : null;
+ 56/50; 0/0; 0/0; Rasterizer : null;
+ 57/0; 0/0; 58/4; Rasterizer : null;
+ 58/57; 0/0; 0/0; FillMode : null;
+ 59/57; 0/0; 0/0; DepthTestEnabled : null;
+ 60/57; 0/0; 0/0; DepthWriteEnabled : null;
+ 61/57; 0/0; 0/0; DepthCompareOp : null;
+ # 0, @ 0, [ 0, 0 ], [ 1, 11 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 12, 3 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 15, 2 ], Shader : null;
+ # 3, @ 0, [ 3, 1 ], [ 17, 3 ], Shader : null;
+ # 4, @ 0, [ 5, 1 ], [ 20, 2 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 6 ], Shader : null;
+ # 6, @ 0, [ 14, 1 ], [ 28, 6 ], Shader : null;
+ # 7, @ 0, [ 22, 1 ], [ 34, 6 ], Shader : null;
+ # 8, @ 0, [ 30, 1 ], [ 40, 6 ], Shader : null;
+ # 9, @ 0, [ 38, 1 ], [ 46, 6 ], Shader : null;
+ # 10, @ 0, [ 0, 0 ], [ 52, 6 ], Pipeline : null;
+ # 11, @ 0, [ 0, 0 ], [ 58, 4 ], Rasterizer : null;
+ # 12, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 1, [ 1, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 3, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 2 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 26, @ 5, [ 11, 2 ], [ 0, 0 ], Resource : null;
+ # 27, @ 5, [ 13, 1 ], [ 0, 0 ], Out : null;
+ # 28, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 6, [ 15, 2 ], [ 0, 0 ], Resource : null;
+ # 31, @ 6, [ 17, 2 ], [ 0, 0 ], Resource : null;
+ # 32, @ 6, [ 19, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 6, [ 21, 1 ], [ 0, 0 ], Out : null;
+ # 34, @ 7, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 35, @ 7, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 36, @ 7, [ 23, 2 ], [ 0, 0 ], Resource : null;
+ # 37, @ 7, [ 25, 2 ], [ 0, 0 ], Resource : null;
+ # 38, @ 7, [ 27, 2 ], [ 0, 0 ], Resource : null;
+ # 39, @ 7, [ 29, 1 ], [ 0, 0 ], Out : null;
+ # 40, @ 8, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 41, @ 8, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 42, @ 8, [ 31, 2 ], [ 0, 0 ], Resource : null;
+ # 43, @ 8, [ 33, 2 ], [ 0, 0 ], Resource : null;
+ # 44, @ 8, [ 35, 2 ], [ 0, 0 ], Resource : null;
+ # 45, @ 8, [ 37, 1 ], [ 0, 0 ], Out : null;
+ # 46, @ 9, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 47, @ 9, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 48, @ 9, [ 39, 2 ], [ 0, 0 ], Resource : null;
+ # 49, @ 9, [ 41, 2 ], [ 0, 0 ], Resource : null;
+ # 50, @ 9, [ 43, 2 ], [ 0, 0 ], Resource : null;
+ # 51, @ 9, [ 45, 1 ], [ 0, 0 ], Out : null;
+ # 52, @ 10, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 53, @ 10, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 54, @ 10, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 55, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 56, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 57, @ 10, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 58, @ 11, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 59, @ 11, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 60, @ 11, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 61, @ 11, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024dcf0,uri=0024df18,flags=24dcfc)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=5,start=00000000,len=0)
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxShader.c:395
+  AfxBuildShaders(cnt=1,shd=0024e0a0,blueprint=0024e0d4)
+ afxClass<Shader>::ConstructObject(04028798)
+ sglShader.c:148
+  _SglShdCtor(shd=04028798)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+        
+        layout(location = 0) in vec2 a_xy;
+
+        out block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        void main()
+        {
+            gl_Position = vec4(a_xy, 0.0, 1.0);
+            sgl_v.uv0 = vec2(gl_Position.xy * 0.5 + 0.5).xy;
+        }
+       
+ Uploading shader 'data/pipeline/yv12ToRgba.xsh.xml?fsSigma'
+ afxXml.c:1313
+  AfxLoadXml(uri:data/pipeline/yv12ToRgba.xsh.xml)
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024e1e4,uri=0024e2c0,flags=24e1ec)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/yv12ToRgba.xsh.xml
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=1,start=00000000,len=0)
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/8; 4/1; 0/0; In : null;
+ 8/0; 3/1; 9/3; Shader : null;
+ 13/12; 0/0; 0/0; Stage : null;
+ 14/12; 0/0; 0/0; Include : null;
+ 12/0; 5/1; 13/2; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/2; 0/0; Resource : null;
+ 19/15; 9/2; 0/0; Resource : null;
+ 20/15; 11/2; 0/0; Resource : null;
+ 21/15; 13/1; 0/0; Out : null;
+ 15/0; 6/1; 16/6; Shader : null;
+ 23/22; 0/0; 0/0; Stage : null;
+ 24/22; 0/0; 0/0; Include : null;
+ 25/22; 15/2; 0/0; Resource : null;
+ 26/22; 17/2; 0/0; Resource : null;
+ 27/22; 19/2; 0/0; Resource : null;
+ 28/22; 21/1; 0/0; Out : null;
+ 22/0; 14/1; 23/6; Shader : null;
+ 30/29; 0/0; 0/0; Stage : null;
+ 31/29; 0/0; 0/0; Include : null;
+ 32/29; 23/2; 0/0; Resource : null;
+ 33/29; 25/2; 0/0; Resource : null;
+ 34/29; 27/2; 0/0; Resource : null;
+ 35/29; 29/1; 0/0; Out : null;
+ 29/0; 22/1; 30/6; Shader : null;
+ 37/36; 0/0; 0/0; Stage : null;
+ 38/36; 0/0; 0/0; Include : null;
+ 39/36; 31/2; 0/0; Resource : null;
+ 40/36; 33/2; 0/0; Resource : null;
+ 41/36; 35/2; 0/0; Resource : null;
+ 42/36; 37/1; 0/0; Out : null;
+ 36/0; 30/1; 37/6; Shader : null;
+ 44/43; 0/0; 0/0; Stage : null;
+ 45/43; 0/0; 0/0; Include : null;
+ 46/43; 39/2; 0/0; Resource : null;
+ 47/43; 41/2; 0/0; Resource : null;
+ 48/43; 43/2; 0/0; Resource : null;
+ 49/43; 45/1; 0/0; Out : null;
+ 43/0; 38/1; 44/6; Shader : null;
+ 51/50; 0/0; 0/0; CullMode : null;
+ 52/50; 0/0; 0/0; FrontFace : null;
+ 53/50; 0/0; 0/0; PrimitiveTopology : null;
+ 54/50; 0/0; 0/0; Shader : null;
+ 55/50; 0/0; 0/0; Shader : null;
+ 56/50; 0/0; 0/0; Rasterizer : null;
+ 50/0; 0/0; 51/6; Pipeline : null;
+ 58/57; 0/0; 0/0; FillMode : null;
+ 59/57; 0/0; 0/0; DepthTestEnabled : null;
+ 60/57; 0/0; 0/0; DepthWriteEnabled : null;
+ 61/57; 0/0; 0/0; DepthCompareOp : null;
+ 57/0; 0/0; 58/4; Rasterizer : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/3; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/8; 4/1; 0/0; In : null;
+ 12/0; 5/1; 13/2; Shader : null;
+ 13/12; 0/0; 0/0; Stage : null;
+ 14/12; 0/0; 0/0; Include : null;
+ 15/0; 6/1; 16/6; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/2; 0/0; Resource : null;
+ 19/15; 9/2; 0/0; Resource : null;
+ 20/15; 11/2; 0/0; Resource : null;
+ 21/15; 13/1; 0/0; Out : null;
+ 22/0; 14/1; 23/6; Shader : null;
+ 23/22; 0/0; 0/0; Stage : null;
+ 24/22; 0/0; 0/0; Include : null;
+ 25/22; 15/2; 0/0; Resource : null;
+ 26/22; 17/2; 0/0; Resource : null;
+ 27/22; 19/2; 0/0; Resource : null;
+ 28/22; 21/1; 0/0; Out : null;
+ 29/0; 22/1; 30/6; Shader : null;
+ 30/29; 0/0; 0/0; Stage : null;
+ 31/29; 0/0; 0/0; Include : null;
+ 32/29; 23/2; 0/0; Resource : null;
+ 33/29; 25/2; 0/0; Resource : null;
+ 34/29; 27/2; 0/0; Resource : null;
+ 35/29; 29/1; 0/0; Out : null;
+ 36/0; 30/1; 37/6; Shader : null;
+ 37/36; 0/0; 0/0; Stage : null;
+ 38/36; 0/0; 0/0; Include : null;
+ 39/36; 31/2; 0/0; Resource : null;
+ 40/36; 33/2; 0/0; Resource : null;
+ 41/36; 35/2; 0/0; Resource : null;
+ 42/36; 37/1; 0/0; Out : null;
+ 43/0; 38/1; 44/6; Shader : null;
+ 44/43; 0/0; 0/0; Stage : null;
+ 45/43; 0/0; 0/0; Include : null;
+ 46/43; 39/2; 0/0; Resource : null;
+ 47/43; 41/2; 0/0; Resource : null;
+ 48/43; 43/2; 0/0; Resource : null;
+ 49/43; 45/1; 0/0; Out : null;
+ 50/0; 0/0; 51/6; Pipeline : null;
+ 51/50; 0/0; 0/0; CullMode : null;
+ 52/50; 0/0; 0/0; FrontFace : null;
+ 53/50; 0/0; 0/0; PrimitiveTopology : null;
+ 54/50; 0/0; 0/0; Shader : null;
+ 55/50; 0/0; 0/0; Shader : null;
+ 56/50; 0/0; 0/0; Rasterizer : null;
+ 57/0; 0/0; 58/4; Rasterizer : null;
+ 58/57; 0/0; 0/0; FillMode : null;
+ 59/57; 0/0; 0/0; DepthTestEnabled : null;
+ 60/57; 0/0; 0/0; DepthWriteEnabled : null;
+ 61/57; 0/0; 0/0; DepthCompareOp : null;
+ # 0, @ 0, [ 0, 0 ], [ 1, 11 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 12, 3 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 15, 2 ], Shader : null;
+ # 3, @ 0, [ 3, 1 ], [ 17, 3 ], Shader : null;
+ # 4, @ 0, [ 5, 1 ], [ 20, 2 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 6 ], Shader : null;
+ # 6, @ 0, [ 14, 1 ], [ 28, 6 ], Shader : null;
+ # 7, @ 0, [ 22, 1 ], [ 34, 6 ], Shader : null;
+ # 8, @ 0, [ 30, 1 ], [ 40, 6 ], Shader : null;
+ # 9, @ 0, [ 38, 1 ], [ 46, 6 ], Shader : null;
+ # 10, @ 0, [ 0, 0 ], [ 52, 6 ], Pipeline : null;
+ # 11, @ 0, [ 0, 0 ], [ 58, 4 ], Rasterizer : null;
+ # 12, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 1, [ 1, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 3, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 2 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 26, @ 5, [ 11, 2 ], [ 0, 0 ], Resource : null;
+ # 27, @ 5, [ 13, 1 ], [ 0, 0 ], Out : null;
+ # 28, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 6, [ 15, 2 ], [ 0, 0 ], Resource : null;
+ # 31, @ 6, [ 17, 2 ], [ 0, 0 ], Resource : null;
+ # 32, @ 6, [ 19, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 6, [ 21, 1 ], [ 0, 0 ], Out : null;
+ # 34, @ 7, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 35, @ 7, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 36, @ 7, [ 23, 2 ], [ 0, 0 ], Resource : null;
+ # 37, @ 7, [ 25, 2 ], [ 0, 0 ], Resource : null;
+ # 38, @ 7, [ 27, 2 ], [ 0, 0 ], Resource : null;
+ # 39, @ 7, [ 29, 1 ], [ 0, 0 ], Out : null;
+ # 40, @ 8, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 41, @ 8, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 42, @ 8, [ 31, 2 ], [ 0, 0 ], Resource : null;
+ # 43, @ 8, [ 33, 2 ], [ 0, 0 ], Resource : null;
+ # 44, @ 8, [ 35, 2 ], [ 0, 0 ], Resource : null;
+ # 45, @ 8, [ 37, 1 ], [ 0, 0 ], Out : null;
+ # 46, @ 9, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 47, @ 9, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 48, @ 9, [ 39, 2 ], [ 0, 0 ], Resource : null;
+ # 49, @ 9, [ 41, 2 ], [ 0, 0 ], Resource : null;
+ # 50, @ 9, [ 43, 2 ], [ 0, 0 ], Resource : null;
+ # 51, @ 9, [ 45, 1 ], [ 0, 0 ], Out : null;
+ # 52, @ 10, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 53, @ 10, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 54, @ 10, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 55, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 56, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 57, @ 10, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 58, @ 11, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 59, @ 11, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 60, @ 11, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 61, @ 11, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024dcf0,uri=0024df18,flags=24dcfc)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=5,start=00000000,len=0)
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxShader.c:395
+  AfxBuildShaders(cnt=1,shd=0024e0a0,blueprint=0024e0d4)
+ afxClass<Shader>::ConstructObject(0402882c)
+ sglShader.c:148
+  _SglShdCtor(shd=0402882c)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+        
+        uniform sampler2D samp0;
+        uniform sampler2D samp1;
+        uniform sampler2D samp2;
+        
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            vec3 yuv;
+            yuv.x = texture(samp0, sgl_v.uv0).r;
+            yuv.y = texture(samp2, sgl_v.uv0).r - 0.5;
+            yuv.z = texture(samp1, sgl_v.uv0).r - 0.5;
+            
+            vec3 rgb = mat3( 1, 1, 1, 0, -0.34414, 1.772, 1.402, -0.71414, 0) * yuv;
+            sgl_rgba = vec4(rgb, 1);
+        }
+       
+ Uploading pipeline 'data/pipeline/yv12ToRgba.xsh.xml'
+ afxXml.c:1313
+  AfxLoadXml(uri:data/pipeline/yv12ToRgba.xsh.xml)
+ afxFile.c:328
+  AfxOpenFiles(cnt=1,file=0024df3c,uri=0024e0a8,flags=24df44)
+ afxClass<File>::ConstructObject(04020654)
+ E:/qwadro/afx/data/pipeline/yv12ToRgba.xsh.xml
+ afxStream.c:608
+  AfxAcquireStream(ios=04020654,flags=1,start=00000000,len=0)
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/8; 4/1; 0/0; In : null;
+ 8/0; 3/1; 9/3; Shader : null;
+ 13/12; 0/0; 0/0; Stage : null;
+ 14/12; 0/0; 0/0; Include : null;
+ 12/0; 5/1; 13/2; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/2; 0/0; Resource : null;
+ 19/15; 9/2; 0/0; Resource : null;
+ 20/15; 11/2; 0/0; Resource : null;
+ 21/15; 13/1; 0/0; Out : null;
+ 15/0; 6/1; 16/6; Shader : null;
+ 23/22; 0/0; 0/0; Stage : null;
+ 24/22; 0/0; 0/0; Include : null;
+ 25/22; 15/2; 0/0; Resource : null;
+ 26/22; 17/2; 0/0; Resource : null;
+ 27/22; 19/2; 0/0; Resource : null;
+ 28/22; 21/1; 0/0; Out : null;
+ 22/0; 14/1; 23/6; Shader : null;
+ 30/29; 0/0; 0/0; Stage : null;
+ 31/29; 0/0; 0/0; Include : null;
+ 32/29; 23/2; 0/0; Resource : null;
+ 33/29; 25/2; 0/0; Resource : null;
+ 34/29; 27/2; 0/0; Resource : null;
+ 35/29; 29/1; 0/0; Out : null;
+ 29/0; 22/1; 30/6; Shader : null;
+ 37/36; 0/0; 0/0; Stage : null;
+ 38/36; 0/0; 0/0; Include : null;
+ 39/36; 31/2; 0/0; Resource : null;
+ 40/36; 33/2; 0/0; Resource : null;
+ 41/36; 35/2; 0/0; Resource : null;
+ 42/36; 37/1; 0/0; Out : null;
+ 36/0; 30/1; 37/6; Shader : null;
+ 44/43; 0/0; 0/0; Stage : null;
+ 45/43; 0/0; 0/0; Include : null;
+ 46/43; 39/2; 0/0; Resource : null;
+ 47/43; 41/2; 0/0; Resource : null;
+ 48/43; 43/2; 0/0; Resource : null;
+ 49/43; 45/1; 0/0; Out : null;
+ 43/0; 38/1; 44/6; Shader : null;
+ 51/50; 0/0; 0/0; CullMode : null;
+ 52/50; 0/0; 0/0; FrontFace : null;
+ 53/50; 0/0; 0/0; PrimitiveTopology : null;
+ 54/50; 0/0; 0/0; Shader : null;
+ 55/50; 0/0; 0/0; Shader : null;
+ 56/50; 0/0; 0/0; Rasterizer : null;
+ 50/0; 0/0; 51/6; Pipeline : null;
+ 58/57; 0/0; 0/0; FillMode : null;
+ 59/57; 0/0; 0/0; DepthTestEnabled : null;
+ 60/57; 0/0; 0/0; DepthWriteEnabled : null;
+ 61/57; 0/0; 0/0; DepthCompareOp : null;
+ 57/0; 0/0; 58/4; Rasterizer : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 0/4294967295; 0/0; 1/11; Qwadro : null;
+ 1/0; 0/1; 2/3; Shader : null;
+ 2/1; 0/0; 0/0; Stage : null;
+ 3/1; 0/0; 0/0; Include : null;
+ 4/1; 1/1; 0/0; In : null;
+ 5/0; 2/1; 6/2; Shader : null;
+ 6/5; 0/0; 0/0; Stage : null;
+ 7/5; 0/0; 0/0; Include : null;
+ 8/0; 3/1; 9/3; Shader : null;
+ 9/8; 0/0; 0/0; Stage : null;
+ 10/8; 0/0; 0/0; Include : null;
+ 11/8; 4/1; 0/0; In : null;
+ 12/0; 5/1; 13/2; Shader : null;
+ 13/12; 0/0; 0/0; Stage : null;
+ 14/12; 0/0; 0/0; Include : null;
+ 15/0; 6/1; 16/6; Shader : null;
+ 16/15; 0/0; 0/0; Stage : null;
+ 17/15; 0/0; 0/0; Include : null;
+ 18/15; 7/2; 0/0; Resource : null;
+ 19/15; 9/2; 0/0; Resource : null;
+ 20/15; 11/2; 0/0; Resource : null;
+ 21/15; 13/1; 0/0; Out : null;
+ 22/0; 14/1; 23/6; Shader : null;
+ 23/22; 0/0; 0/0; Stage : null;
+ 24/22; 0/0; 0/0; Include : null;
+ 25/22; 15/2; 0/0; Resource : null;
+ 26/22; 17/2; 0/0; Resource : null;
+ 27/22; 19/2; 0/0; Resource : null;
+ 28/22; 21/1; 0/0; Out : null;
+ 29/0; 22/1; 30/6; Shader : null;
+ 30/29; 0/0; 0/0; Stage : null;
+ 31/29; 0/0; 0/0; Include : null;
+ 32/29; 23/2; 0/0; Resource : null;
+ 33/29; 25/2; 0/0; Resource : null;
+ 34/29; 27/2; 0/0; Resource : null;
+ 35/29; 29/1; 0/0; Out : null;
+ 36/0; 30/1; 37/6; Shader : null;
+ 37/36; 0/0; 0/0; Stage : null;
+ 38/36; 0/0; 0/0; Include : null;
+ 39/36; 31/2; 0/0; Resource : null;
+ 40/36; 33/2; 0/0; Resource : null;
+ 41/36; 35/2; 0/0; Resource : null;
+ 42/36; 37/1; 0/0; Out : null;
+ 43/0; 38/1; 44/6; Shader : null;
+ 44/43; 0/0; 0/0; Stage : null;
+ 45/43; 0/0; 0/0; Include : null;
+ 46/43; 39/2; 0/0; Resource : null;
+ 47/43; 41/2; 0/0; Resource : null;
+ 48/43; 43/2; 0/0; Resource : null;
+ 49/43; 45/1; 0/0; Out : null;
+ 50/0; 0/0; 51/6; Pipeline : null;
+ 51/50; 0/0; 0/0; CullMode : null;
+ 52/50; 0/0; 0/0; FrontFace : null;
+ 53/50; 0/0; 0/0; PrimitiveTopology : null;
+ 54/50; 0/0; 0/0; Shader : null;
+ 55/50; 0/0; 0/0; Shader : null;
+ 56/50; 0/0; 0/0; Rasterizer : null;
+ 57/0; 0/0; 58/4; Rasterizer : null;
+ 58/57; 0/0; 0/0; FillMode : null;
+ 59/57; 0/0; 0/0; DepthTestEnabled : null;
+ 60/57; 0/0; 0/0; DepthWriteEnabled : null;
+ 61/57; 0/0; 0/0; DepthCompareOp : null;
+ # 0, @ 0, [ 0, 0 ], [ 1, 11 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 12, 3 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 15, 2 ], Shader : null;
+ # 3, @ 0, [ 3, 1 ], [ 17, 3 ], Shader : null;
+ # 4, @ 0, [ 5, 1 ], [ 20, 2 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 6 ], Shader : null;
+ # 6, @ 0, [ 14, 1 ], [ 28, 6 ], Shader : null;
+ # 7, @ 0, [ 22, 1 ], [ 34, 6 ], Shader : null;
+ # 8, @ 0, [ 30, 1 ], [ 40, 6 ], Shader : null;
+ # 9, @ 0, [ 38, 1 ], [ 46, 6 ], Shader : null;
+ # 10, @ 0, [ 0, 0 ], [ 52, 6 ], Pipeline : null;
+ # 11, @ 0, [ 0, 0 ], [ 58, 4 ], Rasterizer : null;
+ # 12, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 1, [ 1, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 3, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 2 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 26, @ 5, [ 11, 2 ], [ 0, 0 ], Resource : null;
+ # 27, @ 5, [ 13, 1 ], [ 0, 0 ], Out : null;
+ # 28, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 6, [ 15, 2 ], [ 0, 0 ], Resource : null;
+ # 31, @ 6, [ 17, 2 ], [ 0, 0 ], Resource : null;
+ # 32, @ 6, [ 19, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 6, [ 21, 1 ], [ 0, 0 ], Out : null;
+ # 34, @ 7, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 35, @ 7, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 36, @ 7, [ 23, 2 ], [ 0, 0 ], Resource : null;
+ # 37, @ 7, [ 25, 2 ], [ 0, 0 ], Resource : null;
+ # 38, @ 7, [ 27, 2 ], [ 0, 0 ], Resource : null;
+ # 39, @ 7, [ 29, 1 ], [ 0, 0 ], Out : null;
+ # 40, @ 8, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 41, @ 8, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 42, @ 8, [ 31, 2 ], [ 0, 0 ], Resource : null;
+ # 43, @ 8, [ 33, 2 ], [ 0, 0 ], Resource : null;
+ # 44, @ 8, [ 35, 2 ], [ 0, 0 ], Resource : null;
+ # 45, @ 8, [ 37, 1 ], [ 0, 0 ], Out : null;
+ # 46, @ 9, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 47, @ 9, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 48, @ 9, [ 39, 2 ], [ 0, 0 ], Resource : null;
+ # 49, @ 9, [ 41, 2 ], [ 0, 0 ], Resource : null;
+ # 50, @ 9, [ 43, 2 ], [ 0, 0 ], Resource : null;
+ # 51, @ 9, [ 45, 1 ], [ 0, 0 ], Out : null;
+ # 52, @ 10, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 53, @ 10, [ 0, 0 ], [ 0, 0 ], FrontFace : null;
+ # 54, @ 10, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 55, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 56, @ 10, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 57, @ 10, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 58, @ 11, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 59, @ 11, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 60, @ 11, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 61, @ 11, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ Dismantling File object (#0) 04020654...
+ Destructing instance 04020654 of File class.
+ afxClass<Rasterizer>::ConstructObject(02b634f0)
+ sglRasterizer.c:834
+  _SglRasCtor(ras=02b634f0)
+ afxClass<Pipeline>::ConstructObject(02b71954)
+ sglPipeline.c:515
+  _SglPipCtor(pip=02b71954)
+ afxClass<Lego>::ConstructObject(03ff6e60)
+ sglPipelineRig.c:279
+  _SglLegoCtor(lego=03ff6e60)
+ E:/qwadro/afx/art/fmv/ubi.bik
+ afxClass<Texture>::ConstructObject(03f48220)
+ sglTexture.c:918
+  _SglTexCtor(tex=03f48220)
+ afxClass<Texture>::ConstructObject(03f482e0)
+ sglTexture.c:918
+  _SglTexCtor(tex=03f482e0)
+ afxClass<Texture>::ConstructObject(03f483a0)
+ sglTexture.c:918
+  _SglTexCtor(tex=03f483a0)
+ afxClass<Texture>::ConstructObject(03f48460)
+ sglTexture.c:918
+  _SglTexCtor(tex=03f48460)
+ afxClass<Texture>::ConstructObject(03f48520)
+ sglTexture.c:918
+  _SglTexCtor(tex=03f48520)
+ afxClass<Texture>::ConstructObject(03f485e0)
+ sglTexture.c:918
+  _SglTexCtor(tex=03f485e0)
+ Draw output (02b7bcb0) porportions readjusted. P 1.776903, R 1.777778 W 1.777778
+ afxDrawOutput.c:372
+  AfxRegenerateDrawOutputBuffers(dout=02b7bcb0)
+ Dismantling Texture object (#0) 03f48160...
+ Destructing instance 03f48160 of Texture class.
+ sglTexture.c:895
+  _SglTexDtor(tex=03f48160)
+ afxClass<Texture>::ConstructObject(03f48160)
+ sglTexture.c:918
+  _SglTexCtor(tex=03f48160)
+ Draw output (02b7bcb0) extent readjusted to 1280x720; 0:0% of 0x0.
+ afxClass<Draw Script>::ConstructObject(02b6b0d0)
+ sglDrawScript.c:133
+  _SglDscrCtor(dscr=02b6b0d0)
+ afxArena.c:767
+  AfxAcquireArena(aren=02b6b0e8)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="sglDrawScript.c:150!_SglDscrCtor")
+ sglTexture.c:745
+  _SglTexReinstantiateIdd(tex=03f48160)
+ afxTexture 03f48160 hardware-side data instanced.
+ afxBuffer 02af2970 hardware-side data instanced.
+ afxShader 04028798 hardware-side data instanced.
+ afxShader 0402882c hardware-side data instanced.
+ afxPipeline 02b71954 hardware-side data instanced.

@@ -20,11 +20,9 @@
 #include "qwadro/inc/base/afxClass.h"
 #include "qwadro/inc/io/afxSource.h"
 #include "qwadro/inc/sim/rendering/akxLighting.h"
-#include "qwadro/inc/draw/afxCamera.h"
 #include "qwadro/inc/cad/afxSkeleton.h"
 #include "qwadro/inc/cad/afxModel.h"
 #include "qwadro/inc/cad/afxMaterial.h"
-#include "qwadro/inc/draw/dev/afxDrawSystem.h"
 #include "qwadro/inc/sim/afxMotor.h"
 #include "qwadro/inc/sim/rendering/akxRenderer.h"
 #include "qwadro/inc/sim/afxAnimation.h"
@@ -128,7 +126,7 @@ AFX_DEFINE_STRUCT(_afxSerializedMsht)
     afxNat          surCnt;
     afxSize         firstTriOffset;
     afxSize         firstSurOffset;
-    // followed by sizeof(akxMeshSurface surfs[surCnt]);
+    // followed by sizeof(afxMeshSurface surfs[surCnt]);
     // followed by sizeof(afxNat tris[triCnt]);
 };
 
@@ -146,7 +144,7 @@ AFX_DEFINE_STRUCT(_afxSerializedVtd)
     afxNat          attrCnt;
     afxSize         firstBiasOffset;
     afxSize         firstVtxOffset;
-    // followed by sizeof(akxVertexBias biases[surCnt]);
+    // followed by sizeof(afxVertexBias biases[surCnt]);
     // followed by sizeof(akxVertex vertices[triCnt]);
 };
 
@@ -242,7 +240,7 @@ AMX afxNat              AfxCountResources(akxAsset cad, afxFcc fcc);
 
 AMX afxNat              AfxFindTextures(akxAsset cad, afxNat cnt, afxString const id[], afxRaster tex[]);
 AMX afxNat              AfxFindMaterials(akxAsset cad, afxNat cnt, afxString const id[], afxMaterial mt[]);
-AMX afxNat              AfxFindVertexDatas(akxAsset cad, afxNat cnt, afxString const id[], akxVertexData vtd[]);
+AMX afxNat              AfxFindVertexDatas(akxAsset cad, afxNat cnt, afxString const id[], afxGeometry vtd[]);
 AMX afxNat              AfxFindTopologies(akxAsset cad, afxNat cnt, afxString const id[], afxMeshTopology msht[]);
 AMX afxNat              AfxFindMeshes(akxAsset cad, afxNat cnt, afxString const id[], afxMesh msh[]);
 AMX afxNat              AfxFindSkeletons(akxAsset cad, afxNat cnt, afxString const id[], afxSkeleton skl[]);

@@ -16,7 +16,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_MESH_C
-#define _AVX_VERTEX_DATA_C
+#define _AVX_GEOMETRY_C
 #define _AVX_VERTEX_BUILDER_C
 #define _AVX_MESH_TOPOLOGY_C
 #include "../dev/AvxImplKit.h"
@@ -34,7 +34,7 @@ struct TriWeightData
 {
     afxNat jntCnt;
     afxNat8 jntIdx[MaxNumWeights * 3];
-    akxIndexedTriangle vtxIdx;
+    afxIndexedTriangle vtxIdx;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,11 +58,11 @@ _AVX void _AfxMesh113131(afxMesh msh)
         {
             TriData->vtxIdx[vtxIdx] = OriginalIndices[triIdx * 3 + vtxIdx];
             
-            akxVertexBias* bias = &msh->vtd->biases[OriginalIndices[triIdx * 3 + vtxIdx]];
+            afxVertexBias* bias = &msh->geo->biases[OriginalIndices[triIdx * 3 + vtxIdx]];
             
             for (afxNat vtxWgtIdx = 0; vtxWgtIdx < bias->weightCnt; ++vtxWgtIdx)
             {
-                akxVertexWeight* w = &msh->vtd->weights[bias->baseWeightIdx + vtxWgtIdx];
+                akxVertexWeight* w = &msh->geo->weights[bias->baseWeightIdx + vtxWgtIdx];
                 
                 if (AfxFind(TriData->jntIdx, TriData->jntIdx + TriData->jntCnt, w->pivotIdx) == TriData->jntIdx + TriData->jntCnt)
                 {
@@ -139,7 +139,7 @@ afxMesh AfxAddDomeToModel(afxModel mdl, afxReal radius, afxNat32 slices)
         }
     }
 
-    akxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
+    afxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
     //AfxFillMeshSection(msh, msecIdx, numberIndices);
     afxNat32* indices = msec->indices.pool;
     msec->indices.pop = msec->indices.cap;
@@ -178,7 +178,7 @@ afxMesh AfxAddParallelepipedToModel(afxModel mdl, afxReal width, afxReal height)
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_TAN, numberVertices, 0, xy_tangents, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_NRM, numberVertices, 0, xy_normals, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_UV, numberVertices, 0, xy_texCoords, 0);
-    akxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
+    afxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
     AfxFillMeshSection(msec, numberIndices, xy_indices);
 
     afxM4d m4d;
@@ -246,7 +246,7 @@ afxMesh AfxAddCubeToModel(afxModel mdl, afxReal scale)
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_TAN, numberVertices, 0, cubeTangents, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_NRM, numberVertices, 0, cubeNormals, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_UV, numberVertices, 0, cubeTexCoords, 0);
-    akxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "cube"));
+    afxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "cube"));
     AfxFillMeshSection(msec, numberIndices, cubeIndices);
     return msh;
 }
@@ -302,7 +302,7 @@ _AVXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id,
 
     AfxMakeString32(&mshb->id, id);
 
-    AfxAllocateArray(&mshb->biases, artCnt, sizeof(akxVertexBias), (akxVertexBias[]) { 0 });
+    AfxAllocateArray(&mshb->biases, artCnt, sizeof(afxVertexBias), (afxVertexBias[]) { 0 });
 
     mshb->vtx = AfxAllocate(vtxCnt, sizeof(mshb->vtx[0]), NIL, AfxHere());
     AfxZero2(mshb->vtx, sizeof(mshb->vtx[0]), vtxCnt);
@@ -464,8 +464,8 @@ _AVXINL afxNat AfxAddVertexBiases(afxMeshBuilder* mshb, afxNat cnt, afxNat const
     for (afxNat i = 0; i < cnt; i++)
     {
         AfxAssert(weight && 1.f >= weight[i]);
-        AfxUpdateArrayRange(&mshb->biases, baseBiasIdx + i, 1, (const akxVertexBias[]) { { .pivotIdx = jntIdx ? jntIdx[i] : 0, .weight = weight ? weight[i] : 1.f } });
-        AfxAssertRange(mshb->artCnt, ((akxVertexBias const*)AfxGetArrayUnit(&mshb->biases, baseBiasIdx + i))->pivotIdx, 1);
+        AfxUpdateArrayRange(&mshb->biases, baseBiasIdx + i, 1, (const afxVertexBias[]) { { .pivotIdx = jntIdx ? jntIdx[i] : 0, .weight = weight ? weight[i] : 1.f } });
+        AfxAssertRange(mshb->artCnt, ((afxVertexBias const*)AfxGetArrayUnit(&mshb->biases, baseBiasIdx + i))->pivotIdx, 1);
     }
     return baseBiasIdx;
 }
@@ -529,7 +529,7 @@ _AVX afxMesh AfxBuildCubeMesh(afxDrawInput din, afxReal scale, afxNat secCnt)
         { 1.f, 0.f }, { 0.f, 0.f }, { 0.f, 1.f }, { 1.f, 1.f }
     };
 
-    static akxIndexedTriangle const tris[] =
+    static afxIndexedTriangle const tris[] =
     { 
         {  0,  2,  1 }, {  0,  3,  2 }, {  4,  5,  6 },
         {  4,  6,  7 }, {  8,  9, 10 }, {  8, 10, 11 },
@@ -551,55 +551,47 @@ _AVX afxMesh AfxBuildCubeMesh(afxDrawInput din, afxReal scale, afxNat secCnt)
     {
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
-            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL,
-            .src = cubeVertices,
-            .srcStride = sizeof(cubeVertices[0])
+            .flags = afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_AFFINE,
+            .usage = "pos"
         },
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_NRM,
-            .src = cubeNormals,
-            .srcStride = sizeof(cubeNormals[0])
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "nrm"
         },
         {
             .fmt = afxVertexFormat_V2D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_UV,
-            .src = cubeTexCoords,
-            .srcStride = sizeof(cubeTexCoords[0])
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "uv"
         }
     };
 
-    akxVertexDataSpec vtdb = { 0 };
+    afxGeometrySpec vtdb = { 0 };
     vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
     vtdb.vtxCnt = AFX_COUNTOF(cubeVertices);
     
-    akxVertexData vtd;
-    AkxAcquireVertexDatas(din, attrSpecs, 1, &vtdb, &vtd);
+    afxGeometry geo;
+    AfxAcquireGeometries(din, attrSpecs, 1, &vtdb, &geo);
 
-    afxMeshTopology msht;
-    akxMeshTopologyBlueprint mshtb = { 0 };
-    mshtb.triCnt = AFX_COUNTOF(tris);
-    mshtb.src = tris;
-    mshtb.srcIdxSiz = sizeof(tris[0][0]);
-    mshtb.surfCnt = secCnt;
-    mshtb.trisForSurfMap = meshSecs;
-    AfxAssembleMeshTopology(din, 1, &mshtb, &msht);
-    
-    akxMeshBlueprint mshb = { 0 };
+    AfxUpdateGeometry(geo, 0, 0, vtdb.vtxCnt, cubeVertices, sizeof(cubeVertices[0]));
+    AfxUpdateGeometry(geo, 1, 0, vtdb.vtxCnt, cubeNormals, sizeof(cubeNormals[0]));
+    AfxUpdateGeometry(geo, 2, 0, vtdb.vtxCnt, cubeTexCoords, sizeof(cubeTexCoords[0]));
+
+    afxMeshBlueprint mshb = { 0 };
     mshb.vtxCnt = AFX_COUNTOF(cubeVertices);
-    mshb.vtd = vtd;
-    mshb.topology = msht;
+    mshb.geo = geo;
     mshb.biasCnt = 1;
-    
+    mshb.triCnt = AFX_COUNTOF(tris);
+    mshb.surfCnt = secCnt;
+    mshb.trisForSurfMap = meshSecs;
+
     afxMesh msh;
     AfxAssembleMeshes(din, 1, &mshb, &msh);
-    AfxReleaseObjects(1, &msht);
-    AfxReleaseObjects(1, &vtd);
+    AfxReleaseObjects(1, &geo);
 
-    afxV3d* pos = AkxExposeVertexData(vtd, 0, 0);
+    AfxUpdateMeshIndices(msh, 0, mshb.triCnt, tris, sizeof(tris[0][0]));
+
+    afxV3d* pos = AfxExposeGeometry(geo, 0, 0);
 
     for (afxNat i = 0; i < mshb.vtxCnt; i++)
         AfxV3dScale(pos[i], pos[i], scale);
@@ -654,32 +646,32 @@ _AVX afxMesh AfxBuildParallelepipedMesh(afxDrawInput din, afxV3d whd, afxReal sl
     {
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
-            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL,
-            .src = vertData,
-            .srcStride = sizeof(vertData[0])
+            .flags = afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_AFFINE,
+            .usage = "pos"
         },
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_NRM
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "nrm"
         },
         {
             .fmt = afxVertexFormat_V2D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_UV
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "uv"
         }
     };
 
-    akxVertexDataSpec vtdb = { 0 };
+    afxGeometrySpec vtdb = { 0 };
     vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
     vtdb.vtxCnt = numVertices;
 
-    akxVertexData vtd;
-    AkxAcquireVertexDatas(din, attrSpecs, 1, &vtdb, &vtd);
+    afxGeometry geo;
+    AfxAcquireGeometries(din, attrSpecs, 1, &vtdb, &geo);
 
-    afxV3d* nrm = AkxExposeVertexData(vtd, 1, 0);
-    afxV2d* uv = AkxExposeVertexData(vtd, 2, 0);
+    AfxUpdateGeometry(geo, 0, 0, vtdb.vtxCnt, vertData, sizeof(vertData[0]));
+
+    afxV3d* nrm = AfxExposeGeometry(geo, 1, 0);
+    afxV2d* uv = AfxExposeGeometry(geo, 2, 0);
 
     afxNat index = 0;
 
@@ -693,23 +685,17 @@ _AVX afxMesh AfxBuildParallelepipedMesh(afxDrawInput din, afxV3d whd, afxReal sl
         index++;
     }
 
-    afxMeshTopology msht;
-    akxMeshTopologyBlueprint mshtb = { 0 };
-    mshtb.triCnt = numIndices / 3;
-    mshtb.src = indicesData;
-    mshtb.srcIdxSiz = sizeof(indicesData[0]);
-    AfxAssembleMeshTopology(din, 1, &mshtb, &msht);
-
-    akxMeshBlueprint mshb = { 0 };
+    afxMeshBlueprint mshb = { 0 };
     mshb.vtxCnt = numVertices;
-    mshb.vtd = vtd;
-    mshb.topology = msht;
+    mshb.geo = geo;
     mshb.biasCnt = 1;
-
+    mshb.triCnt = numIndices / 3;
+    
     afxMesh msh;
     AfxAssembleMeshes(din, 1, &mshb, &msh);
-    AfxReleaseObjects(1, &msht);
-    AfxReleaseObjects(1, &vtd);
+    AfxReleaseObjects(1, &geo);
+
+    AfxUpdateMeshIndices(msh, 0, mshb.triCnt, indicesData, sizeof(indicesData[0]));
 
     return msh;
 }
@@ -777,7 +763,7 @@ _AVX afxMesh AfxBuildDomeMesh(afxDrawInput din, afxReal radius, afxNat slices)
     }
 
     afxNat baseTriIdx = 0;
-    akxIndexedTriangle tri;
+    afxIndexedTriangle tri;
 
     for (afxNat32 i = 0; i < numberParallels; i++)
     {
@@ -826,31 +812,31 @@ _AVX afxMesh AfxBuildDomeMesh2(afxDrawInput din, afxReal radius, afxNat stacks, 
     {
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
-            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL
+            .flags = afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_AFFINE,
+            .usage = "pos"
         },
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_NRM
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "nrm"
         },
         {
             .fmt = afxVertexFormat_V2D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_UV
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "uv"
         }
     };
 
-    akxVertexDataSpec vtdb = { 0 };
+    afxGeometrySpec vtdb = { 0 };
     vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
     vtdb.vtxCnt = numVertices;
 
-    akxVertexData vtd;
-    AkxAcquireVertexDatas(din, attrSpecs, 1, &vtdb, &vtd);
+    afxGeometry geo;
+    AfxAcquireGeometries(din, attrSpecs, 1, &vtdb, &geo);
 
-    afxV3d* pos = AkxExposeVertexData(vtd, 0, 0);
-    afxV3d* nrm = AkxExposeVertexData(vtd, 1, 0);
-    afxV2d* uv = AkxExposeVertexData(vtd, 2, 0);
+    afxV3d* pos = AfxExposeGeometry(geo, 0, 0);
+    afxV3d* nrm = AfxExposeGeometry(geo, 1, 0);
+    afxV2d* uv = AfxExposeGeometry(geo, 2, 0);
     afxNat index = 0;
 
     for (afxNat i = 0; i <= stacks; ++i)
@@ -874,20 +860,30 @@ _AVX afxMesh AfxBuildDomeMesh2(afxDrawInput din, afxReal radius, afxNat stacks, 
             index++;
         }
     }
+    
+    afxNat numIndices = stacks * slices * 2 * 3; // 2 triangles per quad, 3 indices per triangle
+    //afxNat numIndices = stacks * slices * 6; // 6 indices per quad (2 triangles, 3 indices per triangle)
 
-    afxMeshTopology msht;
+    afxMeshBlueprint mshb = { 0 };
+    mshb.vtxCnt = numVertices;
+    mshb.geo = geo;
+    mshb.biasCnt = 1;
+    mshb.triCnt = numIndices / 3;
+
+    afxMesh msh;
+    AfxAssembleMeshes(din, 1, &mshb, &msh);
+    AfxReleaseObjects(1, &geo);
+
 #if 0 // we couldn't use trip strip at the time this code was written.
     afxBool strip = FALSE;
 
     if (strip)
     {
-        afxNat numIndices = stacks * slices * 2 * 3; // 2 triangles per quad, 3 indices per triangle
-
-        akxMeshTopologyBlueprint mshtb = { 0 };
+        afxMeshTopologyBlueprint mshtb = { 0 };
         mshtb.triCnt = numIndices / 3;
         AfxAssembleMeshTopology(din, 1, &mshtb, &msht);
 
-        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+        afxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
 
         // Generate indices for triangle strips
         afxNat idx = 0;
@@ -918,13 +914,7 @@ _AVX afxMesh AfxBuildDomeMesh2(afxDrawInput din, afxReal radius, afxNat stacks, 
     else
 #endif
     {
-        afxNat numIndices = stacks * slices * 6; // 6 indices per quad (2 triangles, 3 indices per triangle)
-
-        akxMeshTopologyBlueprint mshtb = { 0 };
-        mshtb.triCnt = numIndices / 3;
-        AfxAssembleMeshTopology(din, 1, &mshtb, &msht);
-
-        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+        afxIndexedTriangle* tris = AfxGetMeshTriangles(msh, 0);
 
         // Generate indices for triangles
         afxNat idx = 0;
@@ -955,20 +945,9 @@ _AVX afxMesh AfxBuildDomeMesh2(afxDrawInput din, afxReal radius, afxNat stacks, 
 
     if (inv)
     {
-        AfxInvertMeshWinding(msht);
-        AkxInvertNormalizedVertexData(vtd, 1, 0, numVertices);
+        AfxInvertMeshWinding(msh);
+        AfxInvertNormalizedGeometry(geo, 1, 0, numVertices);
     }
-
-    akxMeshBlueprint mshb = { 0 };
-    mshb.vtxCnt = numVertices;
-    mshb.vtd = vtd;
-    mshb.topology = msht;
-    mshb.biasCnt = 1;
-
-    afxMesh msh;
-    AfxAssembleMeshes(din, 1, &mshb, &msh);
-    AfxReleaseObjects(1, &msht);
-    AfxReleaseObjects(1, &vtd);
 
     return msh;
 }
@@ -993,31 +972,31 @@ _AVX afxMesh AfxBuildSphereMesh(afxDrawInput din, afxReal radius, afxNat stacks,
     {
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
-            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL
+            .flags = afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_AFFINE,
+            .usage = "pos"
         },
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_NRM
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "nrm"
         },
         {
             .fmt = afxVertexFormat_V2D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_UV
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "uv"
         }
     };
 
-    akxVertexDataSpec vtdb = { 0 };
+    afxGeometrySpec vtdb = { 0 };
     vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
     vtdb.vtxCnt = numVertices;
 
-    akxVertexData vtd;
-    AkxAcquireVertexDatas(din, attrSpecs, 1, &vtdb, &vtd);
+    afxGeometry geo;
+    AfxAcquireGeometries(din, attrSpecs, 1, &vtdb, &geo);
 
-    afxV3d* pos = AkxExposeVertexData(vtd, 0, 0);
-    afxV3d* nrm = AkxExposeVertexData(vtd, 1, 0);
-    afxV2d* uv = AkxExposeVertexData(vtd, 2, 0);
+    afxV3d* pos = AfxExposeGeometry(geo, 0, 0);
+    afxV3d* nrm = AfxExposeGeometry(geo, 1, 0);
+    afxV2d* uv = AfxExposeGeometry(geo, 2, 0);
     afxNat index = 0;
 
     for (afxNat i = 0; i <= stacks; ++i)
@@ -1042,19 +1021,31 @@ _AVX afxMesh AfxBuildSphereMesh(afxDrawInput din, afxReal radius, afxNat stacks,
         }
     }
 
-    afxMeshTopology msht;
+    afxNat numIndices = stacks * slices * 2 * 3; // 2 triangles per quad, 3 indices per triangle
+    //afxNat numIndices = stacks * slices * 6; // 6 indices per quad (2 triangles, 3 indices per triangle)
+
+    afxMeshBlueprint mshb = { 0 };
+    mshb.vtxCnt = numVertices;
+    mshb.geo = geo;
+    mshb.biasCnt = 1;
+    mshb.triCnt = numIndices / 3;
+
+    afxMesh msh;
+    AfxAssembleMeshes(din, 1, &mshb, &msh);
+    AfxReleaseObjects(1, &geo);
+
 #if 0 // we couldn't use trip strip at the time this code was written.
     afxBool strip = FALSE;
 
     if (strip)
     {
-        afxNat numIndices = stacks * slices * 2 * 3; // 2 triangles per quad, 3 indices per triangle
 
-        akxMeshTopologyBlueprint mshtb = { 0 };
+
+        afxMeshTopologyBlueprint mshtb = { 0 };
         mshtb.triCnt = numIndices / 3;
         AfxAssembleMeshTopology(din, 1, &mshtb, &msht);
 
-        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+        afxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
 
         // Generate indices for triangle strips
         afxNat idx = 0;
@@ -1085,13 +1076,7 @@ _AVX afxMesh AfxBuildSphereMesh(afxDrawInput din, afxReal radius, afxNat stacks,
     else
 #endif
     {
-        afxNat numIndices = stacks * slices * 6; // 6 indices per quad (2 triangles, 3 indices per triangle)
-
-        akxMeshTopologyBlueprint mshtb = { 0 };
-        mshtb.triCnt = numIndices / 3;
-        AfxAssembleMeshTopology(din, 1, &mshtb, &msht);
-
-        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+        afxIndexedTriangle* tris = AfxGetMeshTriangles(msh, 0);
 
         // Generate indices for triangles
         afxNat idx = 0;
@@ -1122,20 +1107,10 @@ _AVX afxMesh AfxBuildSphereMesh(afxDrawInput din, afxReal radius, afxNat stacks,
 
     if (inv)
     {
-        AfxInvertMeshWinding(msht);
-        AkxInvertNormalizedVertexData(vtd, 1, 0, numVertices);
+        AfxInvertMeshWinding(msh);
+        AfxInvertNormalizedGeometry(geo, 1, 0, numVertices);
     }
 
-    akxMeshBlueprint mshb = { 0 };
-    mshb.vtxCnt = numVertices;
-    mshb.vtd = vtd;
-    mshb.topology = msht;
-    mshb.biasCnt = 1;
-
-    afxMesh msh;
-    AfxAssembleMeshes(din, 1, &mshb, &msh);
-    AfxReleaseObjects(1, &msht);
-    AfxReleaseObjects(1, &vtd);
 
     return msh;
 }
@@ -1171,31 +1146,31 @@ _AVX afxMesh AfxBuildCapsuleMesh(afxDrawInput din, afxReal radius, afxReal heigh
     {
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
-            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL
+            .flags = afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_AFFINE,
+            .usage = "pos"
         },
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_NRM
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "nrm"
         },
         {
             .fmt = afxVertexFormat_V2D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_UV
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "uv"
         }
     };
 
-    akxVertexDataSpec vtdb = { 0 };
+    afxGeometrySpec vtdb = { 0 };
     vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
     vtdb.vtxCnt = numVertices;
 
-    akxVertexData vtd;
-    AkxAcquireVertexDatas(din, attrSpecs, 1, &vtdb, &vtd);
+    afxGeometry geo;
+    AfxAcquireGeometries(din, attrSpecs, 1, &vtdb, &geo);
 
-    afxV3d* pos = AkxExposeVertexData(vtd, 0, 0);
-    afxV3d* nrm = AkxExposeVertexData(vtd, 1, 0);
-    afxV2d* uv = AkxExposeVertexData(vtd, 2, 0);
+    afxV3d* pos = AfxExposeGeometry(geo, 0, 0);
+    afxV3d* nrm = AfxExposeGeometry(geo, 1, 0);
+    afxV2d* uv = AfxExposeGeometry(geo, 2, 0);
     afxNat index = 0;
 
     // Generate spherical caps (top and bottom)
@@ -1252,13 +1227,18 @@ _AVX afxMesh AfxBuildCapsuleMesh(afxDrawInput din, afxReal radius, afxReal heigh
         }
     }
 
-    afxMeshTopology msht;
-    {
-        akxMeshTopologyBlueprint mshtb = { 0 };
-        mshtb.triCnt = numIndices / 3;
-        AfxAssembleMeshTopology(din, 1, &mshtb, &msht);
+    afxMeshBlueprint mshb = { 0 };
+    mshb.vtxCnt = numVertices;
+    mshb.geo = geo;
+    mshb.biasCnt = 1;
+    mshb.triCnt = numIndices / 3;
 
-        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+    afxMesh msh;
+    AfxAssembleMeshes(din, 1, &mshb, &msh);
+    AfxReleaseObjects(1, &geo);
+
+    {
+        afxIndexedTriangle* tris = AfxGetMeshTriangles(msh, 0);
 
         // Generate indices for spherical caps
         afxNat idx = 0;
@@ -1313,20 +1293,9 @@ _AVX afxMesh AfxBuildCapsuleMesh(afxDrawInput din, afxReal radius, afxReal heigh
 
     if (inv)
     {
-        AfxInvertMeshWinding(msht);
-        AkxInvertNormalizedVertexData(vtd, 1, 0, numVertices);
+        AfxInvertMeshWinding(msh);
+        AfxInvertNormalizedGeometry(geo, 1, 0, numVertices);
     }
-
-    akxMeshBlueprint mshb = { 0 };
-    mshb.vtxCnt = numVertices;
-    mshb.vtd = vtd;
-    mshb.topology = msht;
-    mshb.biasCnt = 1;
-
-    afxMesh msh;
-    AfxAssembleMeshes(din, 1, &mshb, &msh);
-    AfxReleaseObjects(1, &msht);
-    AfxReleaseObjects(1, &vtd);
 
     return msh;
 }
@@ -1357,31 +1326,31 @@ _AVX afxMesh AfxBuildPlaneMesh(afxDrawInput din, afxNat gridSizeX, afxNat gridSi
     {
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_POSITIONAL | akxVertexFlag_SPATIAL | akxVertexFlag_AFFINE,
-            .usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL | akxVertexUsage_SPATIAL
+            .flags = afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_AFFINE,
+            .usage = "pos"
         },
         {
             .fmt = afxVertexFormat_V3D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_NRM
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "nrm"
         },
         {
             .fmt = afxVertexFormat_V2D,
-            .flags = akxVertexFlag_NORMALIZED | akxVertexFlag_LINEAR,
-            .usage = akxVertexUsage_UV
+            .flags = afxVertexFlag_NORMALIZED | afxVertexFlag_LINEAR,
+            .usage = "uv"
         }
     };
 
-    akxVertexDataSpec vtdb = { 0 };
+    afxGeometrySpec vtdb = { 0 };
     vtdb.attrCnt = AFX_COUNTOF(attrSpecs);
     vtdb.vtxCnt = numVertices;
 
-    akxVertexData vtd;
-    AkxAcquireVertexDatas(din, attrSpecs, 1, &vtdb, &vtd);
+    afxGeometry geo;
+    AfxAcquireGeometries(din, attrSpecs, 1, &vtdb, &geo);
 
-    afxV3d* pos = AkxExposeVertexData(vtd, 0, 0);
-    afxV3d* nrm = AkxExposeVertexData(vtd, 1, 0);
-    afxV2d* uv = AkxExposeVertexData(vtd, 2, 0);
+    afxV3d* pos = AfxExposeGeometry(geo, 0, 0);
+    afxV3d* nrm = AfxExposeGeometry(geo, 1, 0);
+    afxV2d* uv = AfxExposeGeometry(geo, 2, 0);
 
     // Generate vertices
     afxNat index = 0;
@@ -1401,13 +1370,18 @@ _AVX afxMesh AfxBuildPlaneMesh(afxDrawInput din, afxNat gridSizeX, afxNat gridSi
         }
     }
 
-    afxMeshTopology msht;
-    {
-        akxMeshTopologyBlueprint mshtb = { 0 };
-        mshtb.triCnt = numIndices / 3;
-        AfxAssembleMeshTopology(din, 1, &mshtb, &msht);
+    afxMeshBlueprint mshb = { 0 };
+    mshb.vtxCnt = numVertices;
+    mshb.geo = geo;
+    mshb.biasCnt = 1;
+    mshb.triCnt = numIndices / 3;
 
-        akxIndexedTriangle* tris = AfxGetMeshTriangles(msht, 0);
+    afxMesh msh;
+    AfxAssembleMeshes(din, 1, &mshb, &msh);
+    AfxReleaseObjects(1, &geo);
+
+    {
+        afxIndexedTriangle* tris = AfxGetMeshTriangles(msh, 0);
 
         // Generate indices
         afxNat idx = 0;
@@ -1435,17 +1409,6 @@ _AVX afxMesh AfxBuildPlaneMesh(afxDrawInput din, afxNat gridSizeX, afxNat gridSi
             }
         }
     }
-
-    akxMeshBlueprint mshb = { 0 };
-    mshb.vtxCnt = numVertices;
-    mshb.vtd = vtd;
-    mshb.topology = msht;
-    mshb.biasCnt = 1;
-
-    afxMesh msh;
-    AfxAssembleMeshes(din, 1, &mshb, &msh);
-    AfxReleaseObjects(1, &msht);
-    AfxReleaseObjects(1, &vtd);
 
     return msh;
 }

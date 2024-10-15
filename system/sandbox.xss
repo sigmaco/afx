@@ -1,0 +1,50 @@
+require "ux" for Keyboard, Mouse
+require "draw" for Camera
+
+class Main {
+  construct new() {
+    System.print("new game")
+  }
+
+  init() {
+    System.print("init game")
+  }
+  
+  quit() {
+      System.print("quit game")
+  }
+
+  step(dt) {
+    
+    // 4 = A
+    // 7 = D
+    // 20 = Q
+    // 8 = E
+    // 26 = W
+    // 22 = S
+    var r = 0//(Keyboard.KeyIsPressed(0, 4) ? -1 : 0.0) + (Keyboard.KeyIsPressed(0, 7) ? 1 : 0.0);
+    var u = 0//(Keyboard.GetKeyPressure(0, 20) ? -1 : 0.0) + (Keyboard.GetKeyPressure(0, 8) ? 1 : 0.0);
+    var f = 0//(Keyboard.GetKeyPressure(0, 26) ? -1 : 0.0) + (Keyboard.GetKeyPressure(0, 22) ? 1 : 0.0);
+    
+    r = Keyboard.GetKeyPressure(0, 4)
+    r = r * dt
+    
+    var cam = Camera.Get(0)
+    
+    //if (r > 0)
+    
+        //System.print("%(dt)")
+        cam.ApplyMotion(r, dt * u, dt * f)
+        //System.print("update game")
+        //System.print("%(dt)")
+        //System.print("%(r)")
+    
+  }
+
+  draw(din, event) {
+    System.print("draw game")
+  }
+}
+
+var Game = Main.new()
+System.print(". game")

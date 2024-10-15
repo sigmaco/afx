@@ -31,6 +31,7 @@
 #include "qwadro/inc/base/afxChain.h"
 #include "qwadro/inc/base/afxFcc.h"
 #include "qwadro/inc/exec/afxSlock.h"
+#include "qwadro/inc/io/afxUri.h"
 
 typedef enum afxAllocationFlags
 {
@@ -126,11 +127,23 @@ AFX_OBJECT(afxMmu)
 };
 #endif//_AFX_MMU_C
 
+typedef enum afxMemoryFlag
+{
+    afxMemoryFlag_R = AFX_BIT(0),
+    afxMemoryFlag_W = AFX_BIT(1),
+    afxMemoryFlag_X = AFX_BIT(2),
+
+
+} afxMemoryFlags;
+
+AFX afxError                AfxOpenMemory(afxMemoryFlags flags, afxUri const* uri, afxHere const hint, afxMemory* memory);
+AFX afxError                AfxAcquireMemory(afxMemoryFlags flags, afxSize siz, afxUri const* uri, afxHere const hint, afxMemory* memory);
+
+AFX afxError                AfxMapMemory(afxMemory mem, afxSize offset, afxNat range, afxFlags flags, void** var);
+AFX afxError                AfxUnmapMemory(afxMemory mem, afxSize offset, afxNat range);
+
 AFX afxError                AfxMemoryEnableDebugging(afxMmu mmu, afxNat level);
 AFX afxSize                 AfxMemoryGetDefaultAlignment(afxMmu mmu);
-
-AFX afxError    AfxAcquireMemory(afxMemory* mem, afxSize siz);
-AFX afxError    AfxMapMemory(afxMemory mem, afxSize offset, afxNat range, void** var);
 
 AFX afxError    AfxAllocate2(void** var, afxSize siz, afxNat align, afxHere const hint);
 AFX afxError    AfxReallocate2(void** var, afxSize siz, afxNat align, afxHere const hint);
@@ -147,8 +160,6 @@ AFX void                    AfxStream2(afxNat cnt, void const* src, afxSize srcS
 AFX void                    AfxStream3(afxNat cnt, void const* src, afxNat srcOffset, afxSize srcStride, void* dst, afxNat dstOffset, afxNat dstStride);
 
 #define AFX_ALIGNED_SIZEOF(operand_,alignment_) ((operand_ + (alignment_ - 1)) & ~(alignment_ - 1))
-
-AFX afxError                AfxAcquireMmus(afxNat cnt, afxHere const hint, afxAllocationStrategy const strategy[], afxMmu mmus[]);
 
 
 AFX afxInt          AfxMemcmp(void const* buf1, void const* buf2, afxSize siz);

@@ -32,7 +32,7 @@ _ASX afxSoundDevice AfxGetSoundContextDevice(afxSoundContext sctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
-    afxSoundDevice sdev = AfxGetParent(sctx);
+    afxSoundDevice sdev = AfxGetProvider(sctx);
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
     return sdev;
 }
@@ -422,7 +422,7 @@ _ASX afxError _AsxSctxStdDtorCb(afxSoundContext sctx)
     if (sdev->closeCb(sdev, sctx))
         AfxThrowError();
 
-    AfxCleanUpChainedClasses(&sctx->ctx.classes);
+    AfxDeregisterChainedClasses(&sctx->ctx.classes);
 
     if (sctx->exus)
     {
@@ -558,7 +558,7 @@ _ASX afxError _AsxSctxStdCtorCb(afxSoundContext sctx, void** args, afxNat invoke
 
         if (err)
         {
-            AfxCleanUpChainedClasses(classes);
+            AfxDeregisterChainedClasses(classes);
             AfxAssert(AfxChainIsEmpty(classes));
             AfxDeallocate(sctx->exus);
         }

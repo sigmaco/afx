@@ -1,0 +1,63 @@
+Booting...
+Acquiring...  Thread Execution Unit 6960 @ afxSystem_w32.c:442Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... Executable And Linkage Module <e2coree.dll>Memory Page Size: 4096HW Threading Capacity: 2Loading... Executable And Linkage Module <e2draw.dll>Loading... Executable And Linkage Module <e2combo.dll>Loading... Executable And Linkage Module <e2sound.dll>Loading... Executable And Linkage Module <e2mmux.dll>Loading... Executable And Linkage Module <//./z/eaxzal1.dll>Loading... Installable Client Driver <//./z//eaxzal1.dll>	<//./amigal1/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/galileo.dll>Loading... Installable Client Driver <//./z//galileo.dll>	<//./combo/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/tarzgl4.dll>Loading... Installable Client Driver <//./z//tarzgl4.dll>	<//./targl3/>("")  0.0.0 	<//./targl4/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/winsh4d.dll>Loading... Installable Client Driver <//./z//winsh4d.dll>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 6960
+Loading... Executable And Linkage Module <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL32.c:1559
+GL: INVAL_PARAMzglInterop_WGL32.c:1561
+GL: INVAL_PARAMzglInterop_WGL32.c:1659
+GL: INVAL_PARAMzglInterop_WGL32.c:1688
+GL: INVAL_PARAMzglInterop_WGL32.c:1761
+GL: INVAL_PARAMzglInterop_WGL32.c:1764
+GL: INVAL_PARAMzglInterop_WGL32.c:1769
+GL: INVAL_PARAMzglInterop_WGL32.c:1774
+GL: INVAL_PARAMafxDrawBridge.c:360
+afxDrawBridge.c:360
+(dexu->queCnt)
+    InvalidzglDrawBridge.c:1691
+afxClass.c:574
+afxClass.c:581
+afxClass<DrawBrige>(04964928)afxClass.c:713
+afxClass.c:994
+afxPool.c:452
+afxDrawContext.c:701
+zglDrawContext.c:83
+afxClass.c:574
+afxClass.c:581
+afxClass<DrawContext>(0304d348)afxClass.c:713
+afxClass.c:994
+afxPool.c:452
+afxDrawContext.c:903
+Sandbox.c:333
+Sandbox.c:333
+((!1) || ((&dctx) && !(_AfxAssertObjects((1), (afxObject const*)(&dctx),(afxFcc_DCTX)))))
+    InvalidafxClass.c:898
+afxClass.c:898
+(cfg->fcc)
+    InvalidafxClass.c:921
+afxClass.c:921
+(cfg->name && cfg->name[0])
+    InvalidMounting... <//./d/>('E:\qwadro\repo\bangitk\tmp'),7Mounting... <//./a/>('E:\qwadro\repo\bangitk\art'),5afxDrawOutput.c:225
+afxDrawOutput.c:225
+(whd[0])(952) is out of range [1, 256167742]afxDrawOutput.c:226
+afxDrawOutput.c:226
+(whd[1])(506) is out of range [1, 256167797]Window_W32.c:682
+afxWindow.c:186
+afxWindow.c:295
+afxSimulation.c:401
+afxSimulation.c:401
+((!1) || ((&sim->dctx) && !(_AfxAssertObjects((1), (afxObject const*)(&sim->dctx),(afxFcc_DCTX)))))
+    InvalidafxClass.c:574
+afxClass.c:581
+afxClass<Simulation>(04a54608)afxClass.c:713
+afxClass.c:994
+afxPool.c:452
+afxSimulation.c:544
+Sandbox.c:388
+Sandbox.c:388
+((!1) || ((&sim) && !(_AfxAssertObjects((1), (afxObject const*)(&sim),(afxFcc_SIM)))))
+    InvalidakxRenderer.c:1107
+akxRenderer.c:1107
+((!1) || ((&sim) && !(_AfxAssertObjects((1), (afxObject const*)(&sim),(afxFcc_SIM)))))
+    InvalidafxSimulation.c:114
+afxSimulation.c:114
+((!1) || ((&sim) && !(_AfxAssertObjects((1), (afxObject const*)(&sim),(afxFcc_SIM)))))
+    Invalid

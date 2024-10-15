@@ -18,7 +18,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_RING_C
-#include "../dev/afxDevIoBase.h"
+#include "../dev/afxIoImplKit.h"
 
 AFX_DEFINE_STRUCT(afxRing)
 {

@@ -21,7 +21,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "../dev/afxDevIoBase.h"
+#include "../dev/afxIoImplKit.h"
 
 typedef enum
 {
@@ -613,7 +613,7 @@ _AFXINL void AfxFormatUriArg(afxUri* uri, afxChar const *fmt, va_list args)
         AfxAssert(str);
         AfxAssert(fmt);
         AfxFormatStringArg(str, fmt, args);
-        AfxTransformPathString(str, FALSE);
+        //AfxTransformPathString(str, FALSE);
         AfxReparseUri(uri);
         //AfxCanonicalizePath(uri, FALSE);
     }
@@ -637,7 +637,7 @@ _AFXINL void AfxFormatUri(afxUri* uri, afxChar const *fmt, ...)
 
 // EXTRACTION
 
-_AFXINL afxNat AfxPickUriScheme(afxUri const* uri, afxUri* scheme)
+_AFXINL afxNat AfxExcerptUriSchema(afxUri const* uri, afxUri* scheme)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
@@ -647,7 +647,7 @@ _AFXINL afxNat AfxPickUriScheme(afxUri const* uri, afxUri* scheme)
     return scheme->schem;
 }
 
-_AFXINL afxNat AfxPickUriAuthority(afxUri const* uri, afxUri* user, afxUri* host, afxUri* port)
+_AFXINL afxNat AfxExcerptUriAuthority(afxUri const* uri, afxUri* user, afxUri* host, afxUri* port)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(user || host || port);
@@ -694,7 +694,7 @@ _AFXINL afxNat AfxPickUriAuthority(afxUri const* uri, afxUri* user, afxUri* host
     return totalLen;
 }
 
-_AFXINL afxNat AfxPickUriQuery(afxUri const* uri, afxBool skipSep, afxUri* query)
+_AFXINL afxNat AfxExcerptUriQuery(afxUri const* uri, afxBool skipSep, afxUri* query)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
@@ -705,7 +705,7 @@ _AFXINL afxNat AfxPickUriQuery(afxUri const* uri, afxBool skipSep, afxUri* query
     return query->query;
 }
 
-_AFXINL afxNat AfxPickUriFragment(afxUri const* uri, afxBool skipSep, afxUri* frag)
+_AFXINL afxNat AfxExcerptUriFragment(afxUri const* uri, afxBool skipSep, afxUri* frag)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
@@ -764,6 +764,70 @@ _AFXINL afxNat AfxClipPathDirectory2(afxUri* uri, afxUri const* from, afxNat seg
     t.dir = len2;
     *uri = t;
     return len2;
+}
+
+_AFXINL afxNat AfxExcerptPathBase(afxUri const* uri, afxUri* base)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxAssert(base);
+    afxUri t;
+    AfxResetUri(&t);
+    afxNat offset = uri->schem + uri->user/* + from->pass*/ + uri->host + uri->port;
+    afxNat len = (t.root = uri->root) + (t.dir = uri->dir);
+    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
+    //AfxMakeString(&name->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
+    AfxExcerptString(&uri->str, offset, len, &t.str);
+    *base = t;
+    return len;
+}
+
+_AFXINL afxNat AfxExcerptPathSegments(afxUri const* uri, afxUri* root, afxUri* dir, afxUri* file, afxUri* ext)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    afxUri t;
+    AfxResetUri(&t);
+    afxNat offset = _URI_PATH_OFF(uri);
+    afxNat len = _URI_PATH_LEN(uri);
+
+    if (root)
+    {
+        AfxResetUri(root);
+        AfxExcerptString(&uri->str, offset, uri->root, &root->str);
+        root->root = uri->root;
+    }
+
+    if (dir)
+    {
+        if (dir == root) root->dir = uri->dir;
+        else
+        {
+            AfxResetUri(dir);
+            AfxExcerptString(&uri->str, _URI_PATH_OFF(uri) + uri->root, uri->dir, &dir->str);
+        }
+    }
+
+    if (file)
+    {
+        if (file == dir) dir->fname = uri->fname;
+        else
+        {
+            AfxResetUri(file);
+            AfxExcerptString(&uri->str, _URI_PATH_OFF(uri) + uri->root + uri->dir, uri->fname, &file->str);
+        }
+    }
+
+    if (ext)
+    {
+        if (ext == file) file->fext = uri->fext;
+        else
+        {
+            AfxResetUri(ext);
+            AfxExcerptString(&uri->str, _URI_PATH_OFF(uri) + uri->root + uri->dir + uri->fname, uri->fext, &ext->str);
+        }
+    }
+    return len;
 }
 
 _AFXINL afxNat AfxSplitPath(afxUri const* uri, afxUri* root, afxUri* path)
@@ -916,7 +980,7 @@ _AFXINL afxNat AfxGetUriQueryString(afxUri const* uri, afxBool skipSep, afxStrin
     AfxAssert(uri);
     AfxAssert(query);
     afxUri tmp;
-    AfxPickUriQuery(uri, skipSep, &tmp);
+    AfxExcerptUriQuery(uri, skipSep, &tmp);
     AfxReflectString(AfxGetUriString(&tmp), query);
     return query->len;
 }
@@ -1245,7 +1309,7 @@ _AFXINL afxBool AfxIsUriToDevice(afxUri const* uri)
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
     afxUri hostPort;
-    AfxPickUriAuthority(uri, NIL, &hostPort, &hostPort);
+    AfxExcerptUriAuthority(uri, NIL, &hostPort, &hostPort);
     AfxCompareUriString(&hostPort, &AfxString("//."));
     //AfxClipPathDirectory();
     return AfxCompareStringCil(&uri->str, uri->schem, "//.", 0) && AfxCompareStringCil(&uri->str, uri->schem + uri->host, "/", 0);
@@ -1287,7 +1351,7 @@ _AFXINL afxResult AfxUriForEachQueryKey(afxUri const* uri, afxResult(*f)(afxStri
     afxResult cnt = 0;
 
     afxUri query2;
-    AfxPickUriQuery(uri, FALSE, &query2);
+    AfxExcerptUriQuery(uri, FALSE, &query2);
     afxChar const* query = AfxGetUriData(&query2,0);
 #if 0
     afxString64 attr;
@@ -1340,7 +1404,7 @@ _AFXINL afxResult AfxUriMapQueryPairs(afxUri const* uri, afxNat base, afxNat cnt
     afxResult rslt = 0;
 
     afxUri query2;
-    AfxPickUriQuery(uri, FALSE, &query2);
+    AfxExcerptUriQuery(uri, FALSE, &query2);
     afxChar const* start = AfxGetUriData(&query2,0);
     afxChar const *chr = start;
 
@@ -1477,7 +1541,8 @@ _AFXINL void AfxTransformPathString(afxString* str, afxBool out)
 
                 if (ptr < dst)
                 {
-                    AfxThrowError(); //errno = EINVAL;
+                    //AfxThrowError(); //errno = EINVAL;
+                    ptr = dst;
                     return;
                 }
 #else
@@ -1529,8 +1594,8 @@ _AFXINL void AfxCanonicalizePath(afxUri* uri, afxBool microshit)
     
     if (AfxClipUriPath(&path, uri))
     {
-        AfxPickUriQuery(uri, FALSE, &query);
-        AfxPickUriFragment(uri, FALSE, &frag);
+        AfxExcerptUriQuery(uri, FALSE, &query);
+        AfxExcerptUriFragment(uri, FALSE, &frag);
 
         afxString* pathStr = AfxGetUriString2(&path);
 

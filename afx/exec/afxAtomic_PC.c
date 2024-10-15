@@ -19,7 +19,7 @@
 #include <Windows.h>
 #endif
 
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 #ifdef AFX_OS_WIN
 

@@ -1,0 +1,715 @@
+
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                         QWADRO Application Framework                        
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class initialized.
+ Acquiring Core Execution System...
+ Constructing instance 00000000002f8200 of Core Execution System class.
+ MemContext class initialized.
+ Point "." rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/..".
+ Point "system" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64".
+ Point "art" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../art".
+ Point "data" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../data".
+ Point "sound" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../sound".
+ Thread class initialized.
+ Module class initialized.
+ Acquiring Module...
+ Constructing instance 00000000002f40d0 of Module class.
+ Object 00000000002f40d0[mdle]^1 acquired.
+ I/O Stream class initialized.
+ Archive class initialized.
+ Resource class initialized.
+ Uniform Resource Dictionary class initialized.
+ HID class initialized.
+ Keyboard class initialized.
+ Mouse class initialized.
+ Draw System class initialized.
+ Application class initialized.
+ Acquiring Keyboard...
+ Constructing instance 00000000002fc040 of Keyboard : HID class.
+ Constructing instance 00000000002fc040 of HID class.
+ Constructing instance 00000000002fc040 of Keyboard class.
+ Object 00000000002fc040[kbd]^1 acquired.
+ Object 00000000002f8200[sys]^1 acquired.
+ Acquiring Draw System...
+ Constructing instance 00000000002c2de0 of Draw System class.
+ Draw Driver class initialized.
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ Acquiring Module...
+ Constructing instance 00000000002fdcc0 of Module class.
+ Object 00000000002fdcc0[mdle]^1 acquired.
+ Acquiring Draw Driver...
+ Constructing instance 00000000002fe960 of Draw Driver class.
+ Draw Context class initialized.
+New draw driver registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+ ad88888ba   88    ,ad8888ba,     ,ad8888ba,   88           
+d8"     "8b  88   d8"'    `"8b   d8"'    `"8b  88           
+Y8,          88  d8'            d8'            88           
+`Y8aaaaa,    88  88             88             88           
+  `"""""8b,  88  88      88888  88      88888  88
+        `8b  88  Y8,        88  Y8,        88  88           
+Y8a     a8P  88   Y8a.    .a88   Y8a.    .a88  88           
+ "Y88888P"   88    `"Y88888P"     `"Y88888P"   88888888888  
+ Object 00000000002fe960[ddrv]^1 acquired.
+ Loading draw ICDs...
+ Reacquired. (mdle)00000000002fdcc0^3
+ Acquiring Module...
+ Constructing instance 0000000000300e90 of Module class.
+ Object 0000000000300e90[mdle]^1 acquired.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterDrawDrivers not found.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterTextureCodecs not found.
+ Object 00000000002c2de0[dsys]^1 acquired.
+ Acquiring Draw Context...
+ Constructing instance 00000000003019b0 of Draw Context class.
+ Listing all available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Draw Script class initialized.
+ Draw Input class initialized.
+ Draw Engine class initialized.
+ Buffer class initialized.
+ Vertex Buffer class initialized.
+ Index Buffer class initialized.
+ Sampler class initialized.
+ Texture class initialized.
+ Surface class initialized.
+ Canvas class initialized.
+ Pipeline Module class initialized.
+ Pipeline Rig class initialized.
+ Pipeline class initialized.
+ Lego class initialized.
+ Draw Output class initialized.
+ Acquiring Draw Engine...
+ Constructing instance 0000000000308ba0 of Draw Engine class.
+ Acquiring Thread...
+ Constructing instance 000000000030a2b0 of Thread class.
+ Object 000000000030a2b0[thr]^1 acquired.
+ Acquiring Uniform Resource Dictionary...
+ Constructing instance 000000000030a840 of Uniform Resource Dictionary class.
+ Acquiring I/O Stream...
+ Constructing instance 000000000030a910 of I/O Stream class.
+ Acquired. (ios)000000000030a910^1 <-> "E:/qwadro/afx/data/pipeline/rgbaToRgbaYFlipped.pip.urd"
+ Object 000000000030a910[ios]^1 acquired.
+ Destroying I/O Stream... 000000000030a910[ios]^0
+ Destructing instance 000000000030a910 of I/O Stream class.
+ I/O Stream destroyed. 000000000030a910[ios]
+ Object 000000000030a840[urd]^1 acquired.
+ Destroying Uniform Resource Dictionary... 000000000030a840[urd]^0
+ Destructing instance 000000000030a840 of Uniform Resource Dictionary class.
+ Uniform Resource Dictionary destroyed. 000000000030a840[urd]
+ Acquiring Pipeline...
+ Constructing instance 000000000030a840 of Pipeline : Resource class.
+ Constructing instance 000000000030a840 of Resource class.
+ Constructing instance 000000000030a840 of Pipeline class.
+ Acquiring Pipeline Module...
+ Constructing instance 0000000000313da0 of Pipeline Module class.
+ Object 0000000000313da0[pipm]^1 acquired.
+ Taking connection 000000000030a9d8 connecting 0000000000313da0?pipm#1 to holder 000000000030a840?pip#1.
+ Acquiring Pipeline Module...
+ Constructing instance 0000000000313e80 of Pipeline Module class.
+ Object 0000000000313e80[pipm]^1 acquired.
+ Taking connection 000000000030aa38 connecting 0000000000313e80?pipm#1 to holder 000000000030a840?pip#1.
+ Acquiring Pipeline Rig...
+ Constructing instance 000000000030bad0 of Pipeline Rig class.
+ Object 000000000030bad0[pipa]^1 acquired.
+ Object 000000000030a840[pip]^1 acquired.
+ Acquiring Sampler...
+ Constructing instance 000000000030fbd0 of Sampler class.
+ Object 000000000030fbd0[smp]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 000000000030b3c0 of Lego class.
+ Object 000000000030b3c0[bset]^1 acquired.
+ Object 0000000000308ba0[deng]^1 acquired.
+ Acquiring Draw Engine...
+ Constructing instance 000000000030ca00 of Draw Engine class.
+ Acquiring Thread...
+ Constructing instance 000000000030b830 of Thread class.
+ Object 000000000030b830[thr]^1 acquired.
+ Acquiring Sampler...
+ Constructing instance 000000000030b960 of Sampler class.
+ Object 000000000030b960[smp]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 000000000030e570 of Lego class.
+ Object 000000000030e570[bset]^1 acquired.
+ Object 000000000030ca00[deng]^1 acquired.
+ Object 00000000003019b0[dctx]^1 acquired.
+ Acquiring Application...
+ Constructing instance 0000000000313f60 of Application class.
+ Acquiring Mouse...
+ Constructing instance 0000000000317f20 of Mouse : HID class.
+ Constructing instance 0000000000317f20 of HID class.
+ Constructing instance 0000000000317f20 of Mouse class.
+ Object 0000000000317f20[mse]^1 acquired.
+ Taking connection 0000000000314038 connecting 0000000000317f20?mse#1 to holder 0000000000313f60?app#1.
+ Acquiring MemContext...
+ Constructing instance 000000000032f100 of MemContext class.
+ Object 000000000032f100[mctx]^1 acquired.
+ Taking connection 0000000000313fe0 connecting 000000000032f100?mctx#1 to holder 0000000000313f60?app#1.
+ Acquiring Draw Input...
+ Constructing instance 000000000032f320 of Draw Input class.
+ Acquiring MemContext...
+ Constructing instance 000000000032f4f0 of MemContext class.
+ Object 000000000032f4f0[mctx]^1 acquired.
+ Object 000000000032f320[din]^1 acquired.
+ Taking connection 0000000000314570 connecting 000000000032f320?din#1 to holder 0000000000313f60?app#1.
+ Widget class initialized.
+ Simulation class initialized.
+ Object 0000000000313f60[app]^1 acquired.
+ Acquiring I/O Stream...
+ Constructing instance 0000000000331630 of I/O Stream class.
+ Acquired. (ios)0000000000331630^1 <-> "E:/qwadro/afx/art/world.tga"
+ Object 0000000000331630[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 00000000003553d0 of Texture : Resource class.
+ Constructing instance 00000000003553d0 of Resource class.
+ Constructing instance 00000000003553d0 of Texture class.
+ Object 00000000003553d0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000000331630[ios]^0
+ Destructing instance 0000000000331630 of I/O Stream class.
+ I/O Stream destroyed. 0000000000331630[ios]
+ ERR mmplayer.c:100?AfxEnterApplication
+    
+ Acquiring I/O Stream...
+ Constructing instance 0000000000331630 of I/O Stream class.
+ Acquired. (ios)0000000000331630^1 <-> "E:/qwadro/afx/system64/world2.tga"
+ Object 0000000000331630[ios]^1 acquired.
+ Destroying I/O Stream... 0000000000331630[ios]^0
+ Destructing instance 0000000000331630 of I/O Stream class.
+ I/O Stream destroyed. 0000000000331630[ios]
+ Destroying Texture... 00000000003553d0[tex]^0
+ Destructing instance 00000000003553d0 of Texture class.
+ Destructing instance 00000000003553d0 of Texture : Resource class.
+ Destructing instance 00000000003553d0 of Resource class.
+ Texture destroyed. 00000000003553d0[tex]
+ Acquiring Draw Output...
+ Constructing instance 00000000003345c0 of Draw Output class.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000002bfcbb0 of Surface : Texture class.
+ Constructing instance 0000000002bfcbb0 of Texture : Resource class.
+ Constructing instance 0000000002bfcbb0 of Resource class.
+ Constructing instance 0000000002bfcbb0 of Texture class.
+ Constructing instance 0000000002bfcbb0 of Surface class.
+ Object 0000000002bfcbb0[surf]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 00000000040820c0 of Surface : Texture class.
+ Constructing instance 00000000040820c0 of Texture : Resource class.
+ Constructing instance 00000000040820c0 of Resource class.
+ Constructing instance 00000000040820c0 of Texture class.
+ Constructing instance 00000000040820c0 of Surface class.
+ Object 00000000040820c0[surf]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000006570ca0 of Surface : Texture class.
+ Constructing instance 0000000006570ca0 of Texture : Resource class.
+ Constructing instance 0000000006570ca0 of Resource class.
+ Constructing instance 0000000006570ca0 of Texture class.
+ Constructing instance 0000000006570ca0 of Surface class.
+ Object 0000000006570ca0[surf]^1 acquired.
+ QWADRO Draw System (OpenGL/Vulkan Continuous Integration (Intel(R) HD Graphics v3.3.0))
+ Extent readjusted. (dout)00000000003345c0 -> 640, 0.333333 of 1920; 360 0.333333 of 1080
+ QWADRO Draw System (OpenGL/Vulkan Continuous Integration (Intel(R) HD Graphics v3.3.0))
+ Extent readjusted. (dout)00000000003345c0 -> 1912, 0.995833 of 1920; 1053 0.975000 of 1080
+ Object 00000000003345c0[dout]^1 acquired.
+ Acquiring Canvas...
+ Constructing instance 0000000006572850 of Canvas class.
+ Object 0000000006572850[canv]^1 acquired.
+ Acquiring Canvas...
+ Constructing instance 0000000006572970 of Canvas class.
+ Object 0000000006572970[canv]^1 acquired.
+ Acquiring Canvas...
+ Constructing instance 0000000006572a90 of Canvas class.
+ Object 0000000006572a90[canv]^1 acquired.
+ Acquiring Draw Input...
+ Constructing instance 0000000002c3b120 of Draw Input class.
+ Acquiring MemContext...
+ Constructing instance 000000000656f6d0 of MemContext class.
+ Object 000000000656f6d0[mctx]^1 acquired.
+ Object 0000000002c3b120[din]^1 acquired.
+ Acquiring Module...
+ Constructing instance 0000000000318520 of Module class.
+ Object 0000000000318520[mdle]^1 acquired.
+ ERR afxModule.c:32?AfxModuleFindSymbols
+    Symbol BinkSetMixBinVolumes not found.
+ ERR afxModule.c:32?AfxModuleFindSymbols
+    Symbol BinkSetMixBins not found.
+ Acquiring Sampler...
+ Constructing instance 00000000040b3070 of Sampler class.
+ Object 00000000040b3070[smp]^1 acquired.
+ Acquiring Uniform Resource Dictionary...
+ Constructing instance 000000000407fcd0 of Uniform Resource Dictionary class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000006ad2870 of I/O Stream class.
+ Acquired. (ios)0000000006ad2870^1 <-> "E:/qwadro/afx/data/pipeline/yv12ToRgba.pip.urd"
+ Object 0000000006ad2870[ios]^1 acquired.
+ Destroying I/O Stream... 0000000006ad2870[ios]^0
+ Destructing instance 0000000006ad2870 of I/O Stream class.
+ I/O Stream destroyed. 0000000006ad2870[ios]
+ Object 000000000407fcd0[urd]^1 acquired.
+ Destroying Uniform Resource Dictionary... 000000000407fcd0[urd]^0
+ Destructing instance 000000000407fcd0 of Uniform Resource Dictionary class.
+ Uniform Resource Dictionary destroyed. 000000000407fcd0[urd]
+ Acquiring Pipeline...
+ Constructing instance 0000000004270570 of Pipeline : Resource class.
+ Constructing instance 0000000004270570 of Resource class.
+ Constructing instance 0000000004270570 of Pipeline class.
+ Acquiring Pipeline Module...
+ Constructing instance 0000000004255f60 of Pipeline Module class.
+ Object 0000000004255f60[pipm]^1 acquired.
+ Taking connection 0000000004270708 connecting 0000000004255f60?pipm#1 to holder 0000000004270570?pip#1.
+ Acquiring Pipeline Module...
+ Constructing instance 00000000003350e0 of Pipeline Module class.
+ Object 00000000003350e0[pipm]^1 acquired.
+ Taking connection 0000000004270768 connecting 00000000003350e0?pipm#1 to holder 0000000004270570?pip#1.
+ Acquiring Pipeline Rig...
+ Constructing instance 0000000002c18300 of Pipeline Rig class.
+ Object 0000000002c18300[pipa]^1 acquired.
+ Object 0000000004270570[pip]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000002c45eb0 of Surface : Texture class.
+ Constructing instance 0000000002c45eb0 of Texture : Resource class.
+ Constructing instance 0000000002c45eb0 of Resource class.
+ Constructing instance 0000000002c45eb0 of Texture class.
+ Constructing instance 0000000002c45eb0 of Surface class.
+ Object 0000000002c45eb0[surf]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 00000000040a2b60 of Surface : Texture class.
+ Constructing instance 00000000040a2b60 of Texture : Resource class.
+ Constructing instance 00000000040a2b60 of Resource class.
+ Constructing instance 00000000040a2b60 of Texture class.
+ Constructing instance 00000000040a2b60 of Surface class.
+ Object 00000000040a2b60[surf]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 00000000040a2e10 of Surface : Texture class.
+ Constructing instance 00000000040a2e10 of Texture : Resource class.
+ Constructing instance 00000000040a2e10 of Resource class.
+ Constructing instance 00000000040a2e10 of Texture class.
+ Constructing instance 00000000040a2e10 of Surface class.
+ Object 00000000040a2e10[surf]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 000000000408cb60 of Lego class.
+ Object 000000000408cb60[bset]^1 acquired.
+ Acquiring Canvas...
+ Constructing instance 0000000006572cd0 of Canvas class.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 00000000040a30c0 of Surface : Texture class.
+ Constructing instance 00000000040a30c0 of Texture : Resource class.
+ Constructing instance 00000000040a30c0 of Resource class.
+ Constructing instance 00000000040a30c0 of Texture class.
+ Constructing instance 00000000040a30c0 of Surface class.
+ Object 00000000040a30c0[surf]^1 acquired.
+ Object 0000000006572cd0[canv]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 00000000040a3370 of Surface : Texture class.
+ Constructing instance 00000000040a3370 of Texture : Resource class.
+ Constructing instance 00000000040a3370 of Resource class.
+ Constructing instance 00000000040a3370 of Texture class.
+ Constructing instance 00000000040a3370 of Surface class.
+ Object 00000000040a3370[surf]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 00000000040a3620 of Surface : Texture class.
+ Constructing instance 00000000040a3620 of Texture : Resource class.
+ Constructing instance 00000000040a3620 of Resource class.
+ Constructing instance 00000000040a3620 of Texture class.
+ Constructing instance 00000000040a3620 of Surface class.
+ Object 00000000040a3620[surf]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 00000000040a38d0 of Surface : Texture class.
+ Constructing instance 00000000040a38d0 of Texture : Resource class.
+ Constructing instance 00000000040a38d0 of Resource class.
+ Constructing instance 00000000040a38d0 of Texture class.
+ Constructing instance 00000000040a38d0 of Surface class.
+ Object 00000000040a38d0[surf]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 0000000004232fb0 of Lego class.
+ Object 0000000004232fb0[bset]^1 acquired.
+ Acquiring Canvas...
+ Constructing instance 0000000006572bb0 of Canvas class.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 00000000040a3b80 of Surface : Texture class.
+ Constructing instance 00000000040a3b80 of Texture : Resource class.
+ Constructing instance 00000000040a3b80 of Resource class.
+ Constructing instance 00000000040a3b80 of Texture class.
+ Constructing instance 00000000040a3b80 of Surface class.
+ Object 00000000040a3b80[surf]^1 acquired.
+ Object 0000000006572bb0[canv]^1 acquired.
+ Extent readjusted. (dout)00000000003345c0 -> 1366, 0.711458 of 1920; 768 0.711111 of 1080
+ Acquiring Draw Script...
+ Constructing instance 000000000423be30 of Draw Script class.
+ Object 000000000423be30[dib]^1 acquired.
+ ADV sglTexture.c:356?SglTexImageInit
+    tex 0000000000000de1, gl/target 32856, gl/intFmt 6408, gl/fmt 5121, gl/type 6408
+ tex 0000000002bfcbb0, instanced.
+ Shader 0000000004255f60 reinstanced.
+ Shader 00000000003350e0 reinstanced.
+ Draw pipeline 0000000004270570 reinstanced.
+ Sampler 00000000040b3070 reinstanced.
+ ADV sglTexture.c:356?SglTexImageInit
+    tex 0000000000000de1, gl/target 33321, gl/intFmt 6403, gl/fmt 5121, gl/type 6403
+ tex 0000000002c45eb0, instanced.
+ ADV sglTexture.c:356?SglTexImageInit
+    tex 0000000000000de1, gl/target 33321, gl/intFmt 6403, gl/fmt 5121, gl/type 6403
+ tex 00000000040a2b60, instanced.
+ ADV sglTexture.c:356?SglTexImageInit
+    tex 0000000000000de1, gl/target 33321, gl/intFmt 6403, gl/fmt 5121, gl/type 6403
+ tex 00000000040a2e10, instanced.
+ Shader 0000000000313da0 reinstanced.
+ Shader 0000000000313e80 reinstanced.
+ Draw pipeline 000000000030a840 reinstanced.
+ Sampler 000000000030fbd0 reinstanced.
+ ADV sglTexture.c:356?SglTexImageInit
+    tex 0000000000000de1, gl/target 33321, gl/intFmt 6403, gl/fmt 5121, gl/type 6403
+ tex 00000000040a3370, instanced.
+ ADV sglTexture.c:356?SglTexImageInit
+    tex 0000000000000de1, gl/target 33321, gl/intFmt 6403, gl/fmt 5121, gl/type 6403
+ tex 00000000040a3620, instanced.
+ ADV sglTexture.c:356?SglTexImageInit
+    tex 0000000000000de1, gl/target 33321, gl/intFmt 6403, gl/fmt 5121, gl/type 6403
+ tex 00000000040a38d0, instanced.
+ ADV afxSystem.c:993?AfxSystemProcess
+    User input requested application break.
+ aaaaaaaaaaaa
+ Destroying Draw Input... 0000000002c3b120[din]^0
+ Destructing instance 0000000002c3b120 of Draw Input class.
+ Draw Input destroyed. 0000000002c3b120[din]
+ Destroying Canvas... 0000000006572cd0[canv]^0
+ Destructing instance 0000000006572cd0 of Canvas class.
+ Destroying Surface... 00000000040a30c0[surf]^0
+ Destructing instance 00000000040a30c0 of Surface class.
+ Destructing instance 00000000040a30c0 of Surface : Texture class.
+ Destructing instance 00000000040a30c0 of Texture class.
+ Destructing instance 00000000040a30c0 of Texture : Resource class.
+ Destructing instance 00000000040a30c0 of Resource class.
+ Surface destroyed. 00000000040a30c0[surf]
+ Canvas destroyed. 0000000006572cd0[canv]
+ Destroying Lego... 000000000408cb60[bset]^0
+ Destructing instance 000000000408cb60 of Lego class.
+ Lego destroyed. 000000000408cb60[bset]
+ Destroying Surface... 0000000002c45eb0[surf]^0
+ Destructing instance 0000000002c45eb0 of Surface class.
+ Destructing instance 0000000002c45eb0 of Surface : Texture class.
+ Destructing instance 0000000002c45eb0 of Texture class.
+ Destructing instance 0000000002c45eb0 of Texture : Resource class.
+ Destructing instance 0000000002c45eb0 of Resource class.
+ Surface destroyed. 0000000002c45eb0[surf]
+ Destroying Surface... 00000000040a2b60[surf]^0
+ Destructing instance 00000000040a2b60 of Surface class.
+ Destructing instance 00000000040a2b60 of Surface : Texture class.
+ Destructing instance 00000000040a2b60 of Texture class.
+ Destructing instance 00000000040a2b60 of Texture : Resource class.
+ Destructing instance 00000000040a2b60 of Resource class.
+ Surface destroyed. 00000000040a2b60[surf]
+ Destroying Surface... 00000000040a2e10[surf]^0
+ Destructing instance 00000000040a2e10 of Surface class.
+ Destructing instance 00000000040a2e10 of Surface : Texture class.
+ Destructing instance 00000000040a2e10 of Texture class.
+ Destructing instance 00000000040a2e10 of Texture : Resource class.
+ Destructing instance 00000000040a2e10 of Resource class.
+ Surface destroyed. 00000000040a2e10[surf]
+ Destroying Canvas... 0000000006572bb0[canv]^0
+ Destructing instance 0000000006572bb0 of Canvas class.
+ Destroying Surface... 00000000040a3b80[surf]^0
+ Destructing instance 00000000040a3b80 of Surface class.
+ Destructing instance 00000000040a3b80 of Surface : Texture class.
+ Destructing instance 00000000040a3b80 of Texture class.
+ Destructing instance 00000000040a3b80 of Texture : Resource class.
+ Destructing instance 00000000040a3b80 of Resource class.
+ Surface destroyed. 00000000040a3b80[surf]
+ Canvas destroyed. 0000000006572bb0[canv]
+ Destroying Lego... 0000000004232fb0[bset]^0
+ Destructing instance 0000000004232fb0 of Lego class.
+ Lego destroyed. 0000000004232fb0[bset]
+ Destroying Surface... 00000000040a3370[surf]^0
+ Destructing instance 00000000040a3370 of Surface class.
+ Destructing instance 00000000040a3370 of Surface : Texture class.
+ Destructing instance 00000000040a3370 of Texture class.
+ Destructing instance 00000000040a3370 of Texture : Resource class.
+ Destructing instance 00000000040a3370 of Resource class.
+ Surface destroyed. 00000000040a3370[surf]
+ Destroying Surface... 00000000040a3620[surf]^0
+ Destructing instance 00000000040a3620 of Surface class.
+ Destructing instance 00000000040a3620 of Surface : Texture class.
+ Destructing instance 00000000040a3620 of Texture class.
+ Destructing instance 00000000040a3620 of Texture : Resource class.
+ Destructing instance 00000000040a3620 of Resource class.
+ Surface destroyed. 00000000040a3620[surf]
+ Destroying Surface... 00000000040a38d0[surf]^0
+ Destructing instance 00000000040a38d0 of Surface class.
+ Destructing instance 00000000040a38d0 of Surface : Texture class.
+ Destructing instance 00000000040a38d0 of Texture class.
+ Destructing instance 00000000040a38d0 of Texture : Resource class.
+ Destructing instance 00000000040a38d0 of Resource class.
+ Surface destroyed. 00000000040a38d0[surf]
+ Destroying Module... 0000000000318520[mdle]^0
+ Destructing instance 0000000000318520 of Module class.
+ Module destroyed. 0000000000318520[mdle]
+ Destroying Sampler... 00000000040b3070[smp]^0
+ Destructing instance 00000000040b3070 of Sampler class.
+ Sampler destroyed. 00000000040b3070[smp]
+ Destroying Pipeline... 0000000004270570[pip]^0
+ Dropping connection 0000000004270768 from 00000000003350e0?pipm#1 to holder 0000000004270570?pip#0.
+ Dropping connection 0000000004270708 from 0000000004255f60?pipm#1 to holder 0000000004270570?pip#0.
+ Destructing instance 0000000004270570 of Pipeline class.
+ Destroying Pipeline Rig... 0000000002c18300[pipa]^0
+ Destructing instance 0000000002c18300 of Pipeline Rig class.
+ Pipeline Rig destroyed. 0000000002c18300[pipa]
+ Destructing instance 0000000004270570 of Pipeline : Resource class.
+ Destructing instance 0000000004270570 of Resource class.
+ Pipeline destroyed. 0000000004270570[pip]
+ Destroying Application... 0000000000313f60[app]^0
+ Dropping connection 0000000000314570 from 000000000032f320?din#1 to holder 0000000000313f60?app#0.
+ Dropping connection 0000000000313fe0 from 000000000032f100?mctx#1 to holder 0000000000313f60?app#0.
+ Dropping connection 0000000000314038 from 0000000000317f20?mse#1 to holder 0000000000313f60?app#0.
+ Destructing instance 0000000000313f60 of Application class.
+ Deinitializing Simulation class...
+ Simulation class deinitialized.
+ Deinitializing Widget class...
+ Widget class deinitialized.
+ Application destroyed. 0000000000313f60[app]
+ Destroying Draw System... 00000000002c2de0[dsys]^0
+ Destructing instance 00000000002c2de0 of Draw System class.
+ Deinitializing Draw Driver class...
+ Destroying Draw Driver... 00000000002fe960[ddrv]^0
+ Destructing instance 00000000002fe960 of Draw Driver class.
+ Deinitializing Draw Context class...
+ Destroying Draw Context... 00000000003019b0[dctx]^0
+ Destructing instance 00000000003019b0 of Draw Context class.
+ Deinitializing Draw Output class...
+ Destroying Draw Output... 00000000003345c0[dout]^0
+ Destructing instance 00000000003345c0 of Draw Output class.
+ Extent readjusted. (dout)00000000003345c0 -> 1366, 0.711458 of 1920; 768 0.711111 of 1080
+ Draw Output destroyed. 00000000003345c0[dout]
+ Draw Output class deinitialized.
+ Deinitializing Lego class...
+ Destroying Lego... 000000000030e570[bset]^0
+ Destructing instance 000000000030e570 of Lego class.
+ Lego destroyed. 000000000030e570[bset]
+ Destroying Lego... 000000000030b3c0[bset]^0
+ Destructing instance 000000000030b3c0 of Lego class.
+ Lego destroyed. 000000000030b3c0[bset]
+ Lego class deinitialized.
+ Deinitializing Pipeline class...
+ Destroying Pipeline... 000000000030a840[pip]^0
+ Dropping connection 000000000030aa38 from 0000000000313e80?pipm#1 to holder 000000000030a840?pip#0.
+ Dropping connection 000000000030a9d8 from 0000000000313da0?pipm#1 to holder 000000000030a840?pip#0.
+ Destructing instance 000000000030a840 of Pipeline class.
+ Destroying Pipeline Rig... 000000000030bad0[pipa]^0
+ Destructing instance 000000000030bad0 of Pipeline Rig class.
+ Pipeline Rig destroyed. 000000000030bad0[pipa]
+ Destructing instance 000000000030a840 of Pipeline : Resource class.
+ Destructing instance 000000000030a840 of Resource class.
+ Pipeline destroyed. 000000000030a840[pip]
+ Pipeline class deinitialized.
+ Deinitializing Pipeline Rig class...
+ Pipeline Rig class deinitialized.
+ Deinitializing Pipeline Module class...
+ Destroying Pipeline Module... 00000000003350e0[pipm]^0
+ Destructing instance 00000000003350e0 of Pipeline Module class.
+ Pipeline Module destroyed. 00000000003350e0[pipm]
+ Destroying Pipeline Module... 0000000004255f60[pipm]^0
+ Destructing instance 0000000004255f60 of Pipeline Module class.
+ Pipeline Module destroyed. 0000000004255f60[pipm]
+ Destroying Pipeline Module... 0000000000313e80[pipm]^0
+ Destructing instance 0000000000313e80 of Pipeline Module class.
+ Pipeline Module destroyed. 0000000000313e80[pipm]
+ Destroying Pipeline Module... 0000000000313da0[pipm]^0
+ Destructing instance 0000000000313da0 of Pipeline Module class.
+ Pipeline Module destroyed. 0000000000313da0[pipm]
+ Pipeline Module class deinitialized.
+ Deinitializing Canvas class...
+ Destroying Canvas... 0000000006572a90[canv]^0
+ Destructing instance 0000000006572a90 of Canvas class.
+ Destroying Surface... 0000000006570ca0[surf]^0
+ Destructing instance 0000000006570ca0 of Surface class.
+ Destructing instance 0000000006570ca0 of Surface : Texture class.
+ Destructing instance 0000000006570ca0 of Texture class.
+ Destructing instance 0000000006570ca0 of Texture : Resource class.
+ Destructing instance 0000000006570ca0 of Resource class.
+ Surface destroyed. 0000000006570ca0[surf]
+ Canvas destroyed. 0000000006572a90[canv]
+ Destroying Canvas... 0000000006572970[canv]^0
+ Destructing instance 0000000006572970 of Canvas class.
+ Destroying Surface... 00000000040820c0[surf]^0
+ Destructing instance 00000000040820c0 of Surface class.
+ Destructing instance 00000000040820c0 of Surface : Texture class.
+ Destructing instance 00000000040820c0 of Texture class.
+ Destructing instance 00000000040820c0 of Texture : Resource class.
+ Destructing instance 00000000040820c0 of Resource class.
+ Surface destroyed. 00000000040820c0[surf]
+ Canvas destroyed. 0000000006572970[canv]
+ Destroying Canvas... 0000000006572850[canv]^0
+ Destructing instance 0000000006572850 of Canvas class.
+ Destroying Surface... 0000000002bfcbb0[surf]^0
+ Destructing instance 0000000002bfcbb0 of Surface class.
+ Destructing instance 0000000002bfcbb0 of Surface : Texture class.
+ Destructing instance 0000000002bfcbb0 of Texture class.
+ Destructing instance 0000000002bfcbb0 of Texture : Resource class.
+ Destructing instance 0000000002bfcbb0 of Resource class.
+ Surface destroyed. 0000000002bfcbb0[surf]
+ Canvas destroyed. 0000000006572850[canv]
+ Canvas class deinitialized.
+ Deinitializing Surface class...
+ Surface class deinitialized.
+ Deinitializing Texture class...
+ Texture class deinitialized.
+ Deinitializing Sampler class...
+ Destroying Sampler... 000000000030b960[smp]^0
+ Destructing instance 000000000030b960 of Sampler class.
+ Sampler destroyed. 000000000030b960[smp]
+ Destroying Sampler... 000000000030fbd0[smp]^0
+ Destructing instance 000000000030fbd0 of Sampler class.
+ Sampler destroyed. 000000000030fbd0[smp]
+ Sampler class deinitialized.
+ Deinitializing Index Buffer class...
+ Index Buffer class deinitialized.
+ Deinitializing Vertex Buffer class...
+ Vertex Buffer class deinitialized.
+ Deinitializing Buffer class...
+ Buffer class deinitialized.
+ Deinitializing Draw Engine class...
+ Destroying Draw Engine... 000000000030ca00[deng]^0
+ Destructing instance 000000000030ca00 of Draw Engine class.
+ Destroying Thread... 000000000030b830[thr]^0
+ Destructing instance 000000000030b830 of Thread class.
+ Thread destroyed. 000000000030b830[thr]
+ Draw Engine destroyed. 000000000030ca00[deng]
+ Destroying Draw Engine... 0000000000308ba0[deng]^0
+ Destructing instance 0000000000308ba0 of Draw Engine class.
+ Destroying Thread... 000000000030a2b0[thr]^0
+ Destructing instance 000000000030a2b0 of Thread class.
+ Thread destroyed. 000000000030a2b0[thr]
+ Draw Engine destroyed. 0000000000308ba0[deng]
+ Draw Engine class deinitialized.
+ Deinitializing Draw Input class...
+ Destroying Draw Input... 000000000032f320[din]^0
+ Destructing instance 000000000032f320 of Draw Input class.
+ Draw Input destroyed. 000000000032f320[din]
+ Draw Input class deinitialized.
+ Deinitializing Draw Script class...
+ Destroying Draw Script... 000000000423be30[dib]^0
+ Destructing instance 000000000423be30 of Draw Script class.
+ Draw Script destroyed. 000000000423be30[dib]
+ Draw Script class deinitialized.
+ Draw Context destroyed. 00000000003019b0[dctx]
+ Draw Context class deinitialized.
+ Draw Driver destroyed. 00000000002fe960[ddrv]
+ Draw Driver class deinitialized.
+ Draw System destroyed. 00000000002c2de0[dsys]
+ Destroying Core Execution System... 00000000002f8200[sys]^0
+ Destructing instance 00000000002f8200 of Core Execution System class.
+ Point "sound" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../sound".
+ Point "data" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../data".
+ Point "art" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../art".
+ Point "system" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64".
+ Point "." rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/..".
+ Destroying Keyboard... 00000000002fc040[kbd]^0
+ Destructing instance 00000000002fc040 of Keyboard class.
+ Destructing instance 00000000002fc040 of Keyboard : HID class.
+ Destructing instance 00000000002fc040 of HID class.
+ Keyboard destroyed. 00000000002fc040[kbd]
+ Destroying Module... 00000000002f40d0[mdle]^0
+ Destructing instance 00000000002f40d0 of Module class.
+ Module destroyed. 00000000002f40d0[mdle]
+ Deinitializing Application class...
+ Application class deinitialized.
+ Deinitializing Draw System class...
+ Draw System class deinitialized.
+ Deinitializing Mouse class...
+ Destroying Mouse... 0000000000317f20[mse]^0
+ Destructing instance 0000000000317f20 of Mouse class.
+ Destructing instance 0000000000317f20 of Mouse : HID class.
+ Destructing instance 0000000000317f20 of HID class.
+ Mouse destroyed. 0000000000317f20[mse]
+ Mouse class deinitialized.
+ Deinitializing Keyboard class...
+ Keyboard class deinitialized.
+ Deinitializing HID class...
+ HID class deinitialized.
+ Deinitializing Uniform Resource Dictionary class...
+ Uniform Resource Dictionary class deinitialized.
+ Deinitializing Resource class...
+ Resource class deinitialized.
+ Deinitializing Archive class...
+ Archive class deinitialized.
+ Deinitializing I/O Stream class...
+ I/O Stream class deinitialized.
+ Deinitializing Module class...
+ Destroying Module... 0000000000300e90[mdle]^0
+ Destructing instance 0000000000300e90 of Module class.
+ Module destroyed. 0000000000300e90[mdle]
+ Destroying Module... 00000000002fdcc0[mdle]^0
+ Destructing instance 00000000002fdcc0 of Module class.
+ Module destroyed. 00000000002fdcc0[mdle]
+ Module class deinitialized.
+ Deinitializing Thread class...
+ Thread class deinitialized.
+ Deinitializing MemContext class...
+ Destroying MemContext... 000000000656f6d0[mctx]^0
+ Destructing instance 000000000656f6d0 of MemContext class.
+ MemContext destroyed. 000000000656f6d0[mctx]
+ Destroying MemContext... 000000000032f4f0[mctx]^0
+ Destructing instance 000000000032f4f0 of MemContext class.
+ MemContext destroyed. 000000000032f4f0[mctx]
+ Destroying MemContext... 000000000032f100[mctx]^0
+ Destructing instance 000000000032f100 of MemContext class.
+ MemContext destroyed. 000000000032f100[mctx]
+ MemContext class deinitialized.
+ Core Execution System destroyed. 00000000002f8200[sys]

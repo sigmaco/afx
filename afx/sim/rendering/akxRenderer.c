@@ -21,12 +21,12 @@
 #define _AMX_BODY_C
 #define _AMX_MATERIAL_C
 #define _AVX_VERTEX_BUFFER_C
-#define _AVX_VERTEX_DATA_C
+#define _AVX_GEOMETRY_C
 #define _AVX_MESH_TOPOLOGY_C
 #include "../../dev/AmxImplKit.h"
 #include "../../dev/AvxImplKit.h"
 
-_AMX afxError AkxCmdBindVertexDataCache(avxCmdb cmdb, afxNat slotIdx, akxVertexData vtd)
+_AMX afxError AkxCmdBindVertexDataCache(avxCmdb cmdb, afxNat slotIdx, afxGeometry vtd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
@@ -41,7 +41,7 @@ _AMX afxError AkxCmdBindVertexDataCache(avxCmdb cmdb, afxNat slotIdx, akxVertexD
     return err;
 }
 
-_AMX afxError AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd)
+_AMX afxError AkxBufferizeVertexData(afxDrawInput din, afxGeometry vtd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
@@ -49,7 +49,7 @@ _AMX afxError AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd)
     if (vtd->cache.buf)
         return err;
 
-    //afxSimulation sim = AfxGetParent(vtd);
+    //afxSimulation sim = AfxGetProvider(vtd);
     //AfxAssertObjects(1, &sim, afxFcc_SIM);
 
     afxString const positionals[] = { AfxString("pos"), AfxString("pvt"), AfxString("wgt") };
@@ -61,13 +61,13 @@ _AMX afxError AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd)
 
     for (afxNat i = 0; i < vtd->attrCnt; i++)
     {
-        akxVertexDataAttr* attr = &vtd->attrs[i];
+        avxGeometryAttr* attr = &vtd->attrs[i];
         afxVertexFormat fmt = attr->fmt;
         AfxAssert(fmt < afxVertexFormat_TOTAL);
 
-        afxString str = attr->id;
+        afxString str = attr->usage.str;
 
-        if (attr->flags & akxVertexFlag_POSITIONAL || attr->usage & akxVertexUsage_POSITIONAL)
+        if (attr->flags & afxVertexFlag_POSITIONAL)
         {
             if (0 == AfxCompareString(&str, &positionals[0]))
             {
@@ -106,8 +106,9 @@ _AMX afxError AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd)
     AfxPushLinkage(&cache->vbuf, NIL);
     cache->vin = NIL;
 
-    afxVertexBufferSpecification vboSpec = { 0 };
-    vboSpec.access = afxBufferAccess_W;
+    afxBufferInfo vboSpec = { 0 };
+    vboSpec.flags = afxBufferFlag_W;
+    vboSpec.usage = afxBufferUsage_VERTEX;
     vboSpec.bufCap = 0;
 
     for (afxNat i = 0; i < 2; i++)
@@ -119,9 +120,10 @@ _AMX afxError AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd)
         vboSpec.bufCap += cache->streams[i].range;
     }
 
-    afxVertexBuffer vbo;
-    AfxAcquireVertexBuffers(din, 1, &vboSpec, &vbo);
-    afxBuffer buf = AfxGetVertexBufferStorage(vbo);
+    afxBuffer buf;
+    afxDrawContext dctx;
+    AfxGetDrawInputContext(din, &dctx);
+    AfxAcquireBuffers(/*din*/dctx, 1, &vboSpec, &buf);
     cache->buf = buf;
 
     for (afxNat srcIdx = 0; srcIdx < 2; srcIdx++)
@@ -137,16 +139,18 @@ _AMX afxError AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd)
             {
                 if (cacheIdx[j] == srcIdx)
                 {
-                    akxVertexDataAttr* attr = &vtd->attrs[j];
-                    AfxAssert(attr->data);
+                    avxGeometryAttr* attr = &vtd->attrs[j];
+                    //AfxAssert(data);
                     afxVertexFormat fmt = attr->fmt;
                     AfxAssert(fmt < afxVertexFormat_TOTAL);
 
-                    if (attr->data)
+                    afxByte* data = AfxExposeGeometry(vtd, j, 0);
+                    
+                    if (data)
                     {
                         afxSize srcStride = AfxVertexFormatGetSize(fmt);
                         AfxAssert(srcStride);
-                        AfxStream3(vtd->vtxCnt, attr->data, 0, srcStride, dst, cachedAttrOffset[j], cache->streams[srcIdx].stride);
+                        AfxStream3(vtd->vtxCnt, data, 0, srcStride, dst, cachedAttrOffset[j], cache->streams[srcIdx].stride);
                     }
                 }
             }
@@ -156,21 +160,20 @@ _AMX afxError AkxBufferizeVertexData(afxDrawInput din, akxVertexData vtd)
     return err;
 }
 
-_AMX afxError AfxBufferizeMeshTopology(afxDrawInput din, afxMeshTopology msht)
+_AMX afxError AfxBufferizeMesh(afxDrawInput din, afxMesh msh)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &msht, afxFcc_MSHT);
-    akxVertexIndexCache* cache = &msht->cache;
+    AfxAssertObjects(1, &msh, afxFcc_MSH);
+    afxVertexIndexCache* cache = &msh->cache;
 
     if (!cache->buf)
     {
-        afxNat idxSiz = AfxDetermineMeshIndexSize(msht);
-        afxNat idxCnt = AfxCountMeshIndices(msht, 0);
+        afxNat idxSiz = AfxDetermineMeshIndexSize(msh);
+        afxNat idxCnt = AfxCountMeshIndices(msh, 0);
 
-        afxBufferSpecification spec;
-        spec.siz = idxCnt * idxSiz;
-        spec.src = NIL;
-        spec.access = afxBufferAccess_W;
+        afxBufferInfo spec;
+        spec.bufCap = idxCnt * idxSiz;
+        spec.flags = afxBufferFlag_W;
         spec.usage = afxBufferUsage_INDEX;
 
         afxDrawContext dctx;
@@ -182,7 +185,7 @@ _AMX afxError AfxBufferizeMeshTopology(afxDrawInput din, afxMeshTopology msht)
             AfxAssertObjects(1, &cache->buf, afxFcc_BUF);
 
             cache->base = 0;
-            cache->range = spec.siz;
+            cache->range = spec.bufCap;
             cache->stride = cache->range / idxCnt;
             AfxAssert(cache->stride == idxSiz);
             //cache->idxSiz = idxSiz;
@@ -201,41 +204,41 @@ _AMX afxError AfxBufferizeMeshTopology(afxDrawInput din, afxMeshTopology msht)
             afxBufferIo iop = { 0 };
             iop.dstOffset = cache->base;
             iop.dstStride = cache->stride;
-            iop.srcStride = sizeof(msht->tris[0][0]);
-            iop.rowCnt = msht->triCnt * 3;
-            AfxUpdateBuffer(cache->buf, 0, 1, &iop, msht->tris);
+            iop.srcStride = sizeof(msh->tris[0][0]);
+            iop.rowCnt = msh->triCnt * 3;
+            AfxUpdateBuffer(cache->buf, 1, &iop, msh->tris, 0);
 
 #if _AFX_DEBUG
             void* p;
-            AfxWaitForDrawBridge(dctx, 0);
+            AfxWaitForDrawBridge(dctx, 0, 0);
             AfxMapBuffer(cache->buf, cache->base, cache->range, NIL, &p);
 
-            for (afxNat i = 0; i < msht->triCnt; i++)
+            for (afxNat i = 0; i < msh->triCnt; i++)
             {
                 if (idxSiz == 1)
                 {
-                    akxIndexedTriangle8 *tris = p;
-                    AfxAssert(msht->tris[i][0] == tris[i][0]);
-                    AfxAssert(msht->tris[i][1] == tris[i][1]);
-                    AfxAssert(msht->tris[i][2] == tris[i][2]);
+                    afxIndexedTriangle8 *tris = p;
+                    AfxAssert(msh->tris[i][0] == tris[i][0]);
+                    AfxAssert(msh->tris[i][1] == tris[i][1]);
+                    AfxAssert(msh->tris[i][2] == tris[i][2]);
                 }
                 else if (idxSiz == 2)
                 {
-                    akxIndexedTriangle16 *tris = p;
-                    AfxAssert(msht->tris[i][0] == tris[i][0]);
-                    AfxAssert(msht->tris[i][1] == tris[i][1]);
-                    AfxAssert(msht->tris[i][2] == tris[i][2]);
+                    afxIndexedTriangle16 *tris = p;
+                    AfxAssert(msh->tris[i][0] == tris[i][0]);
+                    AfxAssert(msh->tris[i][1] == tris[i][1]);
+                    AfxAssert(msh->tris[i][2] == tris[i][2]);
 
-                    tris[i][0] = msht->tris[i][0];
-                    tris[i][1] = msht->tris[i][1];
-                    tris[i][2] = msht->tris[i][2];
+                    tris[i][0] = msh->tris[i][0];
+                    tris[i][1] = msh->tris[i][1];
+                    tris[i][2] = msh->tris[i][2];
                 }
                 else if (idxSiz == 4)
                 {
-                    akxIndexedTriangle *tris = p;
-                    AfxAssert(msht->tris[i][0] == tris[i][0]);
-                    AfxAssert(msht->tris[i][1] == tris[i][1]);
-                    AfxAssert(msht->tris[i][2] == tris[i][2]);
+                    afxIndexedTriangle *tris = p;
+                    AfxAssert(msh->tris[i][0] == tris[i][0]);
+                    AfxAssert(msh->tris[i][1] == tris[i][1]);
+                    AfxAssert(msh->tris[i][2] == tris[i][2]);
                 }
 
                 if (err)
@@ -251,7 +254,7 @@ _AMX afxError AfxBufferizeMeshTopology(afxDrawInput din, afxMeshTopology msht)
     return err;
 }
 
-_AMX afxError AfxRequestVertexCache(afxDrawInput din, akxVertexData vtd)
+_AMX afxError AfxRequestVertexCache(afxDrawInput din, afxGeometry vtd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
@@ -316,9 +319,9 @@ _AMX afxError AkxDrawBodies(akxRenderer scn, avxCmdb cmdb, afxNat cnt, afxBody b
             AfxAssertObjects(1, &mdl, afxFcc_MDL);
             afxSkeleton skl = AfxGetModelSkeleton(mdl);
             AfxAssertObjects(1, &skl, afxFcc_SKL);
-            afxNat jntCnt = AfxCountJoints(skl, 0);
+            afxNat jntCnt = AfxCountSkeletonJoints(skl, 0);
             afxReal sampleLodErr = 0.0;
-            afxNat sampledJntCnt = AfxCountJoints(skl, sampleLodErr);
+            afxNat sampledJntCnt = AfxCountSkeletonJoints(skl, sampleLodErr);
 
             afxM4d m, m2;
             //AfxComputeModelDisplacement(bod->mdl, m);
@@ -346,7 +349,7 @@ _AMX afxError AkxDrawBodies(akxRenderer scn, avxCmdb cmdb, afxNat cnt, afxBody b
                 {
                     AfxAssertObjects(1, &msh, afxFcc_MSH);
 
-                    akxVertexData vtd;
+                    afxGeometry vtd;
                     afxNat baseVtx, vtxCnt;
                     AfxGetMeshVertices(msh, 0, &vtd, &baseVtx, &vtxCnt);
                     AfxAssertObjects(1, &vtd, afxFcc_VTD);
@@ -374,10 +377,8 @@ _AMX afxError AkxDrawBodies(akxRenderer scn, avxCmdb cmdb, afxNat cnt, afxBody b
 #endif
 #endif
 
-                    afxMeshTopology msht = AfxGetMeshTopology(msh);
-                    AfxAssertObjects(1, &msht, afxFcc_MSHT);
-                    AfxBufferizeMeshTopology(scn->din, msht);
-                    AvxCmdBindIndexSource(cmdb, msht->cache.buf, msht->cache.base, msht->cache.range, msht->cache.stride);
+                    AfxBufferizeMesh(scn->din, msh);
+                    AvxCmdBindIndexSource(cmdb, msh->cache.buf, msh->cache.base, msh->cache.range, msh->cache.stride);
 
                     //AvxCmdSetPrimitiveTopology(cmdb, avxTopology_TRI_LIST);
                     //AvxCmdSetCullMode(cmdb, NIL);
@@ -401,11 +402,11 @@ _AMX afxError AkxDrawBodies(akxRenderer scn, avxCmdb cmdb, afxNat cnt, afxBody b
                     AvxCmdUpdateBuffer(cmdb, scn->framesets[scn->frameIdx].objConstantsBuffer, 64, msh->biasCnt * sizeof(m), scn->framesets[scn->frameIdx].objConstants.w);
                     //AvxCmdUpdateBuffer(cmdb, scn->framesets[scn->frameIdx].objConstantsBuffer, 128, sizeof(m), m);
 
-                    afxNat surfCnt = AfxCountMeshSurfaces(msht, 0);
+                    afxNat surfCnt = AfxCountMeshSurfaces(msh, 0);
 
                     for (afxNat j = 0; j < surfCnt; j++)
                     {
-                        akxMeshSurface *sec = AfxGetMeshSurface(msht, j);
+                        afxMeshSurface *sec = AfxGetMeshSurface(msh, j);
 
                         if (sec->mtlIdx)
                         {
@@ -450,9 +451,9 @@ _AMX afxError AkxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation
             AfxAssertObjects(1, &mdl, afxFcc_MDL);
             afxSkeleton skl = AfxGetModelSkeleton(mdl);
             AfxAssertObjects(1, &skl, afxFcc_SKL);
-            afxNat jntCnt = AfxCountJoints(skl, 0);
+            afxNat jntCnt = AfxCountSkeletonJoints(skl, 0);
             afxReal sampleLodErr = 0.0;
-            afxNat sampledJntCnt = AfxCountJoints(skl, sampleLodErr);
+            afxNat sampledJntCnt = AfxCountSkeletonJoints(skl, sampleLodErr);
 
             afxM4d m, m2;
             //AfxComputeModelDisplacement(bod->mdl, m);
@@ -480,7 +481,7 @@ _AMX afxError AkxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation
                 {
                     AfxAssertObjects(1, &msh, afxFcc_MSH);
 
-                    akxVertexData vtd;
+                    afxGeometry vtd;
                     afxNat baseVtx, vtxCnt;
                     AfxGetMeshVertices(msh, 0, &vtd, &baseVtx, &vtxCnt);
                     AfxAssertObjects(1, &vtd, afxFcc_VTD);
@@ -507,11 +508,8 @@ _AMX afxError AkxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation
                         AvxCmdApplyDrawTechnique(cmdb, scn->tutCamUtilDtec, 0, scn->rigidVin, NIL);
 #endif
 #endif
-
-                    afxMeshTopology msht = AfxGetMeshTopology(msh);
-                    AfxAssertObjects(1, &msht, afxFcc_MSHT);
-                    AfxBufferizeMeshTopology(scn->din, msht);
-                    AvxCmdBindIndexSource(cmdb, msht->cache.buf, msht->cache.base, msht->cache.range, msht->cache.stride);
+                    AfxBufferizeMesh(scn->din, msh);
+                    AvxCmdBindIndexSource(cmdb, msh->cache.buf, msh->cache.base, msh->cache.range, msh->cache.stride);
 
                     //AvxCmdSetPrimitiveTopology(cmdb, avxTopology_TRI_LIST);
                     //AvxCmdSetCullMode(cmdb, NIL);
@@ -535,11 +533,11 @@ _AMX afxError AkxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation
                     AvxCmdUpdateBuffer(cmdb, scn->framesets[scn->frameIdx].objConstantsBuffer, 64, msh->biasCnt * sizeof(m), scn->framesets[scn->frameIdx].objConstants.w);
                     //AvxCmdUpdateBuffer(cmdb, scn->framesets[scn->frameIdx].objConstantsBuffer, 128, sizeof(m), m);
 
-                    afxNat surfCnt = AfxCountMeshSurfaces(msht, 0);
+                    afxNat surfCnt = AfxCountMeshSurfaces(msh, 0);
 
                     for (afxNat j = 0; j < surfCnt; j++)
                     {
-                        akxMeshSurface *sec = AfxGetMeshSurface(msht, j);
+                        afxMeshSurface *sec = AfxGetMeshSurface(msh, j);
 
                         if (sec->mtlIdx)
                         {
@@ -580,7 +578,7 @@ _AMX afxError AkxCmdDrawBodies(avxCmdb cmdb, akxRenderer rnd, afxReal dt, afxNat
         //afxReal64 ct, dt;
         //AfxGetThreadTime(&ct, &dt);
         //AfxUpdateBodyMatrix(bod, dt, FALSE, bod->placement, bod->placement);
-        AfxSampleBodyAnimationsAcceleratedLOD(bod, AfxCountJoints(skl, 0), bod->placement, rnd->lp, rnd->wp, 0.0);
+        AfxSampleBodyAnimationsAcceleratedLOD(bod, AfxCountSkeletonJoints(skl, 0), bod->placement, rnd->lp, rnd->wp, 0.0);
         //AfxSampleBodyAnimationsLODSparse(bod, 0, bod->cachedBoneCnt, rnd->lp, 0.0, NIL);
         //AfxComputePoseBuffer(skl, 0, bod->cachedBoneCnt, rnd->lp, m, rnd->wp);
         //AfxComputeRestPoseBuffer(skl, 0, bod->cachedBoneCnt, m, rnd->wp);
@@ -602,18 +600,18 @@ _AMX afxError AkxCmdDrawBodies(avxCmdb cmdb, akxRenderer rnd, afxReal dt, afxNat
                 AvxCmdApplyDrawTechnique(cmdb, rnd->testDtec, 0, rnd->testVin, NIL);
 
                 afxNat baseVtx = 0, vtxCnt = 0;
-                akxVertexData vtd;
+                afxGeometry vtd;
                 AfxGetMeshVertices(msh, 0, &vtd, &baseVtx, &vtxCnt);
 
-                vtxCnt = AkxCountVertices(vtd);
+                vtxCnt = AfxCountVertices(vtd);
 
                 AkxBufferizeVertexData(rnd->din, vtd);
                 AkxCmdBindVertexDataCache(cmdb, 0, vtd);
 
-                afxMeshTopology msht = AfxGetMeshTopology(msh);
+                avxTopology top = AfxGetMeshTopology(msh);
 
-                AfxBufferizeMeshTopology(rnd->din, msht);
-                AvxCmdBindIndexSource(cmdb, msht->cache.buf, msht->cache.base, msht->cache.range, msht->cache.stride);
+                AfxBufferizeMesh(rnd->din, msh);
+                AvxCmdBindIndexSource(cmdb, msh->cache.buf, msh->cache.base, msh->cache.range, msh->cache.stride);
                 
                 //AvxCmdSetPrimitiveTopology(cmdb, avxTopology_TRI_LIST);
                 //AvxCmdSetCullMode(cmdb, NIL);
@@ -633,11 +631,11 @@ _AMX afxError AkxCmdDrawBodies(avxCmdb cmdb, akxRenderer rnd, afxReal dt, afxNat
                 AvxCmdUpdateBuffer(cmdb, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 64, sizeof(m), m);
                 //AvxCmdUpdateBuffer(cmdb, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 128, sizeof(m), m);
 
-                afxNat surfCnt = AfxCountMeshSurfaces(msht, 0);
+                afxNat surfCnt = AfxCountMeshSurfaces(msh, 0);
 
                 for (afxNat j = 0; j < surfCnt; j++)
                 {
-                    akxMeshSurface *sec = AfxGetMeshSurface(msht, j);
+                    afxMeshSurface *sec = AfxGetMeshSurface(msh, j);
                     //AfxAssert(msh->topology->primType == avxTopology_TRI_LIST);
 
                     akxMaterialConstants mat;
@@ -722,8 +720,6 @@ _AMX afxError AkxCmdEndSceneRendering(avxCmdb cmdb, akxRenderer rnd)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
 
-    AvxCmdEndDrawScope(cmdb);
-
     return err;
 }
 
@@ -755,44 +751,6 @@ _AMX afxError AkxCmdBeginSceneRendering(avxCmdb cmdb, akxRenderer rnd, afxCamera
     {
         rnd->drawArea = (afxRect) { 0 };
     }
-
-    avxDrawTarget rdt = { 0 };
-    //rdt.tex = surf;
-    rdt.clearValue.color[0] = 0.3f;
-    rdt.clearValue.color[1] = 0.1f;
-    rdt.clearValue.color[2] = 0.3f;
-    rdt.clearValue.color[3] = 1;
-    rdt.loadOp = avxLoadOp_CLEAR;
-    rdt.storeOp = avxStoreOp_STORE;
-
-    avxDrawTarget ddt = { 0 };
-    //ddt.tex = rnd->framesets[frameIdx].depthSurf;
-    ddt.clearValue.depth = 1.0;
-    ddt.clearValue.stencil = 0;
-    ddt.loadOp = avxLoadOp_CLEAR;
-    ddt.storeOp = avxStoreOp_STORE;
-
-    //avxCanvas canv = rnd->canv;
-    avxSynthesisConfig dps = { 0 };
-    dps.canv = canv;
-    //dps.area = rnd->drawArea;
-    dps.area.extent[0] = rnd->drawArea.extent[0];
-    dps.area.extent[1] = rnd->drawArea.extent[1];
-    dps.layerCnt = 1;
-    dps.rasterCnt = 1;
-    dps.rasters = &rdt;
-    dps.depth = &ddt;
-    dps.stencil = NIL;
-    AvxCmdBeginDrawScope(cmdb, &dps);
-
-    //afxWhd extent;
-    //AfxGetCanvasExtent(canv, extent);
-    afxViewport vp = { 0 };
-    vp.extent[0] = rnd->drawArea.extent[0];
-    vp.extent[1] = rnd->drawArea.extent[1];
-    vp.depth[0] = (afxReal)0;
-    vp.depth[1] = (afxReal)1;
-    AvxCmdAdjustViewports(cmdb, 0, 1, &vp);
 
     akxViewConstants *viewConstants = &rnd->framesets[frameIdx].viewConstants;
 
@@ -882,7 +840,7 @@ _AMX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxNat invokeNo)
 
     akxRendererConfig const* config = ((akxRendererConfig const*)args[0]) + invokeNo;
 
-    afxSimulation sim = AfxGetParent(rnd);
+    afxSimulation sim = AfxGetProvider(rnd);
     rnd->cachedSim = sim;
     afxDrawContext dctx = sim->dctx;
     rnd->cachedDctx = dctx;
@@ -936,20 +894,30 @@ _AMX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxNat invokeNo)
             1, 2, 3    // second triangle
         };
 
-        afxBufferSpecification vboSpec = { 0 };
-        vboSpec.siz = sizeof(testVertices);
-        vboSpec.src = testVertices;
-        vboSpec.access = afxBufferAccess_W;
+        afxBufferInfo vboSpec = { 0 };
+        vboSpec.bufCap = sizeof(testVertices);
+        vboSpec.flags = afxBufferFlag_W;
         vboSpec.usage = afxBufferUsage_VERTEX;
         AfxAcquireBuffers(dctx, 1, &vboSpec, &rnd->testVbo);
         
-        afxBufferSpecification iboSpec = { 0 };
-        iboSpec.siz = sizeof(testIndices);
-        iboSpec.src = testIndices;
-        iboSpec.access = afxBufferAccess_W;
+        afxBufferIo vboIop = { 0 };
+        vboIop.dstStride = 1;
+        vboIop.srcStride = 1;
+        vboIop.rowCnt = vboSpec.bufCap;
+        AfxUpdateBuffer(rnd->testVbo, 1, &vboIop, testVertices, 0);
+
+        afxBufferInfo iboSpec = { 0 };
+        iboSpec.bufCap = sizeof(testIndices);
+        iboSpec.flags = afxBufferFlag_W;
         iboSpec.usage = afxBufferUsage_INDEX;
         AfxAcquireBuffers(dctx, 1, &iboSpec, &rnd->testIbo);
-        
+
+        afxBufferIo iboIop = { 0 };
+        iboIop.dstStride = 1;
+        iboIop.srcStride = 1;
+        iboIop.rowCnt = iboSpec.bufCap;
+        AfxUpdateBuffer(rnd->testIbo, 1, &iboIop, testIndices, 0);
+
         avxVertexInputStream const vinStreams[] =
         {
             {
@@ -1073,19 +1041,19 @@ _AMX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxNat invokeNo)
 
 
     {
-        afxBufferSpecification bufSpec[] =
+        afxBufferInfo bufSpec[] =
         {
-            { .siz = sizeof(akxViewConstants), .access = afxBufferAccess_W, .usage = afxBufferUsage_UNIFORM, .src = NIL },
-            { .siz = sizeof(akxShaderConstants), .access = afxBufferAccess_W, .usage = afxBufferUsage_UNIFORM, .src = NIL },
-            { .siz = sizeof(akxMaterialConstants), .access = afxBufferAccess_W, .usage = afxBufferUsage_UNIFORM, .src = NIL },
-            { .siz = sizeof(akxInstanceConstants), .access = afxBufferAccess_W, .usage = afxBufferUsage_UNIFORM, .src = NIL }
+            { .bufCap = sizeof(akxViewConstants), .flags = afxBufferFlag_W, .usage = afxBufferUsage_UNIFORM },
+            { .bufCap = sizeof(akxShaderConstants), .flags = afxBufferFlag_W, .usage = afxBufferUsage_UNIFORM },
+            { .bufCap = sizeof(akxMaterialConstants), .flags = afxBufferFlag_W, .usage = afxBufferUsage_UNIFORM },
+            { .bufCap = sizeof(akxInstanceConstants), .flags = afxBufferFlag_W, .usage = afxBufferUsage_UNIFORM }
         };
 #if 0
         afxRasterInfo texiDepthSurfB = { 0 };
         texiDepthSurfB.e
         afxTextureBlueprint depthSurfB;
-        AfxAcquireTextureBlueprint(&depthSurfB, (afxWhd) {1024, 1024, 1 }, afxPixelFormat_D24, afxRasterUsage_DRAW);
-        AfxTextureBlueprintAddImage(&depthSurfB, afxPixelFormat_D24, (afxWhd) { 1, 1, 1 }, NIL, 0);
+        AfxAcquireTextureBlueprint(&depthSurfB, (afxWhd) {1024, 1024, 1 }, avxFormat_D24, afxRasterUsage_DRAW);
+        AfxTextureBlueprintAddImage(&depthSurfB, avxFormat_D24, (afxWhd) { 1, 1, 1 }, NIL, 0);
 #endif
 
         for (afxNat i = 0; i < rnd->frameCnt; i++)

@@ -21,33 +21,39 @@
 
 #include "qwadro/inc/math/afxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
-#include "qwadro/inc/draw/afxRaster.h"
-#include "qwadro/inc/draw/afxBuffer.h"
+#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/afxBuffer.h"
 #include "qwadro/inc/draw/pipe/avxSampler.h"
 #include "qwadro/inc/draw/io/afxTypography.h"
 #include "qwadro/inc/draw/pipe/avxQueryPool.h"
 
 typedef enum avxStoreOp
-/// An enumerated value indicating the load operation to perform on target surface prior to executing the render pass
+/// An enumerated value indicating the load operation to perform on target surface prior to executing the draw scope.
 {
-    /// Stores the resulting value of the render pass for this attachment.
+    /// Stores the resulting value of the draw scope for this surface.
+    /// The contents generated during the draw scope and within the draw area are written to memory.
     avxStoreOp_STORE,
 
-    /// Discards the resulting value of the render pass for this attachment.
+    /// Discards the resulting value of the draw scope for this surface.
+    /// The contents within the draw area are not accessed by the store operation as long as no values are written to the surface during the draw scope.
     avxStoreOp_DISCARD,
 
+    /// The contents within the draw area are not needed after rendering, and may be discarded; the contents of the surface will be undefined inside the draw scope.
     avxStoreOp_DONT_CARE,
 } avxStoreOp;
 
 typedef enum avxLoadOp
-/// An enumerated value indicating the store operation to perform on target surface after executing the render pass
+/// An enumerated value indicating the store operation to perform on target surface after executing the draw scope.
 {
-    /// Loads the clearValue for this attachment into the render pass.
-    avxLoadOp_CLEAR,
-
-    /// Loads the existing value for this attachment into the render pass.
+    /// Loads the existing value for this surface into the draw scope.
+    /// The previous contents of the raster within the draw area will be preserved as the initial values.
     avxLoadOp_LOAD,
 
+    /// Loads the clearValue for this surface into the render pass.
+    /// The contents within the draw area will be cleared to a uniform value, which is specified when a draw scope is begun
+    avxLoadOp_CLEAR,
+
+    /// The previous contents within the area need not be preserved; the contents of the surface will be undefined inside the draw area.
     avxLoadOp_DONT_CARE
 } avxLoadOp;
 
@@ -65,15 +71,16 @@ AFX_DEFINE_STRUCT(avxDrawTarget)
     avxClearValue       clearValue; /// Indicates the value to clear view to prior to executing the render pass.
 };
 
-AFX_DEFINE_STRUCT(avxSynthesisConfig)
+AFX_DEFINE_STRUCT(avxDrawScope)
 {
     avxCanvas           canv;
-    afxRect             area;
-    afxNat              layerCnt;
-    afxNat              rasterCnt;
-    avxDrawTarget const*rasters;
-    avxDrawTarget const*depth;
-    avxDrawTarget const*stencil;
+    afxRect             area; ///  the area that is affected by the draw scope.
+    afxNat              baseLayer; /// the index of the first attachment layer that will be drawn.
+    afxNat              layerCnt; /// the number of layers drawn to in each attachment when viewMask is 0.
+    afxNat              rasterCnt; /// the number of elements in rasters.
+    avxDrawTarget const*rasters; /// structures describing any color attachments used.
+    avxDrawTarget const*depth; /// structure describing a depth attachment.
+    avxDrawTarget const*stencil; /// structure describing a stencil attachment.
 };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -109,22 +116,32 @@ AVX afxCmdId                AvxCmdAdjustCurtains
 
 /// If flags includes resuming then this render pass is resumed from a render canvas instance that has been suspended earlier in submission order.
 
-AVX afxCmdId                AvxCmdBeginDrawScope
+AVX afxCmdId                AvxCmdCommenceDrawScope
 (
     avxCmdb                 cmdb,
-    avxSynthesisConfig const*cfg /// is a pointer to a avxSynthesisConfig structure specifying details of the render pass instance to begin.
+    avxDrawScope const*     cfg /// structure specifying details of the draw scope instance to begin.
+);
+
+AVX afxCmdId                AvxSuspendDrawPass
+(
+    avxCmdb                 cmdb
+);
+
+AVX afxCmdId                AvxResumeDrawPass
+(
+    avxCmdb                 cmdb
 );
 
 /// End a dynamic render canvas instance.
 /// If the value of flags used to begin this render pass instance included suspending, then this render canvas is suspended and will be resumed later in submission order.
 
-AVX afxCmdId                AvxCmdEndDrawScope
+AVX afxCmdId                AvxCmdConcludeDrawScope
 (
     avxCmdb                 cmdb
 );
 
 /// Transition to the next pass of a render canvas.
-/// The pass index for a render canvas begins at zero when AvxCmdBeginDrawScope is recorded, and increments each time AvxCmdNextPass is recorded.
+/// The pass index for a render canvas begins at zero when AvxCmdCommenceDrawScope is recorded, and increments each time AvxCmdNextPass is recorded.
 
 /// After transitioning to the next pass, the application can record the commands for that pass.
 

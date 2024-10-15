@@ -29,7 +29,6 @@
 //#include "qwadro/inc/exec/afxModule.h"
 
 // core
-#include "qwadro/inc/exec/afxDriver.h"
 #include "qwadro/inc/exec/afxDevice.h"
 #include "qwadro/inc/exec/afxService.h"
 #include "qwadro/inc/exec/afxConsole.h"
@@ -37,6 +36,7 @@
 #include "qwadro/inc/base/afxVersion.h"
 // io
 #include "qwadro/inc/io/afxData.h"
+#include "qwadro/inc/io/afxIoBridge.h"
 #include "qwadro/inc/io/afxSource.h"
 #include "qwadro/inc/io/afxStorage.h"
 // math
@@ -75,6 +75,7 @@ AFX_CALLBACK(void*, afxReallocatorFn)(void*, afxSize align, afxSize siz, afxChar
 
 AFX_DEFINE_STRUCT(afxSystemConfig)
 {
+    afxIoBridgeConfig       mainIoBridge;
     afxSize                 maxMemUsage;
     afxNat                  memPageSiz;
     afxNat                  allocGranularity;
@@ -144,14 +145,15 @@ AFX afxNat32            AfxGetPrimeTid(void);
 
 AFX afxBool             AfxEmitEvent(afxObject receiver, afxEvent* ev);
 
-AFX afxClass*         AfxGetStorageClass(void);
-AFX afxClass*         AfxGetMmuClass(void);
-AFX afxClass*         AfxGetModuleClass(void);
-AFX afxClass const*     AfxGetDriverClass(void);
-AFX afxClass*         AfxGetServiceClass(void);
-AFX afxClass*         AfxGetStringBaseClass(void);
-AFX afxClass*         AfxGetThreadClass(void);
+AFX afxClass const*     AfxGetStreamClass(void);
+AFX afxClass*           AfxGetStorageClass(void);
+AFX afxClass*           AfxGetMmuClass(void);
+AFX afxClass*           AfxGetModuleClass(void);
+AFX afxClass*           AfxGetServiceClass(void);
+AFX afxClass*           AfxGetStringBaseClass(void);
+AFX afxClass*           AfxGetThreadClass(void);
 AFX afxClass const*     AfxGetDeviceClass(void);
+AFX afxClass const*     AfxGetIoBridgeClass(void);
 
 
 AFX afxNat              AfxCountDevices(afxDeviceType type);

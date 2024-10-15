@@ -116,7 +116,7 @@ _ASX afxError _AsxSdevDtorCb(afxSoundDevice sdev)
         AfxThrowError();
 
     AfxAssert(!sdev->idd);
-    AfxCleanUpChainedClasses(&sdev->dev.classes);
+    AfxDeregisterChainedClasses(&sdev->dev.classes);
 
     AfxCleanUpMutex(&sdev->relinkedCndMtx);
     AfxCleanUpCondition(&sdev->relinkedCnd);
@@ -138,8 +138,8 @@ _ASX afxError _AsxSdevCtorCb(afxSoundDevice sdev, void** args, afxNat invokeNo)
 {
     afxError err = AFX_ERR_NONE;
 
-    afxDriver icd = args[0];
-    AfxAssertObjects(1, &icd, afxFcc_ICD);
+    afxModule icd = args[0];
+    AfxAssertObjects(1, &icd, afxFcc_MDLE);
     afxSoundDeviceInfo const* info = ((afxSoundDeviceInfo const *)args[1]) + invokeNo;
     AfxAssert(info);
 
@@ -209,7 +209,7 @@ _ASX afxError _AsxSdevCtorCb(afxSoundDevice sdev, void** args, afxNat invokeNo)
                 {
                     if (err)
                     {
-                        AfxCleanUpChainedClasses(&sdev->dev.classes);
+                        AfxDeregisterChainedClasses(&sdev->dev.classes);
                     }
                 }
             }
@@ -269,10 +269,10 @@ _ASX afxBool AfxGetSoundDevice(afxNat sdevId, afxSoundDevice* device)
     return !!sdev;
 }
 
-_ASX afxError _AsxRegisterSoundDevices(afxDriver icd, afxNat cnt, afxSoundDeviceInfo const infos[], afxSoundDevice devices[])
+_ASX afxError _AsxRegisterSoundDevices(afxModule icd, afxNat cnt, afxSoundDeviceInfo const infos[], afxSoundDevice devices[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &icd, afxFcc_ICD);
+    AfxAssertObjects(1, &icd, afxFcc_MDLE);
     AfxAssert(devices);
 
     afxClass* cls = (afxClass*)AfxGetSoundDeviceClass();
@@ -283,10 +283,10 @@ _ASX afxError _AsxRegisterSoundDevices(afxDriver icd, afxNat cnt, afxSoundDevice
     if (cls->pool.totalUsedCnt >= cls->maxInstCnt) AfxThrowError();
     else
     {
-        if (_AfxAllocateClassInstances(cls, cnt, (afxObject*)devices)) AfxThrowError();
+        if (_AfxAllocateObjects(cls, cnt, (afxObject*)devices)) AfxThrowError();
         else
         {
-            if (_AfxConstructClassInstances(cls, cnt, (afxObject*)devices, (void*[]) { icd, (void*)infos }))
+            if (_AfxConstructObjects(cls, cnt, (afxObject*)devices, (void*[]) { icd, (void*)infos }))
             {
                 AfxThrowError();
             }
@@ -297,7 +297,7 @@ _ASX afxError _AsxRegisterSoundDevices(afxDriver icd, afxNat cnt, afxSoundDevice
             }
             else
             {
-                _AfxDeallocateClassInstances(cls, cnt, (afxObject*)devices);
+                _AfxDeallocateObjects(cls, cnt, (afxObject*)devices);
             }
         }
     }

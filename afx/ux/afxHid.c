@@ -69,7 +69,7 @@ _AUX afxError _AuxHidDtorCb(afxHid hid)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &hid, afxFcc_HID);
 
-    AfxCleanUpChainedClasses(&hid->dev.classes);
+    AfxDeregisterChainedClasses(&hid->dev.classes);
 
     return err;
 }
@@ -79,8 +79,8 @@ _AUX afxResult _AuxHidCtorCb(afxHid hid, void** args, afxNat invokeNo)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &hid, afxFcc_HID);
 
-    afxDriver icd = args[0];
-    AfxAssertObjects(1, &icd, afxFcc_ICD);
+    afxModule icd = args[0];
+    AfxAssertObjects(1, &icd, afxFcc_MDLE);
     afxHidInfo const* info = (afxHidInfo const*)(args[1]) + invokeNo;
 
     if (_AfxDevBaseImplementation.ctor(&hid->dev, (void*[]) { icd, (void*)&info->dev }, 0)) AfxThrowError();
@@ -160,10 +160,10 @@ _AUX afxBool AfxGetHid(afxNat port, afxHid* hid)
     return found;
 }
 
-_AUX afxError _AuxRegisterHids(afxDriver icd, afxNat cnt, afxHidInfo const infos[], afxHid hids[])
+_AUX afxError _AuxRegisterHids(afxModule icd, afxNat cnt, afxHidInfo const infos[], afxHid hids[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &icd, afxFcc_ICD);
+    AfxAssertObjects(1, &icd, afxFcc_MDLE);
     AfxAssert(hids);
 
     afxClass* cls = (afxClass*)AfxGetHidClass();
@@ -174,10 +174,10 @@ _AUX afxError _AuxRegisterHids(afxDriver icd, afxNat cnt, afxHidInfo const infos
     if (cls->pool.totalUsedCnt >= cls->maxInstCnt) AfxThrowError();
     else
     {
-        if (_AfxAllocateClassInstances(cls, cnt, (afxObject*)hids)) AfxThrowError();
+        if (_AfxAllocateObjects(cls, cnt, (afxObject*)hids)) AfxThrowError();
         else
         {
-            if (_AfxConstructClassInstances(cls, cnt, (afxObject*)hids, (void*[]) { icd, (void*)infos }))
+            if (_AfxConstructObjects(cls, cnt, (afxObject*)hids, (void*[]) { icd, (void*)infos }))
             {
                 AfxThrowError();
             }
@@ -188,7 +188,7 @@ _AUX afxError _AuxRegisterHids(afxDriver icd, afxNat cnt, afxHidInfo const infos
             }
             else
             {
-                _AfxDeallocateClassInstances(cls, cnt, (afxObject*)hids);
+                _AfxDeallocateObjects(cls, cnt, (afxObject*)hids);
             }
         }
     }

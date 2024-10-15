@@ -128,7 +128,7 @@ _AVX afxError _AvxPipStdDtor(avxPipeline pip)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
 
-    afxDrawContext dctx = AfxGetParent(pip);
+    afxDrawContext dctx = AfxGetProvider(pip);
 
     if (pip->stages)
     {

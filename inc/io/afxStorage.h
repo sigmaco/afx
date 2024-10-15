@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+// This code is part of SIGMA Future Storage.
 
 // A mount point is a directory on a file system that is logically linked to another file system.
 // Mount points are used to make the data on a different physical storage drive easily available in a folder structure.
@@ -98,10 +98,8 @@ AFX_DEFINE_STRUCT(afxFileInfo)
     After the mount command has finished, the directory that is specified becomes the root directory of the newly mounted file system.
 */
 
-AFX afxBool             AfxGetStorage(afxNat diskNo, afxStorage* disk);
-
-AFX afxStorage          AfxFindStorage(afxChar diskId);
-AFX afxStorage          AfxFindStorage2(afxUri const* dev);
+AFX afxBool             AfxGetStorage(afxChar diskId, afxStorage* disk);
+AFX afxBool             AfxFindStorage(afxUri const* uri, afxStorage* disk);
 
 AFX afxError            AfxMountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFileFlags ioFlags);
 AFX afxError            AfxDismountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFileFlags ioFlags);
@@ -115,9 +113,9 @@ AFX afxError            AfxResolveUris(afxFileFlags const permissions, afxNat cn
 
 AFX afxError            AfxResolveUri2(afxFileFlags permissions, afxUri const *in, afxUri *out, afxNat* diskId);
 
-AFX afxError            AfxFindFiles(afxUri const* pattern, afxBool(*callback)(afxUri const*, void*), void* udd);
+AFX afxNat              AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*proc)(void* udd, afxUri const* path, afxUri const* osPath), void* udd);
+AFX afxError            AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags, afxBool(*proc)(void* udd, afxUri const* uri), void* udd);
 
-AFX afxClass const*     AfxGetStreamClass(afxStorage fsys);
 AFX afxClass const*     AfxGetFileClass(afxStorage fsys);
 AFX afxClass const*     AfxGetArchiveClass(afxStorage fsys);
 

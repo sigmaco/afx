@@ -1,0 +1,29 @@
+[Qwadro.Icd]
+DriverDate=2024/05/10
+DriverVer=0.1.1514
+Vendor=SIGMA Technology Group
+Href=https://sigmaco.org
+FeatureScore=1
+Service=audio
+DllFile=eaxzal1.dll
+Devices=Icd.Devices
+
+[Icd.Devices]
+=Device.Amiga
+
+[Device.Amiga]
+Class=SOUND
+Description=Accoustics Immersion Accelerator
+PortCnt=1
+Ports=Amiga.Ports
+; device internal
+AlVerMajor=1
+AlVerMinor=1
+DebugContext=1
+DebugOutput=1
+DebugOutputSync=1
+HwAccelerationPrefered=1
+HwAccelerationRequired=1
+EchoSymbols=1
+EchoSymbolsWsi=1
+OpenalDll=openal32.dll

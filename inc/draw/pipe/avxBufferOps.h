@@ -19,7 +19,7 @@
 #ifndef AVX_BUFFER_OPS_H
 #define AVX_BUFFER_OPS_H
 
-#include "qwadro/inc/draw/afxBuffer.h"
+#include "qwadro/inc/draw/io/afxBuffer.h"
 
   //////////////////////////////////////////////////////////////////////////////
  //// COMMANDS                                                             ////

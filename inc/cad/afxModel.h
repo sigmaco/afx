@@ -61,7 +61,7 @@ AMX void                AfxComputeRiggedMeshMatrices(afxModel mdl, afxNat rigIdx
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError            AfxAssembleModel(afxSimulation sim, afxNat cnt, akxModelBlueprint const blueprints[], afxModel models[]);
+AMX afxError            AfxAssembleModels(afxSimulation sim, afxNat cnt, akxModelBlueprint const blueprints[], afxModel models[]);
 
 AMX afxNat              AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel models[]);
 

@@ -24,8 +24,12 @@ _AVX afxError AfxLoadGlScript(afxUri const* path, afxArray* fCode, afxArray* fIn
     afxError err = NIL;
 
     afxStream file;
+    afxStreamInfo iobi = { 0 };
+    iobi.usage = afxStreamUsage_FILE;
+    iobi.flags = afxStreamFlag_READABLE;
+    AfxAcquireStream(1, &iobi, &file);
 
-    if (AfxOpenFile(path, afxIoFlag_R, &file)) AfxThrowError();
+    if (AfxReopenFile(file, path, afxFileFlag_R)) AfxThrowError();
     else
     {
         afxUri inc;
@@ -287,8 +291,12 @@ _AVX afxError AfxPrintShader(avxShader shd, afxUri const *uri)
     AfxAssert(!(AfxUriIsBlank(uri)));
 
     afxStream file;
+    afxStreamInfo iobi = { 0 };
+    iobi.usage = afxStreamUsage_FILE;
+    iobi.flags = afxStreamFlag_READABLE;
+    AfxAcquireStream(1, &iobi, &file);
 
-    if (AfxOpenFile(uri, afxIoFlag_W, &file)) AfxThrowError();
+    if (AfxReopenFile(file, uri, afxFileFlag_W)) AfxThrowError();
     else
     {
         if (AfxSerializeShader(shd, file)) AfxThrowError();

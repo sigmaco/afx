@@ -66,5 +66,6 @@ AUX afxBool         AfxMouseHasVerticalChanged(afxSession ses, afxNat seat, afxI
 AUX afxError        AfxEmulateMouseMotion(afxSession ses, afxNat seat, afxReal const motion[2], afxWindow wnd);
 AUX afxError        AfxEmulateMouseWheelAction(afxSession ses, afxNat seat, afxReal delta, afxWindow wnd);
 AUX afxError        AfxEmulateMouseButtonActions(afxSession ses, afxNat seat, afxNat cnt, afxMouseButton const butt[], afxBool const pressed[], afxWindow wnd);
+AUX afxError        AfxReleaseMouseButtons(afxSession ses, afxNat seat, afxWindow wnd);
 
 #endif//AUX_MOUSE_H

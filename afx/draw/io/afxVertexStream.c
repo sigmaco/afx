@@ -57,7 +57,7 @@ AFX_DEFINE_STRUCT(DynamicVertexBuffer)
 #define MAX_DYNAMIC_VERTEX_BUFFER_MANAGER       4
 #define MAX_DYNAMIC_VERTEX_BUFFER_MANAGER_SIZE (256*1024)
 
-AFX_DEFINE_STRUCT(avxVertexBufferizer)
+AFX_OBJECT(avxVertexBufferizer)
 {
     afxDrawInput        din;
     afxNat32            DefaultVBSize;
@@ -72,15 +72,15 @@ AFX_DEFINE_STRUCT(avxVertexBufferizer)
     afxSlabAllocator    DynamicVertexBufferFreeList;
 
     afxNat32            CurrentDynamicVertexBufferManager;
-    afxNat32            OffSetDynamicVertexBufferManager[4];
-    afxNat32            SizeDynamicVertexBufferManager[4];
-    afxBuffer           DynamicVertexBufferManager[4];
+    afxNat32            OffSetDynamicVertexBufferManager[MAX_DYNAMIC_VERTEX_BUFFER_MANAGER];
+    afxNat32            SizeDynamicVertexBufferManager[MAX_DYNAMIC_VERTEX_BUFFER_MANAGER];
+    afxBuffer           DynamicVertexBufferManager[MAX_DYNAMIC_VERTEX_BUFFER_MANAGER];
 
 };
 
 akxVertexCache;
 
-afxBool CreateVertexBuffer(avxVertexBufferizer* vbMgr, afxNat32 stride, afxNat32 size, void **vbo, afxNat32 *offset)
+afxBool CreateVertexBuffer(avxVertexBufferizer vbMgr, afxNat32 stride, afxNat32 size, afxBuffer* vbo, afxNat32* offset)
 {
     // based on RwD3D9CreateVertexBuffer
 
@@ -138,9 +138,9 @@ afxBool CreateVertexBuffer(avxVertexBufferizer* vbMgr, afxNat32 stride, afxNat32
         AfxGetDrawInputContext(vbMgr->din, &dctx);
 
         afxBuffer vbo;
-        afxBufferSpecification spec = { 0 };
-        spec.siz = freelist->size;
-        spec.access = afxBufferAccess_W;
+        afxBufferInfo spec = { 0 };
+        spec.bufCap = freelist->size;
+        spec.flags = afxBufferFlag_W;
         spec.usage = afxBufferUsage_VERTEX;
 
         if (AfxAcquireBuffers(dctx, 1, &spec, &vbo))
@@ -199,7 +199,7 @@ afxBool CreateVertexBuffer(avxVertexBufferizer* vbMgr, afxNat32 stride, afxNat32
     return TRUE;
 }
 
-void DestroyVertexBuffer(avxVertexBufferizer* vbMgr, afxNat32 stride, afxNat32 size, void *vbo, afxNat32 offset)
+void DestroyVertexBuffer(avxVertexBufferizer vbMgr, afxNat32 stride, afxNat32 size, afxBuffer vbo, afxNat32 offset)
 {
     // based on RwD3D9DestroyVertexBuffer
 
@@ -344,7 +344,7 @@ void DestroyVertexBuffer(avxVertexBufferizer* vbMgr, afxNat32 stride, afxNat32 s
     }
 }
 
-afxBool DynamicVertexBufferCreate(avxVertexBufferizer* vbMgr, afxNat size, afxBuffer *vertexBuffer)
+afxBool DynamicVertexBufferCreate(avxVertexBufferizer vbMgr, afxNat size, afxBuffer *vertexBuffer)
 {
     afxError err = NIL;
     DynamicVertexBuffer *freeVertexBuffer = NULL;
@@ -405,10 +405,10 @@ afxBool DynamicVertexBufferCreate(avxVertexBufferizer* vbMgr, afxNat size, afxBu
         afxDrawContext dctx;
         AfxGetDrawInputContext(vbMgr->din, &dctx);
 
-        afxBufferSpecification spec = { 0 };
-        spec.siz = size;
+        afxBufferInfo spec = { 0 };
+        spec.bufCap = size;
         spec.usage = afxBufferUsage_VERTEX;
-        spec.access = afxBufferAccess_W;
+        spec.flags = afxBufferFlag_W;
         
         if (AfxAcquireBuffers(dctx, 1, &spec, vertexBuffer))
         {
@@ -430,7 +430,7 @@ afxBool DynamicVertexBufferCreate(avxVertexBufferizer* vbMgr, afxNat size, afxBu
     return TRUE;
 }
 
-void DynamicVertexBufferDestroy(avxVertexBufferizer* vbMgr, void *vertexBuffer)
+void DynamicVertexBufferDestroy(avxVertexBufferizer vbMgr, void *vertexBuffer)
 {
     DynamicVertexBuffer *currentVertexBuffer = vbMgr->DynamicVertexBufferList;
 
@@ -453,11 +453,11 @@ void DynamicVertexBufferDestroy(avxVertexBufferizer* vbMgr, void *vertexBuffer)
     }
 }
 
-afxBool _VertexBufferManagerOpen(avxVertexBufferizer** vbMgrPtr)
+afxBool _VertexBufferManagerOpen(avxVertexBufferizer vbMgr)
 {
     afxError err = NIL;
-    avxVertexBufferizer* vbMgr = AfxAllocate(1, sizeof(vbMgr[0]), 0, AfxHere());
-    *vbMgrPtr = vbMgr;
+    //avxVertexBufferizer* vbMgr = AfxAllocate(1, sizeof(vbMgr[0]), 0, AfxHere());
+    //*vbMgrPtr = vbMgr;
 
     vbMgr->DefaultVBSize = 128 * 1024;
     AfxSetUpSlabAllocator(&vbMgr->StrideFreeList, sizeof(StrideEntry), 16);
@@ -488,12 +488,12 @@ afxBool _VertexBufferManagerOpen(avxVertexBufferizer** vbMgrPtr)
     return TRUE;
 }
 
-void _rwVertexBufferManagerClose(avxVertexBufferizer** vbMgrPtr)
+void _VertexBufferManagerClose(avxVertexBufferizer vbMgr)
 {
-    avxVertexBufferizer* vbMgr = *vbMgrPtr;
+    //avxVertexBufferizer* vbMgr = *vbMgrPtr;
 #if defined(RWDEBUG)
-    RWASSERT(BlocksCreated == 0);
-    RWASSERT(BytesReserved == 0);
+    AfxAssert(BlocksCreated == 0);
+    AfxAssert(BytesReserved == 0);
 #endif /* defined(RWDEBUG) */
 
     // D3D9DynamicVertexBufferManagerDestroy();
@@ -590,6 +590,7 @@ void _rwVertexBufferManagerClose(avxVertexBufferizer** vbMgrPtr)
 #endif /* defined(RWDEBUG) */
 }
 
+#if 0
 _AVX afxNat AfxGetVertexBufferUsage(afxVertexBuffer vbuf)
 {
     afxError err = NIL;
@@ -616,27 +617,19 @@ _AVX afxBuffer AfxGetVertexBufferStorage(afxVertexBuffer vbuf)
     }
     return buf;
 }
+#endif
 
-_AVX afxError _AvxVbufDtor(afxVertexBuffer vbuf)
+_AVX afxError _AvxVbufDtor(avxVertexBufferizer vbuf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
-
-    //afxDrawContext dctx = AfxGetParent(vbuf);
-    //afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    //AfxAssertObjects(1, &mmu, afxFcc_MMU);
-
-    afxBuffer buf;
-
-    if ((buf = vbuf->buf))
-    {
-        AfxAssertObjects(1, &buf, afxFcc_BUF);
-        AfxReleaseObjects(1, &buf);
-    }
+    
+    _VertexBufferManagerClose(vbuf);
+    
     return err;
 }
 
-_AVX afxError _AvxVbufCtor(afxVertexBuffer vbuf, void** args, afxNat invokeNo)
+_AVX afxError _AvxVbufCtor(avxVertexBufferizer vbuf, void** args, afxNat invokeNo)
 {
     afxResult err = NIL;
     AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
@@ -644,38 +637,17 @@ _AVX afxError _AvxVbufCtor(afxVertexBuffer vbuf, void** args, afxNat invokeNo)
     afxDrawInput din = args[0];
     afxVertexBufferSpecification const *spec = ((afxVertexBufferSpecification const *)args[1]) + invokeNo;
 
-    afxDrawContext dctx;
-    AfxGetDrawInputContext(din, &dctx);
+    _VertexBufferManagerOpen(vbuf);
 
-    afxSize bufSiz = spec->bufCap;
-
-    afxBuffer buf;
-    afxBufferSpecification const bufSpec =
-    {
-        .siz = AFX_ALIGNED_SIZEOF(bufSiz, 64),
-        .access = spec->access,
-        .usage = afxBufferUsage_VERTEX,
-        .src = NIL
-    };
-    
-    if (AfxAcquireBuffers(dctx, 1, &bufSpec, &buf)) AfxThrowError();
-    else
-    {
-        vbuf->buf = buf;
-        vbuf->access = spec->access;
-        vbuf->bufSiz = spec->bufCap;
-        vbuf->freeSiz = vbuf->bufSiz;
-
-        AfxDeployChain(&vbuf->rooms, vbuf);
-    }
     return err;
 }
 
 _AVX afxClassConfig const _AvxVbufMgrCfg =
 {
     .fcc = afxFcc_VBUF,
-    .name = "Vertex Buffer",
-    .fixedSiz = sizeof(AFX_OBJECT(afxVertexBuffer)),
+    .name = "VertexBufferizer",
+    .name = "Vertex Bufferizer",
+    .fixedSiz = sizeof(AFX_OBJECT(avxVertexBufferizer)),
     .ctor = (void*)_AvxVbufCtor,
     .dtor = (void*)_AvxVbufDtor
 };

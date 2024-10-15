@@ -42,29 +42,34 @@
 
 AFX_DEFINE_STRUCT(akxSkeletonBlueprint)
 {
-    afxString32         id;
-    afxNat              jointCnt;
-    afxString const*    joints;
-    afxNat const*       parentIdx;
-    afxTransform const* local;
-    afxReal const*      lodErr;
-    afxM4d const*       iw;
+    afxString32         urn;
     afxNat              lodType;
     afxBool             scalable;
     afxBool             deformable;
+    afxNat              jointCnt;
+    afxString const*    joints;
+    afxNat const*       parents;
+    afxTransform const* transforms; // local
+    afxM4d const*       matrices; // inverse world
+    afxReal const*      lodErrors;
 };
 
 AMX afxBool             AfxGetSkeletonUrn(afxSkeleton skl, afxString* id);
 
-AMX afxNat              AfxCountJoints(afxSkeleton skl, afxReal allowedErr);
+AMX afxNat              AfxCountSkeletonJoints(afxSkeleton skl, afxReal allowedErr);
 
-AMX afxNat              AfxFindJoints(afxSkeleton skl, afxNat cnt, afxString const ids[], afxNat indices[]);
+AMX afxNat              AfxFindSkeletonJoints(afxSkeleton skl, afxNat cnt, afxString const ids[], afxNat indices[]);
 
-AMX afxString*          AfxGetJointTag(afxSkeleton skl, afxNat jntIdx);
+AMX afxString*          AfxGetSkeletonJoints(afxSkeleton skl, afxNat jntIdx);
 
-AMXINL afxTransform*    AfxGetJointTransform(afxSkeleton skl, afxNat jntIdx);
-AMX afxM4d*             AfxGetSkeletonIwMatrices(afxSkeleton skl, afxNat baseJntIdx);
+AMXINL afxTransform*    AfxGetSkeletonTransform(afxSkeleton skl, afxNat jntIdx);
+AMX afxM4d*             AfxGetSkeletonMatrices(afxSkeleton skl, afxNat baseJntIdx);
 AMXINL afxNat*          AfxGetSkeletonParentIndexes(afxSkeleton skl, afxNat baseJntIdx);
+
+AMX afxError            AfxResetSkeletonMatrices(afxSkeleton skl, afxNat baseJntIdx, afxNat cnt, afxM4d const matrices[], afxNat stride);
+AMX afxError            AfxResetSkeletonLodErrors(afxSkeleton skl, afxNat baseJntIdx, afxNat cnt, afxReal const lodErrors[]);
+AMX afxError            AfxReparentSkeletonJoints(afxSkeleton skl, afxNat baseJntIdx, afxNat cnt, afxNat const indices[], afxNat stride);
+AMX afxError            AfxResetSkeletonTransforms(afxSkeleton skl, afxNat baseJntIdx, afxNat cnt, afxTransform const transforms[]);
 
 AMX void                AfxQuerySkeletonErrorTolerance(afxSkeleton skl, afxReal allowedErr, afxReal* allowedErrEnd, afxReal* allowedErrScaler);
 

@@ -79,7 +79,7 @@ _AUX afxError AfxStepSession(afxSession ses, void const* set, void* get)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ses, afxFcc_SES);
 
-    afxShell ssh = AfxGetParent(ses);
+    afxShell ssh = AfxGetProvider(ses);
     //ssh->step(ssh, ses, set, get);
 
     return err;
@@ -94,7 +94,7 @@ _AUX afxError _AuxSesDtorCb(afxSession ses)
         AfxReleaseObjects(1, &ses->stdHid);
 
     AfxAssert(!ses->idd);
-    AfxCleanUpChainedClasses(&ses->classes);
+    AfxDeregisterChainedClasses(&ses->classes);
 
     afxUri location;
     AfxMakeUri(&location, 0, "system", 0);
@@ -133,13 +133,15 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxNat invokeNo)
     {
         ses->seats[i].hidNo;
         AfxZero(&ses->seats[i], sizeof(ses->seats[0]));
+        ses->seats[i].buttonCnt = AFX_MB_TOTAL;
+        ses->seats[i].keyCnt = afxKey_TOTAL;
     }
 
 
     {
 
         afxUri location;
-        AfxMakeUri(&location, 0, "system", 0);
+        AfxMakeUri(&location, 0, "tmp", 0);
 
         if (AfxMountStorageUnit('d', &location, afxFileFlag_RWX)) AfxThrowError();
         else
@@ -163,7 +165,7 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxNat invokeNo)
 
     if (err)
     {
-        AfxCleanUpChainedClasses(&ses->classes);
+        AfxDeregisterChainedClasses(&ses->classes);
     }
     return err;
 }

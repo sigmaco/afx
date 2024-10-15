@@ -98,7 +98,7 @@ AFX afxFcc              AfxGetObjectFcc(afxObject obj);
 AFX afxChar const*      AfxGetObjectFccAsString(afxObject obj);
 
 AFX afxClass*           AfxGetClass(afxObject obj);
-AFX void*               AfxGetParent(afxObject obj);
+AFX void*               AfxGetProvider(afxObject obj);
 AFXINL afxBool          AfxDoesObjectInherit(afxObject obj, afxClass const* cls);
 
 AFX afxInt32            AfxGetRefCount(afxObject obj);
@@ -125,10 +125,11 @@ AFX afxBool     AfxReleaseObjects(afxNat cnt, afxObject objects[]);
 #   define AfxReleaseObjects(_cnt_,_objects_) AfxReleaseObjects((_cnt_),(afxObject*)(_objects_))
 #endif
 
-AFX afxBool     _AfxAssertObjects(afxNat cnt, afxObject const objects[], afxFcc fcc);
+AFX afxNat      _AfxAssertObjects(afxNat cnt, afxObject const objects[], afxFcc fcc); // returns the number of exceptions (if any); expects valid handles only.
+AFX afxNat      _AfxTryAssertObjects(afxNat cnt, afxObject const objects[], afxFcc fcc); // returns the number of exceptions (if any); ignore nil handles.
 //#define         AfxAssertObjects(_cnt_,_objects_,_fcc_) AfxAssert(((afxResult)(_cnt_)) == _AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))
-#define         AfxTryAssertObjects(_cnt_,_objects_,_fcc_) AfxAssert((!_cnt_) || (!(((afxObject const*)_objects_)[0])) || (((afxResult)(_cnt_)) == _AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_))))
-#define         AfxAssertObjects(_cnt_,_objects_,_fcc_) AfxAssert((!_cnt_) || (!(((afxObject const*)_objects_)[0])) || (((afxResult)(_cnt_)))), AfxTryAssertObjects(_cnt_,_objects_,_fcc_)
+#define         AfxTryAssertObjects(_cnt_,_objects_,_fcc_) AfxAssert((!_cnt_) || ((_objects_) && !(_AfxTryAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
+#define         AfxAssertObjects(_cnt_,_objects_,_fcc_)    AfxAssert((!_cnt_) || ((_objects_) && !(_AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
 
 AFX afxNat      AfxGetObjectId(afxObject obj);
 

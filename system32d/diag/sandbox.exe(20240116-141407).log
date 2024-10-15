@@ -1,0 +1,38 @@
+
+ afxDebug_w32.c:394
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Qwadro Execution Ecosystem at 5221f728...
+ afxClass<Qwadro Execution Ecosystem>::ConstructObject(004617b0)
+ afxSystem_w32.c:317
+  _AfxSysCtor(sys=004617b0)
+ ERR afxUri.c:624?AfxGetUriPath
+  
+ ERR afxUri.c:624?AfxGetUriPath
+  (uri)
+    Invalid
+ ERR afxBufferedString.c:24?AfxGetBufferedStringData
+  
+ ERR afxBufferedString.c:24?AfxGetBufferedStringData
+  (str)
+    Invalid
+ ERR afxBufferedString.c:412?AfxMakeBufferedString
+  
+ ERR afxBufferedString.c:412?AfxMakeBufferedString
+  (start)
+    Invalid
+ ERR afxBufferedString.c:418?AfxMakeBufferedString
+  

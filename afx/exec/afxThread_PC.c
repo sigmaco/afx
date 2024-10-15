@@ -18,7 +18,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_THREAD_C
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 AFX_THREAD_LOCAL static afxNat32 _currTid = 0;
 AFX_THREAD_LOCAL static afxThread _currThr = NIL;
@@ -673,7 +673,7 @@ _AFX afxError AfxAcquireThreads(afxHere const hint, afxThreadConfig const* cfg, 
     AfxAssert(hint);
     AfxAssert(cfg);
 
-    AfxLogEcho("Acquiring thread...  %u \"%s:%i\"", cfg->tid, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
+    AfxLogEcho("Acquiring...  Thread Execution Unit %u @ %s:%i", cfg->tid, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
 
     // Creates a new Thread object that will execute the function f with the arguments args.
     // The new thread is not started -- it must be started by an explicit call to start(). This allows you to connect to its signals, move Objects to the thread, choose the new thread's priority and so on. The function f will be called in the new thread.

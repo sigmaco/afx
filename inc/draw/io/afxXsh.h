@@ -19,7 +19,7 @@
 #ifndef AFX_XML_BACKED_DRAWABLE_RESOURCES_H
 #define AFX_XML_BACKED_DRAWABLE_RESOURCES_H
 
-#include "qwadro/inc/draw/dev/afxDrawContext.h"
+#include "qwadro/inc/draw/afxDrawContext.h"
 
 AVX afxError    AfxParsePipelineFromXsh(avxPipelineBlueprint* pipb, afxUri const* uri);
 

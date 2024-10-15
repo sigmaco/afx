@@ -20,7 +20,7 @@
 #include <string.h>
 
 #define _AFX_ARENA_C
-#include "../dev/afxDevCoreBase.h"
+#include "../dev/afxExecImplKit.h"
 
 AFX_DEFINE_STRUCT(afxArenaCleanup)
 {

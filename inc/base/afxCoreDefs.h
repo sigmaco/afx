@@ -215,6 +215,8 @@ AFX_DEFINE_HANDLE(afxController);
 AFX_DEFINE_HANDLE(afxResource);
 AFX_DEFINE_HANDLE(afxStorage);
 AFX_DEFINE_HANDLE(afxStringBase);
+AFX_DEFINE_HANDLE(afxIoBridge);
+AFX_DEFINE_HANDLE(afxIoQueue);
 
 AFX_DEFINE_HANDLE(afxShell);
 AFX_DEFINE_HANDLE(afxDrawSystem);

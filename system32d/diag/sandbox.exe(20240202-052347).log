@@ -1,0 +1,164 @@
+
+ afxDebug_w32.c:360
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+                   (c) 2017 SIGMA, Engineering In Technology                   
+                                www.sigmaco.org                                
+                                                                               
+ [!] afxSystem.c:525?AfxDoSystemBootUp
+  Booting up Qwadro...
+ Installing Qwadro Execution Ecosystem at 0f1cbb68...
+ afxClass<Qwadro Execution Ecosystem>::ConstructObject(00494060)
+ afxSystem_w32.c:288
+  _AfxSysCtor(sys=00494060)
+ ERR afxInitialization.c:216?AfxIniLoadFromFile
+  1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.
+ Installing Thread Execution Unit at 00495790 by 00495098...
+ Entering the Thread Execution Environment 4584
+ afxClass<Thread Execution Unit>::ConstructObject(00463930)
+ afxTxu_w32.c:399
+  _AfxTxuCtor(00463930)
+ Installing Memory Management Unit at 004950ac by 00495098...
+ Installing Thread at 004956cc by 00495098...
+ Installing Device at 00495854 by 00495098...
+ Installing Autonomous Service at 00495918 by 00495098...
+ Installing File at 00495b64 by 00495098...
+ Installing I/O Stream at 004959dc by 00495098...
+ Installing Codec at 00495aa0 by 00495098...
+ Installing File Archive at 00495c28 by 00495098 over 00495b64...
+ Installing Executable & Linkable File at 00495234 by 00495098...
+ Installing Installable Client Driver at 004952f8 by 00495098...
+ Installing File System at 00495cec by 00495098...
+ Installing Human Input Device at 004953bc by 00495098 over 00495854...
+ Installing Keyboard at 00495480 by 00495098 over 004953bc...
+ Installing Mouse at 00495544 by 00495098 over 004953bc...
+ Installing Controller at 00495608 by 00495098 over 004953bc...
+ Installing String Catalog at 00495170 by 00495098...
+ [!] afxSystem_w32.c:459?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:460?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(004922f0)
+ afxArena.c:768
+  AfxAllocateArena(aren=00495e2c)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem_w32.c:473!_AfxSysCtor")
+ afxClass<File System>::ConstructObject(004acbf0)
+ Storage point "." 5 mounted -> "E:\qwadro\afx\\\".
+ afxClass<File System>::ConstructObject(004acc68)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system\".
+ afxClass<File System>::ConstructObject(004acce0)
+ Storage point "system32" 7 mounted -> "E:\qwadro\afx\\system32\".
+ afxClass<File System>::ConstructObject(004acd58)
+ Storage point "system32" 7 mounted -> "E:\qwadro\afx\\system32d\".
+ afxClass<File System>::ConstructObject(004acdd0)
+ Storage point "code" 5 mounted -> "E:\qwadro\afx\\code\".
+ afxClass<File System>::ConstructObject(004ace48)
+ Storage point "sound" 5 mounted -> "E:\qwadro\afx\\sound\".
+ afxClass<File System>::ConstructObject(00496990)
+ Storage point "data" 5 mounted -> "E:\qwadro\afx\\data\".
+ afxClass<File System>::ConstructObject(00496a08)
+ Storage point "art" 5 mounted -> "E:\qwadro\afx\\art\".
+ afxClass<File System>::ConstructObject(00496a80)
+ Storage point "tmp" 7 mounted -> "E:\qwadro\afx\\tmp\".
+ afxExecutable.c:243
+  AfxLoadExecutables(cnt=1,executables=00495dec,uri=0042d858)
+ afxClass<Executable & Linkable File>::ConstructObject(00497cb0)
+ afxExecutable.c:153
+  _AfxExeCtor(uri:system/e2coree.dll)
+ E:\qwadro\afx\\system\/e2coree.dll
+ ERR afxFileSystem.c:190?AfxResolveUris
+  
+ ERR afxFileSystem.c:210?AfxResolveUri
+  
+ ERR afxExecutable.c:183?_AfxExeCtor
+  
+ ERR afxClass.c:487?_AfxClsRunSubsetCtor
+  
+ ERR afxClass.c:784?AfxAcquireObjects
+  
+ ERR afxExecutable.c:264?AfxLoadExecutables
+  
+ ERR afxClass.c:846?AfxReleaseObjects
+  
+ ERR afxClass.c:846?AfxReleaseObjects
+  (cnt)
+    Invalid
+ ERR afxSystem_w32.c:483?_AfxSysCtor
+  
+ ERR afxClass.c:860?AfxReleaseObjects
+  
+ ERR afxClass.c:860?AfxReleaseObjects
+  (inst)
+    Invalid
+ Dismantling Memory Management Unit object (#0) 004922f0...
+ Destructing instance 004922f0 of Memory Management Unit class.
+ Dismounting String Catalog :  class... (00495170)
+ Dismounting Controller :  class... (00495608)
+ Dismounting Mouse :  class... (00495544)
+ Dismounting Keyboard :  class... (00495480)
+ Dismounting Human Input Device :  class... (004953bc)
+ Dismounting File System :  class... (00495cec)
+ Dismantling File System object (#0) 004acbf0...
+ Destructing instance 004acbf0 of File System class.
+ Storage point "." 5 unmounted -> "E:\qwadro\afx\\\".
+ Dismantling File System object (#0) 004acc68...
+ Destructing instance 004acc68 of File System class.
+ Storage point "system" 5 unmounted -> "E:\qwadro\afx\\system\".
+ Dismantling File System object (#0) 004acce0...
+ Destructing instance 004acce0 of File System class.
+ Storage point "system32" 7 unmounted -> "E:\qwadro\afx\\system32\".
+ Dismantling File System object (#0) 004acd58...
+ Destructing instance 004acd58 of File System class.
+ Storage point "system32" 7 unmounted -> "E:\qwadro\afx\\system32d\".
+ Dismantling File System object (#0) 004acdd0...
+ Destructing instance 004acdd0 of File System class.
+ Storage point "code" 5 unmounted -> "E:\qwadro\afx\\code\".
+ Dismantling File System object (#0) 004ace48...
+ Destructing instance 004ace48 of File System class.
+ Storage point "sound" 5 unmounted -> "E:\qwadro\afx\\sound\".
+ Dismantling File System object (#0) 00496990...
+ Destructing instance 00496990 of File System class.
+ Storage point "data" 5 unmounted -> "E:\qwadro\afx\\data\".
+ Dismantling File System object (#0) 00496a08...
+ Destructing instance 00496a08 of File System class.
+ Storage point "art" 5 unmounted -> "E:\qwadro\afx\\art\".
+ Dismantling File System object (#0) 00496a80...
+ Destructing instance 00496a80 of File System class.
+ Storage point "tmp" 7 unmounted -> "E:\qwadro\afx\\tmp\".
+ Dismounting Installable Client Driver :  class... (004952f8)
+ Dismounting Executable & Linkable File :  class... (00495234)
+ Dismounting File Archive :  class... (00495c28)
+ Dismounting Codec :  class... (00495aa0)
+ Dismounting I/O Stream :  class... (004959dc)
+ Dismounting File :  class... (00495b64)
+ Dismounting Autonomous Service :  class... (00495918)
+ Dismounting Device :  class... (00495854)
+ Dismounting Thread :  class... (004956cc)
+ Dismounting Memory Management Unit :  class... (004950ac)
+ Dismounting Thread Execution Unit :  class... (00495790)
+ Dismantling Thread Execution Unit object (#0) 00463930...
+ Destructing instance 00463930 of Thread Execution Unit class.
+ afxTxu_w32.c:449
+  _AfxTxuDtor(00463930)
+ ERR afxClass.c:487?_AfxClsRunSubsetCtor
+  
+ ERR afxClass.c:784?AfxAcquireObjects
+  
+ ERR afxSystem.c:533?AfxDoSystemBootUp
+  
+ ERR afxSystem.c:101?AfxGetDrawSystem
+  
+ ERR afxSystem.c:101?AfxGetDrawSystem
+  (((afxResult)(1)) == _AfxAssertObjects((1), (afxObject const*)(&sys),(afxFcc_SYS)))
+    Invalid

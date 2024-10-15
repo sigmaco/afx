@@ -1,0 +1,27 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 7785d874 by 00000000 over 00000000 with 7785a770)
+ 7785d8d0 wdlocked by 4588
+ 7785d8d0 wdunlocked by 4588
+ 7785d8d0 wdlocked by 4588
+ afxClass<Basic I/O System>::ConstructObject(0061f160)
+ afxSystem.c:1067
+  _AfxSysCtor(sys=0061f160)
+ Installing Thread Execution Unit at 0061f56c by 0061f184 over 00000000 with 001ae28c)
+ 0061f5c8 wdlocked by 4588
+ 0061f5c8 wdunlocked by 4588

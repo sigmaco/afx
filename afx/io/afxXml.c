@@ -24,7 +24,7 @@
 #include <string.h>
 
 #define _AFX_XML_C
-#include "../dev/afxDevIoBase.h"
+#include "../dev/afxIoImplKit.h"
 
 static char* xml_strtok_r(char *str, const char *delim, char **nextp) {
     char *ret;
@@ -1248,7 +1248,7 @@ _AFX void AfxCleanUpXml(afxXml* xml)
 
 
     if (xml->file)
-        AfxCloseStream(xml->file);
+        AfxResetStream(xml->file);
 
 }
 
@@ -1259,8 +1259,12 @@ _AFX afxError AfxLoadXml(afxXml* xml, afxUri const *uri)
 
     //AfxEntry("uri:%.*s", AfxPushString(uri ? AfxGetUriString(uri) : &AFX_STR_EMPTY));
     afxStream file;
+    afxStreamInfo iobi = { 0 };
+    iobi.usage = afxStreamUsage_FILE;
+    iobi.flags = afxStreamFlag_READABLE;
+    AfxAcquireStream(1, &iobi, &file);
 
-    if (AfxLoadFile(uri, &file)) AfxThrowError();
+    if (AfxReloadFile(file, uri)) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &file, afxFcc_IOB);
@@ -1270,7 +1274,7 @@ _AFX afxError AfxLoadXml(afxXml* xml, afxUri const *uri)
         if (_AfxXmlOpen(xml, file))
             AfxThrowError();
 
-        xml->file = file;
+        xml->file = (afxStream)file;
     }
     return err;
 }

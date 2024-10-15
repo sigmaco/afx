@@ -41,9 +41,9 @@ typedef enum afxQueryType
 AVX afxDrawContext      AfxGetQueryPoolContext(avxQueryPool qryp);
 
 AVX afxResult           AfxGetQueryResults
-/// Copy results of queries in a query pool to a host memory region.
+/// Copy results of queries in a query qryp to a host memory region.
 (
-    avxQueryPool        pool,
+    avxQueryPool        qryp,
     afxNat              baseQuery, /// the initial query index.
     afxNat              queryCnt, /// the number of queries to read.
     void*               dst, /// a user-allocated buffer where the results will be written.
@@ -53,9 +53,9 @@ AVX afxResult           AfxGetQueryResults
 );
 
 AVX void                AfxResetQueries
-/// Reset queries in a query pool. This command sets the status of query indices [baseQuery, baseQuery + queryCnt - 1] to unavailable.
+/// Reset queries in a query qryp. This command sets the status of query indices [baseQuery, baseQuery + queryCnt - 1] to unavailable.
 (
-    avxQueryPool        pool,
+    avxQueryPool        qryp,
     afxNat              baseQuery, /// the initial query index to reset.
     afxNat              queryCnt /// the number of queries to reset.
 );

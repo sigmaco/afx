@@ -30,7 +30,7 @@ _ASX afxSoundDevice AfxGetSoundInputDevice(afxSoundInput sin)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sin, afxFcc_SIN);
-    afxSoundDevice sdev = AfxGetParent(sin);
+    afxSoundDevice sdev = AfxGetProvider(sin);
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
     return sdev;
 }
@@ -151,7 +151,7 @@ _ASX afxError _AsxSinDtorCb(afxSoundInput sin)
 
     AfxAssert(!sin->idd);
 
-    AfxCleanUpChainedClasses(&sin->classes);
+    AfxDeregisterChainedClasses(&sin->classes);
 
     return err;
 }

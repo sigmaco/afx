@@ -1,0 +1,4 @@
+Booting up...
+Acquiring thread...  8044 "afxSystem_w32.c:502"afxString.c:146
+afxString.c:146
+<base>5 + <len>3 is out of capacity <maxRange>6.

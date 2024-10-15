@@ -1,0 +1,91 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 509e27dc by 00000000 over 00000000 with 509e01c0)
+ afxClass<Basic I/O System>::ConstructObject(00578090)
+ afxSystem.c:1006
+  _AfxSysCtor(sys=00578090)
+ Installing Context at 005780cc by 005780b8 over 00000000 with 509e07a4)
+ Installing Module at 0057818c by 005780b8 over 00000000 with 509e0080)
+ Installing Thread at 005783cc by 005780b8 over 00000000 with 509e01f0)
+ Installing File at 0057854c by 005780b8 over 00000000 with 509e0314)
+ Installing Archive at 0057860c by 005780b8 over 00000000 with 509e02e4)
+ Installing Application at 0057848c by 005780b8 over 00000000 with 509e0000)
+ Installing Keyboard at 0057824c by 005780b8 over 00000000 with 509e0344)
+ Installing Mouse at 0057830c by 005780b8 over 00000000 with 509e0374)
+ Installing Draw System at 005786cc by 005780b8 over 00000000 with 509e1074)
+ [!] afxSystem.c:1090?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1091?_AfxSysCtor
+  Logical processor count: 2
+ afxContext.c:202
+  AfxAcquireContexts(cnt=1,app=0057878c,strategy=0026df6c)
+ afxClass<Context>::ConstructObject(005788f0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=005788f0)
+ afxArena.c:767
+  AfxAcquireArena(aren=005787e8)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="afxSystem.c:1143!_AfxSysCtor")
+ afxSystem.c:751
+  AfxMountStoragePoints(6,0026e0c4)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:169
+  AfxAcquireModules(cnt=1,mdle=005787b8,uri=0026dffc)
+ afxClass<Module>::ConstructObject(0057d560)
+ afxModule.c:125
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:317
+  AfxAcquireKeyboards(cnt=1,kbd=005787bc,port=0026df44)
+ afxClass<Keyboard>::ConstructObject(0057d660)
+ afxKeyboard.c:281
+  _AfxKbdCtor(kbd=0057d660)
+ Entering the Threading Execution Environment  0
+ afxClass<Draw System>::ConstructObject(0057e060)
+ afxDrawSystem.c:760
+  _AfxDsysCtor(dsys=0057e060)
+ Installing Draw Thread at 0057e48c by 0057e0b8 over 00000000 with 0026ea38)
+ Installing Installable Client (Draw) Driver at 0057e0cc by 0057e0b8 over 00000000 with 0026ea08)
+ Installing Draw Device at 0057e18c by 0057e0b8 over 00000000 with 0026e9d8)
+ Installing Draw Context at 0057e24c by 0057e0b8 over 00000000 with 0026e9a8)
+ Installing Draw Output at 0057e30c by 0057e0b8 over 00000000 with 0026e978)
+ Entering the Threading Execution Environment  1
+ afxSystem.c:987
+  startCbOnSysProcUnit(Threading Execution Environment 1 started)
+ Entering the Threading Execution Environment  0
+ Installing Draw Input at 0057e3cc by 0057e0b8 over 00000000 with 0026e948)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+ Truecolor Targa texture serializer installed!
+ Loading draw ICD system/e2draw.icd
+ afxModule.c:169
+  AfxAcquireModules(cnt=1,mdle=0026e774,uri=0026e77c)
+ afxClass<Module>::ConstructObject(0057ffe0)
+ afxModule.c:125
+  _AfxMdleCtor(uri:e2draw.icd)
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(00580aa0)
+ afxDrawSystem.c:323
+  _AfxDdrvCtor(ddrv=00580aa0)

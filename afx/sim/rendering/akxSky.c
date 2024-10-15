@@ -92,7 +92,11 @@ _AMX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim, afxDrawInput din)
     afxUri cubeDir;
     AfxMakeUri(&cubeDir, 0, "../art/skybox/purple", 0);
 
-    sky->cubemap = AfxAssembleCubemapRasters(dctx, afxRasterUsage_SAMPLING, afxRasterFlag_CUBEMAP, &cubeDir, facesUri);
+    afxRasterInfo rasi = { 0 };
+    rasi.flags = afxRasterFlag_CUBEMAP;
+    rasi.usage = afxRasterUsage_SAMPLING;
+
+    sky->cubemap = AfxAssembleCubemapRasters(dctx, &rasi, &cubeDir, facesUri);
     //AfxFlipRaster(sky->cubemap, FALSE, TRUE);
 
 
@@ -148,13 +152,19 @@ _AMX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim, afxDrawInput din)
     //for (afxNat i = 0; i < sizeof(skyboxVertices) / sizeof(skyboxVertices[0]); i++)
     //    skyboxVertices[i] *= 100;
 
-    afxBufferSpecification vboSpec = { 0 };
-    vboSpec.siz = sizeof(skyboxVertices);
-    vboSpec.src = skyboxVertices;
+    afxBufferInfo vboSpec = { 0 };
+    vboSpec.bufCap = sizeof(skyboxVertices);
     vboSpec.usage = afxBufferUsage_VERTEX;
 
     AfxAcquireBuffers(dctx, 1, &vboSpec, &sky->cube);
     AfxAssertObjects(1, &sky->cube, afxFcc_BUF);
+
+    afxBufferIo vboIop = { 0 };
+    vboIop.dstStride = 1;
+    vboIop.srcStride = 1;
+    vboIop.rowCnt = vboSpec.bufCap;
+
+    AfxUpdateBuffer(sky->cube, 1, &vboIop, skyboxVertices, 0);
 
     afxUri uri;
     AfxMakeUri(&uri, 0, "../data/pipeline/skybox/skybox.xsh.xml", 0);
@@ -181,7 +191,7 @@ _AMX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim, afxDrawInput din)
     sky->skyVin = AfxAcquireVertexInput(dctx, 1, vinStreams, 1, vinAttrs);
     AfxAssertObjects(1, &sky->skyVin, afxFcc_VIN);
 
-    avxSamplerConfig smpSpec = { 0 };
+    avxSamplerInfo smpSpec = { 0 };
     smpSpec.magFilter = avxTexelFilter_LINEAR;
     smpSpec.minFilter = avxTexelFilter_LINEAR;
     smpSpec.mipFilter = avxTexelFilter_LINEAR;

@@ -155,12 +155,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\afx\ux\afxKeyboard.c" />
     <ClCompile Include="..\..\afx\ux\afxMouse.c" />
-    <ClCompile Include="..\..\afx\ux\afxScript.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\afx\ux\afxGamepad.c" />
     <ClCompile Include="..\..\afx\ux\afxHid.c" />
     <ClCompile Include="..\..\afx\ux\afxSession.c" />
@@ -174,7 +168,6 @@
     <ClInclude Include="..\..\afx\dev\AuxShellImplKit.h" />
     <ClInclude Include="..\..\inc\ux\afxKeyboard.h" />
     <ClInclude Include="..\..\inc\ux\afxMouse.h" />
-    <ClInclude Include="..\..\inc\ux\afxScript.h" />
     <ClInclude Include="..\..\inc\ux\afxGamepad.h" />
     <ClInclude Include="..\..\inc\ux\afxHid.h" />
     <ClInclude Include="..\..\inc\ux\afxSession.h" />
@@ -192,14 +185,11 @@
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\e2pragma\e2pragma.vcxproj">
-      <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
+    <ProjectReference Include="..\e2draw\e2draw.vcxproj">
+      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
     </ProjectReference>
     <ProjectReference Include="..\e2sound\e2sound.vcxproj">
       <Project>{1685d511-3934-4f31-b8a3-afa740f612b3}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\e2vgi\e2vgi.vcxproj">
-      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

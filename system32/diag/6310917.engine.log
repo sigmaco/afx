@@ -1,0 +1,1497 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+                                                                               
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                                                                             
+                         QWADRO Application Framework                        
+                              Public Test Build                              
+                       (c) 2017 SIGMA Technology Group                       
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ afxSystem.c:917?AfxSystemBootUp(root="",)
+ Acquiring Basic I/O system...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=5824,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b7826a0[5824] allocated. ( &> 16 -> 5824 )
+ Running constructor for Basic I/O system, instance 0b7826a0.
+ afxSystem.c:1007?_AfxSysCtor(sys=0b7826a0)
+ Acquisition objt for Allocator was initialized.
+ Mounting point "." rwx[1,0,0] to "E:\qwadro\afx\cooked\_system32/.."...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=608,hint="afxSystem.c:812!AfxSystemMountPoints")
+ Memory 071c9680[608] allocated. ( &> 16 -> 608 )
+ Point "." rwx[1,0,0] mounted -> "E:\qwadro\afx\cooked\_system32/..".
+ Mounting point "system" rwx[1,0,0] to "E:\qwadro\afx\cooked\_system32"...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=608,hint="afxSystem.c:812!AfxSystemMountPoints")
+ Memory 0b7796c0[608] allocated. ( &> 16 -> 608 )
+ Point "system" rwx[1,0,0] mounted -> "E:\qwadro\afx\cooked\_system32".
+ Mounting point "art" rwx[1,0,0] to "E:\qwadro\afx\cooked\_system32/../../_art"...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=608,hint="afxSystem.c:812!AfxSystemMountPoints")
+ Memory 0b779980[608] allocated. ( &> 16 -> 608 )
+ Point "art" rwx[1,0,0] mounted -> "E:\qwadro\afx\cooked\_system32/../../_art".
+ Mounting point "data" rwx[1,0,0] to "E:\qwadro\afx\cooked\_system32/../../_data"...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=608,hint="afxSystem.c:812!AfxSystemMountPoints")
+ Memory 0b779c50[608] allocated. ( &> 16 -> 608 )
+ Point "data" rwx[1,0,0] mounted -> "E:\qwadro\afx\cooked\_system32/../../_data".
+ Mounting point "sound" rwx[1,0,0] to "E:\qwadro\afx\cooked\_system32/../../_sound"...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=608,hint="afxSystem.c:812!AfxSystemMountPoints")
+ Memory 0b779f10[608] allocated. ( &> 16 -> 608 )
+ Point "sound" rwx[1,0,0] mounted -> "E:\qwadro\afx\cooked\_system32/../../_sound".
+ Acquisition objt for Module was initialized.
+ afxModule.c:68?AfxSystemAcquireModule(uri=system/e2coree.dll,argc=0,argv=00000000)
+ Acquiring Module...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=116,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 005873c0[116] allocated. ( &> 16 -> 128 )
+ Running constructor for Module, instance 005873c0.
+ afxModule.c:139?_AfxMdleCtor(uri:system/e2coree.dll,argc:0,argv:00000000)
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ Object 005873c0[obj]^1 renamed to e2coree.dll.
+ afxQwadro.c:56?AfxEntryPoint(opcode=1,argc=0,argv=00000000)
+ Object 005873c0[obj]^1 acquired.
+ Taking connection 0b783890 connecting 005873c0?obj#1 to holder 0b7826a0?obj#1.
+ Acquisition objt for Stream was initialized.
+ Acquisition objt for Archive was initialized.
+ Acquisition objt for Resource was initialized.
+ Acquisition objt for HID was initialized.
+ Acquisition objt for Keyboard was initialized.
+ Acquisition objt for Mouse was initialized.
+ Acquisition objt for Space was initialized.
+ Acquisition objt for Draw system was initialized.
+ Acquisition objt for Application was initialized.
+ Object 0b7826a0[obj]^1 acquired.
+ afxSystem.c:933?AfxSystemBootUp(0b7826a0?obj#1 = AfxSystem.BootUp())
+ afxApplication.c:440?AfxSystemAcquireApplication(sys=0b7826a0,uri=0032ea58,argc=1,argv=005750a0)
+ Acquiring Application...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=1680,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b89cf80[1680] allocated. ( &> 16 -> 1680 )
+ Running constructor for subset Module of Application, instance 0b89cf80.
+ Running constructor for Module, instance 0b89cf80.
+ afxModule.c:139?_AfxMdleCtor(uri:mmplayer.rom,argc:1,argv:005750a0)
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ Object 0b89cf80[obj]^1 renamed to mmplayer.rom.
+ mmplayer.c:296?AfxEntryPoint(opcode=1,argc=1,argv=005750a0)
+ Running constructor for Application, instance 0b89cf80.
+ afxApplication.c:562?_AfxAppCtor(app=0b89cf80)
+ afxKeyboard.c:150?AfxSystemAcquireKeyboard(sys=0b7826a0,port=0)
+ Acquiring Keyboard...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=2160,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 04b7ffb0[2160] allocated. ( &> 16 -> 2160 )
+ Running constructor for subset HID of Keyboard, instance 04b7ffb0.
+ Running constructor for HID, instance 04b7ffb0.
+ afxHid.c:77?_AfxHidCtor(hid=04b7ffb0)
+ Running constructor for Keyboard, instance 04b7ffb0.
+ afxKeyboard.c:178?_AfxKbdCtor(kbd=04b7ffb0)
+ Object 04b7ffb0[obj]^1 acquired.
+ Taking connection 0b89d034 connecting 04b7ffb0?obj#1 to holder 0b89cf80?obj#1.
+ afxMouse.c:219?AfxSystemAcquireMouse(sys=0b7826a0,port=0)
+ Acquiring Mouse...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=176,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 04b14360[176] allocated. ( &> 16 -> 176 )
+ Running constructor for subset HID of Mouse, instance 04b14360.
+ Running constructor for HID, instance 04b14360.
+ afxHid.c:77?_AfxHidCtor(hid=04b14360)
+ Running constructor for Mouse, instance 04b14360.
+ afxMouse.c:246?_AfxMseCtor(mse=04b14360)
+ Object 04b14360[obj]^1 acquired.
+ Taking connection 0b89d060 connecting 04b14360?obj#1 to holder 0b89cf80?obj#1.
+ afxAllocator.c:965?AfxSystemAcquireAllocator(sys=0b7826a0,strategy=00000000,hint="afxApplication.c:591!_AfxAppCtor")
+ Acquiring Allocator...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=328,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 04b59660[328] allocated. ( &> 16 -> 336 )
+ Running constructor for Allocator, instance 04b59660.
+ afxAllocator.c:735?_AfxAllCtor(all=04b59660)
+ Object 04b59660[obj]^1 acquired.
+ Taking connection 0b89d008 connecting 04b59660?obj#1 to holder 0b89cf80?obj#1.
+ Object 0b89cf80[obj]^1 acquired.
+ ERR afxBootstrap.c:34?main
+    Application reboot failed.
+ afxApplication.c:421?AfxApplicationExecuteComposition(app=0b89cf80)
+ mmplayer.c:155?AfxEnterApplication(app=0b89cf80)
+ afxDrawSystem.c:594?AfxSystemAcquireDrawSystem(sys=0b7826a0,uri=e2opengl.icd)
+ Acquiring Draw system...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=2008,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 049b3b90[2008] allocated. ( &> 16 -> 2016 )
+ Running constructor for subset Module of Draw system, instance 049b3b90.
+ Running constructor for Module, instance 049b3b90.
+ afxModule.c:139?_AfxMdleCtor(uri:e2opengl.icd,argc:0,argv:00000000)
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ Object 049b3b90[obj]^1 renamed to e2opengl.icd.
+ Running constructor for Draw system, instance 049b3b90.
+ afxDrawSystem.c:611?_AfxDsysCtor(dsys=049b3b90)
+ Acquisition objt for Vertex buffer was initialized.
+ Acquisition objt for Index buffer was initialized.
+ Acquisition objt for Uniform buffer was initialized.
+ Acquisition objt for Image was initialized.
+ Acquisition objt for Texture was initialized.
+ Acquisition objt for Canvas was initialized.
+ Acquisition objt for Sampler was initialized.
+ Acquisition objt for Shader was initialized.
+ Acquisition objt for Draw pipeline was initialized.
+ Acquisition objt for Draw script was initialized.
+ Acquisition objt for Draw input was initialized.
+ Acquisition objt for Draw output was initialized.
+ Acquisition objt for Draw context was initialized.
+ Acquisition objt for Sky was initialized.
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=1784,hint="sgl330_dsys.c:582!_AfxDsysImplCtor")
+ Memory 005805a0[1784] allocated. ( &> 16 -> 1792 )
+ Listing all available hardware-accelerated renderers...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ sgl330_dsys.c:251?_SglGlCtxW32Create(dsys=049b3b90,bufSiz="8,8,8",samples=0032d9b8,phwnd=005805cc,phdc=005805d0,phrc=005805d4,verMaj=3,verMin=3,legacy=0)
+ sgl330.c:740?_SglLoadVmt(vmt=00580678,verMajor=1,verMinor=0)
+ sgl330.c:740?_SglLoadVmt(vmt=00580678,verMajor=3,verMinor=3)
+ QWADRO Draw System (OpenGL/Vulkan Continuous Integration (Intel(R) HD Graphics v3.3.0))
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=28,hint="afxDrawSystem.c:496!AfxDrawSystem_RegisterImageIoCodecs")
+ Memory 0056bab0[28] allocated. ( &> 16 -> 32 )
+ Image I/O codec registered.
+ Truecolor Targa image serializer installed!
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=28,hint="afxDrawSystem.c:523!AfxDrawSystem_RegisterTextureIoCodecs")
+ Memory 0056bbb0[28] allocated. ( &> 16 -> 32 )
+ Texture I/O codec registered.
+ Truecolor Targa texture serializer installed!
+ Object 049b3b90[obj]^1 acquired.
+ Taking connection 0b89d4e0 connecting 049b3b90?obj#1 to holder 0b89cf80?obj#1.
+ 0? = AfxObject.Reacquire(049b3b90?obj#2, 0b89cf80?obj#1, 0fae6d90, 0b89d4e0)
+ 0 = AfxApplication.AttachWidgetDrawSystem(0b89cf80?obj#1, 049b3b90?obj#2);
+ afxSimulation.c:388?AfxSystemAcquireSimulation(app=0b7826a0,bounding=[[0.000000,0.000000,0.000000,1.000000],[0.000000,0.000000,0.000000,1.000000]])
+ Acquiring Space...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=1488,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 072cfb80[1488] allocated. ( &> 16 -> 1488 )
+ Running constructor for subset Module of Space, instance 072cfb80.
+ Running constructor for Module, instance 072cfb80.
+ afxModule.c:139?_AfxMdleCtor(uri:e2opengl.icd,argc:0,argv:00000000)
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ Object 072cfb80[obj]^1 renamed to e2opengl.icd.
+ Running constructor for Space, instance 072cfb80.
+ afxSimulation.c:341?_AfxSimCtor(sim=072cfb80)
+ Acquisition objt for afxNode was initialized.
+ Acquisition objt for Skeleton was initialized.
+ Acquisition objt for Material was initialized.
+ Acquisition objt for Mesh was initialized.
+ Acquisition objt for Model was initialized.
+ Acquisition objt for Camera was initialized.
+ Acquisition objt for Light was initialized.
+ Acquisition objt for Body was initialized.
+ Acquisition objt for Entity was initialized.
+ Object 072cfb80[obj]^1 acquired.
+ Taking connection 0b89d538 connecting 072cfb80?obj#1 to holder 0b89cf80?obj#1.
+ 0? = AfxObject.Reacquire(072cfb80?obj#2, 0b89cf80?obj#1, 0fae5de0, 0b89d538)
+ Acquisition objt for Widget was initialized.
+ 0 = AfxApplication.AttachWidgetDrawSystem(0b89cf80?obj#1, 072cfb80?obj#2);
+ afxDrawContext.c:349?AfxDrawSystemAcquireContext(dsys=049b3b90,spec=0032e0a0,uri=)
+ Acquiring Draw context...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=200,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 035c1a50[200] allocated. ( &> 16 -> 208 )
+ Running constructor for Draw context, instance 035c1a50.
+ afxDrawContext.c:441?_AfxDctxCtor(dctx=035c1a50)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=176,hint="afxDrawContext.c:464!_AfxDctxCtor")
+ Memory 04b14d30[176] allocated. ( &> 16 -> 176 )
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=5632,hint="afxDrawContext.c:472!_AfxDctxCtor")
+ Memory 00577680[5632] allocated. ( &> 16 -> 5632 )
+ sgl330_dctx.c:2508?_AfxStdDctxImplCtor(dctx=035c1a50,uri=)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=28,hint="sgl330_dctx.c:2512!_AfxStdDctxImplCtor")
+ Memory 0056ba30[28] allocated. ( &> 16 -> 32 )
+ Object 035c1a50[obj]^1 acquired.
+ afxStream.c:540?AfxSystemAcquireStream(sys:0b7826a0,uri:art/world.tga,access=r)
+ Acquiring Stream...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4336,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 06f9baa0[4336] allocated. ( &> 16 -> 4336 )
+ Running constructor for Stream, instance 06f9baa0.
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 0 0
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=512,hint="afxStream.c:663!_AfxStrmCtor")
+ Memory 0b7736c0[512] allocated. ( &> 16 -> 512 )
+ Acquired. (ios)06f9baa0^1 <-> "E:\qwadro\afx\cooked\_system32/../../_art\world.tga"
+ Object 06f9baa0[obj]^1 acquired.
+ afxTarga.c:596?_AfxInputImageFromTarga(imio=0056bab0,ios=06f9baa0,img=00000000)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=1048576,hint="afxTarga.c:393!_AfxTgaLoad")
+ Memory 04bb0070[1048576] allocated. ( &> 16 -> 1048576 )
+ afxImage.c:558?AfxDrawSystemAcquireImage(dsys=049b3b90,fmt=4,whd=[512,512,1],src=04bb0070)
+ Acquiring Image...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4368,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b77f6a0[4368] allocated. ( &> 16 -> 4368 )
+ Running constructor for subset Resource of Image, instance 0b77f6a0.
+ Running constructor for Resource, instance 0b77f6a0.
+ afxResource.c:101?_AfxResCtor(res=0b77f6a0)
+ Running constructor for Image, instance 0b77f6a0.
+ afxImage.c:586?_AfxImgCtor(img=0b77f6a0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=1048576,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 04cc0070[1048576] allocated. ( &> 16 -> 1048576 )
+ Object 0b77f6a0[obj]^1 acquired.
+ afxMemory.c:206?AfxDeallocate(p=04bb0070)
+ Memory 04bb0070[1048576] deallocated.
+ Deserialized. (img)0b77f6a0 <- fpath "E:\qwadro\afx\cooked\_system32/../../_art\world.tga"
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(06f9baa0?obj#1))
+ Destroying Stream... 06f9baa0[obj]^0
+ Running destructor for Stream, instance 06f9baa0.
+ afxMemory.c:206?AfxDeallocate(p=0b7736c0)
+ Memory 0b7736c0[512] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=06f9baa0)
+ Memory 06f9baa0[4336] deallocated.
+ Stream destroyed. 06f9baa0[obj]
+ Object 06f9baa0[obj]^0 released.
+ afxStream.c:540?AfxSystemAcquireStream(sys:0b7826a0,uri:art/world2.tga,access=w)
+ Acquiring Stream...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4336,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 06f9baa0[4336] allocated. ( &> 16 -> 4336 )
+ Running constructor for Stream, instance 06f9baa0.
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=512,hint="afxStream.c:663!_AfxStrmCtor")
+ Memory 0b7736c0[512] allocated. ( &> 16 -> 512 )
+ Acquired. (ios)06f9baa0^1 <-> "E:\qwadro\afx\cooked\_system32/../../_art\world2.tga"
+ Object 06f9baa0[obj]^1 acquired.
+ afxTarga.c:644?_AfxOutputImageToTarga(imio=0056bab0,ios=06f9baa0,img=0b77f6a0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=1048576,hint="afxTarga.c:582!_AfxTgaGen")
+ Memory 04bb0070[1048576] allocated. ( &> 16 -> 1048576 )
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=1048576,hint="afxTarga.c:229!_AfxTgaSave")
+ Memory 05170070[1048576] allocated. ( &> 16 -> 1048576 )
+ afxMemory.c:236?AfxReallocate(p=0b7736c0,siz=1049088,hint="afxStream.c:305!AfxStreamResizeBuffer")
+ Memory 0b7736c0[512] reallocated at 052e0070[1049088]. ( &> 16 -> 1049088 )
+ afxMemory.c:206?AfxDeallocate(p=05170070)
+ Memory 05170070[1048576] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=04bb0070)
+ Memory 04bb0070[1048576] deallocated.
+ Outputted. (img)0b77f6a0 -> fpath "E:\qwadro\afx\cooked\_system32/../../_art\world2.tga"
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(06f9baa0?obj#1))
+ Destroying Stream... 06f9baa0[obj]^0
+ Running destructor for Stream, instance 06f9baa0.
+ afxMemory.c:206?AfxDeallocate(p=052e0070)
+ Memory 052e0070[1049088] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=06f9baa0)
+ Memory 06f9baa0[4336] deallocated.
+ Stream destroyed. 06f9baa0[obj]
+ Object 06f9baa0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b77f6a0?obj#1))
+ Destroying Image... 0b77f6a0[obj]^0
+ Running destructor for Image, instance 0b77f6a0.
+ afxImage.c:616?_AfxImgDtor(img=0b77f6a0)
+ afxMemory.c:206?AfxDeallocate(p=04cc0070)
+ Memory 04cc0070[1048576] deallocated.
+ Running destructor for subset Resource of Image, instance 0b77f6a0.
+ Running destructor for Resource, instance 0b77f6a0.
+ afxResource.c:92?_AfxResDtor(res=0b77f6a0)
+ afxMemory.c:206?AfxDeallocate(p=0b77f6a0)
+ Memory 0b77f6a0[4368] deallocated.
+ Image destroyed. 0b77f6a0[obj]
+ Object 0b77f6a0[obj]^0 released.
+ afxDrawOutput.c:449?AfxDrawSystemAcquireOutput(dsys=049b3b90,spec=0032e10c,uri=window)
+ Acquiring Draw output...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=288,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 04b5f730[288] allocated. ( &> 16 -> 288 )
+ Running constructor for Draw output, instance 04b5f730.
+ afxDrawOutput.c:334?_AfxDoutCtor(dout=04b5f730)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=132,hint="afxDrawOutput.c:393!_AfxDoutCtor")
+ Memory 0063bad0[132] allocated. ( &> 16 -> 144 )
+ afxCanvas.c:149?AfxDrawSystemAcquireCanvas(dsys=049b3b90,whd=[640,360,1],surfaceCnt=2,surfaceFmt=0032dcdc,surfaceUsage=0032dcd4)
+ Acquiring Canvas...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=148,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b7b17e0[148] allocated. ( &> 16 -> 160 )
+ Running constructor for Canvas, instance 0b7b17e0.
+ afxCanvas.c:239?_AfxCanvCtor(canv=0b7b17e0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=88,hint="afxCanvas.c:254!_AfxCanvCtor")
+ Memory 005817f0[88] allocated. ( &> 16 -> 96 )
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=4,whd=[640,360,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=10)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b77f6a0[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 0b77f6a0.
+ Running constructor for subset Resource of Image, instance 0b77f6a0.
+ Running constructor for Resource, instance 0b77f6a0.
+ afxResource.c:101?_AfxResCtor(res=0b77f6a0)
+ Running constructor for Image, instance 0b77f6a0.
+ afxImage.c:586?_AfxImgCtor(img=0b77f6a0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=921600,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 04bb0070[921600] allocated. ( &> 16 -> 921600 )
+ Running constructor for Texture, instance 0b77f6a0.
+ afxTexture.c:161?_AfxTexCtor(tex=0b77f6a0)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=0b77f6a0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa6fb0[20] allocated. ( &> 16 -> 32 )
+ Object 0b77f6a0[obj]^1 acquired.
+ Taking connection 005817f0 connecting 0b77f6a0?obj#1 to holder 0b7b17e0?obj#1.
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=9,whd=[640,360,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=20)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 06f9baa0[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 06f9baa0.
+ Running constructor for subset Resource of Image, instance 06f9baa0.
+ Running constructor for Resource, instance 06f9baa0.
+ afxResource.c:101?_AfxResCtor(res=06f9baa0)
+ Running constructor for Image, instance 06f9baa0.
+ afxImage.c:586?_AfxImgCtor(img=06f9baa0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=921600,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 04ca0070[921600] allocated. ( &> 16 -> 921600 )
+ Running constructor for Texture, instance 06f9baa0.
+ afxTexture.c:161?_AfxTexCtor(tex=06f9baa0)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=06f9baa0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa7020[20] allocated. ( &> 16 -> 32 )
+ Object 06f9baa0[obj]^1 acquired.
+ Taking connection 0058181c connecting 06f9baa0?obj#1 to holder 0b7b17e0?obj#1.
+ sgl330_canv.c:146?_AfxStdCanvImplCtor(canv=0b7b17e0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_canv.c:151!_AfxStdCanvImplCtor")
+ Memory 04aa7280[20] allocated. ( &> 16 -> 32 )
+ Object 0b7b17e0[obj]^1 acquired.
+ Taking connection 0063bad0 connecting 0b7b17e0?obj#1 to holder 04b5f730?obj#1.
+ afxCanvas.c:149?AfxDrawSystemAcquireCanvas(dsys=049b3b90,whd=[640,360,1],surfaceCnt=2,surfaceFmt=0032dcdc,surfaceUsage=0032dcd4)
+ Acquiring Canvas...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=148,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b7b18d0[148] allocated. ( &> 16 -> 160 )
+ Running constructor for Canvas, instance 0b7b18d0.
+ afxCanvas.c:239?_AfxCanvCtor(canv=0b7b18d0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=88,hint="afxCanvas.c:254!_AfxCanvCtor")
+ Memory 005818b0[88] allocated. ( &> 16 -> 96 )
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=4,whd=[640,360,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=10)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 072e9040[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 072e9040.
+ Running constructor for subset Resource of Image, instance 072e9040.
+ Running constructor for Resource, instance 072e9040.
+ afxResource.c:101?_AfxResCtor(res=072e9040)
+ Running constructor for Image, instance 072e9040.
+ afxImage.c:586?_AfxImgCtor(img=072e9040)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=921600,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 04d90070[921600] allocated. ( &> 16 -> 921600 )
+ Running constructor for Texture, instance 072e9040.
+ afxTexture.c:161?_AfxTexCtor(tex=072e9040)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=072e9040)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa73e0[20] allocated. ( &> 16 -> 32 )
+ Object 072e9040[obj]^1 acquired.
+ Taking connection 005818b0 connecting 072e9040?obj#1 to holder 0b7b18d0?obj#1.
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=9,whd=[640,360,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=20)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 035c37c0[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 035c37c0.
+ Running constructor for subset Resource of Image, instance 035c37c0.
+ Running constructor for Resource, instance 035c37c0.
+ afxResource.c:101?_AfxResCtor(res=035c37c0)
+ Running constructor for Image, instance 035c37c0.
+ afxImage.c:586?_AfxImgCtor(img=035c37c0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=921600,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 05170070[921600] allocated. ( &> 16 -> 921600 )
+ Running constructor for Texture, instance 035c37c0.
+ afxTexture.c:161?_AfxTexCtor(tex=035c37c0)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=035c37c0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa7550[20] allocated. ( &> 16 -> 32 )
+ Object 035c37c0[obj]^1 acquired.
+ Taking connection 005818dc connecting 035c37c0?obj#1 to holder 0b7b18d0?obj#1.
+ sgl330_canv.c:146?_AfxStdCanvImplCtor(canv=0b7b18d0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_canv.c:151!_AfxStdCanvImplCtor")
+ Memory 04aa75c0[20] allocated. ( &> 16 -> 32 )
+ Object 0b7b18d0[obj]^1 acquired.
+ Taking connection 0063bafc connecting 0b7b18d0?obj#1 to holder 04b5f730?obj#1.
+ afxCanvas.c:149?AfxDrawSystemAcquireCanvas(dsys=049b3b90,whd=[640,360,1],surfaceCnt=2,surfaceFmt=0032dcdc,surfaceUsage=0032dcd4)
+ Acquiring Canvas...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=148,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b7b19d0[148] allocated. ( &> 16 -> 160 )
+ Running constructor for Canvas, instance 0b7b19d0.
+ afxCanvas.c:239?_AfxCanvCtor(canv=0b7b19d0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=88,hint="afxCanvas.c:254!_AfxCanvCtor")
+ Memory 00581970[88] allocated. ( &> 16 -> 96 )
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=4,whd=[640,360,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=10)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 035800a0[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 035800a0.
+ Running constructor for subset Resource of Image, instance 035800a0.
+ Running constructor for Resource, instance 035800a0.
+ afxResource.c:101?_AfxResCtor(res=035800a0)
+ Running constructor for Image, instance 035800a0.
+ afxImage.c:586?_AfxImgCtor(img=035800a0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=921600,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 052e0070[921600] allocated. ( &> 16 -> 921600 )
+ Running constructor for Texture, instance 035800a0.
+ afxTexture.c:161?_AfxTexCtor(tex=035800a0)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=035800a0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa70a0[20] allocated. ( &> 16 -> 32 )
+ Object 035800a0[obj]^1 acquired.
+ Taking connection 00581970 connecting 035800a0?obj#1 to holder 0b7b19d0?obj#1.
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=9,whd=[640,360,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=20)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 035d6b50[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 035d6b50.
+ Running constructor for subset Resource of Image, instance 035d6b50.
+ Running constructor for Resource, instance 035d6b50.
+ afxResource.c:101?_AfxResCtor(res=035d6b50)
+ Running constructor for Image, instance 035d6b50.
+ afxImage.c:586?_AfxImgCtor(img=035d6b50)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=921600,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 053d0070[921600] allocated. ( &> 16 -> 921600 )
+ Running constructor for Texture, instance 035d6b50.
+ afxTexture.c:161?_AfxTexCtor(tex=035d6b50)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=035d6b50)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa7200[20] allocated. ( &> 16 -> 32 )
+ Object 035d6b50[obj]^1 acquired.
+ Taking connection 0058199c connecting 035d6b50?obj#1 to holder 0b7b19d0?obj#1.
+ sgl330_canv.c:146?_AfxStdCanvImplCtor(canv=0b7b19d0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_canv.c:151!_AfxStdCanvImplCtor")
+ Memory 04aa7370[20] allocated. ( &> 16 -> 32 )
+ Object 0b7b19d0[obj]^1 acquired.
+ Taking connection 0063bb28 connecting 0b7b19d0?obj#1 to holder 04b5f730?obj#1.
+ sgl330_dout.c:267?_AfxStdDoutImplCtor(dout=04b5f730,uri=window)
+ sgl330_dout.c:208?_AfxStdDoutImplCtorWnd(dout=04b5f730)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=2636,hint="sgl330_dout.c:214!_AfxStdDoutImplCtorWnd")
+ Memory 04b45d70[2636] allocated. ( &> 16 -> 2640 )
+ sgl330_dsys.c:251?_SglGlCtxW32Create(dsys=049b3b90,bufSiz="8,8,8",samples=0032da74,phwnd=04b46184,phdc=04b46188,phrc=04b46190,verMaj=3,verMin=3,legacy=0)
+ sgl330.c:740?_SglLoadVmt(vmt=04b46194,verMajor=3,verMinor=3)
+ afxMemory.c:236?AfxReallocate(p=04bb0070,siz=921600,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 04bb0070[921600] reallocated at 05670070[921600]. ( &> 16 -> 921600 )
+ afxMemory.c:236?AfxReallocate(p=04ca0070,siz=921600,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 04ca0070[921600] reallocated at 04bb0070[921600]. ( &> 16 -> 921600 )
+ afxMemory.c:236?AfxReallocate(p=04d90070,siz=921600,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 04d90070[921600] reallocated at 04ca0070[921600]. ( &> 16 -> 921600 )
+ afxMemory.c:236?AfxReallocate(p=05170070,siz=921600,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 05170070[921600] reallocated at 04d90070[921600]. ( &> 16 -> 921600 )
+ afxMemory.c:236?AfxReallocate(p=052e0070,siz=921600,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 052e0070[921600] reallocated at 05170070[921600]. ( &> 16 -> 921600 )
+ afxMemory.c:236?AfxReallocate(p=053d0070,siz=921600,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 053d0070[921600] reallocated at 052e0070[921600]. ( &> 16 -> 921600 )
+ sgl330_dout.c:140?_AfxStdDoutImplReadjust(dout/wnd=04b5f730,extent=(0.000000,0.000000))
+ Extent readjusted. (dout/wnd)04b5f730 -> 640, 0.333333 of 1920; 360 0.333333 of 1080
+ afxMemory.c:236?AfxReallocate(p=05670070,siz=7935872,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 05670070[921600] reallocated at 06560070[7935872]. ( &> 16 -> 7935872 )
+ afxMemory.c:236?AfxReallocate(p=04bb0070,siz=7935872,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 04bb0070[921600] reallocated at 07f60070[7935872]. ( &> 16 -> 7935872 )
+ afxMemory.c:236?AfxReallocate(p=04ca0070,siz=7935872,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 04ca0070[921600] reallocated at 08700070[7935872]. ( &> 16 -> 7935872 )
+ afxMemory.c:236?AfxReallocate(p=04d90070,siz=7935872,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 04d90070[921600] reallocated at 0db30070[7935872]. ( &> 16 -> 7935872 )
+ afxMemory.c:236?AfxReallocate(p=05170070,siz=7935872,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 05170070[921600] reallocated at 0e2d0070[7935872]. ( &> 16 -> 7935872 )
+ afxMemory.c:236?AfxReallocate(p=052e0070,siz=7935872,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 052e0070[921600] reallocated at 0ea70070[7935872]. ( &> 16 -> 7935872 )
+ sgl330_dout.c:140?_AfxStdDoutImplReadjust(dout/wnd=04b5f730,extent=(0.000000,0.000000))
+ Extent readjusted. (dout/wnd)04b5f730 -> 1904, 0.991667 of 1920; 1042 0.964815 of 1080
+ Object 04b5f730[obj]^1 acquired.
+ Taking connection 04b14d30 connecting 04b5f730?obj#1 to holder 035c1a50?obj#1.
+ afxDrawInput.c:183?AfxDrawSystemAcquireInput(dsys=049b3b90,spec=0032e098,uri=74ba5140)
+ Acquiring Draw input...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=144,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b7b1ac0[144] allocated. ( &> 16 -> 144 )
+ Running constructor for Draw input, instance 0b7b1ac0.
+ afxDrawInput.c:246?_AfxDinCtor(din=0b7b1ac0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=132,hint="afxDrawInput.c:254!_AfxDinCtor")
+ Memory 0063bca0[132] allocated. ( &> 16 -> 144 )
+ afxDrawScript.c:866?AfxDrawSystemAcquireScript(dsys=049b3b90)
+ Acquiring Draw script...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4360,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b7fcc80[4360] allocated. ( &> 16 -> 4368 )
+ Running constructor for subset Stream of Draw script, instance 0b7fcc80.
+ Running constructor for Stream, instance 0b7fcc80.
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=512,hint="afxStream.c:663!_AfxStrmCtor")
+ Memory 0b773df0[512] allocated. ( &> 16 -> 512 )
+ Acquired. (ios)0b7fcc80^1 <-> ""
+ Running constructor for Draw script, instance 0b7fcc80.
+ afxDrawScript.c:888?_AfxDscrCtor(dscr=0b7fcc80)
+ Object 0b7fcc80[obj]^1 acquired.
+ Taking connection 0063bca0 connecting 0b7fcc80?obj#1 to holder 0b7b1ac0?obj#1.
+ afxDrawScript.c:866?AfxDrawSystemAcquireScript(dsys=049b3b90)
+ Acquiring Draw script...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4360,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 04a8a050[4360] allocated. ( &> 16 -> 4368 )
+ Running constructor for subset Stream of Draw script, instance 04a8a050.
+ Running constructor for Stream, instance 04a8a050.
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=512,hint="afxStream.c:663!_AfxStrmCtor")
+ Memory 0b7736c0[512] allocated. ( &> 16 -> 512 )
+ Acquired. (ios)04a8a050^1 <-> ""
+ Running constructor for Draw script, instance 04a8a050.
+ afxDrawScript.c:888?_AfxDscrCtor(dscr=04a8a050)
+ Object 04a8a050[obj]^1 acquired.
+ Taking connection 0063bccc connecting 04a8a050?obj#1 to holder 0b7b1ac0?obj#1.
+ afxDrawScript.c:866?AfxDrawSystemAcquireScript(dsys=049b3b90)
+ Acquiring Draw script...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4360,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b9726e0[4360] allocated. ( &> 16 -> 4368 )
+ Running constructor for subset Stream of Draw script, instance 0b9726e0.
+ Running constructor for Stream, instance 0b9726e0.
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=512,hint="afxStream.c:663!_AfxStrmCtor")
+ Memory 0b774530[512] allocated. ( &> 16 -> 512 )
+ Acquired. (ios)0b9726e0^1 <-> ""
+ Running constructor for Draw script, instance 0b9726e0.
+ afxDrawScript.c:888?_AfxDscrCtor(dscr=0b9726e0)
+ Object 0b9726e0[obj]^1 acquired.
+ Taking connection 0063bcf8 connecting 0b9726e0?obj#1 to holder 0b7b1ac0?obj#1.
+ Object 0b7b1ac0[obj]^1 acquired.
+ Taking connection 00577684 connecting 0b7b1ac0?obj#1 to holder 035c1a50?obj#1.
+ afxModule.c:68?AfxSystemAcquireModule(uri=binkw32.dll,argc=0,argv=00000000)
+ Acquiring Module...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=116,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 00587800[116] allocated. ( &> 16 -> 128 )
+ Running constructor for Module, instance 00587800.
+ afxModule.c:139?_AfxMdleCtor(uri:binkw32.dll,argc:0,argv:00000000)
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ Object 00587800[obj]^1 renamed to binkw32.dll.
+ Object 00587800[obj]^1 acquired.
+ Taking connection 74ba5064 connecting 00587800?obj#1 to holder 00000000?null#0.
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=696,hint="afxBinkVideo.c:793!AfxBinkOpen")
+ Memory 04b39d90[696] allocated. ( &> 16 -> 704 )
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=1,whd=[1280,720,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=0)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 035bcaa0[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 035bcaa0.
+ Running constructor for subset Resource of Image, instance 035bcaa0.
+ Running constructor for Resource, instance 035bcaa0.
+ afxResource.c:101?_AfxResCtor(res=035bcaa0)
+ Running constructor for Image, instance 035bcaa0.
+ afxImage.c:586?_AfxImgCtor(img=035bcaa0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=921600,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 04d30070[921600] allocated. ( &> 16 -> 921600 )
+ Running constructor for Texture, instance 035bcaa0.
+ afxTexture.c:161?_AfxTexCtor(tex=035bcaa0)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=035bcaa0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa7110[20] allocated. ( &> 16 -> 32 )
+ Object 035bcaa0[obj]^1 acquired.
+ Taking connection 04b39e18 connecting 035bcaa0?obj#1 to holder 00000000?null#0.
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=1,whd=[640,360,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=0)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b79aec0[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 0b79aec0.
+ Running constructor for subset Resource of Image, instance 0b79aec0.
+ Running constructor for Resource, instance 0b79aec0.
+ afxResource.c:101?_AfxResCtor(res=0b79aec0)
+ Running constructor for Image, instance 0b79aec0.
+ afxImage.c:586?_AfxImgCtor(img=0b79aec0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=230400,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 0bc05e30[230400] allocated. ( &> 16 -> 230400 )
+ Running constructor for Texture, instance 0b79aec0.
+ afxTexture.c:161?_AfxTexCtor(tex=0b79aec0)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=0b79aec0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa72f0[20] allocated. ( &> 16 -> 32 )
+ Object 0b79aec0[obj]^1 acquired.
+ Taking connection 04b39e44 connecting 0b79aec0?obj#1 to holder 00000000?null#0.
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=1,whd=[640,360,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=0)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b7907e0[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 0b7907e0.
+ Running constructor for subset Resource of Image, instance 0b7907e0.
+ Running constructor for Resource, instance 0b7907e0.
+ afxResource.c:101?_AfxResCtor(res=0b7907e0)
+ Running constructor for Image, instance 0b7907e0.
+ afxImage.c:586?_AfxImgCtor(img=0b7907e0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=230400,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 049ccfc0[230400] allocated. ( &> 16 -> 230400 )
+ Running constructor for Texture, instance 0b7907e0.
+ afxTexture.c:161?_AfxTexCtor(tex=0b7907e0)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=0b7907e0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa74d0[20] allocated. ( &> 16 -> 32 )
+ Object 0b7907e0[obj]^1 acquired.
+ Taking connection 04b39e70 connecting 0b7907e0?obj#1 to holder 00000000?null#0.
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=1,whd=[1280,720,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=0)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0b72f750[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 0b72f750.
+ Running constructor for subset Resource of Image, instance 0b72f750.
+ Running constructor for Resource, instance 0b72f750.
+ afxResource.c:101?_AfxResCtor(res=0b72f750)
+ Running constructor for Image, instance 0b72f750.
+ afxImage.c:586?_AfxImgCtor(img=0b72f750)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=921600,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 05170070[921600] allocated. ( &> 16 -> 921600 )
+ Running constructor for Texture, instance 0b72f750.
+ afxTexture.c:161?_AfxTexCtor(tex=0b72f750)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=0b72f750)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa7190[20] allocated. ( &> 16 -> 32 )
+ Object 0b72f750[obj]^1 acquired.
+ Taking connection 04b39ed8 connecting 0b72f750?obj#1 to holder 00000000?null#0.
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=1,whd=[640,360,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=0)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0bac3420[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 0bac3420.
+ Running constructor for subset Resource of Image, instance 0bac3420.
+ Running constructor for Resource, instance 0bac3420.
+ afxResource.c:101?_AfxResCtor(res=0bac3420)
+ Running constructor for Image, instance 0bac3420.
+ afxImage.c:586?_AfxImgCtor(img=0bac3420)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=230400,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 0bc3e2a0[230400] allocated. ( &> 16 -> 230400 )
+ Running constructor for Texture, instance 0bac3420.
+ afxTexture.c:161?_AfxTexCtor(tex=0bac3420)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=0bac3420)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa7460[20] allocated. ( &> 16 -> 32 )
+ Object 0bac3420[obj]^1 acquired.
+ Taking connection 04b39f04 connecting 0bac3420?obj#1 to holder 00000000?null#0.
+ afxTexture.c:210?AfxDrawSystemAcquireTexture(dsys=049b3b90,fmt=1,whd=[640,360,1],src=00000000,lodCnt=1,swizzling=00000000,sampleCnt=1,linearTiling=0,usage=0)
+ Acquiring Texture...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4424,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0bac45d0[4424] allocated. ( &> 16 -> 4432 )
+ Running constructor for subset Image of Texture, instance 0bac45d0.
+ Running constructor for subset Resource of Image, instance 0bac45d0.
+ Running constructor for Resource, instance 0bac45d0.
+ afxResource.c:101?_AfxResCtor(res=0bac45d0)
+ Running constructor for Image, instance 0bac45d0.
+ afxImage.c:586?_AfxImgCtor(img=0bac45d0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=230400,hint="afxImage.c:600!_AfxImgCtor")
+ Memory 0bc76700[230400] allocated. ( &> 16 -> 230400 )
+ Running constructor for Texture, instance 0bac45d0.
+ afxTexture.c:161?_AfxTexCtor(tex=0bac45d0)
+ sgl330_tex.c:483?_AfxStdTexImplCtor(tex=0bac45d0)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=20,hint="sgl330_tex.c:490!_AfxStdTexImplCtor")
+ Memory 04aa7640[20] allocated. ( &> 16 -> 32 )
+ Object 0bac45d0[obj]^1 acquired.
+ Taking connection 04b39f30 connecting 0bac45d0?obj#1 to holder 00000000?null#0.
+ afxVertexBuffer.c:674?AfxDrawSystemAcquireVertexBuffer(dsys=049b3b90,vtxCnt=4,arrCnt=2,usage=0032cee8,fmt=0032cee0,src=0032ced8,stride=0)
+ Acquiring Vertex buffer...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=120,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0bac5790[120] allocated. ( &> 16 -> 128 )
+ Running constructor for Vertex buffer, instance 0bac5790.
+ afxVertexBuffer.c:697?_AfxVbufCtor(vbuf=0bac5790)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=224,hint="afxVertexBuffer.c:701!_AfxVbufCtor")
+ Memory 0b7b3920[224] allocated. ( &> 16 -> 224 )
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=32,hint="afxVertexBuffer.c:714!_AfxVbufCtor")
+ Memory 04a8e1a0[32] allocated. ( &> 16 -> 32 )
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=32,hint="afxVertexBuffer.c:714!_AfxVbufCtor")
+ Memory 04a8cdf0[32] allocated. ( &> 16 -> 32 )
+ sgl330_vbuf.c:203?_AfxStdVbufImplCtor(vbuf=0bac5790)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=248,hint="sgl330_vbuf.c:212!_AfxStdVbufImplCtor")
+ Memory 04b5b610[248] allocated. ( &> 16 -> 256 )
+ Object 0bac5790[obj]^1 acquired.
+ Taking connection 74ba50fc connecting 0bac5790?obj#1 to holder 00000000?null#0.
+ afxDrawPipeline.c:698?AfxDrawSystemFetchPipeline(dsys=049b3b90,uri=data/bink/video-yv12.dpip.xml)
+ afxStream.c:540?AfxSystemAcquireStream(sys:0b7826a0,uri:data/bink/video-yv12.dpip.xml,access=r)
+ Acquiring Stream...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4336,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 04b02430[4336] allocated. ( &> 16 -> 4336 )
+ Running constructor for Stream, instance 04b02430.
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=512,hint="afxStream.c:663!_AfxStrmCtor")
+ Memory 0b774790[512] allocated. ( &> 16 -> 512 )
+ Acquired. (ios)04b02430^1 <-> "E:\qwadro\afx\cooked\_system32/../../_data\bink/video-yv12.dpip.xml"
+ Object 04b02430[obj]^1 acquired.
+ afxDrawPipeline.c:1089?AfxDrawSystemDeserializePipeline(dsys=049b3b90,ios=04b02430)
+ afxShader.c:70?AfxDrawSystemFetchShader(dsys=049b3b90,uri=data/bink/video-yv12.vsh)
+ afxStream.c:540?AfxSystemAcquireStream(sys:0b7826a0,uri:data/bink/video-yv12.vsh,access=r)
+ Acquiring Stream...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4336,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 04b03580[4336] allocated. ( &> 16 -> 4336 )
+ Running constructor for Stream, instance 04b03580.
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=512,hint="afxStream.c:663!_AfxStrmCtor")
+ Memory 0b774a00[512] allocated. ( &> 16 -> 512 )
+ Acquired. (ios)04b03580^1 <-> "E:\qwadro\afx\cooked\_system32/../../_data\bink/video-yv12.vsh"
+ Object 04b03580[obj]^1 acquired.
+ afxShader.c:92?AfxDrawSystemDeserializeShader(dsys=049b3b90,ios=04b03580)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=179,hint="afxShader.c:103!AfxDrawSystemDeserializeShader")
+ Memory 04b146a0[179] allocated. ( &> 16 -> 192 )
+ afxShader.c:121?AfxDrawSystemAcquireShader(dsys=049b3b90,code=04b146a0,len=178)
+ Acquiring Shader...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=120,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0bac5870[120] allocated. ( &> 16 -> 128 )
+ Running constructor for Shader, instance 0bac5870.
+ afxShader.c:143?_AfxShdrCtor(shdr=0bac5870)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=179,hint="afxShader.c:156!_AfxShdrCtor")
+ Memory 04b148d0[179] allocated. ( &> 16 -> 192 )
+ sgl330_shdr.c:85?_AfxStdShdrImplCtor(shdr=0bac5870)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=16,hint="sgl330_shdr.c:93!_AfxStdShdrImplCtor")
+ Memory 035ae200[16] allocated. ( &> 16 -> 16 )
+ Object 0bac5870[obj]^1 acquired.
+ afxMemory.c:206?AfxDeallocate(p=04b146a0)
+ Memory 04b146a0[179] deallocated.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(04b03580?obj#1))
+ Destroying Stream... 04b03580[obj]^0
+ Running destructor for Stream, instance 04b03580.
+ afxMemory.c:206?AfxDeallocate(p=0b774a00)
+ Memory 0b774a00[512] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=04b03580)
+ Memory 04b03580[4336] deallocated.
+ Stream destroyed. 04b03580[obj]
+ Object 04b03580[obj]^0 released.
+ afxShader.c:70?AfxDrawSystemFetchShader(dsys=049b3b90,uri=data/bink/video-yv12.psh)
+ afxStream.c:540?AfxSystemAcquireStream(sys:0b7826a0,uri:data/bink/video-yv12.psh,access=r)
+ Acquiring Stream...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=4336,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 04b03580[4336] allocated. ( &> 16 -> 4336 )
+ Running constructor for Stream, instance 04b03580.
+ ADV afxSystem.c:742?AfxSystemResolveUri
+    8000 0 100 80 0
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=512,hint="afxStream.c:663!_AfxStrmCtor")
+ Memory 0b774a00[512] allocated. ( &> 16 -> 512 )
+ Acquired. (ios)04b03580^1 <-> "E:\qwadro\afx\cooked\_system32/../../_data\bink/video-yv12.psh"
+ Object 04b03580[obj]^1 acquired.
+ afxShader.c:92?AfxDrawSystemDeserializeShader(dsys=049b3b90,ios=04b03580)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=892,hint="afxShader.c:103!AfxDrawSystemDeserializeShader")
+ Memory 0bbfde50[892] allocated. ( &> 16 -> 896 )
+ afxShader.c:121?AfxDrawSystemAcquireShader(dsys=049b3b90,code=0bbfde50,len=891)
+ Acquiring Shader...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=120,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 0bac5950[120] allocated. ( &> 16 -> 128 )
+ Running constructor for Shader, instance 0bac5950.
+ afxShader.c:143?_AfxShdrCtor(shdr=0bac5950)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=892,hint="afxShader.c:156!_AfxShdrCtor")
+ Memory 0bbfe230[892] allocated. ( &> 16 -> 896 )
+ sgl330_shdr.c:85?_AfxStdShdrImplCtor(shdr=0bac5950)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=16,hint="sgl330_shdr.c:93!_AfxStdShdrImplCtor")
+ Memory 035ae020[16] allocated. ( &> 16 -> 16 )
+ Object 0bac5950[obj]^1 acquired.
+ afxMemory.c:206?AfxDeallocate(p=0bbfde50)
+ Memory 0bbfde50[892] deallocated.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(04b03580?obj#1))
+ Destroying Stream... 04b03580[obj]^0
+ Running destructor for Stream, instance 04b03580.
+ afxMemory.c:206?AfxDeallocate(p=0b774a00)
+ Memory 0b774a00[512] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=04b03580)
+ Memory 04b03580[4336] deallocated.
+ Stream destroyed. 04b03580[obj]
+ Object 04b03580[obj]^0 released.
+ ERR afxDrawPipeline.c:823?_AfxParseRasterization
+    Not implemented yet.
+ ERR afxDrawPipeline.c:823?_AfxParseRasterization
+    Not implemented yet.
+ ERR afxDrawPipeline.c:823?_AfxParseRasterization
+    Not implemented yet.
+ ERR afxDrawPipeline.c:823?_AfxParseRasterization
+    Not implemented yet.
+ afxDrawPipeline.c:1403?AfxDrawSystemAcquirePipeline(dsys=049b3b90,stageCnt=2,shaders=0032c904,shaderTypes=0032c8e4)
+ Acquiring Draw pipeline...
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=5056,hint="afxObject.c:459!AfxObjectAcquire")
+ Memory 04b03580[5056] allocated. ( &> 16 -> 5056 )
+ Running constructor for subset Resource of Draw pipeline, instance 04b03580.
+ Running constructor for Resource, instance 04b03580.
+ afxResource.c:101?_AfxResCtor(res=04b03580)
+ Running constructor for Draw pipeline, instance 04b03580.
+ afxDrawPipeline.c:1447?_AfxDpipCtor(dpip=04b03580)
+ Taking connection 04b04678 connecting 0bac5870?obj#1 to holder 04b03580?obj#1.
+ 0? = AfxObject.Reacquire(0bac5870?obj#2, 04b03580?obj#1, 0fb612c0, 04b04678)
+ Taking connection 04b046a4 connecting 0bac5950?obj#1 to holder 04b03580?obj#1.
+ 0? = AfxObject.Reacquire(0bac5950?obj#2, 04b03580?obj#1, 0fb612c0, 04b046a4)
+ afxMemory.c:236?AfxReallocate(p=00000000,siz=52,hint="afxArray.c:114!AfxArrayReserve")
+ Memory 00000000[0] reallocated at 0b7cbd10[52]. ( &> 16 -> 64 )
+ afxMemory.c:236?AfxReallocate(p=0b7cbd10,siz=104,hint="afxArray.c:114!AfxArrayReserve")
+ Memory 0b7cbd10[52] reallocated at 0b77e6c0[104]. ( &> 16 -> 112 )
+ afxMemory.c:236?AfxReallocate(p=0b77e6c0,siz=156,hint="afxArray.c:114!AfxArrayReserve")
+ Memory 0b77e6c0[104] reallocated at 0b7ad7e0[156]. ( &> 16 -> 160 )
+ sgl330_dpip.c:227?_AfxStdDpipImplCtor(dpip=04b03580)
+ afxMemory.c:376?AfxAllocate(all=00000000,siz=16,hint="sgl330_dpip.c:236!_AfxStdDpipImplCtor")
+ Memory 035ae180[16] allocated. ( &> 16 -> 16 )
+ Object 04b03580[obj]^1 acquired.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0bac5950?obj#2))
+ Object 0bac5950[obj]^1 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0bac5870?obj#2))
+ Object 0bac5870[obj]^1 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(04b02430?obj#1))
+ Destroying Stream... 04b02430[obj]^0
+ Running destructor for Stream, instance 04b02430.
+ afxMemory.c:206?AfxDeallocate(p=0b774790)
+ Memory 0b774790[512] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=04b02430)
+ Memory 04b02430[4336] deallocated.
+ Stream destroyed. 04b02430[obj]
+ Object 04b02430[obj]^0 released.
+ Taking connection 74ba50d0 connecting 04b03580?obj#1 to holder 00000000?null#0.
+ afxMemory.c:236?AfxReallocate(p=06560070,siz=3686400,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 06560070[7935872] reallocated at 05d70070[3686400]. ( &> 16 -> 3686400 )
+ afxMemory.c:236?AfxReallocate(p=07f60070,siz=3686400,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 07f60070[7935872] reallocated at 06560070[3686400]. ( &> 16 -> 3686400 )
+ afxMemory.c:236?AfxReallocate(p=08700070,siz=3686400,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 08700070[7935872] reallocated at 068f0070[3686400]. ( &> 16 -> 3686400 )
+ afxMemory.c:236?AfxReallocate(p=0db30070,siz=3686400,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 0db30070[7935872] reallocated at 07ab0070[3686400]. ( &> 16 -> 3686400 )
+ afxMemory.c:236?AfxReallocate(p=0e2d0070,siz=3686400,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 0e2d0070[7935872] reallocated at 07f60070[3686400]. ( &> 16 -> 3686400 )
+ afxMemory.c:236?AfxReallocate(p=0ea70070,siz=3686400,hint="afxImage.c:422!AfxImageSetExtent")
+ Memory 0ea70070[7935872] reallocated at 082f0070[3686400]. ( &> 16 -> 3686400 )
+ sgl330_dout.c:140?_AfxStdDoutImplReadjust(dout/wnd=04b5f730,extent=(0.000000,0.000000))
+ Extent readjusted. (dout/wnd)04b5f730 -> 1280, 0.666667 of 1920; 720 0.666667 of 1080
+ sgl330_canv.c:27?_AfxStdCanvUpdate(canv=0b7b17e0)
+ sgl330_canv.c:10?_AfxStdCanvImplDtor(canv=0b7b17e0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0b77f6a0)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 00001908, glFmt 00001908, glType 00001401
+ Texture 0b77f6a0 instanced.
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=06f9baa0)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 000084f9, glFmt 000084f9, glType 000084fa
+ Texture 06f9baa0 instanced.
+ DrawOutputBuffer 0b7b17e0 reinstanced.
+ sgl330_dpip.c:133?_AfxStdDpipUpdate(dpip=04b03580)
+ sgl330_shdr.c:9?_AfxStdShdrUpdate(shdr=0bac5870)
+ Shader 0bac5870 reinstanced.
+ sgl330_shdr.c:9?_AfxStdShdrUpdate(shdr=0bac5950)
+ Shader 0bac5950 reinstanced.
+ Draw pipeline 04b03580 reinstanced.
+ Attribute 0 'xy' of vertex buffer 0bac5790 instanced.
+ Attribute 1 'uv0' of vertex buffer 0bac5790 instanced.
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0b72f750)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 00001903, glFmt 00001903, glType 00001401
+ Texture 0b72f750 instanced.
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0bac3420)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 00001903, glFmt 00001903, glType 00001401
+ Texture 0bac3420 instanced.
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0bac45d0)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 00001903, glFmt 00001903, glType 00001401
+ Texture 0bac45d0 instanced.
+ sgl330_canv.c:27?_AfxStdCanvUpdate(canv=0b7b18d0)
+ sgl330_canv.c:10?_AfxStdCanvImplDtor(canv=0b7b18d0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=072e9040)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 00001908, glFmt 00001908, glType 00001401
+ Texture 072e9040 instanced.
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=035c37c0)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 000084f9, glFmt 000084f9, glType 000084fa
+ Texture 035c37c0 instanced.
+ DrawOutputBuffer 0b7b18d0 reinstanced.
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=035bcaa0)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 00001903, glFmt 00001903, glType 00001401
+ Texture 035bcaa0 instanced.
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0b79aec0)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 00001903, glFmt 00001903, glType 00001401
+ Texture 0b79aec0 instanced.
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0b7907e0)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 00001903, glFmt 00001903, glType 00001401
+ Texture 0b7907e0 instanced.
+ sgl330_canv.c:27?_AfxStdCanvUpdate(canv=0b7b19d0)
+ sgl330_canv.c:10?_AfxStdCanvImplDtor(canv=0b7b19d0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=035800a0)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 00001908, glFmt 00001908, glType 00001401
+ Texture 035800a0 instanced.
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=035d6b50)
+ ADV sgl330_tex.c:443?_AfxStdTexUpdate
+    glTarget 00000de1, glIntFmt 000084f9, glFmt 000084f9, glType 000084fa
+ Texture 035d6b50 instanced.
+ DrawOutputBuffer 0b7b19d0 reinstanced.
+ ADV afxSystem.c:903?AfxSystemProcess
+    User input requested application reboot.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b89cf80?obj#1))
+ Destroying Application... 0b89cf80[obj]^0
+ Dropping connection 0b89d538 from 072cfb80?obj#2 to holder 0b89cf80?obj#0.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(072cfb80?obj#2))
+ Object 072cfb80[obj]^1 released.
+ Dropping connection 0b89d4e0 from 049b3b90?obj#2 to holder 0b89cf80?obj#0.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(049b3b90?obj#2))
+ Object 049b3b90[obj]^1 released.
+ Dropping connection 0b89d008 from 04b59660?obj#1 to holder 0b89cf80?obj#0.
+ Dropping connection 0b89d060 from 04b14360?obj#1 to holder 0b89cf80?obj#0.
+ Dropping connection 0b89d034 from 04b7ffb0?obj#1 to holder 0b89cf80?obj#0.
+ Running destructor for Application, instance 0b89cf80.
+ afxApplication.c:458?_AfxAppDtor(app=0b89cf80)
+ afxApplication.c:404?AfxApplicationTerminateComposition(app=0b89cf80)
+ mmplayer.c:275?AfxLeaveApplication(app=0b89cf80)
+ aaaaaaaaaaaa
+ Dropping connection 04b39e18 from 035bcaa0?obj#1 to holder 00000000?null#0.
+ Dropping connection 04b39e44 from 0b79aec0?obj#1 to holder 00000000?null#0.
+ Dropping connection 04b39e70 from 0b7907e0?obj#1 to holder 00000000?null#0.
+ Dropping connection 04b39ed8 from 0b72f750?obj#1 to holder 00000000?null#0.
+ Dropping connection 04b39f04 from 0bac3420?obj#1 to holder 00000000?null#0.
+ Dropping connection 04b39f30 from 0bac45d0?obj#1 to holder 00000000?null#0.
+ afxMemory.c:206?AfxDeallocate(p=04b39d90)
+ Memory 04b39d90[696] deallocated.
+ Dropping connection 74ba50fc from 0bac5790?obj#1 to holder 00000000?null#0.
+ Dropping connection 74ba50d0 from 04b03580?obj#1 to holder 00000000?null#0.
+ Dropping connection 74ba5064 from 00587800?obj#1 to holder 00000000?null#0.
+ Acquisition objt for Widget is being deinitialized.
+ Running destructor for subset Module of Application, instance 0b89cf80.
+ Running destructor for Module, instance 0b89cf80.
+ afxModule.c:122?_AfxMdleDtor(mdle=0b89cf80)
+ mmplayer.c:296?AfxEntryPoint(opcode=0,argc=0,argv=00000000)
+ afxMemory.c:206?AfxDeallocate(p=0b89cf80)
+ Memory 0b89cf80[1680] deallocated.
+ Application destroyed. 0b89cf80[obj]
+ Object 0b89cf80[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b7826a0?obj#1))
+ Destroying Basic I/O system... 0b7826a0[obj]^0
+ Dropping connection 0b783890 from 005873c0?obj#1 to holder 0b7826a0?obj#0.
+ Running destructor for Basic I/O system, instance 0b7826a0.
+ afxSystem.c:946?_AfxSysDtor(sys=0b7826a0)
+ Acquisition objt for Application is being deinitialized.
+ Acquisition objt for Draw system is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(049b3b90?obj#1))
+ Destroying Draw system... 049b3b90[obj]^0
+ Running destructor for Draw system, instance 049b3b90.
+ afxDrawSystem.c:682?_AfxDsysDtor(dsys=049b3b90)
+ Acquisition objt for Sky is being deinitialized.
+ Acquisition objt for Draw context is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(035c1a50?obj#1))
+ Destroying Draw context... 035c1a50[obj]^0
+ Dropping connection 00577684 from 0b7b1ac0?obj#1 to holder 035c1a50?obj#0.
+ Dropping connection 04b14d30 from 04b5f730?obj#1 to holder 035c1a50?obj#0.
+ Running destructor for Draw context, instance 035c1a50.
+ afxDrawContext.c:414?_AfxDctxDtor(dctx=035c1a50)
+ afxDrawContext.c:369?_AfxDctxDropAllInputConnections(dctx=035c1a50)
+ afxMemory.c:206?AfxDeallocate(p=00577680)
+ Memory 00577680[5632] deallocated.
+ afxDrawContext.c:392?_AfxDctxDropAllOutputConnections(dctx=035c1a50)
+ afxMemory.c:206?AfxDeallocate(p=04b14d30)
+ Memory 04b14d30[176] deallocated.
+ sgl330_dctx.c:2493?_AfxStdDctxImplDtor(dctx=035c1a50)
+ afxMemory.c:206?AfxDeallocate(p=0056ba30)
+ Memory 0056ba30[28] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=035c1a50)
+ Memory 035c1a50[200] deallocated.
+ Draw context destroyed. 035c1a50[obj]
+ Object 035c1a50[obj]^0 released.
+ Acquisition objt for Draw output is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(04b5f730?obj#1))
+ Destroying Draw output... 04b5f730[obj]^0
+ Dropping connection 0063bb28 from 0b7b19d0?obj#1 to holder 04b5f730?obj#0.
+ Dropping connection 0063bafc from 0b7b18d0?obj#1 to holder 04b5f730?obj#0.
+ Dropping connection 0063bad0 from 0b7b17e0?obj#1 to holder 04b5f730?obj#0.
+ Running destructor for Draw output, instance 04b5f730.
+ afxDrawOutput.c:310?_AfxDoutDtor(dout/wnd=04b5f730)
+ afxDrawOutput.c:278?_AfxDoutDropAllCanvases(dout=04b5f730)
+ afxMemory.c:206?AfxDeallocate(p=0063bad0)
+ Memory 0063bad0[132] deallocated.
+ sgl330_dout.c:158?_AfxStdDoutImplDtor(dout=04b5f730)
+ ERR afxDrawOutput.c:245?AfxDrawOutputSetExtent
+    
+ ERR afxDrawOutput.c:245?AfxDrawOutputSetExtent
+    (whd[0])
+    Invalid
+ ERR afxDrawOutput.c:246?AfxDrawOutputSetExtent
+    
+ ERR afxDrawOutput.c:246?AfxDrawOutputSetExtent
+    (whd[1])
+    Invalid
+ afxMemory.c:206?AfxDeallocate(p=04b45d70)
+ Memory 04b45d70[2636] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=04b5f730)
+ Memory 04b5f730[288] deallocated.
+ Draw output destroyed. 04b5f730[obj]
+ Object 04b5f730[obj]^0 released.
+ Acquisition objt for Draw input is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b7b1ac0?obj#1))
+ Destroying Draw input... 0b7b1ac0[obj]^0
+ Dropping connection 0063bcf8 from 0b9726e0?obj#1 to holder 0b7b1ac0?obj#0.
+ Dropping connection 0063bccc from 04a8a050?obj#1 to holder 0b7b1ac0?obj#0.
+ Dropping connection 0063bca0 from 0b7fcc80?obj#1 to holder 0b7b1ac0?obj#0.
+ Running destructor for Draw input, instance 0b7b1ac0.
+ afxDrawInput.c:222?_AfxDinDtor(din=0b7b1ac0)
+ afxDrawInput.c:203?_AfxDinDropAllScripts(din=0b7b1ac0)
+ afxMemory.c:206?AfxDeallocate(p=0063bca0)
+ Memory 0063bca0[132] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0b7b1ac0)
+ Memory 0b7b1ac0[144] deallocated.
+ Draw input destroyed. 0b7b1ac0[obj]
+ Object 0b7b1ac0[obj]^0 released.
+ Acquisition objt for Draw script is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b9726e0?obj#1))
+ Destroying Draw script... 0b9726e0[obj]^0
+ Running destructor for Draw script, instance 0b9726e0.
+ afxDrawScript.c:905?_AfxDscrDtor(dscr=0b9726e0)
+ Running destructor for subset Stream of Draw script, instance 0b9726e0.
+ Running destructor for Stream, instance 0b9726e0.
+ afxMemory.c:206?AfxDeallocate(p=0b774530)
+ Memory 0b774530[512] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0b9726e0)
+ Memory 0b9726e0[4360] deallocated.
+ Draw script destroyed. 0b9726e0[obj]
+ Object 0b9726e0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(04a8a050?obj#1))
+ Destroying Draw script... 04a8a050[obj]^0
+ Running destructor for Draw script, instance 04a8a050.
+ afxDrawScript.c:905?_AfxDscrDtor(dscr=04a8a050)
+ Running destructor for subset Stream of Draw script, instance 04a8a050.
+ Running destructor for Stream, instance 04a8a050.
+ afxMemory.c:206?AfxDeallocate(p=0b7736c0)
+ Memory 0b7736c0[512] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=04a8a050)
+ Memory 04a8a050[4360] deallocated.
+ Draw script destroyed. 04a8a050[obj]
+ Object 04a8a050[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b7fcc80?obj#1))
+ Destroying Draw script... 0b7fcc80[obj]^0
+ Running destructor for Draw script, instance 0b7fcc80.
+ afxDrawScript.c:905?_AfxDscrDtor(dscr=0b7fcc80)
+ Running destructor for subset Stream of Draw script, instance 0b7fcc80.
+ Running destructor for Stream, instance 0b7fcc80.
+ afxMemory.c:206?AfxDeallocate(p=0b773df0)
+ Memory 0b773df0[512] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0b7fcc80)
+ Memory 0b7fcc80[4360] deallocated.
+ Draw script destroyed. 0b7fcc80[obj]
+ Object 0b7fcc80[obj]^0 released.
+ Acquisition objt for Draw pipeline is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(04b03580?obj#1))
+ Destroying Draw pipeline... 04b03580[obj]^0
+ Dropping connection 04b046a4 from 0bac5950?obj#1 to holder 04b03580?obj#0.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0bac5950?obj#1))
+ Destroying Shader... 0bac5950[obj]^0
+ Running destructor for Shader, instance 0bac5950.
+ sgl330_shdr.c:60?_AfxStdShdrImplDtor(shdr=0bac5950)
+ afxMemory.c:206?AfxDeallocate(p=0bbfe230)
+ Memory 0bbfe230[892] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0bac5950)
+ Memory 0bac5950[120] deallocated.
+ Shader destroyed. 0bac5950[obj]
+ Object 0bac5950[obj]^0 released.
+ Dropping connection 04b04678 from 0bac5870?obj#1 to holder 04b03580?obj#0.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0bac5870?obj#1))
+ Destroying Shader... 0bac5870[obj]^0
+ Running destructor for Shader, instance 0bac5870.
+ sgl330_shdr.c:60?_AfxStdShdrImplDtor(shdr=0bac5870)
+ afxMemory.c:206?AfxDeallocate(p=04b148d0)
+ Memory 04b148d0[179] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0bac5870)
+ Memory 0bac5870[120] deallocated.
+ Shader destroyed. 0bac5870[obj]
+ Object 0bac5870[obj]^0 released.
+ Running destructor for Draw pipeline, instance 04b03580.
+ afxDrawPipeline.c:1587?_AfxDpipDtor(dpip=04b03580)
+ sgl330_dpip.c:203?_AfxStdDpipImplDtor(dpip=04b03580)
+ afxMemory.c:206?AfxDeallocate(p=0b7ad7e0)
+ Memory 0b7ad7e0[156] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=035ae180)
+ Memory 035ae180[16] deallocated.
+ Running destructor for subset Resource of Draw pipeline, instance 04b03580.
+ Running destructor for Resource, instance 04b03580.
+ afxResource.c:92?_AfxResDtor(res=04b03580)
+ afxMemory.c:206?AfxDeallocate(p=04b03580)
+ Memory 04b03580[5056] deallocated.
+ Draw pipeline destroyed. 04b03580[obj]
+ Object 04b03580[obj]^0 released.
+ Acquisition objt for Shader is being deinitialized.
+ Acquisition objt for Sampler is being deinitialized.
+ Acquisition objt for Canvas is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b7b19d0?obj#1))
+ Destroying Canvas... 0b7b19d0[obj]^0
+ Dropping connection 0058199c from 035d6b50?obj#1 to holder 0b7b19d0?obj#0.
+ Dropping connection 00581970 from 035800a0?obj#1 to holder 0b7b19d0?obj#0.
+ Running destructor for Canvas, instance 0b7b19d0.
+ afxCanvas.c:204?_AfxCanvDtor(canv=0b7b19d0)
+ afxCanvas.c:185?_AfxCanvDropAllSurfaces(canv=0b7b19d0)
+ afxMemory.c:206?AfxDeallocate(p=00581970)
+ Memory 00581970[88] deallocated.
+ sgl330_canv.c:10?_AfxStdCanvImplDtor(canv=0b7b19d0)
+ afxMemory.c:206?AfxDeallocate(p=04aa7370)
+ Memory 04aa7370[20] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0b7b19d0)
+ Memory 0b7b19d0[148] deallocated.
+ Canvas destroyed. 0b7b19d0[obj]
+ Object 0b7b19d0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b7b18d0?obj#1))
+ Destroying Canvas... 0b7b18d0[obj]^0
+ Dropping connection 005818dc from 035c37c0?obj#1 to holder 0b7b18d0?obj#0.
+ Dropping connection 005818b0 from 072e9040?obj#1 to holder 0b7b18d0?obj#0.
+ Running destructor for Canvas, instance 0b7b18d0.
+ afxCanvas.c:204?_AfxCanvDtor(canv=0b7b18d0)
+ afxCanvas.c:185?_AfxCanvDropAllSurfaces(canv=0b7b18d0)
+ afxMemory.c:206?AfxDeallocate(p=005818b0)
+ Memory 005818b0[88] deallocated.
+ sgl330_canv.c:10?_AfxStdCanvImplDtor(canv=0b7b18d0)
+ afxMemory.c:206?AfxDeallocate(p=04aa75c0)
+ Memory 04aa75c0[20] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0b7b18d0)
+ Memory 0b7b18d0[148] deallocated.
+ Canvas destroyed. 0b7b18d0[obj]
+ Object 0b7b18d0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b7b17e0?obj#1))
+ Destroying Canvas... 0b7b17e0[obj]^0
+ Dropping connection 0058181c from 06f9baa0?obj#1 to holder 0b7b17e0?obj#0.
+ Dropping connection 005817f0 from 0b77f6a0?obj#1 to holder 0b7b17e0?obj#0.
+ Running destructor for Canvas, instance 0b7b17e0.
+ afxCanvas.c:204?_AfxCanvDtor(canv=0b7b17e0)
+ afxCanvas.c:185?_AfxCanvDropAllSurfaces(canv=0b7b17e0)
+ afxMemory.c:206?AfxDeallocate(p=005817f0)
+ Memory 005817f0[88] deallocated.
+ sgl330_canv.c:10?_AfxStdCanvImplDtor(canv=0b7b17e0)
+ afxMemory.c:206?AfxDeallocate(p=04aa7280)
+ Memory 04aa7280[20] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0b7b17e0)
+ Memory 0b7b17e0[148] deallocated.
+ Canvas destroyed. 0b7b17e0[obj]
+ Object 0b7b17e0[obj]^0 released.
+ Acquisition objt for Texture is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0bac45d0?obj#1))
+ Destroying Texture... 0bac45d0[obj]^0
+ Running destructor for Texture, instance 0bac45d0.
+ afxTexture.c:142?_AfxTexDtor(tex=0bac45d0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0bac45d0)
+ afxMemory.c:206?AfxDeallocate(p=04aa7640)
+ Memory 04aa7640[20] deallocated.
+ Running destructor for subset Image of Texture, instance 0bac45d0.
+ Running destructor for Image, instance 0bac45d0.
+ afxImage.c:616?_AfxImgDtor(img=0bac45d0)
+ afxMemory.c:206?AfxDeallocate(p=0bc76700)
+ Memory 0bc76700[230400] deallocated.
+ Running destructor for subset Resource of Image, instance 0bac45d0.
+ Running destructor for Resource, instance 0bac45d0.
+ afxResource.c:92?_AfxResDtor(res=0bac45d0)
+ afxMemory.c:206?AfxDeallocate(p=0bac45d0)
+ Memory 0bac45d0[4424] deallocated.
+ Texture destroyed. 0bac45d0[obj]
+ Object 0bac45d0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0bac3420?obj#1))
+ Destroying Texture... 0bac3420[obj]^0
+ Running destructor for Texture, instance 0bac3420.
+ afxTexture.c:142?_AfxTexDtor(tex=0bac3420)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0bac3420)
+ afxMemory.c:206?AfxDeallocate(p=04aa7460)
+ Memory 04aa7460[20] deallocated.
+ Running destructor for subset Image of Texture, instance 0bac3420.
+ Running destructor for Image, instance 0bac3420.
+ afxImage.c:616?_AfxImgDtor(img=0bac3420)
+ afxMemory.c:206?AfxDeallocate(p=0bc3e2a0)
+ Memory 0bc3e2a0[230400] deallocated.
+ Running destructor for subset Resource of Image, instance 0bac3420.
+ Running destructor for Resource, instance 0bac3420.
+ afxResource.c:92?_AfxResDtor(res=0bac3420)
+ afxMemory.c:206?AfxDeallocate(p=0bac3420)
+ Memory 0bac3420[4424] deallocated.
+ Texture destroyed. 0bac3420[obj]
+ Object 0bac3420[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b72f750?obj#1))
+ Destroying Texture... 0b72f750[obj]^0
+ Running destructor for Texture, instance 0b72f750.
+ afxTexture.c:142?_AfxTexDtor(tex=0b72f750)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0b72f750)
+ afxMemory.c:206?AfxDeallocate(p=04aa7190)
+ Memory 04aa7190[20] deallocated.
+ Running destructor for subset Image of Texture, instance 0b72f750.
+ Running destructor for Image, instance 0b72f750.
+ afxImage.c:616?_AfxImgDtor(img=0b72f750)
+ afxMemory.c:206?AfxDeallocate(p=05170070)
+ Memory 05170070[921600] deallocated.
+ Running destructor for subset Resource of Image, instance 0b72f750.
+ Running destructor for Resource, instance 0b72f750.
+ afxResource.c:92?_AfxResDtor(res=0b72f750)
+ afxMemory.c:206?AfxDeallocate(p=0b72f750)
+ Memory 0b72f750[4424] deallocated.
+ Texture destroyed. 0b72f750[obj]
+ Object 0b72f750[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b7907e0?obj#1))
+ Destroying Texture... 0b7907e0[obj]^0
+ Running destructor for Texture, instance 0b7907e0.
+ afxTexture.c:142?_AfxTexDtor(tex=0b7907e0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0b7907e0)
+ afxMemory.c:206?AfxDeallocate(p=04aa74d0)
+ Memory 04aa74d0[20] deallocated.
+ Running destructor for subset Image of Texture, instance 0b7907e0.
+ Running destructor for Image, instance 0b7907e0.
+ afxImage.c:616?_AfxImgDtor(img=0b7907e0)
+ afxMemory.c:206?AfxDeallocate(p=049ccfc0)
+ Memory 049ccfc0[230400] deallocated.
+ Running destructor for subset Resource of Image, instance 0b7907e0.
+ Running destructor for Resource, instance 0b7907e0.
+ afxResource.c:92?_AfxResDtor(res=0b7907e0)
+ afxMemory.c:206?AfxDeallocate(p=0b7907e0)
+ Memory 0b7907e0[4424] deallocated.
+ Texture destroyed. 0b7907e0[obj]
+ Object 0b7907e0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b79aec0?obj#1))
+ Destroying Texture... 0b79aec0[obj]^0
+ Running destructor for Texture, instance 0b79aec0.
+ afxTexture.c:142?_AfxTexDtor(tex=0b79aec0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0b79aec0)
+ afxMemory.c:206?AfxDeallocate(p=04aa72f0)
+ Memory 04aa72f0[20] deallocated.
+ Running destructor for subset Image of Texture, instance 0b79aec0.
+ Running destructor for Image, instance 0b79aec0.
+ afxImage.c:616?_AfxImgDtor(img=0b79aec0)
+ afxMemory.c:206?AfxDeallocate(p=0bc05e30)
+ Memory 0bc05e30[230400] deallocated.
+ Running destructor for subset Resource of Image, instance 0b79aec0.
+ Running destructor for Resource, instance 0b79aec0.
+ afxResource.c:92?_AfxResDtor(res=0b79aec0)
+ afxMemory.c:206?AfxDeallocate(p=0b79aec0)
+ Memory 0b79aec0[4424] deallocated.
+ Texture destroyed. 0b79aec0[obj]
+ Object 0b79aec0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(035bcaa0?obj#1))
+ Destroying Texture... 035bcaa0[obj]^0
+ Running destructor for Texture, instance 035bcaa0.
+ afxTexture.c:142?_AfxTexDtor(tex=035bcaa0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=035bcaa0)
+ afxMemory.c:206?AfxDeallocate(p=04aa7110)
+ Memory 04aa7110[20] deallocated.
+ Running destructor for subset Image of Texture, instance 035bcaa0.
+ Running destructor for Image, instance 035bcaa0.
+ afxImage.c:616?_AfxImgDtor(img=035bcaa0)
+ afxMemory.c:206?AfxDeallocate(p=04d30070)
+ Memory 04d30070[921600] deallocated.
+ Running destructor for subset Resource of Image, instance 035bcaa0.
+ Running destructor for Resource, instance 035bcaa0.
+ afxResource.c:92?_AfxResDtor(res=035bcaa0)
+ afxMemory.c:206?AfxDeallocate(p=035bcaa0)
+ Memory 035bcaa0[4424] deallocated.
+ Texture destroyed. 035bcaa0[obj]
+ Object 035bcaa0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(035d6b50?obj#1))
+ Destroying Texture... 035d6b50[obj]^0
+ Running destructor for Texture, instance 035d6b50.
+ afxTexture.c:142?_AfxTexDtor(tex=035d6b50)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=035d6b50)
+ afxMemory.c:206?AfxDeallocate(p=04aa7200)
+ Memory 04aa7200[20] deallocated.
+ Running destructor for subset Image of Texture, instance 035d6b50.
+ Running destructor for Image, instance 035d6b50.
+ afxImage.c:616?_AfxImgDtor(img=035d6b50)
+ afxMemory.c:206?AfxDeallocate(p=082f0070)
+ Memory 082f0070[3686400] deallocated.
+ Running destructor for subset Resource of Image, instance 035d6b50.
+ Running destructor for Resource, instance 035d6b50.
+ afxResource.c:92?_AfxResDtor(res=035d6b50)
+ afxMemory.c:206?AfxDeallocate(p=035d6b50)
+ Memory 035d6b50[4424] deallocated.
+ Texture destroyed. 035d6b50[obj]
+ Object 035d6b50[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(035800a0?obj#1))
+ Destroying Texture... 035800a0[obj]^0
+ Running destructor for Texture, instance 035800a0.
+ afxTexture.c:142?_AfxTexDtor(tex=035800a0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=035800a0)
+ afxMemory.c:206?AfxDeallocate(p=04aa70a0)
+ Memory 04aa70a0[20] deallocated.
+ Running destructor for subset Image of Texture, instance 035800a0.
+ Running destructor for Image, instance 035800a0.
+ afxImage.c:616?_AfxImgDtor(img=035800a0)
+ afxMemory.c:206?AfxDeallocate(p=07f60070)
+ Memory 07f60070[3686400] deallocated.
+ Running destructor for subset Resource of Image, instance 035800a0.
+ Running destructor for Resource, instance 035800a0.
+ afxResource.c:92?_AfxResDtor(res=035800a0)
+ afxMemory.c:206?AfxDeallocate(p=035800a0)
+ Memory 035800a0[4424] deallocated.
+ Texture destroyed. 035800a0[obj]
+ Object 035800a0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(035c37c0?obj#1))
+ Destroying Texture... 035c37c0[obj]^0
+ Running destructor for Texture, instance 035c37c0.
+ afxTexture.c:142?_AfxTexDtor(tex=035c37c0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=035c37c0)
+ afxMemory.c:206?AfxDeallocate(p=04aa7550)
+ Memory 04aa7550[20] deallocated.
+ Running destructor for subset Image of Texture, instance 035c37c0.
+ Running destructor for Image, instance 035c37c0.
+ afxImage.c:616?_AfxImgDtor(img=035c37c0)
+ afxMemory.c:206?AfxDeallocate(p=07ab0070)
+ Memory 07ab0070[3686400] deallocated.
+ Running destructor for subset Resource of Image, instance 035c37c0.
+ Running destructor for Resource, instance 035c37c0.
+ afxResource.c:92?_AfxResDtor(res=035c37c0)
+ afxMemory.c:206?AfxDeallocate(p=035c37c0)
+ Memory 035c37c0[4424] deallocated.
+ Texture destroyed. 035c37c0[obj]
+ Object 035c37c0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(072e9040?obj#1))
+ Destroying Texture... 072e9040[obj]^0
+ Running destructor for Texture, instance 072e9040.
+ afxTexture.c:142?_AfxTexDtor(tex=072e9040)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=072e9040)
+ afxMemory.c:206?AfxDeallocate(p=04aa73e0)
+ Memory 04aa73e0[20] deallocated.
+ Running destructor for subset Image of Texture, instance 072e9040.
+ Running destructor for Image, instance 072e9040.
+ afxImage.c:616?_AfxImgDtor(img=072e9040)
+ afxMemory.c:206?AfxDeallocate(p=068f0070)
+ Memory 068f0070[3686400] deallocated.
+ Running destructor for subset Resource of Image, instance 072e9040.
+ Running destructor for Resource, instance 072e9040.
+ afxResource.c:92?_AfxResDtor(res=072e9040)
+ afxMemory.c:206?AfxDeallocate(p=072e9040)
+ Memory 072e9040[4424] deallocated.
+ Texture destroyed. 072e9040[obj]
+ Object 072e9040[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(06f9baa0?obj#1))
+ Destroying Texture... 06f9baa0[obj]^0
+ Running destructor for Texture, instance 06f9baa0.
+ afxTexture.c:142?_AfxTexDtor(tex=06f9baa0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=06f9baa0)
+ afxMemory.c:206?AfxDeallocate(p=04aa7020)
+ Memory 04aa7020[20] deallocated.
+ Running destructor for subset Image of Texture, instance 06f9baa0.
+ Running destructor for Image, instance 06f9baa0.
+ afxImage.c:616?_AfxImgDtor(img=06f9baa0)
+ afxMemory.c:206?AfxDeallocate(p=06560070)
+ Memory 06560070[3686400] deallocated.
+ Running destructor for subset Resource of Image, instance 06f9baa0.
+ Running destructor for Resource, instance 06f9baa0.
+ afxResource.c:92?_AfxResDtor(res=06f9baa0)
+ afxMemory.c:206?AfxDeallocate(p=06f9baa0)
+ Memory 06f9baa0[4424] deallocated.
+ Texture destroyed. 06f9baa0[obj]
+ Object 06f9baa0[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0b77f6a0?obj#1))
+ Destroying Texture... 0b77f6a0[obj]^0
+ Running destructor for Texture, instance 0b77f6a0.
+ afxTexture.c:142?_AfxTexDtor(tex=0b77f6a0)
+ sgl330_tex.c:355?_AfxStdTexImplDtor(img=0b77f6a0)
+ afxMemory.c:206?AfxDeallocate(p=04aa6fb0)
+ Memory 04aa6fb0[20] deallocated.
+ Running destructor for subset Image of Texture, instance 0b77f6a0.
+ Running destructor for Image, instance 0b77f6a0.
+ afxImage.c:616?_AfxImgDtor(img=0b77f6a0)
+ afxMemory.c:206?AfxDeallocate(p=05d70070)
+ Memory 05d70070[3686400] deallocated.
+ Running destructor for subset Resource of Image, instance 0b77f6a0.
+ Running destructor for Resource, instance 0b77f6a0.
+ afxResource.c:92?_AfxResDtor(res=0b77f6a0)
+ afxMemory.c:206?AfxDeallocate(p=0b77f6a0)
+ Memory 0b77f6a0[4424] deallocated.
+ Texture destroyed. 0b77f6a0[obj]
+ Object 0b77f6a0[obj]^0 released.
+ Acquisition objt for Image is being deinitialized.
+ Acquisition objt for Uniform buffer is being deinitialized.
+ Acquisition objt for Index buffer is being deinitialized.
+ Acquisition objt for Vertex buffer is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(0bac5790?obj#1))
+ Destroying Vertex buffer... 0bac5790[obj]^0
+ Running destructor for Vertex buffer, instance 0bac5790.
+ afxVertexBuffer.c:765?_AfxVbufDtor(vbuf=0bac5790)
+ sgl330_vbuf.c:167?_AfxStdVbufImplDtor(vbuf=0bac5790)
+ afxMemory.c:206?AfxDeallocate(p=04a8e1a0)
+ Memory 04a8e1a0[32] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=04a8cdf0)
+ Memory 04a8cdf0[32] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0b7b3920)
+ Memory 0b7b3920[224] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=04b5b610)
+ Memory 04b5b610[248] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0bac5790)
+ Memory 0bac5790[120] deallocated.
+ Vertex buffer destroyed. 0bac5790[obj]
+ Object 0bac5790[obj]^0 released.
+ sgl330_dsys.c:539?_AfxStdDsysImplDtor(dsys=049b3b90)
+ afxMemory.c:206?AfxDeallocate(p=005805a0)
+ Memory 005805a0[1784] deallocated.
+ Running destructor for subset Module of Draw system, instance 049b3b90.
+ Running destructor for Module, instance 049b3b90.
+ afxModule.c:122?_AfxMdleDtor(mdle=049b3b90)
+ afxMemory.c:206?AfxDeallocate(p=049b3b90)
+ Memory 049b3b90[2008] deallocated.
+ Draw system destroyed. 049b3b90[obj]
+ Object 049b3b90[obj]^0 released.
+ Acquisition objt for Space is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(072cfb80?obj#1))
+ Destroying Space... 072cfb80[obj]^0
+ Running destructor for Space, instance 072cfb80.
+ afxSimulation.c:316?_AfxSimDtor(sim=072cfb80)
+ Acquisition objt for Entity is being deinitialized.
+ Acquisition objt for Body is being deinitialized.
+ Acquisition objt for Light is being deinitialized.
+ Acquisition objt for Camera is being deinitialized.
+ Acquisition objt for Model is being deinitialized.
+ Acquisition objt for Mesh is being deinitialized.
+ Acquisition objt for Material is being deinitialized.
+ Acquisition objt for Skeleton is being deinitialized.
+ Acquisition objt for afxNode is being deinitialized.
+ Running destructor for subset Module of Space, instance 072cfb80.
+ Running destructor for Module, instance 072cfb80.
+ afxModule.c:122?_AfxMdleDtor(mdle=072cfb80)
+ afxMemory.c:206?AfxDeallocate(p=072cfb80)
+ Memory 072cfb80[1488] deallocated.
+ Space destroyed. 072cfb80[obj]
+ Object 072cfb80[obj]^0 released.
+ Acquisition objt for Mouse is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(04b14360?obj#1))
+ Destroying Mouse... 04b14360[obj]^0
+ Running destructor for Mouse, instance 04b14360.
+ afxMouse.c:237?_AfxMseDtor(mse=04b14360)
+ Running destructor for subset HID of Mouse, instance 04b14360.
+ Running destructor for HID, instance 04b14360.
+ afxHid.c:68?_AfxHidDtor(hid=04b14360)
+ afxMemory.c:206?AfxDeallocate(p=04b14360)
+ Memory 04b14360[176] deallocated.
+ Mouse destroyed. 04b14360[obj]
+ Object 04b14360[obj]^0 released.
+ Acquisition objt for Keyboard is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(04b7ffb0?obj#1))
+ Destroying Keyboard... 04b7ffb0[obj]^0
+ Running destructor for Keyboard, instance 04b7ffb0.
+ afxKeyboard.c:168?_AfxKbdDtor(kbd=04b7ffb0)
+ Running destructor for subset HID of Keyboard, instance 04b7ffb0.
+ Running destructor for HID, instance 04b7ffb0.
+ afxHid.c:68?_AfxHidDtor(hid=04b7ffb0)
+ afxMemory.c:206?AfxDeallocate(p=04b7ffb0)
+ Memory 04b7ffb0[2160] deallocated.
+ Keyboard destroyed. 04b7ffb0[obj]
+ Object 04b7ffb0[obj]^0 released.
+ Acquisition objt for HID is being deinitialized.
+ Acquisition objt for Resource is being deinitialized.
+ Acquisition objt for Archive is being deinitialized.
+ Acquisition objt for Stream is being deinitialized.
+ Acquisition objt for Module is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(00587800?obj#1))
+ Destroying Module... 00587800[obj]^0
+ Running destructor for Module, instance 00587800.
+ afxModule.c:122?_AfxMdleDtor(mdle=00587800)
+ afxMemory.c:206?AfxDeallocate(p=00587800)
+ Memory 00587800[116] deallocated.
+ Module destroyed. 00587800[obj]
+ Object 00587800[obj]^0 released.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(005873c0?obj#1))
+ Destroying Module... 005873c0[obj]^0
+ Running destructor for Module, instance 005873c0.
+ afxModule.c:122?_AfxMdleDtor(mdle=005873c0)
+ afxQwadro.c:56?AfxEntryPoint(opcode=0,argc=0,argv=00000000)
+ afxMemory.c:206?AfxDeallocate(p=005873c0)
+ Memory 005873c0[116] deallocated.
+ Module destroyed. 005873c0[obj]
+ Object 005873c0[obj]^0 released.
+ Acquisition objt for Allocator is being deinitialized.
+ afxObject.c:413?AfxObjectRelease(AfxObject.Release(04b59660?obj#1))
+ Destroying Allocator... 04b59660[obj]^0
+ Running destructor for Allocator, instance 04b59660.
+ afxAllocator.c:715?_AfxAllDtor(all=04b59660)
+ afxAllocator.c:941?AfxAllocatorExhaust(all=04b59660)
+ Exhausted. (all)04b59660
+ afxMemory.c:206?AfxDeallocate(p=04b59660)
+ Memory 04b59660[328] deallocated.
+ Allocator destroyed. 04b59660[obj]
+ Object 04b59660[obj]^0 released.
+ Unmounting point ""...
+ Point "sound" rwx[1,0,0] unmounted -> "E:\qwadro\afx\cooked\_system32/../../_sound".
+ afxMemory.c:206?AfxDeallocate(p=0b779f10)
+ Memory 0b779f10[608] deallocated.
+ Point "data" rwx[1,0,0] unmounted -> "E:\qwadro\afx\cooked\_system32/../../_data".
+ afxMemory.c:206?AfxDeallocate(p=0b779c50)
+ Memory 0b779c50[608] deallocated.
+ Point "art" rwx[1,0,0] unmounted -> "E:\qwadro\afx\cooked\_system32/../../_art".
+ afxMemory.c:206?AfxDeallocate(p=0b779980)
+ Memory 0b779980[608] deallocated.
+ Point "system" rwx[1,0,0] unmounted -> "E:\qwadro\afx\cooked\_system32".
+ afxMemory.c:206?AfxDeallocate(p=0b7796c0)
+ Memory 0b7796c0[608] deallocated.
+ Point "." rwx[1,0,0] unmounted -> "E:\qwadro\afx\cooked\_system32/..".
+ afxMemory.c:206?AfxDeallocate(p=071c9680)
+ Memory 071c9680[608] deallocated.
+ afxMemory.c:206?AfxDeallocate(p=0b7826a0)
+ Memory 0b7826a0[5824] deallocated.
+ Basic I/O system destroyed. 0b7826a0[obj]
+ Object 0b7826a0[obj]^0 released.
+ afxDebug.c:455?AfxDetachDebugger()
+ afxDebug.c:333?AfxDetachDebugTerminal()

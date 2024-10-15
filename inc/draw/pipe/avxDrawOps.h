@@ -30,6 +30,8 @@
 #include "qwadro/inc/draw/pipe/avxTransformationOps.h"
 #include "qwadro/inc/draw/pipe/avxRasterizationOps.h"
 
+#pragma pack(push, 1)
+
 AFX_DEFINE_STRUCT(avxDrawIndirectCmd)
 /// Structure specifying a indirect drawing command
 {
@@ -54,6 +56,8 @@ AFX_DEFINE_STRUCT(avxDispatchIndirectCmd)
 {
     afxNat32            x, y, z; /// the number of local workgroups to dispatch in the X, Y and Z dimensions.
 };
+
+#pragma pack(pop)
 
 AFX_DEFINE_STRUCT(afxCmdQuery)
 {
@@ -132,8 +136,8 @@ AFX_DEFINE_STRUCT(afxCmd)
 
         afxCmdId(*SetBlendConstants)(avxCmdb cmdb, afxReal const blendConstants[4]);
 
-        afxCmdId(*BeginDrawScope)(avxCmdb cmdb, avxSynthesisConfig const*state);
-        afxCmdId(*EndDrawScope)(avxCmdb cmdb);
+        afxCmdId(*CommenceDrawScope)(avxCmdb cmdb, avxDrawScope const*state);
+        afxCmdId(*ConcludeDrawScope)(avxCmdb cmdb);
         afxCmdId(*NextPass)(avxCmdb cmdb, afxBool useAuxStreams);
     } razr;
     

@@ -116,6 +116,7 @@ AFX afxChar const* _AfxDbgTrimFilename(afxChar const* path);
 //#define AFX_SUCCESS ((afxResult)NIL)
 #define AFX_TEST(_exp_) if(_exp_) ((err) = (afxError)(-((afxNat16)__LINE__)), AfxLogError(AFX_STRINGIFY((_exp_))))
 #define AfxThrowError() ((err) = (afxError)(-((afxNat16)__LINE__)), AfxLogError(""))
+#define AfxThrowSoftError() ((err) = (afxError)(-((afxNat16)__LINE__))) // does not echo
 #define AfxResetResult(rslt) (rslt = AFX_SUCCESS)
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
@@ -148,6 +149,10 @@ AFX afxChar const* _AfxDbgTrimFilename(afxChar const* path);
 #   define AfxAssert7(a_, b_, c_, d_, e_, f_, g_) AfxAssert6((a_),(b_),(c_),(d_),(e_),(f_)), AfxAssert((g_))
 #   define AfxAssert8(a_, b_, c_, d_, e_, f_, g_, h_) AfxAssert7((a_),(b_),(c_),(d_),(e_),(f_),(g_)), AfxAssert((h_))
 #   define AfxAssert9(a_, b_, c_, d_, e_, f_, g_, h_, i_) AfxAssert8((a_),(b_),(c_),(d_),(e_),(f_),(g_),(h_)), AfxAssert((i_))
+
+#   define AfxAssertAND(condA_,condB_) ((!!((condA_) && (condB_)))||(AfxThrowError(),AfxLogAssertionFailure("%s\n    %s",AFX_STRINGIFY((condA_) && (condB_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertXOR(condA_,condB_) ((!!((condA_) || (condB_)))||(AfxThrowError(),AfxLogAssertionFailure("%s\n    %s",AFX_STRINGIFY((condA_) || (condB_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertOR(condA_,condB_)  ((!!(((condA_) && !(condB_)) || ((condB_) && !(condA_))))||(AfxThrowError(),AfxLogAssertionFailure("%s\n    %s",AFX_STRINGIFY(((condA_) && !(condB_)) || ((condB_) && !(condA_))),errorMsg[AFXERR_INVALID]),0))
 
 #   define AfxAssertSoft(cond_)         ((!!((cond_)))||(AfxThrowError(),AfxLogAdvertence("%s\n    %s",AFX_STRINGIFY((cond_)),errorMsg[AFXERR_INVALID]),0))
 #   define AfxAssertDiff(a_,b_)         ((!!(((void const*)(a_) != (void const*)(b_))))||(AfxThrowError(),AfxLogAssertionFailure("%s\n    %s",AFX_STRINGIFY((cond_)),errorMsg[AFXERR_INVALID]),0))

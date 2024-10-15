@@ -1,0 +1,501 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                         QWADRO Application Framework                        
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class initialized.
+ Acquiring Core Execution System...
+ Running constructor for Core Execution System, instance 008dd4d0.
+ afxSystem.c:1121?_AfxSysCtor(sys=008dd4d0)
+ MemContext class initialized.
+ Point "." rwx[1,0,0] mounted -> "E:/qwadro/afx/cooked/_system32/..".
+ Point "system" rwx[1,0,0] mounted -> "E:/qwadro/afx/cooked/_system32".
+ Point "art" rwx[1,0,0] mounted -> "E:/qwadro/afx/cooked/_system32/../../_art".
+ Point "data" rwx[1,0,0] mounted -> "E:/qwadro/afx/cooked/_system32/../../_data".
+ Point "sound" rwx[1,0,0] mounted -> "E:/qwadro/afx/cooked/_system32/../../_sound".
+ Thread class initialized.
+ Module class initialized.
+ afxModule.c:63?AfxSystemAcquireModule(sys=008dd4d0,uri=system/e2coree.dll)
+ Acquiring Module...
+ Running constructor for Module, instance 008e0a50.
+ afxModule.c:129?_AfxMdleCtor(uri:system/e2coree.dll)
+ Object 008e0a50[mdle]^1 acquired.
+ Taking connection 008dece8 connecting 008e0a50?mdle#1 to holder 008dd4d0?sys#1.
+ I/O Stream class initialized.
+ Archive class initialized.
+ Resource class initialized.
+ Uniform Resource Dictionary class initialized.
+ HID class initialized.
+ Keyboard class initialized.
+ Mouse class initialized.
+ Draw System class initialized.
+ Application class initialized.
+ Object 008dd4d0[sys]^1 acquired.
+ afxDrawSystem.c:171?AfxSystemAcquireDrawSystem(sys=008dd4d0)
+ Acquiring Draw System...
+ Running constructor for Draw System, instance 008e1030.
+ afxDrawSystem.c:250?_AfxDsysCtor(dsys=008e1030)
+ Draw Driver class initialized.
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:63?AfxSystemAcquireModule(sys=008dd4d0,uri=e2draw.icd)
+ Acquiring Module...
+ Running constructor for Module, instance 008e0b20.
+ afxModule.c:129?_AfxMdleCtor(uri:e2draw.icd)
+ Object 008e0b20[mdle]^1 acquired.
+ afxDrawDriver.c:46?AfxDrawSystemRegisterDriver(dsys=008e1030,mdle=008e0b20,spec=0046e16c)
+ Acquiring Draw Driver...
+ Running constructor for Draw Driver, instance 008e2cf0.
+ afxDrawDriver.c:79?_AfxDdrvCtor(ddrv=008e2cf0)
+ Draw Context class initialized.
+New draw driver registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+ ad88888ba   88    ,ad8888ba,     ,ad8888ba,   88           
+d8"     "8b  88   d8"'    `"8b   d8"'    `"8b  88           
+Y8,          88  d8'            d8'            88           
+`Y8aaaaa,    88  88             88             88           
+  `"""""8b,  88  88      88888  88      88888  88
+        `8b  88  Y8,        88  Y8,        88  88           
+Y8a     a8P  88   Y8a.    .a88   Y8a.    .a88  88           
+ "Y88888P"   88    `"Y88888P"     `"Y88888P"   88888888888  
+ Object 008e2cf0[ddrv]^1 acquired.
+ Loading draw ICDs...
+ afxModule.c:63?AfxSystemAcquireModule(sys=008dd4d0,uri=e2draw.icd)
+ Reacquired. (mdle)008e0b20^3
+ afxModule.c:63?AfxSystemAcquireModule(sys=008dd4d0,uri=e2newton.icd)
+ Acquiring Module...
+ Running constructor for Module, instance 008e50f0.
+ afxModule.c:129?_AfxMdleCtor(uri:e2newton.icd)
+ Object 008e50f0[mdle]^1 acquired.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterDrawDrivers not found.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterTextureCodecs not found.
+ Object 008e1030[dsys]^1 acquired.
+ afxDrawContext.c:227?AfxDrawSystemAcquireContext(dsys=008e1030,spec=0046e738)
+ Acquiring Draw Context...
+ Running constructor for Draw Context, instance 008e40e0.
+ sglDrawContext.c:602?_AfxDctxCtor(dctx=008e40e0)
+ Listing all available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Draw Script class initialized.
+ Draw Input class initialized.
+ Draw Engine class initialized.
+ Buffer class initialized.
+ Vertex Buffer class initialized.
+ Index Buffer class initialized.
+ Sampler class initialized.
+ Texture class initialized.
+ Surface class initialized.
+ Canvas class initialized.
+ Pipeline Module class initialized.
+ Pipeline Rig class initialized.
+ Pipeline class initialized.
+ Lego class initialized.
+ Draw Output class initialized.
+ sglDrawEngine.c:1835?_AfxDrawContextAcquireEngine(dctx=008e40e0)
+ Acquiring Draw Engine...
+ Running constructor for Draw Engine, instance 008ed210.
+ sglDrawEngine.c:1880?_AfxDengCtor(deng=008ed210)
+ afxThread.c:680?AfxSystemAcquireThread(sys=008dd4d0,start=55bb5910,udd=008ed210,exec=55bb5320,hint="sglDrawEngine.c:1892!_AfxDengCtor")
+ Acquiring Thread...
+ Running constructor for Thread, instance 008ee370.
+ afxThread.c:745?_AfxThrCtor(008ee370)
+ Object 008ee370[thr]^1 acquired.
+ afxUniformPipelineDescriptor.c:602?_AfxDrawContextUploadPipelineUrd(dctx=008e40e0,uri=data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.urd)
+ afxUniformPipelineDescriptor.c:558?_AfxLoadAndParsePipelineUrd(dctx=008e40e0)
+ afxUrd.c:1054?AfxSystemUploadUrd(uri=data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.urdp)
+ Acquiring Uniform Resource Dictionary...
+ Running constructor for Uniform Resource Dictionary, instance 008ee7b0.
+ afxUrd.c:1036?_AfxUrdCtor(uri:data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.urd)
+ afxStream.c:656?AfxSystemAcquireStream(sys:008dd4d0,uri:data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.urd,access=r)
+ Acquiring I/O Stream...
+ Running constructor for I/O Stream, instance 008ee850.
+ Acquired. (ios)008ee850^1 <-> "E:/qwadro/afx/_data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.urd"
+ Object 008ee850[ios]^1 acquired.
+ Destroying I/O Stream... 008ee850[ios]^0
+ Running destructor for I/O Stream, instance 008ee850.
+ I/O Stream destroyed. 008ee850[ios]
+ Object 008ee7b0[urd]^1 acquired.
+ Destroying Uniform Resource Dictionary... 008ee7b0[urd]^0
+ Running destructor for Uniform Resource Dictionary, instance 008ee7b0.
+ afxUrd.c:1019?_AfxUrdDtor(urd=008ee7b0)
+ Uniform Resource Dictionary destroyed. 008ee7b0[urd]
+ Acquiring Pipeline...
+ Running constructor for subset Resource of Pipeline, instance 008ee7b0.
+ Running constructor for Resource, instance 008ee7b0.
+ afxResource.c:127?_AfxResCtor(res=008ee7b0)
+ Running constructor for Pipeline, instance 008ee7b0.
+ sglPipeline.c:603?_AfxPipCtor(pip=008ee7b0)
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=008e40e0,code=00465408,len=627)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=008e40e0,code=00465408,len=627)
+ Acquiring Pipeline Module...
+ Running constructor for Pipeline Module, instance 008f7780.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=008f7780)
+ Object 008f7780[pipm]^1 acquired.
+ Taking connection 008ee8fc connecting 008f7780?pipm#1 to holder 008ee7b0?pip#1.
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=008e40e0,code=00466420,len=775)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=008e40e0,code=00466420,len=775)
+ Acquiring Pipeline Module...
+ Running constructor for Pipeline Module, instance 008f7820.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=008f7820)
+ Object 008f7820[pipm]^1 acquired.
+ Taking connection 008ee930 connecting 008f7820?pipm#1 to holder 008ee7b0?pip#1.
+ Acquiring Pipeline Rig...
+ Running constructor for Pipeline Rig, instance 008eefe0.
+ sglPipelineRig.c:100?_AfxPiprCtor(pipr=008eefe0)
+ Object 008eefe0[pipa]^1 acquired.
+ Object 008ee7b0[pip]^1 acquired.
+ Acquiring Lego...
+ Running constructor for Lego, instance 008ef6a0.
+ sglLego.c:68?_AfxLegoCtor(lego=008ef6a0)
+ Object 008ef6a0[bset]^1 acquired.
+ sglSampler.c:84?_AfxDrawContextAcquireSampler(dctx=008e40e0,spec=0046ddd0)
+ Acquiring Sampler...
+ Running constructor for Sampler, instance 008ef9e0.
+ sglSampler.c:131?_AfxSmpCtor(smp=008ef9e0)
+ Object 008ef9e0[smp]^1 acquired.
+ Object 008ed210[deng]^1 acquired.
+ afxThread.c:662?AfxThreadStart(thr=008ee370)
+ Object 008e40e0[dctx]^1 acquired.
+ afxApplication.c:385?AfxSystemAcquireApplication(sys=00000000,spec=55abd9fc)
+ Acquiring Application...
+ sglDrawEngine.c:23?_SglGlCtxW32Create(dctx=008e40e0,bufSiz="8,8,8",samples=026bfd44,phwnd=008eda84,phdc=008eda88,phrc=008eda90,verMaj=3,verMin=3,legacy=0)
+ Running constructor for Application, instance 008f0750.
+ afxApplication.c:473?_AfxAppCtor(app=008f0750)
+ afxKeyboard.c:153?AfxSystemAcquireKeyboard(sys=008dd4d0,port=0)
+ Acquiring Keyboard...
+ Running constructor for subset HID of Keyboard, instance 008fc740.
+ Running constructor for HID, instance 008fc740.
+ afxHid.c:46?_AfxHidCtor(hid=008fc740)
+ Running constructor for Keyboard, instance 008fc740.
+ afxKeyboard.c:181?_AfxKbdCtor(kbd=008fc740)
+ Object 008fc740[kbd]^1 acquired.
+ Taking connection 008f07c4 connecting 008fc740?kbd#1 to holder 008f0750?app#1.
+ afxMouse.c:222?AfxSystemAcquireMouse(sys=008dd4d0,port=0)
+ Acquiring Mouse...
+ Running constructor for subset HID of Mouse, instance 008f2370.
+ Running constructor for HID, instance 008f2370.
+ afxHid.c:46?_AfxHidCtor(hid=008f2370)
+ Running constructor for Mouse, instance 008f2370.
+ afxMouse.c:249?_AfxMseCtor(mse=008f2370)
+ Object 008f2370[mse]^1 acquired.
+ Taking connection 008f07f4 connecting 008f2370?mse#1 to holder 008f0750?app#1.
+ afxMemContext.c:532?AfxSystemAcquireMemContext(sys=008dd4d0,strategy=0046e3d4,hint="afxApplication.c:518!_AfxAppCtor")
+ Acquiring MemContext...
+ Running constructor for MemContext, instance 008f2140.
+ afxMemContext.c:285?_AfxAllCtor(mctx=008f2140)
+ Object 008f2140[mctx]^1 acquired.
+ Taking connection 008f0794 connecting 008f2140?mctx#1 to holder 008f0750?app#1.
+ sglDrawInput.c:203?_AfxDrawContextAcquireInput(dctx=008e40e0,spec=0046e3b8)
+ Acquiring Draw Input...
+ Running constructor for Draw Input, instance 008fde90.
+ sglDrawInput.c:252?_AfxDinCtor(din=008fde90)
+ afxMemContext.c:532?AfxSystemAcquireMemContext(sys=008dd4d0,strategy=0046df6c,hint="sglDrawInput.c:287!_AfxDinCtor")
+ Acquiring MemContext...
+ Running constructor for MemContext, instance 008f34b0.
+ afxMemContext.c:285?_AfxAllCtor(mctx=008f34b0)
+ Object 008f34b0[mctx]^1 acquired.
+ Object 008fde90[din]^1 acquired.
+ Taking connection 008f0cac connecting 008fde90?din#1 to holder 008f0750?app#1.
+ Widget class initialized.
+ Simulation class initialized.
+ Object 008f0750[app]^1 acquired.
+ afxApplication.c:337?AfxApplicationExecute(app=008f0750)
+ Skybox.c:520?AfxEnterApplication(app=008f0750)
+ afxSimulation.c:431?AfxApplicationAcquireSimulation(app=008f0750,bounding=[[0.000000,0.000000,0.000000,1.000000],[0.000000,0.000000,0.000000,1.000000]])
+ Acquiring Simulation...
+ Running constructor for Simulation, instance 00900120.
+ afxSimulation.c:373?_AfxSimCtor(sim=00900120)
+ Material class initialized.
+ Mesh class initialized.
+ Node class initialized.
+ Skeleton class initialized.
+ Model class initialized.
+ Body class initialized.
+ Entity class initialized.
+ Camera class initialized.
+ Light class initialized.
+ Object 00900120[sim]^1 acquired.
+ afxDrawOutput.c:92?AfxDrawContextAcquireOutput(dctx=008e40e0,extent=0046e620,spec=0046e4e8)
+ sglDrawOutput.c:261?_AfxDrawContextAcquireOutput(dctx=008e40e0,extent=0046e620,spec=0046e4e8)
+ Acquiring Draw Output...
+ Running constructor for Draw Output, instance 008fcfe0.
+ sglDrawOutput.c:445?_AfxDoutCtor(dout=008fcfe0)
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=008e40e0,fmt=4,whd=[720,480,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Running constructor for subset Texture of Surface, instance 00902c20.
+ Running constructor for subset Resource of Texture, instance 00902c20.
+ Running constructor for Resource, instance 00902c20.
+ afxResource.c:127?_AfxResCtor(res=00902c20)
+ Running constructor for Texture, instance 00902c20.
+ sglTexture.c:842?_AfxTexCtor(tex=00902c20)
+ Running constructor for Surface, instance 00902c20.
+ sglSurface.c:102?_AfxSurfCtor(surf=00902c20)
+ Object 00902c20[surf]^1 acquired.
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=008e40e0,fmt=4,whd=[720,480,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Running constructor for subset Texture of Surface, instance 0090eed0.
+ Running constructor for subset Resource of Texture, instance 0090eed0.
+ Running constructor for Resource, instance 0090eed0.
+ afxResource.c:127?_AfxResCtor(res=0090eed0)
+ Running constructor for Texture, instance 0090eed0.
+ sglTexture.c:842?_AfxTexCtor(tex=0090eed0)
+ Running constructor for Surface, instance 0090eed0.
+ sglSurface.c:102?_AfxSurfCtor(surf=0090eed0)
+ Object 0090eed0[surf]^1 acquired.
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=008e40e0,fmt=4,whd=[720,480,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Running constructor for subset Texture of Surface, instance 0091a120.
+ Running constructor for subset Resource of Texture, instance 0091a120.
+ Running constructor for Resource, instance 0091a120.
+ afxResource.c:127?_AfxResCtor(res=0091a120)
+ Running constructor for Texture, instance 0091a120.
+ sglTexture.c:842?_AfxTexCtor(tex=0091a120)
+ Running constructor for Surface, instance 0091a120.
+ sglSurface.c:102?_AfxSurfCtor(surf=0091a120)
+ Object 0091a120[surf]^1 acquired.
+ sglDrawOutput.c:398?_AfxStdDoutImplCtor(dout=008fcfe0,uri=window)
+ sglDrawOutput.c:319?_AfxStdDoutImplCtorWnd(dout=008fcfe0)
+ Extent readjusted. (dout)008fcfe0 -> 720, 0.375000 of 1920; 480 0.444444 of 1080
+ sglDriver.c:737?_SglLoadVmt(vmt=008eda94,verMajor=3,verMinor=3)
+ Extent readjusted. (dout)008fcfe0 -> 720, 0.375000 of 1920; 480 0.444444 of 1080
+ QWADRO Draw System (OpenGL/Vulkan Continuous Integration (Intel(R) HD Graphics v3.3.0))
+ afxThread.c:637?AfxThreadRun(thr=008ee370)
+ Extent readjusted. (dout)008fcfe0 -> 1912, 0.995833 of 1920; 1053 0.975000 of 1080
+ Object 008fcfe0[dout]^1 acquired.
+ sglDrawInput.c:203?_AfxDrawContextAcquireInput(dctx=008e40e0,spec=0046e4cc)
+ Acquiring Draw Input...
+ Running constructor for Draw Input, instance 02fe63f0.
+ sglDrawInput.c:252?_AfxDinCtor(din=02fe63f0)
+ afxMemContext.c:532?AfxSystemAcquireMemContext(sys=008dd4d0,strategy=0046e090,hint="sglDrawInput.c:287!_AfxDinCtor")
+ Acquiring MemContext...
+ Running constructor for MemContext, instance 04607340.
+ afxMemContext.c:285?_AfxAllCtor(mctx=04607340)
+ Object 04607340[mctx]^1 acquired.
+ Object 02fe63f0[din]^1 acquired.
+ afxCamera.c:276?AfxSimulationAcquireCamera(sim=00900120,name=viewer,perspective=1)
+ Acquiring Camera...
+ Running constructor for subset Node of Camera, instance 02fc9d70.
+ Running constructor for Node, instance 02fc9d70.
+ Running constructor for Camera, instance 02fc9d70.
+ afxCamera.c:305?_AfxCamCtor(cam=02fc9d70)
+ Object 02fc9d70[cam]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ sglTexture.c:945?_AfxDrawContextBuildTextures(dctx=008e40e0,fmt=3,whd=[2048,2048,1],lodCnt=1,usage=40000000)
+ Acquiring Texture...
+ Running constructor for subset Resource of Texture, instance 04607680.
+ Running constructor for Resource, instance 04607680.
+ afxResource.c:127?_AfxResCtor(res=04607680)
+ Running constructor for Texture, instance 04607680.
+ sglTexture.c:842?_AfxTexCtor(tex=04607680)
+ afxStream.c:656?AfxSystemAcquireStream(sys:008dd4d0,uri:art/skybox/blue/right.tga,access=r)
+ Acquiring I/O Stream...
+ Running constructor for I/O Stream, instance 02ffec70.
+ Acquired. (ios)02ffec70^1 <-> "E:/qwadro/afx/_art/skybox/blue/right.tga"
+ Object 02ffec70[ios]^1 acquired.
+ Destroying I/O Stream... 02ffec70[ios]^0
+ Running destructor for I/O Stream, instance 02ffec70.
+ I/O Stream destroyed. 02ffec70[ios]
+ afxStream.c:656?AfxSystemAcquireStream(sys:008dd4d0,uri:art/skybox/blue/left.tga,access=r)
+ Acquiring I/O Stream...
+ Running constructor for I/O Stream, instance 02ffec70.
+ Acquired. (ios)02ffec70^1 <-> "E:/qwadro/afx/_art/skybox/blue/left.tga"
+ Object 02ffec70[ios]^1 acquired.
+ Destroying I/O Stream... 02ffec70[ios]^0
+ Running destructor for I/O Stream, instance 02ffec70.
+ I/O Stream destroyed. 02ffec70[ios]
+ afxStream.c:656?AfxSystemAcquireStream(sys:008dd4d0,uri:art/skybox/blue/top.tga,access=r)
+ Acquiring I/O Stream...
+ Running constructor for I/O Stream, instance 02ffec70.
+ Acquired. (ios)02ffec70^1 <-> "E:/qwadro/afx/_art/skybox/blue/top.tga"
+ Object 02ffec70[ios]^1 acquired.
+ Destroying I/O Stream... 02ffec70[ios]^0
+ Running destructor for I/O Stream, instance 02ffec70.
+ I/O Stream destroyed. 02ffec70[ios]
+ afxStream.c:656?AfxSystemAcquireStream(sys:008dd4d0,uri:art/skybox/blue/bottom.tga,access=r)
+ Acquiring I/O Stream...
+ Running constructor for I/O Stream, instance 02ffec70.
+ Acquired. (ios)02ffec70^1 <-> "E:/qwadro/afx/_art/skybox/blue/bottom.tga"
+ Object 02ffec70[ios]^1 acquired.
+ Destroying I/O Stream... 02ffec70[ios]^0
+ Running destructor for I/O Stream, instance 02ffec70.
+ I/O Stream destroyed. 02ffec70[ios]
+ afxStream.c:656?AfxSystemAcquireStream(sys:008dd4d0,uri:art/skybox/blue/front.tga,access=r)
+ Acquiring I/O Stream...
+ Running constructor for I/O Stream, instance 02ffec70.
+ Acquired. (ios)02ffec70^1 <-> "E:/qwadro/afx/_art/skybox/blue/front.tga"
+ Object 02ffec70[ios]^1 acquired.
+ Destroying I/O Stream... 02ffec70[ios]^0
+ Running destructor for I/O Stream, instance 02ffec70.
+ I/O Stream destroyed. 02ffec70[ios]
+ afxStream.c:656?AfxSystemAcquireStream(sys:008dd4d0,uri:art/skybox/blue/back.tga,access=r)
+ Acquiring I/O Stream...
+ Running constructor for I/O Stream, instance 02ffec70.
+ Acquired. (ios)02ffec70^1 <-> "E:/qwadro/afx/_art/skybox/blue/back.tga"
+ Object 02ffec70[ios]^1 acquired.
+ Destroying I/O Stream... 02ffec70[ios]^0
+ Running destructor for I/O Stream, instance 02ffec70.
+ I/O Stream destroyed. 02ffec70[ios]
+ Object 04607680[tex]^1 acquired.
+ afxUniformPipelineDescriptor.c:602?_AfxDrawContextUploadPipelineUrd(dctx=008e40e0,uri=data/pipeline/skybox.pip.urd)
+ afxUniformPipelineDescriptor.c:558?_AfxLoadAndParsePipelineUrd(dctx=008e40e0)
+ afxUrd.c:1054?AfxSystemUploadUrd(uri=data/pipeline/skybox.pip.urdp)
+ Acquiring Uniform Resource Dictionary...
+ Running constructor for Uniform Resource Dictionary, instance 046078b0.
+ afxUrd.c:1036?_AfxUrdCtor(uri:data/pipeline/skybox.pip.urd)
+ afxStream.c:656?AfxSystemAcquireStream(sys:008dd4d0,uri:data/pipeline/skybox.pip.urd,access=r)
+ Acquiring I/O Stream...
+ Running constructor for I/O Stream, instance 02ffec70.
+ Acquired. (ios)02ffec70^1 <-> "E:/qwadro/afx/_data/pipeline/skybox.pip.urd"
+ Object 02ffec70[ios]^1 acquired.
+ Destroying I/O Stream... 02ffec70[ios]^0
+ Running destructor for I/O Stream, instance 02ffec70.
+ I/O Stream destroyed. 02ffec70[ios]
+ Object 046078b0[urd]^1 acquired.
+ Destroying Uniform Resource Dictionary... 046078b0[urd]^0
+ Running destructor for Uniform Resource Dictionary, instance 046078b0.
+ afxUrd.c:1019?_AfxUrdDtor(urd=046078b0)
+ Uniform Resource Dictionary destroyed. 046078b0[urd]
+ Acquiring Pipeline...
+ Running constructor for subset Resource of Pipeline, instance 02ffec70.
+ Running constructor for Resource, instance 02ffec70.
+ afxResource.c:127?_AfxResCtor(res=02ffec70)
+ Running constructor for Pipeline, instance 02ffec70.
+ sglPipeline.c:603?_AfxPipCtor(pip=02ffec70)
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=008e40e0,code=00464238,len=1710)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=008e40e0,code=00464238,len=1710)
+ Acquiring Pipeline Module...
+ Running constructor for Pipeline Module, instance 046078b0.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=046078b0)
+ Object 046078b0[pipm]^1 acquired.
+ Taking connection 02ffedbc connecting 046078b0?pipm#1 to holder 02ffec70?pip#1.
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=008e40e0,code=00465250,len=402)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=008e40e0,code=00465250,len=402)
+ Acquiring Pipeline Module...
+ Running constructor for Pipeline Module, instance 0460c3c0.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=0460c3c0)
+ Object 0460c3c0[pipm]^1 acquired.
+ Taking connection 02ffedf0 connecting 0460c3c0?pipm#1 to holder 02ffec70?pip#1.
+ Acquiring Pipeline Rig...
+ Running constructor for Pipeline Rig, instance 0452e2d0.
+ sglPipelineRig.c:100?_AfxPiprCtor(pipr=0452e2d0)
+ Object 0452e2d0[pipa]^1 acquired.
+ Object 02ffec70[pip]^1 acquired.
+ sglCanvas.c:256?_AfxDrawContextAcquireCanvas(dctx=008e40e0,extent=[1912,1053,1],surfaceCnt=2)
+ Acquiring Canvas...
+ Running constructor for Canvas, instance 04605310.
+ sglCanvas.c:339?_AfxCanvCtor(canv=04605310)
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=008e40e0,fmt=9,whd=[1912,1053,1],usage=32)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Running constructor for subset Texture of Surface, instance 02fe8a30.
+ Running constructor for subset Resource of Texture, instance 02fe8a30.
+ Running constructor for Resource, instance 02fe8a30.
+ afxResource.c:127?_AfxResCtor(res=02fe8a30)
+ Running constructor for Texture, instance 02fe8a30.
+ sglTexture.c:842?_AfxTexCtor(tex=02fe8a30)
+ Running constructor for Surface, instance 02fe8a30.
+ sglSurface.c:102?_AfxSurfCtor(surf=02fe8a30)
+ Object 02fe8a30[surf]^1 acquired.
+ Object 04605310[canv]^1 acquired.
+ Acquiring Buffer...
+ Running constructor for Buffer, instance 02fe8c80.
+ sglBuffer.c:323?_AfxBufCtor(buf=02fe8c80)
+ Object 02fe8c80[buf]^1 acquired.
+ Acquiring Lego...
+ Running constructor for Lego, instance 02fffbb0.
+ sglLego.c:68?_AfxLegoCtor(lego=02fffbb0)
+ Object 02fffbb0[bset]^1 acquired.
+ sglCanvas.c:256?_AfxDrawContextAcquireCanvas(dctx=008e40e0,extent=[1912,1053,1],surfaceCnt=2)
+ Acquiring Canvas...
+ Running constructor for Canvas, instance 04605230.
+ sglCanvas.c:339?_AfxCanvCtor(canv=04605230)
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=008e40e0,fmt=9,whd=[1912,1053,1],usage=32)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Running constructor for subset Texture of Surface, instance 02fcf970.
+ Running constructor for subset Resource of Texture, instance 02fcf970.
+ Running constructor for Resource, instance 02fcf970.
+ afxResource.c:127?_AfxResCtor(res=02fcf970)
+ Running constructor for Texture, instance 02fcf970.
+ sglTexture.c:842?_AfxTexCtor(tex=02fcf970)
+ Running constructor for Surface, instance 02fcf970.
+ sglSurface.c:102?_AfxSurfCtor(surf=02fcf970)
+ Object 02fcf970[surf]^1 acquired.
+ Object 04605230[canv]^1 acquired.
+ Acquiring Buffer...
+ Running constructor for Buffer, instance 02fffe30.
+ sglBuffer.c:323?_AfxBufCtor(buf=02fffe30)
+ Object 02fffe30[buf]^1 acquired.
+ Acquiring Lego...
+ Running constructor for Lego, instance 02fce570.
+ sglLego.c:68?_AfxLegoCtor(lego=02fce570)
+ Object 02fce570[bset]^1 acquired.
+ sglDrawScript.c:394?_AfxDrawInputAcquireScript(din=02fe63f0)
+ Acquiring Draw Script...
+ Running constructor for Draw Script, instance 046054c0.
+ sglDrawScript.c:412?_AfxDscrCtor(dscr=046054c0)
+ Object 046054c0[dib]^1 acquired.
+ sglCanvas.c:160?_AfxStdCanvImplDtor(canv=04605310)
+ sglTexture.c:443?_AfxStdTexImplDtor(img=00902c20)
+ ADV sglTexture.c:321?_AfxTexImageInit
+    tex 00000de1, gl/target 6408, gl/intFmt 6408, gl/fmt 5121, gl/type 6408
+ tex 00902c20, instanced.
+ ADV sglTexture.c:321?_AfxTexImageInit
+    tex 00000de1, gl/target 34041, gl/intFmt 34041, gl/fmt 34042, gl/type 34041
+ tex 02fe8a30, instanced.
+ canv 04605310, reinstanced.
+ Shader 046078b0 reinstanced.
+ Shader 0460c3c0 reinstanced.
+ Draw pipeline 02ffec70 reinstanced.
+ buf 02fe8c80, instanced.
+ ADV sglTexture.c:321?_AfxTexImageInit
+    tex 00008513, gl/target 6407, gl/intFmt 6407, gl/fmt 5121, gl/type 6407
+ tex 04607680, instanced.
+ Shader 008f7780 reinstanced.
+ Shader 008f7820 reinstanced.
+ Draw pipeline 008ee7b0 reinstanced.
+ Sampler 008ef9e0 reinstanced.

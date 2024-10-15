@@ -43,9 +43,9 @@ _AVX afxCmdId AvxCmdCopyBuffer(avxCmdb cmdb, afxBuffer src, afxBuffer dst, afxNa
     AfxAssertObjects(1, &dst, afxFcc_BUF);
 
     /// src must have been created with afxBufferUsage_SRC usage flag.
-    AfxAssert(AfxTestBufferAccess(src, afxBufferAccess_R));
+    AfxAssert(AfxTestBufferAccess(src, afxBufferFlag_R));
     /// dst must have been created with afxBufferUsage_DST usage flag.
-    AfxAssert(AfxTestBufferAccess(dst, afxBufferAccess_W));
+    AfxAssert(AfxTestBufferAccess(dst, afxBufferFlag_W));
 
     return cmdb->stdCmds->buf.cpy(cmdb, src, dst, opCnt, ops);
 }
@@ -65,7 +65,7 @@ _AVX afxCmdId AvxCmdFillBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afxNa
     /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     /// buf must have been created with afxBufferUsage_DST usage flag.
-    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferFlag_W));
     
     /// offset must be less than the size of buf.
     /// If range is not equal to zero, range must be less than or equal to the size of dst minus offset.
@@ -95,7 +95,7 @@ _AVX afxCmdId AvxCmdClearBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afxN
     /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     /// buf must have been created with afxBufferUsage_DST usage flag.
-    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferFlag_W));
 
     /// offset must be less than the size of buf.
     /// If range is not equal to zero, range must be less than or equal to the size of dst minus offset.
@@ -125,7 +125,7 @@ _AVX afxCmdId AvxCmdUpdateBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afx
     /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     /// buf must have been created with afxBufferUsage_DST usage flag.
-    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferFlag_W));
 
     /// offset must be less than the size of buf.
     /// If range is not equal to zero, range must be less than or equal to the size of buf minus offset.
@@ -157,7 +157,7 @@ _AVX afxCmdId AvxCmdDumpBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afxNa
     /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     /// buf must have been created with afxBufferUsage_SRC usage flag.
-    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_R));
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferFlag_R));
 
     /// offset must be less than the size of buf.
     /// If range is not equal to zero, range must be less than or equal to the size of buf minus offset.

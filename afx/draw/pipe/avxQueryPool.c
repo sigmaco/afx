@@ -20,21 +20,21 @@
 #define _AVX_QUERY_POOL_C
 #include "../../dev/AvxImplKit.h"
 
-AVX afxResult AfxGetQueryResults(avxQueryPool pool, afxNat baseQuery, afxNat queryCnt, void* dst, afxSize cap, afxSize stride, afxQueryResultFlags flags)
+AVX afxResult AfxGetQueryResults(avxQueryPool qryp, afxNat baseQuery, afxNat queryCnt, void* dst, afxSize cap, afxSize stride, afxQueryResultFlags flags)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pool, afxFcc_QRYP);
-    AfxAssertRange(pool->cap, baseQuery, queryCnt);
+    AfxAssertObjects(1, &qryp, afxFcc_QRYP);
+    AfxAssertRange(qryp->cap, baseQuery, queryCnt);
     AfxAssert(dst);
     AfxAssert(cap);
     return 0;
 }
 
-AVX void AfxResetQueries(avxQueryPool pool, afxNat baseQuery, afxNat queryCnt)
+AVX void AfxResetQueries(avxQueryPool qryp, afxNat baseQuery, afxNat queryCnt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pool, afxFcc_QRYP);
-    AfxAssertRange(pool->cap, baseQuery, queryCnt);
+    AfxAssertObjects(1, &qryp, afxFcc_QRYP);
+    AfxAssertRange(qryp->cap, baseQuery, queryCnt);
 
 }
 
@@ -42,7 +42,7 @@ _AVX afxDrawContext AfxGetQueryPoolContext(avxQueryPool qryp)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &qryp, afxFcc_QRYP);
-    afxDrawContext dctx = AfxGetParent(qryp);
+    afxDrawContext dctx = AfxGetProvider(qryp);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     return dctx;
 }
@@ -75,7 +75,7 @@ _AVX afxError _AvxQrypCtorCb(avxQueryPool qryp, void** args, afxNat invokeNo)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxAcquireQueryPools(afxDrawContext dctx, afxQueryType type, afxNat cap, afxNat cnt, avxQueryPool quer[])
+_AVX afxError AfxAcquireQueryPools(afxDrawContext dctx, afxQueryType type, afxNat cap, afxNat cnt, avxQueryPool pools[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -83,7 +83,7 @@ _AVX afxError AfxAcquireQueryPools(afxDrawContext dctx, afxQueryType type, afxNa
     afxClass* cls = AfxGetQueryPoolClass(dctx);
     AfxAssertClass(cls, afxFcc_QRYP);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)quer, (void const*[]) { dctx, &type, &cap }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)pools, (void const*[]) { dctx, &type, &cap }))
         AfxThrowError();
 
     return err;

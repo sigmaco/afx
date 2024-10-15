@@ -23,7 +23,7 @@ _ASXINL afxSoundContext AsxGetTrackerContext(asxTracker trax)
 {
     afxError err;
     AfxAssertObjects(1, &trax, afxFcc_TRAX);
-    afxSoundContext sctx = AfxGetParent(trax);
+    afxSoundContext sctx = AfxGetProvider(trax);
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
     return sctx;
 }

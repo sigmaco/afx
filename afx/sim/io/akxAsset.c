@@ -76,9 +76,9 @@ _AMX afxError AfxSerializeSkeletons(afxStream out, afxNat cnt, afxSkeleton const
         _afxSerializedChunk chnkHdr;
         chnkHdr.fcc = afxFcc_SKL;
         chnkHdr.len = 0;
-        afxSize chnkHdrPos = AfxGetStreamPosn(out);
+        afxSize chnkHdrPos = AfxAskStreamPosn(out);
         AfxWrite(out, 1, sizeof(chnkHdr), &chnkHdr, sizeof(chnkHdr));
-        afxSize chnkStartPos = AfxGetStreamPosn(out);
+        afxSize chnkStartPos = AfxAskStreamPosn(out);
 
         afxSkeleton skl = src[i];
         _afxSerializedSkl chnk = { 0 };
@@ -97,7 +97,7 @@ _AMX afxError AfxSerializeSkeletons(afxStream out, afxNat cnt, afxSkeleton const
         AfxWrite(out, jointCnt, sizeof(skl->joint[0]), &skl->joint[0], sizeof(skl->joint[0]));
 
 
-        chnkHdr.len = AfxGetStreamPosn(out) - chnkStartPos;
+        chnkHdr.len = AfxAskStreamPosn(out) - chnkStartPos;
         AfxWriteAt(out, chnkHdrPos, 1, sizeof(chnkHdr), &chnkHdr, sizeof(chnkHdr));
         AfxAdvanceStream(out, (afxInt)chnkHdr.len);
     }
@@ -206,7 +206,7 @@ _AMX afxNat AfxFindMaterials(akxAsset cad, afxNat cnt, afxString const id[], afx
     return AfxFindResources(cad, afxFcc_MTL, cnt, id, (void**)mt);
 }
 
-_AMX afxNat AfxFindVertexDatas(akxAsset cad, afxNat cnt, afxString const id[], akxVertexData vtd[])
+_AMX afxNat AfxFindVertexDatas(akxAsset cad, afxNat cnt, afxString const id[], afxGeometry vtd[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cad, afxFcc_CAD);
@@ -505,7 +505,7 @@ _AMX afxError AfxDeserializeMeshTopologies(afxStream in, afxSimulation sim, afxN
         _afxSerializedMsht chnk = { 0 };
         AfxRead(in, 1, sizeof(chnk), &chnk, sizeof(chnk));
 
-        akxMeshTopologyBlueprint spec = { 0 };
+        afxMeshTopologyBlueprint spec = { 0 };
         spec.surfCnt = chnk.surCnt;
         spec.triCnt = chnk.triCnt;
 
@@ -531,9 +531,9 @@ _AMX afxError AfxSerializeMeshTopologies(afxStream out, afxNat cnt, afxMeshTopol
         _afxSerializedChunk chnkHdr;
         chnkHdr.fcc = afxFcc_MSHT;
         chnkHdr.len = 0;
-        afxSize chnkHdrPos = AfxGetStreamPosn(out);
+        afxSize chnkHdrPos = AfxAskStreamPosn(out);
         AfxWrite(out, 1, sizeof(chnkHdr), &chnkHdr, sizeof(chnkHdr));
-        afxSize chnkStartPos = AfxGetStreamPosn(out);
+        afxSize chnkStartPos = AfxAskStreamPosn(out);
 
         afxMeshTopology msht = src[i];
         _afxSerializedMsht chnk = { 0 };
@@ -545,7 +545,7 @@ _AMX afxError AfxSerializeMeshTopologies(afxStream out, afxNat cnt, afxMeshTopol
 
         AfxWrite(out, chnk.triCnt, sizeof(msht->tris[0]), msht->tris, sizeof(msht->tris[0]));
 
-        chnkHdr.len = AfxGetStreamPosn(out) - chnkStartPos;
+        chnkHdr.len = AfxAskStreamPosn(out) - chnkStartPos;
         AfxWriteAt(out, chnkHdrPos, 1, sizeof(chnkHdr), &chnkHdr, sizeof(chnkHdr));
         AfxAdvanceStream(out, (afxInt)chnkHdr.len);
     }

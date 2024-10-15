@@ -28,9 +28,8 @@
 #include "qwadro/inc/ux/afxHid.h"
 #include "qwadro/inc/ux/afxGamepad.h"
 #include "qwadro/inc/ux/afxWindow.h"
+#include "qwadro/inc/ux/afxWidget.h"
 #include "qwadro/inc/ux/afxSession.h"
-#include "qwadro/inc/ux/afxScript.h"
-//#include "qwadro/inc/ux/xss/xss.h"
 
 AFX_DEFINE_STRUCT(afxShellCaps)
 {

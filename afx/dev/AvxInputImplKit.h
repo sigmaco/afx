@@ -23,8 +23,8 @@
 #ifndef AVX_INPUT_IMPL_KIT_H
 #define AVX_INPUT_IMPL_KIT_H
 
-#include "../dev/afxDevCoreBase.h"
-#include "qwadro/inc/draw/dev/afxDrawSystem.h"
+#include "../dev/afxExecImplKit.h"
+#include "qwadro/inc/draw/afxDrawSystem.h"
 
 #ifdef _AVX_CAMERA_C
 
@@ -61,52 +61,27 @@ AFX_OBJECT(afxCamera)
 
 //AFX_STATIC_ASSERT(offsetof(afxCamera, focus % AFX_CAM_ALIGN == 0, "");
 
-#ifdef _AVX_TXD_C
+#ifdef _AVX_GEOMETRY_C
 
-AFX_OBJECT(avxTxd)
+AFX_DEFINE_STRUCT(avxGeometryAttr)
 {
-    afxUri128           uri;
-    afxNat              texCnt;
-    struct
-    {
-        afxString       urn;
-        afxRaster       ras;
-        avxSampler      samp;
-        afxAtom32       reqCnt;
-    }                   *texs;
-};
-
-#endif//_AVX_TXD_C
-
-#ifdef _AVX_VERTEX_DATA_C
-
-AFX_DEFINE_STRUCT(akxVertexDataAttr)
-{
-    akxVertexUsage      usage;
-    akxVertexFlags      flags;
     afxVertexFormat     fmt;
-    union
-    {
-        void*           data;
-        afxByte*        dataBytemap;
-    };
-    afxString           id; // 8
+    afxVertexFlags      flags;
+    afxString8          usage; // 8
 };
 
-AFX_OBJECT(akxVertexData)
+AFX_OBJECT(afxGeometry)
 {
     //afxNat              biasCnt;
-    //akxVertexBias*      biases;
+    //afxVertexBias*      biases;
     afxNat              vtxCnt;
     //akxVertex*          vtx; // one for each vertex
     afxNat              attrCnt;
-    akxVertexDataAttr*  attrs;
-    afxBox             aabb;
+    avxGeometryAttr*    attrs;
+    afxByte**           data;
+    afxBox              aabb;
 
-    akxVertexCache  cache;
-
-    afxUri              urd;
-    afxNat              urdEntryIdx;
+    akxVertexCache      cache;
 };
 
 #endif
@@ -115,47 +90,36 @@ AFX_OBJECT(akxVertexData)
 
 AFX_OBJECT(afxMesh)
 {
-    afxNat              morphCnt;
-    akxMeshMorph*       morphs;
-    afxString*          extraMorphTagMap; // morphCnt - 1; doesn't include base morph.
+    afxNat              triCnt; // count of face indices.
+    afxIndexedTriangle* tris; // indices of face indices.
+    afxNat              surfCnt;
+    afxMeshSurface*     surfaces;
+    afxBox*             surfAabbMap;
+    afxIndexedTriangle* sideToAdjacentMap; // edgeCnt
 
     afxNat              biasCnt;
-    akxMeshBias*        biases;
+    afxMeshBias*        biases;
     afxString*          biasTagMap;
     afxBox*             biasObbMap;
-
-    afxMeshTopology     topology;
-    afxBox*             surfAabbMap;
-
-    afxString           urn; // 32
-    void*               extData;
-};
-
-#endif
-
-#ifdef _AVX_MESH_TOPOLOGY_C
-
-AFX_OBJECT(afxMeshTopology)
-{
-    avxTopology         topology;
-    afxNat              triCnt; // count of face indices.
-    akxIndexedTriangle* tris; // indices of face indices.
-
-    afxNat              surfCnt;
-    akxMeshSurface*     surfaces;
-
-    afxNat              vtxCnt;
-    afxNat*             vtxToVtxMap; // vtxCnt
-    afxNat*             vtxToTriMap; // vtxCnt
-    akxIndexedTriangle* sideToAdjacentMap; // edgeCnt
     afxNat              jointsForTriCnt;
     afxNat*             jointsForTriMap;
     afxNat              triToJointCnt;
     afxNat*             triToJointMap;
 
+    afxNat              vtxCnt;
+    afxNat*             vtxToVtxMap; // vtxCnt
+    afxNat*             vtxToTriMap; // vtxCnt
+    afxNat              morphCnt;
+    afxMeshMorph*       morphs;
+    afxString*          extraMorphTagMap; // morphCnt - 1; doesn't include base morph.
+
+    avxTopology         topology;
     afxNat              maxIdxValue;
     afxNat              minIdxSiz;
-    akxVertexIndexCache cache;
+    afxVertexIndexCache cache;
+
+    afxString           urn; // 32
+    void*               extData;
 };
 
 #endif

@@ -165,17 +165,6 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\e2coree\e2coree.vcxproj">
-      <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\e2pragma\e2pragma.vcxproj">
-      <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\e2vgi\e2vgi.vcxproj">
-      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="e2sound.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +177,17 @@
     <ClCompile Include="..\..\afx\sound\dev\afxSoundInput.c" />
     <ClCompile Include="..\..\afx\sound\dev\afxSoundOutput.c" />
     <ClCompile Include="..\..\afx\sound\dev\afxSoundSystem.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\e2combo\e2combo.vcxproj">
+      <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\e2coree\e2coree.vcxproj">
+      <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\e2draw\e2draw.vcxproj">
+      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

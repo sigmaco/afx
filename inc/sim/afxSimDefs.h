@@ -32,10 +32,10 @@
 
 // Shape is the form of an object or its external boundary, outline, or external surface, as opposed to other properties such as color, texture or material type.
 
-#include "qwadro/inc/draw/dev/afxDrawSystem.h"
+#include "qwadro/inc/draw/afxDrawSystem.h"
 #include "qwadro/inc/sound/dev/afxSoundSystem.h"
 
-#ifndef __e2pragma__
+#ifndef __e2combo__
 #   ifdef _DEBUG
 #       define AMX DLLIMPORT extern 
 #       define AMXINL DLLIMPORT EMBED
@@ -55,11 +55,11 @@
 #       define _AMXINL DLLEXPORT INLINE
 #       define AMXINL DLLEXPORT EMBED
 #   endif
-#endif//__e2sim__
+#endif//__e2combo__
 
 
-AFX_DEFINE_HANDLE(afxPragmaDevice);
-AFX_DEFINE_HANDLE(afxPragmaBridge);
+AFX_DEFINE_HANDLE(afxComboDevice);
+AFX_DEFINE_HANDLE(afxComboBridge);
 AFX_DEFINE_HANDLE(afxMathQueue);
 
 AFX_DEFINE_HANDLE(akxLight);
@@ -71,7 +71,7 @@ AFX_DEFINE_HANDLE(afxMotor);
 AFX_DEFINE_HANDLE(afxMotion);
 AFX_DEFINE_HANDLE(afxAnimation);
 
-AFX_DEFINE_HANDLE(akxTerrain);
+AFX_DEFINE_HANDLE(afxTerrain);
 
 AFX_DEFINE_STRUCT(akxTrackMask)
 {
