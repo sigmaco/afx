@@ -28,16 +28,16 @@ AFX_OBJECT(asxMixer)
 {
     struct
     {
-        afxNat  a;
+        afxUnit  a;
     }           ins[8];
-    afxNat      inCnt;
+    afxUnit      inCnt;
 
     struct
     {
         afxReal factor;
-        afxNat  fromIn;
+        afxUnit  fromIn;
     }           outs[8];
-    afxNat      outCnt;
+    afxUnit      outCnt;
 };
 
 AFX_DEFINE_STRUCT(afxSoundOutputConfig)
@@ -87,7 +87,7 @@ AFX_DEFINE_STRUCT(afxSoundOutputConfig)
 };
 
 ASX afxSoundDevice  AfxGetSoundOutputDevice(afxSoundOutput sout);
-ASX afxError        AfxGetSoundOutputIdd(afxSoundOutput sout, afxNat code, void* dst);
+ASX afxError        AfxGetSoundOutputIdd(afxSoundOutput sout, afxUnit code, void* dst);
 
 // Connection
 

@@ -27,26 +27,26 @@ typedef enum afxComboBridgeFlag
 AFX_DEFINE_STRUCT(afxComboBridgeConfig)
 {
     afxComboBridgeFlags  flags;
-    afxNat              portIdx;
-    afxNat              queueCnt;
+    afxUnit              portIdx;
+    afxUnit              queueCnt;
     afxReal const*      queuePriority;
 };
 
 AFX_DEFINE_STRUCT(amxSubmission)
 {
-    afxNat              portIdx;
-    afxNat              baseQueIdx;
-    afxNat              queCnt;
+    afxUnit              portIdx;
+    afxUnit              baseQueIdx;
+    afxUnit              queCnt;
 
     afxFlags            flags;
     afxSemaphore        waitSems;
-    afxNat64            waitValues;
+    afxUnit64            waitValues;
     avxPipelineStage    waitStageMasks;
-    afxNat32            waitReserveds;
+    afxUnit32            waitReserveds;
     afxSemaphore        signalSems;
-    afxNat64            signalValues;
+    afxUnit64            signalValues;
     avxPipelineStage    signalStageMasks;
-    afxNat32            signalReserveds;
+    afxUnit32            signalReserveds;
     afxFence            fence;
 };
 
@@ -54,23 +54,23 @@ AFX_DEFINE_STRUCT(amxQueueOpData);
 
 AFX_DEFINE_STRUCT(amxQueueOp)
 {
-    afxNat              submType;
-    afxError            (*f)(void*, void*, afxNat, void*);
+    afxUnit              submType;
+    afxError            (*f)(void*, void*, afxUnit, void*);
     void*               udd;
-    afxNat              dataSiz;
+    afxUnit              dataSiz;
     amxQueueOpData*     data;
 };
 
 AMX afxComboDevice       AfxGetMathBridgeDevice(afxComboBridge mdge);
 AMX afxSimulation       AfxGetMathBridgeContext(afxComboBridge mdge);
 
-AMX afxNat              AfxGetMathBridgePort(afxComboBridge mdge);
+AMX afxUnit              AfxGetMathBridgePort(afxComboBridge mdge);
 
-AMX void                _AmxBeginMathQueueDebugScope(afxComboBridge mdge, afxNat queIdx, afxString const* name, afxColor const color);
-AMX void                _AmxPushMathQueueDebugLabel(afxComboBridge mdge, afxNat queIdx, afxString const* name, afxColor const color);
-AMX void                _AmxEndMathQueueDebugScope(afxComboBridge mdge, afxNat queIdx);
+AMX void                _AmxBeginMathQueueDebugScope(afxComboBridge mdge, afxUnit queIdx, afxString const* name, afxColor const color);
+AMX void                _AmxPushMathQueueDebugLabel(afxComboBridge mdge, afxUnit queIdx, afxString const* name, afxColor const color);
+AMX void                _AmxEndMathQueueDebugScope(afxComboBridge mdge, afxUnit queIdx);
 
-AMX afxNat              _AmxSubmitMathCommands(afxComboBridge mdge, amxSubmission const* ctrl, afxNat cnt, avxCmdb cmdbs[]);
-AMX afxNat              _AmxSubmitMathWorkRequest(afxComboBridge mdge, afxNat cnt, amxQueueOp const subm[]);
+AMX afxUnit              _AmxSubmitMathCommands(afxComboBridge mdge, amxSubmission const* ctrl, afxUnit cnt, avxCmdb cmdbs[]);
+AMX afxUnit              _AmxSubmitMathWorkRequest(afxComboBridge mdge, afxUnit cnt, amxQueueOp const subm[]);
 
 #endif//AMX_MATH_BRIDGE_H

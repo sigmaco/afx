@@ -31,7 +31,7 @@ AVX afxCmdId                AvxCmdCopyBuffer
     avxCmdb                 cmdb,
     afxBuffer               src, /// the source buffer.
     afxBuffer               dst, /// the destination buffer.
-    afxNat                  opCnt, /// the number of regions to copy.
+    afxUnit                  opCnt, /// the number of regions to copy.
     afxBufferCopy const     ops[] /// an array of structures specifying the regions to copy.
 );
 
@@ -40,9 +40,9 @@ AVX afxCmdId                AvxCmdFillBuffer
 (
     avxCmdb                 cmdb,
     afxBuffer               buf, /// the buffer to be filled.
-    afxNat                  offset, /// the byte offset into the buffer at which to start filling, and must be a multiple of 4.
-    afxNat                  range, /// the number of bytes to fill, and must be either a multiple of 4, or 0 to fill the range from offset to the end of the buffer. If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.
-    afxNat                  value /// the 4-byte word written repeatedly to the buffer to fill size bytes of data. The data word is written to memory according to the host endianness.
+    afxUnit                  offset, /// the byte offset into the buffer at which to start filling, and must be a multiple of 4.
+    afxUnit                  range, /// the number of bytes to fill, and must be either a multiple of 4, or 0 to fill the range from offset to the end of the buffer. If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.
+    afxUnit                  value /// the 4-byte word written repeatedly to the buffer to fill size bytes of data. The data word is written to memory according to the host endianness.
 );
 
 AVX afxCmdId                AvxCmdClearBuffer
@@ -50,8 +50,8 @@ AVX afxCmdId                AvxCmdClearBuffer
 (
     avxCmdb                 cmdb,
     afxBuffer               buf, /// the buffer to be zeroed.
-    afxNat                  offset, /// the byte offset into the buffer at which to start filling, and must be a multiple of 4.
-    afxNat                  range /// the number of bytes to zero, and must be either a multiple of 4, or 0 to zero the range from offset to the end of the buffer. If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.    
+    afxUnit                  offset, /// the byte offset into the buffer at which to start filling, and must be a multiple of 4.
+    afxUnit                  range /// the number of bytes to zero, and must be either a multiple of 4, or 0 to zero the range from offset to the end of the buffer. If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.    
 );
 
 AVX afxCmdId                AvxCmdUpdateBuffer
@@ -59,8 +59,8 @@ AVX afxCmdId                AvxCmdUpdateBuffer
 (
     avxCmdb                 cmdb,
     afxBuffer               buf, /// the buffer to be updated.
-    afxNat                  offset, /// the byte offset into the buffer to start updating, and must be a multiple of 4.
-    afxNat                  range, /// the number of bytes to update, and must be a multiple of 4.
+    afxUnit                  offset, /// the byte offset into the buffer to start updating, and must be a multiple of 4.
+    afxUnit                  range, /// the number of bytes to update, and must be a multiple of 4.
     void const*             src /// the source data for the buffer update, and must be at least @range bytes in size.
 );
 
@@ -69,8 +69,8 @@ AVX afxCmdId                AvxCmdDumpBuffer
 (
     avxCmdb                 cmdb,
     afxBuffer               buf, /// the buffer to be dumped.
-    afxNat                  offset, /// the byte offset into the buffer to start dumping, and must be a multiple of 4.
-    afxNat                  range, /// the number of bytes to dump, and must be a multiple of 4.
+    afxUnit                  offset, /// the byte offset into the buffer to start dumping, and must be a multiple of 4.
+    afxUnit                  range, /// the number of bytes to dump, and must be a multiple of 4.
     void*                   dst /// the destination place for the buffer dump, and must be at least @range bytes in size.
 );
 

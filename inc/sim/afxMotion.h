@@ -26,7 +26,7 @@
 AFX_DEFINE_STRUCT(afxMotionVector)
 {
     //afxString           id;
-    afxNat              seqKey;
+    afxUnit              seqKey;
     afxInt              dimension;
     afxCurve            value;
 };
@@ -43,9 +43,9 @@ AFX_DEFINE_STRUCT(afxMotionTransform)
 AFX_DEFINE_STRUCT(afxMotionBlueprint)
 {
     afxString32         id;
-    afxNat              vecCnt;
+    afxUnit              vecCnt;
     afxString const*    vectors;
-    afxNat              pivotCnt;
+    afxUnit              pivotCnt;
     afxString const*    pivots;
     afxReal const*      pivotLodError;
     afxBool             incPivotLodError;
@@ -56,14 +56,14 @@ AMX afxBool             AfxGetMotionId(afxMotion mot, afxString* id);
 
 AMX void                AfxComputeMotionDisplacement(afxMotion mot, afxM4d m);
 
-AMX afxBool             AfxFindMotionVector(afxMotion mot, afxString const* seqId, afxNat *seqIdx);
-AMX afxBool             AfxFindMotionTransform(afxMotion mot, afxString const* seqId, afxNat *seqIdx);
+AMX afxBool             AfxFindMotionVector(afxMotion mot, afxString const* seqId, afxUnit *seqIdx);
+AMX afxBool             AfxFindMotionTransform(afxMotion mot, afxString const* seqId, afxUnit *seqIdx);
 
-AMX void                AfxUpdateMotionVectors(afxMotion mot, afxNat baseSeqIdx, afxNat seqCnt, afxMotionVector const vectors[], afxNat fetchRate);
-AMX void                AfxUpdateMotionTransforms(afxMotion mot, afxNat baseSeqIdx, afxNat seqCnt, afxMotionTransform const transforms[], afxNat fetchRate);
+AMX void                AfxUpdateMotionVectors(afxMotion mot, afxUnit baseSeqIdx, afxUnit seqCnt, afxMotionVector const vectors[], afxUnit fetchRate);
+AMX void                AfxUpdateMotionTransforms(afxMotion mot, afxUnit baseSeqIdx, afxUnit seqCnt, afxMotionTransform const transforms[], afxUnit fetchRate);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError            AfxAssembleMotions(afxSimulation sim, afxNat cnt, afxMotionBlueprint const blueprints[], afxMotion motions[]);
+AMX afxError            AfxAssembleMotions(afxSimulation sim, afxUnit cnt, afxMotionBlueprint const blueprints[], afxMotion motions[]);
 
 #endif//AMX_MOTION_H

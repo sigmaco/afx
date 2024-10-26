@@ -22,22 +22,22 @@
 AFX_DEFINE_STRUCT(afxIndexedStringData) // at afxString._data
 {
     afxDatabase db;
-    afxNat      tableId,
+    afxUnit      tableId,
                 idx;
-    afxNat32    crc32;
+    afxUnit32    crc32;
 };
 
 AFX_DEFINE_STRUCT(afxDatabaseEntry)
 {
-    afxNat32    crc32;
-    afxNat      range;
+    afxUnit32    crc32;
+    afxUnit      range;
 };
 
 AFX_DEFINE_STRUCT(afxDatabaseTable)
 {
-    afxNat  id;
+    afxUnit  id;
     afxLink linkage;
-    afxNat  cnt; // count of entries
+    afxUnit  cnt; // count of entries
 };
 
 AFX_OBJECT(afxDatabase)
@@ -49,18 +49,18 @@ AFX_OBJECT(afxDatabase)
 
 AFX_DEFINE_STRUCT(afxDatabaseStrategy)
 {
-    afxNat  maxLen, // max lenght of every strings, useful to force small names, such as 32-char long names for textures.
+    afxUnit  maxLen, // max lenght of every strings, useful to force small names, such as 32-char long names for textures.
             cap,    // total amount of strings supported.
             stock;  // amount of space to preallocate.
 };
 
 AFX afxDatabase     AfxDatabaseAcquire(void *sys, afxDatabaseStrategy const *strategy);
 
-AFX afxNat          AfxDatabaseIndex(afxDatabase *db, afxString const *str);
-AFX afxNat          AfxDatabaseIndexFromRaw(afxDatabase *db, afxChar const *src, afxNat range);
-AFX afxNat          AfxDatabaseDeindex(afxDatabase *db, afxString const *str);
+AFX afxUnit          AfxDatabaseIndex(afxDatabase *db, afxString const *str);
+AFX afxUnit          AfxDatabaseIndexFromRaw(afxDatabase *db, afxChar const *src, afxUnit range);
+AFX afxUnit          AfxDatabaseDeindex(afxDatabase *db, afxString const *str);
 
-AFX afxChar const*  AfxDatabaseGetConstData(afxDatabase *db, afxNat idx, afxString const *str);
-AFX afxNat          AfxDatabaseGetSize(afxDatabase *db, afxNat idx, afxString const *str);
+AFX afxChar const*  AfxDatabaseGetConstData(afxDatabase *db, afxUnit idx, afxString const *str);
+AFX afxUnit          AfxDatabaseGetSize(afxDatabase *db, afxUnit idx, afxString const *str);
 
 #endif//AFX_DATABASE_H

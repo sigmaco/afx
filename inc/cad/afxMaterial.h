@@ -30,13 +30,13 @@
 #include "qwadro/inc/base/afxFixedString.h"
 
 AMX afxString const*AfxGetMaterialUrn(afxMaterial mtl);
-AMX afxNat          AfxCountMaterialMaps(afxMaterial mtl);
+AMX afxUnit          AfxCountMaterialMaps(afxMaterial mtl);
 
 AMX afxMaterial     AfxFindSubmaterial(afxMaterial mtl, afxString const *usage);
-AMX afxMaterial     AfxGetSubmaterial(afxMaterial mtl, afxNat mapIdx);
-AMX void            AfxRebindSubmaterial(afxMaterial mtl, afxNat mapIdx, afxMaterial subMtl);
+AMX afxMaterial     AfxGetSubmaterial(afxMaterial mtl, afxUnit mapIdx);
+AMX void            AfxRebindSubmaterial(afxMaterial mtl, afxUnit mapIdx, afxMaterial subMtl);
 
-AMX void            AfxResetMaterialMap(afxMaterial mtl, afxNat mapIdx, afxString const* usage, afxMaterial subMtl);
+AMX void            AfxResetMaterialMap(afxMaterial mtl, afxUnit mapIdx, afxString const* usage, afxMaterial subMtl);
 
 AMX afxRaster       AfxGetMaterialTexture(afxMaterial mtl);
 AMX void            AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex);
@@ -50,8 +50,8 @@ AMX void            AfxShineMaterial(afxMaterial mtl, afxReal shininess);
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxNat          AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, afxMaterial materials[]);
+AMX afxUnit          AfxEnumerateMaterials(afxSimulation sim, afxUnit first, afxUnit cnt, afxMaterial materials[]);
 
-AMX afxError        AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxNat subCnt, afxMaterial *mtl);
+AMX afxError        AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxUnit subCnt, afxMaterial *mtl);
 
 #endif//AMX_MATERIAL_H

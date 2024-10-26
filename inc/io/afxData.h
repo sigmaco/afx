@@ -37,19 +37,19 @@ typedef enum afxCodecId
 #ifdef _AFX_CODEC_C
 AFX_OBJECT(afxCodec)
 {
-    afxError(*enc)(afxStream stream, afxNat len, afxNat byteCnt, afxByte const* src);
-    afxError(*dec)(afxStream stream, afxNat len, afxNat byteCnt, afxByte* dst);
+    afxError(*enc)(afxStream stream, afxUnit len, afxUnit byteCnt, afxByte const* src);
+    afxError(*dec)(afxStream stream, afxUnit len, afxUnit byteCnt, afxByte* dst);
 };
 #endif//_AFX_CODEC_C
 #endif//_AFX_CORE_C
 
-AFX afxNat  AfxGetCompressionPaddingSize(afxCompressionType type);
+AFX afxUnit  AfxGetCompressionPaddingSize(afxCompressionType type);
 
-AFX afxBool AfxDecompressData(afxCompressionType type, afxBool fileIsByteReversed, afxNat compressedBytesSiz, void *compressedBytes, afxInt stop0, afxInt stop1, afxInt stop2, void *decompressedBytes);
+AFX afxBool AfxDecompressData(afxCompressionType type, afxBool fileIsByteReversed, afxUnit compressedBytesSiz, void *compressedBytes, afxInt stop0, afxInt stop1, afxInt stop2, void *decompressedBytes);
 
-AFX afxError    AfxEncode(afxCodec cdc, void const* src, afxNat srcLen, void* dst, afxNat dstLen);
-AFX afxError    AfxDecode(afxCodec cdc, void const* src, afxNat srcLen, void* dst, afxNat dstLen);
+AFX afxError    AfxEncode(afxCodec cdc, void const* src, afxUnit srcLen, void* dst, afxUnit dstLen);
+AFX afxError    AfxDecode(afxCodec cdc, void const* src, afxUnit srcLen, void* dst, afxUnit dstLen);
 
-//AFX void        AfxDecodeStream(afxStream stream, afxNat len, afxNat byteCnt, afxByte *dst);
+//AFX void        AfxDecodeStream(afxStream stream, afxUnit len, afxUnit byteCnt, afxByte *dst);
 
 #endif//AFX_DATA_H

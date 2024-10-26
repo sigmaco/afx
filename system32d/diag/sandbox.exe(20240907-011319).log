@@ -1,0 +1,67 @@
+Booting...
+Acquiring...  Thread Execution Unit 3000 @ afxSystem_w32.c:447Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... Executable And Linkage Module <e2coree.dll>Memory Page Size: 4096HW Threading Capacity: 2Loading... Executable And Linkage Module <e2draw.dll>Loading... Executable And Linkage Module <e2combo.dll>Loading... Executable And Linkage Module <e2sound.dll>Loading... Executable And Linkage Module <e2mmux.dll>Loading... Executable And Linkage Module <//./z/eaxzal1.dll>Loading... Installable Client Driver <//./z//eaxzal1.dll>	<//./amigal1/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/galileo.dll>Loading... Installable Client Driver <//./z//galileo.dll>	<//./combo/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/tarzgl4.dll>Loading... Installable Client Driver <//./z//tarzgl4.dll>	<//./targl3/>("")  0.0.0 	<//./targl4/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/winsh4d.dll>Loading... Installable Client Driver <//./z//winsh4d.dll>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 3000
+Loading... Executable And Linkage Module <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY17) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL32.c:1559
+GL: INVAL_PARAMzglInterop_WGL32.c:1561
+GL: INVAL_PARAMzglInterop_WGL32.c:1659
+GL: INVAL_PARAMzglInterop_WGL32.c:1688
+GL: INVAL_PARAMzglInterop_WGL32.c:1761
+GL: INVAL_PARAMzglInterop_WGL32.c:1764
+GL: INVAL_PARAMzglInterop_WGL32.c:1769
+GL: INVAL_PARAMzglInterop_WGL32.c:1774
+GL: INVAL_PARAMAcquiring...  Thread Execution Unit 0 @ zglDrawBridge.c:1949Entering the Thread Execution Environment 2080
+Starting 2080 on thread execution unit #1...SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 3000
+avxPipeline.c:303
+avxPipeline.c:303
+afxClass.c:898
+afxClass.c:898
+(cfg->fcc)
+    InvalidafxClass.c:921
+afxClass.c:921
+(cfg->name && cfg->name[0])
+    InvalidMounting... <//./d/>('E:\qwadro\repo\bangitk\tmp'),7Mounting... <//./a/>('E:\qwadro\repo\bangitk\art'),5afxDrawOutput.c:225
+afxDrawOutput.c:225
+(whd[0])(952) is out of range [1, 5292258]afxDrawOutput.c:226
+afxDrawOutput.c:226
+(whd[1])(506) is out of range [1, 5292313]Window_W32.c:692
+afxWindow.c:186
+afxWindow.c:295
+afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>Reopening... <../data/pipeline/test/test.xsh.xml>Entering the Thread Execution Environment 2080
+Hardware-side buffer 05872440 ready. 34962, 1, 4Entering the Thread Execution Environment 3000
+afxXml.c:1141
+afxXml.c:1141
+(tag)
+    InvalidavxPipeline.c:369
+avxPipeline.c:369
+(stageCnt)
+    InvalidzglPipeline.c:524
+afxClass.c:574
+afxClass.c:581
+afxClass<Pipeline>(059bc7a0)afxClass.c:713
+afxClass.c:995
+afxPool.c:452
+avxPipeline.c:512
+Node 'CullMode' not handled.Node 'PrimitiveTopology' not handled.Node 'VertexShader' not handled.Node 'FillMode' not handled.Node 'DepthTestEnabled' not handled.Node 'DepthCompareOp' not handled.Node 'FragmentShader' not handled.Reopening... <../data/pipeline/body/body.xsh.xml>afxXml.c:1141
+afxXml.c:1141
+(tag)
+    InvalidAttribute 'id' not handled.avxPipeline.c:369
+avxPipeline.c:369
+(stageCnt)
+    InvalidzglPipeline.c:524
+afxClass.c:574
+afxClass.c:581
+afxClass<Pipeline>(059c7b90)afxClass.c:713
+afxClass.c:995
+afxPool.c:452
+avxPipeline.c:512
+Node 'CullMode' not handled.Node 'PrimitiveTopology' not handled.Node 'VertexShader' not handled.Node 'DepthTestEnabled' not handled.Node 'DepthWriteEnabled' not handled.Node 'FillMode' not handled.Node 'DepthCompareOp' not handled.Node 'FragmentShader' not handled.Attribute 'id' not handled.avxPipeline.c:369
+avxPipeline.c:369
+(stageCnt)
+    InvalidzglPipeline.c:524
+afxClass.c:574
+afxClass.c:581
+afxClass<Pipeline>(059c7d08)afxClass.c:713
+afxClass.c:995
+afxPool.c:452
+avxPipeline.c:512

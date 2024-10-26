@@ -46,17 +46,17 @@ typedef enum afxSeekOrigin
     afxSeekOrigin_END // from end to begin
 } afxSeekOrigin;
 
-typedef afxNat afxRwx[3];
+typedef afxUnit afxRwx[3];
 
 AFX_DECLARE_STRUCT(_afxIobIdd);
 
 AFX_DEFINE_STRUCT(afxIobImpl)
 {
-    afxError    (*read)(afxStream, void *dst, afxNat32 range);
-    afxResult   (*readFeedback)(afxStream, afxNat32, void*);
-    afxError    (*write)(afxStream, void const * const src, afxNat32 range);
-    afxResult   (*writeFeedback)(afxStream, afxNat32, void*);
-    afxNat      (*tell)(afxStream);
+    afxError    (*read)(afxStream, void *dst, afxUnit32 range);
+    afxResult   (*readFeedback)(afxStream, afxUnit32, void*);
+    afxError    (*write)(afxStream, void const * const src, afxUnit32 range);
+    afxResult   (*writeFeedback)(afxStream, afxUnit32, void*);
+    afxUnit     (*tell)(afxStream);
     afxError    (*seek)(afxStream, afxSize, afxSeekOrigin);
     afxBool     (*eos)(afxStream);
     afxResult   (*dtor)(afxStream);
@@ -66,78 +66,83 @@ AFX_DEFINE_STRUCT(afxIobImpl)
 
 AFX_DEFINE_STRUCT(afxStreamSeg)
 {
-    afxSize     offset;
-    afxNat      range;
-    afxNat      stride;
+    afxSize offset;
+    afxUnit range;
+    afxUnit stride;
 };
 
-AFX afxBool             AfxIsStreamWriteable(afxStream const iob);
-AFX afxBool             AfxIsStreamReadable(afxStream const iob);
-AFX afxBool             AfxIsStreamReadOnly(afxStream const iob);
-AFX afxBool             AfxStreamIsSeekable(afxStream const iob);
+AFX afxBool         AfxIsStreamWriteable(afxStream const iob);
+AFX afxBool         AfxIsStreamReadable(afxStream const iob);
+AFX afxBool         AfxIsStreamReadOnly(afxStream const iob);
+AFX afxBool         AfxStreamIsSeekable(afxStream const iob);
 
-AFX afxNat              AfxGetStreamCapacity(afxStream const iob); // total of bytes of a stream.
-AFX afxSize             AfxGetStreamLength(afxStream const iob); // number of bytes available to be read.
-AFX afxSize             AfxGetStreamRoom(afxStream const iob); // number of bytes available to be written.
+AFX afxUnit         AfxGetStreamCapacity(afxStream const iob); // total of bytes of a stream.
+AFX afxSize         AfxGetStreamLength(afxStream const iob); // number of bytes available to be read.
+AFX afxSize         AfxGetStreamRoom(afxStream const iob); // number of bytes available to be written.
 
-AFX afxSize             AfxAskStreamPosn(afxStream iob);
-AFX afxSize             AfxMeasureStream(afxStream iob); // = end - begin
-AFX afxBool             AfxHasStreamReachedEnd(afxStream iob);
+AFX afxSize         AfxAskStreamPosn(afxStream iob);
+AFX afxSize         AfxMeasureStream(afxStream iob); // = end - begin
+AFX afxBool         AfxHasStreamReachedEnd(afxStream iob);
 
-AFX afxError            AfxSeekStream(afxStream iob, afxSize offset, afxSeekOrigin origin);
-AFX afxError            AfxRewindStream(afxStream iob);
-AFX afxError            AfxRecedeStream(afxStream iob, afxNat range);
-AFX afxError            AfxAdvanceStream(afxStream iob, afxNat range);
+AFX afxError        AfxSeekStream(afxStream iob, afxSize offset, afxSeekOrigin origin);
+AFX afxError        AfxRewindStream(afxStream iob);
+AFX afxError        AfxRecedeStream(afxStream iob, afxUnit range);
+AFX afxError        AfxAdvanceStream(afxStream iob, afxUnit range);
 
-AFX void const*         AfxGetStreamBuffer(afxStream const iob, afxSize offset);
-AFX afxError            AfxAdjustStreamBuffer(afxStream iob, afxNat bufCap);
+AFX void const*     AfxGetStreamBuffer(afxStream const iob, afxSize offset);
+AFX afxError        AfxAdjustStreamBuffer(afxStream iob, afxUnit bufCap);
 
 
-AFX afxBool             AfxResetStream(afxStream iob);
+AFX afxBool         AfxResetStream(afxStream iob);
 
 // Make a stream fork from another stream.
-AFX afxStream           AfxForkStream(afxStream iob); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxStream           AfxForkStreamRange(afxStream iob, afxSize offset, afxNat range); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxStream       AfxForkStream(afxStream iob); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxStream       AfxForkStreamRange(afxStream iob, afxSize offset, afxUnit range); // em caso de erro, retorna o comprimento deixado de fora.
 
-AFX afxError            AfxMergeStream(afxStream out, afxStream in, afxSize base, afxNat range, afxNat rate);
+AFX afxError        AfxMergeStream(afxStream out, afxStream in, afxSize base, afxUnit range, afxUnit rate);
 
-AFX afxError            AfxRead(afxStream in, afxNat cnt, afxNat siz, void* dst, afxNat dstStride);
-AFX afxError            AfxReadReversed(afxStream in, afxNat cnt, afxNat siz, void* dst, afxNat dstStride);
+AFX afxError        AfxRead(afxStream in, afxUnit cnt, afxUnit siz, void* dst, afxUnit dstStride);
+AFX afxError        AfxReadReversed(afxStream in, afxUnit cnt, afxUnit siz, void* dst, afxUnit dstStride);
 
-AFX afxError            AfxReadAt(afxStream in, afxSize offset, afxNat cnt, afxNat siz, void *dst, afxNat dstStride);
-AFX afxError            AfxReadReversedAt(afxStream in, afxSize offset, afxNat cnt, afxNat siz, void *dst, afxNat dstStride);
+AFX afxError        AfxReadAt(afxStream in, afxSize offset, afxUnit cnt, afxUnit siz, void *dst, afxUnit dstStride);
+AFX afxError        AfxReadReversedAt(afxStream in, afxSize offset, afxUnit cnt, afxUnit siz, void *dst, afxUnit dstStride);
 
-AFX afxError            AfxWrite(afxStream out, afxNat cnt, afxNat siz, void const* src, afxNat srcStride);
-AFX afxError            AfxWriteAt(afxStream out, afxSize offset, afxNat cnt, afxNat siz, void const* src, afxNat srcStride);
+AFX afxError        AfxWrite(afxStream out, afxUnit cnt, afxUnit siz, void const* src, afxUnit srcStride);
+AFX afxError        AfxWriteAt(afxStream out, afxSize offset, afxUnit cnt, afxUnit siz, void const* src, afxUnit srcStride);
 
-AFX afxError            AfxReadStream2(afxStream in, afxNat range, afxNat stride, void* dst, afxNat dstStride);
-AFX afxError            AfxReadStreamAt2(afxStream in, afxSize offset, afxNat range, afxNat stride, void* dst, afxNat dstStride);
-AFX afxError            AfxReadStreamReversed2(afxStream in, afxNat range, afxNat stride, void* dst, afxNat dstStride);
-AFX afxError            AfxReadStreamReversedAt2(afxStream in, afxSize offset, afxNat range, afxNat stride, void* dst, afxNat dstStride);
+AFX afxError        AfxReadStream2(afxStream in, afxUnit range, afxUnit stride, void* dst, afxUnit dstStride);
+AFX afxError        AfxReadStreamAt2(afxStream in, afxSize offset, afxUnit range, afxUnit stride, void* dst, afxUnit dstStride);
+AFX afxError        AfxReadStreamReversed2(afxStream in, afxUnit range, afxUnit stride, void* dst, afxUnit dstStride);
+AFX afxError        AfxReadStreamReversedAt2(afxStream in, afxSize offset, afxUnit range, afxUnit stride, void* dst, afxUnit dstStride);
 
-AFX afxError            AfxWriteStream2(afxStream out, afxNat range, afxNat stride, void const* src, afxNat srcStride); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxError            AfxWriteStreamAt2(afxStream out, afxSize offset, afxNat range, afxNat stride, void const* src, afxNat srcStride); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxWriteStream2(afxStream out, afxUnit range, afxUnit stride, void const* src, afxUnit srcStride); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxWriteStreamAt2(afxStream out, afxSize offset, afxUnit range, afxUnit stride, void const* src, afxUnit srcStride); // em caso de erro, retorna o comprimento deixado de fora.
 
-AFX afxError            AfxReadStream(afxStream in, afxNat range, afxNat rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxError            AfxReadStreamAt(afxStream in, afxSize offset, afxNat range, afxNat rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxError            AfxReadStreamReversed(afxStream in, afxNat range, afxNat rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxError            AfxReadStreamReversedAt(afxStream in, afxSize offset, afxNat range, afxNat rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxDoStreamInput(afxStream in, afxUnit rowStride, afxUnit rowCnt, void* dst, afxUnit dstStride); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxDoStreamInputAt(afxStream in, afxSize offset, afxUnit rowStride, afxUnit rowCnt, void* dst, afxUnit dstStride);
+AFX afxError        AfxDoStreamOutput(afxStream out, afxUnit rowStride, afxUnit rowCnt, void const* src, afxUnit srcStride); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxDoStreamOutputAt(afxStream out, afxSize offset, afxUnit rowStride, afxUnit rowCnt, void const* src, afxUnit srcStride);
+
+AFX afxError        AfxReadStream(afxStream in, afxUnit range, afxUnit rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxReadStreamAt(afxStream in, afxSize offset, afxUnit range, afxUnit rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxReadStreamReversed(afxStream in, afxUnit range, afxUnit rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxReadStreamReversedAt(afxStream in, afxSize offset, afxUnit range, afxUnit rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
 
 AFX_DEFINE_STRUCT(afxDataIo)
 {
     afxSize     offset;
-    afxNat      rowStride;
-    afxNat      rowCnt;
+    afxUnit      rowStride;
+    afxUnit      rowCnt;
 };
 
-AFX afxError            AfxDecodeStream(afxStream in, afxSize offset, afxNat rowStride, afxNat rowCnt);
-AFX afxError            AfxDecodeStream2(afxStream in, afxSize offset, afxNat encSiz, afxFcc codec, afxNat stop0, afxNat stop1, afxNat stop2, void* dst);
+AFX afxError        AfxDecodeStream(afxStream in, afxSize offset, afxUnit rowStride, afxUnit rowCnt);
+AFX afxError        AfxDecodeStream2(afxStream in, afxSize offset, afxUnit encSiz, afxFcc codec, afxUnit stop0, afxUnit stop1, afxUnit stop2, void* dst);
 
-AFX afxError            AfxWriteStream(afxStream out, afxNat range, afxNat rate, void const* src); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxError            AfxWriteStreamAt(afxStream out, afxSize offset, afxNat range, afxNat rate, void const* src); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxWriteStream(afxStream out, afxUnit range, afxUnit rate, void const* src); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxWriteStreamAt(afxStream out, afxSize offset, afxUnit range, afxUnit rate, void const* src); // em caso de erro, retorna o comprimento deixado de fora.
 
-AFX afxError            AfxCopyStream(afxStream in, afxNat rate, afxStream out); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxError            AfxCopyStreamRange(afxStream in, afxSize base, afxNat range, afxNat rate, afxStream out); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxCopyStream(afxStream in, afxUnit rate, afxStream out); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxCopyStreamRange(afxStream in, afxSize base, afxUnit range, afxUnit rate, afxStream out); // em caso de erro, retorna o comprimento deixado de fora.
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -161,18 +166,18 @@ typedef enum afxStreamFlag
 
 AFX_DEFINE_STRUCT(afxStreamInfo)
 {
-    afxNat          bufCap;
+    afxUnit          bufCap;
     afxStreamUsage  usage;
     afxStreamFlags  flags;
 };
 
 AFX afxIobImpl const    stdStreamImpl;
 
-AFX afxError            AfxAcquireImplementedStream(afxIobImpl const* pimpl, afxNat cnt, afxStreamInfo const infos[], afxStream streams[]);
-AFX afxError            AfxAcquireStream(afxNat cnt, afxStreamInfo const infos[], afxStream streams[]);
+AFX afxError            AfxAcquireImplementedStream(afxIobImpl const* pimpl, afxUnit cnt, afxStreamInfo const infos[], afxStream streams[]);
+AFX afxError            AfxAcquireStream(afxUnit cnt, afxStreamInfo const infos[], afxStream streams[]);
 
 AFX afxError            AfxReopenStream(afxStream iob, void* buf, afxSize siz);
 AFX afxError            AfxReopenInputStream(afxStream iob, void const* start, afxSize len);
-AFX afxError            AfxReopenOutputStream(afxStream iob, void* buf, afxNat bufCap);
+AFX afxError            AfxReopenOutputStream(afxStream iob, void* buf, afxUnit bufCap);
 
 #endif//AFX_STREAM_H

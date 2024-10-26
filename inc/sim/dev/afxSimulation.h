@@ -53,12 +53,12 @@ AMX afxClass*       AfxGetNodeClass(afxSimulation sim);
 AMX afxClass*       AfxGetRendererClass(afxSimulation sim);
 AMX afxClass*       AfxGetTerrainClass(afxSimulation sim);
 
-AMX afxNat          AfxEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, afxBody bodies[]);
-AMX afxNat          AfxInvokeBodies(afxSimulation sim, afxNat first, afxNat cnt, afxBool(*f)(afxBody, void*), void *udd);
+AMX afxUnit          AfxEnumerateBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBody bodies[]);
+AMX afxUnit          AfxInvokeBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBool(*f)(afxBody, void*), void *udd);
 
 AMX afxError        AfxStepSimulation(afxSimulation sim);
 
-AMX afxNat          AfxRecenterAllMotorClocks(afxSimulation sim, afxReal dCurrentClock);
+AMX afxUnit          AfxRecenterAllMotorClocks(afxSimulation sim, afxReal dCurrentClock);
 
 AMX void            AfxQuerySimulationErrorTolerance(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler);
 
@@ -66,13 +66,13 @@ AMX void            AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPe
 
 AMX afxStringBase   AfxGetModelUrnStringBase(afxSimulation sim);
 
-AMX afxNat          AfxCountMathBridges(afxSimulation sim, afxNat baseBridIdx);
-AMX afxNat          AfxCountMathQueues(afxSimulation sim, afxNat portIdx, afxNat baseQueIdx);
+AMX afxUnit          AfxCountMathBridges(afxSimulation sim, afxUnit baseBridIdx);
+AMX afxUnit          AfxCountMathQueues(afxSimulation sim, afxUnit portIdx, afxUnit baseQueIdx);
 
-AMX afxBool         AfxGetMathBridge(afxSimulation sim, afxNat portIdx, afxComboBridge* bridge);
-AMX afxBool         AfxGetMathQueue(afxSimulation sim, afxNat portIdx, afxNat queIdx, afxMathQueue* queue);
+AMX afxBool         AfxGetMathBridge(afxSimulation sim, afxUnit portIdx, afxComboBridge* bridge);
+AMX afxBool         AfxGetMathQueue(afxSimulation sim, afxUnit portIdx, afxUnit queIdx, afxMathQueue* queue);
 
-AMX afxError        AfxWaitForSimulation(afxSimulation sim, afxNat portIdx, afxNat firstQueIdx, afxNat queCnt);
+AMX afxError        AfxWaitForSimulation(afxSimulation sim, afxUnit portIdx, afxUnit firstQueIdx, afxUnit queCnt);
 
 AMX afxDrawContext  AfxGetSimulationDrawContext(afxSimulation sim);
 AMX afxDrawInput    AfxGetSimulationDrawInput(afxSimulation sim);

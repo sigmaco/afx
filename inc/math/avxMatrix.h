@@ -56,8 +56,8 @@ AVXINL void     AfxComputeShadowM4d(afxM4d m, afxPlane const p, afxReal const li
 
 // Cubemap
 
-AVXINL void     AfxCubemapMatrix_OpenGL(afxM4d m, afxNat face);
-AVXINL void     AfxCubemapMatrix_Direct3D(afxM4d m, afxNat face);
+AVXINL void     AfxCubemapMatrix_OpenGL(afxM4d m, afxUnit face);
+AVXINL void     AfxCubemapMatrix_Direct3D(afxM4d m, afxUnit face);
 
 // View space
 

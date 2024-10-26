@@ -62,16 +62,6 @@ AFX afxV2d const AFX_V2D_IDENTITY;
 AFX afxV3d const AFX_V3D_IDENTITY;
 AFX afxV4d const AFX_V4D_IDENTITY;
 
-#define AfxSpawnV2d(x_, y_) (afxV2d){ (afxReal)(x_), (afxReal)(y_) }
-#define AfxSpawnV3d(x_, y_, z_) (afxV3d){ (afxReal)x_, (afxReal)y_, (afxReal)z_ }
-#define AfxSpawnV4d(x_, y_, z_, w_) (afxV4d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)w_ }
-#define AfxSpawnPoint(x_, y_, z_) (afxV4d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)1 }
-
-#define AfxSpawnConstV2d(x_, y_) (afxV2d const){ (afxReal)(x_), (afxReal)(y_) }
-#define AfxSpawnConstV3d(x_, y_, z_) (afxV3d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_ }
-#define AfxSpawnV4dConst(x_, y_, z_, w_) (afxV4d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)w_ }
-#define AfxSpawnPointConst(x_, y_, z_) (afxV4d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)1 }
-
 #define AfxV2d(x_, y_) (afxV2d const){ (afxReal)(x_), (afxReal)(y_) }
 #define AfxV3d(x_, y_, z_) (afxV3d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_ }
 #define AfxV4d(x_, y_, z_, w_) (afxV4d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)w_ }
@@ -138,9 +128,9 @@ AFXINL void     AfxV2dCopy(afxV2d v, afxV2d const in);
 AFXINL void     AfxV3dCopy(afxV3d v, afxV3d const in);
 AFXINL void     AfxV4dCopy(afxV4d v, afxV4d const in);
 
-AFXINL void     AfxCopyArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d out[]);
-AFXINL void     AfxCopyArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxCopyArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxCopyArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d out[]);
+AFXINL void     AfxCopyArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxCopyArrayedV4d(afxUnit cnt, afxV4d const in[], afxV4d out[]);
 
 AFXINL void     AfxV3dCopyV2d(afxV3d v, afxV2d const in); // 2D linear transformation vector. Z is 0.
 AFXINL void     AfxV4dCopyV2d(afxV4d v, afxV2d const in);
@@ -207,13 +197,13 @@ AFXINL void     AfxClampV2d(afxV2d v, afxV2d const in, afxV2d const min, afxV2d 
 AFXINL void     AfxClampV3d(afxV3d v, afxV3d const in, afxV3d const min, afxV3d const max);
 AFXINL void     AfxClampV4d(afxV4d v, afxV4d const in, afxV4d const min, afxV4d const max);
 
-AFXINL void     AfxNormalizeArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d out[]);
-AFXINL void     AfxNormalizeArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxNormalizeArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxNormalizeArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d out[]);
+AFXINL void     AfxNormalizeArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxNormalizeArrayedV4d(afxUnit cnt, afxV4d const in[], afxV4d out[]);
 
-AFXINL void     AfxZeroOrNormalizeArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d out[]);
-AFXINL void     AfxZeroOrNormalizeArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxZeroOrNormalizeArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxZeroOrNormalizeArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d out[]);
+AFXINL void     AfxZeroOrNormalizeArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxZeroOrNormalizeArrayedV4d(afxUnit cnt, afxV4d const in[], afxV4d out[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Arithmetica                                                                //
@@ -240,7 +230,7 @@ AFXINL void     AfxV4dSub(afxV4d v, afxV4d const a, afxV4d const b);
 // v = a / b
 
 AFXINL void     AfxDivV2d(afxV2d v, afxV2d const a, afxV2d const b);
-AFXINL void     AfxDivV3d(afxV3d v, afxV3d const a, afxV3d const b);
+AFXINL void     AfxV3dDiv(afxV3d v, afxV3d const a, afxV3d const b);
 AFXINL void     AfxDivV4d(afxV4d v, afxV4d const a, afxV4d const b);
 
 // v = a % b
@@ -445,7 +435,7 @@ AFXINL void     AfxV4dPreMultiplyAtm4d(afxV4d v, afxV4d const in, afxM4d const m
 
 // Similarity transform
 
-AFXINL void     AfxAssimilateAtv3d(afxM3d const ltm, afxV4d const atv, afxNat cnt, afxV3d const in[], afxV3d out[]); // make similarity transformation on afxV3d-based position.
-AFXINL void     AfxAssimilateAtv4d(afxM3d const ltm, afxV4d const atv, afxNat cnt, afxV4d const in[], afxV4d out[]); // make similarity transformation on afxV3d-based position.
+AFXINL void     AfxAssimilateAtv3d(afxM3d const ltm, afxV4d const atv, afxUnit cnt, afxV3d const in[], afxV3d out[]); // make similarity transformation on afxV3d-based position.
+AFXINL void     AfxAssimilateAtv4d(afxM3d const ltm, afxV4d const atv, afxUnit cnt, afxV4d const in[], afxV4d out[]); // make similarity transformation on afxV3d-based position.
 
 #endif//AFX_VECTOR_H

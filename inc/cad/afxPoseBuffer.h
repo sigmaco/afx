@@ -22,23 +22,23 @@
 
 #include "qwadro/inc/sim/afxSimDefs.h"
 
-AMX afxError    AfxAcquirePoseBuffers(afxSimulation sim, afxNat cnt, afxNat const artCnt[], afxBool const excludeComposite[], afxPoseBuffer wp[]);
+AMX afxError    AfxAcquirePoseBuffers(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxBool const excludeComposite[], afxPoseBuffer wp[]);
 
 /// Você pode encontrar o número de articulações representadas na afxPoseBuffer assim: 
 
-AMX afxNat      AfxGetPoseBufferCapacity(afxPoseBuffer const wp);
+AMX afxUnit      AfxGetPoseBufferCapacity(afxPoseBuffer const wp);
 
 /// Em qualquer tempo, você pode inspecionar ou modificar o estado alojado de uma articulação na afxPoseBuffer. 
 /// Você acessa o estado da articulação como um afxTransform assim:
 
-AMX afxM4d*     AfxGetWorldMatrices(afxPoseBuffer const wp, afxNat baseArtIdx);
+AMX afxM4d*     AfxGetWorldMatrices(afxPoseBuffer const wp, afxUnit baseArtIdx);
 
 /// O transforme para a articulação é uma afxM4d com componentes translacionais em afxReal[3][0], afxReal[3][1] e afxReal[3][2]. 
 /// Desde que nunca há quaisquer componentes projetivos, os componentes afxReal[0][3], afxReal[1][3] e afxReal[2][3] são garantidos a estarem zerados, e o componente afxReal[3][3] é garantido de ser 1.
 
 /// Similarmente, você pode inspecionar ou modificar a afxM4d composta para uma articulação: 
 
-AMX afxM4d*     AfxGetCompositeMatrices(afxPoseBuffer const wp, afxNat baseArtIdx);
+AMX afxM4d*     AfxGetCompositeMatrices(afxPoseBuffer const wp, afxUnit baseArtIdx);
 
 /// A afxM4d composta está no mesmo layout como aquela retornada de GetPoseBuffer4x4. 
 /// É igual ao "world space" --- afxM4d espacial para a articulação (como dada por GetPoseBuffer4x4) multiplicada pelo transforme inverso de repouso no world-space --- para a articulação (como alojada no afxSkeleton). 

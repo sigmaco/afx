@@ -14,11 +14,13 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-/// The afxThread class provides a platform-independent way to manage threads.
-
-/// A afxThread object manages one thread of control within the program.
-/// afxThreads begin executing in run().
-/// By default, run() starts the event loop by calling exec() and runs a event loop inside the thread.
+/**
+    The afxThread object provides a platform-independent way to manage threads.
+    
+    A afxThread object manages one thread of control within the program.
+    afxThreads begin executing in run().
+    By default, run() starts the event loop by calling exec() and runs a event loop inside the thread.
+*/
 
 #ifndef AFX_THREAD_H
 #define AFX_THREAD_H
@@ -47,10 +49,10 @@ typedef afxResult(*afxThreadProc)(afxThread thr, afxEvent* ev);
 
 AFX_DEFINE_STRUCT(afxThreadConfig)
 {
-    afxNat              minEventCap;
+    afxUnit              minEventCap;
     afxThreadPurpose    purpose;
     //afxThreadProc       procCb;
-    afxNat              tid;
+    afxUnit              tid;
     void*               udd[4];
 };
 
@@ -76,8 +78,8 @@ AFX void        AfxRequestThreadInterruption(afxThread thr);
 //AFX afxError    AfxPostThreadEvent(afxThread thr, afxEvent const *ev);
 
 
-AFX afxNat      AfxResumeThread(afxThread thr);
-AFX afxNat      AfxSuspendThread(afxThread thr);
+AFX afxUnit      AfxResumeThread(afxThread thr);
+AFX afxUnit      AfxSuspendThread(afxThread thr);
 
 /// Returns true if the thread is running; otherwise returns false.
 AFX afxBool     AfxIsThreadRunning(afxThread thr);
@@ -97,13 +99,13 @@ AFX afxResult   AfxWaitForThreadExit(afxThread thr, afxResult* exitCode);
 
 AFX void        AfxGetThreadTime(afxReal64* ct, afxReal64* dt);
 AFX void        AfxGetThreadClock(afxClock* curr, afxClock* last);
-AFX void        AfxGetThreadFrequency(afxNat* iterNo, afxNat* lastFreq);
+AFX void        AfxGetThreadFrequency(afxUnit* iterNo, afxUnit* lastFreq);
 
 /// Test if the currently executing thread is the prime thread; the one which bootstrapped the Qwadro.
 AFX afxBool     AfxIsPrimeThread(void);
 
 /// Returns the thread unique identifier of the currently executing thread.
-AFX afxNat32    AfxGetTid(void);
+AFX afxUnit32    AfxGetTid(void);
 
 /// Return true if the task running on this thread should be stopped. An interruption can be requested by RequestThreadInterruption().
 AFX afxBool     AfxShouldThreadBeInterrupted(void);
@@ -132,10 +134,10 @@ AFX void        AfxYield(void);
 AFX afxBool     AfxGetThread(afxThread* thread);
 
 /// Finds a afxThread handle associated with the currently executing thread.
-AFX afxBool     AfxFindThread(afxNat32 tid, afxThread* thread);
+AFX afxBool     AfxFindThread(afxUnit32 tid, afxThread* thread);
 
 AFX afxBool     AfxGetPrimeThread(afxThread* thread);
 
-AFX afxError    AfxAcquireThreads(afxHere const hint, afxThreadConfig const* cfg, afxNat cnt, afxThread threads[]);
+AFX afxError    AfxAcquireThreads(afxHere const hint, afxThreadConfig const* cfg, afxUnit cnt, afxThread threads[]);
 
 #endif//AFX_THREAD_H

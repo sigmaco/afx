@@ -16,13 +16,13 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#ifndef AVX_VERTEX_BUFFER_H
-#define AVX_VERTEX_BUFFER_H
+#ifndef AVX_BUFFERIZER_H
+#define AVX_BUFFERIZER_H
 
 #include "qwadro/inc/draw/io/afxBuffer.h"
 #include "qwadro/inc/draw/pipe/avxVertexInput.h"
 
-AFX_DEFINE_HANDLE(avxVertexBufferizer);
+AFX_DEFINE_HANDLE(afxBufferizer);
 
 #ifdef _AVX_DRAW_C
 #ifdef _AVX_VERTEX_BUFFER_C
@@ -30,19 +30,18 @@ AFX_DEFINE_HANDLE(avxVertexBufferizer);
 #endif//_AVX_VERTEX_BUFFER_C
 #endif//_AVX_DRAW_C
 
-AFX_DEFINE_STRUCT(afxVertexBufferSpecification)
+AFX_DEFINE_STRUCT(afxBufferizerInfo)
 {
-    afxNat              bufCap;
-    afxBufferFlags     access;
+    afxUnit          bufCap;
+    afxBufferFlags  access;
+    afxBufferUsage  usage;
 };
 
-AVX afxError        AfxAcquireVertexBuffers(afxDrawInput din, afxNat cnt, afxVertexBufferSpecification const spec[], afxVertexBuffer vbuf[]);
+AVX afxError        AfxAcquireBufferizer(afxDrawInput din, afxBufferizerInfo const* info, afxBufferizer* bufferizer);
 
 AVX afxBuffer       AfxGetVertexBufferStorage(afxVertexBuffer vbuf);
-AVX afxNat          AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
+AVX afxUnit          AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
 AVX avxVertexInput  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
-AVX afxNat          AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
+AVX afxUnit          AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
 
-//AFX_DECLARE_STRUCT(akxVertexCache);
-
-#endif//AVX_VERTEX_BUFFER_H
+#endif//AVX_BUFFERIZER_H

@@ -14,10 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-/// A Stack is a linear data structure in which elements can be inserted and deleted only from one side of the list, called the top. 
-/// A stack follows the LIFO (Last In First Out) principle. Example: the element inserted at the last is the first element to come out. 
-/// The insertion of an element into the stack is called push operation, and the deletion of an element from the stack is called pop operation. 
-/// In stack, we always keep track of the last element present in the list with a pointer called top.
+/**
+    A Stack is a linear data structure in which elements can be inserted and deleted only from one side of the list, called the top. 
+    A stack follows the LIFO (Last In First Out) principle. Example: the element inserted at the last is the first element to come out. 
+    The insertion of an element into the stack is called push operation, and the deletion of an element from the stack is called pop operation. 
+    In stack, we always keep track of the last element present in the list with a pointer called top.
+*/
 
 #ifndef AFX_STACK_H
 #define AFX_STACK_H
@@ -28,41 +30,41 @@
 
 AFX_DEFINE_STRUCT(afxStackPage)
 {
-    afxNat          usedUnitCnt;
+    afxUnit          usedUnitCnt;
     afxByte*        units;
-    afxNat          firstIdx;
+    afxUnit          firstIdx;
     afxStackPage*   prev;
 };
 
 AFX_DEFINE_STRUCT(afxStack)
 {
-    afxNat              unitSiz;
-    afxNat              unitsPerBlock;
-    afxNat              totalUsedUnitCnt;
+    afxUnit              unitSiz;
+    afxUnit              unitsPerBlock;
+    afxUnit              totalUsedUnitCnt;
     afxStackPage*       lastBlock;
-    afxNat              maxUnits;
-    afxNat              activeBlocks;
-    afxNat              maxActiveBlocks;
+    afxUnit              maxUnits;
+    afxUnit              activeBlocks;
+    afxUnit              maxActiveBlocks;
     afxStackPage**      blockDir;
     afxMmu              ctx;
 };
 
-AFX void        AfxAllocateStack(afxStack* stak, afxNat unitSiz, afxNat unitsPerBlock);
-AFX void        AfxAllocatePagedStack(afxStack* stak, afxNat unitSiz, afxNat unitsPerBlock, afxNat maxUnits);
+AFX void        AfxAllocateStack(afxStack* stak, afxUnit unitSiz, afxUnit unitsPerBlock);
+AFX void        AfxAllocatePagedStack(afxStack* stak, afxUnit unitSiz, afxUnit unitsPerBlock, afxUnit maxUnits);
 AFX void        AfxDeallocateStack(afxStack* stak);
 
 AFX void        AfxEmptyStack(afxStack* stak);
 
-AFX void*       AfxGetStackUnit(afxStack* stak, afxNat idx);
-AFX void        AfxPopStackUnits(afxStack* stak, afxNat cnt);
-AFX void*       AfxPushStackUnit(afxStack* stak, afxNat *idx);
-AFX char        AfxPushStackUnits(afxStack* stak, afxNat cnt, afxNat *firstIdx, void const *initialVal);
+AFX void*       AfxGetStackUnit(afxStack* stak, afxUnit idx);
+AFX void        AfxPopStackUnits(afxStack* stak, afxUnit cnt);
+AFX void*       AfxPushStackUnit(afxStack* stak, afxUnit *idx);
+AFX char        AfxPushStackUnits(afxStack* stak, afxUnit cnt, afxUnit *firstIdx, void const *initialVal);
 
-AFX void        AfxDumpStackElement(afxStack* stak, afxNat idx, void *dst);
-AFX void        AfxDumpStackElements(afxStack* stak, afxNat first, afxNat cnt, void *dst);
+AFX void        AfxDumpStackElement(afxStack* stak, afxUnit idx, void *dst);
+AFX void        AfxDumpStackElements(afxStack* stak, afxUnit first, afxUnit cnt, void *dst);
 
-AFX void        AfxUpdateStackElement(afxStack* stak, afxNat idx, void const* src);
-AFX void        AfxUpdateStackElements(afxStack* stak, afxNat first, afxNat cnt, void const* src);
+AFX void        AfxUpdateStackElement(afxStack* stak, afxUnit idx, void const* src);
+AFX void        AfxUpdateStackElements(afxStack* stak, afxUnit first, afxUnit cnt, void const* src);
 
 AFX void        AfxDumpStack(afxStack* stak, void *dst);
 

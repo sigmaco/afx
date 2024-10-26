@@ -17,6 +17,7 @@
 #ifndef AFX_IO_BRIDGE_H
 #define AFX_IO_BRIDGE_H
 
+#include "qwadro/inc/exec/afxDevice.h"
 #include "qwadro/inc/io/afxFile.h"
 
 typedef enum afxIoBridgeFlag
@@ -27,8 +28,8 @@ typedef enum afxIoBridgeFlag
 AFX_DEFINE_STRUCT(afxIoPortCaps)
 {
     afxIoBridgeFlags    flags;
-    afxNat              minQueCnt; // usually 3
-    afxNat              maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
+    afxUnit              minQueCnt; // usually 3
+    afxUnit              maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
     afxAcceleration     acceleration;
 
     afxBool8            transfer;
@@ -38,8 +39,8 @@ AFX_DEFINE_STRUCT(afxIoPortCaps)
 
 AFX_DEFINE_STRUCT(afxIoBridgeConfig)
 {
-    afxNat              portId;
-    afxNat              minQueCnt;
+    afxUnit              portId;
+    afxUnit              minQueCnt;
     afxReal const*      queuePriority;
 };
 
@@ -52,27 +53,27 @@ typedef enum
 
 AFX_DEFINE_STRUCT(afxSubmission)
 {
-    afxNat              portId;
-    afxNat              exuIdx;
-    afxNat              exuCnt;
-    afxNat              queIdx;
-    afxNat              queCnt;
+    afxUnit              portId;
+    afxUnit              exuIdx;
+    afxUnit              exuCnt;
+    afxUnit              queIdx;
+    afxUnit              queCnt;
 
     afxFlags            flags;
     afxSemaphore        waitSems;
-    afxNat64            waitValues;
-    afxNat32            waitReserveds;
+    afxUnit64            waitValues;
+    afxUnit32            waitReserveds;
     afxSemaphore        signalSems;
-    afxNat64            signalValues;
-    afxNat32            signalReserveds;
+    afxUnit64            signalValues;
+    afxUnit32            signalReserveds;
     afxFence            fence;
 };
 
 AFX_DEFINE_STRUCT(afxTransference)
 {
-    afxNat              portIdx;
-    afxNat              baseQueIdx;
-    afxNat              queCnt;
+    afxUnit              portIdx;
+    afxUnit              baseQueIdx;
+    afxUnit              queCnt;
 
     afxSemaphore        wait;
     afxSemaphore        signal;
@@ -81,7 +82,7 @@ AFX_DEFINE_STRUCT(afxTransference)
     afxFcc              srcFcc;
     afxFcc              dstFcc;
     afxCodec            codec;
-    afxNat              decSiz;
+    afxUnit              decSiz;
 
     union
     {
@@ -111,14 +112,14 @@ AFX_DEFINE_STRUCT(afxTransference)
     };
 };
 
-AFX afxNat              AfxGetIoBridgePort(afxIoBridge xexu);
+AFX afxUnit              AfxGetIoBridgePort(afxIoBridge xexu);
 
-AFX afxNat              AfxGetIoQueues(afxIoBridge xexu, afxNat first, afxNat cnt, afxIoQueue queues[]);
+AFX afxUnit              AfxGetIoQueues(afxIoBridge xexu, afxUnit first, afxUnit cnt, afxIoQueue queues[]);
 
-AFX afxError            _AfxSubmitIoCommands(afxIoBridge xexu, afxSubmission const* ctrl, afxNat cnt, afxObject cmdbs[]);
-AFX afxError            _AfxSubmitTransferences(afxIoBridge xexu, afxTransference const* ctrl, afxNat opCnt, void const* ops);
+AFX afxError            _AfxSubmitIoCommands(afxIoBridge xexu, afxSubmission const* ctrl, afxUnit cnt, afxObject cmdbs[]);
+AFX afxError            _AfxSubmitTransferences(afxIoBridge xexu, afxTransference const* ctrl, afxUnit opCnt, void const* ops);
 
-AFX afxNat              AfxGetIoQueuePort(afxIoQueue xque);
+AFX afxUnit              AfxGetIoQueuePort(afxIoQueue xque);
 
 ////////////////////////////////////////////////////////////////////////////////
 

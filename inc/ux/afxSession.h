@@ -56,14 +56,14 @@ AFX_DEFINE_STRUCT(afxSeatConfig)
 {
     afxString           u;
     afxFlags            flags;
-    afxNat              portIdx;
-    afxNat              queueCnt;
+    afxUnit             portIdx;
+    afxUnit             queueCnt;
     afxReal const*      queuePriority;
 };
 
 AFX_DEFINE_STRUCT(afxSessionConfig)
 {
-    afxNat              seatCnt;
+    afxUnit             seatCnt;
     afxSeatConfig const*seats;
 
     afxString           username;
@@ -73,7 +73,7 @@ AFX_DEFINE_STRUCT(afxSessionConfig)
     // The username should only be set with ssh_options_set() only before you connect to the server.
 
     afxDrawDevice       ddevId;
-    afxNat              vduIdx;
+    afxUnit             vduIdx;
     afxDrawContext      dctx;
 
     afxSoundContext     sctx;
@@ -83,7 +83,7 @@ AUX afxClass const* AfxGetWidgetClass(afxSession ses);
 AUX afxClass const* AfxGetWindowClass(afxSession ses);
 AUX afxClass const* AfxGetScriptClass(afxSession ses);
 
-AUX afxNat          AfxEnumerateWidgets(afxSession ses, afxNat first, afxNat cnt, afxWidget widgets[]);
+AUX afxUnit         AfxEnumerateWidgets(afxSession ses, afxUnit first, afxUnit cnt, afxWidget widgets[]);
 
 AUX afxError        AfxCloseSession(afxSession ses);
 AUX afxError        AfxOpenSession(afxSession ses, afxUri const* host, afxAuthMethod method, afxString const* credential);
@@ -94,12 +94,12 @@ AUX afxError        AfxBeginFrame(afxSession ses);
 AUX afxError        AfxWaitFrame(afxSession ses);
 AUX afxError        AfxEndFrame(afxSession ses);
 
-AUX afxError        AfxReconnectKeyboard(afxSession ses, afxNat portIdx, afxNat hidNo);
+AUX afxError        AfxReconnectKeyboard(afxSession ses, afxUnit portIdx, afxUnit hidNo);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AUX afxNat          AfxGetSid(afxSession ses); // can be NIL
+AUX afxUnit         AfxGetSid(afxSession ses); // can be NIL
 
-AUX afxError        AfxAcquireSession(afxNat sshId, afxSessionConfig const* cfg, afxSession* session);
+AUX afxError        AfxAcquireSession(afxUnit sshId, afxSessionConfig const* cfg, afxSession* session);
 
 #endif//AUX_SESSION_H

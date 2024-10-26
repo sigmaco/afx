@@ -53,7 +53,7 @@ typedef enum afxFileFlag
     afxFileFlag_S       = AFX_BIT(14), // Sparse. The data is a sparse file. Empty ranges (zeroed ranges) are generated dynamically by some algorithm. This is used by SIGMA Future Storage.
 } afxFileFlags;
 
-AFX afxError        AfxReadFileString(afxStream file, afxString* str);
+AFX afxError        AfxReadFileLine(afxStream file, afxString* str);
 
 AFX afxResult       AfxFlushFileCache(afxStream file);
 

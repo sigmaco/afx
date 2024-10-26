@@ -16,7 +16,9 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-// A avxSampler object represent the state of an image sampler which is used by the implementation to read image data and apply filtering and other transformations for the shader.
+/**
+    A avxSampler object represent the state of an image sampler which is used by the implementation to read image data and apply filtering and other transformations for the shader.
+*/
 
 #ifndef AVX_SAMPLER_H
 #define AVX_SAMPLER_H
@@ -64,9 +66,9 @@ typedef enum avxYuvModelConversion
 
 AFX_DEFINE_STRUCT(avxSamplerInfo)
 {
-    avxTexelFilter          magFilter; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified. Aka upsampling filter.
-    avxTexelFilter          minFilter; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions. Aka downsampling filter.
-    avxTexelFilter          mipFilter; // Mipmap filtering mode. Default is LINEAR.
+    avxTexelFilter          magnify; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified. Aka upsampling filter.
+    avxTexelFilter          minify; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions. Aka downsampling filter.
+    avxTexelFilter          mipify; // Mipmap filtering mode. Default is LINEAR.
     avxTexelAddress         uvw[3]; // REPEAT. Sets the wrap parameter for texture coordinates.
     afxBool                 anisotropyEnabled; // FALSE
     afxReal                 anisotropyMaxDegree; // 1
@@ -75,6 +77,8 @@ AFX_DEFINE_STRUCT(avxSamplerInfo)
     afxReal                 lodBias; // 0. Specifies a fixed bias value that is to be added to the level-of-detail parameter for the texture before texture sampling.
     afxReal                 minLod; // -1000. Sets the minimum level-of-detail parameter. This floating-point value limits the selection of highest resolution mipmap (lowest mipmap level).
     afxReal                 maxLod; // 1000. Sets the maximum level-of-detail parameter. This floating-point value limits the selection of the lowest resolution mipmap (highest mipmap level).
+    
+    //
     afxColor                borderColor; // (0, 0, 0, 0). Specifies the color that should be used for border texels. If a texel is sampled from the border of the texture, this value is used for the non-existent texel data. If the texture contains depth components, the first component of this color is interpreted as a depth value.
     afxBool                 unnormalizedCoords;
 };
@@ -96,11 +100,11 @@ AVX void            AfxDescribeSampler(avxSampler samp, avxSamplerInfo* config);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
-AVX afxError        AfxAcquireYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxError        AfxAcquireYuvSamplers(afxDrawContext dctx, afxUnit cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[]);
 
-AVX afxBool         AfxFindSamplers(afxDrawContext dctx, afxNat cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
-AVX afxBool         AfxFindYuvSamplers(afxDrawContext dctx, afxNat cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxBool         AfxFindSamplers(afxDrawContext dctx, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxBool         AfxFindYuvSamplers(afxDrawContext dctx, afxUnit cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[]);
 
 AVX void            AfxDescribeDefaultSampler(avxSamplerInfo* config);
 

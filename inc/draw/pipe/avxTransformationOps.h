@@ -30,19 +30,19 @@
 AFX_DEFINE_STRUCT(avxVertexInputSource)
 {
     afxBuffer           buf;
-    afxNat32            offset; /// the start of buffer.
-    afxNat32            range; /// the size in bytes of vertex data bound from buffer.
-    afxNat32            stride; /// the byte stride between consecutive elements within the buffer.
+    afxUnit32            offset; /// the start of buffer.
+    afxUnit32            range; /// the size in bytes of vertex data bound from buffer.
+    afxUnit32            stride; /// the byte stride between consecutive elements within the buffer.
     afxBool8            instance; /// addressing is a function of the instance index, else case, it is of the vertex index.
-    afxNat32            instDivisor; /// the number of successive instances that will use the same value of the vertex attribute when instanced rendering is enabled.
+    afxUnit32            instDivisor; /// the number of successive instances that will use the same value of the vertex attribute when instanced rendering is enabled.
 };
 
 AFX_DEFINE_STRUCT(avxVertexInputPoint) /// vertex attribute input stream
 {
-    afxNat              locationIdx; /// is the shader input location number for this attribute.
-    afxNat              srcSlotIdx; /// is the binding number which this attribute takes its data from.
+    afxUnit              locationIdx; /// is the shader input location number for this attribute.
+    afxUnit              srcSlotIdx; /// is the binding number which this attribute takes its data from.
     afxVertexFormat     fmt; /// is the size and type of the vertex attribute data.
-    afxNat32            offset; /// is a byte offset of this attribute relative to the start of an element in the vertex input binding.
+    afxUnit32            offset; /// is a byte offset of this attribute relative to the start of an element in the vertex input binding.
     //afxVertexUsage      usage; /// special flags used to opportunistic optimization
 };
 
@@ -58,8 +58,8 @@ AFX_DEFINE_STRUCT(avxVertexInputPoint) /// vertex attribute input stream
 AVX afxCmdId            AvxCmdAdjustViewports
 (
     avxCmdb             cmdb,
-    afxNat              baseIdx, /// is the index of the first viewport whose parameters are updated by the command.
-    afxNat              cnt, /// is the number of viewports whose parameters are updated by the command.
+    afxUnit              baseIdx, /// is the index of the first viewport whose parameters are updated by the command.
+    afxUnit              cnt, /// is the number of viewports whose parameters are updated by the command.
     afxViewport const   viewports[] /// is a pointer to an array of afxViewport structures specifying viewport parameters.
 );
 
@@ -77,13 +77,13 @@ AVX afxCmdId            AvxCmdAdjustViewports
 AVX afxCmdId            AvxCmdBindVertexSources
 (
     avxCmdb             cmdb,
-    afxNat              baseSlotIdx, /// is the index of the first vertex input binding whose state is updated by the command.
-    afxNat              slotCnt, /// is the number of vertex input bindings whose state is updated by the command.
+    afxUnit              baseSlotIdx, /// is the index of the first vertex input binding whose state is updated by the command.
+    afxUnit              slotCnt, /// is the number of vertex input bindings whose state is updated by the command.
     afxBuffer           buffers[], /// is an array of buffer handles.
-    afxNat32 const      offsets[], /// the start of buffer.
-    afxNat32 const      ranges[], /// the size in bytes of vertex data bound from buffer.
-    afxNat32 const      strides[] /// the byte stride between consecutive elements within the buffer.
-    //afxNat32 const    divisor[] /// the number of successive instances that will use the same value of the vertex attribute when instanced rendering is used.
+    afxUnit32 const      offsets[], /// the start of buffer.
+    afxUnit32 const      ranges[], /// the size in bytes of vertex data bound from buffer.
+    afxUnit32 const      strides[] /// the byte stride between consecutive elements within the buffer.
+    //afxUnit32 const    divisor[] /// the number of successive instances that will use the same value of the vertex attribute when instanced rendering is used.
 );
 
 /// Bind an index buffer to a command buffer.
@@ -92,9 +92,9 @@ AVX afxCmdId            AvxCmdBindIndexSource
 (
     avxCmdb             cmdb,
     afxBuffer           buf, /// is the buffer being bound.
-    afxNat32            offset, /// is the starting offset in bytes within buffer used in index buffer address calculations.
-    afxNat32            range, /// is the size in bytes of index data bound from buffer.
-    afxNat32            idxSiz /// is a value specifying the size of the indices.
+    afxUnit32            offset, /// is the starting offset in bytes within buffer used in index buffer address calculations.
+    afxUnit32            range, /// is the size in bytes of index data bound from buffer.
+    afxUnit32            idxSiz /// is a value specifying the size of the indices.
 );
 
 /// Set primitive topology state dynamically for a command buffer.

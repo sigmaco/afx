@@ -14,6 +14,50 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+/*
+    Copyright (c) 2017 SIGMA FEDERATION.
+
+    SIGMA FEDERATION ("SIGMA") supplies this software to you in
+    consideration of your agreement to the following terms, and your use,
+    installation, modification or redistribution of this SIGMA software
+    constitutes acceptance of these terms.  If you do not agree with these
+    terms, please do not use, install, modify or redistribute this SIGMA
+    software.
+
+    In consideration of your agreement to abide by the following terms, and
+    subject to these terms, SIGMA grants you a personal, non-exclusive
+    license, under SIGMA's copyrights in this original SIGMA software (the
+    SIGMA Software), to use, reproduce, modify and redistribute the
+    SIGMA Software, with or without modifications, in source and/or binary
+    forms; provided that if you redistribute the SIGMA Software, you must
+    retain the copyright notice of SIGMA, this notice and the following
+    text and disclaimers in all such redistributions of the SIGMA Software.
+    Neither the name, trademarks, service marks nor logos of SIGMA
+    FEDERATION may be used to endorse or promote products derived from the
+    SIGMA Software without specific prior written permission from SIGMA.
+    Except as expressly stated in this notice, no other rights or licenses
+    express or implied, are granted by SIGMA herein, including but not
+    limited to any patent rights that may be infringed by your derivative
+    works or by other works in which the SIGMA Software may be
+    incorporated. No hardware is licensed hereunder.
+
+    THE SIGMA SOFTWARE IS BEING PROVIDED ON AN "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+    INCLUDING WITHOUT LIMITATION, WARRANTIES OR CONDITIONS OF TITLE,
+    NON-INFRINGEMENT, MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR
+    ITS USE AND OPERATION EITHER ALONE OR IN COMBINATION WITH OTHER
+    PRODUCTS.
+
+    IN NO EVENT SHALL SIGMA BE LIABLE FOR ANY SPECIAL, INDIRECT,
+    INCIDENTAL, EXEMPLARY, CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+    TO, LOST PROFITS; PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+    USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) OR ARISING IN ANY WAY
+    OUT OF THE USE, REPRODUCTION, MODIFICATION AND/OR DISTRIBUTION OF THE
+    SIGMA SOFTWARE, HOWEVER CAUSED AND WHETHER UNDER THEORY OF CONTRACT,
+    TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY OR OTHERWISE, EVEN IF
+    SIGMA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
   //////////////////////////////////////////////////////////////////////////////
  // High Performance Computing Infrastructure                                //
 //////////////////////////////////////////////////////////////////////////////
@@ -55,13 +99,13 @@ AFX_DEFINE_STRUCT(afxComboDeviceCaps)
 
 AFX_DEFINE_STRUCT(afxComboDeviceLimits)
 {
-    afxNat nat;
+    afxUnit nat;
 };
 
 AFX_DEFINE_STRUCT(afxPragmaPortCaps)
 {
     afxComboBridgeFlags  queFlags;
-    afxNat              queCnt; // the count of queues in this port. Each port must support at least one queue.
+    afxUnit              queCnt; // the count of queues in this port. Each port must support at least one queue.
 };
 
 AFX_DEFINE_STRUCT(akxSimulationConfig)
@@ -85,28 +129,28 @@ AMX afxClass const* AfxGetComboDeviceClass(void);
 
 // MATH DEVICE DISCOVERY ///////////////////////////////////////////////////////
 
-AMX afxNat          AfxInvokeComboDevices(afxNat first, afxNat cnt, afxBool(*f)(afxComboDevice, void*), void* udd);
-AMX afxNat          AfxEvokeComboDevices(afxBool(*flt)(afxComboDevice, void*), void* fdd, afxNat first, afxNat cnt, afxComboDevice devices[]);
-AMX afxNat          AfxEnumerateComboDevices(afxNat first, afxNat cnt, afxComboDevice devices[]);
+AMX afxUnit          AfxInvokeComboDevices(afxUnit first, afxUnit cnt, afxBool(*f)(afxComboDevice, void*), void* udd);
+AMX afxUnit          AfxEvokeComboDevices(afxBool(*flt)(afxComboDevice, void*), void* fdd, afxUnit first, afxUnit cnt, afxComboDevice devices[]);
+AMX afxUnit          AfxEnumerateComboDevices(afxUnit first, afxUnit cnt, afxComboDevice devices[]);
 
-AMX afxBool         AfxGetComboDevice(afxNat mdevId, afxComboDevice* device);
+AMX afxBool         AfxGetComboDevice(afxUnit mdevId, afxComboDevice* device);
 
 // MATH DEVICE HANDLING ////////////////////////////////////////////////////////
 
-AMX afxNat          AfxInvokeSimulations(afxComboDevice mdev, afxNat first, afxNat cnt, afxBool(*f)(afxSimulation, void*), void *udd);
-AMX afxNat          AfxEvokeSimulations(afxComboDevice mdev, afxBool(*flt)(afxSimulation, void*), void* fdd, afxNat first, afxNat cnt, afxSimulation simulations[]);
-AMX afxNat          AfxEnumerateSimulations(afxComboDevice mdev, afxNat first, afxNat cnt, afxSimulation simulations[]);
+AMX afxUnit          AfxInvokeSimulations(afxComboDevice mdev, afxUnit first, afxUnit cnt, afxBool(*f)(afxSimulation, void*), void *udd);
+AMX afxUnit          AfxEvokeSimulations(afxComboDevice mdev, afxBool(*flt)(afxSimulation, void*), void* fdd, afxUnit first, afxUnit cnt, afxSimulation simulations[]);
+AMX afxUnit          AfxEnumerateSimulations(afxComboDevice mdev, afxUnit first, afxUnit cnt, afxSimulation simulations[]);
 
 AMX afxClass const* AfxGetSimulationClass(afxComboDevice mdev);
 
-AMX afxNat          AfxCountPragmaPorts(afxComboDevice mdev);
+AMX afxUnit          AfxCountPragmaPorts(afxComboDevice mdev);
 
 AMX afxBool         AfxIsComboDevicePrompt(afxComboDevice mdev);
 
 // MATH DEVICE CONTEXTUALIZATION ///////////////////////////////////////////////
 
-AMX afxError        AfxConfigureSimulation(afxNat mdevId, akxSimulationConfig* cfg);
+AMX afxError        AfxConfigureSimulation(afxUnit mdevId, akxSimulationConfig* cfg);
 
-AMX afxError        AfxAcquireSimulations(afxNat mdevId, akxSimulationConfig const* cfg, afxSimulation* simulation);
+AMX afxError        AfxAcquireSimulations(afxUnit mdevId, akxSimulationConfig const* cfg, afxSimulation* simulation);
 
 #endif//AMX_COMBO_SYSTEM_H

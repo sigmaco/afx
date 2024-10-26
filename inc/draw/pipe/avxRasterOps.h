@@ -28,12 +28,12 @@ AFX_DEFINE_UNION(avxClearValue)
     {
         afxV4d      rgba;
         afxInt      rgbai[4];
-        afxNat      rgban[4];
+        afxUnit      rgban[4];
     };
     struct
     {
         afxReal     depth; /// default is 1.f
-        afxNat      stencil; /// default is 0
+        afxUnit      stencil; /// default is 0
     };
 };
 
@@ -47,10 +47,10 @@ AFX_DEFINE_STRUCT(afxRasterBlit)
 AFX_DEFINE_STRUCT(afxRasterSubset)
 /// Structure specifying an afxRaster subresource range.
 {
-    afxNat          baseLod; /// the first mipmap level accessible to the view.
-    afxNat          lodCnt; /// the number of mipmap levels (starting from @baseLodIdx) accessible to the view.
-    afxNat          baseLayer; /// the first array layer accessible to the view.
-    afxNat          layerCnt; /// the number of array layers (starting from @baseLayer) accessible to the view.
+    afxUnit          baseLod; /// the first mipmap level accessible to the view.
+    afxUnit          lodCnt; /// the number of mipmap levels (starting from @baseLodIdx) accessible to the view.
+    afxUnit          baseLayer; /// the first array layer accessible to the view.
+    afxUnit          layerCnt; /// the number of array layers (starting from @baseLayer) accessible to the view.
 };
 
   //////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ AVX afxCmdId                AvxCmdPackRaster
     avxCmdb                 cmdb,
     afxRaster               ras, /// the source afxRaster.
     afxBuffer               buf, /// the destination buffer.
-    afxNat                  opCnt, /// the number of regions to copy.
+    afxUnit                  opCnt, /// the number of regions to copy.
     afxRasterIo const       ops[] /// an array of structures specifying the regions to copy.
 );
 
@@ -73,7 +73,7 @@ AVX afxCmdId                AvxCmdUnpackRaster
     avxCmdb                 cmdb,
     afxRaster               ras, /// the destination afxRaster.
     afxBuffer               buf, /// the source buffer.
-    afxNat                  opCnt, /// the number of regions to copy.
+    afxUnit                  opCnt, /// the number of regions to copy.
     afxRasterIo const       ops[] /// an array of structures specifying the regions to copy.
 );
 
@@ -83,7 +83,7 @@ AVX afxCmdId                AvxCmdCopyRaster
     avxCmdb                 cmdb,
     afxRaster               src, /// the source afxRaster.
     afxRaster               dst, /// the destination afxRaster.
-    afxNat                  opCnt, /// the number of regions to copy.
+    afxUnit                  opCnt, /// the number of regions to copy.
     afxRasterCopy const     ops[] /// an array of structures specifying the regions to copy.
 );
 
@@ -93,7 +93,7 @@ AVX afxCmdId                AvxCmdClearRaster
     avxCmdb                 cmdb,
     afxRaster               ras, /// the afxRaster to be cleared.
     avxClearValue const*    value, /// a structure containing the values that the afxRaster subresource ranges will be cleared to.
-    afxNat                  subsetCnt, /// the number of afxRaster subresource ranges.
+    afxUnit                  subsetCnt, /// the number of afxRaster subresource ranges.
     afxRasterSubset const   subsets[] /// an array of structures describing a range of mipmap levels, array layers, and aspects to be cleared.
 );
 
@@ -103,7 +103,7 @@ AVX afxCmdId                AvxCmdResolveRaster
     avxCmdb                 cmdb,
     afxRaster               src, /// the source afxRaster.
     afxRaster               dst, /// the destination afxRaster.
-    afxNat                  opCnt, /// the number of regions to resolve.
+    afxUnit                  opCnt, /// the number of regions to resolve.
     afxRasterCopy const     ops[] /// an array of structures specifying the regions to resolve.
 );
 
@@ -114,7 +114,7 @@ AVX afxCmdId                AvxCmdBlitRaster
     afxRaster               src, /// the source afxRaster.
     afxRaster               dst, /// the destination afxRaster.
     avxTexelFilter          flt, /// a avxTexelFilter specifying the filter to apply if the blits require scaling.
-    afxNat                  opCnt, /// the number of regions to blit.
+    afxUnit                  opCnt, /// the number of regions to blit.
     afxRasterBlit const     ops[] /// an array of structures specifying the regions to blit.
 );
 
@@ -125,8 +125,8 @@ AVX afxCmdId                AvxCmdSubsampleRaster
 (
     avxCmdb                 cmdb,
     afxRaster               ras,
-    afxNat                  baseLod,
-    afxNat                  lodCnt
+    afxUnit                  baseLod,
+    afxUnit                  lodCnt
 );
 
 AVX afxCmdId                AvxCmdSwizzleRaster
@@ -136,7 +136,7 @@ AVX afxCmdId                AvxCmdSwizzleRaster
     afxRaster               ras,
     avxColorSwizzle         a,
     avxColorSwizzle         b,
-    afxNat                  rgnCnt,
+    afxUnit                  rgnCnt,
     afxRasterRegion const   rgns[]
 );
 
@@ -145,7 +145,7 @@ AVX afxCmdId                AvxCmdTransformRaster
     avxCmdb                 cmdb,
     afxRaster               ras,
     afxM4d const            m,
-    afxNat                  rgnCnt,
+    afxUnit                  rgnCnt,
     afxRasterRegion const   rgns[]
 );
 

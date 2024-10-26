@@ -49,7 +49,7 @@ AFX_DEFINE_STRUCT(afxResourceSpecification)
 };
 
 AFX afxUri const*   AfxGetResourceUri(afxResource res);
-AFX afxNat          AfxExcerptResourceName(afxResource res, afxUri *name);
+AFX afxUnit          AfxExcerptResourceName(afxResource res, afxUri *name);
 AFX afxBool         AfxResourceIsReady(afxResource res);
 AFX afxError        AfxLoadResource(afxResource res); // find or load (if not found on dictionaries).
 AFX afxError        AfxRequestResource(afxResource res);
@@ -64,7 +64,7 @@ AFX_OBJECT(afxResource)
     afxUri*             uri; // 128 // resource path
     afxResourceState    state;
     afxChain            instances;
-    afxNat              reqCnt;
+    afxUnit              reqCnt;
     afxLinkage          monitor; // queued for monitoring for external changes.
     afxTime             lastUpdTime;
     afxTime             lastReqTime; // will be used to liberate space if needed.

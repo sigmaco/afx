@@ -1,0 +1,85 @@
+Booting...
+Acquiring...  Thread Execution Unit 6644 @ afxSystem_w32.c:447Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... Executable And Linkage Module <e2coree.dll>afxModule_w32.c:545
+afxSystem_w32.c:461
+Annihilating 1 lost <Module> objects.Annihilating 2 lost <Storage> objects.Dismounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7 @uDismounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7 @uDismounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5 @uDismounting... <//./z/>(''),5 @uDismounting... <//./c/>('C:\Windows\SysWow64'),5 @uAnnihilating 1 lost <Thread> objects.afxClass.c:574
+afxClass.c:581
+afxClass<System>(0f47065c)afxClass.c:713
+afxSystem.c:777
+afxClass.c:1090
+afxClass.c:1090
+(hdr)
+    InvalidafxClass.c:1093
+afxDebug_w32.c:564
+afxDrawSystem.c:58
+afxDrawSystem.c:58
+(var_)
+    InvalidafxDrawSystem.c:654
+afxDrawSystem.c:654
+(var_)
+    InvalidafxClass.c:307
+afxClass.c:307
+(cls)
+    InvalidafxDrawContext.c:810
+afxClass.c:1090
+afxClass.c:1090
+(hdr)
+    InvalidafxClass.c:1093
+afxDebug_w32.c:564
+afxDrawSystem.c:58
+afxDrawSystem.c:58
+(var_)
+    InvalidafxDrawSystem.c:654
+afxDrawSystem.c:654
+(var_)
+    InvalidafxClass.c:307
+afxClass.c:307
+(cls)
+    InvalidafxDrawContext.c:828
+Skybox.c:311
+Skybox.c:311
+((!1) || ((&dctx) && !(_AfxAssertObjects((1), (afxObject const*)(&dctx),(afxFcc_DCTX)))))
+    InvalidafxClass.c:1090
+afxClass.c:1090
+(hdr)
+    InvalidafxClass.c:1093
+afxDebug_w32.c:564
+afxShell.c:34
+afxShell.c:34
+(var_)
+    InvalidafxShell.c:237
+afxShell.c:237
+(var_)
+    InvalidafxClass.c:307
+afxClass.c:307
+(cls)
+    InvalidafxClass.c:1090
+afxClass.c:1090
+(hdr)
+    InvalidafxClass.c:1093
+afxDebug_w32.c:564
+afxClass.c:1090
+afxClass.c:1090
+(hdr)
+    InvalidafxClass.c:1093
+afxDebug_w32.c:564
+afxShell.c:74
+afxShell.c:74
+(var_)
+    InvalidafxSession.c:194
+afxSession.c:194
+(var_)
+    InvalidafxClass.c:977
+afxClass.c:977
+(cls)
+    InvalidafxClass.c:984
+afxSession.c:200
+afxSession.c:72
+afxSession.c:72
+((!1) || ((&ses) && !(_AfxAssertObjects((1), (afxObject const*)(&ses),(afxFcc_SES)))))
+    InvalidafxWindow.c:451
+afxWindow.c:451
+((!1) || ((&ses) && !(_AfxAssertObjects((1), (afxObject const*)(&ses),(afxFcc_SES)))))
+    InvalidafxSession.c:44
+afxSession.c:44
+((!1) || ((&ses) && !(_AfxAssertObjects((1), (afxObject const*)(&ses),(afxFcc_SES)))))
+    Invalid

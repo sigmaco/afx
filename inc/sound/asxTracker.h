@@ -26,13 +26,13 @@
 AFX_OBJECT(asxTracker)
 {
     afxBool loaded;
-    afxNat  sampleCnt;
-    afxNat  patternCnt;
+    afxUnit  sampleCnt;
+    afxUnit  patternCnt;
     void*   udd;
 };
 
 
 
-ASX afxError AsxAcquireTrackers(afxSoundContext sctx, afxNat cnt, asxTracker trackers[]);
+ASX afxError AsxAcquireTrackers(afxSoundContext sctx, afxUnit cnt, asxTracker trackers[]);
 
 #endif//ASX_TRACKER_H

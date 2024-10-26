@@ -49,7 +49,7 @@
 #ifndef AVX_DRAW_OUTPUT_H
 #define AVX_DRAW_OUTPUT_H
 
-#include "qwadro/inc/draw/afxDrawBridge.h"
+#include "qwadro/inc/draw/afxDrawContext.h"
 
 typedef enum avxPresentScaling
 /// mask specifying presentation scaling methods.
@@ -115,13 +115,13 @@ typedef enum avxPresentMode
     
 } avxPresentMode;
 
-typedef afxBool(*avxPresentNotifier)(afxObject receiver, afxNat);
+typedef afxBool(*avxPresentNotifier)(afxObject receiver, afxUnit);
 
 AFX_DEFINE_STRUCT(afxDrawOutputCaps)
 {
-    afxNat              minBufCnt;
-    afxNat              maxBufCnt;
-    afxNat              currExtent[2];
+    afxUnit             minBufCnt;
+    afxUnit             maxBufCnt;
+    afxUnit             currExtent[2];
     afxWhd              minWhd; // D is layer
     afxWhd              maxWhd; // D is layer
     avxPresentTransform supportedTransforms;
@@ -129,12 +129,13 @@ AFX_DEFINE_STRUCT(afxDrawOutputCaps)
     avxPresentAlpha     supportedCompositeAlpha;
     afxRasterFlags      supportedUsageFlags;
     avxPresentScaling   supportedScaling;
-    afxNat              supportedModeCnt;
+    afxUnit             supportedModeCnt;
     avxPresentMode      supportedModes;
 };
 
 AFX_DEFINE_STRUCT(afxDrawOutputConfig)
 {
+    afxUri              endpoint;
     // canvas
     afxWhd              whd;
     avxFormat           pixelFmt; // RGBA8; pixel format of raster surfaces. Pass zero to let driver choose the optimal format.
@@ -143,10 +144,10 @@ AFX_DEFINE_STRUCT(afxDrawOutputConfig)
     avxFormat           pixelFmtDs[2]; // D24/S8/D24S8; pixel format of raster surfaces. Pass zero to disable depth and/or stencil.
     afxRasterUsage      bufUsageDs[2];
     afxRasterFlags      bufFlagsDs[2];
-    avxColorSpace       colorSpc; // avxColorSpace_SRGB; if sRGB isn't present, fall down to LINEAR.
+    avxColorSpace       colorSpc; // avxColorSpace_STANDARD; if sRGB isn't present, fall down to LINEAR.
 
     // swapchain
-    afxNat              minBufCnt; // usually 2 or 3; double or triple-buffered.
+    afxUnit             minBufCnt; // usually 2 or 3; double or triple-buffered.
 
     // endpoint
     avxPresentNotifier  endpointNotifyFn;
@@ -163,62 +164,56 @@ AFX_DEFINE_STRUCT(afxDrawOutputConfig)
         {
             afxWindow   wnd;
         } wsi;
-#ifdef AFX_OS_WIN
+//#ifdef AFX_OS_WIN
         struct
         {
             void*       hInst; // HINSTANCE
             void*       hWnd; // HWND
             void*       hDc; // HDC
         } w32;
-#endif
+//#endif
     };
 };
 
 AVX afxDrawDevice   AfxGetDrawOutputDevice(afxDrawOutput dout);
 
-AVX void**          AfxGetDrawOutputUdd(afxDrawOutput dout);
-AVX afxError        AfxGetDrawOutputIdd(afxDrawOutput dout, afxNat code, void* dst);
-
-AVX void            AfxGetDrawOutputFrequency(afxDrawOutput dout, afxNat* rate);
-
-// Connection
-
-AVX afxBool         AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx);
 AVX afxBool         AfxGetDrawOutputContext(afxDrawOutput dout, afxDrawContext* context);
+AVX afxBool         AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx);
 AVX afxError        AfxDisconnectDrawOutput(afxDrawOutput dout);
+
+AVX void**          AfxGetDrawOutputUdd(afxDrawOutput dout);
+AVX afxError        AfxGetDrawOutputIdd(afxDrawOutput dout, afxUnit code, void* dst);
+
+AVX void            AfxGetDrawOutputFrequency(afxDrawOutput dout, afxUnit* rate);
 
 // Extent
 
-AVX void            AfxGetDrawOutputResolution(afxDrawOutput dout, afxWhd res, afxReal* refreshRate);
+AVX afxWhd          AfxGetDrawOutputResolution(afxDrawOutput dout, afxReal* refreshRate);
 AVX void            AfxGetDrawOutputAspectRatio(afxDrawOutput dout, afxReal64* wpOverHp, afxReal64* wrOverHr, afxReal64* wwOverHw);
-AVX afxBool         AfxResetDrawOutputResolution(afxDrawOutput dout, afxWhd const res, afxReal refreshRate, afxReal64 physAspectRatio);
+AVX afxBool         AfxResetDrawOutputResolution(afxDrawOutput dout, afxWhd res, afxReal refreshRate, afxReal64 physAspectRatio);
 
-AVX afxError        AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd const whd);
+AVX afxError        AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd whd);
 AVX afxError        AfxAdjustDrawOutputFromNdc(afxDrawOutput dout, afxV3d const whd);
 
-AVX void            AfxGetDrawOutputExtent(afxDrawOutput dout, afxWhd whd); // d is always 1; it is here just for compatibility.
+AVX afxWhd          AfxGetDrawOutputExtent(afxDrawOutput dout); // d is always 1; it is here just for compatibility.
 AVX void            AfxGetDrawOutputExtentAsNdc(afxDrawOutput dout, afxV3d whd); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 
 // Buffer
 
-AVX afxBool         AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat bufIdx, avxCanvas* canvas);
-AVX afxNat          AfxGetDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNat cnt, avxCanvas canvases[]);
+AVX afxBool         AfxGetDrawOutputCanvas(afxDrawOutput dout, afxUnit bufIdx, avxCanvas* canvas);
 
-AVX afxBool         AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxRaster* raster);
-AVX afxNat          AfxGetDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[]);
+AVX afxBool         AfxGetDrawOutputBuffer(afxDrawOutput dout, afxUnit bufIdx, afxRaster* buffer);
 
 AVX afxError        AfxRevalidateDrawOutputBuffers(afxDrawOutput dout);
-AVX afxNat          AfxCountDrawOutputBuffers(afxDrawOutput dout);
+AVX afxUnit         AfxCountDrawOutputBuffers(afxDrawOutput dout);
 
 // Reserves a buffer for future use. You must dispose it at some time to avoid starvation.
-AVX afxError        AfxLockDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
+AVX afxError        AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxUnit *bufIdx);
 // Disposes a previously acquired draw buffer without present it.
-AVX afxError        AfxDisposeDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx);
+AVX afxError        AfxDisposeDrawOutputBuffer(afxDrawOutput dout, afxUnit bufIdx);
 
-AVX afxError        AfxWaitForDrawOutput(afxDrawOutput dout);
+AVX afxError        AfxWaitForDrawOutput(afxDrawOutput dout, afxTime timeout);
 
-// Se não há garantia de presentação no tempo de retorno da função nem controle sobre a fila, não seria melhor submeter direto pelo afxDrawOutput e esperar pelo semáforo?
-
-AVX afxError        AfxPrintDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat portIdx, afxUri const* uri);
+AVX afxError        AfxPrintDrawOutput(afxDrawOutput dout, afxUnit bufIdx, afxUnit portIdx, afxUri const* uri);
 
 #endif//AVX_DRAW_OUTPUT_H

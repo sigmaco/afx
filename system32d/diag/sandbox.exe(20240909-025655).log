@@ -1,0 +1,702 @@
+Booting...
+Acquiring...  Thread Execution Unit 7868 @ afxSystem_w32.c:447Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... Executable And Linkage Module <e2coree.dll>Memory Page Size: 4096HW Threading Capacity: 2Loading... Executable And Linkage Module <e2draw.dll>Loading... Executable And Linkage Module <e2combo.dll>Loading... Executable And Linkage Module <e2sound.dll>Loading... Executable And Linkage Module <e2mmux.dll>Loading... Executable And Linkage Module <//./z/eaxzal1.dll>Loading... Installable Client Driver <//./z//eaxzal1.dll>	<//./amigal1/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/galileo.dll>Loading... Installable Client Driver <//./z//galileo.dll>	<//./combo/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/tarzgl4.dll>Loading... Installable Client Driver <//./z//tarzgl4.dll>	<//./targl3/>("")  0.0.0 	<//./targl4/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/winsh4d.dll>Loading... Installable Client Driver <//./z//winsh4d.dll>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 7868
+Loading... Executable And Linkage Module <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY17) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL32.c:1534
+GL: INVAL_PARAMzglInterop_WGL32.c:1549
+GL: INVAL_PARAMzglInterop_WGL32.c:1560
+GL: INVAL_PARAMzglInterop_WGL32.c:1592
+GL: INVAL_PARAMzglInterop_WGL32.c:1623
+GL: INVAL_PARAMzglInterop_WGL32.c:1625
+GL: INVAL_PARAMzglInterop_WGL32.c:1782
+GL: INVAL_PARAMzglInterop_WGL32.c:1785
+GL: INVAL_PARAMzglInterop_WGL32.c:1790
+GL: INVAL_PARAMzglInterop_WGL32.c:1795
+GL: INVAL_PARAMAcquiring...  Thread Execution Unit 0 @ zglDrawBridge.c:1962Entering the Thread Execution Environment 8700
+Starting 8700 on thread execution unit #1...Entering the Thread Execution Environment 7868
+Reopening... <//./z/video/uvOutTristripQuad.vsh>Entering the Thread Execution Environment 8700
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 7868
+Reopening... <//./z/video/stdEnv.inc>afxString.c:177
+afxString.c:177
+<from>430 + <1>1 is out of capacity <strLen>430.Reopening... <//./z/video/sampleOutRgba2d.fsh>Reopening... <//./z/video/stdEnv.inc>afxString.c:177
+afxString.c:177
+<from>157 + <1>1 is out of capacity <strLen>157.afxClass.c:898
+afxClass.c:898
+(cfg->fcc)
+    InvalidafxClass.c:921
+afxClass.c:921
+(cfg->name && cfg->name[0])
+    InvalidMounting... <//./d/>('E:\qwadro\repo\bangitk\tmp'),7Mounting... <//./a/>('E:\qwadro\repo\bangitk\art'),5afxDrawOutput.c:225
+afxDrawOutput.c:225
+(whd[0])(952) is out of range [1, 266465870]afxDrawOutput.c:226
+afxDrawOutput.c:226
+(whd[1])(506) is out of range [1, 266465925]Window_W32.c:692
+afxWindow.c:186
+afxWindow.c:295
+afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>Reopening... <../data/pipeline/test/test.xsh.xml>Entering the Thread Execution Environment 8700
+Hardware-side buffer 04777998 ready. 34962, 2, 4Entering the Thread Execution Environment 7868
+../data/pipeline/test/test.vshReopening... <../data/pipeline/test/test.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>afxString.c:177
+afxString.c:177
+<from>327 + <1>1 is out of capacity <strLen>327.../data/pipeline/test/test.fshReopening... <../data/pipeline/test/test.fsh>Reopening... <../data/pipeline/stdEnv.inc>afxString.c:177
+afxString.c:177
+<from>84 + <1>1 is out of capacity <strLen>84.Reopening... <../data/pipeline/body/body.xsh.xml>Attribute 'id' not handled.../data/pipeline/body/rigidBody.vshReopening... <../data/pipeline/body/rigidBody.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:177
+afxString.c:177
+<from>633 + <1>1 is out of capacity <strLen>633.../data/pipeline/body/body.fshReopening... <../data/pipeline/body/body.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>1296 + <1>1 is out of capacity <strLen>1296.Attribute 'id' not handled.../data/pipeline/body/skinnedBody.vshReopening... <../data/pipeline/body/skinnedBody.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>1317 + <1>1 is out of capacity <strLen>1317.../data/pipeline/body/body.fshReopening... <../data/pipeline/body/body.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>1296 + <1>1 is out of capacity <strLen>1296.Reopening... <../data/pipeline/testLighting/testLighting.xsh.xml>Attribute 'id' not handled.../data/pipeline/testLighting/testLightingBlinn.vshReopening... <../data/pipeline/testLighting/testLightingBlinn.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:177
+afxString.c:177
+<from>588 + <1>1 is out of capacity <strLen>588.../data/pipeline/testLighting/testLightingBlinn.fshReopening... <../data/pipeline/testLighting/testLightingBlinn.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>1474 + <1>1 is out of capacity <strLen>1474.Reopening... <../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidAttribute 'id' not handled.../data/pipeline/tutCamUtil/tutCamUtilRigid.vshReopening... <../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:177
+afxString.c:177
+<from>925 + <1>1 is out of capacity <strLen>925.../data/pipeline/tutCamUtil/tutCamUtil.fshReopening... <../data/pipeline/tutCamUtil/tutCamUtil.fsh>Reopening... <../data/pipeline/stdEnv.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>308 + <1>1 is out of capacity <strLen>308.Attribute 'id' not handled.../data/pipeline/tutCamUtil/tutCamUtilSkinned.vshReopening... <../data/pipeline/tutCamUtil/tutCamUtilSkinned.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:177
+afxString.c:177
+<from>1389 + <1>1 is out of capacity <strLen>1389.../data/pipeline/tutCamUtil/tutCamUtil.fshReopening... <../data/pipeline/tutCamUtil/tutCamUtil.fsh>Reopening... <../data/pipeline/stdEnv.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>308 + <1>1 is out of capacity <strLen>308.Reopening... <../data/pipeline/lighting/lighting.xsh.xml>Attribute 'id' not handled.../data/pipeline/lighting/lighting.vshReopening... <../data/pipeline/lighting/lighting.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:177
+afxString.c:177
+<from>574 + <1>1 is out of capacity <strLen>574.../data/pipeline/lighting/lighting.fshReopening... <../data/pipeline/lighting/lighting.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>1472 + <1>1 is out of capacity <strLen>1472.Installing watcher <0477c960> for 04566350...Entering the Thread Execution Environment 8700
+Hardware-side buffer 04773710 ready. 34962, 3, 4Hardware-side buffer 0477cdb0 ready. 34963, 4, 8Entering the Thread Execution Environment 7868
+glus_wavefront.c:859
+MTL NAME //./art/scenario/bibliotheca/bibliotheca.mtlglus_wavefront.c:291
+MTL FNAME //./art/scenario/bibliotheca/bibliotheca.mtlSkeleton <bibliotheca> assembled at 04a56520.
+    Listing 1 joints..:      0 <> 4294967295Animable model <bibliotheca> assembled at 04840390. 1 mesh rigs for 1 joints.Rigid Mesh <> assembled at 04840478.
+    0 vertices with 3 attributes.
+    23152 triangles (1 bytes per index) arranged in 50 surfaces.
+    Listing 1 biases..:      0 <>   0afxMesh.c:326
+afxMesh.c:326
+<indices[i]>0 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:326
+afxMesh.c:326
+<indices[i]>1 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>2 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>3 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>4 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>5 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>6 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>7 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>8 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>9 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>10 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>11 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>12 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>13 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>14 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>15 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>16 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>17 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>18 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>19 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>20 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>21 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>22 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>23 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>24 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>25 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>26 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>27 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>28 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>29 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>30 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>31 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>32 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>33 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>34 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>35 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>36 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>37 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>38 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>39 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>40 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>41 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>42 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>43 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>44 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>45 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>46 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>47 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>48 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>49 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>50 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>51 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>52 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>53 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>54 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>55 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>56 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>57 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>58 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>59 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>60 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>61 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>62 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>63 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>64 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>65 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>66 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>67 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>68 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>69 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>70 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>71 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>72 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>73 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>74 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>75 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>76 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>77 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>78 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>79 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>80 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>81 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>82 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>83 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>84 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>85 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>86 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>87 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>88 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>89 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>90 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>91 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>92 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>93 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>94 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>95 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>96 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>97 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>98 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>99 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>100 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>101 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>102 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>103 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>104 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>105 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>106 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>107 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>108 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>109 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>110 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>111 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>112 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>113 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>114 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>115 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>116 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>117 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>118 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>119 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>120 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>121 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>122 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>123 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>124 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>125 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>126 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>127 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>128 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>129 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>130 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>131 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>132 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>133 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>134 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>135 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>136 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>137 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>138 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>139 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>140 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>141 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>142 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>143 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>144 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>145 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>146 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>147 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>148 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>149 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>150 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>151 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>152 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>153 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>154 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>155 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>156 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>157 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>158 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>159 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>160 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>161 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>162 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>163 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>164 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>165 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>166 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>167 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>168 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>169 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>170 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>171 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>172 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>173 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>174 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>175 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>176 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>177 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>178 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>179 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>180 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>181 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>182 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>183 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>184 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>185 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>186 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>187 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>188 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>189 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>190 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>191 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>192 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>193 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>194 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>195 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>196 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>197 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>198 + <1>1 is out of capacity <mshm.vtxCnt>0.afxMesh.c:329
+afxMesh.c:326
+afxMesh.c:326
+<indices[i]>199 + <1>1 is out of capacity <mshm.vtxCnt>0.

@@ -1,0 +1,125 @@
+Booting...
+Acquiring...  Thread Execution Unit 2696 @ afxSystem_w32.c:447Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... Executable And Linkage Module <e2coree.dll>Memory Page Size: 4096HW Threading Capacity: 2Loading... Executable And Linkage Module <e2draw.dll>Loading... Executable And Linkage Module <e2combo.dll>Loading... Executable And Linkage Module <e2sound.dll>Loading... Executable And Linkage Module <e2mmux.dll>Loading... Executable And Linkage Module <//./z/eaxzal1.dll>Loading... Installable Client Driver <//./z//eaxzal1.dll>	<//./amigal1/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/galileo.dll>Loading... Installable Client Driver <//./z//galileo.dll>	<//./combo/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/tarzgl4.dll>Loading... Installable Client Driver <//./z//tarzgl4.dll>	<//./targl3/>("")  0.0.0 	<//./targl4/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/winsh4d.dll>Loading... Installable Client Driver <//./z//winsh4d.dll>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 2696
+Loading... Executable And Linkage Module <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY17) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL32.c:1534
+GL: INVAL_PARAMzglInterop_WGL32.c:1549
+GL: INVAL_PARAMzglInterop_WGL32.c:1560
+GL: INVAL_PARAMzglInterop_WGL32.c:1592
+GL: INVAL_PARAMzglInterop_WGL32.c:1623
+GL: INVAL_PARAMzglInterop_WGL32.c:1625
+GL: INVAL_PARAMzglInterop_WGL32.c:1782
+GL: INVAL_PARAMzglInterop_WGL32.c:1785
+GL: INVAL_PARAMzglInterop_WGL32.c:1790
+GL: INVAL_PARAMzglInterop_WGL32.c:1795
+GL: INVAL_PARAMAcquiring...  Thread Execution Unit 0 @ zglDrawBridge.c:1962Reopening... <//./z/video/uvOutTristripQuad.vsh>Entering the Thread Execution Environment 3116
+Starting 3116 on thread execution unit #1...Entering the Thread Execution Environment 2696
+Reopening... <//./z/video/stdEnv.inc>Entering the Thread Execution Environment 3116
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 2696
+afxString.c:177
+afxString.c:177
+<from>430 + <1>1 is out of capacity <strLen>430.Reopening... <//./z/video/sampleOutRgba2d.fsh>Reopening... <//./z/video/stdEnv.inc>afxString.c:177
+afxString.c:177
+<from>157 + <1>1 is out of capacity <strLen>157.afxClass.c:898
+afxClass.c:898
+(cfg->fcc)
+    InvalidafxClass.c:921
+afxClass.c:921
+(cfg->name && cfg->name[0])
+    InvalidMounting... <//./d/>('E:\qwadro\repo\bangitk\tmp'),7Mounting... <//./a/>('E:\qwadro\repo\bangitk\art'),5afxDrawOutput.c:225
+afxDrawOutput.c:225
+(whd[0])(952) is out of range [1, 264438270]afxDrawOutput.c:226
+afxDrawOutput.c:226
+(whd[1])(506) is out of range [1, 264438325]Window_W32.c:692
+afxWindow.c:186
+afxWindow.c:295
+afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>Reopening... <../data/pipeline/test/test.xsh.xml>Entering the Thread Execution Environment 3116
+Hardware-side buffer 02e50598 ready. 34962, 2, 4Entering the Thread Execution Environment 2696
+../data/pipeline/test/test.vsh../data/pipeline/test/test.fshReopening... <../data/pipeline/test/test.vsh>Reopening... <../data/pipeline/stdEnv.inc>Entering the Thread Execution Environment 3116
+Hardware-side buffer 02e50640 ready. 34963, 3, 8Entering the Thread Execution Environment 2696
+Reopening... <../data/pipeline/stdView.inc>afxString.c:177
+afxString.c:177
+<from>327 + <1>1 is out of capacity <strLen>327.Reopening... <../data/pipeline/test/test.fsh>Reopening... <../data/pipeline/stdEnv.inc>afxString.c:177
+afxString.c:177
+<from>84 + <1>1 is out of capacity <strLen>84.Reopening... <../data/pipeline/body/body.xsh.xml>Tag 'id' not handled.../data/pipeline/body/rigidBody.vsh../data/pipeline/body/body.fshReopening... <../data/pipeline/body/rigidBody.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:177
+afxString.c:177
+<from>633 + <1>1 is out of capacity <strLen>633.Reopening... <../data/pipeline/body/body.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>1296 + <1>1 is out of capacity <strLen>1296.Tag 'id' not handled.Tag 'specialization' not handled.../data/pipeline/body/skinnedBody.vsh../data/pipeline/body/body.fshReopening... <../data/pipeline/body/skinnedBody.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>1317 + <1>1 is out of capacity <strLen>1317.Reopening... <../data/pipeline/body/body.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>1296 + <1>1 is out of capacity <strLen>1296.Reopening... <../data/pipeline/testLighting/testLighting.xsh.xml>Tag 'id' not handled.../data/pipeline/testLighting/testLightingBlinn.vsh../data/pipeline/testLighting/testLightingBlinn.fshReopening... <../data/pipeline/testLighting/testLightingBlinn.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:177
+afxString.c:177
+<from>588 + <1>1 is out of capacity <strLen>588.Reopening... <../data/pipeline/testLighting/testLightingBlinn.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>1474 + <1>1 is out of capacity <strLen>1474.Reopening... <../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>Tag 'id' not handled.../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh../data/pipeline/tutCamUtil/tutCamUtil.fshReopening... <../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:177
+afxString.c:177
+<from>925 + <1>1 is out of capacity <strLen>925.Reopening... <../data/pipeline/tutCamUtil/tutCamUtil.fsh>Reopening... <../data/pipeline/stdEnv.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>308 + <1>1 is out of capacity <strLen>308.Tag 'id' not handled.../data/pipeline/tutCamUtil/tutCamUtilSkinned.vsh../data/pipeline/tutCamUtil/tutCamUtil.fshReopening... <../data/pipeline/tutCamUtil/tutCamUtilSkinned.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:177
+afxString.c:177
+<from>1389 + <1>1 is out of capacity <strLen>1389.Reopening... <../data/pipeline/tutCamUtil/tutCamUtil.fsh>Reopening... <../data/pipeline/stdEnv.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>308 + <1>1 is out of capacity <strLen>308.Reopening... <../data/pipeline/lighting/lighting.xsh.xml>Tag 'id' not handled.../data/pipeline/lighting/lighting.vsh../data/pipeline/lighting/lighting.fshReopening... <../data/pipeline/lighting/lighting.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>afxString.c:177
+afxString.c:177
+<from>574 + <1>1 is out of capacity <strLen>574.Reopening... <../data/pipeline/lighting/lighting.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>afxString.c:497
+afxString.c:497
+(effectiveRange == len2)
+    InvalidafxString.c:177
+afxString.c:177
+<from>1472 + <1>1 is out of capacity <strLen>1472.Installing watcher <02e6fd28> for 02c44348...Rigid Mesh <> assembled at 02e51440.
+    121 vertices with 4 attributes.
+    200 triangles (1 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases..:      0 <>   0glus_wavefront.c:803
+glus_wavefront.c:1676
+EeWavefrontModel.c:139
+Skeleton <Bone_main> assembled at 02e54fc0.
+    Listing 10 joints..:      0 <Bone_main> 4294967295      1 <Mill>   0      2 <Bone_hitpointbar>   0      3 <Bone_Upper_mill>   0      4 <Upper Mill>   3      5 <Bone_Flag_Civ>   3      6 <Bone_Mill_Blades>   3      7 <Mill Blades>   6      8 <Bone_Mill_Wheel>   3      9 <Mill Wheel>   8Animable model <Bone_main> assembled at 02e66be8. 4 mesh rigs for 10 joints.Rigid Mesh <Mill> assembled at 02e51538.
+    524 vertices with 3 attributes.
+    139 triangles (2 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases..:      0 <Mill>   0Mesh 02e51538 linked to model 02e66be8.
+    Listing 1 bias-joint mapping..:      0 --> 1 <-- 1 <Mill> Rigid Mesh <Upper Mill> assembled at 02ea5150.
+    472 vertices with 3 attributes.
+    126 triangles (2 bytes per index) arranged in 2 surfaces.
+    Listing 1 biases..:      0 <Upper Mill>   0Mesh 02ea5150 linked to model 02e66be8.
+    Listing 1 bias-joint mapping..:      0 --> 4 <-- 4 <Upper Mill> Rigid Mesh <Mill Blades> assembled at 02e66df8.
+    278 vertices with 3 attributes.
+    70 triangles (2 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases..:      0 <Mill Blades>   0Mesh 02e66df8 linked to model 02e66be8.
+    Listing 1 bias-joint mapping..:      0 --> 7 <-- 7 <Mill Blades> Rigid Mesh <Mill Wheel> assembled at 02eabaf0.
+    58 vertices with 3 attributes.
+    20 triangles (1 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases..:      0 <Mill Wheel>   0Mesh 02eabaf0 linked to model 02e66be8.
+    Listing 1 bias-joint mapping..:      0 --> 9 <-- 9 <Mill Wheel> Motion <Bone_main> assembled. 02efe130
+    Listing 6 transform circuits:	0 <Bone_Flag_Civ> cdcdcdcd	1 <Bone_Mill_Blades> cdcdcdcd	2 <Bone_Mill_Wheel> cdcdcdcd	3 <Bone_Upper_mill> cdcdcdcd	4 <Bone_hitpointbar> cdcdcdcd	5 <Bone_main> cdcdcdcdRigid Mesh <> assembled at 02f073a8.
+    441 vertices with 3 attributes.
+    800 triangles (2 bytes per index) arranged in 1 surfaces.
+    Listing 1 biases..:      0 <>   0Skeleton <> assembled at 02f01888.
+    Listing 1 joints..:      0 <> 4294967295Mesh 02f073a8 linked to model 02f10ae0.
+    Listing 1 bias-joint mapping..:      0 --> 0 <-- 0 <> Animable model <cube> assembled at 02f10ae0. 1 mesh rigs for 1 joints.Entering the Thread Execution Environment 3116
+Hardware-side raster 00873938 ready. de1, 8229, [512,512,1]Hardware-side buffer 02e5e400 ready. 34962, 4, 4Hardware-side buffer 02e5e550 ready. 34963, 5, 8Hardware-side buffer 02e5e4a8 ready. 34962, 6, 4Hardware-side buffer 02e5e6a0 ready. 34963, 7, 8Hardware-side buffer 02e5e5f8 ready. 34962, 8, 4Hardware-side buffer 02e5e7f0 ready. 34963, 9, 8Hardware-side buffer 02e5e748 ready. 34962, 10, 4Hardware-side buffer 02e5e940 ready. 34963, 11, 8Hardware-side buffer 02e5e898 ready. 34962, 12, 4Hardware-side buffer 02e5e9e8 ready. 34963, 13, 8Hardware-side buffer 02e5ea90 ready. 34962, 14, 4Hardware-side buffer 02e5eb38 ready. 34963, 15, 8Hardware-side raster 008736b0 ready. de1, 8058, [952,506,1]Hardware-side raster 008735d8 ready. de1, 81a6, [952,506,1]avxCanvas 02e50440 hardware-side data instanced.Hardware-side buffer 02e4fe28 ready. 35345, 16, 10Reopening... <../data/pipeline/testLighting/testLightingBlinn.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>Reopening... <../data/pipeline/testLighting/testLightingBlinn.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>zglLigature.c:238
+Uniform buffer unit 'sgl_mtl' not found in ligature 0079c888.avxPipeline 02e60ab0 hardware-side data instanced.Reopening... <../data/pipeline/lighting/lighting.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdObject.inc>Reopening... <../data/pipeline/lighting/lighting.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/stdMaterial.inc>zglLigature.c:238
+Uniform buffer unit 'sgl_mtl' not found in ligature 0079c988.zglLigature.c:221
+Combined raster/sampler unit 'floorTexture' not found in ligature 0079c988.avxPipeline 02e617e8 hardware-side data instanced.Hardware-side buffer 02e50bf0 ready. 35345, 17, 10Reopening... <../data/pipeline/test/test.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/test/test.fsh>Reopening... <../data/pipeline/stdEnv.inc>avxPipeline 02e4ff20 hardware-side data instanced.Hardware-side raster 00873788 ready. de1, 8058, [952,506,1]Hardware-side raster 00873860 ready. de1, 81a6, [952,506,1]avxCanvas 02e504d0 hardware-side data instanced.Hardware-side buffer 02e50c98 ready. 35345, 18, 10Hardware-side buffer 02e50de8 ready. 35345, 19, 10Hardware-side raster 00873500 ready. de1, 8058, [952,506,1]Hardware-side raster 00873428 ready. de1, 81a6, [952,506,1]avxCanvas 02e503b0 hardware-side data instanced.

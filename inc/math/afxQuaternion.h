@@ -16,12 +16,15 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-/// The Qwadro quaternion functions use an 4D vector to represent quaternions, where the X, Y, and Z components are the vector part and the W component is the scalar part.
+/**
+    The Qwadro quaternion functions use an 4D vector to represent quaternions, 
+    where the X, Y, and Z components are the vector part and the W component is the scalar part.
 
-/// afxQuat: A 4-dimensional vector representing a rotation.
-/// The vector represents a 4 dimensional complex number where multiplication of the basis elements is not commutative(multiplying i with j gives a different result than multiplying j with i).
-/// Multiplying quaternions reproduces rotation sequences. However quaternions need to be often renormalized, or else they suffer from precision issues.
-/// It can be used to perform SLERP(spherical - linear interpolation) between two rotations.
+    afxQuat: A 4-dimensional vector representing a rotation.
+    The vector represents a 4 dimensional complex number where multiplication of the basis elements is not commutative(multiplying i with j gives a different result than multiplying j with i).
+    Multiplying quaternions reproduces rotation sequences. However quaternions need to be often renormalized, or else they suffer from precision issues.
+    It can be used to perform SLERP(spherical - linear interpolation) between two rotations.
+*/
 
 #ifndef AFX_QUATERNION_H
 #define AFX_QUATERNION_H
@@ -245,14 +248,14 @@ AFXINL void AfxQuatSlerp(afxQuat q, afxQuat const a, afxQuat const b, afxReal t)
 
 AFXINL void AfxQuatExtractAxialRotation(afxQuat const q, afxV3d axis, afxReal *radians); // extracts an axis/angle representation to this quaternion rotation.
 
-AFXINL void AfxAssimilateQuat(afxM3d const ltm, afxM3d const iltm, afxNat cnt, afxQuat const in[], afxQuat out[]); // make similarity transformation on afxQuat-based orientation.
+AFXINL void AfxAssimilateQuat(afxM3d const ltm, afxM3d const iltm, afxUnit cnt, afxQuat const in[], afxQuat out[]); // make similarity transformation on afxQuat-based orientation.
 
 /// Rotates a 3D vector using a quaternion.
 /// v = Returns the rotated 3D vector.
 /// in = 3D vector to rotate.
 /// rot = Quaternion that describes the rotation to apply to the vector.
 
-AFXINL void AfxQuatRotateV3dArray(afxQuat const q, afxNat cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void AfxQuatRotateV3dArray(afxQuat const q, afxUnit cnt, afxV3d const in[], afxV3d out[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -294,7 +297,7 @@ AFXINL void AfxQuatIntegrate(afxQuat q, afxQuat const in, afxV3d const omega, af
 /// this amounts to running through the quaternion buffer and selecting the sequence of quaternions that minimizes the distance between each successive quaternion while keep the rotational meaning the same. 
 /// Qwadro makes it simple to do this:
 
-AFXINL void AfxEnsureQuaternionContinuity(afxNat cnt, afxQuat q[]);
+AFXINL void AfxEnsureQuaternionContinuity(afxUnit cnt, afxQuat q[]);
 
 /// Suffice to say, you shouldn't normally be calling AfxEnsureQuaternionContinuity on anything unless you know you need to, 
 /// because any time you're using Qwadro's higher-level animation functions, 

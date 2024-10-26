@@ -1,0 +1,69 @@
+Booting...
+Acquiring...  Thread Execution Unit 204 @ afxSystem_w32.c:447afxClass.c:693
+afxClass.c:693
+((((uintptr_t)(const void *)((afxSize)hdr)) % (16u) == 0))
+    InvalidafxClass.c:707
+afxClass.c:707
+((((uintptr_t)(const void *)((afxSize)obj)) % (16u) == 0))
+    InvalidafxClass.c:710
+afxClass.c:710
+((((uintptr_t)(const void *)((afxSize)objects[i])) % (16u) == 0))
+    InvalidMounting... <//./z/>(''),5afxClass.c:1002
+afxStorage.c:822
+afxSystem_w32.c:249
+afxSystem_w32.c:453
+Annihilating 1 lost <Storage> objects.Annihilating 1 lost <Thread> objects.afxClass.c:575
+afxClass.c:582
+afxClass<System>(0f6e3ed0)afxClass.c:720
+afxSystem.c:777
+afxClass.c:1097
+afxClass.c:1097
+(hdr)
+    InvalidafxClass.c:1100
+afxDebug_w32.c:564
+afxDrawSystem.c:58
+afxDrawSystem.c:58
+(var_)
+    InvalidafxDrawSystem.c:654
+afxDrawSystem.c:654
+(var_)
+    InvalidafxClass.c:309
+afxClass.c:309
+(cls)
+    InvalidafxDrawContext.c:797
+afxClass.c:1097
+afxClass.c:1097
+(hdr)
+    InvalidafxClass.c:1100
+afxDebug_w32.c:564
+afxDrawSystem.c:58
+afxDrawSystem.c:58
+(var_)
+    InvalidafxDrawSystem.c:654
+afxDrawSystem.c:654
+(var_)
+    InvalidafxClass.c:309
+afxClass.c:309
+(cls)
+    InvalidafxDrawContext.c:815
+Skybox.c:329
+Skybox.c:329
+((!1) || ((&dctx) && !(_AfxAssertObjects((1), (afxObject const*)(&dctx),(afxFcc_DCTX)))))
+    InvalidafxClass.c:1097
+afxClass.c:1097
+(hdr)
+    InvalidafxClass.c:1100
+afxDebug_w32.c:564
+afxShell.c:34
+afxShell.c:34
+(var_)
+    InvalidafxShell.c:237
+afxShell.c:237
+(var_)
+    InvalidafxClass.c:309
+afxClass.c:309
+(cls)
+    InvalidafxClass.c:1097
+afxClass.c:1097
+(hdr)
+    Invalid

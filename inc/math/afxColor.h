@@ -32,13 +32,13 @@ typedef enum avxColorChannel
 
 typedef afxV4d      AFX_SIMD afxColor;
 
-typedef afxNat8     AFX_SIMD afxRgb8[3];
-typedef afxNat8     AFX_SIMD afxRgba8[4];
+typedef afxUnit8     AFX_SIMD afxRgb8[3];
+typedef afxUnit8     AFX_SIMD afxRgba8[4];
 
 typedef enum avxColorSpace
 {
     avxColorSpace_LINEAR = 1,
-    avxColorSpace_SRGB
+    avxColorSpace_STANDARD // sRGB
 } avxColorSpace;
 
 typedef enum avxColorSwizzle
@@ -58,7 +58,7 @@ AFX_DEFINE_STRUCT(avxColorSwizzling)
 
 #define AfxColor(x_, y_, z_, w_) (afxColor const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)w_ }
 
-#define AfxPackArgb32(a, r, g, b) (afxNat32)(((a) << 24) | ((r) << 16) | ((g) << 8) | (b))
+#define AfxPackArgb32(a, r, g, b) (afxUnit32)(((a) << 24) | ((r) << 16) | ((g) << 8) | (b))
 
 AVX avxColorSwizzling const AFX_STD_COLOR_SWIZZLING;
 
@@ -77,10 +77,10 @@ AVXINL void     AfxColorSub(afxColor c, afxColor const a, afxColor const b);
 
 AVXINL void     AfxColorScale(afxColor c, afxColor const from, afxReal lambda);
 
-AVXINL afxNat32 AfxGetColorAsRgba8(afxColor const c);
-AVXINL afxNat32 AfxGetColorAsArgb8(afxColor const c);
-AVXINL void     AfxColorCopyRgba8(afxColor c, afxNat rgba);
-AVXINL void     AfxColorCopyArgb8(afxColor c, afxNat argb);
+AVXINL afxUnit32 AfxGetColorAsRgba8(afxColor const c);
+AVXINL afxUnit32 AfxGetColorAsArgb8(afxColor const c);
+AVXINL void     AfxColorCopyRgba8(afxColor c, afxUnit rgba);
+AVXINL void     AfxColorCopyArgb8(afxColor c, afxUnit argb);
 
 AVXINL void     AfxColorPremulAlpha(afxColor c, afxColor const in);
 

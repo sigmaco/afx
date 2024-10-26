@@ -60,8 +60,8 @@ typedef enum avxLoadOp
 AFX_DEFINE_STRUCT(avxClearRect)
 {
     afxRect             area; /// the two-dimensional region to be cleared.
-    afxNat32            baseLayer; /// the first layer to be cleared.
-    afxNat32            layerCnt; /// the number of layers to clear.
+    afxUnit32            baseLayer; /// the first layer to be cleared.
+    afxUnit32            layerCnt; /// the number of layers to clear.
 };
 
 AFX_DEFINE_STRUCT(avxDrawTarget)
@@ -75,9 +75,9 @@ AFX_DEFINE_STRUCT(avxDrawScope)
 {
     avxCanvas           canv;
     afxRect             area; ///  the area that is affected by the draw scope.
-    afxNat              baseLayer; /// the index of the first attachment layer that will be drawn.
-    afxNat              layerCnt; /// the number of layers drawn to in each attachment when viewMask is 0.
-    afxNat              rasterCnt; /// the number of elements in rasters.
+    afxUnit              baseLayer; /// the index of the first attachment layer that will be drawn.
+    afxUnit              layerCnt; /// the number of layers drawn to in each attachment when viewMask is 0.
+    afxUnit              rasterCnt; /// the number of elements in rasters.
     avxDrawTarget const*rasters; /// structures describing any color attachments used.
     avxDrawTarget const*depth; /// structure describing a depth attachment.
     avxDrawTarget const*stencil; /// structure describing a stencil attachment.
@@ -95,8 +95,8 @@ AFX_DEFINE_STRUCT(avxDrawScope)
 AVX afxCmdId                AvxCmdAdjustScissors
 (
     avxCmdb                 cmdb,
-    afxNat                  baseIdx, /// is the index of the first scissor whose state is updated by the command.
-    afxNat                  cnt, /// is the number of scissors whose rectangles are updated by the command.
+    afxUnit                  baseIdx, /// is the index of the first scissor whose state is updated by the command.
+    afxUnit                  cnt, /// is the number of scissors whose rectangles are updated by the command.
     afxRect const           rects[] /// is a pointer to an array of afxRect structures defining scissor rectangles.
 );
 
@@ -106,8 +106,8 @@ AVX afxCmdId                AvxCmdAdjustScissors
 AVX afxCmdId                AvxCmdAdjustCurtains
 (
     avxCmdb                 cmdb, 
-    afxNat                  baseIdx, /// the first curtain rectangle whose state is updated by the command.
-    afxNat                  cnt, /// the number of curtain rectangles updated by the command.
+    afxUnit                  baseIdx, /// the first curtain rectangle whose state is updated by the command.
+    afxUnit                  cnt, /// the number of curtain rectangles updated by the command.
     afxRect const           rects[] /// an array of afxRect structures defining curtain rectangles.
 );
 
@@ -223,7 +223,7 @@ AVX afxCmdId                AvxCmdSetStencilCompareMask
 (
     avxCmdb                 cmdb,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the compare mask.
-    afxNat32                compareMask /// is the new value to use as the stencil compare mask.
+    afxUnit32                compareMask /// is the new value to use as the stencil compare mask.
 );
 
 /// Set stencil write mask dynamically for a command buffer.
@@ -232,7 +232,7 @@ AVX afxCmdId                AvxCmdSetStencilWriteMask
 (
     avxCmdb                 cmdb,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the write mask, as described above for vkCmdSetStencilCompareMask.
-    afxNat32                writeMask /// is the new value to use as the stencil write mask.
+    afxUnit32                writeMask /// is the new value to use as the stencil write mask.
 );
 
 /// Set stencil reference value dynamically for a command buffer.
@@ -241,7 +241,7 @@ AVX afxCmdId                AvxCmdSetStencilReference
 (
     avxCmdb                 cmdb,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to
-    afxNat32                reference /// is the new value to use as the stencil reference value.
+    afxUnit32                reference /// is the new value to use as the stencil reference value.
 );
 
 /// Set depth bounds test enable dynamically for a command buffer.

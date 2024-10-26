@@ -32,13 +32,13 @@ AFX_DEFINE_STRUCT(afxIter)
 AFX_DEFINE_STRUCT(_afxIter)
 {
     void    *f;
-    afxNat  idx;
+    afxUnit  idx;
     afxBool quit;
     afxError quitCode;
     afxIter iter;
 };
 
-AFXINL afxNat AfxIteratorGetIndex(afxIter const *i)
+AFXINL afxUnit AfxIteratorGetIndex(afxIter const *i)
 {
     _afxIter *ip = AFX_REBASE(i, _afxIter, iter);
     return ip->idx;

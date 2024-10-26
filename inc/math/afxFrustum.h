@@ -72,13 +72,13 @@ AFX_DEFINE_STRUCT(afxFrustum)
 AFXINL void     AfxFrustumCopy(afxFrustum* f, afxFrustum const* in);
 
 AFXINL afxBool  AfxFrustumDoesCullSphere(afxFrustum const* f, afxSphere const* sph);
-AFXINL afxBool  AfxFrustumTestAabbs(afxFrustum const* f, afxNat cnt, afxBox const aabb[]);
+AFXINL afxBool  AfxFrustumTestAabbs(afxFrustum const* f, afxUnit cnt, afxBox const aabb[]);
 AFXINL afxBool  AfxFrustumDoesCullFrustum(afxFrustum const* f, afxFrustum const* other);
 
 // frustrum and matrix must be in same space
 AFXINL void     AfxRecomputeFrustum3(afxFrustum* f, afxM4d const pv);
 AFXINL void     AfxRecomputeFrustum(afxFrustum* f, afxM4d const v, afxM4d const p);
 
-AFXINL void     AfxAabbAbsorbFrustum(afxBox aabb, afxFrustum const* f);
+AFXINL void     AfxAabbAbsorbFrustum(afxBox* aabb, afxFrustum const* f);
 
 #endif//AFX_FRUSTUM_H

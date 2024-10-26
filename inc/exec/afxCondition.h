@@ -18,15 +18,29 @@
 #define AFX_CONDITION_H
 
 #include "qwadro/inc/exec/afxMutex.h"
+#include "qwadro/inc/exec/afxAtomic.h"
 
-// The QWaitCondition class provides a condition variable for synchronizing threads.
+/**
+    The afxCondition object provides a condition variable for synchronizing threads.
 
-// QWaitCondition allows a thread to tell other threads that some sort of condition has been met. One or many threads can block waiting for a QWaitCondition to set a condition with wakeOne() or wakeAll(). Use wakeOne() to wake one randomly selected thread or wakeAll() to wake them all.
+    afxCondition allows a thread to tell other threads that some sort of condition has been met. 
+    One or many threads can block waiting for a QWaitCondition to set a condition with wakeOne() or wakeAll(). 
+    Use wakeOne() to wake one randomly selected thread or wakeAll() to wake them all.
+*/
 
 AFX_DEFINE_STRUCT(afxCondition)
 {
-    //afxByte             data[64];
-    afxAtom32           data[16];
+#ifdef AFX_OS_WIN
+#   ifdef AFX_ISA_X86_64
+    // must at least 64 bytes
+    afxAtom32   data[16]; // 64 bytes
+#else
+    // must at least 36 bytes
+    afxAtom32   data[12]; // 48 bytes
+#   endif
+#else
+    afxAtom32   data[12]; // 48 bytes
+#endif
 };
 
 AFX afxError            AfxSetUpCondition(afxCondition* cond);

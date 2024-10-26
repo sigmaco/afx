@@ -172,38 +172,35 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\demos\e2engine\afxEngine.c" />
+    <ClCompile Include="..\..\src\exec\afxEngine.c" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\amigal1\amigal1.vcxproj">
+    <ProjectReference Include="..\..\..\eaxzal1\_vs17\eaxzal1\eaxzal1.vcxproj">
       <Project>{8db6b4eb-2027-4aa2-90c4-1c5937167746}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\cadio\cadio.vcxproj">
-      <Project>{60b64922-a066-4894-90ac-66ff7a934804}</Project>
+    <ProjectReference Include="..\..\..\galileo\_vs17\galileo\galileo.vcxproj">
+      <Project>{5be5157a-41f1-4142-8ded-fd662fb9909a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\tarzgl4\_vs17\tarzgl4\tarzgl4.vcxproj">
+      <Project>{1bafd2ad-9548-4fa9-b268-6afe5087845d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\winsh4d\_vs17\winsh4d\winsh4d.vcxproj">
+      <Project>{de71d516-d811-49f6-8c15-d99975c40801}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\e2combo\e2combo.vcxproj">
+      <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
     </ProjectReference>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\e2draw\e2draw.vcxproj">
+      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\e2mmux\e2mmux.vcxproj">
       <Project>{b86a5b24-69ef-42ad-86d9-e3ac4405a9ce}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\e2pragma\e2pragma.vcxproj">
-      <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\e2sound\e2sound.vcxproj">
       <Project>{1685d511-3934-4f31-b8a3-afa740f612b3}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\e2vgi\e2vgi.vcxproj">
-      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\emathya\emathya.vcxproj">
-      <Project>{2bb84169-b633-4c99-a266-b72cb6b90992}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\tarzgl4\tarzgl4.vcxproj">
-      <Project>{1bafd2ad-9548-4fa9-b268-6afe5087845d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\winsh4d\winsh4d.vcxproj">
-      <Project>{de71d516-d811-49f6-8c15-d99975c40801}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

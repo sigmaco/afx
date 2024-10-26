@@ -69,15 +69,15 @@ typedef enum afxCurveFormat
 
 AFX_DEFINE_STRUCT(afxCurveBlueprint)
 {
-    afxNat          fmt;
-    afxNat          degree;
-    afxNat          dimens;
-    afxNat          knotCnt;
+    afxUnit          fmt;
+    afxUnit          degree;
+    afxUnit          dimens;
+    afxUnit          knotCnt;
     afxReal const*  knotArray;
     afxReal const*  ctrlArray;
     afxCurve        srcCurve;
-    afxNat          sampleCnt;
-    afxNat          sampleDimension;
+    afxUnit          sampleCnt;
+    afxUnit          sampleDimension;
     afxReal const*  transformedSamples;
     afxReal const*  originalSamples;
     afxBool         curveBuilderNeedsFreeing;
@@ -86,15 +86,15 @@ AFX_DEFINE_STRUCT(afxCurveBlueprint)
 AFX_DEFINE_STRUCT(afxCurveInfo)
 {
     afxCurveFormat  fmt;
-    afxNat          degree;
-    afxNat          dimens;
-    afxNat          knotCnt;
+    afxUnit          degree;
+    afxUnit          dimens;
+    afxUnit          knotCnt;
     afxReal const*  knots;
     afxReal const*  ctrls;
 
     afxCurve        src;
-    afxNat          sampleCnt;
-    afxNat          sampleDim;
+    afxUnit          sampleCnt;
+    afxUnit          sampleDim;
     afxReal const*  xformedSamples;
     afxReal const*  origSamples;
 };
@@ -109,8 +109,8 @@ typedef struct sample_context
 } sample_context;
 
 AMX afxInt          AfxGetCurveDegree(afxCurve c);
-AMX afxNat          AfxGetCurveDimensionality(afxCurve c);
-AMX afxNat          AfxGetCurveDimensionalityUnchecked(afxCurve c);
+AMX afxUnit          AfxGetCurveDimensionality(afxCurve c);
+AMX afxUnit          AfxGetCurveDimensionalityUnchecked(afxCurve c);
 
 AMX afxCurveFlags   AfxGetCurveFlags(afxCurve c);
 AMX afxCurveFlags   AfxTestCurveFlags(afxCurve c, afxCurveFlags mask);
@@ -123,34 +123,34 @@ AMX afxBool         AfxIsCurveConstantNotIdentity(afxCurve c);
 AMX afxReal*        AfxGetCurveKnots(afxCurve c);
 AMX afxReal*        AfxGetCurveControls(afxCurve c);
 
-AMX afxNat          AfxFindCurveKnot(afxCurve c, afxReal t);
+AMX afxUnit          AfxFindCurveKnot(afxCurve c, afxReal t);
 
-AMX afxNat          AfxCountCurveKnots(afxCurve c);
+AMX afxUnit          AfxCountCurveKnots(afxCurve c);
 
-AMX void            AfxSetCurveAllKnotValues(afxCurve c, afxNat knotCnt, afxNat dimension, afxReal const* knotSrc, afxReal const* ctrlSrc);
-AMX void            AfxExtractCurveKnotValues(afxCurve c, afxNat knotIdx, afxNat knotCnt, afxReal* knotResults, afxReal* ctrlResults, afxReal const* identivec);
-AMX afxReal         AfxExtractCurveKnotValue(afxCurve c, afxNat knotIdx, afxReal* ctrlRslt, afxReal const* identity);
+AMX void            AfxSetCurveAllKnotValues(afxCurve c, afxUnit knotCnt, afxUnit dimension, afxReal const* knotSrc, afxReal const* ctrlSrc);
+AMX void            AfxExtractCurveKnotValues(afxCurve c, afxUnit knotIdx, afxUnit knotCnt, afxReal* knotResults, afxReal* ctrlResults, afxReal const* identivec);
+AMX afxReal         AfxExtractCurveKnotValue(afxCurve c, afxUnit knotIdx, afxReal* ctrlRslt, afxReal const* identity);
 
-AMX void            AfxEvaluateCurveAtKnot(afxCurve c, afxNat dimens, afxBool normalize, afxBool bwdsLoop, afxBool fwdsLoop, afxReal curveDur, afxNat knotIdx, afxReal t, afxReal* rslt, afxReal const* identityVec);
-AMX void            AfxEvaluateCurveAt(afxCurve c, afxNat dimens, afxBool normalize, afxBool bwdsLoop, afxBool fwdsLoop, afxReal curveDur, afxReal t, afxReal* rslt, afxReal const* identityVec);
+AMX void            AfxEvaluateCurveAtKnot(afxCurve c, afxUnit dimens, afxBool normalize, afxBool bwdsLoop, afxBool fwdsLoop, afxReal curveDur, afxUnit knotIdx, afxReal t, afxReal* rslt, afxReal const* identityVec);
+AMX void            AfxEvaluateCurveAt(afxCurve c, afxUnit dimens, afxBool normalize, afxBool bwdsLoop, afxBool fwdsLoop, afxReal curveDur, afxReal t, afxReal* rslt, afxReal const* identityVec);
 
 AMX void            AfxCopyCurve(afxCurve c, afxCurve src);
 
-AMX void            AfxSetUpCurve(afxCurve c, afxCurveFormat fmt, afxNat degree, afxNat dim, afxNat knotCnt);
+AMX void            AfxSetUpCurve(afxCurve c, afxCurveFormat fmt, afxUnit degree, afxUnit dim, afxUnit knotCnt);
 AMX void            AfxCleanUpCurve(afxCurve c);
 
-AMX void            AfxMakeCurveDaKC32f(afxCurve c, afxNat degree, afxNat dim, afxNat knotCnt, afxReal const knots[], afxReal const ctrls[]);
+AMX void            AfxMakeCurveDaKC32f(afxCurve c, afxUnit degree, afxUnit dim, afxUnit knotCnt, afxReal const knots[], afxReal const ctrls[]);
 
 
 AMX void            AfxBeginCurveCopy(afxCurveBlueprint* cb, afxCurve src);
-AMX void            AfxBeginCurve(afxCurveBlueprint* cb, afxCurveFormat fmt, afxNat degree, afxNat dimension, afxNat knotCnt);
+AMX void            AfxBeginCurve(afxCurveBlueprint* cb, afxCurveFormat fmt, afxUnit degree, afxUnit dimension, afxUnit knotCnt);
 AMX afxCurve        AfxEndCurve(afxCurveBlueprint* cb, afxSimulation sim);
 
-AMXINL void         AfxResetCurveInfo(afxCurveInfo* cb, afxCurveFormat fmt, afxNat degree, afxNat dimens, afxNat knotCnt);
+AMXINL void         AfxResetCurveInfo(afxCurveInfo* cb, afxCurveFormat fmt, afxUnit degree, afxUnit dimens, afxUnit knotCnt);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError        AfxAcquireCurves(afxSimulation sim, afxNat cnt, afxCurveInfo const info[], afxCurve curves[]);
-AMX afxError        AfxAssembleCurves(afxSimulation sim, afxNat cnt, afxCurveBlueprint const blueprints[], afxCurve curves[]);
+AMX afxError        AfxAcquireCurves(afxSimulation sim, afxUnit cnt, afxCurveInfo const info[], afxCurve curves[]);
+AMX afxError        AfxAssembleCurves(afxSimulation sim, afxUnit cnt, afxCurveBlueprint const blueprints[], afxCurve curves[]);
 
 #endif//AMX_CURVE_H

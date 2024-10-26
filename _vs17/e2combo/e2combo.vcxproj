@@ -19,33 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\afx\cad\afxMaterial.c" />
-    <ClCompile Include="..\..\afx\cad\afxModel.c" />
-    <ClCompile Include="..\..\afx\cad\afxPose.c" />
-    <ClCompile Include="..\..\afx\cad\afxPoseBuffer.c" />
-    <ClCompile Include="..\..\afx\cad\afxSkeleton.c" />
-    <ClCompile Include="..\..\afx\math\afxCurve.c" />
-    <ClCompile Include="..\..\afx\sim\afxAnimation.c" />
-    <ClCompile Include="..\..\afx\sim\afxBody.c" />
-    <ClCompile Include="..\..\afx\sim\afxMotion.c" />
-    <ClCompile Include="..\..\afx\sim\afxMotor.c" />
-    <ClCompile Include="..\..\afx\sim\akxNode.c" />
-    <ClCompile Include="..\..\afx\sim\dev\afxComboBridge.c" />
-    <ClCompile Include="..\..\afx\sim\dev\afxComobSystem.c" />
-    <ClCompile Include="..\..\afx\sim\dev\afxSimulation.c" />
-    <ClCompile Include="..\..\afx\sim\dev\_CurveOps_Cpu.c" />
-    <ClCompile Include="..\..\afx\sim\dev\_SampleTrackVmt.c" />
-    <ClCompile Include="..\..\afx\sim\dev\_Vmt.c" />
-    <ClCompile Include="..\..\afx\sim\io\akxAsset.c" />
-    <ClCompile Include="..\..\afx\sim\rendering\akxLighting.c" />
-    <ClCompile Include="..\..\afx\sim\rendering\akxRenderer.c" />
-    <ClCompile Include="..\..\afx\sim\rendering\akxSky.c" />
-    <ClCompile Include="..\..\afx\sim\rendering\afxTerrain.c" />
+    <ClCompile Include="..\..\src\cad\afxMaterial.c" />
+    <ClCompile Include="..\..\src\cad\afxModel.c" />
+    <ClCompile Include="..\..\src\cad\afxPose.c" />
+    <ClCompile Include="..\..\src\cad\afxPoseBuffer.c" />
+    <ClCompile Include="..\..\src\cad\afxRwx.c" />
+    <ClCompile Include="..\..\src\cad\afxSkeleton.c" />
+    <ClCompile Include="..\..\src\cad\afxXmd.c" />
+    <ClCompile Include="..\..\src\math\afxCurve.c" />
+    <ClCompile Include="..\..\src\sim\afxAnimation.c" />
+    <ClCompile Include="..\..\src\sim\afxBody.c" />
+    <ClCompile Include="..\..\src\sim\afxMotion.c" />
+    <ClCompile Include="..\..\src\sim\afxMotor.c" />
+    <ClCompile Include="..\..\src\sim\afxNode.c" />
+    <ClCompile Include="..\..\src\sim\dev\afxComboBridge.c" />
+    <ClCompile Include="..\..\src\sim\dev\afxComboSystem.c" />
+    <ClCompile Include="..\..\src\sim\dev\afxSimulation.c" />
+    <ClCompile Include="..\..\src\sim\dev\_CurveOps_Cpu.c" />
+    <ClCompile Include="..\..\src\sim\dev\_SampleTrackVmt.c" />
+    <ClCompile Include="..\..\src\sim\dev\_Vmt.c" />
+    <ClCompile Include="..\..\src\sim\io\akxAsset.c" />
+    <ClCompile Include="..\..\src\sim\rendering\akxLighting.c" />
+    <ClCompile Include="..\..\src\sim\rendering\akxRenderer.c" />
+    <ClCompile Include="..\..\src\sim\rendering\afxTerrain.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\afx\dev\AmxCadImplKit.h" />
-    <ClInclude Include="..\..\afx\dev\AmxImplKit.h" />
-    <ClInclude Include="..\..\afx\dev\AmxPuppetImplKit.h" />
+    <ClInclude Include="..\..\src\dev\AmxCadImplKit.h" />
+    <ClInclude Include="..\..\src\dev\AmxImplKit.h" />
+    <ClInclude Include="..\..\src\dev\AmxPuppetImplKit.h" />
     <ClInclude Include="..\..\inc\cad\afxMaterial.h" />
     <ClInclude Include="..\..\inc\cad\afxModel.h" />
     <ClInclude Include="..\..\inc\cad\afxPose.h" />
@@ -56,7 +57,7 @@
     <ClInclude Include="..\..\inc\sim\afxBody.h" />
     <ClInclude Include="..\..\inc\sim\afxMotion.h" />
     <ClInclude Include="..\..\inc\sim\afxMotor.h" />
-    <ClInclude Include="..\..\inc\sim\akxNode.h" />
+    <ClInclude Include="..\..\inc\sim\afxNode.h" />
     <ClInclude Include="..\..\inc\sim\afxSimDefs.h" />
     <ClInclude Include="..\..\inc\sim\dev\afxComboBridge.h" />
     <ClInclude Include="..\..\inc\sim\dev\afxComboSystem.h" />
@@ -64,7 +65,6 @@
     <ClInclude Include="..\..\inc\sim\io\akxAsset.h" />
     <ClInclude Include="..\..\inc\sim\rendering\akxLighting.h" />
     <ClInclude Include="..\..\inc\sim\rendering\akxRenderer.h" />
-    <ClInclude Include="..\..\inc\sim\rendering\akxSky.h" />
     <ClInclude Include="..\..\inc\sim\rendering\afxTerrain.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

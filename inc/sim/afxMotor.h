@@ -25,6 +25,8 @@
 // When your engine creates a new animating entity in the game world, you create a afxBody to accompany it.
 // When you want to play an animation on such an instance, you create a afxMotor.
 
+// Essential part of our machinima.
+
 #ifndef AMX_MOTOR_H
 #define AMX_MOTOR_H
 
@@ -58,14 +60,14 @@ AFX_DEFINE_STRUCT(afxMotorState)
     afxReal         localDur;
 };
 
-AMXINL void         AkxQueryMotorState
+AMXINL void         AfxQueryMotorState
 /// Query the current state of a motor execution.
 (
     afxMotor        moto,
     afxMotorState*  state
 );
 
-AMX afxReal         AkxQueryMotorLocalClock
+AMX afxReal         AfxQueryMotorLocalClock
 /// Query the raw local clock and, optionally, compute a clamped value of it valid to be used to sample animation.
 (
     afxMotor        moto,
@@ -85,74 +87,74 @@ AMX afxBool         AfxMotorIsUnused(afxMotor moto);
 
 AMX afxBool         AfxMotorHasTerminated(afxMotor moto);
 
-AMX afxBool         AkxMotorTerminationIsScheduled(afxMotor moto);
+AMX afxBool         AfxMotorTerminationIsScheduled(afxMotor moto);
 
 AMX afxBool         AfxMotorIsActive(afxMotor moto);
 
 AMX afxBool         AfxMotorHasEffect(afxMotor moto);
 
-AMX void**          AkxGetMotorUdd(afxMotor moto);
+AMX void**          AfxGetMotorUdd(afxMotor moto);
 
-AMX void            AkxSetMotorTargetState(afxMotor moto, afxReal currGlobalTime, afxReal targetGlobalTime, afxReal localTime, afxInt currIterIdx);
+AMX void            AfxSetMotorTargetState(afxMotor moto, afxReal currGlobalTime, afxReal targetGlobalTime, afxReal localTime, afxInt currIterIdx);
 
-AMX void            AkxSetMotorEaseInCurve(afxMotor moto, afxReal startSeconds, afxReal endSeconds, afxReal startValue, afxReal startTangent, afxReal endTangent, afxReal endValue); // Ease the control in over the next two seconds
-AMX void            AkxSetMotorEaseOutCurve(afxMotor moto, afxReal startSeconds, afxReal endSeconds, afxReal startValue, afxReal startTangent, afxReal endTangent, afxReal endValue); // In ten seconds, ease the control out over two seconds
+AMX void            AfxSetMotorEaseInCurve(afxMotor moto, afxReal startSeconds, afxReal endSeconds, afxReal startValue, afxReal startTangent, afxReal endTangent, afxReal endValue); // Ease the control in over the next two seconds
+AMX void            AfxSetMotorEaseOutCurve(afxMotor moto, afxReal startSeconds, afxReal endSeconds, afxReal startValue, afxReal startTangent, afxReal endTangent, afxReal endValue); // In ten seconds, ease the control out over two seconds
 
-AMX afxReal         AkxMotorEaseIn(afxMotor moto, afxReal duration, afxBool fromCurrent);
-AMX afxReal         AkxMotorEaseOut(afxMotor moto, afxReal duration);
+AMX afxReal         AfxMotorEaseIn(afxMotor moto, afxReal duration, afxBool fromCurrent);
+AMX afxReal         AfxMotorEaseOut(afxMotor moto, afxReal duration);
 
-AMX afxReal         AkxGetMotorEaseCurveMultiplier(afxMotor moto);
+AMX afxReal         AfxGetMotorEaseCurveMultiplier(afxMotor moto);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError        AfxAcquireMotors(afxSimulation sim, afxReal currClock, afxReal localDur, afxNat iterCnt, afxNat cnt, afxMotor moto[]);
+AMX afxError        AfxAcquireMotors(afxSimulation sim, afxReal currClock, afxReal localDur, afxUnit iterCnt, afxUnit cnt, afxMotor moto[]);
 
-AMX afxBool         AkxReleaseUnusedMotors(afxNat cnt, afxMotor motors[]);
-AMX afxBool         AkxReleaseOnceUnusedMotors(afxNat cnt, afxMotor motors[]);
-AMX afxBool         AkxReleaseTerminatedMotors(afxNat cnt, afxMotor motors[]);
+AMX afxBool         AfxReleaseUnusedMotors(afxUnit cnt, afxMotor motors[]);
+AMX afxBool         AfxReleaseOnceUnusedMotors(afxUnit cnt, afxMotor motors[]);
+AMX afxBool         AfxReleaseTerminatedMotors(afxUnit cnt, afxMotor motors[]);
 
 /// Resets the raw local clock of a motor to the time passed in.
 
-AMX void            AkxResetMotorLocalClock(afxReal localClock, afxNat cnt, afxMotor motors[]);
+AMX void            AfxResetMotorLocalClock(afxReal localClock, afxUnit cnt, afxMotor motors[]);
 
 // Devido a limitação imposto pelo tipo afxReal32, os relógios de uma afxMotor não podem operar por mais que um dia e meio sem problemas relacionados a perda de precisão.
 // É necessário recentralizar os relógios em algum momento após tal período de operação.
 
 /// Rebase internal clocks with the passed into one.
 
-AMX void            AkxRebaseMotorClocks(afxReal currClock, afxNat cnt, afxMotor motors[]);
+AMX void            AfxRebaseMotorClocks(afxReal currClock, afxUnit cnt, afxMotor motors[]);
 
 /// Update the current motor clock to a new one. /// new absolute time
 
-AMX void            AkxUpdateMotorClock(afxReal time, afxNat cnt, afxMotor motors[]);
+AMX void            AfxUpdateMotorClock(afxReal time, afxUnit cnt, afxMotor motors[]);
 
 // deveria ser suspend, já que o motor já começa ativo
 
-AMX void            AkxActivateMotor(afxBool active, afxNat cnt, afxMotor motors[]);
+AMX void            AfxActivateMotor(afxBool active, afxUnit cnt, afxMotor motors[]);
 
-AMX void            AkxSetMotorWeight(afxReal weight, afxNat cnt, afxMotor motors[]);
+AMX void            AfxSetMotorWeight(afxReal weight, afxUnit cnt, afxMotor motors[]);
 
 /// Sets the speed multiplier. 0.f = stop it, -1.f play it backwards, 0.5 half the playback, 2.0 doubles the playback, etc.
 
-AMX void            AkxSetMotorSpeed(afxReal speed, afxNat cnt, afxMotor motors[]);
+AMX void            AfxSetMotorSpeed(afxReal speed, afxUnit cnt, afxMotor motors[]);
 
-AMX void            AkxSetMotorClockOnly(afxReal time, afxNat cnt, afxMotor motors[]);
+AMX void            AfxSetMotorClockOnly(afxReal time, afxUnit cnt, afxMotor motors[]);
 
 /// Resets the total of iterations allowed for the motors. 0 means infinite.
 
-AMX void            AkxResetMotorIterations(afxInt iterCnt, afxNat cnt, afxMotor motors[]);
+AMX void            AfxResetMotorIterations(afxInt iterCnt, afxUnit cnt, afxMotor motors[]);
 
 /// Selects the current iteration index.
 
-AMX void            AkxSelectMotorIteration(afxInt currIterIdx, afxNat cnt, afxMotor motors[]);
+AMX void            AfxSelectMotorIteration(afxInt currIterIdx, afxUnit cnt, afxMotor motors[]);
 
-AMX void            AkxEnableMotorIterationClamping(afxBool clamp, afxNat cnt, afxMotor motors[]);
-AMX void            AkxEnableMotorTerminationCheck(afxBool checkComplete, afxNat cnt, afxMotor motors[]);
-AMX void            AkxEnableMotorEaseIn(afxBool easeIn, afxNat cnt, afxMotor motors[]);
-AMX void            AkxEnableMotorEaseOut(afxBool easeOut, afxNat cnt, afxMotor motors[]);
+AMX void            AfxEnableMotorIterationClamping(afxBool clamp, afxUnit cnt, afxMotor motors[]);
+AMX void            AfxEnableMotorTerminationCheck(afxBool checkComplete, afxUnit cnt, afxMotor motors[]);
+AMX void            AfxEnableMotorEaseIn(afxBool easeIn, afxUnit cnt, afxMotor motors[]);
+AMX void            AfxEnableMotorEaseOut(afxBool easeOut, afxUnit cnt, afxMotor motors[]);
 
 /// Schedules the self-termination when motors reaches the specified seconds.
 
-AMX void            AfxScheduleMotorTermination(afxReal atSecs, afxNat cnt, afxMotor motors[]);
+AMX void            AfxScheduleMotorTermination(afxReal atSecs, afxUnit cnt, afxMotor motors[]);
 
 #endif//AMX_MOTOR_H

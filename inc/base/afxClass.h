@@ -25,8 +25,6 @@
 #include "qwadro/inc/mem/afxPool.h"
 #include "qwadro/inc/mem/afxArena.h"
 
-// RTTI of Qwadro
-
 // The Qt Meta-Object System in Qt is responsible for the signals and slots inter-object communication mechanism, runtime class information, and the Qt property system.
 // A single QMetaObject instance is created for each QObject subclass that is used in an application, and this instance stores all the class-information for the QObject subclass.
 // This object is available as QObject::typeObject().
@@ -43,7 +41,7 @@ AFX_DECLARE_STRUCT(afxEvent);
 
 AFX_DEFINE_STRUCT(afxIterator)
 {
-    afxNat          idx;
+    afxUnit          idx;
     afxBool         abort;
     void(*f)(afxIterator *itr);
     void            *udd;
@@ -67,7 +65,7 @@ AFX_DEFINE_STRUCT(afxBlueprint)
 
 AFX_DEFINE_STRUCT(afxCookie)
 {
-    afxNat no;
+    afxUnit no;
     void** udd;
 };
 
@@ -75,57 +73,57 @@ AFX_DEFINE_STRUCT(afxCookie)
 
 AFX_DEFINE_STRUCT(afxClassSuballocation)
 {
-    afxNat          siz;
-    afxNat          align;
-    afxNat          cntOff;
-    afxNat          ptrOff;
+    afxUnit         siz;
+    afxUnit         align;
+    afxUnit         cntOff;
+    afxUnit         ptrOff;
 };
 
 AFX_DEFINE_STRUCT(afxClassConfig)
 {
     afxFcc          fcc;
     afxMmu          mmu;
-    afxNat          maxCnt;
-    afxNat          fixedSiz;
+    afxUnit         maxCnt;
+    afxUnit         fixedSiz;
     afxClass*       subset;
-    afxError        (*ctor)(afxObject obj, void** args, afxNat invokeNo);
+    afxError        (*ctor)(afxObject obj, void** args, afxUnit invokeNo);
     afxError        (*dtor)(afxObject obj);
     afxBool         (*event)(afxObject obj, afxEvent *ev);
     afxBool         (*eventFilter)(afxObject obj, afxObject watched, afxEvent *ev);
     afxChar const*  name;
     afxChar const*  desc;
     void const**    vmt;
-    afxNat          unitsPerPage;
-    afxNat          suballocCnt;
+    afxUnit         unitsPerPage;
+    afxUnit         suballocCnt;
     afxClassSuballocation const* suballocs;
 };
 
 AFX_DEFINE_STRUCT(afxObjectChunk)
 {
-    afxNat      off;
-    afxNat      siz;
+    afxUnit     off;
+    afxUnit     siz;
 };
 
 AFX_DEFINE_STRUCT(afxInstanceExtension)
 {
     afxLinkage      cls;
-    afxNat          pluginId;
-    afxNat          objOff;
-    afxNat          objSiz;
-    afxError        (*dtorCb)(afxObject obj, void* ext, afxNat siz);
-    afxError        (*ctorCb)(afxObject obj, void* ext, afxNat siz); // void to avoid warnings
-    afxError        (*cpyCb)(afxObject dst, afxObject src, void* ext, afxNat siz);
-    afxError        (*ioAlwaysCb)(afxStream iob, afxObject obj, void* ext, afxNat siz); // called after the reading of plugin stream data is finished(useful to set up plugin data for plugins that found no data in the stream, but that cannot set up the data during the ctor callback)
-    afxError        (*ioRightsCb)(afxStream iob, afxObject obj, void* ext, afxNat siz, void* data); // called after the reading of plugin stream data is finished, and the object finalised, if and only if the object's rights id was equal to that of the plugin registering the call.
-    afxError        (*ioWriteCb)(afxStream iob, afxObject obj, void* ext, afxNat siz); // writes extension data to a binary stream.
-    afxError        (*ioReadCb)(afxStream iob, afxObject obj, void* ext, afxNat siz); // reads extension data from a binary stream.
-    afxSize         (*ioSizCb)(afxObject obj, void* ext, afxNat siz); // determines the binary size of the extension data.
+    afxUnit         pluginId;
+    afxUnit         objOff;
+    afxUnit         objSiz;
+    afxError        (*dtorCb)(afxObject obj, void* ext, afxUnit siz);
+    afxError        (*ctorCb)(afxObject obj, void* ext, afxUnit siz); // void to avoid warnings
+    afxError        (*cpyCb)(afxObject dst, afxObject src, void* ext, afxUnit siz);
+    afxError        (*ioAlwaysCb)(afxStream iob, afxObject obj, void* ext, afxUnit siz); // called after the reading of plugin stream data is finished(useful to set up plugin data for plugins that found no data in the stream, but that cannot set up the data during the ctor callback)
+    afxError        (*ioRightsCb)(afxStream iob, afxObject obj, void* ext, afxUnit siz, void* data); // called after the reading of plugin stream data is finished, and the object finalised, if and only if the object's rights id was equal to that of the plugin registering the call.
+    afxError        (*ioWriteCb)(afxStream iob, afxObject obj, void* ext, afxUnit siz); // writes extension data to a binary stream.
+    afxError        (*ioReadCb)(afxStream iob, afxObject obj, void* ext, afxUnit siz); // reads extension data from a binary stream.
+    afxSize         (*ioSizCb)(afxObject obj, void* ext, afxUnit siz); // determines the binary size of the extension data.
 };
 
 AFX_DEFINE_STRUCT(afxClassVmt)
 {
-    afxBool(*release)(afxNat cnt, afxObject objects[]);
-    afxError(*reacquire)(afxNat cnt, afxObject objects[]);
+    afxBool(*release)(afxUnit cnt, afxObject objects[]);
+    afxError(*reacquire)(afxUnit cnt, afxObject objects[]);
 };
 
 AFX_DEFINE_STRUCT(afxClass)
@@ -136,20 +134,20 @@ AFX_DEFINE_STRUCT(afxClass)
     afxLinkage      host; // provided by this object.
     afxLinkage      subset; // inherit this object.
     afxChain        supersets; // inherited by these objects.
-    afxNat          level;
-    afxNat          levelMask;
+    afxUnit         level;
+    afxUnit         levelMask;
 
     afxMmu          mmu;
-    afxNat          fixedSiz;
-    afxNat          instCnt; // constructed, not allocated as from pool. We can't rely on pool due to it not being used for static instances.
-    afxNat          maxInstCnt; // 1 == singleton
+    afxUnit         fixedSiz;
+    afxUnit         instCnt; // constructed, not allocated as from pool. We can't rely on pool due to it not being used for static instances.
+    afxUnit         maxInstCnt; // 1 == singleton
     afxPool         pool;
     afxSlock        poolLock;
-    afxNat          unitsPerPage; // when pool gets empty, the class will try to resizes storage pages to this value. If zero, the new page will be set to the size of the first batch allocation when pool was zero.
+    afxUnit         unitsPerPage; // when pool gets empty, the class will try to resizes storage pages to this value. If zero, the new page will be set to the size of the first batch allocation when pool was zero.
     
     afxArena        arena; // used to allocate class/struct suballocations for members.
 
-    afxError        (*ctor)(afxObject obj, void** args, afxNat invokeNo); // void to avoid warnings
+    afxError        (*ctor)(afxObject obj, void** args, afxUnit invokeNo); // void to avoid warnings
     afxError        (*dtor)(afxObject obj);
     afxError        (*ioAlways)(afxStream iob, afxObject obj); // called after the reading of plugin stream data is finished(useful to set up plugin data for plugins that found no data in the stream, but that cannot set up the data during the ctor callback)
     afxError        (*ioRights)(afxStream iob, afxObject obj, void* data); // called after the reading of plugin stream data is finished, and the object finalised, if and only if the object's rights id was equal to that of the plugin registering the call.
@@ -158,13 +156,13 @@ AFX_DEFINE_STRUCT(afxClass)
     afxSize         (*ioSiz)(afxStream iob, afxObject obj); // determines the binary size of the extension data.
     
     afxChain        plugins;
-    afxNat          extraSiz; // extra size contributed by each plugin.
+    afxUnit         extraSiz; // extra size contributed by each plugin.
     afxArena        extraAlloc; // plugin space allocation.
 
     afxBool         (*defEvent)(afxObject obj, afxEvent *ev);
     afxBool         (*defEventFilter)(afxObject obj, afxObject watched, afxEvent *ev);
     
-    afxNat          instBaseSiz;
+    afxUnit         instBaseSiz;
     void const**    vmt;
     afxString const*vmtNames;
     void*           userData[4];
@@ -172,36 +170,36 @@ AFX_DEFINE_STRUCT(afxClass)
 
 AFX afxError        AfxRegisterClass(afxClass* cls, afxClass *base, afxChain* provider, afxClassConfig const *spec);
 AFX afxError        AfxDeregisterClass(afxClass* cls);
-AFX afxNat          AfxExhaustClass(afxClass* cls);
+AFX afxUnit         AfxExhaustClass(afxClass* cls);
 
-AFX afxNat          AfxCountClassInstances(afxClass const* cls);
-AFX afxNat          AfxGetClassInstanceFixedSize(afxClass const* cls);
-AFX afxNat          AfxGetClassInstanceStrictFixedSize(afxClass const* cls);
+AFX afxUnit         AfxCountClassInstances(afxClass const* cls);
+AFX afxUnit         AfxGetClassInstanceFixedSize(afxClass const* cls);
+AFX afxUnit         AfxGetClassInstanceStrictFixedSize(afxClass const* cls);
 
 AFXINL afxArena*    AfxGetClassArena(afxClass *cls);
 
 AFXINL afxClass*    AfxGetSubClass(afxClass const* cls);
-AFXINL afxObject    AfxGetClassInstance(afxClass const* cls, afxNat32 uniqueId);
+AFXINL afxObject    AfxGetClassInstance(afxClass const* cls, afxUnit32 uniqueId);
 
-AFX afxNat          AfxEnumerateClassInstances(afxClass const* cls, afxNat first, afxNat cnt, afxObject objects[]);
+AFX afxUnit         AfxEnumerateClassInstances(afxClass const* cls, afxUnit first, afxUnit cnt, afxObject objects[]);
 
-AFX afxNat          AfxEvokeClassInstances(afxClass const* cls, afxBool(*f)(afxObject,void*), void* udd, afxNat first, afxNat cnt, afxObject objects[]);
+AFX afxUnit         AfxEvokeClassInstances(afxClass const* cls, afxBool(*f)(afxObject,void*), void* udd, afxUnit first, afxUnit cnt, afxObject objects[]);
 
 /// The AfxInvokeClassInstances2() function is used to apply the given callback function to all objects in the specified class.
 /// If any invocation of the callback function returns a failure status the interation is terminated. However, AfxInvokeClassInstances2 will still return successfully.
-AFX afxNat          AfxInvokeClassInstances(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void* udd);
+AFX afxUnit         AfxInvokeClassInstances(afxClass const* cls, afxUnit first, afxUnit cnt, afxBool(*f)(afxObject obj, void *udd), void* udd);
 
 /// The AfxInvokeClassInstances2() function is used to apply the given callback function to all objects in the specified class using another callback as filter.
 /// If any invocation of the exec() callback function returns a failure status the iteration is terminated.
 /// If a invocation of the flt() callback function returns non-zero the object is passed to the exec() callback.
 /// However, AfxInvokeClassInstances2 will return count of objects that passed in flt() callback.
-AFX afxNat          AfxInvokeClassInstances2(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2);
+AFX afxUnit         AfxInvokeClassInstances2(afxClass const* cls, afxUnit first, afxUnit cnt, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2);
 
-AFX afxError        _AfxDeallocateObjects(afxClass* cls, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxAllocateObjects(afxClass* cls, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxAllocateClassInstancesAt(afxClass* cls, afxNat base, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxDestructObjects(afxClass* cls, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxConstructObjects(afxClass* cls, afxNat cnt, afxObject objects[], void** udd);
+AFX afxError        _AfxDeallocateObjects(afxClass* cls, afxUnit cnt, afxObject objects[]);
+AFX afxError        _AfxAllocateObjects(afxClass* cls, afxUnit cnt, afxObject objects[]);
+AFX afxError        _AfxAllocateClassInstancesAt(afxClass* cls, afxUnit base, afxUnit cnt, afxObject objects[]);
+AFX afxError        _AfxDestructObjects(afxClass* cls, afxUnit cnt, afxObject objects[]);
+AFX afxError        _AfxConstructObjects(afxClass* cls, afxUnit cnt, afxObject objects[], void** udd);
 
 AFX afxResult       AfxDeregisterChainedClasses(afxChain* ch);
 AFX afxResult       AfxExhaustChainedClasses(afxChain* ch);
@@ -213,6 +211,6 @@ AFX afxChain*       _AfxGetOrphanClasses(void);
 #   define AfxAssertClass(cls_, fcc_) ((void)(err))
 #endif
 
-AFXINL void* AfxGetObjectExtra(afxObject obj, afxNat pluginId);
+AFXINL void* AfxGetObjectExtra(afxObject obj, afxUnit pluginId);
 
 #endif//AFX_CLASS_H

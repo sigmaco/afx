@@ -69,6 +69,6 @@ AFX_DEFINE_STRUCT(afxWidgetConfig)
     afxResult(*f)(afxWidget, afxUri const*, void *data);
 };
 
-AUX afxError    AfxAcquireWidgets(afxSession ses, afxNat cnt, afxWidgetConfig cfg[], afxWidget widgets[]);
+AUX afxError    AfxAcquireWidgets(afxSession ses, afxUnit cnt, afxWidgetConfig cfg[], afxWidget widgets[]);
 
 #endif//AUX_WIDGET_H

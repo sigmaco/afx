@@ -1,24 +1,10 @@
-<Qwadro>
-    <DrawTechnique>
-        <Pass>
-            <CullMode>BACK</CullMode>
-            <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
-            <VertexShader>//./z/video/uvOutTristripQuad.vsh</VertexShader>
-            
-            <FillMode>SOLID</FillMode>
-            <DepthWriteEnabled></DepthWriteEnabled>
-            <FragmentShader>//./z/video/rgbOutYuvSigma.fsh</FragmentShader>
-        </Pass>
-    </DrawTechnique>
-    <DrawTechnique  id='yFlipped'>
-        <Pass>
-            <CullMode>BACK</CullMode>
-            <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
-            <VertexShader>//./z/video/uvOutTristripQuadInvY.vsh</VertexShader>
-            
-            <FillMode>SOLID</FillMode>
-            <DepthWriteEnabled></DepthWriteEnabled>
-            <FragmentShader>//./z/video/rgbOutYuvSigma.fsh</FragmentShader>
-        </Pass>
-    </DrawTechnique>
-</Qwadro>
+<DrawTechnique>
+    <Pass cullMode='BACK' topology='TRI_STRIP' fillMode='SOLID'>
+        <Shader stage='VERTEX' uri='//./z/video/uvOutTristripQuad.vsh'/>
+        <Shader stage='FRAGMENT' uri='//./z/video/rgbOutYuvSigma.fsh'/>
+    </Pass>
+    <Pass id='yFlipped' cullMode='BACK' topology='TRI_STRIP' fillMode='SOLID'>
+        <Shader stage='VERTEX' uri='//./z/video/uvOutTristripQuadInvY.vsh'/>
+        <Shader stage='FRAGMENT' uri='//./z/video/rgbOutYuvSigma.fsh'/>
+    </Pass>
+</DrawTechnique>

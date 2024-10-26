@@ -22,7 +22,7 @@
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/math/afxSphere.h"
 
-AFX_DEFINE_STRUCT(afxRay)
+AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxRay)
 {
     afxV3d  origin;
     afxV3d  normal; // normalized dir

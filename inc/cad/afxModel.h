@@ -25,46 +25,59 @@
 /// Um ator seria um modelo, assim seria um veículo, ou mesmo uma edificação inteira se essa fossa modelada como uma hierarquia singular.
 /// Um afxModel completo é feito de um afxSkeleton e um conjunto de afxMesh'es, ambos dos quais podem ser acessados diretamente da estrutura do afxModel.
 
-AFX_DEFINE_STRUCT(akxModelBlueprint)
+/// Rigging is the process of connecting a mesh with an internal poseable skeleton rig and bone structure. 
+/// Rigged meshes allow mesh surfaces to rotate and move where internal bones are placed within the model during the modeling process.
+
+typedef enum afxModelFlag
+{
+    afxModelFlag_NONE
+} afxModelFlags;
+
+typedef enum afxMeshRigFlag
+{
+    afxMeshRigFlag_TRANSPLANTED = AFX_BIT(0)
+} afxMeshRigFlags;
+
+AFX_DEFINE_STRUCT(afxModelBlueprint)
 /// Data needed for model assembly
 {
-    afxString32         id;
-    afxSkeleton         skl;
-    afxTransform        displacement;
-    afxNat              rigCnt;
-    afxMesh*            meshes;
+    afxSkeletonBlueprint skl;
+    afxTransform    displacement;
+    afxUnit         rigCnt;
 };
 
-AMX afxBool             AfxGetModelUrn(afxModel mdl, afxString* id);
+AMX afxBool         AfxGetModelUrn(afxModel mdl, afxString* id);
 
-AMX afxSkeleton         AfxGetModelSkeleton(afxModel mdl);
+AMX afxBool         AfxGetModelSkeleton(afxModel mdl, afxSkeleton* skeleton);
 
-AMX void                AfxComputeModelDisplacement(afxModel mdl, afxM4d m);
-AMX void                AfxUpdateModelDisplacement(afxModel mdl, afxTransform const* t);
+AMX void            AfxDisplaceModel(afxModel mdl, afxTransform const* t);
+AMX void            AfxGetModelDisplacement(afxModel mdl, afxTransform* t);
+AMX void            AfxComputeModelDisplacement(afxModel mdl, afxM4d m);
 
-AMX afxNat              AfxCountModelRigs(afxModel mdl);
-AMX afxNat              AfxCountRiggedMeshes(afxModel mdl);
-AMX afxNat              AfxEnumerateRiggedMeshes(afxModel mdl, afxNat baseRig, afxNat rigCnt, afxMesh meshes[]);
-AMX afxError            AfxRigMeshes(afxModel mdl, afxSkeleton origSkl, afxNat baseRig, afxNat rigCnt, afxMesh const meshes[]);
+AMX afxUnit         AfxCountMeshRigs(afxModel mdl);
+AMX afxUnit         AfxCountRiggedMeshes(afxModel mdl);
+AMX afxUnit         AfxGetRiggedMeshes(afxModel mdl, afxUnit baseRigIdx, afxUnit cnt, afxMesh meshes[]);
+AMX afxError        AfxRigMeshes(afxModel mdl, afxUnit baseRigIdx, afxUnit cnt, afxMesh const meshes[], afxSkeleton origSkl);
 
-AMX afxBool             AfxRiggedMeshIsTransplanted(afxModel mdl, afxNat rigIdx);
-AMX afxSkeleton         AfxGetRiggedMeshSkeleton(afxModel mdl, afxNat rigIdx);
+AMX afxBool         AfxIsMeshRigTransplanted(afxModel mdl, afxUnit rigIdx);
+AMX afxBool         AfxGetMeshRigBaseSkeleton(afxModel mdl, afxUnit rigIdx, afxSkeleton* skeleton);
 
-AMX afxMaterial         AfxGetRiggedMeshTxd(afxModel mdl, afxNat rigIdx);
-AMX void                AfxSetRiggedMeshTxd(afxModel mdl, afxNat rigIdx, afxMaterial mtl);
-AMX afxMaterial         AfxFindRiggedMeshMaterial(afxModel mdl, afxNat rigIdx, afxString const* id);
+AMX afxBool         AfxGetMeshRigTxd(afxModel mdl, afxUnit rigIdx, afxMaterial* material);
+AMX void            AfxSetMeshRigTxd(afxModel mdl, afxUnit rigIdx, afxMaterial mtl);
+AMX afxBool         AfxFindMeshRigMaterial(afxModel mdl, afxUnit rigIdx, afxString const* id, afxMaterial* material);
 
-AMX afxNat const*       AfxGetRiggedMeshBiasToJointMapping(afxModel mdl, afxNat rigIdx);
-AMX afxNat const*       AfxGetRiggedMeshBiasFromJointMapping(afxModel mdl, afxNat rigIdx);
+// TODO? Make some kind of binding for these datas to avoid expose/demilitarized/direct access? We can benefit of small integer types.
+AMX afxUnit const*  AfxGetMeshRigBiasToJointMapping(afxModel mdl, afxUnit rigIdx);
+AMX afxUnit const*  AfxGetMeshRigBiasFromJointMapping(afxModel mdl, afxUnit rigIdx);
 
-AMX void                AfxComputeRiggedMeshMatrices(afxModel mdl, afxNat rigIdx, afxPoseBuffer const posb, afxNat baseBias, afxNat jointCnt, afxM4d m[]);
+AMX void            AfxComputeMeshRigMatrices(afxModel mdl, afxUnit rigIdx, afxPoseBuffer const posb, afxUnit baseBiasIdx, afxUnit biasCnt, afxM4d matrices[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError            AfxAssembleModels(afxSimulation sim, afxNat cnt, akxModelBlueprint const blueprints[], afxModel models[]);
+AMX afxUnit         AfxEnumerateModels(afxSimulation sim, afxUnit first, afxUnit cnt, afxModel models[]);
 
-AMX afxNat              AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel models[]);
+AMX void            AfxTransformModels(afxM3d const ltm, afxM3d const iltm, afxReal ltmTol, afxV3d const atv, afxReal atvTol, afxFlags flags, afxUnit cnt, afxModel models[]);
 
-AMX void                AfxTransformModels(afxM3d const ltm, afxM3d const iltm, afxReal ltmTol, afxV3d const atv, afxReal atvTol, afxFlags flags, afxNat cnt, afxModel models[]);
+AMX afxError        AfxAssembleModels(afxSimulation sim, afxSkeleton skl, afxUnit cnt, afxModelBlueprint const blueprints[], afxModel models[]);
 
 #endif//AMX_MODEL_H

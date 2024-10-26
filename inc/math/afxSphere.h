@@ -23,8 +23,8 @@
 
 AFX_DEFINE_STRUCT(afxSphere)
 {
-    afxV3d AFX_SIMD centre;
-    afxReal         radius;
+    afxV3d  centre;
+    afxReal radius;
 };
 
 AFXINL afxSphere* AfxSphereDeploy(afxSphere* sph, afxV3d const centre, afxReal radius);

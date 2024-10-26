@@ -16,16 +16,17 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-/// Command buffers are objects used to record commands which can be subsequently submitted to a device queue for execution. 
-/// There are two levels of command buffers - primary command buffers, which can execute secondary command buffers, and which are submitted to queues, 
-/// and secondary command buffers, which can be executed by primary command buffers, and which are not directly submitted to queues.
-
+/**
+    Command buffers are objects used to record commands which can be subsequently submitted to a device queue for execution. 
+    There are two levels of command buffers - primary command buffers, which can execute secondary command buffers, and which are submitted to queues, 
+    and secondary command buffers, which can be executed by primary command buffers, and which are not directly submitted to queues.
+*/
 /*
-When a pipeline object is bound, any pipeline object state that is not specified as dynamic is applied to the command buffer state.
-Pipeline object state that is specified as dynamic is not applied to the command buffer state at this time.
-Instead, dynamic state can be modified at any time and persists for the lifetime of the command buffer, 
-or until modified by another dynamic state setting command, 
-or made invalid by another pipeline bind with that state specified as static.
+    When a pipeline object is bound, any pipeline object state that is not specified as dynamic is applied to the command buffer state.
+    Pipeline object state that is specified as dynamic is not applied to the command buffer state at this time.
+    Instead, dynamic state can be modified at any time and persists for the lifetime of the command buffer, 
+    or until modified by another dynamic state setting command, 
+    or made invalid by another pipeline bind with that state specified as static.
 */
 
 // COMMAND BATCH --- a group of records processed as a single unit, usually without input from a user.
@@ -81,9 +82,9 @@ typedef enum avxCmdbState
 
 AVX avxCmdbState    AfxGetCmdBufferState(avxCmdb cmdb);
 
-AVX afxNat          AfxGetCmdBufferPort(avxCmdb cmdb);
+AVX afxUnit          AfxGetCmdBufferPort(avxCmdb cmdb);
 
-AVX afxNat          AfxGetCmdBufferPool(avxCmdb cmdb);
+AVX afxUnit          AfxGetCmdBufferPool(avxCmdb cmdb);
 
 AVX afxCmdId        AvxCmdPushDebugScope
 /// Open a command buffer debug label region.
@@ -113,7 +114,7 @@ AVX afxCmdId        AvxCmdInsertDebugLabel
 AVX afxError        AfxRecordCmdBuffers_
 (
     avxCmdbUsage    usage, /// Bitmask specifying usage behavior for command buffer.
-    afxNat          cnt,
+    afxUnit          cnt,
     avxCmdb         buffers[] /// is the handle of the command buffer which is to be put in the recording state.
 );
 
@@ -122,23 +123,23 @@ AVX afxError        AfxRecordCmdBuffers_
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/// AfxAcquireDrawBatches can be used to allocate multiple command buffers.
+/// AfxOpenDrawBatches can be used to allocate multiple command buffers.
 /// If the allocation of any of those command buffers fails, 
 /// the implementation must free all successfully allocated command buffer objects from this command, 
 /// set all entries of the buffers[] array to NIL and return the error.
 
-AVX afxError    AfxAcquireDrawBatches(afxDrawContext dctx, afxNat queIdx, afxNat cnt, avxCmdb batches[]);
+AVX afxError    AfxOpenDrawBatches(afxDrawContext dctx, afxUnit queIdx, afxUnit cnt, avxCmdb batches[]);
 
 /// Start recording a command buffer.
 
-AVX afxError    AfxOpenCmdBuffers(afxDrawInput din, afxNat poolIdx, avxCmdbUsage usage, afxNat cnt, avxCmdb batches[]);
+AVX afxError    AfxOpenCmdBuffers(afxDrawInput din, afxUnit poolIdx, avxCmdbUsage usage, afxUnit cnt, avxCmdb batches[]);
 
 /// Finish recording a command buffer.
 
-AVX afxError    AfxCompileCmdBuffers(afxNat cnt, avxCmdb buffers[]);
+AVX afxError    AfxCompileDrawBatches(afxUnit cnt, avxCmdb buffers[]);
 
 /// 'exhaust' specifies that most or all memory resources currently owned by the command buffer should be returned to the parent command pool. If this flag is not set, then the command buffer may hold onto memory resources and reuse them when recording commands. @cmdb is moved to the initial state.
 
-AVX afxError    AfxRecycleCmdBuffers(afxBool exhaust, afxNat cnt, avxCmdb buffers[]);
+AVX afxError    AfxRecycleCmdBuffers(afxBool exhaust, afxUnit cnt, avxCmdb buffers[]);
 
 #endif//AVX_CMDB_H

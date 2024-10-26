@@ -85,7 +85,7 @@ AFX_DEFINE_STRUCT(auxEvent)
 {
     afxEvent        ev;
     auxEventId      id;
-    afxNat          seat;
+    afxUnit          seat;
     afxWindow       wnd;
     afxWidget       wid;
     afxSize         udd;

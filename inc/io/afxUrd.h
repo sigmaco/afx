@@ -29,7 +29,7 @@ typedef enum afxChunkId
     afxChunkId_NIL,
     afxChunkId_STRUCT,
     afxChunkId_STRING,
-    afxChunkId_EXTENSION,
+    afxChunkId_EXTENSIONS,
     afxChunkId_RW_CAM = 0x05,
     afxChunkId_RW_TEX = 0x06, // RwTexture
     afxChunkId_RW_MTL = 0x07, // RpMaterial
@@ -85,16 +85,16 @@ typedef enum afxChunkId
 
 AFX_DEFINE_STRUCT(afxUrdOrigin)
 {
-    afxNat32    segIdx;
-    afxNat32    offset; // relative to start of segIdx
+    afxUnit32   segIdx;
+    afxUnit32   offset; // relative to start of segIdx
 };
 
 AFX_DEFINE_STRUCT(urdMark)
 {
-    // must be afxNat32[3] to be compatible with RenderWare stream allowing Qwadro features to be skipped as unknown/unsupported chunks.
-    afxNat32        fcc;
-    afxNat32        siz;
-    afxNat32        ver;
+    // must be afxUnit32[3] to be compatible with RenderWare stream allowing Qwadro features to be skipped as unknown/unsupported chunks.
+    afxUnit32       fcc;
+    afxUnit32       siz;
+    afxUnit32       ver;
 };
 
 AFX_DEFINE_STRUCT(urdTrunk)
@@ -103,20 +103,20 @@ AFX_DEFINE_STRUCT(urdTrunk)
     // .hdr.siz = must include all segments.
     // .hdr.ver = still undefined.
     urdMark         hdr;
-    afxNat32        segCnt;
-    afxNat32        baseSegOff; // where is urdSegment[] inside trunk scope.
-    afxNat32        baseStrOff;
-    afxNat32        strLen;
+    afxUnit32       segCnt;
+    afxUnit32       baseSegOff; // where is urdSegment[] inside trunk scope.
+    afxUnit32       baseStrOff;
+    afxUnit32       strLen;
 };
 
 AFX_DEFINE_STRUCT(urdSegment)
 {
-    afxNat32        decSiz; // decoded/uncompressed size
-    afxNat32        decAlign;
-    afxNat32        encSiz; // encoded/compressed size
-    afxNat32        encAlign;
-    afxNat32        codec; // codec used to compress this section
-    afxNat32        start; // where starts the data belonging to this segment.
+    afxUnit32       decSiz; // decoded/uncompressed size
+    afxUnit32       decAlign;
+    afxUnit32       encSiz; // encoded/compressed size
+    afxUnit32       encAlign;
+    afxUnit32       codec; // codec used to compress this section
+    afxUnit32       start; // where starts the data belonging to this segment.
 };
 
 AFX_DEFINE_STRUCT(urdRoot)
@@ -125,32 +125,34 @@ AFX_DEFINE_STRUCT(urdRoot)
     // .hdr.siz = must be exactly sizeof(urdRoot) due its usage as being a file footer hence not allowed to be extended.
     // .hdr.ver = still undefined (Qwadro has not versions)
     urdMark         hdr;
-    afxNat32        trunkFcc;
-    afxNat32        trunkOff;
-    afxNat32        trunkSiz;
-    afxNat32        segBaseOff; // where is urdSegment[] inside trunk scope.
-    afxNat32        segCnt;
-    afxNat32        strBaseOff;
-    afxNat32        strLen;
+    afxUnit32       trunkFcc;
+    afxUnit32       trunkOff;
+    afxUnit32       trunkSiz;
+    afxUnit32       segBaseOff; // where is urdSegment[] inside trunk scope.
+    afxUnit32       segCnt;
+    afxUnit32       strBaseOff;
+    afxUnit32       strLen;
 };
 
 #pragma pack(pop)
 
-AFX afxBool     AfxFetchNextStreamChunk(afxStream in, afxNat32 id, urdMark* hdr);
+AFX afxUnit32   AfxPullStreamChunk(afxStream in, urdMark* hdr);
+
+AFX afxBool     AfxFetchNextStreamChunk(afxStream in, afxUnit32 id, urdMark* hdr);
 
 AFX afxBool     AfxReadNextSeriesHeader(afxStream in, urdMark* hdr);
 AFX afxBool     AfxWriteNextSeriesHeader(afxStream out, urdMark const* hdr);
 
-AFX afxNat      AfxMeasureSerializableExtensions(afxObject obj);
+AFX afxUnit     AfxMeasureSerializableExtensions(afxObject obj);
 AFX afxError    AfxStoreSerializableExtensions(afxStream out, afxObject obj);
 AFX afxError    AfxLoadSerializedExtensions(afxStream in, urdMark const* hdr, afxObject obj);
 AFX afxError    AfxSkipSerializedExtensions(afxStream in, urdMark const* hdr);
 
 
 
-AFX afxBool AfxOpenUrdSegments(afxUrd urd, afxNat firstSeg, afxNat segCnt, afxStream in);
+AFX afxBool AfxOpenUrdSegments(afxUrd urd, afxUnit firstSeg, afxUnit segCnt, afxStream in);
 
-AFX void    AfxCloseUrdSegments(afxUrd urd, afxNat firstSeg, afxNat segCnt);
+AFX void    AfxCloseUrdSegments(afxUrd urd, afxUnit firstSeg, afxUnit segCnt);
 
 AFX void*   AfxResolveUrdReference(afxUrd urd, afxUrdOrigin const* ref);
 

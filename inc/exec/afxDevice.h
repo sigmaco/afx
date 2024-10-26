@@ -70,14 +70,14 @@ AFX_DEFINE_STRUCT(afxDeviceInfo)
     afxString           urn; // device URN
     afxDeviceType       type;
     afxAcceleration     acceleration;
-    afxNat              manifestPagNo;
+    afxUnit              manifestPagNo;
     afxError            (*procCb)(afxDevice,afxThread,void*);
-    afxResult           (*ioctl)(afxDevice dev, afxNat reqCode, va_list args);
+    afxResult           (*ioctl)(afxDevice dev, afxUnit reqCode, va_list args);
 };
 
 AFX_DEFINE_STRUCT(afxDeviceDescription)
 {
-    afxNat32            devId; /// Device ID for Qwadro. This is the same as what is returned from GetDeviceId and GetDeviceIdFromName.
+    afxUnit32            devId; /// Device ID for Qwadro. This is the same as what is returned from GetDeviceId and GetDeviceIdFromName.
     afxString128        name; /// The user-friendly name for the device.
     afxDeviceStatus     stateMask; /// Bitmask used to filter the device based on their state.
     afxBool             isDefault; /// Identify default device. Always false when not supported.
@@ -89,7 +89,7 @@ AFX afxDeviceType       AfxGetDeviceType(afxDevice dev);
 AFX afxDeviceStatus     AfxGetDeviceStatus(afxDevice dev);
 AFX afxAcceleration     AfxGetDeviceAcceleration(afxDevice dev);
 
-AFX afxResult           AfxCallDevice(afxDevice dev, afxNat reqCode, ...);
+AFX afxResult           AfxCallDevice(afxDevice dev, afxUnit reqCode, ...);
 AFX afxError            AfxDoDeviceService(afxDevice dev);
 
 AFX afxClass*           AfxGetFenceClass(afxContext ctx);

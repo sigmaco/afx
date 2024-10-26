@@ -1,0 +1,68 @@
+Booting...
+Acquiring...  Thread Execution Unit 6576 @ afxSystem_w32.c:447Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... Executable And Linkage Module <e2coree.dll>Memory Page Size: 4096HW Threading Capacity: 2Loading... Executable And Linkage Module <e2draw.dll>Loading... Executable And Linkage Module <e2combo.dll>Loading... Executable And Linkage Module <e2sound.dll>Loading... Executable And Linkage Module <e2mmux.dll>Loading... Executable And Linkage Module <//./z/eaxzal1.dll>Loading... Installable Client Driver <//./z//eaxzal1.dll>	<//./amigal1/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/galileo.dll>Loading... Installable Client Driver <//./z//galileo.dll>	<//./combo/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/tarzgl4.dll>Loading... Installable Client Driver <//./z//tarzgl4.dll>	<//./targl3/>("")  0.0.0 	<//./targl4/>("")  0.0.0 Loading... Executable And Linkage Module <//./z/winsh4d.dll>Loading... Installable Client Driver <//./z//winsh4d.dll>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 6576
+Loading... Executable And Linkage Module <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY17) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL32.c:1559
+GL: INVAL_PARAMzglInterop_WGL32.c:1561
+GL: INVAL_PARAMzglInterop_WGL32.c:1659
+GL: INVAL_PARAMzglInterop_WGL32.c:1688
+GL: INVAL_PARAMzglInterop_WGL32.c:1761
+GL: INVAL_PARAMzglInterop_WGL32.c:1764
+GL: INVAL_PARAMzglInterop_WGL32.c:1769
+GL: INVAL_PARAMzglInterop_WGL32.c:1774
+GL: INVAL_PARAMAcquiring...  Thread Execution Unit 0 @ zglDrawBridge.c:1950Reopening... <//./z/video/uvOutTristripQuad.vsh>Reopening... <//./z/video/stdEnv.inc>Reopening... <//./z/video/sampleOutRgba2d.fsh>Entering the Thread Execution Environment 7404
+Starting 7404 on thread execution unit #1...Entering the Thread Execution Environment 6576
+Reopening... <//./z/video/stdEnv.inc>Entering the Thread Execution Environment 7404
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 6576
+afxClass.c:898
+afxClass.c:898
+(cfg->fcc)
+    InvalidafxClass.c:921
+afxClass.c:921
+(cfg->name && cfg->name[0])
+    InvalidMounting... <//./d/>('E:\qwadro\repo\bangitk\tmp'),7afxDrawOutput.c:225
+afxDrawOutput.c:225
+(whd[0])(952) is out of range [1, 253955038]afxDrawOutput.c:226
+afxDrawOutput.c:226
+(whd[1])(506) is out of range [1, 253955093]Window_W32.c:692
+afxWindow.c:186
+afxWindow.c:295
+afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>Reopening... <../art/skybox/purple/right.tga>Entering the Thread Execution Environment 7404
+Hardware-side raster 00621428 ready. 8c1a, 8051, [2048,2048,6]Entering the Thread Execution Environment 6576
+Reopening... <../art/skybox/purple/left.tga>Reopening... <../art/skybox/purple/bottom.tga>Reopening... <../art/skybox/purple/top.tga>Reopening... <../art/skybox/purple/front.tga>Reopening... <../art/skybox/purple/back.tga>Reopening... <../data/pipeline/skybox/skybox.xsh.xml>Entering the Thread Execution Environment 7404
+Hardware-side buffer 028e60f8 ready. 34962, 1, 4Entering the Thread Execution Environment 6576
+../data/pipeline/skybox/skybox.vshNode 'DepthWriteEnabled' not handled.../data/pipeline/skybox/sampleOutRgbaCube.fshReopening... <../data/pipeline/skybox/skybox.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/skybox/sampleOutRgbaCube.fsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../art/skybox/purple/purple.txd>Entering the Thread Execution Environment 7404
+Hardware-side raster 006215d8 ready. de1, 83f0, [2048,2048,1]Entering the Thread Execution Environment 6576
+Reopening... <../tmp/test-txd-dump-tex0.tga>afxUrd.c:295
+afxUrd.c:295
+(hdr->fcc == afxChunkId_EXTENSION)
+    InvalidEntering the Thread Execution Environment 7404
+Hardware-side raster 00621788 ready. de1, 83f0, [2048,2048,1]Entering the Thread Execution Environment 6576
+Reopening... <../tmp/test-txd-dump-tex1.tga>afxUrd.c:295
+afxUrd.c:295
+(hdr->fcc == afxChunkId_EXTENSION)
+    InvalidEntering the Thread Execution Environment 7404
+Hardware-side raster 00621500 ready. de1, 83f0, [2048,2048,1]Entering the Thread Execution Environment 6576
+Reopening... <../tmp/test-txd-dump-tex2.tga>afxUrd.c:295
+afxUrd.c:295
+(hdr->fcc == afxChunkId_EXTENSION)
+    InvalidEntering the Thread Execution Environment 7404
+Hardware-side raster 00621938 ready. de1, 83f0, [2048,2048,1]Entering the Thread Execution Environment 6576
+Reopening... <../tmp/test-txd-dump-tex3.tga>afxUrd.c:295
+afxUrd.c:295
+(hdr->fcc == afxChunkId_EXTENSION)
+    InvalidEntering the Thread Execution Environment 7404
+Hardware-side raster 006216b0 ready. de1, 83f0, [2048,2048,1]Entering the Thread Execution Environment 6576
+Reopening... <../tmp/test-txd-dump-tex4.tga>afxUrd.c:295
+afxUrd.c:295
+(hdr->fcc == afxChunkId_EXTENSION)
+    InvalidEntering the Thread Execution Environment 7404
+Hardware-side raster 00621a10 ready. de1, 83f0, [2048,2048,1]Entering the Thread Execution Environment 6576
+Reopening... <../tmp/test-txd-dump-tex5.tga>afxUrd.c:295
+afxUrd.c:295
+(hdr->fcc == afxChunkId_EXTENSION)
+    InvalidafxUrd.c:295
+afxUrd.c:295
+(hdr->fcc == afxChunkId_EXTENSION)
+    InvalidInstalling watcher <0290dcc8> for 026c2a40...Entering the Thread Execution Environment 7404
+Hardware-side raster 00620ff0 ready. de1, 8058, [952,506,1]Hardware-side raster 00620f18 ready. de1, 81a6, [952,506,1]avxCanvas 028d5590 hardware-side data instanced.Hardware-side buffer 028e61a0 ready. 35345, 2, 10Reopening... <../data/pipeline/skybox/skybox.vsh>Reopening... <../data/pipeline/stdEnv.inc>Reopening... <../data/pipeline/stdView.inc>Reopening... <../data/pipeline/skybox/sampleOutRgbaCube.fsh>Reopening... <../data/pipeline/stdEnv.inc>avxPipeline 026ced68 hardware-side data instanced.Hardware-side sampler 028d28f0 ready.Hardware-side raster 006211a0 ready. de1, 8058, [952,506,1]Hardware-side raster 006210c8 ready. de1, 81a6, [952,506,1]avxCanvas 028d5620 hardware-side data instanced.Hardware-side buffer 028e6440 ready. 35345, 3, 10Hardware-side raster 00621278 ready. de1, 8058, [952,506,1]Hardware-side raster 00621350 ready. de1, 81a6, [952,506,1]avxCanvas 028d56b0 hardware-side data instanced.Hardware-side buffer 028e6638 ready. 35345, 4, 10

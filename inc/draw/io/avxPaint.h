@@ -26,7 +26,7 @@ AFX_DEFINE_STRUCT(avxImmVertex)
 {
     afxV4d      posn; // in RW, W is the reciprocal of homogeneous W; known as RHW.
     afxV2d      uv;
-    afxNat32    col; // emissive color
+    afxUnit32    col; // emissive color
 };
 
 AFX_DEFINE_STRUCT(avxImm3dVertex)
@@ -34,7 +34,7 @@ AFX_DEFINE_STRUCT(avxImm3dVertex)
     afxV3d      pos;
     afxV3d      nrm;
     afxV2d      uv;
-    afxNat32    col;
+    afxUnit32    col;
 };
 
 typedef afxIndex avxVertexIndex;
@@ -52,7 +52,7 @@ AFX_DEFINE_STRUCT(avxGraph)
 
 AVX void        AvxCmdBeginImm2d(avxCmdb cmdb);
 AVX void        AvxCmdEndImm2d(avxCmdb cmdb);
-AVX void        AvxCmdTransformImmVertices(avxCmdb cmdb, afxM4d const m, afxNat cnt, avxImmVertex vertices[]);
+AVX void        AvxCmdTransformImmVertices(avxCmdb cmdb, afxM4d const m, afxUnit cnt, avxImmVertex vertices[]);
 
 AVX void        AvxImmSetColor(avxCmdb cmdb, afxColor const inner, afxColor const outer);
 AVX void        AvxImmBindRasters();
@@ -83,13 +83,13 @@ AVX void AvxGraphRoundedRect(avxGraph* gra, afxV2d pos, afxV2d extent, afxReal c
 AVX void AvxGraphSetFillColor(avxGraph* gra, afxColor const cor);
 
 AVX void AvxGraphRect(avxGraph* gra, afxV2d pos, afxV2d extent);
-AVX afxNat AvxGraphBoxGradient(avxGraph* gra, afxV2d pos, afxV2d extent, afxReal radiusunk, afxReal unk, afxColor src, afxColor dst);
+AVX afxUnit AvxGraphBoxGradient(avxGraph* gra, afxV2d pos, afxV2d extent, afxReal radiusunk, afxReal unk, afxColor src, afxColor dst);
 
 AVX void AvxGraphWinding(avxGraph* gra, afxBool hole);
 
-AVX void AvxGraphFillPaint(avxGraph* gra, afxNat paintId);
+AVX void AvxGraphFillPaint(avxGraph* gra, afxUnit paintId);
 
-AVX afxNat AvxGraphLinearGradient(avxGraph* gra, afxV2d pos, afxV2d extent, afxColor src, afxColor dst);
+AVX afxUnit AvxGraphLinearGradient(avxGraph* gra, afxV2d pos, afxV2d extent, afxColor src, afxColor dst);
 
 AVX void AvxGraphStrokeColor(avxGraph* gra, afxColor cor);
 AVX void AvxGraphStroke(avxGraph* gra);

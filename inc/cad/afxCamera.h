@@ -106,17 +106,17 @@ AVX void            AfxComputeCameraRelativePlanarBases(afxCamera cam, afxBool s
 /// If you pass true, this instructs Qwadro to create non-orthgonal bases such that vertical motion (Y motion) will be mapped to a direction in world space which makes the character appear to move directly upwards on the screen, 
 /// which is actually not the direction orthogonal to perfect horizontal motion (unless the character is at the very center of the screen).
 
-AVX afxBool         AfxProcessCameraInteraction(afxCamera cam, afxNat port, afxReal64 speed, afxReal64 dt);
+AVX afxBool         AfxProcessCameraInteraction(afxCamera cam, afxUnit port, afxReal64 speed, afxReal64 dt);
 
 AVX afxBool         AvxBeginSceneCapture(afxCamera cam);
 AVX afxBool         AvxEndSceneCapture(afxCamera cam);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxNat          AfxEvokeCameras(afxDrawInput din, afxBool(*flt)(afxCamera, void*), void* fdd, afxNat first, afxNat cnt, afxCamera cameras[]);
-AVX afxNat          AfxInvokeCameras(afxDrawInput din, afxNat first, afxNat cnt, afxBool(*f)(afxCamera, void*), void* udd);
-AVX afxNat          AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxCamera cameras[]);
+AVX afxUnit          AfxEvokeCameras(afxDrawInput din, afxBool(*flt)(afxCamera, void*), void* fdd, afxUnit first, afxUnit cnt, afxCamera cameras[]);
+AVX afxUnit          AfxInvokeCameras(afxDrawInput din, afxUnit first, afxUnit cnt, afxBool(*f)(afxCamera, void*), void* udd);
+AVX afxUnit          AfxEnumerateCameras(afxDrawInput din, afxUnit first, afxUnit cnt, afxCamera cameras[]);
 
-AVX afxError        AfxAcquireCameras(afxDrawInput din, afxNat cnt, afxCamera cameras[]);
+AVX afxError        AfxAcquireCameras(afxDrawInput din, afxUnit cnt, afxCamera cameras[]);
 
 #endif//AVX_CAMERA_H

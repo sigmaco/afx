@@ -36,8 +36,10 @@
 #ifndef AVX_GEOMETRY_H
 #define AVX_GEOMETRY_H
 
-#include "qwadro/inc/cad/afxMeshBuilder.h"
+#include "qwadro/inc/cad/afxTriangulation.h"
 #include "qwadro/inc/draw/io/afxVertexStream.h"
+
+#define AVX_MAX_GEOMETRY_ATTRIBUTES 16
 
 /// Vertex data consists of vertex elements combined to form vertex components.
 /// Vertex elements, the smallest unit of a vertex, represent entities such as position, normal, or color.
@@ -77,13 +79,13 @@ typedef enum afxVertexFlag
     afxVertexFlag_NORMALIZED = AFX_BIT(4),
     afxVertexFlag_RASTERIZATION = AFX_BIT(5),
 
-    afxVertexFlag_AFFINE = AFX_BIT(10),
+    afxVertexFlag_ATV = AFX_BIT(10),
     /// affected by affine transformations (ex.: position). Non-delta spatial attributes should receive affine transformations.
 
-    afxVertexFlag_LINEAR = AFX_BIT(11),
+    afxVertexFlag_LTM = AFX_BIT(11),
     /// affected by linear transformations (ex.: tangent, binormal). Delta spatial attributes should receive linear transformations (ex.: normal, tangent/binormal cross).
-
-    afxVertexFlag_LINEAR_INV = AFX_BIT(12),
+    
+    afxVertexFlag_ILTM = AFX_BIT(12),
     /// affected by inverse linear transformations. Non-delta spatial attributes should receive inverse linear transformations (ex.: normal, tangent/binormal cross).
 
     afxVertexFlag_DELTA = AFX_BIT(13), // treat as delta
@@ -91,89 +93,83 @@ typedef enum afxVertexFlag
     afxVertexFlag_RESIDENT = AFX_BIT(14) // allocation for data is resident
 } afxVertexFlags;
 
-AFX_DEFINE_STRUCT(akxVertexCache)
+AFX_DEFINE_STRUCT(avxVertexCache)
 {
     afxLinkage          vbuf;
     avxVertexInput      vin;
     afxBuffer           buf;
     struct
     {
-        afxNat32        base;
-        afxNat32        range;
-        afxNat32        stride;
+        afxUnit32       base;
+        afxUnit32       range;
+        afxUnit32       stride;
     }                   streams[2];
 };
 
 AFX_DEFINE_STRUCT(afxVertexBias)
 {
-    afxNat              pivotIdx;
+    afxUnit             pivotIdx;
     afxReal             weight;
 };
 
-AFX_DEFINE_STRUCT(afxGeometrySpec)
+AFX_DEFINE_STRUCT(afxGeometryInfo)
 {
-    afxNat              vtxCnt;
-    akxVertex const*    vtxSrc;
-    afxNat              vtxSrcStride;
-    afxNat              biasCnt;
-    afxVertexBias const*biasSrc;
-    afxNat              biasSrcStride;
-    afxNat              baseAttrIdx;
-    afxNat              attrCnt;
+    afxUnit             vtxCnt;
+    afxUnit             attrCnt;
+    afxUnit const*      vtxToVtxMap; // vtxCnt
 };
 
-AFX_DEFINE_STRUCT(akxVertexAttrSpec)
+AFX_DEFINE_STRUCT(afxGeometryRow)
 {
     afxVertexFormat     fmt;
     afxVertexFlags      flags;
-    afxChar const*      usage;
+    afxString8          usage;
 };
 
-AVX afxNat              AfxCountVertices(afxGeometry geo);
-AVX afxNat              AkxCountVertexAttributes(afxGeometry geo);
+AVX afxDrawInput        AfxGetGeometryDrawInput(afxGeometry geo);
 
-AVX afxNat              AkxFindVertexAttributes(afxGeometry geo, afxNat cnt, afxString const id[], afxNat attrIdx[]);
+AVX afxError            AfxDescribeGeometry(afxGeometry geo, afxGeometryInfo* info);
+AVX afxError            AfxDescribeGeometryRow(afxGeometry geo, afxUnit attrIdx, afxGeometryRow* info);
 
-AVX afxError            AkxGetVertexAttributeInfo(afxGeometry geo, afxNat attrIdx, afxVertexFormat* fmt, afxString* usage, afxVertexFlags* flags);
+AVX afxUnit             AfxFindGeometryRows(afxGeometry geo, afxUnit cnt, afxString const usages[], afxUnit indices[]);
 
-AVX afxVertexFormat     AkxGetVertexAttributeFormat(afxGeometry geo, afxNat attrIdx);
-AVX afxString           AkxGetVertexAttributeUsage(afxGeometry geo, afxNat attrIdx);
-AVX afxVertexFlags      AkxGetVertexAttributeFlags(afxGeometry geo, afxNat attrIdx);
+AVX afxError            AfxResetGeometry(afxGeometry geo, afxUnit attrIdx, afxVertexFormat fmt, afxVertexFlags flags, afxString const* usage);
 
-AVX void*               AfxExposeGeometry(afxGeometry geo, afxNat attrIdx, afxNat baseVtx);
-AVX afxError            AfxZeroGeometry(afxGeometry geo, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
-AVX afxError            AfxFillGeometry(afxGeometry geo, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void const* src);
-AVX afxError            AfxUpdateGeometry(afxGeometry geo, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void const* src, afxNat32 srcStride);
-AVX afxError            AfxNormalizeGeometry(afxGeometry geo, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
-AVX afxError            AfxInvertNormalizedGeometry(afxGeometry geo, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
+AVX void*               AfxAccessGeometry(afxGeometry geo, afxUnit attrIdx, afxUnit baseVtx);
+AVX afxError            AfxZeroGeometry(afxGeometry geo, afxUnit attrIdx, afxUnit baseVtx, afxUnit vtxCnt);
+AVX afxError            AfxFillGeometry(afxGeometry geo, afxUnit attrIdx, afxUnit baseVtx, afxUnit vtxCnt, void const* src);
+AVX afxError            AfxUpdateGeometry(afxGeometry geo, afxUnit attrIdx, afxUnit baseVtx, afxUnit vtxCnt, void const* src, afxUnit32 srcStride);
+AVX afxError            AfxNormalizeGeometry(afxGeometry geo, afxUnit attrIdx, afxUnit baseVtx, afxUnit vtxCnt);
+AVX afxError            AfxInvertGeometry(afxGeometry geo, afxUnit attrIdx, afxUnit baseVtx, afxUnit vtxCnt);
 
-AVX afxError            AfxUploadGeometry(afxGeometry geo, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, afxStream in, afxNat stride);
-AVX afxError            AfxDownloadGeometry(afxGeometry geo, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, afxStream out, afxNat stride);
+AVX afxError            AfxUploadGeometry(afxGeometry geo, afxUnit attrIdx, afxUnit baseVtx, afxUnit vtxCnt, afxStream in, afxUnit stride);
+AVX afxError            AfxDownloadGeometry(afxGeometry geo, afxUnit attrIdx, afxUnit baseVtx, afxUnit vtxCnt, afxStream out, afxUnit stride);
 
+AVX afxError            AfxBufferizeGeometry(afxGeometry geo, avxVertexCache* vtxCache);
 
 AFX_DEFINE_STRUCT(afxGeometryRegion)
 {
-    afxNat attrIdx;
-    afxNat baseVtx;
-    afxNat vtxCnt;
+    afxUnit attrIdx;
+    afxUnit baseVtx;
+    afxUnit vtxCnt;
 };
 
 AFX_DEFINE_STRUCT(afxGeometryIo)
 {
-    afxNat attrIdx;
-    afxNat baseVtx;
-    afxNat vtxCnt;
-    afxNat rowStride;
+    afxUnit attrIdx;
+    afxUnit baseVtx;
+    afxUnit vtxCnt;
+    afxUnit rowStride;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError            AfxAcquireGeometries(afxDrawInput din, akxVertexAttrSpec const attrSpec[], afxNat cnt, afxGeometrySpec const specs[], afxGeometry datas[]);
+AVX afxError            AfxAcquireGeometries(afxDrawInput din, afxUnit cnt, afxGeometryInfo const specs[], afxGeometry geometries[]);
 
-AVX afxGeometry         AfxBuildGeometry(afxDrawInput din, afxMeshBuilder const* mshb);
+AVX afxGeometry         AfxBuildGeometry(afxDrawInput din, afxTriangulation const* mshb);
 
-AVX void                AfxTransformGeometries(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxBool renormalize, afxNat cnt, afxGeometry geo[]);
+AVX void                AfxTransformGeometries(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxBool renormalize, afxUnit cnt, afxGeometry geo[]);
 
 #endif//AVX_GEOMETRY_H

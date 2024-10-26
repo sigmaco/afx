@@ -22,7 +22,7 @@
 #include "qwadro/inc/draw/afxDrawDefs.h"
 
 #define AFX_BUF_ALIGNMENT 64
-#define AFX_BUF_ALIGN(siz_) AFX_ALIGNED_SIZEOF((siz_), AFX_BUF_ALIGNMENT)
+#define AFX_BUF_ALIGN(siz_) AFX_ALIGNED_SIZE((siz_), AFX_BUF_ALIGNMENT)
 
 typedef enum afxBufferFlags
 {
@@ -43,17 +43,17 @@ typedef enum afxBufferUsage
     afxBufferUsage_INDEX    = AFX_BIT(3), // Can be used as an index buffer; aka IBO.
     afxBufferUsage_UNIFORM  = AFX_BIT(4), // Can be used as a uniform buffer; aka UBO.
     afxBufferUsage_STORAGE  = AFX_BIT(5), // Can be used as a storage buffer; aka SSBO.
-    afxBufferUsage_INDIRECT = AFX_BIT(6), // Can be used as to store indirect command arguments.
-    afxBufferUsage_QUERY    = AFX_BIT(7), // Can be used to capture query results.
-    
-    afxBufferUsage_GRID     = AFX_BIT(8)
+    afxBufferUsage_INDIRECT = AFX_BIT(6), // Can be used as to store indirect command arguments; aka DBO.
+    afxBufferUsage_QUERY    = AFX_BIT(7), // Can be used to capture query results; aka QBO.    
+    afxBufferUsage_MATRIX   = AFX_BIT(8) // Can be used to fetch (usually texels) data; aka TBO.
 } afxBufferUsage;
 
 AFX_DEFINE_STRUCT(afxBufferInfo)
 {
-    afxNat          bufCap; // capacity
+    afxUnit         bufCap; // capacity
     afxBufferUsage  usage;
     afxBufferFlags  flags;
+    avxFormat       fmt; // used for MATRIX/FETCH buffers.
     void*           udd;
 };
 
@@ -61,23 +61,23 @@ AFX_DEFINE_STRUCT(afxBufferCopy)
 {
     afxSize         srcOffset; /// is the starting offset in bytes from the start of srcBuffer.
     afxSize         dstOffset; /// is the starting offset in bytes from the start of dstBuffer.
-    afxNat          range; /// is the number of bytes to copy.
+    afxUnit         range; /// is the number of bytes to copy.
 };
 
 AFX_DEFINE_STRUCT(afxBufferIo)
 {
     afxSize         srcOffset; /// is the starting offset in bytes from the start of srcBuffer.
     afxSize         dstOffset; /// is the starting offset in bytes from the start of dstBuffer.
-    afxNat          srcStride; // [!] only if supported by device, else case it must be 1.
-    afxNat          dstStride; // [!] only if supported by device, else case it must be 1.
-    afxNat          rowCnt; /// is the number of rows to stream in/out.
+    afxUnit         srcStride; // [!] only if supported by device, else case it must be 1.
+    afxUnit         dstStride; // [!] only if supported by device, else case it must be 1.
+    afxUnit         rowCnt; /// is the number of rows to stream in/out.
 };
 
 AVX afxDrawContext  AfxGetBufferContext(afxBuffer buf);
 
 AVX void*           AfxGetBufferUdd(afxBuffer buf);
 
-AVX afxNat          AfxGetBufferCapacity(afxBuffer buf, afxNat from);
+AVX afxUnit          AfxGetBufferCapacity(afxBuffer buf, afxUnit from);
 
 AVX afxBufferUsage  AfxGetBufferUsage(afxBuffer buf);
 AVX afxBufferUsage  AfxTestBufferUsage(afxBuffer buf, afxBufferUsage usage);
@@ -85,17 +85,17 @@ AVX afxBufferUsage  AfxTestBufferUsage(afxBuffer buf, afxBufferUsage usage);
 AVX afxBufferFlags  AfxGetBufferAccess(afxBuffer buf);
 AVX afxBufferFlags  AfxTestBufferAccess(afxBuffer buf, afxBufferFlags access);
 
-AVX afxError        AfxMapBuffer(afxBuffer buf, afxNat offset, afxNat range, afxFlags flags, void** placeholder);
+AVX afxError        AfxMapBuffer(afxBuffer buf, afxUnit offset, afxUnit range, afxFlags flags, void** placeholder);
 AVX void            AfxUnmapBuffer(afxBuffer buf, afxBool wait);
 
-AVX afxError        AfxUploadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIo const ops[], afxStream in, afxNat portId);
-AVX afxError        AfxDownloadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIo const ops[], afxStream out, afxNat portId);
+AVX afxError        AfxUploadBuffer(afxBuffer buf, afxUnit opCnt, afxBufferIo const ops[], afxStream in, afxUnit portId);
+AVX afxError        AfxDownloadBuffer(afxBuffer buf, afxUnit opCnt, afxBufferIo const ops[], afxStream out, afxUnit portId);
 
-AVX afxError        AfxDumpBuffer(afxBuffer buf, afxNat opCnt, afxBufferIo const ops[], void* dst, afxNat portId);
-AVX afxError        AfxUpdateBuffer(afxBuffer buf, afxNat opCnt, afxBufferIo const ops[], void const* src, afxNat portId);
+AVX afxError        AfxDumpBuffer(afxBuffer buf, afxUnit opCnt, afxBufferIo const ops[], void* dst, afxUnit portId);
+AVX afxError        AfxUpdateBuffer(afxBuffer buf, afxUnit opCnt, afxBufferIo const ops[], void const* src, afxUnit portId);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferInfo const infos[], afxBuffer buffers[]);
+AVX afxError        AfxAcquireBuffers(afxDrawContext dctx, afxUnit cnt, afxBufferInfo const infos[], afxBuffer buffers[]);
 
 #endif//AVX_BUFFER_H

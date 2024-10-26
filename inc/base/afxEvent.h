@@ -43,8 +43,8 @@ AFX_DECLARE_STRUCT(afxEvent);
 AFX_DEFINE_STRUCT(afxEvent)
 {
     afxEventId      id;
-    afxNat          siz;
-    afxNat32        tid; // poster
+    afxUnit          siz;
+    afxUnit32        tid; // poster
     //afxBool         posted;
     afxBool         accepted;
     void*           udd[4];
@@ -53,8 +53,8 @@ AFX_DEFINE_STRUCT(afxEvent)
 AFX_DEFINE_STRUCT(afxPostedEvent)
 {
     afxObject       receiver;
-    afxNat          priority;
-    afxNat          siz;
+    afxUnit          priority;
+    afxUnit          siz;
     afxByte         ev[];
 };
 

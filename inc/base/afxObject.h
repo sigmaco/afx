@@ -56,20 +56,20 @@ typedef afxBool (*afxEventFilterFn)(afxObject obj, afxObject watched, afxEvent *
 AFX_DEFINE_STRUCT(afxObjectBase)
 {
     afxFcc              fcc; // OBJ
-    afxClass*           cls;
+    afxObjectFlags      flags;
     afxAtom32           refCnt;
-    afxNat              instIdx; // read-only
-
+    afxUnit32           tid;
+    afxUnit             instIdx; // read-only
+    afxClass*           cls;    
     afxChain            *watchers;
     afxChain            *watching;
     afxBool             (*event)(afxObject obj, afxEvent *ev);
     afxBool             (*eventFilter)(afxObject obj, afxObject watched, afxEvent *ev);
-    afxNat32            tid;
-    afxObjectFlags      flags;
-    
     afxByte*            extra; // plugin data
     afxAddress AFX_SIMD data[];
 };
+
+AFX_STATIC_ASSERT(offsetof(afxObjectBase, data) % 16 == 0, "");
 
 AFX_DEFINE_STRUCT(afxEventFilter)
 {
@@ -80,9 +80,9 @@ AFX_DEFINE_STRUCT(afxEventFilter)
 
 AFX_DEFINE_STRUCT(afxObjectStash)
 {
-    afxNat  cnt;
-    afxNat  siz;
-    afxNat  align;
+    afxUnit cnt;
+    afxUnit siz;
+    afxUnit align;
     void**  var;
 };
 
@@ -90,8 +90,8 @@ AFX void                AfxResetEventHandler(afxObject obj, afxBool(*handler)(af
 AFX void                AfxResetEventFilter(afxObject obj, afxBool(*filter)(afxObject obj, afxObject watched, afxEvent*));
 
 AFX afxBool             AfxNotifyObject(afxObject obj, afxEvent *ev);
-AFX afxError            AfxConnectObjects(afxObject obj, afxNat cnt, afxObject watcheds[]);
-AFX afxError            AfxDisconnectObjects(afxObject obj, afxNat cnt, afxObject watcheds[]);
+AFX afxError            AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]);
+AFX afxError            AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]);
 
 AFX afxResult           AfxTestObjectFcc(afxObject obj, afxFcc fcc);
 AFX afxFcc              AfxGetObjectFcc(afxObject obj);
@@ -103,21 +103,21 @@ AFXINL afxBool          AfxDoesObjectInherit(afxObject obj, afxClass const* cls)
 
 AFX afxInt32            AfxGetRefCount(afxObject obj);
 
-AFX afxNat32            AfxGetObjectTid(afxObject obj);
+AFX afxUnit32            AfxGetObjectTid(afxObject obj);
 
 AFX afxObjectFlags      AfxSetObjectFlags(afxObject obj, afxObjectFlags flags);
 AFX afxObjectFlags      AfxClearObjectFlags(afxObject obj, afxObjectFlags flags);
 AFX afxBool             AfxTestObjectFlags(afxObject obj, afxObjectFlags flags);
 
-AFXINL afxError         AfxAllocateInstanceData(afxObject obj, afxNat cnt, afxObjectStash const stashes[]);
-AFXINL afxError         AfxDeallocateInstanceData(afxObject obj, afxNat cnt, afxObjectStash const stashes[]);
+AFXINL afxError         AfxAllocateInstanceData(afxObject obj, afxUnit cnt, afxObjectStash const stashes[]);
+AFXINL afxError         AfxDeallocateInstanceData(afxObject obj, afxUnit cnt, afxObjectStash const stashes[]);
 
 // %p?%.4s#%i
 #define AfxPushObject(obj_) 0,0,0//(obj_), (obj_) ? AfxGetObjectFccAsString((afxHandle*)obj_) : NIL, (obj_) ? ((afxHandle*)obj_)->refCnt : 0
 
-AFX afxError    AfxAcquireObjects(afxClass* cls, afxNat cnt, afxObject objects[], void const* udd[]);
-AFX afxError    AfxReacquireObjects(afxNat cnt, afxObject objects[]);
-AFX afxBool     AfxReleaseObjects(afxNat cnt, afxObject objects[]);
+AFX afxError    AfxAcquireObjects(afxClass* cls, afxUnit cnt, afxObject objects[], void const* udd[]);
+AFX afxError    AfxReacquireObjects(afxUnit cnt, afxObject objects[]);
+AFX afxBool     AfxReleaseObjects(afxUnit cnt, afxObject objects[]);
 
 #ifndef _AFX_MANAGER_C
 //#   define AfxAcquireObjects(_mgr_,_cnt_,_objects_,_udd_) AfxAcquireObjects((_mgr_),(_cnt_),(afxObject*)(_objects_), ((_udd_)) )
@@ -125,13 +125,13 @@ AFX afxBool     AfxReleaseObjects(afxNat cnt, afxObject objects[]);
 #   define AfxReleaseObjects(_cnt_,_objects_) AfxReleaseObjects((_cnt_),(afxObject*)(_objects_))
 #endif
 
-AFX afxNat      _AfxAssertObjects(afxNat cnt, afxObject const objects[], afxFcc fcc); // returns the number of exceptions (if any); expects valid handles only.
-AFX afxNat      _AfxTryAssertObjects(afxNat cnt, afxObject const objects[], afxFcc fcc); // returns the number of exceptions (if any); ignore nil handles.
-//#define         AfxAssertObjects(_cnt_,_objects_,_fcc_) AfxAssert(((afxResult)(_cnt_)) == _AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))
-#define         AfxTryAssertObjects(_cnt_,_objects_,_fcc_) AfxAssert((!_cnt_) || ((_objects_) && !(_AfxTryAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
-#define         AfxAssertObjects(_cnt_,_objects_,_fcc_)    AfxAssert((!_cnt_) || ((_objects_) && !(_AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
+AFX afxUnit      _AfxAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fcc); // returns the number of exceptions (if any); expects valid handles only.
+AFX afxUnit      _AfxTryAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fcc); // returns the number of exceptions (if any); ignore nil handles.
+//#define         AfxAssertObjects(_cnt_,_objects_,_fcc_) AFX_ASSERT(((afxResult)(_cnt_)) == _AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))
+#define         AfxTryAssertObjects(_cnt_,_objects_,_fcc_) AFX_ASSERT((!_cnt_) || ((_objects_) && !(_AfxTryAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
+#define         AfxAssertObjects(_cnt_,_objects_,_fcc_)    AFX_ASSERT((!_cnt_) || ((_objects_) && !(_AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
 
-AFX afxNat      AfxGetObjectId(afxObject obj);
+AFX afxUnit      AfxGetObjectId(afxObject obj);
 
 AFX afxResult   AfxWaitForObject(afxTime timeout, afxObject obj);
 
