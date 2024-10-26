@@ -22,7 +22,7 @@
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 
-AFX_DEFINE_STRUCT_SIMD(afxRect)
+AFX_DEFINE_STRUCT(afxRect)
 /// Rectangles are used to describe a specified rectangular region of pixels within an image or framebuffer.
 /// Rectangles include both an offset and an extent of the same dimensionality, as described above.
 {
@@ -36,10 +36,10 @@ AFX_DEFINE_STRUCT_SIMD(afxRect)
     };
     union
     {
-        afxNat      extent[2];
+        afxUnit      extent[2];
         struct
         {
-            afxNat  w, h;
+            afxUnit  w, h;
         };
     };
 };
@@ -77,6 +77,8 @@ AVXINL void         AfxZeroRect(afxRect* rc);
 
 AVXINL void         AfxCopyRect(afxRect* rc, afxRect const* src);
 
-AVXINL void         AfxSetRect(afxRect* rc, afxInt x, afxInt y, afxNat w, afxNat h);
+AVXINL void         AfxSetRect(afxRect* rc, afxInt x, afxInt y, afxUnit w, afxUnit h);
+
+AVXINL void         AfxResetViewport(afxViewport* vp, afxReal x, afxReal y, afxReal w, afxReal h, afxReal n, afxReal f);
 
 #endif//AVX_VIEWPORT_H

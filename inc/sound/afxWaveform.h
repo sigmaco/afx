@@ -38,10 +38,10 @@ AFX_DEFINE_HANDLE(afxWaveform);
 
 AFX_DEFINE_STRUCT(asxWaveInfo)
 {
-    afxNat          bps; // bits per sample
-    afxNat          freq; // the sample rate, the number of sample frames played per second. (SPF)
-    afxNat          sampleCnt; // its length, meaning the number of sample frames inside the buffer.
-    afxNat          chanCnt; // the number of channels (1 for mono, 2 for stereo, etc.).
+    afxUnit          bps; // bits per sample
+    afxUnit          freq; // the sample rate, the number of sample frames played per second. (SPF)
+    afxUnit          sampleCnt; // its length, meaning the number of sample frames inside the buffer.
+    afxUnit          chanCnt; // the number of channels (1 for mono, 2 for stereo, etc.).
     void const*     src;
     void*           udd;
 };
@@ -49,39 +49,39 @@ AFX_DEFINE_STRUCT(asxWaveInfo)
 AFX_DEFINE_STRUCT(afxWaveIo)
 /// Especificação de operação de transferência arbitrária de afxWaveform.
 {
-    afxNat              baseCh; // Y
-    afxNat              chCnt; // H layers?
-    afxNat              baseSamp; // Z
-    afxNat              sampCnt; // D
-    afxNat              atT; // X
-    afxNat              dur; // W
+    afxUnit              baseCh; // Y
+    afxUnit              chCnt; // H layers?
+    afxUnit              baseSamp; // Z
+    afxUnit              sampCnt; // D
+    afxUnit              atT; // X
+    afxUnit              dur; // W
 
     afxSize             offset;
-    afxNat              rowStride;
-    afxNat              rowCnt;
+    afxUnit              rowStride;
+    afxUnit              rowCnt;
 };
 
 /// Returns a float representing the sample rate, in samples per second, of the PCM data stored in the buffer.
 ASX afxReal     AsxGetWaveFrequency(afxWaveform wav);
 
 /// Returns an integer representing the length, in sample-frames, of the PCM data stored in the buffer.
-ASX afxNat      AsxGetWaveLength(afxWaveform wav);
+ASX afxUnit      AsxGetWaveLength(afxWaveform wav);
 
 /// Returns a real representing the duration, in seconds, of the PCM data stored in the buffer.
 ASX afxReal     AsxGetWaveDuration(afxWaveform wav);
 
 /// Returns an integer representing the number of discrete audio channels described by the PCM data stored in the buffer.
-ASX afxNat      AsxCountWaveChannels(afxWaveform wav);
+ASX afxUnit      AsxCountWaveChannels(afxWaveform wav);
 
 ASX void*       AsxMapWave(afxWaveform wav);
 ASX void        AsxUnmapWave(afxWaveform wav);
 
 /// The channel number of the current buffer to copy the channel data to.
 /// An optional offset to copy the data to.
-ASX afxError    AsxUpdateWave(afxWaveform wav, afxNat chanIdx, afxNat base, afxNat len, void const* src);
+ASX afxError    AsxUpdateWave(afxWaveform wav, afxUnit chanIdx, afxUnit base, afxUnit len, void const* src);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ASX afxError    AsxAcquireWaves(afxSoundContext sctx, afxNat cnt, asxWaveInfo const info[], afxWaveform buffers[]);
+ASX afxError    AsxAcquireWaves(afxSoundContext sctx, afxUnit cnt, asxWaveInfo const info[], afxWaveform buffers[]);
 
 #endif//ASX_BUFFER_H

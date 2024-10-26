@@ -47,7 +47,7 @@ AFX afxError        AfxAcquireFences
 (
     afxContext ctx, /// the logical device that creates the fence.
     afxBool         signaled, /// fence object is created in the signaled state.
-    afxNat          cnt,
+    afxUnit          cnt,
     afxFence        fences[] /// a array of handles in which the resulting fence objects are returned.
 );
 
@@ -55,15 +55,15 @@ AFX afxError        AfxWaitForFences
 /// Wait for one or more fences to become signaled.
 (
     afxBool         waitAll, /// the condition is that all fences must be signaled, else at least one fence is signaled.
-    afxNat64        timeout, /// the timeout period in units of nanoseconds.
-    afxNat          cnt, /// the number of fences to wait on.
+    afxUnit64        timeout, /// the timeout period in units of nanoseconds.
+    afxUnit          cnt, /// the number of fences to wait on.
     afxFence const  fences[] /// an array of cnt fence handles.    
 );
 
 AFX afxError        AfxResetFences
 /// Resets one or more fence objects.
 (
-    afxNat          cnt, /// the number of fences to reset.
+    afxUnit          cnt, /// the number of fences to reset.
     afxFence const  fences[] /// an array of fence handles to reset.
 );
 

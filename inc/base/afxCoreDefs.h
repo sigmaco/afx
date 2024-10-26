@@ -41,11 +41,50 @@
 #   endif
 #endif//__e2coree__
 
+ // used to access or embed the struct of an handled object.
+#define AFX_OBJECT(handle_) struct handle_##_T
+#define AFX_OBJ(handle_) struct handle_##_T
 
-#define AFX_SIMD AFX_ALIGN(AFX_SIMD_ALIGN) // make SIMD vector alignment
+#define AFX_SIMD_ALIGNMENT 16u
+#define AFX_PTR_ALIGNMENT sizeof(void*)
+#define AFX_DEFAULT_ALIGNMENT AFX_PTR_ALIGNMENT
+
+#define AFX_DEFINE_HANDLE(object) typedef struct object##_T* object
+#define AFX_DEFINE_STRUCT(struct_) typedef struct struct_ struct_; struct struct_ 
+#define AFX_DEFINE_STRUCT_ALIGNED(align_, struct_) typedef struct AFX_ALIGN(align_) struct_ AFX_ALIGN(align_) struct_; struct AFX_ALIGN(align_) struct_ 
+#define AFX_DEFINE_UNION(union_) typedef union union_ union_; union union_ 
+#define AFX_DEFINE_UNION_ALIGNED(align_, union_) typedef  AFX_ALIGN(align_)  union union_ union_ ; union union_ 
+
+#define AFX_DECLARE_STRUCT(struct_) typedef struct struct_ struct_ 
+#define AFX_DECLARE_STRUCT_ALIGN(align_, struct_) typedef struct AFX_ALIGN(align_) struct_ AFX_ALIGN(align_) struct_ 
+#define AFX_DECLARE_UNION(union_) typedef union union_ union_ 
+#define AFX_DECLARE_UNION_ALIGNED(align_, union_) typedef union AFX_ALIGN(align_) union_ AFX_ALIGN(align_) union_ 
+
+#define _AFX_STR(X) #X
+#define AFX_STRINGIFY(X) _AFX_STR(X)
+
+#ifndef offsetof
+#   define offsetof(s,m) ((afxSize)&(((s*)0)->m))
+#endif
+#ifndef ARRAY_SIZE
+#   define ARRAY_SIZE(static_array_) (sizeof(static_array_) / sizeof((static_array_)[0]))
+#endif
+#ifndef countof
+#   define countof ARRAY_SIZE
+#endif
+
+#define AFX_CAST(_type_, _var_) ((_type_)(_var_))
+
+#define AFX_REBASE(link_, type_, entry_) ((type_ *)((void const*)(((afxByte const*)(link_)) - offsetof(type_, entry_))))
+#define AfxRebase(p_,s_,m_) ((s_)(void*)(((afxByte*)p_) - offsetof(s_, m_)))
+
+#ifndef container_of
+#   define container_of AFX_REBASE
+#endif
+
+#define AFX_SIMD AFX_ALIGN(AFX_SIMD_ALIGNMENT) // make SIMD vector alignment
 #define AFX_ADDR  AFX_ALIGN(8) // make machine-dependent pointer alignment
 #define AFX_VLA(type, name, align) type __declspec(align(align)) name
-
 
 #ifdef TRUE
 #   undef TRUE
@@ -56,51 +95,25 @@
 
 #define NIL 0
 
-#define AFX_INVALID_INDEX ((afxNat)(~((afxNat)0)))
-#define AFX_INVALID_INDEX8 ((afxNat8)(~((afxNat8)0)))
-#define AFX_INVALID_INDEX16 ((afxNat16)(~((afxNat16)0)))
-#define AFX_INVALID_INDEX32 ((afxNat32)(~((afxNat32)0)))
-#define AFX_INVALID_INDEX64 ((afxNat64)(~((afxNat64)0)))
+#define AFX_INVALID_INDEX ((afxUnit)(~((afxUnit)0)))
+#define AFX_INVALID_INDEX8 ((afxUnit8)(~((afxUnit8)0)))
+#define AFX_INVALID_INDEX16 ((afxUnit16)(~((afxUnit16)0)))
+#define AFX_INVALID_INDEX32 ((afxUnit32)(~((afxUnit32)0)))
+#define AFX_INVALID_INDEX64 ((afxUnit64)(~((afxUnit64)0)))
 
 AFX_STATIC_ASSERT(AFX_INVALID_INDEX == AFX_N32_MAX, "");
 AFX_STATIC_ASSERT(AFX_INVALID_INDEX8 == AFX_N8_MAX, "");
 AFX_STATIC_ASSERT(AFX_INVALID_INDEX16 == AFX_N16_MAX, "");
 AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 
-#define AFX_BIT_OFFSET(bit_) ((afxNat32)1 << (afxNat32)(bit_)) // get bit offset
+#define AFX_BIT_OFFSET(bit_) ((afxUnit32)1 << (afxUnit32)(bit_)) // get bit offset
 #define AFX_BIT AFX_BIT_OFFSET  // get bit offset
 
 #define AFX_MASK_MIN AFX_BIT(0)
 #define AFX_MASK_MAX AFX_BIT(31)
 #define AFX_MASK_ALL 0xFFFFFFFF
 #define AFX_MASK_NONE 0xFFFFFFFF
-
-
 #define AFX_FORCE_ENUM_N32 0x7fffffff
-
-
-// used to access or embed the struct of an handled object.
-#define AFX_OBJECT(handle_) struct handle_##_T
-#define AFX_OBJ(handle_) struct handle_##_T
-
-#define AFX_DEFINE_HANDLE(object) typedef struct object##_T* object
-#define AFX_DEFINE_STRUCT(struct_) typedef struct struct_ struct_; struct struct_
-#define AFX_DEFINE_STRUCT_SIMD(struct_) typedef struct  struct_  struct_; struct  struct_
-#define AFX_DEFINE_UNION(union_) typedef union union_ union_; union union_
-
-#define AFX_DECLARE_STRUCT(struct_) typedef struct struct_ struct_
-#define AFX_DECLARE_UNION(union_) typedef union union_ union_
-
-////////////////////////////////////////////////////////////////////////////////
-
-#define _AFX_STR(X) #X
-#define AFX_STRINGIFY(X) _AFX_STR(X)
-
-#define AFX_REBASE(link_, type_, entry_) ((type_ *)((void const*)(((afxByte const*)(link_)) - offsetof(type_, entry_))))
-#define AFX_COUNTOF(array_) (sizeof(array_) / sizeof(array_[0]))
-
-#define AfxRebase(p_,s_,m_) ((s_)(void*)(((afxByte*)p_) - ((size_t)&(((s_)0)->m_))))
-#define AfxGetSuperset(obj_,type_,member_) ((type_)(((afxByte*)obj_) - ((size_t)&(((type_)0)->member_))))
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -217,7 +230,6 @@ AFX_DEFINE_HANDLE(afxStorage);
 AFX_DEFINE_HANDLE(afxStringBase);
 AFX_DEFINE_HANDLE(afxIoBridge);
 AFX_DEFINE_HANDLE(afxIoQueue);
-
 AFX_DEFINE_HANDLE(afxShell);
 AFX_DEFINE_HANDLE(afxDrawSystem);
 AFX_DEFINE_HANDLE(afxSoundSystem);
@@ -229,21 +241,18 @@ AFX_DEFINE_UNION(afxUdd)
 {
     void*       p;
     void const* cp;
-    afxNat8     i8;
-    afxNat16    i16;
-    afxNat32    i32;
-    afxNat      i;
-    afxNat8     n8;
-    afxNat16    n16;
-    afxNat32    n32;
-    afxNat      n;
+    afxUnit8     i8;
+    afxUnit16    i16;
+    afxUnit32    i32;
+    afxUnit      i;
+    afxUnit8     n8;
+    afxUnit16    n16;
+    afxUnit32    n32;
+    afxUnit      n;
     afxReal32   f32;
     afxReal64   f64;
     afxReal     f;
 };
-
-
-
 
 #define AFX_FUNC( _type, _name ) _type _CALL _name // Declare a function
 #define AFX_EXTERN_FUNC( _type, _name ) extern _type  _name // // Declare an extern function
@@ -251,7 +260,7 @@ AFX_DEFINE_UNION(afxUdd)
 #define AFX_CALLBACK( _type, _name ) typedef _type (*_name ) // Declare a callback function type
 
 
-typedef afxNat aaxGameObjectId;
+typedef afxUnit aaxGameObjectId;
 
 AFX_DEFINE_STRUCT(afxCallbackInfo) // Callback information structure used as base for all notifications handled by CallbackFunc.
 {
@@ -274,14 +283,14 @@ AFX_CALLBACK(void, afxCallbackFunc) // Function called on completion of an event
 // longer than intended. The "in_uExecutionTimeUsec" should be considered a suggestion or guideline, not a strict rule.
 // A value of 0 means that the function will run until there are no more jobs ready to be immediately executed.
 
-typedef afxNat aaxPluginId;
-typedef afxNat aaxPlayingId;
-typedef afxNat aaxUniqueId;
+typedef afxUnit aaxPluginId;
+typedef afxUnit aaxPlayingId;
+typedef afxUnit aaxUniqueId;
 
 
 
-AFX afxNat AfxFlagsFindLsb(afxFlags mask);
-AFX afxNat AfxFlagsFindMsb(afxFlags mask);
+AFX afxUnit AfxFlagsFindLsb(afxFlags mask);
+AFX afxUnit AfxFlagsFindMsb(afxFlags mask);
 
 #define AfxTestBitPosition(mask_,bit_) ((mask_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
 #define AfxTestBitEnabled(mask_,bit_) (((mask_)>>(bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
@@ -291,8 +300,10 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 #define AfxFlagsMark(_var_,_mask_) (((afxFlags)(_var_)) |= ((afxFlags)(_mask_)))
 #define AfxFlagsClear(_var_,_mask_) (((afxFlags)(_var_)) &= ~((afxFlags)(_mask_)))
 
-#define AfxIndexIsInvalid(_var_) ((_var_) == AFX_INVALID_INDEX)
-#define AfxIsAligned(ptr_, byteCnt_) (((uintptr_t)(const void *)((afxSize)ptr_)) % (byteCnt_) == 0)
+#define AFX_IS_ALIGNED(ptr_, alignment_) (((uintptr_t)(ptr_) % (alignment_)) == 0)
+
+#define AfxIsIndexInvalid(_var_) (((afxIndex)(_value_)) == AFX_INVALID_INDEX) 
+#define AfxIsAnValidIndex(_value_) (((afxIndex)(_value_)) != AFX_INVALID_INDEX) 
 
 #define AfxAbs(x_) ((0 > (x_)) ? -(x_) : (x_))
 #define AfxAbsf(x_) ((0 > (afxReal)(x_)) ? -(afxReal)(x_) : (afxReal)(x_))
@@ -308,12 +319,12 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 #define AfxMinf(a_,b_) AfxMin((afxReal)(a_),(afxReal)(b_))
 #define AfxMinf64(a_,b_) AfxMin((afxReal64)(a_),(afxReal64)(b_))
 #define AfxMini(a_,b_) AfxMin((afxInt)(a_),(afxInt)(b_))
-#define AfxMinu(a_,b_) AfxMin((afxNat)(a_),(afxNat)(b_))
+#define AfxMinu(a_,b_) AfxMin((afxUnit)(a_),(afxUnit)(b_))
 
 #define AfxMaxf(a_,b_) AfxMax((afxReal)(a_),(afxReal)(b_))
 #define AfxMaxf64(a_,b_) AfxMax((afxReal64)(a_),(afxReal64)(b_))
 #define AfxMaxi(a_,b_) AfxMax((afxInt)(a_),(afxInt)(b_))
-#define AfxMaxu(a_,b_) AfxMax((afxNat)(a_),(afxNat)(b_))
+#define AfxMaxu(a_,b_) AfxMax((afxUnit)(a_),(afxUnit)(b_))
 
 #define AfxAtLeast(var_,min_) 
 
@@ -332,6 +343,6 @@ AFXINL afxReal  AfxRandomReal2(afxReal mini, afxReal maxi);
 #define AfxFind(first_,last_,val_) _AfxFind(first_, last_, sizeof(val_), &val_)
 AFX void const* _AfxFind(void const* first, void const* last, afxSize unitSiz, void const* val);
 
-AFX void AfxAccumulateCrc32(afxNat32 *crc, void const* data, afxSize len);
+AFX void AfxAccumulateCrc32(afxUnit32 *crc, void const* data, afxSize len);
 
 #endif//AFX_CORE_DEFS_H

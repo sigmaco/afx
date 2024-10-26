@@ -22,7 +22,7 @@
 
 AFX_DEFINE_STRUCT(afxResident)
 {
-    afxNat      unitIdx;
+    afxUnit      unitIdx;
     afxObject   obj;
     void*       data;
 };
@@ -32,10 +32,10 @@ AFX_DEFINE_STRUCT(afxResidency)
     _AFX_DBG_FCC
     afxSlock    lock;
     afxBool     locked;
-    afxNat      unitsPerPage;
-    afxNat      dataUnitSiz;
-    afxNat      totalUsedCnt;
-    afxNat      pageCnt;
+    afxUnit      unitsPerPage;
+    afxUnit      dataUnitSiz;
+    afxUnit      totalUsedCnt;
+    afxUnit      pageCnt;
     afxByte**   pages;
     afxMmu   mem;
     void        (*dtor)(afxResident *resident);
@@ -43,17 +43,17 @@ AFX_DEFINE_STRUCT(afxResidency)
     void*       udd;
 };
 
-AFX void        AfxAcquireResidency(afxResidency* hdlr, afxNat dataUnitSiz, afxNat unitsPerPage);
+AFX void        AfxAcquireResidency(afxResidency* hdlr, afxUnit dataUnitSiz, afxUnit unitsPerPage);
 AFX void        AfxReleaseResidency(afxResidency* hdlr);
 
-AFX afxNat      AfxGetObjectsResidency(afxNat cnt, afxObject obj[], void *data[], afxResidency* hdlr);
-AFX afxError    AfxAllocateObjects(afxNat cnt, afxObject obj[], afxResidency* hndl);
-AFX afxError    AfxDeallocateObjects(afxNat cnt, afxObject obj[], afxResidency* hndl);
-AFX afxNat      AfxFindObjectsResidency(afxNat cnt, afxObject obj[], afxNat unitIdx[], afxResidency* hndl);
+AFX afxUnit      AfxGetObjectsResidency(afxUnit cnt, afxObject obj[], void *data[], afxResidency* hdlr);
+AFX afxError    AfxAllocateObjects(afxUnit cnt, afxObject obj[], afxResidency* hndl);
+AFX afxError    AfxDeallocateObjects(afxUnit cnt, afxObject obj[], afxResidency* hndl);
+AFX afxUnit      AfxFindObjectsResidency(afxUnit cnt, afxObject obj[], afxUnit unitIdx[], afxResidency* hndl);
 
-AFX afxNat      AfxEnumerateResidentObjects(afxResidency* hdlr, afxNat first, afxNat cnt, afxObject obj[]);
-AFX afxNat      AfxInvokeResidentObjects(afxResidency* hndl, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void* udd), void *udd);
+AFX afxUnit      AfxEnumerateResidentObjects(afxResidency* hdlr, afxUnit first, afxUnit cnt, afxObject obj[]);
+AFX afxUnit      AfxInvokeResidentObjects(afxResidency* hndl, afxUnit first, afxUnit cnt, afxBool(*f)(afxObject obj, void* udd), void *udd);
 
-AFX afxNat      AfxGetResidencyCount(afxResidency* hndl);
+AFX afxUnit      AfxGetResidencyCount(afxResidency* hndl);
 
 #endif//AFX_HANDLING_H

@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
- // This code is part of SIGMA A4D <https://sigmaco.org/a4d>
+// This code is part of SIGMA A4D <https://sigmaco.org/a4d>
 
 #ifndef ASX_SOUND_BRIDGE_H
 #define ASX_SOUND_BRIDGE_H
@@ -24,17 +24,17 @@
 AFX_DEFINE_STRUCT(afxSoundBridgeConfig)
 {
     afxFlags            flags;
-    afxNat              portIdx;
-    afxNat              queueCnt;
+    afxUnit              portIdx;
+    afxUnit              queueCnt;
     afxReal const*      queuePriority;
 };
 
 
 AFX_DEFINE_STRUCT(asxSubmission)
 {
-    afxNat              portIdx;
-    afxNat              baseQueIdx;
-    afxNat              queCnt;
+    afxUnit              portIdx;
+    afxUnit              baseQueIdx;
+    afxUnit              queCnt;
 
     afxFlags            flags;
     afxSemaphore        waitSems;
@@ -44,17 +44,17 @@ AFX_DEFINE_STRUCT(asxSubmission)
 
 AFX_DEFINE_STRUCT(asxFlush)
 {
-    afxNat              portIdx;
-    afxNat              baseQueIdx;
-    afxNat              queCnt;
+    afxUnit              portIdx;
+    afxUnit              baseQueIdx;
+    afxUnit              queCnt;
     afxSemaphore        wait;
 };
 
 AFX_DEFINE_STRUCT(asxTransference)
 {
-    afxNat              portIdx;
-    afxNat              baseQueIdx;
-    afxNat              queCnt;
+    afxUnit              portIdx;
+    afxUnit              baseQueIdx;
+    afxUnit              queCnt;
 
     afxSemaphore        wait;
     afxSemaphore        signal;
@@ -63,7 +63,7 @@ AFX_DEFINE_STRUCT(asxTransference)
     afxFcc              srcFcc;
     afxFcc              dstFcc;
     afxCodec            codec;
-    afxNat              decSiz;
+    afxUnit              decSiz;
 
     union
     {
@@ -96,11 +96,11 @@ AFX_DEFINE_STRUCT(asxTransference)
 ASX afxSoundDevice      AfxGetSoundBridgeDevice(afxSoundBridge sdge);
 ASX afxSoundContext     AfxGetSoundBridgeContext(afxSoundBridge sdge);
 
-ASX afxNat              AfxGetSoundBridgePort(afxSoundBridge sdge);
+ASX afxUnit              AfxGetSoundBridgePort(afxSoundBridge sdge);
 
-ASX afxNat              _AsxSubmitSoundCommands(afxSoundBridge sdge, asxSubmission const* ctrl, afxNat cnt, asxTracker trackers[]);
-ASX afxNat              _AsxSubmitTransferences(afxSoundBridge sdge, asxTransference const* ctrl, afxNat opCnt, void const* ops);
-ASX afxNat              _AsxSubmitSoundOutputFlushes(afxSoundBridge sdge, asxFlush const* ctrl, afxNat cnt, afxSoundOutput outputs[], afxNat const bufIdx[]);
+ASX afxUnit              _AsxSubmitSoundCommands(afxSoundBridge sdge, asxSubmission const* ctrl, afxUnit cnt, asxTracker trackers[]);
+ASX afxUnit              _AsxSubmitTransferences(afxSoundBridge sdge, asxTransference const* ctrl, afxUnit opCnt, void const* ops);
+ASX afxUnit              _AsxSubmitSoundOutputFlushes(afxSoundBridge sdge, asxFlush const* ctrl, afxUnit cnt, afxSoundOutput outputs[], afxUnit const bufIdx[]);
 
 
 

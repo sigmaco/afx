@@ -20,25 +20,28 @@
 #include "qwadro/inc/base/afxCoreDefs.h"
 #include "qwadro/inc/base/afxDebug.h"
 
-/// A Queue is a linear structure that follows a particular order in which the operations are performed. 
-/// The order is First In First Out (FIFO). 
-/// A good example of a queue is any queue of consumers for a resource where the consumer that came first is served first. 
-/// The difference between stacks and queues is in removing. In a stack we remove the item the most recently added; in a queue, we remove the item the least recently added.
+/**
+    A queue is a linear structure that follows a particular order in which the operations are performed. 
+    The order is First In First Out (FIFO). 
+    A good example of a queue is any queue of consumers for a resource where the consumer that came first is served first. 
+    The difference between stacks and queues is in removing. In a stack we remove the item the most recently added; in a queue, 
+    we remove the item the least recently added.
 
-/// Thread safe se apenas um thread insere e apenas um outro remove.
+    Thread safe se apenas um thread insere e apenas um outro remove.
+*/
 
 AFX_DEFINE_STRUCT(afxQueue)
 {
-    afxNat      head;
-    afxNat      tail;
-    afxNat      cap;
-    afxNat      unitSiz;
+    afxUnit      head;
+    afxUnit      tail;
+    afxUnit      cap;
+    afxUnit      unitSiz;
     afxByte*    bytemap;
 };
 
 AFXINL afxError AfxCleanUpQueue(afxQueue* que);
-AFXINL afxError AfxSetUpQueue(afxQueue* que, afxNat unitSiz, afxNat cap);
-AFXINL afxError AfxWrapQueue(afxQueue* que, afxNat unitSiz, afxNat cap, afxByte* bytemap);
+AFXINL afxError AfxSetUpQueue(afxQueue* que, afxUnit unitSiz, afxUnit cap);
+AFXINL afxError AfxWrapQueue(afxQueue* que, afxUnit unitSiz, afxUnit cap, afxByte* bytemap);
 
 /// Remove, also called deque or pop, this removes the oldest element from the queue.
 AFXINL afxError AfxPopQueue(afxQueue* que);

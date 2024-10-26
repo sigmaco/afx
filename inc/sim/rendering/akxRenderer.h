@@ -20,7 +20,6 @@
 #define RENDERER_H
 
 #include "qwadro/inc/sim/afxBody.h"
-#include "qwadro/inc/sim/rendering/akxSky.h"
 
 // clustered rendering entity
 AFX_DEFINE_HANDLE(afxRenderable);
@@ -43,15 +42,9 @@ AFX_DEFINE_STRUCT(akxProto)
 
 AFX_DEFINE_STRUCT(akxPlacement)
 {
-    afxNat          id;
+    afxUnit          id;
     afxTransform    t;
 };
-
-AMX afxError AkxRegisterPrototype(afxNat* protoId, afxString const* name, afxUri const* mdd, afxUri const* txd, afxUri const* and);
-
-AMX afxError AkxSpawnEntity(afxNat protoId, afxTransform const* t);
-
-AMX afxError AkxSpawnAnimatedEntity(afxNat protoId, afxTransform const* t);
 
 AFX_DEFINE_STRUCT(akxViewConstants) // frame
 {
@@ -83,7 +76,7 @@ AFX_DEFINE_STRUCT(akxMaterialConstants)
     afxReal Ns; // specular color is weighted by the specular exponent Ns. Ranges between [0...1000].
     afxReal d; // dissolution. 1.0 means fully opaque.
     afxReal Ni; // index of refraction
-    afxNat  illum; // illumination model. 0 = diffuse color, 1 = diffuse color and ambient, etc.
+    afxUnit  illum; // illumination model. 0 = diffuse color, 1 = diffuse color and ambient, etc.
     afxBool hasDiffTex;
     afxBool hasSpecTex;
 };
@@ -109,8 +102,8 @@ AFX_OBJECT(akxRenderer)
     afxCamera           activeCam;
     afxRect             drawArea;
     avxCanvas           canv;
-    afxNat              frameCnt;
-    afxNat              frameIdx;
+    afxUnit              frameCnt;
+    afxUnit              frameIdx;
     struct
     {
         akxViewConstants    viewConstants;
@@ -126,10 +119,7 @@ AFX_OBJECT(akxRenderer)
 
     //afxM4d              p;
     //afxFrustum          viewVolume;
-    afxArray            capturedNodes; // akxNode
-
-    akxSky                  sky;
-    afxBool                 skyEnabled;
+    afxArray            capturedNodes; // afxNode
 
     avxPipeline         wirePip;
     afxBool             drawVolumes;
@@ -171,21 +161,20 @@ for each view {
 }
 #endif
 
+AMX afxError AkxRegisterPrototype(afxUnit* protoId, afxString const* name, afxUri const* mdd, afxUri const* txd, afxUri const* and);
+
+AMX afxError AkxSpawnEntity(afxUnit protoId, afxTransform const* t);
+
+AMX afxError AkxSpawnAnimatedEntity(afxUnit protoId, afxTransform const* t);
+
 AMX afxError    AkxCmdBeginSceneRendering(avxCmdb cmdb, akxRenderer rnd, afxCamera cam, afxRect const* drawArea, avxCanvas canv);
 AMX afxError    AkxCmdEndSceneRendering(avxCmdb cmdb, akxRenderer rnd);
 
 AMX afxError    AfxRendererSetStar(akxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
 
-AMX afxError    AkxCmdDrawBodies(avxCmdb cmdb, akxRenderer rnd, afxReal dt, afxNat cnt, afxBody bodies[]);
+AMX afxError    AkxCmdDrawBodies(avxCmdb cmdb, akxRenderer rnd, afxReal dt, afxUnit cnt, afxBody bodies[]);
 
 AMX afxError    AkxCmdDrawTestIndexed(avxCmdb cmdb, akxRenderer rnd);
-
-
-AMX afxError    AfxBufferizeMesh(afxDrawInput din, afxMesh msh);
-
-AMX afxError    AkxBufferizeVertexData(afxDrawInput din, afxGeometry vtd);
-
-AMX afxError    AkxCmdBindVertexDataCache(avxCmdb cmdb, afxNat slotIdx, afxGeometry vtd);
 
 AMX afxError    AkxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation sim, avxCmdb cmdb);
 
@@ -193,9 +182,9 @@ AMX afxError    AkxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulati
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError    AkxAcquireRenderers(afxSimulation sim, afxNat cnt, akxRenderer rnd[], akxRendererConfig const config[]);
+AMX afxError    AkxAcquireRenderers(afxSimulation sim, afxUnit cnt, akxRenderer rnd[], akxRendererConfig const config[]);
 
 
-AMX void        AkxCmdRequestModel(afxSimulation sim, afxNat id);
+AMX void        AkxCmdRequestModel(afxSimulation sim, afxUnit id);
 
 #endif//RENDERER_H

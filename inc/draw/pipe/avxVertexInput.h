@@ -16,8 +16,10 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-/// When the vertex stage is present in a pipeline, the vertex shader input variables form an interface with the vertex input attributes.
-/// All vertex shader inputs declared must have a corresponding attribute and binding in the pipeline.
+/**
+    When the vertex stage is present in a pipeline, the vertex shader input variables form an interface with the vertex input attributes.
+    All vertex shader inputs declared must have a corresponding attribute and binding in the pipeline.
+*/
 
 #ifndef AVX_VERTEX_INPUT_H
 #define AVX_VERTEX_INPUT_H
@@ -26,27 +28,27 @@
 
 AFX_DEFINE_STRUCT(avxVertexInputAttr)
 {
-    afxNat                  location;
-    afxNat                  streamIdx;
-    afxNat32                offset;
+    afxUnit                  location;
+    afxUnit                  streamIdx;
+    afxUnit32                offset;
     afxVertexFormat         fmt;
     afxBool                 normalized;
 };
 
 AFX_DEFINE_STRUCT(avxVertexInputStream)
 {
-    afxNat                  slotIdx;
-    //afxNat32                stride;
-    afxNat                  instanceRate; // 0
+    afxUnit                  slotIdx;
+    //afxUnit32                stride;
+    afxUnit                  instanceRate; // 0
 };
 
-AVX afxNat              AfxCountVertexInputStreams(avxVertexInput vin);
-AVX afxNat              AfxCountVertexInputAttributes(avxVertexInput vin);
+AVX afxUnit              AfxCountVertexInputStreams(avxVertexInput vin);
+AVX afxUnit              AfxCountVertexInputAttributes(avxVertexInput vin);
 
-AVX afxNat              AfxMeasureVertexInputStream(avxVertexInput vin, afxNat streamIdx);
+AVX afxUnit              AfxMeasureVertexInputStream(avxVertexInput vin, afxUnit streamIdx);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX avxVertexInput      AfxAcquireVertexInput(afxDrawContext dctx, afxNat streamCnt, avxVertexInputStream const streams[], afxNat attrCnt, avxVertexInputAttr const attrs[]);
+AVX avxVertexInput      AfxAcquireVertexInput(afxDrawContext dctx, afxUnit streamCnt, avxVertexInputStream const streams[], afxUnit attrCnt, avxVertexInputAttr const attrs[]);
 
 #endif//AVX_VERTEX_INPUT_H

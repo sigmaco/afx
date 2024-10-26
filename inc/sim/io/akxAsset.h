@@ -60,88 +60,88 @@
 
 AFX_DEFINE_STRUCT(_afxStrChunk)
 {
-    afxNat  len;
+    afxUnit  len;
     afxSize start;
 };
 
 AFX_DEFINE_STRUCT(_afxTxdChunk)
 {
-    afxNat  texCnt;
-    afxNat  texUrns;
+    afxUnit  texCnt;
+    afxUnit  texUrns;
 };
 
 AFX_DEFINE_STRUCT(_afxMddFileData)
 /// Modelling diagram dictionary
 {
-    afxNat  mdlCnt;
+    afxUnit  mdlCnt;
     afxSize mdlDirBaseOffset;
-    afxNat  sklCnt;
+    afxUnit  sklCnt;
     afxSize sklDirBaseOffset;
-    afxNat  mshCnt;
+    afxUnit  mshCnt;
     afxSize mshDirBaseOffset;
-    afxNat  mshtCnt;
+    afxUnit  mshtCnt;
     afxSize mshtDirBaseOffset;
-    afxNat  vtdCnt;
+    afxUnit  vtdCnt;
     afxSize vtdDirBaseOffset;
 };
 
 AFX_DEFINE_STRUCT(_afxMtdFileData)
 /// Material template dictionary
 {
-    afxNat  mtlCnt;
+    afxUnit  mtlCnt;
     afxSize mtlDirBaseOffset;
-    afxNat  texCnt;
+    afxUnit  texCnt;
     afxSize texDirBaseOffset;
 };
 
 AFX_DEFINE_STRUCT(_afxSerializedChunk)
 {
     afxFcc          fcc;
-    afxNat          len;
-    //afxNat          cnt; // if nested it is more than 1; // variable length of instances did it unusable
+    afxUnit          len;
+    //afxUnit          cnt; // if nested it is more than 1; // variable length of instances did it unusable
 };
 
 AFX_DEFINE_STRUCT(_afxSerializedMdl)
 {
     afxString       name;
-    afxNat          sklIdx;
+    afxUnit          sklIdx;
     afxTransform    init;
-    afxNat          mshCnt;
-    // followed by sizeof(afxNat mshIdx[mshCnt]);
+    afxUnit          mshCnt;
+    // followed by sizeof(afxUnit mshIdx[mshCnt]);
 };
 
 AFX_DEFINE_STRUCT(_afxSerializedMsh)
 {
     afxString       name;
-    afxNat          vtdIdx;
-    afxNat          mshtIdx;
-    afxNat          mtlCnt;
-    afxNat          pivotCnt;
-    // followed by sizeof(afxNat pivotNameStrIdx[pivotCnt]);
+    afxUnit          vtdIdx;
+    afxUnit          mshtIdx;
+    afxUnit          mtlCnt;
+    afxUnit          pivotCnt;
+    // followed by sizeof(afxUnit pivotNameStrIdx[pivotCnt]);
 };
 
 AFX_DEFINE_STRUCT(_afxSerializedMsht)
 {
-    afxNat          triCnt;
-    afxNat          surCnt;
+    afxUnit          triCnt;
+    afxUnit          surCnt;
     afxSize         firstTriOffset;
     afxSize         firstSurOffset;
-    // followed by sizeof(afxMeshSurface surfs[surCnt]);
-    // followed by sizeof(afxNat tris[triCnt]);
+    // followed by sizeof(afxMeshSection surfs[surCnt]);
+    // followed by sizeof(afxUnit tris[triCnt]);
 };
 
 AFX_DEFINE_STRUCT(_afxSerializedVtxa)
 {
-    afxNat          biasCnt;
-    afxNat          vtxCnt;
-    afxNat          attrCnt;
+    afxUnit          biasCnt;
+    afxUnit          vtxCnt;
+    afxUnit          attrCnt;
 };
 
 AFX_DEFINE_STRUCT(_afxSerializedVtd)
 {
-    afxNat          biasCnt;
-    afxNat          vtxCnt;
-    afxNat          attrCnt;
+    afxUnit          biasCnt;
+    afxUnit          vtxCnt;
+    afxUnit          attrCnt;
     afxSize         firstBiasOffset;
     afxSize         firstVtxOffset;
     // followed by sizeof(afxVertexBias biases[surCnt]);
@@ -151,29 +151,29 @@ AFX_DEFINE_STRUCT(_afxSerializedVtd)
 AFX_DEFINE_STRUCT(_afxSerializedSkl)
 {
     afxString name;
-    afxNat lodType;
-    afxNat jointCnt;
+    afxUnit lodType;
+    afxUnit jointCnt;
     afxSize firstBoneOffset;
     afxSize firstBoneNameOfffset;
-    // followed by sizeof(afxNat lt[boneCnt]);
-    // followed by sizeof(afxNat iw[boneCnt]);
-    // followed by sizeof(afxNat parIdx[boneCnt]);
-    // followed by sizeof(afxNat lodErr[boneCnt]);
+    // followed by sizeof(afxUnit lt[boneCnt]);
+    // followed by sizeof(afxUnit iw[boneCnt]);
+    // followed by sizeof(afxUnit parIdx[boneCnt]);
+    // followed by sizeof(afxUnit lodErr[boneCnt]);
     // followed by sizeof(afxString boneNames[boneCnt]);
 };
 #pragma pack(pop)
 
 AFX_DEFINE_STRUCT(afxAssertReference)
 {
-    afxNat              type;
+    afxUnit              type;
     afxUri const*       file;
 };
 
 AFX_DEFINE_STRUCT(afxCadToolInfo)
 {
     afxString const*    name; // from art tool name
-    afxNat              majorRev;
-    afxNat              minorRev;
+    afxUnit              majorRev;
+    afxUnit              minorRev;
     afxV3d              right; // X-vector (aka right) of art tool.
     afxV3d              up; // Y-vector (aka up) of art tool.
     afxV3d              at; // Z-vector (aka at) of art tool.
@@ -185,10 +185,10 @@ AFX_DEFINE_STRUCT(afxCadToolInfo)
 AFX_DEFINE_STRUCT(afxCadExporterInfo)
 {
     afxString const*    name;
-    afxNat              majorRev;
-    afxNat              minorRev;
-    afxNat              customization;
-    afxNat              buildNum;
+    afxUnit              majorRev;
+    afxUnit              minorRev;
+    afxUnit              customization;
+    afxUnit              buildNum;
     void*               udd;
 };
 
@@ -214,53 +214,53 @@ AFX_OBJECT(akxAsset)
     afxCadToolInfo*     toolInfo;
     afxCadExporterInfo* exporterInfo;
 
-    afxNat              resCap;
+    afxUnit              resCap;
     afxResourceSlot*    resSlots;
     struct
     {
         afxFcc          fcc;
-        afxNat          baseResIdx;
-        afxNat          resCnt;
+        afxUnit          baseResIdx;
+        afxUnit          resCnt;
     }                  *nests;
-    afxNat              nestCnt;
+    afxUnit              nestCnt;
 };
 
 AFX_DEFINE_STRUCT(akxAssetBuilder)
 {
-    void(*GetInfo)(void* data, afxNat *typeCnt, afxNat* resCnt, afxUri* name);
-    void(*GetTypeInfo)(void* data, afxNat setIdx, afxFcc* resType, afxNat* resCnt);
-    void*(*GetResourceInfo)(void* data, afxFcc type, afxNat resIdx, afxUri* name);
+    void(*GetInfo)(void* data, afxUnit *typeCnt, afxUnit* resCnt, afxUri* name);
+    void(*GetTypeInfo)(void* data, afxUnit setIdx, afxFcc* resType, afxUnit* resCnt);
+    void*(*GetResourceInfo)(void* data, afxFcc type, afxUnit resIdx, afxUri* name);
     afxBool(*GetToolInfo)(void* data, afxCadToolInfo* toolInfo, afxCadExporterInfo* exporterInfo);
     afxError(*AddResources)(void* data, afxFcc type, afxUri const* name);
 };
 
-AMX afxNat              AfxFindResourceNests(akxAsset cad, afxNat cnt, afxFcc const fcc[], afxNat nestIdx[]);
-AMX afxNat              AfxFindResources(akxAsset cad, afxFcc fcc, afxNat cnt, afxString const id[], void* res[]);
-AMX afxNat              AfxCountResources(akxAsset cad, afxFcc fcc);
+AMX afxUnit              AfxFindResourceNests(akxAsset cad, afxUnit cnt, afxFcc const fcc[], afxUnit nestIdx[]);
+AMX afxUnit              AfxFindResources(akxAsset cad, afxFcc fcc, afxUnit cnt, afxString const id[], void* res[]);
+AMX afxUnit              AfxCountResources(akxAsset cad, afxFcc fcc);
 
-AMX afxNat              AfxFindTextures(akxAsset cad, afxNat cnt, afxString const id[], afxRaster tex[]);
-AMX afxNat              AfxFindMaterials(akxAsset cad, afxNat cnt, afxString const id[], afxMaterial mt[]);
-AMX afxNat              AfxFindVertexDatas(akxAsset cad, afxNat cnt, afxString const id[], afxGeometry vtd[]);
-AMX afxNat              AfxFindTopologies(akxAsset cad, afxNat cnt, afxString const id[], afxMeshTopology msht[]);
-AMX afxNat              AfxFindMeshes(akxAsset cad, afxNat cnt, afxString const id[], afxMesh msh[]);
-AMX afxNat              AfxFindSkeletons(akxAsset cad, afxNat cnt, afxString const id[], afxSkeleton skl[]);
-AMX afxNat              AfxFindModels(akxAsset cad, afxNat cnt, afxString const id[], afxModel mdl[]);
-AMX afxNat              AfxFindAnimations(akxAsset cad, afxNat cnt, afxString const id[], afxAnimation anim[]);
+AMX afxUnit              AfxFindTextures(akxAsset cad, afxUnit cnt, afxString const id[], afxRaster tex[]);
+AMX afxUnit              AfxFindMaterials(akxAsset cad, afxUnit cnt, afxString const id[], afxMaterial mt[]);
+AMX afxUnit              AfxFindVertexDatas(akxAsset cad, afxUnit cnt, afxString const id[], afxGeometry vtd[]);
+AMX afxUnit              AfxFindTopologies(akxAsset cad, afxUnit cnt, afxString const id[], afxMeshTopology msht[]);
+AMX afxUnit              AfxFindMeshes(akxAsset cad, afxUnit cnt, afxString const id[], afxMesh msh[]);
+AMX afxUnit              AfxFindSkeletons(akxAsset cad, afxUnit cnt, afxString const id[], afxSkeleton skl[]);
+AMX afxUnit              AfxFindModels(akxAsset cad, afxUnit cnt, afxString const id[], afxModel mdl[]);
+AMX afxUnit              AfxFindAnimations(akxAsset cad, afxUnit cnt, afxString const id[], afxAnimation anim[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError            AfxAcquireAssets(afxSimulation sim, afxNat cnt, afxNat const nestCnt[], afxNat const resCap[], akxAsset cad[]);
-AMX afxError            AfxBuildAssets(afxSimulation sim, akxAssetBuilder const* cadb, afxNat cnt, void* data[], akxAsset cad[]);
+AMX afxError            AfxAcquireAssets(afxSimulation sim, afxUnit cnt, afxUnit const nestCnt[], afxUnit const resCap[], akxAsset cad[]);
+AMX afxError            AfxBuildAssets(afxSimulation sim, akxAssetBuilder const* cadb, afxUnit cnt, void* data[], akxAsset cad[]);
 
-AMX afxError            AfxLoadAssets(afxSimulation sim, afxError(*load)(afxUri const* file, afxFlags flags), afxFlags flags, afxNat cnt, afxUri const file[]);
-AMX afxError            AfxStoreAssets(afxSimulation sim, afxError(*store)(afxUri const* file, afxFlags flags), afxFlags flags, afxNat cnt, afxUri const file[]);
+AMX afxError            AfxLoadAssets(afxSimulation sim, afxError(*load)(afxUri const* file, afxFlags flags), afxFlags flags, afxUnit cnt, afxUri const file[]);
+AMX afxError            AfxStoreAssets(afxSimulation sim, afxError(*store)(afxUri const* file, afxFlags flags), afxFlags flags, afxUnit cnt, afxUri const file[]);
 
-AMX void                AfxTransformAssets(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, akxAsset cad[]);
+AMX void                AfxTransformAssets(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxReal affineTol, afxReal linearTol, afxFlags flags, afxUnit cnt, akxAsset cad[]);
 
 
-AMX afxError            AfxDeserializeSkeletons(afxStream in, afxSimulation sim, afxNat cnt, afxSkeleton skl[]);
-AMX afxError            AfxSerializeSkeletons(afxStream out, afxNat cnt, afxSkeleton const skl[]);
+AMX afxError            AfxDeserializeSkeletons(afxStream in, afxSimulation sim, afxUnit cnt, afxSkeleton skl[]);
+AMX afxError            AfxSerializeSkeletons(afxStream out, afxUnit cnt, afxSkeleton const skl[]);
 
 #endif//AMX_ASSET_H

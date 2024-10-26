@@ -35,25 +35,25 @@ AFX_DEFINE_STRUCT(afxAnimationBlueprint)
     afxReal         dur;
     afxReal         timeStep;
     afxReal         oversampling;
-    afxNat          motSlotCnt;
+    afxUnit          motSlotCnt;
     afxMotion*      motions;
     afxString32     id;
 };
 
 AMX afxBool     AfxGetAnimationUrn(afxAnimation ani, afxString* id);
 
-AMX afxBool     AfxFindMotion(afxAnimation ani, afxString const* id, afxNat *motIdx);
+AMX afxBool     AfxFindMotion(afxAnimation ani, afxString const* id, afxUnit *motIdx);
 
-AMX afxError    AkxRelinkMotions(afxAnimation ani, afxNat baseSlot, afxNat slotCnt, afxMotion motions[]);
+AMX afxError    AkxRelinkMotions(afxAnimation ani, afxUnit baseSlot, afxUnit slotCnt, afxMotion motions[]);
 
-AMX afxNat      AfxPerformAnimation(afxAnimation ani, afxReal startTime, afxNat iterCnt, afxNat cnt, afxBody bodies[]);
+AMX afxUnit      AfxPerformAnimation(afxAnimation ani, afxReal startTime, afxUnit iterCnt, afxUnit cnt, afxBody bodies[]);
 
-//AMX afxNat    AfxPerformAnimationBinding(afxAnimation ani, afxReal startTime, afxNat iterCnt, struct animation_binding *binding, afxNat cnt, afxBody bodies[]);
+//AMX afxUnit    AfxPerformAnimationBinding(afxAnimation ani, afxReal startTime, afxUnit iterCnt, struct animation_binding *binding, afxUnit cnt, afxBody bodies[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError    AkxAssembleAnimations(afxSimulation sim, afxNat cnt, afxAnimationBlueprint const blueprints[], afxAnimation animations[]);
+AMX afxError    AkxAssembleAnimations(afxSimulation sim, afxUnit cnt, afxAnimationBlueprint const blueprints[], afxAnimation animations[]);
 
-AMX void        AkxTransformAnimations(afxM3d const ltm, afxM3d const iltm, afxReal linearTol, afxV4d const atv, afxReal affineTol, afxFlags flags, afxNat cnt, afxAnimation ani[]);
+AMX void        AkxTransformAnimations(afxM3d const ltm, afxM3d const iltm, afxReal linearTol, afxV4d const atv, afxReal affineTol, afxFlags flags, afxUnit cnt, afxAnimation ani[]);
 
 #endif//AMX_ANIMATION_H

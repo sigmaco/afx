@@ -16,8 +16,10 @@
 
 // This code is part of SIGMA Future Storage.
 
-// afxArchive allows you to save a complex network of objects in a permanent
-// binary form (usually disk storage) that persists after those objects are deleted.
+/**
+    afxArchive allows you to save a complex network of objects in a permanent
+    binary form (usually disk storage) that persists after those objects are deleted.
+*/
 
 #ifndef AFX_ARCHIVE_H
 #define AFX_ARCHIVE_H
@@ -36,27 +38,27 @@
 AFX_DEFINE_STRUCT(afxArchiveItemDescriptor)
 {
     afxSize     offset;
-    afxNat32    size;
-    afxNat32    compressedSize;
-    afxNat32    codec;
-    afxNat32    crc32;
+    afxUnit32    size;
+    afxUnit32    compressedSize;
+    afxUnit32    codec;
+    afxUnit32    crc32;
 };
 
-AFX afxNat      AfxCountArchivedFiles(afxArchive arc);
+AFX afxUnit     AfxCountArchivedFiles(afxArchive arc);
 
-AFX afxBool     AfxArchivedFileIsDirectory(afxArchive arc, afxNat idx);
-AFX afxError    AfxDumpArchivedFile(afxArchive arc, afxNat idx, afxNat bufSiz, void *buf);
-AFX afxError    AfxForkArchivedFile(afxArchive arc, afxNat idx, afxStream *ios);
-AFX afxError    AfxExtractArchivedFile(afxArchive arc, afxNat idx, afxUri const *uri); // extract to file directory.
-AFX afxBool     AfxFindArchivedFile(afxArchive arc, afxUri const *name, afxNat *idx);
-AFX afxError    AfxOpenArchivedFile(afxArchive arc, afxNat idx, afxStream *in);
+AFX afxBool     AfxArchivedFileIsDirectory(afxArchive arc, afxUnit idx);
+AFX afxError    AfxDumpArchivedFile(afxArchive arc, afxUnit idx, afxUnit bufSiz, void *buf);
+AFX afxError    AfxForkArchivedFile(afxArchive arc, afxUnit idx, afxStream *ios);
+AFX afxError    AfxExtractArchivedFile(afxArchive arc, afxUnit idx, afxUri const *uri); // extract to file directory.
+AFX afxBool     AfxFindArchivedFile(afxArchive arc, afxUri const *name, afxUnit *idx);
+AFX afxError    AfxOpenArchivedFile(afxArchive arc, afxUnit idx, afxStream *in);
 
-AFX afxError    AfxDescribeArchivedFile(afxArchive arc, afxNat idx, afxArchiveItemDescriptor *desc);
-AFX afxSize     AfxGetArchivedFileOffset(afxArchive arc, afxNat idx);
-AFX afxNat      AfxGetArchivedFileCodec(afxArchive arc, afxNat idx);
-AFX afxNat      AfxGetArchivedFileUncompressedSize(afxArchive arc, afxNat idx);
-AFX afxString*  AfxGetArchivedFileName(afxArchive arc, afxNat idx, afxUri *name);
-AFX afxNat32    AfxGetArchivedFileCrc(afxArchive arc, afxNat idx);
+AFX afxError    AfxDescribeArchivedFile(afxArchive arc, afxUnit idx, afxArchiveItemDescriptor *desc);
+AFX afxSize     AfxGetArchivedFileOffset(afxArchive arc, afxUnit idx);
+AFX afxUnit     AfxGetArchivedFileCodec(afxArchive arc, afxUnit idx);
+AFX afxUnit     AfxGetArchivedFileUncompressedSize(afxArchive arc, afxUnit idx);
+AFX afxString*  AfxGetArchivedFileName(afxArchive arc, afxUnit idx, afxUri *name);
+AFX afxUnit32   AfxGetArchivedFileCrc(afxArchive arc, afxUnit idx);
 
 ////////////////////////////////////////////////////////////////////////////////
 

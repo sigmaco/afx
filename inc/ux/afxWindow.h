@@ -29,7 +29,7 @@
 AFX_DEFINE_STRUCT(afxWindowConfig)
 {
     afxRect             rc;
-    afxNat              ddevId;
+    afxUnit             ddevId;
     afxDrawOutputConfig frame;
     afxDrawOutputConfig surface;
     afxBool             (*eventCb)(afxWindow, auxEvent*);
@@ -47,7 +47,7 @@ AFX_DEFINE_STRUCT(afxLayout)
         afxRect margin;
         afxRect border;
         afxRect padding;
-        afxNat  wh[2];
+        afxUnit  wh[2];
     };
 };
 
@@ -71,11 +71,11 @@ AUX afxBool         AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, 
 
 /// The AfxTraceScreenToSurface() function converts the screen coordinates of a specified point on the screen to surface coordinates.
 
-AUX afxBool         AfxTraceScreenToSurface(afxWindow wnd, afxNat const screenPos[2], afxNat surfPos[2]);
+AUX afxBool         AfxTraceScreenToSurface(afxWindow wnd, afxUnit const screenPos[2], afxUnit surfPos[2]);
 
 /// The AfxTraceSurfaceToScreen() function converts the surface coordinates of a specified point to screen coordinates.
 
-AUX afxBool         AfxTraceSurfaceToScreen(afxWindow wnd, afxNat const surfPos[2], afxNat screenPos[2]);
+AUX afxBool         AfxTraceSurfaceToScreen(afxWindow wnd, afxUnit const surfPos[2], afxUnit screenPos[2]);
 
 AUX afxBool         AfxSetCursorConfinement(afxWindow wnd, afxBool confine);
 
@@ -83,7 +83,7 @@ AUX afxBool         AfxSetCursorConfinement(afxWindow wnd, afxBool confine);
 /// If the specified afxWindow is a control, the text of the control is changed. 
 /// However, AfxFormatWindowCaption() cannot change the text of a control in another application.
 
-AUX afxNat          AfxFormatWindowCaption(afxWindow wnd, afxChar const* fmt, ...);
+AUX afxUnit         AfxFormatWindowCaption(afxWindow wnd, afxChar const* fmt, ...);
 
 /// The AfxRedrawWindow() function updates the specified rectangle or region in a window's surface (aka client area).
 
@@ -93,7 +93,7 @@ AUX void            AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt);
 
 /// Sets the upper left position of the afxWindow (point) including its window frame.
 
-AUX afxBool         AfxMoveWindow(afxWindow wnd, afxNat const pos[2]);
+AUX afxBool         AfxMoveWindow(afxWindow wnd, afxUnit const pos[2]);
 
 AUX afxError        AfxAdjustWindow(afxWindow wnd, afxRect const* frame, afxRect const* surface);
 AUX afxError        AfxAdjustWindowFromNdc(afxWindow wnd, afxV2d const offset, afxV2d const extent);

@@ -15,12 +15,15 @@
  */
 
 /*
-
-In computer science, region-based memory management is a type of memory management in which each allocated object is assigned to a region.
-A region, also called a zone, arena, area, or memory context, is a collection of allocated objects that can be efficiently reallocated or deallocated all at once.
-Like stack allocation, regions facilitate allocation and deallocation of memory with low overhead; but they are more flexible, allowing objects to live longer than the stack frame in which they were allocated.
-In typical implementations, all objects in a region are allocated in a single contiguous range of memory addresses, similarly to how stack frames are typically allocated.
-
+    In computer science, region-based memory management is a type of memory management in which 
+    each allocated object is assigned to a region.
+    A region, also called a zone, arena, area, or memory context, is a collection of allocated 
+    objects that can be efficiently reallocated or deallocated all at once.
+    Like stack allocation, regions facilitate allocation and deallocation of memory with low 
+    overhead; but they are more flexible, allowing objects to live longer than the stack frame 
+    in which they were allocated.
+    In typical implementations, all objects in a region are allocated in a single contiguous 
+    range of memory addresses, similarly to how stack frames are typically allocated.
 */
 
 #ifndef AFX_ARENA_H
@@ -31,9 +34,9 @@ In typical implementations, all objects in a region are allocated in a single co
 
 AFX_DEFINE_STRUCT(afxArenaSpecification)
 {
-    afxNat      chunkSiz;
-    afxNat      largeItemSiz;
-    afxNat      initialCleanupSiz;
+    afxUnit      chunkSiz;
+    afxUnit      largeItemSiz;
+    afxUnit      initialCleanupSiz;
     afxBool     recycle;
 };
 
@@ -41,26 +44,26 @@ AFX_DEFINE_STRUCT(afxArena)
 {
     afxMmu      mmu;
     afxHere     hint;
-    afxNat      totalAllocated;
-    afxNat      smallItems;
-    afxNat      largeItems;
-    afxNat      chunkCnt;
-    afxNat      unusedSpace; /* Unused space due to alignment, etc. */
+    afxUnit     totalAllocated;
+    afxUnit     smallItems;
+    afxUnit     largeItems;
+    afxUnit     chunkCnt;
+    afxUnit     unusedSpace; /* Unused space due to alignment, etc. */
 
-    afxNat      allocated;
+    afxUnit     allocated;
     char*       initialData;
     char*       data;
 
-    afxNat      maxCleanupCnt;
-    afxNat      cleanupCnt;
+    afxUnit     maxCleanupCnt;
+    afxUnit     cleanupCnt;
     void*       cleanups;
     void*       largeList;
 
-    afxNat      chunkSiz;
-    afxNat      largeItemSiz;
+    afxUnit     chunkSiz;
+    afxUnit     largeItemSiz;
     afxBool     recycleEnabled;
     void**      recycleBin;
-    afxNat      recycleSiz;
+    afxUnit     recycleSiz;
 };
 
 AFX afxError    AfxDeployArena(afxArena* aren, afxArenaSpecification const *spec, afxHere const hint);

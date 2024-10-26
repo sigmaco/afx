@@ -19,7 +19,7 @@
 
 #include "qwadro/inc/base/afxCoreDefs.h"
 
-typedef afxNat16    afxCompactTime; // DOS time
+typedef afxUnit16    afxCompactTime; // DOS time
 
 typedef afxInt64 afxTime;
 
@@ -38,11 +38,11 @@ AFX_STATIC_ASSERT(sizeof(afxTime) == sizeof(time_t), "");
 
 AFX afxTime AfxGetTime(afxTime *t);
 
-AFX afxNat AfxGetTimer(void);
+AFX afxUnit AfxGetTimer(void);
 
-AFX afxNat64 AfxGetTickCounter(void);
+AFX afxUnit64 AfxGetTickCounter(void);
 
-AFX afxNat64 AfxGetTicksPerSecond(void);
+AFX afxUnit64 AfxGetTicksPerSecond(void);
 
 
 #define AfxCompactTimeGetHour(t) ((t)>>11)

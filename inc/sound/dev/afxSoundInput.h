@@ -44,15 +44,15 @@ AFX_DEFINE_STRUCT(afxSoundInputConfig)
 {
     afxUri              endpoint;
     afxSoundInputProc   proc;
-    afxNat              dragTxuBase;
-    afxNat              dragTxuCnt;
+    afxUnit              dragTxuBase;
+    afxUnit              dragTxuCnt;
 
-    afxNat              cmdPoolMemStock;
-    afxNat              estimatedSubmissionCnt;
-    afxNat              minVtxBufCap;
-    afxNat              maxVtxBufCap;
-    afxNat              minIdxBufCap;
-    afxNat              maxIdxBufCap;
+    afxUnit              cmdPoolMemStock;
+    afxUnit              estimatedSubmissionCnt;
+    afxUnit              minVtxBufCap;
+    afxUnit              maxVtxBufCap;
+    afxUnit              minIdxBufCap;
+    afxUnit              maxIdxBufCap;
     void*               udd;
 };
 

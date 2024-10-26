@@ -71,8 +71,8 @@ typedef enum afxDrawBridgeFlag
 AFX_DEFINE_STRUCT(afxDrawPortCaps)
 {
     afxDrawBridgeFlags  flags;
-    afxNat              minQueCnt; // usually 3
-    afxNat              maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
+    afxUnit             minQueCnt; // usually 3
+    afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
     afxAcceleration     acceleration;
 
     afxBool8            draw;
@@ -85,8 +85,8 @@ AFX_DEFINE_STRUCT(afxDrawPortCaps)
 
 AFX_DEFINE_STRUCT(afxDrawBridgeConfig)
 {
-    afxNat              portId;
-    afxNat              minQueCnt;
+    afxUnit             portId;
+    afxUnit             minQueCnt;
     afxReal const*      queuePriority;
 };
 
@@ -100,39 +100,39 @@ typedef enum
 
 AFX_DEFINE_STRUCT(avxSubmission)
 {
-    afxNat              portId;
-    afxNat              exuIdx;
-    afxNat              exuCnt;
-    afxNat              queIdx;
-    afxNat              queCnt;
+    afxUnit             portId;
+    afxUnit             exuIdx;
+    afxUnit             exuCnt;
+    afxUnit             queIdx;
+    afxUnit             queCnt;
 
     afxFlags            flags;
     afxSemaphore        waitSems;
-    afxNat64            waitValues;
+    afxUnit64            waitValues;
     avxPipelineStage    waitStageMasks;
-    afxNat32            waitReserveds;
+    afxUnit32            waitReserveds;
     afxSemaphore        signalSems;
-    afxNat64            signalValues;
+    afxUnit64            signalValues;
     avxPipelineStage    signalStageMasks;
-    afxNat32            signalReserveds;
+    afxUnit32            signalReserveds;
     afxFence            fence;
 };
 
 AFX_DEFINE_STRUCT(avxPresentation)
 {
-    afxNat              portId;
-    afxNat              exuIdx;
-    afxNat              exuCnt;
-    afxNat              queIdx;
-    afxNat              queCnt;
+    afxUnit             portId;
+    afxUnit             exuIdx;
+    afxUnit             exuCnt;
+    afxUnit             queIdx;
+    afxUnit             queCnt;
     afxSemaphore        wait;
 };
 
 AFX_DEFINE_STRUCT(avxTransference)
 {
-    afxNat              portIdx;
-    afxNat              baseQueIdx;
-    afxNat              queCnt;
+    afxUnit             portIdx;
+    afxUnit             baseQueIdx;
+    afxUnit             queCnt;
 
     afxSemaphore        wait;
     afxSemaphore        signal;
@@ -141,8 +141,8 @@ AFX_DEFINE_STRUCT(avxTransference)
     afxFcc              srcFcc;
     afxFcc              dstFcc;
     afxCodec            codec;
-    afxNat              encSiz;
-    afxNat              decSiz;
+    afxUnit             encSiz;
+    afxUnit             decSiz;
     union
     {
         struct
@@ -176,27 +176,27 @@ AFX_DEFINE_UNION(avxQueueOpData)
     struct
     {
         afxFlags            flags;
-        afxNat              waitCnt;
+        afxUnit             waitCnt;
         afxSemaphore        waitSems[4];
-        afxNat64            waitValues[4];
+        afxUnit64            waitValues[4];
         avxPipelineStage    waitStageMasks[4];
-        afxNat32            waitReserveds[4];
-        afxNat              cmdbCnt;
+        afxUnit32            waitReserveds[4];
+        afxUnit             cmdbCnt;
         avxCmdb             cmdbs[4];
-        afxNat              signalCnt;
+        afxUnit             signalCnt;
         afxSemaphore        signalSems[4];
-        afxNat64            signalValues[4];
+        afxUnit64            signalValues[4];
         avxPipelineStage    signalStageMasks[4];
-        afxNat32            signalReserveds[4];
+        afxUnit32            signalReserveds[4];
         afxFence            fence;
     }                       work;
     struct
     {
-        afxNat          waitCnt;
+        afxUnit         waitCnt;
         afxSemaphore    waits[4];
-        afxNat          bufCnt;
+        afxUnit         bufCnt;
         afxDrawOutput   outputs[4];
-        afxNat          buffers[4];
+        afxUnit         buffers[4];
         afxResult       results[4];
     }                   present;
     struct
@@ -230,10 +230,10 @@ AFX_DEFINE_UNION(avxQueueOpData)
         afxFcc              srcFcc;
         afxFcc              dstFcc;
         afxCodec            codec;
-        afxNat              decompressedSiz;
-        afxNat              waitCnt;
+        afxUnit             decompressedSiz;
+        afxUnit             waitCnt;
         afxSemaphore        waits[4];
-        afxNat              signalCnt;
+        afxUnit             signalCnt;
         afxSemaphore        signals[4];
         afxFence            fence;
     } transfer;
@@ -241,30 +241,30 @@ AFX_DEFINE_UNION(avxQueueOpData)
     {
         afxBuffer           buf;
         afxSize             off;
-        afxNat              ran;
+        afxUnit             ran;
         afxFlags            flags;
     } map;
 };
 
 AFX_DEFINE_STRUCT(avxQueueOp)
 {
-    afxNat              submType;
-    afxError            (*f)(void*, void*, afxNat, void*);
+    afxUnit             submType;
+    afxError            (*f)(void*, void*, afxUnit, void*);
     void*               udd;
-    afxNat              dataSiz;
+    afxUnit             dataSiz;
     avxQueueOpData*     data;
 };
 
 AVX afxDrawDevice       AfxGetDrawBridgeDevice(afxDrawBridge dexu);
 AVX afxDrawContext      AfxGetDrawBridgeContext(afxDrawBridge dexu);
 
-AVX afxNat              AfxGetDrawBridgePort(afxDrawBridge dexu);
+AVX afxUnit             AfxGetDrawBridgePort(afxDrawBridge dexu);
 
-AVX void                AfxQueryDrawQueues(afxDrawBridge dexu, afxNat* baseQueIdx, afxNat* queCnt);
+AVX void                AfxQueryDrawQueues(afxDrawBridge dexu, afxUnit* baseQueIdx, afxUnit* queCnt);
 
-AVX afxError            _AvxSubmitDrawCommands(afxDrawBridge dexu, avxSubmission const* ctrl, afxNat cnt, avxCmdb cmdbs[]);
-AVX afxError            _AvxSubmitTransferences(afxDrawBridge dexu, avxTransference const* ctrl, afxNat opCnt, void const* ops);
-AVX afxError            _AvxSubmitDrawWorkRequest(afxDrawBridge dexu, afxNat cnt, avxQueueOp const subm[]);
+AVX afxError            _AvxSubmitDrawCommands(afxDrawBridge dexu, avxSubmission const* ctrl, afxUnit cnt, avxCmdb cmdbs[]);
+AVX afxError            _AvxSubmitTransferences(afxDrawBridge dexu, avxTransference const* ctrl, afxUnit opCnt, void const* ops);
+AVX afxError            _AvxSubmitDrawWorkRequest(afxDrawBridge dexu, afxUnit cnt, avxQueueOp const subm[]);
 
 AVX void                _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, afxColor const color);
 AVX void                _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, afxColor const color);
@@ -272,6 +272,6 @@ AVX void                _AvxEndDrawQueueDebugScope(afxDrawQueue dque);
 
 AVX afxDrawDevice       AfxGetDrawQueueDevice(afxDrawQueue dque);
 AVX afxDrawContext      AfxGetDrawQueueContext(afxDrawQueue dque);
-AVX afxNat              AfxGetDrawQueuePort(afxDrawQueue dque);
+AVX afxUnit             AfxGetDrawQueuePort(afxDrawQueue dque);
 
 #endif//AVX_DRAW_BRIDGE_H

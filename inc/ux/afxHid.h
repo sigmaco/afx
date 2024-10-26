@@ -77,32 +77,32 @@ AFX_DEFINE_STRUCT(afxHidCaps)
 
 AFX_DEFINE_STRUCT(afxHidLimits)
 {
-    afxNat  keyCnt;
-    afxNat  fnKeyCnt;
-    afxNat  indicatorCnt;
-    afxNat  mouseBtnCnt;
-    afxNat  mouseSampleRate;
-    afxNat  wheelCnt; // usually 1 in common mouses; the vertical scroll.
-    afxNat  axisCnt;
-    afxNat  analogStickCnt; // usually 2 in common gamepads.
-    afxNat  throttleCnt; // usually 2 in common gamepads. Ex.: L2 and R2.
+    afxUnit  keyCnt;
+    afxUnit  fnKeyCnt;
+    afxUnit  indicatorCnt;
+    afxUnit  mouseBtnCnt;
+    afxUnit  mouseSampleRate;
+    afxUnit  wheelCnt; // usually 1 in common mouses; the vertical scroll.
+    afxUnit  axisCnt;
+    afxUnit  analogStickCnt; // usually 2 in common gamepads.
+    afxUnit  throttleCnt; // usually 2 in common gamepads. Ex.: L2 and R2.
 };
 
 AUX afxClass const* AfxGetHidClass(void);
 
 // HID DISCOVERY ///////////////////////////////////////////////////////////////
 
-AUX afxNat          AfxInvokeHids(afxNat first, afxNat cnt, afxBool(*f)(afxHid, void*), void *udd);
-AUX afxNat          AfxEvokeHids(afxBool(*flt)(afxHid, void*), void* fdd, afxNat first, afxNat cnt, afxHid hids[]);
-AUX afxNat          AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hids[]);
+AUX afxUnit         AfxInvokeHids(afxUnit first, afxUnit cnt, afxBool(*f)(afxHid, void*), void *udd);
+AUX afxUnit         AfxEvokeHids(afxBool(*flt)(afxHid, void*), void* fdd, afxUnit first, afxUnit cnt, afxHid hids[]);
+AUX afxUnit         AfxEnumerateHids(afxUnit first, afxUnit cnt, afxHid hids[]);
 
-AUX afxBool         AfxGetHid(afxNat port, afxHid* hid);
+AUX afxBool         AfxGetHid(afxUnit port, afxHid* hid);
 
 // HID HANDLING ////////////////////////////////////////////////////////////////
 
 AUX afxBool         AfxIsHidPrompt(afxHid hid);
 
-AUX afxNat          AfxGetHidPort(afxHid hid);
+AUX afxUnit         AfxGetHidPort(afxHid hid);
 AUX afxResult       AfxTestHidFlags(afxHid hid, afxHidFlag flags);
 
 AUX void*           AfxGetHidIdd(afxHid hid);

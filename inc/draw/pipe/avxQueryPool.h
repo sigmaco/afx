@@ -44,8 +44,8 @@ AVX afxResult           AfxGetQueryResults
 /// Copy results of queries in a query qryp to a host memory region.
 (
     avxQueryPool        qryp,
-    afxNat              baseQuery, /// the initial query index.
-    afxNat              queryCnt, /// the number of queries to read.
+    afxUnit              baseQuery, /// the initial query index.
+    afxUnit              queryCnt, /// the number of queries to read.
     void*               dst, /// a user-allocated buffer where the results will be written.
     afxSize             cap, /// the size in bytes of the buffer pointed to by @dst.
     afxSize             stride, /// the stride in bytes between results for individual queries within @dst.
@@ -56,8 +56,8 @@ AVX void                AfxResetQueries
 /// Reset queries in a query qryp. This command sets the status of query indices [baseQuery, baseQuery + queryCnt - 1] to unavailable.
 (
     avxQueryPool        qryp,
-    afxNat              baseQuery, /// the initial query index to reset.
-    afxNat              queryCnt /// the number of queries to reset.
+    afxUnit              baseQuery, /// the initial query index to reset.
+    afxUnit              queryCnt /// the number of queries to reset.
 );
 
 #endif//AVX_QUERY_POOL_H

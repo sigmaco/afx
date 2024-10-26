@@ -14,8 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-/// afxInterlockedQueue is a lock-less, thread-safe, multi-producer-multi-consumer queue data structure. 
-/// It is designed to hold copyable values.
+/**
+    afxInterlockedQueue is a lock-less, thread-safe, multi-producer-multi-consumer queue data structure. 
+    It is designed to hold copyable values.
+*/
 
 #ifndef AFX_INTERLOCKED_QUEUE_H
 #define AFX_INTERLOCKED_QUEUE_H
@@ -35,7 +37,7 @@ AFX_DEFINE_STRUCT(afxInterlockedQueue)
         afxByte     value[]; /// Value actually contained in the queue
     }*              entries; // Buffer of entries.    
 #endif
-    afxNat          unitSiz;
+    afxUnit          unitSiz;
     afxInt32        queIdxMask; /// Mask to apply to the read/write position to clamp it to array bounds
     afxAtom32       readPosn; /// readIdx of where we are in the sequence
     afxAtom32       writePosn; /// writeIdx of where we are in the sequence
@@ -43,7 +45,7 @@ AFX_DEFINE_STRUCT(afxInterlockedQueue)
 
 /// Inicializa a fila afxInterlockedQueue e aloca memória para o número especificado de entradas.
 /// O número de entradas não é mutável após inicialização.
-AFX afxError    AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxNat unitSiz, afxNat cap);
+AFX afxError    AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxUnit unitSiz, afxUnit cap);
 
 /// Libera a memória reservado para a fila e redefine o estado interno.
 /// A fila deve estar vazia quando esta função for chamada.

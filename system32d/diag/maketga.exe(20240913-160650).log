@@ -1,0 +1,14 @@
+Booting...
+Acquiring...  Thread Execution Unit 8212 @ afxSystem_w32.c:447Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... Executable And Linkage Module <e2coree.dll>Memory Page Size: 4096HW Threading Capacity: 2Loading... Executable And Linkage Module <e2draw.dll>Loading... Executable And Linkage Module <e2combo.dll>Loading... Executable And Linkage Module <e2sound.dll>Loading... Executable And Linkage Module <e2mmux.dll>Loading... Executable And Linkage Module <//./z////eaxzal1.dll>Loading... Installable Client Driver <//./z/////eaxzal1.dll>	<//./amigal1/>("")  0.0.0 Loading... Executable And Linkage Module <//./z////galileo.dll>Loading... Installable Client Driver <//./z/////galileo.dll>	<//./combo/>("")  0.0.0 Loading... Executable And Linkage Module <//./z////tarzgl4.dll>Loading... Installable Client Driver <//./z/////tarzgl4.dll>	<//./targl3/>("")  0.0.0 	<//./targl4/>("")  0.0.0 Loading... Executable And Linkage Module <//./z////winsh4d.dll>Loading... Installable Client Driver <//./z/////winsh4d.dll>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 8212
+Loading... Executable And Linkage Module <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY17) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL32.c:1534
+GL: INVAL_PARAMzglInterop_WGL32.c:1549
+GL: INVAL_PARAMzglInterop_WGL32.c:1560
+GL: INVAL_PARAMzglInterop_WGL32.c:1592
+GL: INVAL_PARAMzglInterop_WGL32.c:1623
+GL: INVAL_PARAMzglInterop_WGL32.c:1625
+GL: INVAL_PARAMzglInterop_WGL32.c:1782
+GL: INVAL_PARAMzglInterop_WGL32.c:1785
+GL: INVAL_PARAMzglInterop_WGL32.c:1790
+GL: INVAL_PARAMzglInterop_WGL32.c:1795
+GL: INVAL_PARAMAcquiring...  Thread Execution Unit 0 @ zglDrawBridge.c:2060

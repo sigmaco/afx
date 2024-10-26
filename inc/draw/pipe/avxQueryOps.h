@@ -26,7 +26,7 @@ AVX afxCmdId            AvxCmdBeginQuery
 (
     avxCmdb             cmdb,
     avxQueryPool        pool, /// the query pool that will manage the results of the query.
-    afxNat              queryIdx, /// the index within the query pool that will contain the results.
+    afxUnit              queryIdx, /// the index within the query pool that will contain the results.
     afxBool             precise /// specifies the precision of occlusion queries.
 ); 
 
@@ -35,7 +35,7 @@ AVX afxCmdId            AvxCmdEndQuery
 (
     avxCmdb             cmdb,
     avxQueryPool        pool, /// the pool that is managing the results of the query.
-    afxNat              queryIdx /// the index within the query pool where the result is stored.
+    afxUnit              queryIdx /// the index within the query pool where the result is stored.
 );
 
 AVX afxCmdId            AvxCmdCopyQueryResults
@@ -43,8 +43,8 @@ AVX afxCmdId            AvxCmdCopyQueryResults
 (
     avxCmdb             cmdb,
     avxQueryPool        pool, /// the query pool managing the queries containing the desired results.
-    afxNat              baseQuery, /// the initial query index.
-    afxNat              queryCnt, /// the number of queries. @baseQuery and @queryCnt together define a range of queries.
+    afxUnit              baseQuery, /// the initial query index.
+    afxUnit              queryCnt, /// the number of queries. @baseQuery and @queryCnt together define a range of queries.
     afxBuffer           buf, /// a afxBuffer object that will receive the results of the copy command.
     afxSize             offset, /// an offset into dstBuffer.
     afxSize             stride, /// the stride in bytes between results for individual queries within dstBuffer.
@@ -56,8 +56,8 @@ AVX afxCmdId            AvxCmdResetQueries
 (
     avxCmdb             cmdb,
     avxQueryPool        pool, /// the pool managing the queries being reset.
-    afxNat              baseQuery, /// the initial query index to reset.
-    afxNat              queryCnt /// the number of queries to reset.
+    afxUnit              baseQuery, /// the initial query index to reset.
+    afxUnit              queryCnt /// the number of queries to reset.
 );
 
 AVX afxCmdId            AvxCmdWriteTimestamp
@@ -65,7 +65,7 @@ AVX afxCmdId            AvxCmdWriteTimestamp
 (
     avxCmdb             cmdb,
     avxQueryPool        pool,
-    afxNat              queryIdx, /// the query that will contain the timestamp.
+    afxUnit              queryIdx, /// the query that will contain the timestamp.
     avxPipelineStage    stage /// the stage of the pipeline.
 );
 

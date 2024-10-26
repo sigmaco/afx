@@ -19,11 +19,19 @@
 
 #define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
 #define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+// enforce early tests
+#define IN_EARLY_FRAGMENT_TESTS() layout(early_fragment_tests) in 
 //#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
 //#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+#define IN_CANVAS_COORD() in vec4 gl_FragCoord 
+#define IN_WINDOW_COORD() layout(origin_upper_left) in vec4 gl_FragCoord 
 
 // ubo = std140, ssbo = std430
 #define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
 #define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
 #define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define TEXTURE(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
 #define PUSH_UNIT() layout(std140) uniform PushConstants 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+#define SPECIALIZED(_specid_, _type_, _name_) layout(_specid_) const _type_ _name_ 

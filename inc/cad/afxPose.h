@@ -23,11 +23,11 @@
 #include "qwadro/inc/sim/afxSimDefs.h"
 #include "qwadro/inc/math/afxTransform.h"
 
-AMX afxError        AfxAcquirePoses(afxSimulation sim, afxNat cnt, afxNat const artCnt[], afxPose lp[]);
+AMX afxError        AfxAcquirePoses(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxPose lp[]);
 
-AMX afxNat          AfxGetPoseCapacity(afxPose const lp);
+AMX afxUnit          AfxGetPoseCapacity(afxPose const lp);
 
-AMX afxTransform*   AfxGetPoseTransform(afxPose const pose, afxNat artIdx);
+AMX afxTransform*   AfxGetPoseTransform(afxPose const pose, afxUnit artIdx);
 
 AMX void            AfxCopyPose(afxPose pose, afxPose const from);
 

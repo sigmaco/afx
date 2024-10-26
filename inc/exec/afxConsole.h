@@ -27,7 +27,7 @@ AFX afxBool     AfxReleaseConsole(void);
 
 AFX afxResult   AfxPrompt(afxString const* cur, afxString* buf);
 
-AFX afxResult   AfxPrint(afxNat32 color, afxChar const* msg);
-AFX afxResult   AfxPrintf(afxNat32 color, afxChar const* msg, ...);
+AFX afxResult   AfxPrint(afxUnit32 color, afxChar const* msg);
+AFX afxResult   AfxPrintf(afxUnit32 color, afxChar const* msg, ...);
 
 #endif//AFX_CONSOLE_H

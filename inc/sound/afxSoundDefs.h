@@ -90,7 +90,7 @@ AFX_DEFINE_STRUCT(asxListener) // Listener information.
 ASXINL void AsxResetListener(asxListener* lis)
 {
     afxError err = NIL;
-    AfxAssert(lis);
+    AFX_ASSERT(lis);
     lis->scalingFactor = (afxReal32)1;
     lis->spatialized = TRUE;
 }
@@ -104,7 +104,7 @@ AFX_DEFINE_STRUCT(asxRamp) // volume ramp specified by end points "previous" and
 ASXINL void AsxSetRamp(asxRamp* ramp, afxReal prev, afxReal next)
 {
     afxError err = NIL;
-    AfxAssert(ramp);
+    AFX_ASSERT(ramp);
     ramp->prev = (afxReal32)prev;
     ramp->next = (afxReal32)next;
 }
@@ -112,15 +112,15 @@ ASXINL void AsxSetRamp(asxRamp* ramp, afxReal prev, afxReal next)
 ASXINL void AsxResetRamp(asxRamp* ramp)
 {
     afxError err = NIL;
-    AfxAssert(ramp);
+    AFX_ASSERT(ramp);
     AsxSetRamp(ramp, 1, 1);
 }
 
 ASXINL void AsxCopyRamp(asxRamp* ramp, asxRamp const* in)
 {
     afxError err = NIL;
-    AfxAssert(ramp);
-    AfxAssert(in);
+    AFX_ASSERT(ramp);
+    AFX_ASSERT(in);
     ramp->prev = in->prev;
     ramp->next = in->next;
 }
@@ -128,8 +128,8 @@ ASXINL void AsxCopyRamp(asxRamp* ramp, asxRamp const* in)
 ASXINL void AsxScaleRamp(asxRamp* ramp, asxRamp const* rhs)
 {
     afxError err = NIL;
-    AfxAssert(ramp);
-    AfxAssert(rhs);
+    AFX_ASSERT(ramp);
+    AFX_ASSERT(rhs);
     ramp->prev *= rhs->prev;
     ramp->next *= rhs->next;
 }

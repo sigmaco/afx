@@ -35,6 +35,8 @@
 
 #include "qwadro/inc/draw/io/afxRaster.h"
 
+#define AFX_MAX_TEX_ID_LEN 32
+
 AFX_DEFINE_STRUCT(afxTexture)
 {
     afxUri          name;
@@ -46,17 +48,18 @@ AFX_DEFINE_STRUCT(afxTexture)
 
 AFX_DEFINE_STRUCT(avxTxdInfo)
 {
-    afxNat                  texCnt;
+    afxUri const*           url;
+    afxUnit                  texCnt;
     afxString const*        names;
     afxRasterInfo const*    rasters;
-    avxSamplerInfo const* samplers;
+    avxSamplerInfo const*   samplers;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
 AVX afxError    AfxAcquireTxd(afxDrawInput din, avxTxdInfo const* info, afxTxd* dict);
 
-AVX afxError    AfxOpenTxd(afxDrawInput din, afxUri const* uri, afxTxd* dict);
+AVX afxError    AfxOpenTxd(afxDrawInput din, afxUri const* url, afxTxd* dict);
 AVX afxError    AfxLoadTxd(afxDrawInput din, afxStream in, afxTxd* dict);
 
 #endif//AVX_TXD_H

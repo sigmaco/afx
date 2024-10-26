@@ -23,14 +23,14 @@
 
 AFX_DEFINE_STRUCT(afxGlyph)
 {
-    afxNat  origin[2];
-    afxNat  bearing[2]; // offset X/Y from baseline (origin). Ex.: originX + bearingX + width
-    afxNat  extent[2]; // char area
-    afxNat  advanceX; // size for horizontal advance after input.
-    //afxNat xMin; // = originX + bearingX
-    //afxNat xMax; // = originX + bearingX + width
-    //afxNat yMin; // = originY + bearingY
-    //afxNat yMax; // = originY + bearingY + height
+    afxUnit  origin[2];
+    afxUnit  bearing[2]; // offset X/Y from baseline (origin). Ex.: originX + bearingX + width
+    afxUnit  extent[2]; // char area
+    afxUnit  advanceX; // size for horizontal advance after input.
+    //afxUnit xMin; // = originX + bearingX
+    //afxUnit xMax; // = originX + bearingX + width
+    //afxUnit yMin; // = originY + bearingY
+    //afxUnit yMax; // = originY + bearingY + height
 };
 
 #ifdef _AVX_DRAW_C
@@ -38,15 +38,15 @@ AFX_DEFINE_STRUCT(afxGlyph)
 AFX_OBJECT(afxTypography)
 {
     afxString   id;
-    afxNat      charWidht;
-    afxNat      baseGlyphIdx; // usually used to skip first non-drawable (control chars)
-    afxNat      glyphCnt;
+    afxUnit      charWidht;
+    afxUnit      baseGlyphIdx; // usually used to skip first non-drawable (control chars)
+    afxUnit      glyphCnt;
     afxGlyph*   glyphes;
-    afxNat      pageCnt;
+    afxUnit      pageCnt;
     struct
     {
-        afxNat  baseGlyphIdx;
-        afxNat  glyphCnt;
+        afxUnit  baseGlyphIdx;
+        afxUnit  glyphCnt;
     }*pages;
 };
 #endif//_AFX_TYPOGRAPHY_C
@@ -54,6 +54,6 @@ AFX_OBJECT(afxTypography)
 
 AVX afxTypography   AfxAcquireTypography(afxDrawContext dctx);
 
-AVX afxBool         AfxGetGlyph(afxTypography typ, afxNat codepoint, afxGlyph* glyph);
+AVX afxBool         AfxGetGlyph(afxTypography typ, afxUnit codepoint, afxGlyph* glyph);
 
 #endif//AFX_TYPOGRAPHY_H

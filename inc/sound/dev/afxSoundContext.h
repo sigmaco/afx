@@ -31,34 +31,34 @@ ASX afxClass const* AfxGetWaveformClass(afxSoundContext sctx);
 ASX afxSoundDevice  AfxGetSoundContextDevice(afxSoundContext sctx);
 
 
-ASX afxNat          AfxCountSoundBridges(afxSoundContext sctx, afxNat baseBridIdx);
-ASX afxNat          AfxCountSoundQueues(afxSoundContext sctx, afxNat portIdx, afxNat baseQueIdx);
+ASX afxUnit          AfxCountSoundBridges(afxSoundContext sctx, afxUnit baseBridIdx);
+ASX afxUnit          AfxCountSoundQueues(afxSoundContext sctx, afxUnit portIdx, afxUnit baseQueIdx);
 
 /// Get a bridge handle from a device context.
 /// Get a queue handle from a device context.
 
-ASX afxBool         AfxGetSoundBridge(afxSoundContext sctx, afxNat portIdx, afxSoundBridge* bridge);
+ASX afxBool         AfxGetSoundBridge(afxSoundContext sctx, afxUnit portIdx, afxSoundBridge* bridge);
 
-ASX afxBool         AfxGetSoundQueue(afxSoundContext sctx, afxNat portIdx, afxNat queIdx, afxSoundQueue* queue);
+ASX afxBool         AfxGetSoundQueue(afxSoundContext sctx, afxUnit portIdx, afxUnit queIdx, afxSoundQueue* queue);
 
 /// Wait for a device context to become idle.
 /// Wait for a bridge to become idle. To wait on the host for the completion of outstanding queue operations for a given bridge.
 /// Wait for a queue to become idle. To wait on the host for the completion of outstanding queue operations for a given queue.
 
 ASX afxError        AfxWaitForSoundContext(afxSoundContext sctx);
-ASX afxError        AfxWaitForIdleSoundBridge(afxSoundContext sctx, afxNat portIdx);
-ASX afxError        AfxWaitForIdleSoundQueue(afxSoundContext sctx, afxNat portIdx, afxNat queIdx);
+ASX afxError        AfxWaitForIdleSoundBridge(afxSoundContext sctx, afxUnit portIdx);
+ASX afxError        AfxWaitForIdleSoundQueue(afxSoundContext sctx, afxUnit portIdx, afxUnit queIdx);
 
-ASX void            AfxCountSoundContextConnections(afxSoundContext sctx, afxNat* inputCnt, afxNat* outputCnt);
+ASX void            AfxCountSoundContextConnections(afxSoundContext sctx, afxUnit* inputCnt, afxUnit* outputCnt);
 ASX afxError        AfxDisconnectSoundContext(afxSoundContext sctx, afxBool keepInputs, afxBool keepOutputs);
 
-ASX afxNat          AfxCountSoundInputConnections(afxSoundContext sctx);
-ASX afxBool         AfxGetConnectedSoundInput(afxSoundContext sctx, afxNat conNo, afxSoundInput* input);
-ASX afxNat          AfxGetConnectedSoundInputs(afxSoundContext sctx, afxNat baseCon, afxNat cnt, afxSoundInput inputs[]);
-ASX afxNat          AfxInvokeConnectedSoundInputs(afxSoundContext sctx, afxNat baseCon, afxNat cnt, afxBool(*f)(afxSoundInput, void*), void *udd);
+ASX afxUnit          AfxCountSoundInputConnections(afxSoundContext sctx);
+ASX afxBool         AfxGetConnectedSoundInput(afxSoundContext sctx, afxUnit conNo, afxSoundInput* input);
+ASX afxUnit          AfxGetConnectedSoundInputs(afxSoundContext sctx, afxUnit baseCon, afxUnit cnt, afxSoundInput inputs[]);
+ASX afxUnit          AfxInvokeConnectedSoundInputs(afxSoundContext sctx, afxUnit baseCon, afxUnit cnt, afxBool(*f)(afxSoundInput, void*), void *udd);
 
-ASX afxBool         AfxGetConnectedSoundOutput(afxSoundContext sctx, afxNat conNo, afxSoundOutput* output);
-ASX afxNat          AfxGetConnectedSoundOutputs(afxSoundContext sctx, afxNat baseCon, afxNat cnt, afxSoundOutput outputs[]);
-ASX afxNat          AfxInvokeConnectedSoundOutputs(afxSoundContext sctx, afxNat baseCon, afxNat cnt, afxBool(*f)(afxSoundOutput, void*), void *udd);
+ASX afxBool         AfxGetConnectedSoundOutput(afxSoundContext sctx, afxUnit conNo, afxSoundOutput* output);
+ASX afxUnit          AfxGetConnectedSoundOutputs(afxSoundContext sctx, afxUnit baseCon, afxUnit cnt, afxSoundOutput outputs[]);
+ASX afxUnit          AfxInvokeConnectedSoundOutputs(afxSoundContext sctx, afxUnit baseCon, afxUnit cnt, afxBool(*f)(afxSoundOutput, void*), void *udd);
 
 #endif//ASX_SOUND_CONTEXT_H

@@ -58,13 +58,13 @@ AFXINL afxChar*     AfxStrrchr(afxChar const* str, afxInt ch);
 AFXINL afxChar*     AfxStrpbrk(afxChar const* str1, afxChar const* control);
 /// Finds the first occurrence of the entire excerpt (not including the terminating null character) which appears in the str.
 AFXINL afxChar*     AfxStrstr(afxChar const* str, afxChar const* excerpt);
-AFXINL afxChar*     AfxStrnstr(afxChar const* str, afxNat strLen, afxChar const* substr, afxNat substrLen);
+AFXINL afxChar*     AfxStrnstr(afxChar const* str, afxUnit strLen, afxChar const* substr, afxUnit substrLen);
 
 
 /// Appends the string pointed to, by src to the end of the string pointed to by dst.
 AFXINL afxChar*     AfxStrcat(afxChar* dst, afxChar const* src);
 /// Appends the string pointed to, by src to the end of the string pointed to, by dst up to len characters long.
-AFXINL afxChar*     AfxStrncat(afxChar* dst, afxChar const* src, afxNat len);
+AFXINL afxChar*     AfxStrncat(afxChar* dst, afxChar const* src, afxUnit len);
 
 
 /// Copies the string pointed to, by src to dst.
@@ -76,7 +76,7 @@ AFXINL afxChar*     AfxStrncpy(afxChar* dst, afxChar const* src, afxSize len);
 /// Compares the string pointed to, by str1 to the string pointed to by str2.
 AFXINL afxResult    AfxStrcmp(afxChar const* str, afxChar const* str2);
 /// Compares at most the first len bytes of str1 and str2.
-AFXINL afxResult    AfxStrncmp(afxChar const* str, afxChar const* str2, afxNat len);
+AFXINL afxResult    AfxStrncmp(afxChar const* str, afxChar const* str2, afxUnit len);
 
 AFXINL afxResult    AfxStricmp(afxChar const* str, afxChar const* str2);
 
@@ -88,7 +88,7 @@ AFXINL afxInt       AfxStrcoll(afxChar const* str1, afxChar const* str2);
 
 /// Sends formatted output to a string.
 AFXINL afxResult    AfxSprintf(afxChar* buf, afxChar const* fmt, ...);
-AFXINL afxResult    AfxSnprintf(afxChar* buf, afxNat size, afxChar const* fmt, ...);
+AFXINL afxResult    AfxSnprintf(afxChar* buf, afxUnit size, afxChar const* fmt, ...);
 
 /// Sends formatted output to a string using an argument list.
 AFXINL afxResult    AfxVsprintf(afxChar* buf, afxChar const* fmt, va_list args);

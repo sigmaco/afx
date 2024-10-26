@@ -72,22 +72,16 @@ AFX_DEFINE_HANDLE(afxVertexStream);
 AFX_DEFINE_HANDLE(afxVertexBuffer);
 AFX_DEFINE_HANDLE(afxIndexBuffer);
 
-AFX_DEFINE_HANDLE(afxCurve);
-AFX_DEFINE_HANDLE(afxPose);
-AFX_DEFINE_HANDLE(afxPoseBuffer);
-AFX_DEFINE_HANDLE(afxSkeleton);
-
-AFX_DEFINE_HANDLE(afxMaterial);
-AFX_DEFINE_HANDLE(afxMesh);
 AFX_DEFINE_HANDLE(afxGeometry);
+AFX_DEFINE_HANDLE(afxMesh);
 AFX_DEFINE_HANDLE(afxMeshTopology);
-AFX_DEFINE_HANDLE(afxModel);
+AFX_DEFINE_HANDLE(afxScene);
 
-typedef afxNat32 afxCmdId;
+typedef afxUnit32 afxCmdId;
 
 AFX_DEFINE_STRUCT(afxFileDrop)
 {
-    afxNat                      x, y;
+    afxUnit                      x, y;
     afxArray                    files; // afxChar const*
 };
 
@@ -341,19 +335,48 @@ typedef enum
 typedef enum afxVertexFormat
 {
     //NIL,
-    afxVertexFormat_REAL = 1,
-    afxVertexFormat_V2D,
-    afxVertexFormat_V3D,
-    afxVertexFormat_V4D,
-    afxVertexFormat_M2D,
-    afxVertexFormat_M3D,
-    afxVertexFormat_M4D,
+    afxVertexFormat_R32 = 1,
+    afxVertexFormat_REAL = afxVertexFormat_R32,
+    afxVertexFormat_R32x2,
+    afxVertexFormat_V2D = afxVertexFormat_R32x2,
+    afxVertexFormat_R32x3,
+    afxVertexFormat_V3D = afxVertexFormat_R32x3,
+    afxVertexFormat_R32x4,
+    afxVertexFormat_V4D = afxVertexFormat_R32x4,
+    afxVertexFormat_R16,
+    afxVertexFormat_R16x2,
+    afxVertexFormat_R16x4,
 
-    afxVertexFormat_BYTE,
-    afxVertexFormat_V2B,
-    afxVertexFormat_V3B,
-    afxVertexFormat_V4B,
+    afxVertexFormat_U32,
+    afxVertexFormat_U32x2,
+    afxVertexFormat_U32x4,
+    afxVertexFormat_U16,
+    afxVertexFormat_U16x2,
+    afxVertexFormat_U16x4,
+    afxVertexFormat_U8,
+    afxVertexFormat_U8x2,
+    afxVertexFormat_U8x4,
     
+    afxVertexFormat_I32,
+    afxVertexFormat_I32x2,
+    afxVertexFormat_I32x4,
+    afxVertexFormat_I16,
+    afxVertexFormat_I16x2,
+    afxVertexFormat_I16x4,
+    afxVertexFormat_I8,
+    afxVertexFormat_I8x2,
+    afxVertexFormat_I8x4,
+
+    afxVertexFormat_LTV3, // [ r, u, f ]
+    afxVertexFormat_ATV3, // [ x, y, z ]
+    afxVertexFormat_LTV4, // [ r, u, f, 0 ]
+    afxVertexFormat_ATV4, // [ x, y, z, 1 ]
+    afxVertexFormat_LTM2, // [ r, u, r, u ]
+    afxVertexFormat_LTM3, // [ r, u, f, r, u, f, r, u, f ]
+    afxVertexFormat_ATM3, // [ r, u, 0, r, u, 0, x, y, 1 ]
+    afxVertexFormat_LTM4, // [ r, u, f, 0, r, u, f, 0, r, u, f, 0, 0, 0, 0, 0 ]
+    afxVertexFormat_ATM4, // [ r, u, f, 0, r, u, f, 0, r, u, f, 0, x, y, z, 1 ]
+
     afxVertexFormat_TOTAL
 } afxVertexFormat;
 
@@ -456,7 +479,7 @@ AVX afxString const*        AfxStringifyFillMode(avxFillMode fm, afxString *out)
 AVX afxString const*        AfxStringifyShaderStage(avxShaderStage ss, afxString *out);
 AVX afxString const*        AfxStringifyVertexFormat(afxVertexFormat fmt, afxString *out);
 
-AVX afxNat AfxVertexFormatGetSize(afxVertexFormat fmt);
+AVX afxUnit AfxVertexFormatGetSize(afxVertexFormat fmt);
 
 AVX afxResult       AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSiz, afxSize *vecSiz, afxSize *siz);
 

@@ -51,37 +51,37 @@ AMX void        AfxGetBodyRootMotionVectors(afxBody bod, afxReal secsElapsed, af
 AFX_DEFINE_STRUCT(afxAnimSampleContext)
 {
     afxBool         accelerated;
-    afxNat          firstPivot;
-    afxNat          pivotCnt;
+    afxUnit          firstPivot;
+    afxUnit          pivotCnt;
     afxMotor        moto;
     afxPose         pose;
     afxPoseBuffer   posb;
     afxReal         allowedErr;
     afxM4d const    displacement;
-    afxNat const*   sparseBoneArray;
+    afxUnit const*   sparseBoneArray;
 };
 
 AMX afxBool     AfxSampleBodyAnimations(afxBody bod, afxAnimSampleContext const* ctx);
 
-AMX void        AfxSampleBodyAnimationsLODSparse(afxBody bod, afxNat basePivotIdx, afxNat pivotCnt, afxPose rslt, afxReal allowedErr, afxNat const* sparseBoneArray);
-AMX void        AfxSampleBodyAnimationsAcceleratedLOD(afxBody bod, afxNat pivotCnt, afxM4d const offset, afxPose scratch, afxPoseBuffer rslt, afxReal allowedErr);
-AMX afxBool     AfxSampleSingleBodyAnimationLODSparse(afxBody bod, afxMotor moto, afxNat basePivotIdx, afxNat pivotCnt, afxPose rslt, afxReal allowedErr, afxNat const* sparseBoneArray);
-AMX void        AfxAccumulateBodyAnimationsLODSparse(afxBody bod, afxNat basePivotIdx, afxNat pivotCnt, afxPose rslt, afxReal allowedErr, afxNat const* sparseBoneArray);
+AMX void        AfxSampleBodyAnimationsLODSparse(afxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose rslt, afxReal allowedErr, afxUnit const* sparseBoneArray);
+AMX void        AfxSampleBodyAnimationsAcceleratedLOD(afxBody bod, afxUnit pivotCnt, afxM4d const offset, afxPose scratch, afxPoseBuffer rslt, afxReal allowedErr);
+AMX afxBool     AfxSampleSingleBodyAnimationLODSparse(afxBody bod, afxMotor moto, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose rslt, afxReal allowedErr, afxUnit const* sparseBoneArray);
+AMX void        AfxAccumulateBodyAnimationsLODSparse(afxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose rslt, afxReal allowedErr, afxUnit const* sparseBoneArray);
 
 AMX void        AkxCmdBindPose(avxCmdb cmdb, afxPose pose);
 AMX void        AkxCmdBindPoseBuffer(avxCmdb cmdb, afxPoseBuffer wp);
-AMX void        AkxCmdBindSparsePivotMap(avxCmdb cmdb, afxNat const* sparseBoneArray);
+AMX void        AkxCmdBindSparsePivotMap(avxCmdb cmdb, afxUnit const* sparseBoneArray);
 AMX void        AkxCmdSetAllowedSamplingError(avxCmdb cmdb, afxReal allowedErr);
-AMX void        AkxCmdSampleBodyMotions(avxCmdb cmdb, afxBody bod, afxNat basePivot, afxNat pivotCnt);
+AMX void        AkxCmdSampleBodyMotions(avxCmdb cmdb, afxBody bod, afxUnit basePivot, afxUnit pivotCnt);
 
 AMX void        AfxSetBodyMass(afxBody bod, afxV3d mass);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError    AfxSpawnBodies(afxModel proto, afxNat cnt, afxBody bod[]);
+AMX afxError    AfxSpawnBodies(afxModel proto, afxUnit cnt, afxBody bod[]);
 
-AMX afxError    AfxAcquireBodies(afxSimulation sim, afxModel mdl, afxNat cnt, afxBody bodies[]);
+AMX afxError    AfxAcquireBodies(afxSimulation sim, afxModel mdl, afxUnit cnt, afxBody bodies[]);
 
-AMX afxNat      AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal duration, afxNat iterCnt, akxTrackMask* modelMask, afxNat cnt, afxBody bodies[]);
+AMX afxUnit      AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, akxTrackMask* modelMask, afxUnit cnt, afxBody bodies[]);
 
 #endif//AMX_BODY_H

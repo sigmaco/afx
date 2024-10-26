@@ -21,14 +21,18 @@
 #include "qwadro/inc/exec/afxMutex.h"
 #include "qwadro/inc/base/afxFcc.h"
 
-/// Slim locks enable the threads of a single process to access shared resources; they are optimized for speed and occupy very little memory. 
-/// Slim locks cannot be shared across processes.
+/**
+    Slim locks enable the threads of a single process to access shared resources; 
+    they are optimized for speed and occupy very little memory. 
+    Slim locks cannot be shared across processes.
+    
+    Reader threads read data from a shared resource whereas writer threads write data to a shared resource. 
+    When multiple threads are reading and writing using a shared resource, 
+    exclusive locks such as a critical section or mutex can become a bottleneck 
+    if the reader threads run continuously but write operations are rare.
+*/
 
-/// Reader threads read data from a shared resource whereas writer threads write data to a shared resource. 
-/// When multiple threads are reading and writing using a shared resource, 
-/// exclusive locks such as a critical section or mutex can become a bottleneck if the reader threads run continuously but write operations are rare.
-
-typedef struct { void *srwl; afxNat32 tidEx; } afxSlock;
+typedef struct { void *srwl; afxUnit32 tidEx; } afxSlock;
 
 AFX afxError AfxDeploySlock(afxSlock *slck);
 AFX afxError AfxDismantleSlock(afxSlock *slck);

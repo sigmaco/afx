@@ -149,9 +149,9 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\afx\dev\AsxContextImplKit.h" />
-    <ClInclude Include="..\..\afx\dev\AsxDeviceImplKit.h" />
-    <ClInclude Include="..\..\afx\dev\AsxImplKit.h" />
+    <ClInclude Include="..\..\src\dev\AsxContextImplKit.h" />
+    <ClInclude Include="..\..\src\dev\AsxDeviceImplKit.h" />
+    <ClInclude Include="..\..\src\dev\AsxImplKit.h" />
     <ClInclude Include="..\..\inc\sound\asxSound.h" />
     <ClInclude Include="..\..\inc\sound\afxSoundDefs.h" />
     <ClInclude Include="..\..\inc\sound\asxBank.h" />
@@ -168,15 +168,15 @@
     <ResourceCompile Include="e2sound.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\afx\sound\asxSound.c" />
-    <ClCompile Include="..\..\afx\sound\asxBank.c" />
-    <ClCompile Include="..\..\afx\sound\afxWaveform.c" />
-    <ClCompile Include="..\..\afx\sound\asxTracker.c" />
-    <ClCompile Include="..\..\afx\sound\dev\afxSoundBridge.c" />
-    <ClCompile Include="..\..\afx\sound\dev\afxSoundContext.c" />
-    <ClCompile Include="..\..\afx\sound\dev\afxSoundInput.c" />
-    <ClCompile Include="..\..\afx\sound\dev\afxSoundOutput.c" />
-    <ClCompile Include="..\..\afx\sound\dev\afxSoundSystem.c" />
+    <ClCompile Include="..\..\src\sound\asxSound.c" />
+    <ClCompile Include="..\..\src\sound\asxBank.c" />
+    <ClCompile Include="..\..\src\sound\afxWaveform.c" />
+    <ClCompile Include="..\..\src\sound\asxTracker.c" />
+    <ClCompile Include="..\..\src\sound\dev\afxSoundBridge.c" />
+    <ClCompile Include="..\..\src\sound\dev\afxSoundContext.c" />
+    <ClCompile Include="..\..\src\sound\dev\afxSoundInput.c" />
+    <ClCompile Include="..\..\src\sound\dev\afxSoundOutput.c" />
+    <ClCompile Include="..\..\src\sound\dev\afxSoundSystem.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2combo\e2combo.vcxproj">

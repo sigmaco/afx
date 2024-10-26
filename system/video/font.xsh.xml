@@ -1,14 +1,4 @@
-<Qwadro>
-    <Pipeline id='instanced'>
-        <CullMode>BACK</CullMode>
-        <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
-        <VertexShader>//./z/video/font.vsh</VertexShader>
-        <VertexInputStream instanceRate='1'>0</VertexInputStream>
-    </Pipeline>
-    <Rasterizer id='instanced'>
-        <FillMode>SOLID</FillMode>
-        <DepthWriteEnabled></DepthWriteEnabled>
-        <Transformer>//./z/video/font.xsh.xml?instanced</Transformer>
-        <FragmentShader>//./z/video/font.fsh</FragmentShader>
-    </Rasterizer>
-</Qwadro>
+<Pipeline id='instanced' cullMode='BACK' topology='TRI_STRIP' fillMode='SOLID' >
+    <Shader stage='VERTEX' uri='//./z/video/font.vsh' />
+    <Shader stage='FRAGMENT' uri='//./z/video/font.fsh' />
+</Pipeline>

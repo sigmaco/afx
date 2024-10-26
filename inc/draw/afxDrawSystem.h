@@ -14,6 +14,55 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+ // QWADRO is an open-source coalition of libraries that supports rapid development of software that deals with 4D data.
+ // The QWADRO frontend exposes a set of carefully selected data structures and algorithms in C.
+ // The backend is highly optimized and is set up for parallelization.
+ // We welcome contributions from the open-source community.
+
+/*
+    Copyright (c) 2017 SIGMA FEDERATION.
+
+    SIGMA FEDERATION ("SIGMA") supplies this software to you in
+    consideration of your agreement to the following terms, and your use,
+    installation, modification or redistribution of this SIGMA software
+    constitutes acceptance of these terms.  If you do not agree with these
+    terms, please do not use, install, modify or redistribute this SIGMA
+    software.
+
+    In consideration of your agreement to abide by the following terms, and
+    subject to these terms, SIGMA grants you a personal, non-exclusive
+    license, under SIGMA's copyrights in this original SIGMA software (the
+    SIGMA Software), to use, reproduce, modify and redistribute the
+    SIGMA Software, with or without modifications, in source and/or binary
+    forms; provided that if you redistribute the SIGMA Software, you must
+    retain the copyright notice of SIGMA, this notice and the following
+    text and disclaimers in all such redistributions of the SIGMA Software.
+    Neither the name, trademarks, service marks nor logos of SIGMA
+    FEDERATION may be used to endorse or promote products derived from the
+    SIGMA Software without specific prior written permission from SIGMA.
+    Except as expressly stated in this notice, no other rights or licenses
+    express or implied, are granted by SIGMA herein, including but not
+    limited to any patent rights that may be infringed by your derivative
+    works or by other works in which the SIGMA Software may be
+    incorporated. No hardware is licensed hereunder.
+
+    THE SIGMA SOFTWARE IS BEING PROVIDED ON AN "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+    INCLUDING WITHOUT LIMITATION, WARRANTIES OR CONDITIONS OF TITLE,
+    NON-INFRINGEMENT, MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR
+    ITS USE AND OPERATION EITHER ALONE OR IN COMBINATION WITH OTHER
+    PRODUCTS.
+
+    IN NO EVENT SHALL SIGMA BE LIABLE FOR ANY SPECIAL, INDIRECT,
+    INCIDENTAL, EXEMPLARY, CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+    TO, LOST PROFITS; PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+    USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) OR ARISING IN ANY WAY
+    OUT OF THE USE, REPRODUCTION, MODIFICATION AND/OR DISTRIBUTION OF THE
+    SIGMA SOFTWARE, HOWEVER CAUSED AND WHETHER UNDER THEORY OF CONTRACT,
+    TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY OR OTHERWISE, EVEN IF
+    SIGMA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
   //////////////////////////////////////////////////////////////////////////////
  // Qwadro Unified Video Graphics Infrastructure                             //
 //////////////////////////////////////////////////////////////////////////////
@@ -76,101 +125,101 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
 // These limits are typically defined by the graphics hardware, drivers, or the graphics API itself. 
 // Understanding these limits is important for optimizing performance and ensuring compatibility across different hardware and platforms.
 {
-    afxNat      maxRasterDim1D;
-    afxNat      maxRasterDim2D;
-    afxNat      maxRasterDim3D;
-    afxNat      maxRasterDimCube;
-    afxNat      maxRasterArrayLayers;
-    afxNat      maxTexelBufElements;
-    afxNat      maxUniformBufRange;
-    afxNat      maxStorageBufRange;
-    afxNat      maxPushConstantsSiz;
-    afxNat      maxMemAllocCnt;
-    afxNat      maxSamplerAllocCnt;
+    afxUnit     maxRasterDim1D;
+    afxUnit     maxRasterDim2D;
+    afxUnit     maxRasterDim3D;
+    afxUnit     maxRasterDimCube;
+    afxUnit     maxRasterArrayLayers;
+    afxUnit     maxTexelBufElements;
+    afxUnit     maxUboRange;
+    afxUnit     maxSsboRange;
+    afxUnit     maxPushConstsSiz;
+    afxUnit     maxMemAllocCnt;
+    afxUnit     maxSamplerAllocCnt;
     afxSize     bufferRasterGranularity;
     afxSize     sparseAddrSpaceSiz;
-    afxNat      maxBoundDescriptorSets;
-    afxNat      maxPerStageDescriptorSamplers;
-    afxNat      maxPerStageDescriptorUniformBuffers;
-    afxNat      maxPerStageDescriptorStorageBuffers;
-    afxNat      maxPerStageDescriptorSampledImages;
-    afxNat      maxPerStageDescriptorStorageImages;
-    afxNat      maxPerStageDescriptorInputAttachments;
-    afxNat      maxPerStageResources;
-    afxNat      maxDescriptorSetSamplers;
-    afxNat      maxDescriptorSetUniformBuffers;
-    afxNat      maxDescriptorSetUniformBuffersDynamic;
-    afxNat      maxDescriptorSetStorageBuffers;
-    afxNat      maxDescriptorSetStorageBuffersDynamic;
-    afxNat      maxDescriptorSetSampledImages;
-    afxNat      maxDescriptorSetStorageImages;
-    afxNat      maxDescriptorSetInputAttachments;
-    afxNat      maxVtxInputAttributes;
-    afxNat      maxVtxInputBindings;
-    afxNat      maxVtxInputAttributeOffset;
-    afxNat      maxVtxInputBindingStride;
-    afxNat      maxVtxOutputCompos;
-    afxNat      maxTessGenLvl;
-    afxNat      maxTessPatchSiz;
-    afxNat      maxTessCtrlPerVtxInComps;
-    afxNat      maxTessCtrlPerVtxOutComps;
-    afxNat      maxTessCtrlPerPatchOutComps;
-    afxNat      maxTessCtrlTotalOutComps;
-    afxNat      maxTessEvalInComps;
-    afxNat      maxTessEvalOutComps;
-    afxNat      maxPrimShaderInvocations;
-    afxNat      maxPrimInComps;
-    afxNat      maxPrimOutComps;
-    afxNat      maxPrimOutVertices;
-    afxNat      maxPrimTotalOutComps;
-    afxNat      maxFragInComps;
-    afxNat      maxFragOutAttachments;
-    afxNat      maxFragDualSrcAttachments;
-    afxNat      maxFragCombinedOutputResources;
-    afxNat      maxComputeSharedMemorySiz;
-    afxWhd      maxComputeWorkGroupCnt;
-    afxNat      maxComputeWorkGroupInvocations;
-    afxWhd      maxComputeWorkGroupSiz;
-    afxNat      subPixelPrecisionBits;
-    afxNat      subTexelPrecisionBits;
-    afxNat      mipmapPrecisionBits;
-    afxNat      maxDrawIndexedIdxValue;
-    afxNat      maxDrawIndirectCnt;
+    afxUnit     maxBoundLigaSets;
+    afxUnit     maxPerStageSamplers;
+    afxUnit     maxPerStageUbos;
+    afxUnit     maxPerStageSsbos;
+    afxUnit     maxPerStageSampledImages;
+    afxUnit     maxPerStageStorageImages;
+    afxUnit     maxPerStageInputAttachments;
+    afxUnit     maxPerStageResources;
+    afxUnit     maxLigaSetSamplers;
+    afxUnit     maxLigaSetUbos;
+    afxUnit     maxLigaSetUbosDynamic;
+    afxUnit     maxLigaSetSsbos;
+    afxUnit     maxLigaSetSsbosDynamic;
+    afxUnit     maxLigaSetSampledImages;
+    afxUnit     maxLigaSetStorageImages;
+    afxUnit     maxLigaSetInputAttachments;
+    afxUnit     maxVtxIns;
+    afxUnit     maxVtxInSrcs;
+    afxUnit     maxVtxInOffset;
+    afxUnit     maxVtxInSrcStride;
+    afxUnit     maxVtxOutCompos;
+    afxUnit     maxTessGenLvl;
+    afxUnit     maxTessPatchSiz;
+    afxUnit     maxTessCtrlPerVtxInComps;
+    afxUnit     maxTessCtrlPerVtxOutComps;
+    afxUnit     maxTessCtrlPerPatchOutComps;
+    afxUnit     maxTessCtrlTotalOutComps;
+    afxUnit     maxTessEvalInComps;
+    afxUnit     maxTessEvalOutComps;
+    afxUnit     maxPrimShadInvocations;
+    afxUnit     maxPrimInComps;
+    afxUnit     maxPrimOutComps;
+    afxUnit     maxPrimOutVertices;
+    afxUnit     maxPrimTotalOutComps;
+    afxUnit     maxFragInComps;
+    afxUnit     maxFragOutAttachments;
+    afxUnit     maxFragDualSrcAttachments;
+    afxUnit     maxFragCombinedOutputResources;
+    afxUnit     maxComputeSharedMemSiz;
+    afxWhd      maxComputeWarpCnt;
+    afxUnit     maxComputeWarpInvocations;
+    afxWhd      maxComputeWarpSiz;
+    afxUnit     subPixelPreciBits;
+    afxUnit     subTexelPreciBits;
+    afxUnit     mipmapPrecisionBits;
+    afxUnit     maxDrawIndexedIdxValue;
+    afxUnit     maxDrawIndirectCnt;
     afxReal     maxSamplerLodBias;
     afxReal     maxSamplerAnisotropy;
-    afxNat      maxVpCnt;
-    afxNat      maxVpDimensions[2];
+    afxUnit     maxVpCnt;
+    afxUnit     maxVpDimensions[2];
     afxV2d      vpBoundsRange;
-    afxNat      vpSubPixelBits;
+    afxUnit     vpSubPixelBits;
     afxSize     minMemMapAlign;
     afxSize     minTexelBufOffsetAlign;
-    afxSize     minUniformBufOffsetAlign;
-    afxSize     minStorageBufOffsetAlign;
+    afxSize     minUboOffsetAlign;
+    afxSize     minSsboOffsetAlign;
     afxInt      minTexelOffset;
-    afxNat      maxTexelOffset;
+    afxUnit     maxTexelOffset;
     afxInt      minTexelGatherOffset;
-    afxNat      maxTexelGatherOffset;
+    afxUnit     maxTexelGatherOffset;
     afxReal     minInterpolationOffset;
     afxReal     maxInterpolationOffset;
-    afxNat      subPixelInterpolationOffsetBits;
+    afxUnit     subPixelInterpolationOffsetBits;
     afxWhd      maxCanvasWhd;
     afxFlags    canvasColorSampleCnts;
     afxFlags    canvasDepthSampleCnts;
     afxFlags    canvasStencilSampleCnts;
     afxFlags    canvasNoAttachmentsSampleCnts;
-    afxNat      maxColorAttachments;
+    afxUnit     maxColorAttachments;
     afxFlags    sampledRasterColorSampleCnts;
     afxFlags    sampledRasterIntegerSampleCnts;
     afxFlags    sampledRasterDepthSampleCnts;
     afxFlags    sampledRasterStencilSampleCnts;
     afxFlags    storageRasterSampleCnts;
-    afxNat      maxSampleMaskWords;
+    afxUnit     maxSampleMaskWords;
     afxBool     timestampComputeAndGraphics;
     afxReal     timestampPeriod;
-    afxNat      maxClipDistances;
-    afxNat      maxCullDistances;
-    afxNat      maxCombinedClipAndCullDistances;
-    afxNat      discreteQueuePriorities;
+    afxUnit     maxClipDistances;
+    afxUnit     maxCullDistances;
+    afxUnit     maxCombinedClipAndCullDistances;
+    afxUnit     discreteQueuePriorities;
     afxV2d      pointSizRange;
     afxV2d      lineWidthRange;
     afxReal     pointSizGranularity;
@@ -187,7 +236,7 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
 /// (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
 /// you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
 
-AVX afxReal64       AfxFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
+AVX afxReal64       AfxFindPhysicalAspectRatio(afxUnit screenWidth, afxUnit screenHeight);
 
 AVX afxReal64       AfxFindAllowedCameraLodError(afxReal64 errInPixels, afxInt vpHeightInPixels, afxReal64 fovY, afxReal64 distanceFromCam);
 
@@ -202,56 +251,56 @@ AVX afxBool         AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeature
 AVX void            AfxGetDrawDeviceFeatures(afxDrawDevice ddev, afxDrawFeatures* features);
 AVX void            AfxGetDrawDeviceLimits(afxDrawDevice ddev, afxDrawLimits* limits);
 
-AVX afxNat          AfxCountDrawPorts(afxDrawDevice ddev);
-AVX void            AfxGetDrawPortCapabilities(afxDrawDevice ddev, afxNat portId, afxDrawPortCaps* caps);
+AVX afxUnit         AfxCountDrawPorts(afxDrawDevice ddev);
+AVX void            AfxGetDrawPortCapabilities(afxDrawDevice ddev, afxUnit portId, afxDrawPortCaps* caps);
 
 // Query draw port support for presentation.
-AVX afxBool         AfxDoesDrawPortSupportPresentation(afxDrawDevice ddev, afxNat portId, afxDrawOutput dout);
-AVX afxNat          AfxEnumeratePresentationModes(afxDrawOutput dout, afxNat first, afxNat cnt, avxPresentMode modes[]);
-AVX afxNat          AfxEnumerateDrawOutputFormats(afxDrawOutput dout, afxNat first, afxNat cnt, avxFormat formats[]);
+AVX afxBool         AfxDoesDrawPortSupportPresentation(afxDrawDevice ddev, afxUnit portId, afxDrawOutput dout);
+AVX afxUnit         AfxEnumeratePresentationModes(afxDrawOutput dout, afxUnit first, afxUnit cnt, avxPresentMode modes[]);
+AVX afxUnit         AfxEnumerateDrawOutputFormats(afxDrawOutput dout, afxUnit first, afxUnit cnt, avxFormat formats[]);
 
 AVX afxClass const* AfxGetDrawContextClass(afxDrawDevice ddev);
 AVX afxClass const* AvxGetDrawOutputClass(afxDrawDevice ddev);
 AVX afxClass const* AvxGetDrawInputClass(afxDrawDevice ddev);
 
-AVX afxNat          AfxInvokeDrawContexts(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawContext, void*), void *udd);
-AVX afxNat          AfxInvokeDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
-AVX afxNat          AfxInvokeDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
+AVX afxUnit         AfxInvokeDrawContexts(afxDrawDevice ddev, afxUnit first, afxUnit cnt, afxBool(*f)(afxDrawContext, void*), void *udd);
+AVX afxUnit         AfxInvokeDrawOutputs(afxDrawDevice ddev, afxUnit first, afxUnit cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
+AVX afxUnit         AfxInvokeDrawInputs(afxDrawDevice ddev, afxUnit first, afxUnit cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
 
-AVX afxNat          AfxEvokeDrawContexts(afxDrawDevice ddev, afxBool(*f)(afxDrawContext, void*), void* udd, afxNat first, afxNat cnt, afxDrawContext contexts[]);
-AVX afxNat          AfxEvokeDrawOutputs(afxDrawDevice ddev, afxBool(*f)(afxDrawOutput, void*), void* udd, afxNat first, afxNat cnt, afxDrawOutput outputs[]);
-AVX afxNat          AfxEvokeDrawInputs(afxDrawDevice ddev, afxBool(*f)(afxDrawInput, void*), void* udd, afxNat first, afxNat cnt, afxDrawInput inputs[]);
+AVX afxUnit         AfxEvokeDrawContexts(afxDrawDevice ddev, afxBool(*f)(afxDrawContext, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawContext contexts[]);
+AVX afxUnit         AfxEvokeDrawOutputs(afxDrawDevice ddev, afxBool(*f)(afxDrawOutput, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawOutput outputs[]);
+AVX afxUnit         AfxEvokeDrawInputs(afxDrawDevice ddev, afxBool(*f)(afxDrawInput, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawInput inputs[]);
 
-AVX afxNat          AfxEnumerateDrawContexts(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawContext contexts[]);
-AVX afxNat          AfxEnumerateDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawOutput outputs[]);
-AVX afxNat          AfxEnumerateDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawInput inputs[]);
+AVX afxUnit         AfxEnumerateDrawContexts(afxDrawDevice ddev, afxUnit first, afxUnit cnt, afxDrawContext contexts[]);
+AVX afxUnit         AfxEnumerateDrawOutputs(afxDrawDevice ddev, afxUnit first, afxUnit cnt, afxDrawOutput outputs[]);
+AVX afxUnit         AfxEnumerateDrawInputs(afxDrawDevice ddev, afxUnit first, afxUnit cnt, afxDrawInput inputs[]);
 
 AVX void*           AfxGetDrawDeviceIdd(afxDrawDevice ddev);
 
 // DRAW DEVICE DISCOVERY ///////////////////////////////////////////////////////
 
-AVX afxNat          AfxChooseDrawDevices(afxDrawFeatures const* features, afxDrawLimits const* limits, afxNat maxCnt, afxNat ddevId[]); // return count of found devices
+AVX afxUnit         AfxChooseDrawDevices(afxDrawFeatures const* features, afxDrawLimits const* limits, afxUnit maxCnt, afxUnit ddevId[]); // return count of found devices
 
 /// Enumerates all draw devices by passing the handle to each device, in turn, to an application-defined callback function. 
 /// AfxEvokeDrawDevices() continues until the last device is enumerated or the callback function returns FALSE.
-AVX afxNat          AfxInvokeDrawDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void* udd);
+AVX afxUnit         AfxInvokeDrawDevices(afxUnit first, afxUnit cnt, afxBool(*f)(afxDrawDevice, void*), void* udd);
 
-AVX afxNat          AfxEvokeDrawDevices(afxBool(*f)(afxDrawDevice, void*), void* udd, afxNat first, afxNat cnt, afxDrawDevice devices[]);
+AVX afxUnit         AfxEvokeDrawDevices(afxBool(*f)(afxDrawDevice, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawDevice devices[]);
 
 /// The AfxEnumerateDrawDevices() function lets you obtain the handle to each draw device in the current session.
-AVX afxNat          AfxEnumerateDrawDevices(afxNat first, afxNat cnt, afxDrawDevice devices[]);
+AVX afxUnit         AfxEnumerateDrawDevices(afxUnit first, afxUnit cnt, afxDrawDevice devices[]);
 
-AVX afxBool         AfxGetDrawDevice(afxNat ddevId, afxDrawDevice* device);
+AVX afxBool         AfxGetDrawDevice(afxUnit ddevId, afxDrawDevice* device);
 
 // DRAW DEVICE CONTEXTUALIZATION ///////////////////////////////////////////////
 
-AVX afxError        AfxConfigureDrawDevice(afxNat ddevId, afxDrawContextConfig* cfg);
-AVX afxError        AfxConfigureDrawOutput(afxNat ddevId, afxDrawOutputConfig* cfg);
-AVX afxError        AfxConfigureDrawInput(afxNat ddevId, afxDrawInputConfig* cfg);
+AVX afxError        AfxConfigureDrawDevice(afxUnit ddevId, afxDrawContextConfig* cfg);
+AVX afxError        AfxConfigureDrawOutput(afxUnit ddevId, afxDrawOutputConfig* cfg);
+AVX afxError        AfxConfigureDrawInput(afxUnit ddevId, afxDrawInputConfig* cfg);
 
-AVX afxError        AfxOpenDrawDevice(afxNat ddevId, afxDrawContextConfig const* cfg, afxDrawContext* context);
-AVX afxError        AfxOpenDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, afxDrawOutput* output); // file, window, desktop, widget, frameserver, etc; physical or virtual VDUs.
-AVX afxError        AfxOpenDrawInput(afxNat ddevId, afxDrawInputConfig const* cfg, afxDrawInput* input);
+AVX afxError        AfxOpenDrawDevice(afxUnit ddevId, afxDrawContextConfig const* cfg, afxDrawContext* context);
+AVX afxError        AfxOpenDrawOutput(afxUnit ddevId, afxDrawOutputConfig const* cfg, afxDrawOutput* output); // file, window, desktop, widget, frameserver, etc; physical or virtual VDUs.
+AVX afxError        AfxOpenDrawInput(afxUnit ddevId, afxDrawInputConfig const* cfg, afxDrawInput* input);
 
 /*
     AfxOpenDrawDevice("//./targa/", &cfg, &dctx);

@@ -35,10 +35,10 @@
  /// - The minor version number is a 10 - bit integer packed into bits 21 - 12.
  /// - The patch version number is a 12 - bit integer packed into bits 11 - 0.
 
-#define AFX_MAKE_VERSION(major_, minor_, patch_) ((((afxNat32)(major_)) << 22) | (((afxNat32)(minor_)) << 12) | ((afxNat32)(patch_)))
-#define AFX_VER_MAJOR(ver_) ((afxNat32)(ver_) >> 22)
-#define AFX_VER_MINOR(ver_) (((afxNat32)(ver_) >> 12) & 0x3FFU)
-#define AFX_VER_PATCH(ver_) ((afxNat32)(ver_) & 0xFFFU)
+#define AFX_MAKE_VERSION(major_, minor_, patch_) ((((afxUnit32)(major_)) << 22) | (((afxUnit32)(minor_)) << 12) | ((afxUnit32)(patch_)))
+#define AFX_VER_MAJOR(ver_) ((afxUnit32)(ver_) >> 22)
+#define AFX_VER_MINOR(ver_) (((afxUnit32)(ver_) >> 12) & 0x3FFU)
+#define AFX_VER_PATCH(ver_) ((afxUnit32)(ver_) & 0xFFFU)
 
 #define AFX_QWADRO_VER_MAJOR 0
 #define AFX_QWADRO_VER_MINOR 1
@@ -47,9 +47,9 @@
 /// O Qwadro SDK é atualizado frequentemente, por isso é útil poder sempre garantir que a API e a ABI estejam sincronizadas.
 /// A maneira mais simples de fazer isso é usar as seguintes funções.
 
-AFX afxBool             AfxTestSystemCompatibility(afxNat verMajor, afxNat verMinor, afxNat verPatch);
+AFX afxBool             AfxTestSystemCompatibility(afxUnit verMajor, afxUnit verMinor, afxUnit verPatch);
 
-AFX void                AfxGetSystemVersion(afxNat* verMajor, afxNat* verMinor, afxNat* verPatch);
+AFX void                AfxGetSystemVersion(afxUnit* verMajor, afxUnit* verMinor, afxUnit* verPatch);
 
 AFX afxString const *   AfxGetSystemVersionString(void);
 

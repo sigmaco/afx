@@ -17,9 +17,9 @@
 /// O objeto afxMesh é a estrutura primária para dado geométrico no Qwadro.
 /// Este referencia dados de vértice, dados de triângulo, afxMaterial's, afxMeshMorph'es e afxMeshBias's.
 /// Assets padrões do Qwadro contêm um arranjo de afxMesh na estrutura de informação do arquivo, e afxMesh'es são também referenciadas pelos objetos afxModel que as usam.
-/// Cada afxMesh é separada em afxMeshSurface's delitmitadas por afxMaterial's.
-/// A estrutura afxMeshSurface é a estrutura primária que você interage para obter estas porções.
-/// A estrutura afxMeshSurface referencia o arranjo de índices para a afxMesh, a qual em sua vez referencia o arranjo de vértice.
+/// Cada afxMesh é separada em afxMeshSection's delitmitadas por afxMaterial's.
+/// A estrutura afxMeshSection é a estrutura primária que você interage para obter estas porções.
+/// A estrutura afxMeshSection referencia o arranjo de índices para a afxMesh, a qual em sua vez referencia o arranjo de vértice.
 /// Se a afxMesh é deformável, as vértices no arranjo de vértice referenciam as articulações no arranjo de afxMeshBias's.
 /// Os dados de vértice para uma afxMesh, dados por um akxVertexBuffer referenciado pelo afxMesh, contêm todos os vértices únicos na afxMesh.
 
@@ -28,13 +28,13 @@
 
 /// Para determinar quais articulações uma afxMesh está ligada a (uma para afxMesh rígida, muitas para afxMesh deformável), você pode acessar o arranjo de afxMeshBias's. 
 /// Este arranjo contém nomes das articulações as quais a afxMesh está ligada, bem como parâmetros de "oriented bounding box" para as partes da afxMesh que estão ligadas àquela articulação e outra informação pertinente a ligação malha-a-articulação.
-/// Note que na maioria dos casos você não necessitará de usar os nomes das articulações no afxMeshBias diretamente, porque você pode usar um objeto akxMeshRig para fazer este trabalho (e outro trabalho necessário de ligação) para você.
+/// Note que na maioria dos casos você não necessitará de usar os nomes das articulações no afxMeshBias diretamente, porque você pode usar um objeto afxMeshRig para fazer este trabalho (e outro trabalho necessário de ligação) para você.
 
 /// Os dados de índice para uma afxMesh, dado por um afxMesh referenciado pelo afxMesh, contém todos os índices para os triângulos na afxMesh.
 /// Estes índices sempre descrevem uma lista de triângulo - isso é, cada grupo de três índices descrevem um singelo triângulo - os dados não são organizados em "strips" ou "fans".
 
 /// Uma vez que você tem vértices e índices, você basicamente tem todos os dados da afxMesh que você necessita para quais porções de índice vão com quais afxMaterial's.
-/// A estrutura afxMeshSurface provém esta informação.
+/// A estrutura afxMeshSection provém esta informação.
 
 /*
     MESH TOPOLOGY
@@ -64,8 +64,8 @@
 /// Mesh triangle topology is described by the afxMesh structure, which is pointed to by the afxMesh. 
 /// The afxMesh structure provides a number of useful arrays of data, including the mesh triangulation, edge connectivity, and vertex relationships. 
 
-/// The afxMeshSurface array specifies the actual triangulation of the mesh. 
-/// Each afxMeshSurface structure indexes into either the vertex index array, for the indices that make up the triangles.  
+/// The afxMeshSection array specifies the actual triangulation of the mesh. 
+/// Each afxMeshSection structure indexes into either the vertex index array, for the indices that make up the triangles.  
 /// The material index indexes into the material slot array, and specifies the material used for the group of triangles. 
 
 /// The afxMesh structure also contains extra information about the mesh triangulation that can be useful in mesh processing. 
@@ -98,72 +98,104 @@
 #include "qwadro/inc/math/afxVertex.h"
 #include "qwadro/inc/cad/afxGeometry.h"
 #include "qwadro/inc/base/afxFixedString.h"
-#include "qwadro/inc/cad/afxMeshBuilder.h"
+#include "qwadro/inc/cad/afxTriangulation.h"
 
-typedef afxNat8 afxVertexIndex8;
-typedef afxNat16 afxVertexIndex16;
-typedef afxNat32 afxVertexIndex32;
-typedef afxVertexIndex32 afxVertexIndex;
-typedef afxNat akxFaceIndex;
-typedef afxVertexIndex8 afxIndexedTriangle8[3];
-typedef afxVertexIndex16 afxIndexedTriangle16[3];
-typedef afxVertexIndex32 afxIndexedTriangle32[3];
-typedef afxIndexedTriangle32 afxIndexedTriangle;
+#define AMX_INDICES_PER_TRI 3
 
-AFX_DEFINE_STRUCT(afxMeshSurface)
+typedef afxIndex8 afxTriangle8[3];
+typedef afxIndex16 afxTriangle16[3];
+typedef afxIndex32 afxTriangle32[3];
+
+typedef enum afxMeshFlag
 {
-    afxNat              mtlIdx;
-    afxNat              baseTriIdx;
-    afxNat              triCnt;
-    //afxBox              aabb; // added this field to ease occlusion culling.
-};
+    afxMeshFlag_NONE
+} afxMeshFlags;
 
-AFX_DEFINE_STRUCT(afxVertexIndexCache)
+typedef enum afxMeshMorphFlag
+{
+    afxMeshMorphFlag_NONE
+} afxMeshMorphFlags;
+
+typedef enum afxMeshBiasFlag
+{
+    afxMeshBiasFlag_NONE
+} afxMeshBiasFlags;
+
+typedef enum afxMeshSurfaceFlag
+{
+    afxMeshSurfaceFlag_HOLE = AFX_BIT(0)
+} afxMeshSurfaceFlags;
+
+AFX_DEFINE_STRUCT(avxIndexCache)
 {
     afxLinkage          stream;
     afxBuffer           buf;
-    afxNat32            base;
-    afxNat32            range;
-    afxNat32            stride; // idxSiz
+    afxUnit32           base;
+    afxUnit32           range;
+    afxUnit32           stride; // idxSiz
     afxMesh             msh;
 };
-AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
+
+AFX_DEFINE_STRUCT(afxMeshSection)
+{
+    afxUnit             mtlIdx;
+    afxUnit             baseTriIdx;
+    afxUnit             triCnt;
+    afxMeshSurfaceFlags flags;
+};
+
+AFX_DEFINE_STRUCT(afxMeshMorph)
+// aka morph target, blend shape
 {
     afxGeometry         geo;
-    afxNat              baseVtx;
-    afxNat              vtxCnt;
+    afxUnit             baseVtx;
+    afxUnit             vtxCnt;
     afxBool             delta;
+    afxMeshMorphFlags   flags;
 };
 
 AFX_DEFINE_STRUCT(afxMeshBias)
 {
-    afxBox              obb;
-    afxNat              triCnt;
-    afxNat*             tris; // indices to vertices
+    afxUnit             triCnt;
+    afxUnit*            tris; // indices to vertices
+    afxMeshBiasFlags    flags;
+};
+
+AFX_DEFINE_STRUCT(afxMeshInfo)
+{
+    avxTopology         topology;
+    afxUnit             idxCnt;
+    afxUnit             triCnt;
+    afxUnit             edgeCnt;
+    afxUnit             secCnt;
+    afxUnit             biasCnt;
+    afxUnit             morphCnt;
+    afxUnit             minIdxSiz;
+    afxString32         urn;
+    void*               udd;
 };
 
 AFX_DEFINE_STRUCT(afxMeshBlueprint)
 /// Data needed for mesh assembly
 {
-    afxNat              triCnt;
-    afxNat const*       sideToAdjacentMap; // triCnt * 3
-    afxNat              mtlCnt;
-    afxNat              surfCnt;
-    afxNat const*       surfToMtlMap; // surfCnt;
-    afxNat const*       baseTrisForSurfMap; // surfCnt; one per surface
-    afxNat const*       trisForSurfMap; // surfCnt; one per surface
+    afxUnit             triCnt;
+    afxUnit const*      sideToAdjacentMap; // triCnt * 3
+    afxUnit             mtlCnt;
+    afxUnit             secCnt;
+    afxUnit const*      surfToMtlMap; // secCnt;
+    afxUnit const*      baseTrisForSurfMap; // secCnt; one per surface
+    afxUnit const*      trisForSurfMap; // secCnt; one per surface
     
-    afxNat              biasCnt;
-    afxNat const*       biasesForTriMap;
-    afxNat const*       triToBiasMap;
+    afxUnit             biasCnt;
+    afxUnit const*      biasesForTriMap;
+    afxUnit const*      triToBiasMap;
     afxString const*    biases;
 
     afxGeometry         geo;
-    afxNat              baseVtx;
-    afxNat              vtxCnt;
-    afxNat const*       vtxToVtxMap; // vtxCnt
-    afxNat const*       vtxToTriMap; // vtxCnt
-    afxNat              extraMorphCnt;
+    afxUnit             baseVtx;
+    afxUnit             vtxCnt;
+    afxUnit const*      vtxToTriMap; // vtxCnt
+    afxUnit             extraMorphCnt;
     afxMeshMorph const* extraMorphs;
     afxString const*    extraMorphTagMap;
 
@@ -171,62 +203,196 @@ AFX_DEFINE_STRUCT(afxMeshBlueprint)
     void*               udd;
 };
 
-AVX afxBool             AfxGetMeshUrn(afxMesh msh, afxString* id);
+/**
+    The AfxGetMeshDrawInput() method retrieves the draw input mechanism that provides the mesh.
 
-AVX afxNat              AfxCountMeshVertices(afxMesh msh, afxNat morphIdx, afxNat baseVtxIdx);
-AVX afxBool             AfxGetMeshVertices(afxMesh msh, afxNat morphIdx, afxGeometry* data, afxNat* baseVtx, afxNat* vtxCnt);
+    @param msh must be a valid afxMesh handle.
+    @return Must return an afxDrawInput handle of the provider.
+*/
 
-AVX afxNat              AfxCountMeshMorphs(afxMesh msh, afxNat baseMorphIdx);
-AVX afxMeshMorph*       AfxGetMeshMorphs(afxMesh msh, afxNat baseMorphIdx);
+AVX afxDrawInput    AfxGetMeshDrawInput(afxMesh msh);
 
-AVX avxTopology         AfxGetMeshTopology(afxMesh msh);
+AVX afxBool         AfxGetMeshUrn(afxMesh msh, afxString* id);
 
-AVX afxBool             AfxMeshIsDeformable(afxMesh msh);
+/**
+    The AfxGetMeshMorphes() method retrieves information describing one or more mesh morphes.
 
-AVX afxNat              AfxCountMeshBiases(afxMesh msh, afxNat baseBiasIdx);
-AVX afxMeshBias*        AfxGetMeshBiases(afxMesh msh, afxNat baseBiasIdx);
-AVX afxString*          AfxGetMeshBiasTags(afxMesh msh, afxNat baseBiasIdx);
+    @param msh must be a valid afxMesh handle.
+    @param baseMorphIdx is the number of the first/base morph to be indexed from.
+    @param cnt is the number of morphes to be described. Must be greater than 0.
+    @param info [out] must be a valid pointer to an array of afxMeshMorph structures.
+*/
 
-AVX afxNat              AfxCountMeshIndices(afxMesh msh, afxNat baseIdx);
+AVX afxUnit         AfxGetMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, afxMeshMorph morphes[]);
 
-AVX afxNat*             AfxGetMeshIndices(afxMesh msh, afxNat baseIdx);
-AVX afxIndexedTriangle* AfxGetMeshTriangles(afxMesh msh, afxNat baseTriIdx);
+/**
+    The AfxChangeMeshMorphes() method changes geometric data to one or more mesh morphes.
 
-AVX afxNat              AfxCountMeshTriangles(afxMesh msh, afxNat baseTriIdx);
+    @param msh must be a valid afxMesh handle.
+    @param baseMorphIdx is the number of the first/base morph to be indexed from.
+    @param cnt is the number of morphes to be described. Must be greater than 0.
+    @param info must be a valid pointer to an array of afxMeshMorph structures.
+*/
 
-AVX afxNat              AfxCountMeshTriangleEdges(afxMesh msh, afxNat baseEdgeIdx);
+AVX afxError        AfxChangeMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, afxMeshMorph const morphes[]);
 
-AVX afxNat              AfxCountMeshSurfaces(afxMesh msh, afxNat baseSurfIdx);
-AVX afxMeshSurface*     AfxGetMeshSurface(afxMesh msh, afxNat surIdx);
+/**
+    The AfxGetMeshTopology() method retrieves the primitive topology of faces in the mesh.
 
-AVX afxBool             AfxDescribeMeshCoverage(afxMesh msh, afxNat surIdx, afxMeshSurface* desc);
+    @param msh must be a valid afxMesh handle.
+    @return Must return a valid avxTopology value.
+*/
 
-/// By default, Qwadro always write triangle indices in counter-clockwise winding. 
-/// If you need your indices in clockwise order, or if you've manipulated your mesh vertices such that they've been mirrored in some way, 
-/// you can always invert the winding of a afxMesh's indices like this: 
+AVX avxTopology     AfxGetMeshTopology(afxMesh msh);
 
-AVX void                AfxInvertMeshWinding(afxMesh msh);
+/**
+    The AfxIsMeshDeformable() method tests whether a mesh is deformable (aka skinned).
+    
+    A Qwadro mesh is either rigid or deforming. 
+    Deforming meshes are ones that are bound to multiple bones, 
+    whereas rigid meshes are ones that are bound to a single bone (and thus move "rigidly" with that bone). 
 
-/// If you are merging multiple topologies, or processing material groups, sometimes it can be useful to remap the material indices in a afxMeshSurface. 
-/// For each material index in the afxMesh, it will lookup that index in the remapTable array and replace material index with the value. 
+    @param msh must be a valid afxMesh handle.
+    @return Must return TRUE if the mesh has more than one bias, or FALSE if has only one.
+*/
 
-AVX void                AfxRemapMeshCoverage(afxMesh msh, afxNat remapCnt, afxNat const remapTable[]);
+AVX afxBool         AfxIsMeshDeformable(afxMesh msh);
 
+AVX afxUnit         AfxGetMeshBiases(afxMesh msh, afxUnit baseBiasIdx, afxUnit cnt, afxMeshBias biases[]);
+AVX afxString*      AfxGetMeshBiasTags(afxMesh msh, afxUnit baseBiasIdx);
 
-AVX afxError            AfxUpdateMeshIndices(afxMesh msh, afxNat baseTriIdx, afxNat triCnt, void const* src, afxNat srcIdxSiz);
+AVX afxUnit*        AfxGetMeshIndices(afxMesh msh, afxUnit baseTriIdx);
 
-AVX afxNat              AfxDetermineMeshIndexSize(afxMesh msh);
+/**
+    The AfxDescribeMesh() method retrieves information describing the mesh.
+
+    @param msh must be a valid afxMesh handle.
+    @param info [out] must be a valid pointer to a afxMeshInfo structure.
+*/
+
+AVX void            AfxDescribeMesh(afxMesh msh, afxMeshInfo* info);
+
+/**
+    The AfxGetMeshSections() method retrieves information describing one or more mesh sections.
+
+    @param msh must be a valid afxMesh handle.
+    @param baseSecIdx is the number of the first/base surface to be indexed from.
+    @param cnt is the number of sections to be described. Must be greater than 0.
+    @param info [out] must be a valid pointer to an array of afxMeshInfo structures.
+*/
+
+AVX afxUnit         AfxGetMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit cnt, afxMeshSection sections[]);
+
+/**
+    The AfxInvertMeshTopology() method inverts the winding of a mesh without changing the vertex data.
+
+    Qwadro assumes that triangle indices are ordered in counter-clockwise winding.
+    This method is util in case of source data be in clockwise order, 
+    or the vertices were manipulated such that they have been mirrored in some way.
+
+    @param msh must be a valid afxMesh handle.
+*/
+
+AVX void            AfxInvertMeshTopology(afxMesh msh);
+
+/**
+    The AfxRemapMeshCoverage() method replaces material indices across mesh sections.
+
+    It can be useful to rearrange material indices across mesh sections after modifying a mesh.
+    This method will iterate for each mesh surface, look for its material index in specified table,
+    and replace material index with the value.
+
+    @param msh must be a valid afxMesh handle.
+    @param mtlIdxCnt is the number of material indices in the lookup table.
+    @param mtlIdxLut must be a array of indices mapping actual material indices into new ones.
+    @return Must return the number of material indices affectively replaced.
+*/
+
+AVX afxUnit         AfxRemapMeshCoverage(afxMesh msh, afxUnit mtlIdxCnt, afxUnit const mtlIdxLut[]);
+
+AVX afxError        AfxUpdateMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void const* src, afxUnit srcIdxSiz);
+AVX afxError        AfxDumpMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void* dst, afxUnit dstIdxSiz);
+
+AVX afxError        AfxUploadMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, afxStream in, afxUnit srcIdxSiz);
+AVX afxError        AfxDownloadMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, afxStream out, afxUnit dstIdxSiz);
+
+AVX afxError        AfxRecomputeMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit baseSecIdx, afxUnit cnt, afxUnit posAttrIdx);
+AVX afxError        AfxUpdateMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit baseSecIdx, afxUnit cnt, afxBox const aabbs[]);
+
+/**
+    The AfxRecomputeMeshNormals() method computes normal vectors of vertices for a mesh morph.
+
+    The computed normal vector at each vertex is always normalized to have unit length.
+
+    @param msh must be a valid afxMesh handle.
+    @param morphIdx must be a valid index into the mesh morphes.
+    @param posAttrIdx must be a valid index into the geometry backing the specified mesh morph.
+    @param nrmAttrIdx must be a valid index into the geometry backing the specified mesh morph.
+    @return Must return any error ocurried, if any, or zero.
+*/
+
+AVX afxError        AfxRecomputeMeshNormals(afxMesh msh, afxUnit morphIdx, afxUnit posAttrIdx, afxUnit nrmAttrIdx);
+
+/**
+    The AfxRecomputeMeshTangents() method performs tangent frame computations on a mesh.
+
+    Tangent and binormal vectors are generated.
+
+    @param msh must be a valid afxMesh handle.
+    @param morphIdx must be a valid index into the mesh morphes.
+    @param posAttrIdx must be a valid index into the geometry backing the specified mesh morph.
+    @param uvAttrIdx must be a valid index into the geometry backing the specified mesh morph.
+    @param tanAttrIdx must be a valid index into the geometry backing the specified mesh morph or AFX_INVALID_INDEX to don't store tangent data.
+    @param bitAttrIdx must be a valid index into the geometry backing the specified mesh morph or AFX_INVALID_INDEX to don't store bitangent data.
+    @return Must return any error ocurried, if any, or zero.
+*/
+
+AVX afxError        AfxRecomputeMeshTangents(afxMesh msh, afxUnit morphIdx, afxUnit posAttrIdx, afxUnit uvAttrIdx, afxUnit tanAttrIdx, afxUnit bitAttrIdx);
+
+AVX afxError        AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vtxCache, avxIndexCache* idxCache);
+AVX afxError        AfxDestripifyMesh(afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void const* src, afxUnit srcIdxSiz);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError            AfxAssembleMeshes(afxDrawInput din, afxNat cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
+/**
+    The AfxTransformMeshes() function similarity transforms an array of meshes.
 
-AVX afxNat              AfxEnumerateMeshes(afxDrawInput din, afxNat base, afxNat cnt, afxMesh msh[]);
+    @param ltm is the 3x3 linear transformation to perform.
+    @param iltm is the 3x3 inverse linear transformation to perform.
+    @param ltTol is the tolerance factor for linear transformations.
+    @param atv is the translation to perform.
+    @param atTol is the tolerance factor for affine transformations.
+    @param cnt is the number of meshes to be transformed.
+    @param meshes must be a valid pointer to an array of afxMesh handles.
+    @return Must return any error ocurried, if any, or zero.
+*/
 
-AVX afxError            AfxBuildMeshes(afxDrawInput din, afxNat cnt, afxMeshBuilder const mshb[], afxMesh meshes[]);
+AVX afxError        AfxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxReal ltTol, afxV3d const atv, afxReal atTol, afxFlags flags, afxUnit cnt, afxMesh meshes[]);
 
-AVX void                AfxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxReal ltTol, afxV3d const atv, afxReal atTol, afxFlags flags, afxNat cnt, afxMesh meshes[]);
+/**
+    The AfxEnumerateMeshes() function enumerates some or all meshes provided by a draw input mechanism.
 
-AVX void                AfxRenormalizeMeshes(afxNat cnt, afxMesh meshes[]);
+    @param din must be a valid afxDrawInput handle.
+    @param first is the number of the first mesh to be enumerated from.
+    @param cnt is the number of meshes to be enumerated. Must be greater than 0.
+    @param meshes [out] must be a valid pointer to an array of afxMesh handles.
+    @return Must return any error ocurried, if any, or zero.
+*/
+
+AVX afxUnit         AfxEnumerateMeshes(afxDrawInput din, afxUnit first, afxUnit cnt, afxMesh meshes[]);
+
+/**
+    The AfxAssembleMeshes() function assembles new meshes using specified blueprints.
+
+    @param din must be a valid afxDrawInput handle.
+    @param first is the number of the first mesh to be enumerated from.
+    @param cnt is the number of meshes to be assembled. Must be greater than 0.
+    @param meshes [out] must be a valid pointer to an array of afxMesh handles.
+    @return Must return any error ocurried, if any, or zero.
+*/
+
+AVX afxError        AfxAssembleMeshes(afxDrawInput din, afxUnit cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
+
+AVX afxError        AfxBuildMeshes(afxDrawInput din, afxUnit cnt, afxTriangulation const mshb[], afxMesh meshes[]);
 
 #endif//AVX_MESH_H

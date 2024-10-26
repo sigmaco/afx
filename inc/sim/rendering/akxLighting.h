@@ -17,11 +17,11 @@
 #ifndef AMX_LIGHT_H
 #define AMX_LIGHT_H
 
-#include "qwadro/inc/sim/akxNode.h"
+#include "qwadro/inc/sim/afxNode.h"
 #include "qwadro/inc/mem/afxArray.h"
 #include "qwadro/inc/math/afxColor.h"
 
-#define AFX_LIT_ALIGN AFX_SIMD_ALIGN
+#define AFX_LIT_ALIGN AFX_SIMD_ALIGNMENT
 
 // light rigs as in Doom
 
@@ -64,7 +64,7 @@ AFX_OBJECT(akxLight)
 
     afxReal     angularDist; // 0.f
     
-    afxNat32    bakeMode; // 2
+    afxUnit32    bakeMode; // 2
     afxColor    color; // [1, 1, 1, 1]
     afxMask     cullMask; // 0xFFFFFFFF
     afxReal     energy; // 1.f
@@ -120,8 +120,8 @@ AFX_OBJECT(akxLight)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError    AfxAcquireDirectionalLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
-AMX afxError    AfxAcquireOmniLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
-AMX afxError    AfxAcquireSpotLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
+AMX afxError    AfxAcquireDirectionalLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]);
+AMX afxError    AfxAcquireOmniLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]);
+AMX afxError    AfxAcquireSpotLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]);
 
 #endif//AMX_LIGHT_H

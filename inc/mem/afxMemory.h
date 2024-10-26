@@ -120,7 +120,7 @@ AFX_OBJECT(afxMmu)
     afxSize                     defAlign;
 
 // debug
-    afxNat                      dbgLevel; // 0 - nothing, 1 - mechanism activity, 2 - block activity, 3 - portion (de)allocations, 4 - [implementation-dependent]
+    afxUnit                      dbgLevel; // 0 - nothing, 1 - mechanism activity, 2 - block activity, 3 - portion (de)allocations, 4 - [implementation-dependent]
     afxChar const*              func;
     afxChar const*              fname;
     afxSize                     fline;
@@ -139,31 +139,31 @@ typedef enum afxMemoryFlag
 AFX afxError                AfxOpenMemory(afxMemoryFlags flags, afxUri const* uri, afxHere const hint, afxMemory* memory);
 AFX afxError                AfxAcquireMemory(afxMemoryFlags flags, afxSize siz, afxUri const* uri, afxHere const hint, afxMemory* memory);
 
-AFX afxError                AfxMapMemory(afxMemory mem, afxSize offset, afxNat range, afxFlags flags, void** var);
-AFX afxError                AfxUnmapMemory(afxMemory mem, afxSize offset, afxNat range);
+AFX afxError                AfxMapMemory(afxMemory mem, afxSize offset, afxUnit range, afxFlags flags, void** var);
+AFX afxError                AfxUnmapMemory(afxMemory mem, afxSize offset, afxUnit range);
 
-AFX afxError                AfxMemoryEnableDebugging(afxMmu mmu, afxNat level);
+AFX afxError                AfxMemoryEnableDebugging(afxMmu mmu, afxUnit level);
 AFX afxSize                 AfxMemoryGetDefaultAlignment(afxMmu mmu);
 
-AFX afxError    AfxAllocate2(void** var, afxSize siz, afxNat align, afxHere const hint);
-AFX afxError    AfxReallocate2(void** var, afxSize siz, afxNat align, afxHere const hint);
-AFX afxError    AfxCoallocate2(void** var, afxSize siz, afxNat cnt, afxNat align, afxHere const hint);
+AFX afxError    AfxAllocate2(void** var, afxSize siz, afxUnit align, afxHere const hint);
+AFX afxError    AfxReallocate2(void** var, afxSize siz, afxUnit align, afxHere const hint);
+AFX afxError    AfxCoallocate2(void** var, afxSize siz, afxUnit cnt, afxUnit align, afxHere const hint);
 AFX afxError    AfxDeallocate2(void** var, afxHere const hint);
 
-AFX void*                   AfxAllocate(afxSize cnt, afxSize siz, afxNat align, afxHere const hint);
-AFX void*                   AfxCoallocate(afxSize siz, afxSize cnt, afxNat align, afxHere const hint);
-AFX void*                   AfxReallocate(void *p, afxSize siz, afxSize cnt, afxNat align, afxHere const hint);
+AFX void*                   AfxAllocate(afxSize cnt, afxSize siz, afxUnit align, afxHere const hint);
+AFX void*                   AfxCoallocate(afxSize siz, afxSize cnt, afxUnit align, afxHere const hint);
+AFX void*                   AfxReallocate(void *p, afxSize siz, afxSize cnt, afxUnit align, afxHere const hint);
 AFX void                    AfxDeallocate(void *p);
 
 #define                     AfxStream(cnt_,srcStride_,dstStride_,src_,dst_) AfxStream2(cnt_,src_,srcStride_,dst_,dstStride_)
-AFX void                    AfxStream2(afxNat cnt, void const* src, afxSize srcStride, void* dst, afxNat dstStride);
-AFX void                    AfxStream3(afxNat cnt, void const* src, afxNat srcOffset, afxSize srcStride, void* dst, afxNat dstOffset, afxNat dstStride);
+AFX void                    AfxStream2(afxUnit cnt, void const* src, afxSize srcStride, void* dst, afxUnit dstStride);
+AFX void                    AfxStream3(afxUnit cnt, void const* src, afxUnit srcOffset, afxSize srcStride, void* dst, afxUnit dstOffset, afxUnit dstStride);
 
-#define AFX_ALIGNED_SIZEOF(operand_,alignment_) ((operand_ + (alignment_ - 1)) & ~(alignment_ - 1))
+#define AFX_ALIGNED_SIZE(operand_,alignment_) ((operand_ + (alignment_ - 1)) & ~(alignment_ - 1))
 
 
 AFX afxInt          AfxMemcmp(void const* buf1, void const* buf2, afxSize siz);
-AFX void const*     AfxMemchr(void const* buf, afxInt val, afxNat cap);
+AFX void const*     AfxMemchr(void const* buf, afxInt val, afxUnit cap);
 
 AFX void            AfxCopy(void* dst, void const* src, afxSize siz);
 AFX void            AfxCopy2(void* dst, void const* src, afxSize siz, afxSize cnt);

@@ -23,46 +23,28 @@
 #ifdef _AMX_TERRAIN_C
 AFX_OBJECT(afxTerrain)
 {
-    afxBuffer   vbo[2];
-    afxNat      vboBase[2];
-    afxNat      vboRange[2];
-    afxNat      vboStride[2];
-    afxBuffer   ibo;
-    afxNat      iboRange;
-    afxNat      iboStride;
-
-    afxNat      width, depth;
-    afxReal     step;
-    afxReal*    height;
-
-    afxMesh*    mesh;
-    afxNat*     indices;
-    afxNat      num_indices;
-    afxV3d*     vertices;
-    afxV3d*     normals;
-    afxNat      vertex_count;
-
-    afxNat      rez;
-    afxNat      numStrips;
-    afxNat      numTrisPerStrip;
-
-    afxNat      secCnt;
+    afxUnit      secCnt;
     struct
     {
+        afxUnit  width, depth;
         afxMesh msh;
     }           *sectors;
 };
 #endif//_AMX_TERRAIN_C
 
 AMX afxError    AkxDrawTerrain(afxTerrain ter, akxRenderer scn, avxCmdb cmdb);
-AMX afxError    AkxDrawTerrainSector(afxTerrain ter, afxNat secIdx, akxRenderer scn, avxCmdb cmdb);
+AMX afxError    AkxDrawTerrainSector(afxTerrain ter, afxUnit secIdx, akxRenderer scn, avxCmdb cmdb);
 
-AMX afxError    AfxResetTerrainSector(afxTerrain ter, afxNat secIdx, afxMesh msh);
+AMX afxError    AfxResetTerrainSector(afxTerrain ter, afxUnit secIdx, afxMesh msh);
+
+AMX afxUnit      AfxGetTerrainMeshes(afxTerrain ter, afxUnit secIdx, afxUnit cnt, afxMesh meshes[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError    AfxAcquireTerrain(afxSimulation sim, afxNat secCnt, afxTerrain* terrain);
+AMX afxError    AfxAcquireTerrain(afxSimulation sim, afxUnit secCnt, afxTerrain* terrain);
 
 AMX afxError    AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain* terrain);
+
+AMX afxError    AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* uri, afxTerrain* terrain);
 
 #endif//AMX_TERRAIN_H

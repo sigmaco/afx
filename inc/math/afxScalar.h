@@ -213,4 +213,6 @@ AFXINL afxReal      AfxNdcf(afxReal x, afxReal total);
 AFXINL afxReal64    AfxUnndc(afxReal64 x, afxReal64 total);
 AFXINL afxReal      AfxUnndcf(afxReal x, afxReal total);
 
+AFXINL afxInt16     AfxReal32ToSnorm(afxReal v);
+
 #endif//AFX_SCALAR_H

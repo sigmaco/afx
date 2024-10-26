@@ -24,7 +24,7 @@ AFX_DEFINE_STRUCT(afxReferencedString)
 {
     afxLinkage          strb;
     afxString           str; // stores just a offset into string arena
-    afxNat              refCnt;
+    afxUnit              refCnt;
     afxChar             data[];
 };
 
@@ -34,13 +34,13 @@ AFX_OBJECT(afxStringBase)
     afxReferencedString*first;
 };
 
-AFX afxNat      AfxCatalogStrings2(afxStringBase strc, afxNat cnt, afxString const in[], afxString out[]);
+AFX afxUnit      AfxCatalogStrings2(afxStringBase strc, afxUnit cnt, afxString const in[], afxString out[]);
 
-AFX afxNat      AfxResolveStrings2(afxStringBase strc, afxNat cnt, afxString const in[], afxString out[]);
+AFX afxUnit      AfxResolveStrings2(afxStringBase strc, afxUnit cnt, afxString const in[], afxString out[]);
 
-AFX afxError    AfxAcquireStringCatalogs(afxNat cnt, afxStringBase catalogs[]);
+AFX afxError    AfxAcquireStringCatalogs(afxUnit cnt, afxStringBase catalogs[]);
 
-AFX afxNat      AfxDecatalogStrings(afxStringBase strc, afxNat cnt, afxString const strings[]);
-AFX afxNat      AfxCatalogStrings(afxStringBase strc, afxNat cnt, afxString const in[], afxString out[]);
+AFX afxUnit      AfxDecatalogStrings(afxStringBase strc, afxUnit cnt, afxString const strings[]);
+AFX afxUnit      AfxCatalogStrings(afxStringBase strc, afxUnit cnt, afxString const in[], afxString out[]);
 
 #endif//AFX_INDEXED_STRING_H

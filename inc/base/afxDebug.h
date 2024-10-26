@@ -52,7 +52,7 @@ typedef enum
 AFX_DEFINE_STRUCT(afxHere2)
 {
     afxString   file;
-    afxNat      line;
+    afxUnit      line;
     afxString   func;
 };
 
@@ -77,8 +77,8 @@ AFX afxBool         _AfxDbgIsAttached(void);
 AFX afxResult       _AfxDbgLock(void);
 AFX afxResult       _AfxDbgUnlock(void);
 
-AFX afxResult       AfxDbgLog(afxNat ch, afxChar const* msg, afxNat len);
-AFX afxResult       AfxDbgLogf(afxNat ch, afxHere const hint, afxChar const* msg, ...);
+AFX afxResult       AfxDbgLog(afxUnit ch, afxChar const* msg, afxUnit len);
+AFX afxResult       AfxDbgLogf(afxUnit ch, afxHere const hint, afxChar const* msg, ...);
 
 #if 0
 AFX void            AfxLogCall(afxHere const hint, afxChar const* args, ...); // green
@@ -114,41 +114,43 @@ AFX afxChar const* _AfxDbgTrimFilename(afxChar const* path);
 #endif
 
 //#define AFX_SUCCESS ((afxResult)NIL)
-#define AFX_TEST(_exp_) if(_exp_) ((err) = (afxError)(-((afxNat16)__LINE__)), AfxLogError(AFX_STRINGIFY((_exp_))))
-#define AfxThrowError() ((err) = (afxError)(-((afxNat16)__LINE__)), AfxLogError(""))
-#define AfxThrowSoftError() ((err) = (afxError)(-((afxNat16)__LINE__))) // does not echo
+#define AFX_TEST(_exp_) if(_exp_) ((err) = (afxError)(-((afxUnit16)__LINE__)), AfxLogError(AFX_STRINGIFY((_exp_))))
+#define AfxThrowError() ((err) = (afxError)(-((afxUnit16)__LINE__)), AfxLogError(""))
+#define AfxThrowSoftError() ((err) = (afxError)(-((afxUnit16)__LINE__))) // does not echo
 #define AfxResetResult(rslt) (rslt = AFX_SUCCESS)
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
 
-//#   define AfxAssertRange(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxHere(),"%s(%u) + %s(%u) is out of range [0, %s(%u)]",AFX_STRINGIFY(base_),(base_),AFX_STRINGIFY(range_),(range_),AFX_STRINGIFY(total_),(total_)),0))
+//#   define AFX_ASSERT_RANGE(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxHere(),"%s(%u) + %s(%u) is out of range [0, %s(%u)]",AFX_STRINGIFY(base_),(base_),AFX_STRINGIFY(range_),(range_),AFX_STRINGIFY(total_),(total_)),0))
 //#   define AfxAssertRangei(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxHere(),"%s(%i) + %s(%i) is out of range [0, %s(%i)]",AFX_STRINGIFY(base_),(base_),AFX_STRINGIFY(range_),(range_),AFX_STRINGIFY(total_),(total_)),0))
 //#   define AfxAssertRangef(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxHere(),"%s(%f) + %s(%f) is out of range [0, %s(%f)]",AFX_STRINGIFY(base_),(base_),AFX_STRINGIFY(range_),(range_),AFX_STRINGIFY(total_),(total_)),0))
 
 // TODO override old ones
-#   define AfxAssertRange(capacity_, first_, count_)  ((!!((capacity_ >= first_ + count_)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%u + <%s>%u is out of capacity <%s>%u.",AFX_STRINGIFY(first_),(first_),AFX_STRINGIFY(count_),(count_),AFX_STRINGIFY(capacity_),(capacity_)),0))
+#   define AFX_ASSERT_RANGE(capacity_, first_, count_)  ((!!((capacity_ >= first_ + count_)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%u + <%s>%u is out of capacity <%s>%u.",AFX_STRINGIFY(first_),(first_),AFX_STRINGIFY(count_),(count_),AFX_STRINGIFY(capacity_),(capacity_)),0))
 #   define AfxAssertRangei(capacity_, first_, count_) ((!!((capacity_ >= first_ + count_)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%i + <%s>%i is out of capacity <%s>%i.",AFX_STRINGIFY(first_),(first_),AFX_STRINGIFY(count_),(count_),AFX_STRINGIFY(capacity_),(capacity_)),0))
 #   define AfxAssertRangef(capacity_, first_, count_) ((!!((capacity_ >= first_ + count_)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%f + <%s>%f is out of capacity <%s>%f.",AFX_STRINGIFY(first_),(first_),AFX_STRINGIFY(count_),(count_),AFX_STRINGIFY(capacity_),(capacity_)),0))
 #   define AfxAssertCapacity(capacity_, unit_)        ((!!((capacity_ >= unit_))))||(AfxThrowError(),AfxLogAssertionFailure("%s<%u> is out of capacity %s<%u>.",AFX_STRINGIFY(unit_),(unit_),AFX_STRINGIFY(capacity_),(capacity_)),0))
-#   define AfxAssertBounds(value_, min_, max_)  ((!!((value_ >= min_ && value_ <= max_)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%u is out of bounds <%s>[%u, %u]<%s>.",AFX_STRINGIFY(value_),(value_),AFX_STRINGIFY(min_),(min_),(max_),AFX_STRINGIFY(max_)),0))
+#   define AFX_ASSERT_BOUNDS(value_, min_, max_)  ((!!((value_ >= min_ && value_ <= max_)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%u is out of bounds <%s>[%u, %u]<%s>.",AFX_STRINGIFY(value_),(value_),AFX_STRINGIFY(min_),(min_),(max_),AFX_STRINGIFY(max_)),0))
 
 #   define AfxAssertBool(value_) ((!!((value_!=FALSE)||(value_!=TRUE)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%u is a illegal bool.",AFX_STRINGIFY(value_),(value_)),0))
 #   define AfxAssertAbs(value_) ((!!((value_>=0)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%u is not absolute.",AFX_STRINGIFY(value_),(value_)),0))
 
-#   define AfxAssertRangeWhd(total_, offset_, range_) ((!!(((total_) && (offset_) && (range_))&&(((total_)[0] >= (offset_)[0] + (range_)[0])&&((total_)[1] >= (offset_)[1] + (range_)[1])&&((total_)[2] >= (offset_)[2] + (range_)[2]))))||(AfxThrowError(),AfxLogError("<%s>[ %i, %i, %i ] + <%s>[ %i, %i, %i ] is out of capacity <%s>[ %i, %i, %i ].",AFX_STRINGIFY(offset_),((offset_) ? (offset_)[0] : 0),((offset_) ? (offset_)[1] : 0),((offset_) ? (offset_)[2] : 0),AFX_STRINGIFY(range_),((range_) ? (range_)[0] : 0),((range_) ? (range_)[1] : 0),((range_) ? (range_)[2] : 0),AFX_STRINGIFY(total_),((total_) ? (total_)[0] : 0),((total_) ? (total_)[1] : 0),((total_) ? (total_)[2] : 0)),0))
+//#   define AfxAssertRangeWhd(total_, offset_, range_) ((!!(((total_) && (offset_) && (range_))&&(((total_).w >= (offset_).x + (range_).w)&&((total_).h >= (offset_).y + (range_).h)&&((total_).d >= (offset_).z + (range_).d))))||(AfxThrowError(),AfxLogError("<%s>[ %i, %i, %i ] + <%s>[ %i, %i, %i ] is out of capacity <%s>[ %i, %i, %i ].",AFX_STRINGIFY(offset_),((offset_) ? (offset_).x : 0),((offset_) ? (offset_).y : 0),((offset_) ? (offset_).z : 0),AFX_STRINGIFY(range_),((range_) ? (range_).w : 0),((range_) ? (range_).h : 0),((range_) ? (range_).d : 0),AFX_STRINGIFY(total_),((total_) ? (total_).w : 0),((total_) ? (total_).h : 0),((total_) ? (total_).d : 0)),0))
+#   define AfxAssertRangeWhd(total_, offset_, range_) ((!!((((total_).w >= (offset_).x + (range_).w)&&((total_).h >= (offset_).y + (range_).h)&&((total_).d >= (offset_).z + (range_).d))))||(AfxThrowError(),AfxLogError("<%s>[ %i, %i, %i ] + <%s>[ %i, %i, %i ] is out of capacity <%s>[ %i, %i, %i ].",AFX_STRINGIFY(offset_),((offset_).x),((offset_).y),((offset_).z),AFX_STRINGIFY(range_),((range_).w),((range_).h),((range_).d),AFX_STRINGIFY(total_),((total_).w),(total_).h),((total_).d),0))
 
 // diferente de um range, um extent sempre há um valor mínimo. Algo não pode ter largura igual a zero e existir.
-#   define AfxAssertExtent(total_, range_) (((!!(range_))&&(!!((total_ >= range_))))||(AfxThrowError(),AfxLogAssertionFailure("%s(%u) is out of range [1, %u]",AFX_STRINGIFY((range_)),(range_),AFX_STRINGIFY((total_)),(total_)),0))
+//#   define AfxAssertExtent(total_, range_) (((!!(range_))&&(!!((total_ >= range_))))||(AfxThrowError(),AfxLogAssertionFailure("%s(%u) is out of range [1, %u]",AFX_STRINGIFY((range_)),(range_),AFX_STRINGIFY((total_)),(total_)),0))
+#   define AfxAssertExtent(total_, range_) (((((total_ >= range_))))||(AfxThrowError(),AfxLogAssertionFailure("%s(%u) is out of range [1, %u]",AFX_STRINGIFY((range_)),(range_),(total_)),0))
 
-#   define AfxAssert(cond_)  /*assert(cond_)*/           ((!!((cond_)))||(AfxThrowError(),AfxLogAssertionFailure("%s\n    %s",AFX_STRINGIFY((cond_)),errorMsg[AFXERR_INVALID]),0))
-#   define AfxAssert2(a_, b_) AfxAssert((a_)), AfxAssert((b_))
-#   define AfxAssert3(a_, b_, c_) AfxAssert2((a_),(b_)), AfxAssert((c_))
-#   define AfxAssert4(a_, b_, c_, d_) AfxAssert3((a_),(b_),(c_)), AfxAssert((d_))
-#   define AfxAssert5(a_, b_, c_, d_, e_) AfxAssert4((a_),(b_),(c_),(d_)), AfxAssert((e_))
-#   define AfxAssert6(a_, b_, c_, d_, e_, f_) AfxAssert5((a_),(b_),(c_),(d_),(e_)), AfxAssert((f_))
-#   define AfxAssert7(a_, b_, c_, d_, e_, f_, g_) AfxAssert6((a_),(b_),(c_),(d_),(e_),(f_)), AfxAssert((g_))
-#   define AfxAssert8(a_, b_, c_, d_, e_, f_, g_, h_) AfxAssert7((a_),(b_),(c_),(d_),(e_),(f_),(g_)), AfxAssert((h_))
-#   define AfxAssert9(a_, b_, c_, d_, e_, f_, g_, h_, i_) AfxAssert8((a_),(b_),(c_),(d_),(e_),(f_),(g_),(h_)), AfxAssert((i_))
+#   define AFX_ASSERT(cond_)  /*assert(cond_)*/           ((!!((cond_)))||(AfxThrowError(),AfxLogAssertionFailure("%s\n    %s",AFX_STRINGIFY((cond_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssert2(a_, b_) AFX_ASSERT((a_)), AFX_ASSERT((b_))
+#   define AfxAssert3(a_, b_, c_) AfxAssert2((a_),(b_)), AFX_ASSERT((c_))
+#   define AfxAssert4(a_, b_, c_, d_) AfxAssert3((a_),(b_),(c_)), AFX_ASSERT((d_))
+#   define AfxAssert5(a_, b_, c_, d_, e_) AfxAssert4((a_),(b_),(c_),(d_)), AFX_ASSERT((e_))
+#   define AfxAssert6(a_, b_, c_, d_, e_, f_) AfxAssert5((a_),(b_),(c_),(d_),(e_)), AFX_ASSERT((f_))
+#   define AfxAssert7(a_, b_, c_, d_, e_, f_, g_) AfxAssert6((a_),(b_),(c_),(d_),(e_),(f_)), AFX_ASSERT((g_))
+#   define AfxAssert8(a_, b_, c_, d_, e_, f_, g_, h_) AfxAssert7((a_),(b_),(c_),(d_),(e_),(f_),(g_)), AFX_ASSERT((h_))
+#   define AfxAssert9(a_, b_, c_, d_, e_, f_, g_, h_, i_) AfxAssert8((a_),(b_),(c_),(d_),(e_),(f_),(g_),(h_)), AFX_ASSERT((i_))
 
 #   define AfxAssertAND(condA_,condB_) ((!!((condA_) && (condB_)))||(AfxThrowError(),AfxLogAssertionFailure("%s\n    %s",AFX_STRINGIFY((condA_) && (condB_)),errorMsg[AFXERR_INVALID]),0))
 #   define AfxAssertXOR(condA_,condB_) ((!!((condA_) || (condB_)))||(AfxThrowError(),AfxLogAssertionFailure("%s\n    %s",AFX_STRINGIFY((condA_) || (condB_)),errorMsg[AFXERR_INVALID]),0))
@@ -159,13 +161,13 @@ AFX afxChar const* _AfxDbgTrimFilename(afxChar const* path);
 #   define AfxAssertDiffSoft(a_,b_)         ((!!(((void const*)(a_) != (void const*)(b_))))||(AfxThrowError(),AfxLogAdvertence("%s\n    %s",AFX_STRINGIFY((cond_)),errorMsg[AFXERR_INVALID]),0))
 #   define AfxAssertType(var_, fcc_)    ((!!((var_) && (*((afxFcc const*)var_) == (fcc_))))||(AfxThrowError(),AfxLogAssertionFailure("%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[AFXERR_INVALID]),0))
 #   define AfxTryAssertType(var_, fcc_) ((!!(!(var_) || (*((afxFcc const*)var_) == (fcc_))))||(AfxThrowError(),AfxLogAssertionFailure("%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[AFXERR_INVALID]),0))
-#   define AfxAssertAlign(addr_,align_) ((!!((AfxIsAligned((addr_),(align_)))))||(AfxThrowError(),AfxLogAssertionFailure("%s(%u) is not aligned to %u bytes",AFX_STRINGIFY((addr_)), (addr_), (align_),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertAlign(addr_,align_) ((!!((AFX_IS_ALIGNED((addr_),(align_)))))||(AfxThrowError(),AfxLogAssertionFailure("%s(%u) is not aligned to %u bytes",AFX_STRINGIFY((addr_)), (addr_), (align_),errorMsg[AFXERR_INVALID]),0))
 
 #   define AfxAssignFcc(obj_,fcc_) (obj_)->fcc = (fcc_)
 #   define AfxAssignTypeFcc(type_,fcc_) *((afxFcc*)type_) = (fcc_)
 #else
 
-#   define AfxAssert(cond_) ((void)(err))
+#   define AFX_ASSERT(cond_) ((void)(err))
 #   define AfxAssert2(a_, b_) ((void)(err))
 #   define AfxAssert3(a_, b_, c_) ((void)(err))
 #   define AfxAssert4(a_, b_, c_, d_) ((void)(err))
@@ -175,6 +177,10 @@ AFX afxChar const* _AfxDbgTrimFilename(afxChar const* path);
 #   define AfxAssert8(a_, b_, c_, d_, e_, f_, g_, h_) ((void)(err))
 #   define AfxAssert9(a_, b_, c_, d_, e_, f_, g_, h_, i_) ((void)(err))
 
+#   define AfxAssertAND(condA_,condB_) 
+#   define AfxAssertXOR(condA_,condB_) 
+#   define AfxAssertOR(condA_,condB_) 
+
 #   define AfxAssertDiff(a_,b_) ((void)(err))
 #   define AfxAssertDiffSoft(a_,b_) ((void)(err)) // when input causes just computational power loss
 #   define AfxAssertType(var_, fcc_) ((void)(err))
@@ -183,11 +189,11 @@ AFX afxChar const* _AfxDbgTrimFilename(afxChar const* path);
 #   define AfxAssertBool(value_)
 #   define AfxAssertAbs(value_)
 
-#   define AfxAssertRange(total_, base_, range_)
+#   define AFX_ASSERT_RANGE(total_, base_, range_)
 #   define AfxAssertRangei(total_, base_, range_)
 #   define AfxAssertRangef(total_, base_, range_)
 #   define AfxAssertCapacity(capacity_, unit_)
-#   define AfxAssertBounds(value_, min_, max_)
+#   define AFX_ASSERT_BOUNDS(value_, min_, max_)
 
 #   define AfxAssertRangeWhd(total_, offset_, range_)
 
@@ -209,7 +215,7 @@ AFX afxChar const* _AfxDbgTrimFilename(afxChar const* path);
 
 #ifdef _AFX_DEBUG
 #   define _AFX_DBG_FCC    afxFcc    fcc
-#   define _AFX_DBG_FCC16   afxNat16  fcc
+#   define _AFX_DBG_FCC16   afxUnit16  fcc
 #else
 #   define _AFX_DBG_FCC 
 #   define _AFX_DBG_FCC16 

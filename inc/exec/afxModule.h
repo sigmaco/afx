@@ -35,17 +35,17 @@ typedef enum afxModuleType
 AFX void                AfxGetModulePath(afxModule mdle, afxUri* uri);
 
 AFX void*               AfxGetSymbolAddress(afxModule mdle, afxString const* name);
-AFX afxNat              AfxGetSymbolAddresses(afxModule mdle, afxNat cnt, afxString const names[], void* addresses[]);
-AFX afxNat              AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxNat cnt, afxString const names[], void* addresses[]);
+AFX afxUnit              AfxGetSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const names[], void* addresses[]);
+AFX afxUnit              AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxUnit cnt, afxString const names[], void* addresses[]);
 
 
 AFX void*               AfxFindModuleSymbol(afxModule mdle, afxChar const *name);
-AFX afxResult           AfxFindModuleSymbols(afxModule mdle, afxNat cnt, afxChar const *name[], void *sym[]);
+AFX afxResult           AfxFindModuleSymbols(afxModule mdle, afxUnit cnt, afxChar const *name[], void *sym[]);
 
-AFX afxNat              AfxFindSymbolAddresses(afxModule mdle, afxNat cnt, afxString const names[], void* addresses[]);
+AFX afxUnit              AfxFindSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const names[], void* addresses[]);
 
 AFX void                AfxGetModuleInfo(afxModule icd, afxString* product, afxString* vendor, afxString* description);
-AFX void                AfxGetModuleVersion(afxModule icd, afxNat* verMajor, afxNat* verMinor, afxNat* verPatch);
+AFX void                AfxGetModuleVersion(afxModule icd, afxUnit* verMajor, afxUnit* verMinor, afxUnit* verPatch);
 
 AFX void*               AfxGetModuleIdd(afxModule mdle);
 

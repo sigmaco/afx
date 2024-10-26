@@ -16,16 +16,18 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-/// RenderWare uses 4x3, row-major affine matrices.
-/// This object defines a RenderWare Matrix object.
-/// The Matrix is heavily used throughout the API and a full range of functions are provided, including: rotation, multiplication, concatenation, scaling, translation, creation, destruction, stream read/write functions and a number of access functions to access particular vector data within the matrix.
-/// The "Right vector" is one of the vectors in a RenderWare Graphics matrix. It corresponds to the 'x' axis in a right-handed, xyz coordinate system. 
-/// The "Up vector" is one of the vectors in a RenderWare Graphics matrix. The up vector corresponds to the 'y' axis in a right-handed, xyz coordinate system. 
-/// The "at vector" is one of the vectors in a RenderWare Graphics matrix. It corresponds to the 'z' axis in a right-handed, xyz coordinate system. 
-/// RenderWare Graphics uses a right-handed co-ordinate system. Therefore with z increasing into the display screen, and y increasing upwards, the x co-ordinate system increases towards the left.
-/// RenderWare, such as DirectX, uses row vectors and ends up with the much more natural: result = input * local_to_object * object_to_world. Your input is in local space, it gets transformed into object space before finally ending up in world space. Clean, clear, and readable. If you instead multiply the two matrices together on their own, you get the clear local_to_world = local_to_object * object_to_world instead of the awkward local_to_world = object_to_world * local_to_object you would get with OpenGL shaders and column vectors.
+/**
+    RenderWare uses 4x3, row-major affine matrices.
+    
+    This object defines a RenderWare Matrix object.
+    
+    The Matrix is heavily used throughout the API and a full range of functions are provided, including: rotation, multiplication, concatenation, scaling, translation, creation, destruction, stream read/write functions and a number of access functions to access particular vector data within the matrix.
+    The "Right vector" is one of the vectors in a RenderWare Graphics matrix. It corresponds to the 'x' axis in a right-handed, xyz coordinate system. 
+    The "Up vector" is one of the vectors in a RenderWare Graphics matrix. The up vector corresponds to the 'y' axis in a right-handed, xyz coordinate system. 
+    The "at vector" is one of the vectors in a RenderWare Graphics matrix. It corresponds to the 'z' axis in a right-handed, xyz coordinate system. 
+    RenderWare Graphics uses a right-handed co-ordinate system. Therefore with z increasing into the display screen, and y increasing upwards, the x co-ordinate system increases towards the left.
+    RenderWare, such as DirectX, uses row vectors and ends up with the much more natural: result = input * local_to_object * object_to_world. Your input is in local space, it gets transformed into object space before finally ending up in world space. Clean, clear, and readable. If you instead multiply the two matrices together on their own, you get the clear local_to_world = local_to_object * object_to_world instead of the awkward local_to_world = object_to_world * local_to_object you would get with OpenGL shaders and column vectors.
 
-/*
     These translations are often called:
 
     Surge, translation along the longitudinal axis (forward or backwards)
@@ -115,6 +117,10 @@ AFXINL void     AfxM4dCopyM3d(afxM4d m, afxM3d const ltm, afxV4d const atv);
 AFXINL void     AfxM4dCopyLtm(afxM4d m, afxM4d const in); // copy only the 3x3
 AFXINL void     AfxM4dCopyAtm(afxM4d m, afxM4d const in); // copy only the 4x3
 AFXINL void     AfxM3dCopyM4d(afxM3d m, afxM4d const in);
+
+AFXINL void     AfxAtm3dCopy(afxAtm3d m, afxAtm3d const in);
+AFXINL void     AfxAtm3dCopyM3d(afxAtm3d m, afxM3d const in);
+AFXINL void     AfxAtm3dCopyM4d(afxAtm3d m, afxM4d const in);
 
 AFXINL void     AfxM2dTranspose(afxM2d m, afxM2d const in);
 AFXINL void     AfxM3dTranspose(afxM3d m, afxM3d const in);
@@ -226,10 +232,10 @@ AFXINL void         AfxM4dComposeTransformation
 /// Builds a transformation matrix.
 (
     afxM4d          m, 
-    afxV3d const    scalOrigin, /// Vector describing the center of the scaling.
+    afxV3d const    scalPivot, /// Vector describing the center of the scaling.
     afxQuat const   scalOrient, /// Quaternion describing the orientation of the scaling.
     afxV3d const    scaling, /// Vector containing the scaling factors for the x-axis, y-axis, and z-axis.
-    afxV3d const    rotOrigin, /// Vector describing the center of the rotation.
+    afxV3d const    rotPivot, /// Vector describing the center of the rotation.
     afxQuat const   rotQuat, /// Quaternion describing the rotation around the origin indicated by rotOrigin.
     afxV3d const    translation /// Vector describing the translations along the x-axis, y-axis, and z-axis.
 );
@@ -239,7 +245,7 @@ AFXINL void         AfxM4dComposeAffineTransformation
 (
     afxM4d          m, 
     afxV3d const    scale, /// Vector of scaling factors for each dimension.
-    afxV3d const    rotAxis, /// Point identifying the center of rotation.
+    afxV3d const    rotPivot, /// Point identifying the center of rotation.
     afxQuat const   rot, /// Rotation factors.
     afxV3d const    translation /// Translation offsets.
 );
@@ -284,35 +290,35 @@ AFXINL void     AfxM4dMultiplyTransposedAffine(afxM4d m, afxM4d const in, afxM4d
 
 // Matrix vs Vector
 
-AFXINL void     AfxM2dPostMultiplyV2d(afxM2d const m, afxNat cnt, afxV2d const in[], afxV2d out[]);
-AFXINL void     AfxM3dPostMultiplyV3d(afxM3d const m, afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxM4dPostMultiplyV4d(afxM4d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxM2dPostMultiplyV2d(afxM2d const m, afxUnit cnt, afxV2d const in[], afxV2d out[]);
+AFXINL void     AfxM3dPostMultiplyV3d(afxM3d const m, afxUnit cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxM4dPostMultiplyV4d(afxM4d const m, afxUnit cnt, afxV4d const in[], afxV4d out[]);
 
-AFXINL void     AfxM3dPostMultiplyLtv4d(afxM3d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
-AFXINL void     AfxM4dPostMultiplyAtv3d(afxM4d const m, afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxM4dPostMultiplyAtv4d(afxM4d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxM3dPostMultiplyLtv4d(afxM3d const m, afxUnit cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxM4dPostMultiplyAtv3d(afxM4d const m, afxUnit cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxM4dPostMultiplyAtv4d(afxM4d const m, afxUnit cnt, afxV4d const in[], afxV4d out[]);
 
-AFXINL void     AfxM2dPreMultiplyV2d(afxM2d const m, afxNat cnt, afxV2d const in[], afxV2d out[]);
-AFXINL void     AfxM3dPreMultiplyV3d(afxM3d const m, afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxM4dPreMultiplyV4d(afxM4d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxM2dPreMultiplyV2d(afxM2d const m, afxUnit cnt, afxV2d const in[], afxV2d out[]);
+AFXINL void     AfxM3dPreMultiplyV3d(afxM3d const m, afxUnit cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxM4dPreMultiplyV4d(afxM4d const m, afxUnit cnt, afxV4d const in[], afxV4d out[]);
 
-AFXINL void     AfxM3dPreMultiplyLtv4d(afxM3d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
-AFXINL void     AfxM4dPreMultiplyAtv3d(afxM4d const m, afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxM4dPreMultiplyAtv4d(afxM4d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxM3dPreMultiplyLtv4d(afxM3d const m, afxUnit cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxM4dPreMultiplyAtv3d(afxM4d const m, afxUnit cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxM4dPreMultiplyAtv4d(afxM4d const m, afxUnit cnt, afxV4d const in[], afxV4d out[]);
 
 
-AFXINL void     AfxM2dPostMultiplyV2dSerialized(afxM2d const m, afxNat inStride, afxNat outStride, afxNat cnt, afxV2d const in[], afxV2d out[]);
-AFXINL void     AfxM3dPostMultiplyV3dSerialized(afxM3d const m, afxNat inStride, afxNat outStride, afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxM4dPostMultiplyV4dSerialized(afxM4d const m, afxNat inStride, afxNat outStride, afxNat cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxM2dPostMultiplyV2dSerialized(afxM2d const m, afxUnit inStride, afxUnit outStride, afxUnit cnt, afxV2d const in[], afxV2d out[]);
+AFXINL void     AfxM3dPostMultiplyV3dSerialized(afxM3d const m, afxUnit inStride, afxUnit outStride, afxUnit cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxM4dPostMultiplyV4dSerialized(afxM4d const m, afxUnit inStride, afxUnit outStride, afxUnit cnt, afxV4d const in[], afxV4d out[]);
 
-AFXINL void     AfxM4dPostMultiplyAtv3dSerialized(afxM4d const m, afxNat inStride, afxNat outStride, afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxM3dPostMultiplyLtv4dSerialized(afxM3d const m, afxNat inStride, afxNat outStride, afxNat cnt, afxV4d const in[], afxV4d out[]);
-AFXINL void     AfxM4dPostMultiplyAtv4dSerialized(afxM4d const m, afxNat inStride, afxNat outStride, afxNat cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxM4dPostMultiplyAtv3dSerialized(afxM4d const m, afxUnit inStride, afxUnit outStride, afxUnit cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxM3dPostMultiplyLtv4dSerialized(afxM3d const m, afxUnit inStride, afxUnit outStride, afxUnit cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxM4dPostMultiplyAtv4dSerialized(afxM4d const m, afxUnit inStride, afxUnit outStride, afxUnit cnt, afxV4d const in[], afxV4d out[]);
 
 // Assimilate
 
-AFXINL void     AfxAssimilateLtm3d(afxM3d const ltm, afxM3d const iltm, afxNat cnt, afxM3d const in[], afxM3d out[]); // make similarity transformation on afxM3d-based scale/shear.
-AFXINL void     AfxAssimilateAtm4d(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxNat cnt, afxM4d const in[], afxM4d out[]);
+AFXINL void     AfxAssimilateLtm3d(afxM3d const ltm, afxM3d const iltm, afxUnit cnt, afxM3d const in[], afxM3d out[]); // make similarity transformation on afxM3d-based scale/shear.
+AFXINL void     AfxAssimilateAtm4d(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxUnit cnt, afxM4d const in[], afxM4d out[]);
 
 AFX void        AfxApplyRootMotionVectorsToMatrix(afxV3d const translation, afxV3d const rotation, afxM4d const mm, afxM4d m);
 

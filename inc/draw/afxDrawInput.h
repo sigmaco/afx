@@ -36,16 +36,13 @@
 #ifndef AVX_DRAW_INPUT_H
 #define AVX_DRAW_INPUT_H
 
-//#include "qwadro/inc/base/afxClass.h"
-//#include "qwadro/inc/io/afxUri.h"
-#include "qwadro/inc/draw/afxDrawBridge.h"
-//#include "qwadro/inc/math/avxMatrix.h"
+#include "qwadro/inc/draw/afxDrawContext.h"
 
 #include "qwadro/inc/cad/afxCamera.h"
 #include "qwadro/inc/cad/afxGeometry.h"
 #include "qwadro/inc/cad/afxMesh.h"
+#include "qwadro/inc/cad/afxScene.h"
 #include "qwadro/inc/cad/afxTxd.h"
-
 #include "qwadro/inc/draw/io/afxVertexStream.h"
 #include "qwadro/inc/draw/io/afxDrawTechnique.h"
 
@@ -75,15 +72,15 @@ AFX_DEFINE_STRUCT(afxDrawInputConfig)
 {
     afxUri              endpoint;
     afxDrawInputProc    proc;
-    afxNat              dragTxuBase;
-    afxNat              dragTxuCnt;
+    afxUnit             dragTxuBase;
+    afxUnit             dragTxuCnt;
 
-    afxNat              cmdPoolMemStock;
-    afxNat              estimatedSubmissionCnt;
-    afxNat              minVtxBufCap;
-    afxNat              maxVtxBufCap;
-    afxNat              minIdxBufCap;
-    afxNat              maxIdxBufCap;
+    afxUnit             cmdPoolMemStock;
+    afxUnit             estimatedSubmissionCnt;
+    afxUnit             minVtxBufCap;
+    afxUnit             maxVtxBufCap;
+    afxUnit             minIdxBufCap;
+    afxUnit             maxIdxBufCap;
     void*               udd;
 };
 
@@ -96,6 +93,7 @@ AVX afxClass const* AfxGetDrawTechniqueClass(afxDrawInput din);
 AVX afxClass*       AfxGetIndexBufferClass(afxDrawInput din);
 AVX afxClass*       AfxGetVertexBufferClass(afxDrawInput din);
 AVX afxClass const* AfxGetTextureClass(afxDrawInput din);
+AVX afxClass const* AfxGetSceneClass(afxDrawInput din);
 AVX afxClass const* AfxGetTxdClass(afxDrawInput din);
 
 AVX afxClass const* AfxGetMeshClass(afxDrawInput din);
@@ -125,7 +123,7 @@ AVX void            AfxComputeFrustrumMatrices(afxDrawInput din, afxReal left, a
 AVX void            AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRatio, afxReal range, afxM4d p, afxM4d ip);
 AVX void            AfxComputePerspectiveMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
 
-AVX afxError        AfxUplinkTxds(afxDrawInput din, afxNat baseSlot, afxNat slotCnt, afxUri const uris[]);
+AVX afxError        AfxUplinkTxds(afxDrawInput din, afxUnit baseSlot, afxUnit slotCnt, afxUri const uris[]);
 
 AVX afxStringBase   AfxGetPivotTagStringBase(afxDrawInput din);
 AVX afxStringBase   AfxGetMorphTagStringBase(afxDrawInput din);

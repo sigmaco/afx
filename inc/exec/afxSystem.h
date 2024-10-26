@@ -63,27 +63,27 @@ enum // opcodes used for primitive communication bethween engine and executables
 AFX_DEFINE_STRUCT(afxPlatformConfig)
 {
     afxFcc                  platFcc;
-#ifdef AFX_OS_WIN
+//#ifdef AFX_OS_WIN
     /*HINSTANCE*/void*      hInst;
     /*HWND*/void*           hWnd;
-#endif
+//#endif
 };
 
 /// All internal memory allocations go through a central allocator.
 /// You can get complete control over memory allocations overriding it.
-AFX_CALLBACK(void*, afxReallocatorFn)(void*, afxSize align, afxSize siz, afxChar const* __file__, afxNat __line__);
+AFX_CALLBACK(void*, afxReallocatorFn)(void*, afxSize align, afxSize siz, afxChar const* __file__, afxUnit __line__);
 
 AFX_DEFINE_STRUCT(afxSystemConfig)
 {
     afxIoBridgeConfig       mainIoBridge;
     afxSize                 maxMemUsage;
-    afxNat                  memPageSiz;
-    afxNat                  allocGranularity;
-    afxNat                  genrlArenaSpace;
+    afxUnit                 memPageSiz;
+    afxUnit                 allocGranularity;
+    afxUnit                 genrlArenaSpace;
 
-    afxNat                  ioBufSiz;
-    afxNat                  ioArenaSpace;
-    afxNat                  hwThreadingCap; // max amount of hardware threads managed by Qwadro.
+    afxUnit                 ioBufSiz;
+    afxUnit                 ioArenaSpace;
+    afxUnit                 hwThreadingCap; // max amount of hardware threads managed by Qwadro.
     afxReal                 unitsToMeter; // the number of units in a meter.
     
     afxAssertHook           assertHook; // external assertion handling function (optional)
@@ -94,14 +94,6 @@ AFX_DEFINE_STRUCT(afxSystemConfig)
     afxProfilerPostMarkerFn profilerPostMarker; // external (optional) function for tracking significant events in the system, to act as a marker or bookmark. (only called in Debug and Profile binaries; this is not called in Release)
 
     afxChar const*          root;
-
-    afxSize const*          attrs[2];
-    
-    struct
-    {
-        afxChar const*      key;
-        void const*         value;
-    };
 
     afxPlatformConfig       platform;
 
@@ -123,14 +115,14 @@ AFX afxBool             AfxGetSystem(afxSystem* system);
 AFX afxBool             AfxSystemIsExecuting(void);
 //AFX afxTime             AfxDoSystemThreading(afxTime timeout);
 
-AFX afxNat              AfxGetIoBufferSize(void);
+AFX afxUnit             AfxGetIoBufferSize(void);
 
-AFX afxNat              AfxGetMemoryPageSize(void);
+AFX afxUnit             AfxGetMemoryPageSize(void);
 
 /// Returns the ideal number of threads that this process can run in parallel. 
 /// This is done by querying the number of logical processors available to this process (if supported by this OS) or the total number of logical processors in the system. 
 /// This function returns 1 if neither value could be determined.
-AFX afxNat              AfxGetThreadingCapacity(void);
+AFX afxUnit             AfxGetThreadingCapacity(void);
 
 AFX afxUri const*       AfxGetSystemDirectory(afxUri *dst);
 AFX afxString const*    AfxGetSystemDirectoryString(afxString *dst);
@@ -138,7 +130,7 @@ AFX afxString const*    AfxGetSystemDirectoryString(afxString *dst);
 AFX afxUri const*       AfxGetPwd(afxUri *dst);
 AFX afxString const*    AfxGetPwdString(afxString *dst);
 
-AFX afxNat32            AfxGetPrimeTid(void);
+AFX afxUnit32           AfxGetPrimeTid(void);
 
 // Sends event event directly to receiver receiver, using the notify() function. Returns the value that was returned from the event handler.
 // Adds the event event, with the object receiver as the receiver of the event, to an event queue and returns immediately.
@@ -156,16 +148,16 @@ AFX afxClass const*     AfxGetDeviceClass(void);
 AFX afxClass const*     AfxGetIoBridgeClass(void);
 
 
-AFX afxNat              AfxCountDevices(afxDeviceType type);
+AFX afxUnit              AfxCountDevices(afxDeviceType type);
 
-AFX afxNat              AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, afxDevice devices[]);
-AFX afxNat              AfxEnumerateStorages(afxNat first, afxNat cnt, afxStorage systems[]);
-AFX afxNat              AfxEnumerateModules(afxNat first, afxNat cnt, afxModule executables[]);
-AFX afxNat              AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread threads[]);
+AFX afxUnit              AfxEnumerateDevices(afxDeviceType type, afxUnit first, afxUnit cnt, afxDevice devices[]);
+AFX afxUnit              AfxEnumerateStorages(afxUnit first, afxUnit cnt, afxStorage systems[]);
+AFX afxUnit              AfxEnumerateModules(afxUnit first, afxUnit cnt, afxModule executables[]);
+AFX afxUnit              AfxEnumerateThreads(afxUnit first, afxUnit cnt, afxThread threads[]);
 
-AFX afxNat              AfxInvokeDevices(afxDeviceType type, afxNat first, afxNat cnt, afxBool(*f)(afxDevice, void*), void *udd);
-AFX afxNat              AfxInvokeStorages(afxNat first, afxNat cnt, afxBool(*f)(afxStorage, void*), void *udd);
-AFX afxNat              AfxInvokeModules(afxNat first, afxNat cnt, afxBool(*f)(afxModule, void*), void *udd);
-AFX afxNat              AfxInvokeThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd);
+AFX afxUnit              AfxInvokeDevices(afxDeviceType type, afxUnit first, afxUnit cnt, afxBool(*f)(afxDevice, void*), void *udd);
+AFX afxUnit              AfxInvokeStorages(afxUnit first, afxUnit cnt, afxBool(*f)(afxStorage, void*), void *udd);
+AFX afxUnit              AfxInvokeModules(afxUnit first, afxUnit cnt, afxBool(*f)(afxModule, void*), void *udd);
+AFX afxUnit              AfxInvokeThreads(afxUnit first, afxUnit cnt, afxBool(*f)(afxThread, void*), void *udd);
 
 #endif//AFX_SYSTEM_H
