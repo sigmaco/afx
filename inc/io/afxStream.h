@@ -25,18 +25,37 @@
 #include "qwadro/inc/base/afxObject.h"
 #include "qwadro/inc/mem/afxMemory.h"
 #include "qwadro/inc/io/afxUri.h"
+#include "qwadro/inc/io/afxRing.h"
+
+#define AFX_DEFAULT_IOB_SIZE 512
+
+typedef enum afxIoUsage
+{
+    afxIoUsage_MEM      = AFX_BIT(0), // will be used as I/O memory buffer.
+    afxIoUsage_FILE     = AFX_BIT(1), // will be used as file I/O stream/buffer.
+    afxIoUsage_PIPE     = AFX_BIT(2),
+    afxIoUsage_TCP      = AFX_BIT(3), // will be used as TCP communication stream/buffer.
+    afxIoUsage_TTY      = AFX_BIT(4) // will be used as console I/O stream/buffer.
+} afxIoUsage;
 
 typedef enum afxIoFlag
 {
     // permissions
-    afxIoFlag_R         = AFX_BIT(0), // Readable
+    afxIoFlag_R         = AFX_BIT(0), // Readable (read-only)
+    afxIoFlag_READABLE  = afxIoFlag_R,
     afxIoFlag_W         = AFX_BIT(1), // Writeable
+    afxIoFlag_WRITEABLE = afxIoFlag_W,
     afxIoFlag_X         = AFX_BIT(2), // Executable (seekable)
-    afxIoFlag_RW        = (afxIoFlag_R | afxIoFlag_W),
-    afxIoFlag_RX        = (afxIoFlag_R | afxIoFlag_X),
-    afxIoFlag_WX        = (afxIoFlag_W | afxIoFlag_X),
-    afxIoFlag_RWX       = (afxIoFlag_R | afxIoFlag_W | afxIoFlag_X),
-    AFX_IO_PERM_MASK    = afxIoFlag_RWX
+    afxIoFlag_SEEKABLE  = afxIoFlag_X,
+
+    afxIoFlag_RW        = (afxIoFlag_R | afxIoFlag_W), // (read/write, create if not exists)
+    afxIoFlag_RX        = (afxIoFlag_R | afxIoFlag_X), // read or create
+    afxIoFlag_WX        = (afxIoFlag_W | afxIoFlag_X), // 
+    afxIoFlag_RWX       = (afxIoFlag_R | afxIoFlag_W | afxIoFlag_X), // 
+    afxIoModeMask       = afxIoFlag_RWX,
+
+    afxIoFlag_RESIZABLE = AFX_BIT(3),
+    afxIoFlag_RING      = AFX_BIT(4)
 } afxIoFlags;
 
 typedef enum afxSeekOrigin
@@ -46,7 +65,12 @@ typedef enum afxSeekOrigin
     afxSeekOrigin_END // from end to begin
 } afxSeekOrigin;
 
-typedef afxUnit afxRwx[3];
+AFX_DEFINE_STRUCT(afxStreamInfo)
+{
+    afxUnit          bufCap;
+    afxIoUsage  usage;
+    afxIoFlags  flags;
+};
 
 AFX_DECLARE_STRUCT(_afxIobIdd);
 
@@ -60,16 +84,10 @@ AFX_DEFINE_STRUCT(afxIobImpl)
     afxError    (*seek)(afxStream, afxSize, afxSeekOrigin);
     afxBool     (*eos)(afxStream);
     afxResult   (*dtor)(afxStream);
+    afxError    (*buf)(afxStream,afxUnit,void*);
 };
 
-// Reads data from a stream
-
-AFX_DEFINE_STRUCT(afxStreamSeg)
-{
-    afxSize offset;
-    afxUnit range;
-    afxUnit stride;
-};
+AFX afxIobImpl const stdStreamImpl;
 
 AFX afxBool         AfxIsStreamWriteable(afxStream const iob);
 AFX afxBool         AfxIsStreamReadable(afxStream const iob);
@@ -80,18 +98,83 @@ AFX afxUnit         AfxGetStreamCapacity(afxStream const iob); // total of bytes
 AFX afxSize         AfxGetStreamLength(afxStream const iob); // number of bytes available to be read.
 AFX afxSize         AfxGetStreamRoom(afxStream const iob); // number of bytes available to be written.
 
+/**
+    The AfxAskStreamPosn() method gets the current position in a stream.
+
+    @param iob the stream object that identifies the stream.
+    @return Returns the current value of the position indicator of the stream.
+*/
+
 AFX afxSize         AfxAskStreamPosn(afxStream iob);
+
 AFX afxSize         AfxMeasureStream(afxStream iob); // = end - begin
+
+/**
+    The AfxHasStreamReachedEnd() method checks for end-of-file indicator.
+
+    Checks whether the end-of-File indicator associated with stream is set, returning a value different from zero if it is.
+    This indicator is generally set by a previous operation on the stream that attempted to read at or past the end-of-file.
+    Notice that stream's internal position indicator may point to the end-of-file for the next operation, but still, the 
+    end-of-file indicator may not be set until an operation attempts to read at that point.
+
+    @param iob the stream object that identifies the stream.
+    @return A non-zero value is returned in the case that the end-of-file indicator associated with the stream is set.
+    Otherwise, zero is returned.
+*/
+
 AFX afxBool         AfxHasStreamReachedEnd(afxStream iob);
 
+/**
+    The AfxSeekStream() method repositions a stream position indicator.
+    
+    Sets the position indicator associated with the stream to a new position.
+
+    The new position is defined by adding offset to a reference position specified by origin.
+
+    @param iob is the stream object that identifies the stream.
+    @param offset is the umber of bytes to offset from origin.
+    @param origin is the position used as reference for the offset.
+    @return If successful, the function returns zero. Otherwise, it returns non-zero value.
+*/
+
 AFX afxError        AfxSeekStream(afxStream iob, afxSize offset, afxSeekOrigin origin);
+
+/**
+    The AfxRewindStream() method sets the position of a stream to the beginning.
+
+    Sets the position indicator associated with stream to the beginning of the file.
+
+    @param iob the stream object that identifies the stream.
+    @return Returns any error occuried.
+*/
+
 AFX afxError        AfxRewindStream(afxStream iob);
+
 AFX afxError        AfxRecedeStream(afxStream iob, afxUnit range);
+
 AFX afxError        AfxAdvanceStream(afxStream iob, afxUnit range);
 
 AFX void const*     AfxGetStreamBuffer(afxStream const iob, afxSize offset);
-AFX afxError        AfxAdjustStreamBuffer(afxStream iob, afxUnit bufCap);
 
+/**
+    The AfxBufferizeStream() method changes the stream buffering.
+
+    Specifies a buffer for stream. The function allows to specify the mode and size of the buffer (in bytes).
+    
+    If buffer is a nil, the function automatically allocates a buffer (using bufCap as a hint on the size to use). 
+    
+    Otherwise, the array pointed by buf may be used as a buffer of bufCap bytes.
+
+    This function should be called once the stream has been associated with an open file, 
+    but before any input or output operation is performed with it.
+
+    @param iob the stream object that identifies the stream.
+    @param bufCap is the buffer size, in bytes.
+    @param buf is the user-allocated buffer. Shall be at least bufCap bytes long.
+    @return Returns any error occuried.
+*/
+
+AFX afxError        AfxBufferizeStream(afxStream iob, afxUnit bufCap, void* buf);
 
 AFX afxBool         AfxResetStream(afxStream iob);
 
@@ -128,13 +211,6 @@ AFX afxError        AfxReadStreamAt(afxStream in, afxSize offset, afxUnit range,
 AFX afxError        AfxReadStreamReversed(afxStream in, afxUnit range, afxUnit rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
 AFX afxError        AfxReadStreamReversedAt(afxStream in, afxSize offset, afxUnit range, afxUnit rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
 
-AFX_DEFINE_STRUCT(afxDataIo)
-{
-    afxSize     offset;
-    afxUnit      rowStride;
-    afxUnit      rowCnt;
-};
-
 AFX afxError        AfxDecodeStream(afxStream in, afxSize offset, afxUnit rowStride, afxUnit rowCnt);
 AFX afxError        AfxDecodeStream2(afxStream in, afxSize offset, afxUnit encSiz, afxFcc codec, afxUnit stop0, afxUnit stop1, afxUnit stop2, void* dst);
 
@@ -144,40 +220,14 @@ AFX afxError        AfxWriteStreamAt(afxStream out, afxSize offset, afxUnit rang
 AFX afxError        AfxCopyStream(afxStream in, afxUnit rate, afxStream out); // em caso de erro, retorna o comprimento deixado de fora.
 AFX afxError        AfxCopyStreamRange(afxStream in, afxSize base, afxUnit range, afxUnit rate, afxStream out); // em caso de erro, retorna o comprimento deixado de fora.
 
+AFX afxError        AfxReopenStream(afxStream iob, afxUnit bufCap, void* start, afxSize len);
+
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef enum afxStreamUsage
-{
-    afxStreamUsage_FILE     = AFX_BIT(0), // will be used as file I/O stream/buffer.
-    afxStreamUsage_PIPE     = AFX_BIT(1),
-    afxStreamUsage_MEM      = AFX_BIT(2), // will be used as I/O memory buffer.
-    afxStreamUsage_TCP      = AFX_BIT(3), // will be used as TCP communication stream/buffer.
-    afxStreamUsage_TTY      = AFX_BIT(4) // will be used as console I/O stream/buffer.
-} afxStreamUsage;
+AFX afxError        AfxOpenStream(afxUnit bufCap, void* start, afxUnit len, afxIoFlags flags, afxStream* stream);
 
-typedef enum afxStreamFlag
-{
-    afxStreamFlag_READABLE  = AFX_BIT(0),
-    afxStreamFlag_WRITEABLE = AFX_BIT(1),
-    afxStreamFlag_SEEKABLE  = AFX_BIT(2),
-    afxStreamFlag_RESIZABLE = AFX_BIT(3),
-    afxStreamFlag_RING      = AFX_BIT(4)
-} afxStreamFlags;
+AFX afxError        AfxAcquireStream(afxUnit cnt, afxStreamInfo const infos[], afxStream streams[]);
 
-AFX_DEFINE_STRUCT(afxStreamInfo)
-{
-    afxUnit          bufCap;
-    afxStreamUsage  usage;
-    afxStreamFlags  flags;
-};
-
-AFX afxIobImpl const    stdStreamImpl;
-
-AFX afxError            AfxAcquireImplementedStream(afxIobImpl const* pimpl, afxUnit cnt, afxStreamInfo const infos[], afxStream streams[]);
-AFX afxError            AfxAcquireStream(afxUnit cnt, afxStreamInfo const infos[], afxStream streams[]);
-
-AFX afxError            AfxReopenStream(afxStream iob, void* buf, afxSize siz);
-AFX afxError            AfxReopenInputStream(afxStream iob, void const* start, afxSize len);
-AFX afxError            AfxReopenOutputStream(afxStream iob, void* buf, afxUnit bufCap);
+AFX afxError        AfxAcquireImplementedStream(afxIobImpl const* pimpl, afxUnit cnt, afxStreamInfo const infos[], afxStream streams[]);
 
 #endif//AFX_STREAM_H

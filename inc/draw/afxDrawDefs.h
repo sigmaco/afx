@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -43,49 +43,7 @@
 #   endif
 #endif//__e2draw__
 
-// Object handles defined by SIGMA Draw System
-
-AFX_DEFINE_HANDLE(afxDrawDevice);
-AFX_DEFINE_HANDLE(afxDrawContext);
-AFX_DEFINE_HANDLE(afxDrawBridge);
-AFX_DEFINE_HANDLE(afxDrawQueue);
-AFX_DEFINE_HANDLE(afxDrawInput);
-AFX_DEFINE_HANDLE(avxCmdb);
-AFX_DEFINE_HANDLE(afxDrawOutput);
-AFX_DEFINE_HANDLE(avxPipeline);
-AFX_DEFINE_HANDLE(avxRasterizer);
-AFX_DEFINE_HANDLE(avxVertexInput);
-AFX_DEFINE_HANDLE(avxShader);
-AFX_DEFINE_HANDLE(avxLigature);
-AFX_DEFINE_HANDLE(avxSampler);
-AFX_DEFINE_HANDLE(avxQueryPool);
-AFX_DEFINE_HANDLE(afxBuffer);
-AFX_DEFINE_HANDLE(afxRaster);
-AFX_DEFINE_HANDLE(avxCanvas);
-
-AFX_DEFINE_HANDLE(afxDrawOperation);
-AFX_DEFINE_HANDLE(afxDrawTechnique);
-AFX_DEFINE_HANDLE(afxTypography);
-AFX_DEFINE_HANDLE(afxCamera);
-AFX_DEFINE_HANDLE(afxTxd);
-AFX_DEFINE_HANDLE(afxVertexStream);
-AFX_DEFINE_HANDLE(afxVertexBuffer);
-AFX_DEFINE_HANDLE(afxIndexBuffer);
-
-AFX_DEFINE_HANDLE(afxGeometry);
-AFX_DEFINE_HANDLE(afxMesh);
-AFX_DEFINE_HANDLE(afxMeshTopology);
-AFX_DEFINE_HANDLE(afxScene);
-
-typedef afxUnit32 afxCmdId;
-
-AFX_DEFINE_STRUCT(afxFileDrop)
-{
-    afxUnit                      x, y;
-    afxArray                    files; // afxChar const*
-};
-
-typedef enum
+typedef enum avxTopology
 {
     avxTopology_POINT_LIST, // Mesh is made from points.
 
@@ -107,7 +65,8 @@ typedef enum
     avxTopology_TOTAL
 } avxTopology;
 
-typedef enum
+#if 0
+typedef enum afxFormat
 {
     afxFormat_REAL,
     afxFormat_NAT,
@@ -124,7 +83,7 @@ typedef enum
 
     afxFormat_TOTAL
 } afxFormat;
-
+#endif
 
 typedef enum avxStencilOp
 {
@@ -179,7 +138,7 @@ typedef enum avxCullMode
     avxCullMode_TOTAL
 } avxCullMode;
 
-typedef enum
+typedef enum avxFrontFace
 {
     avxFrontFace_CCW,
     avxFrontFace_CW,
@@ -187,7 +146,7 @@ typedef enum
     avxFrontFace_TOTAL
 } avxFrontFace;
 
-typedef enum
+typedef enum avxFillMode
 {
     avxFillMode_SOLID,
     avxFillMode_EDGE,
@@ -196,7 +155,7 @@ typedef enum
     avxFillMode_TOTAL
 } avxFillMode;
 
-typedef enum
+typedef enum avxBlendFactor
 /// Fragment output blending factors.
 /// Rs0,Gs0,Bs0 and As0 represent the first source color R, G, B, and A components, respectively, for the fragment output location corresponding to the color attachment being blended.
 /// Rs1,Gs1,Bs1 and As1 represent the second source color R, G, B, and A components, respectively, used in dual source blending modes, for the fragment output location corresponding to the color attachment being blended.
@@ -282,7 +241,7 @@ typedef enum
     avxBlendFactor_TOTAL
 } avxBlendFactor;
 
-typedef enum
+typedef enum avxBlendOp
 /// Fragment output blending operations.
 /// Once the source and destination blend factors have been selected, they along with the source and destination components are passed to the blending operations.
 /// RGB and alpha components can use different operations.
@@ -318,7 +277,7 @@ typedef enum
     /// A = max(As0, Ad)
 } avxBlendOp;
 
-typedef enum
+typedef enum avxCompareOp
 {
     avxCompareOp_NEVER, // NIL = Never passes
     avxCompareOp_LESS, // Passes if the incoming depth value is less than the stored depth value.
@@ -332,6 +291,7 @@ typedef enum
     avxCompareOp_TOTAL
 } avxCompareOp;
 
+#if 0
 typedef enum afxVertexFormat
 {
     //NIL,
@@ -379,6 +339,7 @@ typedef enum afxVertexFormat
 
     afxVertexFormat_TOTAL
 } afxVertexFormat;
+#endif
 
 typedef enum avxShaderStage
 {
@@ -392,6 +353,51 @@ typedef enum avxShaderStage
 
     avxShaderStage_TOTAL
 } avxShaderStage;
+
+// Object handles defined by SIGMA Draw System
+
+AFX_DEFINE_HANDLE(afxDrawPlatform);
+AFX_DEFINE_HANDLE(afxDrawDevice);
+AFX_DEFINE_HANDLE(afxDrawSystem);
+AFX_DEFINE_HANDLE(afxDrawThread);
+AFX_DEFINE_HANDLE(afxDrawBridge);
+AFX_DEFINE_HANDLE(afxDrawQueue);
+AFX_DEFINE_HANDLE(afxDrawInput);
+AFX_DEFINE_HANDLE(afxDrawContext);
+AFX_DEFINE_HANDLE(afxDrawOutput);
+AFX_DEFINE_HANDLE(avxPipeline);
+AFX_DEFINE_HANDLE(avxRasterizer);
+AFX_DEFINE_HANDLE(avxVertexDecl);
+AFX_DEFINE_HANDLE(avxShader);
+AFX_DEFINE_HANDLE(avxLigature);
+AFX_DEFINE_HANDLE(avxSampler);
+AFX_DEFINE_HANDLE(avxQueryPool);
+AFX_DEFINE_HANDLE(afxBuffer);
+AFX_DEFINE_HANDLE(afxRaster);
+AFX_DEFINE_HANDLE(avxCanvas);
+
+AFX_DEFINE_HANDLE(afxDrawOperation);
+AFX_DEFINE_HANDLE(afxDrawTechnique);
+AFX_DEFINE_HANDLE(afxTypography);
+AFX_DEFINE_HANDLE(afxCamera);
+AFX_DEFINE_HANDLE(afxTxd);
+AFX_DEFINE_HANDLE(afxVertexStream);
+AFX_DEFINE_HANDLE(afxVertexBuffer);
+AFX_DEFINE_HANDLE(afxIndexBuffer);
+
+AFX_DEFINE_HANDLE(afxGeometry);
+AFX_DEFINE_HANDLE(afxMesh);
+AFX_DEFINE_HANDLE(afxMeshTopology);
+AFX_DEFINE_HANDLE(afxScene);
+
+AFX_DEFINE_STRUCT(avxViewConstants)
+{
+    afxM4d  v, iv;
+    afxM4d  p, ip;
+    afxM4d  pv, ipv;
+    afxV4d  viewPos; // view point
+    afxV2d  viewExtent;
+};
 
 AVX afxString const g_str_Qwadro;
 AVX afxString const g_str_Draw;
@@ -467,7 +473,9 @@ AVX avxCullMode             AfxFindCullMode(afxString const *str);
 AVX avxFrontFace            AfxFindFrontFace(afxString const *str);
 AVX avxFillMode             AfxFindFillMode(afxString const *str);
 AVX avxShaderStage          AfxFindShaderStage(afxString const *str);
-AVX afxVertexFormat         AfxFindVertexFormat(afxString const *str);
+#if 0
+AVX avxFormat               AfxFindVertexFormat(afxString const *str);
+#endif
 
 AVX afxString const*        AfxStringifyPrimitiveTopology(avxTopology pt, afxString *out);
 AVX afxString const*        AfxStringifyLogicOp(avxLogicOp f, afxString *out);
@@ -477,10 +485,12 @@ AVX afxString const*        AfxStringifyCullMode(avxCullMode cm, afxString *out)
 AVX afxString const*        AfxStringifyFrontFace(avxFrontFace ff, afxString *out);
 AVX afxString const*        AfxStringifyFillMode(avxFillMode fm, afxString *out);
 AVX afxString const*        AfxStringifyShaderStage(avxShaderStage ss, afxString *out);
+#if 0
 AVX afxString const*        AfxStringifyVertexFormat(afxVertexFormat fmt, afxString *out);
 
 AVX afxUnit AfxVertexFormatGetSize(afxVertexFormat fmt);
 
 AVX afxResult       AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSiz, afxSize *vecSiz, afxSize *siz);
+#endif
 
 #endif//AVX_DRAW_DEFS_H

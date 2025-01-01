@@ -50,22 +50,28 @@
 #define MFX_USE_RW_MATH // use RenderWare over Qwadro conventions
 //#define MFX_ALIGN_ALL // force SIMD alignment to afxV3d and other types.
 
-#define AfxScalar(x_)   (x_)
+#define AFX_R(x_)   (x_)
 
 #ifndef AFX_PI
 #   define AFX_PI 3.14159265358979323846
 #endif
+#ifndef AFX_EPSILON32
+#   define AFX_EPSILON32 FLT_EPSILON
+#endif
+#ifndef AFX_EPSILON64
+#   define AFX_EPSILON64 DBL_EPSILON
+#endif
 #ifndef AFX_EPSILON
-#   define AFX_EPSILON DBL_EPSILON
+#   define AFX_EPSILON AFX_EPSILON32
 #endif
 
 #define AFX_PI_OVER2    (AFX_PI / 2.0)
 
 #ifndef MFX_ALIGN_ALL
 typedef afxReal afxV2d[2];
-typedef afxReal afxV4d[4];
-typedef afxV2d  afxM2d[2]; // 2D Linear Transform (2x2 Matrix)
-typedef afxV4d  afxM4d[4];
+typedef afxReal AFX_SIMD afxV4d[4];
+typedef afxV2d  AFX_SIMD afxM2d[2]; // 2D Linear Transform (2x2 Matrix)
+typedef afxV4d  AFX_SIMD afxM4d[4];
 #else
 typedef afxReal AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxV2d[2];
 typedef afxReal AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxV4d[4];
@@ -73,17 +79,16 @@ typedef afxV2d  AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxM2d[2]; // 2D Linear Transform 
 typedef afxV4d  AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxM4d[4];
 #endif
 
-typedef afxV4d  afxQuat; // 0,1,2 = imaginary, 3 = real
-typedef afxV4d  afxRotor; // 0,1,2 = imaginary, 3 = real
-typedef afxV4d  afxVector;
-typedef afxV4d  afxPoint;
-typedef afxM4d  afxMatrix;
+typedef afxV4d  AFX_SIMD afxQuat; // 0,1,2 = imaginary, 3 = real
+typedef afxV4d  AFX_SIMD afxRotor; // 0,1,2 = imaginary, 3 = real
+typedef afxV4d  AFX_SIMD afxVector;
+typedef afxV4d  AFX_SIMD afxPoint;
+typedef afxM4d  AFX_SIMD afxMatrix;
 
 #ifndef MFX_ALIGN_ALL
 typedef afxReal afxV3d[3];
 typedef afxV3d  afxM3d[3]; // 3D Linear Transform (3x3 Matrix)
 typedef afxV3d  afxAtm3d[4]; // non-aligned affine space.
-typedef afxV3d  afxAtm3d[4];
 #else
 typedef afxReal AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxV3d[3];
 typedef afxV3d  AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxM3d[3]; // 3D Linear Transform (3x3 Matrix)

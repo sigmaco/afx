@@ -1,0 +1,22 @@
+Booting...
+Threading... #4532 (afxSystem_w32.c:426)Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree>Memory page Size: 4096HW threading: 2Loading... <e2draw>Loading... <e2combo>Loading... <e2sound>Loading... <e2mmux>Loading... <//./z////eaxzal1.dll>afxModule_w32.c:504
+afxSystem.c:464
+Loading... <//./z////galileo.dll>afxModule_w32.c:504
+afxSystem.c:464
+Loading... <//./z////tarzgl4.dll>afxModule_w32.c:504
+afxSystem.c:464
+Loading... <//./z////winsh4d.dll>afxModule_w32.c:504
+afxSystem.c:464
+Entering the Thread Execution Environment 4532
+afxDrawContext.c:797
+afxDrawContext.c:815
+Sandbox.c:175
+Sandbox.c:175
+((!1) || ((&dctx) && !(_AfxAssertObjects((1), (afxObject const*)(&dctx),(afxFcc_DCTX)))))
+    InvalidafxSession.c:191
+afxSession.c:191
+((!1) || ((&ssh) && !(_AfxAssertObjects((1), (afxObject const*)(&ssh),(afxFcc_SSH)))))
+    InvalidafxShell.c:72
+afxShell.c:72
+((!1) || ((&ssh) && !(_AfxAssertObjects((1), (afxObject const*)(&ssh),(afxFcc_SSH)))))
+    Invalid

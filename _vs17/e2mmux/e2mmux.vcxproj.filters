@@ -10,18 +10,21 @@
     <Filter Include="qwadro\ux">
       <UniqueIdentifier>{4be41a32-e9be-4f31-b40f-df5202683b52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\dev">
-      <UniqueIdentifier>{874ef619-d049-45e5-9275-8035cc0e34ce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro\xss">
       <UniqueIdentifier>{346a1566-a569-4651-9073-309cc413505e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux\va">
+      <UniqueIdentifier>{9b228ef9-8379-4acb-84ef-f336d50c523b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux\impl">
+      <UniqueIdentifier>{1c14798f-38af-4077-a295-4f4953bcb173}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux\hid">
+      <UniqueIdentifier>{cb16976d-3205-42bc-b0de-c54818915508}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ux\afxWidget.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ux\afxGamepad.c">
       <Filter>qwadro\ux</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ux\afxWindow.c">
@@ -30,19 +33,10 @@
     <ClCompile Include="..\..\src\ux\afxShell.c">
       <Filter>qwadro\ux</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ux\afxHid.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\ux\afxSession.c">
       <Filter>qwadro\ux</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ux\afxTerminal.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ux\afxKeyboard.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ux\afxMouse.c">
       <Filter>qwadro\ux</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\xss\xssValue.c">
@@ -75,6 +69,30 @@
     <ClCompile Include="..\..\src\xss\xssUtils.c">
       <Filter>qwadro\xss</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\dep_\vgl\vgl.c">
+      <Filter>qwadro\ux\va</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\va\auxPaint.c">
+      <Filter>qwadro\ux\va</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\dep_\vgl1\vgl1.c">
+      <Filter>qwadro\ux\va</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\hid\afxKeyboard.c">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\hid\afxMouse.c">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\hid\afxGamepad.c">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\hid\afxHid.c">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\impl\auxImplementation.c">
+      <Filter>qwadro\ux\impl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\ux\afxUxDefs.h">
@@ -89,12 +107,6 @@
     <ClInclude Include="..\..\inc\ux\afxShell.h">
       <Filter>qwadro\ux</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\ux\afxGamepad.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\ux\afxHid.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\ux\afxWindow.h">
       <Filter>qwadro\ux</Filter>
     </ClInclude>
@@ -103,18 +115,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\ux\afxTerminal.h">
       <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\ux\afxKeyboard.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\ux\afxMouse.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dev\AuxImplKit.h">
-      <Filter>qwadro\dev</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\dev\AuxShellImplKit.h">
-      <Filter>qwadro\dev</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\xss\xss.h">
       <Filter>qwadro\xss</Filter>
@@ -157,6 +157,30 @@
     </ClInclude>
     <ClInclude Include="..\..\src\xss\xssUtils.h">
       <Filter>qwadro\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\va\auxPaint.h">
+      <Filter>qwadro\ux\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\dep_\vgl1\vgl1.h">
+      <Filter>qwadro\ux\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\hid\afxHid.h">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\hid\afxKeyboard.h">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\hid\afxMouse.h">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\hid\afxGamepad.h">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ux\impl\auxImplementation.h">
+      <Filter>qwadro\ux\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ux\impl\auxImpl_Shell.h">
+      <Filter>qwadro\ux\impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

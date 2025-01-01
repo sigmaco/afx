@@ -31,7 +31,7 @@ AFX_DEFINE_UNION(afxWhd)
 
 AFX_DEFINE_UNION(afxOffset)
 {
-    afxUnit x, y, z; // , lodIdx; // padding reused to store the LOD used.
+    afxInt x, y, z; // , lodIdx; // padding reused to store the LOD used.
 };
 
 AFX_DEFINE_UNION(afxExtent)

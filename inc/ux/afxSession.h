@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *         Q W A D R O   M U L T I M E D I A   U X   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -23,8 +23,8 @@
 
 #include "qwadro/inc/ux/afxUxDefs.h"
 #include "qwadro/inc/math/afxViewport.h"
-#include "qwadro/inc/ux/afxKeyboard.h"
-#include "qwadro/inc/ux/afxMouse.h"
+#include "qwadro/inc/ux/hid/afxKeyboard.h"
+#include "qwadro/inc/ux/hid/afxMouse.h"
 
 typedef enum afxSessionState
 {
@@ -52,6 +52,13 @@ typedef enum afxAuthMethod
     afxAuthMethod_TOTAL
 } afxAuthMethod;
 
+typedef enum afxSeatCaps
+{
+    afxSeatCap_KEYBOARD,
+    afxSeatCap_MOUSE,
+    afxSeatCap_GAMEPAD,
+} afxSeatCaps;
+
 AFX_DEFINE_STRUCT(afxSeatConfig)
 {
     afxString           u;
@@ -72,29 +79,32 @@ AFX_DEFINE_STRUCT(afxSessionConfig)
     // Most server implementations do not permit changing the username during authentication.
     // The username should only be set with ssh_options_set() only before you connect to the server.
 
-    afxDrawDevice       ddevId;
+    afxUnit             ddevId;
     afxUnit             vduIdx;
-    afxDrawContext      dctx;
-
-    afxSoundContext     sctx;
+    afxDrawSystem       dsys;
+    afxUnit             sdevId;
+    afxUnit             soutIdx;
+    afxSoundSystem      ssys;
 };
 
-AUX afxClass const* AfxGetWidgetClass(afxSession ses);
-AUX afxClass const* AfxGetWindowClass(afxSession ses);
-AUX afxClass const* AfxGetScriptClass(afxSession ses);
-
-AUX afxUnit         AfxEnumerateWidgets(afxSession ses, afxUnit first, afxUnit cnt, afxWidget widgets[]);
+AUX afxUnit         AfxEnumerateWidgets(afxWindow wnd, afxUnit first, afxUnit cnt, afxWidget widgets[]);
 
 AUX afxError        AfxCloseSession(afxSession ses);
 AUX afxError        AfxOpenSession(afxSession ses, afxUri const* host, afxAuthMethod method, afxString const* credential);
 
 AUX afxError        AfxStepSession(afxSession ses, void const*, void*);
 
+AUX afxBool         AfxGetSessionVideo(afxSession ses, afxDrawSystem* system);
+
+AUX afxBool         AfxGetSessionAudio(afxSession ses, afxSoundSystem* system, afxSink* sink);
+
 AUX afxError        AfxBeginFrame(afxSession ses);
 AUX afxError        AfxWaitFrame(afxSession ses);
 AUX afxError        AfxEndFrame(afxSession ses);
 
 AUX afxError        AfxReconnectKeyboard(afxSession ses, afxUnit portIdx, afxUnit hidNo);
+
+AUX afxTime         AfxPollInput(afxSession ses);
 
 ////////////////////////////////////////////////////////////////////////////////
 

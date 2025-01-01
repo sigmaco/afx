@@ -62,7 +62,7 @@ AFX afxV4d const AFX_V4D_RBF;
 AFX afxV4d const AFX_V4D_RTF;
 AFX afxV4d const AFX_V4D_LTF;
 
-AFX_DEFINE_STRUCT(afxFrustum)
+AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxFrustum)
 {
     afxPlane    planes[afxCubeFace_TOTAL];
     afxV4d      corners[afxCubeCorner_TOTAL];

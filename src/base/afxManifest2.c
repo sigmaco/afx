@@ -214,7 +214,7 @@ _AFX afxError AfxDeployManifest(afxManifest* ini)
     afxError err = NIL;
     ini->pageCnt = 0;
     
-    if (!(ini->pages = AfxAllocate(8, sizeof(ini->pages[0]), 0, AfxHere())))
+    if (AfxAllocate(8 * sizeof(ini->pages[0]), 0, AfxHere(), (void**)&ini->pages))
         AfxThrowError();
 
     return err;
@@ -234,12 +234,12 @@ _AFX void AfxDismantleManifest(afxManifest* ini)
         }
 
         AfxDeallocateString(&page->name);
-        AfxDeallocate(page->keys);
+        AfxDeallocate((void**)&page->keys, AfxHere());
     }
 
     if (ini->pages)
     {
-        AfxDeallocate(ini->pages);
+        AfxDeallocate((void**)&ini->pages, AfxHere());
         ini->pages = NIL;
     }
 }

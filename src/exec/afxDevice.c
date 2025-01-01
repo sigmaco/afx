@@ -47,9 +47,9 @@ afxString devAccelString[] =
 _AFX afxModule AfxGetDeviceDriver(afxDevice dev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dev, afxFcc_DEV);
+    AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
     afxModule icd = AfxGetLinker(&dev->icd);
-    AfxAssertObjects(1, &icd, afxFcc_MDLE);
+    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     return icd;
 }
 
@@ -58,7 +58,7 @@ _AFX afxClass* AfxGetFenceClass(afxContext ctx)
     afxError err = AFX_ERR_NONE;
     //AfxAssertObjects(1, &ddev, afxFcc_CTX);
     afxClass *cls = &ctx->fences;
-    AfxAssertClass(cls, afxFcc_FENC);
+    AFX_ASSERT_CLASS(cls, afxFcc_FENC);
     return cls;
 }
 
@@ -67,16 +67,16 @@ _AFX afxClass* AfxGetSemaphoreClass(afxContext ctx)
     afxError err = AFX_ERR_NONE;
     //AfxAssertObjects(1, &ddev, afxFcc_DEV);
     afxClass *cls = &ctx->semaphores;
-    AfxAssertClass(cls, afxFcc_SEM);
+    AFX_ASSERT_CLASS(cls, afxFcc_SEM);
     return cls;
 }
 
 _AFX afxError AfxDoDeviceService(afxDevice dev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dev, afxFcc_DEV);
-    afxThread thr;
+    AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 
+    afxThread thr;
     if (!AfxGetThread(&thr)) AfxThrowError();
     else
     {
@@ -89,7 +89,7 @@ _AFX afxError AfxDoDeviceService(afxDevice dev)
 _AFX afxResult AfxCallDevice(afxDevice dev, afxUnit reqCode, ...)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dev, afxFcc_DEV);
+    AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
     afxResult rslt = NIL;
 
     if (dev->ioctlCb)
@@ -105,33 +105,33 @@ _AFX afxResult AfxCallDevice(afxDevice dev, afxUnit reqCode, ...)
 _AFX afxDeviceType AfxGetDeviceType(afxDevice dev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dev, afxFcc_DEV);
+    AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
     return dev->type;
 }
 
 _AFX afxDeviceStatus AfxGetDeviceStatus(afxDevice dev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dev, afxFcc_DEV);
+    AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
     return dev->status;
 }
 
 _AFX afxAcceleration AfxGetDeviceAcceleration(afxDevice dev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dev, afxFcc_DEV);
+    AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
     return dev->acceleration;
 }
 
 _AFX afxError _AfxDevDtorCb(afxDevice dev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dev, afxFcc_DEV);
+    AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 
     AfxDeregisterChainedClasses(&dev->classes);
-    AFX_ASSERT(AfxChainIsEmpty(&dev->classes));
+    AFX_ASSERT(AfxIsChainEmpty(&dev->classes));
     
-    AfxPopLinkage(&dev->icd);
+    AfxPopLink(&dev->icd);
 
     return err;
 }
@@ -139,10 +139,10 @@ _AFX afxError _AfxDevDtorCb(afxDevice dev)
 _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dev, afxFcc_DEV);
+    AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 
     afxModule icd = args[0];
-    AfxAssertObjects(1, &icd, afxFcc_MDLE);
+    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     afxDeviceInfo const* info = (afxDeviceInfo const*)(args[1]) + invokeNo;
     AFX_ASSERT(info);
 
@@ -152,7 +152,7 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxUnit invokeNo)
     dev->status = afxDeviceStatus_DISABLED;
     dev->acceleration = info->acceleration;
 
-    AfxPushLinkage(&dev->icd, &icd->devices);
+    AfxPushLink(&dev->icd, &icd->devices);
 
     afxUri urn;
     AfxWrapUriString(&urn, &info->urn);
@@ -218,7 +218,7 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxUnit invokeNo)
 
     if (err)
     {
-        AfxPopLinkage(&dev->icd);
+        AfxPopLink(&dev->icd);
     }
 
     return err;
@@ -246,8 +246,8 @@ _AFX afxUnit AfxInvokeDevices(afxDeviceType type, afxUnit first, afxUnit cnt, af
     if (!type)
     {
         afxClass const* cls = AfxGetDeviceClass();
-        AfxAssertClass(cls, afxFcc_DEV);
-        rslt = AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
+        AFX_ASSERT_CLASS(cls, afxFcc_DEV);
+        rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
     }
     else
     {
@@ -255,7 +255,7 @@ _AFX afxUnit AfxInvokeDevices(afxDeviceType type, afxUnit first, afxUnit cnt, af
         afxUnit i = first;
         while (AfxEnumerateDevices(type, i, 1, &dev))
         {
-            AfxAssertObjects(1, &dev, afxFcc_DEV);
+            AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
             AFX_ASSERT(dev->type == type);
 
             ++rslt;
@@ -273,24 +273,30 @@ _AFX afxUnit AfxEnumerateDevices(afxDeviceType type, afxUnit first, afxUnit cnt,
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
-    AFX_ASSERT(devices);
     afxResult rslt = 0;
     afxClass const* cls = AfxGetDeviceClass();
-    AfxAssertClass(cls, afxFcc_DEV);
+    AFX_ASSERT_CLASS(cls, afxFcc_DEV);
 
     if (!type)
-        rslt = AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)devices);
+    {
+        if (!devices)
+            rslt = cls->instCnt;
+        else
+            rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)devices);
+    }
     else
     {
         afxDevice dev;
         afxUnit i = first;
-        while (AfxEnumerateClassInstances(cls, i, cnt, (afxObject*)&dev))
+        while (AfxEnumerateObjects(cls, i, cnt, (afxObject*)&dev))
         {
-            AfxAssertObjects(1, &dev, afxFcc_DEV);
+            AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 
             if (dev->type == type)
             {
-                devices[rslt] = dev;
+                if (devices)
+                    devices[rslt] = dev;
+
                 ++rslt;
             }
 
@@ -309,8 +315,8 @@ _AFX afxUnit AfxCountDevices(afxDeviceType type)
     if (!type)
     {
         afxClass const* cls = AfxGetDeviceClass();
-        AfxAssertClass(cls, afxFcc_DEV);
-        rslt = AfxCountClassInstances(cls);
+        AFX_ASSERT_CLASS(cls, afxFcc_DEV);
+        rslt = AfxEnumerateObjects(cls, 0, 0, NIL);
     }
     else
     {
@@ -318,7 +324,7 @@ _AFX afxUnit AfxCountDevices(afxDeviceType type)
         afxDevice dev;
         while (AfxEnumerateDevices(type, i, 1, &dev))
         {
-            AfxAssertObjects(1, &dev, afxFcc_DEV);
+            AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
             AFX_ASSERT(dev->type == type);
             ++rslt;
             ++i;
@@ -340,7 +346,7 @@ _AFX afxBool AfxFindDevice(afxDeviceType type, afxUri const* urn, afxDevice* dev
     afxDevice dev;
     while (AfxEnumerateDevices(type, i, 1, &dev))
     {
-        AfxAssertObjects(1, &dev, afxFcc_DEV);
+        AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
         AFX_ASSERT(!type || (dev->type == type));
 
         afxUri tmp;

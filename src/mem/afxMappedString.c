@@ -28,12 +28,12 @@ _AFX afxUnit AfxDecatalogStrings(afxStringBase strc, afxUnit cnt, afxString cons
             afxReferencedString* ref;
             AfxChainForEveryLinkage(&strc->strings, afxReferencedString, strb, ref)
             {
-                if (0 == AfxCompareStrings(&ref->str, TRUE, 1, &strings[i]))
+                if (0 == AfxCompareStrings(&ref->str, 0, TRUE, 1, &strings[i]))
                 {
                     if (0 == (--ref->refCnt))
                     {
-                        AfxPopLinkage(&ref->strb);
-                        AfxDeallocate(ref);
+                        AfxPopLink(&ref->strb);
+                        AfxDeallocate((void**)&ref, AfxHere());
                     }
                     ++rslt;
                     break;
@@ -58,7 +58,7 @@ _AFX afxUnit AfxCatalogStrings(afxStringBase strc, afxUnit cnt, afxString const 
             afxReferencedString* ref;
             AfxChainForEveryLinkage(&strc->strings, afxReferencedString, strb, ref)
             {
-                if (0 == AfxCompareStrings(&ref->str, FALSE, 1, &in[i]))
+                if (0 == AfxCompareStrings(&ref->str, 0, FALSE, 1, &in[i]))
                 {
                     out[i] = ref->str;
                     out[i].cap = 0;
@@ -71,7 +71,7 @@ _AFX afxUnit AfxCatalogStrings(afxStringBase strc, afxUnit cnt, afxString const 
 
             if (!found)
             {
-                ref = AfxAllocate(1, sizeof(*ref) + (sizeof(ref->data[0]) * in[i].len), 0, AfxHere());
+                AfxAllocate(sizeof(*ref) + (sizeof(ref->data[0]) * in[i].len), 0, AfxHere(), (void**)&ref);
 
                 if (!ref)
                 {
@@ -80,7 +80,7 @@ _AFX afxUnit AfxCatalogStrings(afxStringBase strc, afxUnit cnt, afxString const 
                 }
                 else
                 {
-                    AfxPushLinkage(&ref->strb, &strc->strings);
+                    AfxPushLink(&ref->strb, &strc->strings);
                     AfxMakeString(&ref->str, in[i].len, ref->data, in[i].len);
                     AfxCopyString(&ref->str, &in[i]);
                     ref->refCnt = 1;
@@ -102,12 +102,12 @@ _AFX afxUnit AfxCatalogStrings(afxStringBase strc, afxUnit cnt, afxString const 
 _AFX afxError _AfxStrcCtor(afxStringBase strc, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &strc, afxFcc_STRB);
+    AFX_ASSERT_OBJECTS(afxFcc_STRB, 1, &strc);
     
     AfxDeployChain(&strc->strings, strc);
     strc->first = NIL;
 
-    //AfxSetUpPool(&strc, sizeof(afxMappedString), 32);
+    //AfxDeployPool(&strc, sizeof(afxMappedString), 32);
 
     return err;
 }
@@ -115,14 +115,14 @@ _AFX afxError _AfxStrcCtor(afxStringBase strc, void** args, afxUnit invokeNo)
 _AFX afxError _AfxStrcDtor(afxStringBase strc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &strc, afxFcc_STRB);
+    AFX_ASSERT_OBJECTS(afxFcc_STRB, 1, &strc);
 
     afxUnit rslt = 0;
     afxReferencedString* ref;
     AfxChainForEveryLinkage(&strc->strings, afxReferencedString, strb, ref)
     {
-        AfxPopLinkage(&ref->strb);
-        AfxDeallocate(ref);
+        AfxPopLink(&ref->strb);
+        AfxDeallocate((void**)&ref, AfxHere());
         ++rslt;
     }
 

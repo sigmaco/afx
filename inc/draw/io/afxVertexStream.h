@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -20,7 +20,7 @@
 #define AVX_BUFFERIZER_H
 
 #include "qwadro/inc/draw/io/afxBuffer.h"
-#include "qwadro/inc/draw/pipe/avxVertexInput.h"
+#include "qwadro/inc/draw/pipe/avxVertexDecl.h"
 
 AFX_DEFINE_HANDLE(afxBufferizer);
 
@@ -32,7 +32,7 @@ AFX_DEFINE_HANDLE(afxBufferizer);
 
 AFX_DEFINE_STRUCT(afxBufferizerInfo)
 {
-    afxUnit          bufCap;
+    afxUnit         bufCap;
     afxBufferFlags  access;
     afxBufferUsage  usage;
 };
@@ -40,8 +40,8 @@ AFX_DEFINE_STRUCT(afxBufferizerInfo)
 AVX afxError        AfxAcquireBufferizer(afxDrawInput din, afxBufferizerInfo const* info, afxBufferizer* bufferizer);
 
 AVX afxBuffer       AfxGetVertexBufferStorage(afxVertexBuffer vbuf);
-AVX afxUnit          AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
-AVX avxVertexInput  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
-AVX afxUnit          AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
+AVX afxUnit         AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
+AVX avxVertexDecl  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
+AVX afxUnit         AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
 
 #endif//AVX_BUFFERIZER_H

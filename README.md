@@ -28,6 +28,8 @@ Qwadro was firstly designed for POSIX/Unix/Linux systems. Due to complexities ha
 There are several strange names in Qwadro, because Qwadro is an experiment that implements several paradigms of the same concept with random names to test both in parallel, and its API changes frequently depending on usage optimization. And... it is governed by methodist laws of Go Horse.
 There is some RenderWare semantics heritage still present. For example, we have afxRaster, afxQuat, afxV3d, afxV4d.
 
+E no Qwadro é assim: o que funciona está bugado, e o que não está bugado não funciona.
+
 ## Qwadro Video Graphics Infrastructure
 The **Qwadro Video Graphics Infrastructure** (**VGI**) is the foundation of the Draw I/O System that was developed to encapsulates some of the low-level tasks that encompasses functionality for device discovery, solicitation and enumeration, swap-chain creation, and presentation that are needed by device driver interfaces (DDI) and implementations to the Draw I/O System. VGI provides a common framework for future graphics components. It also defines a DDI that manages low-level shared tasks independently from the drawing mechanism runtime. The tasks implemented with VGI will be handled by the VGI DDI.
 

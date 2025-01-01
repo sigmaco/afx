@@ -16,56 +16,45 @@
 
 #include "../dev/afxExecImplKit.h"
 
-_AFXINL afxError AfxWrapQueue(afxQueue* que, afxUnit unitSiz, afxUnit cap, afxByte* bytemap)
+_AFXINL afxError AfxMakeQueue(afxQueue* que, afxUnit unitSiz, afxUnit cap, void* buf, afxUnit pop)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(que);
     AFX_ASSERT(unitSiz);
     AFX_ASSERT(cap);
-    //AfxAssignTypeFcc(que, afxFcc_QUE);
+    AFX_ASSERT(pop <= cap);
     que->unitSiz = unitSiz;
     que->cap = cap;
     que->head = (que->tail = 0);
-    que->bytemap = bytemap;
+    que->bytemap = buf;
+    que->alloced = !buf;
     return err;
 }
 
-_AFXINL afxError AfxSetUpQueue(afxQueue* que, afxUnit unitSiz, afxUnit cap)
+_AFXINL afxError AfxDismantleQueue(afxQueue* que)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(que);
-    AFX_ASSERT(unitSiz);
-    AFX_ASSERT(cap);
-
-    if (AfxWrapQueue(que, unitSiz, cap, NIL))
-        AfxThrowError();
-
-    return err;
-}
-
-_AFXINL afxError AfxCleanUpQueue(afxQueue* que)
-{
-    afxError err = AFX_ERR_NONE;
-    //AfxAssertType(que, afxFcc_QUE);
-
     que->head = (que->tail = 0);
     que->cap = 0;
     que->unitSiz = 0;
-
-    if (que->bytemap)
+    
+    if (que->bytemap && que->alloced)
     {
-        AfxDeallocate(que->bytemap);
+        AfxDeallocate((void**)&que->bytemap, AfxHere());
         que->bytemap = NIL;
+        que->alloced = FALSE;
     }
     return err;
 }
 
-_AFXINL afxError AfxPushQueue(afxQueue *que, void const* data)
+_AFXINL afxError AfxPushQueue(afxQueue* que, void const* data)
 {
     afxError err = AFX_ERR_NONE;
-    //AfxAssertType(que, afxFcc_QUE);
+    AFX_ASSERT(que);
+    AFX_ASSERT(data);
 
-    if (!que->bytemap && !(que->bytemap = AfxAllocate(que->cap, que->unitSiz, 0, AfxHere()))) AfxThrowError();
+    if (!que->bytemap && AfxAllocate(que->cap * que->unitSiz, 0, AfxHere(), (void**)&que->bytemap)) AfxThrowError();
     else
     {
         AfxCopy(&que->bytemap[que->unitSiz * que->tail], data, que->unitSiz);
@@ -74,25 +63,26 @@ _AFXINL afxError AfxPushQueue(afxQueue *que, void const* data)
     return err;
 }
 
+_AFXINL afxError AfxPopQueue(afxQueue *que)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(que);
+    AFX_ASSERT(que->head != que->tail);
+    que->head = (que->head + 1) % que->cap;
+    return err;
+}
+
 _AFXINL void* AfxPeekQueue(afxQueue const* que)
 {
     afxError err = AFX_ERR_NONE;
-    //AfxAssertType(que, afxFcc_QUE);
+    AFX_ASSERT(que);
     return (que->head == que->tail ? NIL : &que->bytemap[que->head * que->unitSiz]);
 }
 
 _AFXINL afxBool AfxIsQueueEmpty(afxQueue const* que)
 {
     afxError err = AFX_ERR_NONE;
-    //AfxAssertType(que, afxFcc_QUE);
+    AFX_ASSERT(que);
     return (que->head == que->tail);
 }
 
-_AFXINL afxError AfxPopQueue(afxQueue *que)
-{
-    afxError err = AFX_ERR_NONE;
-    //AfxAssertType(que, afxFcc_QUE);
-    AFX_ASSERT(que->head != que->tail);
-    que->head = (que->head + 1) % que->cap;
-    return err;
-}

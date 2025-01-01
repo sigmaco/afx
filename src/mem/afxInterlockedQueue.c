@@ -26,14 +26,16 @@ _AFXINL afxError AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxUnit un
     /// Initializa a file afxInterlockedQueue e aloca memória para o número especificado de entradas.
     /// O número de entradas não é mutável após inicialização.
 
+    cap = AfxPowerOfTwo32(cap);
     AFX_ASSERT((cap & (cap - 1)) == 0); // test for power of 2
-
+    AFX_ASSERT_P2(cap);
+    
     ique->queIdxMask = cap - 1;
     ique->writePosn = 0;
     ique->readPosn = 0;
     ique->unitSiz = unitSiz;
 
-    if (!(ique->entrySeqIdx = AfxAllocate(cap, sizeof(ique->entrySeqIdx[0]), 0, AfxHere()))) AfxThrowError();
+    if (AfxAllocate(cap * sizeof(ique->entrySeqIdx[0]), 0, AfxHere(), (void**)&ique->entrySeqIdx)) AfxThrowError();
     else
     {
         for (afxUnit i = 0; i < cap; ++i)
@@ -42,14 +44,14 @@ _AFXINL afxError AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxUnit un
             AfxStoreAtom32(&ique->entrySeqIdx[i], i);
         }
 
-        if (!(ique->entryValue = AfxAllocate(cap, unitSiz, 0, AfxHere()))) AfxThrowError();
+        if (AfxAllocate(cap * unitSiz, 0, AfxHere(), (void**)&ique->entryValue)) AfxThrowError();
         else
         {
             AfxZero(ique->entryValue, cap * ique->unitSiz);
         }
 
         if (err && ique->entrySeqIdx)
-            AfxDeallocate((void*)ique->entrySeqIdx);
+            AfxDeallocate((void**)&ique->entrySeqIdx, AfxHere());
     }
     return err;
 }
@@ -65,14 +67,14 @@ _AFXINL afxError AfxDismantleInterlockedQueue(afxInterlockedQueue* ique)
     if (ique->entrySeqIdx)
     {
         AFX_ASSERT(ique->readPosn == ique->writePosn);
-        AfxDeallocate((void*)ique->entrySeqIdx);
+        AfxDeallocate((void**)&ique->entrySeqIdx, AfxHere());
         ique->entrySeqIdx = NIL;
     }
 
     if (ique->entryValue)
     {
         AFX_ASSERT(ique->readPosn == ique->writePosn);
-        AfxDeallocate(ique->entryValue);
+        AfxDeallocate((void**)&ique->entryValue, AfxHere());
         ique->entryValue = NIL;
     }
 

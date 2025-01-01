@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -47,9 +47,10 @@ AFX_DEFINE_STRUCT(afxRect)
 AFX_DEFINE_STRUCT(afxViewport)
 /// Structure specifying a viewport
 {
-    afxV2d          offset; /// [x, y] are the viewport's upper left corner (x,y).
-    afxV2d          extent; /// [w, h] are the viewport's width and height, respectively.
-    afxV2d          depth;  /// [n, f] are the normalized min/max depth range for the viewport.
+    afxV2d origin; /// [x, y] are the viewport's bottom left corner (x,y).
+    afxV2d extent; /// [w, h] are the viewport's width and height, respectively.
+    afxReal minDepth; /// is the normalized min depth range for the viewport.
+    afxReal maxDepth; /// is the normalized max depth range for the viewport.
 };
 
 /// min depth can be less than, equal to, or greater than max depth.
@@ -79,6 +80,6 @@ AVXINL void         AfxCopyRect(afxRect* rc, afxRect const* src);
 
 AVXINL void         AfxSetRect(afxRect* rc, afxInt x, afxInt y, afxUnit w, afxUnit h);
 
-AVXINL void         AfxResetViewport(afxViewport* vp, afxReal x, afxReal y, afxReal w, afxReal h, afxReal n, afxReal f);
+AVXINL void         AfxResetViewport(afxViewport* vp, afxReal x, afxReal y, afxReal w, afxReal h, afxReal minDepth, afxReal maxDepth);
 
 #endif//AVX_VIEWPORT_H

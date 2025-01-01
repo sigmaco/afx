@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -23,7 +23,7 @@
 #ifndef AVX_SAMPLER_H
 #define AVX_SAMPLER_H
 
-#include "qwadro/inc/draw/afxPixel.h"
+#include "qwadro/inc/draw/io/afxPixel.h"
 #include "qwadro/inc/math/afxColor.h"
 
 typedef enum avxTexelAddress
@@ -100,11 +100,11 @@ AVX void            AfxDescribeSampler(avxSampler samp, avxSamplerInfo* config);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
-AVX afxError        AfxAcquireYuvSamplers(afxDrawContext dctx, afxUnit cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxError        AfxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxError        AfxDeclareYuvSamplers(afxDrawSystem dsys, afxUnit cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[]);
 
-AVX afxBool         AfxFindSamplers(afxDrawContext dctx, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
-AVX afxBool         AfxFindYuvSamplers(afxDrawContext dctx, afxUnit cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxBool         AfxFindSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxBool         AfxFindYuvSamplers(afxDrawSystem dsys, afxUnit cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[]);
 
 AVX void            AfxDescribeDefaultSampler(avxSamplerInfo* config);
 

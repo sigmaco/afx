@@ -20,118 +20,108 @@
 #define _AFX_RING_C
 #include "../dev/afxIoImplKit.h"
 
-AFX_DEFINE_STRUCT(afxRing)
-{
-    afxUnit32    readIdx;
-    afxUnit32    writeIdx;
-    afxAtom32   readableItemCnt;
-    afxUnit32    itemCnt;
-    afxUnit      unitSiz;
-    afxByte*    data;
-};
-
-afxError Init(afxRing* ring, afxUnit unitSiz, afxUnit32 itemCnt)
+_AFX afxError AfxDeployRing(afxRing* ring, afxUnit unitSiz, afxUnit32 cap)
 {
     afxError err = NIL;
-    ring->itemCnt = itemCnt;
+    ring->cap = cap;
     ring->readIdx = 0;
     ring->writeIdx = 0;
     ring->readableItemCnt = 0;
     ring->unitSiz = unitSiz;
 
-    if (!(ring->data = AfxAllocate(itemCnt, unitSiz, AFX_SIMD_ALIGNMENT, AfxHere())))
+    if (AfxAllocate(cap * unitSiz, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&ring->data))
         AfxThrowError();
 
     return err;
 }
 
-void Term(afxRing* ring)
+_AFX void AfxDismantleRing(afxRing* ring)
 {
-    ring->itemCnt = 0;
+    ring->cap = 0;
     ring->readIdx = 0;
     ring->writeIdx = 0;
     ring->readableItemCnt = 0;
 
     if (ring->data)
     {
-        AfxDeallocate(ring->data);
+        AfxDeallocate((void**)&ring->data, AfxHere());
         ring->data = NIL;
     }
 }
 
 // ---- Producer ---- //
 
-afxUnit32 AfxGetRingWriteIndex(afxRing* ring)
+_AFX afxUnit32 AfxGetRingWriteIndex(afxRing* ring)
 {
     return ring->writeIdx;
 }
 
-void* AfxGetRingWritePtr(afxRing* ring)
+_AFX void* AfxGetRingWritePtr(afxRing* ring)
 {
     return &ring->data[ring->writeIdx * ring->unitSiz];
 }
 
-afxUnit32 AfxGetRingNbWritableItems(afxRing* ring)
+_AFX afxUnit32 AfxGetRingNbWritableItems(afxRing* ring)
 {
-    return ring->itemCnt - (afxUnit32)ring->readableItemCnt;
+    return ring->cap - (afxUnit32)ring->readableItemCnt;
 }
 
-void AfxIncrementRingWriteIndex(afxRing* ring, afxUnit32 itemCnt)
+_AFX void AfxIncrementRingWriteIndex(afxRing* ring, afxUnit32 itemCnt)
 {
     afxError err = NIL;
     AFX_ASSERT(AfxGetRingNbWritableItems(ring) >= itemCnt);
-    ring->writeIdx = (ring->writeIdx + itemCnt) % ring->itemCnt;
+    ring->writeIdx = (ring->writeIdx + itemCnt) % ring->cap;
     AfxAddAtom32(&ring->readableItemCnt, itemCnt);
 }
 
 // ---- Consumer ----
 
-afxUnit32 AfxGetRingReadIndex(afxRing* ring)
+_AFX afxUnit32 AfxGetRingReadIndex(afxRing* ring)
 {
     return ring->readIdx;
 }
 
-void const* AfxGetRingReadPtr(afxRing* ring)
+_AFX void const* AfxGetRingReadPtr(afxRing* ring)
 {
     return &ring->data[ring->readIdx * ring->unitSiz];
 }
 
 // Peek at any item between the read and write pointer without advancing the read pointer.
-void const* AfxPeekRing(afxRing* ring, afxUnit32 offset)
+_AFX void const* AfxPeekRing(afxRing* ring, afxUnit32 offset)
 {
     afxError err = NIL;
     AFX_ASSERT((afxUnit32)ring->readableItemCnt > offset);
-    afxUnit32 readIdx = (ring->readIdx + offset) % ring->itemCnt;
+    afxUnit32 readIdx = (ring->readIdx + offset) % ring->cap;
     return &ring->data[readIdx * ring->unitSiz];
 }
 
-void AfxIncrementRingReadIndex(afxRing* ring, afxUnit32 itemCnt)
+_AFX void AfxIncrementRingReadIndex(afxRing* ring, afxUnit32 itemCnt)
 {
     afxError err = NIL;
-    AFX_ASSERT((afxUnit32)ring->readableItemCnt >= ring->itemCnt);
-    ring->readIdx = (ring->readIdx + itemCnt) % ring->itemCnt;
+    AFX_ASSERT((afxUnit32)ring->readableItemCnt >= ring->cap);
+    ring->readIdx = (ring->readIdx + itemCnt) % ring->cap;
     AfxSubAtom32(&ring->readableItemCnt, itemCnt);
 }
 
-afxUnit32 AfxGetRingNbReadableItems(afxRing* ring)
+_AFX afxUnit32 AfxGetRingNbReadableItems(afxRing* ring)
 {
     return ring->readableItemCnt;
 }
 
-afxUnit32 AfxGetRingSize(afxRing* ring)
+_AFX afxUnit32 AfxGetRingSize(afxRing* ring)
 {
-    return ring->itemCnt;
+    return ring->cap;
 }
 
 // Warning: requires external locking to prevent concurrent Grow+Read in a multi-threaded scenario. 
 // Like the rest of the class, assumes a single writing thread.
-afxBool AfxGrowRing(afxRing* ring, afxUnit32 growBy)
+_AFX afxBool AfxGrowRing(afxRing* ring, afxUnit32 growBy)
 {
-    afxUnit32 newItemCnt = ring->itemCnt + growBy;
+    afxUnit32 newItemCnt = ring->cap + growBy;
     afxByte* newData;
     afxUnit unitSiz = ring->unitSiz;
 
-    if ((newData = AfxAllocate(newItemCnt, unitSiz, 0, AfxHere())))
+    if (!AfxAllocate(newItemCnt * unitSiz, 0, AfxHere(), (void**)&newData))
     {
         if (ring->readableItemCnt)
         {
@@ -142,7 +132,7 @@ afxBool AfxGrowRing(afxRing* ring, afxUnit32 growBy)
                 if (ring->writeIdx)
                     AfxCopy(newData, ring->data, unitSiz * ring->writeIdx);
 
-                AfxCopy(&newData[unitSiz * (ring->readIdx + growBy)], &ring->data[unitSiz * ring->readIdx], unitSiz * (ring->itemCnt - ring->readIdx));
+                AfxCopy(&newData[unitSiz * (ring->readIdx + growBy)], &ring->data[unitSiz * ring->readIdx], unitSiz * (ring->cap - ring->readIdx));
                 ring->readIdx += growBy;
             }
             else
@@ -152,9 +142,9 @@ afxBool AfxGrowRing(afxRing* ring, afxUnit32 growBy)
             }
         }
 
-        AfxDeallocate(ring->data);
+        AfxDeallocate((void**)&ring->data, AfxHere());
         ring->data = newData;
-        ring->itemCnt = newItemCnt;
+        ring->cap = newItemCnt;
 
         return TRUE;
     }

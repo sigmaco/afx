@@ -1,0 +1,16 @@
+Booting...
+Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree.dll>Memory page Size: 4096HW threading: 2Loading... <e2draw.dll>Loading... <e2combo.dll>Loading... <e2sound.dll>Loading... <e2mmux.dll>Loading... <//./z////eaxzal1.dll>Installing... <eaxzal1>	<//./eaxzal1/>("")  0.0.0 Loading... <//./z////galileo.dll>Installing... <galileo>	<//./galileo/>("")  0.0.0 Loading... <//./z////tarzgl4.dll>Installing... <tarzgl4>avxImplementation.c:129
+avxImplementation.c:129
+(clsCfg.fcc == afxFcc_DSYS)
+    SuccessavxImplementation.c:130
+avxImplementation.c:130
+(clsCfg.fixedSiz >= _AVX_DSYS_CLASS_CONFIG.fixedSiz)
+    SuccessavxImplementation.c:134
+afxClass.c:781
+afxClass.c:781
+(cls)
+    SuccesszglDrawDevice_W32.c:658
+afxModule_w32.c:409
+afxClass.c:569
+afxClass.c:576
+afxClass<Module>(00510fe0)

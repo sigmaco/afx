@@ -15,15 +15,15 @@
  */
 
 #define _AMX_SIM_C
-#define _AMX_SIMULATION_C
+//#define _AMX_SIMULATION_C
 #define _AMX_NODE_C
-#include "../dev/AmxImplKit.h"
+#include "impl/amxImplementation.h"
 
 
 _AMXINL afxError _AfxNodDtor(afxNode nod)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &nod, afxFcc_NOD);
+    AFX_ASSERT_OBJECTS(afxFcc_NOD, 1, &nod);
 
     return err;
 }
@@ -41,17 +41,17 @@ _AMXINL afxError _AfxNodCtor(afxNode nod, void** args, afxUnit invokeNo)
 _AMXINL afxError AfxAcquireNodes(afxSimulation sim, afxUnit cnt, afxNode nod[], afxUnit const config[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sim, afxFcc_SIM);
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    if (AfxAcquireObjects(&sim->nodes, cnt, (afxObject*)nod, (void const*[]) { (void*)config }))
+    if (AfxAcquireObjects(_AmxGetNodeClass(sim), cnt, (afxObject*)nod, (void const*[]) { (void*)config }))
         AfxThrowError();
 
-    AfxAssertObjects(cnt, nod, afxFcc_NOD);
+    AFX_ASSERT_OBJECTS(afxFcc_NOD, cnt, nod);
 
     return err;
 }
 
-_AMX afxClassConfig _AfxNodMgrCfg =
+_AMX afxClassConfig const _AMX_NOD_CLASS_CONFIG =
 {
     .fcc = afxFcc_NOD,
     .name = "Node",

@@ -441,8 +441,8 @@ _AFXINL afxResult _AfxDbgDetach(void)
         }
 
         debugger.running = 0;
-        AfxCleanUpCondition(&(debugger.cond));
-        AfxCleanUpMutex(&(debugger.mtx));
+        AfxDismantleCondition(&(debugger.cond));
+        AfxDismantleMutex(&(debugger.mtx));
     }
     return 0;
 }
@@ -454,8 +454,8 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
     if (debugger.running) AfxThrowError();
     else
     {
-        AfxSetUpMutex(&(debugger.mtx), AFX_MTX_RECURSIVE);
-        AfxSetUpCondition(&(debugger.cond));
+        AfxDeployMutex(&(debugger.mtx), AFX_MTX_RECURSIVE);
+        AfxDeployCondition(&(debugger.cond));
         debugger.isLocked = TRUE;
 
         afxChar path[1024];
@@ -547,8 +547,8 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
             }
         }
 
-        AfxCleanUpCondition(&(debugger.cond));
-        AfxCleanUpMutex(&(debugger.mtx));
+        AfxDismantleCondition(&(debugger.cond));
+        AfxDismantleMutex(&(debugger.mtx));
     }
     return FALSE;
 }

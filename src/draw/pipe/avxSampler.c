@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -18,13 +18,13 @@
 
 #define _AVX_DRAW_C
 #define _AVX_SAMPLER_C
-#include "../../dev/AvxImplKit.h"
+#include "../impl/avxImplementation.h"
 
 _AVX void AfxDescribeSampler(avxSampler samp, avxSamplerInfo* spec)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(spec);
-    AfxAssertObjects(1, &samp, afxFcc_SAMP);
+    AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
 
     spec->magnify = samp->cfg.base.magnify;
     spec->minify = samp->cfg.base.minify;
@@ -43,7 +43,7 @@ _AVX void AfxDescribeSampler(avxSampler samp, avxSamplerInfo* spec)
 _AVX afxError _AvxSampStdDtor(avxSampler samp)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &samp, afxFcc_SAMP);
+    AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
 
     return err;
 }
@@ -51,7 +51,7 @@ _AVX afxError _AvxSampStdDtor(avxSampler samp)
 _AVX afxError _AvxSampStdCtor(avxSampler samp, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &samp, afxFcc_SAMP);
+    AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
 
     avxYuvSamplerInfo const *cfg = ((avxYuvSamplerInfo const *)args[1]) + invokeNo;
     afxBool yuv = args[2] ? *(afxBool const*)args[2] : FALSE;
@@ -78,7 +78,7 @@ _AVX afxError _AvxSampStdCtor(avxSampler samp, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AvxSampStdImplementation =
+_AVX afxClassConfig const _AVX_SAMP_CLASS_CONFIG =
 {
     .fcc = afxFcc_SAMP,
     .name = "Sampler",
@@ -90,55 +90,55 @@ _AVX afxClassConfig const _AvxSampStdImplementation =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxAcquireSamplers(afxDrawContext dctx, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[])
+_AVX afxError AfxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(samplers);
     AFX_ASSERT(cnt);
     afxBool rslt = 0;
 
-    if (cnt != (afxUnit)(rslt = AfxFindSamplers(dctx, cnt, cfg, samplers)))
+    if (cnt != (afxUnit)(rslt = AfxFindSamplers(dsys, cnt, cfg, samplers)))
     {
-        afxClass* cls = AfxGetSamplerClass(dctx);
-        AfxAssertClass(cls, afxFcc_SAMP);
+        afxClass* cls = AvxGetSamplerClass(dsys);
+        AFX_ASSERT_CLASS(cls, afxFcc_SAMP);
 
         for (afxUnit i = 0; i < cnt; i++)
         {
-            if (AfxAcquireObjects(cls, 1, (afxObject*)&samplers[i], (void const*[]) { dctx, (void*)&cfg[i], NIL }))
+            if (AfxAcquireObjects(cls, 1, (afxObject*)&samplers[i], (void const*[]) { dsys, (void*)&cfg[i], NIL }))
             {
                 AfxThrowError();
-                AfxReleaseObjects(rslt, samplers);
+                AfxDisposeObjects(rslt, samplers);
             }
         }
     }
-    AfxTryAssertObjects(cnt, samplers, afxFcc_SAMP);
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_SAMP, cnt, samplers);
     return err;
 }
 
-_AVX afxError AfxAcquireYuvSamplers(afxDrawContext dctx, afxUnit cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[])
+_AVX afxError AfxDeclareYuvSamplers(afxDrawSystem dsys, afxUnit cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(samplers);
     AFX_ASSERT(cnt);
     afxBool rslt = 0;
 
-    if (cnt != (afxUnit)(rslt = AfxFindYuvSamplers(dctx, cnt, cfg, samplers)))
+    if (cnt != (afxUnit)(rslt = AfxFindYuvSamplers(dsys, cnt, cfg, samplers)))
     {
-        afxClass* cls = AfxGetSamplerClass(dctx);
-        AfxAssertClass(cls, afxFcc_SAMP);
+        afxClass* cls = AvxGetSamplerClass(dsys);
+        AFX_ASSERT_CLASS(cls, afxFcc_SAMP);
         
         for (afxUnit i = 0; i < cnt; i++)
         {
-            if (AfxAcquireObjects(cls, 1, (afxObject*)&samplers[i], (void const*[]) { dctx, (void*)&cfg[i], (afxBool[]) { TRUE } }))
+            if (AfxAcquireObjects(cls, 1, (afxObject*)&samplers[i], (void const*[]) { dsys, (void*)&cfg[i], (afxBool[]) { TRUE } }))
             {
                 AfxThrowError();
-                AfxReleaseObjects(rslt, samplers);
+                AfxDisposeObjects(rslt, samplers);
             }
         }
     }
-    AfxTryAssertObjects(cnt, samplers, afxFcc_SAMP);
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_SAMP, cnt, samplers);
     return err;
 }
 
@@ -147,7 +147,7 @@ struct findSampCb { afxUnit crc; avxSampler sampler; };
 _AVXINL afxBool _AvxFindSampCompareCb(avxSampler samp, struct findSampCb* udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &samp, afxFcc_SAMP);
+    AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
 
     if (samp->crc == udd->crc)
     {
@@ -160,7 +160,7 @@ _AVXINL afxBool _AvxFindSampCompareCb(avxSampler samp, struct findSampCb* udd)
 _AVXINL afxBool _AvxFindSampCb(avxSampler samp, struct findSampCb* udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &samp, afxFcc_SAMP);
+    AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
 
     if (samp->crc == udd->crc)
     {
@@ -170,10 +170,10 @@ _AVXINL afxBool _AvxFindSampCb(avxSampler samp, struct findSampCb* udd)
     return TRUE; // continue
 };
 
-_AVX afxBool AfxFindSamplers(afxDrawContext dctx, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[])
+_AVX afxBool AfxFindSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(samplers);
     AFX_ASSERT(cfg);
     AFX_ASSERT(cnt);
@@ -181,10 +181,10 @@ _AVX afxBool AfxFindSamplers(afxDrawContext dctx, afxUnit cnt, avxSamplerInfo co
     return rslt;
 }
 
-_AVX afxBool AfxFindYuvSamplers(afxDrawContext dctx, afxUnit cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[])
+_AVX afxBool AfxFindYuvSamplers(afxDrawSystem dsys, afxUnit cnt, avxYuvSamplerInfo const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(samplers);
     AFX_ASSERT(cfg);
     AFX_ASSERT(cnt);

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *         Q W A D R O   M U L T I M E D I A   U X   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -15,6 +15,16 @@
  */
 
 // Advanced User Experience Extensions for Qwadro
+
+/*
+    Widgets are smaller graphical elements or controls within a window that enable user interaction. 
+    Widgets are used to allow users to interact with the system or application without directly manipulating the window. 
+    They are often part of a GUI and provide specific functions, like displaying information or allowing user input.
+
+    Their buttons allow the user to initiate an action. Their text boxes/fields enable users to input text.
+    Their sliders are used to select a value from a range. Their checkboxes/radio buttons let users select options.
+    Their labels display text or other information. Their menus provide a list of options or commands.
+*/
 
 #ifndef AUX_WIDGET_H
 #define AUX_WIDGET_H
@@ -25,8 +35,6 @@
 #include "qwadro/inc/base/afxObject.h"
 #include "qwadro/inc/io/afxUri.h"
 #include "qwadro/inc/math/afxTransform.h"
-//#include "afxViewport.h"
-//#include "qwadro/inc/draw/dev/afxDrawInput.h"
 
 typedef enum afxWidgetType
 {
@@ -69,6 +77,11 @@ AFX_DEFINE_STRUCT(afxWidgetConfig)
     afxResult(*f)(afxWidget, afxUri const*, void *data);
 };
 
-AUX afxError    AfxAcquireWidgets(afxSession ses, afxUnit cnt, afxWidgetConfig cfg[], afxWidget widgets[]);
+AUX afxError AfxResetWidget(afxWidget wid);
+AUX afxError AfxDoWidgetInput(afxWidget wid);
+AUX afxError AfxTestWidget(afxWidget wid);
+AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx);
+
+AUX afxError    AfxAcquireWidgets(afxWindow wnd, afxUnit cnt, afxWidgetConfig cfg[], afxWidget widgets[]);
 
 #endif//AUX_WIDGET_H

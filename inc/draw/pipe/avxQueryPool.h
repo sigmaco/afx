@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -38,7 +38,7 @@ typedef enum afxQueryType
     afxQueryType_TOTAL
 } afxQueryType;
 
-AVX afxDrawContext      AfxGetQueryPoolContext(avxQueryPool qryp);
+AVX afxDrawSystem      AfxGetQueryPoolContext(avxQueryPool qryp);
 
 AVX afxResult           AfxGetQueryResults
 /// Copy results of queries in a query qryp to a host memory region.

@@ -117,74 +117,88 @@ AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef enum afxError3
-{
-    // NIL, // The operation completed successfully.    
-    AFXERR_UNKNOWN = 1,
-    AFXERR_NIL, // Pointer or reference was nil.
-    AFXERR_ZERO, // Zero was found when some value was expected for such parameter.
-    AFXERR_EMPTY, // Nothing was found when function expected anything other than zero.
-    AFXERR_NOT_FOUND, // Resource wasn't found at an given address.
-    AFXERR_OUT_OF_RANGE, // Index or offset exceeded the totality of the seekable space.
-    AFXERR_INVALID, // The given argument exists but was invalid for such parameter.
-    AFXERR_NOT_ENOUGHT, // Supplied memory or data was insufficient for such operation.
-    AFXERR_DENIED, // Such operation was denied on given object or resource.
-    AFXERR_VIOLATION, // Potential violation on data integrity was detected.
-    AFXERR_INCOMPATIBLE, // Object or resource incompatible.
-    AFXERR_CORRUPTED, // Corruption in data integrity was detected for the given object.
-    AFXERR_UNSUPPORTED, // Operation unsupported.
-    AFXERR_UNINITIALIZED, // Object or resource wasn't initialized yet.
-} afxError3;
-
-typedef afxInt /*__attribute__((unused))*/ afxError;
+//typedef afxInt /*__attribute__((unused))*/ afxError;
 #define AFX_ERR_NONE /*(afxError)*/0
 
-enum
+typedef enum afxError
+// The afxError type allows for clear and consistent error handling and success status reporting in your code.
 {
-    AFX_SUCCESS, // The operation completed successfully.
+    // Zero indicates a successful operation.
+    afxError_SUCCESS,
 
-    AFX_UNKNOWN = -1,
-    AFX_FILE_NOT_FOUND = -2, // The system cannot find the file specified.
-    AFX_PATH_NOT_FOUND = -3, // The system cannot find the path specified.
-    AFX_TOO_MANY_OPEN_FILES = -4, // The system cannot open the file.
-    AFX_ACCESS_DENIED = -5, // Access is denied.
-    AFX_INVALID_HANDLE = -6, // The handle is invalid.
-    AFX_ARENA_TRASHED = -7, // The storage control blocks were destroyed.
-    AFX_NOT_ENOUGH_MEMORY = -8, // Not enough memory resources are available to process this command.
-    AFX_INVALID_BLOCK = -9, // The storage control block address is invalid.
-    AFX_BAD_ENVIRONMENT = -10, // The environment is incorrect.
-    AFX_BAD_FORMAT = -11, // An attempt was made to load a program with an incorrect format.
-    AFX_INVALID_ACCESS = -12, // The access code is invalid.
-    AFX_INVALID_DATA = -13, // The data is invalid.
-    AFX_OUTOFMEMORY = -14, // Not enough storage is available to complete this operation.
-    AFX_INVALID_DRIVE = -15, // The system cannot find the drive specified.
-    AFX_CURRENT_DIRECTORY = -16, // The directory cannot be removed.
-    AFX_NOT_SAME_DEVICE = -17, // The system cannot move the file to a different disk drive.
-    AFX_NO_MORE_FILES = -18, // There are no more files.
-    AFX_WRITE_PROTECT = -19, // The media is write protected.
-    AFX_BAD_UNIT = -20, // The system cannot find the device specified.
-    AFX_NOT_READY = -21, // The device is not ready.
-    AFX_BAD_COMMAND = -22, // The device does not recognize the command.
-    AFX_CRC = -23, // Data error(cyclic redundancy check).
-    AFX_BAD_LENGTH = -24, // The program issued a command but the command length is incorrect.
-    AFX_SEEK = -25, // The drive cannot locate a specific area or track on the disk.
-    AFX_NOT_DOS_DISK = -26, // The specified disk or diskette cannot be accessed.
-    AFX_SECTOR_NOT_FOUND = -27, // The drive cannot find the sector requested.
-    AFX_OUT_OF_PAPER = -28, // The printer is out of paper.
-    AFX_WRITE_FAULT = -29, // The system cannot write to the specified device.
-    AFX_READ_FAULT = -30, // The system cannot read from the specified device.
-    AFX_GEN_FAILURE = -31, // A device attached to the system is not functioning.
-    AFX_SHARING_VIOLATION = -32, // The process cannot access the file because it is being used by another process.
-    AFX_LOCK_VIOLATION = -33, // The process cannot access the file because another process has locked a portion of the file.
-    AFX_INVALID_ADDRESS = -487, // Attempt to access invalid address.
-};
+    // Positive codes
+    // These represent status. Isn't necessarily a direct success or error (for example, 
+    // a state code indicating progress or partial success).
+    afxError_INITIALIZED,
+
+    afxError_TIMEOUT,
+    afxError_INCOMPLETE,
+
+    // Negative error codes.
+    // These represent runtime error conditions and are negative values.
+    afxError_UNKNOWN = AFX_I32_MIN, // all following declarations will decrease one unit.
+
+    afxError_FILE_NOT_FOUND, // The system cannot find the file specified.
+    afxError_PATH_NOT_FOUND, // The system cannot find the path specified.
+    afxError_TOO_MANY_OPEN_FILES, // The system cannot open the file.
+    afxError_ACCESS_DENIED, // Access is denied.
+    afxError_INVALID_HANDLE, // The handle is invalid.
+    afxError_ARENA_TRASHED, // The storage control blocks were destroyed.
+    afxError_NOT_ENOUGH_MEMORY, // Not enough memory resources are available to process this command.
+    afxError_INVALID_BLOCK, // The storage control block address is invalid.
+    afxError_BAD_ENVIRONMENT, // The environment is incorrect.
+    afxError_BAD_FORMAT, // An attempt was made to load a program with an incorrect format.
+    afxError_INVALID_ACCESS, // The access code is invalid.
+    afxError_INVALID_DATA, // The data is invalid.
+    afxError_OUT_OF_MEMORY, // Not enough storage is available to complete this operation.
+    afxError_INVALID_DRIVE, // The system cannot find the drive specified.
+    afxError_CURRENT_DIRECTORY, // The directory cannot be removed.
+    afxError_NOT_SAME_DEVICE, // The system cannot move the file to a different disk drive.
+    afxError_NO_MORE_FILES, // There are no more files.
+    afxError_WRITE_PROTECT, // The media is write protected.
+    afxError_BAD_UNIT, // The system cannot find the device specified.
+    afxError_NOT_READY, // The device is not ready.
+    afxError_BAD_COMMAND, // The device does not recognize the command.
+    afxError_CRC, // Data error(cyclic redundancy check).
+    afxError_BAD_LENGTH, // The program issued a command but the command length is incorrect.
+    afxError_SEEK, // The drive cannot locate a specific area or track on the disk.
+    afxError_NOT_DOS_DISK, // The specified disk or diskette cannot be accessed.
+    afxError_SECTOR_NOT_FOUND, // The drive cannot find the sector requested.
+    afxError_OUT_OF_PAPER, // The printer is out of paper.
+    afxError_WRITE_FAULT, // The system cannot write to the specified device.
+    afxError_READ_FAULT, // The system cannot read from the specified device.
+    afxError_GEN_FAILURE, // A device attached to the system is not functioning.
+    afxError_SHARING_VIOLATION, // The process cannot access the file because it is being used by another process.
+    afxError_LOCK_VIOLATION, // The process cannot access the file because another process has locked a portion of the file.
+    afxError_INVALID_ADDRESS, // Attempt to access invalid address.
+    afxError_INVALID,
+    afxError_EMPTY,
+    afxError_NOT_FOUND,
+    afxError_OUT_OF_RANGE,
+    afxError_INSUFFICIENT,
+    afxError_DENIED,
+    afxError_VIOLATION,
+    afxError_UNSUPPORTED,
+    afxError_UNINITIALIZED,
+    afxError_OUT_OF_DED_MEMORY,
+    afxError_INIT_FAILED,
+    afxError_DEVICE_LOST,
+    afxError_MEMORY_MAP_FAILED,
+    afxError_LAYER_NOT_PRESENT,
+    afxError_EXTENSION_NOT_PRESENT,
+    afxError_FEATURE_NOT_PRESENT,
+    afxError_INCOMPATIBLE_DRIVER,
+    afxError_TOO_MANY_OBJECTS,
+    afxError_FMT_NOT_SUPPORTED,
+    afxError_FRAGMENTED_POOL,
+} afxError;
 
 typedef enum afxCriterion
 {
-    AFX_PROHIBIT, // if available can't be procceeded.
-    AFX_PERMIT, // if available can be used. Don't care. Same as allow?
-    AFX_PREFER, // if available should be used. Same as recommend?
-    AFX_REQUIRE, // if not available shouldn't procceed.
+    afxCriterion_PROHIBIT, // if available can't be procceeded.
+    afxCriterion_PERMIT, // if available can be used. Don't care. Same as allow?
+    afxCriterion_PREFER, // if available should be used. Same as recommend?
+    afxCriterion_REQUIRE, // if not available shouldn't procceed.
 }
 afxCriterion;
 
@@ -196,9 +210,6 @@ typedef enum afxProfileFlag
 } afxProfileFlag;
 
 // Object handles defined by Core Execution System
-
-typedef void* afxObject;
-#define AfxObjects(_objets_) ((afxObject*)_objets_)
 
 AFX_DEFINE_HANDLE(afxSystem);
 AFX_DEFINE_HANDLE(afxIoSystem);
@@ -241,17 +252,17 @@ AFX_DEFINE_UNION(afxUdd)
 {
     void*       p;
     void const* cp;
-    afxUnit8     i8;
-    afxUnit16    i16;
-    afxUnit32    i32;
-    afxUnit      i;
-    afxUnit8     n8;
-    afxUnit16    n16;
-    afxUnit32    n32;
-    afxUnit      n;
+    afxInt      i;
+    afxInt32    i32;
+    afxInt16    i16;
+    afxInt8     i8;
+    afxUnit     u;
+    afxUnit32   u32;
+    afxUnit16   u16;
+    afxUnit8    u8;
+    afxReal     f;
     afxReal32   f32;
     afxReal64   f64;
-    afxReal     f;
 };
 
 #define AFX_FUNC( _type, _name ) _type _CALL _name // Declare a function
@@ -344,5 +355,22 @@ AFXINL afxReal  AfxRandomReal2(afxReal mini, afxReal maxi);
 AFX void const* _AfxFind(void const* first, void const* last, afxSize unitSiz, void const* val);
 
 AFX void AfxAccumulateCrc32(afxUnit32 *crc, void const* data, afxSize len);
+
+#define AfxAlignDown(val, align) (typeof(val))((val) & (~((typeof(val))((align) - 1))))
+#define AfxAlign(val, align) AfxAlignDown(((val) + ((typeof(val)) (align) - 1)), align)
+
+#define AFX_SIZEOF_FIELD(type_, field_) (sizeof(((type_*)0)->field_))
+#define	AFX_DIM(a_) (sizeof(a_) / sizeof((a_)[0]))
+
+// assertion for test power of two condition
+#define AFX_ASSERT_P2(val_) AFX_ASSERT(((uintptr_t)val_ & (val_ - 1)) == 0)
+
+#define AfxPtrAdd(ptr, x) ((void*)((uintptr_t)(ptr) + (x)))
+#define AfxPtrSub(ptr, x) ((void *)((uintptr_t)(ptr) - (x)))
+#define AfxPtrDiff(ptr1, ptr2) ((uintptr_t)(ptr1) - (uintptr_t)(ptr2))
+#define AfxPtrAlignFloor(ptr, align) ((typeof(ptr))AfxAlignDown((uintptr_t)(ptr), align))
+#define AfxPtrAlignCeil(ptr, align) AfxPtrAlignFloor((typeof(ptr))AfxPtrAdd(ptr, (align) - 1), align)
+
+AFX afxUnit32 AfxPowerOfTwo32(afxUnit32 v);
 
 #endif//AFX_CORE_DEFS_H

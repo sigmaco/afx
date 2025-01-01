@@ -89,9 +89,11 @@ _AFXINL void AfxClearStrings(afxUnit cnt, afxString strings[])
     {
         afxString* s = &strings[i];
 
-        if (s->cap && s->buf)
+        if (s->cap)
+        {
+            AFX_ASSERT(s->buf);
             s->buf[0] = '\0';
-
+        }
         s->len = 0;
     }
 }
@@ -167,7 +169,6 @@ _AFXINL afxBool AfxFindFirstChar(afxString const* s, afxUnit from, afxInt ch, af
     AFX_ASSERT(s);
     afxBool rslt = FALSE;
     afxUnit strLen = s->len;
-    AFX_ASSERT_RANGE(strLen, from, 1);
 
     if (strLen > from)
     {
@@ -192,9 +193,7 @@ _AFXINL afxBool AfxFindLastChar(afxString const* s, afxUnit from, afxInt ch, afx
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(s);
     afxBool rslt = FALSE;
-
     afxUnit strLen = s->len;
-    AFX_ASSERT_RANGE(strLen, from, 1);
 
     if (strLen > from)
     {
@@ -241,10 +240,9 @@ _AFXINL afxResult AfxCompareString(afxString const* s, afxUnit base, afxChar con
     else if ((s->len != len) || ((!s->len && len) || (!len && s->len))) // if have different lenghts or any of them is blank.
         return s->len - len;
 
-    afxString a, b;
-    AfxExcerptString(s, base, len, &a);
+    afxString b;
     AfxMakeString(&b, 0, start, len);
-    return (0 != AfxCompareStrings(&a, ci, 1, &b));
+    return (0 != AfxCompareStrings(s, base, ci, 1, &b));
 }
 
 _AFXINL afxResult _AfxCompareStringRange2(afxString const* s, afxUnit lenA, afxString const* other, afxUnit lenB)
@@ -268,56 +266,58 @@ _AFXINL afxUnit AfxCompareSubstrings(afxString const* s, afxUnit base, afxUnit l
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(others);
     AFX_ASSERT(s);
-    afxUnit idx = AFX_INVALID_INDEX;
+
+    afxString ss;
+    AfxExcerptString(s, base, s->len - base, &ss);
+    afxUnit lenA = ss.len;
+
+    void const *a = AfxGetStringData(&ss, 0); // base was already considered by excerption
 
     for (afxUnit i = 0; i < cnt; i++)
     {
         afxString const* other = &others[i];
 
-        if (len > s->len - base)
-            continue;
-
-        void const* a = AfxGetStringData(s, base);
         void const* b = AfxGetStringData(other, 0);
 
         if ((ci && (0 == _strnicmp(a, b, len))) || (0 == strncmp(a, b, len)))
         {
-            idx = i;
-            break;
+            return i;
         }
     }
-    return idx;
+    return AFX_INVALID_INDEX;
 }
 
-_AFXINL afxUnit AfxCompareStrings(afxString const* s, afxBool ci, afxUnit cnt, afxString const others[])
+_AFXINL afxUnit AfxCompareStrings(afxString const* s, afxUnit base, afxBool ci, afxUnit cnt, afxString const others[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(others);
     AFX_ASSERT(s);
-    afxUnit idx = AFX_INVALID_INDEX;
+
+    afxString ss;
+    AfxExcerptString(s, base, s->len - base, &ss);
+    afxUnit lenA = ss.len;
+
+    void const *a = AfxGetStringData(&ss, 0); // base was already considered by excerption
 
     for (afxUnit i = 0; i < cnt; i++)
     {
         afxString const* other = &others[i];
-
-        afxUnit lenA = s->len, lenB = other->len;
+        afxUnit lenB = other->len;
 
         if (lenA + lenB == 0) return i;
         else if ((lenA != lenB) || ((!lenA && lenB) || (!lenB && lenA))) // if have different lenghts or any of them is blank.
             continue;
 
-        void const *a = AfxGetStringData(s, 0);
         void const *b = AfxGetStringData(other, 0);
-        AFX_ASSERT(a);
         AFX_ASSERT(b);
+        AFX_ASSERT(a);
 
         if ((ci && (0 == _strnicmp(a, b, lenA))) || (0 == strncmp(a, b, lenA)))
         {
-            idx = i;
-            break;
+            return i;
         }
     }
-    return idx;
+    return AFX_INVALID_INDEX;
 }
 
 _AFXINL afxResult AfxDumpString(afxString const* s, afxUnit base, afxUnit len, void *dst)
@@ -325,20 +325,29 @@ _AFXINL afxResult AfxDumpString(afxString const* s, afxUnit base, afxUnit len, v
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(s);
     AFX_ASSERT_RANGE(s->len, base, len);
-    afxUnit maxRange = AfxGetStringLength(s);
-    AFX_ASSERT(base + len <= maxRange);
+
+    // sanitize arguments
+    base = AfxMin(base, s->len - 1);
+    len = AfxMin(len, s->len - base);
+
+    if (!len)
+        return 0;
+
     void const *src = AfxGetStringData(s, base);
     AFX_ASSERT(src);
-    AFX_ASSERT(len);
     AFX_ASSERT(dst);
-    AfxCopy(dst, src, len > maxRange - base ? maxRange - base : len);
-    return 0;
+    AfxCopy(dst, src, len);
+    return len;
 }
 
 _AFXINL afxResult AfxScanStringArg(afxString const* s, afxChar const* fmt, va_list args)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(s);
+
+    if (!s->len)
+        return 0;
+
     void const *src = AfxGetStringData(s, 0);
     AFX_ASSERT(src);
     AFX_ASSERT(fmt);
@@ -350,12 +359,17 @@ _AFXINL afxResult AfxScanString(afxString const* s, afxChar const* fmt, ...)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(s);
+
+    if (!s->len)
+        return 0;
+
     void const *src = AfxGetStringData(s, 0);
     AFX_ASSERT(src);
-    AFX_ASSERT(fmt);
+
     va_list args;
+    AFX_ASSERT(fmt);
     va_start(args, fmt);
-    afxResult rslt = vsscanf(src, fmt, args);
+    afxResult rslt = AfxScanStringArg(s, fmt, args);
     va_end(args);
     return rslt;
 }
@@ -364,13 +378,16 @@ _AFXINL afxUnit AfxFormatStringArg(afxString* s, afxChar const* fmt, va_list arg
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(s);
-    AFX_ASSERT(AfxGetStringCapacity(s, 0));
+
     afxUnit cap = AfxGetStringCapacity(s, 0);
-    AFX_ASSERT(cap);
-    AFX_ASSERT(fmt);
-    AFX_ASSERT(args);
+
+    if (!cap)
+        return 0;
+
     void *map = AfxGetStringStorage(s, 0);
     AFX_ASSERT(map);
+    AFX_ASSERT(fmt);
+    AFX_ASSERT(args);
     return (s->len = AfxVsnprintf(map, cap, fmt, args));
 }
 
@@ -378,7 +395,6 @@ _AFXINL afxUnit AfxFormatString(afxString* s, afxChar const* fmt, ...)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(s);
-    AFX_ASSERT(AfxGetStringCapacity(s, 0));
 
     va_list args;
     AFX_ASSERT(fmt);
@@ -395,7 +411,7 @@ _AFXINL afxUnit AfxCatenateStrings(afxString* s, afxUnit cnt, afxString const sr
     AFX_ASSERT(s);
     AFX_ASSERT(AfxGetStringCapacity(s, 0));
     AFX_ASSERT(src);
-    afxUnit rslt = 0;
+    afxUnit excluded = 0;
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -403,51 +419,41 @@ _AFXINL afxUnit AfxCatenateStrings(afxString* s, afxUnit cnt, afxString const sr
         afxUnit srcLen = AfxGetStringLength(in);
         afxUnit effectiveRange = 0;
 
-        if (srcLen)
+        if (!srcLen)
+            continue;
+
+        afxUnit base = AfxGetStringLength(s);
+        afxUnit room = AfxGetStringCapacity(s, base);
+
+        if (room)
         {
-            afxUnit base = AfxGetStringLength(s);
-            afxUnit cap = AfxGetStringCapacity(s, 0);
-            AFX_ASSERT(cap); // writeable strings must have capacity
-            afxUnit leftCap = (cap - base);
+            void *dst = AfxGetStringStorage(s, base);
+            AFX_ASSERT(dst);
+            AFX_ASSERT(room >= srcLen);
+            effectiveRange = AfxClamp(effectiveRange, srcLen, room); // truncate to capacity when string has space.
+            AFX_ASSERT(effectiveRange == srcLen);
 
-            if (!leftCap) AfxThrowError();
-            else
-            {
-                void *dstData = AfxGetStringStorage(s, base);
-                AFX_ASSERT(dstData);
-                AFX_ASSERT(leftCap >= srcLen);
-                effectiveRange = srcLen > leftCap ? leftCap : srcLen; // truncate to capacity when string has space.
-                AFX_ASSERT(effectiveRange == srcLen);
-
-                if (!dstData) AfxThrowError();
-                else
-                {
-                    afxString tmp;
-                    AfxMakeString(&tmp, leftCap, dstData, effectiveRange);
-                    AfxCopyString(&tmp, in);
-                    s->len += tmp.len;
-                }
-            }
-            rslt += srcLen - effectiveRange;
+            afxString tmp;
+            AfxMakeString(&tmp, room, dst, effectiveRange);
+            AfxCopyString(&tmp, in);
+            s->len += tmp.len;
         }
+        excluded += (srcLen - effectiveRange);
     }
-    return rslt;
+    return excluded;
 }
 
 _AFXINL afxUnit AfxCatenateString(afxString* s, afxChar const* start, afxUnit len)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(s);
-    AFX_ASSERT(AfxGetStringCapacity(s, 0));
 
     if (!len && start)
         len = AfxStrlen(start);
 
     afxString tmp;
     AfxMakeString(&tmp, 0, start, len);
-    afxUnit overflow = AfxCatenateStrings(s, 1, &tmp);
-    AFX_ASSERT(!overflow);
-    return overflow;
+    return AfxCatenateStrings(s, 1, &tmp);
 }
 
 _AFXINL afxUnit AfxCopySubstring(afxString* s, afxString const* in, afxUnit base, afxUnit len)
@@ -504,17 +510,11 @@ _AFXINL afxUnit AfxCopyString(afxString* s, afxString const* in)
     AFX_ASSERT(AfxGetStringCapacity(s, 0));
     afxUnit clippedRange = 0;
 
-    if (!in) AfxClearStrings(1, s);
-    else
-    {
-        AFX_ASSERT(in);
-        afxUnit len = AfxMin(AfxGetStringLength(in), AfxGetStringCapacity(s, 0));
+    if (!in)
+        AfxClearStrings(1, s);
+    else if ((clippedRange = AfxCopySubstring(s, in, 0, in->len)))
+        AfxThrowError();
 
-        if (!len) clippedRange = AfxGetStringLength(in), AfxClearStrings(1, s);
-        else if ((clippedRange = AfxCopySubstring(s, in, 0, len)))
-            AfxThrowError();
-    }
-    AfxAssertAbs(clippedRange);
     return clippedRange;
 }
 
@@ -622,7 +622,7 @@ _AFXINL afxBool WildCardMatch(afxString const* s, const char *Wildcard, char *Ou
                     AfxMakeString(&t1, 0, v4, v10);
                     AfxMakeString(&t2, 0, v3, v10);
 
-                    while (!AfxIsAnValidIndex(AfxCompareStrings(&t1, FALSE, 1, &t2)) || !WildCardMatch(&t2, v4, v6))
+                    while (!AfxIsAnValidIndex(AfxCompareStrings(&t1, 0, FALSE, 1, &t2)) || !WildCardMatch(&t2, v4, v6))
                     {
                         *v6 = *v3;
                         afxChar v11 = v3[1];
@@ -665,7 +665,7 @@ _AFXINL void AfxDeallocateString(afxString *s)
     
     if (s->cap && s->buf)
     {
-        AfxDeallocate(s->buf);
+        AfxDeallocate((void**)&s->buf, AfxHere());
         s->buf = NIL;
     }
     AfxResetStrings(1, s);
@@ -692,7 +692,7 @@ _AFXINL afxError AfxAllocateString(afxString* s, afxUnit cap, void const *start,
 
         void *buf = NIL;
 
-        if (effectiveCap && !(buf = AfxAllocate(1, effectiveCap, 0, AfxHere())))
+        if (effectiveCap && AfxAllocate(effectiveCap, 0, AfxHere(), (void**)&buf))
             AfxThrowError();
 
         AfxMakeString(s, effectiveCap, buf, 0);

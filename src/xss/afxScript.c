@@ -31,7 +31,7 @@ _AUX void GenAcqObj(xssVm vm)
 
 _AUX void GenRelObj(void* data)
 {
-    AfxReleaseObjects(1, data);
+    AfxDisposeObjects(1, data);
     *(void**)data = NIL;
 }
 
@@ -224,7 +224,7 @@ _AUX afxError XssCall(xssVm vm, afxHandle method)
 _AUX void AfxGetScriptTime(afxScript xss, afxReal64* ct, afxReal64* dt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &xss, afxFcc_XSS);
+    AFX_ASSERT_OBJECTS(afxFcc_XSS, 1, &xss);
     afxClock currClock;
     AfxGetClock(&currClock);
     AFX_ASSERT(ct);
@@ -237,7 +237,7 @@ _AUX void AfxGetScriptTime(afxScript xss, afxReal64* ct, afxReal64* dt)
 _AUX afxBool _AuxXssEvent(afxScript xss, auxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &xss, afxFcc_XSS);
+    AFX_ASSERT_OBJECTS(afxFcc_XSS, 1, &xss);
 
     switch (ev->id)
     {
@@ -280,10 +280,10 @@ _AUX afxBool _AuxXssEvent(afxScript xss, auxEvent *ev)
 _AUX afxError _AuxXssCtor(afxScript xss, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &xss, afxFcc_XSS);
+    AFX_ASSERT_OBJECTS(afxFcc_XSS, 1, &xss);
 
     afxShell sh = args[0];
-    AfxAssertObjects(1, &sh, afxFcc_USYS);
+    AFX_ASSERT_OBJECTS(afxFcc_USYS, 1, &sh);
     afxString const* domain = ((afxString const*)args[1]) + invokeNo;
     afxString const* code = ((afxString const*)args[2]) + invokeNo;
 
@@ -304,7 +304,7 @@ _AUX afxError _AuxXssCtor(afxScript xss, void** args, afxUnit invokeNo)
 _AUX afxError _AuxXssDtor(afxScript xss)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &xss, afxFcc_XSS);
+    AFX_ASSERT_OBJECTS(afxFcc_XSS, 1, &xss);
 
     if (xss->vm)
         xssDestroyVm(xss->vm);
@@ -334,7 +334,7 @@ _AUX afxError AfxAcquireScript(afxString const* domain, afxString const* code, a
     AfxGetShell(&sh);
     AfxAssertObjects(1, sh, afxFcc_USYS);
     afxClass* cls = AfxGetScriptClass();
-    AfxAssertClass(cls, afxFcc_XSS);
+    AFX_ASSERT_CLASS(cls, afxFcc_XSS);
 
     if (AfxAcquireObjects(cls, 1, (void*)script, ((void const*[]) { sh, domain, code })))
         AfxThrowError();
@@ -399,8 +399,8 @@ _AUX afxError AfxLoadScript(afxString const* scope, afxUri const* uri)
 
     afxStream file;
     afxStreamInfo iobi = { 0 };
-    iobi.usage = afxStreamUsage_FILE;
-    iobi.flags = afxStreamFlag_READABLE;
+    iobi.usage = afxIoUsage_FILE;
+    iobi.flags = afxIoFlag_READABLE;
     AfxAcquireStream(1, &iobi, &file);
     AfxReloadFile(file, uri);
 
@@ -445,7 +445,7 @@ _AUX afxError AfxLoadScript(afxString const* scope, afxUri const* uri)
 #endif
         }
 
-        AfxReleaseObjects(1, &file);
+        AfxDisposeObjects(1, &file);
     }
     return err;
 }
@@ -454,7 +454,7 @@ _AUX afxError AfxLoadScript(afxString const* scope, afxUri const* uri)
 _AUX afxResult AfxRunScript(afxScript xss, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &xss, afxFcc_XSS);
+    AFX_ASSERT_OBJECTS(afxFcc_XSS, 1, &xss);
 
     if (uri)
     {

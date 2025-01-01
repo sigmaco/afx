@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "../dev/AvxImplKit.h"
+#include "impl/avxImplementation.h"
 
 
 _AVX afxString const g_str_Qwadro = AFX_STRING("Qwadro");
@@ -115,21 +115,6 @@ afxChar const *fmtNames[] =
     "V4DI"
 };
 
-_AVX afxString const vtxFmtString[afxVertexFormat_TOTAL] =
-{
-    AFX_STRING(""),
-    AFX_STRING("float"),
-    AFX_STRING("vec2"),
-    AFX_STRING("vec3"),
-    AFX_STRING("vec4"),
-    AFX_STRING("mat2"),
-    AFX_STRING("mat3"),
-    AFX_STRING("mat4"),
-
-    //AFX_STRING("V4B"),
-    //AFX_STRING("v8B"),
-};
-
 _AVX afxString const shaderStageString[] =
 {
     AFX_STRING(""),
@@ -221,25 +206,72 @@ _AVX afxString const primTopologyString[] =
     AFX_STRING("PATCH_LIST")
 };
 
-afxUnit const vtxFmtSizes[] =
+#if 0
+afxUnit const vtxFmtSizes[afxVertexFormat_TOTAL] =
 {
+    /*
+        afxVertexFormat_R32 = 1,
+        afxVertexFormat_R32x2,
+        afxVertexFormat_R32x3,
+        afxVertexFormat_R32x4,
+        afxVertexFormat_R16,
+        afxVertexFormat_R16x2,
+        afxVertexFormat_R16x4,
+
+        afxVertexFormat_U32,
+        afxVertexFormat_U32x2,
+        afxVertexFormat_U32x4,
+        afxVertexFormat_U16,
+        afxVertexFormat_U16x2,
+        afxVertexFormat_U16x4,
+        afxVertexFormat_U8,
+        afxVertexFormat_U8x2,
+        afxVertexFormat_U8x4,
+    
+        afxVertexFormat_I32,
+        afxVertexFormat_I32x2,
+        afxVertexFormat_I32x4,
+        afxVertexFormat_I16,
+        afxVertexFormat_I16x2,
+        afxVertexFormat_I16x4,
+        afxVertexFormat_I8,
+        afxVertexFormat_I8x2,
+        afxVertexFormat_I8x4,
+    */
     0,
 
     sizeof(afxReal),
     sizeof(afxV2d),
     sizeof(afxV3d),
     sizeof(afxV4d),
-    sizeof(afxM2d),
-    sizeof(afxM3d),
-    sizeof(afxM4d),
+    sizeof(afxReal16),
+    sizeof(afxReal16[2]),
+    sizeof(afxReal16[4]),
 
-    sizeof(afxByte),
+    sizeof(afxUnit32),
+    sizeof(afxUnit32[2]),
+    sizeof(afxUnit32[4]),
+    sizeof(afxUnit16),
+    sizeof(afxUnit16[2]),
+    sizeof(afxUnit16[4]),
+    sizeof(afxUnit8),
     sizeof(afxUnit8[2]),
-    sizeof(afxUnit8[3]),
     sizeof(afxUnit8[4]),
+
+    sizeof(afxInt32),
+    sizeof(afxInt32[2]),
+    sizeof(afxInt32[4]),
+    sizeof(afxInt16),
+    sizeof(afxInt16[2]),
+    sizeof(afxInt16[4]),
+    sizeof(afxInt8),
+    sizeof(afxInt8[2]),
+    sizeof(afxInt8[4]),
+
 
 
 };
+#endif
 
 afxChar const * const vtxFmtNames[] =
 {
@@ -251,6 +283,7 @@ afxChar const * const vtxFmtNames[] =
     "XYZW32Q"
 };
 
+#if 0
 _AVX afxUnit AfxVertexFormatGetSize(afxVertexFormat fmt)
 {
     afxError err = AFX_ERR_NONE;
@@ -293,6 +326,7 @@ _AVX afxResult AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSi
 
     return 0;
 }
+#endif
 
 _AVX avxTopology AfxFindPrimitiveTopology(afxString const *str)
 {
@@ -301,7 +335,7 @@ _AVX avxTopology AfxFindPrimitiveTopology(afxString const *str)
 
     for (afxUnit i = 0; i < avxTopology_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, TRUE, 1, &primTopologyString[i]))
+        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &primTopologyString[i]))
             return (avxTopology)i;
     }
 
@@ -315,7 +349,7 @@ _AVX avxLogicOp AfxFindLogicOp(afxString const *str)
 
     for (afxUnit i = 0; i < avxLogicOp_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, TRUE, 1, &logicOpString[i]))
+        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &logicOpString[i]))
             return (avxLogicOp)i;
     }
 
@@ -329,7 +363,7 @@ _AVX avxStencilOp AfxFindStencilOp(afxString const *str)
 
     for (afxUnit i = 0; i < avxStencilOp_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, TRUE, 1, &stencilOpString[i]))
+        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &stencilOpString[i]))
             return (avxStencilOp)i;
     }
 
@@ -343,7 +377,7 @@ _AVX avxCompareOp AfxFindCompareOp(afxString const *str)
 
     for (afxUnit i = 0; i < avxCompareOp_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, TRUE, 1, &compareOpString[i]))
+        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &compareOpString[i]))
             return (avxCompareOp)i;
     }
 
@@ -357,7 +391,7 @@ _AVX avxCullMode AfxFindCullMode(afxString const *str)
 
     for (afxUnit i = 0; i < avxCullMode_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, TRUE, 1, &cullModeString[i]))
+        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &cullModeString[i]))
             return (avxCullMode)i;
     }
 
@@ -371,7 +405,7 @@ _AVX avxFrontFace AfxFindFrontFace(afxString const *str)
 
     for (afxUnit i = 0; i < avxFrontFace_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, TRUE, 1, &frontFaceString[i]))
+        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &frontFaceString[i]))
             return (avxFrontFace)i;
     }
 
@@ -385,7 +419,7 @@ _AVX avxFillMode AfxFindFillMode(afxString const *str)
 
     for (afxUnit i = 0; i < avxFillMode_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, TRUE, 1, &fillModeString[i]))
+        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &fillModeString[i]))
             return (avxFillMode)i;
     }
 
@@ -399,25 +433,11 @@ _AVX avxShaderStage AfxFindShaderStage(afxString const *str)
 
     for (afxUnit i = 0; i < avxShaderStage_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, TRUE, 1, &shaderStageString[i]))
+        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &shaderStageString[i]))
             return (avxShaderStage)i;
     }
 
     return (avxShaderStage)0;
-}
-
-_AVX afxVertexFormat AfxFindVertexFormat(afxString const *str)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(str);
-
-    for (afxUnit i = 0; i < afxVertexFormat_TOTAL; i++)
-    {
-        if (0 == AfxCompareStrings(str, TRUE, 1, &vtxFmtString[i]))
-            return (afxVertexFormat)i;
-    }
-
-    return (afxVertexFormat)-1;
 }
 
 _AVX afxString const* AfxStringifyShaderStage(avxShaderStage ss, afxString *out)
@@ -484,6 +504,7 @@ _AVX afxString const* AfxStringifyPrimitiveTopology(avxTopology pt, afxString *o
     return out;
 }
 
+#if 0
 _AVX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
@@ -491,3 +512,4 @@ _AVX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxString *o
     AfxCopyString(out, &vtxFmtString[fmt]);
     return out;
 }
+#endif

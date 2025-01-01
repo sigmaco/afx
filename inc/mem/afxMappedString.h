@@ -22,7 +22,7 @@
 
 AFX_DEFINE_STRUCT(afxReferencedString)
 {
-    afxLinkage          strb;
+    afxLink          strb;
     afxString           str; // stores just a offset into string arena
     afxUnit              refCnt;
     afxChar             data[];

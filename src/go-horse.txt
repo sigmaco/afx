@@ -1,3 +1,6 @@
+Esta lista foi criada para ajudar a entender e/ou resolver problemas oriundos da qualidade do código.
+Uma vez que tudo foi inicialmente prototipado com Go Horse, que é igual a forma errado só que mais rápida,
+há uma caralhada de problemas.
 
 // POSSÍVEIS PROBLEMAS
 
@@ -40,6 +43,10 @@ Depth/stencil buffer não criado em operações com depth test.
 
 0xC0000005: Access violation reading location 0x00000000 caused by SIMD-aligned variables will be a issue with the "memory block" not being allocated with SIMD alignment.
 
+Wrong indexation counter inside array element accessor. Ex.: [idx++] // Increase before this access.
+
+Allocated memory data corruption occurying after the first iteration may be caused by the *counter* missing the sizeof(type).
+
 // POSSÍVEIS ABORDAGENS
 
 NORM#1 O Qwadro não mais vai tentar evitar erros internos, apenas em entrada e saída de dados. O Qwadro apenas vai tentar informar argumentos inválidos. É responsabilidade do programador a resiliência e qualidade do código.
@@ -64,6 +71,7 @@ Fetch -> Quando há 'destreza' em uma função para conseguir algo. A exemplo, carr
 Deploy -> Quando um objeto não-referenciável é empregado, isto é, inicializado, mas não é alocado.
 Drop -> Quando um objeto não-referenciável é retirado, isto é, zerado, mas não é desalocado.
 
+Funções Enumerate() deveriam contar quantas instâncias há caso um receptáculo não seja passado adentro.
 
 // TODO
 

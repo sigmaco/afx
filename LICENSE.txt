@@ -19,7 +19,7 @@
     installation, modification or redistribution of this SIGMA software
     constitutes acceptance of these terms.  If you do not agree with these
     terms, do not use, install, modify or redistribute this SIGMA
-    software, you are not sanctioned to.
+    software; you are not sanctioned to.
 
     In consideration of your agreement to abide by the following terms, and
     subject to these terms, SIGMA grants you a personal, non-exclusive

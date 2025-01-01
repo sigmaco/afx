@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -74,6 +74,6 @@ AVX afxResult       AfxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxBuildLigatures(afxDrawContext dctx, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[]);
+AVX afxError        AfxDeclareLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[]);
 
 #endif//AVX_LIGATURE_H

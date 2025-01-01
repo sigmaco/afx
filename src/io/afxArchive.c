@@ -113,7 +113,7 @@ typedef afxError (*_afxZipRecordCallback)(afxArchive arc, afxUnit idx, _afxZipSe
 _AFX afxBool _AfxGetArcD(afxArchive arc, struct _afxArcD **arc, struct _afxSysD* sysD)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
     AFX_ASSERT(arc);
     AfxAssertType(sysD, afxFcc_SYS);
     return AfxExposeResidentObjects(1, &arc, (void**)arc, &theSys->archives);
@@ -123,7 +123,7 @@ _AFX afxBool _AfxGetArcD(afxArchive arc, struct _afxArcD **arc, struct _afxSysD*
 _AFX afxError _AfxZipFindAndReadCdHdr(afxStream file, _afxZipSerializedCdHdr *endRecord)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &file, afxFcc_IOB);
+    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
 
     if (AfxSeekStream(file, 0, afxSeekOrigin_END)) AfxThrowError();
     else
@@ -187,7 +187,7 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
 {
     _afxZipSerializedCdEntryHdr fileHdr;
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     afxStream ios = arc->file;
 
@@ -309,7 +309,7 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
 _AFX afxError _AfxZipReadEntryData(afxStream file, _afxZipSerializedCdEntryHdr *header, void *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &file, afxFcc_IOB);
+    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
 
     if (header->codec == 0) // Store
     {
@@ -341,7 +341,7 @@ _AFX afxError _AfxZipReadCdEntryCallback(afxArchive arc, afxUnit idx, _afxZipSer
     (void)comment;
     (void)user_data;
 
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     _afxZipEntry *e = AfxGetArrayUnit(&arc->entries, idx);
     AfxMakeUri128(&e->path, NIL);
@@ -361,7 +361,7 @@ _AFX afxError _AfxZipReadCdEntryCallback(afxArchive arc, afxUnit idx, _afxZipSer
 _AFX afxUnit AfxCountArchivedFiles(afxArchive arc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AfxAssertType(&arc->entries, afxFcc_ARR);
     return arc->entries.pop;
@@ -370,7 +370,7 @@ _AFX afxUnit AfxCountArchivedFiles(afxArchive arc)
 _AFX afxBool AfxFindArchivedFile(afxArchive arc, afxUri const *name, afxUnit *idx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(name);
     AFX_ASSERT(!AfxIsUriBlank(name));
@@ -395,7 +395,7 @@ _AFX afxBool AfxFindArchivedFile(afxArchive arc, afxUri const *name, afxUnit *id
 _AFX afxSize AfxGetArchivedFileOffset(afxArchive arc, afxUnit idx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
     _afxZipEntry const *e = AfxGetArrayUnit(&arc->entries, idx);
@@ -405,7 +405,7 @@ _AFX afxSize AfxGetArchivedFileOffset(afxArchive arc, afxUnit idx)
 _AFX afxBool AfxArchivedFileIsDirectory(afxArchive arc, afxUnit idx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
     _afxZipEntry const *e = AfxGetArrayUnit(&arc->entries, idx);
@@ -428,7 +428,7 @@ _AFX afxBool AfxArchivedFileIsDirectory(afxArchive arc, afxUnit idx)
 _AFX afxError AfxDumpArchivedFile(afxArchive arc, afxUnit idx, afxUnit bufSiz, void *buf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
     AFX_ASSERT(bufSiz);
@@ -453,10 +453,10 @@ _AFX afxError AfxDumpArchivedFile(afxArchive arc, afxUnit idx, afxUnit bufSiz, v
 _AFX afxError AfxForkArchivedFile(afxArchive arc, afxUnit idx, afxStream *ios)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
-    AfxAssertObjects(1, &ios, afxFcc_IOB);
+    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &ios);
 
     _afxZipEntry const *e = AfxGetArrayUnit(&arc->entries, idx);
     AFX_ASSERT(e);
@@ -464,20 +464,20 @@ _AFX afxError AfxForkArchivedFile(afxArchive arc, afxUnit idx, afxStream *ios)
     afxStream ios2;
     afxStreamInfo iobi = { 0 };
     iobi.bufCap = size;
-    iobi.usage = afxStreamUsage_FILE;
-    iobi.flags = afxStreamFlag_READABLE;
+    iobi.usage = afxIoUsage_FILE;
+    iobi.flags = afxIoFlag_READABLE;
 
     if (AfxAcquireStream(1, &iobi, &ios2)) AfxThrowError();
     else
     {
         *ios = ios2;
-        AfxAssertObjects(1, &ios2, afxFcc_IOB);
+        AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &ios2);
 
         //if (AfxCopyStreamRange(arc->file, e->offset, size, 0, ios2))
             AfxThrowError();
 
         if (err)
-            AfxReleaseObjects(1, (void*[]){ ios2 });
+            AfxDisposeObjects(1, (void*[]){ ios2 });
     }
     return err;
 }
@@ -485,7 +485,7 @@ _AFX afxError AfxForkArchivedFile(afxArchive arc, afxUnit idx, afxStream *ios)
 _AFX afxError AfxDescribeArchivedFile(afxArchive arc, afxUnit idx, afxArchiveItemDescriptor *desc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
     AFX_ASSERT(desc);
@@ -502,7 +502,7 @@ _AFX afxError AfxDescribeArchivedFile(afxArchive arc, afxUnit idx, afxArchiveIte
 _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxUnit idx, afxStream *in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
 
@@ -512,8 +512,8 @@ _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxUnit idx, afxStream *in)
     afxStream in2;
     afxStreamInfo iobi = { 0 };
     iobi.bufCap = size;
-    iobi.usage = afxStreamUsage_FILE;
-    iobi.flags = afxStreamFlag_READABLE;
+    iobi.usage = afxIoUsage_FILE;
+    iobi.flags = afxIoFlag_READABLE;
 
     if (AfxAcquireStream(1, &iobi, &in2)) AfxThrowError();
     else
@@ -525,7 +525,7 @@ _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxUnit idx, afxStream *in)
             AfxThrowError();
 
         if (err)
-            AfxReleaseObjects(1, (void*[]) { in2 });
+            AfxDisposeObjects(1, (void*[]) { in2 });
     }
     return err;
 }
@@ -533,7 +533,7 @@ _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxUnit idx, afxStream *in)
 _AFX afxError AfxExtractArchivedFile(afxArchive arc, afxUnit idx, afxUri const *uri) // extract to file directory.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
     AFX_ASSERT(uri);
@@ -547,19 +547,19 @@ _AFX afxError AfxExtractArchivedFile(afxArchive arc, afxUnit idx, afxUri const *
     //AfxSeekStreamFromBegin(ios, e->offset);
     afxStream file;
     afxStreamInfo iobi = { 0 };
-    iobi.usage = afxStreamUsage_FILE;
-    iobi.flags = afxStreamFlag_READABLE;
+    iobi.usage = afxIoUsage_FILE;
+    iobi.flags = afxIoFlag_READABLE;
     AfxAcquireStream(1, &iobi, &file);
 
     if (AfxReopenFile(file, uri, afxFileFlag_W)) AfxThrowError();
     else
     {
-        AfxAssertObjects(1, &file, afxFcc_IOB);
+        AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
 
         //if (AfxCopyStreamRange(ios, e->offset, size, 0, file))
             AfxThrowError();
 
-        AfxReleaseObjects(1, (void*[]) { file });
+        AfxDisposeObjects(1, (void*[]) { file });
     }
     return err;
 }
@@ -567,7 +567,7 @@ _AFX afxError AfxExtractArchivedFile(afxArchive arc, afxUnit idx, afxUri const *
 _AFX afxUnit AfxGetArchivedFileCodec(afxArchive arc, afxUnit idx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
     _afxZipEntry const *e = AfxGetArrayUnit(&arc->entries, idx);
@@ -578,7 +578,7 @@ _AFX afxUnit AfxGetArchivedFileCodec(afxArchive arc, afxUnit idx)
 _AFX afxUnit AfxGetArchivedFileUncompressedSize(afxArchive arc, afxUnit idx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
     _afxZipEntry const *e = AfxGetArrayUnit(&arc->entries, idx);
@@ -588,7 +588,7 @@ _AFX afxUnit AfxGetArchivedFileUncompressedSize(afxArchive arc, afxUnit idx)
 _AFX afxUnit32 AfxGetArchivedFileCrc(afxArchive arc, afxUnit idx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
     _afxZipEntry const *e = AfxGetArrayUnit(&arc->entries, idx);
@@ -598,7 +598,7 @@ _AFX afxUnit32 AfxGetArchivedFileCrc(afxArchive arc, afxUnit idx)
 _AFX afxString* AfxGetArchivedFileName(afxArchive arc, afxUnit idx, afxUri *name)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
     AFX_ASSERT(name);
@@ -610,12 +610,12 @@ _AFX afxString* AfxGetArchivedFileName(afxArchive arc, afxUnit idx, afxUri *name
 _AFX afxError _AfxArcCtor(afxArchive arc, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     afxStorage fsys = args[0];
     arc->file = args[1];
 
-    AfxMakeArray(&arc->entries, 1, sizeof(_afxZipEntry), NIL);
+    AfxMakeArray(&arc->entries, sizeof(_afxZipEntry), 1, NIL, 0);
 
     return err;
 }
@@ -623,7 +623,7 @@ _AFX afxError _AfxArcCtor(afxArchive arc, void** args, afxUnit invokeNo)
 _AFX afxError _AfxArcDtor(afxArchive arc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AfxCleanUpArray(&arc->entries);
 
@@ -650,8 +650,8 @@ _AFX afxArchive AfxOpenArchive(afxUri const* uri, afxFileFlags const flags, afxE
 
     afxStream file;
     afxStreamInfo iobi = { 0 };
-    iobi.usage = afxStreamUsage_FILE;
-    iobi.flags = afxStreamFlag_READABLE;
+    iobi.usage = afxIoUsage_FILE;
+    iobi.flags = afxIoFlag_READABLE;
     AfxAcquireStream(1, &iobi, &file);
 
     if (AfxReopenFile(file, uri, (flags & afxIoFlag_RWX))) AfxThrowError();
@@ -661,7 +661,7 @@ _AFX afxArchive AfxOpenArchive(afxUri const* uri, afxFileFlags const flags, afxE
         afxUnit diskId = AfxGetObjectId(fsys);
 
         afxClass* cls = (afxClass*)AfxGetArchiveClass(fsys);
-        AfxAssertClass(cls, afxFcc_ARC);
+        AFX_ASSERT_CLASS(cls, afxFcc_ARC);
     
         _afxZipSerializedCdHdr cdHdr = { 0 };
 

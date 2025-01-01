@@ -16,8 +16,11 @@
 
 // Hardware-accelerated curve computation
 
+// A curve is a continuous and smooth mathematical object representing a set of points that form a shape or path in a given space.
+
 /*
-    Knot vector (uniform or not) is part of the definition of a NURBS curve. So, you can actually define your own non-uniform knot vector as long as the knot vector follows the basic rules:
+    Knot vector (uniform or not) is part of the definition of a NURBS curve. 
+    So, you can actually define your own non-uniform knot vector as long as the knot vector follows the basic rules:
 
     1) # of knot values = # of control points + order
 
@@ -27,7 +30,9 @@
     Of course, choosing different values for a, b, c, d and e will result in curves with different shape.
 */
 
-/// Knots are the things that make the curve continuous, like in Bezier curves, the line segment from the mid point control point have to have the same tangent and length and if they are then the Bezier curves are c-continuous.
+// Knots are the things that make the curve continuous, like in Bezier curves, 
+// the line segment from the mid point control point have to have the same tangent 
+// and length and if they are then the Bezier curves are c-continuous.
 
 #ifndef AMX_CURVE_H
 #define AMX_CURVE_H
@@ -69,48 +74,60 @@ typedef enum afxCurveFormat
 
 AFX_DEFINE_STRUCT(afxCurveBlueprint)
 {
-    afxUnit          fmt;
-    afxUnit          degree;
-    afxUnit          dimens;
-    afxUnit          knotCnt;
+    afxUnit         fmt;
+    afxUnit         degree;
+    afxUnit         dimens;
+    afxUnit         knotCnt;
     afxReal const*  knotArray;
     afxReal const*  ctrlArray;
     afxCurve        srcCurve;
-    afxUnit          sampleCnt;
-    afxUnit          sampleDimension;
+    afxUnit         sampleCnt;
+    afxUnit         sampleDimension;
     afxReal const*  transformedSamples;
     afxReal const*  originalSamples;
     afxBool         curveBuilderNeedsFreeing;
 };
 
+AFX_DEFINE_STRUCT(afxCurveInfo2)
+{
+    afxCurveFormat  fmt;
+    afxCurveFlags   flags;
+    afxUnit         degree;
+    afxUnit         dimens;
+    afxUnit         knotCnt;
+    afxUnit         ctrlCnt;
+};
+
 AFX_DEFINE_STRUCT(afxCurveInfo)
 {
     afxCurveFormat  fmt;
-    afxUnit          degree;
-    afxUnit          dimens;
-    afxUnit          knotCnt;
+    afxUnit         degree;
+    afxUnit         dimens;
+    afxUnit         knotCnt;
     afxReal const*  knots;
     afxReal const*  ctrls;
 
     afxCurve        src;
-    afxUnit          sampleCnt;
-    afxUnit          sampleDim;
+    afxUnit         sampleCnt;
+    afxUnit         sampleDim;
     afxReal const*  xformedSamples;
     afxReal const*  origSamples;
 };
 
-typedef struct sample_context
+AFX_DEFINE_STRUCT(afxSampleContext)
 {
-    afxReal LocalClock;
-    afxReal LocalDuration;
-    afxBool UnderflowLoop;
-    afxBool OverflowLoop;
-    afxInt FrameIndex;
-} sample_context;
+    afxReal localClock;
+    afxReal localDur;
+    afxBool underflowLoop;
+    afxBool overflowLoop;
+    afxInt frameIdx;
+};
+
+AMX void AfxDescribeCurve(afxCurve cur, afxCurveInfo2* desc);
 
 AMX afxInt          AfxGetCurveDegree(afxCurve c);
-AMX afxUnit          AfxGetCurveDimensionality(afxCurve c);
-AMX afxUnit          AfxGetCurveDimensionalityUnchecked(afxCurve c);
+AMX afxUnit         AfxGetCurveDimensionality(afxCurve c);
+AMX afxUnit         AfxGetCurveDimensionalityUnchecked(afxCurve c);
 
 AMX afxCurveFlags   AfxGetCurveFlags(afxCurve c);
 AMX afxCurveFlags   AfxTestCurveFlags(afxCurve c, afxCurveFlags mask);
@@ -123,16 +140,13 @@ AMX afxBool         AfxIsCurveConstantNotIdentity(afxCurve c);
 AMX afxReal*        AfxGetCurveKnots(afxCurve c);
 AMX afxReal*        AfxGetCurveControls(afxCurve c);
 
-AMX afxUnit          AfxFindCurveKnot(afxCurve c, afxReal t);
+AMX afxUnit         AfxFindCurveKnot(afxCurve c, afxReal t);
 
-AMX afxUnit          AfxCountCurveKnots(afxCurve c);
+AMX afxUnit         AfxCountCurveKnots(afxCurve c);
 
-AMX void            AfxSetCurveAllKnotValues(afxCurve c, afxUnit knotCnt, afxUnit dimension, afxReal const* knotSrc, afxReal const* ctrlSrc);
+AMX void            AfxUpdateCurveKnots(afxCurve c, afxUnit knotCnt, afxUnit dimension, afxReal const* knotSrc, afxReal const* ctrlSrc);
 AMX void            AfxExtractCurveKnotValues(afxCurve c, afxUnit knotIdx, afxUnit knotCnt, afxReal* knotResults, afxReal* ctrlResults, afxReal const* identivec);
 AMX afxReal         AfxExtractCurveKnotValue(afxCurve c, afxUnit knotIdx, afxReal* ctrlRslt, afxReal const* identity);
-
-AMX void            AfxEvaluateCurveAtKnot(afxCurve c, afxUnit dimens, afxBool normalize, afxBool bwdsLoop, afxBool fwdsLoop, afxReal curveDur, afxUnit knotIdx, afxReal t, afxReal* rslt, afxReal const* identityVec);
-AMX void            AfxEvaluateCurveAt(afxCurve c, afxUnit dimens, afxBool normalize, afxBool bwdsLoop, afxBool fwdsLoop, afxReal curveDur, afxReal t, afxReal* rslt, afxReal const* identityVec);
 
 AMX void            AfxCopyCurve(afxCurve c, afxCurve src);
 

@@ -31,8 +31,8 @@
 
 
 // 3D positions and transformations exist within coordinate systems called spaces.
-// World space is the coordinate system for the entire scene.Its origin is at the center of the scene.The grid you see in view windows shows the world space axes.
-// Object space is the coordinate system from an object's point of view.The origin of object space is at the object's pivot point, and its axes are rotated with the object.
+// World space is the coordinate system for the entire scene. Its origin is at the center of the scene. The grid you see in view windows shows the world space axes.
+// Object space is the coordinate system from an object's point of view. The origin of object space is at the object's pivot point, and its axes are rotated with the object.
 // Local space is similar to object space, however it uses the origin and axes of the object's parent node in the hierarchy of objects.This is useful when you haven't transformed the object itself, but it is part of a group that is transformed.
 
 #ifndef AMX_NODE_H
@@ -44,13 +44,13 @@
 #include "qwadro/inc/math/afxBox.h"
 #include "qwadro/inc/math/afxSphere.h"
 #include "qwadro/inc/sim/afxSimDefs.h"
-#include "qwadro/inc/cad/afxPose.h"
-#include "qwadro/inc/cad/afxPoseBuffer.h"
+#include "qwadro/inc/sim/body/afxPose.h"
+#include "qwadro/inc/sim/body/afxPlacement.h"
 
 typedef enum afxDagNodeType
 {
     afxDagNodeType_Leaf_AnimBlend,
-    afxDagNodeType_Leaf_LocalPose,
+    afxDagNodeType_Leaf_LocalAttitude,
     afxDagNodeType_Leaf_Callback,
     afxDagNodeType_OnePastLastLeafType,
     afxDagNodeType_Node_Crossfade,
@@ -77,16 +77,16 @@ AFX_DEFINE_STRUCT(afxDagNode)
         } animBlend;
         struct
         {
-            afxPose lp;
+            afxPose pose;
             afxBool owned;
-        } localPose;
+        } pose;
         struct
         {
-            afxPose (*sample)(void*, afxInt, afxReal, afxInt const*);
-            void    (*setClock)(void*, afxReal);
-            void    (*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool);
-            void    *udd;
-        } callback;
+            afxPose(*sample)(void*, afxInt, afxReal, afxInt const*);
+            void(*setClock)(void*, afxReal);
+            void(*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool);
+            void *udd;
+        } cb;
         struct
         {
             afxReal weightNone;
@@ -96,9 +96,9 @@ AFX_DEFINE_STRUCT(afxDagNode)
         } crossfade;
         struct
         {
-            afxSkeleton     skl;
-            afxQuatBlend    quatMode;
-            afxReal         fillThreshold;
+            afxSkeleton skl;
+            afxQuatBlend quatMode;
+            afxReal fillThreshold;
         } weightedBlend;
     };
 };

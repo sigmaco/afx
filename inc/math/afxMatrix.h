@@ -155,9 +155,9 @@ AFXINL void     AfxM2dScale(afxM2d m, afxM2d const in, afxReal scale);
 AFXINL void     AfxM3dScale(afxM3d m, afxM3d const in, afxReal scale);
 AFXINL void     AfxM4dScale(afxM4d m, afxM4d const in, afxReal scale);
 
-AFXINL void     AfxM2dAddScaled(afxM2d m, afxM2d const a, afxM2d const b, afxReal scale);
-AFXINL void     AfxM3dAddScaled(afxM3d m, afxM3d const a, afxM3d const b, afxReal scale);
-AFXINL void     AfxM4dAddScaled(afxM4d m, afxM4d const a, afxM4d const b, afxReal scale);
+AFXINL void     AfxM2dMads(afxM2d m, afxReal scale, afxM2d const b, afxM2d const c);
+AFXINL void     AfxM3dMads(afxM3d m, afxReal scale, afxM3d const b, afxM3d const c);
+AFXINL void     AfxM4dMads(afxM4d m, afxReal scale, afxM4d const b, afxM4d const c);
 
 // Mix
 // The MIX function is conceptually similar to LERP but may involve additional functionality, such as more complex blending modes or different blending parameters. 

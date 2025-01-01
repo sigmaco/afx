@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -16,7 +16,35 @@
 
 #define _AVX_DRAW_C
 #define _AVX_SHADER_C
-#include "../../dev/AvxImplKit.h"
+#include "../impl/avxImplementation.h"
+
+_AVX afxString const vtxFmtString[avxFormat_TOTAL] =
+{
+    AFX_STRING(""),
+    [avxFormat_R32f] = AFX_STRING("float"),
+    [avxFormat_RG32f] = AFX_STRING("vec2"),
+    [avxFormat_RGB32f] = AFX_STRING("vec3"),
+    [avxFormat_RGBA32f] = AFX_STRING("vec4"),
+    AFX_STRING("mat2"),
+    AFX_STRING("mat3"),
+    AFX_STRING("mat4"),
+
+    //AFX_STRING("V4B"),
+    //AFX_STRING("v8B"),
+};
+_AVX avxFormat AfxFindVertexFormat(afxString const *str)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(str);
+
+    for (afxUnit i = 0; i < avxFormat_TOTAL; i++)
+    {
+        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &vtxFmtString[i]))
+            return (avxFormat)i;
+    }
+
+    return (avxFormat)-1;
+}
 
 _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArray* fResources, afxString* pushConstsName)
 {
@@ -49,19 +77,19 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
 
                 AfxMakeString(&fmtName.str, 0, fmtName.buf, 0);
                 AfxMakeString(&varName.str, 0, varName.buf, 0);
-                afxVertexFormat fmt = AfxFindVertexFormat(&fmtName.str);
+                avxFormat fmt = AfxFindVertexFormat(&fmtName.str);
 
                 afxUnit idx;
                 avxShaderIoChannel* decl;
 
-                if (!(decl = AfxInsertArrayUnit(fInOuts, &idx))) AfxThrowError();
+                if (!(decl = AfxPushArrayUnit(fInOuts, &idx))) AfxThrowError();
                 else
                 {
                     AFX_ASSERT(location < 16); // hardcoded limitation
                     decl->location = location;
-                    AFX_ASSERT(fmt < afxVertexFormat_TOTAL);
+                    AFX_ASSERT(fmt < avxFormat_TOTAL);
                     decl->fmt = fmt;
-                    AfxMakeString8(&decl->semantic, &varName.str);
+                    AfxMakeString16(&decl->semantic, &varName.str);
                 }
             }
         }
@@ -80,19 +108,19 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                 AfxMakeString(&fmtName.str, 0, fmtName.buf, 0);
                 AfxMakeString(&varName.str, 0, varName.buf, 0);
 
-                afxVertexFormat fmt = AfxFindVertexFormat(&fmtName.str);
+                avxFormat fmt = AfxFindVertexFormat(&fmtName.str);
 
                 afxUnit idx;
                 avxShaderIoChannel* decl;
 
-                if (!(decl = AfxInsertArrayUnit(fInOuts, &idx))) AfxThrowError();
+                if (!(decl = AfxPushArrayUnit(fInOuts, &idx))) AfxThrowError();
                 else
                 {
                     AFX_ASSERT(location < 16); // hardcoded limitation
                     decl->location = location;
-                    AFX_ASSERT(fmt < afxVertexFormat_TOTAL);
+                    AFX_ASSERT(fmt < avxFormat_TOTAL);
                     decl->fmt = fmt;
-                    AfxMakeString8(&decl->semantic, &varName.str);
+                    AfxMakeString16(&decl->semantic, &varName.str);
                 }
             }
         }
@@ -119,10 +147,10 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
 
                     avxShaderParam resType = 0;
 
-                    if ((0 == AfxCompareStrings(&typeName.str, FALSE, 1, &AfxString("sampler1D"))) ||
-                        (0 == AfxCompareStrings(&typeName.str, FALSE, 1, &AfxString("sampler2D"))) ||
-                        (0 == AfxCompareStrings(&typeName.str, FALSE, 1, &AfxString("sampler3D"))) ||
-                        (0 == AfxCompareStrings(&typeName.str, FALSE, 1, &AfxString("samplerCube")))
+                    if ((0 == AfxCompareStrings(&typeName.str, 0, FALSE, 1, &AfxString("sampler1D"))) ||
+                        (0 == AfxCompareStrings(&typeName.str, 0, FALSE, 1, &AfxString("sampler2D"))) ||
+                        (0 == AfxCompareStrings(&typeName.str, 0, FALSE, 1, &AfxString("sampler3D"))) ||
+                        (0 == AfxCompareStrings(&typeName.str, 0, FALSE, 1, &AfxString("samplerCube")))
                         )
                     {
                         resType = avxShaderParam_COMBINED_IMAGE_SAMPLER;
@@ -131,7 +159,7 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                     afxUnit idx;
                     avxShaderResource *decl;
 
-                    if (!(decl = AfxInsertArrayUnit(fResources, &idx))) AfxThrowError();
+                    if (!(decl = AfxPushArrayUnit(fResources, &idx))) AfxThrowError();
                     else
                     {
                         AFX_ASSERT(set < 4);
@@ -165,7 +193,7 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                     afxUnit idx;
                     avxShaderResource *decl;
 
-                    if (!(decl = AfxInsertArrayUnit(fResources, &idx))) AfxThrowError();
+                    if (!(decl = AfxPushArrayUnit(fResources, &idx))) AfxThrowError();
                     else
                     {
                         AFX_ASSERT(set < 4);
@@ -201,7 +229,7 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                     afxUnit idx;
                     avxShaderResource *decl;
 
-                    if (!(decl = AfxInsertArrayUnit(fResources, &idx))) AfxThrowError();
+                    if (!(decl = AfxPushArrayUnit(fResources, &idx))) AfxThrowError();
                     else
                     {
                         AFX_ASSERT(set < 4);
@@ -242,8 +270,8 @@ _AVX afxError _AvxLoadGlScript(afxStream file, afxArray* fCode)
 
     afxStream inc;
     afxStreamInfo iobi = { 0 };
-    iobi.usage = afxStreamUsage_FILE;
-    iobi.flags = afxStreamFlag_READABLE;
+    iobi.usage = afxIoUsage_FILE;
+    iobi.flags = afxIoFlag_READABLE;
     AfxAcquireStream(1, &iobi, &inc);
 
     afxChar buf[2048] = { 0 };
@@ -267,7 +295,7 @@ _AVX afxError _AvxLoadGlScript(afxStream file, afxArray* fCode)
             if (AfxReopenFile(inc, &incUri, afxFileFlag_R)) AfxThrowError();
             else
             {
-                //afxChar* room = AfxInsertArrayUnits(&bp->codes, line.str.len + 3, &baseChar, NIL);
+                //afxChar* room = AfxPushArrayUnits(&bp->codes, line.str.len + 3, &baseChar, NIL);
                 //AfxDumpString(&AfxString("// "), 0, 3, room);
                 //AfxDumpString(&line.str, 0, line.str.len, &room[3]);
 
@@ -277,10 +305,10 @@ _AVX afxError _AvxLoadGlScript(afxStream file, afxArray* fCode)
             continue;
         }
 
-        void* room = AfxInsertArrayUnits(fCode, line.str.len, &baseChar, NIL);
+        void* room = AfxPushArrayUnits(fCode, line.str.len, &baseChar, NIL);
         AfxDumpString(&line.str, 0, line.str.len, room);
     }
-    AfxReleaseObjects(1, &inc);
+    AfxDisposeObjects(1, &inc);
     return err;
 }
 
@@ -291,8 +319,8 @@ _AVX afxError _AvxLoadGlScript(afxStream file, afxArray* fCode)
 _AVX afxError AfxSerializeShader(avxShader shd, afxStream ios)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ios, afxFcc_IOB);
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &ios);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     AfxWriteStream(ios, shd->codeLen, 0, shd->code);
 
@@ -302,37 +330,39 @@ _AVX afxError AfxSerializeShader(avxShader shd, afxStream ios)
 _AVX afxError AfxDumpShaderCode(avxShader shd, afxArray* arr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     afxArray fCode;
 
     if (shd->codeLen)
     {
-        AfxWrapArray(&fCode, 1, shd->codeLen, shd->code, shd->codeLen);
+        AfxMakeArray(&fCode, 1, shd->codeLen, shd->code, shd->codeLen);
         AfxAppendArray(arr, &fCode);
     }
     else
     {
         afxStream file;
         afxStreamInfo iobi = { 0 };
-        iobi.usage = afxStreamUsage_FILE;
-        iobi.flags = afxStreamFlag_READABLE;
-        if (AfxAcquireStream(1, &iobi, &file)) AfxThrowError();
+        iobi.usage = afxIoUsage_FILE;
+        iobi.flags = afxIoFlag_READABLE;
+        if (AfxAcquireStream(1, &iobi, &file))
+        {
+            AfxThrowError();
+            return err;
+        }
+
+        afxUri* path = &shd->uri.uri;
+        AFX_ASSERT(!AfxIsUriBlank(path));
+
+        if (AfxReopenFile(file, path, afxFileFlag_R)) AfxThrowError();
         else
         {
-            afxUri* path = &shd->uri.uri;
-            AFX_ASSERT(!AfxIsUriBlank(path));
-
-            if (AfxReopenFile(file, path, afxFileFlag_R)) AfxThrowError();
-            else
-            {
-                AfxMakeArray(&fCode, 4096, sizeof(afxByte), NIL);
-                _AvxLoadGlScript(file, &fCode);
-                AfxAppendArray(arr, &fCode);
-                AfxCleanUpArray(&fCode);
-            }
-            AfxReleaseObjects(1, &file);
+            AfxMakeArray(&fCode, sizeof(afxByte), 4096, NIL, 0);
+            _AvxLoadGlScript(file, &fCode);
+            AfxAppendArray(arr, &fCode);
+            AfxCleanUpArray(&fCode);
         }
+        AfxDisposeObjects(1, &file);
     }
 
     return err;
@@ -341,40 +371,41 @@ _AVX afxError AfxDumpShaderCode(avxShader shd, afxArray* arr)
 _AVX afxError AfxPrintShader(avxShader shd, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     AFX_ASSERT(uri);
     AFX_ASSERT(!(AfxIsUriBlank(uri)));
 
     afxStream file;
     afxStreamInfo iobi = { 0 };
-    iobi.usage = afxStreamUsage_FILE;
-    iobi.flags = afxStreamFlag_READABLE;
+    iobi.usage = afxIoUsage_FILE;
+    iobi.flags = afxIoFlag_READABLE;
     AfxAcquireStream(1, &iobi, &file);
 
-    if (AfxReopenFile(file, uri, afxFileFlag_W)) AfxThrowError();
-    else
+    if (AfxReopenFile(file, uri, afxFileFlag_W))
     {
-        if (AfxSerializeShader(shd, file)) AfxThrowError();
-        else
-        {
-            // success
-        }
-        AfxReleaseObjects(1, &file);
+        AfxThrowError();
+        return err;
     }
+
+    if (AfxSerializeShader(shd, file))
+        AfxThrowError();
+
+    AfxDisposeObjects(1, &file);
+
     return err;
 }
 
 _AVX afxUnit AfxCountShaderIoChannels(avxShader shd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     return shd->ioDeclCnt;
 }
 
 _AVX afxUnit AfxGetShaderIoChannels(avxShader shd, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     AFX_ASSERT_RANGE(shd->ioDeclCnt, first, cnt);
     AFX_ASSERT(channels);
     AFX_ASSERT(cnt);
@@ -394,14 +425,14 @@ _AVX afxUnit AfxGetShaderIoChannels(avxShader shd, afxUnit first, afxUnit cnt, a
 _AVX afxUnit AfxCountShaderInterfaces(avxShader shd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     return shd->resDeclCnt;
 }
 
 _AVX afxResult AfxDescribeShaderInterfaces(avxShader shd, afxUnit first, afxUnit cnt, avxShaderResource rsrc[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     AFX_ASSERT_RANGE(shd->resDeclCnt, first, cnt);
     AFX_ASSERT(rsrc);
     AFX_ASSERT(cnt);
@@ -423,21 +454,21 @@ _AVX afxResult AfxDescribeShaderInterfaces(avxShader shd, afxUnit first, afxUnit
 _AVX avxShaderStage AfxGetShaderStage(avxShader shd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     return shd->stage;
 }
 
 _AVX afxUri const* AfxShaderGetUri(avxShader shd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     return &shd->uri.uri;
 }
 
 _AVX afxError _AvxShdStdDtorCb(avxShader shd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     afxObjectStash stashs[] =
     {
@@ -469,9 +500,9 @@ _AVX afxError _AvxShdStdDtorCb(avxShader shd)
 _AVX afxError _AvxShdStdCtorCb(avxShader shd, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
-    afxDrawContext dctx = args[0];
+    afxDrawSystem dsys = args[0];
     afxUri const* uri = args[1] ? ((afxUri const*)args[1]) + invokeNo : NIL;
     afxString const* code = args[2] ? ((afxString const*)args[2]) + invokeNo : NIL;
     
@@ -485,8 +516,8 @@ _AVX afxError _AvxShdStdCtorCb(avxShader shd, void** args, afxUnit invokeNo)
     AfxMakeString32(&shd->pushConstName, NIL);
 
     afxArray fInOuts, fResources;
-    AfxMakeArray(&fInOuts, 16, sizeof(avxShaderIoChannel), NIL);
-    AfxMakeArray(&fResources, 16, sizeof(avxShaderResource), NIL); // if data is reallocated, autoreference by strings will be broken YYYYYYYYYY
+    AfxMakeArray(&fInOuts, sizeof(avxShaderIoChannel), 16, NIL, 0);
+    AfxMakeArray(&fResources, sizeof(avxShaderResource), 16, NIL, 0); // if data is reallocated, autoreference by strings will be broken YYYYYYYYYY
 
     if (code && code->len)
     {
@@ -499,8 +530,8 @@ _AVX afxError _AvxShdStdCtorCb(avxShader shd, void** args, afxUnit invokeNo)
 
         afxStream file;
         afxStreamInfo iobi = { 0 };
-        iobi.usage = afxStreamUsage_FILE;
-        iobi.flags = afxStreamFlag_READABLE;
+        iobi.usage = afxIoUsage_FILE;
+        iobi.flags = afxIoFlag_READABLE;
         if (AfxAcquireStream(1, &iobi, &file)) AfxThrowError();
         else
         {
@@ -511,13 +542,13 @@ _AVX afxError _AvxShdStdCtorCb(avxShader shd, void** args, afxUnit invokeNo)
             {
                 afxArray fCode;
                 afxString fCodeS;
-                AfxMakeArray(&fCode, 4096, sizeof(afxByte), NIL);
+                AfxMakeArray(&fCode, sizeof(afxByte), 4096, NIL, 0);
                 _AvxLoadGlScript(file, &fCode);
                 AfxMakeString(&fCodeS, fCode.pop, fCode.data, fCode.pop);
                 _AvxScanGlScript(&fCodeS, &fInOuts, &fResources, &shd->pushConstName.str);
                 AfxCleanUpArray(&fCode);
             }
-            AfxReleaseObjects(1, &file);
+            AfxDisposeObjects(1, &file);
         }
     }
     else AfxThrowError();
@@ -572,7 +603,7 @@ _AVX afxError _AvxShdStdCtorCb(avxShader shd, void** args, afxUnit invokeNo)
         {
             avxShaderIoChannel* ioBp = AfxGetArrayUnit(&fInOuts, i);
             shd->ioDecls[i] = *ioBp;
-            AfxMakeString8(&shd->ioDecls[i].semantic, &ioBp->semantic.str);
+            AfxMakeString16(&shd->ioDecls[i].semantic, &ioBp->semantic.str);
         }
 
         shd->topology = avxTopology_TRI_LIST;
@@ -584,11 +615,11 @@ _AVX afxError _AvxShdStdCtorCb(avxShader shd, void** args, afxUnit invokeNo)
     AfxCleanUpArray(&fInOuts);
     AfxCleanUpArray(&fResources);
 
-    AfxAssertObjects(1, &shd, afxFcc_SHD);
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     return err;
 }
 
-_AVX afxClassConfig const _AvxShdStdImplementation =
+_AVX afxClassConfig const _AVX_SHD_CLASS_CONFIG =
 {
     .fcc = afxFcc_SHD,
     .name = "Shader",
@@ -600,18 +631,18 @@ _AVX afxClassConfig const _AvxShdStdImplementation =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxAcquireShaders(afxDrawContext dctx, afxUnit cnt, afxUri const uris[], afxString const codes[], avxShader shaders[])
+_AVX afxError AfxAcquireShaders(afxDrawSystem dsys, afxUnit cnt, afxUri const uris[], afxString const codes[], avxShader shaders[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(uris || codes);
     AFX_ASSERT(shaders);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = AfxGetShaderClass(dctx);
-    AfxAssertClass(cls, afxFcc_SHD);
+    afxClass* cls = AvxGetShaderClass(dsys);
+    AFX_ASSERT_CLASS(cls, afxFcc_SHD);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)shaders, (void const*[]) { dctx, uris, codes }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)shaders, (void const*[]) { dsys, uris, codes }))
         AfxThrowError();
 
     return err;

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "../../dev/AvxImplKit.h"
+#include "../impl/avxImplementation.h"
 
 AVX afxChar const *shdResTypeNames[];
 
@@ -58,7 +58,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
     {
         AfxQueryXmlTag(xml, elemIdx, i, &name, &acontent);
 
-        switch (AfxCompareStrings(&name, TRUE, ARRAY_SIZE(pipAttrNames), pipAttrNames))
+        switch (AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(pipAttrNames), pipAttrNames))
         {
         case 0: // topology
         {
@@ -241,7 +241,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
         AfxQueryXmlElement(xml, childElemIdx, &name, &content);
         afxUnit childTagCnt = AfxCountXmlTags(xml, childElemIdx);
 
-        if (0 == AfxCompareStrings(&name, TRUE, 1, &AfxStaticString("Shader")))
+        if (0 == AfxCompareStrings(&name, 0, TRUE, 1, &AfxStaticString("Shader")))
         {
             avxShaderStage shdStage = NIL;
             afxString shdFn = { 0 };
@@ -258,11 +258,11 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
             {
                 AfxQueryXmlTag(xml, childElemIdx, j, &name, &acontent);
 
-                switch (AfxCompareStrings(&name, TRUE, ARRAY_SIZE(shdAttrNames), shdAttrNames))
+                switch (AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(shdAttrNames), shdAttrNames))
                 {
                 case 0: // stage
                 {
-                    switch (AfxCompareStrings(&acontent, TRUE, ARRAY_SIZE(stageNames), stageNames))
+                    switch (AfxCompareStrings(&acontent, 0, TRUE, ARRAY_SIZE(stageNames), stageNames))
                     {
                     case avxShaderStage_VERTEX: shdStage = avxShaderStage_VERTEX; break;
                     case avxShaderStage_FRAGMENT: shdStage = avxShaderStage_FRAGMENT; break;
@@ -308,7 +308,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
 
             if (!AfxIsStringEmpty(&content))
             {
-                //AfxAcquireShaders(dctx, 1, );
+                //AfxAcquireShaders(dsys, 1, );
             }
 
             if (shaderStages)
@@ -322,7 +322,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
 
             ++config.stageCnt;
         }
-        else if (0 == AfxCompareStrings(&name, TRUE, 1, &AfxStaticString("Stencil")))
+        else if (0 == AfxCompareStrings(&name, 0, TRUE, 1, &AfxStaticString("Stencil")))
         {
             avxStencilInfo si = { 0 };
 
@@ -346,7 +346,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
             {
                 AfxQueryXmlTag(xml, childElemIdx, j, &name, &acontent);
 
-                switch (AfxCompareStrings(&name, TRUE, ARRAY_SIZE(shdAttrNames), shdAttrNames))
+                switch (AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(shdAttrNames), shdAttrNames))
                 {
                 case 0: // compareOp
                 {

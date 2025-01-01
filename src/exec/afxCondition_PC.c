@@ -24,13 +24,13 @@
 
 AFX_STATIC_ASSERT(sizeof(cnd_t) <= sizeof(afxCondition), "");
 
-_AFX void AfxCleanUpCondition(afxCondition* cond)
+_AFX void AfxDismantleCondition(afxCondition* cond)
 {
     afxError err = AFX_ERR_NONE;
     cnd_destroy((cnd_t*)cond);
 }
 
-_AFX afxError AfxSetUpCondition(afxCondition* cond)
+_AFX afxError AfxDeployCondition(afxCondition* cond)
 {
     afxError err = AFX_ERR_NONE;
 

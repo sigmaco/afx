@@ -56,16 +56,16 @@ AFX_DEFINE_STRUCT(afxArray)
         afxByte*bytemap;
         void*   data;
     };
+    afxBool     alloced;
 };
 
 #define AfxArray(type_, cap_, initialVal_) AfxMakeArray((cap_), sizeof(type_), (initialVal_) ? ((type_ const[]){(initialVal_)}) : NIL)
 
-AFXINL afxError     AfxWrapArray(afxArray* arr, afxUnit unitSiz, afxUnit cap, void* buf, afxUnit cnt);
-AFXINL afxError     AfxMakeArray(afxArray* arr, afxUnit cap, afxUnit unitSiz, void const* const initial);
-AFXINL void         AfxCleanUpArray(afxArray *arr);
+AFXINL afxError     AfxMakeArray(afxArray* arr, afxUnit unitSiz, afxUnit cap, void* buf, afxUnit pop);
+AFXINL void         AfxCleanUpArray(afxArray* arr);
 
-AFXINL void*        AfxInsertArrayUnit(afxArray *arr, afxUnit *idx);
-AFXINL void*        AfxInsertArrayUnits(afxArray *arr, afxUnit cnt, afxUnit *firstIdx, void const *initialVal);
+AFXINL void*        AfxPushArrayUnit(afxArray* arr, afxUnit* unitIdx);
+AFXINL void*        AfxPushArrayUnits(afxArray* arr, afxUnit cnt, afxUnit* baseUnitIdx, void const *initialVal);
 AFXINL void         AfxPopArrayUnits(afxArray *arr, afxUnit cnt);
 
 AFXINL afxError     AfxAddArrayUnits(afxArray *arr, afxUnit cnt, void const* src, afxUnit srcStride, afxUnit* firstIdx);
@@ -101,6 +101,9 @@ AFXINL void         AfxUpdateArray(afxArray* arr, afxUnit firstUnit, afxUnit uni
 
 AFXINL void*        AfxGetArrayUnit(afxArray const *arr, afxUnit unitIdx);
 AFXINL void*        AfxGetLastArrayUnit(afxArray const *arr);
+
+AFX afxBool         AfxLookUpArray(afxArray* arr, void* data, afxUnit* elemIdx);
+AFX afxError        AfxArrayUnique(afxArray* arr, void* data, afxUnit* elemIdx);
 
 // ELEMENT
 

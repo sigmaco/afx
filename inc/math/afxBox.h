@@ -28,7 +28,7 @@
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/math/afxSphere.h"
 
-AFX_DEFINE_STRUCT(afxBox)
+AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxBox)
 {
     afxV4d  sup; // [ sup/max, inf/min ]
     afxV4d  inf;

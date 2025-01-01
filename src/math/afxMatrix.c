@@ -26,44 +26,44 @@
 
 _AFX afxM2d const AFX_M2D_ZERO =
 {
-    { AfxScalar(0), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(0) },
+    { AFX_R(0), AFX_R(0) },
+    { AFX_R(0), AFX_R(0) },
 };
 
 _AFX afxM3d const AFX_M3D_ZERO =
 {
-    { AfxScalar(0), AfxScalar(0), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(0), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(0), AfxScalar(0) }
+    { AFX_R(0), AFX_R(0), AFX_R(0) },
+    { AFX_R(0), AFX_R(0), AFX_R(0) },
+    { AFX_R(0), AFX_R(0), AFX_R(0) }
 };
 
 _AFX afxM4d const AFX_M4D_ZERO =
 {
-    { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(0) }
+    { AFX_R(0), AFX_R(0), AFX_R(0), AFX_R(0) },
+    { AFX_R(0), AFX_R(0), AFX_R(0), AFX_R(0) },
+    { AFX_R(0), AFX_R(0), AFX_R(0), AFX_R(0) },
+    { AFX_R(0), AFX_R(0), AFX_R(0), AFX_R(0) }
 };
 
 _AFX afxM2d const AFX_M2D_IDENTITY =
 {
-    { AfxScalar(1), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(1) },
+    { AFX_R(1), AFX_R(0) },
+    { AFX_R(0), AFX_R(1) },
 };
 
 _AFX afxM3d const AFX_M3D_IDENTITY =
 {
-    { AfxScalar(1), AfxScalar(0), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(1), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(0), AfxScalar(1) }
+    { AFX_R(1), AFX_R(0), AFX_R(0) },
+    { AFX_R(0), AFX_R(1), AFX_R(0) },
+    { AFX_R(0), AFX_R(0), AFX_R(1) }
 };
 
 _AFX afxM4d const AFX_M4D_IDENTITY =
 {
-    { AfxScalar(1), AfxScalar(0), AfxScalar(0), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(1), AfxScalar(0), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(0), AfxScalar(1), AfxScalar(0) },
-    { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(1) }
+    { AFX_R(1), AFX_R(0), AFX_R(0), AFX_R(0) },
+    { AFX_R(0), AFX_R(1), AFX_R(0), AFX_R(0) },
+    { AFX_R(0), AFX_R(0), AFX_R(1), AFX_R(0) },
+    { AFX_R(0), AFX_R(0), AFX_R(0), AFX_R(1) }
 };
 
 // IsIdentity
@@ -569,15 +569,15 @@ _AFXINL void AfxM3dCopyM2d(afxM3d m, afxM2d const in)
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
-    m[0][2] = AfxScalar(0);
+    m[0][2] = AFX_R(0);
 
     m[1][0] = in[1][0];
     m[1][1] = in[1][1];
-    m[1][2] = AfxScalar(0);
+    m[1][2] = AFX_R(0);
 
-    m[2][0] = AfxScalar(0);
-    m[2][1] = AfxScalar(0);
-    m[2][2] = AfxScalar(1);
+    m[2][0] = AFX_R(0);
+    m[2][1] = AFX_R(0);
+    m[2][2] = AFX_R(1);
 }
 
 _AFXINL void AfxM4dCopyM2d(afxM4d m, afxM2d const in)
@@ -589,23 +589,23 @@ _AFXINL void AfxM4dCopyM2d(afxM4d m, afxM2d const in)
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
-    m[0][2] = AfxScalar(0);
-    m[0][3] = AfxScalar(0);
+    m[0][2] = AFX_R(0);
+    m[0][3] = AFX_R(0);
 
     m[1][0] = in[1][0];
     m[1][1] = in[1][1];
-    m[1][2] = AfxScalar(0);
-    m[1][3] = AfxScalar(0);
+    m[1][2] = AFX_R(0);
+    m[1][3] = AFX_R(0);
 
-    m[2][0] = AfxScalar(0);
-    m[2][1] = AfxScalar(0);
-    m[2][2] = AfxScalar(1);
-    m[2][3] = AfxScalar(0);
+    m[2][0] = AFX_R(0);
+    m[2][1] = AFX_R(0);
+    m[2][2] = AFX_R(1);
+    m[2][3] = AFX_R(0);
 
-    m[3][0] = AfxScalar(0);
-    m[3][1] = AfxScalar(0);
-    m[3][2] = AfxScalar(0);
-    m[3][3] = AfxScalar(1);
+    m[3][0] = AFX_R(0);
+    m[3][1] = AFX_R(0);
+    m[3][2] = AFX_R(0);
+    m[3][3] = AFX_R(1);
 }
 
 _AFXINL void AfxM4dCopyM3d(afxM4d m, afxM3d const ltm, afxV4d const atv)
@@ -619,17 +619,17 @@ _AFXINL void AfxM4dCopyM3d(afxM4d m, afxM3d const ltm, afxV4d const atv)
     m[0][0] = ltm[0][0];
     m[0][1] = ltm[0][1];
     m[0][2] = ltm[0][2];
-    m[0][3] = AfxScalar(0);
+    m[0][3] = AFX_R(0);
 
     m[1][0] = ltm[1][0];
     m[1][1] = ltm[1][1];
     m[1][2] = ltm[1][2];
-    m[1][3] = AfxScalar(0);
+    m[1][3] = AFX_R(0);
 
     m[2][0] = ltm[2][0];
     m[2][1] = ltm[2][1];
     m[2][2] = ltm[2][2];
-    m[2][3] = AfxScalar(0);
+    m[2][3] = AFX_R(0);
 
     m[3][0] = atv[0];
     m[3][1] = atv[1];
@@ -947,37 +947,37 @@ _AFXINL void AfxM4dScale(afxM4d m, afxM4d const in, afxReal scale)
 
 // AddScaled
 
-_AFXINL void AfxM2dAddScaled(afxM2d m, afxM2d const a, afxM2d const b, afxReal scale)
+_AFXINL void AfxM2dMads(afxM2d m, afxReal scale, afxM2d const b, afxM2d const c)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
-    AFX_ASSERT(a);
     AFX_ASSERT(b);
-    AfxAddScaledV2d(m[0], a[0], b[0], scale);
-    AfxAddScaledV2d(m[1], a[1], b[1], scale);
+    AFX_ASSERT(c);
+    AfxV2dMads(m[0], scale, b[0], c[0]);
+    AfxV2dMads(m[1], scale, b[1], c[1]);
 }
 
-_AFXINL void AfxM3dAddScaled(afxM3d m, afxM3d const a, afxM3d const b, afxReal scale)
+_AFXINL void AfxM3dMads(afxM3d m, afxReal scale, afxM3d const b, afxM3d const c)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
-    AFX_ASSERT(a);
     AFX_ASSERT(b);
-    AfxAddScaledV3d(m[0], a[0], b[0], scale);
-    AfxAddScaledV3d(m[1], a[1], b[1], scale);
-    AfxAddScaledV3d(m[2], a[2], b[2], scale);
+    AFX_ASSERT(c);
+    AfxV3dMads(m[0], scale, b[0], c[0]);
+    AfxV3dMads(m[1], scale, b[1], c[1]);
+    AfxV3dMads(m[2], scale, b[2], c[2]);
 }
 
-_AFXINL void AfxM4dAddScaled(afxM4d m, afxM4d const a, afxM4d const b, afxReal scale)
+_AFXINL void AfxM4dMads(afxM4d m, afxReal scale, afxM4d const b, afxM4d const c)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
-    AFX_ASSERT(a);
     AFX_ASSERT(b);
-    AfxAddScaledV4d(m[0], a[0], b[0], scale);
-    AfxAddScaledV4d(m[1], a[1], b[1], scale);
-    AfxAddScaledV4d(m[2], a[2], b[2], scale);
-    AfxAddScaledV4d(m[3], a[3], b[3], scale);
+    AFX_ASSERT(c);
+    AfxV4dMads(m[0], scale, b[0], c[0]);
+    AfxV4dMads(m[1], scale, b[1], c[1]);
+    AfxV4dMads(m[2], scale, b[2], c[2]);
+    AfxV4dMads(m[3], scale, b[3], c[3]);
 }
 
 // Mix
@@ -1615,22 +1615,22 @@ _AFXINL void AfxM4dRotationFromAxis(afxM4d m, afxV3d const axis, afxReal /*theta
     m[0][0] = (axis2[0] * axis2[0] * cosValue) + cosTheta;
     m[0][1] = (axis2[0] * axis2[1] * cosValue) + (axis2[2] * sinTheta);
     m[0][2] = (axis2[0] * axis2[2] * cosValue) - (axis2[1] * sinTheta);
-    m[0][3] = AfxScalar(0);
+    m[0][3] = AFX_R(0);
 
     m[1][0] = (axis2[1] * axis2[0] * cosValue) - (axis2[2] * sinTheta);
     m[1][1] = (axis2[1] * axis2[1] * cosValue) + cosTheta;
     m[1][2] = (axis2[1] * axis2[2] * cosValue) + (axis2[0] * sinTheta);
-    m[1][3] = AfxScalar(0);
+    m[1][3] = AFX_R(0);
 
     m[2][0] = (axis2[2] * axis2[0] * cosValue) + (axis2[1] * sinTheta);
     m[2][1] = (axis2[2] * axis2[1] * cosValue) - (axis2[0] * sinTheta);
     m[2][2] = (axis2[2] * axis2[2] * cosValue) + cosTheta;
-    m[2][3] = AfxScalar(0);
+    m[2][3] = AFX_R(0);
 
-    m[3][0] = AfxScalar(0);
-    m[3][1] = AfxScalar(0);
-    m[3][2] = AfxScalar(0);
-    m[3][3] = AfxScalar(1);
+    m[3][0] = AFX_R(0);
+    m[3][1] = AFX_R(0);
+    m[3][2] = AFX_R(0);
+    m[3][3] = AFX_R(1);
 }
 
 _AFXINL void AfxM4dRotationX(afxM4d m, afxReal angle)

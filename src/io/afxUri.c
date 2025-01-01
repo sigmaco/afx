@@ -476,21 +476,21 @@ _AFXINL afxResult AfxCompareUriString(afxUri const* uri, afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert2(uri, str);
-    return !AfxIsAnValidIndex(AfxCompareStrings(AfxGetUriString(uri), FALSE, 1, str));
+    return !AfxIsAnValidIndex(AfxCompareStrings(AfxGetUriString(uri), 0, FALSE, 1, str));
 }
 
 _AFXINL afxResult AfxCompareUriStringCi(afxUri const* uri, afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert2(uri, str);
-    return !AfxIsAnValidIndex(AfxCompareStrings(AfxGetUriString(uri), TRUE, 1, str));
+    return !AfxIsAnValidIndex(AfxCompareStrings(AfxGetUriString(uri), 0, TRUE, 1, str));
 }
 
 _AFXINL afxResult AfxCompareUri(afxUri const* uri, afxUri const *other)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert2(uri, other);
-    return !AfxIsAnValidIndex(AfxCompareStrings(AfxGetUriString(uri), FALSE, 1, AfxGetUriString(other)));
+    return !AfxIsAnValidIndex(AfxCompareStrings(AfxGetUriString(uri), 0, FALSE, 1, AfxGetUriString(other)));
 }
 
 _AFXINL afxResult AfxCompareUriCi(afxUri const* uri, afxUri const *other)
@@ -1358,7 +1358,7 @@ _AFXINL afxResult _AfxFindUriQueryAttribute(afxString *attr, afxString *value, v
     AFX_ASSERT(data);
     struct { afxString const* key; afxString* dst; afxBool success; } *data2 = data;
 
-    if (0 == AfxCompareStrings(data2->key, FALSE, 1, attr))
+    if (0 == AfxCompareStrings(data2->key, 0, FALSE, 1, attr))
     {
         AfxCopyString(data2->dst, value);
         data2->success = TRUE;

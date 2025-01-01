@@ -88,7 +88,7 @@ _AFXINL void AfxAabbAbsorbSpheres(afxBox* bb, afxUnit cnt, afxSphere const sph[]
         AfxV3dSub(range[1], sph[i].centre, radius);
         AfxAabbAbsorbAtv3d(bb, 2, range);
     }
-    bb->sup[3] = (bb->inf[3] = AfxScalar(1));
+    bb->sup[3] = (bb->inf[3] = AFX_R(1));
 }
 
 _AFXINL void AfxAabbAbsorb(afxBox* bb, afxUnit cnt, afxBox const other[])
@@ -120,6 +120,20 @@ _AFXINL afxUnit AfxAabbTestAtv3d(afxBox const* bb, afxUnit cnt, afxV3d const poi
         }
     }
     return rslt;
+}
+
+afxBool AfxTestSphereBox(afxSphere const* bs, afxBox const* bb)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(bb);
+
+    // test if a bounding box is fully inside a bounding sphere.
+
+    for (afxUnit i = 0; i < 3; i++)
+        if (bs->centre[i] + bs->radius < bb->inf[i] || bs->centre[i] - bs->radius > bb->sup[i])
+            return FALSE;
+
+    return TRUE;
 }
 
 _AFXINL void AfxAabbGetExtents(afxBox const* bb, afxV3d extent)
@@ -202,7 +216,9 @@ _AFXINL void AfxTransformObbs(afxM3d const ltm, afxV4d const atv, afxUnit cnt, a
                 for (afxUnit x = 0; x < 2; x++)
                 {
                     afxV3d tmp;
-                    AfxV3dSet(tmp, x ? in[i].sup[0] : in[i].inf[0], y ? in[i].sup[1] : in[i].inf[1], z ? in[i].sup[2] : in[i].inf[2]);
+                    AfxV3dSet(tmp,  x ? in[i].sup[0] : in[i].inf[0], 
+                                    y ? in[i].sup[1] : in[i].inf[1], 
+                                    z ? in[i].sup[2] : in[i].inf[2]);
 
                     AfxV3dPostMultiplyM3d(pos, ltm, tmp);
                     AfxV3dAdd(pos, pos, atv);
@@ -213,12 +229,8 @@ _AFXINL void AfxTransformObbs(afxM3d const ltm, afxV4d const atv, afxUnit cnt, a
             }
         }
 
-        out[i].sup[0] = max[0];
-        out[i].sup[1] = max[1];
-        out[i].sup[2] = max[2];
-        out[i].inf[0] = min[0];
-        out[i].inf[1] = min[1];
-        out[i].inf[2] = min[2];
+        AfxV3dCopy(out[i].sup, max);
+        AfxV3dCopy(out[i].inf, min);
     }
 }
 

@@ -19,8 +19,10 @@
 _AFX afxStackPage* _AfxStackAllocateBlock(afxStack *stak)
 {
     afxUnit v1 = stak->unitSiz * stak->unitsPerBlock;
-    afxStackPage *block = AfxAllocate(1, sizeof(*block), 0, AfxHere());
-    block->units = AfxAllocate(1, v1, 0, AfxHere());
+    afxStackPage *block;
+    AfxAllocate(sizeof(*block), 0, AfxHere(), (void**)&block);
+    block->units;
+    AfxAllocate(v1, 0, AfxHere(), (void**)&block->units);
 
     {
         block->usedUnitCnt = 0;
@@ -273,7 +275,7 @@ _AFX void AfxPopStackUnits(afxStack *stak, afxUnit cnt)
         stak->totalUsedUnitCnt -= v3->usedUnitCnt;
         v2 -= v3->usedUnitCnt;
         stak->lastBlock = v3->prev;
-        AfxDeallocate(v4);
+        AfxDeallocate((void**)&v4, AfxHere());
         afxStackPage **v5 = stak->blockDir;
 
         if (v5)
@@ -295,7 +297,7 @@ _AFX void AfxEmptyStack(afxStack *stak)
 
     if (stak->blockDir)
     {
-        AfxDeallocate(stak->blockDir);
+        AfxDeallocate((void**)&stak->blockDir, AfxHere());
         stak->blockDir = NIL;
     }
 }
@@ -306,7 +308,7 @@ _AFX void AfxDeallocateStack(afxStack *stak)
 
     if (stak->blockDir)
     {
-        AfxDeallocate(stak->blockDir);
+        AfxDeallocate((void**)&stak->blockDir, AfxHere());
         stak->blockDir = NIL;
     }
 }
@@ -337,7 +339,8 @@ _AFX void AfxAllocatePagedStack(afxStack *stak, afxUnit unitSiz, afxUnit unitsPe
     stak->lastBlock = NIL;
     stak->activeBlocks = 0;
     stak->maxActiveBlocks = v4;
-    afxStackPage**v5 = AfxAllocate(v4, sizeof(afxStackPage*), 0, AfxHere());
+    afxStackPage**v5;
+    AfxAllocate(v4 * sizeof(afxStackPage*), 0, AfxHere(), (void**)&v5);
     afxUnit v6 = sizeof(afxStackPage*) * stak->maxActiveBlocks;
     stak->blockDir = v5;
     AfxZero(v5, v6);

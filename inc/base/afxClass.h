@@ -29,7 +29,6 @@
 // A single QMetaObject instance is created for each QObject subclass that is used in an application, and this instance stores all the class-information for the QObject subclass.
 // This object is available as QObject::typeObject().
 
-AFX_DECLARE_STRUCT(afxClassExtension);
 //AFX_DECLARE_STRUCT(afxHandle);
 AFX_DECLARE_STRUCT(afxClass);
 AFX_DECLARE_STRUCT(afxEvent);
@@ -104,10 +103,10 @@ AFX_DEFINE_STRUCT(afxObjectChunk)
     afxUnit     siz;
 };
 
-AFX_DEFINE_STRUCT(afxInstanceExtension)
+AFX_DEFINE_STRUCT(afxClassExtension)
 {
-    afxLinkage      cls;
-    afxUnit         pluginId;
+    afxLink      cls;
+    afxUnit         extId;
     afxUnit         objOff;
     afxUnit         objSiz;
     afxError        (*dtorCb)(afxObject obj, void* ext, afxUnit siz);
@@ -131,8 +130,8 @@ AFX_DEFINE_STRUCT(afxClass)
     afxFcc          fcc; // afxFcc_CLS
     afxFcc          objFcc;
     afxChar         name[32];
-    afxLinkage      host; // provided by this object.
-    afxLinkage      subset; // inherit this object.
+    afxLink         host; // provided by this object.
+    afxLink         subset; // inherit this object.
     afxChain        supersets; // inherited by these objects.
     afxUnit         level;
     afxUnit         levelMask;
@@ -155,7 +154,7 @@ AFX_DEFINE_STRUCT(afxClass)
     afxError        (*ioRead)(afxStream iob, afxObject obj); // reads extension data from a binary stream.
     afxSize         (*ioSiz)(afxStream iob, afxObject obj); // determines the binary size of the extension data.
     
-    afxChain        plugins;
+    afxChain        extensions;
     afxUnit         extraSiz; // extra size contributed by each plugin.
     afxArena        extraAlloc; // plugin space allocation.
 
@@ -168,26 +167,30 @@ AFX_DEFINE_STRUCT(afxClass)
     void*           userData[4];
 };
 
-AFX afxError        AfxRegisterClass(afxClass* cls, afxClass *base, afxChain* provider, afxClassConfig const *spec);
-AFX afxError        AfxDeregisterClass(afxClass* cls);
+AFX afxError        AfxMountClass(afxClass* cls, afxClass *base, afxChain* provider, afxClassConfig const *spec);
+AFX afxError        AfxDismountClass(afxClass* cls);
+
+AFX afxError        AfxInstallClassExtension(afxClass* cls, afxClassExtension* const ext);
+
 AFX afxUnit         AfxExhaustClass(afxClass* cls);
 
-AFX afxUnit         AfxCountClassInstances(afxClass const* cls);
-AFX afxUnit         AfxGetClassInstanceFixedSize(afxClass const* cls);
-AFX afxUnit         AfxGetClassInstanceStrictFixedSize(afxClass const* cls);
+AFX afxUnit         AfxGetSizeOfObject(afxClass const* cls, afxUnit* strictSize);
 
 AFXINL afxArena*    AfxGetClassArena(afxClass *cls);
 
 AFXINL afxClass*    AfxGetSubClass(afxClass const* cls);
 AFXINL afxObject    AfxGetClassInstance(afxClass const* cls, afxUnit32 uniqueId);
 
-AFX afxUnit         AfxEnumerateClassInstances(afxClass const* cls, afxUnit first, afxUnit cnt, afxObject objects[]);
+// Pass NIL into objects to AfxEnumerateObjects() to return a total number of instances.
 
-AFX afxUnit         AfxEvokeClassInstances(afxClass const* cls, afxBool(*f)(afxObject,void*), void* udd, afxUnit first, afxUnit cnt, afxObject objects[]);
+AFX afxUnit         AfxEnumerateObjects(afxClass const* cls, afxUnit first, afxUnit cnt, afxObject objects[]);
+AFX afxUnit         _AfxEnumerateObjectsUnlocked(afxClass const* cls, afxBool fromLast, afxUnit first, afxUnit cnt, afxObject objects[]);
+
+AFX afxUnit         AfxEvokeObjects(afxClass const* cls, afxBool(*f)(afxObject,void*), void* udd, afxUnit first, afxUnit cnt, afxObject objects[]);
 
 /// The AfxInvokeClassInstances2() function is used to apply the given callback function to all objects in the specified class.
 /// If any invocation of the callback function returns a failure status the interation is terminated. However, AfxInvokeClassInstances2 will still return successfully.
-AFX afxUnit         AfxInvokeClassInstances(afxClass const* cls, afxUnit first, afxUnit cnt, afxBool(*f)(afxObject obj, void *udd), void* udd);
+AFX afxUnit         AfxInvokeObjects(afxClass const* cls, afxUnit first, afxUnit cnt, afxBool(*f)(afxObject obj, void *udd), void* udd);
 
 /// The AfxInvokeClassInstances2() function is used to apply the given callback function to all objects in the specified class using another callback as filter.
 /// If any invocation of the exec() callback function returns a failure status the iteration is terminated.
@@ -206,11 +209,13 @@ AFX afxResult       AfxExhaustChainedClasses(afxChain* ch);
 AFX afxChain*       _AfxGetOrphanClasses(void);
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
-#   define AfxAssertClass(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError("%s\n    %s", AFX_STRINGIFY((var_)), errorMsg[AFXERR_INVALID]), 0))
+#   define AFX_ASSERT_CLASS(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError("%s\n    %s", AFX_STRINGIFY((var_)), errorMsg[afxError_INVALID]), 0))
 #else
-#   define AfxAssertClass(cls_, fcc_) ((void)(err))
+#   define AFX_ASSERT_CLASS(cls_, fcc_) ((void)(err))
 #endif
 
 AFXINL void* AfxGetObjectExtra(afxObject obj, afxUnit pluginId);
+
+AFXINL void* AfxGetObjectIdd(afxObject obj, afxUnit offset);
 
 #endif//AFX_CLASS_H

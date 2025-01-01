@@ -65,7 +65,7 @@ AFX_OBJECT(afxResource)
     afxResourceState    state;
     afxChain            instances;
     afxUnit              reqCnt;
-    afxLinkage          monitor; // queued for monitoring for external changes.
+    afxLink          monitor; // queued for monitoring for external changes.
     afxTime             lastUpdTime;
     afxTime             lastReqTime; // will be used to liberate space if needed.
     afxError            (*load)(afxResource res);

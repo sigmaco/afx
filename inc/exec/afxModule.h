@@ -24,25 +24,32 @@
 #include "qwadro/inc/io/afxUri.h"
 #include "qwadro/inc/base/afxManifest.h"
 
-typedef enum afxModuleType
+typedef enum afxModuleFlags
 {
-    afxModuleType_DLL, // has DllMain
-    afxModuleType_ASI, // has 
-    afxModuleType_ICD, // has DriverEntry
-    afxModuleType_SYS, // has
-} afxModuleType;
+    afxModuleFlag_DLL   = AFX_BIT(0), // has DllMain
+    afxModuleFlag_ASI   = AFX_BIT(1), // has 
+    afxModuleFlag_ICD   = AFX_BIT(2), // has DriverEntry
+    afxModuleFlag_SYS   = AFX_BIT(3), // has
+    
+    afxModuleFlag_AVX   = AFX_BIT(8),
+    afxModuleFlag_AMX   = AFX_BIT(9),
+    afxModuleFlag_ASX   = AFX_BIT(10),
+    afxModuleFlag_AUX   = AFX_BIT(11),
+} afxModuleFlags;
+
+AFX afxModuleFlags      AfxTestModule(afxModule mdle, afxModuleFlags bitmask);
 
 AFX void                AfxGetModulePath(afxModule mdle, afxUri* uri);
 
 AFX void*               AfxGetSymbolAddress(afxModule mdle, afxString const* name);
-AFX afxUnit              AfxGetSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const names[], void* addresses[]);
-AFX afxUnit              AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxUnit cnt, afxString const names[], void* addresses[]);
+AFX afxUnit             AfxGetSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const names[], void* addresses[]);
+AFX afxUnit             AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxUnit cnt, afxString const names[], void* addresses[]);
 
 
 AFX void*               AfxFindModuleSymbol(afxModule mdle, afxChar const *name);
 AFX afxResult           AfxFindModuleSymbols(afxModule mdle, afxUnit cnt, afxChar const *name[], void *sym[]);
 
-AFX afxUnit              AfxFindSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const names[], void* addresses[]);
+AFX afxUnit             AfxFindSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const names[], void* addresses[]);
 
 AFX void                AfxGetModuleInfo(afxModule icd, afxString* product, afxString* vendor, afxString* description);
 AFX void                AfxGetModuleVersion(afxModule icd, afxUnit* verMajor, afxUnit* verMinor, afxUnit* verPatch);

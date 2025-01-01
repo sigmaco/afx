@@ -21,8 +21,8 @@
 #include "qwadro/inc/math/afxMatrix.h"
 #include "qwadro/inc/math/afxVector.h"
 
-_AFX afxQuat const AFX_QUAT_ZERO = { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(0) };
-_AFX afxQuat const AFX_QUAT_IDENTITY = { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(1) };
+_AFX afxQuat const AFX_QUAT_ZERO = { AFX_R(0), AFX_R(0), AFX_R(0), AFX_R(0) };
+_AFX afxQuat const AFX_QUAT_IDENTITY = { AFX_R(0), AFX_R(0), AFX_R(0), AFX_R(1) };
 
 ////////////////////////////////////////////////////////////////////////////////
 // Initialization                                                             //
@@ -200,11 +200,11 @@ _AFXINL void AfxQuatRotationFromAxis(afxQuat q, afxV3d const axis, afxReal phi)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(q);
     AFX_ASSERT(axis); // radians
-    afxReal s = AfxSinf(phi * AfxScalar(0.5));
+    afxReal s = AfxSinf(phi * AFX_R(0.5));
     q[0] = axis[0] * s;
     q[1] = axis[1] * s;
     q[2] = axis[2] * s;
-    q[3] = AfxCosf(phi * AfxScalar(0.5));
+    q[3] = AfxCosf(phi * AFX_R(0.5));
     AfxQuatNormalize(q, q); // reduz erros causados por AfxSinf() e AfxCosf().
 }
 
@@ -448,7 +448,7 @@ _AFXINL void AfxQuatLerp(afxQuat q, afxQuat const a, afxQuat const b, afxReal pe
     AFX_ASSERT(b);
     AFX_ASSERT(q);
 
-    afxReal f = AfxScalar(1) - percent;
+    afxReal f = AFX_R(1) - percent;
     
     if (AfxQuatDot(a, b) < 0.f)
     {
@@ -475,22 +475,22 @@ _AFXINL void AfxQuatSlerp(afxQuat q, afxQuat const a, afxQuat const b, afxReal p
     AFX_ASSERT(b);
     AFX_ASSERT(q);
 
-    if (AfxRealIsEquivalent(percent, AfxScalar(0))) AfxQuatCopy(q, a);
+    if (AfxRealIsEquivalent(percent, AFX_R(0))) AfxQuatCopy(q, a);
     else
     {
-        if (AfxRealIsEquivalent(percent, AfxScalar(1))) AfxQuatCopy(q, b);
+        if (AfxRealIsEquivalent(percent, AFX_R(1))) AfxQuatCopy(q, b);
         else
         {
             // if they are close q parallel, use LERP, This avoids div/0. At small angles, the slerp a lerp are the same.
             afxReal dot = AfxQuatDot(a, b);
 
-            if (AfxRealIsEquivalent(dot, AfxScalar(1))) AfxQuatLerp(q, a, q, percent);
+            if (AfxRealIsEquivalent(dot, AFX_R(1))) AfxQuatLerp(q, a, q, percent);
             else
             {
                 // if dot is negative, they are "pointing" away from one another, use the shortest arc instead (reverse end a start)
                 // This has the effect of changing the direction of travel around the sphere beginning with "end" a going the b way around the sphere.
 
-                if (dot < AfxScalar(0))
+                if (dot < AFX_R(0))
                 {
                     afxQuat neg;
                     AfxQuatNeg(neg, a);
@@ -500,9 +500,9 @@ _AFXINL void AfxQuatSlerp(afxQuat q, afxQuat const a, afxQuat const b, afxReal p
                 else
                 {
                     // keep the dot product in the range that acos canv handle (shouldn't get here)
-                    dot = AfxClampd(dot, AfxScalar(-1), AfxScalar(1));
+                    dot = AfxClampd(dot, AFX_R(-1), AFX_R(1));
                     afxReal theta = AfxAcosf(dot); // the angle between start a end in radians
-                    afxReal s = AfxSinf(theta), f1 = AfxSinf((AfxScalar(1) - percent) * theta) / s, f2 = AfxSinf(percent * theta) / s; // compute negative a positive
+                    afxReal s = AfxSinf(theta), f1 = AfxSinf((AFX_R(1) - percent) * theta) / s, f2 = AfxSinf(percent * theta) / s; // compute negative a positive
 
                     // mul & add
                     q[3] = f1 * a[3] + f2 * b[3];

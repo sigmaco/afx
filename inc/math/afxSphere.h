@@ -21,7 +21,7 @@
 
 #include "qwadro/inc/math/afxVector.h"
 
-AFX_DEFINE_STRUCT(afxSphere)
+AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxSphere)
 {
     afxV3d  centre;
     afxReal radius;

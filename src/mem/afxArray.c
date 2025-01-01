@@ -66,37 +66,26 @@ _AFXINL void AfxCleanUpArray(afxArray *arr)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(arr);
     AfxEmptyArray(arr);
+    arr->cap = 0;
 
-    if (arr->bytemap)
-        AfxDeallocate(arr->bytemap), arr->bytemap = NIL;
+    if (arr->bytemap && arr->alloced)
+    {
+        AfxDeallocate((void**)&arr->bytemap, AfxHere());
+        arr->alloced = FALSE;
+    }
 }
 
-_AFXINL afxError AfxMakeArray(afxArray* arr, afxUnit cap, afxUnit unitSiz, void const* const initial)
+_AFXINL afxError AfxMakeArray(afxArray* arr, afxUnit unitSiz, afxUnit cap, void* buf, afxUnit pop)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(arr);
     AFX_ASSERT(unitSiz);
+    AFX_ASSERT(cap >= pop);
     arr->unitSiz = unitSiz;
-    arr->cap = cap;
-    arr->pop = 0;
-    arr->bytemap = NIL;
-
-    if (initial && cap)
-    {
-        AfxReserveArraySpace(arr, cap);
-        AfxFill2(arr->bytemap, initial, unitSiz, cap);
-    }
-    return err;
-}
-
-_AFXINL afxError AfxWrapArray(afxArray* arr, afxUnit unitSiz, afxUnit cap, void* buf, afxUnit cnt)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(arr);
-    arr->unitSiz = unitSiz;
-    arr->cap = cap;
-    arr->pop = cnt;
+    arr->cap = AfxMax(1, cap);
+    arr->pop = buf ? pop : 0;
     arr->bytemap = buf;
+    arr->alloced = !buf;
     return err;
 }
 
@@ -130,13 +119,12 @@ _AFXINL afxError AfxReserveArraySpace(afxArray *arr, afxUnit cap)
         if (!arr->bytemap)
             cap = AfxMax(cap, arr->cap);
 
-        afxByte *p;
+        AFX_ASSERT(arr->alloced);
 
-        if (!(p = AfxReallocate(arr->bytemap, arr->unitSiz, cap, 0, AfxHere()) /*AfxReallocate(&((afxSize *)(*arr))[-2], (siz), AfxHere())*/)) AfxThrowError();
+        if (AfxReallocate(arr->unitSiz * cap, 0, AfxHere(), (void**)&arr->bytemap) /*AfxReallocate(&((afxSize *)(*arr))[-2], (siz), AfxHere())*/) AfxThrowError();
         else
         {
             arr->cap = cap;
-            arr->bytemap = (afxByte*)p;
         }
     }
     return err;
@@ -180,7 +168,7 @@ _AFXINL void AfxDumpArray(afxArray const* arr, afxUnit firstUnit, afxUnit unitCn
     AfxCopy2(dst, &arr->bytemap[firstUnit * arr->unitSiz], arr->unitSiz, unitCnt);
 }
 
-_AFXINL void* AfxInsertArrayUnits(afxArray* arr, afxUnit cnt, afxUnit* firstIdx, void const *initialVal)
+_AFXINL void* AfxPushArrayUnits(afxArray* arr, afxUnit cnt, afxUnit* baseUnitIdx, void const *initialVal)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(arr);
@@ -195,8 +183,8 @@ _AFXINL void* AfxInsertArrayUnits(afxArray* arr, afxUnit cnt, afxUnit* firstIdx,
     {
         first = NIL;
 
-        if (firstIdx)
-            *firstIdx = AFX_INVALID_INDEX;
+        if (baseUnitIdx)
+            *baseUnitIdx = AFX_INVALID_INDEX;
     }
     else
     {
@@ -205,8 +193,8 @@ _AFXINL void* AfxInsertArrayUnits(afxArray* arr, afxUnit cnt, afxUnit* firstIdx,
         afxUnit baseIdx = arr->pop;
         arr->pop += cnt;
 
-        if (firstIdx)
-            *firstIdx = baseIdx;
+        if (baseUnitIdx)
+            *baseUnitIdx = baseIdx;
 
         first = AfxGetArrayUnit(arr, baseIdx);
 
@@ -218,13 +206,13 @@ _AFXINL void* AfxInsertArrayUnits(afxArray* arr, afxUnit cnt, afxUnit* firstIdx,
     return first;
 }
 
-_AFXINL void* AfxInsertArrayUnit(afxArray *arr, afxUnit *idx)
+_AFXINL void* AfxPushArrayUnit(afxArray *arr, afxUnit* unitIdx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(arr);
     void *ptr;
 
-    if (!(ptr = AfxInsertArrayUnits(arr, 1, idx, NIL)))
+    if (!(ptr = AfxPushArrayUnits(arr, 1, unitIdx, NIL)))
         AfxThrowError();
 
     return ptr;
@@ -357,5 +345,46 @@ _AFXINL afxError AfxSwapArray(afxArray *arr, afxArray *other)
     arr->pop = pop;
     arr->bytemap = bytemap;
 
+    return err;
+}
+
+_AFX afxBool AfxLookUpArray(afxArray* arr, void* data, afxUnit* elemIdx)
+{
+    afxError err = NIL;
+    AFX_ASSERT(arr);
+    AFX_ASSERT(data);
+    AFX_ASSERT(elemIdx);
+
+    for (afxUnit i = 0; i < arr->pop; i++)
+    {
+        void* el = AfxGetArrayUnit(arr, i);
+
+        if (0 == AfxMemcmp(el, data, arr->unitSiz))
+        {
+            AFX_ASSERT(elemIdx);
+            *elemIdx = i;
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+_AFX afxError AfxArrayUnique(afxArray* arr, void* data, afxUnit* elemIdx)
+{
+    afxError err = NIL;
+    AFX_ASSERT(arr);
+    AFX_ASSERT(data);
+    AFX_ASSERT(elemIdx);
+
+    if (!AfxLookUpArray(arr, data, elemIdx))
+    {
+        void* room = AfxPushArrayUnit(arr, elemIdx);
+
+        if (!room) AfxThrowError();
+        else
+        {
+            AfxCopy(room, data, arr->unitSiz);
+        }
+    }
     return err;
 }

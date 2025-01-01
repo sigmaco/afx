@@ -14,13 +14,21 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-
-#include "../../dep/tinycthread.h"
-#include "../../dep/tinycthread.c"
-
 #define _AFX_CORE_C
 #define _AFX_THREAD_C
 #include "../dev/afxExecImplKit.h"
+
+#include "../../dep/tinycthread.h"
+#include "../../dep/tinycthread.c"
+#ifdef AFX_OS_WIN
+#   include <combaseapi.h>
+#else
+#   include <unistd.h>
+#endif
+
+#ifdef AFX_OS_WIN
+#   define W32_INIT_COM
+#endif
 
 AFX_THREAD_LOCAL afxUnit32 _currTid = 0;
 AFX_THREAD_LOCAL afxUnit32 _currThrObjId = 0;
@@ -44,6 +52,15 @@ _AFX afxUnit32 AfxGetTid(void)
     return (_currTid = GetCurrentThreadId());// _currTid ? _currTid : (_currTid = GetCurrentThreadId());
 }
 
+_AFX void AfxSleep(afxUnit ms)
+{
+#ifdef AFX_OS_WIN
+    Sleep(ms);
+#else
+    usleep(ms * 1000);
+#endif
+}
+
 _AFX void AfxYield(void)
 {
     thrd_yield();
@@ -58,7 +75,7 @@ struct _thrFindThreadParam
 _AFXINL afxBool _ThrFindThreadCb(afxThread thr, void* udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     struct _thrFindThreadParam* param = udd;
 
     if (param->tid == thr->tid)
@@ -77,7 +94,7 @@ _AFX afxBool AfxFindThread(afxUnit32 tid, afxThread* thread)
     if (tid)
     {
         AfxInvokeThreads(0, AFX_N32_MAX, _ThrFindThreadCb, &param);
-        AfxTryAssertObjects(1, &param.thr, afxFcc_THR);
+        AFX_TRY_ASSERT_OBJECTS(afxFcc_THR, 1, &param.thr);
     }
 
     AFX_ASSERT(thread);
@@ -118,7 +135,7 @@ _AFX afxBool AfxIsPrimeThread(void)
 _AFXINL void _AfxGetThreadFrequency(afxThread thr, afxUnit* execNo, afxUnit* lastFreq)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     AFX_ASSERT(execNo);
     *execNo = thr->execNo;
     AFX_ASSERT(lastFreq);
@@ -132,14 +149,14 @@ _AFX void AfxGetThreadFrequency(afxUnit* execNo, afxUnit* lastFreq)
     AFX_ASSERT(execNo);
     afxThread thr;
     AfxGetThread(&thr);
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     _AfxGetThreadFrequency(thr, execNo, lastFreq);
 }
 
 _AFXINL void _AfxGetThreadClock(afxThread thr, afxClock* curr, afxClock* last)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     afxClock currClock;
     AfxGetClock(&currClock);
     AFX_ASSERT(curr);
@@ -154,14 +171,14 @@ _AFX void AfxGetThreadClock(afxClock* curr, afxClock* last)
     afxError err = AFX_ERR_NONE;
     afxThread thr;
     AfxGetThread(&thr);
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     _AfxGetThreadClock(thr, curr, last);
 }
 
 _AFXINL void _AfxGetThreadTime(afxThread thr, afxReal64* ct, afxReal64* dt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     afxClock currClock;
     AfxGetClock(&currClock);
     afxReal64 ct2 = AfxGetSecondsElapsed(&thr->startClock, &currClock);
@@ -178,14 +195,14 @@ _AFX void AfxGetThreadTime(afxReal64* ct, afxReal64* dt)
     afxError err = AFX_ERR_NONE;
     afxThread thr;
     AfxGetThread(&thr);
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     _AfxGetThreadTime(thr, ct, dt);
 }
 
 _AFXINL void _AfxExitThread(afxThread thr, afxInt code)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
 
     // Tells the thread's event loop to exit with a return code.
     // After calling this function, the thread leaves the event loop and returns from the call to exec(). The exec() function returns returnCode.
@@ -203,7 +220,7 @@ _AFX void AfxExitThread(afxInt code)
     afxError err = AFX_ERR_NONE;
     afxThread thr;
     AfxGetThread(&thr);
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     _AfxExitThread(thr, code);
 }
 
@@ -220,14 +237,14 @@ _AFX void AfxQuitThread(void)
     afxError err = AFX_ERR_NONE;
     afxThread thr;
     AfxGetThread(&thr);
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     _AfxQuitThread(thr);
 }
 
 _AFXINL afxBool _AfxShouldThreadBeInterrupted(afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     afxBool rslt = FALSE;
 
     // Return true if the task running on this thread should be stopped. 
@@ -244,7 +261,7 @@ _AFX afxBool AfxShouldThreadBeInterrupted(void)
     afxError err = AFX_ERR_NONE;
     afxThread thr;
     AfxGetThread(&thr);
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     return _AfxShouldThreadBeInterrupted(thr);
 }
 
@@ -253,7 +270,7 @@ _AFX afxBool AfxShouldThreadBeInterrupted(void)
 _AFX afxBool AfxGetThreadExitCode(afxThread thr, afxInt* exitCode)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
 
     // Retrieves the context of the specified thread.
 
@@ -265,7 +282,7 @@ _AFX afxBool AfxGetThreadExitCode(afxThread thr, afxInt* exitCode)
 _AFX afxResult AfxWaitForThreadExit(afxThread thr, afxResult* exitCode)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     afxResult rslt = FALSE;
     // The thread associated with this Thread object has finished execution (i.e. when it returns from run()). 
     // This function will return true if the thread has finished. 
@@ -297,7 +314,7 @@ _AFX afxResult AfxWaitForThreadExit(afxThread thr, afxResult* exitCode)
 _AFX void AfxRequestThreadInterruption(afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
 
     //void requestInterruption()
     //Request the interruption of the thread.That request is advisory and it is up to code running on the thread to decide if and how it should act upon such request. 
@@ -316,39 +333,74 @@ _AFX void AfxRequestThreadInterruption(afxThread thr)
 _AFX void** AfxGetThreadUdd(afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     return thr->udd;
 }
 
 _AFX afxBool AfxIsThreadRunning(afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     return thr->running && !thr->isInFinish;
 }
 
 _AFX afxBool AfxIsThreadFinished(afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     return thr->finished || thr->isInFinish;
 }
 
 _AFX afxBool AfxPostEvent(afxThread thr, void(*event)(void* udd), void* udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     return PostThreadMessageA(thr->tid, WM_USER, (WPARAM)event, (LPARAM)udd);
 }
+
+#ifdef AFX_OS_WIN
+typedef struct THREADNAME_INFO
+{
+    DWORD dwType;
+    LPCSTR szName;
+    DWORD dwThreadID;
+    DWORD dwFlags;
+} THREADNAME_INFO;
+
+void _AfxRenameThreadW32(DWORD osTid, afxString const* name)
+{
+    afxString128 s;
+    AfxMakeString128(&s, name);
+
+    THREADNAME_INFO info;
+    info.dwType = 0x1000;
+    info.szName = s.buf;
+    info.dwThreadID = osTid;
+    info.dwFlags = 0;
+
+    __try
+    {
+        RaiseException(/*MS_VC_EXCEPTION*/0x406d1388, 0, sizeof(info) / sizeof(DWORD), (DWORD*)&info);
+    }
+    __except (EXCEPTION_CONTINUE_EXECUTION)
+    {
+    }
+}
+#endif
 
 _AFX int _AfxExecTxuCb(void** v)
 {
     afxError err = AFX_ERR_NONE;
     
     afxThread thr = v[0];
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     afxInt(*proc)(void* arg) = v[1];
     void* arg = v[2];
+
+#ifdef W32_INIT_COM
+    if (S_OK != CoInitializeEx(NULL, COINIT_MULTITHREADED))
+        AfxThrowError();
+#endif
 
     thr->tid = AfxGetTid();
     //thr->osHandle = thrd_current();
@@ -457,6 +509,11 @@ _AFX int _AfxExecTxuCb(void** v)
     }
 
     _AfxDeinitMmu(thr);
+
+#ifdef W32_INIT_COM
+    CoUninitialize();
+#endif
+
     AfxSignalCondition2(&thr->statusCnd);
     thr->tid = 0;
     AfxSignalCondition2(&thr->statusCnd);
@@ -466,7 +523,7 @@ _AFX int _AfxExecTxuCb(void** v)
 _AFX afxError AfxRunThread(afxThread thr, afxInt(*proc)(void* arg), void* arg)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
 
     // Begins execution of the thread by calling run(). 
     // The operating system will schedule the thread according to the priority parameter. 
@@ -509,6 +566,12 @@ _AFX afxError AfxRunThread(afxThread thr, afxInt(*proc)(void* arg), void* arg)
 
                 AFX_ASSERT(GetThreadId(thr->osHandle) == thr->tid);
                 AFX_ASSERT(thr->osHandle == thr->osHandle);
+
+                afxString s;
+                AfxMakeString(&s, 0, thr->_func_, 0);
+                _AfxRenameThreadW32(thr->tid, &s);
+                
+                AfxLogEcho("Running... %p#%u --- %s:%i", thr, thr->tid, _AfxDbgTrimFilename((char const *const)thr->_file_), (int)thr->_line_);
             }
         }
     }
@@ -518,7 +581,7 @@ _AFX afxError AfxRunThread(afxThread thr, afxInt(*proc)(void* arg), void* arg)
 _AFX afxError _AfxThrDtorCb(afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
 
     // Destroys the Thread.
     // Note that deleting a Thread object will not stop the execution of the thread it manages.Deleting a running Thread(i.e.isFinished() returns false) will result in a program crash.Wait for the finished() signal before deleting the QThread.
@@ -530,8 +593,15 @@ _AFX afxError _AfxThrDtorCb(afxThread thr)
 
     AFX_ASSERT(AfxIsQueueEmpty(&thr->events));
 
-    if (AfxCleanUpQueue(&thr->events))
+    if (AfxDismantleQueue(&thr->events))
         AfxThrowError();
+    
+    if (thr->tid == AfxGetPrimeTid()) // is prime thread
+    {
+#ifdef W32_INIT_COM
+        CoUninitialize();
+#endif
+    }
 
     if (thr->osHandle)
     {
@@ -540,8 +610,8 @@ _AFX afxError _AfxThrDtorCb(afxThread thr)
         CloseHandle(thr->osHandle);
     }
 
-    AfxCleanUpCondition(&thr->statusCnd);
-    AfxCleanUpMutex(&thr->statusCndMtx);
+    AfxDismantleCondition(&thr->statusCnd);
+    AfxDismantleMutex(&thr->statusCndMtx);
 
     return err;
 }
@@ -549,12 +619,10 @@ _AFX afxError _AfxThrDtorCb(afxThread thr)
 _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
 
     //AfxZero(thr, sizeof(thr[0]));
 
-    afxSystem sys = args[0];
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxSize const* hint = args[1];
     afxThreadConfig const *cfg = ((afxThreadConfig const *)(args[2]));// +invokeNo; --- not specific
     AFX_ASSERT(cfg);
@@ -573,8 +641,8 @@ _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
     thr->interruptionRequested = FALSE;
     thr->exitCode = 0;
 
-    AfxSetUpMutex(&thr->statusCndMtx, AFX_MTX_PLAIN);
-    AfxSetUpCondition(&thr->statusCnd);
+    AfxDeployMutex(&thr->statusCndMtx, AFX_MTX_PLAIN);
+    AfxDeployCondition(&thr->statusCnd);
 
     if (cfg)
     {
@@ -604,7 +672,7 @@ _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
     // This allows you to connect to its signals, move Objects to the thread, choose the new thread's priority and so on.
     // The function f will be called in the new thread.
 
-    if (AfxSetUpQueue(&thr->events, sizeof(afxEvent), AfxMax(AFX_THR_MIN_EVENT_CAP, cfg->minEventCap))) AfxThrowError();
+    if (AfxMakeQueue(&thr->events, sizeof(afxEvent), AfxMax(AFX_THR_MIN_EVENT_CAP, cfg->minEventCap), NIL, 0)) AfxThrowError();
     else
     {
         //AfxDeploySlock(&thr->evSlock);
@@ -631,6 +699,10 @@ _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
 
                     if (thr->tid == AfxGetTid()) // is current thread
                     {
+#ifdef W32_INIT_COM
+                        if (S_OK != CoInitializeEx(NULL, COINIT_MULTITHREADED))
+                            AfxThrowError();
+#endif
                         _currTid = AfxGetTid();
                         _currThr = thr;
                         _currThrObjId = AfxGetObjectId(thr);
@@ -647,7 +719,7 @@ _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
     }
 
     if (err)
-        AfxCleanUpQueue(&thr->events);
+        AfxDismantleQueue(&thr->events);
 
     return err;
 }
@@ -670,8 +742,8 @@ _AFX afxUnit AfxInvokeThreads(afxUnit first, afxUnit cnt, afxBool(*f)(afxThread,
     AFX_ASSERT(f);
     AFX_ASSERT(cnt);
     afxClass* cls = AfxGetThreadClass();
-    AfxAssertClass(cls, afxFcc_THR);
-    return AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
+    AFX_ASSERT_CLASS(cls, afxFcc_THR);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxUnit AfxEnumerateThreads(afxUnit first, afxUnit cnt, afxThread threads[])
@@ -680,9 +752,9 @@ _AFX afxUnit AfxEnumerateThreads(afxUnit first, afxUnit cnt, afxThread threads[]
     AFX_ASSERT(threads);
     AFX_ASSERT(cnt);
     afxClass* cls = AfxGetThreadClass();
-    AfxAssertClass(cls, afxFcc_THR);
-    afxUnit rslt = AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)threads);
-    AfxAssertObjects(rslt, threads, afxFcc_THR);
+    AFX_ASSERT_CLASS(cls, afxFcc_THR);
+    afxUnit rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)threads);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, rslt, threads);
     return rslt;
 }
 
@@ -693,21 +765,19 @@ _AFX afxError AfxAcquireThreads(afxHere const hint, afxThreadConfig const* cfg, 
     AFX_ASSERT(hint);
     AFX_ASSERT(cfg);
 
-    AfxLogEcho("Threading... #%u (%s:%i)", cfg->tid, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
-
     // Creates a new Thread object that will execute the function f with the arguments args.
     // The new thread is not started -- it must be started by an explicit call to start(). This allows you to connect to its signals, move Objects to the thread, choose the new thread's priority and so on. The function f will be called in the new thread.
 
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass* cls = AfxGetThreadClass();
-    AfxAssertClass(cls, afxFcc_THR);
+    AFX_ASSERT_CLASS(cls, afxFcc_THR);
     
     if (AfxAcquireObjects(cls, cnt, (afxObject*)threads, (void const*[]) { sys, hint, (void*)cfg, })) AfxThrowError();
     else
     {
-        AfxAssertObjects(cnt, threads, afxFcc_THR);        
+        AFX_ASSERT_OBJECTS(afxFcc_THR, cnt, threads);
     }
     return err;
 }

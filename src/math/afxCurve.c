@@ -16,56 +16,7 @@
 
 #define _AMX_C
 #define _AMX_CURVE_C
-#include "../dev/AmxCadImplKit.h"
-
-_AMXINL afxInt AfxGetCurveDegree(afxCurve c)
-{
-    afxError err = NIL;
-    AfxAssertObjects(1, &c, afxFcc_CUR);
-    return c->degree;
-}
-
-_AMXINL afxCurveFlags AfxGetCurveFlags(afxCurve c)
-{
-    afxError err = NIL;
-    AfxAssertObjects(1, &c, afxFcc_CUR);
-    return c->flags;
-}
-
-_AMXINL afxCurveFlags AfxTestCurveFlags(afxCurve c, afxCurveFlags mask)
-{
-    afxError err = NIL;
-    AfxAssertObjects(1, &c, afxFcc_CUR);
-    return (c->flags & mask);
-}
-
-_AMXINL afxBool AfxIsCurveKeyframed(afxCurve c)
-{
-    afxError err = NIL;
-    AfxAssertObjects(1, &c, afxFcc_CUR);
-    return !!AfxTestCurveFlags(c, afxCurveFlag_KEYFRAMED);
-}
-
-_AMXINL afxBool AfxIsCurveIdentity(afxCurve c)
-{
-    afxError err = NIL;
-    AFX_ASSERT(c);
-    return !!AfxTestCurveFlags(c, afxCurveFlag_IDENTITY);
-}
-
-_AMXINL afxBool AfxIsCurveConstantOrIdentity(afxCurve c)
-{
-    afxError err = NIL;
-    AFX_ASSERT(c);
-    return !!AfxTestCurveFlags(c, afxCurveFlag_IDENTITY | afxCurveFlag_CONSTANT);
-}
-
-_AMXINL afxBool AfxIsCurveConstantNotIdentity(afxCurve c)
-{
-    afxError err = NIL;
-    AFX_ASSERT(c);
-    return AfxIsCurveConstantOrIdentity(c) && !AfxIsCurveIdentity(c);
-}
+#include "../sim/impl/amxImplementation.h"
 
 _AMXINL afxUnit AfxCountCurveKnots(afxCurve c)
 {
@@ -156,6 +107,69 @@ _AMXINL afxUnit AfxGetCurveDimensionality(afxCurve c)
     AFX_ASSERT(AfxCountCurveKnots(c) ? AfxGetCurveDimensionalityUnchecked(c) : 0);
 #endif
     return c->dimens;
+}
+
+_AMX void AfxDescribeCurve(afxCurve cur, afxCurveInfo2* desc)
+{
+    afxError err = NIL;
+    AFX_ASSERT_OBJECTS(afxFcc_CUR, 1, &cur);
+    AFX_ASSERT(desc);
+
+    desc->fmt = cur->fmt;
+    desc->degree = cur->degree;
+    desc->flags = cur->flags;
+    desc->dimens = AfxGetCurveDimensionality(cur);
+    desc->knotCnt = AfxCountCurveKnots(cur);
+    desc->ctrlCnt = cur->ctrlCnt;
+}
+
+_AMXINL afxInt AfxGetCurveDegree(afxCurve c)
+{
+    afxError err = NIL;
+    AFX_ASSERT_OBJECTS(afxFcc_CUR, 1, &c);
+    return c->degree;
+}
+
+_AMXINL afxCurveFlags AfxGetCurveFlags(afxCurve c)
+{
+    afxError err = NIL;
+    AFX_ASSERT_OBJECTS(afxFcc_CUR, 1, &c);
+    return c->flags;
+}
+
+_AMXINL afxCurveFlags AfxTestCurveFlags(afxCurve c, afxCurveFlags mask)
+{
+    afxError err = NIL;
+    AFX_ASSERT_OBJECTS(afxFcc_CUR, 1, &c);
+    return (c->flags & mask);
+}
+
+_AMXINL afxBool AfxIsCurveKeyframed(afxCurve c)
+{
+    afxError err = NIL;
+    AFX_ASSERT_OBJECTS(afxFcc_CUR, 1, &c);
+    return !!AfxTestCurveFlags(c, afxCurveFlag_KEYFRAMED);
+}
+
+_AMXINL afxBool AfxIsCurveIdentity(afxCurve c)
+{
+    afxError err = NIL;
+    AFX_ASSERT(c);
+    return !!AfxTestCurveFlags(c, afxCurveFlag_IDENTITY);
+}
+
+_AMXINL afxBool AfxIsCurveConstantOrIdentity(afxCurve c)
+{
+    afxError err = NIL;
+    AFX_ASSERT(c);
+    return !!AfxTestCurveFlags(c, afxCurveFlag_IDENTITY | afxCurveFlag_CONSTANT);
+}
+
+_AMXINL afxBool AfxIsCurveConstantNotIdentity(afxCurve c)
+{
+    afxError err = NIL;
+    AFX_ASSERT(c);
+    return AfxIsCurveConstantOrIdentity(c) && !AfxIsCurveIdentity(c);
 }
 
 _AMXINL afxReal* AfxGetCurveKnots(afxCurve c)
@@ -372,7 +386,7 @@ _AMX void AfxCopyCurve(afxCurve c, afxCurve src)
     }
 }
 
-_AMX void AfxSetCurveAllKnotValues(afxCurve c, afxUnit knotCnt, afxUnit dimens, afxReal const* knotSrc, afxReal const* ctrlSrc)
+_AMX void AfxUpdateCurveKnots(afxCurve c, afxUnit knotCnt, afxUnit dimens, afxReal const* knotSrc, afxReal const* ctrlSrc)
 {
     afxError err = NIL;
     AFX_ASSERT(c);
@@ -544,45 +558,6 @@ _AMX afxReal AfxExtractCurveKnotValue(afxCurve c, afxUnit knotIdx, afxReal* ctrl
     return f;
 }
 
-_AMX void AfxEvaluateCurveAtKnot(afxCurve c, afxUnit dimens, afxBool normalize, afxBool bwdsLoop, afxBool fwdsLoop, afxReal curveDur, afxUnit knotIdx, afxReal t, afxReal* rslt, afxReal const* identityVec)
-{
-    afxError err;
-    afxReal *tiBuffer;
-    afxReal *piBuffer;
-    afxReal tiBufferSpace[8];
-    afxReal piBufferSpace[64];
-
-    if (AfxIsCurveConstantOrIdentity(c))
-    {
-        AfxExtractCurveKnotValue(c, 0, rslt, identityVec);
-    }
-    else
-    {
-        afxInt degree = AfxGetCurveDegree(c);
-        afxUnit knotCnt = AfxCountCurveKnots(c);
-        
-        if (knotIdx == knotCnt)
-            knotIdx -= 1;
-
-        AFX_ASSERT(knotIdx < AFX_INVALID_INDEX - 10);
-
-        if (Smt2.ConstructBSplineBuffers(dimens,
-            bwdsLoop ? c : NIL, c, fwdsLoop ? c : NIL,
-            curveDur, curveDur, curveDur,
-            knotIdx, tiBufferSpace, piBufferSpace, &tiBuffer, &piBuffer, identityVec) && normalize && dimens == 4)
-        {
-            AfxEnsureQuaternionContinuity(degree + 1, &piBufferSpace);
-        }
-
-        Smt2.SampleBSpline(degree, dimens, normalize, tiBuffer, piBuffer, t, rslt);
-    }
-}
-
-_AMX void AfxEvaluateCurveAt(afxCurve c, afxUnit dimens, afxBool normalize, afxBool bwdsLoop, afxBool fwdsLoop, afxReal curveDur, afxReal t, afxReal* rslt, afxReal const* identityVec)
-{
-    AfxEvaluateCurveAtKnot(c, dimens, normalize, bwdsLoop, fwdsLoop, curveDur, AfxFindCurveKnot(c, t), t, rslt, identityVec);
-}
-
 _AMX void AfxMakeCurveDaKC32f(afxCurve c, afxUnit degree, afxUnit dim, afxUnit knotCnt, afxReal const knots[], afxReal const ctrls[])
 {
     afxError err = NIL;
@@ -640,99 +615,99 @@ _AMX void AfxBeginCurveCopy(afxCurveBlueprint* cb, afxCurve src)
     cb->srcCurve = src;
 }
 
-_AMX afxError _AmxCurCtorCb(afxCurve cur, void** args, afxUnit invokeNo)
+_AMX afxError _AmxCurCtorCb(afxCurve c, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &cur, afxFcc_CUR);
+    AFX_ASSERT_OBJECTS(afxFcc_CUR, 1, &c);
 
     afxSimulation sim = args[0];
-    AfxAssertObjects(1, &sim, afxFcc_SIM);
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     afxCurveInfo const* info = ((afxCurveInfo const*)args[1]) + invokeNo;
 
     afxCurveFormat fmt = info->fmt;
-    cur->fmt = fmt;
-    cur->degree = info->degree;
-    cur->flags = NIL;
+    c->fmt = fmt;
+    c->degree = info->degree;
+    c->flags = NIL;
 
     switch (fmt)
     {
     case afxCurveFormat_DaKeyframes32f:
     {
-        cur->dimens = info->dimens;
-        cur->flags |= afxCurveFlag_KEYFRAMED;
-        cur->knotCnt = info->knotCnt; // unused
-        cur->knots = NIL; // unused
-        cur->ctrlCnt = info->dimens * info->knotCnt;
-        cur->ctrls = NIL;
+        c->dimens = info->dimens;
+        c->flags |= afxCurveFlag_KEYFRAMED;
+        c->knotCnt = info->knotCnt; // unused
+        c->knots = NIL; // unused
+        c->ctrlCnt = info->dimens * info->knotCnt;
+        c->ctrls = NIL;
 
-        AFX_ASSERT(cur->knotCnt == cur->ctrlCnt / cur->dimens);
+        AFX_ASSERT(c->knotCnt == c->ctrlCnt / c->dimens);
 
-        if (cur->ctrlCnt && !(cur->ctrls = AfxAllocate(cur->ctrlCnt, sizeof(cur->ctrls[0]), 0, AfxHere())))
+        if (c->ctrlCnt && AfxAllocate(c->ctrlCnt * sizeof(c->ctrls[0]), 0, AfxHere(), (void**)&c->ctrls))
             AfxThrowError();
 
         break;
     }
     case afxCurveFormat_DaK32fC32f:
     {
-        cur->dimens = info->dimens; // unused        
-        cur->knotCnt = info->knotCnt;
-        cur->knots = NIL;
-        cur->ctrlCnt = info->knotCnt * info->dimens;
-        cur->ctrls = NIL;
+        c->dimens = info->dimens; // unused        
+        c->knotCnt = info->knotCnt;
+        c->knots = NIL;
+        c->ctrlCnt = info->knotCnt * info->dimens;
+        c->ctrls = NIL;
 
-        if (cur->knotCnt && !(cur->knots = AfxAllocate(cur->knotCnt, sizeof(cur->knots[0]), 0, AfxHere())))
+        if (c->knotCnt && AfxAllocate(c->knotCnt * sizeof(c->knots[0]), 0, AfxHere(), (void**)&c->knots))
             AfxThrowError();
 
-        if (cur->ctrlCnt && !(cur->ctrls = AfxAllocate(cur->ctrlCnt, sizeof(cur->ctrls[0]), 0, AfxHere())))
+        if (c->ctrlCnt && AfxAllocate(c->ctrlCnt * sizeof(c->ctrls[0]), 0, AfxHere(), (void**)&c->ctrls))
             AfxThrowError();
 
-        if (!cur->knotCnt)
+        if (!c->knotCnt)
         {
-            if (cur->ctrlCnt)
-                cur->flags |= afxCurveFlag_KEYFRAMED;
+            if (c->ctrlCnt)
+                c->flags |= afxCurveFlag_KEYFRAMED;
             else
-                cur->flags |= afxCurveFlag_IDENTITY;
+                c->flags |= afxCurveFlag_IDENTITY;
         }
-        else if (cur->knotCnt == 1)
+        else if (c->knotCnt == 1)
         {
-            cur->flags |= afxCurveFlag_CONSTANT;
+            c->flags |= afxCurveFlag_CONSTANT;
         }
         break;
     }
     case afxCurveFormat_DaIdentity:
     {
-        cur->dimens = info->dimens;
-        cur->knotCnt = 0; // unused
-        cur->knots = NIL; // unused
-        cur->ctrlCnt = 0; // unused
-        cur->ctrls = NIL; // unused
-        cur->flags |= afxCurveFlag_IDENTITY | afxCurveFlag_CONSTANT;
+        c->dimens = info->dimens;
+        c->knotCnt = 0; // unused
+        c->knots = NIL; // unused
+        c->ctrlCnt = 0; // unused
+        c->ctrls = NIL; // unused
+        c->flags |= afxCurveFlag_IDENTITY | afxCurveFlag_CONSTANT;
         break;
     }
     case afxCurveFormat_DaConstant32f:
     {
-        cur->dimens = info->dimens; // unused
-        cur->knotCnt = info->knotCnt; // unused
-        AFX_ASSERT(cur->knotCnt == 1);
-        cur->knots = NIL; // unused
-        cur->ctrlCnt = info->dimens;
-        cur->ctrls = NIL;
+        c->dimens = info->dimens; // unused
+        c->knotCnt = info->knotCnt; // unused
+        AFX_ASSERT(c->knotCnt == 1);
+        c->knots = NIL; // unused
+        c->ctrlCnt = info->dimens;
+        c->ctrls = NIL;
 
-        if (cur->ctrlCnt && !(cur->ctrls = AfxAllocate(cur->ctrlCnt, sizeof(cur->ctrls[0]), 0, AfxHere())))
+        if (c->ctrlCnt && AfxAllocate(c->ctrlCnt * sizeof(c->ctrls[0]), 0, AfxHere(), (void**)&c->ctrls))
             AfxThrowError();
 
-        cur->flags |= afxCurveFlag_CONSTANT;
+        c->flags |= afxCurveFlag_CONSTANT;
         break;
     }
     case afxCurveFormat_D3Constant32f:
     case afxCurveFormat_D4Constant32f:
     {
-        cur->dimens = info->dimens; // unused
-        cur->knotCnt = 1; // unused
-        cur->knots = NIL; // unused
-        cur->ctrlCnt = 0; // unused
-        cur->ctrls = NIL; // unused
-        cur->flags |= afxCurveFlag_CONSTANT;
+        c->dimens = info->dimens; // unused
+        c->knotCnt = 1; // unused
+        c->knots = NIL; // unused
+        c->ctrlCnt = 0; // unused
+        c->ctrls = NIL; // unused
+        c->flags |= afxCurveFlag_CONSTANT;
         break;
     }
     default: AfxThrowError(); break;
@@ -764,22 +739,22 @@ _AMX afxError _AmxCurCtorCb(afxCurve cur, void** args, afxUnit invokeNo)
             if (info->sampleCnt != -1 && info->origSamples)
             {
                 AfxThrowError();
-                //((void(__cdecl *)(afxCurve*, int, int, const float *))*(f))(cur, sampleCnt, info->sampleDimension, info->originalSamples);
+                //((void(__cdecl *)(afxCurve*, int, int, const float *))*(f))(c, sampleCnt, info->sampleDimension, info->originalSamples);
             }
 
             if (info->src)
             {
-                AfxCopyCurve(cur, info->src);
+                AfxCopyCurve(c, info->src);
             }
             else
             {
                 if (fmt != afxCurveFormat_DaKeyframes32f)
                 {
-                    AfxSetCurveAllKnotValues(cur, info->knotCnt, info->dimens, info->knots, info->ctrls);
+                    AfxUpdateCurveKnots(c, info->knotCnt, info->dimens, info->knots, info->ctrls);
                 }
                 else
                 {
-                    AfxSetCurveAllKnotValues(cur, info->knotCnt, info->dimens, info->knots ? info->knots : (afxReal const[]) { 0.f }, info->ctrls);
+                    AfxUpdateCurveKnots(c, info->knotCnt, info->dimens, info->knots ? info->knots : (afxReal const[]) { 0.f }, info->ctrls);
                 }
             }
         }
@@ -787,34 +762,34 @@ _AMX afxError _AmxCurCtorCb(afxCurve cur, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AMX afxError _AmxCurDtorCb(afxCurve cur)
+_AMX afxError _AmxCurDtorCb(afxCurve c)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &cur, afxFcc_CUR);
+    AFX_ASSERT_OBJECTS(afxFcc_CUR, 1, &c);
 
-    switch (cur->fmt)
+    switch (c->fmt)
     {
     case afxCurveFormat_DaKeyframes32f:
     {
-        if (cur->ctrls)
-            AfxDeallocate(cur->ctrls);
+        if (c->ctrls)
+            AfxDeallocate((void**)&c->ctrls, AfxHere());
 
         break;
     }
     case afxCurveFormat_DaK32fC32f:
     {
-        if (cur->knots)
-            AfxDeallocate(cur->knots);
+        if (c->knots)
+            AfxDeallocate((void**)&c->knots, AfxHere());
 
-        if (cur->ctrls)
-            AfxDeallocate(cur->ctrls);
+        if (c->ctrls)
+            AfxDeallocate((void**)&c->ctrls, AfxHere());
 
         break;
     }
     case afxCurveFormat_DaConstant32f:
     {
-        if (cur->ctrls)
-            AfxDeallocate(cur->ctrls);
+        if (c->ctrls)
+            AfxDeallocate((void**)&c->ctrls, AfxHere());
 
         break;
     }
@@ -823,7 +798,7 @@ _AMX afxError _AmxCurDtorCb(afxCurve cur)
     return err;
 }
 
-_AMX afxClassConfig const _AmxCurClsCfg =
+_AMX afxClassConfig const _AMX_CUR_CLASS_CONFIG =
 {
     .fcc = afxFcc_CUR,
     .name = "Curve",
@@ -838,10 +813,10 @@ _AMX afxClassConfig const _AmxCurClsCfg =
 _AMX afxError AfxAcquireCurves(afxSimulation sim, afxUnit cnt, afxCurveInfo const info[], afxCurve curves[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sim, afxFcc_SIM);
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    afxClass* cls = (afxClass*)AfxGetCurveClass(sim);
-    AfxAssertClass(cls, afxFcc_CUR);
+    afxClass* cls = (afxClass*)_AmxGetCurveClass(sim);
+    AFX_ASSERT_CLASS(cls, afxFcc_CUR);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)curves, (void const*[]) { sim, info }))
         AfxThrowError();

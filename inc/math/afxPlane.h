@@ -41,7 +41,7 @@ typedef enum afxFloorPlane
     afxFloorPlane_YZ
 } afxFloorPlane;
 
-AFX_DEFINE_STRUCT(afxPlane)
+AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxPlane)
 {
     afxV3d      normal;
     union

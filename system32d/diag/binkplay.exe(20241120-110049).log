@@ -1,0 +1,58 @@
+Booting...
+Threading... #6676 (afxSystem_w32.c:426)Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\binkv\system'),5Mounting... <//./z/>('E:\qwadro\repo\binkv\system32'),7Mounting... <//./z/>('E:\qwadro\repo\binkv\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree.dll>Threading... #0 (afxIoBridge.c:250)Memory page Size: 4096HW threading: 2Loading... <e2draw.dll>Loading... <e2combo.dll>Loading... <e2sound.dll>Loading... <e2mmux.dll>Loading... <//./z////eaxzal1.dll>Installing... <//./z/////eaxzal1.dll>	<//./eaxzal1/>("")  0.0.0 Loading... <//./z////galileo.dll>Installing... <//./z/////galileo.dll>	<//./galileo/>("")  0.0.0 Loading... <//./z////tarzgl4.dll>Installing... <//./z/////tarzgl4.dll>	<//./tarzgl3/>("")  0.0.0 	<//./tarzgl4/>("")  0.0.0 Loading... <//./z////winsh4d.dll>Installing... <//./z/////winsh4d.dll>Mounting... <//./d/>('E:\qwadro\repo\binkv\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 6676
+Loading... <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL.c:1534
+GL: INVAL_PARAMzglInterop_WGL.c:1549
+GL: INVAL_PARAMzglInterop_WGL.c:1560
+GL: INVAL_PARAMzglInterop_WGL.c:1592
+GL: INVAL_PARAMzglInterop_WGL.c:1623
+GL: INVAL_PARAMzglInterop_WGL.c:1625
+GL: INVAL_PARAMzglInterop_WGL.c:1782
+GL: INVAL_PARAMzglInterop_WGL.c:1785
+GL: INVAL_PARAMzglInterop_WGL.c:1790
+GL: INVAL_PARAMzglInterop_WGL.c:1795
+GL: INVAL_PARAMThreading... #0 (afxDrawBridge.c:500)Entering the Thread Execution Environment 6904
+Starting 6904 on thread execution unit #2...Entering the Thread Execution Environment 6676
+afxClass.c:910
+afxClass.c:910
+(cfg->fcc)
+    SuccessafxClass.c:933
+afxClass.c:933
+(cfg->name && cfg->name[0])
+    SuccessEntering the Thread Execution Environment 6904
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 6676
+Threading... #0 (afxDrawBridge.c:500)Entering the Thread Execution Environment 1100
+Starting 1100 on thread execution unit #3...Entering the Thread Execution Environment 6676
+Loading... <//./c/openal32.dll>Entering the Thread Execution Environment 1100
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 6676
+Threading... #0 (afxSoundBridge.c:399)Entering the Thread Execution Environment 1232
+Starting 1232 on thread execution unit #4...Entering the Thread Execution Environment 6676
+Mounting... <//./d/>('E:\qwadro\repo\binkv\tmp'),7Mounting... <//./a/>('E:\qwadro\repo\binkv\art'),7afxFile.c:410
+afxFile.c:411
+Couldn't open <//./d/Tex_0099_0.tga>afxRaster.c:837
+mmplayer.c:73
+mmplayer.c:75
+mmplayer.c:75
+(dumpImg)
+    SuccessafxRaster.c:489
+afxRaster.c:489
+((!1) || ((&ras) && !(_AfxAssertObjects((1), (afxObject const*)(&ras),(afxFcc_RAS)))))
+    SuccessafxFile.c:443
+afxFile.c:444
+Couldn't open <//./d/Tex_0099_0_dump.tga>afxRaster.c:497
+Entering the Thread Execution Environment 1232
+Sound Execution Unit .Entering the Thread Execution Environment 6676
+//./z/video/uvOutTristripQuad.vsh//./z/video/rgbOutYuvSigma.fshEntering the Thread Execution Environment 1232
+Loading... <//./c/openal32.dll>Entering the Thread Execution Environment 6676
+Tag 'id' not handled.//./z/video/uvOutTristripQuadInvY.vsh//./z/video/rgbOutYuvSigma.fshLoading... <//./z/binkw32.dl_>Entering the Thread Execution Environment 6904
+GPU buffer 00826bf0 ready. 35052, 2, 1GPU buffer 00826cd0 ready. 35052, 3, 1GPU RO 05990d40 ready. de1, 8058, [512,512,1]GPU RO 049519f0 ready. de1, 8229, [1280,720,1]GPU RO 04951a90 ready. de1, 8229, [640,360,1]GPU RO 04951b30 ready. de1, 8229, [640,360,1]GPU RO 059908f0 ready. de1, 8058, [1280,720,1]GPU RO 05990990 ready. de1, 8cac, [1280,720,1]avxCanvas 05a61a90 hardware-side data instanced.avxPipeline 0499e460 hardware-side data instanced.Hardware-side sampler 05980010 ready.GPU RO 05990bb0 ready. de1, 8058, [1280,720,1]GPU RO 05990c50 ready. de1, 8cac, [1280,720,1]avxCanvas 05a61bb0 hardware-side data instanced.GPU RO 05990a30 ready. de1, 8058, [1280,720,1]GPU RO 05990b10 ready. de1, 8cac, [1280,720,1]avxCanvas 05a61b20 hardware-side data instanced.GPU RO 049517c0 ready. de1, 8229, [1280,720,1]GPU RO 04951860 ready. de1, 8229, [640,360,1]GPU RO 04951900 ready. de1, 8229, [640,360,1]Entering the Thread Execution Environment 6676
+afxDrawContext.c:303
+mmplayer.c:136
+afxDrawContext.c:303
+mmplayer.c:136
+afxDrawContext.c:303
+mmplayer.c:136
+afxDrawContext.c:303
+mmplayer.c:136

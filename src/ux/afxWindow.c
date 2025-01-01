@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *         Q W A D R O   M U L T I M E D I A   U X   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -18,12 +18,21 @@
 //#define _AUX_SHELL_C
 #define _AUX_SESSION_C
 #define _AUX_WINDOW_C
-#include "../dev/AuxImplKit.h"
+#include "impl/auxImplementation.h"
+
+_AUX afxClass const* AuxGetWidgetClass(afxWindow wnd)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
+    afxClass const* cls = &wnd->widCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_WID);
+    return cls;
+}
 
 _AUX afxError AfxChangeWindowIcon(afxWindow wnd, afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     
     if (wnd->chIconCb && wnd->chIconCb(wnd, ras))
         AfxThrowError();
@@ -34,34 +43,33 @@ _AUX afxError AfxChangeWindowIcon(afxWindow wnd, afxRaster ras)
 _AUX afxError AfxLoadWindowIcon(afxWindow wnd, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(uri);
-    afxDrawContext dctx;
-
-    if (!AfxGetDrawOutputContext(wnd->dout ? wnd->dout : wnd->frameDout, &dctx)) AfxThrowError();
-    else
+    afxDrawSystem dsys = AfxGetDrawOutputContext(wnd->dout ? wnd->dout : wnd->frameDout);
+    
+    afxRasterInfo rasi = { 0 };
+    rasi.usage = afxRasterUsage_SRC;
+    rasi.flags = afxRasterFlag_2D;
+    
+    afxRaster ras;
+    if (AfxLoadRasters(dsys, 1, &rasi, &uri[0], &ras))
     {
-        afxRasterInfo rasi = { 0 };
-        rasi.usage = afxRasterUsage_SRC;
-        rasi.flags = afxRasterFlag_2D;
-        afxRaster ras;
-
-        if (AfxLoadRasters(dctx, 1, &rasi, &uri[0], &ras)) AfxThrowError();
-        else
-        {
-            if (AfxChangeWindowIcon(wnd, ras))
-                AfxThrowError();
-
-            AfxReleaseObjects(1, &ras);
-        }
+        AfxThrowError();
+        return err;
     }
+
+    if (AfxChangeWindowIcon(wnd, ras))
+        AfxThrowError();
+
+    AfxDisposeObjects(1, &ras);
+
     return err;
 }
 
 _AUX afxError AfxRedrawWindow(afxWindow wnd, afxRect const* rc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     
     if (wnd->redrawCb && wnd->redrawCb(wnd, rc))
         AfxThrowError();
@@ -69,10 +77,30 @@ _AUX afxError AfxRedrawWindow(afxWindow wnd, afxRect const* rc)
     return err;
 }
 
+_AUX afxError AfxRedrawWidgets(afxWindow wnd, afxDrawContext dctx)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
+
+    afxUnit i = 0;
+    afxWidget wid;
+    while (AfxEnumerateObjects(AuxGetWidgetClass(wnd), i, 1, (afxObject*)&wid))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
+        afxWhd whd;
+        whd.w = wnd->surfaceRect.w;
+        whd.h = wnd->surfaceRect.h;
+        whd.d = 1;
+        AfxDrawWidget(wid, whd, dctx);
+        i++;
+    }
+    return err;
+}
+
 _AUX afxBool AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, afxDrawOutput* surface)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(frame || surface);
     afxDrawOutput dout;
     afxBool rslt = 0;
@@ -81,7 +109,7 @@ _AUX afxBool AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, afxDraw
     {
         if ((dout = wnd->frameDout))
         {
-            AfxAssertObjects(1, &dout, afxFcc_DOUT);
+            AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
             ++rslt;
         }
         *frame = dout;
@@ -91,7 +119,7 @@ _AUX afxBool AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, afxDraw
     {
         if ((dout = wnd->dout))
         {
-            AfxAssertObjects(1, &dout, afxFcc_DOUT);
+            AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
             ++rslt;
         }
         *surface = dout;
@@ -99,10 +127,10 @@ _AUX afxBool AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, afxDraw
     return rslt;
 }
 
-_AUX void AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt)
+_AUX void _AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     afxClock currClock;
     AfxGetClock(&currClock);
     AFX_ASSERT(ct);
@@ -115,7 +143,7 @@ _AUX void AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt)
 _AUX afxUnit AfxFormatWindowCaption(afxWindow wnd, afxChar const* fmt, ...)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(fmt);
     va_list va;
     va_start(va, fmt);
@@ -128,7 +156,7 @@ _AUX afxUnit AfxFormatWindowCaption(afxWindow wnd, afxChar const* fmt, ...)
 _AUX void AfxGetWindowRect(afxWindow wnd, afxRect* frame, afxRect* surface)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(frame || surface);
 
     if (frame)
@@ -141,7 +169,7 @@ _AUX void AfxGetWindowRect(afxWindow wnd, afxRect* frame, afxRect* surface)
 _AUX afxBool AfxTraceScreenToSurface(afxWindow wnd, afxUnit const screenPos[2], afxUnit surfPos[2])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(screenPos);
     AFX_ASSERT(surfPos);
     afxBool rslt = 0;
@@ -153,7 +181,7 @@ _AUX afxBool AfxTraceScreenToSurface(afxWindow wnd, afxUnit const screenPos[2], 
 _AUX afxBool AfxTraceSurfaceToScreen(afxWindow wnd, afxUnit const surfPos[2], afxUnit screenPos[2])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(screenPos);
     AFX_ASSERT(surfPos);
     afxBool rslt = 0;
@@ -165,7 +193,7 @@ _AUX afxBool AfxTraceSurfaceToScreen(afxWindow wnd, afxUnit const surfPos[2], af
 _AUX afxBool AfxMoveWindow(afxWindow wnd, afxUnit const pos[2])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(pos);
     
     if (wnd->moveCb && wnd->moveCb(wnd, pos)) AfxThrowError();
@@ -180,7 +208,7 @@ _AUX afxBool AfxMoveWindow(afxWindow wnd, afxUnit const pos[2])
 _AUX afxError AfxAdjustWindow(afxWindow wnd, afxRect const* frame, afxRect const* surface)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     afxDesktop* dwm = wnd->dwm;
 
     if (wnd->adjustCb && wnd->adjustCb(wnd, frame, surface)) AfxThrowError();
@@ -215,8 +243,9 @@ _AUX afxError AfxAdjustWindow(afxWindow wnd, afxRect const* frame, afxRect const
 
                 afxWhd whd;
                 afxDrawOutput dout = wnd->dout;
-                AfxAssertObjects(1, &dout, afxFcc_DOUT);
-                whd = AfxGetDrawOutputExtent(dout);
+                AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
+                whd;
+                AfxQueryDrawOutputExtent(dout, &whd, NIL);
                 whd.w = wnd->surfaceRect.w;
                 whd.h = wnd->surfaceRect.h;
 
@@ -256,10 +285,10 @@ _AUX afxError AfxAdjustWindow(afxWindow wnd, afxRect const* frame, afxRect const
 
                 if (dout)
                 {
-                    AfxAssertObjects(1, &dout, afxFcc_DOUT);
+                    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
                     afxWhd whd;
-                    whd = AfxGetDrawOutputExtent(dout);
+                    AfxQueryDrawOutputExtent(dout, &whd, NIL);
                     whd.w = wnd->surfaceRect.w;
                     whd.h = wnd->surfaceRect.h;
 
@@ -275,7 +304,7 @@ _AUX afxError AfxAdjustWindow(afxWindow wnd, afxRect const* frame, afxRect const
 _AUX afxError AfxAdjustWindowFromNdc(afxWindow wnd, afxV2d const offset, afxV2d const extent)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(extent);
 
     afxDesktop* dwm = wnd->dwm;
@@ -300,7 +329,7 @@ _AUX afxError AfxAdjustWindowFromNdc(afxWindow wnd, afxV2d const offset, afxV2d 
 _AUX afxError AfxAdjustWindowSurfaceFromNdc(afxWindow wnd, afxV2d const offset, afxV2d const extent)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
 
     afxDesktop* dwm = wnd->dwm;
     afxRect rc = { 0 };
@@ -324,7 +353,7 @@ _AUX afxError AfxAdjustWindowSurfaceFromNdc(afxWindow wnd, afxV2d const offset, 
 _AUX afxBool _AuxWndStdEventCb(afxWindow wnd, auxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
 
     switch (ev->id)
     {
@@ -346,14 +375,29 @@ _AUX afxBool _AuxWndStdEventCb(afxWindow wnd, auxEvent *ev)
     return TRUE;
 }
 
+_AUX afxError _AuxWndDtorCb(afxWindow wnd)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
+
+    AfxDeregisterChainedClasses(&wnd->classes);
+
+    //AfxDisposeObjects(1, &wnd->m.dout);
+
+    AfxChangeWindowIcon(wnd, NIL); // detach any custom icon
+
+    return err;
+}
+
 _AUX afxError _AuxWndCtorCb(afxWindow wnd, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
 
     afxSession ses = args[0];
-    AfxAssertObjects(1, &ses, afxFcc_SES);
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxWindowConfig const* cfg = (afxWindowConfig const*)(args[1]) + invokeNo;
+    afxClassConfig const* widClsCfg = args[2];
 
     if (!cfg) AfxThrowError();
     else
@@ -395,25 +439,14 @@ _AUX afxError _AuxWndCtorCb(afxWindow wnd, void** args, afxUnit invokeNo)
         wnd->resizable = TRUE;
 
 
+        afxClassConfig clsCfg;
+        clsCfg = widClsCfg ? *widClsCfg : _AUX_WID_CLASS_CONFIG;
+        AfxMountClass(&wnd->widCls, NIL, &wnd->classes, &clsCfg);
     }
     return err;
 }
 
-_AUX afxError _AuxWndDtorCb(afxWindow wnd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &wnd, afxFcc_WND);
-
-    AfxDeregisterChainedClasses(&wnd->classes);
-
-    //AfxReleaseObjects(1, &wnd->m.dout);
-
-    AfxChangeWindowIcon(wnd, NIL); // detach any custom icon
-    
-    return err;
-}
-
-_AUX afxClassConfig const _AuxWndStdImplementation =
+_AUX afxClassConfig const _AUX_WND_CLASS_CONFIG =
 {
     .fcc = afxFcc_WND,
     .name = "Window",
@@ -429,16 +462,17 @@ _AUX afxClassConfig const _AuxWndStdImplementation =
 _AUX afxError AfxConfigureWindow(afxSession ses, afxWindowConfig* cfg, afxV2d const nde)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ses, afxFcc_SES);
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    afxDrawSystem dsys = cfg->dsys;
     *cfg = (afxWindowConfig) { 0 };
+    cfg->dsys = dsys;
     cfg->eventCb = _AuxWndStdEventCb;
 
-    AfxConfigureDrawOutput(cfg->ddevId, &cfg->frame);
+    AfxConfigureDrawOutput(cfg->dsys, &cfg->frame);
     cfg->frame.doNotClip = FALSE;
     cfg->frame.presentAlpha = avxPresentAlpha_PREMUL;
-    AfxConfigureDrawOutput(cfg->ddevId, &cfg->surface);
-    cfg->surface.pixelFmt = avxFormat_BGRA8;
-    cfg->surface.pixelFmtDs[0] = avxFormat_X8D24;
+    AfxConfigureDrawOutput(cfg->dsys, &cfg->surface);
     cfg->surface.bufFlags = afxRasterUsage_DRAW | afxRasterUsage_SAMPLING;
     cfg->surface.bufFlagsDs[0] = afxRasterUsage_DRAW | afxRasterUsage_SAMPLING;
 
@@ -448,19 +482,19 @@ _AUX afxError AfxConfigureWindow(afxSession ses, afxWindowConfig* cfg, afxV2d co
 _AUX afxError AfxAcquireWindow(afxSession ses, afxWindowConfig const* cfg, afxWindow* window)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ses, afxFcc_SES);
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     afxClass* cls = (afxClass*)AfxGetWindowClass(ses);
-    AfxAssertClass(cls, afxFcc_WND);
+    AFX_ASSERT_CLASS(cls, afxFcc_WND);
     afxWindow wnd;
 
     if (!cfg) AfxThrowError();
     else
     {
-        if (AfxAcquireObjects(cls, 1, (afxObject*)&wnd, (void const*[]) { ses, cfg })) AfxThrowError();
+        if (AfxAcquireObjects(cls, 1, (afxObject*)&wnd, (void const*[]) { ses, cfg, (void*)&_AUX_WID_CLASS_CONFIG })) AfxThrowError();
         else
         {
-            AfxAssertObjects(1, &wnd, afxFcc_WND);
+            AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
             AFX_ASSERT(window);
             *window = wnd;
         }

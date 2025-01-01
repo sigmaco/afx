@@ -53,16 +53,78 @@ typedef enum afxFileFlag
     afxFileFlag_S       = AFX_BIT(14), // Sparse. The data is a sparse file. Empty ranges (zeroed ranges) are generated dynamically by some algorithm. This is used by SIGMA Future Storage.
 } afxFileFlags;
 
-AFX afxError        AfxReadFileLine(afxStream file, afxString* str);
+#pragma pack(push, 1)
 
-AFX afxResult       AfxFlushFileCache(afxStream file);
+AFX_DEFINE_STRUCT(afxFileSegment)
+{
+    afxUnit16   encodedAlign;
+    afxUnit16   decodedAlign;
+    afxUnit32   decodedSiz; // decoded/uncompressed size
+    afxUnit32   encodedSiz; // encoded/compressed size
+    afxUnit32   codec; // codec used to compress this section
+    afxUnit32   start; // where starts the data belonging to this segment.
+};
 
-AFX afxBool         AfxTestFileFlags(afxStream file, afxFileFlags flags);
+#pragma pack(pop)
 
-AFX afxBool         AfxGetFileUri(afxStream file, afxUri* location);
-AFX afxBool         AfxGetResolvedFileUri(afxStream file, afxUri* location);
+AFX_DEFINE_STRUCT(afxFileBlock)
+{
+    afxUnit32   segIdx; // index of a file segment.
+    afxUnit32   offset; // relative to start of a file segment.
+    afxUnit32   range; // length of data from offset.
+};
 
-AFX afxError        AfxReopenFile(afxStream file, afxUri const* uri, afxFileFlags flags);
-AFX afxError        AfxReloadFile(afxStream file, afxUri const* uri); // will upload the entire file data into RAM and close the file.
+AFX afxError    AfxReadFileLine(afxStream file, afxString* str);
+
+AFX afxResult   AfxFlushFileCache(afxStream file);
+
+AFX afxBool     AfxTestFileFlags(afxStream file, afxFileFlags flags);
+
+AFX afxBool     AfxGetFileUri(afxStream file, afxUri* location);
+AFX afxBool     AfxGetResolvedFileUri(afxStream file, afxUri* location);
+
+// FILE SEGMENT
+
+AFX afxBool     AfxTrackFileSegment(afxStream file, void const* at, afxUnit* segIdx);
+
+AFX void*       AfxResolveFileReference(afxStream file, afxFileBlock const* ref);
+
+AFX afxBool     AfxOpenFileSegments(afxStream file, afxUnit baseSegIdx, afxUnit segCnt, afxStream in);
+
+AFX void        AfxCloseFileSegments(afxStream file, afxUnit baseSegIdx, afxUnit segCnt);
+
+AFX afxError    AfxRealizeFileSegments(afxStream file, afxUnit32 baseSegOffset, afxUnit segCnt);
+
+// FILE REUSE
+
+/**
+    The AfxReopenFile() method reuses a stream to either open the file specified by uri or to change its access mode.
+
+    If a new uri is specified, the function first attempts to close any file already associated with the stream 
+    and disassociates it. Then, independently of whether that stream was successfuly closed or not, this method opens the 
+    file specified by uri and associates it with the stream just as AfxOpenFile() would do using the specified mode.
+
+    If uri is nil, the function attempts to change the mode of the stream.
+
+    This function is especially useful for redirecting predefined streams like stdin, stdout and stderr to specific files.
+*/
+
+AFX afxError    AfxReopenFile(afxStream file, afxUri const* uri, afxFileFlags flags);
+
+AFX afxError    AfxReloadFile(afxStream file, afxUri const* uri); // will upload the entire file data into RAM and close the file.
+
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+    The AfxOpenFile() method opens a file stream.
+
+    Opens the file whose name is specified in the parameter filename and associates it with a stream that can be identified in future operations by the FILE pointer returned.
+
+    The operations that are allowed on the stream and how these are performed are defined by the mode parameter.
+*/
+
+AFX afxError    AfxOpenFile(afxUri const* uri, afxFileFlags flags, afxStream* file);
+
+AFX afxError    AfxLoadFile(afxUri const* uri, afxStream* file); // will upload the entire file data into RAM and close the file.
 
 #endif//AFX_FILE_H
