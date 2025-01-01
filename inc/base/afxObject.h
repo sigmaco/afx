@@ -43,6 +43,25 @@ AFX_DECLARE_STRUCT(afxClass);
 
 //#include "../mem/afxArray.h"
 
+typedef enum afxEventId
+{
+    AFX_EVENT_NONE,
+
+    afxThreadEvent_RUN = 1,
+    afxThreadEvent_QUIT,
+
+    AFX_EVENT_OBJ_DESTROYED, // before deletion
+    AFX_EVENT_OBJ_RENAMED, // after rename
+
+    AFX_EVENT_STRM_UPDATED,
+
+    afxEvent_DRAW,
+    afxEvent_SOUND,
+    afxEvent_UX,
+
+    AFX_EVENT_TOTAL
+} afxEventId;
+
 typedef enum afxObjectFlag
 {
     afxObjectFlag_READY  = (1 << 0),
@@ -51,7 +70,30 @@ typedef enum afxObjectFlag
     afxObjectFlag_
 } afxObjectFlags;
 
-typedef afxBool (*afxEventFilterFn)(afxObject obj, afxObject watched, afxEvent *ev);
+typedef void* afxObject;
+#define AfxObjects(_objets_) ((afxObject*)_objets_)
+
+AFX_DECLARE_STRUCT(afxEvent);
+
+AFX_DEFINE_STRUCT(afxEvent)
+{
+    afxEventId      id;
+    afxUnit          siz;
+    afxUnit32        tid; // poster
+    //afxBool         posted;
+    afxBool         accepted;
+    void*           udd[4];
+};
+
+typedef afxBool(*afxEventFilterFn)(afxObject obj, afxObject watched, afxEvent *ev);
+
+AFX_DEFINE_STRUCT(afxPostedEvent)
+{
+    afxObject       receiver;
+    afxUnit          priority;
+    afxUnit          siz;
+    afxByte         ev[];
+};
 
 AFX_DEFINE_STRUCT(afxObjectBase)
 {
@@ -73,8 +115,8 @@ AFX_STATIC_ASSERT(offsetof(afxObjectBase, data) % 16 == 0, "");
 
 AFX_DEFINE_STRUCT(afxEventFilter)
 {
-    afxLinkage          holder; // obj->watching
-    afxLinkage          watched; // obj->watchers
+    afxLink          holder; // obj->watching
+    afxLink          watched; // obj->watchers
     //afxEventFilterFn    fn;
 };
 
@@ -117,19 +159,27 @@ AFXINL afxError         AfxDeallocateInstanceData(afxObject obj, afxUnit cnt, af
 
 AFX afxError    AfxAcquireObjects(afxClass* cls, afxUnit cnt, afxObject objects[], void const* udd[]);
 AFX afxError    AfxReacquireObjects(afxUnit cnt, afxObject objects[]);
-AFX afxBool     AfxReleaseObjects(afxUnit cnt, afxObject objects[]);
+AFX afxBool     AfxDisposeObjects(afxUnit cnt, afxObject objects[]);
 
 #ifndef _AFX_MANAGER_C
 //#   define AfxAcquireObjects(_mgr_,_cnt_,_objects_,_udd_) AfxAcquireObjects((_mgr_),(_cnt_),(afxObject*)(_objects_), ((_udd_)) )
 #   define AfxReacquireObjects(_cnt_,_objects_) AfxReacquireObjects((_cnt_),(afxObject*)(_objects_))
-#   define AfxReleaseObjects(_cnt_,_objects_) AfxReleaseObjects((_cnt_),(afxObject*)(_objects_))
+#   define AfxDisposeObjects(_cnt_,_objects_) AfxDisposeObjects((_cnt_),(afxObject*)(_objects_))
 #endif
 
 AFX afxUnit      _AfxAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fcc); // returns the number of exceptions (if any); expects valid handles only.
 AFX afxUnit      _AfxTryAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fcc); // returns the number of exceptions (if any); ignore nil handles.
 //#define         AfxAssertObjects(_cnt_,_objects_,_fcc_) AFX_ASSERT(((afxResult)(_cnt_)) == _AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))
-#define         AfxTryAssertObjects(_cnt_,_objects_,_fcc_) AFX_ASSERT((!_cnt_) || ((_objects_) && !(_AfxTryAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
-#define         AfxAssertObjects(_cnt_,_objects_,_fcc_)    AFX_ASSERT((!_cnt_) || ((_objects_) && !(_AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
+//#define         AfxTryAssertObjects(_cnt_,_objects_,_fcc_) AFX_ASSERT((!_cnt_) || ((_objects_) && !(_AfxTryAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
+//#define         AfxAssertObjects(_cnt_,_objects_,_fcc_)    AFX_ASSERT((!_cnt_) || ((_objects_) && !(_AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
+
+#ifdef _AFX_DEBUG
+#   define  AFX_TRY_ASSERT_OBJECTS(_fcc_,_cnt_,_objects_) AFX_ASSERT((!_cnt_) || ((_objects_) && !(_AfxTryAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
+#   define  AFX_ASSERT_OBJECTS(_fcc_,_cnt_,_objects_)    AFX_ASSERT((!_cnt_) || ((_objects_) && !(_AfxAssertObjects((_cnt_), (afxObject const*)(_objects_),(_fcc_)))))
+#else
+#   define  AFX_TRY_ASSERT_OBJECTS(_fcc_,_cnt_,_objects_) 
+#   define  AFX_ASSERT_OBJECTS(_fcc_,_cnt_,_objects_) 
+#endif
 
 AFX afxUnit      AfxGetObjectId(afxObject obj);
 

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
 
-#include "../dev/AvxImplKit.h"
+#include "../draw/impl/avxImplementation.h"
 
 _AVXINL void AfxZeroRect(afxRect* rc)
 {
@@ -48,14 +48,14 @@ _AVXINL void AfxSetRect(afxRect* rc, afxInt x, afxInt y, afxUnit w, afxUnit h)
     rc->h = h;
 }
 
-_AVXINL void AfxResetViewport(afxViewport* vp, afxReal x, afxReal y, afxReal w, afxReal h, afxReal n, afxReal f)
+_AVXINL void AfxResetViewport(afxViewport* vp, afxReal x, afxReal y, afxReal w, afxReal h, afxReal minDepth, afxReal maxDepth)
 {
     afxError err = NIL;
     AfxAssert3(vp, w, h);
-    vp->offset[0] = x;
-    vp->offset[1] = y;
+    vp->origin[0] = x;
+    vp->origin[1] = y;
     vp->extent[0] = w;
     vp->extent[1] = h;
-    vp->depth[0] = n;
-    vp->depth[1] = f;
+    vp->minDepth = minDepth;
+    vp->maxDepth = maxDepth;
 }

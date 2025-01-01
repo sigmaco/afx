@@ -25,30 +25,30 @@
 
 AFX_DEFINE_STRUCT(afxPoolPage)
 {
-    afxUnit          usedCnt;
-    afxUnit32        usage;
+    afxUnit         usedCnt;
+    afxUnit32       usage;
     afxByte*        data;
 };
 
 AFX_DEFINE_STRUCT(afxPool)
 {
-    afxUnit          unitSiz;
-    afxUnit          memAlign;
-    afxUnit          unitsPerPage;
-    afxUnit          totalUsedCnt;
-    afxUnit          pageCnt;
+    afxUnit         unitSiz;
+    afxUnit         memAlign;
+    afxUnit         unitsPerPage;
+    afxUnit         totalUsedCnt;
+    afxUnit         pageCnt;
     afxPoolPage*    pages;
     afxMmu          mem;
 };
 
-AFX void        AfxSetUpPool(afxPool* pool, afxUnit unitSiz, afxUnit unitsPerPage, afxUnit memAlign);
-AFX void        AfxCleanUpPool(afxPool* pool);
+AFX void        AfxDeployPool(afxPool* pool, afxUnit unitSiz, afxUnit unitsPerPage, afxUnit memAlign);
+AFX void        AfxDismantlePool(afxPool* pool);
 
-AFX void*       AfxAllocatePoolUnit(afxPool* pool, afxSize* idx);
-AFX afxError    AfxAllocatePoolUnits(afxPool* pool, afxUnit cnt, void* units[]);
+AFX void*       AfxPushPoolUnit(afxPool* pool, afxSize* idx);
+AFX afxError    AfxPushPoolUnits(afxPool* pool, afxUnit cnt, void* units[]);
 
-AFX void        AfxDeallocatePoolUnit(afxPool* pool, void* unit);
-AFX void        AfxDeallocatePoolUnits(afxPool* pool, afxUnit cnt, void* units[]);
+AFX void        AfxPopPoolUnit(afxPool* pool, void* unit);
+AFX void        AfxPopPoolUnits(afxPool* pool, afxUnit cnt, void* units[]);
 
 AFX afxBool     AfxGetPoolItem(afxPool const* pool, afxSize idx, void **ptr);
 AFX afxBool     AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr);

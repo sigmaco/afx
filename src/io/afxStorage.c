@@ -24,6 +24,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_STORAGE_C
+#include "../dev/afxExecImplKit.h"
 #include "../dev/afxIoImplKit.h"
 
 extern afxClassConfig const _AfxFileClsCfg;
@@ -33,18 +34,18 @@ extern afxClassConfig const _AfxUrdClsCfg;
 _AFX afxClass const* AfxGetFileClass(afxStorage fsys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+    AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
     afxClass const* cls = &fsys->fileCls;
-    AfxAssertClass(cls, afxFcc_FILE);
+    AFX_ASSERT_CLASS(cls, afxFcc_FILE);
     return cls;
 }
 
 _AFX afxClass const* AfxGetArchiveClass(afxStorage fsys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+    AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
     afxClass const* cls = &fsys->archCls;
-    AfxAssertClass(cls, afxFcc_ARC);
+    AFX_ASSERT_CLASS(cls, afxFcc_ARC);
     return cls;
 }
 
@@ -83,7 +84,7 @@ _AFX afxError AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags,
 
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     AFX_ASSERT(pattern);
     AFX_ASSERT(flags);
@@ -152,7 +153,7 @@ _AFX afxError AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags,
 
             if (AfxFindStorage(&dev, &fsys))
             {
-                AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+                AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
 
                 afxStorageUnit const* fsto;
                 AfxIterateLinkage(afxStorageUnit, fsto, &fsys->storages, fsys)
@@ -188,7 +189,7 @@ _AFX afxError AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags,
 
             if (AfxFindStorage(&dev, &fsys))
             {
-                AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+                AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
 
                 afxStorageUnit const* fsto;
                 AfxIterateLinkage(afxStorageUnit, fsto, &fsys->storages, fsys)
@@ -232,7 +233,7 @@ _AFX afxError AfxResolveUris2(afxFileFlags const permissions, afxUnit cnt, afxUr
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     AFX_ASSERT(in);
     AFX_ASSERT(out);
@@ -299,7 +300,7 @@ _AFX afxError AfxResolveUris2(afxFileFlags const permissions, afxUnit cnt, afxUr
                 
             if (AfxFindStorage(&dev, &fsys))
             {
-                AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+                AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
 
                 afxStorageUnit const* fsto;
                 AfxIterateLinkage(afxStorageUnit, fsto, &fsys->storages, fsys)
@@ -368,7 +369,7 @@ _AFX afxError AfxResolveUri2(afxFileFlags permissions, afxUri const *in, afxUri 
     return err;
 }
 
-_AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*callback)(void* udd, afxUri const* path, afxUri const* osPath), void* udd)
+_AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*callback)(void* udd, afxUnit diskId, afxUnit endpointIdx, afxUri const* path, afxUri const* osPath), void* udd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pattern);
@@ -408,9 +409,14 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
 
     afxUri dir;
     AfxClipPathDirectory(&dir, &path);
+    
+    afxUnit diskId = AFX_INVALID_INDEX;
 
     if (disk)
     {
+        diskId = AfxGetObjectId(disk);
+
+        afxUnit endpointIdx = 0;
         afxStorageUnit const* fsto;
         AfxIterateLinkage(afxStorageUnit, fsto, &disk->storages, fsys)
         {
@@ -446,7 +452,7 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
                             resolved = TRUE;
                             rslt++;
 
-                            if (callback && !callback(udd, &baseUrl.uri, &resolvedUrl.uri))
+                            if (callback && !callback(udd, diskId, endpointIdx, &baseUrl.uri, &resolvedUrl.uri))
                                 break;
 
                         } while (FindNextFileA(fh, &wfd));
@@ -469,7 +475,7 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
                             resolved = TRUE;
                             rslt++;
 
-                            if (callback && !callback(udd, &baseUrl.uri, &resolvedUrl.uri))
+                            if (callback && !callback(udd, diskId, endpointIdx, &baseUrl.uri, &resolvedUrl.uri))
                                 break;
                         }
                     }
@@ -478,6 +484,8 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
 
             if (resolved)
                 break;
+
+            endpointIdx++;
         }
     }
     else
@@ -520,7 +528,7 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
 
                     rslt++;
 
-                    if (callback && !callback(udd, &found, &resolvedUrl.uri))
+                    if (callback && !callback(udd, AFX_INVALID_INDEX, AFX_INVALID_INDEX, &found, &resolvedUrl.uri))
                         break;
 
                 } while (FindNextFileA(fh, &wfd));
@@ -538,7 +546,7 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
                     rslt++;
 
                     if (callback)
-                        callback(udd, pattern, &szPattern.uri);
+                        callback(udd, AFX_INVALID_INDEX, AFX_INVALID_INDEX, pattern, &szPattern.uri);
                 }
             }
         }
@@ -549,7 +557,7 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
 _AFX afxUnit AfxFindStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFileFlags ioFlags)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+    AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
     AFX_ASSERT(endpoint);
     AFX_ASSERT(ioFlags);
     afxUnit fstoIdx = AFX_INVALID_INDEX;
@@ -579,20 +587,20 @@ _AFX afxError _DismountStorageUnit(afxStorage fsys, afxStorageUnit* fsto)
 
     AfxLogEcho("Dismounting... <%.*s>('%.*s'),%x @u", AfxPushString(AfxGetUriString(&fsys->baseUrl.uri)), AfxPushString(AfxGetUriString(&fsto->rootPath)), fsto->flags, AfxGetObjectId(fsys));
 
-    AfxPopLinkage(&fsto->fsys);
+    AfxPopLink(&fsto->fsys);
 
     if (fsto->arc)
-        AfxReleaseObjects(1, (void*[]) { fsto->arc });
+        AfxDisposeObjects(1, (void*[]) { fsto->arc });
 
     AfxDeallocateUri(&fsto->rootPath);
-    AfxDeallocate(fsto);
+    AfxDeallocate((void**)&fsto, AfxHere());
     return err;
 }
 
 _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFileFlags fileFlags)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+    AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
     AFX_ASSERT(fileFlags);
 
     afxUri2048 endpoint2;
@@ -664,7 +672,7 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
         else
         {
             unsigned short flagsToTest = NIL;
-            afxIoFlags ioPerms = fileFlags & AFX_IO_PERM_MASK;
+            afxIoFlags ioPerms = fileFlags & afxIoModeMask;
 
             if (AfxTestFlags(ioPerms, afxIoFlag_R))
                 flagsToTest |= _S_IREAD;
@@ -694,12 +702,13 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
     {
         AfxLogEcho("Mounting... <%.*s>('%.*s'),%x", AfxPushString(AfxGetUriString(&fsys->baseUrl.uri)), AfxPushString(AfxGetUriString(&endpoint2.uri)), fileFlags);
 
-        afxStorageUnit* fsto = AfxAllocate(1, sizeof(*fsto), 0, AfxHere());
+        afxStorageUnit* fsto;
+        AfxAllocate(sizeof(*fsto), 0, AfxHere(), (void**)&fsto);
 
         if (!fsto) AfxThrowError();
         else
         {
-            AfxPushLinkage(&fsto->fsys, &fsys->storages);
+            AfxPushLink(&fsto->fsys, &fsys->storages);
 
             AfxDuplicateUri(&fsto->rootPath, &endpoint2.uri);
 
@@ -713,7 +722,7 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
 
 
     if (err && arc)
-        AfxReleaseObjects(1, (void*[]) { arc });
+        AfxDisposeObjects(1, (void*[]) { arc });
 
     return err;
 }
@@ -721,7 +730,7 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
 _AFX afxError _AfxFsysCtorCb(afxStorage fsys, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+    AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
 
     afxChar diskId = *(afxChar const*)args[0];
     diskId = (afxChar)AfxTolower(diskId);
@@ -732,7 +741,7 @@ _AFX afxError _AfxFsysCtorCb(afxStorage fsys, void** args, afxUnit invokeNo)
     afxArchive arc = args[3];
     
     AFX_ASSERT(ioFlags);
-    AFX_ASSERT(ioFlags & AFX_IO_PERM_MASK);
+    AFX_ASSERT(ioFlags & afxIoModeMask);
 
     AfxMakeUri8(&fsys->baseUrl, NIL);
     AfxFormatUri(&fsys->baseUrl.uri, "//./%c/", diskId);
@@ -745,9 +754,9 @@ _AFX afxError _AfxFsysCtorCb(afxStorage fsys, void** args, afxUnit invokeNo)
     if (_MountStorageUnit(fsys, endpoint, ioFlags)) AfxThrowError();
     else
     {
-        //AfxRegisterClass(&fsys->fileCls, (afxClass*)AfxGetStreamClass(), &fsys->classes, &_AfxFileClsCfg);
-        AfxRegisterClass(&fsys->archCls, NIL, &fsys->classes, &_AfxArcClsCfg); // require iob
-        AfxRegisterClass(&fsys->urdCls, NIL, &fsys->classes, &_AfxUrdClsCfg);
+        //AfxMountClass(&fsys->fileCls, (afxClass*)AfxGetStreamClass(), &fsys->classes, &_AfxFileClsCfg);
+        AfxMountClass(&fsys->archCls, NIL, &fsys->classes, &_AfxArcClsCfg); // require iob
+        AfxMountClass(&fsys->urdCls, NIL, &fsys->classes, &_AfxUrdClsCfg);
 
     }
 
@@ -757,7 +766,7 @@ _AFX afxError _AfxFsysCtorCb(afxStorage fsys, void** args, afxUnit invokeNo)
 _AFX afxError _AfxFsysDtorCb(afxStorage fsys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+    AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
 
     AfxDeregisterChainedClasses(&fsys->classes);
 
@@ -767,8 +776,8 @@ _AFX afxError _AfxFsysDtorCb(afxStorage fsys)
         _DismountStorageUnit(fsys, fsto);
     }
     
-    AFX_ASSERT(AfxChainIsEmpty(&fsys->storages));
-    AFX_ASSERT(AfxChainIsEmpty(&fsys->fileChain));
+    AFX_ASSERT(AfxIsChainEmpty(&fsys->storages));
+    AFX_ASSERT(AfxIsChainEmpty(&fsys->fileChain));
 
     return err;
 }
@@ -791,8 +800,8 @@ _AFX afxUnit AfxInvokeStorages(afxUnit first, afxUnit cnt, afxBool(*f)(afxStorag
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
     afxClass* cls = AfxGetStorageClass();
-    AfxAssertClass(cls, afxFcc_FSYS);
-    return AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
+    AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxUnit AfxEnumerateStorages(afxUnit first, afxUnit cnt, afxStorage systems[])
@@ -801,8 +810,8 @@ _AFX afxUnit AfxEnumerateStorages(afxUnit first, afxUnit cnt, afxStorage systems
     AFX_ASSERT(cnt);
     AFX_ASSERT(systems);
     afxClass* cls = AfxGetStorageClass();
-    AfxAssertClass(cls, afxFcc_FSYS);
-    return AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)systems);
+    AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)systems);
 }
 
 _AFX afxError AfxMountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFileFlags ioFlags)
@@ -816,7 +825,7 @@ _AFX afxError AfxMountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFil
     if (!AfxGetStorage(diskId, &fsys))
     {
         afxClass* cls = AfxGetStorageClass();
-        AfxAssertClass(cls, afxFcc_FSYS);
+        AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
 
         if (AfxAcquireObjects(cls, 1, (afxObject*)&fsys, (void const*[]) { &diskId, endpoint, &ioFlags, NIL }))
             AfxThrowError();
@@ -873,7 +882,7 @@ _AFX afxBool AfxGetStorage(afxChar diskId, afxStorage* disk)
     afxStorage fsys;
     while (AfxEnumerateStorages(i, 1, &fsys))
     {
-        AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+        AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
 
         if (fsys->diskId == diskId)
         {
@@ -902,7 +911,7 @@ _AFX afxBool AfxFindStorage(afxUri const* uri, afxStorage* disk)
         afxStorage fsys;
         while (AfxEnumerateStorages(i, 1, &fsys))
         {
-            AfxAssertObjects(1, &fsys, afxFcc_FSYS);
+            AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
 
             if (AfxIsAnValidIndex(AfxCompareSubstrings(&dev.str, 0, 5, TRUE, 1, &fsys->baseUrl.uri.str)))
             {

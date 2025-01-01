@@ -33,7 +33,6 @@
 // Shape is the form of an object or its external boundary, outline, or external surface, as opposed to other properties such as color, texture or material type.
 
 #include "qwadro/inc/draw/afxDrawSystem.h"
-#include "qwadro/inc/sound/dev/afxSoundSystem.h"
 
 #ifndef __e2combo__
 #   ifdef _DEBUG
@@ -58,24 +57,27 @@
 #endif//__e2combo__
 
 
-AFX_DEFINE_HANDLE(afxComboDevice);
-AFX_DEFINE_HANDLE(afxComboBridge);
-AFX_DEFINE_HANDLE(afxMathQueue);
+AFX_DEFINE_HANDLE(afxEngine);
+AFX_DEFINE_HANDLE(afxSimBridge);
+AFX_DEFINE_HANDLE(afxSimQueue);
+AFX_DEFINE_HANDLE(afxCatalyst);
 
 AFX_DEFINE_HANDLE(akxLight);
 AFX_DEFINE_HANDLE(akxRenderer);
 AFX_DEFINE_HANDLE(akxEntity);
 AFX_DEFINE_HANDLE(afxNode);
 AFX_DEFINE_HANDLE(afxBody);
-AFX_DEFINE_HANDLE(afxMotor);
+AFX_DEFINE_HANDLE(afxCapstan);
 AFX_DEFINE_HANDLE(afxMotion);
 AFX_DEFINE_HANDLE(afxAnimation);
 
 AFX_DEFINE_HANDLE(afxTerrain);
 
 AFX_DEFINE_HANDLE(afxCurve);
+AFX_DEFINE_HANDLE(afxAttitude);
+AFX_DEFINE_HANDLE(afxPosture);
+AFX_DEFINE_HANDLE(afxPlacement);
 AFX_DEFINE_HANDLE(afxPose);
-AFX_DEFINE_HANDLE(afxPoseBuffer);
 AFX_DEFINE_HANDLE(afxSkeleton);
 
 AFX_DEFINE_HANDLE(afxMaterial);
@@ -88,11 +90,11 @@ AFX_DEFINE_STRUCT(akxTrackMask)
     afxReal*    boneWeights;
 };
 
-typedef enum akxAccumulateOp
+typedef enum afxAccumOp
 {
-    akxAccumulateOp_NONE, // no accumulation
-    akxAccumulateOp_CONST, // constant extraction accumulation
-    akxAccumulateOp_DELTA, // variable delta accumulation
-} akxAccumulateOp;
+    afxAccumOp_NONE, // no accumulation
+    afxAccumOp_CONST, // constant extraction accumulation
+    afxAccumOp_DELTA, // variable delta accumulation
+} afxAccumOp;
 
 #endif//AMX_SIM_DEFS_H

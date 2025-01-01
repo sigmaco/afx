@@ -1,0 +1,39 @@
+Booting...
+Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree.dll>Memory page Size: 4096HW threading: 2Loading... <e2draw.dll>Loading... <e2combo.dll>Loading... <e2sound.dll>Loading... <e2mmux.dll>Loading... <//./z////eaxzal1.dll>Installing... <eaxzal1>	<//./eaxzal1/>("")  0.0.0 Loading... <//./z////galileo.dll>Installing... <galileo>	<//./galileo/>("")  0.0.0 Loading... <//./z////tarzgl4.dll>Installing... <tarzgl4>Loading... <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL.c:1537
+GL: INVAL_PARAMzglInterop_WGL.c:1552
+GL: INVAL_PARAMzglInterop_WGL.c:1563
+GL: INVAL_PARAMzglInterop_WGL.c:1595
+GL: INVAL_PARAMzglInterop_WGL.c:1626
+GL: INVAL_PARAMzglInterop_WGL.c:1628
+GL: INVAL_PARAMzglInterop_WGL.c:1785
+GL: INVAL_PARAMzglInterop_WGL.c:1788
+GL: INVAL_PARAMzglInterop_WGL.c:1793
+GL: INVAL_PARAMzglInterop_WGL.c:1798
+GL: INVAL_PARAMLoading... <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL.c:1537
+GL: INVAL_PARAMzglInterop_WGL.c:1552
+GL: INVAL_PARAMzglInterop_WGL.c:1563
+GL: INVAL_PARAMzglInterop_WGL.c:1595
+GL: INVAL_PARAMzglInterop_WGL.c:1626
+GL: INVAL_PARAMzglInterop_WGL.c:1628
+GL: INVAL_PARAMzglInterop_WGL.c:1785
+GL: INVAL_PARAMzglInterop_WGL.c:1788
+GL: INVAL_PARAMzglInterop_WGL.c:1793
+GL: INVAL_PARAMzglInterop_WGL.c:1798
+GL: INVAL_PARAM	<//./tarzgl3/>("")  0.0.0 	<//./tarzgl4/>("")  0.0.0 Loading... <//./z////winsh4d.dll>Installing... <winsh4d>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 7544
+Starting 7544 on thread execution unit #2...SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 6112
+Running... 0484e570#7544 --- null:195afxClass.c:912
+afxClass.c:912
+(cfg->fcc)
+    SuccessafxClass.c:935
+afxClass.c:935
+(cfg->name && cfg->name[0])
+    SuccessRunning... 0484e710#3500 --- null:195Loading... <//./c/openal32.dll>Entering the Thread Execution Environment 3500
+Starting 3500 on thread execution unit #3...SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 5856
+Starting 5856 on thread execution unit #4...Entering the Thread Execution Environment 6112
+Running... 04e49700#5856 --- null:399Mounting... <//./d/>('E:\qwadro\repo\bangitk\tmp'),7Entering the Thread Execution Environment 5856
+Sound Execution Unit .Loading... <//./c/openal32.dll>Entering the Thread Execution Environment 7544
+GPU RO 05062ae0 ready. de1, 8058, [512,256,1]GPU buffer 05053d90 ready. 34962, 2, 4GPU buffer 05053e20 ready. 34963, 3, 8GPU RO 0505fb60 ready. de1, 8058, [675,330,1]GPU RO 0505fc50 ready. de1, 8cac, [675,330,1]avxCanvas 0505f970 hardware-side data instanced.avxPipeline 02f42e70 hardware-side data instanced.Hardware-side sampler 05062850 ready.GPU RO 0505fd30 ready. de1, 8058, [675,330,1]GPU RO 0505de30 ready. de1, 8cac, [675,330,1]avxCanvas 0505fa00 hardware-side data instanced.GPU RO 0505df10 ready. de1, 8058, [675,330,1]GPU RO 0505e000 ready. de1, 8cac, [675,330,1]avxCanvas 0505fa90 hardware-side data instanced.

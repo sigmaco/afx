@@ -43,8 +43,8 @@ AFX_DEFINE_STRUCT(afxCondition)
 #endif
 };
 
-AFX afxError            AfxSetUpCondition(afxCondition* cond);
-AFX void                AfxCleanUpCondition(afxCondition* cond);
+AFX afxError            AfxDeployCondition(afxCondition* cond);
+AFX void                AfxDismantleCondition(afxCondition* cond);
 
 AFX afxError            AfxSignalCondition(afxCondition* cond);
 AFX afxError            AfxSignalCondition2(afxCondition* cond);

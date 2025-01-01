@@ -91,7 +91,7 @@ static void AfxXmlNodeAttrDelete(afxXml* xml, afxXmlAttr* attribute)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(attribute);
 
-    AfxDeallocate(attribute);
+    AfxDeallocate((void**)&attribute, AfxHere());
 }
 
 static void AfxXmlNodeDelete(afxXml* xml, afxXmlNode *node)
@@ -106,7 +106,7 @@ static void AfxXmlNodeDelete(afxXml* xml, afxXmlNode *node)
         ++at;
     }
 
-    AfxDeallocate(node->attributes);
+    AfxDeallocate((void**)&node->attributes, AfxHere());
 
     afxXmlNode** it = node->children;
 
@@ -116,9 +116,9 @@ static void AfxXmlNodeDelete(afxXml* xml, afxXmlNode *node)
         ++it;
     }
 
-    AfxDeallocate(node->children);
+    AfxDeallocate((void**)&node->children, AfxHere());
 
-    AfxDeallocate(node);
+    AfxDeallocate((void**)&node, AfxHere());
 }
 
 static uint8_t _AfxXmlParsePeek(struct xml_parser* parser, size_t n) {
@@ -179,7 +179,7 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
     afxXmlAttr** attributes;
     int position;
 
-    attributes = AfxCoallocate(1, sizeof(afxXmlAttr*), 0, AfxHere());
+    AfxCoallocate(1, sizeof(afxXmlAttr*), 0, AfxHere(), (void**)&attributes);
     attributes[0] = 0;
 
     afxString128 tmpStr;
@@ -197,8 +197,10 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
 
         for (token = xml_strtok_r(NULL, " ", &rest); token != NULL; token = xml_strtok_r(NULL, " ", &rest))
         {
-            str_name = AfxAllocate(1, strlen(token) + 1, 0, AfxHere());
-            str_content = AfxAllocate(1, strlen(token) + 1, 0, AfxHere());
+            str_name;
+            AfxAllocate(strlen(token) + 1, 0, AfxHere(), (void**)&str_name);
+            str_content;
+            AfxAllocate(strlen(token) + 1, 0, AfxHere(), (void**)&str_content);
             // %s=\"%s\" wasn't working for some reason, ugly hack to make it work
             if (sscanf(token, "%[^=]=\"%[^\"]", str_name, str_content) != 2)
             {
@@ -206,8 +208,8 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
                 {
                     if (sscanf(token, "%[^=]", str_name, str_content) != 1)
                     {
-                        AfxDeallocate(str_name);
-                        AfxDeallocate(str_content);
+                        AfxDeallocate((void**)&str_name, AfxHere());
+                        AfxDeallocate((void**)&str_content, AfxHere());
                         continue;
                     }
                     else *str_content = '\0';
@@ -217,27 +219,28 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
             start_name = &tag_open->start[position];
             start_content = &tag_open->start[position + strlen(str_name) + 2];
 
-            new_attribute = AfxAllocate(1, sizeof(afxXmlAttr), 0, AfxHere());
+            new_attribute;
+            AfxAllocate(sizeof(afxXmlAttr), 0, AfxHere(), (void**)&new_attribute);
             AfxMakeString(&new_attribute->name, 0, start_name, strlen(str_name));
             AfxMakeString(&new_attribute->content, 0, start_content, strlen(str_content));
 
             old_elements = get_zero_terminated_array_attributes(attributes);
             new_elements = old_elements + 1;
-            attributes = AfxReallocate(attributes, sizeof(struct xml_attributes*), (new_elements + 1), 0, AfxHere());
+            AfxReallocate(sizeof(struct xml_attributes*) * (new_elements + 1), 0, AfxHere(), (void**)&attributes);
 
             attributes[new_elements - 1] = new_attribute;
             attributes[new_elements] = 0;
 
             afxUnit addedIdx;
-            afxXmlTag* tag = AfxInsertArrayUnits(&xml->tempTagArr, 1, &addedIdx, NIL);
+            afxXmlTag* tag = AfxPushArrayUnits(&xml->tempTagArr, 1, &addedIdx, NIL);
             AFX_ASSERT(addedIdx == baseTagIdx2 + tagCnt2);
             AfxMakeString(&tag->name, 0, start_name, strlen(str_name));
             AfxMakeString(&tag->content, 0, start_content, strlen(str_content));
             ++tagCnt2;
             
 
-            AfxDeallocate(str_name);
-            AfxDeallocate(str_content);
+            AfxDeallocate((void**)&str_name, AfxHere());
+            AfxDeallocate((void**)&str_content, AfxHere());
         }
         
         tag_open->len = trimRange;
@@ -264,7 +267,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxUnit parentIdx, struct xml_p
     afxUnit tagCnt = 0;
     afxUnit baseChildIdx = 0;
     afxUnit childCnt = 0;
-    AfxInsertArrayUnits(&xml->tempElemArr, 1, &elemIdx, NIL);
+    AfxPushArrayUnits(&xml->tempElemArr, 1, &elemIdx, NIL);
     baseChildIdx = xml->tempElemArr.pop;
 
     ////////////////////////////////////////////////////////////
@@ -299,7 +302,8 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxUnit parentIdx, struct xml_p
     size_t original_length;
     afxXmlAttr** attributes;
 
-    afxXmlNode** children = AfxCoallocate(1, sizeof(afxXmlNode*), 0, AfxHere());
+    afxXmlNode** children;
+    AfxCoallocate(1, sizeof(afxXmlNode*), 0, AfxHere(), (void**)&children);
     children[0] = 0;
 
     // Parse open tag
@@ -493,7 +497,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxUnit parentIdx, struct xml_p
 
                         size_t old_elements = get_zero_terminated_array_nodes(children);
                         size_t new_elements = old_elements + 1;
-                        children = AfxReallocate(children, sizeof(afxXmlNode*), (new_elements + 1), 0, AfxHere());
+                        AfxReallocate(sizeof(afxXmlNode*) * (new_elements + 1), 0, AfxHere(), (void**)&children);
 
                         // Save child
 
@@ -560,7 +564,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxUnit parentIdx, struct xml_p
                     /* Close tag has to match open tag
                      */
 
-                    if (AFX_INVALID_INDEX == AfxCompareStrings(&tag_open, FALSE, 1, &tag_close))
+                    if (AFX_INVALID_INDEX == AfxCompareStrings(&tag_open, 0, FALSE, 1, &tag_close))
                     {
                         AfxThrowError();
                         AfxLogError(" %.*s %.*s", AfxPushString(&tag_open), AfxPushString(&tag_close));
@@ -578,7 +582,8 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxUnit parentIdx, struct xml_p
                 int a = 0;
             }
 
-            afxXmlNode* node = AfxAllocate(1, sizeof(afxXmlNode), 0, AfxHere());
+            afxXmlNode* node;
+            AfxAllocate(sizeof(afxXmlNode), 0, AfxHere(), (void**)&node);
             AfxMakeString(&node->name, 0, tag_open.start, tag_open.len);
             AfxMakeString(&node->content, 0, content.start, content.len);
             node->attributes = attributes;
@@ -614,7 +619,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxUnit parentIdx, struct xml_p
             AfxXmlNodeDelete(xml, *it);
             ++it;
         }
-        AfxDeallocate(children);
+        AfxDeallocate((void**)&children, AfxHere());
     }
     return 0;
 }
@@ -639,9 +644,9 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxUnit length)
     else
     {
         xml->tempElemArr;
-        AfxMakeArray(&xml->tempElemArr, 100, sizeof(afxXmlElement), NIL);
+        AfxMakeArray(&xml->tempElemArr, sizeof(afxXmlElement), 100, NIL, 0);
         xml->tempTagArr;
-        AfxMakeArray(&xml->tempTagArr, 100, sizeof(afxXmlTag), NIL);
+        AfxMakeArray(&xml->tempTagArr, sizeof(afxXmlTag), 100, NIL, 0);
 
         /* Parse the root node
          */
@@ -675,10 +680,11 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxUnit length)
             int a = 1;
 
             afxArray sorted;
-            AfxMakeArray(&sorted, elemCnt, sizeof(afxXmlElement), NIL);
+            AfxMakeArray(&sorted, sizeof(afxXmlElement), elemCnt, NIL, 0);
             AfxReserveArraySpace(&sorted, elemCnt);
 
-            afxUnit* indicesMap = AfxAllocate(elemCnt, sizeof(indicesMap[0]), 0, AfxHere());
+            afxUnit* indicesMap;
+            AfxAllocate(elemCnt * sizeof(indicesMap[0]), 0, AfxHere(), (void**)&indicesMap);
 
             afxUnit activeParentIdx = AFX_INVALID_INDEX;
             afxUnit remaningCnt = elemCnt;
@@ -691,7 +697,7 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxUnit length)
                     if (elem->parentIdx == activeParentIdx)
                     {
                         afxUnit idx;
-                        afxXmlElement* elem2 = AfxInsertArrayUnit(&sorted, &idx);
+                        afxXmlElement* elem2 = AfxPushArrayUnit(&sorted, &idx);
                         indicesMap[i] = idx;
                         //AFX_ASSERT(idx == i);
                         AfxReflectString(&elem->name, &elem2->name);
@@ -723,7 +729,7 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxUnit length)
                 neo->baseChildIdx = indicesMap[old->baseChildIdx];
             }
 
-            AfxDeallocate(indicesMap);
+            AfxDeallocate((void**)&indicesMap, AfxHere());
 
             xml->elemCnt = sorted.pop;
             xml->elems = sorted.data;
@@ -836,7 +842,7 @@ _AFX afxBool AfxXmlNodeHasAttribute(afxXmlNode const* node, afxString const* key
     {
         afxXmlAttr const *a = node->attributes[i];
 
-        if (0 == AfxCompareStrings(key, ci, 1, &a->name))
+        if (0 == AfxCompareStrings(key, 0, ci, 1, &a->name))
             return TRUE;
     }
     return FALSE;
@@ -853,7 +859,7 @@ _AFX afxString const* AfxFindXmlAttribute(afxXmlNode const* node, afxString cons
     {
         afxXmlAttr const *a = node->attributes[i];
 
-        if (0 == AfxCompareStrings(key, ci, 1, &a->name))
+        if (0 == AfxCompareStrings(key, 0, ci, 1, &a->name))
             return &a->content;
     }
     return NIL;
@@ -932,7 +938,7 @@ _AFX afxBool AfxTestXmlRoot(afxXml const* xml, afxString const* name)
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssertType(xml, afxFcc_XML);
-    return (0 == AfxCompareStrings(&(xml->root->name), FALSE, 1, name));
+    return (0 == AfxCompareStrings(&(xml->root->name), 0, FALSE, 1, name));
 }
 
 _AFX afxBool AfxIndexXmlElements(afxXml const* xml, afxUnit parentIdx, afxUnit base, afxUnit cnt, afxString const names[], afxUnit* nameIdx)
@@ -947,7 +953,7 @@ _AFX afxBool AfxIndexXmlElements(afxXml const* xml, afxUnit parentIdx, afxUnit b
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        if (0 == AfxCompareStrings(&xml->elems[parent->baseChildIdx].name, FALSE, 1, &names[i]))
+        if (0 == AfxCompareStrings(&xml->elems[parent->baseChildIdx].name, 0, FALSE, 1, &names[i]))
         {
             if (nameIdx)
                 *nameIdx = i;
@@ -969,7 +975,7 @@ _AFX afxBool AfxTestXmlTag(afxXml const* xml, afxUnit elemIdx, afxUnit cnt, afxS
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        if (0 == AfxCompareStrings(&xml->elems[elemIdx].name, FALSE, 1, &names[i]))
+        if (0 == AfxCompareStrings(&xml->elems[elemIdx].name, 0, FALSE, 1, &names[i]))
         {
             if (nameIdx)
                 *nameIdx = i;
@@ -1126,7 +1132,7 @@ _AFX afxUnit AfxFindXmlElements(afxXml const* xml, afxUnit parentIdx, afxString 
 
     for (afxUnit i = 0; i < childCnt; i++)
     {
-        if (0 == AfxCompareStrings(&xml->elems[firstChildIdx + first + i].name, FALSE, 1, name))
+        if (0 == AfxCompareStrings(&xml->elems[firstChildIdx + first + i].name, 0, FALSE, 1, name))
             ++foundCnt;
 
         if (cnt && foundCnt == cnt)
@@ -1158,7 +1164,7 @@ _AFX afxUnit AfxFindXmlTaggedElements(afxXml const* xml, afxUnit parentIdx, afxU
         afxUnit currElemIdx = firstChildIdx + first + i;
         afxXmlElement* currElem = &xml->elems[currElemIdx];
 
-        if (!ignoreName && 0 != AfxCompareStrings(&currElem->name, FALSE, 1, elem))
+        if (!ignoreName && 0 != AfxCompareStrings(&currElem->name, 0, FALSE, 1, elem))
             continue;
 
         if (ignoreTag)
@@ -1177,9 +1183,9 @@ _AFX afxUnit AfxFindXmlTaggedElements(afxXml const* xml, afxUnit parentIdx, afxU
             {
                 afxXmlTag* currTag = &xml->tags[firstTagIdx + j];
 
-                if (0 == AfxCompareStrings(&currTag->name, FALSE, 1, tag))
+                if (0 == AfxCompareStrings(&currTag->name, 0, FALSE, 1, tag))
                 {
-                    if (ignoreValue || 0 == AfxCompareStrings(value, FALSE, 1, &currTag->content))
+                    if (ignoreValue || 0 == AfxCompareStrings(value, 0, FALSE, 1, &currTag->content))
                     {
                         if (childIdx)
                             childIdx[foundCnt] = currElemIdx;
@@ -1208,7 +1214,7 @@ _AFX afxXmlNode const* AfxXmlNodeFindChild(afxXmlNode const *base, afxString con
     {
         afxXmlNode const *n = base->children[i];
 
-        if (0 == AfxCompareStrings(child, FALSE, 1, &n->name))
+        if (0 == AfxCompareStrings(child, 0, FALSE, 1, &n->name))
         {
             if (!attr || AfxIsStringEmpty(attr))
                 return n;
@@ -1219,12 +1225,12 @@ _AFX afxXmlNode const* AfxXmlNodeFindChild(afxXmlNode const *base, afxString con
             {
                 afxXmlAttr const *a = n->attributes[j];
 
-                if (0 == AfxCompareStrings(attr, FALSE, 1, &a->name))
+                if (0 == AfxCompareStrings(attr, 0, FALSE, 1, &a->name))
                 {
                     if (!value || AfxIsStringEmpty(value))
                         return n;
 
-                    if (0 == AfxCompareStrings(value, FALSE, 1, &a->content))
+                    if (0 == AfxCompareStrings(value, 0, FALSE, 1, &a->content))
                         return n;
                 }
             }
@@ -1243,14 +1249,14 @@ _AFX void AfxCleanUpXml(afxXml* xml)
     if (xml->elems)
     {
         afxArray arr;
-        AfxWrapArray(&arr, sizeof(xml->elems[0]), xml->elemCnt, xml->elems, xml->elemCnt);
+        AfxMakeArray(&arr, sizeof(xml->elems[0]), xml->elemCnt, xml->elems, xml->elemCnt);
         AfxCleanUpArray(&arr);
     }
 
     if (xml->tags)
     {
         afxArray arr;
-        AfxWrapArray(&arr, sizeof(xml->tags[0]), xml->tagCnt, xml->tags, xml->tagCnt);
+        AfxMakeArray(&arr, sizeof(xml->tags[0]), xml->tagCnt, xml->tags, xml->tagCnt);
         AfxCleanUpArray(&arr);
     }
 
@@ -1268,14 +1274,14 @@ _AFX afxError AfxLoadXml(afxXml* xml, afxUri const *uri)
     //AfxEntry("uri:%.*s", AfxPushString(uri ? AfxGetUriString(uri) : &AFX_STR_EMPTY));
     afxStream file;
     afxStreamInfo iobi = { 0 };
-    iobi.usage = afxStreamUsage_FILE;
-    iobi.flags = afxStreamFlag_READABLE;
+    iobi.usage = afxIoUsage_FILE;
+    iobi.flags = afxIoFlag_READABLE;
     AfxAcquireStream(1, &iobi, &file);
 
     if (AfxReloadFile(file, uri)) AfxThrowError();
     else
     {
-        AfxAssertObjects(1, &file, afxFcc_IOB);
+        AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
 
         //AfxAssignTypeFcc(xml, afxFcc_XML);
 

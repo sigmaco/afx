@@ -49,18 +49,17 @@
     <ClInclude Include="..\..\inc\exec\afxConsole.h" />
     <ClInclude Include="..\..\inc\exec\afxThread.h" />
     <ClInclude Include="..\..\inc\exec\afxTime.h" />
-    <ClInclude Include="..\..\inc\game\agxGameData.h" />
-    <ClInclude Include="..\..\inc\game\agxGameDefs.h" />
-    <ClInclude Include="..\..\inc\game\agxGameObject.h" />
     <ClInclude Include="..\..\inc\io\afxArchive.h" />
     <ClInclude Include="..\..\inc\io\afxData.h" />
     <ClInclude Include="..\..\inc\io\afxDatabase.h" />
     <ClInclude Include="..\..\inc\io\afxFile.h" />
     <ClInclude Include="..\..\inc\io\afxIoBridge.h" />
     <ClInclude Include="..\..\inc\io\afxResource.h" />
+    <ClInclude Include="..\..\inc\io\afxRing.h" />
     <ClInclude Include="..\..\inc\io\afxSource.h" />
     <ClInclude Include="..\..\inc\io\afxStorage.h" />
     <ClInclude Include="..\..\inc\io\afxStream.h" />
+    <ClInclude Include="..\..\inc\io\afxStreamOps.h" />
     <ClInclude Include="..\..\inc\io\afxUrd.h" />
     <ClInclude Include="..\..\inc\io\afxUri.h" />
     <ClInclude Include="..\..\inc\io\afxXml.h" />
@@ -90,7 +89,6 @@
     <ClInclude Include="..\..\inc\mem\afxMemory.h" />
     <ClInclude Include="..\..\inc\mem\afxPool.h" />
     <ClInclude Include="..\..\inc\mem\afxQueue.h" />
-    <ClInclude Include="..\..\inc\mem\afxResidency.h" />
     <ClInclude Include="..\..\inc\mem\afxSlabAllocator.h" />
     <ClInclude Include="..\..\inc\mem\afxStack.h" />
     <ClInclude Include="..\..\src\dev\afxExecImplKit.h" />
@@ -104,6 +102,8 @@
     <Text Include="..\..\go-horse.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\dep\rpmalloc\malloc.c" />
+    <ClCompile Include="..\..\dep\rpmalloc\rpmalloc.c" />
     <ClCompile Include="..\..\src\base\afxManifest2.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -111,19 +111,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\src\io\afxIoBridge.c" />
+    <ClCompile Include="..\..\src\io\afxIoPort.c" />
+    <ClCompile Include="..\..\src\io\afxIoQueue.c" />
+    <ClCompile Include="..\..\src\io\afxStreamOps.c" />
+    <ClCompile Include="..\..\src\io\afxStreamXpu.c" />
     <ClCompile Include="..\..\src\math\afxReal16.c" />
-    <ClCompile Include="..\..\lib\rpmalloc\malloc.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\rpmalloc\rpmalloc.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\src\afxQwadro.c" />
     <ClCompile Include="..\..\src\afxQwadroCpp.cpp" />
     <ClCompile Include="..\..\src\base\afxChain.c" />
@@ -151,8 +143,6 @@
     <ClCompile Include="..\..\src\exec\afxConsole_w32.c" />
     <ClCompile Include="..\..\src\exec\afxThread_PC.c" />
     <ClCompile Include="..\..\src\exec\afxTime_w32.c" />
-    <ClCompile Include="..\..\src\game\agxGameData.c" />
-    <ClCompile Include="..\..\src\game\agxGameObject.c" />
     <ClCompile Include="..\..\src\io\afxArchive.c" />
     <ClCompile Include="..\..\src\io\afxData.c" />
     <ClCompile Include="..\..\src\io\afxDatabase.c" />
@@ -293,6 +283,7 @@
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <OmitFramePointers>false</OmitFramePointers>
       <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link />
     <Link>
@@ -314,7 +305,6 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <OmitFramePointers>false</OmitFramePointers>
-      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link />
     <Link>
@@ -332,6 +322,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>

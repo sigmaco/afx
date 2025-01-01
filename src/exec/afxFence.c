@@ -25,7 +25,7 @@
 _AFX afxContext AfxGetFenceContext(afxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fenc, afxFcc_FENC);
+    AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
     afxContext ctx = AfxGetProvider(fenc);
     //AfxAssertObjects(1, &ctx, afxFcc_CTX);
     AFX_ASSERT(ctx);
@@ -35,7 +35,7 @@ _AFX afxContext AfxGetFenceContext(afxFence fenc)
 _AFX afxDevice AfxGetFenceDevice(afxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fenc, afxFcc_FENC);
+    AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
     afxContext ctx = AfxGetFenceContext(fenc);
     AFX_ASSERT(ctx);
     afxDevice dev = AfxGetProvider(ctx);
@@ -47,14 +47,14 @@ _AFX afxDevice AfxGetFenceDevice(afxFence fenc)
 _AFX afxBool AfxFenceIsSignaled(afxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fenc, afxFcc_FENC);
+    AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
     return AfxLoadAtom32(&fenc->signaled);
 }
 
 _AFX afxError _AfxFencStdDtor(afxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fenc, afxFcc_FENC);
+    AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
     
     return err;
 }
@@ -62,7 +62,7 @@ _AFX afxError _AfxFencStdDtor(afxFence fenc)
 _AFX afxError _AfxFencStdCtor(afxFence fenc, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &fenc, afxFcc_FENC);
+    AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
 
     afxContext ctx = args[0];
     afxBool signaled = *(afxBool const*)args[1];
@@ -87,10 +87,10 @@ _AFX afxClassConfig const _AfxFencStdImplementation =
 _AFX afxError AfxWaitForFences(afxBool waitAll, afxUnit64 timeout, afxUnit cnt, afxFence const fences[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(cnt, fences, afxFcc_FENC);
+    AFX_ASSERT_OBJECTS(afxFcc_FENC, cnt, fences);
     afxContext ctx = AfxGetFenceContext(fences[0]);
     AFX_ASSERT(ctx);
-    //AfxAssertObjects(1, &ctx, afxFcc_DCTX);
+    //AfxAssertObjects(1, &ctx, afxFcc_DSYS);
 
     if (ctx->waitFenc(waitAll, timeout, cnt, fences))
         AfxThrowError();
@@ -101,10 +101,10 @@ _AFX afxError AfxWaitForFences(afxBool waitAll, afxUnit64 timeout, afxUnit cnt, 
 _AFX afxError AfxResetFences(afxUnit cnt, afxFence const fences[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(cnt, fences, afxFcc_FENC);
+    AFX_ASSERT_OBJECTS(afxFcc_FENC, cnt, fences);
     afxContext ctx = AfxGetFenceContext(fences[0]);
     AFX_ASSERT(ctx);
-    //AfxAssertObjects(1, &ctx, afxFcc_DCTX);
+    //AfxAssertObjects(1, &ctx, afxFcc_DSYS);
     
     if (ctx->resetFenc(cnt, fences))
         AfxThrowError();
@@ -115,12 +115,12 @@ _AFX afxError AfxResetFences(afxUnit cnt, afxFence const fences[])
 _AFX afxError AfxAcquireFences(afxContext ctx, afxBool signaled, afxUnit cnt, afxFence fences[])
 {
     afxError err = AFX_ERR_NONE;
-    //AfxAssertObjects(1, &ctx, afxFcc_DCTX);
+    //AfxAssertObjects(1, &ctx, afxFcc_DSYS);
     AFX_ASSERT(cnt);
     AFX_ASSERT(fences);
 
     afxClass* cls = AfxGetFenceClass(ctx);
-    AfxAssertClass(cls, afxFcc_FENC);
+    AFX_ASSERT_CLASS(cls, afxFcc_FENC);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)fences, (void const*[]) { ctx, &signaled }))
         AfxThrowError();

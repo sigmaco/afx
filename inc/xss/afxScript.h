@@ -19,7 +19,7 @@
 
 #include "qwadro/inc/ux/afxWidget.h"
 #include "qwadro/inc/ux/afxWindow.h"
-#include "qwadro/inc/ux/afxHid.h"
+#include "qwadro/inc/ux/hid/afxHid.h"
 
 // Add concept of environmental variables, such as $(name) -> value, to be used to form strings, paths, etc.
 

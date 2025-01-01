@@ -148,12 +148,4 @@ AFX afxError    AfxStoreSerializableExtensions(afxStream out, afxObject obj);
 AFX afxError    AfxLoadSerializedExtensions(afxStream in, urdMark const* hdr, afxObject obj);
 AFX afxError    AfxSkipSerializedExtensions(afxStream in, urdMark const* hdr);
 
-
-
-AFX afxBool AfxOpenUrdSegments(afxUrd urd, afxUnit firstSeg, afxUnit segCnt, afxStream in);
-
-AFX void    AfxCloseUrdSegments(afxUrd urd, afxUnit firstSeg, afxUnit segCnt);
-
-AFX void*   AfxResolveUrdReference(afxUrd urd, afxUrdOrigin const* ref);
-
 #endif//AFX_URD_H

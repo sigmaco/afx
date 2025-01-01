@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -18,6 +18,7 @@
 #define ASX_SOUND_DEFS_H
 
 #include "qwadro/inc/exec/afxSystem.h"
+#include "qwadro/inc/sim/afxSimulation.h"
 
 #ifndef __e2sound__
 #   ifdef _DEBUG
@@ -43,24 +44,35 @@
 
 //AFX_DEFINE_HANDLE(afxSoundSystem);
 AFX_DEFINE_HANDLE(afxSoundDevice);
-AFX_DEFINE_HANDLE(afxSoundContext);
+AFX_DEFINE_HANDLE(afxSoundSystem);
 AFX_DEFINE_HANDLE(afxSoundOutput);
+AFX_DEFINE_HANDLE(afxSink);
 AFX_DEFINE_HANDLE(afxSoundInput);
 AFX_DEFINE_HANDLE(afxSoundBridge);
 AFX_DEFINE_HANDLE(afxSoundQueue);
 AFX_DEFINE_HANDLE(asxBank);
 AFX_DEFINE_HANDLE(asxTracker);
+AFX_DEFINE_HANDLE(afxSubmix);
+AFX_DEFINE_HANDLE(afxBroker);
+AFX_DEFINE_HANDLE(afxMixer);
 AFX_DEFINE_HANDLE(afxWaveform);
+AFX_DEFINE_HANDLE(afxAudio);
 AFX_DEFINE_HANDLE(afxSound);
+AFX_DEFINE_HANDLE(afxAudient);
 
 typedef enum asxFormat
 // Sound sample formats.
 {
-    asxFormat_U8 = 1,// [0, 255]
-    asxFormat_S16, // [-32768, 32767]
-    asxFormat_S24, // [-8388608, 8388607]
-    asxFormat_S32, // [-2147483648, 2147483647]
-    asxFormat_F32  // [-1, 1]
+    asxFormat_A32f = 1, // 32-bit float amplitude sample [-1.f, 1.f]
+    asxFormat_S32f, // 32-bit float interleaved amplutide block [-1.f, 1.f]
+    asxFormat_A32i, // 32-bit signed int amplitude sample [-2147483648, 2147483647]
+    asxFormat_S32i, // 32-bit signed int interleaved amplutide block [-2147483648, 2147483647]
+    asxFormat_A24i, // 24-bit signed int amplitude sample [-8388608, 8388607]
+    asxFormat_S24i, // 24-bit signed int interleaved amplutide block [-8388608, 8388607]
+    asxFormat_A16i, // 16-bit signed int amplitude sample [-32768, 32767]
+    asxFormat_S16i, // 16-bit signed int interleaved amplutide block [-32768, 32767]
+    asxFormat_A8i,  // 8-bit amplitude sample [0, 255]
+    asxFormat_S8i  // 8-bit interleaved amplutide block [0, 255]
 } asxFormat;
 
 typedef enum asxCurveInterpolation
@@ -79,67 +91,5 @@ typedef enum asxCurveInterpolation
     asxCurveInterpolation_LastFadeCurve = 8, // update this value to reflect last curve available for fades
     asxCurveInterpolation_Constant = 9  // constant ( not valid for fading values )
 } asxCurveInterpolation;
-
-AFX_DEFINE_STRUCT(asxListener) // Listener information.
-{
-    afxTransform        pos;
-    afxReal32           scalingFactor;
-    afxBool             spatialized;
-};
-
-ASXINL void AsxResetListener(asxListener* lis)
-{
-    afxError err = NIL;
-    AFX_ASSERT(lis);
-    lis->scalingFactor = (afxReal32)1;
-    lis->spatialized = TRUE;
-}
-
-AFX_DEFINE_STRUCT(asxRamp) // volume ramp specified by end points "previous" and "next".
-{
-    afxReal32 prev;
-    afxReal32 next;
-};
-
-ASXINL void AsxSetRamp(asxRamp* ramp, afxReal prev, afxReal next)
-{
-    afxError err = NIL;
-    AFX_ASSERT(ramp);
-    ramp->prev = (afxReal32)prev;
-    ramp->next = (afxReal32)next;
-}
-
-ASXINL void AsxResetRamp(asxRamp* ramp)
-{
-    afxError err = NIL;
-    AFX_ASSERT(ramp);
-    AsxSetRamp(ramp, 1, 1);
-}
-
-ASXINL void AsxCopyRamp(asxRamp* ramp, asxRamp const* in)
-{
-    afxError err = NIL;
-    AFX_ASSERT(ramp);
-    AFX_ASSERT(in);
-    ramp->prev = in->prev;
-    ramp->next = in->next;
-}
-
-ASXINL void AsxScaleRamp(asxRamp* ramp, asxRamp const* rhs)
-{
-    afxError err = NIL;
-    AFX_ASSERT(ramp);
-    AFX_ASSERT(rhs);
-    ramp->prev *= rhs->prev;
-    ramp->next *= rhs->next;
-}
-
-ASXINL asxRamp AsxMergeRamps(asxRamp const* lhs, asxRamp const* rhs)
-{
-    asxRamp rslt;
-    AsxCopyRamp(&rslt, lhs);
-    AsxScaleRamp(&rslt, rhs);
-    return rslt;
-}
 
 #endif//ASX_SOUND_DEFS_H

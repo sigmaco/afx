@@ -46,7 +46,7 @@ AFX_OBJECT(afxDevice)
     afxUnit32            driverVer;
     afxUnit32            apiVer;
 
-    afxLinkage          icd;
+    afxLink          icd;
     afxString128        devName;
 
     afxChain            classes;
@@ -72,21 +72,46 @@ AFX_OBJECT(afxFence)
 #ifdef _AFX_MODULE_C
 AFX_OBJECT(afxModule)
 {
-    afxModuleType       type;
+    afxChain            classes;
+    afxModuleFlags      flags;
     afxUri128           path;
     void*               osHandle;
-    afxBool             hasBeenLoaded;
     afxBool             demangle;
 
     afxManifest         etc;
-    afxFlags            flags;
     afxChain            devices; // if it is a ICD, this chain interlinks each device provided by this driver.
     afxBool             attached;
-   
-    afxError(*icdHookFn)(afxModule, afxUri const*);
+
+    struct
+    {
+        afxError(*icdHookFn)(afxModule, afxUri const*); // initializes driver-wide data structures and resources.
+        afxError(*icdUnloadFn)(afxModule); // performs any operations that are necessary before the system unloads the driver.
+        afxByte icdCache[64];
+        void* icdData;
+
+        afxLink avx; // ICD attachment for AVX implementations
+        afxLink amx; // ICD attachment for AMX implementations
+        afxLink asx; // ICD attachment for ASX implementations
+        afxLink aux; // ICD attachment for AUX implementations
+
+        afxClass vduCls;
+        afxClass ddevCls;
+        afxClass dsysCls;
+
+        afxClass mdevCls;
+        afxClass simCls;
+
+        afxClass asiCls;
+        afxClass sdevCls;
+        afxClass ssysCls;
+
+        afxClass sshCls;
+        afxClass sesCls;
+        afxClass hidCls;
+    } icd;
 
     afxString           description;
-    afxUnit              verMajor, verMinor, verPatch, verBuild;
+    afxUnit             verMajor, verMinor, verPatch, verBuild;
     afxString           product;
     afxString           vendor;
     afxString           legal;
@@ -209,7 +234,7 @@ AFX_OBJECT(afxSystem)
     afxClass                cdcCls;
     afxClass                iosCls;
     afxClass                fsysCls;
-    afxClass                xexuCls;
+    afxClass                exuCls;
 
     afxUnit                  ptrSiz;
     afxBool                 bigEndian;
@@ -241,7 +266,7 @@ AFX_OBJECT(afxSystem)
     {
         afxBool             disabled;
         afxModule           e2drawDll;
-        afxClass            ddevCls;
+        afxChain            icdChain;
         afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
     }                       avx;
     // asx
@@ -249,7 +274,7 @@ AFX_OBJECT(afxSystem)
     {
         afxBool             disabled;
         afxModule           e2soundDll;
-        afxClass            sdevCls;
+        afxChain            icdChain;
         afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
     }                       asx;
     // amx
@@ -257,6 +282,7 @@ AFX_OBJECT(afxSystem)
     {
         afxBool             disabled;
         afxModule           e2simDll;
+        afxChain            icdChain;
         afxClass            mdevCls;
         afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
     }                       amx;
@@ -265,6 +291,7 @@ AFX_OBJECT(afxSystem)
     {
         afxBool             disabled;
         afxModule           e2mmuxDll;
+        afxChain            icdChain;
         afxClass            hidCls;
         afxClass            sshCls;
         afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
@@ -284,5 +311,22 @@ AFX_OBJECT(afxSystem)
 #endif//_AFX_SYSTEM_C
 
 AFX afxClassConfig const _AfxDevBaseImplementation;
+
+AFX afxClass*           AfxGetFenceClass(afxContext ctx);
+AFX afxClass*           AfxGetSemaphoreClass(afxContext ctx);
+
+AFX afxClassConfig const _AfxSemStdImplementation;
+AFX afxClassConfig const _AfxFencStdImplementation;
+
+AFX afxClass const*     AfxGetStreamClass(void);
+AFX afxClass*           AfxGetStorageClass(void);
+AFX afxClass*           AfxGetMmuClass(void);
+AFX afxClass*           AfxGetModuleClass(void);
+AFX afxClass*           AfxGetServiceClass(void);
+AFX afxClass*           AfxGetStringBaseClass(void);
+AFX afxClass*           AfxGetThreadClass(void);
+AFX afxClass const*     AfxGetDeviceClass(void);
+AFX afxClass const*     AfxGetIoBridgeClass(void);
+
 
 #endif//AFX_EXEC_IMPL_KIT_H

@@ -7,7 +7,7 @@
  *                 #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#
  *                 ###     ###     ### ###    ###  ########  ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "../../dev/AvxImplKit.h"
+#include "../impl/avxImplementation.h"
 #include "qwadro/inc/draw/io/afxTarga.h"
 
 static_assert(sizeof(avxFormat) == sizeof(afxUnit32), "");
@@ -213,14 +213,14 @@ void DecompressRleChunk(afxStream stream, afxUnit width, afxUnit height, afxUnit
         afxByte hdr;
         AfxReadStream(stream, sizeof(afxByte), 0, &hdr);
 
-        afxUnit i, runLen = (hdr & 0x7F) + 1;
+        afxUnit runLen = (hdr & 0x7F) + 1;
 
         if (hdr & 0x80) // high bit is set when it's a run-length packet.
         {
             afxByte buf[4];
             AfxReadStream(stream, sizeof(afxByte) * byteCnt, 0, buf);
 
-            for (i = 0; i < runLen; i++)
+            for (afxUnit i = 0; i < runLen; i++)
             {
                 AfxCopy2(&dst[currByte], buf, sizeof(afxByte), byteCnt);
                 currByte += byteCnt;
@@ -230,7 +230,7 @@ void DecompressRleChunk(afxStream stream, afxUnit width, afxUnit height, afxUnit
         {
             // Raw packet
 
-            for (i = 0; i < runLen; i++)
+            for (afxUnit i = 0; i < runLen; i++)
             {
                 AfxReadStream(stream, sizeof(afxByte) * byteCnt, 0, &dst[currByte]);
                 currByte += byteCnt;
@@ -264,7 +264,7 @@ void DecodeRle8(afxUnit w, afxUnit h, afxByte const* in, afxByte* out)
 _AVX afxError AfxWriteTarga(afxStream out, afxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, afxRasterFlags flags, afxUnit uddSiz, void const* udd)
 {
     afxError err = NIL;
-    AfxAssertObjects(1, &out, afxFcc_IOB);
+    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(!uddSiz || udd);
     AFX_ASSERT(iop);
     AFX_ASSERT(fmt);
@@ -294,7 +294,7 @@ _AVX afxError AfxWriteTarga(afxStream out, afxRasterIo* iop, afxUnit lodCnt, avx
     tgai.extFcc[1] = 'g';
     tgai.extFcc[2] = 'a';
     tgai.extFcc[3] = '4';
-    tgai.extLen = (AFX_TGA_HDR_SIZE - 18) + uddSiz2;
+    tgai.extLen = (AFX_TGA_HDR_SIZ + AFX_TGA_EXT_SIZ) + uddSiz2;
     tgai.palType = 0;
     tgai.imgType = 2;
     tgai.palBase = 0;
@@ -324,15 +324,15 @@ _AVX afxError AfxWriteTarga(afxStream out, afxRasterIo* iop, afxUnit lodCnt, avx
     //tgai.rowStride = tgai.rowStride > w ? tgai.rowStride : AFX_ALIGNED_SIZE(w, AFX_SIMD_ALIGNMENT);
     //tgai.rowsPerImg = tgai.rowsPerImg > h ? tgai.rowsPerImg : h;
 
-    tgai.dataOff = iop->offset + AFX_TGA_HDR_SIZE + uddSiz2;
+    tgai.dataOff = iop->offset + AFX_TGA_HDR_SIZ + AFX_TGA_EXT_SIZ + uddSiz2;
 
     if (uddSiz)
-        AfxCopy(tgai.udd, udd, AfxMin(uddSiz, AFX_TGA_UDD_SIZE));
+        AfxCopy(tgai.udd, udd, uddSiz2);
 
-    if (AfxWriteStream(out, AFX_TGA_HDR_SIZE + uddSiz2, 0, &tgai))
+    if (AfxWriteStream(out, AFX_TGA_HDR_SIZ + AFX_TGA_EXT_SIZ + uddSiz2, 0, &tgai))
         AfxThrowError();
 
-    AFX_ASSERT(AfxAskStreamPosn(out) == 64);
+    AFX_ASSERT(AfxAskStreamPosn(out) == 64 + uddSiz2);
 
     return err;
 }
@@ -345,15 +345,21 @@ _AVX afxError AfxReadTarga(afxStream in, afxTargaFile* info)
     afxBool legacy = TRUE;
 
     afxTargaFile tgai;
-    if (AfxReadStream(in, AFX_TGA_HDR_SIZE, 0, &tgai))
+    if (AfxReadStream(in, AFX_TGA_HDR_SIZ, 0, &tgai))
     {
         AfxThrowError();
         return err;
     }
 
-    if (tgai.extLen >= AFX_TGA_HDR_SIZE)
+    if (tgai.extLen >= AFX_TGA_EXT_SIZ)
     {
-        if (!((tgai.extFcc[0] == 't') && (tgai.extFcc[1] == 'g') && (tgai.extFcc[2] == 'a') && (tgai.extFcc[3] == '4')))
+        if (AfxReadStream(in, AFX_TGA_EXT_SIZ, 0, &tgai.extFcc[0]))
+        {
+            AfxThrowError();
+            return err;
+        }
+
+        if ((tgai.extFcc[0] != 't') || (tgai.extFcc[1] != 'g') || (tgai.extFcc[2] != 'a') || (tgai.extFcc[3] != '4'))
         {
             if (AfxAdvanceStream(in, tgai.extLen))
                 AfxThrowError();
@@ -375,15 +381,16 @@ _AVX afxError AfxReadTarga(afxStream in, afxTargaFile* info)
 
             info->dataOff = tgai.dataOff;
             info->codec = tgai.codec;
-            info->encSiz = tgai.encSiz;
-            info->decSiz = tgai.decSiz;
+            info->encodedSiz = tgai.encodedSiz;
+            info->decodedSiz = tgai.decodedSiz;
             info->rowStride = tgai.rowStride;
             info->rowsPerImg = tgai.rowsPerImg;
 
             legacy = FALSE;
         }
     }
-    else
+    
+    if (legacy)
     {
         *info = tgai;
 
@@ -401,8 +408,8 @@ _AVX afxError AfxReadTarga(afxStream in, afxTargaFile* info)
         info->rowStride = tgai.width;
         info->rowsPerImg = tgai.height;
         info->dataOff = AfxAskStreamPosn(in);
-        info->decSiz = 0;
-        info->encSiz = 0;
+        info->decodedSiz = 0;
+        info->encodedSiz = 0;
         info->codec = (tgai.imgType >= 9 && 11 <= tgai.imgType) ? afxTargaCodec_RLE8 : afxTargaCodec_NONE;
 
         afxUnit8 alphaBits = tgai.descriptor & 0x0F;
@@ -420,8 +427,8 @@ _AVX afxError AfxReadTarga(afxStream in, afxTargaFile* info)
 
             info->rowStride = rowStride;
             info->rowsPerImg = info->height;
-            info->decSiz = info->rowsPerImg * AFX_ALIGNED_SIZE(info->rowStride, AFX_SIMD_ALIGNMENT);
-            info->encSiz = info->rowsPerImg * info->rowStride;
+            info->decodedSiz = info->rowsPerImg * AFX_ALIGNED_SIZE(info->rowStride, AFX_SIMD_ALIGNMENT);
+            info->encodedSiz = info->rowsPerImg * info->rowStride;
             
             switch (tgai.bpp)
             {
@@ -446,8 +453,8 @@ _AVX afxError AfxReadTarga(afxStream in, afxTargaFile* info)
 
             info->rowStride = rowStride;
             info->rowsPerImg = info->height;
-            info->decSiz = info->rowsPerImg * AFX_ALIGNED_SIZE(info->rowStride, AFX_SIMD_ALIGNMENT);
-            info->encSiz = info->rowsPerImg * info->rowStride;
+            info->decodedSiz = info->rowsPerImg * AFX_ALIGNED_SIZE(info->rowStride, AFX_SIMD_ALIGNMENT);
+            info->encodedSiz = info->rowsPerImg * info->rowStride;
             
             switch (tgai.bpp)
             {
@@ -525,10 +532,12 @@ _AVX afxError AfxReadTarga(afxStream in, afxTargaFile* info)
 _AVX afxError AfxDecodeTarga(afxStream in, afxTargaFile const* meta, void* dst)
 {
     afxError err = NIL;
-    AfxAssertObjects(1, &in, afxFcc_IOB);
+    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(meta);
     AFX_ASSERT(meta->rowStride);
     AFX_ASSERT(meta->rowsPerImg);
+
+    AfxSeekStream(in, meta->dataOff, afxSeekOrigin_BEGIN);
 
     AFX_ASSERT(dst);
     afxByte *data = dst;
@@ -574,13 +583,13 @@ _AVX afxError AfxDecodeTarga(afxStream in, afxTargaFile const* meta, void* dst)
         afxUnit palPixStride = (AFX_ALIGNED_SIZE(meta->palBpp, AFX_BYTE_SIZE) / AFX_BYTE_SIZE);
         afxUnit wXh = meta->width * meta->height;
 
-        if (!(palette = AfxAllocate(meta->palSiz, palPixStride, AFX_SIMD_ALIGNMENT, AfxHere()))) AfxThrowError();
+        if (AfxAllocate(meta->palSiz * palPixStride, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&palette)) AfxThrowError();
         else
         {
             if (AfxReadStreamAt(in, meta->dataOff, meta->palSiz * palPixStride, 0, palette)) AfxThrowError();
             else
             {
-                if (!(indices = AfxAllocate(wXh, sizeof(afxByte), AFX_SIMD_ALIGNMENT, AfxHere()))) AfxThrowError();
+                if (AfxAllocate(wXh, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&indices)) AfxThrowError();
                 else
                 {
                     if (meta->imgType == 9) // TGA Type 9 refers to a compressed black and white image.
@@ -626,10 +635,10 @@ _AVX afxError AfxDecodeTarga(afxStream in, afxTargaFile const* meta, void* dst)
                     default: AfxThrowError(); break;
                     }
 
-                    AfxDeallocate(indices);
+                    AfxDeallocate((void**)&indices, AfxHere());
                 }
             }
-            AfxDeallocate(palette);
+            AfxDeallocate((void**)&palette, AfxHere());
         }
         break;
     }

@@ -25,7 +25,7 @@
 _AFX void* AfxGetSemaphoreContext(afxSemaphore sem)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sem, afxFcc_SEM);
+    AFX_ASSERT_OBJECTS(afxFcc_SEM, 1, &sem);
     void* ctx = AfxGetProvider(sem);
     //AfxAssertObjects(1, &ctx, afxFcc_CTX);
     return ctx;
@@ -34,7 +34,7 @@ _AFX void* AfxGetSemaphoreContext(afxSemaphore sem)
 _AFX afxError _AfxSemStdDtor(afxSemaphore sem)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sem, afxFcc_SEM);
+    AFX_ASSERT_OBJECTS(afxFcc_SEM, 1, &sem);
 
     sem->value = NIL;
 
@@ -44,7 +44,7 @@ _AFX afxError _AfxSemStdDtor(afxSemaphore sem)
 _AFX afxError _AfxSemStdCtor(afxSemaphore sem, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sem, afxFcc_SEM);
+    AFX_ASSERT_OBJECTS(afxFcc_SEM, 1, &sem);
 
     sem->value = NIL;
 
@@ -67,12 +67,12 @@ _AFX afxClassConfig const _AfxSemStdImplementation =
 _AFX afxError AfxAcquireSemaphores(void* ctx, afxUnit cnt, afxSemaphore semaphores[])
 {
     afxError err = AFX_ERR_NONE;
-    //AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    //AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(cnt);
     AFX_ASSERT(semaphores);
 
     afxClass* cls = AfxGetSemaphoreClass(ctx);
-    AfxAssertClass(cls, afxFcc_SEM);
+    AFX_ASSERT_CLASS(cls, afxFcc_SEM);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)semaphores, (void const*[]) { ctx }))
         AfxThrowError();

@@ -21,7 +21,7 @@
 _AFX afxError AfxDoService(afxService svc, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &svc, afxFcc_SVC);
+    AFX_ASSERT_OBJECTS(afxFcc_SVC, 1, &svc);
 
     return err;
 }
@@ -87,7 +87,7 @@ _AFX void RequestJobWorker(afxWorkerFn in_fnJobWorker, afxJobType jobType, afxUn
 _AFX afxError _AfxSvcDtor(afxService svc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &svc, afxFcc_SVC);
+    AFX_ASSERT_OBJECTS(afxFcc_SVC, 1, &svc);
 
     if (svc->workers)
     {
@@ -103,10 +103,10 @@ _AFX afxError _AfxSvcDtor(afxService svc)
         {
             afxResult exitCode;
             AfxWaitForThreadExit(svc->workers[i].thr, &exitCode);
-            AfxReleaseObjects(1, (void*)&svc->workers[i].thr);
+            AfxDisposeObjects(1, (void*)&svc->workers[i].thr);
         }
 
-        AfxDeallocate(svc->workers);
+        AfxDeallocate((void**)&svc->workers, AfxHere());
         svc->workers = NIL;
     }
     AfxDismantleInterlockedQueue(&svc->jobTypeQue);
@@ -117,7 +117,7 @@ _AFX afxError _AfxSvcDtor(afxService svc)
 _AFX afxError _AfxSvcCtor(afxService svc, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &svc, afxFcc_SVC);
+    AFX_ASSERT_OBJECTS(afxFcc_SVC, 1, &svc);
 
     afxServiceConfig const *config = ((afxServiceConfig const *)args[1]) + invokeNo;
     afxUnit workerThrCnt = 1;
@@ -133,7 +133,7 @@ _AFX afxError _AfxSvcCtor(afxService svc, void** args, afxUnit invokeNo)
     if (AfxDeployInterlockedQueue(&svc->jobTypeQue, sizeof(afxJobType), uNumEntries)) AfxThrowError();
     else
     {
-        if (!(svc->workers = AfxAllocate(workerThrCnt, sizeof(svc->workers[0]), 0, AfxHere()))) AfxThrowError();
+        if (AfxAllocate(workerThrCnt * sizeof(svc->workers[0]), 0, AfxHere(), (void**)&svc->workers)) AfxThrowError();
         else
         {
             AfxZero2(svc->workers, sizeof(svc->workers[0]), workerThrCnt);
@@ -177,12 +177,12 @@ _AFX afxError AfxAcquireServices(afxUnit cnt, afxServiceConfig const config[], a
 {
     afxError err = AFX_ERR_NONE;
     afxClass* cls = AfxGetServiceClass();
-    AfxAssertClass(cls, afxFcc_SVC);
+    AFX_ASSERT_CLASS(cls, afxFcc_SVC);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)services, (void const*[]) { NIL, (void*)config }))
         AfxThrowError();
 
-    AfxAssertObjects(cnt, services, afxFcc_SVC);
+    AFX_ASSERT_OBJECTS(afxFcc_SVC, cnt, services);
 
     return err;
 }

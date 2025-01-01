@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -43,46 +43,46 @@ typedef enum avxShaderParam
 
 AFX_DEFINE_STRUCT(avxShaderResource)
 {
-    afxUnit              set;
-    afxUnit              binding;
-    avxShaderParam    type;
-    afxUnit              cnt;
-    afxString16         name; // 16
+    afxUnit         set;
+    afxUnit         binding;
+    avxShaderParam  type;
+    afxUnit         cnt;
+    afxString16     name; // 16
 };
 
 AFX_DEFINE_STRUCT(avxShaderIoChannel)
 {
-    afxString8          semantic;
-    afxUnit              location; /// is the shader input location number for this attribute or output location for this channel.
-    afxVertexFormat     fmt; /// is the size and type of the vertex attribute data or color data.
+    afxString16     semantic;
+    afxUnit         location; /// is the shader input location number for this attribute or output location for this channel.
+    avxFormat       fmt; /// is the size and type of the vertex attribute data or color data.
 };
 
 AFX_DEFINE_STRUCT(avxShaderConfig)
 {
-    afxUri              uri;
-    afxString           code;
-    afxUnit              verMajor;
-    afxUnit              verMinor;
-    afxBool             extended;
+    afxUri          uri;
+    afxString       code;
+    afxUnit         verMajor;
+    afxUnit         verMinor;
+    afxBool         extended;
 };
 
-AVX avxShaderStage      AfxGetShaderStage(avxShader shd);
+AVX avxShaderStage  AfxGetShaderStage(avxShader shd);
 
-AVX afxUnit              AfxCountShaderIoChannels(avxShader shd);
-AVX afxUnit              AfxGetShaderIoChannels(avxShader shd, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[]);
+AVX afxUnit         AfxCountShaderIoChannels(avxShader shd);
+AVX afxUnit         AfxGetShaderIoChannels(avxShader shd, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[]);
 
-AVX afxUnit              AfxCountShaderInterfaces(avxShader shd);
-AVX afxResult           AfxDescribeShaderInterfaces(avxShader shd, afxUnit first, afxUnit cnt, avxShaderResource rsrc[]);
+AVX afxUnit         AfxCountShaderInterfaces(avxShader shd);
+AVX afxResult       AfxDescribeShaderInterfaces(avxShader shd, afxUnit first, afxUnit cnt, avxShaderResource rsrc[]);
 
-AVX afxBool             AfxShaderIsDummy(avxShader shd);
+AVX afxBool         AfxShaderIsDummy(avxShader shd);
 
-AVX afxError            AfxDumpShaderCode(avxShader shd, afxArray* arr);
+AVX afxError        AfxDumpShaderCode(avxShader shd, afxArray* arr);
 
-AVX afxError            AfxPrintShader(avxShader shd, afxUri const *uri);
-AVX afxError            AfxSerializeShader(avxShader shd, afxStream ios);
+AVX afxError        AfxPrintShader(avxShader shd, afxUri const *uri);
+AVX afxError        AfxSerializeShader(avxShader shd, afxStream ios);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError            AfxAcquireShaders(afxDrawContext dctx, afxUnit cnt, afxUri const uris[], afxString const codes[], avxShader shaders[]);
+AVX afxError        AfxAcquireShaders(afxDrawSystem dsys, afxUnit cnt, afxUri const uris[], afxString const codes[], avxShader shaders[]);
 
 #endif//AVX_SHADER_H

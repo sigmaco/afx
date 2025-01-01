@@ -104,7 +104,7 @@ _AFX afxError _AfxResDtor(afxResource res)
     AfxAssertObject(res, afxFcc_RES);
 
     if (res->monitor.chain)
-        AfxPopLinkage(&res->monitor);
+        AfxPopLink(&res->monitor);
 
     return err;
 }
@@ -134,7 +134,7 @@ _AFX afxError _AfxResCtor(void *cache, afxUnit idx, afxResource res, afxResource
     res->lastUpdTime = 0;
     res->lastReqTime = 0;
 
-    AfxPushLinkage(&res->monitor, NIL);
+    AfxPushLink(&res->monitor, NIL);
     
     return err;
 }

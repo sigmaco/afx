@@ -74,7 +74,12 @@ AFX_DEFINE_STRUCT(afxPlatformConfig)
 AFX_CALLBACK(void*, afxReallocatorFn)(void*, afxSize align, afxSize siz, afxChar const* __file__, afxUnit __line__);
 
 AFX_DEFINE_STRUCT(afxSystemConfig)
+// The system-wide settings and parameters.
 {
+    afxUnit                 verMajor;
+    afxUnit                 verMinor;
+    afxUnit                 verPatch;
+
     afxIoBridgeConfig       mainIoBridge;
     afxSize                 maxMemUsage;
     afxUnit                 memPageSiz;
@@ -100,6 +105,8 @@ AFX_DEFINE_STRUCT(afxSystemConfig)
     afxBool                 avxDisabled;
     afxBool                 asxDisabled;
     afxBool                 auxDisabled;
+
+    afxChar const*          appId; // a 32-byte long unique identifier for the application.
 };
 
 // Perform a Qwadro bootstrap.
@@ -136,17 +143,6 @@ AFX afxUnit32           AfxGetPrimeTid(void);
 // Adds the event event, with the object receiver as the receiver of the event, to an event queue and returns immediately.
 
 AFX afxBool             AfxEmitEvent(afxObject receiver, afxEvent* ev);
-
-AFX afxClass const*     AfxGetStreamClass(void);
-AFX afxClass*           AfxGetStorageClass(void);
-AFX afxClass*           AfxGetMmuClass(void);
-AFX afxClass*           AfxGetModuleClass(void);
-AFX afxClass*           AfxGetServiceClass(void);
-AFX afxClass*           AfxGetStringBaseClass(void);
-AFX afxClass*           AfxGetThreadClass(void);
-AFX afxClass const*     AfxGetDeviceClass(void);
-AFX afxClass const*     AfxGetIoBridgeClass(void);
-
 
 AFX afxUnit              AfxCountDevices(afxDeviceType type);
 

@@ -19,13 +19,13 @@
 
 AFX_STATIC_ASSERT(sizeof(mtx_t) <= sizeof(afxMutex), "");
 
-_AFX void AfxCleanUpMutex(afxMutex* mtx)
+_AFX void AfxDismantleMutex(afxMutex* mtx)
 {
     afxError err = AFX_ERR_NONE;
     mtx_destroy((mtx_t*)mtx);
 }
 
-_AFX afxError AfxSetUpMutex(afxMutex* mtx, afxMutexType type)
+_AFX afxError AfxDeployMutex(afxMutex* mtx, afxMutexType type)
 {
     afxError err = AFX_ERR_NONE;
 

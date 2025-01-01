@@ -54,7 +54,7 @@ _AFX afxClass* _AfxGetSysMgr(void)
     
     if (sysCls.fcc != afxFcc_CLS)
     {
-        AfxRegisterClass(&sysCls, NIL, NIL, &sysClsCfg);
+        AfxMountClass(&sysCls, NIL, NIL, &sysClsCfg);
     }
     return &sysCls;
 }
@@ -73,7 +73,7 @@ _AFX afxUnit32 AfxGetPrimeTid(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     return sys->primeTid;
 }
 
@@ -82,9 +82,9 @@ _AFX afxBool AfxGetPrimeThread(afxThread* thread)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxThread thr = sys->primeThr;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
+    AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     *thread = thr;
     return !!thr;
 }
@@ -101,7 +101,7 @@ _AFX afxUnit AfxGetIoBufferSize(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     return sys->ioBufSiz;
 }
 
@@ -111,7 +111,7 @@ _AFX afxUnit AfxGetMemoryPageSize(void)
     afxSystem sys;
     if (AfxGetSystem(&sys))
     {
-        AfxAssertObjects(1, &sys, afxFcc_SYS);
+        AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     }
     return sys ? sys->memPageSiz : 0;
 }
@@ -121,7 +121,7 @@ _AFX afxUnit AfxGetThreadingCapacity(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     return sys->hwThreadingCap;
 }
 
@@ -130,9 +130,9 @@ _AFX afxClass const* AfxGetIoBridgeClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass const* cls = &sys->xexuCls;
-    AfxAssertClass(cls, afxFcc_XEXU);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass const* cls = &sys->exuCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_EXU);
     return cls;
 }
 
@@ -141,9 +141,9 @@ _AFX afxClass const* AfxGetStreamClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass const* cls = &sys->iosCls;
-    AfxAssertClass(cls, afxFcc_IOB);
+    AFX_ASSERT_CLASS(cls, afxFcc_IOB);
     return cls;
 }
 
@@ -152,9 +152,9 @@ _AFX afxClass* AfxGetStorageClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->fsysCls;
-    AfxAssertClass(cls, afxFcc_FSYS);
+    AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
     return cls;
 }
 
@@ -163,9 +163,9 @@ _AFX afxClass* AfxGetServiceClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->svcCls;
-    AfxAssertClass(cls, afxFcc_SVC);
+    AFX_ASSERT_CLASS(cls, afxFcc_SVC);
     return cls;
 }
 
@@ -174,9 +174,9 @@ _AFX afxClass* AfxGetThreadClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->thrCls;
-    AfxAssertClass(cls, afxFcc_THR);
+    AFX_ASSERT_CLASS(cls, afxFcc_THR);
     return cls;
 }
 
@@ -185,9 +185,9 @@ _AFX afxClass* AfxGetStringBaseClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->strbCls;
-    AfxAssertClass(cls, afxFcc_STRB);
+    AFX_ASSERT_CLASS(cls, afxFcc_STRB);
     return cls;
 }
 
@@ -196,9 +196,9 @@ _AFX afxClass* AfxGetMmuClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->mmuCls;
-    AfxAssertClass(cls, afxFcc_MMU);
+    AFX_ASSERT_CLASS(cls, afxFcc_MMU);
     return cls;
 }
 
@@ -207,9 +207,9 @@ _AFX afxClass* AfxGetModuleClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->mdleCls;
-    AfxAssertClass(cls, afxFcc_MDLE);
+    AFX_ASSERT_CLASS(cls, afxFcc_MDLE);
     return cls;
 }
 
@@ -218,9 +218,9 @@ _AFX afxClass const* AfxGetDeviceClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass const* cls = &sys->devCls;
-    AfxAssertClass(cls, afxFcc_DEV);
+    AFX_ASSERT_CLASS(cls, afxFcc_DEV);
     return cls;
 }
 
@@ -229,7 +229,7 @@ _AFX afxUri const* AfxGetSystemDirectory(afxUri *dst)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxUri const* qwd = &sys->qwd.uri;
     return dst ? AfxCopyUri(dst, qwd), dst : qwd;
 }
@@ -239,7 +239,7 @@ _AFX afxString const* AfxGetSystemDirectoryString(afxString *dst)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxString const* qwd = AfxGetUriString(&sys->qwd.uri);
     return dst ? AfxCopyString(dst, qwd), dst : qwd;
 }
@@ -249,7 +249,7 @@ _AFX afxUri const* AfxGetPwd(afxUri *dst)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxUri const* pwd = &sys->pwd.uri;
     return dst ? AfxCopyUri(dst, pwd), dst : pwd;
 }
@@ -259,7 +259,7 @@ _AFX afxString const* AfxGetPwdString(afxString *dst)
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxString const* pwd = AfxGetUriString(&sys->pwd.uri);
     return dst ? AfxCopyString(dst, pwd), dst : pwd;
 }
@@ -272,7 +272,7 @@ _AFX void AfxRequestShutdown(afxInt exitCode)
     if (!AfxGetSystem(&sys)) AfxThrowError();
     else
     {
-        AfxAssertObjects(1, &sys, afxFcc_SYS);
+        AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
         //_AfxInterruptionAllThreads(exitCode);
         sys->exitCode = exitCode;
         sys->isInShutdown = TRUE;
@@ -286,7 +286,7 @@ _AFX afxBool AfxSystemIsExecuting(void)
 
     if (AfxGetSystem(&sys))
     {
-        AfxAssertObjects(1, &sys, afxFcc_SYS);
+        AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
         return sys->operating && !sys->isInShutdown;
     }
     return FALSE;
@@ -318,7 +318,7 @@ _AFX afxBool AfxEmitEvent(afxObject receiver, afxEvent* ev)
 _AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     usysReady = FALSE;
 #if 0
@@ -329,8 +329,8 @@ _AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
 #endif
     if (sys->aux.e2mmuxDll)
     {
-        AfxAssertObjects(1, &sys->aux.e2mmuxDll, afxFcc_MDLE);
-        AfxReleaseObjects(1, &sys->aux.e2mmuxDll);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->aux.e2mmuxDll);
+        AfxDisposeObjects(1, &sys->aux.e2mmuxDll);
     }
     //AfxZero(&sys->aux, sizeof(sys->aux));
 
@@ -343,8 +343,8 @@ _AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
 #endif
     if (sys->asx.e2soundDll)
     {
-        AfxAssertObjects(1, &sys->asx.e2soundDll, afxFcc_MDLE);
-        AfxReleaseObjects(1, &sys->asx.e2soundDll);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->asx.e2soundDll);
+        AfxDisposeObjects(1, &sys->asx.e2soundDll);
     }
     //AfxZero(&sys->asx, sizeof(sys->asx));
 
@@ -357,8 +357,8 @@ _AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
 #endif
     if (sys->amx.e2simDll)
     {
-        AfxAssertObjects(1, &sys->amx.e2simDll, afxFcc_MDLE);
-        AfxReleaseObjects(1, &sys->amx.e2simDll);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->amx.e2simDll);
+        AfxDisposeObjects(1, &sys->amx.e2simDll);
     }
     //AfxZero(&sys->amx, sizeof(sys->amx));
 #if 0
@@ -369,8 +369,8 @@ _AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
 #endif
     if (sys->avx.e2drawDll)
     {
-        AfxAssertObjects(1, &sys->avx.e2drawDll, afxFcc_MDLE);
-        AfxReleaseObjects(1, &sys->avx.e2drawDll);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->avx.e2drawDll);
+        AfxDisposeObjects(1, &sys->avx.e2drawDll);
     }
 
     //AfxZero(&sys->avx, sizeof(sys->avx));
@@ -441,7 +441,7 @@ _AFX afxBool _AfxParseDriverManifestCb(afxSystem sys, afxUri const* manifestUri)
     return TRUE;
 }
 
-_AFX afxBool _AfxLoadAndAttachIcd(void* udd, afxUri const* path, afxUri const* osPath)
+_AFX afxBool _AfxLoadAndAttachIcd(void* udd, afxUnit diskId, afxUnit endpointIdx, afxUri const* path, afxUri const* osPath)
 {
     afxError err = AFX_ERR_NONE;
     afxBool next = TRUE;
@@ -493,7 +493,7 @@ _AFX afxBool _AfxLoadAndAttachIcd(void* udd, afxUri const* path, afxUri const* o
 _AFX afxError _AfxScanIcdManifests(afxSystem sys, afxManifest const* sysIni)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     afxUri fileMask;
     AfxMakeUri(&fileMask, 0, "//./z/*.inf", 0);
@@ -553,7 +553,7 @@ _AFX afxError _AfxScanIcdManifests(afxSystem sys, afxManifest const* sysIni)
             AfxDismantleManifest(&ini);
         }
         while (AfxFindNextFile(file));
-        AfxReleaseObjects(1, &file);
+        AfxDisposeObjects(1, &file);
     }
 #endif
     //AfxForEachUriResolution(afxFileFlag_R, &fileMask, (void*)_AfxParseDriverManifestCb, sys);
@@ -563,11 +563,13 @@ _AFX afxError _AfxScanIcdManifests(afxSystem sys, afxManifest const* sysIni)
 _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     if (!(sys->avx.disabled))
     {
         //AfxDbgLogf(6, NIL, "Doing the AVX start up...");
+
+        AfxDeployChain(&sys->avx.icdChain, sys);
 
         afxUri uri;
         AfxMakeUri(&uri, 0, "e2draw", 0);
@@ -576,7 +578,7 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
         if (AfxLoadModule(&uri, AFX_BIT(8), &e2drawDll)) AfxThrowError();
         else
         {
-            AfxAssertObjects(1, &e2drawDll, afxFcc_MDLE);
+            AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2drawDll);
             sys->avx.e2drawDll = e2drawDll;
 
             afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2drawDll, "afxScmHook");
@@ -603,7 +605,7 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
 #endif
             if (err)
             {
-                AfxReleaseObjects(1, &sys->avx.e2drawDll);
+                AfxDisposeObjects(1, &sys->avx.e2drawDll);
                 sys->avx.e2drawDll = NIL;
             }
         }
@@ -613,6 +615,8 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
     {
         //AfxDbgLogf(6, NIL, "Doing the AMX start up...");
 
+        AfxDeployChain(&sys->amx.icdChain, sys);
+
         afxUri uri;
         AfxMakeUri(&uri, 0, "e2combo", 0);
         afxModule e2simDll = NIL;
@@ -620,7 +624,7 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
         if (AfxLoadModule(&uri, AFX_BIT(8), &e2simDll)) AfxThrowError();
         else
         {
-            AfxAssertObjects(1, &e2simDll, afxFcc_MDLE);
+            AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2simDll);
             sys->amx.e2simDll = e2simDll;
 
             afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2simDll, "afxScmHook");
@@ -647,7 +651,7 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
 #endif
             if (err)
             {
-                AfxReleaseObjects(1, &sys->amx.e2simDll);
+                AfxDisposeObjects(1, &sys->amx.e2simDll);
                 sys->amx.e2simDll = NIL;
             }
         }
@@ -656,6 +660,8 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
     if (!(sys->asx.disabled))
     {
         //AfxDbgLogf(6, NIL, "Doing the ASX start up...");
+        
+        AfxDeployChain(&sys->asx.icdChain, sys);
 
         afxUri uri;
         AfxMakeUri(&uri, 0, "e2sound", 0);
@@ -664,7 +670,7 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
         if (AfxLoadModule(&uri, AFX_BIT(8), &e2soundDll)) AfxThrowError();
         else
         {
-            AfxAssertObjects(1, &e2soundDll, afxFcc_MDLE);
+            AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2soundDll);
             sys->asx.e2soundDll = e2soundDll;
 
             afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2soundDll, "afxScmHook");
@@ -691,7 +697,7 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
 #endif
             if (err)
             {
-                AfxReleaseObjects(1, &sys->asx.e2soundDll);
+                AfxDisposeObjects(1, &sys->asx.e2soundDll);
                 sys->asx.e2soundDll = NIL;
             }
         }
@@ -701,6 +707,8 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
     {
         //AfxDbgLogf(6, NIL, "Doing the AUX start up...");
 
+        AfxDeployChain(&sys->aux.icdChain, sys);
+
         afxUri uri;
         AfxMakeUri(&uri, 0, "e2mmux", 0);
         afxModule e2mmuxDll = NIL;
@@ -708,7 +716,7 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
         if (AfxLoadModule(&uri, AFX_BIT(8), &e2mmuxDll)) AfxThrowError();
         else
         {
-            AfxAssertObjects(1, &e2mmuxDll, afxFcc_MDLE);
+            AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2mmuxDll);
             sys->aux.e2mmuxDll = e2mmuxDll;
 
             afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2mmuxDll, "afxScmHook");
@@ -735,7 +743,7 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
 #endif
             if (err)
             {
-                AfxReleaseObjects(1, &sys->aux.e2mmuxDll);
+                AfxDisposeObjects(1, &sys->aux.e2mmuxDll);
                 sys->aux.e2mmuxDll = NIL;
             }
         }
@@ -772,14 +780,14 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
             //TheSystem = malloc(sizeof(afxObjectBase) + sizeof(TheSystem[0]));
 
             afxClass* cls = _AfxGetSysMgr();
-            AfxAssertClass(cls, afxFcc_SYS);
+            AFX_ASSERT_CLASS(cls, afxFcc_SYS);
 
             if (_AfxConstructObjects(cls, 1, (void**)&TheSystem, (void*[]) { &ini, (void*)config })) AfxThrowError();
             else
             {
                 AFX_ASSERT(TheSystem != sys); // Attention! Ctor moves the object pointer to hide out the object base.
                 sys = TheSystem;
-                AfxAssertObjects(1, &sys, afxFcc_SYS);
+                AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
                 AfxLogY("Memory page Size: %d", sys->memPageSiz);
                 AfxLogY("HW threading: %d", sys->hwThreadingCap);
@@ -874,7 +882,7 @@ _AFX void AfxDoSystemShutdown(afxInt exitCode)
             AfxThrowError();
 
         afxClass* cls = _AfxGetSysMgr();
-        AfxAssertClass(cls, afxFcc_SYS);
+        AFX_ASSERT_CLASS(cls, afxFcc_SYS);
 
         AFX_ASSERT(TheSystem == sys);
 
@@ -883,7 +891,7 @@ _AFX void AfxDoSystemShutdown(afxInt exitCode)
 
         AFX_ASSERT(TheSystem != sys); // Attention! Dtor moves the object pointer to expose the object hdr.
         AfxZero(TheSystem, sizeof(afxObjectBase));
-        AfxDeregisterClass(cls);
+        AfxDismountClass(cls);
     }
 #ifndef _AFX_DISABLE_DEBUGGER
     _AfxDbgDetach();

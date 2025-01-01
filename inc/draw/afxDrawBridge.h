@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -17,7 +17,7 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /// No QWADRO, uma fila é dividida em duas partes, afxDrawInput na vanguarda e afxDrawBridge na retaguarda.
-/// Ao criar um afxDrawContext, necessariamente ao menos uma afxDrawBridge foi criada consequentemente e associado ao mesmo.
+/// Ao criar um afxDrawSystem, necessariamente ao menos uma afxDrawBridge foi criada consequentemente e associado ao mesmo.
 /// Isto porque, no QWADRO, você não executa as operações de desenho. Ao invés, você submete elas a serem processadas através de um afxDrawInput.
 /// Uma afxDrawBridge livre, por sua vez, e que pode realizar determinada operação submetida, então puxará a submissão.
 
@@ -59,219 +59,109 @@
 #include "qwadro/inc/draw/io/afxRaster.h"
 #include "qwadro/inc/draw/io/afxBuffer.h"
 
-typedef enum afxDrawBridgeFlag
+typedef enum afxDrawPortFlag
 {
-    afxDrawBridgeFlag_DRAW      = AFX_BIT(0), // supports draw ops
-    afxDrawBridgeFlag_DRAW_AUX  = AFX_BIT(1), // supports auxiliary draw ops (but can't perform a entire draw pipeline execution)
-    afxDrawBridgeFlag_COMPUTE   = AFX_BIT(2), // supports compute ops
-    afxDrawBridgeFlag_TRANSFER  = AFX_BIT(3), // supports transfer ops
-    afxDrawBridgeFlag_VHS       = AFX_BIT(4), // supports VHS enc/dec
-} afxDrawBridgeFlags;
+    afxDrawPortFlag_DRAW      = AFX_BIT(0), // supports draw ops
+    afxDrawPortFlag_COMPUTE   = AFX_BIT(1), // supports compute ops
+    afxDrawPortFlag_TRANSFER  = AFX_BIT(2), // supports transfer ops
+    afxDrawPortFlag_DRAW_AUX  = AFX_BIT(3), // supports auxiliary draw ops (but can't perform a entire draw pipeline execution)
+    afxDrawPortFlag_VHS       = AFX_BIT(4), // supports VHS enc/dec
+} afxDrawPortFlags;
 
 AFX_DEFINE_STRUCT(afxDrawPortCaps)
 {
-    afxDrawBridgeFlags  flags;
+    afxDrawPortFlags    capabilities;
+    afxAcceleration     acceleration;
     afxUnit             minQueCnt; // usually 3
     afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
-    afxAcceleration     acceleration;
-
-    afxBool8            draw;
-    afxBool8            compute;
-    afxBool8            transfer;
-    afxBool8            present;
-    afxBool8            encode;
-    afxBool8            decode;
 };
 
 AFX_DEFINE_STRUCT(afxDrawBridgeConfig)
 {
-    afxUnit             portId;
+    afxUnit             ddevId;
+    afxDrawPortFlags    capabilities; // specifies capabilities of queues in a port.
+    afxAcceleration     acceleration;
     afxUnit             minQueCnt;
     afxReal const*      queuePriority;
 };
 
-typedef enum
-{
-    avxQueueOp_WORK = 1,
-    avxQueueOp_PRESENT,
-    avxQueueOp_TRANSFER,
-    avxQueueOp_MAPPING
-} avxQueueOpType;
-
 AFX_DEFINE_STRUCT(avxSubmission)
 {
-    afxUnit             portId;
     afxUnit             exuIdx;
-    afxUnit             exuCnt;
-    afxUnit             queIdx;
+    afxUnit             baseQueIdx;
     afxUnit             queCnt;
 
     afxFlags            flags;
     afxSemaphore        waitSems;
-    afxUnit64            waitValues;
+    afxUnit64           waitValues;
     avxPipelineStage    waitStageMasks;
-    afxUnit32            waitReserveds;
+    afxUnit32           waitReserveds;
     afxSemaphore        signalSems;
-    afxUnit64            signalValues;
+    afxUnit64           signalValues;
     avxPipelineStage    signalStageMasks;
-    afxUnit32            signalReserveds;
+    afxUnit32           signalReserveds;
     afxFence            fence;
 };
 
 AFX_DEFINE_STRUCT(avxPresentation)
 {
-    afxUnit             portId;
-    afxUnit             exuIdx;
-    afxUnit             exuCnt;
-    afxUnit             queIdx;
-    afxUnit             queCnt;
-    afxSemaphore        wait;
+    afxUnit         exuIdx;
+    afxUnit         baseQueIdx;
+    afxUnit         queCnt;
+    afxSemaphore    wait;
 };
 
 AFX_DEFINE_STRUCT(avxTransference)
 {
-    afxUnit             portIdx;
-    afxUnit             baseQueIdx;
-    afxUnit             queCnt;
+    afxUnit         exuIdx;
+    afxUnit         baseQueIdx;
+    afxUnit         queCnt;
 
-    afxSemaphore        wait;
-    afxSemaphore        signal;
-    afxFence            fence;
+    afxSemaphore    wait;
+    afxSemaphore    signal;
+    afxFence        fence;
 
-    afxFcc              srcFcc;
-    afxFcc              dstFcc;
-    afxCodec            codec;
-    afxUnit             encSiz;
-    afxUnit             decSiz;
     union
     {
-        struct
-        {
-            afxRaster       ras;
-            //afxRasterIo     op;
-            union
-            {
-                void*       dst;
-                void const* src;
-                afxBuffer   buf;
-                afxStream   iob;
-            };
-        }                   img;
-        struct
-        {
-            afxBuffer       buf;
-            //afxBufferIo     op;
-            union
-            {
-                void*       dst;
-                void const* src;
-                afxStream   iob;
-            };
-        }                   data;
-    };
+        afxRaster   ras;
+        afxBuffer   buf;
+        void*       dst;
+        void const* src;
+        afxStream   iob;
+    }               src;
+    afxFcc          srcFcc;
+    union
+    {
+        afxRaster   ras;
+        afxBuffer   buf;
+        void*       dst;
+        void const* src;
+        afxStream   iob;
+    }               dst;
+    afxFcc          dstFcc;
+
+    afxCodec        codec;
+    afxUnit         encSiz;
+    afxUnit         decSiz;
 };
 
-AFX_DEFINE_UNION(avxQueueOpData)
-{
-    struct
-    {
-        afxFlags            flags;
-        afxUnit             waitCnt;
-        afxSemaphore        waitSems[4];
-        afxUnit64            waitValues[4];
-        avxPipelineStage    waitStageMasks[4];
-        afxUnit32            waitReserveds[4];
-        afxUnit             cmdbCnt;
-        avxCmdb             cmdbs[4];
-        afxUnit             signalCnt;
-        afxSemaphore        signalSems[4];
-        afxUnit64            signalValues[4];
-        avxPipelineStage    signalStageMasks[4];
-        afxUnit32            signalReserveds[4];
-        afxFence            fence;
-    }                       work;
-    struct
-    {
-        afxUnit         waitCnt;
-        afxSemaphore    waits[4];
-        afxUnit         bufCnt;
-        afxDrawOutput   outputs[4];
-        afxUnit         buffers[4];
-        afxResult       results[4];
-    }                   present;
-    struct
-    {
-        union
-        {
-            struct
-            {
-                afxRaster       ras;
-                afxRasterIo     op;
-                union
-                {
-                    void*       dst;
-                    void const* src;
-                    afxBuffer   buf;
-                    afxStream   iob;
-                };
-            }                   img;
-            struct
-            {
-                afxBuffer       buf;
-                afxBufferIo     op;
-                union
-                {
-                    void*       dst;
-                    void const* src;
-                    afxStream   iob;
-                };
-            }                   data;
-        };
-        afxFcc              srcFcc;
-        afxFcc              dstFcc;
-        afxCodec            codec;
-        afxUnit             decompressedSiz;
-        afxUnit             waitCnt;
-        afxSemaphore        waits[4];
-        afxUnit             signalCnt;
-        afxSemaphore        signals[4];
-        afxFence            fence;
-    } transfer;
-    struct
-    {
-        afxBuffer           buf;
-        afxSize             off;
-        afxUnit             ran;
-        afxFlags            flags;
-    } map;
-};
+AVX afxDrawDevice   AfxGetDrawBridgeDevice(afxDrawBridge dexu);
+AVX afxDrawSystem   AfxGetDrawBridgeContext(afxDrawBridge dexu);
 
-AFX_DEFINE_STRUCT(avxQueueOp)
-{
-    afxUnit             submType;
-    afxError            (*f)(void*, void*, afxUnit, void*);
-    void*               udd;
-    afxUnit             dataSiz;
-    avxQueueOpData*     data;
-};
+AVX afxUnit         AfxQueryDrawBridgePort(afxDrawBridge dexu, afxDrawDevice* device);
 
-AVX afxDrawDevice       AfxGetDrawBridgeDevice(afxDrawBridge dexu);
-AVX afxDrawContext      AfxGetDrawBridgeContext(afxDrawBridge dexu);
+AVX afxUnit         AfxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cnt, afxDrawQueue queues[]);
 
-AVX afxUnit             AfxGetDrawBridgePort(afxDrawBridge dexu);
+AVX afxDrawSystem   AfxGetDrawQueueContext(afxDrawQueue dque);
+AVX afxUnit         AfxGetDrawQueuePort(afxDrawQueue dque);
 
-AVX void                AfxQueryDrawQueues(afxDrawBridge dexu, afxUnit* baseQueIdx, afxUnit* queCnt);
 
-AVX afxError            _AvxSubmitDrawCommands(afxDrawBridge dexu, avxSubmission const* ctrl, afxUnit cnt, avxCmdb cmdbs[]);
-AVX afxError            _AvxSubmitTransferences(afxDrawBridge dexu, avxTransference const* ctrl, afxUnit opCnt, void const* ops);
-AVX afxError            _AvxSubmitDrawWorkRequest(afxDrawBridge dexu, afxUnit cnt, avxQueueOp const subm[]);
+/// Open a queue debug label region.
+/// Close a queue debug label region.
+/// Insert a label into a queue.
 
-AVX void                _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, afxColor const color);
-AVX void                _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, afxColor const color);
-AVX void                _AvxEndDrawQueueDebugScope(afxDrawQueue dque);
-
-AVX afxDrawDevice       AfxGetDrawQueueDevice(afxDrawQueue dque);
-AVX afxDrawContext      AfxGetDrawQueueContext(afxDrawQueue dque);
-AVX afxUnit             AfxGetDrawQueuePort(afxDrawQueue dque);
+AVX void            AfxBeginDrawQueueDebugScope(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxString const* name, afxColor const color);
+AVX void            AfxPushDrawQueueDebugLabel(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxString const* name, afxColor const color);
+AVX void            AfxEndDrawQueueDebugScope(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx);
 
 #endif//AVX_DRAW_BRIDGE_H

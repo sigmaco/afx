@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -20,15 +20,16 @@
 #define _AVX_VERTEX_BUFFER_C
 #define _AVX_INDEX_BUFFER_C
 #define _AVX_DRAW_INPUT_C
-#include "../../dev/AvxImplKit.h"
+#include "../impl/avxImplementation.h"
+#include "qwadro/inc/math/afxReal16.h"
 
 AFX_DEFINE_STRUCT(freeVBlistEntry)
 {
     freeVBlistEntry*        next;
     freeVBlistEntry*        prev;
     afxBuffer               vbo;
-    afxUnit32                offset;
-    afxUnit32                size;
+    afxUnit32               offset;
+    afxUnit32               size;
 };
 
 AFX_DEFINE_STRUCT(createdVBlistEntry)
@@ -40,7 +41,7 @@ AFX_DEFINE_STRUCT(createdVBlistEntry)
 AFX_DEFINE_STRUCT(StrideEntry)
 {
     StrideEntry*            next;
-    afxUnit32                stride;
+    afxUnit32               stride;
     freeVBlistEntry*        freelist;
     createdVBlistEntry*     vblist;
 };
@@ -49,8 +50,8 @@ AFX_DEFINE_STRUCT(DynamicVertexBuffer)
 {
     DynamicVertexBuffer*    next;
     afxBuffer               vbo;
-    afxUnit32                size;
-    afxUnit32                used;
+    afxUnit32               size;
+    afxUnit32               used;
     afxBuffer*              variableAddress;
 };
 
@@ -60,7 +61,7 @@ AFX_DEFINE_STRUCT(DynamicVertexBuffer)
 AFX_OBJECT(afxBufferizer)
 {
     afxDrawInput        din;
-    afxUnit32            DefaultVBSize;
+    afxUnit32           DefaultVBSize;
 
     StrideEntry*        StrideList;
 
@@ -71,12 +72,921 @@ AFX_OBJECT(afxBufferizer)
     DynamicVertexBuffer*DynamicVertexBufferList;
     afxSlabAllocator    DynamicVertexBufferFreeList;
 
-    afxUnit32            CurrentDynamicVertexBufferManager;
-    afxUnit32            OffSetDynamicVertexBufferManager[MAX_DYNAMIC_VERTEX_BUFFER_MANAGER];
-    afxUnit32            SizeDynamicVertexBufferManager[MAX_DYNAMIC_VERTEX_BUFFER_MANAGER];
+    afxUnit32           CurrentDynamicVertexBufferManager;
+    afxUnit32           OffSetDynamicVertexBufferManager[MAX_DYNAMIC_VERTEX_BUFFER_MANAGER];
+    afxUnit32           SizeDynamicVertexBufferManager[MAX_DYNAMIC_VERTEX_BUFFER_MANAGER];
     afxBuffer           DynamicVertexBufferManager[MAX_DYNAMIC_VERTEX_BUFFER_MANAGER];
 
 };
+
+#define GET_ADDR(base_, stride_, idx_) (void*)((afxByte*)base_ + stride_ * idx_)
+#define GET_CONST_ADDR(base_, stride_, idx_) (void const*)((afxByte const*)base_ + stride_ * idx_)
+
+#if 0
+_AVX afxError AfxConvert2
+(
+    afxUnit cnt,
+    void const* src,
+    afxVertexFormat srcFmt,
+    afxUnit srcStride,
+    void* dst,
+    afxVertexFormat dstFmt,
+    afxUnit dstStride,
+    afxBool normalized
+)
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxUnit srcCompCnt = 0;
+    afxUnit dstCompCnt = 0;
+
+    switch (srcFmt)
+    {
+    case afxVertexFormat_R32:
+    case afxVertexFormat_R16:
+    case afxVertexFormat_U32:
+    case afxVertexFormat_I32:
+    case afxVertexFormat_U16:
+    case afxVertexFormat_I16:
+    case afxVertexFormat_U8:
+    case afxVertexFormat_I8:
+        srcCompCnt = 1; break;
+    case afxVertexFormat_R32x2:
+    case afxVertexFormat_R16x2:
+    case afxVertexFormat_U32x2:
+    case afxVertexFormat_I32x2:
+    case afxVertexFormat_U16x2:
+    case afxVertexFormat_I16x2:
+    case afxVertexFormat_U8x2:
+    case afxVertexFormat_I8x2:
+        srcCompCnt = 2; break;
+    case afxVertexFormat_R32x3:
+        //case afxVertexFormat_U32x3:
+        //case afxVertexFormat_I32x3:
+        srcCompCnt = 3; break;
+    case afxVertexFormat_R32x4:
+    case afxVertexFormat_R16x4:
+    case afxVertexFormat_U32x4:
+    case afxVertexFormat_I32x4:
+    case afxVertexFormat_U16x4:
+    case afxVertexFormat_I16x4:
+    case afxVertexFormat_U8x4:
+    case afxVertexFormat_I8x4:
+        srcCompCnt = 4; break;
+    default:
+        break;
+    }
+
+    switch (dstFmt)
+    {
+    case afxVertexFormat_R32:
+    case afxVertexFormat_R16:
+    case afxVertexFormat_U32:
+    case afxVertexFormat_I32:
+    case afxVertexFormat_U16:
+    case afxVertexFormat_I16:
+    case afxVertexFormat_U8:
+    case afxVertexFormat_I8:
+        dstCompCnt = 1; break;
+    case afxVertexFormat_R32x2:
+    case afxVertexFormat_R16x2:
+    case afxVertexFormat_U32x2:
+    case afxVertexFormat_I32x2:
+    case afxVertexFormat_U16x2:
+    case afxVertexFormat_I16x2:
+    case afxVertexFormat_U8x2:
+    case afxVertexFormat_I8x2:
+        dstCompCnt = 2; break;
+    case afxVertexFormat_R32x3:
+        //case afxVertexFormat_U32x3:
+        //case afxVertexFormat_I32x3:
+        dstCompCnt = 3; break;
+    case afxVertexFormat_R32x4:
+    case afxVertexFormat_R16x4:
+    case afxVertexFormat_U32x4:
+    case afxVertexFormat_I32x4:
+    case afxVertexFormat_U16x4:
+    case afxVertexFormat_I16x4:
+    case afxVertexFormat_U8x4:
+    case afxVertexFormat_I8x4:
+        dstCompCnt = 4; break;
+    default:
+        break;
+    }
+
+    switch (dstFmt)
+    {
+    case afxVertexFormat_R32:
+    case afxVertexFormat_R32x2:
+    case afxVertexFormat_R32x3:
+    case afxVertexFormat_R32x4:
+    {
+        switch (srcFmt)
+        {
+        case afxVertexFormat_R32:
+        case afxVertexFormat_R32x2:
+        case afxVertexFormat_R32x3:
+        case afxVertexFormat_R32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxReal32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0.f;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_R16:
+        case afxVertexFormat_R16x2:
+        case afxVertexFormat_R16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxReal16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = AfxUnpackReal16(src4[j]);
+                    else
+                        dst3[j] = 0.f;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U32:
+        case afxVertexFormat_U32x2:
+            //case afxVertexFormat_U32x3:
+        case afxVertexFormat_U32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0.f;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I32:
+        case afxVertexFormat_I32x2:
+            //case afxVertexFormat_I32x3:
+        case afxVertexFormat_I32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0.f;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U16:
+        case afxVertexFormat_U16x2:
+        case afxVertexFormat_U16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0.f;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I16:
+        case afxVertexFormat_I16x2:
+        case afxVertexFormat_I16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0.f;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U8:
+        case afxVertexFormat_U8x2:
+        case afxVertexFormat_U8x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit8 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0.f;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I8:
+        case afxVertexFormat_I8x2:
+        case afxVertexFormat_I8x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt8 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0.f;
+                }
+            }
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+        break;
+    }
+    case afxVertexFormat_R16:
+    case afxVertexFormat_R16x2:
+    case afxVertexFormat_R16x4:
+    {
+        switch (srcFmt)
+        {
+        case afxVertexFormat_R32:
+        case afxVertexFormat_R32x2:
+        case afxVertexFormat_R32x3:
+        case afxVertexFormat_R32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxReal32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = AfxPackReal16(src4[j]);
+                    else
+                        dst3[j] = AfxPackReal16(0.f);
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_R16:
+        case afxVertexFormat_R16x2:
+        case afxVertexFormat_R16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxReal16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = AfxPackReal16(0.f);
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U32:
+        case afxVertexFormat_U32x2:
+            //case afxVertexFormat_U32x3:
+        case afxVertexFormat_U32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = AfxPackReal16((afxReal)src4[j]);
+                    else
+                        dst3[j] = AfxPackReal16(0.f);
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I32:
+        case afxVertexFormat_I32x2:
+            //case afxVertexFormat_I32x3:
+        case afxVertexFormat_I32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = AfxPackReal16((afxReal)src4[j]);
+                    else
+                        dst3[j] = AfxPackReal16(0.f);
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U16:
+        case afxVertexFormat_U16x2:
+        case afxVertexFormat_U16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = AfxPackReal16((afxReal)src4[j]);
+                    else
+                        dst3[j] = AfxPackReal16(0.f);
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I16:
+        case afxVertexFormat_I16x2:
+        case afxVertexFormat_I16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = AfxPackReal16((afxReal)src4[j]);
+                    else
+                        dst3[j] = AfxPackReal16(0.f);
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U8:
+        case afxVertexFormat_U8x2:
+        case afxVertexFormat_U8x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit8 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = AfxPackReal16((afxReal)src4[j]);
+                    else
+                        dst3[j] = AfxPackReal16(0.f);
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I8:
+        case afxVertexFormat_I8x2:
+        case afxVertexFormat_I8x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxReal16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt8 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = AfxPackReal16((afxReal)src4[j]);
+                    else
+                        dst3[j] = AfxPackReal16(0.f);
+                }
+            }
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+        break;
+    }
+    case afxVertexFormat_U32:
+    case afxVertexFormat_U32x2:
+        //case afxVertexFormat_U32x3:
+    case afxVertexFormat_U32x4:
+    {
+        switch (srcFmt)
+        {
+        case afxVertexFormat_R32: // real32 to nat32
+        case afxVertexFormat_R32x2: // real32 to nat32
+        case afxVertexFormat_R32x3: // real32 to nat32
+        case afxVertexFormat_R32x4: // real32 to nat32
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxReal32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0.f;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U32:
+        case afxVertexFormat_U32x2:
+            //case afxVertexFormat_U32x3:
+        case afxVertexFormat_U32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I32:
+        case afxVertexFormat_I32x2:
+            //case afxVertexFormat_I32x3:
+        case afxVertexFormat_I32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U16:
+        case afxVertexFormat_U16x2:
+        case afxVertexFormat_U16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I16:
+        case afxVertexFormat_I16x2:
+        case afxVertexFormat_I16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U8:
+        case afxVertexFormat_U8x2:
+        case afxVertexFormat_U8x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit8 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I8:
+        case afxVertexFormat_I8x2:
+        case afxVertexFormat_I8x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit32* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt8 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+    }
+    case afxVertexFormat_U16:
+    case afxVertexFormat_U16x2:
+    case afxVertexFormat_U16x4:
+    {
+        switch (srcFmt)
+        {
+        case afxVertexFormat_R32: // real32 to nat8 (normalized or raw)
+        case afxVertexFormat_R32x2: // real32 to nat8 (normalized or raw)
+        case afxVertexFormat_R32x3: // real32 to nat8 (normalized or raw)
+        case afxVertexFormat_R32x4: // real32 to nat8 (normalized or raw)
+        {
+            if (normalized)
+            {
+                for (afxUnit i = 0; i < cnt; i++)
+                {
+                    afxUnit16* dst3 = GET_ADDR(dst, dstStride, i);
+                    afxReal32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                    for (afxUnit j = 0; j < dstCompCnt; j++)
+                    {
+                        if (j < srcCompCnt)
+                            dst3[j] = src4[j] * 65535.f;
+                        else
+                            dst3[j] = 0.f;
+                    }
+                }
+            }
+            else
+            {
+                for (afxUnit i = 0; i < cnt; i++)
+                {
+                    afxUnit16* dst3 = GET_ADDR(dst, dstStride, i);
+                    afxReal32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                    for (afxUnit j = 0; j < dstCompCnt; j++)
+                    {
+                        if (j < srcCompCnt)
+                            dst3[j] = src4[j];
+                        else
+                            dst3[j] = 0.f;
+                    }
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U32:
+        case afxVertexFormat_U32x2:
+            //case afxVertexFormat_U32x3:
+        case afxVertexFormat_U32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I32:
+        case afxVertexFormat_I32x2:
+            //case afxVertexFormat_I32x3:
+        case afxVertexFormat_I32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U16:
+        case afxVertexFormat_U16x2:
+        case afxVertexFormat_U16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I16:
+        case afxVertexFormat_I16x2:
+        case afxVertexFormat_I16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U8:
+        case afxVertexFormat_U8x2:
+        case afxVertexFormat_U8x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit8 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I8:
+        case afxVertexFormat_I8x2:
+        case afxVertexFormat_I8x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit16* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt8 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+    }
+    case afxVertexFormat_U8:
+    case afxVertexFormat_U8x2:
+    case afxVertexFormat_U8x4:
+    {
+        switch (srcFmt)
+        {
+        case afxVertexFormat_R32: // real32 to nat8 (normalized or raw)
+        case afxVertexFormat_R32x2: // real32 to nat8 (normalized or raw)
+        case afxVertexFormat_R32x3: // real32 to nat8 (normalized or raw)
+        case afxVertexFormat_R32x4: // real32 to nat8 (normalized or raw)
+        {
+            if (normalized)
+            {
+                for (afxUnit i = 0; i < cnt; i++)
+                {
+                    afxUnit8* dst3 = GET_ADDR(dst, dstStride, i);
+                    afxReal32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                    for (afxUnit j = 0; j < dstCompCnt; j++)
+                    {
+                        if (j < srcCompCnt)
+                            dst3[j] = src4[j] * 255.f;
+                        else
+                            dst3[j] = 0.f;
+                    }
+                }
+            }
+            else
+            {
+                for (afxUnit i = 0; i < cnt; i++)
+                {
+                    afxUnit8* dst3 = GET_ADDR(dst, dstStride, i);
+                    afxReal32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                    for (afxUnit j = 0; j < dstCompCnt; j++)
+                    {
+                        if (j < srcCompCnt)
+                            dst3[j] = src4[j];
+                        else
+                            dst3[j] = 0.f;
+                    }
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U32:
+        case afxVertexFormat_U32x2:
+            //case afxVertexFormat_U32x3:
+        case afxVertexFormat_U32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit8* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I32:
+        case afxVertexFormat_I32x2:
+            //case afxVertexFormat_I32x3:
+        case afxVertexFormat_I32x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit8* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt32 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U16:
+        case afxVertexFormat_U16x2:
+        case afxVertexFormat_U16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit8* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I16:
+        case afxVertexFormat_I16x2:
+        case afxVertexFormat_I16x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit8* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt16 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_U8:
+        case afxVertexFormat_U8x2:
+        case afxVertexFormat_U8x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit8* dst3 = GET_ADDR(dst, dstStride, i);
+                afxUnit8 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        case afxVertexFormat_I8:
+        case afxVertexFormat_I8x2:
+        case afxVertexFormat_I8x4:
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit8* dst3 = GET_ADDR(dst, dstStride, i);
+                afxInt8 const* src4 = GET_CONST_ADDR(src, srcStride, i);
+
+                for (afxUnit j = 0; j < dstCompCnt; j++)
+                {
+                    if (j < srcCompCnt)
+                        dst3[j] = src4[j];
+                    else
+                        dst3[j] = 0;
+                }
+            }
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+    }
+    default: AfxThrowError();  break;
+    }
+
+    return err;
+}
+#endif
 
 afxBool CreateVertexBuffer(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size, afxBuffer* vbo, afxUnit32* offset)
 {
@@ -100,7 +1010,7 @@ afxBool CreateVertexBuffer(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size
     if (!strideList)
     {
         // create one if there isn't any
-        strideList = AfxAllocateSlab(&vbMgr->StrideFreeList);
+        strideList = AfxPushSlabUnit(&vbMgr->StrideFreeList);
         AFX_ASSERT(strideList);
         strideList->stride = stride;
         strideList->freelist = NULL;
@@ -124,7 +1034,7 @@ afxBool CreateVertexBuffer(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size
     if (!freelist)
     {
         // If there is not free space, create a new VB
-        freelist = AfxAllocateSlab(&vbMgr->FreeVBFreeList);
+        freelist = AfxPushSlabUnit(&vbMgr->FreeVBFreeList);
         AFX_ASSERT(freelist);
         freelist->offset = 0;
         freelist->size = (((vbMgr->DefaultVBSize + (stride - 1)) / stride) * stride);
@@ -132,18 +1042,17 @@ afxBool CreateVertexBuffer(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size
         if (size >= freelist->size)
             freelist->size = size;
         
-        afxDrawContext dctx;
-        AfxGetDrawInputContext(vbMgr->din, &dctx);
+        afxDrawSystem dsys = AfxGetDrawInputContext(vbMgr->din);
 
         afxBuffer vbo;
         afxBufferInfo spec = { 0 };
-        spec.bufCap = freelist->size;
+        spec.cap = freelist->size;
         spec.flags = afxBufferFlag_W;
         spec.usage = afxBufferUsage_VERTEX;
 
-        if (AfxAcquireBuffers(dctx, 1, &spec, &vbo))
+        if (AfxAcquireBuffers(dsys, 1, &spec, &vbo))
         {
-            AfxDeallocateSlab(&vbMgr->FreeVBFreeList, freelist);            
+            AfxPopSlabUnit(&vbMgr->FreeVBFreeList, freelist);            
             return FALSE;
         }
         
@@ -157,7 +1066,7 @@ afxBool CreateVertexBuffer(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size
         strideList->freelist = freelist;
 
         // Add an entry to the vb list
-        createdVBlistEntry* vblist = AfxAllocateSlab(&vbMgr->CreatedVBFreeList);
+        createdVBlistEntry* vblist = AfxPushSlabUnit(&vbMgr->CreatedVBFreeList);
         vblist->vbo = vbo;
         vblist->next = strideList->vblist;
         strideList->vblist = vblist;
@@ -186,7 +1095,7 @@ afxBool CreateVertexBuffer(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size
         if (strideList->freelist == freelist)
             strideList->freelist = freelist->next;
 
-        AfxDeallocateSlab(&vbMgr->FreeVBFreeList, freelist);
+        AfxPopSlabUnit(&vbMgr->FreeVBFreeList, freelist);
     }
 
 #if defined(RWDEBUG)
@@ -314,13 +1223,13 @@ void DestroyVertexBuffer(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size, 
                     if (strideList->freelist == oldFreelist)
                         strideList->freelist = oldFreelist->next;
 
-                    AfxDeallocateSlab(&vbMgr->FreeVBFreeList, oldFreelist);
+                    AfxPopSlabUnit(&vbMgr->FreeVBFreeList, oldFreelist);
                 }
             } while (canCompactMore);
         }
         else
         {
-            freelist = AfxAllocateSlab(&vbMgr->FreeVBFreeList);
+            freelist = AfxPushSlabUnit(&vbMgr->FreeVBFreeList);
             freelist->offset = offset;
             freelist->size = size;
             freelist->vbo = vbo;
@@ -380,7 +1289,7 @@ afxBool DynamicVertexBufferCreate(afxBufferizer vbMgr, afxUnit size, afxBuffer *
         /* Destroy a free vertex buffer to make room for the new one */
         if (freeVertexBuffer)
         {
-            AfxReleaseObjects(1, &freeVertexBuffer->vbo);
+            AfxDisposeObjects(1, &freeVertexBuffer->vbo);
             freeVertexBuffer->vbo = NULL;
 
             currentVertexBuffer = freeVertexBuffer;
@@ -392,7 +1301,7 @@ afxBool DynamicVertexBufferCreate(afxBufferizer vbMgr, afxUnit size, afxBuffer *
         else
         {
             /* Create a new item */
-            currentVertexBuffer = AfxAllocateSlab(&vbMgr->DynamicVertexBufferFreeList);
+            currentVertexBuffer = AfxPushSlabUnit(&vbMgr->DynamicVertexBufferFreeList);
 
             /* Add it to the beginnig of the list */
             currentVertexBuffer->next = vbMgr->DynamicVertexBufferList;
@@ -400,15 +1309,14 @@ afxBool DynamicVertexBufferCreate(afxBufferizer vbMgr, afxUnit size, afxBuffer *
             vbMgr->DynamicVertexBufferList = currentVertexBuffer;
         }
 
-        afxDrawContext dctx;
-        AfxGetDrawInputContext(vbMgr->din, &dctx);
+        afxDrawSystem dsys = AfxGetDrawInputContext(vbMgr->din);
 
         afxBufferInfo spec = { 0 };
-        spec.bufCap = size;
+        spec.cap = size;
         spec.usage = afxBufferUsage_VERTEX;
         spec.flags = afxBufferFlag_W;
         
-        if (AfxAcquireBuffers(dctx, 1, &spec, vertexBuffer))
+        if (AfxAcquireBuffers(dsys, 1, &spec, vertexBuffer))
         {
             AfxThrowError();
             return FALSE;
@@ -458,11 +1366,11 @@ afxBool _VertexBufferManagerOpen(afxBufferizer vbMgr)
     //*vbMgrPtr = vbMgr;
 
     vbMgr->DefaultVBSize = 128 * 1024;
-    AfxSetUpSlabAllocator(&vbMgr->StrideFreeList, sizeof(StrideEntry), 16);
-    AfxSetUpSlabAllocator(&vbMgr->FreeVBFreeList, sizeof(freeVBlistEntry), 100);
-    AfxSetUpSlabAllocator(&vbMgr->CreatedVBFreeList, sizeof(createdVBlistEntry), 100);
+    AfxDeploySlabAllocator(&vbMgr->StrideFreeList, sizeof(StrideEntry), 16);
+    AfxDeploySlabAllocator(&vbMgr->FreeVBFreeList, sizeof(freeVBlistEntry), 100);
+    AfxDeploySlabAllocator(&vbMgr->CreatedVBFreeList, sizeof(createdVBlistEntry), 100);
 
-    AfxSetUpSlabAllocator(&vbMgr->DynamicVertexBufferFreeList, sizeof(DynamicVertexBuffer), 4);
+    AfxDeploySlabAllocator(&vbMgr->DynamicVertexBufferFreeList, sizeof(DynamicVertexBuffer), 4);
 
     afxBool created;
     afxUnit32 n;
@@ -520,7 +1428,7 @@ void _VertexBufferManagerClose(afxBufferizer vbMgr)
 
         if (vbMgr->DynamicVertexBufferList->vbo)
         {
-            AfxReleaseObjects(1, &vbMgr->DynamicVertexBufferList->vbo);
+            AfxDisposeObjects(1, &vbMgr->DynamicVertexBufferList->vbo);
 
             vbMgr->DynamicVertexBufferList->vbo = NULL;
 
@@ -530,12 +1438,12 @@ void _VertexBufferManagerClose(afxBufferizer vbMgr)
             }
         }
 
-        AfxDeallocateSlab(&vbMgr->DynamicVertexBufferFreeList, vbMgr->DynamicVertexBufferList);
+        AfxPopSlabUnit(&vbMgr->DynamicVertexBufferFreeList, vbMgr->DynamicVertexBufferList);
 
         vbMgr->DynamicVertexBufferList = next;
     }
 
-    AfxCleanUpSlabAllocator(&vbMgr->DynamicVertexBufferFreeList);
+    AfxDismantleSlabAllocator(&vbMgr->DynamicVertexBufferFreeList);
 
 #if defined(RWDEBUG)
     NumDynamicVertexBuffer = 0;
@@ -552,7 +1460,7 @@ void _VertexBufferManagerClose(afxBufferizer vbMgr)
         {
             freeVBlistEntry   *nextFreelist = vbMgr->StrideList->freelist->next;
 
-            AfxDeallocateSlab(&vbMgr->FreeVBFreeList, vbMgr->StrideList->freelist);
+            AfxPopSlabUnit(&vbMgr->FreeVBFreeList, vbMgr->StrideList->freelist);
 
             vbMgr->StrideList->freelist = nextFreelist;
         }
@@ -564,22 +1472,22 @@ void _VertexBufferManagerClose(afxBufferizer vbMgr)
 
             if (vbMgr->StrideList->vblist->vbo != NULL)
             {
-                AfxReleaseObjects(1, &(vbMgr->StrideList->vblist->vbo));
+                AfxDisposeObjects(1, &(vbMgr->StrideList->vblist->vbo));
             }
 
-            AfxDeallocateSlab(&vbMgr->CreatedVBFreeList, vbMgr->StrideList->vblist);
+            AfxPopSlabUnit(&vbMgr->CreatedVBFreeList, vbMgr->StrideList->vblist);
 
             vbMgr->StrideList->vblist = nextvblist;
         }
 
-        AfxDeallocateSlab(&vbMgr->StrideFreeList, vbMgr->StrideList);
+        AfxPopSlabUnit(&vbMgr->StrideFreeList, vbMgr->StrideList);
 
         vbMgr->StrideList = next;
     }
 
-    AfxCleanUpSlabAllocator(&vbMgr->CreatedVBFreeList);
-    AfxCleanUpSlabAllocator(&vbMgr->FreeVBFreeList);
-    AfxCleanUpSlabAllocator(&vbMgr->StrideFreeList);
+    AfxDismantleSlabAllocator(&vbMgr->CreatedVBFreeList);
+    AfxDismantleSlabAllocator(&vbMgr->FreeVBFreeList);
+    AfxDismantleSlabAllocator(&vbMgr->StrideFreeList);
 
 #if defined(RWDEBUG)
     BlocksCreated = 0;
@@ -591,7 +1499,7 @@ void _VertexBufferManagerClose(afxBufferizer vbMgr)
 _AVX afxError _AvxBufzDtor(afxBufferizer vbuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
+    AFX_ASSERT_OBJECTS(afxFcc_VBUF, 1, &vbuf);
     
     _VertexBufferManagerClose(vbuf);
     
@@ -601,7 +1509,7 @@ _AVX afxError _AvxBufzDtor(afxBufferizer vbuf)
 _AVX afxError _AvxBufzCtor(afxBufferizer vbuf, void** args, afxUnit invokeNo)
 {
     afxResult err = NIL;
-    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
+    AFX_ASSERT_OBJECTS(afxFcc_VBUF, 1, &vbuf);
 
     afxDrawInput din = args[0];
     afxBufferizerInfo const* info = ((afxBufferizerInfo const *)args[1]) + invokeNo;
@@ -615,7 +1523,7 @@ _AVX afxClassConfig const _AvxVbufMgrCfg =
 {
     .fcc = afxFcc_VBUF,
     .name = "Bufferizer",
-    .name = "Bufferizer",
+    .desc = "Bufferizer",
     .fixedSiz = sizeof(AFX_OBJECT(afxBufferizer)),
     .ctor = (void*)_AvxBufzCtor,
     .dtor = (void*)_AvxBufzDtor
@@ -624,12 +1532,12 @@ _AVX afxClassConfig const _AvxVbufMgrCfg =
 _AVX afxError AfxAcquireBufferizer(afxDrawInput din, afxBufferizerInfo const* info, afxBufferizer bufferizer[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
     AFX_ASSERT(bufferizer);
     AFX_ASSERT(info);
 
-    afxClass* cls = AfxGetVertexBufferClass(din);
-    AfxAssertClass(cls, afxFcc_VBUF);
+    afxClass* cls = AvxGetVertexBufferClass(din);
+    AFX_ASSERT_CLASS(cls, afxFcc_VBUF);
 
     if (AfxAcquireObjects(cls, 1, (afxObject*)bufferizer, (void const*[]) { din, info }))
         AfxThrowError();

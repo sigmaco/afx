@@ -23,7 +23,7 @@ _AFXINL void AfxDeployChain(afxChain *ch, void *holder)
     AFX_ASSERT(ch);
     ch->holder = holder;
     ch->cnt = 0;
-    afxLinkage* anchor = &(ch->anchor);
+    afxLink* anchor = &(ch->anchor);
     anchor->next = anchor;
     anchor->prev = anchor;
     anchor->chain = ch;
@@ -36,18 +36,17 @@ _AFXINL void AfxSwapChains(afxChain *ch, afxChain *other)
     void *holder = ch->holder;
     ch->holder = other->holder;
     other->holder = holder;
-    afxUnit cnt = ch->cnt;
     ch->cnt = other->cnt;
     other->cnt = ch->cnt;
 
-    afxLinkage *a = AfxGetLastLinkage(ch);
-    afxLinkage *b = AfxGetLastLinkage(other);
+    afxLink *a = AfxGetLastLink(ch);
+    afxLink *b = AfxGetLastLink(other);
     
     if (a)
-        AfxPushLinkage(a, other);
+        AfxPushLink(a, other);
 
     if (b)
-        AfxPushLinkage(b, ch);
+        AfxPushLink(b, ch);
 }
 
 _AFXINL afxUnit AfxGetChainLength(afxChain const *ch)
@@ -64,42 +63,42 @@ _AFXINL void* AfxGetChainHolder(afxChain const *ch)
     return ch->holder;
 }
 
-_AFXINL afxLinkage* AfxGetLastLinkage(afxChain const *ch)
+_AFXINL afxLink* AfxGetLastLink(afxChain const *ch)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
     return ch->anchor.next != &ch->anchor ? ch->anchor.next : NIL;
 }
 
-_AFXINL afxLinkage* AfxGetFirstLinkage(afxChain const *ch)
+_AFXINL afxLink* AfxGetFirstLink(afxChain const *ch)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
     return ch->anchor.prev != &ch->anchor ? ch->anchor.prev : NIL;
 }
 
-_AFXINL afxLinkage* AfxGetAnchor(afxChain *ch)
+_AFXINL afxLink* AfxGetAnchor(afxChain *ch)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
     return &ch->anchor;
 }
 
-_AFXINL afxLinkage const* AfxGetAnchorConst(afxChain const *ch)
+_AFXINL afxLink const* AfxGetAnchorConst(afxChain const *ch)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
     return &ch->anchor;
 }
 
-_AFXINL afxBool AfxChainIsEmpty(afxChain const *ch)
+_AFXINL afxBool AfxIsChainEmpty(afxChain const *ch)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
     return (ch->anchor.next == &(ch->anchor));
 }
 
-_AFXINL void AfxResetLinkage(afxLinkage *lnk)
+_AFXINL void AfxResetLink(afxLink *lnk)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lnk);
@@ -108,7 +107,7 @@ _AFXINL void AfxResetLinkage(afxLinkage *lnk)
     lnk->chain = NIL;
 }
 
-_AFXINL afxUnit AfxLinkAhead(afxLinkage* lnk, afxLinkage* prev)
+_AFXINL afxUnit AfxLinkAhead(afxLink* lnk, afxLink* prev)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lnk);
@@ -134,7 +133,7 @@ _AFXINL afxUnit AfxLinkAhead(afxLinkage* lnk, afxLinkage* prev)
     return lnkIdx;
 }
 
-_AFXINL afxUnit AfxLinkBehind(afxLinkage* lnk, afxLinkage* next)
+_AFXINL afxUnit AfxLinkBehind(afxLink* lnk, afxLink* next)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lnk);
@@ -160,7 +159,7 @@ _AFXINL afxUnit AfxLinkBehind(afxLinkage* lnk, afxLinkage* next)
     return lnkIdx;
 }
 
-_AFXINL afxUnit AfxPushLinkage(afxLinkage *lnk, afxChain *ch)
+_AFXINL afxUnit AfxPushLink(afxLink *lnk, afxChain *ch)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lnk);
@@ -174,7 +173,7 @@ _AFXINL afxUnit AfxPushLinkage(afxLinkage *lnk, afxChain *ch)
     }
     else
     {
-        afxLinkage *anchor = &ch->anchor;
+        afxLink *anchor = &ch->anchor;
         lnk->next = anchor->next;
         lnk->prev = anchor;
         anchor->next->prev = lnk;
@@ -184,7 +183,7 @@ _AFXINL afxUnit AfxPushLinkage(afxLinkage *lnk, afxChain *ch)
     return lnkIdx;
 }
 
-_AFXINL afxUnit AfxPushBackLinkage(afxLinkage *lnk, afxChain *ch)
+_AFXINL afxUnit AfxPushBackLink(afxLink *lnk, afxChain *ch)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lnk);
@@ -197,7 +196,7 @@ _AFXINL afxUnit AfxPushBackLinkage(afxLinkage *lnk, afxChain *ch)
     }
     else
     {
-        afxLinkage *anchor = &ch->anchor;
+        afxLink *anchor = &ch->anchor;
         lnk->prev = anchor->prev;
         lnk->next = anchor;
         anchor->prev->next = lnk;
@@ -207,35 +206,40 @@ _AFXINL afxUnit AfxPushBackLinkage(afxLinkage *lnk, afxChain *ch)
     return lnkIdx;
 }
 
-_AFXINL void AfxPopLinkage(afxLinkage *lnk)
+_AFXINL void AfxPopLink(afxLink *lnk)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lnk);
-    afxChain* ch = lnk->chain;
 
     if (lnk->chain)
     {
         --lnk->chain->cnt;
         lnk->chain = NIL;
     }
-    afxLinkage* prev = lnk->prev;
-    afxLinkage* next = lnk->next;
+    afxLink* prev = lnk->prev;
+    afxLink* next = lnk->next;
+
+    if (!prev || !next)
+    {
+        int a = 1;
+    }
+
     prev->next = next;
     next->prev = prev;
     lnk->next = (lnk->prev = lnk);
 }
 
-_AFXINL afxLinkage* AfxFindLastLinkage(afxChain const *ch, afxUnit idx)
+_AFXINL afxLink* AfxFindLastLink(afxChain const *ch, afxUnit idx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
     //AFX_ASSERT(idx < ch->cnt);
 
-    afxLinkage const *lnk = &ch->anchor;
-    lnk = lnk->next;
+    afxLink const *lnk = &ch->anchor;
 
-    for (afxInt i = 0; i < ch->cnt; i++)
+    for (afxUnit i = 0; i < ch->cnt; i++)
     {
+        lnk = lnk->next;
         AFX_ASSERT(lnk);
 
         if (idx == (afxUnit)i)
@@ -243,20 +247,20 @@ _AFXINL afxLinkage* AfxFindLastLinkage(afxChain const *ch, afxUnit idx)
 
         lnk = lnk->next;
     }
-    return (void*)lnk;
+    return NIL;
 }
 
-_AFXINL afxLinkage* AfxFindFirstLinkage(afxChain const *ch, afxUnit idx)
+_AFXINL afxLink* AfxFindFirstLink(afxChain const *ch, afxUnit idx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
     //AFX_ASSERT(idx < ch->cnt);
 
-    afxLinkage const *lnk = &ch->anchor;
-    lnk = lnk->prev;
+    afxLink const *lnk = &ch->anchor;
 
-    for (afxInt i = 0; i < ch->cnt; i++)
+    for (afxUnit i = 0; i < ch->cnt; i++)
     {
+        lnk = lnk->prev;
         AFX_ASSERT(lnk);
 
         if (idx == (afxUnit)i)
@@ -264,17 +268,17 @@ _AFXINL afxLinkage* AfxFindFirstLinkage(afxChain const *ch, afxUnit idx)
 
         lnk = lnk->prev;
     }
-    return (void*)lnk;
+    return NIL;
 }
 
-_AFXINL afxBool AfxFindChainLinkageIndex(afxChain const *ch, afxLinkage *lnk, afxUnit *idx)
+_AFXINL afxBool AfxFindLinkIndex(afxChain const *ch, afxLink *lnk, afxUnit *idx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
 
-    afxLinkage const *lnk2 = &ch->anchor;
+    afxLink const *lnk2 = &ch->anchor;
 
-    for (afxInt i = 0; i < ch->cnt; i++)
+    for (afxUnit i = 0; i < ch->cnt; i++)
     {
         lnk2 = lnk2->next;
         AFX_ASSERT(lnk2);
@@ -289,14 +293,14 @@ _AFXINL afxBool AfxFindChainLinkageIndex(afxChain const *ch, afxLinkage *lnk, af
     return FALSE;
 }
 
-_AFXINL afxBool AfxFindChainLinkageIndexB2F(afxChain const *ch, afxLinkage *lnk, afxUnit *idx)
+_AFXINL afxBool AfxFindLinkIndexB2F(afxChain const *ch, afxLink *lnk, afxUnit *idx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
 
-    afxLinkage const *lnk2 = &ch->anchor;
+    afxLink const *lnk2 = &ch->anchor;
 
-    for (afxInt i = 0; i < ch->cnt; i++)
+    for (afxUnit i = 0; i < ch->cnt; i++)
     {
         lnk2 = lnk2->prev;
         AFX_ASSERT(lnk2);
@@ -311,52 +315,52 @@ _AFXINL afxBool AfxFindChainLinkageIndexB2F(afxChain const *ch, afxLinkage *lnk,
     return FALSE;
 }
 
-_AFXINL void* AfxGetLinker(afxLinkage const *lnk)
+_AFXINL void* AfxGetLinker(afxLink const *lnk)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lnk);
     return lnk->chain ? lnk->chain->holder : NIL;
 }
 
-_AFXINL afxChain* AfxGetChain(afxLinkage const *lnk)
+_AFXINL afxChain* AfxGetChain(afxLink const *lnk)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lnk);
     return lnk->chain;
 }
 
-_AFXINL afxLinkage* AfxGetNextLinkage(afxLinkage const *lnk)
+_AFXINL afxLink* AfxGetNextLink(afxLink const *lnk)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lnk);
-    afxLinkage* n = lnk->next;
+    afxLink* n = lnk->next;
     return lnk->chain && &lnk->chain->anchor != n ? n : NIL;
 }
 
-_AFXINL afxLinkage* AfxGetPrevLinkage(afxLinkage const *lnk)
+_AFXINL afxLink* AfxGetPrevLink(afxLink const *lnk)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lnk);
-    afxLinkage* p = lnk->prev;
+    afxLink* p = lnk->prev;
     return lnk->chain && &lnk->chain->anchor != p ? p : NIL;
 }
 
-_AFXINL afxUnit AfxInvokeLinkages(afxChain *ch, afxBool fromLast, afxUnit first, afxUnit cnt, afxBool(*f)(afxLinkage *lnk, void *udd), void *udd)
+_AFXINL afxUnit AfxInvokeLinkages(afxChain *ch, afxBool fromLast, afxUnit first, afxUnit cnt, afxBool(*f)(afxLink *lnk, void *udd), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
     afxUnit rslt = 0;
 
-    afxLinkage *lnk = &ch->anchor;
+    afxLink *lnk = &ch->anchor;
 
-    for (afxInt i = 0; i < ch->cnt; i++)
+    for (afxUnit i = 0; i < ch->cnt; i++)
     {
         lnk = fromLast ? lnk->next : lnk->prev;
         
         if (lnk == &ch->anchor)
             break;
 
-        if (i >= (afxInt)first)
+        if (i >= (afxUnit)first)
         {
             ++rslt;
 
@@ -371,7 +375,7 @@ _AFXINL afxUnit AfxInvokeLinkages(afxChain *ch, afxBool fromLast, afxUnit first,
     return rslt;
 }
 
-_AFXINL afxResult AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxUnit base, afxUnit cnt, afxLinkage *lnk[])
+_AFXINL afxResult AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxUnit base, afxUnit cnt, afxLink *lnk[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
@@ -380,11 +384,11 @@ _AFXINL afxResult AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxUn
     afxResult rslt = 0;
 
     afxUnit posn = 0;
-    afxLinkage *lnk2;
+    afxLink *lnk2;
 
     if (reverse)  // from front (last in) to back (first in) of chain
     {
-        AfxChainForEveryLinkage(ch, afxLinkage, next, lnk2)
+        AfxChainForEveryLinkage(ch, afxLink, next, lnk2)
         {
             if (posn >= base)
             {
@@ -400,7 +404,7 @@ _AFXINL afxResult AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxUn
     }
     else  // from back (first in) to front (last in) of chain
     {
-        AfxChainForEveryLinkageB2F(ch, afxLinkage, next, lnk2)
+        AfxChainForEveryLinkageB2F(ch, afxLink, next, lnk2)
         {
             if (posn >= base)
             {

@@ -76,7 +76,7 @@ AFX afxUnit             AfxFormatStringArg(afxString* s, afxChar const* fmt, va_
 AFXINL afxResult        AfxCompareString(afxString const* s, afxUnit base, afxChar const* start, afxUnit len, afxBool ci);
 
 // return the index of the first matched other string or AFX_INVALID_INDEX. Can be used in switch/case statements.
-AFX afxUnit             AfxCompareStrings(afxString const* s, afxBool ci, afxUnit cnt, afxString const others[]);
+AFX afxUnit             AfxCompareStrings(afxString const* s, afxUnit base, afxBool ci, afxUnit cnt, afxString const others[]);
 AFXINL afxUnit          AfxCompareSubstrings(afxString const* s, afxUnit base, afxUnit len, afxBool ci, afxUnit cnt, afxString const others[]);
 
 AFX afxUnit             AfxCatenateStrings(afxString* s, afxUnit cnt, afxString const src[]); // Return clamped off (non-copied) length if any.

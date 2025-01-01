@@ -37,7 +37,7 @@ AFX_DEFINE_STRUCT(afxInterlockedQueue)
         afxByte     value[]; /// Value actually contained in the queue
     }*              entries; // Buffer of entries.    
 #endif
-    afxUnit          unitSiz;
+    afxUnit         unitSiz;
     afxInt32        queIdxMask; /// Mask to apply to the read/write position to clamp it to array bounds
     afxAtom32       readPosn; /// readIdx of where we are in the sequence
     afxAtom32       writePosn; /// writeIdx of where we are in the sequence

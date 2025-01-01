@@ -26,6 +26,8 @@
 #include "qwadro/inc/exec/afxFence.h"
 #include "qwadro/inc/exec/afxSemaphore.h"
 
+typedef afxUnit32 afxCmdId;
+
 typedef enum afxDeviceType
 {
     afxDeviceType_HID = 1,
@@ -40,18 +42,21 @@ typedef enum afxDeviceType
 
 typedef enum afxAcceleration
 {
-    afxAcceleration_CPU     = AFX_BIT(0), // CPU with no graphic support --- ex.: Ryzen 7
-    afxAcceleration_GPU     = AFX_BIT(1), // abstract GPU
-    afxAcceleration_IGPU    = afxAcceleration_GPU | AFX_BIT(2), // integrated GPU --- ex.: Intel HD Graphics
-    afxAcceleration_DGPU    = afxAcceleration_GPU | AFX_BIT(3), // dedicated GPU --- ex.: AMD/NVidia PCIE adapter
-    afxAcceleration_VGPU    = afxAcceleration_GPU | AFX_BIT(4), // virtual GPU --- ex.: VM/sandboxed instantiation.
+    afxAcceleration_CPU     = AFX_BIT(0), // CPU --- software-based implementation
+    afxAcceleration_GPU     = AFX_BIT(1), // abstract GPU --- hardware-based (rasterizer) implementation
+    afxAcceleration_IGPU    = AFX_BIT(2), // integrated GPU --- ex.: Intel HD Graphics
+    afxAcceleration_DGPU    = AFX_BIT(3), // dedicated GPU --- ex.: AMD/NVidia PCIE adapter
+    afxAcceleration_VGPU    = AFX_BIT(4), // virtual GPU --- ex.: VM/sandboxed instantiation.
     afxAcceleration_APU     = afxAcceleration_CPU | afxAcceleration_IGPU, // accelerated processing unit; combined CPU-IGPU --- ex.: AMD A-series
     afxAcceleration_PPU     = AFX_BIT(5), // physics processing unit --- ex.: Ageia PhysX card
-    afxAcceleration_SPU     = AFX_BIT(6), // synergistic processing unit --- ex.: SIMD processors
+    afxAcceleration_SPU     = AFX_BIT(6), // synergistic processing unit --- ex.: coprocessors
     afxAcceleration_TPU     = AFX_BIT(7), // tensor processing unit
-    afxAcceleration_DSP     = AFX_BIT(8), // digital signal processor --- ex.: waveform processors
+    afxAcceleration_NPU     = AFX_BIT(8), // neural processing unit
+    afxAcceleration_DSP     = AFX_BIT(9), // digital signal processor --- ex.: waveform processors
+    afxAcceleration_ASIC    = AFX_BIT(10), // application-specific integrated circuit
+    afxAcceleration_FPGA    = AFX_BIT(11), // field-programmable gate arrays
     
-    afxAcceleration_TOTAL   = 8
+    afxAcceleration_TOTAL   = 12
 } afxAcceleration;
 
 typedef enum afxDeviceStatus
@@ -92,16 +97,8 @@ AFX afxAcceleration     AfxGetDeviceAcceleration(afxDevice dev);
 AFX afxResult           AfxCallDevice(afxDevice dev, afxUnit reqCode, ...);
 AFX afxError            AfxDoDeviceService(afxDevice dev);
 
-AFX afxClass*           AfxGetFenceClass(afxContext ctx);
-AFX afxClass*           AfxGetSemaphoreClass(afxContext ctx);
-
 ////////////////////////////////////////////////////////////////////////////////
 
 AFX afxBool             AfxFindDevice(afxDeviceType order, afxUri const* urn, afxDevice* device);
-
-////////////////////////////////////////////////////////////////////////////////
-
-AFX afxClassConfig const _AfxSemStdImplementation;
-AFX afxClassConfig const _AfxFencStdImplementation;
 
 #endif//AFX_DEVICE_H

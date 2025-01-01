@@ -1,0 +1,10 @@
+Booting...
+Threading... #6700 (afxSystem_w32.c:426)Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree.dll>afxIoBridge.c:207
+afxIoBridge.c:207
+((!1) || ((&dev) && !(_AfxAssertObjects((1), (afxObject const*)(&dev),(afxFcc_DEV)))))
+    InvalidThreading... #0 (afxIoBridge.c:250)afxIoBridge.c:42
+afxIoBridge.c:42
+((!1) || ((&ctx) && !(_AfxAssertObjects((1), (afxObject const*)(&ctx),(afxFcc_CTX)))))
+    InvalidafxClass.c:569
+afxClass.c:576
+afxClass<IoBridge>(100700b0)

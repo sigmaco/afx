@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -38,7 +38,7 @@ AFX_DEFINE_STRUCT(afxSurfaceConfig)
     avxFormat       fmt; // layout
     afxRasterUsage  rasUsage;
     afxRasterFlags  rasFlags;
-    afxUnit          sampleCnt; // layout
+    afxUnit         sampleCnt; // layout
 };
 
 AVX afxResult       AfxTestCanvas(avxCanvas canv, afxCanvasFlags bitmask);
@@ -59,12 +59,12 @@ AVX afxError        AfxRelinkDrawBuffers(avxCanvas canv, afxUnit baseSlot, afxUn
 AVX afxError        AfxRelinkDepthBuffer(avxCanvas canv, afxRaster depth);
 AVX afxError        AfxRelinkStencilBuffer(avxCanvas canv, afxRaster stencil);
 
-AVX afxError        AfxPrintDrawBuffer(avxCanvas canv, afxUnit surIdx, afxUnit portIdx, afxRasterIo const* op, afxUri const* uri);
+AVX afxError        AfxPrintDrawBuffer(avxCanvas canv, afxUnit surIdx, afxRasterIo const* op, afxUnit exuIdx, afxUri const* uri);
 
 AVX afxError        AfxRedoDrawBuffers(avxCanvas canv);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxCoacquireCanvas(afxDrawContext dctx, afxWhd whd, afxUnit surCnt, afxSurfaceConfig const surCfg[], afxUnit cnt, avxCanvas canvases[]);
+AVX afxError        AfxCoacquireCanvas(afxDrawSystem dsys, afxWhd whd, afxUnit surCnt, afxSurfaceConfig const surCfg[], afxUnit cnt, avxCanvas canvases[]);
 
 #endif//AVX_CANVAS_H

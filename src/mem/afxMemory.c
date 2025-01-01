@@ -14,12 +14,15 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+//#define RPMALLOC_ALLOC 1
 
 //#undef _MSC_VER
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
-//#include "rpmalloc/rpmalloc.h"
+#ifdef RPMALLOC_ALLOC
+#include "../../dep/rpmalloc/rpmalloc.h"
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <crtdbg.h>
@@ -43,30 +46,32 @@ typedef struct _afxArbitraryChunk
 _AFX afxError _AfxInitMmu(afxThread thr)
 {
     afxError err = NIL;
-
+#ifdef RPMALLOC_ALLOC
     if (thr)
     {
-        //rpmalloc_thread_initialize();
+        rpmalloc_thread_initialize();
     }
     else
     {
-        //rpmalloc_initialize(0);
+        rpmalloc_initialize(0);
     }
+#endif
     return err;
 }
 
 _AFX afxError _AfxDeinitMmu(afxThread thr)
 {
     afxError err = NIL;
-    
+#ifdef RPMALLOC_ALLOC
     if (thr)
     {
-        //rpmalloc_thread_finalize();
+        rpmalloc_thread_finalize();
     }
     else
     {
-        //rpmalloc_finalize();
+        rpmalloc_finalize();
     }
+#endif
     return err;
 }
 
@@ -93,14 +98,14 @@ _AFX void const* AfxMemchr(void const* buf, afxInt val, afxUnit cap)
 _AFX void* AfxMallocCb(afxSize siz, afxHere const hint)
 {
     void* p;
-#ifndef SWAP_ALLOC
+#ifndef RPMALLOC_ALLOC
 #ifdef _DEBUG
     p = _malloc_dbg(siz, _NORMAL_BLOCK, (const char*)hint[0], hint[1]);
 #else
     p = malloc(siz);
 #endif
 #else
-    p = malloc(siz);
+    p = rpmalloc(siz);
 #endif
     return p;
 }
@@ -108,7 +113,7 @@ _AFX void* AfxMallocCb(afxSize siz, afxHere const hint)
 _AFX void AfxFreeCb(void* block)
 {
     void* p = block;
-#ifndef SWAP_ALLOC
+#ifndef RPMALLOC_ALLOC
 #ifdef _DEBUG
     _free_dbg(p, _NORMAL_BLOCK);
 #else
@@ -122,7 +127,7 @@ _AFX void AfxFreeCb(void* block)
 _AFX void* AfxCallocCb(afxSize cnt, afxSize siz, afxHere const hint)
 {
     void* p;
-#ifndef SWAP_ALLOC
+#ifndef RPMALLOC_ALLOC
 #ifdef _DEBUG
     p = _calloc_dbg(cnt, siz, _NORMAL_BLOCK, (const char*)hint[0], hint[1]);
 #else
@@ -139,7 +144,7 @@ _AFX void* AfxReallocCb(void* block, afxSize siz, afxHere const hint)
     void* p = block;
 
     void* p2;
-#ifndef SWAP_ALLOC
+#ifndef RPMALLOC_ALLOC
 #ifdef _DEBUG
     p2 = _realloc_dbg(p, siz, _NORMAL_BLOCK, (const char*)hint[0], hint[1]);
 #else
@@ -155,7 +160,7 @@ _AFX void AfxFreeAlignedCb(void* block)
 {
     void* p = block;
 
-#ifndef SWAP_ALLOC
+#ifndef RPMALLOC_ALLOC
 #ifdef _DEBUG
     _aligned_free_dbg(p);
 #else
@@ -171,7 +176,7 @@ _AFX void* AfxMallocAlignedCb(afxSize siz, afxSize align, afxHere const hint)
     align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
     void* p;
-#ifndef SWAP_ALLOC
+#ifndef RPMALLOC_ALLOC
 #ifdef _DEBUG
     p = _aligned_malloc_dbg(siz, align, (const char*)hint[0], hint[1]);
 #else
@@ -189,7 +194,7 @@ _AFX void* AfxReallocAlignedCb(void* block, afxSize siz, afxSize align, afxHere 
 
     void* p = block;
     void* p2;
-#ifndef SWAP_ALLOC
+#ifndef RPMALLOC_ALLOC
 #ifdef _DEBUG
     p2 = _aligned_realloc_dbg(p, siz, align, (const char*)hint[0], hint[1]);
 #else
@@ -207,7 +212,7 @@ _AFX void* AfxRecallocAlignedCb(void* block, afxSize cnt, afxSize siz, afxSize a
 
     void* p = block;
     void* p2;
-#ifndef SWAP_ALLOC
+#ifndef RPMALLOC_ALLOC
 #ifdef _DEBUG
     p2 = _aligned_recalloc_dbg(p, cnt, siz, align, (const char*)hint[0], hint[1]);
 #else
@@ -225,9 +230,17 @@ _AFX void* AfxMalloc(afxSize siz)
     return AfxMallocCb(siz, AfxHere());
 }
 
-_AFX void AfxFree(void* block)
+_AFX void AfxFree(void** pp)
 {
-    AfxFreeCb(block);
+    afxError err = NIL;
+    AFX_ASSERT(pp);
+    void* p = *pp;
+
+    if (p)
+    {
+        AfxFreeCb(p);
+        *pp = NIL;
+    }
 }
 
 _AFX void* AfxCalloc(afxSize cnt, afxSize siz)
@@ -240,9 +253,17 @@ _AFX void* AfxRealloc(void* block, afxSize siz)
     return AfxReallocCb(block, siz, AfxHere());
 }
 
-_AFX void AfxFreeAligned(void* block)
+_AFX void AfxFreeAligned(void** pp)
 {
-    AfxFreeAlignedCb(block);
+    afxError err = NIL;
+    AFX_ASSERT(pp);
+    void* p = *pp;
+
+    if (p)
+    {
+        AfxFreeAlignedCb(p);
+        *pp = NIL;
+    }
 }
 
 _AFX void* AfxMallocAligned(afxSize siz, afxSize align)
@@ -270,7 +291,7 @@ _AFX void _AfxMemAllocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHere const
 {
     //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
     //AFX_ASSERT(p);
     AFX_ASSERT(siz);
     AFX_ASSERT(cnt);
@@ -281,7 +302,7 @@ _AFX void _AfxMemDeallocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHere con
 {
     //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
     //AFX_ASSERT(p);
     //AFX_ASSERT(siz);
     AFX_ASSERT(hint);
@@ -291,7 +312,7 @@ _AFX void _AfxMemDeallocStd(afxMmu mmu, void *p)
 {
     //AfxEntry("p=%p", p);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
     AFX_ASSERT(p);
 
@@ -305,7 +326,7 @@ _AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxS
 {
     //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
     //AFX_ASSERT(p);
     AFX_ASSERT(siz);
     void *neo = NIL;
@@ -322,7 +343,7 @@ _AFX void* _AfxMemAllocStd(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, 
 {
     //AfxEntry("ctx=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
     AFX_ASSERT(siz);
     AFX_ASSERT(hint);
     void *p = NIL;
@@ -340,14 +361,14 @@ _AFX void* _AfxMemAllocStd(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, 
 _AFX afxSize AfxMemoryGetDefaultAlignment(afxMmu mmu)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
     return mmu->defAlign;
 }
 
 _AFX afxError AfxMemoryEnableDebugging(afxMmu mmu, afxUnit level)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
     mmu->dbgLevel = level;
     return err;
 }
@@ -355,7 +376,7 @@ _AFX afxError AfxMemoryEnableDebugging(afxMmu mmu, afxUnit level)
 _AFX afxError AfxMapMemory(afxMemory mem, afxSize offset, afxUnit range, afxFlags flags, void** var)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mem, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mem);
 
     return err;
 }
@@ -363,7 +384,7 @@ _AFX afxError AfxMapMemory(afxMemory mem, afxSize offset, afxUnit range, afxFlag
 _AFX afxError AfxUnmapMemory(afxMemory mem, afxSize offset, afxUnit range)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mem, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mem);
 
     return err;
 }
@@ -371,7 +392,7 @@ _AFX afxError AfxUnmapMemory(afxMemory mem, afxSize offset, afxUnit range)
 _AFX afxError _AfxMmuCtor(afxMmu mmu, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
     afxAllocationStrategy const *as = args[0] ? ((afxAllocationStrategy const*)args[0]) + invokeNo : NIL;
     afxSize const *hint = ((afxSize const*)args[1]) + invokeNo;
@@ -413,7 +434,7 @@ _AFX afxError _AfxMmuCtor(afxMmu mmu, void** args, afxUnit invokeNo)
 _AFX afxError _AfxMmuDtor(afxMmu mmu)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+    AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
     mmu->dbgLevel = 3;
 
@@ -443,7 +464,7 @@ _AFX afxError AfxAcquireMemory(afxMemoryFlags flags, afxSize siz, afxUri const* 
     afxError err = AFX_ERR_NONE;
 
     afxClass* cls = AfxGetMmuClass();
-    AfxAssertClass(cls, afxFcc_MMU);
+    AFX_ASSERT_CLASS(cls, afxFcc_MMU);
     afxMemory mem = NIL;
 
     if (AfxAcquireObjects(cls, 1, (afxObject*)&mem, (void const*[]) { NIL, &siz, hint }))
@@ -619,8 +640,9 @@ _AFX void AfxCopy(void* dst, void const* src, afxSize siz)
     AFX_ASSERT(src);
     AFX_ASSERT(dst);
     AFX_ASSERT(src != dst);
-    AFX_ASSERT(siz);
-    AfxCopy2(dst, src, siz, 1);
+    
+    if (siz)
+        AfxCopy2(dst, src, siz, 1);
 }
 
 _AFX void AfxFill2(void* p, void const* value, afxSize siz, afxSize cnt)
@@ -674,9 +696,10 @@ _AFX void AfxZero(void *p, afxSize siz)
     AfxZero2(p, siz, 1);
 }
 
-_AFX void AfxDeallocate(void *p)
+_AFX afxError AfxDeallocate(void** pp, afxHere const hint)
 {
     afxError err = AFX_ERR_NONE;
+    void* p = *pp;
 
     if (p)
     {
@@ -687,7 +710,7 @@ _AFX void AfxDeallocate(void *p)
 
         if (mmu)
         {
-            AfxAssertObjects(1, &mmu, afxFcc_MMU);
+            AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
             mmu->deallocCb(mmu, p);
         }
@@ -695,14 +718,15 @@ _AFX void AfxDeallocate(void *p)
         {
             AfxFreeAlignedCb(p);
         }
+        *pp = NIL;
     }
+    return err;
 }
 
-_AFX void* AfxReallocate(void *p, afxSize siz, afxSize cnt, afxUnit align, afxHere const hint)
+_AFX afxError AfxReallocate(afxSize siz, afxUnit align, afxHere const hint, void** pp)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(siz);
-    AFX_ASSERT(cnt);
     AFX_ASSERT(hint);
     //AfxEntry("p=%p,siz=%u,hint=\"%s:%i!%s\"", p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     void *out = NIL;
@@ -710,49 +734,44 @@ _AFX void* AfxReallocate(void *p, afxSize siz, afxSize cnt, afxUnit align, afxHe
     align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
     afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
+    void* p = *pp;
 
     if (p)
     {
         if (!mmu)
         {
-            if (!(out = AfxReallocAlignedCb(p, cnt * siz, align, hint)))
+            if (!(out = AfxReallocAlignedCb(p, siz, align, hint)))
                 AfxThrowError();
-
-            return out;
         }
         else
         {
-            AfxAssertObjects(1, &mmu, afxFcc_MMU);
+            AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
-            if (!(out = mmu->reallocCb(mmu, p, cnt, siz, align, hint)))
+            if (!(out = mmu->reallocCb(mmu, p, 1, siz, align, hint)))
                 AfxThrowError();
-
-            return out;
         }
     }
     else
     {
         if (mmu)
         {
-            AfxAssertObjects(1, &mmu, afxFcc_MMU);
+            AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
-            if (!(out = mmu->reallocCb(mmu, p, cnt, siz, align, hint)))
+            if (!(out = mmu->reallocCb(mmu, p, 1, siz, align, hint)))
                 AfxThrowError();
-
-            return out;
         }
         else
         {
-            if (!(out = AfxReallocAlignedCb(NIL, cnt * siz, align, hint)))
+            if (!(out = AfxReallocAlignedCb(NIL, siz, align, hint)))
                 AfxThrowError();
-
-            return out;
         }
     }
-    return out;
+
+    *pp = out;
+    return err;
 }
 
-_AFX void* AfxCoallocate(afxSize cnt, afxSize siz, afxUnit align, afxHere const hint)
+_AFX afxError AfxCoallocate(afxSize cnt, afxSize siz, afxUnit align, afxHere const hint, void** pp)
 {
     //AfxEntry("ctx=%p,cnt=%u,siz=%u,hint=\"%s:%i!%s\"", ctx, cnt, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -767,7 +786,7 @@ _AFX void* AfxCoallocate(afxSize cnt, afxSize siz, afxUnit align, afxHere const 
 
     if (mmu)
     {
-        AfxAssertObjects(1, &mmu, afxFcc_MMU);
+        AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
         if (!(p = mmu->allocCb(mmu, cnt, siz, align, hint)))
             AfxThrowError();
@@ -777,42 +796,39 @@ _AFX void* AfxCoallocate(afxSize cnt, afxSize siz, afxUnit align, afxHere const 
         if (!(p = AfxRecallocAlignedCb(NIL, cnt, siz, align, hint)))
             AfxThrowError();
     }
-    return p;
+    *pp = p;
+    return err;
 }
 
-_AFX void* AfxAllocate(afxSize cnt, afxSize siz, afxUnit align, afxHere const hint)
+_AFX afxError AfxAllocate(afxSize siz, afxUnit align, afxHere const hint, void** pp)
 {
     //AfxEntry("ctx=%p,siz=%u,cnt=%u,hint=\"%s:%i!%s\"", ctx, siz, cnt, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(hint);
     AFX_ASSERT(siz);
-    AFX_ASSERT(cnt);
     void *p = NIL;
 
     align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
-    if (cnt * siz)
+    if (siz)
     {
         afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
 
         if (mmu)
         {
-            AfxAssertObjects(1, &mmu, afxFcc_MMU);
+            AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
-            if (!(p = mmu->allocCb(mmu, cnt, siz, align, hint)))
+            if (!(p = mmu->allocCb(mmu, 1, siz, align, hint)))
                 AfxThrowError();
-
-            return p;
         }
         else
         {
-            if (!(p = AfxMallocAlignedCb(cnt * siz, align, hint)))
+            if (!(p = AfxMallocAlignedCb(siz, align, hint)))
                 AfxThrowError();
-
-            return p;
         }
     }
-    return p;
+    *pp = p;
+    return err;
 }
 
 

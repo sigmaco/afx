@@ -38,7 +38,7 @@ _AFXINL _afxIniRecord* _AfxIniCreateRecord(afxManifest* ini, _afxIniPage* page, 
 {
     afxError err;
 
-    if ((!(page->keyCnt % 8)) && !(page->keys = AfxReallocate(page->keys, sizeof(page->keys[0]), (8 + page->keyCnt), NIL, AfxHere()))) AfxThrowError();
+    if ((!(page->keyCnt % 8)) && AfxReallocate(sizeof(page->keys[0]) * (8 + page->keyCnt), NIL, AfxHere(), (void**)&page->keys)) AfxThrowError();
     else
     {
         _afxIniRecord* entry = &page->keys[page->keyCnt++];
@@ -56,7 +56,7 @@ _AFXINL _afxIniPage* _AfxIniCreatePage(afxManifest* ini, afxString const* block)
 {
     afxError err;
 
-    if ((!(ini->pageCnt % 8)) && !(ini->pages = AfxReallocate(ini->pages, sizeof(ini->pages[0]), (8 + ini->pageCnt), NIL, AfxHere()))) AfxThrowError();
+    if ((!(ini->pageCnt % 8)) && AfxReallocate(sizeof(ini->pages[0]) * (8 + ini->pageCnt), NIL, AfxHere(), (void**)&ini->pages)) AfxThrowError();
     else
     {
         _afxIniPage* page = &ini->pages[ini->pageCnt++];
@@ -66,7 +66,7 @@ _AFXINL _afxIniPage* _AfxIniCreatePage(afxManifest* ini, afxString const* block)
         if (AfxCloneString(&page->name, block)) AfxThrowError();
         else
         {
-            if (!(page->keys = AfxAllocate(8, sizeof(page->keys[0]), 0, AfxHere())))
+            if (AfxAllocate(8 * sizeof(page->keys[0]), 0, AfxHere(), (void**)&page->keys))
                 AfxThrowError();
         }
         return page;
@@ -93,7 +93,7 @@ _AFX afxBool AfxFindInitializationSection(afxManifest const* ini, afxString cons
 
     for (afxUnit i = 0; i < ini->pageCnt; i++)
     {
-        if (0 == AfxCompareStrings(&ini->pages[i].name, TRUE, 1, name))
+        if (0 == AfxCompareStrings(&ini->pages[i].name, 0, TRUE, 1, name))
         {
             AFX_ASSERT(secIdx);
             *secIdx = i;
@@ -115,7 +115,7 @@ _AFX afxBool AfxFindInitializationRecord(afxManifest const* ini, afxUnit secIdx,
     
     for (afxUnit i = 0; i < ini->pages[secIdx].keyCnt; i++)
     {
-        if (0 == AfxCompareStrings(&ini->pages[secIdx].keys[i].key, TRUE, 1, name))
+        if (0 == AfxCompareStrings(&ini->pages[secIdx].keys[i].key, 0, TRUE, 1, name))
         {
             AFX_ASSERT(recIdx);
             *recIdx = i;
@@ -186,7 +186,7 @@ _AFXINL _afxIniPage* _AfxIniFindPage(afxManifest const* ini, afxString const* na
     
     if (name)
         for (afxUnit i = 0; i < ini->pageCnt; i++)
-            if (0 == AfxCompareStrings(&ini->pages[i].name, TRUE, 1, name))
+            if (0 == AfxCompareStrings(&ini->pages[i].name, 0, TRUE, 1, name))
                 return &ini->pages[i];
 
     return NIL;
@@ -198,7 +198,7 @@ _AFXINL _afxIniRecord* _AfxIniFindRecord(afxManifest const* ini, _afxIniPage con
 
     if (page && key)
         for (afxUnit i = 0; i < page->keyCnt; i++)
-            if (0 == AfxCompareStrings(&page->keys[i].key, TRUE, 1, key))
+            if (0 == AfxCompareStrings(&page->keys[i].key, 0, TRUE, 1, key))
                 return &page->keys[i];
     
     return NIL;
@@ -214,7 +214,7 @@ _AFX afxError AfxDeployManifest(afxManifest* ini)
     afxError err = NIL;
     ini->pageCnt = 0;
     
-    if (!(ini->pages = AfxAllocate(8, sizeof(ini->pages[0]), 0, AfxHere())))
+    if (AfxAllocate(8 * sizeof(ini->pages[0]), 0, AfxHere(), (void**)&ini->pages))
         AfxThrowError();
 
     return err;
@@ -234,12 +234,12 @@ _AFX void AfxDismantleManifest(afxManifest* ini)
         }
 
         AfxDeallocateString(&page->name);
-        AfxDeallocate(page->keys);
+        AfxDeallocate((void**)&page->keys, AfxHere());
     }
 
     if (ini->pages)
     {
-        AfxDeallocate(ini->pages);
+        AfxDeallocate((void**)&ini->pages, AfxHere());
         ini->pages = NIL;
     }
 }

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *         Q W A D R O   M U L T I M E D I A   U X   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -17,6 +17,18 @@
   //////////////////////////////////////////////////////////////////////////////
  // Advanced User Experience                                                 //
 //////////////////////////////////////////////////////////////////////////////
+
+/*
+    In computing, windows refer to the graphical elements that allow users to interact with software applications. 
+    The concept of windows is fundamental to modern graphical user interfaces (GUIs), such as those used in desktop environments. 
+    Each window typically represents a different application or document and can be resized, minimized, maximized, or closed. 
+    Windows enable multitasking by displaying multiple applications on the screen at once.
+    
+    Multiple windows can be opened and managed simultaneously. Often includes the title of the application or document.
+    Common window controls include minimize, maximize, and close buttons. You can adjust the size of a window to your preference.
+
+    The surface is the client area within the window where the content or functionality is displayed.
+*/
 
 #ifndef AUX_WINDOW_H
 #define AUX_WINDOW_H
@@ -29,7 +41,7 @@
 AFX_DEFINE_STRUCT(afxWindowConfig)
 {
     afxRect             rc;
-    afxUnit             ddevId;
+    afxDrawSystem       dsys;
     afxDrawOutputConfig frame;
     afxDrawOutputConfig surface;
     afxBool             (*eventCb)(afxWindow, auxEvent*);
@@ -89,7 +101,9 @@ AUX afxUnit         AfxFormatWindowCaption(afxWindow wnd, afxChar const* fmt, ..
 
 AUX afxError        AfxRedrawWindow(afxWindow wnd, afxRect const* rc);
 
-AUX void            AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt);
+AUX afxError        AfxRedrawWidgets(afxWindow wnd, afxDrawContext dctx);
+
+//AUX void            AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt);
 
 /// Sets the upper left position of the afxWindow (point) including its window frame.
 

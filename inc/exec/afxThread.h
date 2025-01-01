@@ -49,10 +49,10 @@ typedef afxResult(*afxThreadProc)(afxThread thr, afxEvent* ev);
 
 AFX_DEFINE_STRUCT(afxThreadConfig)
 {
-    afxUnit              minEventCap;
+    afxUnit             minEventCap;
     afxThreadPurpose    purpose;
     //afxThreadProc       procCb;
-    afxUnit              tid;
+    afxUnit             tid;
     void*               udd[4];
 };
 
@@ -127,6 +127,8 @@ AFX void        AfxQuitThread(void);
 /// Yields execution of the current thread to another runnable thread, if any. 
 /// Note that the operating system decides to which thread to switch.
 AFX void        AfxYield(void);
+
+AFX void        AfxSleep(afxUnit ms);
 
 ////////////////////////////////////////////////////////////////////////////////
 

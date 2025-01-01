@@ -53,6 +53,7 @@
 #include "qwadro/inc/io/afxArchive.h"
 #include "qwadro/inc/io/afxFile.h"
 #include "qwadro/inc/io/afxStream.h"
+#include "qwadro/inc/io/afxStreamOps.h"
 #include "qwadro/inc/io/afxUrd.h"
 #include "qwadro/inc/io/afxUri.h"
 
@@ -122,10 +123,7 @@ AFX afxError            AfxResolveUris(afxFileFlags const permissions, afxUnit c
 
 AFX afxError            AfxResolveUri2(afxFileFlags permissions, afxUri const *in, afxUri *out, afxUnit* diskId);
 
-AFX afxUnit             AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*proc)(void* udd, afxUri const* path, afxUri const* osPath), void* udd);
+AFX afxUnit             AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*proc)(void* udd, afxUnit diskId, afxUnit endpointIdx, afxUri const* path, afxUri const* osPath), void* udd);
 AFX afxError            AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags, afxBool(*proc)(void* udd, afxUri const* uri), void* udd);
-
-AFX afxClass const*     AfxGetFileClass(afxStorage fsys);
-AFX afxClass const*     AfxGetArchiveClass(afxStorage fsys);
 
 #endif//AFX_STORAGE_H

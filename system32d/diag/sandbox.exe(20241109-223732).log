@@ -1,0 +1,990 @@
+Booting...
+Threading... #4488 (afxSystem_w32.c:426)Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree.dll>Threading... #0 (afxIoBridge.c:250)Memory page Size: 4096HW threading: 2Loading... <e2draw.dll>Loading... <e2combo.dll>Loading... <e2sound.dll>Loading... <e2mmux.dll>Loading... <//./z////eaxzal1.dll>Installing... <//./z/////eaxzal1.dll>	<//./eaxzal1/>("")  0.0.0 Loading... <//./z////galileo.dll>Installing... <//./z/////galileo.dll>	<//./galileo/>("")  0.0.0 Loading... <//./z////tarzgl4.dll>Installing... <//./z/////tarzgl4.dll>	<//./tarzgl3/>("")  0.0.0 	<//./tarzgl4/>("")  0.0.0 Loading... <//./z////winsh4d.dll>Installing... <//./z/////winsh4d.dll>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 4488
+Loading... <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL.c:1534
+GL: INVAL_PARAMzglInterop_WGL.c:1549
+GL: INVAL_PARAMzglInterop_WGL.c:1560
+GL: INVAL_PARAMzglInterop_WGL.c:1592
+GL: INVAL_PARAMzglInterop_WGL.c:1623
+GL: INVAL_PARAMzglInterop_WGL.c:1625
+GL: INVAL_PARAMzglInterop_WGL.c:1782
+GL: INVAL_PARAMzglInterop_WGL.c:1785
+GL: INVAL_PARAMzglInterop_WGL.c:1790
+GL: INVAL_PARAMzglInterop_WGL.c:1795
+GL: INVAL_PARAMThreading... #0 (afxDrawBridge.c:500)Entering the Thread Execution Environment 3580
+Starting 3580 on thread execution unit #2...Entering the Thread Execution Environment 4488
+Reopening... <//./z/video/uvOutTristripQuad.vsh>Entering the Thread Execution Environment 3580
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 4488
+Reopening... <//./z/video/stdEnv.inc>Reopening... <//./z/video/sampleOutRgba2d.fsh>Reopening... <//./z/video/stdEnv.inc>afxClass.c:910
+afxClass.c:910
+(cfg->fcc)
+    InvalidafxClass.c:933
+afxClass.c:933
+(cfg->name && cfg->name[0])
+    InvalidThreading... #0 (afxDrawBridge.c:500)Reopening... <//./z/video/uvOutTristripQuad.vsh>Reopening... <//./z/video/stdEnv.inc>Reopening... <//./z/video/sampleOutRgba2d.fsh>Reopening... <//./z/video/stdEnv.inc>Loading... <//./c/openal32.dll>Entering the Thread Execution Environment 2768
+Starting 2768 on thread execution unit #3...Entering the Thread Execution Environment 4488
+Threading... #0 (afxSoundBridge.c:374)Entering the Thread Execution Environment 2768
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 824
+Starting 824 on thread execution unit #4...Entering the Thread Execution Environment 4488
+Mounting... <//./d/>('E:\qwadro\repo\bangitk\tmp'),7Loading... <../system/boot>Reopening... <../system/boot>Entering the Thread Execution Environment 824
+Sound Execution Unit .Entering the Thread Execution Environment 4488
+afxStream.c:75
+afxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096193 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096194 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096195 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096196 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096197 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096198 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096199 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096200 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096201 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096202 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096203 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096204 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096205 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096206 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096207 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096208 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096209 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096210 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096211 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096212 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096213 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096214 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096215 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096216 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+Entering the Thread Execution Environment 824
+Loading... <//./c/openal32.dll>Entering the Thread Execution Environment 4488
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096217 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096218 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096219 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096220 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096221 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096222 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096223 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096224 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096225 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096226 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096227 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096228 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096229 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096230 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096231 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096232 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096233 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096234 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096235 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096236 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096237 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096238 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096239 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096240 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096241 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096242 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096243 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096244 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096245 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096246 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096247 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096248 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096249 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096250 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096251 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096252 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096253 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096254 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096255 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096256 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096257 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096258 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096259 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096260 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096261 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096262 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096263 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096264 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096265 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096266 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096267 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096268 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096269 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096270 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096271 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096272 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096273 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096274 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096275 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096276 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096277 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096278 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096279 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096280 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096281 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096282 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096283 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096284 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096285 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096286 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096287 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096288 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096289 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096290 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096291 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096292 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096293 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096294 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096295 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096296 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    InvalidafxStream.c:708
+afxStream.c:202
+afxStream.c:202
+<(afxUnit)offset>1096297 + <1>1 is out of capacity <iob->bufCap>1096192.afxStream.c:75
+afxStream.c:111
+afxStream.c:111
+<offset>1096192 + <1>1 is out of capacity <iob->bufCap>1096192.afxMemory.c:640
+afxMemory.c:640
+(src)
+    Invalid

@@ -31,19 +31,19 @@
 
 typedef struct afxChain afxChain;
 typedef struct afxChain2 afxChain2;
-typedef struct afxLinkage afxLinkage;
-typedef struct afxLinkage2 afxLinkage2;
+typedef struct afxLink afxLink;
+typedef struct afxLink2 afxLink2;
 
-struct afxLinkage
+struct afxLink
 {
     union
     {
-        afxLinkage* next;
+        afxLink* next;
         afxAtomPtr nextA;
     };
     union
     {
-        afxLinkage* prev;
+        afxLink* prev;
         afxAtomPtr prevA;
     };
     union
@@ -51,65 +51,62 @@ struct afxLinkage
         afxChain*   chain;
         afxAtomPtr  chainA;
     };
+    void*           held;
 };
 
 struct afxChain 
 {
-    afxLinkage      anchor;
-    union
-    {
-        void*       holder;
-        afxFcc*     holderFcc;
-    };
-    /*afxAtomic*/afxInt cnt;
+    afxLink     anchor;
+    void*       holder;
+    afxUnit     cnt;
 };
 
-AFXINL void                 AfxDeployChain(afxChain *ch, void *holder);
+AFXINL void             AfxDeployChain(afxChain *ch, void *holder);
 
-AFXINL afxUnit              AfxGetChainLength(afxChain const *ch);
-AFXINL void*                AfxGetChainHolder(afxChain const *ch);
+AFXINL afxUnit          AfxGetChainLength(afxChain const *ch);
+AFXINL void*            AfxGetChainHolder(afxChain const *ch);
 
-AFXINL void                 AfxSwapChains(afxChain *ch, afxChain *other);
-AFXINL afxLinkage*          AfxGetLastLinkage(afxChain const *ch); // last in (B2F)
-AFXINL afxLinkage*          AfxGetFirstLinkage(afxChain const *ch); // first in (B2F)
-AFXINL afxLinkage*          AfxGetAnchor(afxChain *ch);
-AFXINL afxLinkage const*    AfxGetAnchorConst(afxChain const *ch);
-AFXINL afxBool              AfxChainIsEmpty(afxChain const *ch);
+AFXINL void             AfxSwapChains(afxChain *ch, afxChain *other);
+AFXINL afxLink*         AfxGetLastLink(afxChain const *ch); // last in (B2F)
+AFXINL afxLink*         AfxGetFirstLink(afxChain const *ch); // first in (B2F)
+AFXINL afxLink*         AfxGetAnchor(afxChain *ch);
+AFXINL afxLink const*   AfxGetAnchorConst(afxChain const *ch);
+AFXINL afxBool          AfxIsChainEmpty(afxChain const *ch);
 
-AFXINL afxBool              AfxFindChainLinkageIndex(afxChain const *ch, afxLinkage *lnk, afxUnit *idx);
-AFXINL afxBool              AfxFindChainLinkageIndexB2F(afxChain const *ch, afxLinkage *lnk, afxUnit *idx);
-AFXINL afxLinkage*          AfxFindLastLinkage(afxChain const *ch, afxUnit idx);
-AFXINL afxLinkage*          AfxFindFirstLinkage(afxChain const *ch, afxUnit idx);
-AFXINL afxError             AfxChainPushLinkageAfter(afxChain *ch, afxUnit idx);
-AFXINL afxError             AfxChainPopLinkage(afxChain *ch, afxUnit idx);
-
-
-AFXINL afxResult            AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxUnit base, afxUnit cnt, afxLinkage *lnk[]);
-
-AFXINL afxUnit               AfxInvokeLinkages(afxChain *ch, afxBool fromLast, afxUnit first, afxUnit cnt, afxBool(*f)(afxLinkage *lnk, void *udd), void *udd);
-
-AFXINL void     AfxResetLinkage(afxLinkage *lnk);
-AFXINL afxUnit   AfxPushLinkage(afxLinkage *lnk, afxChain *ch);
-AFXINL afxUnit   AfxPushBackLinkage(afxLinkage *lnk, afxChain *ch);
-AFXINL void     AfxPopLinkage(afxLinkage *lnk);
+AFXINL afxBool          AfxFindLinkIndex(afxChain const *ch, afxLink *lnk, afxUnit *idx);
+AFXINL afxBool          AfxFindLinkIndexB2F(afxChain const *ch, afxLink *lnk, afxUnit *idx);
+AFXINL afxLink*         AfxFindLastLink(afxChain const *ch, afxUnit idx);
+AFXINL afxLink*         AfxFindFirstLink(afxChain const *ch, afxUnit idx);
+AFXINL afxError         AfxPushLinkAfter(afxChain *ch, afxUnit idx);
+AFXINL afxError         AfxChainPopLinkage(afxChain *ch, afxUnit idx);
 
 
-AFXINL afxUnit AfxLinkBehind(afxLinkage* lnk, afxLinkage* next);
-AFXINL afxUnit AfxLinkAhead(afxLinkage* lnk, afxLinkage* prev);
+AFXINL afxResult        AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxUnit base, afxUnit cnt, afxLink *lnk[]);
 
-AFXINL void* AfxGetLinker(afxLinkage const *lnk); // linker is the chain holder
+AFXINL afxUnit          AfxInvokeLinkages(afxChain *ch, afxBool fromLast, afxUnit first, afxUnit cnt, afxBool(*f)(afxLink *lnk, void *udd), void *udd);
 
-AFXINL afxChain* AfxGetChain(afxLinkage const *lnk);
+AFXINL void             AfxResetLink(afxLink *lnk);
+AFXINL afxUnit          AfxPushLink(afxLink *lnk, afxChain *ch);
+AFXINL afxUnit          AfxPushBackLink(afxLink *lnk, afxChain *ch);
+AFXINL void             AfxPopLink(afxLink *lnk);
 
-AFXINL afxLinkage* AfxGetNextLinkage(afxLinkage const *lnk);
 
-AFXINL afxLinkage* AfxGetPrevLinkage(afxLinkage const *lnk);
+AFXINL afxUnit          AfxLinkBehind(afxLink* lnk, afxLink* next);
+AFXINL afxUnit          AfxLinkAhead(afxLink* lnk, afxLink* prev);
 
-#define AfxChainForEveryLinkage2(ch_, type_, offset_, lnk_) for (afxLinkage const*_next##lnk2_ = (afxLinkage*)NIL, *_curr##lnk2_ = (ch_)->anchor.next; _next##lnk2_ = (_curr##lnk2_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk2_, type_, offset_), (_curr##lnk2_) != &(ch_)->anchor; _curr##lnk2_ = _next##lnk2_)
-#define AfxChainForEveryLinkage(ch_, type_, offset_, lnk_) for (afxLinkage const*_next##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.next; _next##lnk_ = (_curr##lnk_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _next##lnk_)
-#define AfxChainForEveryLinkageB2F(ch_, type_, offset_, lnk_) for (afxLinkage const*_last##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; _last##lnk_ = (_curr##lnk_)->prev, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _last##lnk_)
+AFXINL void*            AfxGetLinker(afxLink const *lnk); // linker is the chain holder
 
-#define AfxIterateLinkage(type_, lnk_, ch_, offset_) for (afxLinkage const*_next##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.next; _next##lnk_ = (_curr##lnk_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _next##lnk_)
-#define AfxIterateLinkageB2F(type_, lnk_, ch_, offset_) for (afxLinkage const*_last##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; _last##lnk_ = (_curr##lnk_)->prev, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _last##lnk_)
+AFXINL afxChain*        AfxGetChain(afxLink const *lnk);
+
+AFXINL afxLink*         AfxGetNextLink(afxLink const *lnk);
+
+AFXINL afxLink*         AfxGetPrevLink(afxLink const *lnk);
+
+#define AfxChainForEveryLinkage2(ch_, type_, offset_, lnk_) for (afxLink const*_next##lnk2_ = (afxLink*)NIL, *_curr##lnk2_ = (ch_)->anchor.next; _next##lnk2_ = (_curr##lnk2_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk2_, type_, offset_), (_curr##lnk2_) != &(ch_)->anchor; _curr##lnk2_ = _next##lnk2_)
+#define AfxChainForEveryLinkage(ch_, type_, offset_, lnk_) for (afxLink const*_next##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.next; _next##lnk_ = (_curr##lnk_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _next##lnk_)
+#define AfxChainForEveryLinkageB2F(ch_, type_, offset_, lnk_) for (afxLink const*_last##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; _last##lnk_ = (_curr##lnk_)->prev, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _last##lnk_)
+
+#define AfxIterateLinkage(type_, lnk_, ch_, offset_) for (afxLink const*_next##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.next; _next##lnk_ = (_curr##lnk_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _next##lnk_)
+#define AfxIterateLinkageB2F(type_, lnk_, ch_, offset_) for (afxLink const*_last##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; _last##lnk_ = (_curr##lnk_)->prev, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _last##lnk_)
 
 #endif//AFX_CHAIN_H

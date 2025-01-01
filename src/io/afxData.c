@@ -99,7 +99,7 @@ _AFX void _AfxDecodeRle(afxStream stream, afxUnit len, afxUnit byteCnt, afxByte 
 _AFX afxError _AfxCdcCtor(afxCodec cdc, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &cdc, afxFcc_CDC);
+    AFX_ASSERT_OBJECTS(afxFcc_CDC, 1, &cdc);
 
     afxSystem sys = args[0];
 
@@ -109,11 +109,11 @@ _AFX afxError _AfxCdcCtor(afxCodec cdc, void** args, afxUnit invokeNo)
 _AFX afxError _AfxCdcDtor(afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &cdc, afxFcc_CDC);
+    AFX_ASSERT_OBJECTS(afxFcc_CDC, 1, &cdc);
 
     //afxMmu mmu = AfxGetDrawSystemMmu();
 
-    //AfxReleaseObjects(1, (void*[]) { ddrv->mdle });
+    //AfxDisposeObjects(1, (void*[]) { ddrv->mdle });
 
     return err;
 }

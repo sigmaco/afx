@@ -57,7 +57,10 @@ extern afxClassConfig const _AfxIosClsCfg;
 extern afxClassConfig const _AfxFsysMgrCfg;
 extern afxClassConfig const _AfxStrbMgrCfg;
 extern afxClassConfig const _AfxShMgrCfg;
-extern afxClassConfig const _AfxXexuStdImplementation;
+extern afxClassConfig const _AfxExuStdImplementation;
+
+AFX afxError _AfxInitMmu(afxThread thr);
+AFX afxError _AfxDeinitMmu(afxThread thr);
 
 // READ ONLY METHODS //////////////////////////////////////////////////////////
 
@@ -70,7 +73,7 @@ _AFX afxResult PrimeThreadProc(afxThread thr, afxEvent* ev)
 _AFX afxBool SshProc(afxShell ssh, MSG const* msg)
 {
     afxError err = NIL;
-    AfxAssertObjects(1, &ssh, afxFcc_SSH);
+    AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
 
     AfxCallDevice((afxDevice)ssh, 3, msg);
 
@@ -83,7 +86,7 @@ _AFX afxTime AfxDoSystemThreading(afxTime timeout)
 
     afxSystem sys;
     AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     afxTime first, last, dt;
     AfxGetTime(&first);
@@ -117,7 +120,7 @@ _AFX afxTime AfxDoSystemThreading(afxTime timeout)
                     if (sys->aux.ioctl)
                         sys->aux.ioctl(sys, sys->aux.e2mmuxDll, 0, &timeout);
 
-                    AfxInvokeClassInstances(&sys->aux.sshCls, 0, 0, (void*)SshProc, &msg);
+                    AfxInvokeObjects(&sys->aux.sshCls, 0, 0, (void*)SshProc, &msg);
                 }
 
                 if (AfxIsPrimeThread())
@@ -338,7 +341,7 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
 _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     afxManifest* ini = args[0];
     afxSystemConfig const *cfg = args[1];
@@ -349,7 +352,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 
     afxChain* classes = &sys->classes;
     AfxDeployChain(classes, sys);
-    AfxRegisterClass(&sys->strbCls, NIL, classes, &_AfxStrbMgrCfg);
+    AfxMountClass(&sys->strbCls, NIL, classes, &_AfxStrbMgrCfg);
 
     // setting the process working directory and the Qwadro/system working directory...
     afxUri uri;
@@ -395,27 +398,27 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 
     clsCfg = _AfxThrMgrCfg;
     clsCfg.unitsPerPage = sys->hwThreadingCap;
-    AfxRegisterClass(&sys->thrCls, NIL, classes, &clsCfg); // require txu
+    AfxMountClass(&sys->thrCls, NIL, classes, &clsCfg); // require txu
 
-    AfxRegisterClass(&sys->mmuCls, NIL, classes, &_AfxMmuMgrCfg);
+    AfxMountClass(&sys->mmuCls, NIL, classes, &_AfxMmuMgrCfg);
 
     clsCfg = _AfxDevBaseImplementation;
     clsCfg.ctor = NIL; // must be called by specialized device constructor. It is needed to perform nested specialized device creation.
-    AfxRegisterClass(&sys->devCls, NIL, classes, &clsCfg);
+    AfxMountClass(&sys->devCls, NIL, classes, &clsCfg);
 
-    AfxRegisterClass(&sys->svcCls, NIL, classes, &_AfxSvcMgrCfg);
-    //AfxRegisterClass(&sys->fileMgr, NIL, classes, &_AfxFileMgrConfig);
-    AfxRegisterClass(&sys->cdcCls, NIL, classes, &_AfxCdcMgrCfg);
+    AfxMountClass(&sys->svcCls, NIL, classes, &_AfxSvcMgrCfg);
+    //AfxMountClass(&sys->fileMgr, NIL, classes, &_AfxFileMgrConfig);
+    AfxMountClass(&sys->cdcCls, NIL, classes, &_AfxCdcMgrCfg);
 
-    AfxRegisterClass(&sys->iosCls, NIL, classes, &_AfxIosClsCfg);
+    AfxMountClass(&sys->iosCls, NIL, classes, &_AfxIosClsCfg);
 
-    AfxRegisterClass(&sys->fsysCls, NIL, classes, &_AfxFsysMgrCfg); // require iob, arch
+    AfxMountClass(&sys->fsysCls, NIL, classes, &_AfxFsysMgrCfg); // require iob, arch
 
-    AfxRegisterClass(&sys->mdleCls, NIL, classes, &_AfxMdleMgrCfg);
-    //AfxRegisterClass(&sys->icdCls, &sys->exeMgr, classes, &_AfxIcdClsCfg);
+    AfxMountClass(&sys->mdleCls, NIL, classes, &_AfxMdleMgrCfg);
+    //AfxMountClass(&sys->icdCls, &sys->exeMgr, classes, &_AfxIcdClsCfg);
     
-    clsCfg = _AfxXexuStdImplementation;
-    AfxRegisterClass(&sys->xexuCls, NIL, classes, &clsCfg);
+    clsCfg = _AfxExuStdImplementation;
+    AfxMountClass(&sys->exuCls, NIL, classes, &clsCfg);
 
     afxThreadConfig thrCfg = { 0 };
     thrCfg.tid = (sys->primeTid = AfxGetTid());
@@ -423,7 +426,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
     if (AfxAcquireThreads(AfxHere(), &thrCfg, 1, &sys->primeThr)) AfxThrowError();
     else
     {
-        AfxAssertObjects(1, &sys->primeThr, afxFcc_THR);
+        AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &sys->primeThr);
         //sys->primeThr = primeThr;
 
         if (_AfxSysMountDefaultFileStorages(sys)) AfxThrowError();
@@ -437,14 +440,14 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
             if (AfxLoadModule(&urib.uri, AFX_BIT(8), &e2coree)) AfxThrowError();
             else
             {
-                AfxAssertObjects(1, &e2coree, afxFcc_MDLE);
+                AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2coree);
                 sys->e2coree = e2coree;
 
                 if (AfxAcquireIoBridge(&cfg->mainIoBridge, &sys->primeExu))
                     AfxThrowError();
 
                 if (err)
-                    AfxReleaseObjects(1, &sys->e2coree);
+                    AfxDisposeObjects(1, &sys->e2coree);
             }
         }
     }
@@ -458,10 +461,10 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 _AFX afxError _AfxSysDtor(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
-    AfxReleaseObjects(1, &sys->e2coree);
-    AfxReleaseObjects(1, &sys->primeThr);
+    AfxDisposeObjects(1, &sys->e2coree);
+    AfxDisposeObjects(1, &sys->primeThr);
 
     // objects will be released at class drop.
     AfxDeregisterChainedClasses(&sys->classes);

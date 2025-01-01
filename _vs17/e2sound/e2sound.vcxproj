@@ -95,6 +95,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
@@ -127,6 +128,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link />
     <Link />
@@ -149,34 +151,24 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\dev\AsxContextImplKit.h" />
-    <ClInclude Include="..\..\src\dev\AsxDeviceImplKit.h" />
-    <ClInclude Include="..\..\src\dev\AsxImplKit.h" />
-    <ClInclude Include="..\..\inc\sound\asxSound.h" />
+    <ClInclude Include="..\..\inc\sound\afxSoundBridge.h" />
+    <ClInclude Include="..\..\inc\sound\afxSoundSystem.h" />
     <ClInclude Include="..\..\inc\sound\afxSoundDefs.h" />
-    <ClInclude Include="..\..\inc\sound\asxBank.h" />
-    <ClInclude Include="..\..\inc\sound\afxWaveform.h" />
-    <ClInclude Include="..\..\inc\sound\asxTracker.h" />
-    <ClInclude Include="..\..\inc\sound\dev\afxSoundBridge.h" />
-    <ClInclude Include="..\..\inc\sound\dev\afxSoundContext.h" />
-    <ClInclude Include="..\..\inc\sound\dev\afxSoundInput.h" />
-    <ClInclude Include="..\..\inc\sound\dev\afxSoundOutput.h" />
-    <ClInclude Include="..\..\inc\sound\dev\afxSoundSystem.h" />
+    <ClInclude Include="..\..\inc\sound\afxSoundDevice.h" />
+    <ClInclude Include="..\..\inc\sound\io\afxAudient.h" />
+    <ClInclude Include="..\..\inc\sound\io\afxAudio.h" />
+    <ClInclude Include="..\..\inc\sound\io\afxSound.h" />
+    <ClInclude Include="..\..\inc\sound\op\afxMixer.h" />
+    <ClInclude Include="..\..\inc\sound\op\afxSink.h" />
+    <ClInclude Include="..\..\src\sound\impl\asxImpl_Audio.h" />
+    <ClInclude Include="..\..\src\sound\impl\asxImpl_System.h" />
+    <ClInclude Include="..\..\src\sound\impl\asxImplementation.h" />
+    <ClInclude Include="..\..\src\sound\impl\asxImpl_Executor.h" />
+    <ClInclude Include="..\..\src\sound\impl\asxImpl_Mixer.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="e2sound.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\sound\asxSound.c" />
-    <ClCompile Include="..\..\src\sound\asxBank.c" />
-    <ClCompile Include="..\..\src\sound\afxWaveform.c" />
-    <ClCompile Include="..\..\src\sound\asxTracker.c" />
-    <ClCompile Include="..\..\src\sound\dev\afxSoundBridge.c" />
-    <ClCompile Include="..\..\src\sound\dev\afxSoundContext.c" />
-    <ClCompile Include="..\..\src\sound\dev\afxSoundInput.c" />
-    <ClCompile Include="..\..\src\sound\dev\afxSoundOutput.c" />
-    <ClCompile Include="..\..\src\sound\dev\afxSoundSystem.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2combo\e2combo.vcxproj">
@@ -188,6 +180,22 @@
     <ProjectReference Include="..\e2draw\e2draw.vcxproj">
       <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\sound\afxSoundBridge.c" />
+    <ClCompile Include="..\..\src\sound\afxSoundDefs.c" />
+    <ClCompile Include="..\..\src\sound\afxSoundSystem.c" />
+    <ClCompile Include="..\..\src\sound\afxSoundDevice.c" />
+    <ClCompile Include="..\..\src\sound\impl\asxImplementation.c" />
+    <ClCompile Include="..\..\src\sound\impl\asxImpl_Audio.c" />
+    <ClCompile Include="..\..\src\sound\impl\asxImpl_Executor.c" />
+    <ClCompile Include="..\..\src\sound\impl\asxImpl_Mixer.c" />
+    <ClCompile Include="..\..\src\sound\io\afxAudient.c" />
+    <ClCompile Include="..\..\src\sound\io\afxAudio.c" />
+    <ClCompile Include="..\..\src\sound\io\afxSound.c" />
+    <ClCompile Include="..\..\src\sound\op\afxMixer.c" />
+    <ClCompile Include="..\..\src\sound\op\afxSink.c" />
+    <ClCompile Include="..\..\src\sound\op\afxSoundQueue.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

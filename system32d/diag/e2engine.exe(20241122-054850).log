@@ -1,0 +1,29 @@
+Booting...
+Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree.dll>Memory page Size: 4096HW threading: 2Loading... <e2draw.dll>Loading... <e2combo.dll>Loading... <e2sound.dll>Loading... <e2mmux.dll>Loading... <//./z////eaxzal1.dll>Installing... <eaxzal1>	<//./eaxzal1/>("")  0.0.0 Loading... <//./z////galileo.dll>Installing... <galileo>	<//./galileo/>("")  0.0.0 Loading... <//./z////tarzgl4.dll>Installing... <tarzgl4>Loading... <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL.c:1537
+GL: INVAL_PARAMzglInterop_WGL.c:1552
+GL: INVAL_PARAMzglInterop_WGL.c:1563
+GL: INVAL_PARAMzglInterop_WGL.c:1595
+GL: INVAL_PARAMzglInterop_WGL.c:1626
+GL: INVAL_PARAMzglInterop_WGL.c:1628
+GL: INVAL_PARAMzglInterop_WGL.c:1785
+GL: INVAL_PARAMzglInterop_WGL.c:1788
+GL: INVAL_PARAMzglInterop_WGL.c:1793
+GL: INVAL_PARAMzglInterop_WGL.c:1798
+GL: INVAL_PARAMLoading... <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL.c:1537
+GL: INVAL_PARAMzglInterop_WGL.c:1552
+GL: INVAL_PARAMzglInterop_WGL.c:1563
+GL: INVAL_PARAMzglInterop_WGL.c:1595
+GL: INVAL_PARAMzglInterop_WGL.c:1626
+GL: INVAL_PARAMzglInterop_WGL.c:1628
+GL: INVAL_PARAMzglInterop_WGL.c:1785
+GL: INVAL_PARAMzglInterop_WGL.c:1788
+GL: INVAL_PARAMzglInterop_WGL.c:1793
+GL: INVAL_PARAMzglInterop_WGL.c:1798
+GL: INVAL_PARAM	<//./tarzgl3/>("")  0.0.0 	<//./tarzgl4/>("")  0.0.0 Loading... <//./z////winsh4d.dll>Installing... <winsh4d>Mounting... <//./d/>('E:\qwadro\repo\bangitk\system'),7	<//./dwm/>("")  0.0.0 	<//./kbd/>("")  0.0.0 	<//./mse/>("")  0.0.0 	<//./gpad/>("")  0.0.0 Entering the Thread Execution Environment 3496
+zglDrawDevice_W32.c:159
+zglDrawSystem_W32.c:71
+afxClass.c:571
+afxClass.c:578
+afxClass<DrawSystem>(02cac310)

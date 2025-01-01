@@ -34,9 +34,9 @@
 
 AFX_DEFINE_STRUCT(afxArenaSpecification)
 {
-    afxUnit      chunkSiz;
-    afxUnit      largeItemSiz;
-    afxUnit      initialCleanupSiz;
+    afxUnit     chunkSiz;
+    afxUnit     largeItemSiz;
+    afxUnit     initialCleanupSiz;
     afxBool     recycle;
 };
 
@@ -69,29 +69,27 @@ AFX_DEFINE_STRUCT(afxArena)
 AFX afxError    AfxDeployArena(afxArena* aren, afxArenaSpecification const *spec, afxHere const hint);
 AFX void        AfxDismantleArena(afxArena* aren);
 
+AFX void        AfxExhaustArena(afxArena* aren);
+
+AFX void        AfxRecycleArenaUnit(afxArena* aren, void* p, afxSize size);
+
 AFX afxSize     AfxPushArenaCleanup(afxArena* aren, void(*action)(void *data, void*extra), void *data, void*extra);
 AFX afxBool     AfxPopArenaCleanup(afxArena* aren, void(*action)(void *, void*), void *data);
 
-AFX void*       AfxAllocateArena(afxArena* aren, afxSize size);
-AFX void*       AfxCoallocateArena(afxArena* aren, afxSize num, afxSize size);
+AFX void*       AfxRequestArenaUnit(afxArena* aren, afxSize size);
+AFX void*       AfxRequestArenaUnits(afxArena* aren, afxSize num, afxSize size);
 
-AFX void*       AfxAllocateArenaCopied(afxArena* aren, afxSize size, const void* init);
-AFX void*       AfxCoallocateArenaCopied(afxArena* aren, afxSize num, afxSize size, const void* init);
+AFX void*       AfxRequestArenaCopy(afxArena* aren, afxSize size, const void* init);
+AFX void*       AfxRequestArenaCopies(afxArena* aren, afxSize num, afxSize size, const void* init);
 
-AFX void*       AfxAllocateArenaZeroed(afxArena* aren, afxSize size);
-AFX void*       AfxCoallocateArenaZeroed(afxArena* aren, afxSize num, afxSize size);
-
-AFX void        AfxExhaustArena(afxArena* aren);
+AFX void*       AfxRequestArenaZeroedUnit(afxArena* aren, afxSize size);
+AFX void*       AfxRequestArenaZeroedUnits(afxArena* aren, afxSize num, afxSize size);
 
 AFX char*       AfxArenaDuplicateString(afxArena* aren, const char *string);
 
-AFX void        AfxRecycleArena(afxArena* aren, void* p, afxSize size);
-
 AFX void        AfxDumpArenaStats(afxArena* aren, afxStream out);
 
-AFX afxSize     AfxGetArenaRecycleSize(afxArena* aren);
-AFX afxSize     AfxGetArenaTotalAllocated(afxArena* aren);
-AFX afxSize     AfxGetArenaUnusedSpace(afxArena* aren);
+AFX void        AfxGetArenaInfo(afxArena* aren, afxUnit* totalAllocated, afxUnit* unusedSpace, afxUnit* recycleSiz);
 
 AFX void        AfxLogArenaStats(afxArena* aren);
 

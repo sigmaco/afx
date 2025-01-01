@@ -898,8 +898,8 @@ static Value importModule(xssVm vm, Value name)
   
   afxStream file;
   afxStreamInfo iobi = { 0 };
-  iobi.usage = afxStreamUsage_FILE;
-  iobi.flags = afxStreamFlag_READABLE;
+  iobi.usage = afxIoUsage_FILE;
+  iobi.flags = afxIoFlag_READABLE;
   AfxAcquireStream(1, &iobi, &file);
   AfxReloadFile(file, &uri.uri);
 

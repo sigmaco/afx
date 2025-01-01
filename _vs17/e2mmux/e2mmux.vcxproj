@@ -95,6 +95,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
@@ -127,6 +128,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -153,15 +155,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\ux\afxKeyboard.c" />
-    <ClCompile Include="..\..\src\ux\afxMouse.c" />
-    <ClCompile Include="..\..\src\ux\afxGamepad.c" />
-    <ClCompile Include="..\..\src\ux\afxHid.c" />
+    <ClCompile Include="..\..\..\..\dep_\vgl1\vgl1.c" />
+    <ClCompile Include="..\..\..\..\dep_\vgl\vgl.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\src\ux\afxSession.c" />
     <ClCompile Include="..\..\src\ux\afxTerminal.c" />
     <ClCompile Include="..\..\src\ux\afxWindow.c" />
     <ClCompile Include="..\..\src\ux\afxShell.c" />
     <ClCompile Include="..\..\src\ux\afxWidget.c" />
+    <ClCompile Include="..\..\src\ux\hid\afxGamepad.c" />
+    <ClCompile Include="..\..\src\ux\hid\afxHid.c" />
+    <ClCompile Include="..\..\src\ux\hid\afxKeyboard.c" />
+    <ClCompile Include="..\..\src\ux\hid\afxMouse.c" />
+    <ClCompile Include="..\..\src\ux\impl\auxImplementation.c" />
+    <ClCompile Include="..\..\src\ux\va\auxPaint.c" />
     <ClCompile Include="..\..\src\xss\afxScript.c" />
     <ClCompile Include="..\..\src\xss\xssCompiler.c" />
     <ClCompile Include="..\..\src\xss\xssCore.c" />
@@ -174,8 +185,14 @@
     <ClCompile Include="..\..\src\xss\xssVm.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\dev\AuxImplKit.h" />
-    <ClInclude Include="..\..\src\dev\AuxShellImplKit.h" />
+    <ClInclude Include="..\..\..\..\dep_\vgl1\vgl1.h" />
+    <ClInclude Include="..\..\inc\ux\hid\afxGamepad.h" />
+    <ClInclude Include="..\..\inc\ux\hid\afxHid.h" />
+    <ClInclude Include="..\..\inc\ux\hid\afxKeyboard.h" />
+    <ClInclude Include="..\..\inc\ux\hid\afxMouse.h" />
+    <ClInclude Include="..\..\inc\ux\va\auxPaint.h" />
+    <ClInclude Include="..\..\src\ux\impl\auxImplementation.h" />
+    <ClInclude Include="..\..\src\ux\impl\auxImpl_Shell.h" />
     <ClInclude Include="..\..\src\xss\xssCommon.h" />
     <ClInclude Include="..\..\src\xss\xssCompiler.h" />
     <ClInclude Include="..\..\src\xss\xssCore.h" />
@@ -188,10 +205,6 @@
     <ClInclude Include="..\..\src\xss\xssUtils.h" />
     <ClInclude Include="..\..\src\xss\xssValue.h" />
     <ClInclude Include="..\..\src\xss\xssVm.h" />
-    <ClInclude Include="..\..\inc\ux\afxKeyboard.h" />
-    <ClInclude Include="..\..\inc\ux\afxMouse.h" />
-    <ClInclude Include="..\..\inc\ux\afxGamepad.h" />
-    <ClInclude Include="..\..\inc\ux\afxHid.h" />
     <ClInclude Include="..\..\inc\ux\afxSession.h" />
     <ClInclude Include="..\..\inc\ux\afxTerminal.h" />
     <ClInclude Include="..\..\inc\ux\afxWindow.h" />

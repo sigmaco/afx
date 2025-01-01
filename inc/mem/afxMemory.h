@@ -145,15 +145,10 @@ AFX afxError                AfxUnmapMemory(afxMemory mem, afxSize offset, afxUni
 AFX afxError                AfxMemoryEnableDebugging(afxMmu mmu, afxUnit level);
 AFX afxSize                 AfxMemoryGetDefaultAlignment(afxMmu mmu);
 
-AFX afxError    AfxAllocate2(void** var, afxSize siz, afxUnit align, afxHere const hint);
-AFX afxError    AfxReallocate2(void** var, afxSize siz, afxUnit align, afxHere const hint);
-AFX afxError    AfxCoallocate2(void** var, afxSize siz, afxUnit cnt, afxUnit align, afxHere const hint);
-AFX afxError    AfxDeallocate2(void** var, afxHere const hint);
-
-AFX void*                   AfxAllocate(afxSize cnt, afxSize siz, afxUnit align, afxHere const hint);
-AFX void*                   AfxCoallocate(afxSize siz, afxSize cnt, afxUnit align, afxHere const hint);
-AFX void*                   AfxReallocate(void *p, afxSize siz, afxSize cnt, afxUnit align, afxHere const hint);
-AFX void                    AfxDeallocate(void *p);
+AFX afxError                AfxAllocate(afxSize siz, afxUnit align, afxHere const hint, void** pp);
+AFX afxError                AfxCoallocate(afxSize siz, afxSize cnt, afxUnit align, afxHere const hint, void** pp);
+AFX afxError                AfxReallocate(afxSize siz, afxUnit align, afxHere const hint, void** pp);
+AFX afxError                AfxDeallocate(void** pp, afxHere const hint);
 
 #define                     AfxStream(cnt_,srcStride_,dstStride_,src_,dst_) AfxStream2(cnt_,src_,srcStride_,dst_,dstStride_)
 AFX void                    AfxStream2(afxUnit cnt, void const* src, afxSize srcStride, void* dst, afxUnit dstStride);
@@ -176,16 +171,17 @@ AFX void*           AfxMemset(void* dst, afxInt val, afxSize siz);
 AFX void            AfxZero(void* p, afxSize siz);
 AFX void            AfxZero2(void* p, afxSize siz, afxSize cnt);
 
-AFX void            AfxFree(void* block);
+#if 0
+AFX void            AfxFree(void** pp);
 AFX void*           AfxMalloc(afxSize siz);
 AFX void*           AfxCalloc(afxSize cnt, afxSize siz);
 AFX void*           AfxRealloc(void* block, afxSize siz);
 
-AFX void            AfxFreeAligned(void* block);
+AFX void            AfxFreeAligned(void** pp);
 AFX void*           AfxMallocAligned(afxSize siz, afxSize align);
 AFX void*           AfxReallocAligned(void* block, afxSize siz, afxSize align);
 AFX void*           AfxRecallocAligned(void* block, afxSize cnt, afxSize siz, afxSize align);
-
+#endif
 
 AFX afxError _AfxInitMmu(afxThread thr);
 AFX afxError _AfxDeinitMmu(afxThread thr);

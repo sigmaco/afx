@@ -32,16 +32,16 @@
 
 AFX_DEFINE_STRUCT(afxQueue)
 {
-    afxUnit      head;
-    afxUnit      tail;
-    afxUnit      cap;
-    afxUnit      unitSiz;
+    afxUnit     head;
+    afxUnit     tail;
+    afxUnit     cap;
+    afxUnit     unitSiz;
     afxByte*    bytemap;
+    afxBool     alloced;
 };
 
-AFXINL afxError AfxCleanUpQueue(afxQueue* que);
-AFXINL afxError AfxSetUpQueue(afxQueue* que, afxUnit unitSiz, afxUnit cap);
-AFXINL afxError AfxWrapQueue(afxQueue* que, afxUnit unitSiz, afxUnit cap, afxByte* bytemap);
+AFXINL afxError AfxDismantleQueue(afxQueue* que);
+AFXINL afxError AfxMakeQueue(afxQueue* que, afxUnit unitSiz, afxUnit cap, void* buf, afxUnit pop);
 
 /// Remove, also called deque or pop, this removes the oldest element from the queue.
 AFXINL afxError AfxPopQueue(afxQueue* que);

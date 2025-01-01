@@ -129,7 +129,7 @@ _AFXINL afxBool AfxWhdIsZero(afxWhd const whd)
 {
     afxError err = AFX_ERR_NONE;
     //AFX_ASSERT(whd);
-    return (AfxScalar(0) == (whd.w + whd.h + whd.d));
+    return (AFX_R(0) == (whd.w + whd.h + whd.d));
 }
 
 _AFXINL void AfxWhdAdd(afxWhd* whd, afxWhd const a, afxWhd const b)

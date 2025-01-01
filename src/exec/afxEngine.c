@@ -3,209 +3,192 @@
 #include <Windows.h>
 #include "qwadro/inc/afxQwadro.h"
 
-#include "../../../../dep_/vgl/vgl.h"
 afxSimulation sim = NIL;
 
 afxBool readyToRender = FALSE;
-afxSoundContext sctx;
+afxSoundSystem ssys;
 afxWindow window;
+afxSession ses = NIL;
 afxDrawOutput dout = NIL;
-afxDrawContext dctx = NIL;
+afxDrawSystem dsys = NIL;
 afxDrawInput din = NIL;
 
 void *vg = NIL;
 
-afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw thread
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
-
-    switch (ev->id)
-    {
-    default:
-    {
-        akxRenderer rnd = AfxGetDrawInputUdd(din);
-        afxDrawContext dctx;
-        AfxGetDrawInputContext(din, &dctx);
-
-        if (readyToRender)
-        {
-            afxUnit outBufIdx = 0;
-
-            if (!AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx))
-            {
-                avxCmdb cmdb;
-                afxUnit queIdx = AFX_INVALID_INDEX;
-                afxUnit portId = 0;
-
-                if (AfxOpenDrawBatches(dctx, portId, 1, &cmdb)) AfxThrowError();
-                else
-                {
-                    queIdx = AfxGetCmdBufferPool(cmdb);
-
-                    afxWhd canvWhd;
-                    avxCanvas canv;
-                    AfxGetDrawOutputCanvas(dout, outBufIdx, &canv);
-                    AfxAssertObjects(1, &canv, afxFcc_CANV);                        
-                    canvWhd = AfxGetCanvasExtent(canv);
-
-                    avxDrawTarget dt[2] = { 0 };
-                    AfxV4dSet(dt[0].clearValue.rgba, 0.3, 0.3, 0.3, 1.0);
-                    dt[1].clearValue.depth = 1.0;
-                    dt[1].clearValue.stencil = 0;
-                    avxDrawScope sync = { 0 };
-                    sync.area.w = canvWhd.w;
-                    sync.area.h = canvWhd.h;
-                    sync.canv = canv;
-                    sync.rasterCnt = 1;
-                    sync.rasters = &dt[0];
-                    sync.depth = &dt[1];
-                    AvxCmdCommenceDrawScope(cmdb, &sync);
-
-                    afxViewport vp = { 0 };
-                    vp.offset[0] = sync.area.x;
-                    vp.offset[1] = sync.area.y;
-                    vp.extent[0] = sync.area.w;
-                    vp.extent[1] = sync.area.h;
-                    vp.depth[1] = 1.0f;
-                    AvxCmdAdjustViewports(cmdb, 0, 1, &vp);
-
-                    TestSvg(vg, cmdb, canvWhd);
-
-                    AvxCmdConcludeDrawScope(cmdb);
-
-                    afxSemaphore dscrCompleteSem = NIL;
-
-                    if (AfxCloseDrawBatches(1, &cmdb)) AfxThrowError();
-                    else
-                    {
-                        avxSubmission subm = { 0 };
-
-                        if (AfxSubmitDrawCommands(dctx, &subm, 1, &cmdb))
-                            AfxThrowError();
-
-                        AfxWaitForDrawQueue(dctx, subm.exuIdx, queIdx);
-                    }
-                }
-
-                afxSemaphore dscrCompleteSem = NIL;
-
-                //AfxStampDrawOutputBuffers(1, &req, AfxV2d(200, 200), &AfxString("Test"), 738);
-
-                avxPresentation pres = { 0 };
-
-                if (AfxPresentDrawOutputBuffers(dctx, &pres, 1, &dout, &outBufIdx))
-                    AfxThrowError();
-
-            }
-        }
-        break;
-    }
-    }
-    return FALSE;
-}
-
 void UpdateFrameMovement(afxReal64 DeltaTime)
 {
     afxError err = AFX_ERR_NONE;
-
 }
 
 int main(int argc, char const* argv[])
 {
     afxError err = AFX_ERR_NONE;
-    afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    //afxUri2048 romUri;
-    //AfxMakeUri2048(&romUri, NIL);
-    //AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
+    // Boot up the Qwadro (if necessary)
 
-    // Boot up the Qwadro
-
-    afxSystemConfig sysCfg;
-    AfxConfigureSystem(&sysCfg);
-    AfxDoSystemBootUp(&sysCfg);
-    
-    afxSession ses;
-    afxSessionConfig scfg = { 0 };
-    AfxAcquireSession(0, &scfg, &ses);
+    afxSystemConfig sysc;
+    AfxConfigureSystem(&sysc);
+    AfxDoSystemBootUp(&sysc);
 
     // Acquire hardware device contexts
-#if 0
-    afxSoundContextConfig sctxCfg = { 0 };
-    AfxOpenSoundDevice(0, &sctxCfg, &sctx);
-    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
-#endif
+
     afxUnit ddevId = 0;
-    afxDrawContextConfig dctxCfg = { 0 };
-    AfxOpenDrawDevice(ddevId, &dctxCfg, &dctx);
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    afxDrawSystemConfig dsyc;
+    AfxConfigureDrawSystem(ddevId, &dsyc);
+    AfxEstablishDrawSystem(ddevId, &dsyc, &dsys);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+    // Open a session
+
+    afxSessionConfig scfg = { 0 };
+    AfxAcquireSession(0, &scfg, &ses);
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    AfxOpenSession(ses, NIL, NIL, NIL);
 
     // Acquire a drawable surface
 
-    afxWindowConfig wrc = { 0 };
-    wrc.ddevId = ddevId;
-    wrc.surface.pixelFmt = avxFormat_RGBA8;
-    wrc.surface.pixelFmtDs[0] = avxFormat_D32f;
-    wrc.surface.minBufCnt = 2;
+    afxWindowConfig wrc;
+    wrc.dsys = dsys;
+    AfxConfigureWindow(ses, &wrc, NIL);
     AfxAcquireWindow(ses, &wrc, &window);
-    AfxAssertObjects(1, &window, afxFcc_WND);
-    AfxAdjustWindowFromNdc(window, NIL, AfxV2d(0.5, 0.5));
-
+    AfxAdjustWindowFromNdc(window, NIL, AFX_V3D(0.5, 0.5, 1));
     AfxGetWindowDrawOutput(window, NIL, &dout);
-    AfxAssertObjects(1, &dout, afxFcc_DOUT);
-    AfxReconnectDrawOutput(dout, dctx);
+    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
-    // Acquire a draw operator
+    // Acquire a draw input mechanism
 
-    afxDrawInputConfig dinConfig = { 0 };
-    //dinConfig.proc = DrawInputProc;
-    AfxOpenDrawInput(ddevId, &dinConfig, &din);
-    AFX_ASSERT(din);
-    AfxReconnectDrawInput(din, dctx);
+    afxDrawInput din;
+    afxDrawInputConfig dinCfg;
+    AfxConfigureDrawInput(dsys, &dinCfg);
+    AfxOpenDrawInput(dsys, &dinCfg, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
 
-    // Acquire a simulation
-
-    akxSimulationConfig simSpec = { 0 };
-    AfxAabbSet(&simSpec.extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
-    simSpec.dctx = dctx;
-    simSpec.din = din;
-    simSpec.unitsPerMeter = 1.f;
-    AfxV3dSet(simSpec.right, 1, 0, 0);
-    AfxV3dSet(simSpec.up, 0, 1, 0);
-    AfxV3dSet(simSpec.back, 0, 0, 1);
-    AfxV3dZero(simSpec.origin);
-    AfxAcquireSimulations(0, &simSpec, &sim);
-    AfxAssertObjects(1, &sim, afxFcc_SIM);
-
-    // Load startup scripts
-
-    afxUri uri;
-    AfxMakeUri(&uri, 0, "system/engine.xss", 0);
-    //AfxLoadScript(NIL, &uri);
+    afxWidget wid;
+    afxWidgetConfig widc = { 0 };
+    AfxAcquireWidgets(window, 1, &widc, &wid);
+    
 
     // Run
 
-    readyToRender = TRUE;
+    afxClock startClock, lastClock;
+    AfxGetClock(&startClock);
+    lastClock = startClock;
 
-    vg = AvxAcquireGraphic(dctx, 1);
+    readyToRender = TRUE;
 
     while (AfxSystemIsExecuting())
     {
-        AfxPollInput();
+        AfxPollInput(ses);
 
         afxReal64 ct, dt;
-        AfxStepWindow(window, &ct, &dt);
+        //AfxStepWindow(window, &ct, &dt);
+        {
+            afxClock currClock;
+            AfxGetClock(&currClock);
+            ct = AfxGetSecondsElapsed(&startClock, &currClock);
+            dt = AfxGetSecondsElapsed(&lastClock, &currClock);
+            lastClock = currClock;
+        }
+
         UpdateFrameMovement(dt);
 
-        DrawInputProc(din, NIL);
+        if (!AfxSystemIsExecuting())
+            break;
+
+        if (!readyToRender)
+            continue;
+
+        afxUnit outBufIdx = 0;
+
+        if (AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx))
+            continue;
+
+        afxDrawContext dctx;
+        afxUnit queIdx = 0;
+        afxUnit portId = 0;
+
+        if (AfxAcquireDrawContexts(dsys, portId, queIdx, 1, &dctx))
+        {
+            AfxThrowError();
+            AfxRecycleDrawOutputBuffer(dout, outBufIdx);
+            continue;
+        }
+
+        avxCanvas canv;
+        afxWhd canvWhd;
+        AfxGetDrawOutputCanvas(dout, outBufIdx, &canv);
+        AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
+        canvWhd = AfxGetCanvasExtent(canv);
+
+        {
+            avxDrawTarget rdt = { 0 };
+            rdt.clearValue.rgba[0] = 0.3f;
+            rdt.clearValue.rgba[1] = 0.1f;
+            rdt.clearValue.rgba[2] = 0.3f;
+            rdt.clearValue.rgba[3] = 1;
+            rdt.loadOp = avxLoadOp_CLEAR;
+            rdt.storeOp = avxStoreOp_STORE;
+            avxDrawTarget ddt = { 0 };
+            ddt.clearValue.depth = 1.0;
+            ddt.clearValue.stencil = 0;
+            ddt.loadOp = avxLoadOp_CLEAR;
+            ddt.storeOp = avxStoreOp_STORE;
+
+            avxDrawScope dps = { 0 };
+            dps.canv = canv;
+            dps.layerCnt = 1;
+            dps.targetCnt = 1;
+            dps.targets = &rdt;
+            //dps.depth = &ddt;
+            //dps.stencil = &ddt;
+
+            AfxSetRect(&dps.area, 0, 0, canvWhd.x, canvWhd.y);
+            AvxCmdCommenceDrawScope(dctx, &dps);
+
+            AfxResetWidget(wid);
+            AfxDoWidgetInput(wid);
+            AfxTestWidget(wid);
+            AfxRedrawWidgets(window, dctx);
+
+            //TestSvg(vg, dctx, canvWhd);
+            AvxCmdConcludeDrawScope(dctx);
+        }
+
+        afxSemaphore dscrCompleteSem = NIL;
+
+        if (AfxCompileDrawCommands(dctx))
+        {
+            AfxThrowError();
+            AfxRecycleDrawOutputBuffer(dout, outBufIdx);
+            continue;
+        }
+
+        avxSubmission subm = { 0 };
+
+        if (AfxRollDrawCommands(dsys, &subm, 1, &dctx))
+        {
+            AfxThrowError();
+            AfxRecycleDrawOutputBuffer(dout, outBufIdx);
+            continue;
+        }
+
+        AfxWaitForDrawQueue(dsys, subm.exuIdx, subm.baseQueIdx, 0);
+
+        //AfxStampDrawOutputBuffers(1, &req, AFX_V2D(200, 200), &AfxString("Test"), 738);
+
+        avxPresentation pres = { 0 };
+
+        if (AfxPresentDrawOutputs(dsys, &pres, 1, &dout, &outBufIdx))
+        {
+            AfxThrowError();
+            AfxRecycleDrawOutputBuffer(dout, outBufIdx);
+            continue;
+        }
     }
 
-    AvxReleaseGraphic(vg);
+    AfxDisposeObjects(1, &window);
 
-    AfxReleaseObjects(1, &window);
-
-    AfxReleaseObjects(1, &dctx);
+    AfxDisposeObjects(1, &dsys);
 
     AfxDoSystemShutdown(0);
     Sleep(3000);

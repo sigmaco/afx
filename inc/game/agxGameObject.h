@@ -111,10 +111,10 @@ AFX_DEFINE_STRUCT(agxEntityDecl)
     afxUri                  icon;
     afxUri                  portrait;
     afxUri                  animFile;
-    afxUnit                  displayTxtId;
-    afxUnit                  editorTxtId;
-    afxUnit                  rolloverTxtId;
-    afxUnit                  shortRolloverTxtId;
+    afxUnit                 displayTxtId;
+    afxUnit                 editorTxtId;
+    afxUnit                 rolloverTxtId;
+    afxUnit                 shortRolloverTxtId;
     agxMovementType         movType; // movement type
     afxReal                 obstrucRadiusX; // obstruction radius X
     afxReal                 obstrucRadiusZ; // obstruction radius Z
@@ -132,18 +132,18 @@ AFX_DEFINE_STRUCT(agxEntityDecl)
         agxResourceType     resType;
         afxReal             value;
     }*                      costs;
-    afxUnit                  costCnt;
-    afxUnit                  allowedAge;
+    afxUnit                 costCnt;
+    afxUnit                 allowedAge;
     struct
     {
         agxAttackType       attackType;
         afxReal             value;
     }*                      armors;
-    afxUnit                  armorCnt;
+    afxUnit                 armorCnt;
 
     // movible entities
     afxReal                 turnRate;
-    afxUnit                  popCnt; // population count
+    afxUnit                 popCnt; // population count
     agxFormationCategory    formation; // formation category
     afxReal                 maxVelocity;
     afxReal                 maxRunVelocity;
@@ -152,10 +152,10 @@ AFX_DEFINE_STRUCT(agxEntityDecl)
 
     struct
     {
-        afxUnit              page;
-        afxUnit              column;
+        afxUnit             page;
+        afxUnit             column;
     }*                      cmds;
-    afxUnit                  cmdCnt;
+    afxUnit                 cmdCnt;
 
 };
 

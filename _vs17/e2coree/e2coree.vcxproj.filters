@@ -7,9 +7,6 @@
     <Filter Include="qwadro\math">
       <UniqueIdentifier>{bfb78e21-6007-4902-94b2-e2c3057ff7e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\game">
-      <UniqueIdentifier>{3bb2f21a-c55f-477f-af22-266217b15f5e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro\io">
       <UniqueIdentifier>{a28a9c88-0824-4eff-a448-c2f3e0dd9bf0}</UniqueIdentifier>
     </Filter>
@@ -72,15 +69,6 @@
     <ClInclude Include="..\..\inc\math\afxRotor.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\game\agxGameDefs.h">
-      <Filter>qwadro\game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\game\agxGameObject.h">
-      <Filter>qwadro\game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\game\agxGameData.h">
-      <Filter>qwadro\game</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\io\afxSource.h">
       <Filter>qwadro\io</Filter>
     </ClInclude>
@@ -128,9 +116,6 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>_dll</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mem\afxResidency.h">
-      <Filter>qwadro\mem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\math\afxSimd.h">
       <Filter>qwadro\math</Filter>
@@ -264,6 +249,12 @@
     <ClInclude Include="..\..\inc\math\afxSpace.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\io\afxRing.h">
+      <Filter>qwadro\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\io\afxStreamOps.h">
+      <Filter>qwadro\io</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md">
@@ -311,12 +302,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\math\afxRotor.c">
       <Filter>qwadro\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\game\agxGameObject.c">
-      <Filter>qwadro\game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\game\agxGameData.c">
-      <Filter>qwadro\game</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\io\afxResource.c">
       <Filter>qwadro\io</Filter>
@@ -474,12 +459,6 @@
     <ClCompile Include="..\..\src\exec\afxCondition_PC.c">
       <Filter>qwadro\exec</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\lib\rpmalloc\malloc.c">
-      <Filter>qwadro\dep</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\lib\rpmalloc\rpmalloc.c">
-      <Filter>qwadro\dep</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\io\afxIoBridge.c">
       <Filter>qwadro\io</Filter>
     </ClCompile>
@@ -488,6 +467,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\math\afxReal16.c">
       <Filter>qwadro\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\rpmalloc\malloc.c">
+      <Filter>qwadro\dep</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\rpmalloc\rpmalloc.c">
+      <Filter>qwadro\dep</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\io\afxIoQueue.c">
+      <Filter>qwadro\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\io\afxIoPort.c">
+      <Filter>qwadro\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\io\afxStreamOps.c">
+      <Filter>qwadro\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\io\afxStreamXpu.c">
+      <Filter>qwadro\io</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

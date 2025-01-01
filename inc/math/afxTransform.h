@@ -26,6 +26,10 @@
     (note that it may also contain mirroring). 
     Additionally, each transform stores a set of afxTransformFlags that indicates which, if any, of these values current 
     has a non-identity value. These flags are solely used to speed up computation.
+
+    When using transformation matrices we usually use the terms "rotation" and "translation". 
+    When using a pose we use the terms "orientation" and "position". 
+    But that’s just a subtle difference – it pretty much means the same.
 */
 
 #ifndef AFX_TRANSFORM_H
@@ -39,17 +43,17 @@ typedef enum afxTransformFlag
 {
     afxTransformFlag_TRANSLATED = AFX_BIT(0), // has non-identity position
     afxTransformFlag_ROTATED    = AFX_BIT(1), // has non-identity orientation
-    afxTrasnformFlags_RIGID     = afxTransformFlag_TRANSLATED | afxTransformFlag_ROTATED,
+    afxTransformFlag_RIGID      = afxTransformFlag_TRANSLATED | afxTransformFlag_ROTATED,
     afxTransformFlag_DEFORMED   = AFX_BIT(2), // has non-identity scale/shear
     afxTransformFlag_ALL =      (afxTransformFlag_TRANSLATED | afxTransformFlag_ROTATED | afxTransformFlag_DEFORMED)
 } afxTransformFlags;
 
 AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxTransform)
 {
-    afxQuat AFX_SIMD    orientation;
-    afxV3d AFX_SIMD     position;
-    afxTransformFlags   flags;
-    afxM3d              scaleShear;
+    afxQuat             orientation;
+    afxV3d              position; // @ 16
+    afxTransformFlags   flags; // @ 28
+    afxM3d              scaleShear; // @ 32
 };
 
 AFX afxTransform const AFX_TRANSFORM_ZERO;

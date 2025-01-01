@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -28,7 +28,7 @@
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/io/afxUri.h"
 #include "qwadro/inc/base/afxFixedString.h"
-#include "qwadro/inc/draw/afxPixel.h"
+#include "qwadro/inc/draw/io/afxPixel.h"
 #include "qwadro/inc/math/afxColor.h"
 #include "qwadro/inc/base/afxFixedString.h"
 
@@ -194,9 +194,9 @@ AFX_DEFINE_STRUCT(avxStencilInfo)
 /// Structure specifying stencil operation state
 {
     avxCompareOp        compareOp; /// is a value specifying the comparison operator used in the stencil test. /// avxCompareOp_ALWAYS
-    afxUnit32            reference; /// is an integer stencil reference value that is used in the unsigned stencil comparison. /// 0
-    afxUnit32            compareMask; /// selects the bits of the unsigned integer stencil values participating in the stencil test. // 1
-    afxUnit32            writeMask; /// selects the bits of the unsigned integer stencil values updated by the stencil test in the stencil framebuffer attachment. /// 1
+    afxUnit32           reference; /// is an integer stencil reference value that is used in the unsigned stencil comparison. /// 0
+    afxUnit32           compareMask; /// selects the bits of the unsigned integer stencil values participating in the stencil test. // 1
+    afxUnit32           writeMask; /// selects the bits of the unsigned integer stencil values updated by the stencil test in the stencil framebuffer attachment. /// 1
     avxStencilOp        failOp; /// is a value specifying the action performed on samples that fail the stencil test. /// avxStencilOp_KEEP
     avxStencilOp        depthFailOp; /// is a value specifying the action performed on samples that pass the stencil test and fail the depth test. /// avxStencilOp_KEEP
     avxStencilOp        passOp; /// is a value specifying the action performed on samples that pass both the depth and stencil tests. /// avxStencilOp_KEEP    
@@ -223,10 +223,10 @@ AFX_DEFINE_STRUCT(avxColorOutput)
 
 AFX_DEFINE_STRUCT(avxPipelineInfo)
 {
-    afxUnit              stageCnt;
+    afxUnit             stageCnt;
     avxLigature         liga;
 
-    avxVertexInput      vin;
+    avxVertexDecl      vin;
     avxTopology         primTopology;
     afxBool             primRestartEnabled;
     avxCullMode         cullMode;
@@ -249,7 +249,7 @@ AFX_DEFINE_STRUCT(avxPipelineInfo)
     afxReal             depthBiasClamp; /// is the maximum (or minimum) depth bias of a fragment. /// 0.f
     // multisampling rasterization
     afxBool             msEnabled;
-    afxUnit              sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
+    afxUnit             sampleLvl; /// is a value specifying the number of samples used in rasterization. /// 0
     afxMask             sampleMasks[AVX_MAX_SAMPLE_MASKS]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
 
     // fragment & pixel output operations
@@ -277,7 +277,7 @@ AFX_DEFINE_STRUCT(avxPipelineInfo)
     afxV2d              depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
 
     // color bending, logical op and color writing
-    afxUnit              colorOutCnt;
+    afxUnit             colorOutCnt;
     avxColorOutput      colorOuts[AVX_MAX_COLOR_OUTPUTS];
     afxColor            blendConstants;
     afxBool             pixelLogicOpEnabled;
@@ -286,21 +286,21 @@ AFX_DEFINE_STRUCT(avxPipelineInfo)
 
 AFX_DEFINE_STRUCT(avxPipelineBlueprint)
 {
-    afxUnit              stageCnt;
+    afxUnit             stageCnt;
     
     afxBool             transformationDisabled;
     // NOTE: the following members are ignored if transformationDisabled is TRUE.
 
-    avxVertexInput      vin;
+    avxVertexDecl       vin;
     avxTopology         primTop; /// is a option defining the primitive topology. /// avxTopology_TRI_LIST
     avxPipelineFlags    primFlags;
     afxBool             primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
     
     afxBool             tesselationEnabled;
-    afxUnit              patchCtrlPoints; /// is the number of control points per patch.
+    afxUnit             patchCtrlPoints; /// is the number of control points per patch.
 
     afxBool             primShaderSupported;
-    afxUnit              vpCnt; /// the number of viewports used by the pipeline. At least 1.
+    afxUnit             vpCnt; /// the number of viewports used by the pipeline. At least 1.
     avxCullMode         cullMode; /// is the triangle facing direction used for primitive culling. /// avxCullMode_BACK
     afxBool             frontFacingInverted; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
     afxBool             depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE    
@@ -323,7 +323,7 @@ AFX_DEFINE_STRUCT(avxPipelineBlueprint)
     afxReal             depthBiasClamp; /// is the maximum (or minimum) depth bias of a fragment. /// 0.f
     // multisampling rasterization
     afxBool             msEnabled;
-    afxUnit              sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
+    afxUnit             sampleLvl; /// is a value specifying the number of samples used in rasterization. /// 0
     afxMask             sampleMasks[AVX_MAX_SAMPLE_MASKS]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
 
     // fragment & pixel output operations
@@ -351,35 +351,35 @@ AFX_DEFINE_STRUCT(avxPipelineBlueprint)
     afxV2d              depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
 
     // color bending, logical op and color writing
-    afxUnit              colorOutCnt;
+    afxUnit             colorOutCnt;
     avxColorOutput      colorOuts[AVX_MAX_COLOR_OUTPUTS];
     afxColor            blendConstants;
     afxBool             pixelLogicOpEnabled;
     avxLogicOp          pixelLogicOp;
 };
 
-AVX afxDrawContext      AfxGetPipelineContext(avxPipeline pip);
+AVX afxDrawSystem       AfxGetPipelineContext(avxPipeline pip);
 
 AVX void                AfxDescribePipeline(avxPipeline pip, avxPipelineInfo* info);
 
-AVX afxUnit              AfxGetColorOutputChannels(avxPipeline pip, afxUnit first, afxUnit cnt, avxColorOutput ch[]);
-AVX afxUnit              AfxGetMultisamplingMasks(avxPipeline pip, afxUnit first, afxUnit cnt, afxMask sampleMask[]);
+AVX afxUnit             AfxGetColorOutputChannels(avxPipeline pip, afxUnit first, afxUnit cnt, avxColorOutput ch[]);
+AVX afxUnit             AfxGetMultisamplingMasks(avxPipeline pip, afxUnit first, afxUnit cnt, afxMask sampleMask[]);
 
 AVX afxBool             AfxGetPipelineShader(avxPipeline pip, avxShaderStage stage, avxShader* shader);
-AVX afxUnit              AfxGetPipelineShaders(avxPipeline pip, afxIndex first, afxUnit cnt, avxShader shaders[]);
+AVX afxUnit             AfxGetPipelineShaders(avxPipeline pip, afxIndex first, afxUnit cnt, avxShader shaders[]);
 
 AVX afxBool             AfxGetPipelineLigature(avxPipeline pip, avxLigature* ligature);
-AVX afxBool             AfxGetPipelineVertexInput(avxPipeline pip, avxVertexInput* input);
+AVX afxBool             AfxGetPipelineVertexInput(avxPipeline pip, avxVertexDecl* input);
 
 AVX afxError            AfxRelinkPipelineFunction(avxPipeline pip, avxShaderStage stage, avxShader shd, afxString const* fn, afxUnit const specIds[], void const* specValues[]);
 AVX afxError            AfxUplinkPipelineFunction(avxPipeline pip, avxShaderStage stage, afxUri const* uri, afxString const* fn, afxUnit const specIds[], void const* specValues[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError            AfxAssembleComputePipelines(afxDrawContext dctx, afxUnit cnt, avxPipelineBlueprint const blueprints[], avxPipeline pipelines[]);
+AVX afxError            AfxAssembleComputePipelines(afxDrawSystem dsys, afxUnit cnt, avxPipelineBlueprint const blueprints[], avxPipeline pipelines[]);
 
-AVX afxError            AfxAssemblePipelines(afxDrawContext dctx, afxUnit cnt, avxPipelineBlueprint const cfg[], avxPipeline razr[]);
+AVX afxError            AfxAssemblePipelines(afxDrawSystem dsys, afxUnit cnt, avxPipelineBlueprint const cfg[], avxPipeline razr[]);
 
-AVX afxError            AfxLoadPipeline(afxDrawContext dctx, avxVertexInput vin, afxUri const* uri, avxPipeline* pipeline);
+AVX afxError            AfxLoadPipeline(afxDrawSystem dsys, avxVertexDecl vin, afxUri const* uri, avxPipeline* pipeline);
 
 #endif//AVX_PIPELINE_H

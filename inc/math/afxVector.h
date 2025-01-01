@@ -62,10 +62,28 @@ AFX afxV2d const AFX_V2D_IDENTITY;
 AFX afxV3d const AFX_V3D_IDENTITY;
 AFX afxV4d const AFX_V4D_IDENTITY;
 
-#define AfxV2d(x_, y_) (afxV2d const){ (afxReal)(x_), (afxReal)(y_) }
-#define AfxV3d(x_, y_, z_) (afxV3d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_ }
-#define AfxV4d(x_, y_, z_, w_) (afxV4d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)w_ }
-#define AfxAtv4d(x_, y_, z_) (afxV4d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)1 }
+#define AFX_V2D(x_, y_) (afxV2d const){ (afxReal)(x_), (afxReal)(y_) }
+#define AFX_V3D(x_, y_, z_) (afxV3d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_ }
+#define AFX_V4D(x_, y_, z_, w_) (afxV4d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)w_ }
+#define AFX_ATV4D(x_, y_, z_) (afxV4d const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)1 }
+
+#define AFX_V(x) _Generic((x), \
+    afxReal: (afxV4d){(x), (x), (x), (x)}, \
+    afxV2d: (afxV4d){x[0], x[1], 0.0f, 0.0f}, \
+    afxV3d: (afxV4d){x[0], x[1], x[2], 1.0f}) 
+
+#define AFX_LTV(v) _Generic((v), \
+    float: (afxV4d){(v), 0.f, 0.f, 0.f}, \
+    afxReal: (afxV4d){v, 0.f, 0.f, 0.f}, \
+    afxV2d:  (afxV4d){v[0], v[1], 0.0f, 0.0f}, \
+    afxV3d:  (afxV4d){v[0], v[1], v[2], 0.0f}, \
+    default: (afxV4d){(afxReal)v}) 
+
+#define AFX_ATV(v) _Generic((v), \
+    afxReal: (afxV4d){v, 0.f, 0.f, 1.f}, \
+    afxV2d:  (afxV4d){v[0], v[1], 0.0f, 1.0f}, \
+    afxV3d:  (afxV4d){v[0], v[1], v[2], 1.0f}, \
+    default: (afxV4d){(afxReal)v}) 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Initialization                                                             //
@@ -215,54 +233,56 @@ AFXINL void     AfxV2dAdd(afxV2d v, afxV2d const a, afxV2d const b);
 AFXINL void     AfxV3dAdd(afxV3d v, afxV3d const a, afxV3d const b);
 AFXINL void     AfxV4dAdd(afxV4d v, afxV4d const a, afxV4d const b);
 
-// v = a + b * lambda
-
-AFXINL void     AfxAddScaledV2d(afxV2d v, afxV2d const a, afxV2d const b, afxReal lambda);
-AFXINL void     AfxAddScaledV3d(afxV3d v, afxV3d const a, afxV3d const b, afxReal lambda);
-AFXINL void     AfxAddScaledV4d(afxV4d v, afxV4d const a, afxV4d const b, afxReal lambda);
-
 // v = a - b
 
-AFXINL void     AfxV2dSub(afxV2d v, afxV2d const a, afxV2d const b);
-AFXINL void     AfxV3dSub(afxV3d v, afxV3d const a, afxV3d const b);
-AFXINL void     AfxV4dSub(afxV4d v, afxV4d const a, afxV4d const b);
+AFXINL void     AfxV2dSub(afxV2d v, afxV2d const a, afxV2d const b); // v = a - b
+AFXINL void     AfxV3dSub(afxV3d v, afxV3d const a, afxV3d const b); // v = a - b
+AFXINL void     AfxV4dSub(afxV4d v, afxV4d const a, afxV4d const b); // v = a - b
 
 // v = a / b
 
-AFXINL void     AfxDivV2d(afxV2d v, afxV2d const a, afxV2d const b);
-AFXINL void     AfxV3dDiv(afxV3d v, afxV3d const a, afxV3d const b);
-AFXINL void     AfxDivV4d(afxV4d v, afxV4d const a, afxV4d const b);
+AFXINL void     AfxDivV2d(afxV2d v, afxV2d const a, afxV2d const b); // v = a / b
+AFXINL void     AfxV3dDiv(afxV3d v, afxV3d const a, afxV3d const b); // v = a / b
+AFXINL void     AfxDivV4d(afxV4d v, afxV4d const a, afxV4d const b); // v = a / b
 
 // v = a % b
 
-AFXINL void     AfxModV2d(afxV2d v, afxV2d const a, afxV2d const b);
-AFXINL void     AfxModV3d(afxV3d v, afxV3d const a, afxV3d const b);
-AFXINL void     AfxModV4d(afxV4d v, afxV4d const a, afxV4d const b);
+AFXINL void     AfxModV2d(afxV2d v, afxV2d const a, afxV2d const b); // v = a % b
+AFXINL void     AfxModV3d(afxV3d v, afxV3d const a, afxV3d const b); // v = a % b
+AFXINL void     AfxModV4d(afxV4d v, afxV4d const a, afxV4d const b); // v = a % b
 
 // v = a * lambda
 
-AFXINL void     AfxV2dScale(afxV2d v, afxV2d const a, afxReal lambda);
-AFXINL void     AfxV3dScale(afxV3d v, afxV3d const a, afxReal lambda);
-AFXINL void     AfxV4dScale(afxV4d v, afxV4d const a, afxReal lambda);
+AFXINL void     AfxV2dScale(afxV2d v, afxV2d const a, afxReal lambda); // v = a * lambda
+AFXINL void     AfxV3dScale(afxV3d v, afxV3d const a, afxReal lambda); // v = a * lambda
+AFXINL void     AfxV4dScale(afxV4d v, afxV4d const a, afxReal lambda); // v = a * lambda
 
 // v = a * b
 
-AFXINL void     AfxV2dMultiply(afxV2d v, afxV2d const a, afxV2d const b);
-AFXINL void     AfxV3dMultiply(afxV3d v, afxV3d const a, afxV3d const b);
-AFXINL void     AfxV4dMultiply(afxV4d v, afxV4d const a, afxV4d const b);
+AFXINL void     AfxV2dMultiply(afxV2d v, afxV2d const a, afxV2d const b); // v = a * b
+AFXINL void     AfxV3dMultiply(afxV3d v, afxV3d const a, afxV3d const b); // v = a * b
+AFXINL void     AfxV4dMultiply(afxV4d v, afxV4d const a, afxV4d const b); // v = a * b
 
-// v = in * mul + plus
+// vector-multiply-add (accumulate)
+// v = a * b + c
 
-AFXINL void     AfxMadV2d(afxV2d v, afxV2d const in, afxV2d const mul, afxV2d const plus);
-AFXINL void     AfxMadV3d(afxV3d v, afxV3d const in, afxV3d const mul, afxV3d const plus);
-AFXINL void     AfxMadV4d(afxV4d v, afxV4d const in, afxV4d const mul, afxV4d const plus);
+AFXINL void     AfxV2dMad(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c); // v = a * b + c
+AFXINL void     AfxV3dMad(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c); // v = a * b + c
+AFXINL void     AfxV4dMad(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c); // v = a * b + c
+
+// scalar-multiply-add (accumulate)
+// v = a + b * lambda
+
+AFXINL void     AfxV2dMads(afxV2d v, afxReal lambda, afxV2d const b, afxV2d const c); // v = lambda * b + c
+AFXINL void     AfxV3dMads(afxV3d v, afxReal lambda, afxV3d const b, afxV3d const c); // v = lambda * b + c
+AFXINL void     AfxV4dMads(afxV4d v, afxReal lambda, afxV4d const b, afxV4d const c); // v = lambda * b + c
 
 // reverse subtract
 // v = c - (a * b)
 
-AFXINL void     AfxResubV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c);
-AFXINL void     AfxResubV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c);
-AFXINL void     AfxResubV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c);
+AFXINL void     AfxResubV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c); // v = c - (a * b)
+AFXINL void     AfxResubV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c); // v = c - (a * b)
+AFXINL void     AfxResubV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c); // v = c - (a * b)
 
 // Mix
 // The MIX function is conceptually similar to LERP but may involve additional functionality, such as more complex blending modes or different blending parameters. 
@@ -364,25 +384,31 @@ AFXINL afxReal  AfxV4dSum(afxV4d const v);
 // You may remember that the cosine or cos function becomes 0 when the angle is 90 degrees or 1 when the angle is 0.
 // This allows us dst easily test if the two vectors are orthogonal or parallel dst each other using the dot product (orthogonal means the vectors are at a right-angle dst each other).
 
-AFXINL afxReal  AfxV2dDot(afxV2d const in, afxV2d const other);
-AFXINL afxReal  AfxV3dDot(afxV3d const in, afxV3d const other);
-AFXINL afxReal  AfxV4dDot(afxV4d const in, afxV4d const other);
+AFXINL afxReal  AfxV2dDot(afxV2d const v, afxV2d const other);
+AFXINL afxReal  AfxV3dDot(afxV3d const v, afxV3d const other);
+AFXINL afxReal  AfxV4dDot(afxV4d const v, afxV4d const other);
+
+// The AfxV*dDist function calculates the distance between two vectors.
+
+AFXINL afxReal  AfxV2dDist(afxV2d const v, afxV2d const other);
+AFXINL afxReal  AfxV3dDist(afxV3d const v, afxV3d const other);
+AFXINL afxReal  AfxV4dDist(afxV4d const v, afxV4d const other);
 
 // Computes the squared magnitude
 
-AFXINL afxReal  AfxV2dSq(afxV2d const in);
-AFXINL afxReal  AfxV3dSq(afxV3d const in);
-AFXINL afxReal  AfxV4dSq(afxV4d const in);
+AFXINL afxReal  AfxV2dSq(afxV2d const v);
+AFXINL afxReal  AfxV3dSq(afxV3d const v);
+AFXINL afxReal  AfxV4dSq(afxV4d const v);
 
 // The magnitude/length of a vector in Cartesian coordinates is the square root of the sum of the squares of its coordinates.
 
-AFXINL afxReal  AfxV2dMag(afxV2d const in);
-AFXINL afxReal  AfxV3dMag(afxV3d const in);
-AFXINL afxReal  AfxV4dMag(afxV4d const in);
+AFXINL afxReal  AfxV2dMag(afxV2d const v);
+AFXINL afxReal  AfxV3dMag(afxV3d const v);
+AFXINL afxReal  AfxV4dMag(afxV4d const v);
 
-AFXINL afxReal  AfxV2dMagRecip(afxV2d const in);
-AFXINL afxReal  AfxV3dMagRecip(afxV3d const in);
-AFXINL afxReal  AfxV4dMagRecip(afxV4d const in);
+AFXINL afxReal  AfxV2dMagRecip(afxV2d const v);
+AFXINL afxReal  AfxV3dMagRecip(afxV3d const v);
+AFXINL afxReal  AfxV4dMagRecip(afxV4d const v);
 
 // Computes the cross product (a cross b) and stores the result in v
 // The cross product is only defined in 3D space and takes two non-parallel vectors as input and produces a third vector that is orthogonal dst both the input vectors.

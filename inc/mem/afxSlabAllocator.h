@@ -46,23 +46,23 @@ AFX_DEFINE_STRUCT(afxMemorySlab)
     afxMemorySlab*      next;
     afxMemorySlab*      prev;
     afxMemorySlabSlot*  firstFree;
-    afxUnit              unitCnt;
+    afxUnit             unitCnt;
     afxByte AFX_ADDR    units[1];
 };
 
 AFX_DEFINE_STRUCT(afxSlabAllocator)
 {
-    afxUnit              unitSiz;
-    afxUnit              unitsPerSlab;
+    afxUnit             unitSiz;
+    afxUnit             unitsPerSlab;
     afxMemorySlab       anchor;
 };
 
-AFX afxError    AfxSetUpSlabAllocator(afxSlabAllocator* mgr, afxUnit unitSiz, afxUnit unitsPerSlab);
+AFX afxError    AfxDeploySlabAllocator(afxSlabAllocator* mgr, afxUnit unitSiz, afxUnit unitsPerSlab);
 
-AFX afxError    AfxCleanUpSlabAllocator(afxSlabAllocator* mgr);
+AFX afxError    AfxDismantleSlabAllocator(afxSlabAllocator* mgr);
 
-AFX afxError    AfxDeallocateSlab(afxSlabAllocator* mgr, void* p);
+AFX afxError    AfxPopSlabUnit(afxSlabAllocator* mgr, void* p);
 
-AFX void*       AfxAllocateSlab(afxSlabAllocator* mgr);
+AFX void*       AfxPushSlabUnit(afxSlabAllocator* mgr);
 
 #endif//AFX_SLAB_ALLOCATOR_H

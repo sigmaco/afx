@@ -38,7 +38,7 @@ _AFXINL afxMemorySlab* _AfxFindSlabForPtr(afxSlabAllocator* mgr, void* p)
     return NIL;
 }
 
-_AFX void* AfxAllocateSlab(afxSlabAllocator* mgr)
+_AFX void* AfxPushSlabUnit(afxSlabAllocator* mgr)
 {
     afxError err = NIL;
     AFX_ASSERT(mgr);
@@ -57,7 +57,7 @@ _AFX void* AfxAllocateSlab(afxSlabAllocator* mgr)
         slab = slab->next;
     }
 
-    if (!slabFound && !(slab = AfxAllocate(1, sizeof(*slab) + (unitsPerSlab * mgr->unitSiz), 0, AfxHere()))) AfxThrowError();
+    if (!slabFound && AfxAllocate(sizeof(*slab) + (unitsPerSlab * mgr->unitSiz), 0, AfxHere(), (void**)&slab)) AfxThrowError();
     else
     {
         slab->next = &mgr->anchor;
@@ -85,7 +85,7 @@ _AFX void* AfxAllocateSlab(afxSlabAllocator* mgr)
     return 0;
 }
 
-_AFX afxError AfxDeallocateSlab(afxSlabAllocator* mgr, void* p)
+_AFX afxError AfxPopSlabUnit(afxSlabAllocator* mgr, void* p)
 {
     afxError err = NIL;
     AFX_ASSERT(mgr);
@@ -114,7 +114,7 @@ _AFX afxError AfxDeallocateSlab(afxSlabAllocator* mgr, void* p)
     return err;
 }
 
-_AFX afxError AfxCleanUpSlabAllocator(afxSlabAllocator* mgr)
+_AFX afxError AfxDismantleSlabAllocator(afxSlabAllocator* mgr)
 {
     afxError err = NIL;
     AFX_ASSERT(mgr);
@@ -127,14 +127,14 @@ _AFX afxError AfxCleanUpSlabAllocator(afxSlabAllocator* mgr)
         {
             slab->next->prev = slab->prev;
             slab->prev->next = slab->next;
-            AfxDeallocate(slab);
+            AfxDeallocate((void**)&slab, AfxHere());
             slab = anchor->next;
         } while (slab != anchor);
     }
     return err;
 }
 
-_AFX afxError AfxSetUpSlabAllocator(afxSlabAllocator* mgr, afxUnit unitSiz, afxUnit unitsPerSlab)
+_AFX afxError AfxDeploySlabAllocator(afxSlabAllocator* mgr, afxUnit unitSiz, afxUnit unitsPerSlab)
 {
     afxError err = NIL;
     AFX_ASSERT(mgr);

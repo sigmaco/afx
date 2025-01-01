@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *         Q W A D R O   M U L T I M E D I A   U X   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -20,20 +20,9 @@
 #define _AUX_UX_C
 #define _AUX_SHELL_C
 #define _AUX_WINDOW_C
-#include "../dev/AuxImplKit.h"
+#include "impl/auxImplementation.h"
 
 AFX afxChain* _AfxGetSystemClassChain(void);
-
-_AUX afxClass const* AuxGetShellClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass const* cls = &sys->aux.sshCls;
-    AfxAssertClass(cls, afxFcc_SSH);
-    return cls;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // SHELL HANDLING                                                             //
@@ -42,67 +31,50 @@ _AUX afxClass const* AuxGetShellClass(void)
 _AUX afxClass const* AfxGetMouseClass(afxShell ssh)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ssh, afxFcc_SSH);
+    AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
     afxClass const* cls = &ssh->mseCls;
-    AfxAssertClass(cls, afxFcc_MSE);
+    AFX_ASSERT_CLASS(cls, afxFcc_MSE);
     return cls;
 }
 
 _AUX afxClass const* AfxGetKeyboardClass(afxShell ssh)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ssh, afxFcc_SSH);
+    AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
     afxClass const* cls = &ssh->kbdCls;
-    AfxAssertClass(cls, afxFcc_KBD);
+    AFX_ASSERT_CLASS(cls, afxFcc_KBD);
     return cls;
 }
 
 _AUX afxClass const* AfxGetControllerClass(afxShell ssh)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ssh, afxFcc_SSH);
+    AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
     afxClass const* cls = &ssh->padCls;
-    AfxAssertClass(cls, afxFcc_CTRL);
-    return cls;
-}
-
-_AUX afxClass const* AfxGetSessionClass(afxShell ssh)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ssh, afxFcc_SSH);
-    afxClass const* cls = &ssh->sesCls;
-    AfxAssertClass(cls, afxFcc_SES);
+    AFX_ASSERT_CLASS(cls, afxFcc_CTRL);
     return cls;
 }
 
 _AUX void* AfxGetShellIdd(afxShell ssh)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ssh, afxFcc_SSH);
-    return ssh->idd;
+    AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
+    return NIL;
 }
 
 _AUX afxBool AfxIsShellPrompt(afxShell ssh)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ssh, afxFcc_SSH);
+    AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
     return ssh->dev.serving;
 }
 
 _AUX afxError _AuxSshDtorCb(afxShell ssh)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ssh, afxFcc_SSH);
+    AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
 
-    if (ssh->stdHid)
-        AfxReleaseObjects(1, &ssh->stdHid);
-
-    AFX_ASSERT(!ssh->idd);
     AfxDeregisterChainedClasses(&ssh->dev.classes);
-
-    afxUri location;
-    AfxMakeUri(&location, 0, "system", 0);
-    AfxDismountStorageUnit('d', &location, afxFileFlag_RWX);
 
     return err;
 }
@@ -110,10 +82,10 @@ _AUX afxError _AuxSshDtorCb(afxShell ssh)
 _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ssh, afxFcc_SSH);
+    AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
 
     afxModule icd = args[0];
-    AfxAssertObjects(1, &icd, afxFcc_MDLE);
+    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     afxShellInfo const* info = ((afxShellInfo const *)args[1]) + invokeNo;
     AFX_ASSERT(info);
 
@@ -122,78 +94,30 @@ _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxUnit invokeNo)
     {
         //AfxGetSubClass(AfxGetShellClass(ssh))->ctor(ssh, args, invokeNo);
 
-        ssh->idd = NIL;
-
         afxClassConfig clsCfg;
 
         clsCfg = info->kbdClsCfg ? *info->kbdClsCfg : _AuxKbdStdImplementation;
-        AfxRegisterClass(&ssh->kbdCls, NIL, &ssh->dev.classes, &clsCfg);
+        AfxMountClass(&ssh->kbdCls, NIL, &ssh->dev.classes, &clsCfg);
 
         clsCfg = info->mseClsCfg ? *info->mseClsCfg : _AuxMseStdImplementation;
-        AfxRegisterClass(&ssh->mseCls, NIL, &ssh->dev.classes, &clsCfg);
+        AfxMountClass(&ssh->mseCls, NIL, &ssh->dev.classes, &clsCfg);
 
         clsCfg = info->padClsCfg ? *info->padClsCfg : _AuxCtrlStdImplementation;
-        AfxRegisterClass(&ssh->padCls, NIL, &ssh->dev.classes, &clsCfg);
+        AfxMountClass(&ssh->padCls, NIL, &ssh->dev.classes, &clsCfg);
 
-        clsCfg = info->sesClsCfg ? *info->sesClsCfg : _AuxSesStdImplementation;
-        AfxRegisterClass(&ssh->sesCls, NIL, &ssh->dev.classes, &clsCfg);
+        clsCfg = info->sesClsCfg ? *info->sesClsCfg : _AUX_SES_CLASS_CONFIG;
+        AfxMountClass(&ssh->sesCls, NIL, &ssh->dev.classes, &clsCfg);
 
-
-        clsCfg = info->widClsCfg ? *info->widClsCfg : _AuxWidStdImplementation;
-        ssh->widClsCfg = clsCfg;
-
-        clsCfg = info->wndClsCfg ? *info->wndClsCfg : _AuxWndStdImplementation;
+        clsCfg = info->wndClsCfg ? *info->wndClsCfg : _AUX_WND_CLASS_CONFIG;
         ssh->wndClsCfg = clsCfg;
 
         clsCfg = info->xssClsCfg ? *info->xssClsCfg : /*_AuxXssStdImplementation*/(afxClassConfig) { 0 };
         ssh->xssClsCfg = clsCfg;
 
-
-        ssh->focusedWnd = NIL;
-        ssh->curCapturedOn = NIL;
-
-        afxUnit dwmCnt = 1;
-
-        for (afxUnit i = 0; i < dwmCnt; i++)
-        {
-            afxDesktop* dwm = &ssh->dwm;
-
-            dwm->res.w = 1;
-            dwm->res.h = 1;
-            dwm->res.d = 1;
-            dwm->dout = NIL;
-            dwm->refreshRate = 1;
-        }
-
-
         if (AfxCallDevice(&ssh->dev, afxFcc_USYS, NIL)) AfxThrowError();
         else
         {
 
-            {
-
-                afxUri location;
-                AfxMakeUri(&location, 0, "system", 0);
-
-                if (AfxMountStorageUnit('d', &location, afxFileFlag_RWX)) AfxThrowError();
-                else
-                {
-                    afxUri uri;
-                    AfxMakeUri(&uri, 0, "system/qwadro.xss", 0);
-
-                    afxString s;
-                    AfxMakeString(&s, 0, "qwadro", 0);
-                    //AfxLoadScript(&s, &uri);
-
-                    if (err)
-                        AfxDismountStorageUnit('d', &location, afxFileFlag_RWX);
-                }
-
-                if (err)
-                {
-
-                }
-            }
 
             if (err)
             {
@@ -204,147 +128,75 @@ _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxUnit invokeNo)
     return err;
 }
 
+_AUX afxClassConfig const _AUX_SSH_CLASS_CONFIG =
+{
+    .fcc = afxFcc_SSH,
+    .name = "Shell",
+    .desc = "Shell Driver Interface",
+    .fixedSiz = sizeof(AFX_OBJECT(afxShell)),
+    .ctor = (void*)_AuxSshCtorCb,
+    .dtor = (void*)_AuxSshDtorCb
+};
+
 ////////////////////////////////////////////////////////////////////////////////
-// SHELL DISCOVERY                                                            //
+// IMPLEMENTATION DISCOVERY                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AUX afxUnit AfxInvokeShells(afxUnit first, afxUnit cnt, afxBool(*f)(afxShell, void*), void *udd)
+_AUX afxUnit AfxInvokeShells(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*,afxShell), afxUnit cnt)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
-    afxClass const* cls = AuxGetShellClass();
-    AfxAssertClass(cls, afxFcc_SSH);
-    return AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
-}
+    afxUnit rslt = 0;
 
-_AUX afxUnit AfxEvokeShells(afxBool(*f)(afxShell, void*), void* udd, afxUnit first, afxUnit cnt, afxShell shells[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(cnt);
-    AFX_ASSERT(shells);
-    afxClass const* cls = AuxGetShellClass();
-    AfxAssertClass(cls, afxFcc_SSH);
-    return AfxEvokeClassInstances(cls, (void*)f, udd, first, cnt, (afxObject*)shells);
-}
-
-_AUX afxUnit AfxEnumerateShells(afxUnit first, afxUnit cnt, afxShell shells[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(cnt);
-    AFX_ASSERT(shells);
-    afxClass const* cls = AuxGetShellClass();
-    AfxAssertClass(cls, afxFcc_SSH);
-    return AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)shells);
-}
-
-_AUX afxBool AfxGetShell(afxUnit sshId, afxShell* shell)
-{
-    afxError err = AFX_ERR_NONE;
-    afxShell ssh = NIL;
-    while (AfxEnumerateShells(sshId, 1, &ssh))
+    afxModule mdle;
+    while (AuxGetIcd(icd, &mdle))
     {
-        AfxAssertObjects(1, &ssh, afxFcc_SSH);
-        AFX_ASSERT(shell);
-        *shell = ssh;
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
+        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AUX) == (afxModuleFlag_ICD | afxModuleFlag_AUX));
+        afxClass const* cls = _AuxGetShellClass(mdle);
+        AFX_ASSERT_CLASS(cls, afxFcc_SSH);
+        rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
         break;
     }
-    return !!ssh;
+    return rslt;
 }
 
-_AUX afxError _AuxRegisterShells(afxModule icd, afxUnit cnt, afxShellInfo const infos[], afxShell shells[])
+_AUX afxUnit AfxEvokeShells(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*,afxShell), afxUnit cnt, afxShell shells[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &icd, afxFcc_MDLE);
     AFX_ASSERT(shells);
-
-    afxClass* cls = (afxClass*)AuxGetShellClass();
-    AfxAssertClass(cls, afxFcc_SSH);
-
-    AfxEnterSlockExclusive(&cls->poolLock);
-
-    if (cls->pool.totalUsedCnt >= cls->maxInstCnt) AfxThrowError();
-    else
+    AFX_ASSERT(cnt);
+    afxUnit rslt = 0;
+    afxModule mdle;
+    while (AuxGetIcd(icd, &mdle))
     {
-        if (_AfxAllocateObjects(cls, cnt, (afxObject*)shells)) AfxThrowError();
-        else
-        {
-            if (_AfxConstructObjects(cls, cnt, (afxObject*)shells, (void*[]) { icd, (void*)infos }))
-            {
-                AfxThrowError();
-            }
-
-            if (!err)
-            {
-                AfxAssertObjects(cnt, shells, afxFcc_SSH);
-            }
-            else
-            {
-                _AfxDeallocateObjects(cls, cnt, (afxObject*)shells);
-            }
-        }
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
+        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AUX) == (afxModuleFlag_ICD | afxModuleFlag_AUX));
+        afxClass const* cls = _AuxGetShellClass(mdle);
+        AFX_ASSERT_CLASS(cls, afxFcc_SSH);
+        rslt = AfxEvokeObjects(cls, (void*)f, udd, first, cnt, (afxObject*)shells);
+        break;
     }
-
-    AfxExitSlockExclusive(&cls->poolLock);
-
-    return err;
+    return rslt;
 }
 
-_AUX afxBool SshPump(afxShell ssh, void* udd)
-{
-    afxError err = NIL;
-    AfxAssertObjects(1, &ssh, afxFcc_SSH);
-
-    ssh->pumpCb(ssh);
-
-    return TRUE;
-}
-
-_AUX afxTime AfxPollInput(void)
+_AUX afxUnit AfxEnumerateShells(afxUnit icd, afxUnit first, afxUnit cnt, afxShell shells[])
 {
     afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(shells);
+    AFX_ASSERT(cnt);
+    afxUnit rslt = 0;
 
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-
-    afxTime first, last, dt;
-    AfxGetTime(&first);
-
-    if (!sys->aux.disabled)
+    afxModule mdle;
+    while (AuxGetIcd(icd, &mdle))
     {
-        AfxInvokeClassInstances(&sys->aux.sshCls, 0, 0, (void*)SshPump, NIL);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
+        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AUX) == (afxModuleFlag_ICD | afxModuleFlag_AUX));
+        afxClass const* cls = _AuxGetShellClass(mdle);
+        AFX_ASSERT_CLASS(cls, afxFcc_SSH);
+        rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)shells);
+        break;
     }
-    dt = (AfxGetTime(&last) - first);
-    return dt;
-}
-
-_AUX afxError afxScmHook(afxModule mdle, afxManifest const* ini)
-{
-    afxError err = NIL;
-    AfxAssertObjects(1, &mdle, afxFcc_MDLE);
-
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-
-    AfxRegisterClass(&sys->aux.hidCls, (afxClass*)AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AuxHidStdImplementation);
-
-    afxClassConfig const _AuxSshClsCfg =
-    {
-        .fcc = afxFcc_SSH,
-        .name = "Shell",
-        .desc = "Shell Driver Interface",
-        .fixedSiz = sizeof(AFX_OBJECT(afxShell)),
-        .ctor = (void*)_AuxSshCtorCb,
-        .dtor = (void*)_AuxSshDtorCb
-    };
-    AfxRegisterClass(&sys->aux.sshCls, (afxClass*)AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AuxSshClsCfg); // require base*
-
-    if (!err)
-    {
-        //sys->aux.ready = TRUE;
-    }
-
-    return err;
+    return rslt;
 }

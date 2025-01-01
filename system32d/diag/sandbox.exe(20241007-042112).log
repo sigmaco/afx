@@ -1,0 +1,4 @@
+Booting...
+Threading... #3388 (afxSystem_w32.c:426)Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree>afxModule_w32.c:504
+afxSystem_w32.c:440
+Annihilating 2 lost <Storage> objects.Dismounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7 @uDismounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7 @uDismounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5 @uDismounting... <//./z/>(''),5 @uDismounting... <//./c/>('C:\Windows\SysWow64'),5 @uAnnihilating 1 lost <Thread> objects.

@@ -30,21 +30,21 @@
 
 AFX_DEFINE_STRUCT(afxStackPage)
 {
-    afxUnit          usedUnitCnt;
+    afxUnit         usedUnitCnt;
     afxByte*        units;
-    afxUnit          firstIdx;
+    afxUnit         firstIdx;
     afxStackPage*   prev;
 };
 
 AFX_DEFINE_STRUCT(afxStack)
 {
-    afxUnit              unitSiz;
-    afxUnit              unitsPerBlock;
-    afxUnit              totalUsedUnitCnt;
+    afxUnit             unitSiz;
+    afxUnit             unitsPerBlock;
+    afxUnit             totalUsedUnitCnt;
     afxStackPage*       lastBlock;
-    afxUnit              maxUnits;
-    afxUnit              activeBlocks;
-    afxUnit              maxActiveBlocks;
+    afxUnit             maxUnits;
+    afxUnit             activeBlocks;
+    afxUnit             maxActiveBlocks;
     afxStackPage**      blockDir;
     afxMmu              ctx;
 };

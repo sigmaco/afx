@@ -19,53 +19,68 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\cad\afxMaterial.c" />
-    <ClCompile Include="..\..\src\cad\afxModel.c" />
-    <ClCompile Include="..\..\src\cad\afxPose.c" />
-    <ClCompile Include="..\..\src\cad\afxPoseBuffer.c" />
-    <ClCompile Include="..\..\src\cad\afxRwx.c" />
-    <ClCompile Include="..\..\src\cad\afxSkeleton.c" />
-    <ClCompile Include="..\..\src\cad\afxXmd.c" />
+    <ClCompile Include="..\..\src\game\agxGameData.c" />
+    <ClCompile Include="..\..\src\game\agxGameObject.c" />
     <ClCompile Include="..\..\src\math\afxCurve.c" />
-    <ClCompile Include="..\..\src\sim\afxAnimation.c" />
-    <ClCompile Include="..\..\src\sim\afxBody.c" />
-    <ClCompile Include="..\..\src\sim\afxMotion.c" />
-    <ClCompile Include="..\..\src\sim\afxMotor.c" />
+    <ClCompile Include="..\..\src\sim\afxSampleContext.c" />
+    <ClCompile Include="..\..\src\sim\afxSimBridge.c" />
+    <ClCompile Include="..\..\src\sim\afxEngine.c" />
+    <ClCompile Include="..\..\src\sim\afxCapstan.c" />
     <ClCompile Include="..\..\src\sim\afxNode.c" />
-    <ClCompile Include="..\..\src\sim\dev\afxComboBridge.c" />
-    <ClCompile Include="..\..\src\sim\dev\afxComboSystem.c" />
-    <ClCompile Include="..\..\src\sim\dev\afxSimulation.c" />
-    <ClCompile Include="..\..\src\sim\dev\_CurveOps_Cpu.c" />
-    <ClCompile Include="..\..\src\sim\dev\_SampleTrackVmt.c" />
-    <ClCompile Include="..\..\src\sim\dev\_Vmt.c" />
-    <ClCompile Include="..\..\src\sim\io\akxAsset.c" />
-    <ClCompile Include="..\..\src\sim\rendering\akxLighting.c" />
-    <ClCompile Include="..\..\src\sim\rendering\akxRenderer.c" />
-    <ClCompile Include="..\..\src\sim\rendering\afxTerrain.c" />
+    <ClCompile Include="..\..\src\sim\afxSimQueue.c" />
+    <ClCompile Include="..\..\src\sim\afxSimulation.c" />
+    <ClCompile Include="..\..\src\sim\afxTerrain.c" />
+    <ClCompile Include="..\..\src\sim\akxLighting.c" />
+    <ClCompile Include="..\..\src\sim\akxRenderer.c" />
+    <ClCompile Include="..\..\src\sim\body\afxAnimation.c" />
+    <ClCompile Include="..\..\src\sim\body\afxAnimationIo.c" />
+    <ClCompile Include="..\..\src\sim\body\afxBody.c" />
+    <ClCompile Include="..\..\src\sim\body\afxCollision.c" />
+    <ClCompile Include="..\..\src\sim\body\afxMaterial.c" />
+    <ClCompile Include="..\..\src\sim\body\afxModel.c" />
+    <ClCompile Include="..\..\src\sim\body\afxModelIo.c" />
+    <ClCompile Include="..\..\src\sim\body\afxMotion.c" />
+    <ClCompile Include="..\..\src\sim\body\afxPlacement.c" />
+    <ClCompile Include="..\..\src\sim\body\afxPose.c" />
+    <ClCompile Include="..\..\src\sim\body\afxXmd.c" />
+    <ClCompile Include="..\..\src\sim\impl\amxImplementation.c" />
+    <ClCompile Include="..\..\src\sim\impl\amxImpl_Catalyst.c" />
+    <ClCompile Include="..\..\src\sim\impl\amxImpl_Executor.c" />
+    <ClCompile Include="..\..\src\sim\op\afxMiscOps.c" />
+    <ClCompile Include="..\..\src\sim\op\afxPoseOps.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\dev\AmxCadImplKit.h" />
-    <ClInclude Include="..\..\src\dev\AmxImplKit.h" />
-    <ClInclude Include="..\..\src\dev\AmxPuppetImplKit.h" />
-    <ClInclude Include="..\..\inc\cad\afxMaterial.h" />
-    <ClInclude Include="..\..\inc\cad\afxModel.h" />
-    <ClInclude Include="..\..\inc\cad\afxPose.h" />
-    <ClInclude Include="..\..\inc\cad\afxPoseBuffer.h" />
-    <ClInclude Include="..\..\inc\cad\afxSkeleton.h" />
+    <ClInclude Include="..\..\inc\game\agxGameData.h" />
+    <ClInclude Include="..\..\inc\game\agxGameDefs.h" />
+    <ClInclude Include="..\..\inc\game\agxGameObject.h" />
+    <ClInclude Include="..\..\inc\sim\afxSimBridge.h" />
+    <ClInclude Include="..\..\inc\sim\afxEngine.h" />
+    <ClInclude Include="..\..\inc\sim\afxSimulation.h" />
+    <ClInclude Include="..\..\inc\sim\afxTerrain.h" />
+    <ClInclude Include="..\..\inc\sim\akxLighting.h" />
+    <ClInclude Include="..\..\inc\sim\akxRenderer.h" />
     <ClInclude Include="..\..\inc\math\afxCurve.h" />
-    <ClInclude Include="..\..\inc\sim\afxAnimation.h" />
-    <ClInclude Include="..\..\inc\sim\afxBody.h" />
-    <ClInclude Include="..\..\inc\sim\afxMotion.h" />
-    <ClInclude Include="..\..\inc\sim\afxMotor.h" />
+    <ClInclude Include="..\..\inc\sim\afxCapstan.h" />
     <ClInclude Include="..\..\inc\sim\afxNode.h" />
     <ClInclude Include="..\..\inc\sim\afxSimDefs.h" />
-    <ClInclude Include="..\..\inc\sim\dev\afxComboBridge.h" />
-    <ClInclude Include="..\..\inc\sim\dev\afxComboSystem.h" />
-    <ClInclude Include="..\..\inc\sim\dev\afxSimulation.h" />
-    <ClInclude Include="..\..\inc\sim\io\akxAsset.h" />
-    <ClInclude Include="..\..\inc\sim\rendering\akxLighting.h" />
-    <ClInclude Include="..\..\inc\sim\rendering\akxRenderer.h" />
-    <ClInclude Include="..\..\inc\sim\rendering\afxTerrain.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxAnimation.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxBody.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxMaterial.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxModel.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxMotion.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxPlacement.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxPose.h" />
+    <ClInclude Include="..\..\inc\sim\op\afxMiscOps.h" />
+    <ClInclude Include="..\..\inc\sim\op\afxPoseOps.h" />
+    <ClInclude Include="..\..\inc\sim\op\afxSampleContext.h" />
+    <ClInclude Include="..\..\src\sim\impl\amxImpl_Animation.h" />
+    <ClInclude Include="..\..\src\sim\impl\amxImpl_Catalyst.h" />
+    <ClInclude Include="..\..\src\sim\impl\amxImpl_Curve.h" />
+    <ClInclude Include="..\..\src\sim\impl\amxImpl_Executor.h" />
+    <ClInclude Include="..\..\src\sim\impl\amxImpl_Model.h" />
+    <ClInclude Include="..\..\src\sim\impl\amxImplementation.h" />
+    <ClInclude Include="..\..\src\sim\impl\amxImpl_Body.h" />
+    <ClInclude Include="..\..\src\sim\impl\amxImpl_Simulation.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +169,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link />
     <Link />
@@ -188,6 +204,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
