@@ -19,7 +19,7 @@
 #ifndef AFX_IMAGING_OPS_H
 #define AFX_IMAGING_OPS_H
 
-#include "qwadro/inc/math/afxViewport.h"
+#include "qwadro/inc/draw/math/afxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/draw/io/afxRaster.h"
 #include "qwadro/inc/draw/io/afxBuffer.h"

@@ -71,6 +71,7 @@ _AVX avxWork* _AvxDquePushWork(afxDrawQueue dque, afxUnit id, afxUnit siz, afxCm
 
     avxWork* work = AfxRequestArenaUnit(&dque->workArena, siz);
     AFX_ASSERT(work);
+    AfxZero(work, sizeof(work->hdr));
     work->hdr.id = id;
     work->hdr.siz = siz;
     AfxGetTime(&work->hdr.pushTime);
@@ -174,7 +175,7 @@ _AVX afxError _AvxSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), void
     return err;
 }
 
-_AVX afxError _AvxSubmitDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[])
+_AVX afxError _AvxSubmitDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence)
 {
     afxError err = AFX_ERR_NONE;
     /// dque must be a valid afxDrawQueue handle.
@@ -197,7 +198,7 @@ _AVX afxError _AvxSubmitDrawCommands(afxDrawQueue dque, avxSubmission const* ctr
 
     if (ctrl)
     {
-        work->Execute.fence = ctrl->fence;
+        work->Execute.hdr.completionFence = fence;
         work->Execute.signal = ctrl->signalSems;
         work->Execute.wait = ctrl->waitSems;
     }
@@ -333,28 +334,118 @@ _AVX afxError _AvxSubmitTransferences(afxDrawQueue dque, avxTransference const* 
     return err;
 }
 
-_AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxBuffer buf, afxSize off, afxUnit ran, afxFlags flags, void** placeholder)
+_AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, afxBufferRemap const maps[], afxUnit unmapCnt, afxBuffer const unmaps[])
 {
     afxError err = AFX_ERR_NONE;
     /// dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
-    AFX_ASSERT(buf);
 
     if (AfxLockMutex(&dque->workChnMtx))
         return afxError_TIMEOUT;
 
-    afxCmdId cmdId;
-    avxWork* work = _AvxDquePushWork(dque, AVX_GET_STD_WORK_ID(Remap), sizeof(work->Remap), &cmdId);
-    AFX_ASSERT(work);
+    if (mapCnt)
+    {
+        afxCmdId cmdId;
+        avxWork* work = _AvxDquePushWork(dque, AVX_GET_STD_WORK_ID(Remap), sizeof(work->Remap) + (mapCnt * sizeof(work->Remap.mapOps[0])), &cmdId);
+        AFX_ASSERT(work);
 
-    work->Remap.buf = buf;
-    work->Remap.off = off;
-    work->Remap.ran = ran;
-    work->Remap.flags = flags;
-    work->Remap.placeholder = placeholder;
+        work->Remap.mapCnt = mapCnt;
+        work->Remap.unmapCnt = 0;
 
-    AfxReacquireObjects(1, &buf);
-    AfxIncAtom32(&buf->pendingRemap);
+        for (afxUnit i = 0; i < mapCnt; i++)
+        {
+            afxBufferRemap const* map = &maps[i];
+
+            work->Remap.mapOps[i].buf = map->buf;
+            work->Remap.mapOps[i].offset = map->offset;
+            work->Remap.mapOps[i].range = map->range;
+            work->Remap.mapOps[i].flags = map->flags;
+            work->Remap.mapOps[i].placeholder = map->placeholder;
+
+            AfxReacquireObjects(1, &map->buf);
+            AfxIncAtom32(&map->buf->pendingRemap);
+        }
+    }
+
+    if (unmapCnt)
+    {
+        afxCmdId cmdId;
+        avxWork* work = _AvxDquePushWork(dque, AVX_GET_STD_WORK_ID(Remap), sizeof(work->Remap) + (unmapCnt * sizeof(work->Remap.unmapOps[0])), &cmdId);
+        AFX_ASSERT(work);
+
+        work->Remap.mapCnt = 0;
+        work->Remap.unmapCnt = unmapCnt;
+
+        for (afxUnit i = 0; i < unmapCnt; i++)
+        {
+            afxBuffer buf = unmaps[i];
+
+            work->Remap.unmapOps[i] = buf;
+            
+            AfxReacquireObjects(1, &buf);
+            AfxIncAtom32(&buf->pendingRemap);
+        }
+    }
+
+    AfxUnlockMutex(&dque->workChnMtx);
+
+    return err;
+}
+
+_AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, afxBufferMap const flushes[], afxUnit fetchCnt, afxBufferMap const fetches[])
+{
+    afxError err = AFX_ERR_NONE;
+    /// dque must be a valid afxDrawQueue handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
+
+    if (AfxLockMutex(&dque->workChnMtx))
+        return afxError_TIMEOUT;
+
+    if (flushCnt)
+    {
+        afxCmdId cmdId;
+        avxWork* work = _AvxDquePushWork(dque, AVX_GET_STD_WORK_ID(SyncMaps), sizeof(work->SyncMaps) + (flushCnt * sizeof(work->SyncMaps.ops[0])), &cmdId);
+        AFX_ASSERT(work);
+
+        work->SyncMaps.baseFetchIdx = 0;
+        work->SyncMaps.fetchCnt = 0;
+        work->SyncMaps.baseFlushIdx = 0;
+        work->SyncMaps.flushCnt = flushCnt;
+
+        for (afxUnit i = 0; i < flushCnt; i++)
+        {
+            afxBufferMap const* map = &flushes[i];
+
+            work->SyncMaps.ops[i].buf = map->buf;
+            work->SyncMaps.ops[i].offset = map->offset;
+            work->SyncMaps.ops[i].range = map->range;
+
+            AfxReacquireObjects(1, &map->buf);
+        }
+    }
+
+    if (fetchCnt)
+    {
+        afxCmdId cmdId;
+        avxWork* work = _AvxDquePushWork(dque, AVX_GET_STD_WORK_ID(SyncMaps), sizeof(work->SyncMaps) + (fetchCnt * sizeof(work->SyncMaps.ops[0])), &cmdId);
+        AFX_ASSERT(work);
+
+        work->SyncMaps.baseFetchIdx = 0;
+        work->SyncMaps.flushCnt = 0;
+        work->SyncMaps.baseFlushIdx = 0;
+        work->SyncMaps.fetchCnt = fetchCnt;
+
+        for (afxUnit i = 0; i < fetchCnt; i++)
+        {
+            afxBufferMap const* map = &fetches[i];
+
+            work->SyncMaps.ops[i].buf = map->buf;
+            work->SyncMaps.ops[i].offset = map->offset;
+            work->SyncMaps.ops[i].range = map->range;
+
+            AfxReacquireObjects(1, &map->buf);
+        }
+    }
 
     AfxUnlockMutex(&dque->workChnMtx);
 

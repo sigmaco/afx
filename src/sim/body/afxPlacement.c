@@ -14,24 +14,24 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _AMX_PLACEMENT_C
-#include "../impl/amxImplementation.h"
+#define _ASX_PLACEMENT_C
+#include "../impl/asxImplementation.h"
 
-_AMX afxM4d* AfxPostureGetWorldMatrixArray(afxPlacement const plce)
+_ASX afxM4d* AfxPostureGetWorldMatrixArray(afxPlacement const plce)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PLCE, 1, &plce);
     return plce->world;
 }
 
-_AMX afxM4d* AfxPostureGetCompositeMatrixArray(afxPlacement const plce)
+_ASX afxM4d* AfxPostureGetCompositeMatrixArray(afxPlacement const plce)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PLCE, 1, &plce);
     return plce->delta;
 }
 
-_AMX afxM4d* AfxGetPlacementDeltas(afxPlacement const plce, afxUnit baseArtIdx)
+_ASX afxM4d* AfxGetPlacementDeltas(afxPlacement const plce, afxUnit baseArtIdx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PLCE, 1, &plce);
@@ -39,7 +39,7 @@ _AMX afxM4d* AfxGetPlacementDeltas(afxPlacement const plce, afxUnit baseArtIdx)
     return &plce->delta[baseArtIdx];
 }
 
-_AMX afxM4d* AfxGetPlacementMatrices(afxPlacement const plce, afxUnit baseArtIdx)
+_ASX afxM4d* AfxGetPlacementMatrices(afxPlacement const plce, afxUnit baseArtIdx)
 {
     //float (*__cdecl GetPosture4x4(const world_pose *Posture, int BoneIndex))[4]
     afxError err = AFX_ERR_NONE;
@@ -48,14 +48,14 @@ _AMX afxM4d* AfxGetPlacementMatrices(afxPlacement const plce, afxUnit baseArtIdx
     return &plce->world[baseArtIdx];
 }
 
-_AMX afxUnit AfxGetPlacementCapacity(afxPlacement const plce)
+_ASX afxUnit AfxGetPlacementCapacity(afxPlacement const plce)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PLCE, 1, &plce);
     return plce->matCnt;
 }
 
-_AMX afxError _AmxPosbDtorCb(afxPlacement plce)
+_ASX afxError _AsxPosbDtorCb(afxPlacement plce)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PLCE, 1, &plce);
@@ -69,7 +69,7 @@ _AMX afxError _AmxPosbDtorCb(afxPlacement plce)
     return err;
 }
 
-_AMX afxError _AmxPosbCtorCb(afxPlacement plce, void** args, afxUnit invokeNo)
+_ASX afxError _AsxPosbCtorCb(afxPlacement plce, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PLCE, 1, &plce);
@@ -89,24 +89,24 @@ _AMX afxError _AmxPosbCtorCb(afxPlacement plce, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AMX afxClassConfig const _AMX_PLCE_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_PLCE_CLASS_CONFIG =
 {
     .fcc = afxFcc_PLCE,
     .name = "Placement",
     .desc = "Skeletal Placement Buffer",
     .fixedSiz = sizeof(AFX_OBJECT(afxPlacement)),
-    .ctor = (void*)_AmxPosbCtorCb,
-    .dtor = (void*)_AmxPosbDtorCb
+    .ctor = (void*)_AsxPosbCtorCb,
+    .dtor = (void*)_AsxPosbDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AfxAcquirePlacements(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxBool const excludeComposite[], afxPlacement placements[])
+_ASX afxError AfxAcquirePlacements(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxBool const excludeComposite[], afxPlacement placements[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    afxClass* cls = (afxClass*)_AmxGetPlacementClass(sim);
+    afxClass* cls = (afxClass*)_AsxGetPlacementClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_PLCE);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)placements, (void const*[]) { sim, artCnt, excludeComposite }))

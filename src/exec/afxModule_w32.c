@@ -30,9 +30,10 @@
 
 #define _AFX_CORE_C
 #define _AFX_MODULE_C
+#define _AFX_SYSTEM_C
 #define _AFX_DRIVER_C
 #define _AFX_DEVICE_C
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 _AFX afxModuleFlags AfxTestModule(afxModule mdle, afxModuleFlags bitmask)
 {
@@ -330,7 +331,7 @@ _AFX afxError _AfxMdleDtorCb(afxModule mdle)
     // objects will be released at class drop.
 
     afxDevice dev;
-    AfxChainForEveryLinkage(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
+    AFX_ITERATE_CHAIN(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
     {
         AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
         while (AfxDisposeObjects(1, &dev));
@@ -612,7 +613,7 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
             AfxGetModuleInfo(mdle, &s.str, &providerName.str, &devDesc.str);
 
             afxDevice dev;
-            AfxChainForEveryLinkageB2F(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
+            AFX_ITERATE_CHAIN_B2F(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
             {
                 AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 
@@ -659,7 +660,7 @@ _AFX afxError _AfxAttachDriver(afxModule mdle, afxUri const* manifest, void* udd
                 AfxGetModuleInfo(mdle, &s.str, &providerName.str, &devDesc.str);
 
                 afxDevice dev;
-                AfxChainForEveryLinkageB2F(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
+                AFX_ITERATE_CHAIN_B2F(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
                 {
                     AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 

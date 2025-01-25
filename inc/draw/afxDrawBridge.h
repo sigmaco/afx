@@ -100,7 +100,6 @@ AFX_DEFINE_STRUCT(avxSubmission)
     afxUnit64           signalValues;
     avxPipelineStage    signalStageMasks;
     afxUnit32           signalReserveds;
-    afxFence            fence;
 };
 
 AFX_DEFINE_STRUCT(avxPresentation)
@@ -119,7 +118,7 @@ AFX_DEFINE_STRUCT(avxTransference)
 
     afxSemaphore    wait;
     afxSemaphore    signal;
-    afxFence        fence;
+    avxFence        fence;
 
     union
     {

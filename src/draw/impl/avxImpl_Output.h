@@ -121,6 +121,6 @@ AFX_OBJECT(afxDrawOutput)
 AVX afxClassConfig const _AVX_DOUT_CLASS_CONFIG;
 
 AVX afxError _AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd whd);
-AVX afxError _AvxPresentDrawOutput(afxDrawQueue dque, avxPresentation* ctrl, afxDrawOutput dout, afxUnit bufIdx);
+AVX afxError _AvxPresentDrawOutput(afxDrawQueue dque, avxPresentation* ctrl, avxFence wait, afxDrawOutput dout, afxUnit bufIdx, avxFence signal);
 
 #endif//AVX_IMPL___OUTPUT_H

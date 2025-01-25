@@ -35,6 +35,7 @@
 #include "qwadro/inc/draw/pipe/avxShader.h"
 #include "qwadro/inc/draw/pipe/avxVertexDecl.h"
 #include "qwadro/inc/draw/op/avxDrawOps.h"
+#include "qwadro/inc/draw/op/avxFence.h"
 
 AFX_DEFINE_STRUCT(afxDrawSystemConfig)
 // The system-wide settings and parameters.
@@ -66,7 +67,7 @@ AVX afxError        AfxWaitForDrawBridge(afxDrawSystem dsys, afxUnit exuIdx, afx
 AVX afxError        AfxWaitForDrawQueue(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queId, afxTime timeout);
 AVX afxError        AfxWaitForDrawPort(afxDrawSystem dsys, afxUnit portId, afxTime timeout);
 
-AVX afxError        AfxRollDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, afxUnit cnt, afxDrawContext contexts[]);
+AVX afxError        AfxRollDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence);
 
 // DRAW INPUT/OUTPUT MECHANISM CONNECTIONS
 
@@ -79,9 +80,14 @@ AVX afxUnit         AfxInvokeDrawInputs(afxDrawSystem dsys, afxUnit first, afxUn
 AVX afxUnit         AfxEvokeDrawOutputs(afxDrawSystem dsys, afxBool(*f)(afxDrawOutput, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawOutput outputs[]);
 AVX afxUnit         AfxEvokeDrawInputs(afxDrawSystem dsys, afxBool(*f)(afxDrawInput, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawInput inputs[]);
 
-AVX afxError        AfxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, afxUnit cnt, afxDrawOutput outputs[], afxUnit const bufIdx[]);
+AVX afxError        AfxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, avxFence wait, afxUnit cnt, afxDrawOutput outputs[], afxUnit const bufIdx[], avxFence signal[]);
+
 
 ////////////////////////////////////////////////////////////////////////////////
+
+AVX afxUnit         AfxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawSystem systems[]);
+AVX afxUnit         AfxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt);
+AVX afxUnit         AfxEvokeDrawSystems(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt, afxDrawSystem systems[]);
 
 AVX afxError        AfxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg);
 

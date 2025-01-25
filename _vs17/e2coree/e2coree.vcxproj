@@ -39,7 +39,6 @@
     <ClInclude Include="..\..\inc\exec\afxClock.h" />
     <ClInclude Include="..\..\inc\exec\afxCondition.h" />
     <ClInclude Include="..\..\inc\exec\afxDevice.h" />
-    <ClInclude Include="..\..\inc\exec\afxFence.h" />
     <ClInclude Include="..\..\inc\exec\afxModule.h" />
     <ClInclude Include="..\..\inc\exec\afxMutex.h" />
     <ClInclude Include="..\..\inc\exec\afxSemaphore.h" />
@@ -63,11 +62,8 @@
     <ClInclude Include="..\..\inc\io\afxUrd.h" />
     <ClInclude Include="..\..\inc\io\afxUri.h" />
     <ClInclude Include="..\..\inc\io\afxXml.h" />
-    <ClInclude Include="..\..\inc\math\afxBox.h" />
-    <ClInclude Include="..\..\inc\math\afxFrustum.h" />
     <ClInclude Include="..\..\inc\math\afxMathDefs.h" />
     <ClInclude Include="..\..\inc\math\afxMatrix.h" />
-    <ClInclude Include="..\..\inc\math\afxPlane.h" />
     <ClInclude Include="..\..\inc\math\afxQuaternion.h" />
     <ClInclude Include="..\..\inc\math\afxRay.h" />
     <ClInclude Include="..\..\inc\math\afxReal16.h" />
@@ -75,13 +71,16 @@
     <ClInclude Include="..\..\inc\math\afxScalar.h" />
     <ClInclude Include="..\..\inc\math\afxSimd.h" />
     <ClInclude Include="..\..\inc\math\afxSpace.h" />
-    <ClInclude Include="..\..\inc\math\afxSphere.h" />
     <ClInclude Include="..\..\inc\math\afxTransform.h" />
     <ClInclude Include="..\..\inc\math\afxTrigonometry.h" />
     <ClInclude Include="..\..\inc\math\afxVector.h" />
     <ClInclude Include="..\..\inc\math\afxVertex.h" />
-    <ClInclude Include="..\..\inc\math\afxVolume.h" />
     <ClInclude Include="..\..\inc\math\afxWhd.h" />
+    <ClInclude Include="..\..\inc\math\bound\afxBox.h" />
+    <ClInclude Include="..\..\inc\math\bound\afxFrustum.h" />
+    <ClInclude Include="..\..\inc\math\bound\afxPlane.h" />
+    <ClInclude Include="..\..\inc\math\bound\afxSphere.h" />
+    <ClInclude Include="..\..\inc\math\bound\afxVolume.h" />
     <ClInclude Include="..\..\inc\mem\afxArena.h" />
     <ClInclude Include="..\..\inc\mem\afxArray.h" />
     <ClInclude Include="..\..\inc\mem\afxInterlockedQueue.h" />
@@ -91,12 +90,32 @@
     <ClInclude Include="..\..\inc\mem\afxQueue.h" />
     <ClInclude Include="..\..\inc\mem\afxSlabAllocator.h" />
     <ClInclude Include="..\..\inc\mem\afxStack.h" />
-    <ClInclude Include="..\..\src\dev\afxExecImplKit.h" />
-    <ClInclude Include="..\..\src\dev\afxIoImplKit.h" />
+    <ClInclude Include="..\..\inc\xss\afxScript.h" />
+    <ClInclude Include="..\..\src\impl\afxExecImplKit.h" />
+    <ClInclude Include="..\..\src\impl\afxIoImplKit.h" />
+    <ClInclude Include="..\..\src\impl\xss\xss.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssCommon.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssCompiler.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssCore.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssDebug.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssMath.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssOpcodes.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssOptMeta.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssOptRandom.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssPrimitive.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssUtils.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssValue.h" />
+    <ClInclude Include="..\..\src\impl\xss\xssVm.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md" />
+    <None Include="..\..\src\impl\xss\xssCore.xss" />
+    <None Include="..\..\src\impl\xss\xssCore.xss.inc" />
+    <None Include="..\..\src\impl\xss\xssOptMeta.xss" />
+    <None Include="..\..\src\impl\xss\xssOptMeta.xss.inc" />
+    <None Include="..\..\src\impl\xss\xssOptRandom.xss" />
+    <None Include="..\..\src\impl\xss\xssOptRandom.xss.inc" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\go-horse.txt" />
@@ -110,6 +129,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\afxScript.c" />
+    <ClCompile Include="..\..\src\impl\xss\xssCompiler.c" />
+    <ClCompile Include="..\..\src\impl\xss\xssCore.c" />
+    <ClCompile Include="..\..\src\impl\xss\xssDebug.c" />
+    <ClCompile Include="..\..\src\impl\xss\xssOptMeta.c" />
+    <ClCompile Include="..\..\src\impl\xss\xssOptRandom.c" />
+    <ClCompile Include="..\..\src\impl\xss\xssPrimitive.c" />
+    <ClCompile Include="..\..\src\impl\xss\xssUtils.c" />
+    <ClCompile Include="..\..\src\impl\xss\xssValue.c" />
+    <ClCompile Include="..\..\src\impl\xss\xssVm.c" />
     <ClCompile Include="..\..\src\io\afxIoBridge.c" />
     <ClCompile Include="..\..\src\io\afxIoPort.c" />
     <ClCompile Include="..\..\src\io\afxIoQueue.c" />
@@ -132,7 +161,6 @@
     <ClCompile Include="..\..\src\exec\afxClock_w32.c" />
     <ClCompile Include="..\..\src\exec\afxCondition_PC.c" />
     <ClCompile Include="..\..\src\exec\afxDevice.c" />
-    <ClCompile Include="..\..\src\exec\afxFence.c" />
     <ClCompile Include="..\..\src\exec\afxModule_w32.c" />
     <ClCompile Include="..\..\src\exec\afxMutex_PC.c" />
     <ClCompile Include="..\..\src\exec\afxSemaphore.c" />
@@ -160,22 +188,22 @@
     <ClCompile Include="..\..\src\io\afxUrd.c" />
     <ClCompile Include="..\..\src\io\afxUri.c" />
     <ClCompile Include="..\..\src\io\afxXml.c" />
-    <ClCompile Include="..\..\src\math\afxBox.c" />
-    <ClCompile Include="..\..\src\math\afxFrustum.c" />
     <ClCompile Include="..\..\src\math\afxMatrix.c" />
-    <ClCompile Include="..\..\src\math\afxPlane.c" />
     <ClCompile Include="..\..\src\math\afxQuaternion.c" />
     <ClCompile Include="..\..\src\math\afxRay.c" />
     <ClCompile Include="..\..\src\math\afxRotor.c" />
     <ClCompile Include="..\..\src\math\afxScalar.c" />
     <ClCompile Include="..\..\src\math\afxSimd.c" />
-    <ClCompile Include="..\..\src\math\afxSphere.c" />
     <ClCompile Include="..\..\src\math\afxTrigonometry.c" />
     <ClCompile Include="..\..\src\math\afxVector.c" />
     <ClCompile Include="..\..\src\math\afxMathOps.c" />
     <ClCompile Include="..\..\src\math\afxTransform.c" />
     <ClCompile Include="..\..\src\math\afxVertex.c" />
     <ClCompile Include="..\..\src\math\afxWhd.c" />
+    <ClCompile Include="..\..\src\math\bound\afxBox.c" />
+    <ClCompile Include="..\..\src\math\bound\afxFrustum.c" />
+    <ClCompile Include="..\..\src\math\bound\afxPlane.c" />
+    <ClCompile Include="..\..\src\math\bound\afxSphere.c" />
     <ClCompile Include="..\..\src\mem\afxArena.c" />
     <ClCompile Include="..\..\src\mem\afxArray.c" />
     <ClCompile Include="..\..\src\mem\afxInterlockedQueue.c" />

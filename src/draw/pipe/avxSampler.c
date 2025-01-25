@@ -100,7 +100,7 @@ _AVX afxError AfxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo
 
     if (cnt != (afxUnit)(rslt = AfxFindSamplers(dsys, cnt, cfg, samplers)))
     {
-        afxClass* cls = AvxGetSamplerClass(dsys);
+        afxClass* cls = (afxClass*)_AvxGetSamplerClass(dsys);
         AFX_ASSERT_CLASS(cls, afxFcc_SAMP);
 
         for (afxUnit i = 0; i < cnt; i++)
@@ -126,7 +126,7 @@ _AVX afxError AfxDeclareYuvSamplers(afxDrawSystem dsys, afxUnit cnt, avxYuvSampl
 
     if (cnt != (afxUnit)(rslt = AfxFindYuvSamplers(dsys, cnt, cfg, samplers)))
     {
-        afxClass* cls = AvxGetSamplerClass(dsys);
+        afxClass* cls = (afxClass*)_AvxGetSamplerClass(dsys);
         AFX_ASSERT_CLASS(cls, afxFcc_SAMP);
         
         for (afxUnit i = 0; i < cnt; i++)

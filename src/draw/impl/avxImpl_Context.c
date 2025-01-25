@@ -56,7 +56,7 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
     afxCmdId lastId = 0; // DBG
 
     avxCmd *cmdHdr;
-    AfxChainForEveryLinkageB2F(&dctx->commands, avxCmd, hdr.script, cmdHdr)
+    AFX_ITERATE_CHAIN_B2F(&dctx->commands, avxCmd, hdr.script, cmdHdr)
     {
         lastId = cmdHdr->hdr.id;
 

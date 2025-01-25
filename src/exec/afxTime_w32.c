@@ -21,7 +21,7 @@
 #include <time.h>
 #pragma comment (lib, "winmm")
 
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 afxTime AfxGetTime(afxTime *t)
 {

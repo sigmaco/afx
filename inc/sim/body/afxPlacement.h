@@ -16,18 +16,18 @@
 
 // O objeto afxPlacement é um buffer usado para manter o estado de um afxSkeleton de afxModel como expressado no "world space". 
 
-#ifndef AMX_PLACEMENT_H
-#define AMX_PLACEMENT_H
+#ifndef ASX_PLACEMENT_H
+#define ASX_PLACEMENT_H
 
 #include "qwadro/inc/sim/afxSimDefs.h"
 
-AMX afxError    AfxAcquirePlacements(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxBool const excludeComposite[], afxPlacement placements[]);
+ASX afxError    AfxAcquirePlacements(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxBool const excludeComposite[], afxPlacement placements[]);
 
-AMX afxUnit     AfxGetPlacementCapacity(afxPlacement const plce);
+ASX afxUnit     AfxGetPlacementCapacity(afxPlacement const plce);
 
-AMX afxM4d*     AfxGetPlacementMatrices(afxPlacement const plce, afxUnit baseArtIdx);
+ASX afxM4d*     AfxGetPlacementMatrices(afxPlacement const plce, afxUnit baseArtIdx);
 
-AMX afxM4d*     AfxGetPlacementDeltas(afxPlacement const plce, afxUnit baseArtIdx);
+ASX afxM4d*     AfxGetPlacementDeltas(afxPlacement const plce, afxUnit baseArtIdx);
 
 /// A afxM4d composta está no mesmo layout como aquela retornada de GetPosture4x4. 
 /// É igual ao "world space" --- afxM4d espacial para a articulação (como dada por GetPosture4x4) multiplicada pelo transforme inverso de repouso no world-space --- para a articulação (como alojada no afxSkeleton). 
@@ -35,7 +35,7 @@ AMX afxM4d*     AfxGetPlacementDeltas(afxPlacement const plce, afxUnit baseArtId
 
 /// As afxM4d de transformação no world-space e compostas são garantida a estarem contíguas, assim sendo, você pode também obter o ponteiro para o início da array e usá-lo para manualmente acessar articulações individuais. 
 
-AMX afxM4d*     AfxPostureGetWorldMatrixArray(afxPlacement const plce);
-AMX afxM4d*     AfxPostureGetCompositeMatrixArray(afxPlacement const plce);
+ASX afxM4d*     AfxPostureGetWorldMatrixArray(afxPlacement const plce);
+ASX afxM4d*     AfxPostureGetCompositeMatrixArray(afxPlacement const plce);
 
-#endif//AMX_PLACEMENT_H
+#endif//ASX_PLACEMENT_H

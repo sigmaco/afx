@@ -14,13 +14,13 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AMX_TERRAIN_H
-#define AMX_TERRAIN_H
+#ifndef ASX_TERRAIN_H
+#define ASX_TERRAIN_H
 
-#include "qwadro/inc/sim/body/afxModel.h"
+#include "qwadro/inc/sim/io/afxModel.h"
 #include "qwadro/inc/sim/akxLighting.h"
 
-#ifdef _AMX_TERRAIN_C
+#ifdef _ASX_TERRAIN_C
 AFX_OBJECT(afxTerrain)
 {
     afxUnit      secCnt;
@@ -30,21 +30,21 @@ AFX_OBJECT(afxTerrain)
         afxMesh msh;
     }           *sectors;
 };
-#endif//_AMX_TERRAIN_C
+#endif//_ASX_TERRAIN_C
 
-AMX afxError    AmxDrawTerrain(afxTerrain ter, akxRenderer scn, afxDrawContext dctx);
-AMX afxError    AmxDrawTerrainSector(afxTerrain ter, afxUnit secIdx, akxRenderer scn, afxDrawContext dctx);
+ASX afxError    AsxDrawTerrain(afxTerrain ter, akxRenderer scn, afxDrawContext dctx);
+ASX afxError    AsxDrawTerrainSector(afxTerrain ter, afxUnit secIdx, akxRenderer scn, afxDrawContext dctx);
 
-AMX afxError    AfxResetTerrainSector(afxTerrain ter, afxUnit secIdx, afxMesh msh);
+ASX afxError    AfxResetTerrainSector(afxTerrain ter, afxUnit secIdx, afxMesh msh);
 
-AMX afxUnit     AfxGetTerrainMeshes(afxTerrain ter, afxUnit secIdx, afxUnit cnt, afxMesh meshes[]);
+ASX afxUnit     AfxGetTerrainMeshes(afxTerrain ter, afxUnit secIdx, afxUnit cnt, afxMesh meshes[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError    AfxAcquireTerrain(afxSimulation sim, afxUnit secCnt, afxTerrain* terrain);
+ASX afxError    AfxAcquireTerrain(afxSimulation sim, afxUnit secCnt, afxTerrain* terrain);
 
-AMX afxError    AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain* terrain);
+ASX afxError    AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain* terrain);
 
-AMX afxError    AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* uri, afxTerrain* terrain);
+ASX afxError    AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* uri, afxTerrain* terrain);
 
-#endif//AMX_TERRAIN_H
+#endif//ASX_TERRAIN_H

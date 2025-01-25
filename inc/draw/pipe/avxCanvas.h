@@ -44,7 +44,6 @@ AFX_DEFINE_STRUCT(afxSurfaceConfig)
 AVX afxResult       AfxTestCanvas(avxCanvas canv, afxCanvasFlags bitmask);
 
 AVX afxWhd          AfxGetCanvasExtent(avxCanvas canv);
-AVX afxError        AfxReadjustCanvas(avxCanvas canv, afxWhd whd);
 
 AVX void            AfxCountDrawBufferSlots(avxCanvas canv, afxUnit* slotCnt, afxUnit* colorSlotCnt);
 
@@ -55,13 +54,11 @@ AVX afxBool         AfxGetColorBuffers(avxCanvas canv, afxUnit baseSlotIdx, afxU
 AVX afxBool         AfxGetDepthBuffers(avxCanvas canv, afxRaster* depth, afxRaster* stencil);
 
 // must be compatible with format, have at least sampleCnt, and not be less extent than canvas.
-AVX afxError        AfxRelinkDrawBuffers(avxCanvas canv, afxUnit baseSlot, afxUnit cnt, afxRaster rasters[]);
-AVX afxError        AfxRelinkDepthBuffer(avxCanvas canv, afxRaster depth);
-AVX afxError        AfxRelinkStencilBuffer(avxCanvas canv, afxRaster stencil);
+AVX afxError        AfxBindDrawBuffers(avxCanvas canv, afxUnit baseSlot, afxUnit cnt, afxRaster rasters[]);
+AVX afxError        AfxBindDepthBuffer(avxCanvas canv, afxRaster depth);
+AVX afxError        AfxBindStencilBuffer(avxCanvas canv, afxRaster stencil);
 
 AVX afxError        AfxPrintDrawBuffer(avxCanvas canv, afxUnit surIdx, afxRasterIo const* op, afxUnit exuIdx, afxUri const* uri);
-
-AVX afxError        AfxRedoDrawBuffers(avxCanvas canv);
 
 ////////////////////////////////////////////////////////////////////////////////
 

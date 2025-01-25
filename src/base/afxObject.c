@@ -15,7 +15,7 @@
  */
 
 //#define _AFX_SYSTEM_C
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 #define OBJ_HDR_SIZ     AFX_ALIGNED_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT)
 #define GET_OBJ_HDR(obj_) ((void*)(((afxByte*)obj_) - OBJ_HDR_SIZ))
@@ -250,20 +250,6 @@ _AFXINL afxError AfxDeallocateInstanceData(afxObject obj, afxUnit cnt, afxObject
     }
     return err;
 }
-_AFX void AfxResetEventFilter(afxObject obj, afxBool(*filter)(afxObject,afxObject,afxEvent*))
-{
-    afxError err = AFX_ERR_NONE;
-    afxObjectBase* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
-
-    if (filter) hdr->eventFilter = filter;
-    else
-    {
-        afxClass const* cls = hdr->cls;
-        AFX_ASSERT(cls);
-        hdr->eventFilter = cls->defEventFilter;
-    }
-}
 
 _AFX void AfxResetEventHandler(afxObject obj, afxBool(*handler)(afxObject,afxEvent*))
 {
@@ -280,7 +266,7 @@ _AFX void AfxResetEventHandler(afxObject obj, afxBool(*handler)(afxObject,afxEve
     }
 }
 
-_AFX afxError AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[])
+_AFX afxError AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[], afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev))
 {
     afxError err = AFX_ERR_NONE;
 
@@ -299,11 +285,11 @@ _AFX afxError AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watched
         while (hdr->watchers)
         {
             afxEventFilter *flt;
-            AfxChainForEveryLinkage(hdr->watchers, afxEventFilter, watched, flt)
+            AFX_ITERATE_CHAIN(hdr->watchers, afxEventFilter, watched, flt)
             {
                 AFX_ASSERT(AfxGetLinker(&flt->watched) == watched);
 
-                if (AfxGetLinker(&flt->holder) == obj)
+                if ((AfxGetLinker(&flt->holder) == obj) && (!fn || (flt->fn == fn)))
                 {
                     AfxPopLink(&flt->watched);
                     AfxPopLink(&flt->holder);
@@ -320,16 +306,32 @@ _AFX afxError AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watched
                         AfxDeallocate((void**)&filterInst->watching, AfxHere());
                         filterInst->watching = NIL;
                     }
-                    break;
+
+                    if (fn)
+                        break;
                 }
             }
             break;
+        }
+
+        // dealloc filter chains if there is no more filter.
+
+        if (hdr->watchers && hdr->watchers->cnt == 0)
+        {
+            AfxDeallocate((void**)&hdr->watchers, AfxHere());
+            hdr->watchers = NIL;
+        }
+
+        if (filterInst->watching && filterInst->watching->cnt == 0)
+        {
+            AfxDeallocate((void**)&filterInst->watching, AfxHere());
+            filterInst->watching = NIL;
         }
     }
     return err;
 }
 
-_AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[])
+_AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[], afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev))
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(watcheds);
@@ -349,19 +351,17 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
         AfxLogEcho("Installing watcher <%p> for %p...", obj, watched);
         //AFX_ASSERT(fn);
 
-        afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev) = filterInst->eventFilter;
-
         while (fn)
         {
             afxEventFilter *flt;
 
             if (hdr->watchers)
             {
-                AfxChainForEveryLinkage(hdr->watchers, afxEventFilter, watched, flt)
+                AFX_ITERATE_CHAIN(hdr->watchers, afxEventFilter, watched, flt)
                 {
                     AFX_ASSERT(AfxGetLinker(&flt->watched) == watched);
 
-                    if (AfxGetLinker(&flt->holder) == obj)
+                    if ((AfxGetLinker(&flt->holder) == obj) && (flt->fn == fn))
                         break; // already exists
                 }
             }
@@ -392,12 +392,15 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
                     {
                         AfxPushLink(&flt->holder, filterInst->watching);
                         AfxPushLink(&flt->watched, hdr->watchers);
+                        flt->fn = fn;
                     }
                 }
             }
 
             if (err)
             {
+                // dealloc filter chains if there is no more filter.
+
                 if (hdr->watchers && hdr->watchers->cnt == 0)
                 {
                     AfxDeallocate((void**)&hdr->watchers, AfxHere());
@@ -415,7 +418,7 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
 
         if (err)
         {
-            AfxDisconnectObjects(obj, objIdx, watcheds);
+            AfxDisconnectObjects(obj, objIdx, watcheds, fn);
             break;
         }
     }
@@ -448,18 +451,13 @@ _AFX afxBool AfxNotifyObject(afxObject obj, afxEvent* ev)
     if (hdr->watchers)
     {
         afxEventFilter *flt;
-        AfxChainForEveryLinkage(hdr->watchers, afxEventFilter, watched, flt)
+        AFX_ITERATE_CHAIN(hdr->watchers, afxEventFilter, watched, flt)
         {
             AFX_ASSERT(AfxGetLinker(&flt->watched) == obj);
-            afxObjectBase* fltHdr = GET_OBJ_HDR(AfxGetLinker(&flt->holder));
-            AfxAssertType(fltHdr, afxFcc_OBJ);
-            afxBool(*eventFilter)(afxObject obj, afxObject watched, afxEvent *ev) = fltHdr->eventFilter;
-
-            if (eventFilter)
-            {
-                AFX_ASSERT(eventFilter);
-                intercept |= eventFilter(AfxGetLinker(&flt->holder), obj, ev);
-            }
+            afxObjectBase* watcherHdr = GET_OBJ_HDR(AfxGetLinker(&flt->holder));
+            AfxAssertType(watcherHdr, afxFcc_OBJ);            
+            AFX_ASSERT(flt->fn);
+            intercept |= flt->fn(AfxGetLinker(&flt->holder), obj, ev);
         }
     }
 

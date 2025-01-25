@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 _AFXINL afxBool AfxIsArrayFull(afxArray const *arr)
 {

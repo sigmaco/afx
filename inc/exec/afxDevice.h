@@ -23,7 +23,6 @@
 #include "qwadro/inc/io/afxUri.h"
 #include "qwadro/inc/base/afxManifest.h"
 #include "qwadro/inc/base/afxClass.h"
-#include "qwadro/inc/exec/afxFence.h"
 #include "qwadro/inc/exec/afxSemaphore.h"
 
 typedef afxUnit32 afxCmdId;

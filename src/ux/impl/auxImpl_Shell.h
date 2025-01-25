@@ -21,9 +21,9 @@
 #ifndef AUX_IMPL___SHELL_H
 #define AUX_IMPL___SHELL_H
 
-#include "../../dev/afxExecImplKit.h"
+#include "../../impl/afxExecImplKit.h"
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/math/afxViewport.h"
+#include "qwadro/inc/draw/math/afxViewport.h"
 #include "qwadro/inc/ux/afxShell.h"
 #include "qwadro/../../dep_/vgl1/vgl1.h"
 
@@ -129,7 +129,7 @@ AFX_OBJECT(afxSession)
     afxDrawSystem      dsys;
     afxUnit             sdevId;
     afxUnit             soutIdx;
-    afxSoundSystem     ssys;
+    afxMixSystem     ssys;
     afxSink      aso;
 
     void*               idd;
@@ -228,11 +228,11 @@ AFX_OBJECT(afxHid)
 
 #ifdef _AUX_KEYBOARD_C
 #ifndef _AFX_CONTEXT_C
-#   error "Require afxContext implementation"
+#   error "Require afxDevLink implementation"
 #endif
 AFX_OBJECT(afxKeyboard)
 {
-    AFX_OBJ(afxContext) ctx;
+    AFX_OBJ(afxDevLink) ctx;
     afxUnit              port;
     afxHidFlag          flags;
     void*               idd;
@@ -247,11 +247,11 @@ AFX_OBJECT(afxKeyboard)
 
 #ifdef _AUX_MOUSE_C
 #ifndef _AFX_CONTEXT_C
-#   error "Require afxContext implementation"
+#   error "Require afxDevLink implementation"
 #endif
 AFX_OBJECT(afxMouse)
 {
-    AFX_OBJ(afxContext) ctx;
+    AFX_OBJ(afxDevLink) ctx;
     afxUnit              port;
     afxHidFlag          flags;
     void*               idd;
@@ -270,11 +270,11 @@ AFX_OBJECT(afxMouse)
 
 #ifdef _AUX_GAMEPAD_C
 #ifndef _AFX_CONTEXT_C
-#   error "Require afxContext implementation"
+#   error "Require afxDevLink implementation"
 #endif
 AFX_OBJECT(afxGamepad)
 {
-    AFX_OBJ(afxContext) ctx;
+    AFX_OBJ(afxDevLink) ctx;
     afxBool             fn[4];
     afxBool             lhb[4];
     afxBool             rhb[4];

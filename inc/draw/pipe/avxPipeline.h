@@ -29,7 +29,7 @@
 #include "qwadro/inc/io/afxUri.h"
 #include "qwadro/inc/base/afxFixedString.h"
 #include "qwadro/inc/draw/io/afxPixel.h"
-#include "qwadro/inc/math/afxColor.h"
+#include "qwadro/inc/draw/math/afxColor.h"
 #include "qwadro/inc/base/afxFixedString.h"
 
 /*

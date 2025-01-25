@@ -69,12 +69,12 @@ _AUX afxBool AfxGetSessionVideo(afxSession ses, afxDrawSystem* system)
     return !!dsys;
 }
 
-_AUX afxBool AfxGetSessionAudio(afxSession ses, afxSoundSystem* system, afxSink* sink)
+_AUX afxBool AfxGetSessionAudio(afxSession ses, afxMixSystem* system, afxSink* sink)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
-    afxSoundSystem ssys = ses->ssys;
-    AFX_ASSERT_OBJECTS(afxFcc_SSYS, 1, &ssys);
+    afxMixSystem ssys = ses->ssys;
+    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &ssys);
     AFX_ASSERT(system);
     *system = ssys;
     AFX_ASSERT(sink);
@@ -205,11 +205,11 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
     {
         if (cfg->ssys)
         {
-            afxSoundSystem ssys = cfg->ssys;
-            AFX_ASSERT_OBJECTS(afxFcc_SSYS, 1, &ssys);
+            afxMixSystem ssys = cfg->ssys;
+            AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &ssys);
             AfxReacquireObjects(1, &ssys);
-            afxSoundDevice sdev = AfxGetSoundSystemDevice(ssys);
-            AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &sdev);
+            afxMixDevice sdev = AfxGetSoundSystemDevice(ssys);
+            AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &sdev);
             ses->ssys = ssys;
             ses->sdevId = AfxGetObjectId(sdev);
             ses->soutIdx = cfg->soutIdx;
@@ -219,15 +219,16 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
         }
         else
         {
-            afxSoundSystem ssys = NIL;
+#if 0
+            afxMixSystem ssys = NIL;
             afxUnit sdevId = cfg->sdevId;
 
             if (sdevId != AFX_INVALID_INDEX)
             {
-                afxSoundSystemConfig sccfg;
-                AfxConfigureSoundSystem(sdevId, &sccfg);
+                afxMixSystemConfig sccfg;
+                AfxConfigureMixSystem(sdevId, &sccfg);
 
-                if (AfxEstablishSoundSystem(sdevId, &sccfg, &ssys))
+                if (AfxEstablishMixSystem(sdevId, &sccfg, &ssys))
                     AfxThrowError();
             }
             ses->ssys = ssys;
@@ -236,6 +237,8 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
             afxSinkConfig asoCfg;
             AfxConfigureAudioSink(ssys, &asoCfg);
             AfxOpenAudioSink(ssys, &asoCfg, &ses->aso);
+#endif
+
 #if 0
             afxStream file;
             AfxOpenFile(AfxUri("../system/boot"), afxFileFlag_R, &file);
@@ -328,7 +331,7 @@ _AUX afxError AfxAcquireSession(afxUnit icd, afxSessionConfig const* cfg, afxSes
     }
 
     afxModule driver;
-    if (!AuxGetIcd(icd, &driver))
+    if (!_AuxGetIcd(icd, &driver))
     {
         AfxThrowError();
         return err;

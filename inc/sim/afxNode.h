@@ -26,7 +26,7 @@
 
 // Handling with afxNodes, the programmer shouldn't care about matrix pre/post-multiplication. RenderWare chose don't do it.
 
-// afxNode defines the base class for all scene objects in QWADRO AMX.
+// afxNode defines the base class for all scene objects in QWADRO ASX.
 
 
 
@@ -35,14 +35,14 @@
 // Object space is the coordinate system from an object's point of view. The origin of object space is at the object's pivot point, and its axes are rotated with the object.
 // Local space is similar to object space, however it uses the origin and axes of the object's parent node in the hierarchy of objects.This is useful when you haven't transformed the object itself, but it is part of a group that is transformed.
 
-#ifndef AMX_NODE_H
-#define AMX_NODE_H
+#ifndef ASX_NODE_H
+#define ASX_NODE_H
 
 #include "qwadro/inc/base/afxObject.h"
 #include "qwadro/inc/base/afxString.h"
 #include "qwadro/inc/math/afxMathDefs.h"
-#include "qwadro/inc/math/afxBox.h"
-#include "qwadro/inc/math/afxSphere.h"
+#include "qwadro/inc/math/bound/afxBox.h"
+#include "qwadro/inc/math/bound/afxSphere.h"
 #include "qwadro/inc/sim/afxSimDefs.h"
 #include "qwadro/inc/sim/body/afxPose.h"
 #include "qwadro/inc/sim/body/afxPlacement.h"
@@ -104,4 +104,4 @@ AFX_DEFINE_STRUCT(afxDagNode)
 };
 
 
-#endif//AMX_NODE_H
+#endif//ASX_NODE_H

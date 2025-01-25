@@ -16,134 +16,134 @@
 
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
-#define _AMX_ENGINE_C
-#define _AMX_SIM_BRIDGE_C
-#define _AMX_SIM_QUEUE_C
-#define _AMX_CATALYST_C
-#include "impl/amxImplementation.h"
+#define _ASX_ENGINE_C
+#define _ASX_SIM_BRIDGE_C
+#define _ASX_SIM_QUEUE_C
+#define _ASX_CONTEXT_C
+#include "impl/asxImplementation.h"
 
-_AMX afxError _AmxUnlockSimQueue(afxSimQueue mque)
+_ASX afxError _AsxUnlockSimQueue(afxSimQueue sque)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    AfxUnlockMutex(&mque->workChnMtx);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
+    AfxUnlockMutex(&sque->workChnMtx);
     return err;
 }
 
-_AMX afxError _AmxLockSimQueue(afxSimQueue mque, afxBool wait, afxTimeSpec const* ts)
+_ASX afxError _AsxLockSimQueue(afxSimQueue sque, afxBool wait, afxTimeSpec const* ts)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
     if (wait)
     {
-        if (!AfxTryLockMutex(&mque->workChnMtx))
+        if (!AfxTryLockMutex(&sque->workChnMtx))
             return 1;
     }
     else
     {
         if (ts)
-            err = AfxLockMutexTimed(&mque->workChnMtx, ts);
+            err = AfxLockMutexTimed(&sque->workChnMtx, ts);
         else
-            if (AfxLockMutex(&mque->workChnMtx))
+            if (AfxLockMutex(&sque->workChnMtx))
                 AfxThrowError();
     }
     return err;
 }
 
-_AMX afxError _AmxMquePopBlob(afxSimQueue mque, void* blob, afxUnit siz)
+_ASX afxError _AsxSquePopBlob(afxSimQueue sque, void* blob, afxUnit siz)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    AfxRecycleArenaUnit(&mque->workArena, blob, siz);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
+    AfxRecycleArenaUnit(&sque->workArena, blob, siz);
     return err;
 }
 
-_AMX void* _AmxMquePushBlob(afxSimQueue mque, afxUnit siz)
+_ASX void* _AsxSquePushBlob(afxSimQueue sque, afxUnit siz)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    void* blob = AfxRequestArenaUnit(&mque->workArena, siz);
+    void* blob = AfxRequestArenaUnit(&sque->workArena, siz);
     AFX_ASSERT(blob);
     return blob;
 }
 
-_AMX afxError _AmxMquePopWork(afxSimQueue mque, amxWork* work)
+_ASX afxError _AsxSquePopWork(afxSimQueue sque, asxWork* work)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
     AfxPopLink(&work->hdr.chain);
-    AfxRecycleArenaUnit(&mque->workArena, work, work->hdr.siz);
+    AfxRecycleArenaUnit(&sque->workArena, work, work->hdr.siz);
     return err;
 }
 
-_AMX amxWork* _AmxMquePushWork(afxSimQueue mque, afxUnit id, afxUnit siz, afxCmdId* cmdId)
+_ASX asxWork* _AsxSquePushWork(afxSimQueue sque, afxUnit id, afxUnit siz, afxCmdId* cmdId)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    amxWork* work = AfxRequestArenaUnit(&mque->workArena, siz);
+    asxWork* work = AfxRequestArenaUnit(&sque->workArena, siz);
     AFX_ASSERT(work);
     work->hdr.id = id;
     work->hdr.siz = siz;
     AfxGetTime(&work->hdr.pushTime);
     AFX_ASSERT(cmdId);
-    *cmdId = AfxPushLink(&work->hdr.chain, &mque->workChn);
+    *cmdId = AfxPushLink(&work->hdr.chain, &sque->workChn);
     return work;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxClass const* _AmxGetCatalystClass(afxSimQueue mque)
+_ASX afxClass const* _AsxGetCatalystClass(afxSimQueue sque)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    afxClass const* cls = &mque->cmdbCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_CYST);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
+    afxClass const* cls = &sque->cmdbCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_CTX);
     return cls;
 }
 
-_AMX afxEngine AfxGetSimQueueDevice(afxSimQueue mque)
+_ASX afxEngine AfxGetSampleQueueDevice(afxSimQueue sque)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    afxSimBridge mexu = AfxGetProvider(mque);
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    afxEngine sdev = AfxGetMathBridgeDevice(mexu);
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &sdev);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
+    afxSimBridge sexu = AfxGetProvider(sque);
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
+    afxEngine sdev = AfxGetMathBridgeDevice(sexu);
+    AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &sdev);
     return sdev;
 }
 
-_AMX afxSimulation AfxGetSimQueueContext(afxSimQueue mque)
+_ASX afxSimulation AfxGetSampleQueueContext(afxSimQueue sque)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    afxSimulation sim = mque->sim;
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
+    afxSimulation sim = sque->sim;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     return sim;
 }
 
-_AMX afxUnit AfxGetSimQueuePort(afxSimQueue mque)
+_ASX afxUnit AfxGetSampleQueuePort(afxSimQueue sque)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    return mque->portId;
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
+    return sque->portId;
 }
 
-_AMX afxError _AmxSubmitSimCommands(afxSimQueue mque, avxSubmission const* ctrl, afxUnit cnt, afxCatalyst contexts[])
+_ASX afxError _AsxSubmitSimCommands(afxSimQueue sque, asxSubmission const* ctrl, afxUnit cnt, afxContext contexts[])
 {
     afxError err = AFX_ERR_NONE;
-    /// mque must be a valid afxCatalyst handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    /// sque must be a valid afxContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
     AFX_ASSERT(cnt);
     AFX_ASSERT(contexts);
 
-    if (!AfxTryLockMutex(&mque->workChnMtx))
+    if (!AfxTryLockMutex(&sque->workChnMtx))
         return afxError_TIMEOUT;
 
     afxCmdId cmdId;
-    amxWork* work = _AmxMquePushWork(mque, AVX_GET_STD_WORK_ID(Execute), sizeof(work->Execute) + (cnt * sizeof(work->Execute.cmdbs[0])), &cmdId);
+    asxWork* work = _AsxSquePushWork(sque, AVX_GET_STD_WORK_ID(Execute), sizeof(work->Execute) + (cnt * sizeof(work->Execute.cmdbs[0])), &cmdId);
     AFX_ASSERT(work);
 
     if (ctrl)
@@ -157,87 +157,87 @@ _AMX afxError _AmxSubmitSimCommands(afxSimQueue mque, avxSubmission const* ctrl,
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        afxCatalyst mctx = contexts[i];
-        AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &mctx);
+        afxContext mctx = contexts[i];
+        AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &mctx);
 
         AfxReacquireObjects(1, &mctx);
         work->Execute.cmdbs[i] = mctx;
         AfxIncAtom32(&mctx->submCnt);
-        work->Execute.cmdbs[i]->state = amxCatalystState_PENDING;
+        work->Execute.cmdbs[i]->state = asxContextState_PENDING;
     }
 
-    AfxUnlockMutex(&mque->workChnMtx);
+    AfxUnlockMutex(&sque->workChnMtx);
 
     return err;
 }
 
-_AMX afxError _AmxMqueDtorCb(afxSimQueue mque)
+_ASX afxError _AsxSqueDtorCb(afxSimQueue sque)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    AfxDeregisterChainedClasses(&mque->classes);
+    AfxDeregisterChainedClasses(&sque->classes);
 
-    AfxDismountClass(&mque->cmdbCls);
-    AfxDismantleSlock(&mque->cmdbReqLock);
-    AfxDismantleQueue(&mque->cmdbRecycQue);
+    AfxDismountClass(&sque->cmdbCls);
+    AfxDismantleSlock(&sque->cmdbReqLock);
+    AfxDismantleQueue(&sque->cmdbRecycQue);
 
-    AfxDismantleMutex(&mque->workChnMtx);
-    AfxDismantleArena(&mque->workArena);
-    AfxDismantleSlock(&mque->workArenaSlock);
-    AfxDismantleCondition(&mque->idleCnd);
-    AfxDismantleMutex(&mque->idleCndMtx);
+    AfxDismantleMutex(&sque->workChnMtx);
+    AfxDismantleArena(&sque->workArena);
+    AfxDismantleSlock(&sque->workArenaSlock);
+    AfxDismantleCondition(&sque->idleCnd);
+    AfxDismantleMutex(&sque->idleCndMtx);
 
     return err;
 }
 
-_AMX afxError _AmxMqueCtorCb(afxSimQueue mque, void** args, afxUnit invokeNo)
+_ASX afxError _AsxSqueCtorCb(afxSimQueue sque, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    afxSimBridge mexu = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    _amxSimBridgeAcquisition const* cfg = AFX_CAST(_amxSimBridgeAcquisition const*, args[1]);
+    afxSimBridge sexu = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
+    _asxSimBridgeAcquisition const* cfg = AFX_CAST(_asxSimBridgeAcquisition const*, args[1]);
     AFX_ASSERT(cfg);
 
-    mque->mdev = cfg->mdev;
-    mque->portId = cfg->portId;
-    mque->exuIdx = cfg->exuIdx;
-    mque->sim = AfxGetMathBridgeContext(mexu);
+    sque->seng = cfg->seng;
+    sque->portId = cfg->portId;
+    sque->exuIdx = cfg->exuIdx;
+    sque->sim = AfxGetMathBridgeContext(sexu);
 
-    mque->immediate = 0;// !!spec->immedate;
+    sque->immediate = 0;// !!spec->immedate;
 
-    AfxDeploySlock(&mque->workArenaSlock);
-    AfxDeployArena(&mque->workArena, NIL, AfxHere());
+    AfxDeploySlock(&sque->workArenaSlock);
+    AfxDeployArena(&sque->workArena, NIL, AfxHere());
 
-    AfxDeployMutex(&mque->workChnMtx, AFX_MTX_PLAIN);
-    AfxDeployChain(&mque->workChn, mexu);
-    AfxDeployMutex(&mque->idleCndMtx, AFX_MTX_PLAIN);
-    AfxDeployCondition(&mque->idleCnd);
+    AfxDeployMutex(&sque->workChnMtx, AFX_MTX_PLAIN);
+    AfxDeployChain(&sque->workChn, sexu);
+    AfxDeployMutex(&sque->idleCndMtx, AFX_MTX_PLAIN);
+    AfxDeployCondition(&sque->idleCnd);
 
-    mque->closed = FALSE;
+    sque->closed = FALSE;
 
-    AfxDeployChain(&mque->classes, (void*)mque);
+    AfxDeployChain(&sque->classes, (void*)sque);
 
-    mque->cmdbLockedForReq = FALSE;
-    AfxDeploySlock(&mque->cmdbReqLock);
-    AfxMakeQueue(&mque->cmdbRecycQue, sizeof(afxDrawContext), 3, NIL, 0);
+    sque->cmdbLockedForReq = FALSE;
+    AfxDeploySlock(&sque->cmdbReqLock);
+    AfxMakeQueue(&sque->cmdbRecycQue, sizeof(afxDrawContext), 3, NIL, 0);
 
     afxClassConfig tmpClsCfg = { 0 };
-    tmpClsCfg = cfg->mctxClsCfg ? *cfg->mctxClsCfg : _AMX_CYST_CLASS_CONFIG;
-    AFX_ASSERT(tmpClsCfg.fcc == afxFcc_CYST);
-    AfxMountClass(&mque->cmdbCls, NIL, &mque->classes, &tmpClsCfg);
+    tmpClsCfg = cfg->mctxClsCfg ? *cfg->mctxClsCfg : _ASX_CTX_CLASS_CONFIG;
+    AFX_ASSERT(tmpClsCfg.fcc == afxFcc_CTX);
+    AfxMountClass(&sque->cmdbCls, NIL, &sque->classes, &tmpClsCfg);
 
     return err;
 }
 
-_AMX afxClassConfig const _AMX_MQUE_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_SQUE_CLASS_CONFIG =
 {
-    .fcc = afxFcc_MQUE,
+    .fcc = afxFcc_SQUE,
     .name = "MathQueue",
     .desc = "Math Device Submission Queue",
     .fixedSiz = sizeof(AFX_OBJECT(afxSimQueue)),
-    .ctor = (void*)_AmxMqueCtorCb,
-    .dtor = (void*)_AmxMqueDtorCb
+    .ctor = (void*)_AsxSqueCtorCb,
+    .dtor = (void*)_AsxSqueDtorCb
 };

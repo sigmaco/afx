@@ -14,8 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AUX_SCRIPT_H
-#define AUX_SCRIPT_H
+#ifndef AFX_SCRIPT_H
+#define AFX_SCRIPT_H
 
 #include "qwadro/inc/ux/afxWidget.h"
 #include "qwadro/inc/ux/afxWindow.h"
@@ -47,14 +47,14 @@ AFX_OBJECT(afxScript)
 #endif//_AFX_SCRIPT_C
 #endif//_AFX_CORE_C
 
-AUX void                AfxGetScriptTime(afxScript xss, afxReal64* ct, afxReal64* dt);
+AFX void                AfxGetScriptTime(afxScript xss, afxReal64* ct, afxReal64* dt);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AUX afxResult           AfxRunScript(afxScript xss, afxUri const* uri); // Enters the main event loop and waits until exit() is called. Returns the value that was passed to exit() (which is 0 if exit() is called via quit()).
+AFX afxResult           AfxRunScript(afxScript xss, afxUri const* uri); // Enters the main event loop and waits until exit() is called. Returns the value that was passed to exit() (which is 0 if exit() is called via quit()).
 
-AUX afxError            AfxLoadScript(afxString const* scope, afxUri const* uri);
+AFX afxError            AfxLoadScript(afxString const* scope, afxUri const* uri);
 
-AUX afxError            AfxInjectScript(afxString const* scope, afxString const* code);
+AFX afxError            AfxInjectScript(afxString const* scope, afxString const* code);
 
-#endif//AUX_SCRIPT_H
+#endif//AFX_SCRIPT_H

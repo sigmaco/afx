@@ -29,7 +29,48 @@
 //#define _AVX_DRAW_SYSTEM_C
 //#define _AVX_DRAW_OUTPUT_C
 //#define _AVX_DRAW_INPUT_C
+#define _AVX_BUFFER_C
 #include "impl/avxImplementation.h"
+
+_AVX afxDrawFeatures const* _AvxAccessDrawRequirements(afxDrawSystem dsys)
+{
+    afxError err = AFX_ERR_NONE;
+    /// dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    return &dsys->requirements;
+}
+
+_AVX void* _AvxGetMapBuffersCallback(afxDrawSystem dsys)
+{
+    afxError err = AFX_ERR_NONE;
+    /// dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    return dsys->mapBufsCb;
+}
+
+_AVX void* _AvxGetUnmapBuffersCallback(afxDrawSystem dsys)
+{
+    afxError err = AFX_ERR_NONE;
+    /// dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    return dsys->unmapBufsCb;
+}
+
+_AVX void* _AvxGetSyncMapsCallback(afxDrawSystem dsys)
+{
+    afxError err = AFX_ERR_NONE;
+    /// dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    return dsys->syncMapsCb;
+}
+
+_AVX void* _AvxGetFlushMapsCallback(afxDrawSystem dsys)
+{
+    afxError err = AFX_ERR_NONE;
+    /// dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    return dsys->flushMapsCb;
+}
 
 _AVX afxModule AfxGetDrawSystemIcd(afxDrawSystem dsys)
 {
@@ -49,6 +90,16 @@ _AVX afxClass const* _AvxGetDrawBridgeClass(afxDrawSystem dsys)
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass const* cls = &dsys->dexuCls;
     AFX_ASSERT_CLASS(cls, afxFcc_DEXU);
+    return cls;
+}
+
+_AVX afxClass const* _AvxGetFenceClass(afxDrawSystem dsys)
+{
+    afxError err = AFX_ERR_NONE;
+    /// dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    afxClass *cls = &dsys->fencCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_FENC);
     return cls;
 }
 
@@ -72,7 +123,7 @@ _AVX afxClass const* _AvxGetDrawInputClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass* AvxGetQueryPoolClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxGetQueryPoolClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -82,7 +133,7 @@ _AVX afxClass* AvxGetQueryPoolClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass* AvxGetVertexInputClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxGetVertexInputClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -92,7 +143,7 @@ _AVX afxClass* AvxGetVertexInputClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass* AvxGetRasterClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxGetRasterClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -102,7 +153,7 @@ _AVX afxClass* AvxGetRasterClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* AvxGetBufferClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxGetBufferClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -112,7 +163,7 @@ _AVX afxClass const* AvxGetBufferClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass* AvxGetSamplerClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxGetSamplerClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -122,7 +173,7 @@ _AVX afxClass* AvxGetSamplerClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass* AvxGetPipelineClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxGetPipelineClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -132,7 +183,7 @@ _AVX afxClass* AvxGetPipelineClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass* AvxGetCanvasClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxGetCanvasClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -142,7 +193,7 @@ _AVX afxClass* AvxGetCanvasClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass* AvxGetShaderClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxGetShaderClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -152,7 +203,7 @@ _AVX afxClass* AvxGetShaderClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass* AvxGetLigatureClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxGetLigatureClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -417,7 +468,7 @@ _AVX afxUnit AfxInvokeDrawInputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt,
     return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
-_AVX afxError AfxRollDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, afxUnit cnt, afxDrawContext contexts[])
+_AVX afxError AfxRollDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence)
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -462,7 +513,7 @@ _AVX afxError AfxRollDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, afxUn
             }
 
             afxError err2;
-            if ((err2 = _AvxSubmitDrawCommands(dque, ctrl, 1, contexts)))
+            if ((err2 = _AvxSubmitDrawCommands(dque, ctrl, 1, contexts, fence)))
             {
                 if (err2 == afxError_TIMEOUT)
                     continue;
@@ -539,7 +590,44 @@ _AVX afxError _AvxTransferVideoMemory(afxDrawSystem dsys, avxTransference* ctrl,
     return err;
 }
 
-_AVX afxError AfxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, afxUnit cnt, afxDrawOutput outputs[], afxUnit const bufIdx[])
+AFX_DEFINE_STRUCT(avxPresent)
+{
+    // --- VkDeviceGroupPresentInfoKHR
+    // Mode and mask controlling which physical devices' images are presented
+
+
+
+    // --- VkSwapchainPresentFenceInfoEXT
+
+    avxFence const* completionSignal;
+
+    // --- VkDisplayPresentInfoKHR
+    // Structure describing parameters of a queue presentation to a swapchain
+    
+    // srcRect is a rectangular region of pixels to present. 
+    // It must be a subset of the image being presented. 
+    // If VkDisplayPresentInfoKHR is not specified, this region will be assumed to be the entire presentable image.
+    afxRect srcRect;
+
+    // dstRect is a rectangular region within the visible region of the swapchain's display mode.
+    // If VkDisplayPresentInfoKHR is not specified, 
+    // this region will be assumed to be the entire visible region of the swapchain's mode.
+    // If the specified rectangle is a subset of the display mode's visible region, 
+    // content from display planes below the swapchain's plane will be visible outside the rectangle.
+    // If there are no planes below the swapchain's, the area outside the specified rectangle will be black.
+    // If portions of the specified rectangle are outside of the display's visible region, 
+    // pixels mapping only to those portions of the rectangle will be discarded.
+    afxRect dstRect;
+
+    // persistent, when TRUE, the display engine will enable buffered mode on displays that support it. 
+    // This allows the display engine to stop sending content to the display until a new image is presented. 
+    // The display will instead maintain a copy of the last presented image. 
+    // This allows less power to be used, but may increase presentation latency. 
+    // If VkDisplayPresentInfoKHR is not specified, persistent mode will not be used.
+    afxBool persistent;
+};
+
+_AVX afxError AfxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, avxFence wait, afxUnit cnt, afxDrawOutput outputs[], afxUnit const bufIdx[], avxFence signal[])
 {
     afxError err = AFX_ERR_NONE;
     /// dsys must be a valid afxDrawSystem handle.
@@ -590,7 +678,7 @@ _AVX afxError AfxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, a
                 AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
                 
                 afxError err2;
-                if ((err2 = _AvxPresentDrawOutput(dque, ctrl, dout, bufIdx[i])))
+                if ((err2 = _AvxPresentDrawOutput(dque, ctrl, wait, dout, bufIdx[i], signal ? signal[i] : NIL)))
                 {
                     if (err2 == afxError_TIMEOUT)
                         continue;
@@ -845,7 +933,7 @@ _AVX afxError AfxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
     *cfg = (afxDrawSystemConfig const) { 0 };
 
     afxModule driver;
-    if (!AvxGetIcd(icd, &driver))
+    if (!_AvxGetIcd(icd, &driver))
     {
         AfxThrowError();
         return err;
@@ -882,7 +970,7 @@ _AVX afxError AfxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg
     }
 
     afxModule driver;
-    if (!AvxGetIcd(icd, &driver))
+    if (!_AvxGetIcd(icd, &driver))
     {
         AfxThrowError();
         return err;

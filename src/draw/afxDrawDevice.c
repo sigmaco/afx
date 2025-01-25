@@ -27,18 +27,18 @@
 #define _AVX_DRAW_OUTPUT_C
 #define _AVX_DRAW_INPUT_C
 #include "impl/avxImplementation.h"
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
-_AVX afxString const targaSignature = AFX_STRING(
-    "           :::::::::::     :::     :::::::::   ::::::::      :::               \n"
-    "               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             \n"
-    "               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            \n"
-    "               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           \n"
-    "               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           \n"
-    "               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           \n"
-    "               ###     ###     ### ###    ###  ########  ###     ###           \n"
+_AVX afxString const sigmaDrawSignature = AFX_STRING(
+    "      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      \n"
+    "     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     \n"
+    "     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     \n"
+    "     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     \n"
+    "     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     \n"
+    "     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     \n"
+    "      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      \n"
     "                                                                               \n"
-    "              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              \n"
+    "    Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E    \n"
     "                                                                               \n"
     "                               Public Test Build                               \n"
     "                           (c) 2017 SIGMA FEDERATION                           \n"
@@ -52,6 +52,13 @@ AFX afxChain* _AfxGetSystemClassChain(void);
 ////////////////////////////////////////////////////////////////////////////////
 // DRAW DEVICE HANDLING                                                       //
 ////////////////////////////////////////////////////////////////////////////////
+
+_AVX afxDrawLimits const* _AvxAccessDrawLimits(afxDrawDevice ddev)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
+    return &ddev->limits;
+}
 
 _AVX afxBool AfxIsDrawDevicePrompt(afxDrawDevice ddev)
 {
@@ -316,6 +323,30 @@ _AVX afxBool AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const
     return rslt;
 }
 
+_AVX afxError _AvxRegisterDisplays(afxDrawDevice ddev, afxUnit cnt, avxDisplayInfo const infos[], afxDisplay displays[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
+    AFX_ASSERT(displays);
+    AFX_ASSERT(infos);
+    AFX_ASSERT(cnt);
+
+    afxClass* cls = (afxClass*)&ddev->vduCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_VDU);
+
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)displays, (void const*[]) { ddev, infos, NIL }))
+    {
+        AfxThrowError();
+        return err;
+    }
+    else
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_VDU, cnt, displays);
+
+    }
+    return err;
+}
+
 _AVX afxError _AvxDdevDtorCb(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
@@ -350,6 +381,7 @@ _AVX afxError _AvxDdevCtorCb(afxDrawDevice ddev, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     afxDrawDeviceInfo const* info = AFX_CAST(afxDrawDeviceInfo const*, args[1]) + invokeNo;
     AFX_ASSERT(info);
+    afxClassConfig* vduClsCfg = AFX_CAST(afxClassConfig*, args[2]) + invokeNo;
 
     if (_AfxDevBaseImplementation.ctor(&ddev->dev, (void*[]){ icd, (void*)&info->dev }, 0)) AfxThrowError();
     else
@@ -389,6 +421,8 @@ _AVX afxError _AvxDdevCtorCb(afxDrawDevice ddev, void** args, afxUnit invokeNo)
                     AfxMakeString128(&ddev->ports[i].desc, NIL);
                     AfxMakeString8(&ddev->ports[i].urn, NIL);
                 }
+
+                AfxMountClass(&ddev->vduCls, (afxClass*)AfxGetDeviceClass(), &ddev->dev.classes, vduClsCfg ? vduClsCfg : &_AVX_VDU_CLASS_CONFIG);
                 
                 if (AfxCallDevice(&ddev->dev, afxFcc_DSYS, NIL)) AfxThrowError();
                 else
@@ -429,7 +463,7 @@ _AVX afxUnit AfxEnumerateDrawDevices(afxUnit icd, afxUnit first, afxUnit cnt, af
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AvxGetIcd(icd, &mdle))
+    while (_AvxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
@@ -449,7 +483,7 @@ _AVX afxUnit AfxInvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AvxGetIcd(icd, &mdle))
+    while (_AvxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
@@ -469,7 +503,7 @@ _AVX afxUnit AfxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AvxGetIcd(icd, &mdle))
+    while (_AvxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
@@ -488,7 +522,7 @@ _AVX afxUnit AfxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, 
     AFX_ASSERT(features);
     afxUnit rslt = 0;
     afxModule mdle;
-    while (AvxGetIcd(icd, &mdle))
+    while (_AvxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
@@ -524,7 +558,7 @@ _AVX afxUnit AfxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AvxGetIcd(icd, &mdle))
+    while (_AvxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
@@ -544,7 +578,7 @@ _AVX afxUnit AfxEvokeDrawSystems(afxUnit icd, afxUnit first, void* udd, afxBool(
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AvxGetIcd(icd, &mdle))
+    while (_AvxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
@@ -564,7 +598,7 @@ _AVX afxUnit AfxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, af
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AvxGetIcd(icd, &mdle))
+    while (_AvxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));

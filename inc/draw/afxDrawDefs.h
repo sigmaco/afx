@@ -361,6 +361,7 @@ AFX_DEFINE_HANDLE(afxDrawDevice);
 AFX_DEFINE_HANDLE(afxDrawSystem);
 AFX_DEFINE_HANDLE(afxDrawThread);
 AFX_DEFINE_HANDLE(afxDrawBridge);
+AFX_DEFINE_HANDLE(afxDisplay);
 AFX_DEFINE_HANDLE(afxDrawQueue);
 AFX_DEFINE_HANDLE(afxDrawInput);
 AFX_DEFINE_HANDLE(afxDrawContext);

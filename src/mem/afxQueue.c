@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 _AFXINL afxError AfxMakeQueue(afxQueue* que, afxUnit unitSiz, afxUnit cap, void* buf, afxUnit pop)
 {

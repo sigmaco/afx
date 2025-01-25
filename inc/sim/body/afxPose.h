@@ -17,22 +17,22 @@
 /// O objeto afxPose é um buffer usado para manter o estado de um afxSkeleton como expressado em sua "pose local". 
 /// Aqui, cada articulação no afxSkeleton é representada por um afxTransform que é relativo a sua articulação-parente imediata. 
 
-#ifndef AMX_POSE_H
-#define AMX_POSE_H
+#ifndef ASX_POSE_H
+#define ASX_POSE_H
 
 #include "qwadro/inc/sim/afxSimDefs.h"
 #include "qwadro/inc/math/afxTransform.h"
 
-AMX afxError        AfxAcquirePoses(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxPose lp[]);
+ASX afxError        AfxAcquirePoses(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxPose lp[]);
 
-AMX afxUnit         AfxGetPoseCapacity(afxPose const lp);
+ASX afxUnit         AfxGetPoseCapacity(afxPose const lp);
 
-AMX afxTransform*   AfxGetPoseTransform(afxPose const pose, afxUnit artIdx);
+ASX afxTransform*   AfxGetPoseTransform(afxPose const pose, afxUnit artIdx);
 
-AMX void            AfxCopyPose(afxPose pose, afxPose const from);
+ASX void            AfxCopyPose(afxPose pose, afxPose const from);
 
-AMX void            AfxApplyRootMotionVectorsToPose(afxPose pose, afxV3d const translation, afxV3d const rotation);
+ASX void            AfxApplyRootMotionVectorsToPose(afxPose pose, afxV3d const translation, afxV3d const rotation);
 
-AMX void            AfxAccumulateLocalTransform(afxPose LocalAttitude, int LocalAttitudeBoneIndex, int SkeletonBoneIndex, float Weight, const afxModel ReferenceSkeleton, afxQuatBlend Mode, const afxTransform *Transform);
+ASX void            AfxAccumulateLocalTransform(afxPose LocalAttitude, int LocalAttitudeBoneIndex, int SkeletonBoneIndex, float Weight, const afxModel ReferenceSkeleton, afxQuatBlend Mode, const afxTransform *Transform);
 
-#endif//AMX_POSE_H
+#endif//ASX_POSE_H

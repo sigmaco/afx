@@ -142,7 +142,7 @@ _AUX afxError _AuxImplementShell(afxModule icd, afxClassConfig const* sesCls)
     return err;
 }
 
-_AUX afxBool AuxGetIcd(afxUnit icdIdx, afxModule* driver)
+_AUX afxBool _AuxGetIcd(afxUnit icdIdx, afxModule* driver)
 {
     afxError err = AFX_ERR_NONE;
     afxBool found = FALSE;
@@ -152,7 +152,7 @@ _AUX afxBool AuxGetIcd(afxUnit icdIdx, afxModule* driver)
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     afxModule icd;
-    while ((icd = AFX_REBASE(AfxFindFirstLink(&sys->aux.icdChain, icdIdx), AFX_OBJ(afxModule), icd.aux)))
+    while ((icdIdx < sys->aux.icdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->aux.icdChain, icdIdx), AFX_OBJ(afxModule), icd.aux)))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
 

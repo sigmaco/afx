@@ -15,11 +15,11 @@
  */
 
 #define _AFX_SIM_C
-#define _AMX_LIGHT_C
-#include "impl/amxImplementation.h"
+#define _ASX_LIGHT_C
+#include "impl/asxImplementation.h"
 #include "qwadro/inc/sim/akxLighting.h"
 
-_AMX afxError _AfxLitDtor(akxLight lit)
+_ASX afxError _AfxLitDtor(akxLight lit)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_LIT, 1, &lit);
@@ -27,7 +27,7 @@ _AMX afxError _AfxLitDtor(akxLight lit)
     return err;
 }
 
-_AMX afxError _AfxLitCtor(akxLight lit, void** args, afxUnit invokeNo)
+_ASX afxError _AfxLitCtor(akxLight lit, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_LIT, 1, &lit);
@@ -87,49 +87,49 @@ _AMX afxError _AfxLitCtor(akxLight lit, void** args, afxUnit invokeNo)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AfxAcquireDirectionalLights(afxSimulation sim, afxUnit cnt, afxUnit uid[])
+_ASX afxError AfxAcquireDirectionalLights(afxSimulation sim, afxUnit cnt, afxUnit uid[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     akxLight lit;
 
     for (afxUnit i = 0; i < cnt; i++)
-        if (AfxAcquireObjects(_AmxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_DIRECTIONAL } })) AfxThrowError();
+        if (AfxAcquireObjects(_AsxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_DIRECTIONAL } })) AfxThrowError();
         else
             uid[i] = AfxGetObjectId(lit);
 
     return err;
 }
 
-_AMX afxError AfxAcquireOmniLights(afxSimulation sim, afxUnit cnt, afxUnit uid[])
+_ASX afxError AfxAcquireOmniLights(afxSimulation sim, afxUnit cnt, afxUnit uid[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     akxLight lit;
 
     for (afxUnit i = 0; i < cnt; i++)
-        if (AfxAcquireObjects(_AmxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_OMNI } })) AfxThrowError();
+        if (AfxAcquireObjects(_AsxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_OMNI } })) AfxThrowError();
         else
             uid[i] = AfxGetObjectId(lit);
 
     return err;
 }
 
-_AMX afxError AfxAcquireSpotLights(afxSimulation sim, afxUnit cnt, afxUnit uid[])
+_ASX afxError AfxAcquireSpotLights(afxSimulation sim, afxUnit cnt, afxUnit uid[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     akxLight lit;
 
     for (afxUnit i = 0; i < cnt; i++)
-        if (AfxAcquireObjects(_AmxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_SPOT } })) AfxThrowError();
+        if (AfxAcquireObjects(_AsxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_SPOT } })) AfxThrowError();
         else
             uid[i] = AfxGetObjectId(lit);
 
     return err;
 }
 
-_AMX afxClassConfig const _AMX_LIT_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_LIT_CLASS_CONFIG =
 {
     .fcc = afxFcc_LIT,
     .name = "Light",

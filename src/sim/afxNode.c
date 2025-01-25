@@ -14,13 +14,13 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _AMX_SIM_C
-//#define _AMX_SIMULATION_C
-#define _AMX_NODE_C
-#include "impl/amxImplementation.h"
+#define _ASX_SIM_C
+//#define _ASX_SIMULATION_C
+#define _ASX_NODE_C
+#include "impl/asxImplementation.h"
 
 
-_AMXINL afxError _AfxNodDtor(afxNode nod)
+_ASXINL afxError _AfxNodDtor(afxNode nod)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_NOD, 1, &nod);
@@ -28,7 +28,7 @@ _AMXINL afxError _AfxNodDtor(afxNode nod)
     return err;
 }
 
-_AMXINL afxError _AfxNodCtor(afxNode nod, void** args, afxUnit invokeNo)
+_ASXINL afxError _AfxNodCtor(afxNode nod, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssertObject(&nod->obj, afxFcc_NOD);
@@ -38,12 +38,12 @@ _AMXINL afxError _AfxNodCtor(afxNode nod, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AMXINL afxError AfxAcquireNodes(afxSimulation sim, afxUnit cnt, afxNode nod[], afxUnit const config[])
+_ASXINL afxError AfxAcquireNodes(afxSimulation sim, afxUnit cnt, afxNode nod[], afxUnit const config[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    if (AfxAcquireObjects(_AmxGetNodeClass(sim), cnt, (afxObject*)nod, (void const*[]) { (void*)config }))
+    if (AfxAcquireObjects(_AsxGetNodeClass(sim), cnt, (afxObject*)nod, (void const*[]) { (void*)config }))
         AfxThrowError();
 
     AFX_ASSERT_OBJECTS(afxFcc_NOD, cnt, nod);
@@ -51,7 +51,7 @@ _AMXINL afxError AfxAcquireNodes(afxSimulation sim, afxUnit cnt, afxNode nod[], 
     return err;
 }
 
-_AMX afxClassConfig const _AMX_NOD_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_NOD_CLASS_CONFIG =
 {
     .fcc = afxFcc_NOD,
     .name = "Node",

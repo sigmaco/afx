@@ -32,7 +32,7 @@
 #pragma comment (lib, "dwmapi")
 #endif
 
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 extern afxString const qwadroSignature;
 

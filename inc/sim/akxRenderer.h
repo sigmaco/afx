@@ -83,8 +83,7 @@ AFX_DEFINE_STRUCT(akxMaterialConstants)
 
 AFX_DEFINE_STRUCT(akxInstanceConstants)
 {
-    afxM4d  m;
-    afxM4d  w[32];
+    afxM4d  m[AVX_BUF_UPDATE_CAPACITY / sizeof(afxM4d)];
 };
 
 AFX_DEFINE_STRUCT(akxRendererConfig)
@@ -110,12 +109,33 @@ AFX_OBJECT(akxRenderer)
         akxShaderConstants  shaderConstants;
         akxMaterialConstants materialConstants;
         akxInstanceConstants  objConstants;
-        afxBuffer           viewConstantsBuffer; // p, v
-        afxBuffer           shdConstantsBuffer;
-        afxBuffer           mtlConstantsBuffer;
-        afxBuffer           objConstantsBuffer; // m
+        afxBuffer           viewUbo; // p, v
+        afxBuffer           shdUbo;
+        afxBuffer           mtlUbo;
+        afxUnit             mtlBufOffset;
+        afxBuffer           objUbo; // m
+        afxUnit             mtxBufOffset;
+        afxUnit             mtxBufPop;
 
+        afxBuffer           biasMapUbo;
+        afxUnit             biasMapOffset;
+        afxUnit             biasMapPop;
+
+        afxBuffer           icbo; // indirect indexed draw buffer
+        afxUnit             icbOffset;
+        afxUnit             indDrawCnt;
+
+
+        afxByte* icboPtr;
+        afxByte* mtboPtr;
+        afxByte* bmboPtr;
+        afxByte* mtlboPtr;
+
+        avxFence            drawCompletedFence;
+        avxFence            framePresentedFence;
     }                       framesets[3];
+
+    afxBool                 doMdi;
 
     //afxM4d              p;
     //afxFrustum          viewVolume;
@@ -134,6 +154,11 @@ AFX_OBJECT(akxRenderer)
     afxDrawTechnique    lightingDtec;
 
     avxVertexDecl      rigidVin;
+    avxVertexDecl   vin_p3n3t2_bi_mtl_mtx_jnt;
+    avxVertexDecl   vin_p3j1n3t2_bi_mtl_mtx_jnt;
+    avxVertexDecl   vin_p3j2n3t2_bi_mtl_mtx_jnt;
+    avxVertexDecl   vin_p3j3n3t2_bi_mtl_mtx_jnt;
+    avxVertexDecl   vin_p3j4n3t2_bi_mtl_mtx_jnt;
     avxVertexDecl      skinnedVin;
     avxVertexDecl      testVin;
 
@@ -161,30 +186,30 @@ for each view {
 }
 #endif
 
-AMX afxError    AmxRegisterPrototype(afxUnit* protoId, afxString const* name, afxUri const* mdd, afxUri const* txd, afxUri const* and);
+ASX afxError    AsxRegisterPrototype(afxUnit* protoId, afxString const* name, afxUri const* mdd, afxUri const* txd, afxUri const* and);
 
-AMX afxError    AmxSpawnEntity(afxUnit protoId, afxTransform const* t);
+ASX afxError    AsxSpawnEntity(afxUnit protoId, afxTransform const* t);
 
-AMX afxError    AmxSpawnAnimatedEntity(afxUnit protoId, afxTransform const* t);
+ASX afxError    AsxSpawnAnimatedEntity(afxUnit protoId, afxTransform const* t);
 
-AMX afxError    AmxBeginSceneRendering(afxDrawContext dctx, akxRenderer rnd, afxCamera cam, afxRect const* drawArea, avxCanvas canv);
-AMX afxError    AmxEndSceneRendering(afxDrawContext dctx, akxRenderer rnd);
+ASX afxError    AsxBeginSceneRendering(afxDrawContext dctx, akxRenderer rnd, afxCamera cam, afxRect const* drawArea, avxCanvas canv);
+ASX afxError    AsxEndSceneRendering(afxDrawContext dctx, akxRenderer rnd);
 
-AMX afxError    AfxRendererSetStar(akxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
+ASX afxError    AfxRendererSetStar(akxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
 
-AMX afxError    AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt, afxUnit cnt, afxBody bodies[]);
+ASX afxError    AsxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt, afxUnit cnt, afxBody bodies[]);
 
-AMX afxError    AmxCmdDrawTestIndexed(afxDrawContext dctx, akxRenderer rnd);
+ASX afxError    AsxCmdDrawTestIndexed(afxDrawContext dctx, akxRenderer rnd);
 
-AMX afxError    AmxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation sim, afxDrawContext dctx, afxCatalyst mctx);
+ASX afxError    AsxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation sim, afxDrawContext dctx, afxContext mctx);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError    AmxAcquireRenderers(afxSimulation sim, afxUnit cnt, akxRenderer rnd[], akxRendererConfig const config[]);
+ASX afxError    AsxAcquireRenderers(afxSimulation sim, afxUnit cnt, akxRenderer rnd[], akxRendererConfig const config[]);
 
 
-AMX void        AmxCmdRequestModel(afxSimulation sim, afxUnit id);
+ASX void        AsxCmdRequestModel(afxSimulation sim, afxUnit id);
 
 #endif//RENDERER_H

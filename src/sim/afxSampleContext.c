@@ -16,238 +16,239 @@
 
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
-#define _AMX_ENGINE_C
-#define _AMX_SIM_BRIDGE_C
-#define _AMX_SIM_QUEUE_C
-#define _AMX_CATALYST_C
-#include "impl/amxImplementation.h"
+#define _ASX_ENGINE_C
+#define _ASX_SIM_BRIDGE_C
+#define _ASX_SIM_QUEUE_C
+#define _ASX_CONTEXT_C
+#include "impl/asxImplementation.h"
 
-_AMX amxCmd* _AmxCystPushCmd(afxCatalyst cyst, afxUnit id, afxUnit siz, afxCmdId* cmdId)
+_ASX asxCmd* _AsxCtxPushCmd(afxContext ctx, afxUnit id, afxUnit siz, afxCmdId* cmdId)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
+    AFX_ASSERT(siz >= sizeof(asxCmdHdr));
 
-    amxCmd* cmd = AfxRequestArenaUnit(&cyst->cmdArena, siz);
+    asxCmd* cmd = AfxRequestArenaUnit(&ctx->cmdArena, siz);
     AFX_ASSERT(cmd);
     cmd->hdr.id = id;
     cmd->hdr.siz = siz;
     AFX_ASSERT(cmdId);
-    *cmdId = AfxPushLink(&cmd->hdr.script, &cyst->commands);
+    *cmdId = AfxPushLink(&cmd->hdr.script, &ctx->commands);
     AFX_ASSERT(id != 268895528);
     return cmd;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX amxCatalystState _AmxGetCatalystStatus(afxCatalyst cyst)
+_ASX asxContextState _AsxGetCatalystStatus(afxContext ctx)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
-    return cyst->state;
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
+    return ctx->state;
 }
 
-_AMX afxUnit AfxGetCatalystPort(afxCatalyst cyst)
+_ASX afxUnit AfxGetCatalystPort(afxContext ctx)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
-    return cyst->portId;
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
+    return ctx->portId;
 }
 
-_AMX afxUnit AfxGetCatalystPool(afxCatalyst cyst)
+_ASX afxUnit AfxGetCatalystPool(afxContext ctx)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
-    return cyst->poolIdx;
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
+    return ctx->poolIdx;
 }
 
-_AMX afxError AfxCompileSimCommands(afxCatalyst cyst)
+_ASX afxError AfxCompileSimCommands(afxContext ctx)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
 
     /// If there was an error during recording, the application will be notified by an unsuccessful return 
     /// code returned by AfxEndCommandBuffer, and the command buffer will be moved to the invalid state.
     /// The command buffer must have been in the recording state, and, if successful, is moved to the executable state.
 
-    if (cyst->state != amxCatalystState_RECORDING)
+    if (ctx->state != asxContextState_RECORDING)
     {
         AfxThrowError();
         return err;
     }
     else
     {
-        if (cyst->endCb(cyst))
+        if (ctx->endCb(ctx))
         {
             AfxThrowError();
             return err;
         }
         else
         {
-            cyst->state = amxCatalystState_EXECUTABLE;
+            ctx->state = asxContextState_EXECUTABLE;
         }
     }
     return err;
 }
 
-_AMX afxError AfxRecycleCatalyst(afxCatalyst cyst, afxBool freeRes)
+_ASX afxError AfxRecycleCatalyst(afxContext ctx, afxBool freeRes)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
 
-    afxSimQueue mque = AfxGetProvider(cyst);
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    afxSimQueue sque = AfxGetProvider(ctx);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    afxUnit poolIdx = cyst->poolIdx;
+    afxUnit poolIdx = ctx->poolIdx;
 
-    if (AfxTryEnterSlockExclusive(&mque->cmdbReqLock))
+    if (AfxTryEnterSlockExclusive(&sque->cmdbReqLock))
     {
-        if (AfxPushQueue(&mque->cmdbRecycQue, &cyst))
+        if (AfxPushQueue(&sque->cmdbRecycQue, &ctx))
         {
-            AfxDisposeObjects(1, &cyst);
+            AfxDisposeObjects(1, &ctx);
         }
         else
         {
-            cyst->state = amxCatalystState_INVALID;
+            ctx->state = asxContextState_INVALID;
         }
-        AfxExitSlockExclusive(&mque->cmdbReqLock);
+        AfxExitSlockExclusive(&sque->cmdbReqLock);
     }
     else
     {
-        AfxDisposeObjects(1, &cyst);
+        AfxDisposeObjects(1, &ctx);
     }
     return err;
 }
 
-_AMX afxError _AmxCystDtorCb(afxCatalyst cyst)
+_ASX afxError _AsxCtxDtorCb(afxContext ctx)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
 
-    while (AfxLoadAtom32(&cyst->submCnt))
+    while (AfxLoadAtom32(&ctx->submCnt))
     {
         AfxYield();
     }
 
-    AFX_ASSERT(cyst->state != amxCatalystState_PENDING);
+    AFX_ASSERT(ctx->state != asxContextState_PENDING);
 
-    //AfxRecycleCmdBuffers(TRUE, 1, &cyst);
+    //AfxRecycleCmdBuffers(TRUE, 1, &ctx);
 
-    //if (cyst->base.vmt->dtor && cyst->base.vmt->dtor(cyst))
+    //if (ctx->base.vmt->dtor && ctx->base.vmt->dtor(ctx))
         //AfxThrowError();
 
-    //AFX_ASSERT(!cyst->base.idd);
+    //AFX_ASSERT(!ctx->base.idd);
 
-    AfxDismantleArena(&cyst->cmdArena);
+    AfxDismantleArena(&ctx->cmdArena);
 
     return err;
 }
 
-_AMX afxError _AmxCystCtorCb(afxCatalyst cyst, void** args, afxUnit invokeNo)
+_ASX afxError _AsxCtxCtorCb(afxContext ctx, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
 
-    afxSimQueue mque = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    afxSimQueue sque = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    //afxSimulation dsys = AfxGetSimBridgeContext(mexu);
+    //afxSimulation dsys = AfxGetSimBridgeContext(sexu);
 
-    cyst->submCnt = 0;
-    cyst->submQueMask = NIL;
-    cyst->portId = AfxGetSimQueuePort(mque);
-    cyst->poolIdx = AfxGetObjectId(mque);
+    ctx->submCnt = 0;
+    ctx->submQueMask = NIL;
+    ctx->portId = AfxGetSampleQueuePort(sque);
+    ctx->poolIdx = AfxGetObjectId(sque);
 
-    cyst->disposable = TRUE;
+    ctx->disposable = TRUE;
 
-    cyst->state = amxCatalystState_INITIAL;
+    ctx->state = asxContextState_INITIAL;
 
-    AfxDeployChain(&cyst->commands, cyst);
-    AfxDeployArena(&cyst->cmdArena, NIL, AfxHere());
+    AfxDeployChain(&ctx->commands, ctx);
+    AfxDeployArena(&ctx->cmdArena, NIL, AfxHere());
 
-    cyst->endCb = _AmxCystEndCb;
-    cyst->resetCb = _AmxCystResetCb;
+    ctx->endCb = _AsxCtxEndCb;
+    ctx->resetCb = _AsxCtxResetCb;
 
     return err;
 }
 
-_AMX afxClassConfig const _AMX_CYST_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_CTX_CLASS_CONFIG =
 {
-    .fcc = afxFcc_CYST,
+    .fcc = afxFcc_CTX,
     .name = "Catalyst",
     .desc = "Simulation Catalyst",
-    .fixedSiz = sizeof(AFX_OBJECT(afxCatalyst)),
-    .ctor = (void*)_AmxCystCtorCb,
-    .dtor = (void*)_AmxCystDtorCb
+    .fixedSiz = sizeof(AFX_OBJECT(afxContext)),
+    .ctor = (void*)_AsxCtxCtorCb,
+    .dtor = (void*)_AsxCtxDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AfxAcquireCatalysts(afxSimulation dsys, afxUnit exuIdx, afxUnit queIdx, afxUnit cnt, afxCatalyst batches[])
+_ASX afxError AfxAcquireSampleContexts(afxSimulation dsys, afxUnit exuIdx, afxUnit queIdx, afxUnit cnt, afxContext batches[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &dsys);
     AFX_ASSERT(batches);
     AFX_ASSERT(cnt);
 
-    afxSimBridge mexu;
-    if (!AfxGetSimBridges(dsys, exuIdx, 1, &mexu))
+    afxSimBridge sexu;
+    if (!AfxGetSimBridges(dsys, exuIdx, 1, &sexu))
     {
         AfxThrowError();
-        return err;
+        return afxError_BAD_UNIT;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
 
-    afxSimQueue mque;
-    if (!AfxGetSimQueues(mexu, queIdx, 1, &mque))
+    afxSimQueue sque;
+    if (!AfxGetSimQueues(sexu, queIdx, 1, &sque))
     {
         AfxThrowError();
-        return err;
+        return afxError_BAD_UNIT;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    if (!AfxTryEnterSlockExclusive(&mque->cmdbReqLock))
+    if (!AfxTryEnterSlockExclusive(&sque->cmdbReqLock))
     {
         AfxThrowError();
-        return err;
+        return afxError_TIMEOUT;
     }
 
     afxUnit cnt2 = 0;
-    afxCatalyst* unit;
-    while ((unit = AfxPeekQueue(&mque->cmdbRecycQue)))
+    afxContext* unit;
+    while ((unit = AfxPeekQueue(&sque->cmdbRecycQue)))
     {
-        afxCatalyst cyst = *unit;
-        AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
+        afxContext ctx = *unit;
+        AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
 
-        if (cyst->resetCb(cyst, TRUE, 0)) AfxThrowError();
+        if (ctx->resetCb(ctx, TRUE, 0)) AfxThrowError();
         else
         {
-            AFX_ASSERT(cyst->state == amxCatalystState_RECORDING);
+            AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
-            batches[cnt2] = cyst;
+            batches[cnt2] = ctx;
             ++cnt2;
         }
 
         if (err)
-            AfxDisposeObjects(1, &cyst);
+            AfxDisposeObjects(1, &ctx);
 
-        AfxPopQueue(&mque->cmdbRecycQue);
+        AfxPopQueue(&sque->cmdbRecycQue);
 
         if (cnt2 == cnt)
             break;
     }
 
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, cnt2, batches);
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, cnt2, batches);
 
-    AfxExitSlockExclusive(&mque->cmdbReqLock);
+    AfxExitSlockExclusive(&sque->cmdbReqLock);
 
     if (cnt2 < cnt)
     {
         afxUnit cnt3 = cnt - cnt2;
 
-        afxClass* cls = (afxClass*)_AmxGetCatalystClass(mque);
-        AFX_ASSERT_CLASS(cls, afxFcc_CYST);
+        afxClass* cls = (afxClass*)_AsxGetCatalystClass(sque);
+        AFX_ASSERT_CLASS(cls, afxFcc_CTX);
 
-        if (AfxAcquireObjects(cls, cnt3, (afxObject*)&batches[cnt2], (void const*[]) { mque }))
+        if (AfxAcquireObjects(cls, cnt3, (afxObject*)&batches[cnt2], (void const*[]) { sque }))
         {
             AfxThrowError();
 
@@ -260,19 +261,19 @@ _AMX afxError AfxAcquireCatalysts(afxSimulation dsys, afxUnit exuIdx, afxUnit qu
         {
             for (afxUnit k = 0; k < cnt3; k++)
             {
-                afxCatalyst cyst = batches[cnt2 + k];
-                AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
+                afxContext ctx = batches[cnt2 + k];
+                AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
 
-                if (cyst->resetCb(cyst, TRUE, 0)) AfxThrowError();
+                if (ctx->resetCb(ctx, TRUE, 0)) AfxThrowError();
                 else
                 {
-                    AFX_ASSERT(cyst->state == amxCatalystState_RECORDING);
+                    AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
-                    batches[cnt2] = cyst;
+                    batches[cnt2] = ctx;
                     ++cnt2;
                 }
             }
-            AFX_ASSERT_OBJECTS(afxFcc_CYST, cnt2, batches);
+            AFX_ASSERT_OBJECTS(afxFcc_CTX, cnt2, batches);
         }
     }
     return err;

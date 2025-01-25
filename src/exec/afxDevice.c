@@ -19,7 +19,7 @@
 #define _AFX_DRIVER_C
 #define _AFX_DEVICE_C
 #define _AFX_CONTEXT_C
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 afxString devTypeString[] =
 {
@@ -53,16 +53,7 @@ _AFX afxModule AfxGetDeviceDriver(afxDevice dev)
     return icd;
 }
 
-_AFX afxClass* AfxGetFenceClass(afxContext ctx)
-{
-    afxError err = AFX_ERR_NONE;
-    //AfxAssertObjects(1, &ddev, afxFcc_CTX);
-    afxClass *cls = &ctx->fences;
-    AFX_ASSERT_CLASS(cls, afxFcc_FENC);
-    return cls;
-}
-
-_AFX afxClass* AfxGetSemaphoreClass(afxContext ctx)
+_AFX afxClass* AfxGetSemaphoreClass(afxDevLink ctx)
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssertObjects(1, &ddev, afxFcc_DEV);

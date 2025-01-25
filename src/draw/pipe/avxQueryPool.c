@@ -80,7 +80,7 @@ _AVX afxError AfxAcquireQueryPools(afxDrawSystem dsys, afxQueryType type, afxUni
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    afxClass* cls = AvxGetQueryPoolClass(dsys);
+    afxClass* cls = (afxClass*)_AvxGetQueryPoolClass(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_QRYP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)pools, (void const*[]) { dsys, &type, &cap }))

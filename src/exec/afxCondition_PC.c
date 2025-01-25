@@ -15,7 +15,7 @@
  */
 
 #include "../../dep/tinycthread.h"
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 #if defined(_TTHREAD_WIN32_)
 #define _CONDITION_EVENT_ONE 0

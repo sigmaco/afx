@@ -87,6 +87,12 @@ AFX_DEFINE_STRUCT(afxRasterInfo)
     afxRasterUsage  usage;
     afxRasterFlags  flags;
     void*           udd;
+    
+    // subresourcing
+    afxRaster           base;
+    afxUnit             baseLod;
+    afxUnit             baseLayer;
+    avxColorSwizzling   swizzle;
 };
 
 // LOD is mip level or sample level, depending on raster
@@ -129,7 +135,7 @@ AVX afxWhd AfxGetRasterExtent(afxRaster ras, afxUnit lodIdx);
     The AfxGetRasterSwizzling() function gets the color swizzling for a given sub-index of a raster (typically for GPU color format mapping).
 */
 
-AVX void AfxGetRasterSwizzling(afxRaster ras, afxUnit subIdx, avxColorSwizzling* csw);
+AVX void AfxGetRasterSwizzling(afxRaster ras, avxColorSwizzling* csw);
 
 /*
     The AfxQueryRasterLayout() function queries the layout of a raster at a given LOD and layer index, potentially for more detailed memory access patterns.

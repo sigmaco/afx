@@ -1519,7 +1519,7 @@ _AVX afxError _AvxBufzCtor(afxBufferizer vbuf, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AvxVbufMgrCfg =
+_AVX afxClassConfig const _AVX_VBUF_CLASS_CONFIG =
 {
     .fcc = afxFcc_VBUF,
     .name = "Bufferizer",

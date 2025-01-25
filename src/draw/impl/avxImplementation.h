@@ -23,8 +23,15 @@
 #ifndef AVX_IMPLEMENTATION_H
 #define AVX_IMPLEMENTATION_H
 
-#include "../../dev/afxExecImplKit.h"
-#include "../../dev/afxIoImplKit.h"
+#include "../../impl/afxExecImplKit.h"
+#include "../../impl/afxIoImplKit.h"
+
+// hardcoded validation controls
+#define AVX_FEATURE_VALIDATION_ENABLED TRUE
+#define AVX_LIMIT_VALIDATION_ENABLED TRUE
+#define AVX_VALIDATION_ENABLED TRUE
+
+
 #include "qwadro/inc/draw/afxDrawSystem.h"
 #include "avxImpl_System.h"
 #include "avxImpl_Context.h"
@@ -68,12 +75,35 @@ AFX_OBJECT(afxDrawDevice)
     afxBool             leftHandedSpace;
     avxClipSpaceDepth   clipSpaceDepth;
 
+    afxClass            vduCls;
     afxChain            ineps;
     struct _afxDdevIdd* idd;
 };
 #endif//_AVX_DRAW_DEVICE_C
 
+#ifdef _AVX_DISPLAY_C
+#ifdef _AVX_DISPLAY_IMPL
+#ifndef _AFX_DEVICE_C
+#   error "Require afxDevice implementation"
+#endif
+AFX_OBJECT(_avxDisplay)
+#else
+AFX_OBJECT(afxDisplay)
+#endif
+{
+    AFX_OBJ(afxDevice)  dev;
+
+    afxChar const*      name; // the name of the display.
+    afxUnit             dimWh[2]; // the physical width and height of the visible portion of the display, in millimeters.
+    afxUnit             resWh[2]; // the physical, native, or preferred resolution of the display.
+    avxPresentTransform supportedXforms; // transforms are supported by this display.
+    afxBool             planeReorder; // can re-arrange the planes on this display in any order relative to each other?
+    afxBool             persistentContent; // can submit persistent present operations on swapchains created against this display?
+};
+#endif//_AVX_DISPLAY_C
+
 AVX afxClassConfig const _AVX_DDEV_CLASS_CONFIG;
+AVX afxClassConfig const _AVX_VDU_CLASS_CONFIG;
 
 AVX afxClass const* _AvxGetDrawDeviceClass(afxModule icd);
 AVX afxClass const* _AvxGetDrawSystemClass(afxModule icd);
@@ -81,6 +111,8 @@ AVX afxClass const* _AvxGetDrawSystemClass(afxModule icd);
 AVX afxError _AvxRegisterDrawDevices(afxModule icd, afxUnit cnt, afxDrawDeviceInfo const infos[], afxDrawDevice devices[]);
 AVX afxError _AvxImplementDrawSystem(afxModule icd, afxClassConfig const* vduCls, afxClassConfig const* ddevCls, afxClassConfig const* dsysCls);
 
-AVX afxBool AvxGetIcd(afxUnit icdIdx, afxModule* driver);
+AVX afxBool _AvxGetIcd(afxUnit icdIdx, afxModule* driver);
+
+AVX afxDrawLimits const* _AvxAccessDrawLimits(afxDrawDevice ddev);
 
 #endif//AVX_IMPLEMENTATION_H

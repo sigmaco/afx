@@ -22,7 +22,7 @@
 #define AUX_SESSION_H
 
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/math/afxViewport.h"
+#include "qwadro/inc/draw/math/afxViewport.h"
 #include "qwadro/inc/ux/hid/afxKeyboard.h"
 #include "qwadro/inc/ux/hid/afxMouse.h"
 
@@ -84,7 +84,7 @@ AFX_DEFINE_STRUCT(afxSessionConfig)
     afxDrawSystem       dsys;
     afxUnit             sdevId;
     afxUnit             soutIdx;
-    afxSoundSystem      ssys;
+    afxMixSystem      ssys;
 };
 
 AUX afxUnit         AfxEnumerateWidgets(afxWindow wnd, afxUnit first, afxUnit cnt, afxWidget widgets[]);
@@ -96,7 +96,7 @@ AUX afxError        AfxStepSession(afxSession ses, void const*, void*);
 
 AUX afxBool         AfxGetSessionVideo(afxSession ses, afxDrawSystem* system);
 
-AUX afxBool         AfxGetSessionAudio(afxSession ses, afxSoundSystem* system, afxSink* sink);
+AUX afxBool         AfxGetSessionAudio(afxSession ses, afxMixSystem* system, afxSink* sink);
 
 AUX afxError        AfxBeginFrame(afxSession ses);
 AUX afxError        AfxWaitFrame(afxSession ses);

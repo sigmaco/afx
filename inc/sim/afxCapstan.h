@@ -31,8 +31,8 @@
 
 // Essential part of our machinima.
 
-#ifndef AMX_MOTOR_H
-#define AMX_MOTOR_H
+#ifndef ASX_MOTOR_H
+#define ASX_MOTOR_H
 
 #include "qwadro/inc/sim/afxSimDefs.h"
 #include "qwadro/inc/sim/body/afxPose.h"
@@ -71,101 +71,101 @@ AFX_DEFINE_STRUCT(afxCapstanConfig)
     afxUnit iterCnt;
 };
 
-AMXINL void         AfxQueryCapstanState
+ASXINL void         AfxQueryCapstanState
 /// Query the current state of a motor execution.
 (
     afxCapstan        caps,
     afxCapstanState*  state
 );
 
-AMX afxReal         AfxQueryCapstanLocalClock
+ASX afxReal         AfxQueryCapstanLocalClock
 /// Query the raw local clock and, optionally, compute a clamped value of it valid to be used to sample animation.
 (
     afxCapstan        caps,
     afxReal*        clamped // [0-localDur]
 );
 
-AMX void            AfxGetCapstanTiming
+ASX void            AfxGetCapstanTiming
 /// Get internal clocks for a motor.
 (
     afxCapstan        caps,
     afxCapstanTiming* timing
 );
 
-AMX afxBool         AfxCapstanIsUnused(afxCapstan caps);
+ASX afxBool         AfxCapstanIsUnused(afxCapstan caps);
 
 // TERMINATION
 
-AMX afxBool         AfxCapstanHasTerminated(afxCapstan caps);
+ASX afxBool         AfxCapstanHasTerminated(afxCapstan caps);
 
-AMX afxBool         AfxCapstanTerminationIsScheduled(afxCapstan caps);
+ASX afxBool         AfxCapstanTerminationIsScheduled(afxCapstan caps);
 
-AMX afxBool         AfxCapstanIsActive(afxCapstan caps);
+ASX afxBool         AfxCapstanIsActive(afxCapstan caps);
 
-AMX afxBool         AfxCapstanHasEffect(afxCapstan caps);
+ASX afxBool         AfxCapstanHasEffect(afxCapstan caps);
 
-AMX void*           AfxGetCapstanUdd(afxCapstan caps, afxUnit idx);
+ASX void*           AfxGetCapstanUdd(afxCapstan caps, afxUnit idx);
 
-AMX void            AfxSetCapstanTargetState(afxCapstan caps, afxReal currGlobalTime, afxReal targetGlobalTime, afxReal localTime, afxInt currIterIdx);
+ASX void            AfxSetCapstanTargetState(afxCapstan caps, afxReal currGlobalTime, afxReal targetGlobalTime, afxReal localTime, afxInt currIterIdx);
 
-AMX void            AfxSetCapstanEaseInCurve(afxCapstan caps, afxReal startSeconds, afxReal endSeconds, afxReal startValue, afxReal startTangent, afxReal endTangent, afxReal endValue); // Ease the control in over the next two seconds
-AMX void            AfxSetCapstanEaseOutCurve(afxCapstan caps, afxReal startSeconds, afxReal endSeconds, afxReal startValue, afxReal startTangent, afxReal endTangent, afxReal endValue); // In ten seconds, ease the control out over two seconds
+ASX void            AfxSetCapstanEaseInCurve(afxCapstan caps, afxReal startSeconds, afxReal endSeconds, afxReal startValue, afxReal startTangent, afxReal endTangent, afxReal endValue); // Ease the control in over the next two seconds
+ASX void            AfxSetCapstanEaseOutCurve(afxCapstan caps, afxReal startSeconds, afxReal endSeconds, afxReal startValue, afxReal startTangent, afxReal endTangent, afxReal endValue); // In ten seconds, ease the control out over two seconds
 
-AMX afxReal         AfxCapstanEaseIn(afxCapstan caps, afxReal duration, afxBool fromCurrent);
-AMX afxReal         AfxCapstanEaseOut(afxCapstan caps, afxReal duration);
+ASX afxReal         AfxCapstanEaseIn(afxCapstan caps, afxReal duration, afxBool fromCurrent);
+ASX afxReal         AfxCapstanEaseOut(afxCapstan caps, afxReal duration);
 
-AMX afxReal         AfxGetCapstanEaseCurveMultiplier(afxCapstan caps);
+ASX afxReal         AfxGetCapstanEaseCurveMultiplier(afxCapstan caps);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /// Resets the raw local clock of a motor to the time passed in.
 
-AMX void            AfxResetCapstanLocalClock(afxReal localClock, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxResetCapstanLocalClock(afxReal localClock, afxUnit cnt, afxCapstan capstans[]);
 
 // Devido a limitação imposto pelo tipo afxReal32, os relógios de uma afxCapstan não podem operar por mais que um dia e meio sem problemas relacionados a perda de precisão.
 // É necessário recentralizar os relógios em algum momento após tal período de operação.
 
 /// Rebase internal clocks with the passed into one.
 
-AMX void            AfxRebaseCapstanClocks(afxReal currClock, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxRebaseCapstanClocks(afxReal currClock, afxUnit cnt, afxCapstan capstans[]);
 
 /// Update the current motor clock to a new one. /// new absolute time
 
-AMX void            AfxUpdateCapstanClock(afxReal time, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxUpdateCapstanClock(afxReal time, afxUnit cnt, afxCapstan capstans[]);
 
 // deveria ser suspend, já que o motor já começa ativo
 
-AMX void            AfxActivateCapstan(afxBool active, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxActivateCapstan(afxBool active, afxUnit cnt, afxCapstan capstans[]);
 
-AMX void            AfxSetCapstanWeight(afxReal weight, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxSetCapstanWeight(afxReal weight, afxUnit cnt, afxCapstan capstans[]);
 
 /// Sets the speed multiplier. 0.f = stop it, -1.f play it backwards, 0.5 half the playback, 2.0 doubles the playback, etc.
 
-AMX void            AfxSetCapstanSpeed(afxReal speed, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxSetCapstanSpeed(afxReal speed, afxUnit cnt, afxCapstan capstans[]);
 
-AMX void            AfxSetCapstanClockOnly(afxReal time, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxSetCapstanClockOnly(afxReal time, afxUnit cnt, afxCapstan capstans[]);
 
 /// Resets the total of iterations allowed for the capstans. 0 means infinite.
 
-AMX void            AfxResetCapstanIterations(afxInt iterCnt, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxResetCapstanIterations(afxInt iterCnt, afxUnit cnt, afxCapstan capstans[]);
 
 /// Selects the current iteration index.
 
-AMX void            AfxSelectCapstanIteration(afxInt currIterIdx, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxSelectCapstanIteration(afxInt currIterIdx, afxUnit cnt, afxCapstan capstans[]);
 
-AMX void            AfxEnableCapstanIterationClamping(afxBool clamp, afxUnit cnt, afxCapstan capstans[]);
-AMX void            AfxEnableCapstanTerminationCheck(afxBool checkComplete, afxUnit cnt, afxCapstan capstans[]);
-AMX void            AfxEnableCapstanEaseIn(afxBool easeIn, afxUnit cnt, afxCapstan capstans[]);
-AMX void            AfxEnableCapstanEaseOut(afxBool easeOut, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxEnableCapstanIterationClamping(afxBool clamp, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxEnableCapstanTerminationCheck(afxBool checkComplete, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxEnableCapstanEaseIn(afxBool easeIn, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxEnableCapstanEaseOut(afxBool easeOut, afxUnit cnt, afxCapstan capstans[]);
 
 /// Schedules the self-termination when capstans reaches the specified seconds.
 
-AMX void            AfxScheduleCapstanTermination(afxReal atSecs, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxScheduleCapstanTermination(afxReal atSecs, afxUnit cnt, afxCapstan capstans[]);
 
-AMX afxBool         AfxReleaseUnusedCapstans(afxUnit cnt, afxCapstan capstans[]);
-AMX afxBool         AfxReleaseOnceUnusedCapstans(afxUnit cnt, afxCapstan capstans[]);
-AMX afxBool         AfxReleaseTerminatedCapstans(afxUnit cnt, afxCapstan capstans[]);
+ASX afxBool         AfxReleaseUnusedCapstans(afxUnit cnt, afxCapstan capstans[]);
+ASX afxBool         AfxReleaseOnceUnusedCapstans(afxUnit cnt, afxCapstan capstans[]);
+ASX afxBool         AfxReleaseTerminatedCapstans(afxUnit cnt, afxCapstan capstans[]);
 
-AMX afxError        AfxAcquireCapstans(afxSimulation sim, afxCapstanConfig const* cfg, afxUnit cnt, afxCapstan capstans[]);
+ASX afxError        AfxAcquireCapstans(afxSimulation sim, afxCapstanConfig const* cfg, afxUnit cnt, afxCapstan capstans[]);
 
-#endif//AMX_MOTOR_H
+#endif//ASX_MOTOR_H

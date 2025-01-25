@@ -19,7 +19,7 @@
 #include "qwadro/inc/math/afxMatrix.h"
 #include "qwadro/inc/math/afxScalar.h"
 #include "qwadro/inc/math/afxVector.h"
-#include "qwadro/inc/math/afxPlane.h"
+#include "qwadro/inc/math/bound/afxPlane.h"
 #include "qwadro/inc/io/afxStream.h"
 
 // Memory layout: row-major

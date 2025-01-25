@@ -166,7 +166,7 @@ _AVX afxCmdId AvxCmdUpdateBuffer(afxDrawContext dctx, afxBuffer buf, afxUnit off
     /// the src data for the buffer update, and must be at least range bytes in size.
     AFX_ASSERT(src);
 
-    AFX_ASSERT(64000 >= range);
+    AFX_ASSERT(AVX_BUF_UPDATE_CAPACITY >= range);
 
     afxCmdId cmdId;
     avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(UpdateBuffer), sizeof(cmd->UpdateBuffer) + range, &cmdId);

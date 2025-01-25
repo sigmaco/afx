@@ -19,7 +19,7 @@
 #ifndef AVX_PRIMITIVE_OUTPUT_OPS_H
 #define AVX_PRIMITIVE_OUTPUT_OPS_H
 
-#include "qwadro/inc/math/afxViewport.h"
+#include "qwadro/inc/draw/math/afxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/draw/io/afxRaster.h"
 #include "qwadro/inc/draw/io/afxBuffer.h"
@@ -30,7 +30,7 @@
  //// COMMANDS                                                             ////
 //////////////////////////////////////////////////////////////////////////////
 
-AVX afxCmdId AvxCmdBindVertexInput(afxDrawContext dctx, avxVertexDecl vin);
+AVX afxCmdId AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexDecl vin);
 
 AFX void AvxCmdBeginTransformFeedbackEXT
 (

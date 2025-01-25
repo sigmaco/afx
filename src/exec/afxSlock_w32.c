@@ -28,7 +28,7 @@
 #   include <unistd.h>
 #endif
 
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 
 AFX afxBool AfxTryEnterSlockShared(afxSlock *slck)

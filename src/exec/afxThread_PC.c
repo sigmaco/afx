@@ -16,7 +16,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_THREAD_C
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 #include "../../dep/tinycthread.h"
 #include "../../dep/tinycthread.c"

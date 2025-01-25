@@ -177,7 +177,7 @@ _AVX afxError _AvxImplementDrawSystem(afxModule icd, afxClassConfig const* vduCl
     return err;
 }
 
-_AVX afxBool AvxGetIcd(afxUnit icdIdx, afxModule* driver)
+_AVX afxBool _AvxGetIcd(afxUnit icdIdx, afxModule* driver)
 {
     afxError err = AFX_ERR_NONE;
     afxBool found = FALSE;
@@ -187,7 +187,7 @@ _AVX afxBool AvxGetIcd(afxUnit icdIdx, afxModule* driver)
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     afxModule icd;
-    while ((icd = AFX_REBASE(AfxFindFirstLink(&sys->avx.icdChain, icdIdx), AFX_OBJ(afxModule), icd.avx)))
+    while ((icdIdx < sys->avx.icdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->avx.icdChain, icdIdx), AFX_OBJ(afxModule), icd.avx)))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
 

@@ -19,7 +19,7 @@
 #ifndef AVX_DRAW_OPS_H
 #define AVX_DRAW_OPS_H
 
-#include "qwadro/inc/math/afxViewport.h"
+#include "qwadro/inc/draw/math/afxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/draw/op/avxRasterOps.h"
 #include "qwadro/inc/draw/op/avxBufferOps.h"
@@ -31,29 +31,29 @@
 
 #pragma pack(push, 1)
 
-AFX_DEFINE_STRUCT(avxDrawIndirectCmd)
+AFX_DEFINE_STRUCT(avxDrawIndirect)
 /// Structure specifying a indirect drawing command
 {
-    afxUnit32            vtxCnt; /// is the number of vertices to draw.
-    afxUnit32            instCnt; /// is the number of instances to draw.
-    afxUnit32            firstVtx; /// is the index of the first vertex to draw.
-    afxUnit32            firstInst; /// is the instance ID of the first instance to draw.
+    afxUnit32   vtxCnt; /// is the number of vertices to draw.
+    afxUnit32   instCnt; /// is the number of instances to draw.
+    afxUnit32   baseVtx; /// is the index of the first vertex to draw.
+    afxUnit32   baseInst; /// is the instance ID of the first instance to draw.
 };
 
-AFX_DEFINE_STRUCT(avxDrawIndexedIndirectCmd)
+AFX_DEFINE_STRUCT(avxDrawIndexedIndirect)
 /// Structure specifying a indexed indirect drawing command
 {
-    afxUnit32            idxCnt; /// is the number of vertices to draw.
-    afxUnit32            instCnt; /// is the number of instances to draw.
-    afxUnit32            firstIdx;/// is the base index within the index buffer.
-    afxInt32            vtxOff; /// is the value added to the vertex index before indexing into the vertex buffer.
-    afxUnit32            firstInst; /// is the instance ID of the first instance to draw.
+    afxUnit32   idxCnt; /// is the number of vertices to draw.
+    afxUnit32   instCnt; /// is the number of instances to draw.
+    afxUnit32   baseIdx;/// is the base index within the index buffer.
+    afxInt32    vtxOff; /// is the value added to the vertex index before indexing into the vertex buffer.
+    afxUnit32   baseInst; /// is the instance ID of the first instance to draw.
 };
 
-AFX_DEFINE_STRUCT(avxDispatchIndirectCmd)
+AFX_DEFINE_STRUCT(avxDispatchIndirect)
 /// Structure specifying a indirect dispatching command.
 {
-    afxUnit32            x, y, z; /// the number of local workgroups to dispatch in the X, Y and Z dimensions.
+    afxUnit32   x, y, z; /// the number of warps (local workgroups) to dispatch in the X, Y and Z dimensions.
 };
 
 #pragma pack(pop)
@@ -61,6 +61,28 @@ AFX_DEFINE_STRUCT(avxDispatchIndirectCmd)
   //////////////////////////////////////////////////////////////////////////////
  //// COMMANDS                                                             ////
 //////////////////////////////////////////////////////////////////////////////
+
+AVX afxCmdId        AvxCmdPushDebugScope
+/// Open a command buffer debug label region.
+(
+    afxDrawContext  dctx,
+    afxString const*name, /// the name of the label.
+    afxColor const  color /// is an optional color associated with the label.
+);
+
+AVX afxCmdId        AvxCmdPopDebugScope
+/// Close a command buffer label region.
+(
+    afxDrawContext  dctx
+);
+
+AVX afxCmdId        AvxCmdInsertDebugLabel
+/// Insert a label into a command buffer.
+(
+    afxDrawContext  dctx,
+    afxString const*name, /// the name of the label.
+    afxColor const  color /// is an optional color associated with the label.
+);
 
 /// Bind a pipeline object to a command buffer.
 /// Once bound, a pipeline binding affects subsequent commands that interact with the given pipeline type in the command buffer until a different pipeline of the same type is bound to the bind point, or until the pipeline bind point is disturbed by binding a shader object.
@@ -71,7 +93,7 @@ AVX afxCmdId                AvxCmdBindPipeline
     afxDrawContext          dctx, /// is the command buffer that the pipeline will be bound to. 
     afxUnit                 segment, /// is a value specifying to which level the pipeline is bound. Binding one does not disturb the others.
     avxPipeline             pip, /// is the pipeline to be bound.
-    avxVertexDecl          vin,
+    avxVertexDecl           vin,
     afxFlags                dynamics
 );
 
@@ -97,8 +119,8 @@ AVX afxCmdId                AvxCmdDraw
     afxDrawContext          dctx,
     afxUnit                 vtxCnt, /// is the number of vertices to draw.
     afxUnit                 instCnt, /// is the number of instances to draw.
-    afxUnit                 firstVtxIdx, /// is the index of the first vertex to draw.
-    afxUnit                 firstInstIdx /// is the instance ID of the first instance to draw.
+    afxUnit                 baseVtx, /// is the index of the first vertex to draw.
+    afxUnit                 baseInst /// is the instance ID of the first instance to draw.
 );
 
 /// Draw primitives with indirect parameters.
@@ -133,9 +155,9 @@ AVX afxCmdId                AvxCmdDrawIndirectCount
 
 /// Draw primitives with indexed vertices. 
 /// When the command is executed, primitives are assembled using the current primitive topology and @idxCnt vertices whose indices are retrieved from the index buffer.
-/// The index buffer is treated as an array of tightly packed unsigned integers of size defined by the @idxSiz parameter (of AvxCmdBindIndexSource) with which the buffer was bound.
+/// The index buffer is treated as an array of tightly packed unsigned integers of size defined by the @idxSiz parameter (of AvxCmdBindIndexBuffer) with which the buffer was bound.
 
-/// The first vertex index is at an offset of @firstIdx × @idxSiz + @offset within the bound index buffer, where @offset is the offset specified by AvxCmdBindIndexSource, and @idxSize is the byte size of the type specified by @idxSiz.
+/// The first vertex index is at an offset of @firstIdx × @idxSiz + @offset within the bound index buffer, where @offset is the offset specified by AvxCmdBindIndexBuffer, and @idxSize is the byte size of the type specified by @idxSiz.
 /// Subsequent index values are retrieved from consecutive locations in the index buffer.
 /// Indices are first compared to the primitive restart value, then zero extended to 32 bits (if the @idxSiz is 1 or 2) and have @vtxOff added to them, before being supplied as the @vtxIdx value.
 
@@ -147,9 +169,9 @@ AVX afxCmdId                AvxCmdDrawIndexed
     afxDrawContext          dctx,
     afxUnit                 idxCnt, /// is the number of vertices to draw.
     afxUnit                 instCnt, /// is the number of instances to draw.
-    afxUnit                 firstIdx, /// is the base index within the index buffer.
+    afxUnit                 baseIdx, /// is the base index within the index buffer.
     afxUnit                 vtxOffset, /// is the value added to the vertex index before indexing into the vertex buffer.
-    afxUnit                 firstInstIdx /// is the instance ID of the first instance to draw.
+    afxUnit                 baseInst /// is the instance ID of the first instance to draw.
 );
 
 /// Draw primitives with indirect parameters and indexed vertices.
@@ -199,36 +221,14 @@ AVX afxCmdId                AvxCmdDispatchIndirect
 );
 
 
-AVX afxCmdId            AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, afxBuffer buffers[], afxUnit offsets[], afxUnit ranges[]);
-AVX afxCmdId            AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, afxRaster rasters[], afxUnit const subIdx[]);
-AVX afxCmdId            AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxSampler samplers[]);
+AVX afxCmdId            AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, afxBufferMap const maps[]);
+AVX afxCmdId            AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, afxRaster const rasters[]);
+AVX afxCmdId            AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxSampler const samplers[]);
 
 AVX afxCmdId            AvxCmdBindFontSIG(afxDrawContext dctx, afxUnit first, afxUnit cnt, afxTypography typ[], avxPipeline pip[], avxSampler smp[], afxRaster ras[]);
 
 AVX afxCmdId            AvxCmdPushConstants(afxDrawContext dctx, afxUnit offset, afxUnit siz, void const* data);
 
 AVX afxError            AvxCmdStampDebug(afxDrawContext dctx, afxM4d const v, afxV2d const at, afxString const* caption);
-
-AVX afxCmdId        AvxCmdPushDebugScope
-/// Open a command buffer debug label region.
-(
-    afxDrawContext  dctx,
-    afxString const*name, /// the name of the label.
-    afxColor const  color /// is an optional color associated with the label.
-);
-
-AVX afxCmdId        AvxCmdPopDebugScope
-/// Close a command buffer label region.
-(
-    afxDrawContext  dctx
-);
-
-AVX afxCmdId        AvxCmdInsertDebugLabel
-/// Insert a label into a command buffer.
-(
-    afxDrawContext  dctx,
-    afxString const*name, /// the name of the label.
-    afxColor const  color /// is an optional color associated with the label.
-);
 
 #endif//AVX_DRAW_OPS_H

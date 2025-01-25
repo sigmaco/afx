@@ -577,7 +577,7 @@ _AVX afxError AfxAssembleComputePipelines(afxDrawSystem dsys, afxUnit cnt, avxPi
 {
     afxError err = AFX_ERR_NONE;
 
-    afxClass* cls = AvxGetPipelineClass(dsys);
+    afxClass* cls = (afxClass*)_AvxGetPipelineClass(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_PIP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)pipelines, (void const*[]) { dsys, (void*)blueprints, (void*)blueprints }))
@@ -594,7 +594,7 @@ _AVX afxError AfxAssemblePipelines(afxDrawSystem dsys, afxUnit cnt, avxPipelineB
     AFX_ASSERT(cfg);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = AvxGetPipelineClass(dsys);
+    afxClass* cls = (afxClass*)_AvxGetPipelineClass(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_PIP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)pipelines, (void const*[]) { dsys, (void*)cfg, (void*)cfg }))

@@ -21,7 +21,7 @@
 #define _AVX_DRAW_C
 //#define _AVX_DRAW_SYSTEM_C
 #define _AVX_DRAW_INPUT_C
-#define _AVX_DRAW_DEVICE_C
+//#define _AVX_DRAW_DEVICE_C
 #define _AVX_DRAW_BRIDGE_C
 #define _AVX_DRAW_QUEUE_C
 #define _AVX_DRAW_CONTEXT_C
@@ -31,6 +31,7 @@ _AVX avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxCm
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    AFX_ASSERT(siz >= sizeof(avxCmdHdr));
 
     avxCmd* cmd = AfxRequestArenaUnit(&dctx->cmdArena, siz);
     AFX_ASSERT(cmd);
@@ -220,6 +221,15 @@ _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
     dctx->submQueMask = NIL;
     dctx->portId = AfxGetDrawQueuePort(dque);
     dctx->poolIdx = AfxGetDrawQueuePort(dque);
+    
+    afxDrawBridge dexu = AfxGetProvider(dque);
+    AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
+    afxDrawSystem dsys = AfxGetProvider(dexu);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    afxDrawDevice ddev = AfxGetDrawBridgeDevice(dexu);
+    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
+    dctx->devLimits = _AvxAccessDrawLimits(ddev);
+    dctx->enabledFeatures = _AvxAccessDrawRequirements(dsys);
 
     dctx->disposable = TRUE;
 

@@ -15,7 +15,7 @@
  */
 
 #include "../../dep/tinycthread.h"
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 AFX_STATIC_ASSERT(sizeof(mtx_t) <= sizeof(afxMutex), "");
 

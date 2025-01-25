@@ -57,7 +57,6 @@ AFX_DEFINE_STRUCT(_avxDrawBridgeAcquisition)
 };
 
 #ifdef _AVX_DRAW_BRIDGE_C
-
 #ifdef _AVX_DRAW_BRIDGE_IMPL
 AFX_OBJECT(_avxDrawBridge)
 #else
@@ -84,6 +83,17 @@ AFX_OBJECT(afxDrawBridge)
     avxDpu*         dpu;
 };
 #endif//_AVX_DRAW_BRIDGE_C
+
+#ifdef _AVX_FENCE_C
+#ifdef _AVX_FENCE_IMPL
+AFX_OBJECT(_avxFence)
+#else
+AFX_OBJECT(avxFence)
+#endif
+{
+    afxAtom32 signaled;
+};
+#endif//_AVX_FENCE_C
 
 #ifdef _AVX_DRAW_QUEUE_C
 #ifdef _AVX_DRAW_QUEUE_IMPL
@@ -127,6 +137,7 @@ AFX_DEFINE_UNION(avxWorkList)
         void* Transfer;
         void* Present;
         void* Remap;
+        void* SyncMaps;
     };
     void(*f[])(void*, avxWork*);
 };
@@ -144,6 +155,8 @@ AFX_DEFINE_STRUCT(avxWorkHdr)
     afxTime pullTime; // fecth (by queue) time
     afxTime complTime; // completation time
     afxError(*exec)(void*, afxDrawBridge, afxUnit queIdx, avxWork*);
+    avxFence completionFence;
+    afxSize idd[4];
 };
 
 AFX_DEFINE_UNION(avxWork)
@@ -155,7 +168,7 @@ AFX_DEFINE_UNION(avxWork)
 
         afxSemaphore    wait;
         afxSemaphore    signal;
-        afxFence        fence;
+        //avxFence        fence;
         afxUnit         cmdbCnt;
         afxDrawContext AFX_SIMD cmdbs[];
     } Execute;
@@ -165,7 +178,7 @@ AFX_DEFINE_UNION(avxWork)
 
         afxSemaphore    wait;
         afxSemaphore    signal;
-        afxFence        fence;
+        //avxFence        fence;
 
         union
         {
@@ -209,13 +222,26 @@ AFX_DEFINE_UNION(avxWork)
     struct
     {
         avxWorkHdr hdr;
-
-        afxBuffer       buf;
-        afxSize         off;
-        afxUnit         ran;
-        afxFlags        flags;
-        void**          placeholder;
+        afxUnit     mapCnt;
+        afxUnit     unmapCnt;
+        union
+        {
+            afxBufferRemap mapOps[];
+            afxBuffer unmapOps[];
+        };
     } Remap;
+    struct
+    {
+        avxWorkHdr  hdr;
+        afxUnit     baseFlushIdx;
+        afxUnit     flushCnt;
+        afxUnit     baseFetchIdx;
+        afxUnit     fetchCnt;
+        union
+        {
+            afxBufferMap ops[];
+        };
+    } SyncMaps;
     struct
     {
         avxWorkHdr hdr;
@@ -226,6 +252,15 @@ AFX_DEFINE_UNION(avxWork)
         afxUnit         dataSiz;
         afxByte AFX_SIMD data[];
     } Callback;
+    struct
+    {
+        avxWorkHdr hdr;
+
+        afxBool waitAll;
+        afxUnit64 timeout;
+        afxUnit cnt;
+        avxFence fences[];
+    } WaitForFences;
 };
 
 AVX afxClass const* _AvxGetDrawThreadClass(afxDrawBridge dexu);
@@ -233,6 +268,7 @@ AVX afxClass const* _AvxGetDrawQueueClass(afxDrawBridge dexu);
 AVX afxClassConfig const _AVX_DQUE_CLASS_CONFIG;
 AVX afxClassConfig const _AVX_DEXU_CLASS_CONFIG;
 AVX afxClassConfig const _AVX_DTHR_CLASS_CONFIG;
+AVX afxClassConfig const _AVX_FENC_CLASS_CONFIG;
 
 AVX afxError _AvxUnlockDrawQueue(afxDrawQueue dque);
 AVX afxError _AvxLockDrawQueue(afxDrawQueue dque, afxBool wait, afxTimeSpec const* ts);
@@ -260,9 +296,10 @@ AVX afxError _AvxDexu_PingCb(afxDrawBridge dexu, afxUnit queIdx);
 AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx);
 
 // Common queued operations
-AVX afxError _AvxSubmitDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[]);
+AVX afxError _AvxSubmitDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence);
 AVX afxError _AvxSubmitTransferences(afxDrawQueue dque, avxTransference const* ctrl, afxUnit opCnt, void const* ops);
-AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxBuffer buf, afxSize off, afxUnit ran, afxFlags flags, void** placeholder);
+AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, afxBufferRemap const maps[], afxUnit unmapCnt, afxBuffer const unmaps[]);
+AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, afxBufferMap const flushes[], afxUnit fetchCnt, afxBufferMap const fetches[]);
 AVX afxError _AvxSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), void* udd);
 
 AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, afxColor const color);

@@ -14,12 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AMX_LIGHT_H
-#define AMX_LIGHT_H
+#ifndef ASX_LIGHT_H
+#define ASX_LIGHT_H
 
 #include "qwadro/inc/sim/afxNode.h"
 #include "qwadro/inc/mem/afxArray.h"
-#include "qwadro/inc/math/afxColor.h"
+#include "qwadro/inc/draw/math/afxColor.h"
 
 #define AFX_LIT_ALIGN AFX_SIMD_ALIGNMENT
 
@@ -49,7 +49,7 @@ typedef enum akxLightFlag
     akxLightFlag_REV_CULL_FACE  = AFX_BIT(3), // false
 } akxLightFlags;
 
-#ifdef _AMX_LIGHT_C
+#ifdef _ASX_LIGHT_C
 AFX_OBJECT(akxLight)
 {
     afxReal     distFadeBegin; // 40.f
@@ -114,14 +114,14 @@ AFX_OBJECT(akxLight)
         } dir;
     };
 };
-#endif//_AMX_LIGHT_C
+#endif//_ASX_LIGHT_C
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError    AfxAcquireDirectionalLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]);
-AMX afxError    AfxAcquireOmniLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]);
-AMX afxError    AfxAcquireSpotLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]);
+ASX afxError    AfxAcquireDirectionalLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]);
+ASX afxError    AfxAcquireOmniLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]);
+ASX afxError    AfxAcquireSpotLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]);
 
-#endif//AMX_LIGHT_H
+#endif//ASX_LIGHT_H

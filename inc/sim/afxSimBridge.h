@@ -14,8 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AMX_SIM_BRIDGE_H
-#define AMX_SIM_BRIDGE_H
+#ifndef ASX_SIM_BRIDGE_H
+#define ASX_SIM_BRIDGE_H
 
 #include "qwadro/inc/sim/afxSimDefs.h"
 
@@ -42,7 +42,7 @@ AFX_DEFINE_STRUCT(afxSimBridgeConfig)
     afxReal const*      queuePriority;
 };
 
-AFX_DEFINE_STRUCT(amxSubmission)
+AFX_DEFINE_STRUCT(asxSubmission)
 {
     afxUnit             portIdx;
     afxUnit             baseQueIdx;
@@ -57,34 +57,34 @@ AFX_DEFINE_STRUCT(amxSubmission)
     afxUnit64           signalValues;
     avxPipelineStage    signalStageMasks;
     afxUnit32           signalReserveds;
-    afxFence            fence;
+    avxFence            fence;
 };
 
-AFX_DEFINE_STRUCT(amxQueueOpData);
+AFX_DEFINE_STRUCT(asxQueueOpData);
 
-AFX_DEFINE_STRUCT(amxQueueOp)
+AFX_DEFINE_STRUCT(asxQueueOp)
 {
     afxUnit             submType;
     afxError            (*f)(void*, void*, afxUnit, void*);
     void*               udd;
     afxUnit             dataSiz;
-    amxQueueOpData*     data;
+    asxQueueOpData*     data;
 };
 
-AMX afxEngine           AfxGetMathBridgeDevice(afxSimBridge mexu);
-AMX afxSimulation       AfxGetMathBridgeContext(afxSimBridge mexu);
+ASX afxEngine           AfxGetMathBridgeDevice(afxSimBridge sexu);
+ASX afxSimulation       AfxGetMathBridgeContext(afxSimBridge sexu);
 
-AMX afxUnit             AfxQuerySimBridgePort(afxSimBridge mexu, afxEngine* engine);
+ASX afxUnit             AfxQuerySimBridgePort(afxSimBridge sexu, afxEngine* engine);
 
-AMX afxError            AfxWaitForIdleSimBridge(afxSimBridge mexu, afxTime timeout);
+ASX afxError            AfxWaitForIdleSimBridge(afxSimBridge sexu, afxTime timeout);
 
-AMX afxUnit             AfxGetSimQueues(afxSimBridge mexu, afxUnit baseQueIdx, afxUnit cnt, afxSimQueue queues[]);
+ASX afxUnit             AfxGetSimQueues(afxSimBridge sexu, afxUnit baseQueIdx, afxUnit cnt, afxSimQueue queues[]);
 
-AMX void                _AmxBeginMathQueueDebugScope(afxSimBridge mexu, afxUnit queIdx, afxString const* name, afxColor const color);
-AMX void                _AmxPushMathQueueDebugLabel(afxSimBridge mexu, afxUnit queIdx, afxString const* name, afxColor const color);
-AMX void                _AmxEndMathQueueDebugScope(afxSimBridge mexu, afxUnit queIdx);
+ASX void                _AsxBeginMathQueueDebugScope(afxSimBridge sexu, afxUnit queIdx, afxString const* name, afxColor const color);
+ASX void                _AsxPushMathQueueDebugLabel(afxSimBridge sexu, afxUnit queIdx, afxString const* name, afxColor const color);
+ASX void                _AsxEndMathQueueDebugScope(afxSimBridge sexu, afxUnit queIdx);
 
-AMX afxUnit             _AmxSubmitMathCommands(afxSimBridge mexu, amxSubmission const* ctrl, afxUnit cnt, afxDrawContext cmdbs[]);
-AMX afxUnit             _AmxSubmitMathWorkRequest(afxSimBridge mexu, afxUnit cnt, amxQueueOp const subm[]);
+ASX afxUnit             _AsxSubmitMathCommands(afxSimBridge sexu, asxSubmission const* ctrl, afxUnit cnt, afxDrawContext cmdbs[]);
+ASX afxUnit             _AsxSubmitMathWorkRequest(afxSimBridge sexu, afxUnit cnt, asxQueueOp const subm[]);
 
-#endif//AMX_SIM_BRIDGE_H
+#endif//ASX_SIM_BRIDGE_H

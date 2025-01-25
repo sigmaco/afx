@@ -20,33 +20,33 @@
 #define _AVX_DRAW_CONTEXT_C
 #include "../impl/avxImplementation.h"
 
-_AVX afxCmdId AvxCmdBindVertexInput(afxDrawContext dctx, avxVertexDecl vin)
+_AVX afxCmdId AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexDecl vin)
 {
     afxError err = AFX_ERR_NONE;
-    /// dctx must be a valid afxDrawContext handle.
+    // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    /// dctx must be in the recording state.
+    // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    /// This command must only be called outside of a video coding scope.
+    // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
     AFX_TRY_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
     
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindVertexInput), sizeof(cmd->BindVertexInput), &cmdId);
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(DeclareVertex), sizeof(cmd->DeclareVertex), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->BindVertexInput.vin = vin;
+    cmd->DeclareVertex.vin = vin;
     return cmdId;
 }
 
 _AVX afxCmdId AvxCmdSwitchFrontFace(afxDrawContext dctx, afxBool cw)
 {
     afxError err = AFX_ERR_NONE;
-    /// dctx must be a valid afxDrawContext handle.
+    // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    /// dctx must be in the recording state.
+    // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    /// This command must only be called outside of a video coding scope.
+    // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
     
     AFX_ASSERT_RANGE(cw, FALSE, TRUE);
@@ -62,14 +62,14 @@ _AVX afxCmdId AvxCmdSwitchFrontFace(afxDrawContext dctx, afxBool cw)
 _AVX afxCmdId AvxCmdSetCullMode(afxDrawContext dctx, avxCullMode mode)
 {
     afxError err = AFX_ERR_NONE;
-    /// dctx must be a valid afxDrawContext handle.
+    // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    /// dctx must be in the recording state.
+    // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    /// This command must only be called outside of a video coding scope.
+    // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
-    /// mode must be a valid combination of avxCullMode values.
+    // mode must be a valid combination of avxCullMode values.
     AFX_ASSERT_BOUNDS(mode, avxCullMode_NONE, avxCullMode_BOTH);
     mode = AfxClamp(mode, avxCullMode_NONE, avxCullMode_BOTH);
 
@@ -83,19 +83,40 @@ _AVX afxCmdId AvxCmdSetCullMode(afxDrawContext dctx, avxCullMode mode)
 _AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUnit cnt, afxViewport const viewports[])
 {
     afxError err = AFX_ERR_NONE;
-    /// dctx must be a valid afxDrawContext handle.
+
+#if AVX_VALIDATION_ENABLED
+    // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    /// dctx must be in the recording state.
+    // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    /// This command must only be called outside of a video coding scope.
+    // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
-    /// cnt must be greater than 0.
+    // cnt must be greater than 0.
     AFX_ASSERT(cnt);
 
-    /// viewports must be a valid pointer to an array of cnt valid afxViewport structures.
-    AFX_ASSERT(viewports);    
-    AFX_ASSERT_RANGE(8, baseIdx, cnt);
+    // viewports must be a valid pointer to an array of cnt valid afxViewport structures.
+    AFX_ASSERT(viewports);
+
+#if AVX_LIMIT_VALIDATION_ENABLED
+    // The sum of @baseIdx and @cnt must be between 1 and the device limit 'maxVpCnt", inclusive.
+    AFX_ASSERT_RANGE(dctx->devLimits->maxVpCnt, baseIdx, cnt);
+#endif
+
+#if AVX_FEATURE_VALIDATION_ENABLED
+    if (!dctx->enabledFeatures->multiViewport)
+    {
+        /*
+            If the multiViewport feature is not enabled, 
+                firstViewport must be 0.
+            If the multiViewport feature is not enabled, 
+                viewportCount must be 1.
+        */
+        AFX_ASSERT(baseIdx == 0);
+        AFX_ASSERT(cnt == 1);
+    }
+#endif
+#endif
 
     afxCmdId cmdId;
     avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(AdjustViewports), sizeof(cmd->AdjustViewports) + (cnt * sizeof(cmd->AdjustViewports.viewports[0])), &cmdId);
@@ -106,134 +127,169 @@ _AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUni
     for (afxUnit i = 0; i < cnt; i++)
     {
         afxViewport const* vp = &viewports[i];
-        AFX_ASSERT(vp->extent[0]);
-        AFX_ASSERT(vp->extent[1]);
-        AFX_ASSERT_BOUNDS(vp->minDepth, 0.0, 1.0);
-        AFX_ASSERT_BOUNDS(vp->maxDepth, 0.0, 1.0);
-
+#if AVX_VALIDATION_ENABLED
+#if AVX_LIMIT_VALIDATION_ENABLED
+        AFX_ASSERT_RANGE(dctx->devLimits->maxVpDimensions[0], vp->origin[0], vp->extent[0]);
+        AFX_ASSERT_RANGE(dctx->devLimits->maxVpDimensions[1], vp->origin[1], vp->extent[1]);
+        AFX_ASSERT(dctx->devLimits->vpBoundsRange[0] <= vp->minDepth);
+        AFX_ASSERT(dctx->devLimits->vpBoundsRange[1] >= vp->maxDepth);
+#endif
+#endif
         cmd->AdjustViewports.viewports[i] = *vp;
     }
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindVertexSources(afxDrawContext dctx, afxUnit baseSlotIdx, afxUnit slotCnt, afxBuffer buffers[], afxUnit32 const offsets[], afxUnit32 const ranges[], afxUnit32 const strides[])
+_AVX afxCmdId AvxCmdBindVertexBuffers(afxDrawContext dctx, afxUnit baseSlotIdx, afxUnit cnt, avxBufferedStream const streams[])
 {
     afxError err = AFX_ERR_NONE;
-    /// dctx must be a valid afxDrawContext handle.
+
+#if AVX_VALIDATION_ENABLED
+    // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    /// dctx must be in the recording state.
+    // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    /// This command must only be called outside of a video coding scope.
+    // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
-    AFX_ASSERT_RANGE(8, baseSlotIdx, slotCnt);
-    AFX_ASSERT(strides);
+    AFX_ASSERT(streams);
+
+#if AVX_LIMIT_VALIDATION_ENABLED
+    /*
+        @baseSlotIdx must be less than device limit 'maxVtxInSrcs'.
+
+        The sum of @baseSlotIdx and @slotCnt must be less than or equal to the device limit 'maxVtxInSrcs'.
+    */
+    AFX_ASSERT_RANGE(dctx->devLimits->maxVtxInSrcs, baseSlotIdx, cnt);
+#endif
+#endif
     
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindVertexSources), sizeof(cmd->BindVertexSources) + (slotCnt * sizeof(cmd->BindVertexSources.items[0])), &cmdId);
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindVertexBuffers), sizeof(cmd->BindVertexBuffers) + (cnt * sizeof(cmd->BindVertexBuffers.src[0])), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->BindVertexSources.baseSlotIdx = baseSlotIdx;
-    cmd->BindVertexSources.slotCnt = slotCnt;
+    cmd->BindVertexBuffers.baseSlotIdx = baseSlotIdx;
+    cmd->BindVertexBuffers.cnt = cnt;
 
-    for (afxUnit i = 0; i < slotCnt; i++)
+    for (afxUnit i = 0; i < cnt; i++)
     {
-        if (buffers)
+        avxBufferedStream const* stream = &streams[i];
+
+        afxBuffer buf = stream->buf;
+        afxSize offset = stream->offset;
+        afxUnit range = stream->range;
+        afxUnit stride = stream->stride;
+
+#if AVX_VALIDATION_ENABLED
+        if (buf)
         {
-            afxBuffer buf = buffers[i];
+            // If @buffers is not NIL, @buf must be a valid afxBuffer handle.
+            AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
+            // All elements of @buffers must have been created with the afxBufferUsage_VERTEX flag.
+            AFX_ASSERT(AfxTestBufferUsage(buf, afxBufferUsage_VERTEX));
 
-            if (buf)
-            {
-                /// If buf is not NIL, buffer must be a valid afxBuffer handle.
-                AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-
-                /// All elements of buffers must have been created with the afxBufferUsage_VERTEX flag.
-                AFX_ASSERT(AfxTestBufferUsage(buf, afxBufferUsage_VERTEX));
-
-                afxUnit bufCap = AfxGetBufferCapacity(buf, 0);
-
-                /// If sizes is not NIL, all elements of offsets must be less than the size of the corresponding element in buffers.
-                /// If sizes is not NIL, all elements of offsets plus pSizes , where sizes is not zero, must be less than or equal to the size of the corresponding element in buffers.
-                afxUnit offset = offsets ? offsets[i] : 0;
-                afxUnit range = ranges ? ranges[i] : bufCap - offset;
-                AFX_ASSERT_RANGE(bufCap, offset, range);
-                AFX_ASSERT(range);
-
-                AFX_ASSERT(strides && strides[i]);
-            }
+            // If @ranges is not NIL, all elements of @offsets must be less than the size of the corresponding element in @buffers.
+            // If @ranges is not NIL, all elements of @offsets plus @ranges, where sizes is not zero, must be less than or equal to the size of the corresponding element in @buffers.
+            afxUnit bufCap = AfxGetBufferCapacity(buf, 0);
+            AFX_ASSERT_RANGE(bufCap, offset, range);
+            offset = AfxMin(offset, bufCap - 1);
+            afxUnit range = AfxMin(range ? range : bufCap, bufCap - offset);
+            AFX_ASSERT(range);
         }
         else
         {
-            /// If an element of buffers is NIL, then the corresponding element of offsets must be zero.
-            AFX_ASSERT(!ranges || !ranges[i]);
-            AFX_ASSERT(!offsets || !offsets[i]);
-            AFX_ASSERT(!strides || !strides[i]);
+            // If an element of @buffers is NIL, then the corresponding element of @offsets must be zero.
+            AFX_ASSERT(range);
+            AFX_ASSERT(offset == 0);
+            AFX_ASSERT(stride);
         }
-        cmd->BindVertexSources.items[i].buf = buffers ? buffers[i] : NIL;
-        cmd->BindVertexSources.items[i].offset = offsets ? offsets[i] : 0;
-        cmd->BindVertexSources.items[i].range = ranges ? ranges[i] : 0;
-        cmd->BindVertexSources.items[i].stride = strides ? strides[i] : 0;
+
+#if AVX_LIMIT_VALIDATION_ENABLED
+        // If @strides is not NIL each element of @strides must be less than or equal to the device limit 'maxVertexInputBindingStride'.
+        AFX_ASSERT_RANGE(dctx->devLimits->maxVtxInSrcStride, 0, stride);
+#endif
+#endif
+        cmd->BindVertexBuffers.src[i].buf = buf;
+        cmd->BindVertexBuffers.src[i].offset = offset;
+        cmd->BindVertexBuffers.src[i].range = range;
+        cmd->BindVertexBuffers.src[i].stride = stride;
     }
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindIndexSource(afxDrawContext dctx, afxBuffer buf, afxUnit32 offset, afxUnit32 range, afxUnit32 idxSiz)
+_AVX afxCmdId AvxCmdBindIndexBuffer(afxDrawContext dctx, afxBuffer buf, afxUnit32 offset, afxUnit32 range, afxUnit32 idxSiz)
 {
     afxError err = AFX_ERR_NONE;
-    /// dctx must be a valid afxDrawContext handle.
+
+#if AVX_VALIDATION_ENABLED
+    // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    /// dctx must be in the recording state.
+    // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    /// This command must only be called outside of a video coding scope.
+    // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
     
-    /// idxSiz must not be zero.
+    // idxSiz must not be zero.
     AFX_ASSERT(idxSiz);
+    if (idxSiz == 1)
+    {
+        // If idxSiz is 1 byte longe, the indexTypeUint8 feature must be enabled.
+#if AVX_FEATURE_VALIDATION_ENABLED
+        //AFX_ASSERT(dctx->enabledFeatures->idxSizUint8);
+#endif
+    }
 
     if (!buf)
     {
         AFX_ASSERT(!offset);
         AFX_ASSERT(!range);
+        // If @buf is NIL, @offset must be zero.
         offset = 0;
         range = 0;
     }
     else
     {
-        /// If buf is not NIL, buffer must be a valid afxBuffer handle.
+        // If @buf is not NIL, buffer must be a valid afxBuffer handle.
         AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-
-        /// buffer must have been created with the afxBufferUsage_INDEX flag.
+        // @buf must have been created with the afxBufferUsage_INDEX flag.
         AFX_ASSERT(AfxTestBufferUsage(buf, afxBufferUsage_INDEX));
 
-        /// offset must be less than the size of buffer.
+        // @offset must be less than the size of buffer.
         afxUnit bufCap = AfxGetBufferCapacity(buf, 0);
+        // The sum of @offset and the base address of the @range of buffer, must be a multiple of the size of the type indicated by @idxSiz.
+        // If @range is not WHOLE, @range must be a multiple of the size of the type indicated by @idxSiz.
+        // If @range is not WHOLE, the sum of @offset and @range must be less than or equal to the size of buffer.
+        AFX_ASSERT(offset % idxSiz == 0);
+        AFX_ASSERT(range % idxSiz == 0);
+        // @offset must be less than the size of buffer.
         AFX_ASSERT_RANGE(bufCap, offset, range);
         AFX_ASSERT(range);
 
-        offset = AfxClamp(offset, 0, bufCap - 1);
-        range = AfxClamp(range, 0, bufCap - offset);
+        offset = AfxMin(offset, bufCap - 1);
+        range = AfxMin(range ? range : bufCap, bufCap - offset);
     }
+#endif
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindIndexSource), sizeof(cmd->BindIndexSource), &cmdId);
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindIndexBuffer), sizeof(cmd->BindIndexBuffer), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->BindIndexSource.buf = buf;
-    cmd->BindIndexSource.offset = offset;
-    cmd->BindIndexSource.range = range;
-    cmd->BindIndexSource.idxSiz = idxSiz;
+    cmd->BindIndexBuffer.buf = buf;
+    cmd->BindIndexBuffer.offset = offset;
+    cmd->BindIndexBuffer.range = range;
+    cmd->BindIndexBuffer.idxSiz = idxSiz;
     return cmdId;
 }
 
 _AVX afxCmdId AvxCmdSetPrimitiveTopology(afxDrawContext dctx, avxTopology topology)
 {
     afxError err = AFX_ERR_NONE;
-    /// dctx must be a valid afxDrawContext handle.
+    // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    /// dctx must be in the recording state.
+    // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    /// This command must only be called outside of a video coding scope.
+    // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
-    /// topology must be a valid avxTopology value.
+    // topology must be a valid avxTopology value.
     AFX_ASSERT(topology < avxTopology_TOTAL);
 
     afxCmdId cmdId;

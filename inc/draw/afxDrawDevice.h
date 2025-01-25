@@ -56,8 +56,9 @@
 
 #include "qwadro/inc/exec/afxDevice.h"
 #include "qwadro/inc/draw/afxDrawBridge.h"
-#include "qwadro/inc/draw/op/afxDrawOutput.h"
-#include "qwadro/inc/draw/op/afxDrawInput.h"
+#include "qwadro/inc/draw/afxDrawOutput.h"
+#include "qwadro/inc/draw/afxDrawInput.h"
+#include "qwadro/inc/draw/avxDisplay.h"
 
 AFX_DEFINE_STRUCT(afxDrawFeatures)
 /**
@@ -326,6 +327,14 @@ AVX void*           AfxGetDrawDeviceIdd(afxDrawDevice ddev);
 
 // IMPLEMENTATION DISCOVERY ////////////////////////////////////////////////////
 
+AVX afxUnit         AfxEnumerateDrawDevices(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawDevice devices[]);
+
+/// Enumerates all draw devices by passing the handle to each device, in turn, to an application-defined callback function. 
+/// AfxEvokeDrawDevices() continues until the last device is enumerated or the callback function returns FALSE.
+AVX afxUnit         AfxInvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawDevice), afxUnit cnt);
+
+AVX afxUnit         AfxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawDevice), afxUnit cnt, afxDrawDevice devices[]);
+
 AVX afxUnit         AfxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, afxDrawLimits const* limits, afxUnit maxCnt, afxUnit ddevIds[]); // return count of found devices
 
 /**
@@ -335,17 +344,5 @@ AVX afxUnit         AfxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* fea
     @param cnt the number of draw devices to be retrieved.
     @return Returns the number of draw devices inserted in the @param devices.
 */
-
-AVX afxUnit         AfxEnumerateDrawDevices(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawDevice devices[]);
-
-/// Enumerates all draw devices by passing the handle to each device, in turn, to an application-defined callback function. 
-/// AfxEvokeDrawDevices() continues until the last device is enumerated or the callback function returns FALSE.
-AVX afxUnit         AfxInvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawDevice), afxUnit cnt);
-
-AVX afxUnit         AfxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawDevice), afxUnit cnt, afxDrawDevice devices[]);
-
-AVX afxUnit         AfxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawSystem systems[]);
-AVX afxUnit         AfxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt);
-AVX afxUnit         AfxEvokeDrawSystems(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt, afxDrawSystem systems[]);
 
 #endif//AVX_DRAW_DEVICE_H

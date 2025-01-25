@@ -14,49 +14,60 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _AMX_SIM_C
-#define _AMX_SIMULATION_C
-#include "impl/amxImplementation.h"
+#define _ASX_SIM_C
+#define _ASX_SIMULATION_C
+#include "impl/asxImplementation.h"
+
+extern afxClassConfig const _ASX_SCN_CLASS_CONFIG;
 
 //extern afxChain* _AfxGetSystemClassChain(void);
 
 // SIMULATION API //////////////////////////////////////////////////////////////
 
-_AMX afxModule AfxGetSimulationIcd(afxSimulation sim)
+_ASX afxModule AfxGetSimulationIcd(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     /// sim must be a valid afxSimulation handle.
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     afxModule icd = AfxGetProvider(sim);
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-    AFX_ASSERT(AfxTestModule(icd, afxModuleFlag_ICD | afxModuleFlag_AMX));
+    AFX_ASSERT(AfxTestModule(icd, afxModuleFlag_ICD | afxModuleFlag_ASX));
     return icd;
 }
 
-_AMX afxDrawSystem AfxGetSimulationDrawSystem(afxSimulation sim)
+_ASX afxDrawSystem AfxGetSimulationDrawSystem(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     return sim->dsys;
 }
 
-_AMX afxDrawInput AfxGetSimulationDrawInput(afxSimulation sim)
+_ASX afxDrawInput AfxGetSimulationDrawInput(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     return sim->din;
 }
 
-_AMX afxClass const* _AmxGetMathBridgeClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetMathBridgeClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const* cls = &sim->mexuCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_MEXU);
+    afxClass const* cls = &sim->sexuCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_SEXU);
     return cls;
 }
 
-_AMX afxClass const* _AmxGetMotionClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetMeshClass(afxSimulation sim)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    afxClass const* cls = &sim->mshCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_MSH);
+    return cls;
+}
+
+_ASX afxClass const* _AsxGetMotionClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -65,7 +76,7 @@ _AMX afxClass const* _AmxGetMotionClass(afxSimulation sim)
     return cls;
 }
 
-_AMX afxClass const* _AmxGetAnimationClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetAnimationClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -74,7 +85,7 @@ _AMX afxClass const* _AmxGetAnimationClass(afxSimulation sim)
     return cls;
 }
 
-_AMX afxClass const* _AmxGetInstancedAnimationClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetInstancedAnimationClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -83,7 +94,7 @@ _AMX afxClass const* _AmxGetInstancedAnimationClass(afxSimulation sim)
     return cls;
 }
 
-_AMX afxClass const* _AmxGetPoseClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetPoseClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -92,7 +103,7 @@ _AMX afxClass const* _AmxGetPoseClass(afxSimulation sim)
     return cls;
 }
 
-_AMX afxClass const* _AmxGetPlacementClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetPlacementClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -101,7 +112,7 @@ _AMX afxClass const* _AmxGetPlacementClass(afxSimulation sim)
     return cls;
 }
 
-_AMX afxClass const* _AmxGetCurveClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetCurveClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -110,7 +121,7 @@ _AMX afxClass const* _AmxGetCurveClass(afxSimulation sim)
     return cls;
 }
 
-_AMX afxClass const* _AmxGetMaterialClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetMaterialClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -119,7 +130,7 @@ _AMX afxClass const* _AmxGetMaterialClass(afxSimulation sim)
     return cls;
 }
 
-_AMX afxClass const* _AmxGetModelClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetModelClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -128,7 +139,7 @@ _AMX afxClass const* _AmxGetModelClass(afxSimulation sim)
     return cls;
 }
 
-_AMX afxClass* _AmxGetRendererClass(afxSimulation sim)
+_ASX afxClass* _AsxGetRendererClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -137,7 +148,16 @@ _AMX afxClass* _AmxGetRendererClass(afxSimulation sim)
     return class;
 }
 
-_AMX afxClass* _AmxGetLightClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetSceneClass(afxSimulation sim)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    afxClass const* cls = &sim->scnCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_SCN);
+    return cls;
+}
+
+_ASX afxClass* _AsxGetLightClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -146,7 +166,7 @@ _AMX afxClass* _AmxGetLightClass(afxSimulation sim)
     return class;
 }
 
-_AMX afxClass* _AmxGetBodyClass(afxSimulation sim)
+_ASX afxClass* _AsxGetBodyClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -155,7 +175,7 @@ _AMX afxClass* _AmxGetBodyClass(afxSimulation sim)
     return class;
 }
 
-_AMX afxClass* _AmxGetCapstanClass(afxSimulation sim)
+_ASX afxClass* _AsxGetCapstanClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -164,7 +184,7 @@ _AMX afxClass* _AmxGetCapstanClass(afxSimulation sim)
     return class;
 }
 
-_AMX afxClass* _AmxGetMotiveClass(afxSimulation sim)
+_ASX afxClass* _AsxGetMotiveClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -173,7 +193,7 @@ _AMX afxClass* _AmxGetMotiveClass(afxSimulation sim)
     return class;
 }
 
-_AMX afxClass* _AmxGetTerrainClass(afxSimulation sim)
+_ASX afxClass* _AsxGetTerrainClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -182,7 +202,7 @@ _AMX afxClass* _AmxGetTerrainClass(afxSimulation sim)
     return class;
 }
 
-_AMX afxClass* _AmxGetNodeClass(afxSimulation sim)
+_ASX afxClass* _AsxGetNodeClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -191,7 +211,7 @@ _AMX afxClass* _AmxGetNodeClass(afxSimulation sim)
     return class;
 }
 
-_AMX afxStringBase AfxGetModelUrnStringBase(afxSimulation sim)
+_ASX afxStringBase _AsxGetModelUrnStringBase(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -202,7 +222,29 @@ _AMX afxStringBase AfxGetModelUrnStringBase(afxSimulation sim)
     return sim->strbMdlSklMotUrns;
 }
 
-_AMX void AfxQuerySimulationErrorTolerance(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler)
+_ASX afxStringBase _AsxGetPivotTagStringBase(afxSimulation sim)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+
+    if (!sim->strbJointBiasesTags)
+        AfxAcquireStringCatalogs(1, &sim->strbJointBiasesTags);
+
+    return sim->strbJointBiasesTags;
+}
+
+_ASX afxStringBase _AsxGetMorphTagStringBase(afxSimulation sim)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+
+    if (!sim->strbMorphTags)
+        AfxAcquireStringCatalogs(1, &sim->strbMorphTags);
+
+    return sim->strbMorphTags;
+}
+
+_ASX void AfxQuerySimulationErrorTolerance(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -220,14 +262,14 @@ _AMX void AfxQuerySimulationErrorTolerance(afxSimulation sim, afxReal allowedErr
     }
 }
 
-_AMX afxReal _AmxGetAllowedLodErrorFadingFactor(afxSimulation sim)
+_ASX afxReal _AsxGetAllowedLodErrorFadingFactor(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     return sim->allowedLodErrFadingFactor;
 }
 
-_AMX void AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, afxV3d const right, afxV3d const up, afxV3d const back, afxV3d const origin, afxM3d ltm, afxM3d iltm, afxV3d atv)
+_ASX void AfxComputeSimilarity(afxSimulation sim, afxReal unitsPerMeter, afxV3d const right, afxV3d const up, afxV3d const back, afxV3d const origin, afxM3d ltm, afxM3d iltm, afxV3d atv)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -255,7 +297,7 @@ _AMX void AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, af
     AfxV3dSub(atv, sim->origin, origin);
 }
 
-_AMX afxError AfxStepSimulation(afxSimulation sim)
+_ASX afxError AfxStepSimulation(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -279,7 +321,7 @@ _AMX afxError AfxStepSimulation(afxSimulation sim)
     return err;
 }
 
-_AMX afxUnit AfxGetSimBridges(afxSimulation sim, afxUnit baseExuIdx, afxUnit cnt, afxSimBridge bridges[])
+_ASX afxUnit AfxGetSimBridges(afxSimulation sim, afxUnit baseExuIdx, afxUnit cnt, afxSimBridge bridges[])
 {
     afxError err = AFX_ERR_NONE;
     /// sim must be a valid afxSimulation handle.
@@ -295,15 +337,15 @@ _AMX afxUnit AfxGetSimBridges(afxSimulation sim, afxUnit baseExuIdx, afxUnit cnt
     {
         for (afxUnit i = 0; i < cnt; i++)
         {
-            afxSimBridge mexu = sim->bridges[baseExuIdx + i];
-            AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-            bridges[rslt++] = mexu;
+            afxSimBridge sexu = sim->bridges[baseExuIdx + i];
+            AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
+            bridges[rslt++] = sexu;
         }
     }
     return rslt;
 }
 
-_AMX afxUnit AfxQuerySimBridges(afxSimulation sim, afxUnit mdevId, afxUnit portId, afxUnit first, afxUnit cnt, afxSimBridge bridges[])
+_ASX afxUnit AfxQuerySimBridges(afxSimulation sim, afxUnit sengId, afxUnit portId, afxUnit first, afxUnit cnt, afxSimBridge bridges[])
 {
     afxError err = AFX_ERR_NONE;
     /// sim must be a valid afxSimulation handle.
@@ -314,13 +356,13 @@ _AMX afxUnit AfxQuerySimBridges(afxSimulation sim, afxUnit mdevId, afxUnit portI
     afxUnit bridgeCnt = sim->bridgeCnt;
     for (afxUnit i = 0; i < bridgeCnt; i++)
     {
-        afxSimBridge mexu = sim->bridges[i];
-        AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-        afxEngine mdev;
-        afxUnit portId2 = AfxQuerySimBridgePort(mexu, &mdev);
-        AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
+        afxSimBridge sexu = sim->bridges[i];
+        AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
+        afxEngine seng;
+        afxUnit portId2 = AfxQuerySimBridgePort(sexu, &seng);
+        AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
 
-        if ((mdevId != AFX_INVALID_INDEX) && (mdevId != AfxGetObjectId(mdev)))
+        if ((sengId != AFX_INVALID_INDEX) && (sengId != AfxGetObjectId(seng)))
             continue;
 
         if ((portId != AFX_INVALID_INDEX) && (portId != portId2))
@@ -330,7 +372,7 @@ _AMX afxUnit AfxQuerySimBridges(afxSimulation sim, afxUnit mdevId, afxUnit portI
         {
             if (bridges)
             {
-                bridges[rslt] = mexu;
+                bridges[rslt] = sexu;
             }
 
             if (cnt == rslt)
@@ -345,7 +387,7 @@ _AMX afxUnit AfxQuerySimBridges(afxSimulation sim, afxUnit mdevId, afxUnit portI
     return rslt;
 }
 
-_AMX afxError AfxWaitForSimBridge(afxSimulation sim, afxUnit exuIdx, afxTime timeout)
+_ASX afxError AfxWaitForSimBridge(afxSimulation sim, afxUnit exuIdx, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
     /// sim must be a valid afxSimulation handle.
@@ -353,20 +395,20 @@ _AMX afxError AfxWaitForSimBridge(afxSimulation sim, afxUnit exuIdx, afxTime tim
     /// portIdx must be a valid index to a bridge.
     AFX_ASSERT_RANGE((afxUnit)sim->bridgeCnt, exuIdx, 1);
 
-    afxSimBridge mexu;
-    while (!AfxGetSimBridges(sim, exuIdx, 1, &mexu))
+    afxSimBridge sexu;
+    while (!AfxGetSimBridges(sim, exuIdx, 1, &sexu))
     {
         AfxThrowError();
         return err;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
 
-    AfxWaitForIdleSimBridge(mexu, timeout);
+    AfxWaitForIdleSimBridge(sexu, timeout);
 
     return err;
 }
 
-_AMX afxError AfxWaitForSimulation(afxSimulation sim, afxTime timeout)
+_ASX afxError AfxWaitForSimulation(afxSimulation sim, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
     /// sim must be a valid afxSimulation handle.
@@ -385,7 +427,7 @@ _AMX afxError AfxWaitForSimulation(afxSimulation sim, afxTime timeout)
     return err;
 }
 
-_AMX afxError AfxRollSimCommands(afxSimulation sim, avxSubmission* ctrl, afxUnit cnt, afxCatalyst contexts[])
+_ASX afxError AfxRollSimCommands(afxSimulation sim, asxSubmission* ctrl, afxUnit cnt, afxContext contexts[])
 {
     afxError err = AFX_ERR_NONE;
     /// sim must be a valid afxDrawSystem handle.
@@ -394,14 +436,14 @@ _AMX afxError AfxRollSimCommands(afxSimulation sim, avxSubmission* ctrl, afxUnit
     AFX_ASSERT(ctrl);
     AFX_ASSERT(cnt);
 
-    afxSimBridge mexu;
-    if (!AfxGetSimBridges(sim, ctrl->exuIdx, 1, &mexu))
+    afxSimBridge sexu;
+    if (!AfxGetSimBridges(sim, ctrl->portIdx, 1, &sexu))
     {
         AfxThrowError();
         return err;
     }
 
-    afxClass const* dqueCls = _AmxGetSimQueueClass(mexu);
+    afxClass const* dqueCls = _AsxGetSimQueueClass(sexu);
 
     // sanitize arguments
     afxUnit totalQueCnt = dqueCls->instCnt;
@@ -416,15 +458,15 @@ _AMX afxError AfxRollSimCommands(afxSimulation sim, avxSubmission* ctrl, afxUnit
         {
             afxUnit queIdx = baseQueIdx + i;
 
-            afxSimQueue mque;
-            if (!AfxGetSimQueues(mexu, queIdx, 1, &mque))
+            afxSimQueue sque;
+            if (!AfxGetSimQueues(sexu, queIdx, 1, &sque))
             {
                 AfxThrowError();
                 break;
             }
 
             afxError err2;
-            if ((err2 = _AmxSubmitSimCommands(mque, ctrl, 1, contexts)))
+            if ((err2 = _AsxSubmitSimCommands(sque, ctrl, 1, contexts)))
             {
                 if (err2 == afxError_TIMEOUT)
                     continue;
@@ -443,7 +485,7 @@ _AMX afxError AfxRollSimCommands(afxSimulation sim, avxSubmission* ctrl, afxUnit
     return err;
 }
 
-_AMX afxBool _AmxCaptureBodCb(afxBody bod, void** udd)
+_ASX afxBool _AsxCaptureBodCb(afxBody bod, void** udd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
@@ -468,7 +510,7 @@ _AMX afxBool _AmxCaptureBodCb(afxBody bod, void** udd)
     return TRUE;
 }
 
-_AMX afxError AfxCullBodies(afxSimulation sim, afxFrustum const* f, afxArray* pvs)
+_ASX afxError AfxCullBodies(afxSimulation sim, afxFrustum const* f, afxArray* pvs)
 {
     afxError err = AFX_ERR_NONE;
     /// sim must be a valid afxDrawSystem handle.
@@ -480,12 +522,12 @@ _AMX afxError AfxCullBodies(afxSimulation sim, afxFrustum const* f, afxArray* pv
     // TODO: Move to implementation
 
     afxReal lodErr = 0.f;
-    AfxInvokeBodies(sim, 0, AFX_N32_MAX, (void*)_AmxCaptureBodCb, (void*[]) { f, &lodErr, pvs });
+    AfxInvokeBodies(sim, 0, AFX_N32_MAX, (void*)_AsxCaptureBodCb, (void*[]) { f, &lodErr, pvs });
 
     return err;
 }
 
-_AMX afxError _AmxSimDtorCb(afxSimulation sim)
+_ASX afxError _AsxSimDtorCb(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -495,15 +537,15 @@ _AMX afxError _AmxSimDtorCb(afxSimulation sim)
     return err;
 }
 
-_AMX afxError _AmxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
+_ASX afxError _AsxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
     afxModule icd = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-    _amxSimulationAcquisition const* cfg = AFX_CAST(_amxSimulationAcquisition const*, args[1]) + invokeNo;
-    _amxSimBridgeAcquisition* bridgeCfgs = AFX_CAST(_amxSimBridgeAcquisition*, args[2]) + invokeNo;
+    _asxSimulationAcquisition const* cfg = AFX_CAST(_asxSimulationAcquisition const*, args[1]) + invokeNo;
+    _asxSimBridgeAcquisition* bridgeCfgs = AFX_CAST(_asxSimBridgeAcquisition*, args[2]) + invokeNo;
 
     if (!cfg)
     {
@@ -564,66 +606,72 @@ _AMX afxError _AmxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
 
         afxClassConfig clsCfg;
 
-        clsCfg = cfg->curClsCfg ? *cfg->curClsCfg : _AMX_CUR_CLASS_CONFIG;
+        clsCfg = cfg->curClsCfg ? *cfg->curClsCfg : _ASX_CUR_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_CUR);
         AfxMountClass(&sim->curCls, NIL, classes, &clsCfg);
 
-        clsCfg = cfg->poseClsCfg ? *cfg->poseClsCfg : _AMX_POSE_CLASS_CONFIG;
+        clsCfg = cfg->poseClsCfg ? *cfg->poseClsCfg : _ASX_POSE_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_POSE);
         AfxMountClass(&sim->poseCls, NIL, classes, &clsCfg);
 
-        clsCfg = cfg->plceClsCfg ? *cfg->plceClsCfg : _AMX_PLCE_CLASS_CONFIG;
+        clsCfg = cfg->plceClsCfg ? *cfg->plceClsCfg : _ASX_PLCE_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_PLCE);
         AfxMountClass(&sim->plceCls, NIL, classes, &clsCfg);
 
-        clsCfg = cfg->mtlClsCfg ? *cfg->mtlClsCfg : _AMX_MTL_CLASS_CONFIG;
+        clsCfg = cfg->mtlClsCfg ? *cfg->mtlClsCfg : _ASX_MTL_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_MTL);
         AfxMountClass(&sim->mtlCls, NIL, classes, &clsCfg); // require tex
 
-        clsCfg = cfg->mdlClsCfg ? *cfg->mdlClsCfg : _AMX_MDL_CLASS_CONFIG;
+        clsCfg = cfg->mshClsCfg ? *cfg->mshClsCfg : _ASX_MSH_CLASS_CONFIG;
+        AFX_ASSERT(clsCfg.fcc == afxFcc_MSH);
+        AfxMountClass(&sim->mshCls, NIL, classes, &clsCfg); // require msht, vtd
+
+        clsCfg = cfg->mdlClsCfg ? *cfg->mdlClsCfg : _ASX_MDL_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_MDL);
         AfxMountClass(&sim->mdlCls, NIL, classes, &clsCfg); // require skl, msh
 
-        clsCfg = cfg->motClsCfg ? *cfg->motClsCfg : _AMX_MOT_CLASS_CONFIG;
+        clsCfg = cfg->motClsCfg ? *cfg->motClsCfg : _ASX_MOT_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_MOT);
         AfxMountClass(&sim->motCls, NIL, classes, &clsCfg);
         
-        clsCfg = cfg->aniClsCfg ? *cfg->aniClsCfg : _AMX_ANI_CLASS_CONFIG;
+        clsCfg = cfg->aniClsCfg ? *cfg->aniClsCfg : _ASX_ANI_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_ANI);
         AfxMountClass(&sim->aniCls, NIL, classes, &clsCfg); // require mot
 
-        clsCfg = cfg->anikClsCfg ? *cfg->anikClsCfg : (afxClassConfig) { 0 }/* _AMX_ANI_CLASS_CONFIG*/;
+        clsCfg = cfg->anikClsCfg ? *cfg->anikClsCfg : (afxClassConfig) { 0 }/* _ASX_ANI_CLASS_CONFIG*/;
         AFX_ASSERT(clsCfg.fcc == afxFcc_ANIK);
         AfxMountClass(&sim->anikCls, NIL, classes, &clsCfg); // require mot
 
-        clsCfg = cfg->capsClsCfg ? *cfg->capsClsCfg : _AMX_MOTO_CLASS_CONFIG;
+        clsCfg = cfg->capsClsCfg ? *cfg->capsClsCfg : _ASX_MOTO_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_MOTO);
         AfxMountClass(&sim->motoCls, NIL, classes, &clsCfg);
 
-        clsCfg = cfg->motvClsCfg ? *cfg->motvClsCfg : (afxClassConfig) { 0 }/* _AMX_MOTO_CLASS_CONFIG*/;
+        clsCfg = cfg->motvClsCfg ? *cfg->motvClsCfg : (afxClassConfig) { 0 }/* _ASX_MOTO_CLASS_CONFIG*/;
         AFX_ASSERT(clsCfg.fcc == afxFcc_MOTV);
         AfxMountClass(&sim->motvCls, NIL, classes, &clsCfg);
 
-        clsCfg = cfg->bodClsCfg ? *cfg->bodClsCfg : _AMX_BOD_CLASS_CONFIG;
+        clsCfg = cfg->bodClsCfg ? *cfg->bodClsCfg : _ASX_BOD_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_BOD);
         AfxMountClass(&sim->bodCls, NIL, classes, &clsCfg); // require moto
 
-        clsCfg = cfg->terClsCfg ? *cfg->terClsCfg : _AMX_TER_CLASS_CONFIG;
+        clsCfg = cfg->terClsCfg ? *cfg->terClsCfg : _ASX_TER_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_TER);
         AfxMountClass(&sim->terCls, NIL, classes, &clsCfg); // require all
 
-        clsCfg = cfg->litClsCfg ? *cfg->litClsCfg : _AMX_LIT_CLASS_CONFIG;
+        clsCfg = cfg->litClsCfg ? *cfg->litClsCfg : _ASX_LIT_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_LIT);
         AfxMountClass(&sim->lights, NIL, classes, &clsCfg);
 
-        clsCfg = cfg->rndClsCfg ? *cfg->rndClsCfg : _AMX_RND_CLASS_CONFIG;
+        clsCfg = cfg->rndClsCfg ? *cfg->rndClsCfg : _ASX_RND_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_RND);
         AfxMountClass(&sim->renderers, NIL, classes, &clsCfg); // require all
 
+        clsCfg = _ASX_SCN_CLASS_CONFIG;
+        AfxMountClass(&sim->scnCls, NIL, classes, &clsCfg);
 
-        clsCfg = cfg->mexuClsCfg ? *cfg->mexuClsCfg : _AMX_MEXU_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_MEXU);
-        AfxMountClass(&sim->mexuCls, NIL, classes, &clsCfg); // require all
+        clsCfg = cfg->sexuClsCfg ? *cfg->sexuClsCfg : _ASX_SEXU_CLASS_CONFIG;
+        AFX_ASSERT(clsCfg.fcc == afxFcc_SEXU);
+        AfxMountClass(&sim->sexuCls, NIL, classes, &clsCfg); // require all
 
     }
 
@@ -673,8 +721,8 @@ _AMX afxError _AmxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
         return err;
     }
 
-    afxClass* cls = (afxClass*)_AmxGetMathBridgeClass(sim);
-    AFX_ASSERT_CLASS(cls, afxFcc_MEXU);
+    afxClass* cls = (afxClass*)_AsxGetMathBridgeClass(sim);
+    AFX_ASSERT_CLASS(cls, afxFcc_SEXU);
 
     if (AfxAcquireObjects(cls, sim->bridgeCnt, (afxObject*)sim->bridges, (void const*[]) { sim, bridgeCfgs }))
     {
@@ -682,14 +730,14 @@ _AMX afxError _AmxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
     }
     else
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MEXU, sim->bridgeCnt, sim->bridges);
+        AFX_ASSERT_OBJECTS(afxFcc_SEXU, sim->bridgeCnt, sim->bridges);
 
-        afxEngine mdev = AfxGetMathBridgeDevice(sim->bridges[0]);
+        afxEngine seng = AfxGetMathBridgeDevice(sim->bridges[0]);
 
-        AfxCallDevice((afxDevice)mdev, 3, sim);
-        AfxCallDevice((afxDevice)mdev, 5, sim);
+        AfxCallDevice((afxDevice)seng, 3, sim);
+        AfxCallDevice((afxDevice)seng, 5, sim);
 
-        if (AfxDoDeviceService((afxDevice)mdev)) AfxThrowError(); // let the device build its SPUs.
+        if (AfxDoDeviceService((afxDevice)seng)) AfxThrowError(); // let the device build its SPUs.
         else
         {
             sim->running = TRUE;
@@ -707,19 +755,19 @@ _AMX afxError _AmxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AMX afxClassConfig const _AMX_SIM_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_SIM_CLASS_CONFIG =
 {
     .fcc = afxFcc_SIM,
     .name = "Simulation",
     .desc = "Simulation",
     .fixedSiz = sizeof(AFX_OBJECT(afxSimulation)),
-    .ctor = (void*)_AmxSimCtorCb,
-    .dtor = (void*)_AmxSimDtorCb
+    .ctor = (void*)_AsxSimCtorCb,
+    .dtor = (void*)_AsxSimDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AfxConfigureSimulation(afxUnit icd, afxSimulationConfig* cfg)
+_ASX afxError AfxConfigureSimulation(afxUnit icd, afxSimulationConfig* cfg)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -733,23 +781,23 @@ _AMX afxError AfxConfigureSimulation(afxUnit icd, afxSimulationConfig* cfg)
     *cfg = (afxSimulationConfig const) { 0 };
 
     afxModule driver;
-    if (!AmxGetIcd(icd, &driver))
+    if (!_AsxGetIcd(icd, &driver))
     {
         AfxThrowError();
         return err;
     }
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &driver);
-    AFX_ASSERT(AfxTestModule(driver, afxModuleFlag_ICD | afxModuleFlag_AMX));
+    AFX_ASSERT(AfxTestModule(driver, afxModuleFlag_ICD | afxModuleFlag_ASX));
 
-    afxEngine mdev;
+    afxEngine seng;
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
-    if (!AfxEnumerateEngines(icd, 0, 1, &mdev))
+    if (!AfxEnumerateEngines(icd, 0, 1, &seng))
     {
         AfxThrowError();
         return err;
     }
 
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
+    AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
 
     AfxV3dSet(cfg->right, 1, 0, 0);
     AfxV3dSet(cfg->up, 0, 1, 0);
@@ -759,12 +807,12 @@ _AMX afxError AfxConfigureSimulation(afxUnit icd, afxSimulationConfig* cfg)
     cfg->unitsPerMeter = 1.f;
     cfg->allowedLodErrFadingFactor = 0.80000001;
 
-    cfg->prime.minQueCnt = _AMX_MQUE_CLASS_CONFIG.unitsPerPage;
+    cfg->prime.minQueCnt = _ASX_SQUE_CLASS_CONFIG.unitsPerPage;
 
     return err;
 }
 
-_AMX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg, afxSimulation* simulation)
+_ASX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg, afxSimulation* simulation)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -776,25 +824,25 @@ _AMX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg
     }
 
     afxModule driver;
-    if (!AmxGetIcd(icd, &driver))
+    if (!_AsxGetIcd(icd, &driver))
     {
         AfxThrowError();
         return err;
     }
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &driver);
-    AFX_ASSERT(AfxTestModule(driver, afxModuleFlag_ICD | afxModuleFlag_AMX));
+    AFX_ASSERT(AfxTestModule(driver, afxModuleFlag_ICD | afxModuleFlag_ASX));
 
-    afxEngine mdev;
+    afxEngine seng;
     AFX_ASSERT(cfg->prime.engId != AFX_INVALID_INDEX);
-    if (!AfxEnumerateEngines(icd, cfg->prime.engId, 1, &mdev))
+    if (!AfxEnumerateEngines(icd, cfg->prime.engId, 1, &seng))
     {
         AfxThrowError();
         return err;
     }
 
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
+    AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
 
-    if (AfxCallDevice((afxDevice)mdev, 1, NIL))
+    if (AfxCallDevice((afxDevice)seng, 1, NIL))
     {
         AfxThrowError(); // let the device build its DPUs.
         return err;
@@ -803,18 +851,18 @@ _AMX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg
     // Acquire bridges and queues
     afxUnit portId = AFX_INVALID_INDEX;
     afxUnit totalSqueCnt = 0;
-    afxUnit baseQueIdx[AMX_MAX_SIM_BRIDGE_PER_CONTEXT] = { 0 };
-    _amxSimBridgeAcquisition bridgeCfg[AMX_MAX_SIM_BRIDGE_PER_CONTEXT] = { 0 };
+    afxUnit baseQueIdx[ASX_MAX_SIM_BRIDGE_PER_CONTEXT] = { 0 };
+    _asxSimBridgeAcquisition bridgeCfg[ASX_MAX_SIM_BRIDGE_PER_CONTEXT] = { 0 };
     afxUnit bridgeCnt = 0;
 
-    if (!AfxEnumerateEngines(icd, cfg->prime.engId, 1, &mdev))
+    if (!AfxEnumerateEngines(icd, cfg->prime.engId, 1, &seng))
     {
         AfxThrowError();
         return err;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
-    bridgeCfg[bridgeCnt].mdev = mdev;
-    if (!AfxChooseSimPorts(mdev, cfg->prime.capabilities, cfg->prime.acceleration, 1, &portId))
+    AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
+    bridgeCfg[bridgeCnt].seng = seng;
+    if (!AfxChooseSimPorts(seng, cfg->prime.capabilities, cfg->prime.acceleration, 1, &portId))
     {
         AfxThrowError();
         return err;
@@ -822,7 +870,7 @@ _AMX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg
     AFX_ASSERT(portId != AFX_INVALID_INDEX);
     bridgeCfg[bridgeCnt].portId = portId;
     bridgeCfg[bridgeCnt].exuIdx = 0;
-    bridgeCfg[bridgeCnt].minQueCnt = AfxClamp(cfg->prime.minQueCnt, 1, AMX_MAX_SIM_QUEUE_PER_BRIDGE);
+    bridgeCfg[bridgeCnt].minQueCnt = AfxClamp(cfg->prime.minQueCnt, 1, ASX_MAX_SIM_QUEUE_PER_BRIDGE);
     ++bridgeCnt;
 
     if (cfg->auxCnt && cfg->auxs)
@@ -849,14 +897,14 @@ _AMX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg
 #endif
             if (bridgeIdx == AFX_INVALID_INDEX)
             {
-                if (!AfxEnumerateEngines(icd, cfg->auxs[i].engId, 1, &mdev))
+                if (!AfxEnumerateEngines(icd, cfg->auxs[i].engId, 1, &seng))
                 {
                     AfxThrowError();
                     return err;
                 }
-                AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
-                bridgeCfg[bridgeCnt].mdev = mdev;
-                if (!AfxChooseSimPorts(mdev, cfg->auxs[i].capabilities, cfg->auxs[i].acceleration, 1, &portId))
+                AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
+                bridgeCfg[bridgeCnt].seng = seng;
+                if (!AfxChooseSimPorts(seng, cfg->auxs[i].capabilities, cfg->auxs[i].acceleration, 1, &portId))
                 {
                     AfxThrowError();
                     return err;
@@ -864,13 +912,13 @@ _AMX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg
                 AFX_ASSERT(portId != AFX_INVALID_INDEX);
                 bridgeCfg[bridgeCnt].portId = portId;
                 bridgeCfg[bridgeCnt].exuIdx = bridgeCnt;
-                bridgeCfg[bridgeCnt].minQueCnt = AfxClamp(cfg->auxs[i].minQueCnt, 1, AMX_MAX_SIM_QUEUE_PER_BRIDGE);
+                bridgeCfg[bridgeCnt].minQueCnt = AfxClamp(cfg->auxs[i].minQueCnt, 1, ASX_MAX_SIM_QUEUE_PER_BRIDGE);
                 ++bridgeCnt;
             }
         }
     }
 
-    _amxSimulationAcquisition cfg2 = { 0 };
+    _asxSimulationAcquisition cfg2 = { 0 };
     cfg2.bridgeCnt = bridgeCnt;
     cfg2.extensionCnt = cfg->extensionCnt;
     cfg2.extensions = cfg->extensions;
@@ -889,7 +937,7 @@ _AMX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg
     AfxV3dCopy(cfg2.origin, cfg->origin);
     AfxBoxCopy(&cfg2.extent, &cfg->extent);
 
-    afxClass* cls = (afxClass*)_AmxGetSimulationClass(driver);
+    afxClass* cls = (afxClass*)_AsxGetSimulationClass(driver);
     AFX_ASSERT_CLASS(cls, afxFcc_SIM);
 
     afxSimulation sim;

@@ -21,36 +21,38 @@
     behave in the real world under various conditions.
 */
 
-#ifndef AMX_MATERIAL_H
-#define AMX_MATERIAL_H
+#ifndef ASX_MATERIAL_H
+#define ASX_MATERIAL_H
 
 #include "qwadro/inc/sim/afxSimDefs.h"
 #include "qwadro/inc/draw/io/afxRaster.h"
 #include "qwadro/inc/base/afxFixedString.h"
 
-AMX afxString const*AfxGetMaterialUrn(afxMaterial mtl);
-AMX afxUnit         AfxCountMaterialMaps(afxMaterial mtl);
+ASX afxString const*AfxGetMaterialUrn(afxMaterial mtl);
+ASX afxUnit         AfxCountMaterialMaps(afxMaterial mtl);
 
-AMX afxMaterial     AfxFindSubmaterial(afxMaterial mtl, afxString const *usage);
-AMX afxMaterial     AfxGetSubmaterial(afxMaterial mtl, afxUnit mapIdx);
-AMX void            AfxRebindSubmaterial(afxMaterial mtl, afxUnit mapIdx, afxMaterial subMtl);
+ASX afxMaterial     AfxFindSubmaterial(afxMaterial mtl, afxString const *usage);
+ASX afxMaterial     AfxGetSubmaterial(afxMaterial mtl, afxUnit mapIdx);
+ASX void            AfxRebindSubmaterial(afxMaterial mtl, afxUnit mapIdx, afxMaterial subMtl);
 
-AMX void            AfxResetMaterialMap(afxMaterial mtl, afxUnit mapIdx, afxString const* usage, afxMaterial subMtl);
+ASX void            AfxResetMaterialMap(afxMaterial mtl, afxUnit mapIdx, afxString const* usage, afxMaterial subMtl);
 
-AMX afxRaster       AfxGetMaterialTexture(afxMaterial mtl);
-AMX void            AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex);
-AMX void            AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex);
+ASX afxRaster       AfxGetMaterialTexture(afxMaterial mtl);
+ASX void            AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex);
+ASX void            AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex);
 
 // non-Granny
-AMX void            AfxColorizeMaterial(afxMaterial mtl, afxV4d const color);
-AMX void            AfxShineMaterial(afxMaterial mtl, afxReal shininess);
+ASX void            AfxColorizeMaterial(afxMaterial mtl, afxV4d const color);
+ASX void            AfxShineMaterial(afxMaterial mtl, afxReal shininess);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxUnit         AfxEnumerateMaterials(afxSimulation sim, afxUnit first, afxUnit cnt, afxMaterial materials[]);
+ASX afxUnit         AfxFindMaterialIndices(afxSimulation sim, afxUnit cnt, afxString const materials[], afxUnit indices[]);
 
-AMX afxError        AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxUnit subCnt, afxMaterial *mtl);
+ASX afxUnit         AfxEnumerateMaterials(afxSimulation sim, afxUnit first, afxUnit cnt, afxMaterial materials[]);
 
-#endif//AMX_MATERIAL_H
+ASX afxError        AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxUnit subCnt, afxMaterial *mtl);
+
+#endif//ASX_MATERIAL_H

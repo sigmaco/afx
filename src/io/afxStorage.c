@@ -24,8 +24,8 @@
 
 #define _AFX_CORE_C
 #define _AFX_STORAGE_C
-#include "../dev/afxExecImplKit.h"
-#include "../dev/afxIoImplKit.h"
+#include "../impl/afxExecImplKit.h"
+#include "../impl/afxIoImplKit.h"
 
 extern afxClassConfig const _AfxFileClsCfg;
 extern afxClassConfig const _AfxArcClsCfg;

@@ -65,7 +65,7 @@ AFX_DEFINE_STRUCT(afxSubmission)
     afxSemaphore        signalSems;
     afxUnit64           signalValues;
     afxUnit32           signalReserveds;
-    afxFence            fence;
+    avxFence            fence;
 };
 
 AFX_DEFINE_STRUCT(afxTransference)
@@ -76,7 +76,7 @@ AFX_DEFINE_STRUCT(afxTransference)
 
     afxSemaphore        wait;
     afxSemaphore        signal;
-    afxFence            fence;
+    avxFence            fence;
 
     afxFcc              srcFcc;
     afxFcc              dstFcc;
@@ -112,7 +112,7 @@ AFX_DEFINE_STRUCT(afxTransference)
 };
 
 AFX afxDevice       AfxGetIoBridgeDevice(afxIoBridge exu);
-AFX afxContext      AfxGetIoBridgeContext(afxIoBridge exu);
+AFX afxDevLink      AfxGetIoBridgeContext(afxIoBridge exu);
 
 AFX afxUnit         AfxGetIoBridgePort(afxIoBridge xexu);
 
@@ -125,7 +125,7 @@ AFX afxError        _AfxSubmitIoCommands(afxIoBridge xexu, afxSubmission const* 
 
 
 AFX afxUnit         AfxGetIoQueuePort(afxIoQueue xque);
-AFX afxContext      AfxGetIoQueueContext(afxIoQueue xque);
+AFX afxDevLink      AfxGetIoQueueContext(afxIoQueue xque);
 
 ////////////////////////////////////////////////////////////////////////////////
 

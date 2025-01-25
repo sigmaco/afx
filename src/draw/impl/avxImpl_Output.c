@@ -26,7 +26,7 @@
 //#define _AVX_BUFFER_C
 #include "avxImplementation.h"
 
-_AVX afxError _AvxPresentDrawOutput(afxDrawQueue dque, avxPresentation* ctrl, afxDrawOutput dout, afxUnit bufIdx)
+_AVX afxError _AvxPresentDrawOutput(afxDrawQueue dque, avxPresentation* ctrl, avxFence wait, afxDrawOutput dout, afxUnit bufIdx, avxFence signal)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);

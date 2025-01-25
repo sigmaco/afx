@@ -161,14 +161,14 @@ _AVX afxError _AvxTxdStdCtorCb(afxTxd txd, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AvxTexClsCfg =
+_AVX afxClassConfig const _AVX_TEX_CLASS_CONFIG =
 {
     .fcc = afxFcc_TEX,
     .name = "Texture",
     .desc = "Texture"
 };
 
-_AVX afxClassConfig const _AvxTxdClsCfg =
+_AVX afxClassConfig const _AVX_TXD_CLASS_CONFIG =
 {
     .fcc = afxFcc_TXD,
     .name = "Txd",

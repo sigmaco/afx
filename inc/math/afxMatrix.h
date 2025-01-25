@@ -72,7 +72,7 @@
 
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/math/afxQuaternion.h"
-#include "qwadro/inc/math/afxPlane.h"
+#include "qwadro/inc/math/bound/afxPlane.h"
 
 AFX afxM2d const AFX_M2D_ZERO;
 AFX afxM3d const AFX_M3D_ZERO;

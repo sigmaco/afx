@@ -221,7 +221,7 @@ _AVX afxError _AvxRelinkDrawBuffersCb(avxCanvas canv, afxBool managed, afxUnit b
     return err;
 }
 
-_AVX afxError AfxRelinkDrawBuffers(avxCanvas canv, afxUnit baseSlot, afxUnit cnt, afxRaster rasters[])
+_AVX afxError AfxBindDrawBuffers(avxCanvas canv, afxUnit baseSlot, afxUnit cnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     /// canv must be a valid avxCanvas handle.
@@ -241,7 +241,7 @@ _AVX afxError AfxRelinkDrawBuffers(avxCanvas canv, afxUnit baseSlot, afxUnit cnt
     return err;
 }
 
-_AVX afxError AfxRelinkDepthBuffer(avxCanvas canv, afxRaster depth)
+_AVX afxError AfxBindDepthBuffer(avxCanvas canv, afxRaster depth)
 {
     afxError err = AFX_ERR_NONE;
     /// canv must be a valid avxCanvas handle.
@@ -250,13 +250,13 @@ _AVX afxError AfxRelinkDepthBuffer(avxCanvas canv, afxRaster depth)
     
     afxUnit slotIdx;
     if (!AfxGetDepthBufferSlots(canv, &slotIdx, NIL)) AfxThrowError();
-    else if (AfxRelinkDrawBuffers(canv, slotIdx, 1, &depth))
+    else if (AfxBindDrawBuffers(canv, slotIdx, 1, &depth))
         AfxThrowError();
 
     return err;
 }
 
-_AVX afxError AfxRelinkStencilBuffer(avxCanvas canv, afxRaster stencil)
+_AVX afxError AfxBindStencilBuffer(avxCanvas canv, afxRaster stencil)
 {
     afxError err = AFX_ERR_NONE;
     /// canv must be a valid avxCanvas handle.
@@ -265,13 +265,13 @@ _AVX afxError AfxRelinkStencilBuffer(avxCanvas canv, afxRaster stencil)
     
     afxUnit slotIdx;
     if (!AfxGetDepthBufferSlots(canv, NIL, &slotIdx)) AfxThrowError();
-    else if (AfxRelinkDrawBuffers(canv, slotIdx, 1, &stencil))
+    else if (AfxBindDrawBuffers(canv, slotIdx, 1, &stencil))
         AfxThrowError();
 
     return err;
 }
 
-_AVX afxError AfxReadjustCanvas(avxCanvas canv, afxWhd whd)
+_AVX afxError _AfxReadjustCanvas(avxCanvas canv, afxWhd whd)
 {
     afxError err = AFX_ERR_NONE;
     /// canv must be a valid avxCanvas handle.
@@ -338,7 +338,7 @@ _AVX afxError AfxPrintDrawBuffer(avxCanvas canv, afxUnit slotIdx, afxRasterIo co
     return err;
 }
 
-_AVX afxError AfxRedoDrawBuffers(avxCanvas canv)
+_AVX afxError _AvxRedoDrawBuffers(avxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     /// canv must be a valid avxCanvas handle.
@@ -359,7 +359,7 @@ _AVX afxError AfxRedoDrawBuffers(avxCanvas canv)
             continue;
 
         if (surf->ras)
-            AfxRelinkDrawBuffers(canv, i, 1, NIL);
+            AfxBindDrawBuffers(canv, i, 1, NIL);
 
         rasi.fmt = surf->fmt;
         rasi.lodCnt = surf->sampleCnt;
@@ -554,6 +554,9 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
         canv->flags |= afxCanvasFlag_HAS_DEPTH;
     }
 
+    if (_AvxRedoDrawBuffers(canv))
+        AfxThrowError();
+
     if (err)
     {
         AfxDeallocateInstanceData(canv, ARRAY_SIZE(stashs), stashs);
@@ -582,7 +585,7 @@ _AVX afxError AfxCoacquireCanvas(afxDrawSystem dsys, afxWhd whd, afxUnit surCnt,
     AFX_ASSERT(surCfg);
     AfxAssertWhd(whd);
 
-    afxClass* cls = AvxGetCanvasClass(dsys);
+    afxClass* cls = (afxClass*)_AvxGetCanvasClass(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_CANV);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)canvases, (void const*[]) { dsys, &whd, &surCnt, surCfg }))

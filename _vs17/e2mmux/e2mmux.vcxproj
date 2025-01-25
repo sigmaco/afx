@@ -173,16 +173,6 @@
     <ClCompile Include="..\..\src\ux\hid\afxMouse.c" />
     <ClCompile Include="..\..\src\ux\impl\auxImplementation.c" />
     <ClCompile Include="..\..\src\ux\va\auxPaint.c" />
-    <ClCompile Include="..\..\src\xss\afxScript.c" />
-    <ClCompile Include="..\..\src\xss\xssCompiler.c" />
-    <ClCompile Include="..\..\src\xss\xssCore.c" />
-    <ClCompile Include="..\..\src\xss\xssDebug.c" />
-    <ClCompile Include="..\..\src\xss\xssOptMeta.c" />
-    <ClCompile Include="..\..\src\xss\xssOptRandom.c" />
-    <ClCompile Include="..\..\src\xss\xssPrimitive.c" />
-    <ClCompile Include="..\..\src\xss\xssUtils.c" />
-    <ClCompile Include="..\..\src\xss\xssValue.c" />
-    <ClCompile Include="..\..\src\xss\xssVm.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\dep_\vgl1\vgl1.h" />
@@ -193,26 +183,12 @@
     <ClInclude Include="..\..\inc\ux\va\auxPaint.h" />
     <ClInclude Include="..\..\src\ux\impl\auxImplementation.h" />
     <ClInclude Include="..\..\src\ux\impl\auxImpl_Shell.h" />
-    <ClInclude Include="..\..\src\xss\xssCommon.h" />
-    <ClInclude Include="..\..\src\xss\xssCompiler.h" />
-    <ClInclude Include="..\..\src\xss\xssCore.h" />
-    <ClInclude Include="..\..\src\xss\xssDebug.h" />
-    <ClInclude Include="..\..\src\xss\xssMath.h" />
-    <ClInclude Include="..\..\src\xss\xssOpcodes.h" />
-    <ClInclude Include="..\..\src\xss\xssOptMeta.h" />
-    <ClInclude Include="..\..\src\xss\xssOptRandom.h" />
-    <ClInclude Include="..\..\src\xss\xssPrimitive.h" />
-    <ClInclude Include="..\..\src\xss\xssUtils.h" />
-    <ClInclude Include="..\..\src\xss\xssValue.h" />
-    <ClInclude Include="..\..\src\xss\xssVm.h" />
     <ClInclude Include="..\..\inc\ux\afxSession.h" />
     <ClInclude Include="..\..\inc\ux\afxTerminal.h" />
     <ClInclude Include="..\..\inc\ux\afxWindow.h" />
     <ClInclude Include="..\..\inc\ux\afxShell.h" />
     <ClInclude Include="..\..\inc\ux\afxUxDefs.h" />
     <ClInclude Include="..\..\inc\ux\afxWidget.h" />
-    <ClInclude Include="..\..\inc\xss\afxScript.h" />
-    <ClInclude Include="..\..\inc\xss\xss.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -228,14 +204,6 @@
     <ProjectReference Include="..\e2sound\e2sound.vcxproj">
       <Project>{1685d511-3934-4f31-b8a3-afa740f612b3}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\src\xss\xssCore.xss" />
-    <None Include="..\..\src\xss\xssCore.xss.inc" />
-    <None Include="..\..\src\xss\xssOptMeta.xss" />
-    <None Include="..\..\src\xss\xssOptMeta.xss.inc" />
-    <None Include="..\..\src\xss\xssOptRandom.xss" />
-    <None Include="..\..\src\xss\xssOptRandom.xss.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

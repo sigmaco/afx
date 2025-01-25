@@ -24,6 +24,23 @@
 
 AFX afxChain* _AfxGetSystemClassChain(void);
 
+_AUX afxString const sigmaUxSignature = AFX_STRING(
+    "      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      \n"
+    "     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     \n"
+    "     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     \n"
+    "     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     \n"
+    "     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     \n"
+    "     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     \n"
+    "      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      \n"
+    "                                                                               \n"
+    "     Q W A D R O   M U L T I M E D I A   U X   I N F R A S T R U C T U R E     \n"
+    "                                                                               \n"
+    "                               Public Test Build                               \n"
+    "                           (c) 2017 SIGMA FEDERATION                           \n"
+    "                                www.sigmaco.org                                \n"
+    "                                                                               \n"
+);
+
 ////////////////////////////////////////////////////////////////////////////////
 // SHELL HANDLING                                                             //
 ////////////////////////////////////////////////////////////////////////////////
@@ -150,7 +167,7 @@ _AUX afxUnit AfxInvokeShells(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AuxGetIcd(icd, &mdle))
+    while (_AuxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AUX) == (afxModuleFlag_ICD | afxModuleFlag_AUX));
@@ -169,7 +186,7 @@ _AUX afxUnit AfxEvokeShells(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(v
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;
     afxModule mdle;
-    while (AuxGetIcd(icd, &mdle))
+    while (_AuxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AUX) == (afxModuleFlag_ICD | afxModuleFlag_AUX));
@@ -189,7 +206,7 @@ _AUX afxUnit AfxEnumerateShells(afxUnit icd, afxUnit first, afxUnit cnt, afxShel
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AuxGetIcd(icd, &mdle))
+    while (_AuxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AUX) == (afxModuleFlag_ICD | afxModuleFlag_AUX));

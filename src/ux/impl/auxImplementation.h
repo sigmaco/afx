@@ -36,7 +36,7 @@ AFX_DEFINE_STRUCT(_auxSessionAcquisition)
     afxDrawSystem       dsys;
     afxUnit             sdevId;
     afxUnit             soutIdx;
-    afxSoundSystem      ssys;
+    afxMixSystem      ssys;
 
     afxClassConfig const* wndClsCfg;
     afxClassConfig const* xssClsCfg;
@@ -54,6 +54,6 @@ AUX afxError _AuxRegisterShells(afxModule icd, afxUnit cnt, afxShellInfo const i
 
 AUX afxError _AuxImplementShell(afxModule icd, afxClassConfig const* sesCls);
 
-AUX afxBool AuxGetIcd(afxUnit icdIdx, afxModule* driver);
+AUX afxBool _AuxGetIcd(afxUnit icdIdx, afxModule* driver);
 
 #endif//AUX_IMPLEMENTATION_H

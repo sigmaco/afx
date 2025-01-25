@@ -15,10 +15,10 @@
  */
 
 #define _AFX_SIM_C
-#define _AMX_MOTOR_C
-#include "impl/amxImplementation.h"
+#define _ASX_MOTOR_C
+#include "impl/asxImplementation.h"
 
-_AMXINL void* AfxGetCapstanUdd(afxCapstan caps, afxUnit idx)
+_ASXINL void* AfxGetCapstanUdd(afxCapstan caps, afxUnit idx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -29,7 +29,7 @@ _AMXINL void* AfxGetCapstanUdd(afxCapstan caps, afxUnit idx)
     return caps->udd[idx];
 }
 
-_AMXINL void AfxSetCapstanClockOnly(afxReal time, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxSetCapstanClockOnly(afxReal time, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -43,33 +43,33 @@ _AMXINL void AfxSetCapstanClockOnly(afxReal time, afxUnit cnt, afxCapstan capsta
     }
 }
 
-_AMXINL afxBool AfxCapstanTerminationIsScheduled(afxCapstan caps)
+_ASXINL afxBool AfxCapstanTerminationIsScheduled(afxCapstan caps)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
     return (caps->flags & afxCapstanFlag_KILL_ONCE_COMPLETE) == afxCapstanFlag_KILL_ONCE_COMPLETE;
 }
 
-_AMXINL afxBool AfxCapstanIsActive(afxCapstan caps)
+_ASXINL afxBool AfxCapstanIsActive(afxCapstan caps)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
     return (caps->flags & afxCapstanFlag_ACTIVE) == afxCapstanFlag_ACTIVE;
 }
 
-_AMXINL afxBool AfxCapstanHasTerminated(afxCapstan caps)
+_ASXINL afxBool AfxCapstanHasTerminated(afxCapstan caps)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
     return (caps->flags & afxCapstanFlag_KILL_ONCE_COMPLETE) && caps->timing.currClock >= caps->timing.killClock;
 }
 
-_AMXINL afxBool AfxCapstanHasEffect(afxCapstan caps)
+_ASXINL afxBool AfxCapstanHasEffect(afxCapstan caps)
 {
     return (caps->flags & afxCapstanFlag_ACTIVE) && caps->currWeight != 0.0;
 }
 
-_AMXINL void AfxEnableCapstanTerminationCheck(afxBool checkComplete, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxEnableCapstanTerminationCheck(afxBool checkComplete, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -86,7 +86,7 @@ _AMXINL void AfxEnableCapstanTerminationCheck(afxBool checkComplete, afxUnit cnt
     }
 }
 
-_AMXINL void AfxEnableCapstanIterationClamping(afxBool clamp, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxEnableCapstanIterationClamping(afxBool clamp, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -103,7 +103,7 @@ _AMXINL void AfxEnableCapstanIterationClamping(afxBool clamp, afxUnit cnt, afxCa
     }
 }
 
-_AMXINL void AfxEnableCapstanEaseIn(afxBool easeIn, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxEnableCapstanEaseIn(afxBool easeIn, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -120,7 +120,7 @@ _AMXINL void AfxEnableCapstanEaseIn(afxBool easeIn, afxUnit cnt, afxCapstan caps
     }
 }
 
-_AMXINL void AfxEnableCapstanEaseOut(afxBool easeOut, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxEnableCapstanEaseOut(afxBool easeOut, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -137,7 +137,7 @@ _AMXINL void AfxEnableCapstanEaseOut(afxBool easeOut, afxUnit cnt, afxCapstan ca
     }
 }
 
-_AMXINL void AfxActivateCapstan(afxBool active, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxActivateCapstan(afxBool active, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -159,7 +159,7 @@ _AMXINL void AfxActivateCapstan(afxBool active, afxUnit cnt, afxCapstan capstans
     }
 }
 
-_AMXINL void AfxGetCapstanTiming(afxCapstan caps, afxCapstanTiming* timing)
+_ASXINL void AfxGetCapstanTiming(afxCapstan caps, afxCapstanTiming* timing)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -167,7 +167,7 @@ _AMXINL void AfxGetCapstanTiming(afxCapstan caps, afxCapstanTiming* timing)
     *timing = caps->timing;
 }
 
-_AMXINL void AfxRebaseCapstanClocks(afxReal currClock, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxRebaseCapstanClocks(afxReal currClock, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -185,7 +185,7 @@ _AMXINL void AfxRebaseCapstanClocks(afxReal currClock, afxUnit cnt, afxCapstan c
     }
 }
 
-_AMXINL void AfxResetCapstanLocalClock(afxReal localClock, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxResetCapstanLocalClock(afxReal localClock, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -199,7 +199,7 @@ _AMXINL void AfxResetCapstanLocalClock(afxReal localClock, afxUnit cnt, afxCapst
     }
 }
 
-_AMXINL void AfxSelectCapstanIteration(afxInt currIterIdx, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxSelectCapstanIteration(afxInt currIterIdx, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -212,7 +212,7 @@ _AMXINL void AfxSelectCapstanIteration(afxInt currIterIdx, afxUnit cnt, afxCapst
     }
 }
 
-_AMXINL void AfxResetCapstanIterations(afxInt iterCnt, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxResetCapstanIterations(afxInt iterCnt, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -225,7 +225,7 @@ _AMXINL void AfxResetCapstanIterations(afxInt iterCnt, afxUnit cnt, afxCapstan c
     }
 }
 
-_AMXINL void AfxSetCapstanSpeed(afxReal speed, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxSetCapstanSpeed(afxReal speed, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -238,7 +238,7 @@ _AMXINL void AfxSetCapstanSpeed(afxReal speed, afxUnit cnt, afxCapstan capstans[
     }
 }
 
-_AMXINL void AfxSetCapstanWeight(afxReal weight, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxSetCapstanWeight(afxReal weight, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -253,7 +253,7 @@ _AMXINL void AfxSetCapstanWeight(afxReal weight, afxUnit cnt, afxCapstan capstan
     }
 }
 
-_AMXINL void AfxUpdateCapstanClock(afxReal time, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxUpdateCapstanClock(afxReal time, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -268,14 +268,14 @@ _AMXINL void AfxUpdateCapstanClock(afxReal time, afxUnit cnt, afxCapstan capstan
     }
 }
 
-_AMXINL afxBool AfxCapstanIsUnused(afxCapstan caps)
+_ASXINL afxBool AfxCapstanIsUnused(afxCapstan caps)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
     return 0 == AfxGetRefCount(caps); //AfxIsChainEmpty(&caps->puppets);
 }
 
-_AMXINL void AfxScheduleCapstanTermination(afxReal atSecs, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxScheduleCapstanTermination(afxReal atSecs, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -289,7 +289,7 @@ _AMXINL void AfxScheduleCapstanTermination(afxReal atSecs, afxUnit cnt, afxCapst
     }
 }
 
-_AMXINL void AfxQueryCapstanState(afxCapstan caps, afxCapstanState* state)
+_ASXINL void AfxQueryCapstanState(afxCapstan caps, afxCapstanState* state)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -357,7 +357,7 @@ _AMXINL void AfxQueryCapstanState(afxCapstan caps, afxCapstanState* state)
     }
 }
 
-_AMXINL afxReal AfxCapstanEaseIn(afxCapstan caps, afxReal Duration, afxBool fromCurrent)
+_ASXINL afxReal AfxCapstanEaseIn(afxCapstan caps, afxReal Duration, afxBool fromCurrent)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -370,7 +370,7 @@ _AMXINL afxReal AfxCapstanEaseIn(afxCapstan caps, afxReal Duration, afxBool from
     return fromCurrenta;
 }
 
-_AMXINL afxReal AfxCapstanEaseOut(afxCapstan caps, afxReal duration)
+_ASXINL afxReal AfxCapstanEaseOut(afxCapstan caps, afxReal duration)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -385,7 +385,7 @@ _AMXINL afxReal AfxCapstanEaseOut(afxCapstan caps, afxReal duration)
 
 // Modulus local clock and dependents
 
-_AMXINL void _AfxCapstanModulusLocalClock(afxCapstan caps)
+_ASXINL void _AfxCapstanModulusLocalClock(afxCapstan caps)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -417,7 +417,7 @@ _AMXINL void _AfxCapstanModulusLocalClock(afxCapstan caps)
     }
 }
 
-_AMXINL void AfxSetCapstanTargetState(afxCapstan caps, afxReal currGlobalTime, afxReal targetGlobalTime, afxReal localTime, afxInt loopIndex)
+_ASXINL void AfxSetCapstanTargetState(afxCapstan caps, afxReal currGlobalTime, afxReal targetGlobalTime, afxReal localTime, afxInt loopIndex)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -429,7 +429,7 @@ _AMXINL void AfxSetCapstanTargetState(afxCapstan caps, afxReal currGlobalTime, a
     _AfxCapstanModulusLocalClock(caps);
 }
 
-_AMXINL afxReal AfxQueryCapstanLocalClock(afxCapstan caps, afxReal* clamped)
+_ASXINL afxReal AfxQueryCapstanLocalClock(afxCapstan caps, afxReal* clamped)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -481,12 +481,12 @@ _AMXINL afxReal AfxQueryCapstanLocalClock(afxCapstan caps, afxReal* clamped)
     return localClock;
 }
 
-_AMXINL void _PackEaseCurve(afxUnit *result, afxReal Af, afxReal Bf, afxReal Cf, afxReal Df)
+_ASXINL void _PackEaseCurve(afxUnit *result, afxReal Af, afxReal Bf, afxReal Cf, afxReal Df)
 {
     *result = ((afxInt)(Af * 255.0)) | ((((afxInt)(Bf * 255.0)) | ((((afxInt)(Cf * 255.0)) | ((afxInt)((afxInt)(Df * 255.0)) << 8)) << 8)) << 8);
 }
 
-_AMXINL void AfxSetCapstanEaseInCurve(afxCapstan caps, afxReal StartSeconds, afxReal EndSeconds, afxReal StartValue, afxReal StartTangent, afxReal EndTangent, afxReal EndValue)
+_ASXINL void AfxSetCapstanEaseInCurve(afxCapstan caps, afxReal StartSeconds, afxReal EndSeconds, afxReal StartValue, afxReal StartTangent, afxReal EndTangent, afxReal EndValue)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -495,7 +495,7 @@ _AMXINL void AfxSetCapstanEaseInCurve(afxCapstan caps, afxReal StartSeconds, afx
     _PackEaseCurve(&caps->easeInValues, StartValue, StartTangent, EndTangent, EndValue);
 }
 
-_AMXINL void AfxSetCapstanEaseOutCurve(afxCapstan caps, afxReal StartSeconds, afxReal EndSeconds, afxReal StartValue, afxReal StartTangent, afxReal EndTangent, afxReal EndValue)
+_ASXINL void AfxSetCapstanEaseOutCurve(afxCapstan caps, afxReal StartSeconds, afxReal EndSeconds, afxReal StartValue, afxReal StartTangent, afxReal EndTangent, afxReal EndValue)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -504,7 +504,7 @@ _AMXINL void AfxSetCapstanEaseOutCurve(afxCapstan caps, afxReal StartSeconds, af
     _PackEaseCurve(&caps->easeOutValues, StartValue, StartTangent, EndTangent, EndValue);
 }
 
-_AMXINL afxReal _ComputeEaseCurve(afxReal *Bezier, afxReal StartClock, afxReal CurrentClock, afxReal EndClock)
+_ASXINL afxReal _ComputeEaseCurve(afxReal *Bezier, afxReal StartClock, afxReal CurrentClock, afxReal EndClock)
 {
     afxReal v5; // st7
 
@@ -534,7 +534,7 @@ LABEL_3:
     return ((1.0 - v5) * Bezier[1] + v5 * Bezier[2]) * (1.0 - v5) * v5 * 3.0 + v5 * Bezier[3] * v5 * v5 + (1.0 - v5) * Bezier[0] * (1.0 - v5) * (1.0 - v5);
 }
 
-_AMXINL void _UnpackEaseCurve(afxUnit32 value, afxV4d result)
+_ASXINL void _UnpackEaseCurve(afxUnit32 value, afxV4d result)
 {
     result[0] = (afxReal)(afxUnit8)value * 0.0039215689;
     result[1] = (afxReal)((afxUnit16)value >> 8) * 0.0039215689;
@@ -542,7 +542,7 @@ _AMXINL void _UnpackEaseCurve(afxUnit32 value, afxV4d result)
     result[3] = (afxReal)(value >> 24) * 0.0039215689;
 }
 
-_AMXINL afxReal AfxGetCapstanEaseCurveMultiplier(afxCapstan caps)
+_ASXINL afxReal AfxGetCapstanEaseCurveMultiplier(afxCapstan caps)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -584,7 +584,7 @@ _AMXINL afxReal AfxGetCapstanEaseCurveMultiplier(afxCapstan caps)
     return result;
 }
 
-_AMX afxError _AmxMotoDtorCb(afxCapstan caps)
+_ASX afxError _AsxMotoDtorCb(afxCapstan caps)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -594,7 +594,7 @@ _AMX afxError _AmxMotoDtorCb(afxCapstan caps)
     return err;
 }
 
-_AMX afxError _AmxMotoCtorCb(afxCapstan caps, void** args, afxUnit invokeNo)
+_ASX afxError _AsxMotoCtorCb(afxCapstan caps, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
@@ -623,19 +623,19 @@ _AMX afxError _AmxMotoCtorCb(afxCapstan caps, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AMX afxClassConfig const _AMX_MOTO_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_MOTO_CLASS_CONFIG =
 {
     .fcc = afxFcc_MOTO,
     .name = "Capstan",
     .desc = "Locomotion Capstan",
     .fixedSiz = sizeof(AFX_OBJECT(afxCapstan)),
-    .ctor = (void*)_AmxMotoCtorCb,
-    .dtor = (void*)_AmxMotoDtorCb
+    .ctor = (void*)_AsxMotoCtorCb,
+    .dtor = (void*)_AsxMotoDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxBool AfxReleaseTerminatedCapstans(afxUnit cnt, afxCapstan capstans[])
+_ASX afxBool AfxReleaseTerminatedCapstans(afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(capstans);
@@ -657,7 +657,7 @@ _AMX afxBool AfxReleaseTerminatedCapstans(afxUnit cnt, afxCapstan capstans[])
     return rslt;
 }
 
-_AMX afxBool AfxReleaseUnusedCapstans(afxUnit cnt, afxCapstan capstans[])
+_ASX afxBool AfxReleaseUnusedCapstans(afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(capstans);
@@ -679,7 +679,7 @@ _AMX afxBool AfxReleaseUnusedCapstans(afxUnit cnt, afxCapstan capstans[])
     return rslt;
 }
 
-_AMX afxBool AfxReleaseOnceUnusedCapstans(afxUnit cnt, afxCapstan capstans[])
+_ASX afxBool AfxReleaseOnceUnusedCapstans(afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(capstans);
@@ -698,13 +698,13 @@ _AMX afxBool AfxReleaseOnceUnusedCapstans(afxUnit cnt, afxCapstan capstans[])
     return AfxReleaseUnusedCapstans(cnt, capstans);
 }
 
-_AMX afxError AfxAcquireCapstans(afxSimulation sim, afxCapstanConfig const* cfg, afxUnit cnt, afxCapstan capstans[])
+_ASX afxError AfxAcquireCapstans(afxSimulation sim, afxCapstanConfig const* cfg, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     AFX_ASSERT(cfg);
 
-    afxClass *cls = _AmxGetCapstanClass(sim);
+    afxClass *cls = _AsxGetCapstanClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_MOTO);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)capstans, (void const*[]) { sim, cfg }))
@@ -717,13 +717,13 @@ _AMX afxError AfxAcquireCapstans(afxSimulation sim, afxCapstanConfig const* cfg,
     return err;
 }
 
-_AMX afxUnit AfxRecenterAllCapstanClocks(afxSimulation sim, afxReal dCurrentClock)
+_ASX afxUnit AfxRecenterAllCapstanClocks(afxSimulation sim, afxReal dCurrentClock)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);    
     afxUnit i = 0;
     afxCapstan caps;
-    afxClass *cls = _AmxGetCapstanClass(sim);
+    afxClass *cls = _AsxGetCapstanClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_MOTO);    
     while (!AfxEnumerateObjects(cls, i++, 1, (afxObject*)&caps))
     {

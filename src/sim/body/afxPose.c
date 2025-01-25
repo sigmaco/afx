@@ -15,20 +15,20 @@
  */
 
 
-#define _AMX_POSE_C
-#define _AMX_SKELETON_C
-#define _AMX_MODEL_C
-#define _AMX_ANIMATION_C
-#include "../impl/amxImplementation.h"
+#define _ASX_POSE_C
+#define _ASX_SKELETON_C
+#define _ASX_MODEL_C
+#define _ASX_ANIMATION_C
+#include "../impl/asxImplementation.h"
 
-_AMX afxUnit AfxGetPoseCapacity(afxPose const pose)
+_ASX afxUnit AfxGetPoseCapacity(afxPose const pose)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pose);
     return pose->artCnt;
 }
 
-_AMX afxTransform* AfxGetPoseTransform(afxPose const pose, afxUnit artIdx)
+_ASX afxTransform* AfxGetPoseTransform(afxPose const pose, afxUnit artIdx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pose);
@@ -36,7 +36,7 @@ _AMX afxTransform* AfxGetPoseTransform(afxPose const pose, afxUnit artIdx)
     return &pose->arts[artIdx].xform;
 }
 
-_AMX void AfxCopyPose(afxPose pose, afxPose const from)
+_ASX void AfxCopyPose(afxPose pose, afxPose const from)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pose);
@@ -51,7 +51,7 @@ _AMX void AfxCopyPose(afxPose pose, afxPose const from)
     }
 }
 
-_AMX void AfxApplyRootMotionVectorsToPose(afxPose pose, afxV3d const translation, afxV3d const rotation)
+_ASX void AfxApplyRootMotionVectorsToPose(afxPose pose, afxV3d const translation, afxV3d const rotation)
 {
     afxTransform* t = AfxGetPoseTransform(pose, 0);
     AfxV3dAdd(t->position, t->position, translation);
@@ -61,7 +61,7 @@ _AMX void AfxApplyRootMotionVectorsToPose(afxPose pose, afxV3d const translation
     AfxQuatMultiply(t->orientation, rot, t->orientation);
 }
 
-_AMX void AfxAccumulateLocalTransform(afxPose pose, int LocalAttitudeBoneIndex, int SkeletonBoneIndex, float Weight, const afxModel ReferenceSkeleton, afxQuatBlend Mode, const afxTransform *Transform)
+_ASX void AfxAccumulateLocalTransform(afxPose pose, int LocalAttitudeBoneIndex, int SkeletonBoneIndex, float Weight, const afxModel ReferenceSkeleton, afxQuatBlend Mode, const afxTransform *Transform)
 {
     afxError err = NIL;
     double v10; // st7
@@ -177,7 +177,7 @@ LABEL_13:
     }
 }
 
-_AMX afxUnit AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, akxTrackMask* modelMask, afxUnit cnt, afxBody bodies[])
+_ASX afxUnit AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, akxTrackMask* modelMask, afxUnit cnt, afxBody bodies[])
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_POSE, 1, &pose);
@@ -186,7 +186,7 @@ _AMX afxUnit AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal 
 
     afxSimulation sim = AfxGetProvider(pose);
 
-    amxTrackTarget targets[256];
+    asxTrackTarget targets[256];
 
     for (afxUnit mdlIdx = 0; mdlIdx < cnt; mdlIdx++)
     {
@@ -195,7 +195,7 @@ _AMX afxUnit AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal 
         if (!bod) continue;
         AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
 
-        targets[mdlIdx] = (amxTrackTarget) { 0 };
+        targets[mdlIdx] = (asxTrackTarget) { 0 };
         targets[mdlIdx].ModelMask = modelMask;
         targets[mdlIdx].OnInstance = bod;
     }
@@ -214,8 +214,8 @@ _AMX afxUnit AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal 
     {
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
 
-        amxMotive motives;
-        if (AfxAcquireObjects((afxClass*)_AmxGetMotiveClass(sim), cnt, (afxObject*)motives, (void const*[]) { sim, pose, moto, &targets[0] }))
+        asxMotive motives;
+        if (AfxAcquireObjects((afxClass*)_AsxGetMotiveClass(sim), cnt, (afxObject*)motives, (void const*[]) { sim, pose, moto, &targets[0] }))
         {
             AfxThrowError();
         }
@@ -224,7 +224,7 @@ _AMX afxUnit AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal 
     return rslt;
 }
 
-_AMX afxError _AmxPoseDtorCb(afxPose pose)
+_ASX afxError _AsxPoseDtorCb(afxPose pose)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_POSE, 1, &pose);
@@ -235,7 +235,7 @@ _AMX afxError _AmxPoseDtorCb(afxPose pose)
     return err;
 }
 
-_AMX afxError _AmxPoseCtorCb(afxPose pose, void** args, afxUnit invokeNo)
+_ASX afxError _AsxPoseCtorCb(afxPose pose, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_POSE, 1, &pose);
@@ -254,24 +254,24 @@ _AMX afxError _AmxPoseCtorCb(afxPose pose, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AMX afxClassConfig const _AMX_POSE_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_POSE_CLASS_CONFIG =
 {
     .fcc = afxFcc_POSE,
     .name = "Pose",
     .desc = "Skeletal Pose",
     .fixedSiz = sizeof(AFX_OBJECT(afxPose)),
-    .ctor = (void*)_AmxPoseCtorCb,
-    .dtor = (void*)_AmxPoseDtorCb
+    .ctor = (void*)_AsxPoseCtorCb,
+    .dtor = (void*)_AsxPoseDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AfxAcquirePoses(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxPose pose[])
+_ASX afxError AfxAcquirePoses(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxPose pose[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    afxClass* cls = (afxClass*)_AmxGetPoseClass(sim);
+    afxClass* cls = (afxClass*)_AsxGetPoseClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_POSE);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)pose, (void const*[]) { sim, artCnt }))

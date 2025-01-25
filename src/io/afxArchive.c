@@ -26,7 +26,7 @@
 #define _AFX_CORE_C
 #define _AFX_FILE_C
 #define _AFX_ARCHIVE_C
-#include "../dev/afxIoImplKit.h"
+#include "../impl/afxIoImplKit.h"
 
 
 typedef struct zip zip;
