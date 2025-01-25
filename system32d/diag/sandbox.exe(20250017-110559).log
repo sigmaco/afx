@@ -1,0 +1,910 @@
+Booting...
+Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree.dll>Memory page Size: 4096HW threading: 2Loading... <e2draw.dll>Loading... <e2combo.dll>Loading... <e2sound.dll>Loading... <e2mmux.dll>Loading... <//./z////eaxzal1.dll>Installing... <eaxzal1>Loading... <//./c/openal32.dll>	<//./eaxzal1/>("")  0.0.0 Loading... <//./z////galileo.dll>Installing... <galileo>	<//./catalyst/>("")  0.0.0 Loading... <//./z////tarzgl4.dll>Installing... <tarzgl4>Loading... <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL.c:1746
+GL: INVAL_PARAMzglInterop_WGL.c:1761
+GL: INVAL_PARAMzglInterop_WGL.c:1772
+GL: INVAL_PARAMzglInterop_WGL.c:1804
+GL: INVAL_PARAMzglInterop_WGL.c:1835
+GL: INVAL_PARAMzglInterop_WGL.c:1837
+GL: INVAL_PARAMzglInterop_WGL.c:1994
+GL: INVAL_PARAMzglInterop_WGL.c:1997
+GL: INVAL_PARAMzglInterop_WGL.c:2002
+GL: INVAL_PARAMzglInterop_WGL.c:2007
+GL: INVAL_PARAMLoading... <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL.c:1746
+GL: INVAL_PARAMzglInterop_WGL.c:1761
+GL: INVAL_PARAMzglInterop_WGL.c:1772
+GL: INVAL_PARAMzglInterop_WGL.c:1804
+GL: INVAL_PARAMzglInterop_WGL.c:1835
+GL: INVAL_PARAMzglInterop_WGL.c:1837
+GL: INVAL_PARAMzglInterop_WGL.c:1994
+GL: INVAL_PARAMzglInterop_WGL.c:1997
+GL: INVAL_PARAMzglInterop_WGL.c:2002
+GL: INVAL_PARAMzglInterop_WGL.c:2007
+GL: INVAL_PARAM	<//./tarzgl3/>("")  0.0.0 	<//./tarzgl4/>("")  0.0.0 Loading... <//./z////winsh4d.dll>Installing... <winsh4d>Entering the Thread Execution Environment 7752
+Running... 04a7b5f0#7860 --- null:195Entering the Thread Execution Environment 7860
+Starting 7860 on thread execution unit #2...Entering the Thread Execution Environment 7752
+afxClass.c:912
+afxClass.c:912
+(cfg->fcc)
+    SuccessafxClass.c:935
+afxClass.c:935
+(cfg->name && cfg->name[0])
+    SuccessEntering the Thread Execution Environment 7860
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 7752
+Running... 04a7b790#3372 --- null:195Entering the Thread Execution Environment 3372
+Starting 3372 on thread execution unit #3...Entering the Thread Execution Environment 7752
+Running... 05825750#8612 --- null:418Mounting... <//./d/>('E:\qwadro\repo\bangitk\tmp'),7Entering the Thread Execution Environment 3372
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 8612
+Starting 8612 on thread execution unit #4...Sound Execution Unit .Loading... <//./c/openal32.dll>Entering the Thread Execution Environment 7752
+afxClass.c:935
+afxClass.c:935
+(cfg->name && cfg->name[0])
+    SuccessafxClass.c:935
+afxClass.c:935
+(cfg->name && cfg->name[0])
+    SuccessEntering the Thread Execution Environment 6108
+Starting 6108 on thread execution unit #5...Entering the Thread Execution Environment 7752
+Running... 058258f0#6108 --- null:217Entering the Thread Execution Environment 7860
+GPU buffer 02fdafa0 ready. 34962, 2, 4Entering the Thread Execution Environment 7752
+../data/pipeline/test/test.vshTag '/' not handled.../data/pipeline/test/test.fshTag '/' not handled.Entering the Thread Execution Environment 7860
+GPU buffer 02fdb080 ready. 34963, 3, 8Entering the Thread Execution Environment 6108
+Sim Execution Unit .Entering the Thread Execution Environment 7752
+Tag 'id' not handled.Tag 'depthWriteEnabled' not handled.../data/pipeline/body/rigidBody.vshTag '/' not handled.../data/pipeline/body/body.fshTag '/' not handled.Tag 'id' not handled.Tag 'depthWriteEnabled' not handled.Tag 'specialization' not handled.../data/pipeline/body/skinnedBody.vshTag '/' not handled.../data/pipeline/body/body.fshTag '/' not handled.Tag 'id' not handled.../data/pipeline/testLighting/testLightingBlinn.vshTag '/' not handled.../data/pipeline/testLighting/testLightingBlinn.fshTag '/' not handled.Tag 'id' not handled.../data/pipeline/tutCamUtil/tutCamUtilRigid.vshTag '/' not handled.../data/pipeline/tutCamUtil/tutCamUtil.fshTag '/' not handled.Tag 'id' not handled.../data/pipeline/tutCamUtil/tutCamUtilSkinned.vshTag '/' not handled.../data/pipeline/tutCamUtil/tutCamUtil.fshTag '/' not handled.Tag 'id' not handled.../data/pipeline/lighting/lighting.vshTag '/' not handled.../data/pipeline/lighting/lighting.fshTag '/' not handled.Installing watcher <05ad7800> for 05841ef0...
+meshes[1]+-- msh <> 05ad35d0|   +-- topology : 3|   +-- triCnt : 20000|   +-- vtxCnt : 10201|   +-- attributes[4]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <tan>|   |   +-- <uv>|   +-- materials[1]|   |   +-- <>|   +-- sections[1]|   |   +-- [0, 20000] #0|   +-- biases[1]|   |   +-- <>|   +-- morphes[1]|   |   +-- <>Skeletal Animable model <> assembled at 05c01820. 1 mesh rigs for 33 joints.Listing 33 joints..:      0 <> 4294967295      1 <normal> 4294967295      2 < Pelvis> 4294967295      3 < Spine 1> 4294967295      4 < Spine 2> 4294967295      5 < Neck> 4294967295      6 < Head> 4294967295      7 <Jaw> 4294967295      8 <L Brow> 4294967295      9 <R Brow> 4294967295     10 <Bip01 L Clavicle> 4294967295     11 < L UpperArm> 4294967295     12 < L ForeArm> 4294967295     13 < L Hand> 4294967295     14 < L Finger> 4294967295     15 <L Finger01> 4294967295     16 <Bip01 R Clavicle> 4294967295     17 < R UpperArm> 4294967295     18 < R ForeArm> 4294967295     19 < R Hand> 4294967295     20 < R Finger> 4294967295     21 <R Finger01> 4294967295     22 <L breast> 4294967295     23 <R breast> 4294967295     24 <Belly> 4294967295     25 < L Thigh> 4294967295     26 < L Calf> 4294967295     27 < L Foot> 4294967295     28 < L Toe0> 4294967295     29 < R Thigh> 4294967295     30 < R Calf> 4294967295     31 < R Foot> 4294967295     32 < R Toe0> 4294967295
+meshes[1]+-- msh <> 05c07d60|   +-- topology : 3|   +-- triCnt : 8247|   +-- vtxCnt : 6084|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <uv>|   |   +-- <nrm>|   +-- materials[8]|   |   +-- <yuniwii>|   |   +-- <sak>|   |   +-- <gombolori>|   |   +-- <rambut>|   |   +-- <yuniwii>|   |   +-- <yuniwii>|   |   +-- <yuniwii>|   |   +-- <plus>|   +-- sections[8]|   |   +-- [0, 1030] #0|   |   +-- [1030, 1030] #0|   |   +-- [2060, 1030] #0|   |   +-- [3090, 1030] #0|   |   +-- [4120, 1030] #0|   |   +-- [5150, 1030] #0|   |   +-- [6180, 1030] #0|   |   +-- [7210, 1030] #0|   +-- biases[21]|   |   +-- <normal>|   |   +-- < Pelvis>|   |   +-- < Spine 1>|   |   +-- < Spine 2>|   |   +-- < Neck>|   |   +-- <R Brow>|   |   +-- <Bip01 L Clavicle>|   |   +-- < L UpperArm>|   |   +-- < L ForeArm>|   |   +-- < L Hand>|   |   +-- < L Finger>|   |   +-- <Bip01 R Clavicle>|   |   +-- < R UpperArm>|   |   +-- < R ForeArm>|   |   +-- < R Finger>|   |   +-- <Belly>|   |   +-- < L Thigh>|   |   +-- < L Calf>|   |   +-- < L Toe0>|   |   +-- < R Thigh>|   |   +-- < R Calf>|   +-- morphes[1]|   |   +-- <>+-- rig #0|   +-- msh <> 05c07d60|   +-- biases-from/to-joints|   |   +-- <normal> @ 1#'normal'|   |   +-- < Pelvis> @ 2#' Pelvis'|   |   +-- < Spine 1> @ 3#' Spine 1'|   |   +-- < Spine 2> @ 4#' Spine 2'|   |   +-- < Neck> @ 5#' Neck'|   |   +-- <R Brow> @ 9#'R Brow'|   |   +-- <Bip01 L Clavicle> @ 10#'Bip01 L Clavicle'|   |   +-- < L UpperArm> @ 11#' L UpperArm'|   |   +-- < L ForeArm> @ 12#' L ForeArm'|   |   +-- < L Hand> @ 13#' L Hand'|   |   +-- < L Finger> @ 14#' L Finger'|   |   +-- <Bip01 R Clavicle> @ 16#'Bip01 R Clavicle'|   |   +-- < R UpperArm> @ 17#' R UpperArm'|   |   +-- < R ForeArm> @ 18#' R ForeArm'|   |   +-- < R Finger> @ 20#' R Finger'|   |   +-- <Belly> @ 24#'Belly'|   |   +-- < L Thigh> @ 25#' L Thigh'|   |   +-- < L Calf> @ 26#' L Calf'|   |   +-- < L Toe0> @ 28#' L Toe0'|   |   +-- < R Thigh> @ 29#' R Thigh'|   |   +-- < R Calf> @ 30#' R Calf'Skeletal Animable model <30> assembled at 05c033d0. 1 mesh rigs for 33 joints.Listing 33 joints..:      0 <> 4294967295      1 <normal> 4294967295      2 < Pelvis> 4294967295      3 < Spine 1> 4294967295      4 < Spine 2> 4294967295      5 < Neck> 4294967295      6 < Head> 4294967295      7 <Jaw> 4294967295      8 <L Brow> 4294967295      9 <R Brow> 4294967295     10 <Bip01 L Clavicle> 4294967295     11 < L UpperArm> 4294967295     12 < L ForeArm> 4294967295     13 < L Hand> 4294967295     14 < L Finger> 4294967295     15 <L Finger01> 4294967295     16 <Bip01 R Clavicle> 4294967295     17 < R UpperArm> 4294967295     18 < R ForeArm> 4294967295     19 < R Hand> 4294967295     20 < R Finger> 4294967295     21 <R Finger01> 4294967295     22 <L breast> 4294967295     23 <R breast> 4294967295     24 <Belly> 4294967295     25 < L Thigh> 4294967295     26 < L Calf> 4294967295     27 < L Foot> 4294967295     28 < L Toe0> 4294967295     29 < R Thigh> 4294967295     30 < R Calf> 4294967295     31 < R Foot> 4294967295     32 < R Toe0> 4294967295
+meshes[1]+-- msh <> 05c15370|   +-- topology : 3|   +-- triCnt : 8247|   +-- vtxCnt : 6084|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <uv>|   |   +-- <nrm>|   +-- materials[8]|   |   +-- <yuniwii>|   |   +-- <sak>|   |   +-- <gombolori>|   |   +-- <rambut>|   |   +-- <yuniwii>|   |   +-- <yuniwii>|   |   +-- <yuniwii>|   |   +-- <plus>|   +-- sections[8]|   |   +-- [0, 1030] #0|   |   +-- [1030, 1030] #0|   |   +-- [2060, 1030] #0|   |   +-- [3090, 1030] #0|   |   +-- [4120, 1030] #0|   |   +-- [5150, 1030] #0|   |   +-- [6180, 1030] #0|   |   +-- [7210, 1030] #0|   +-- biases[21]|   |   +-- <normal>|   |   +-- < Pelvis>|   |   +-- < Spine 1>|   |   +-- < Spine 2>|   |   +-- < Neck>|   |   +-- <R Brow>|   |   +-- <Bip01 L Clavicle>|   |   +-- < L UpperArm>|   |   +-- < L ForeArm>|   |   +-- < L Hand>|   |   +-- < L Finger>|   |   +-- <Bip01 R Clavicle>|   |   +-- < R UpperArm>|   |   +-- < R ForeArm>|   |   +-- < R Finger>|   |   +-- <Belly>|   |   +-- < L Thigh>|   |   +-- < L Calf>|   |   +-- < L Toe0>|   |   +-- < R Thigh>|   |   +-- < R Calf>|   +-- morphes[1]|   |   +-- <>+-- rig #0|   +-- msh <> 05c15370|   +-- biases-from/to-joints|   |   +-- <normal> @ 1#'normal'|   |   +-- < Pelvis> @ 2#' Pelvis'|   |   +-- < Spine 1> @ 3#' Spine 1'|   |   +-- < Spine 2> @ 4#' Spine 2'|   |   +-- < Neck> @ 5#' Neck'|   |   +-- <R Brow> @ 9#'R Brow'|   |   +-- <Bip01 L Clavicle> @ 10#'Bip01 L Clavicle'|   |   +-- < L UpperArm> @ 11#' L UpperArm'|   |   +-- < L ForeArm> @ 12#' L ForeArm'|   |   +-- < L Hand> @ 13#' L Hand'|   |   +-- < L Finger> @ 14#' L Finger'|   |   +-- <Bip01 R Clavicle> @ 16#'Bip01 R Clavicle'|   |   +-- < R UpperArm> @ 17#' R UpperArm'|   |   +-- < R ForeArm> @ 18#' R ForeArm'|   |   +-- < R Finger> @ 20#' R Finger'|   |   +-- <Belly> @ 24#'Belly'|   |   +-- < L Thigh> @ 25#' L Thigh'|   |   +-- < L Calf> @ 26#' L Calf'|   |   +-- < L Toe0> @ 28#' L Toe0'|   |   +-- < R Thigh> @ 29#' R Thigh'|   |   +-- < R Calf> @ 30#' R Calf'Skeletal Animable model <Bone_main> assembled at 05c03e10. 4 mesh rigs for 10 joints.Listing 10 joints..:      0 <Bone_main> 4294967295      1 <Mill> 4294967295      2 <Bone_hitpointbar> 4294967295      3 <Bone_Upper_mill> 4294967295      4 <Upper Mill> 4294967295      5 <Bone_Flag_Civ> 4294967295      6 <Bone_Mill_Blades> 4294967295      7 <Mill Blades> 4294967295      8 <Bone_Mill_Wheel> 4294967295      9 <Mill Wheel> 4294967295
+meshes[1]+-- msh <Mill> 05828530|   +-- topology : 3|   +-- triCnt : 139|   +-- vtxCnt : 524|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <uv>|   +-- materials[1]|   |   +-- <West Mill Age3>|   +-- sections[1]|   |   +-- [0, 139] #0|   +-- biases[1]|   |   +-- <Mill>|   +-- morphes[1]|   |   +-- <>+-- rig #0|   +-- msh <Mill> 05828530|   +-- biases-from/to-joints|   |   +-- <Mill> @ 1#'Mill'
+meshes[1]+-- msh <Upper Mill> 058286a0|   +-- topology : 3|   +-- triCnt : 126|   +-- vtxCnt : 472|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <uv>|   +-- materials[2]|   |   +-- <West Mill Age3>|   |   +-- <West Mill Age3 Pixelxform1>|   +-- sections[2]|   |   +-- [0, 119] #0|   |   +-- [119, 7] #1|   +-- biases[1]|   |   +-- <Upper Mill>|   +-- morphes[1]|   |   +-- <>+-- rig #1|   +-- msh <Upper Mill> 058286a0|   +-- biases-from/to-joints|   |   +-- <Upper Mill> @ 4#'Upper Mill'
+meshes[1]+-- msh <Mill Blades> 05828800|   +-- topology : 3|   +-- triCnt : 70|   +-- vtxCnt : 278|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <uv>|   +-- materials[1]|   |   +-- <West Mill Age3 alphatest>|   +-- sections[1]|   |   +-- [0, 70] #0|   +-- biases[1]|   |   +-- <Mill Blades>|   +-- morphes[1]|   |   +-- <>+-- rig #2|   +-- msh <Mill Blades> 05828800|   +-- biases-from/to-joints|   |   +-- <Mill Blades> @ 7#'Mill Blades'
+meshes[1]+-- msh <Mill Wheel> 05828970|   +-- topology : 3|   +-- triCnt : 20|   +-- vtxCnt : 58|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <uv>|   +-- materials[2]|   |   +-- <West Mill Age3>|   |   +-- <West Mill Age3 Pixelxform1>|   +-- sections[1]|   |   +-- [0, 20] #0|   +-- biases[1]|   |   +-- <Mill Wheel>|   +-- morphes[1]|   |   +-- <>+-- rig #3|   +-- msh <Mill Wheel> 05828970|   +-- biases-from/to-joints|   |   +-- <Mill Wheel> @ 9#'Mill Wheel'Skeletal Animable model <Bone_main> assembled at 05c03e10. 4 mesh rigs for 10 joints.Listing 10 joints..:      0 <Bone_main> 4294967295      1 <Mill> 4294967295      2 <Bone_hitpointbar> 4294967295      3 <Bone_Upper_mill> 4294967295      4 <Upper Mill> 4294967295      5 <Bone_Flag_Civ> 4294967295      6 <Bone_Mill_Blades> 4294967295      7 <Mill Blades> 4294967295      8 <Bone_Mill_Wheel> 4294967295      9 <Mill Wheel> 4294967295
+meshes[4]+-- msh <> 05828970|   +-- topology : 3|   +-- triCnt : 139|   +-- vtxCnt : 524|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <uv>|   +-- materials[1]|   |   +-- <West Mill Age3>|   +-- sections[1]|   |   +-- [0, 139] #0|   +-- biases[1]|   |   +-- <Mill>|   +-- morphes[1]|   |   +-- <>+-- msh <> 05828800|   +-- topology : 3|   +-- triCnt : 126|   +-- vtxCnt : 472|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <uv>|   +-- materials[2]|   |   +-- <West Mill Age3>|   |   +-- <West Mill Age3 Pixelxform1>|   +-- sections[2]|   |   +-- [0, 63] #0|   |   +-- [63, 63] #0|   +-- biases[1]|   |   +-- <Upper Mill>|   +-- morphes[1]|   |   +-- <>+-- msh <> 058286a0|   +-- topology : 3|   +-- triCnt : 70|   +-- vtxCnt : 278|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <uv>|   +-- materials[1]|   |   +-- <West Mill Age3 alphatest>|   +-- sections[1]|   |   +-- [0, 70] #0|   +-- biases[1]|   |   +-- <Mill Blades>|   +-- morphes[1]|   |   +-- <>+-- msh <> 05828530|   +-- topology : 3|   +-- triCnt : 20|   +-- vtxCnt : 58|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <uv>|   +-- materials[2]|   |   +-- <West Mill Age3>|   |   +-- <West Mill Age3 Pixelxform1>|   +-- sections[1]|   |   +-- [0, 20] #0|   +-- biases[1]|   |   +-- <Mill Wheel>|   +-- morphes[1]|   |   +-- <>+-- rig #0|   +-- msh <> 05828970|   +-- biases-from/to-joints|   |   +-- <Mill> @ 1#'Mill'+-- rig #1|   +-- msh <> 05828800|   +-- biases-from/to-joints|   |   +-- <Upper Mill> @ 4#'Upper Mill'+-- rig #2|   +-- msh <> 058286a0|   +-- biases-from/to-joints|   |   +-- <Mill Blades> @ 7#'Mill Blades'+-- rig #3|   +-- msh <> 05828530|   +-- biases-from/to-joints|   |   +-- <Mill Wheel> @ 9#'Mill Wheel'Motion <Bone_main> assembled. 05bff6d0
+    Listing 6 transform circuits:	0 <Bone_Flag_Civ> cdcdcdcd	1 <Bone_Mill_Blades> cdcdcdcd	2 <Bone_Mill_Wheel> cdcdcdcd	3 <Bone_Upper_mill> cdcdcdcd	4 <Bone_hitpointbar> cdcdcdcd	5 <Bone_main> cdcdcdcdMotion <Bone_main> assembled. 05c1bef0
+    Listing 6 transform circuits:	0 <Bone_Flag_Civ> cdcdcdcd	1 <Bone_Mill_Blades> cdcdcdcd	2 <Bone_Mill_Wheel> cdcdcdcd	3 <Bone_Upper_mill> cdcdcdcd	4 <Bone_hitpointbar> cdcdcdcd	5 <Bone_main> cdcdcdcd
+meshes[1]+-- msh <> 05828ad0|   +-- topology : 3|   +-- triCnt : 800|   +-- vtxCnt : 441|   +-- attributes[3]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <uv>|   +-- materials[1]|   |   +-- <>|   +-- sections[1]|   |   +-- [0, 800] #0|   +-- biases[1]|   |   +-- <>|   +-- morphes[1]|   |   +-- <>Skeletal Animable model <cube> assembled at 05c03f50. 1 mesh rigs for 1 joints.Listing 1 joints..:      0 <> 4294967295+-- rig #0|   +-- msh <> 05828ad0|   +-- biases-from/to-joints|   |   +-- <> @ 0#''Entering the Thread Execution Environment 7860
+GPU buffer 02fdbd20 ready. 34962, 4, 4GPU buffer 02fdbe00 ready. 34963, 5, 8GPU buffer 02fdbed0 ready. 34962, 6, 4Entering the Thread Execution Environment 7752
+avxTransformOps.c:159
+avxTransformOps.c:159
+(range)
+    SuccessEntering the Thread Execution Environment 7860
+GPU buffer 02fdbfb0 ready. 34963, 7, 8GPU buffer 02fdc080 ready. 34962, 8, 4GPU buffer 02fdc160 ready. 34963, 9, 8GPU buffer 05ccaf90 ready. 34962, 10, 4GPU buffer 05ccb060 ready. 34963, 11, 8GPU buffer 05ccb140 ready. 34962, 12, 4GPU buffer 05ccb210 ready. 34963, 13, 8GPU buffer 05ccb2f0 ready. 34962, 14, 4GPU buffer 05ccb3c0 ready. 34963, 15, 8GPU buffer 05ccb4a0 ready. 34962, 16, 4GPU buffer 05ccb570 ready. 34963, 17, 8GPU buffer 02fdb9c0 ready. 35345, 18, 10GPU RO 05a46dd0 ready. de1, 8058, [675,330,1]GPU RO 05a463e0 ready. de1, 8cac, [675,330,1]avxCanvas 05a451a0 hardware-side data instanced.GPU buffer 02fdb660 ready. 35345, 19, 10zglLigature.c:238
+Uniform buffer unit 'sgl_mtl' not found in ligature 05a53c10.avxPipeline 05ac3050 hardware-side data instanced.zglLigature.c:238
+Uniform buffer unit 'sgl_jntMap' not found in ligature 05ac0940.zglLigature.c:238
+Uniform buffer unit 'sgl_mtl' not found in ligature 05ac0940.zglLigature.c:221
+Combined raster/sampler unit 'floorTexture' not found in ligature 05ac0940.avxPipeline 05ac3e20 hardware-side data instanced.avxPipeline 05ab70a0 hardware-side data instanced.GPU buffer 02fdbaa0 ready. 35345, 20, 10zglVertexDecl.c:61
+zglVertexDecl.c:61
+<attr->location>10 + <1>1 is out of capacity <8>8.zglVertexDecl.c:61
+zglVertexDecl.c:61
+<attr->location>11 + <1>1 is out of capacity <8>8.zglVertexDecl.c:61
+zglVertexDecl.c:61
+<attr->location>12 + <1>1 is out of capacity <8>8.zglVertexDecl.c:61
+zglVertexDecl.c:61
+<attr->location>13 + <1>1 is out of capacity <8>8.GPU buffer 02fdb8f0 ready. 36671, 21, 44GPU buffer 02fdb810 ready. 35345, 22, 10Entering the Thread Execution Environment 7752
+avxTransformOps.c:159
+avxTransformOps.c:159
+(range)
+    SuccessEntering the Thread Execution Environment 7860
+GPU buffer 02fdb3e0 ready. 35345, 23, 10GPU RO 05a464c0 ready. de1, 8058, [675,330,1]GPU RO 05a465b0 ready. de1, 8cac, [675,330,1]avxCanvas 05a45230 hardware-side data instanced.GPU buffer 02fdb150 ready. 35345, 24, 10GPU buffer 02fdb590 ready. 35345, 25, 10GPU buffer 02fdb4b0 ready. 36671, 26, 44GPU buffer 02fdb300 ready. 35345, 27, 10GPU RO 05a52600 ready. de1, 8058, [675,330,1]GPU RO 05a526e0 ready. de1, 8cac, [675,330,1]avxCanvas 05a452c0 hardware-side data instanced.Entering the Thread Execution Environment 7752
+avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65536 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65568 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65600 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65632 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65664 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65664 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65696 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65696 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65728 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65760 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65760 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65792 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65792 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65824 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65824 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65536 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65568 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65600 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65632 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65664 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65664 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65696 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65696 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65728 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65760 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65760 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65792 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65792 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65824 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65824 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65856 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65856 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65888 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65920 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65952 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65984 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66016 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66048 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66080 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66112 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66112 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66144 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66144 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66176 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66208 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66208 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66240 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66240 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66272 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66272 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>65856 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65856 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65888 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65920 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65952 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>65984 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66016 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66048 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66080 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66112 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66112 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66144 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66144 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66176 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66208 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66208 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66240 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66240 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66272 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66272 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66304 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66304 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66336 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66368 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66400 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66432 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66464 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66496 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66528 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66560 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66560 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66592 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66592 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66624 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66656 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66656 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66688 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66688 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66720 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66720 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66304 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66304 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66336 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66368 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66400 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66432 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66464 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66496 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66528 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66560 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66560 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66592 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66592 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66624 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66656 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66656 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66688 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66688 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66720 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66720 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66752 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66752 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66784 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66816 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66848 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66880 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66912 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66944 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66976 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67008 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67008 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67040 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67040 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67072 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67104 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67104 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67136 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67136 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67168 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67168 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>66752 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66752 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66784 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66816 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66848 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66880 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66912 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66944 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>66976 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67008 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67008 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67040 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67040 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67072 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67104 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67104 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67136 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67136 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67168 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67168 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67200 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67200 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67232 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67264 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67296 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67328 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67360 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67392 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67424 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67456 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67456 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67488 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67488 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67520 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67552 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67552 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67584 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67584 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67616 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67616 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67200 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67200 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67232 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67264 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67296 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67328 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67360 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67392 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67424 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67456 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67456 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67488 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67488 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67520 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67552 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67552 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67584 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67584 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67616 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67616 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67648 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67648 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67680 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67712 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67744 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67776 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67808 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67840 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67872 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67904 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67904 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67936 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67936 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67968 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68000 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68000 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68032 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68032 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68064 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68064 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67648 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67648 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67680 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67712 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67744 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67776 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67808 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67840 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67872 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67904 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67904 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>67936 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67936 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>67968 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68000 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68000 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68032 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68032 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68064 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68064 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68096 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68096 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68128 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68160 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68192 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68224 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68256 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68288 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68320 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68352 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68352 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68384 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68384 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68416 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68448 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68448 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68480 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68480 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68512 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68512 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68096 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68096 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68128 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68160 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68192 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68224 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68256 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68288 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68320 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68352 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68352 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68384 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68384 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68416 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68448 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68448 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68480 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68480 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68512 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68512 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68544 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68544 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68576 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68608 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68640 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68672 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68704 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68736 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68768 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68800 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68800 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68832 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68832 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68864 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68896 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68896 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68928 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68928 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68960 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68960 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68544 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68544 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68576 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68608 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68640 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68672 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68704 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68736 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68768 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68800 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68800 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68832 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68832 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68864 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68896 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68896 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68928 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68928 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68960 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68960 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68992 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68992 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69024 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69056 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69088 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69120 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69152 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69184 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69216 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69248 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69248 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69280 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69280 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69312 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69344 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69344 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69376 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69376 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69408 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69408 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>68992 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>68992 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69024 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69056 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69088 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69120 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69152 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69184 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69216 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69248 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69248 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69280 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69280 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69312 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69344 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69344 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69376 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69376 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69408 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69408 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69440 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69440 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69472 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69504 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69536 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69568 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69600 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69632 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69664 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69696 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69696 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69728 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69728 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69760 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69792 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69792 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69824 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69824 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69856 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69856 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69440 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69440 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69472 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69504 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69536 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69568 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69600 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69632 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69664 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69696 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69696 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69728 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69728 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69760 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69792 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69792 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69824 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69824 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69856 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69856 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>69888 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69888 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69920 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69952 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>69984 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>70016 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>70048 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>70080 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>70112 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>70144 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>70144 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>70176 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>70176 + <range>32 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>70208 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>70240 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>70240 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>70272 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>70272 + <range>32 is out of capacity <bufCap>65536.avxTransformOps.c:158
+avxTransformOps.c:158
+<offset>16 + <range>70304 is out of capacity <bufCap>65536.avxBufferOps.c:158
+avxBufferOps.c:158
+<offset>70304 + <range>32 is out of capacity <bufCap>65536.

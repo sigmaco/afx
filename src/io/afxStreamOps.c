@@ -18,8 +18,8 @@
 
 #define _AFX_CORE_C
 #define _AFX_STREAM_C
-#include "../dev/afxIoImplKit.h"
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxIoImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 _AFX afxStdCmd* _AfxIobPushCmd(afxStream iob, afxUnit id, afxUnit siz, afxCmdId* cmdId)
 {

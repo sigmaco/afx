@@ -29,7 +29,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_MMU_C
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 typedef struct _afxArbitraryChunk
 {

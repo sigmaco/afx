@@ -50,18 +50,18 @@ AFX afxError    AfxPushPoolUnits(afxPool* pool, afxUnit cnt, void* units[]);
 AFX void        AfxPopPoolUnit(afxPool* pool, void* unit);
 AFX void        AfxPopPoolUnits(afxPool* pool, afxUnit cnt, void* units[]);
 
-AFX afxBool     AfxGetPoolItem(afxPool const* pool, afxSize idx, void **ptr);
 AFX afxBool     AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr);
 AFX afxBool     AfxGetPoolUnits(afxPool const* pool, afxUnit cnt, afxSize const idx[], void *ptr[]);
 AFX afxBool     AfxGetLinearPoolUnits(afxPool const* pool, afxUnit first, afxUnit cnt, void *ptr[]);
 
-AFX afxBool     AfxFindPoolUnitIndex(afxPool* pool, void* unit, afxUnit* idx, afxUnit* localIdx);
-AFX afxError    AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val);
+AFX afxBool     AfxFindPoolUnit(afxPool* pool, void* unit, afxUnit* idx, afxUnit* localIdx);
+AFX afxError    AfxTakePoolUnit(afxPool* pool, afxSize idx, void *val);
+AFX afxError    AfxFreePoolUnit(afxPool* pool, afxSize idx);
 
-AFX afxUnit      AfxEnumeratePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, void *items[]);
-AFX afxUnit      AfxEnumeratePoolUnits(afxPool const* pool, afxUnit first, afxUnit cnt, afxBool freeOnly, void *items[]);
+AFX afxUnit     AfxEnumeratePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, void *items[]);
+AFX afxUnit     AfxEnumeratePoolUnits(afxPool const* pool, afxUnit first, afxUnit cnt, afxBool freeOnly, void *items[]);
 
-AFX afxUnit      AfxInvokePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, afxBool(*f)(void* item, void* udd), void *udd);
-AFX afxUnit      AfxInvokePoolUnits(afxPool const* pool, afxUnit first, afxUnit cnt, afxBool freeOnly, afxBool (*f)(void* item, void* udd), void *udd);
+AFX afxUnit     AfxInvokePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, afxBool(*f)(void* item, void* udd), void *udd);
+AFX afxUnit     AfxInvokePoolUnits(afxPool const* pool, afxUnit first, afxUnit cnt, afxBool freeOnly, afxBool (*f)(void* item, void* udd), void *udd);
 
 #endif//AFX_POOL_H

@@ -14,8 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AMX_SIM_DEFS_H
-#define AMX_SIM_DEFS_H
+#ifndef ASX_SIM_DEFS_H
+#define ASX_SIM_DEFS_H
 
 // Tudo que é alocado independentemente de forma mecanizada DEVE integrar Acquire, Reacquire e Release.
 
@@ -36,23 +36,23 @@
 
 #ifndef __e2combo__
 #   ifdef _DEBUG
-#       define AMX DLLIMPORT extern 
-#       define AMXINL DLLIMPORT EMBED
+#       define ASX DLLIMPORT extern 
+#       define ASXINL DLLIMPORT EMBED
 #   else
-#       define AMX DLLIMPORT extern 
-#       define AMXINL DLLIMPORT EMBED
+#       define ASX DLLIMPORT extern 
+#       define ASXINL DLLIMPORT EMBED
 #   endif
 #else
 #   ifdef _DEBUG
-#       define _AMX DLLEXPORT
-#       define AMX DLLEXPORT extern 
-#       define _AMXINL DLLEXPORT INLINE
-#       define AMXINL DLLEXPORT EMBED
+#       define _ASX DLLEXPORT
+#       define ASX DLLEXPORT extern 
+#       define _ASXINL DLLEXPORT INLINE
+#       define ASXINL DLLEXPORT EMBED
 #   else
-#       define _AMX DLLEXPORT
-#       define AMX DLLEXPORT extern 
-#       define _AMXINL DLLEXPORT INLINE
-#       define AMXINL DLLEXPORT EMBED
+#       define _ASX DLLEXPORT
+#       define ASX DLLEXPORT extern 
+#       define _ASXINL DLLEXPORT INLINE
+#       define ASXINL DLLEXPORT EMBED
 #   endif
 #endif//__e2combo__
 
@@ -60,7 +60,7 @@
 AFX_DEFINE_HANDLE(afxEngine);
 AFX_DEFINE_HANDLE(afxSimBridge);
 AFX_DEFINE_HANDLE(afxSimQueue);
-AFX_DEFINE_HANDLE(afxCatalyst);
+AFX_DEFINE_HANDLE(afxContext);
 
 AFX_DEFINE_HANDLE(akxLight);
 AFX_DEFINE_HANDLE(akxRenderer);
@@ -97,4 +97,4 @@ typedef enum afxAccumOp
     afxAccumOp_DELTA, // variable delta accumulation
 } afxAccumOp;
 
-#endif//AMX_SIM_DEFS_H
+#endif//ASX_SIM_DEFS_H

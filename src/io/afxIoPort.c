@@ -21,7 +21,7 @@
 #define _AFX_IO_BRIDGE_C
 #define _AFX_IO_QUEUE_C
 #define _AFX_DRAW_OUTPUT_C
-#include "../dev/afxIoImplKit.h"
+#include "../impl/afxIoImplKit.h"
 #include "qwadro/inc/io/afxIoBridge.h"
 
 _AFX afxError _AfxXpuStdWorkCallbackCb(afxIoBridge exu, afxStdWork* work)
@@ -69,7 +69,7 @@ _AFX afxBool _AfxExuStdIoProcCb(afxIoBridge exu, afxThread thr)
         if (AfxTryLockMutex(&xque->workChnMtx))
         {
             afxStdWork* work;
-            AfxChainForEveryLinkageB2F(&xque->workChn, afxStdWork, hdr.chain, work)
+            AFX_ITERATE_CHAIN_B2F(&xque->workChn, afxStdWork, hdr.chain, work)
             {
                 AFX_ASSERT(xque->workChn.cnt);
                 AfxGetTime(&work->hdr.pullTime);
@@ -92,7 +92,7 @@ _AFX afxInt _AfxExuStdIoThreadProc(afxIoBridge exu)
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
 
     afxDevice ddev = AfxGetIoBridgeDevice(exu);
-    afxContext ctx = AfxGetIoBridgeContext(exu);
+    afxDevLink ctx = AfxGetIoBridgeContext(exu);
     afxUnit portId = exu->portId;
 
     afxThread thr;

@@ -27,7 +27,7 @@
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
 #define _AFX_THREAD_C
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 AFX_THREAD_LOCAL static LARGE_INTEGER QPC_InitialVal = { 0 };
 AFX_THREAD_LOCAL static unsigned int LastTickCount = 0;

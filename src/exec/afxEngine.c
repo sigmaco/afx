@@ -6,7 +6,7 @@
 afxSimulation sim = NIL;
 
 afxBool readyToRender = FALSE;
-afxSoundSystem ssys;
+afxMixSystem ssys;
 afxWindow window;
 afxSession ses = NIL;
 afxDrawOutput dout = NIL;

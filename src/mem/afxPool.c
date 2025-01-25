@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 _AFX afxUnit AfxEnumeratePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, void *items[])
 {
@@ -311,7 +311,7 @@ _AFX afxBool AfxGetPoolItem(afxPool const* pool, afxSize idx, void **ptr)
 }
 #endif
 
-_AFX afxError AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val)
+_AFX afxError AfxTakePoolUnit(afxPool* pool, afxSize idx, void *val)
 {
     afxError err = NIL;
     //AfxAssertType(pool, afxFcc_POOL);
@@ -358,6 +358,9 @@ _AFX afxError AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val)
             void* unit = &pag->data[pool->unitSiz * localIdx];
             afxBool alloced = AfxTestBitEnabled(pag->usage, localIdx); //pag->usage & mask;
 
+            if (alloced)
+                AfxThrowError();
+
             if (val)
                 AfxCopy(unit, val, pool->unitSiz);
 
@@ -376,6 +379,39 @@ _AFX afxError AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val)
     return err;
 }
 
+_AFX afxError AfxFreePoolUnit(afxPool* pool, afxSize idx)
+{
+    afxError err = NIL;
+    //AfxAssertType(pool, afxFcc_POOL);
+
+    afxPoolPage *pag;
+    afxSize pageIdx = idx / pool->unitsPerPage;
+
+    if (0 == pool->pageCnt || (pageIdx >= pool->pageCnt))
+        return err; // not paged/found
+
+    AFX_ASSERT(pool->pages);
+    pag = &pool->pages[pageIdx];
+
+    if (!pag->data)
+        return err; // not allocated
+
+    afxSize localIdx = idx % /*32*/pool->unitsPerPage;
+    //afxUnit32 mask = AFX_BIT(localIdx);
+    void* unit = &pag->data[pool->unitSiz * localIdx];
+    afxBool alloced = AfxTestBitEnabled(pag->usage, localIdx); //pag->usage & mask;
+
+    if (alloced)
+    {
+        pag->usage |= ~AFX_BIT(localIdx);
+        --pag->usedCnt;
+        --pool->totalUsedCnt;
+    }
+
+    AFX_ASSERT(!AfxGetPoolUnit(pool, idx, NIL));
+    return err;
+}
+
 _AFX void AfxPopPoolUnits(afxPool* pool, afxUnit cnt, void* units[])
 {
     afxError err = NIL;
@@ -390,7 +426,7 @@ _AFX void AfxPopPoolUnits(afxPool* pool, afxUnit cnt, void* units[])
     //return err;
 }
 
-_AFX afxBool AfxFindPoolUnitIndex(afxPool* pool, void* unit2, afxUnit* idx, afxUnit* localIdx)
+_AFX afxBool AfxFindPoolUnit(afxPool* pool, void* unit2, afxUnit* idx, afxUnit* localIdx)
 {
     afxError err = NIL;
     //AfxAssertType(pool, afxFcc_POOL);
@@ -444,7 +480,7 @@ _AFX void AfxPopPoolUnit(afxPool* pool, void* unit2)
     afxUnit unitsPerPage = pool->unitsPerPage;
     //afxSize pagSiz = unitsPerPage * unitSiz;
     afxUnit localIdx, idx;
-    afxBool found = AfxFindPoolUnitIndex(pool, unit, &idx, &localIdx);
+    afxBool found = AfxFindPoolUnit(pool, unit, &idx, &localIdx);
 
     if (!found) AfxThrowError();
     else
@@ -586,7 +622,7 @@ _AFX void* AfxPushPoolUnit(afxPool* pool, afxSize* idx)
     {
         AFX_ASSERT(!AfxGetPoolUnit(pool, idx2, NIL));
 
-        if (AfxOccupyPoolUnit(pool, idx2, NIL)) AfxThrowError();
+        if (AfxTakePoolUnit(pool, idx2, NIL)) AfxThrowError();
         else
         {
             AFX_ASSERT(AfxGetPoolUnit(pool, idx2, NIL));
@@ -648,7 +684,7 @@ _AFX afxError AfxTestDictionarys(void)
     afxSize idx;
 
     for (afxUnit i = 0; i < 3000; i++)
-        AfxOccupyPoolUnit(&pool, i, &idx);
+        AfxTakePoolUnit(&pool, i, &idx);
 
     //afxUnit j = 3000;
     //for (afxUnit i = 0; i < 3000; i++)

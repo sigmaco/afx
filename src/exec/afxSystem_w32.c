@@ -32,7 +32,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 AFX_STATIC_ASSERT(sizeof(AFX_OBJECT(afxSystem)) > sizeof(void*), "");
 _AFX afxBool sysReady = FALSE;
@@ -392,7 +392,9 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
     sys->hwThreadingCap = cfg->hwThreadingCap;
     sys->reallocatorFn = cfg->reallocatorFn;
 
-
+    sys->asx.disabled = cfg->asxDisabled;
+    sys->aux.disabled = cfg->auxDisabled;
+    sys->avx.disabled = cfg->avxDisabled;
 
     afxClassConfig clsCfg;
 

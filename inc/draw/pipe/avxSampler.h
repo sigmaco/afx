@@ -24,7 +24,7 @@
 #define AVX_SAMPLER_H
 
 #include "qwadro/inc/draw/io/afxPixel.h"
-#include "qwadro/inc/math/afxColor.h"
+#include "qwadro/inc/draw/math/afxColor.h"
 
 typedef enum avxTexelAddress
 /// Specify behavior of sampling with texture coordinates outside an texel map.

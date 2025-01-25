@@ -18,154 +18,154 @@
 
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
-#define _AMX_ENGINE_C
-#define _AMX_SIM_BRIDGE_C
-#define _AMX_SIM_QUEUE_C
-#include "impl/amxImplementation.h"
+#define _ASX_ENGINE_C
+#define _ASX_SIM_BRIDGE_C
+#define _ASX_SIM_QUEUE_C
+#include "impl/asxImplementation.h"
 
-_AMX afxClass const* _AmxGetSimQueueClass(afxSimBridge mexu)
+_ASX afxClass const* _AsxGetSimQueueClass(afxSimBridge sexu)
 {
     afxError err = AFX_ERR_NONE;
-    /// mexu must be a valid afxSimBridge handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    afxClass const* cls = &mexu->mqueCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_MQUE);
+    /// sexu must be a valid afxSimBridge handle.
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
+    afxClass const* cls = &sexu->squeCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_SQUE);
     return cls;
 }
 
-_AMX afxEngine AfxGetMathBridgeDevice(afxSimBridge mexu)
+_ASX afxEngine AfxGetMathBridgeDevice(afxSimBridge sexu)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    afxEngine mdev = mexu->mdev;
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
-    return mdev;
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
+    afxEngine seng = sexu->seng;
+    AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
+    return seng;
 }
 
-_AMX afxSimulation AfxGetMathBridgeContext(afxSimBridge mexu)
+_ASX afxSimulation AfxGetMathBridgeContext(afxSimBridge sexu)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    afxSimulation sim = AfxGetProvider(mexu);
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
+    afxSimulation sim = AfxGetProvider(sexu);
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     return sim;
 }
 
-_AMX afxUnit AfxQuerySimBridgePort(afxSimBridge mexu, afxEngine* engine)
+_ASX afxUnit AfxQuerySimBridgePort(afxSimBridge sexu, afxEngine* engine)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
 
     if (engine)
     {
-        afxEngine mdev = mexu->mdev;
-        AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
-        *engine = mdev;
+        afxEngine seng = sexu->seng;
+        AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
+        *engine = seng;
     }
-    return mexu->portId;
+    return sexu->portId;
 }
 
-_AMX afxUnit AfxGetSimQueues(afxSimBridge mexu, afxUnit baseQueIdx, afxUnit cnt, afxSimQueue queues[])
+_ASX afxUnit AfxGetSimQueues(afxSimBridge sexu, afxUnit baseQueIdx, afxUnit cnt, afxSimQueue queues[])
 {
     afxError err = AFX_ERR_NONE;
-    /// mexu must be a valid afxSimBridge handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    /// sexu must be a valid afxSimBridge handle.
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
     /// queues must be a valid pointer to the afxSimQueue handles.
     AFX_ASSERT(queues);
 
-    afxClass const* mqueCls = _AmxGetSimQueueClass(mexu);
-    AFX_ASSERT_CLASS(mqueCls, afxFcc_MQUE);
-    afxUnit rslt = _AfxEnumerateObjectsUnlocked(mqueCls, FALSE, baseQueIdx, cnt, (afxObject*)queues);
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, rslt, queues);
+    afxClass const* squeCls = _AsxGetSimQueueClass(sexu);
+    AFX_ASSERT_CLASS(squeCls, afxFcc_SQUE);
+    afxUnit rslt = _AfxEnumerateObjectsUnlocked(squeCls, FALSE, baseQueIdx, cnt, (afxObject*)queues);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, rslt, queues);
     return rslt;
 }
 
-_AMX afxError AfxWaitForEmptySimQueue(afxSimBridge mexu, afxUnit queIdx, afxTime timeout)
+_ASX afxError AfxWaitForEmptySimQueue(afxSimBridge sexu, afxUnit queIdx, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    /// mexu must be a valid afxSimBridge handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    /// sexu must be a valid afxSimBridge handle.
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
 
-    afxSimQueue mque;
-    if (!AfxGetSimQueues(mexu, queIdx, 1, &mque))
+    afxSimQueue sque;
+    if (!AfxGetSimQueues(sexu, queIdx, 1, &sque))
     {
         AfxThrowError();
         return err;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+    AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    if (!mque->waitCb)
+    if (!sque->waitCb)
     {
-        AfxLockMutex(&mque->idleCndMtx);
+        AfxLockMutex(&sque->idleCndMtx);
 
         afxTimeSpec ts = { 0 };
         ts.nsec = AfxMax(1, timeout) * 100000; // 100000 = 0.0001 sec
 
-        while (mque->workChn.cnt)
+        while (sque->workChn.cnt)
         {
-            mexu->pingCb(mexu, 0);
-            AfxWaitTimedCondition(&mque->idleCnd, &mque->idleCndMtx, &ts);
+            sexu->pingCb(sexu, 0);
+            AfxWaitTimedCondition(&sque->idleCnd, &sque->idleCndMtx, &ts);
         }
-        AfxUnlockMutex(&mque->idleCndMtx);
+        AfxUnlockMutex(&sque->idleCndMtx);
     }
-    else if (mque->waitCb(mque, timeout))
+    else if (sque->waitCb(sque, timeout))
         AfxThrowError();
 
     return err;
 }
 
-_AMX afxError AfxWaitForIdleSimBridge(afxSimBridge mexu, afxTime timeout)
+_ASX afxError AfxWaitForIdleSimBridge(afxSimBridge sexu, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    /// mexu must be a valid afxSimBridge handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    /// sexu must be a valid afxSimBridge handle.
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
 
-    if (mexu->pingCb)
-        mexu->pingCb(mexu, 0);
+    if (sexu->pingCb)
+        sexu->pingCb(sexu, 0);
 
-    afxClass const* mqueCls = _AmxGetSimQueueClass(mexu);
-    AFX_ASSERT_CLASS(mqueCls, afxFcc_MQUE);
-    afxUnit queCnt = mqueCls->instCnt;
+    afxClass const* squeCls = _AsxGetSimQueueClass(sexu);
+    AFX_ASSERT_CLASS(squeCls, afxFcc_SQUE);
+    afxUnit queCnt = squeCls->instCnt;
 
     for (afxUnit i = 0; i < queCnt; i++)
-        AfxWaitForEmptySimQueue(mexu, i, timeout);
+        AfxWaitForEmptySimQueue(sexu, i, timeout);
 
     return err;
 }
 
-_AMX afxError _AmxMexuDtorCb(afxSimBridge mexu)
+_ASX afxError _AsxMexuDtorCb(afxSimBridge sexu)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
 
-    afxSimulation sim = AfxGetMathBridgeContext(mexu);
+    afxSimulation sim = AfxGetMathBridgeContext(sexu);
 
     AfxWaitForSimulation(sim, 0);
     AfxWaitForSimulation(sim, 0); // yes, two times.
 
-    AfxDeregisterChainedClasses(&mexu->classes);
+    AfxDeregisterChainedClasses(&sexu->classes);
 
-    if (mexu->worker)
+    if (sexu->worker)
     {
         afxInt exitCode;
-        AfxWaitForThreadExit(mexu->worker, &exitCode);
-        AfxDisposeObjects(1, &mexu->worker);
+        AfxWaitForThreadExit(sexu->worker, &exitCode);
+        AfxDisposeObjects(1, &sexu->worker);
     }
 
-    AfxDismantleCondition(&mexu->schedCnd);
-    AfxDismantleMutex(&mexu->schedCndMtx);
+    AfxDismantleCondition(&sexu->schedCnd);
+    AfxDismantleMutex(&sexu->schedCndMtx);
 
     return err;
 }
 
-_AMX afxError _AmxMexuCtorCb(afxSimBridge mexu, void** args, afxUnit invokeNo)
+_ASX afxError _AsxMexuCtorCb(afxSimBridge sexu, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
 
     afxSimulation sim = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    _amxSimBridgeAcquisition const* cfg = AFX_CAST(_amxSimBridgeAcquisition const*, args[1]) + invokeNo;
+    _asxSimBridgeAcquisition const* cfg = AFX_CAST(_asxSimBridgeAcquisition const*, args[1]) + invokeNo;
 
     if (!cfg)
     {
@@ -174,47 +174,47 @@ _AMX afxError _AmxMexuCtorCb(afxSimBridge mexu, void** args, afxUnit invokeNo)
         return err;
     }
 
-    mexu->mdev = cfg->mdev;
+    sexu->seng = cfg->seng;
     AFX_ASSERT(cfg->portId != AFX_INVALID_INDEX);
-    mexu->portId = cfg->portId;
-    mexu->exuIdx = cfg->exuIdx;
+    sexu->portId = cfg->portId;
+    sexu->exuIdx = cfg->exuIdx;
 
-    mexu->pingCb = _AmxMexu_PingCb;
-    mexu->workerProc = _AMX_MPU_THREAD_PROC;
-    mexu->procCb = _AmxMpu_ProcCb;
+    sexu->pingCb = _AsxSexu_PingCb;
+    sexu->workerProc = _ASX_SPU_THREAD_PROC;
+    sexu->procCb = _AsxSpu_ProcCb;
 
-    mexu->workVmt = &_AMX_MPU_WORK_VMT;
-    //mexu->cmdVmt = &_AMX_MPU_CMD_VMT;
+    sexu->workVmt = &_ASX_SPU_WORK_VMT;
+    //sexu->cmdVmt = &_ASX_MPU_CMD_VMT;
 
-    AfxDeployMutex(&mexu->schedCndMtx, AFX_MTX_PLAIN);
-    AfxDeployCondition(&mexu->schedCnd);
-    mexu->schedCnt = 0;
+    AfxDeployMutex(&sexu->schedCndMtx, AFX_MTX_PLAIN);
+    AfxDeployCondition(&sexu->schedCnd);
+    sexu->schedCnt = 0;
 
-    AfxDeployChain(&mexu->classes, mexu);
-    afxClassConfig clsCfg = cfg->mqueClsCfg ? *cfg->mqueClsCfg : _AMX_MQUE_CLASS_CONFIG;
-    AFX_ASSERT(clsCfg.fcc == afxFcc_MQUE);
-    AfxMountClass(&mexu->mqueCls, NIL, &mexu->classes, &clsCfg);
+    AfxDeployChain(&sexu->classes, sexu);
+    afxClassConfig clsCfg = cfg->squeClsCfg ? *cfg->squeClsCfg : _ASX_SQUE_CLASS_CONFIG;
+    AFX_ASSERT(clsCfg.fcc == afxFcc_SQUE);
+    AfxMountClass(&sexu->squeCls, NIL, &sexu->classes, &clsCfg);
 
-    afxClass* mqueCls = (afxClass*)_AmxGetSimQueueClass(mexu);
-    AFX_ASSERT_CLASS(mqueCls, afxFcc_MQUE);
-    afxSimQueue queues[AMX_MAX_SIM_QUEUE_PER_BRIDGE];
-    AFX_ASSERT(AMX_MAX_SIM_QUEUE_PER_BRIDGE >= cfg->minQueCnt);
+    afxClass* squeCls = (afxClass*)_AsxGetSimQueueClass(sexu);
+    AFX_ASSERT_CLASS(squeCls, afxFcc_SQUE);
+    afxSimQueue queues[ASX_MAX_SIM_QUEUE_PER_BRIDGE];
+    AFX_ASSERT(ASX_MAX_SIM_QUEUE_PER_BRIDGE >= cfg->minQueCnt);
 
-    if (AfxAcquireObjects(mqueCls, cfg->minQueCnt, (afxObject*)queues, (void const*[]) { mexu, cfg }))
+    if (AfxAcquireObjects(squeCls, cfg->minQueCnt, (afxObject*)queues, (void const*[]) { sexu, cfg }))
     {
         AfxThrowError();
     }
 
     if (!err)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MQUE, cfg->minQueCnt, queues);
+        AFX_ASSERT_OBJECTS(afxFcc_SQUE, cfg->minQueCnt, queues);
 
         afxThreadConfig thrCfg = { 0 };
         //thrCfg.procCb = DrawThreadProc;
         thrCfg.purpose = afxThreadPurpose_SIM;
-        thrCfg.udd[0] = mexu;
+        thrCfg.udd[0] = sexu;
 
-        if (AfxAcquireThreads(AfxHere(), &thrCfg, 1, &mexu->worker))
+        if (AfxAcquireThreads(AfxHere(), &thrCfg, 1, &sexu->worker))
         {
             AfxThrowError();
         }
@@ -222,19 +222,19 @@ _AMX afxError _AmxMexuCtorCb(afxSimBridge mexu, void** args, afxUnit invokeNo)
 
     if (err)
     {
-        AfxDeregisterChainedClasses(&mexu->classes);
-        AfxDismantleCondition(&mexu->schedCnd);
-        AfxDismantleMutex(&mexu->schedCndMtx);
+        AfxDeregisterChainedClasses(&sexu->classes);
+        AfxDismantleCondition(&sexu->schedCnd);
+        AfxDismantleMutex(&sexu->schedCndMtx);
     }
     return err;
 }
 
-_AMX afxClassConfig const _AMX_MEXU_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_SEXU_CLASS_CONFIG =
 {
-    .fcc = afxFcc_MEXU,
+    .fcc = afxFcc_SEXU,
     .name = "MathBrige",
     .desc = "Math Device Execution Bridge",
     .fixedSiz = sizeof(AFX_OBJECT(afxSimBridge)),
-    .ctor = (void*)_AmxMexuCtorCb,
-    .dtor = (void*)_AmxMexuDtorCb
+    .ctor = (void*)_AsxMexuCtorCb,
+    .dtor = (void*)_AsxMexuDtorCb
 };

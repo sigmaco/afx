@@ -15,11 +15,11 @@
  */
 
 
-#define _AMX_DRAW_C
-#define _AMX_MATERIAL_C
-#include "../impl/amxImplementation.h"
+#define _ASX_DRAW_C
+#define _ASX_MATERIAL_C
+#include "../impl/asxImplementation.h"
 
-_AMX void AfxColorizeMaterial(afxMaterial mtl, afxV4d const color)
+_ASX void AfxColorizeMaterial(afxMaterial mtl, afxV4d const color)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
@@ -27,14 +27,14 @@ _AMX void AfxColorizeMaterial(afxMaterial mtl, afxV4d const color)
     AfxV4dCopy(mtl->color, color);
 }
 
-_AMX void AfxShineMaterial(afxMaterial mtl, afxReal shininess)
+_ASX void AfxShineMaterial(afxMaterial mtl, afxReal shininess)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
     mtl->shininess = shininess;
 }
 
-_AMX afxRaster AfxGetMaterialTexture(afxMaterial mtl)
+_ASX afxRaster AfxGetMaterialTexture(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
@@ -43,7 +43,7 @@ _AMX afxRaster AfxGetMaterialTexture(afxMaterial mtl)
     return tex;
 }
 
-_AMX void AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex)
+_ASX void AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
@@ -65,7 +65,7 @@ _AMX void AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex)
     }
 }
 
-_AMX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
+_ASX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
@@ -100,14 +100,14 @@ _AMX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
     }
 }
 
-_AMX afxUnit AfxCountMaterialMaps(afxMaterial mtl)
+_ASX afxUnit AfxCountMaterialMaps(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
     return mtl->mapCnt;
 }
 
-_AMX afxMaterial AfxFindSubmaterial(afxMaterial mtl, afxString const *usage)
+_ASX afxMaterial AfxFindSubmaterial(afxMaterial mtl, afxString const *usage)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
@@ -125,7 +125,7 @@ _AMX afxMaterial AfxFindSubmaterial(afxMaterial mtl, afxString const *usage)
     return NIL;
 }
 
-_AMX afxMaterial AfxGetSubmaterial(afxMaterial mtl, afxUnit mapIdx)
+_ASX afxMaterial AfxGetSubmaterial(afxMaterial mtl, afxUnit mapIdx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
@@ -135,7 +135,7 @@ _AMX afxMaterial AfxGetSubmaterial(afxMaterial mtl, afxUnit mapIdx)
     return subMtl;
 }
 
-_AMX void AfxRebindSubmaterial(afxMaterial mtl, afxUnit mapIdx, afxMaterial subMtl)
+_ASX void AfxRebindSubmaterial(afxMaterial mtl, afxUnit mapIdx, afxMaterial subMtl)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
@@ -161,7 +161,7 @@ _AMX void AfxRebindSubmaterial(afxMaterial mtl, afxUnit mapIdx, afxMaterial subM
     }
 }
 
-_AMX void AfxResetMaterialMap(afxMaterial mtl, afxUnit mapIdx, afxString const* usage, afxMaterial subMtl)
+_ASX void AfxResetMaterialMap(afxMaterial mtl, afxUnit mapIdx, afxString const* usage, afxMaterial subMtl)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
@@ -190,14 +190,14 @@ _AMX void AfxResetMaterialMap(afxMaterial mtl, afxUnit mapIdx, afxString const* 
     }
 }
 
-_AMX afxString const* AfxGetMaterialUrn(afxMaterial mtl)
+_ASX afxString const* AfxGetMaterialUrn(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
     return &mtl->urn;
 }
 
-_AMX afxError _AmxMtlDtorCb(afxMaterial mtl)
+_ASX afxError _AsxMtlDtorCb(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
@@ -223,7 +223,7 @@ _AMX afxError _AmxMtlDtorCb(afxMaterial mtl)
     return err;
 }
 
-_AMX afxError _AmxMtlCtorCb(afxMaterial mtl, void** args, afxUnit invokeNo)
+_ASX afxError _AsxMtlCtorCb(afxMaterial mtl, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
@@ -303,21 +303,69 @@ _AMX afxError _AmxMtlCtorCb(afxMaterial mtl, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AMX afxClassConfig const _AMX_MTL_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_MTL_CLASS_CONFIG =
 {
     .fcc = afxFcc_MTL,
     .name = "Material",
     .desc = "Material",
     .fixedSiz = sizeof(AFX_OBJECT(afxMaterial)),
-    .ctor = (void*)_AmxMtlCtorCb,
-    .dtor = (void*)_AmxMtlDtorCb
+    .ctor = (void*)_AsxMtlCtorCb,
+    .dtor = (void*)_AsxMtlDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxUnit subCnt, afxMaterial *mtl)
+_ASX afxBool _AsxFindNamedMtlCb(afxMaterial mtl, void* udd)
+{
+    struct
+    {
+        afxUnit cnt;
+        afxString const* materials;
+        afxUnit* indices;
+        afxUnit rslt;
+    } *udd2 = udd;
+
+    afxUnit idx;
+    if (AFX_INVALID_INDEX != (idx = AfxCompareStrings(&mtl->urn, 0, TRUE, udd2->cnt, &udd2->materials[udd2->rslt])))
+    {
+        udd2->indices[idx] = AfxGetObjectId(mtl);
+        ++udd2->rslt;
+    }
+}
+
+_ASX afxUnit AfxFindMaterialIndices(afxSimulation sim, afxUnit cnt, afxString const materials[], afxUnit indices[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+
+    afxClass* cls = (afxClass*)_AsxGetMaterialClass(sim);
+    AFX_ASSERT_CLASS(cls, afxFcc_MTL);
+
+    afxUnit rslt = 0;
+
+    struct
+    {
+        afxUnit cnt;
+        afxString const* materials;
+        afxUnit* indices;
+        afxUnit rslt;
+    }
+    udd2 =
+    {
+        .cnt = cnt,
+        .materials = materials,
+        .indices = indices,
+        .rslt = 0
+    };
+
+    rslt = AfxInvokeObjects(cls, 0, cnt, (void*)_AsxFindNamedMtlCb, &udd2);
+
+    return rslt;
+}
+
+_ASX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxUnit subCnt, afxMaterial *mtl)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -325,7 +373,7 @@ _AMX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRast
     AFX_ASSERT(mtl);
     AFX_ASSERT(id);
 
-    afxClass* cls = (afxClass*)_AmxGetMaterialClass(sim);
+    afxClass* cls = (afxClass*)_AsxGetMaterialClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_MTL);
 
     if (AfxAcquireObjects(cls, 1, (afxObject*)mtl, (void const*[]) { sim, id, tex, &subCnt }))
@@ -334,11 +382,11 @@ _AMX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRast
     return err;
 }
 
-_AMX afxUnit AfxEnumerateMaterials(afxSimulation sim, afxUnit first, afxUnit cnt, afxMaterial materials[])
+_ASX afxUnit AfxEnumerateMaterials(afxSimulation sim, afxUnit first, afxUnit cnt, afxMaterial materials[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const* cls = _AmxGetMaterialClass(sim);
+    afxClass const* cls = _AsxGetMaterialClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_MTL);
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)materials);
 }

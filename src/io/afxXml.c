@@ -24,7 +24,7 @@
 #include <string.h>
 
 #define _AFX_XML_C
-#include "../dev/afxIoImplKit.h"
+#include "../impl/afxIoImplKit.h"
 
 static char* xml_strtok_r(char *str, const char *delim, char **nextp) {
     char *ret;

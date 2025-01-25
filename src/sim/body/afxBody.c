@@ -15,14 +15,20 @@
  */
 
 #define _AFX_SIM_C
-#define _AMX_BODY_C
-#define _AMX_ANIMATION_C
-#define _AMX_MOTION_C
-#define _AMX_SKELETON_C
-#define _AMX_SIMULATION_C
-#include "../impl/amxImplementation.h"
+#define _ASX_BODY_C
+#define _ASX_ANIMATION_C
+#define _ASX_MOTION_C
+#define _ASX_SKELETON_C
+#define _ASX_SIMULATION_C
+#include "../impl/asxImplementation.h"
 
-_AMX afxBool AfxGetBodyModel(afxBody bod, afxModel* model)
+AFX_DEFINE_STRUCT(afxModelLink)
+{
+    afxLink     mdl; // afxModel.instances;
+    afxLink     body; // afxBody.mdl;
+};
+
+_ASX afxBool AfxGetBodyModel(afxBody bod, afxModel* model)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
@@ -33,7 +39,18 @@ _AMX afxBool AfxGetBodyModel(afxBody bod, afxModel* model)
     return (mdl != NIL);
 }
 
-_AMX void AfxUpdateBodyMotives(afxBody bod, afxReal newClock)
+_ASX afxBool AfxGetBodyPose(afxBody bod, afxPose* pose)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+    afxPose pos = bod->pose;
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_POSE, 1, &pos);
+    AFX_ASSERT(pose);
+    *pose = pos;
+    return (pos != NIL);
+}
+
+_ASX void AfxUpdateBodyMotives(afxBody bod, afxReal newClock)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
@@ -42,8 +59,8 @@ _AMX void AfxUpdateBodyMotives(afxBody bod, afxReal newClock)
     // like SetModelClock
     // it will automatically set all the motive's to the given clock, saving you the trouble of doing so.
 
-    amxMotive intk;
-    AfxChainForEveryLinkage(&bod->motives, AFX_OBJ(amxMotive), bod, intk)
+    asxMotive intk;
+    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
     {
         afxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
@@ -51,13 +68,13 @@ _AMX void AfxUpdateBodyMotives(afxBody bod, afxReal newClock)
     }
 }
 
-_AMX void AfxPurgeTerminatedMotives(afxBody bod)
+_ASX void AfxPurgeTerminatedMotives(afxBody bod)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
 
-    amxMotive intk;
-    AfxChainForEveryLinkage(&bod->motives, AFX_OBJ(amxMotive), bod, intk)
+    asxMotive intk;
+    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
     {
         afxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
@@ -65,18 +82,18 @@ _AMX void AfxPurgeTerminatedMotives(afxBody bod)
         if (AfxCapstanHasTerminated(moto))
         {
             AfxDisposeObjects(1, &intk);
-            //_AmxDestroyMotive(intk);
+            //_AsxDestroyMotive(intk);
         }
     }
 }
 
-_AMX void AfxRecenterBodyMotiveClocks(afxBody bod, afxReal currClock)
+_ASX void AfxRecenterBodyMotiveClocks(afxBody bod, afxReal currClock)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
 
-    amxMotive intk;
-    AfxChainForEveryLinkage(&bod->motives, AFX_OBJ(amxMotive), bod, intk)
+    asxMotive intk;
+    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
     {
         afxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
@@ -84,7 +101,7 @@ _AMX void AfxRecenterBodyMotiveClocks(afxBody bod, afxReal currClock)
     }
 }
 
-_AMX void AfxDoBodyDynamics(afxBody bod, afxReal dt)
+_ASX void AfxDoBodyDynamics(afxBody bod, afxReal dt)
 {
     // compute inertia matrices
     for (int i = 0; i < 3; i++)
@@ -137,7 +154,7 @@ _AMX void AfxDoBodyDynamics(afxBody bod, afxReal dt)
     AfxV3dZero(bod->rigid.torque);
 }
 
-_AMX void AfxApplyForceAndTorque(afxBody bod, afxV3d const force, afxV3d const torque)
+_ASX void AfxApplyForceAndTorque(afxBody bod, afxV3d const force, afxV3d const torque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
@@ -145,25 +162,28 @@ _AMX void AfxApplyForceAndTorque(afxBody bod, afxV3d const force, afxV3d const t
     AfxV3dAdd(bod->rigid.torque, bod->rigid.torque, torque);
 }
 
-_AMX afxError _AmxBodDtorCb(afxBody bod)
+_ASX afxError _AsxBodDtorCb(afxBody bod)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
 
-    amxMotive intk;
-    AfxChainForEveryLinkage(&bod->motives, AFX_OBJ(amxMotive), bod, intk)
+    asxMotive intk;
+    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
     {
-        //_AmxDestroyMotive(intk);
+        //_AsxDestroyMotive(intk);
         AfxDisposeObjects(1, &intk);
     }
 
     if (bod->mdl)
         AfxDisposeObjects(1, &bod->mdl);
 
+    if (bod->pose)
+        AfxDisposeObjects(1, &bod->pose);
+
     return err;
 }
 
-_AMX afxError _AmxBodCtorCb(afxBody bod, void** args, afxUnit invokeNo)
+_ASX afxError _AsxBodCtorCb(afxBody bod, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
@@ -196,44 +216,44 @@ _AMX afxError _AmxBodCtorCb(afxBody bod, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AMX afxClassConfig _AMX_BOD_CLASS_CONFIG =
+_ASX afxClassConfig _ASX_BOD_CLASS_CONFIG =
 {
     .fcc = afxFcc_BOD,
     .name = "Body",
     .desc = "Modelled Body Instance",
     .fixedSiz = sizeof(AFX_OBJECT(afxBody)),
-    .ctor = (void*)_AmxBodCtorCb,
-    .dtor = (void*)_AmxBodDtorCb
+    .ctor = (void*)_AsxBodCtorCb,
+    .dtor = (void*)_AsxBodDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxUnit AfxEnumerateBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBody bodies[])
+_ASX afxUnit AfxEnumerateBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBody bodies[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const* cls = _AmxGetBodyClass(sim);
+    afxClass const* cls = _AsxGetBodyClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_BOD);
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)bodies);
 }
 
-_AMX afxUnit AfxInvokeBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBool(*f)(afxBody, void*), void *udd)
+_ASX afxUnit AfxInvokeBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBool(*f)(afxBody, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
-    afxClass const* cls = _AmxGetBodyClass(sim);
+    afxClass const* cls = _AsxGetBodyClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_BOD);
     return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
-_AMX afxError AfxAcquireBodies(afxSimulation sim, afxModel mdl, afxUnit cnt, afxBody bodies[])
+_ASX afxError AfxAcquireBodies(afxSimulation sim, afxModel mdl, afxUnit cnt, afxBody bodies[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    afxClass* cls = (afxClass*)_AmxGetBodyClass(sim);
+    afxClass* cls = (afxClass*)_AsxGetBodyClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_BOD);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)bodies, (void const*[]) { sim, mdl }))

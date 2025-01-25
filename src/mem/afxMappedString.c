@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 _AFX afxUnit AfxDecatalogStrings(afxStringBase strc, afxUnit cnt, afxString const strings[])
 {
@@ -26,7 +26,7 @@ _AFX afxUnit AfxDecatalogStrings(afxStringBase strc, afxUnit cnt, afxString cons
         if (strings[i].len)
         {
             afxReferencedString* ref;
-            AfxChainForEveryLinkage(&strc->strings, afxReferencedString, strb, ref)
+            AFX_ITERATE_CHAIN(&strc->strings, afxReferencedString, strb, ref)
             {
                 if (0 == AfxCompareStrings(&ref->str, 0, TRUE, 1, &strings[i]))
                 {
@@ -56,7 +56,7 @@ _AFX afxUnit AfxCatalogStrings(afxStringBase strc, afxUnit cnt, afxString const 
             afxBool found = FALSE;
 
             afxReferencedString* ref;
-            AfxChainForEveryLinkage(&strc->strings, afxReferencedString, strb, ref)
+            AFX_ITERATE_CHAIN(&strc->strings, afxReferencedString, strb, ref)
             {
                 if (0 == AfxCompareStrings(&ref->str, 0, FALSE, 1, &in[i]))
                 {
@@ -119,7 +119,7 @@ _AFX afxError _AfxStrcDtor(afxStringBase strc)
 
     afxUnit rslt = 0;
     afxReferencedString* ref;
-    AfxChainForEveryLinkage(&strc->strings, afxReferencedString, strb, ref)
+    AFX_ITERATE_CHAIN(&strc->strings, afxReferencedString, strb, ref)
     {
         AfxPopLink(&ref->strb);
         AfxDeallocate((void**)&ref, AfxHere());

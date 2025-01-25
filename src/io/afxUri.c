@@ -21,7 +21,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "../dev/afxIoImplKit.h"
+#include "../impl/afxIoImplKit.h"
 
 typedef enum
 {

@@ -23,7 +23,7 @@
 
 #include "qwadro/inc/exec/afxSystem.h"
 #include "qwadro/inc/draw/afxDrawSystem.h"
-#include "qwadro/inc/sound/afxSoundSystem.h"
+#include "qwadro/inc/mix/afxMixSystem.h"
 
 #ifndef __e2mmux__
 #   ifdef _DEBUG

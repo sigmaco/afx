@@ -20,28 +20,56 @@
 #include "../draw/impl/avxImplementation.h"
 
 #define _AFX_SIM_C
-#define _AMX_TERRAIN_C
-#define _AMX_SIMULATION_C
-#include "impl/amxImplementation.h"
+#define _ASX_TERRAIN_C
+#define _ASX_SIMULATION_C
+#include "impl/asxImplementation.h"
 #include "qwadro/inc/sim/afxTerrain.h"
 
-_AMX afxError AfxLoadHeighmap(afxTerrain ter, afxUnit secIdx, afxUri const* uri)
+AFX_DEFINE_STRUCT(asxQuadrant)
+{
+    afxRect     bounds;
+    afxUnit     childIdx[4];
+    afxUnit     parentIdx;
+    afxChain    contents;
+};
+
+AFX_DEFINE_STRUCT(asxQuadtree)
+{
+    asxQuadrant root;
+    afxPool     quadrants;
+};
+
+ASX void AfxDeployQuadtree(asxQuadtree* tree, afxRect* bounds)
+{
+    tree->root.bounds = *bounds;
+    tree->root.parentIdx = AFX_INVALID_INDEX;
+
+    for (afxUnit i = 0; i < /* it is always a quadtree*/ 4; i++)
+        tree->root.childIdx[i] = AFX_INVALID_INDEX;
+
+    AfxDeployChain(&tree->root.contents, tree);
+    AfxDeployPool(&tree->quadrants, sizeof(asxQuadtree), /* it is always a quadtree*/ 4, AFX_SIMD_ALIGNMENT);
+}
+
+_ASX afxError AfxLoadHeighmap(afxTerrain ter, afxUnit secIdx, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_TER, 1, &ter);
     AFX_ASSERT_RANGE(ter->secCnt, secIdx, 1);
 
     afxStream iob;
-    afxStreamInfo iobi = { 0 };
-    AfxAcquireStream(1, &iobi, &iob);
-    AfxReloadFile(iob, uri);
-
+    if (AfxOpenFile(uri, afxFileFlag_RX, &iob))
+    {
+        AfxThrowError();
+        return err;
+    }
     afxTargaFile tga;
     AfxReadTarga(iob, &tga);
 
     afxByte* data;
     AfxAllocate(tga.decodedSiz, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&data);
     AfxDecodeTarga(iob, &tga, data);
+    AfxDisposeObjects(1, &iob);
 
     avxFormatDescription pfd;
     AfxDescribePixelFormat(tga.fmt, &pfd);
@@ -72,10 +100,12 @@ _AMX afxError AfxLoadHeighmap(afxTerrain ter, afxUnit secIdx, afxUri const* uri)
         }
     }
 
+    AfxDeallocate((void**)&data, AfxHere());
+
     return err;
 }
 
-_AMX afxUnit AfxGetTerrainMeshes(afxTerrain ter, afxUnit secIdx, afxUnit cnt, afxMesh meshes[])
+_ASX afxUnit AfxGetTerrainMeshes(afxTerrain ter, afxUnit secIdx, afxUnit cnt, afxMesh meshes[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_TER, 1, &ter);
@@ -96,7 +126,7 @@ _AMX afxUnit AfxGetTerrainMeshes(afxTerrain ter, afxUnit secIdx, afxUnit cnt, af
     return rslt;
 }
 
-_AMX afxError AfxResetTerrainSector(afxTerrain ter, afxUnit secIdx, afxMesh msh)
+_ASX afxError AfxResetTerrainSector(afxTerrain ter, afxUnit secIdx, afxMesh msh)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_TER, 1, &ter);
@@ -118,7 +148,7 @@ _AMX afxError AfxResetTerrainSector(afxTerrain ter, afxUnit secIdx, afxMesh msh)
     return err;
 }
 
-_AMX afxError _AmxTerDtorCb(afxTerrain ter)
+_ASX afxError _AsxTerDtorCb(afxTerrain ter)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_TER, 1, &ter);
@@ -138,7 +168,7 @@ _AMX afxError _AmxTerDtorCb(afxTerrain ter)
     return err;
 }
 
-_AMX afxError _AmxTerCtorCb(afxTerrain ter, void** args, afxUnit invokeNo)
+_ASX afxError _AsxTerCtorCb(afxTerrain ter, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_TER, 1, &ter);
@@ -175,30 +205,30 @@ _AMX afxError _AmxTerCtorCb(afxTerrain ter, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AMX afxClassConfig const _AMX_TER_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_TER_CLASS_CONFIG =
 {
     .fcc = afxFcc_TER,
     .name = "Terrain",
     .desc = "Managed Terrain",
     .fixedSiz = sizeof(AFX_OBJECT(afxTerrain)),
-    .ctor = (void*)_AmxTerCtorCb,
-    .dtor = (void*)_AmxTerDtorCb
+    .ctor = (void*)_AsxTerCtorCb,
+    .dtor = (void*)_AsxTerDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AfxAcquireTerrain(afxSimulation sim, afxUnit secCnt, afxTerrain* terrain)
+_ASX afxError AfxAcquireTerrain(afxSimulation sim, afxUnit secCnt, afxTerrain* terrain)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    if (AfxAcquireObjects(_AmxGetTerrainClass(sim), 1, (afxObject*)terrain, (void const*[]) { sim, &secCnt } ))
+    if (AfxAcquireObjects(_AsxGetTerrainClass(sim), 1, (afxObject*)terrain, (void const*[]) { sim, &secCnt } ))
         AfxThrowError();
 
     return err;
 }
 
-_AMX afxError AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain* terrain)
+_ASX afxError AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain* terrain)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -209,7 +239,7 @@ _AMX afxError AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain
     //msh = AfxBuildPlaneMesh(sim->din, 256, 256, 256, 256);
     //msh = AfxBuildParallelepipedMesh(sim->din, AfxWhd(10, 10, 10), 10, 10);
     //msh = AfxBuildCubeMesh(sim->din, 10, 1);
-    AfxBuildGridMesh(sim->din, 100, 100, 1000, 1000, &msh);
+    AfxBuildGridMesh(sim, 100, 100, 1000, 1000, &msh);
     //msh = AfxBuildGridMesh(sim->din, 10, 10, 10, 10);
     //msh = AfxBuildDiscMesh(sim->din, 10, 10);
     //AfxInvertMeshTopology(msh);
@@ -223,7 +253,7 @@ _AMX afxError AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain
     return err;
 }
 
-_AMX afxError AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* uri, afxTerrain* terrain)
+_ASX afxError AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* uri, afxTerrain* terrain)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -251,7 +281,7 @@ _AMX afxError AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* ur
     //tga.width = tga.width, tga.height = tga.height / 8;
 
     afxMesh msh;
-    AfxBuildGridMesh(sim->din, tga.width, tga.height, tga.width * 10, tga.height * 10, &msh);
+    AfxBuildGridMesh(sim, tga.width, tga.height, tga.width * 10, tga.height * 10, &msh);
 
     afxTerrain ter;
     AfxAcquireTerrain(sim, 1, &ter);

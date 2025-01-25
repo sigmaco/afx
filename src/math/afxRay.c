@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/inc/math/afxBox.h"
+#include "qwadro/inc/math/bound/afxBox.h"
 #include "qwadro/inc/math/afxScalar.h"
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/math/afxMatrix.h"

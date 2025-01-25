@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "../impl/amxImplementation.h"
+#include "../impl/asxImplementation.h"
 
 AFX_DEFINE_STRUCT(afxTriangle)
 {
@@ -33,7 +33,7 @@ AFX_DEFINE_STRUCT(afxShape)
 };
 
 // Precompute the edges, normal, and cross product for the triangle
-_AMX void precompute_triangle_edges(afxUnit triCnt, afxUnit const indices[], afxV3d const vertices[], afxTriangle tris[])
+_ASX void precompute_triangle_edges(afxUnit triCnt, afxUnit const indices[], afxV3d const vertices[], afxTriangle tris[])
 {
     for (afxUnit i = 0; i < triCnt; i++)
     {
@@ -47,7 +47,7 @@ _AMX void precompute_triangle_edges(afxUnit triCnt, afxUnit const indices[], afx
 // Apply the transformation matrix to the edges and normal of a triangle
 // Once this struct store differential values,
 // it will just work it if all triangle vertices are rigidly transformed.
-_AMX void transform_triangle_edges_and_normal(afxM4d const m, afxTriangle const* in, afxTriangle* out)
+_ASX void transform_triangle_edges_and_normal(afxM4d const m, afxTriangle const* in, afxTriangle* out)
 {
     // Transform the reference vertex v0
     
@@ -62,7 +62,7 @@ _AMX void transform_triangle_edges_and_normal(afxM4d const m, afxTriangle const*
 }
 
 // The Moller–Trumbore ray-triangle intersection algorithm (optimized with precomputed edges)
-_AMX afxBool intersect_triangle(afxTriangle const* triA, afxTriangle const* triB)
+_ASX afxBool intersect_triangle(afxTriangle const* triA, afxTriangle const* triB)
 {
     // Compute the vector s (v0 - u0) from the reference vertices of the two triangles
     afxV3d s;
@@ -91,7 +91,7 @@ _AMX afxBool intersect_triangle(afxTriangle const* triA, afxTriangle const* triB
     return t > AFX_EPSILON;  // If t is positive, intersection is valid
 }
 
-_AMX afxBool AfxTestShapeCollision2(afxShape const* s1, afxM4d const m1, afxShape const* s2, afxM4d const m2)
+_ASX afxBool AfxTestShapeCollision2(afxShape const* s1, afxM4d const m1, afxShape const* s2, afxM4d const m2)
 {
     // Edge-to-edge intersection test using Moller–Trumbore algorithm
     afxTriangle s1t_cache;
@@ -118,7 +118,7 @@ _AMX afxBool AfxTestShapeCollision2(afxShape const* s1, afxM4d const m1, afxShap
     return 0;
 }
 
-_AMX afxBool AfxTestShapeCollision(afxShape const* s1, afxShape const* s2)
+_ASX afxBool AfxTestShapeCollision(afxShape const* s1, afxShape const* s2)
 {
     // Edge-to-edge intersection test using Moller–Trumbore algorithm
 
@@ -134,7 +134,7 @@ _AMX afxBool AfxTestShapeCollision(afxShape const* s1, afxShape const* s2)
     }
 }
 
-_AMX afxError AfxBuildMeshShape(afxMesh msh, afxShape* shape)
+_ASX afxError AfxBuildMeshShape(afxMesh msh, afxShape* shape)
 {
     afxError err = NIL;
 

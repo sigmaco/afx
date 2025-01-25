@@ -92,7 +92,7 @@ typedef enum afxFcc
     afxFcc_SIGC     = AFX_MAKE_FCC('s', 'i', 'g', 'c'), // afxSignalConnection
     afxFcc_MEM      = AFX_MAKE_FCC('m', 'e', 'm', '\0'), // afxMemory
     afxFcc_MMU      = AFX_MAKE_FCC('m', 'm', 'u', '\0'), // afxMmu
-    afxFcc_CTX      = AFX_MAKE_FCC('c', 't', 'x', '\0'), // afxContext
+    afxFcc_DEVK      = AFX_MAKE_FCC('d', 'e', 'v', 'k'), // afxDevLink
     afxFcc_MPAG     = AFX_MAKE_FCC('m', 'p', 'a', 'g'), // afxMemPage
     //afxFcc_CHNK     = AFX_MAKE_FCC('m', 'e', 'm', '\0'), // afxMmu
     afxFcc_ALLS     = AFX_MAKE_FCC('a', 'l', 'l', 's'), // afxSlabMemory
@@ -183,7 +183,7 @@ typedef enum afxFcc
     afxFcc_DENG     = AFX_MAKE_FCC('d', 'e', 'n', 'g'), // afxTxu
     afxFcc_DTHR     = AFX_MAKE_FCC('d', 't', 'h', 'r'), // afxDrawThread
     afxFcc_CANV     = AFX_MAKE_FCC('c', 'a', 'n', 'v'), // avxCanvas
-    afxFcc_FENC     = AFX_MAKE_FCC('f', 'e', 'n', 'c'), // afxFence
+    afxFcc_FENC     = AFX_MAKE_FCC('f', 'e', 'n', 'c'), // avxFence
     afxFcc_SEM      = AFX_MAKE_FCC('s', 'e', 'm', '\0'), // afxSemaphore
     afxFcc_DCTX     = AFX_MAKE_FCC('d', 'c', 't', 'x'), // afxDrawContext
     afxFcc_PIP      = AFX_MAKE_FCC('p', 'i', 'p', '\0'), // avxPipeline
@@ -223,22 +223,19 @@ typedef enum afxFcc
 
     // *** e2sound ***
 
-    afxFcc_SSYS     = AFX_MAKE_FCC('s', 's', 'y', 's'), // afxSoundSystem
-    afxFcc_SENG     = AFX_MAKE_FCC('s', 'e', 'n', 'g'), // afxTxu
-    afxFcc_STHR     = AFX_MAKE_FCC('s', 't', 'h', 'r'), // afxSoundThread
-    afxFcc_SDEV     = AFX_MAKE_FCC('s', 'o', 'u', 't'), // afxSoundDevice
-    afxFcc_SOUT     = AFX_MAKE_FCC('s', 'o', 'u', 't'), // afxSoundOutput
-    afxFcc_SIN      = AFX_MAKE_FCC('s', 'i', 'n', '\0'), // afxSoundInput
+    afxFcc_MSYS     = AFX_MAKE_FCC('m', 's', 'y', 's'), // afxMixSystem
+    afxFcc_MDEV     = AFX_MAKE_FCC('m', 'o', 'u', 't'), // afxMixDevice
+    afxFcc_MEXU     = AFX_MAKE_FCC('s', 'e', 'x', 'u'), // afxMixBridge
+    afxFcc_MTHR     = AFX_MAKE_FCC('m', 't', 'h', 'r'), // afxMixThread
+    afxFcc_MQUE     = AFX_MAKE_FCC('s', 'q', 'u', 'e'), // afxMixQueue
+    afxFcc_MOUT     = AFX_MAKE_FCC('m', 'o', 'u', 't'), // afxMixOutput
+    afxFcc_MIN      = AFX_MAKE_FCC('m', 'i', 'n', '\0'), // afxMixInput
     afxFcc_ASIO     = AFX_MAKE_FCC('a', 's', 'i', 'o'), // afxSink
-    afxFcc_MIX      = AFX_MAKE_FCC('m', 'i', 'x', '\0'), // afxMixer
+    afxFcc_MIX      = AFX_MAKE_FCC('m', 'i', 'x', '\0'), // afxMixContext
     afxFcc_SCTX     = AFX_MAKE_FCC('s', 'c', 't', 'x'), // afxSoundContext
-    afxFcc_SQUE     = AFX_MAKE_FCC('s', 'q', 'u', 'e'), // afxSoundQueue
-    afxFcc_SDGE     = AFX_MAKE_FCC('s', 'd', 'g', 'e'), // afxSoundBridge
-    afxFcc_SEXU     = AFX_MAKE_FCC('s', 'e', 'x', 'u'), // afxSoundBridge
     afxFcc_SBUF     = AFX_MAKE_FCC('s', 'b', 'u', 'f'), // afxWaveform
     afxFcc_WAV      = AFX_MAKE_FCC('w', 'a', 'v', '\0'), // afxWaveform
     afxFcc_TRAX     = AFX_MAKE_FCC('t', 'r', 'a', 'x'), // asxTracker
-    afxFcc_SMIX     = AFX_MAKE_FCC('s', 'm', 'i', 'x'), // afxSubmix
     afxFcc_BROK     = AFX_MAKE_FCC('b', 'r', 'o', 'k'), // afxBroker
     afxFcc_AUD      = AFX_MAKE_FCC('a', 'u', 'd', '\0'), // afxListener
     afxFcc_SND      = AFX_MAKE_FCC('s', 'n', 'd', '\0'), // afxSound
@@ -250,11 +247,11 @@ typedef enum afxFcc
 
     // *** e2simul ***
 
-    afxFcc_MSYS     = AFX_MAKE_FCC('m', 's', 'y', 's'), // afxComboSystem
-    afxFcc_MDEV     = AFX_MAKE_FCC('m', 'd', 'e', 'v'), // afxEngine
-    afxFcc_MEXU     = AFX_MAKE_FCC('m', 'e', 'x', 'u'), // afxSimBridge
-    afxFcc_MQUE     = AFX_MAKE_FCC('m', 'q', 'u', 'e'), // afxSimQueue
-    afxFcc_CYST     = AFX_MAKE_FCC('c', 'y', 's', 't'), // afxCatalyst
+    afxFcc_SSYS     = AFX_MAKE_FCC('m', 's', 'y', 's'), // afxComboSystem
+    afxFcc_SDEV     = AFX_MAKE_FCC('m', 'd', 'e', 'v'), // afxEngine
+    afxFcc_SEXU     = AFX_MAKE_FCC('m', 'e', 'x', 'u'), // afxSimBridge
+    afxFcc_SQUE     = AFX_MAKE_FCC('m', 'q', 'u', 'e'), // afxSimQueue
+    afxFcc_CTX     = AFX_MAKE_FCC('c', 't', 'x', '\0'), // afxContext
     afxFcc_SIM      = AFX_MAKE_FCC('s', 'i', 'm', '\0'), // afxSimulation
     afxFcc_HUB      = AFX_MAKE_FCC('h', 'u', 'b', '\0'), // afxHub
     afxFcc_DAG      = AFX_MAKE_FCC('d', 'a', 'g', '\0'), // afxDag
@@ -319,9 +316,9 @@ typedef enum afxFcc
     afxFcc_BODC     = AFX_MAKE_FCC('p', 'u', 'p', '\0'), // afxBodyControl
     afxFcc_BODP     = AFX_MAKE_FCC('b', 'o', 'd', 'p'), // afxBodyPart
     afxFcc_ANI      = AFX_MAKE_FCC('a', 'n', 'i', '\0'), // afxAnimation
-    afxFcc_ANIK     = AFX_MAKE_FCC('a', 'n', 'i', 'k'), // amxInstancedAnimation
+    afxFcc_ANIK     = AFX_MAKE_FCC('a', 'n', 'i', 'k'), // asxInstancedAnimation
     afxFcc_MOT      = AFX_MAKE_FCC('m', 'o', 't', '\0'), // afxMotion
-    afxFcc_MOTV     = AFX_MAKE_FCC('m', 'o', 't', 'v'), // amxMotive
+    afxFcc_MOTV     = AFX_MAKE_FCC('m', 'o', 't', 'v'), // asxMotive
     afxFcc_CUR      = AFX_MAKE_FCC('c', 'u', 'r', '\0'), // afxCurve
     afxFcc_RND      = AFX_MAKE_FCC('r', 'n', 'd', '\0'), // akxRenderer
 

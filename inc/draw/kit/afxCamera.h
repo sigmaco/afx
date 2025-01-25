@@ -21,8 +21,8 @@
 
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/mem/afxArray.h"
-#include "qwadro/inc/math/afxFrustum.h"
-#include "qwadro/inc/math/avxMatrix.h"
+#include "qwadro/inc/math/bound/afxFrustum.h"
+#include "qwadro/inc/draw/math/avxMatrix.h"
 
 /// Reset a camera to its default configuration.
 AVX void            AfxResetCamera(afxCamera cam);

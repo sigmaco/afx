@@ -10,9 +10,6 @@
     <Filter Include="qwadro\ux">
       <UniqueIdentifier>{4be41a32-e9be-4f31-b40f-df5202683b52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\xss">
-      <UniqueIdentifier>{346a1566-a569-4651-9073-309cc413505e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro\ux\va">
       <UniqueIdentifier>{9b228ef9-8379-4acb-84ef-f336d50c523b}</UniqueIdentifier>
     </Filter>
@@ -38,36 +35,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\ux\afxTerminal.c">
       <Filter>qwadro\ux</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\xss\xssValue.c">
-      <Filter>qwadro\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\xss\xssVm.c">
-      <Filter>qwadro\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\xss\afxScript.c">
-      <Filter>qwadro\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\xss\xssCompiler.c">
-      <Filter>qwadro\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\xss\xssCore.c">
-      <Filter>qwadro\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\xss\xssDebug.c">
-      <Filter>qwadro\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\xss\xssOptMeta.c">
-      <Filter>qwadro\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\xss\xssOptRandom.c">
-      <Filter>qwadro\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\xss\xssPrimitive.c">
-      <Filter>qwadro\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\xss\xssUtils.c">
-      <Filter>qwadro\xss</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\dep_\vgl\vgl.c">
       <Filter>qwadro\ux\va</Filter>
@@ -116,48 +83,6 @@
     <ClInclude Include="..\..\inc\ux\afxTerminal.h">
       <Filter>qwadro\ux</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\xss\xss.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\xss\afxScript.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssValue.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssVm.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssCommon.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssCompiler.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssCore.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssDebug.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssMath.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssOpcodes.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssOptMeta.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssOptRandom.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssPrimitive.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\xss\xssUtils.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\ux\va\auxPaint.h">
       <Filter>qwadro\ux\va</Filter>
     </ClInclude>
@@ -187,25 +112,5 @@
     <ResourceCompile Include="e2mmux.rc">
       <Filter>_dll</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\src\xss\xssCore.xss">
-      <Filter>qwadro\xss</Filter>
-    </None>
-    <None Include="..\..\src\xss\xssCore.xss.inc">
-      <Filter>qwadro\xss</Filter>
-    </None>
-    <None Include="..\..\src\xss\xssOptMeta.xss">
-      <Filter>qwadro\xss</Filter>
-    </None>
-    <None Include="..\..\src\xss\xssOptMeta.xss.inc">
-      <Filter>qwadro\xss</Filter>
-    </None>
-    <None Include="..\..\src\xss\xssOptRandom.xss">
-      <Filter>qwadro\xss</Filter>
-    </None>
-    <None Include="..\..\src\xss\xssOptRandom.xss.inc">
-      <Filter>qwadro\xss</Filter>
-    </None>
   </ItemGroup>
 </Project>

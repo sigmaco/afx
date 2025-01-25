@@ -23,7 +23,7 @@
     <ProjectGuid>{1685D511-3934-4F31-B8A3-AFA740F612B3}</ProjectGuid>
     <RootNamespace>e2sound</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
-    <ProjectName>e2sound</ProjectName>
+    <ProjectName>e2mix</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -90,7 +90,7 @@
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>__e2sound__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__e2mix__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
@@ -107,7 +107,7 @@
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>__e2sound__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__e2mix__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
@@ -123,7 +123,7 @@
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>__e2sound__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__e2mix__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -141,7 +141,7 @@
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>__e2sound__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__e2mix__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -151,20 +151,20 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\sound\afxSoundBridge.h" />
-    <ClInclude Include="..\..\inc\sound\afxSoundSystem.h" />
-    <ClInclude Include="..\..\inc\sound\afxSoundDefs.h" />
-    <ClInclude Include="..\..\inc\sound\afxSoundDevice.h" />
-    <ClInclude Include="..\..\inc\sound\io\afxAudient.h" />
-    <ClInclude Include="..\..\inc\sound\io\afxAudio.h" />
-    <ClInclude Include="..\..\inc\sound\io\afxSound.h" />
-    <ClInclude Include="..\..\inc\sound\op\afxMixer.h" />
-    <ClInclude Include="..\..\inc\sound\op\afxSink.h" />
-    <ClInclude Include="..\..\src\sound\impl\asxImpl_Audio.h" />
-    <ClInclude Include="..\..\src\sound\impl\asxImpl_System.h" />
-    <ClInclude Include="..\..\src\sound\impl\asxImplementation.h" />
-    <ClInclude Include="..\..\src\sound\impl\asxImpl_Executor.h" />
-    <ClInclude Include="..\..\src\sound\impl\asxImpl_Mixer.h" />
+    <ClInclude Include="..\..\inc\mix\afxMixBridge.h" />
+    <ClInclude Include="..\..\inc\mix\afxMixDefs.h" />
+    <ClInclude Include="..\..\inc\mix\afxMixDevice.h" />
+    <ClInclude Include="..\..\inc\mix\afxMixSystem.h" />
+    <ClInclude Include="..\..\inc\mix\io\afxAudient.h" />
+    <ClInclude Include="..\..\inc\mix\io\afxAudio.h" />
+    <ClInclude Include="..\..\inc\mix\io\afxSound.h" />
+    <ClInclude Include="..\..\inc\mix\op\afxMixContext.h" />
+    <ClInclude Include="..\..\inc\mix\op\afxSink.h" />
+    <ClInclude Include="..\..\src\mix\impl\amxImplementation.h" />
+    <ClInclude Include="..\..\src\mix\impl\amxImpl_Audio.h" />
+    <ClInclude Include="..\..\src\mix\impl\amxImpl_Executor.h" />
+    <ClInclude Include="..\..\src\mix\impl\amxImpl_MixContext.h" />
+    <ClInclude Include="..\..\src\mix\impl\amxImpl_System.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -182,20 +182,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\sound\afxSoundBridge.c" />
-    <ClCompile Include="..\..\src\sound\afxSoundDefs.c" />
-    <ClCompile Include="..\..\src\sound\afxSoundSystem.c" />
-    <ClCompile Include="..\..\src\sound\afxSoundDevice.c" />
-    <ClCompile Include="..\..\src\sound\impl\asxImplementation.c" />
-    <ClCompile Include="..\..\src\sound\impl\asxImpl_Audio.c" />
-    <ClCompile Include="..\..\src\sound\impl\asxImpl_Executor.c" />
-    <ClCompile Include="..\..\src\sound\impl\asxImpl_Mixer.c" />
-    <ClCompile Include="..\..\src\sound\io\afxAudient.c" />
-    <ClCompile Include="..\..\src\sound\io\afxAudio.c" />
-    <ClCompile Include="..\..\src\sound\io\afxSound.c" />
-    <ClCompile Include="..\..\src\sound\op\afxMixer.c" />
-    <ClCompile Include="..\..\src\sound\op\afxSink.c" />
-    <ClCompile Include="..\..\src\sound\op\afxSoundQueue.c" />
+    <ClCompile Include="..\..\src\mix\afxMixBridge.c" />
+    <ClCompile Include="..\..\src\mix\afxMixDefs.c" />
+    <ClCompile Include="..\..\src\mix\afxMixDevice.c" />
+    <ClCompile Include="..\..\src\mix\afxMixSystem.c" />
+    <ClCompile Include="..\..\src\mix\impl\amxImplementation.c" />
+    <ClCompile Include="..\..\src\mix\impl\amxImpl_Audio.c" />
+    <ClCompile Include="..\..\src\mix\impl\amxImpl_Executor.c" />
+    <ClCompile Include="..\..\src\mix\impl\amxImpl_MixContext.c" />
+    <ClCompile Include="..\..\src\mix\io\afxAudient.c" />
+    <ClCompile Include="..\..\src\mix\io\afxAudio.c" />
+    <ClCompile Include="..\..\src\mix\io\afxSound.c" />
+    <ClCompile Include="..\..\src\mix\op\afxMixContext.c" />
+    <ClCompile Include="..\..\src\mix\op\afxMixQueue.c" />
+    <ClCompile Include="..\..\src\mix\op\afxSink.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

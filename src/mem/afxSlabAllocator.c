@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 _AFXINL afxMemorySlab* _AfxFindSlabForPtr(afxSlabAllocator* mgr, void* p)
 {

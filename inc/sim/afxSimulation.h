@@ -22,24 +22,25 @@
 
 // A space is a purely mathematical representation of a world within space and its interactions.
 
-#ifndef AMX_SIMULATION_H
-#define AMX_SIMULATION_H
+#ifndef ASX_SIMULATION_H
+#define ASX_SIMULATION_H
 
 #include "qwadro/inc/sim/afxEngine.h"
 #include "qwadro/inc/sim/akxLighting.h"
 
-#include "qwadro/inc/sim/body/afxAnimation.h"
+#include "qwadro/inc/sim/io/afxAnimation.h"
 #include "qwadro/inc/sim/afxCapstan.h"
-#include "qwadro/inc/sim/body/afxMotion.h"
+#include "qwadro/inc/sim/io/afxMotion.h"
 #include "qwadro/inc/sim/akxRenderer.h"
 
 //#include "qwadro/inc/cad/afxSkeleton.h"
-#include "qwadro/inc/math/afxCurve.h"
+#include "qwadro/inc/sim/io/afxCurve.h"
 
-#include "qwadro/inc/sim/body/afxModel.h"
+#include "qwadro/inc/sim/io/afxModel.h"
 #include "qwadro/inc/sim/body/afxMaterial.h"
 
 #include "qwadro/inc/sim/op/afxSampleContext.h"
+#include "qwadro/inc/sim/io/afxScene.h"
 
 AFX_DEFINE_STRUCT(afxSimulationConfig)
 {
@@ -66,41 +67,41 @@ AFX_DEFINE_STRUCT(afxSimulationConfig)
 
 };
 
-AMX afxModule       AfxGetSimulationIcd(afxSimulation sim);
+ASX afxModule       AfxGetSimulationIcd(afxSimulation sim);
 
 // DRAW BRIDGES AND QUEUES.
 
-AMX afxUnit         AfxGetSimBridges(afxSimulation sim, afxUnit baseExuIdx, afxUnit cnt, afxSimBridge bridges[]);
-AMX afxUnit         AfxQuerySimBridges(afxSimulation sim, afxUnit mdevId, afxUnit portId, afxUnit first, afxUnit cnt, afxSimBridge bridges[]);
+ASX afxUnit         AfxGetSimBridges(afxSimulation sim, afxUnit baseExuIdx, afxUnit cnt, afxSimBridge bridges[]);
+ASX afxUnit         AfxQuerySimBridges(afxSimulation sim, afxUnit sengId, afxUnit portId, afxUnit first, afxUnit cnt, afxSimBridge bridges[]);
 
 
 
-AMX afxError        AfxStepSimulation(afxSimulation sim);
+ASX afxError        AfxStepSimulation(afxSimulation sim);
 
-AMX afxError        AfxWaitForSimBridge(afxSimulation sim, afxUnit exuIdx, afxTime timeout);
-AMX afxError        AfxWaitForSimulation(afxSimulation sim, afxTime timeout);
+ASX afxError        AfxWaitForSimBridge(afxSimulation sim, afxUnit exuIdx, afxTime timeout);
+ASX afxError        AfxWaitForSimulation(afxSimulation sim, afxTime timeout);
 
-AMX afxUnit         AfxRecenterAllCapstanClocks(afxSimulation sim, afxReal dCurrentClock);
+ASX afxUnit         AfxRecenterAllCapstanClocks(afxSimulation sim, afxReal dCurrentClock);
 
-AMX void            AfxQuerySimulationErrorTolerance(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler);
+ASX void            AfxQuerySimulationErrorTolerance(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler);
 
-AMX void            AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, afxV3d const right, afxV3d const up, afxV3d const back, afxV3d const origin, afxM3d ltm, afxM3d iltm, afxV3d atv);
+ASX void            AfxComputeSimilarity(afxSimulation sim, afxReal unitsPerMeter, afxV3d const right, afxV3d const up, afxV3d const back, afxV3d const origin, afxM3d ltm, afxM3d iltm, afxV3d atv);
 
 
-AMX afxDrawSystem   AfxGetSimulationDrawSystem(afxSimulation sim);
-AMX afxDrawInput    AfxGetSimulationDrawInput(afxSimulation sim);
+ASX afxDrawSystem   AfxGetSimulationDrawSystem(afxSimulation sim);
+ASX afxDrawInput    AfxGetSimulationDrawInput(afxSimulation sim);
 
-AMX afxUnit         AfxEnumerateBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBody bodies[]);
-AMX afxUnit         AfxInvokeBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBool(*f)(afxBody, void*), void *udd);
+ASX afxUnit         AfxEnumerateBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBody bodies[]);
+ASX afxUnit         AfxInvokeBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBool(*f)(afxBody, void*), void *udd);
 
-AMX afxError        AfxRollSimCommands(afxSimulation sim, avxSubmission* ctrl, afxUnit cnt, afxCatalyst contexts[]);
+ASX afxError        AfxRollSimCommands(afxSimulation sim, asxSubmission* ctrl, afxUnit cnt, afxContext contexts[]);
 
-AMX afxError        AfxCullBodies(afxSimulation sim, afxFrustum const* f, afxArray* pvs);
+ASX afxError        AfxCullBodies(afxSimulation sim, afxFrustum const* f, afxArray* pvs);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError        AfxConfigureSimulation(afxUnit mdevId, afxSimulationConfig* cfg);
+ASX afxError        AfxConfigureSimulation(afxUnit sengId, afxSimulationConfig* cfg);
 
-AMX afxError        AfxEstablishSimulation(afxUnit mdevId, afxSimulationConfig const* cfg, afxSimulation* simulation);
+ASX afxError        AfxEstablishSimulation(afxUnit sengId, afxSimulationConfig const* cfg, afxSimulation* simulation);
 
-#endif//AMX_SIMULATION_H
+#endif//ASX_SIMULATION_H

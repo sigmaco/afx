@@ -77,6 +77,9 @@ AFX_OBJECT(afxDrawContext)
 
     afxBool         inRenderPass;
     afxBool         inVideoCoding;
+
+    afxDrawLimits const* devLimits;
+    afxDrawFeatures const* enabledFeatures;
 };
 #endif//_AVX_DRAW_CONTEXT_C
 
@@ -158,6 +161,8 @@ AFX_DEFINE_UNION(avxCmd)
     } CopyRaster;
     struct
     {
+        avxCmdHdr hdr;
+
         afxDrawContext dctx;
         afxRaster src;
         afxRaster dst;
@@ -167,6 +172,8 @@ AFX_DEFINE_UNION(avxCmd)
     } BlitRaster;
     struct
     {
+        avxCmdHdr hdr;
+
         afxDrawContext dctx;
         afxRaster src;
         afxRaster dst;
@@ -175,6 +182,8 @@ AFX_DEFINE_UNION(avxCmd)
     } ResolveRaster;
     struct
     {
+        avxCmdHdr hdr;
+
         afxDrawContext dctx;
         afxRaster ras;
         avxClearValue value;
@@ -207,12 +216,7 @@ AFX_DEFINE_UNION(avxCmd)
         afxUnit set;
         afxUnit baseIdx;
         afxUnit cnt;
-        struct
-        {
-            afxBuffer buf;
-            afxUnit offset;
-            afxUnit range;
-        } AFX_SIMD items[];
+        afxBufferMap AFX_SIMD maps[];
     } BindBuffers;
     struct
     {
@@ -221,11 +225,7 @@ AFX_DEFINE_UNION(avxCmd)
         afxUnit set;
         afxUnit baseIdx;
         afxUnit cnt;
-        struct
-        {
-            afxRaster ras;
-            afxUnit subIdx;
-        } AFX_SIMD items[];
+        afxRaster AFX_SIMD rasters[];
     } BindRasters;
     struct
     {
@@ -247,7 +247,7 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        avxDrawIndirectCmd data;
+        avxDrawIndirect data;
     } Draw;
     struct
     {
@@ -273,7 +273,7 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        avxDrawIndexedIndirectCmd data;
+        avxDrawIndexedIndirect data;
     } DrawIndexed;
     struct
     {
@@ -299,7 +299,7 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        avxDispatchIndirectCmd data;
+        avxDispatchIndirect data;
     } Dispatch;
     struct
     {
@@ -319,7 +319,7 @@ AFX_DEFINE_UNION(avxCmd)
     struct
     {
         avxCmdHdr hdr;
-        
+
         afxM4d  v;
         afxV2d  at;
         afxUnit len;
@@ -333,7 +333,7 @@ AFX_DEFINE_UNION(avxCmd)
         avxCmdHdr hdr;
 
         avxVertexDecl vin;
-    } BindVertexInput;
+    } DeclareVertex;
     struct
     {
         avxCmdHdr hdr;
@@ -359,15 +359,9 @@ AFX_DEFINE_UNION(avxCmd)
         avxCmdHdr hdr;
 
         afxUnit baseSlotIdx;
-        afxUnit slotCnt;
-        struct
-        {
-            afxBuffer buf;
-            afxUnit32 offset;
-            afxUnit32 range;
-            afxUnit32 stride;
-        } AFX_SIMD items[];
-    } BindVertexSources;
+        afxUnit cnt;
+        avxBufferedStream AFX_SIMD src[];
+    } BindVertexBuffers;
     struct
     {
         avxCmdHdr hdr;
@@ -376,7 +370,7 @@ AFX_DEFINE_UNION(avxCmd)
         afxUnit32 offset;
         afxUnit32 range;
         afxUnit32 idxSiz;
-    } BindIndexSource;
+    } BindIndexBuffer;
     struct
     {
         avxCmdHdr hdr;
@@ -493,7 +487,7 @@ AFX_DEFINE_UNION(avxCmd)
     } AdjustCurtains;
     struct
     {
-        avxCmdHdr       hdr;
+        avxCmdHdr hdr;
 
         avxCanvas       canv;
         afxRect         area;
@@ -621,12 +615,12 @@ AFX_DEFINE_UNION(avxCmdList)
         void* StampDebug;
 
         // TRANSFORMATION OPERATIONS
-        void* BindVertexInput;
+        void* DeclareVertex;
         void* SwitchFrontFace;
         void* SetCullMode;
         void* AdjustViewports;
-        void* BindVertexSources;
-        void* BindIndexSource;
+        void* BindVertexBuffers;
+        void* BindIndexBuffer;
         void* SetPrimitiveTopology;
 
         // RASTERIZATION OPERATIOS

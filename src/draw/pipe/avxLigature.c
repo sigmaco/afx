@@ -315,7 +315,7 @@ _AVX afxError AfxDeclareLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureCo
     AFX_ASSERT(cfg);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = AvxGetLigatureClass(dsys);
+    afxClass* cls = (afxClass*)_AvxGetLigatureClass(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_LIGA);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)ligatures, (void const*[]) { dsys, cfg }))

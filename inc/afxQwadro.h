@@ -29,12 +29,12 @@
 // AVX
 #include "qwadro/inc/draw/afxDrawSystem.h"
 // ASX
-#include "qwadro/inc/sound/afxSoundSystem.h"
-// AMX
+#include "qwadro/inc/mix/afxMixSystem.h"
+// ASX
 #include "qwadro/inc/sim/afxSimulation.h"
 // AUX
 #include "qwadro/inc/ux/afxShell.h"
-// AMX
+// ASX
 #include "qwadro/inc/sim/afxSimulation.h"
 
 #endif//AFX_QWADRO_H

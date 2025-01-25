@@ -34,8 +34,7 @@
 /afx/sim/dev/_SampleTrackVmt.c
 /afx/sim/dev/_Vmt.c
 
-/afx/xss
-/afx/ux/_luna
+/afx/src/impl/xss/
 /afx/exp
 /afx/bink1/dep
 /afx/cadio/dep

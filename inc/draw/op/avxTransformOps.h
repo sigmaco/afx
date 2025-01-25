@@ -19,12 +19,21 @@
 #ifndef AVX_TRANSFORM_OPS_H
 #define AVX_TRANSFORM_OPS_H
 
-#include "qwadro/inc/math/afxViewport.h"
+#include "qwadro/inc/draw/math/afxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/draw/io/afxRaster.h"
 #include "qwadro/inc/draw/io/afxBuffer.h"
 #include "qwadro/inc/draw/pipe/avxSampler.h"
 #include "qwadro/inc/draw/pipe/avxQueryPool.h"
+
+AFX_DEFINE_STRUCT(avxBufferedStream)
+/// Structured specifying a afxBuffer-backed stream.
+{
+    afxBuffer   buf; /// is an array of buffer handles.
+    afxSize     offset; /// the start of buffer.
+    afxUnit     range; /// the size in bytes of data bound from buffer.
+    afxUnit     stride; /// the byte stride between consecutive elements within the buffer.
+};
 
   //////////////////////////////////////////////////////////////////////////////
  //// COMMANDS                                                             ////
@@ -54,21 +63,17 @@ AVX afxCmdId            AvxCmdAdjustViewports
 
 /// This command also dynamically sets the byte strides between consecutive elements within buffer @buf[#i] to the corresponding @stride[#i] value when drawing using shader objects, or when the graphics pipeline is created without vertex input binding stride set.
 
-AVX afxCmdId            AvxCmdBindVertexSources
+AVX afxCmdId            AvxCmdBindVertexBuffers
 (
     afxDrawContext      dctx,
     afxUnit             baseSlotIdx, /// is the index of the first vertex input binding whose state is updated by the command.
-    afxUnit             slotCnt, /// is the number of vertex input bindings whose state is updated by the command.
-    afxBuffer           buffers[], /// is an array of buffer handles.
-    afxUnit32 const     offsets[], /// the start of buffer.
-    afxUnit32 const     ranges[], /// the size in bytes of vertex data bound from buffer.
-    afxUnit32 const     strides[] /// the byte stride between consecutive elements within the buffer.
-    //afxUnit32 const    divisor[] /// the number of successive instances that will use the same value of the vertex attribute when instanced rendering is used.
+    afxUnit             cnt, /// is the number of vertex input bindings whose state is updated by the command.
+    avxBufferedStream const streams[] /// an array of info to set up the afxBuffer-backed streams.
 );
 
 /// Bind an index buffer to a command buffer.
 
-AVX afxCmdId            AvxCmdBindIndexSource
+AVX afxCmdId            AvxCmdBindIndexBuffer
 (
     afxDrawContext      dctx,
     afxBuffer           buf, /// is the buffer being bound.
@@ -102,6 +107,6 @@ AVX afxCmdId            AvxCmdSetCullMode
     avxCullMode         mode /// specifies the cull mode property to use for drawing.
 );
 
-AVX afxCmdId            AvxCmdBindVertexInput(afxDrawContext dctx, avxVertexDecl vin);
+AVX afxCmdId            AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexDecl vin);
 
 #endif//AVX_TRANSFORM_OPS_H

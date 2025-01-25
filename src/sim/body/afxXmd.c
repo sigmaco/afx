@@ -16,11 +16,11 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "../impl/amxImplementation.h"
+#include "../impl/asxImplementation.h"
 
-AMX afxChar const *shdResTypeNames[];
+ASX afxChar const *shdResTypeNames[];
 
-_AMX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxUnit elemIdx, afxSkeleton skl, afxModel* model)
+_ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxUnit elemIdx, afxSkeleton skl, afxModel* model)
 {
     afxError err = AFX_ERR_NONE;
     
@@ -1149,7 +1149,7 @@ afxError LoadRwDff(afxSimulation sim, afxDrawInput din, afxStream in, afxModel* 
                 }
             }
 
-            AfxAssembleMeshes(din, 1, &mshb, &meshes[geoIdx]);
+            AfxCompileMeshes(sim, 1, &mshb, &meshes[geoIdx]);
 
             AfxFormatVertexAttribute(meshes[geoIdx], posAttrIdx, avxFormat_RGB32f, afxVertexFlag_ATV, &AfxString("pos"));
             AfxFormatVertexAttribute(meshes[geoIdx], nrmAttrIdx, avxFormat_RGB32f, afxVertexFlag_LTM, &AfxString("nrm"));
@@ -1233,7 +1233,7 @@ afxError LoadRwDff(afxSimulation sim, afxDrawInput din, afxStream in, afxModel* 
             AfxTransformMeshes(ltm, iltm, AFX_EPSILON, AFX_V3D_ZERO, AFX_EPSILON, 3, 1, &meshes[geoIdx]);
         }
 
-        AfxRigMeshes(mdl, 0, dff.clumps[0].gl.totalGeometries, meshes, NIL);
+        AfxRigMeshes(mdl, NIL, 0, dff.clumps[0].gl.totalGeometries, meshes);
 
         *model = mdl;
 
@@ -1250,7 +1250,7 @@ afxError LoadRwDff(afxSimulation sim, afxDrawInput din, afxStream in, afxModel* 
     return err;
 }
 
-_AMX afxError TestDffLoad(afxSimulation sim, afxDrawInput din, afxUri const* uri, afxModel* model)
+_ASX afxError TestDffLoad(afxSimulation sim, afxDrawInput din, afxUri const* uri, afxModel* model)
 {
 
     afxStream file;

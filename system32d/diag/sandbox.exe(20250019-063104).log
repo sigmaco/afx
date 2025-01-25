@@ -1,0 +1,91 @@
+Booting...
+Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\system'),5Mounting... <//./z/>('E:\qwadro\system32'),7Mounting... <//./z/>('E:\qwadro\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree.dll>Memory page Size: 4096HW threading: 2Loading... <e2draw.dll>Loading... <e2combo.dll>Loading... <e2sound.dll>Loading... <e2mmux.dll>Loading... <//./z////eaxzal1.dll>Installing... <eaxzal1>Loading... <//./c/openal32.dll>	<//./eaxzal1/>("")  0.0.0 Loading... <//./z////galileo.dll>Installing... <galileo>	<//./catalyst/>("")  0.0.0 Loading... <//./z////tarzgl4.dll>Installing... <tarzgl4>Loading... <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL.c:1746
+GL: INVAL_PARAMzglInterop_WGL.c:1761
+GL: INVAL_PARAMzglInterop_WGL.c:1772
+GL: INVAL_PARAMzglInterop_WGL.c:1804
+GL: INVAL_PARAMzglInterop_WGL.c:1835
+GL: INVAL_PARAMzglInterop_WGL.c:1837
+GL: INVAL_PARAMzglInterop_WGL.c:1994
+GL: INVAL_PARAMzglInterop_WGL.c:1997
+GL: INVAL_PARAMzglInterop_WGL.c:2002
+GL: INVAL_PARAMzglInterop_WGL.c:2007
+GL: INVAL_PARAMLoading... <//./c/opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008zglInterop_WGL.c:1746
+GL: INVAL_PARAMzglInterop_WGL.c:1761
+GL: INVAL_PARAMzglInterop_WGL.c:1772
+GL: INVAL_PARAMzglInterop_WGL.c:1804
+GL: INVAL_PARAMzglInterop_WGL.c:1835
+GL: INVAL_PARAMzglInterop_WGL.c:1837
+GL: INVAL_PARAMzglInterop_WGL.c:1994
+GL: INVAL_PARAMzglInterop_WGL.c:1997
+GL: INVAL_PARAMzglInterop_WGL.c:2002
+GL: INVAL_PARAMzglInterop_WGL.c:2007
+GL: INVAL_PARAM	<//./tarzgl3/>("")  0.0.0 	<//./tarzgl4/>("")  0.0.0 Loading... <//./z////winsh4d.dll>Installing... <winsh4d>Entering the Thread Execution Environment 8952
+Starting 8952 on thread execution unit #2...Entering the Thread Execution Environment 4968
+Running... 06b0c2c0#8952 --- null:195Entering the Thread Execution Environment 8952
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 4968
+afxClass.c:912
+afxClass.c:912
+(cfg->fcc)
+    SuccessafxClass.c:935
+afxClass.c:935
+(cfg->name && cfg->name[0])
+    SuccessEntering the Thread Execution Environment 4212
+Starting 4212 on thread execution unit #3...Entering the Thread Execution Environment 4968
+Running... 06b0c460#4212 --- null:195Entering the Thread Execution Environment 4212
+SIGMA GL/2 Draw Execution Unit 000
+	Intel(R) HD Graphics 3.2.0 - Build 10.18.10.5129Entering the Thread Execution Environment 3476
+Starting 3476 on thread execution unit #4...Sound Execution Unit .Entering the Thread Execution Environment 4968
+Running... 0a424400#3476 --- null:418Mounting... <//./d/>('E:\qwadro\tmp'),7Entering the Thread Execution Environment 3476
+Loading... <//./c/openal32.dll>Entering the Thread Execution Environment 4968
+afxClass.c:935
+afxClass.c:935
+(cfg->name && cfg->name[0])
+    SuccessafxClass.c:935
+afxClass.c:935
+(cfg->name && cfg->name[0])
+    SuccessEntering the Thread Execution Environment 2420
+Starting 2420 on thread execution unit #5...Sim Execution Unit .Entering the Thread Execution Environment 4968
+Running... 0a4245a0#2420 --- null:217afxFile.c:410
+afxFile.c:411
+Couldn't open <../data/pipeline/test/test.xsh.xml>afxFile.c:487
+Entering the Thread Execution Environment 8952
+GPU buffer 0060d8c0 ready. 34962, 53, 4Entering the Thread Execution Environment 4968
+afxXml.c:1281
+afxDrawTechnique.c:114
+afxFile.c:410
+afxFile.c:411
+Couldn't open <../data/pipeline/body/body.xsh.xml>afxFile.c:487
+afxXml.c:1281
+afxDrawTechnique.c:114
+Entering the Thread Execution Environment 8952
+GPU buffer 0060d990 ready. 34963, 54, 8Entering the Thread Execution Environment 4968
+afxFile.c:410
+afxFile.c:411
+Couldn't open <../data/pipeline/testLighting/testLighting.xsh.xml>afxFile.c:487
+afxXml.c:1281
+afxDrawTechnique.c:114
+afxFile.c:410
+afxFile.c:411
+Couldn't open <../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>afxFile.c:487
+afxXml.c:1281
+afxDrawTechnique.c:114
+afxFile.c:410
+afxFile.c:411
+Couldn't open <../data/pipeline/lighting/lighting.xsh.xml>afxFile.c:487
+afxXml.c:1281
+afxDrawTechnique.c:114
+Installing watcher <0a753050> for 0a4a1760...
+meshes[1]+-- msh <> 0a73c3c0|   +-- topology : 3|   +-- triCnt : 20000|   +-- vtxCnt : 10201|   +-- attributes[4]|   |   +-- <pos>|   |   +-- <nrm>|   |   +-- <tan>|   |   +-- <uv>|   +-- materials[1]|   |   +-- <>|   +-- sections[1]|   |   +-- [0, 20000] #0|   +-- biases[1]|   |   +-- <>|   +-- morphes[1]|   |   +-- <>afxFile.c:410
+afxFile.c:411
+Couldn't open <../art/30.dff>afxFile.c:564
+afxFile.c:565
+Couldn't open <../art/30.dff>afxUrd.c:78
+afxUrd.c:78
+((!1) || ((&in) && !(_AfxAssertObjects((1), (afxObject const*)(&in),(afxFcc_IOB)))))
+    SuccessafxStream.c:177
+afxStream.c:177
+((!1) || ((&iob) && !(_AfxAssertObjects((1), (afxObject const*)(&iob),(afxFcc_IOB)))))
+    Success

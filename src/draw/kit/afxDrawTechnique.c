@@ -83,7 +83,7 @@ _AVX afxError _AvxDtecCtorCb(afxDrawTechnique dtec, void** args, afxUnit invokeN
     return err;
 }
 
-_AVX afxClassConfig const _AvxDtecClsCfg =
+_AVX afxClassConfig const _AVX_DTEC_CLASS_CONFIG =
 {
     .fcc = afxFcc_DTEC,
     .name = "DrawTechnique",

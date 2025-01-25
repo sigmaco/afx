@@ -21,8 +21,8 @@
 #define _AFX_IO_BRIDGE_C
 #define _AFX_IO_QUEUE_C
 #define _AFX_DRAW_OUTPUT_C
-#include "../dev/afxIoImplKit.h"
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxIoImplKit.h"
+#include "../impl/afxExecImplKit.h"
 #include "qwadro/inc/io/afxIoBridge.h"
 
 _AFX afxDevice AfxGetIoBridgeDevice(afxIoBridge exu)
@@ -34,12 +34,12 @@ _AFX afxDevice AfxGetIoBridgeDevice(afxIoBridge exu)
     return dev;
 }
 
-_AFX afxContext AfxGetIoBridgeContext(afxIoBridge exu)
+_AFX afxDevLink AfxGetIoBridgeContext(afxIoBridge exu)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
-    afxContext ctx = exu->ctx;
-    //AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
+    afxDevLink ctx = exu->ctx;
+    //AFX_ASSERT_OBJECTS(afxFcc_DEVK, 1, &ctx);
     return ctx;
 }
 
@@ -205,8 +205,8 @@ _AFX afxError _AfxExuStdCtorCb(afxIoBridge exu, void** args, afxUnit invokeNo)
 
     afxDevice dev = args[0];
     //AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
-    afxContext ctx = args[1];
-    //AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
+    afxDevLink ctx = args[1];
+    //AFX_ASSERT_OBJECTS(afxFcc_DEVK, 1, &ctx);
     afxIoBridgeConfig const *cfg = ((afxIoBridgeConfig const *)args[2]);
     AFX_ASSERT(cfg);
     afxClassConfig const* xqueClsCfg = args[3];

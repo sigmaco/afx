@@ -143,7 +143,8 @@ AFX_DEFINE_STRUCT(afxClass)
     afxPool         pool;
     afxSlock        poolLock;
     afxUnit         unitsPerPage; // when pool gets empty, the class will try to resizes storage pages to this value. If zero, the new page will be set to the size of the first batch allocation when pool was zero.
-    
+    afxUnit         uniqueInc;
+
     afxArena        arena; // used to allocate class/struct suballocations for members.
 
     afxError        (*ctor)(afxObject obj, void** args, afxUnit invokeNo); // void to avoid warnings

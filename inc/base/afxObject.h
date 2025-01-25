@@ -98,15 +98,14 @@ AFX_DEFINE_STRUCT(afxPostedEvent)
 AFX_DEFINE_STRUCT(afxObjectBase)
 {
     afxFcc              fcc; // OBJ
+    afxUnit             instIdx; // read-only
     afxObjectFlags      flags;
     afxAtom32           refCnt;
     afxUnit32           tid;
-    afxUnit             instIdx; // read-only
     afxClass*           cls;    
     afxChain            *watchers;
     afxChain            *watching;
     afxBool             (*event)(afxObject obj, afxEvent *ev);
-    afxBool             (*eventFilter)(afxObject obj, afxObject watched, afxEvent *ev);
     afxByte*            extra; // plugin data
     afxAddress AFX_SIMD data[];
 };
@@ -115,9 +114,9 @@ AFX_STATIC_ASSERT(offsetof(afxObjectBase, data) % 16 == 0, "");
 
 AFX_DEFINE_STRUCT(afxEventFilter)
 {
-    afxLink          holder; // obj->watching
-    afxLink          watched; // obj->watchers
-    //afxEventFilterFn    fn;
+    afxLink holder; // holder->watching
+    afxLink watched; // watched->watchers
+    afxBool (*fn)(afxObject obj, afxObject watched, afxEvent*);
 };
 
 AFX_DEFINE_STRUCT(afxObjectStash)
@@ -129,11 +128,10 @@ AFX_DEFINE_STRUCT(afxObjectStash)
 };
 
 AFX void                AfxResetEventHandler(afxObject obj, afxBool(*handler)(afxObject obj,afxEvent*));
-AFX void                AfxResetEventFilter(afxObject obj, afxBool(*filter)(afxObject obj, afxObject watched, afxEvent*));
 
 AFX afxBool             AfxNotifyObject(afxObject obj, afxEvent *ev);
-AFX afxError            AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]);
-AFX afxError            AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]);
+AFX afxError            AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[], afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev));
+AFX afxError            AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[], afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev));
 
 AFX afxResult           AfxTestObjectFcc(afxObject obj, afxFcc fcc);
 AFX afxFcc              AfxGetObjectFcc(afxObject obj);

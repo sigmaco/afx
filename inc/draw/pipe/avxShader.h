@@ -25,18 +25,19 @@
 
 typedef enum avxShaderParam
 {
-    avxShaderParam_INPUT = 0,
-    avxShaderParam_OUTPUT = 1,
-    avxShaderParam_SAMPLER_UNIT = 2,
-    avxShaderParam_COMBINED_IMAGE_SAMPLER = 3, // when an image is bound without a sampler
-    avxShaderParam_IMAGE_UNIT = 4,
-    avxShaderParam_STORAGE_IMAGE = 5,
-    avxShaderParam_FETCH_UNIT = 6,
-    avxShaderParam_STORAGE_TEXEL_BUFFER = 7,
-    avxShaderParam_UNIFORM_UNIT = 8,
-    avxShaderParam_STORAGE_UNIT = 9,
+    avxShaderParam_IN = 0,
+    avxShaderParam_OUT = 1,
+    avxShaderParam_SAMPLER = 2, // sampler only
+    avxShaderParam_TEXTURE = 3, // combined image-sampler
+    avxShaderParam_RASTER = 4, // raster only
+    avxShaderParam_IMAGE = 5,
+    avxShaderParam_TFBO = 6,
+    avxShaderParam_TSBO = 7,
+    avxShaderParam_UNIFORM = 8, // UBO
+    avxShaderParam_BUFFER = 9, // SSBO
     avxShaderParam_INPUT_ATTACHMENT = 10,
-    avxShaderParam_PUSH_CONSTANT_BUFFER = 11,
+    avxShaderParam_PUSH = 11, // push constant buffer object
+    avxShaderParam_FEEDBACK = 12, // transform feedback buffer
 
     avxShaderParam_TOTAL
 } avxShaderParam;

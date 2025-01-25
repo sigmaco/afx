@@ -37,7 +37,7 @@ AFX_OBJECT(afxBuffer)
     avxFormat       fmt; // for tensor buffer
     void*           udd;
 
-    void*           data; // used by system bufferization
+    void*           data; // used by host-side allocation
     afxBuffer       src; // handled used by subacquision of another buffer
     afxSize         start; // offset used by subacquision of another buffer
     afxUnit         cap; // capacity
@@ -54,36 +54,23 @@ AFX_OBJECT(afxBuffer)
 #endif//_AVX_BUFFER_C
 
 #ifdef _AVX_RASTER_C
-AFX_DEFINE_STRUCT(afxSubraster)
-{
-    afxUnit              baseLod;
-    afxUnit              lodCnt;
-    afxUnit              baseLayer;
-    afxUnit              layerCnt;
-    avxFormat           fmt;
-    avxColorSwizzling   swizzling;
-    afxRasterFlags      flags;
-};
 #ifdef _AVX_RASTER_IMPL
 AFX_OBJECT(_avxRaster)
 #else
 AFX_OBJECT(afxRaster)
 #endif
 {
+    afxRaster           base; // sub
     afxRasterFlags      flags;
     afxRasterUsage      usage;
     void*               udd;
     avxFormat           fmt;
+    afxUnit             baseLayer; // sub
     afxWhd              extent; // extent of image
+    afxUnit             baseLod; // sub
     afxUnit             lodCnt; // mip level cnt
     afxUnit             sampleCnt; // 1, 2, 4, 8, 16, 32, or 64.
-
-    afxUnit             subCnt;
-    union
-    {
-        afxSubraster    sub0;
-        afxSubraster*   subs;
-    };
+    avxColorSwizzling   swizzling; // sub
 };
 #endif
 

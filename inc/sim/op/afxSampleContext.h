@@ -14,8 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AMX_SAMPLE_CONTEXT_H
-#define AMX_SAMPLE_CONTEXT_H
+#ifndef ASX_SAMPLE_CONTEXT_H
+#define ASX_SAMPLE_CONTEXT_H
 
 /*
     In computer simulation, a sample context refers to the specific scenario, environment, 
@@ -31,14 +31,14 @@
 #include "qwadro/inc/sim/op/afxPoseOps.h"
 #include "qwadro/inc/sim/op/afxMiscOps.h"
 
-AMX afxUnit AfxGetCatalystPort(afxCatalyst cyst);
+ASX afxUnit AfxGetCatalystPort(afxContext ctx);
 
-AMX afxUnit AfxGetCatalystPool(afxCatalyst cyst);
+ASX afxUnit AfxGetCatalystPool(afxContext ctx);
 
-AMX afxError AfxCompileSimCommands(afxCatalyst cyst);
+ASX afxError AfxCompileSimCommands(afxContext ctx);
 
-AMX afxError AfxRecycleCatalyst(afxCatalyst cyst, afxBool freeRes);
+ASX afxError AfxRecycleCatalyst(afxContext ctx, afxBool freeRes);
 
-AMX afxError AfxAcquireCatalysts(afxSimulation dsys, afxUnit exuIdx, afxUnit queIdx, afxUnit cnt, afxCatalyst batches[]);
+ASX afxError AfxAcquireSampleContexts(afxSimulation dsys, afxUnit exuIdx, afxUnit queIdx, afxUnit cnt, afxContext batches[]);
 
-#endif//AMX_SAMPLE_CONTEXT_H
+#endif//ASX_SAMPLE_CONTEXT_H

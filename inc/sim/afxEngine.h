@@ -15,10 +15,10 @@
  */
 
   //////////////////////////////////////////////////////////////////////////////
- // High Performance Computing Infrastructure                                //
+ // High Performance Cosputing Infrastructure                                //
 //////////////////////////////////////////////////////////////////////////////
 
-// This section is part of SIGMA High Performance Computing Infrastructure.
+// This section is part of SIGMA High Performance Cosputing Infrastructure.
 
 // A computer simulation (or "sim") is an attempt to model a real-life or hypothetical situation on a computer so that it can be studied to see how the system works. 
 // By changing variables in the simulation, predictions may be made about the behaviour of the system. 
@@ -32,8 +32,8 @@
     analysis (the study of continuous changes), and set theory (presently used as a foundation for all mathematics).
 */
 
-#ifndef AMX_ENGINE_H
-#define AMX_ENGINE_H
+#ifndef ASX_ENGINE_H
+#define ASX_ENGINE_H
 
 #include "qwadro/inc/exec/afxDevice.h"
 #include "qwadro/inc/sim/afxSimBridge.h"
@@ -54,20 +54,20 @@ AFX_DEFINE_STRUCT(afxEngineLimits)
     afxUnit maxCurvDims; // 9?
 };
 
-AMX afxUnit     AfxCountEnginePorts(afxEngine mdev);
+ASX afxUnit     AfxCountEnginePorts(afxEngine seng);
 
-AMX afxBool     AfxIsEnginePrompt(afxEngine mdev);
+ASX afxBool     AfxIsEnginePrompt(afxEngine seng);
 
-AMX afxUnit     AfxChooseSimPorts(afxEngine mdev, afxSimPortFlags caps, afxAcceleration accel, afxUnit maxCnt, afxUnit portId[]);
+ASX afxUnit     AfxChooseSimPorts(afxEngine seng, afxSimPortFlags caps, afxAcceleration accel, afxUnit maxCnt, afxUnit portId[]);
 
 // IMPLEMENTATION DISCOVERY ////////////////////////////////////////////////////
 
-AMX afxUnit     AfxInvokeEngines(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*,afxEngine), afxUnit cnt);
-AMX afxUnit     AfxEvokeEngines(afxUnit icd, afxUnit first, void* udd, afxBool(*flt)(void*,afxEngine), afxUnit cnt, afxEngine devices[]);
-AMX afxUnit     AfxEnumerateEngines(afxUnit icd, afxUnit first, afxUnit cnt, afxEngine devices[]);
+ASX afxUnit     AfxInvokeEngines(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*,afxEngine), afxUnit cnt);
+ASX afxUnit     AfxEvokeEngines(afxUnit icd, afxUnit first, void* udd, afxBool(*flt)(void*,afxEngine), afxUnit cnt, afxEngine devices[]);
+ASX afxUnit     AfxEnumerateEngines(afxUnit icd, afxUnit first, afxUnit cnt, afxEngine devices[]);
 
-AMX afxUnit     AfxInvokeSimulations(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*,afxSimulation), afxUnit cnt);
-AMX afxUnit     AfxEvokeSimulations(afxUnit icd, afxUnit first, void* udd, afxBool(*flt)(void*, afxSimulation), afxUnit cnt, afxSimulation simulations[]);
-AMX afxUnit     AfxEnumerateSimulations(afxUnit icd, afxUnit first, afxUnit cnt, afxSimulation simulations[]);
+ASX afxUnit     AfxInvokeSimulations(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*,afxSimulation), afxUnit cnt);
+ASX afxUnit     AfxEvokeSimulations(afxUnit icd, afxUnit first, void* udd, afxBool(*flt)(void*, afxSimulation), afxUnit cnt, afxSimulation simulations[]);
+ASX afxUnit     AfxEnumerateSimulations(afxUnit icd, afxUnit first, afxUnit cnt, afxSimulation simulations[]);
 
-#endif//AMX_ENGINE_H
+#endif//ASX_ENGINE_H

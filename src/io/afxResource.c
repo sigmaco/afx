@@ -18,7 +18,7 @@
 
 
 #include <sys/stat.h>
-#include "../dev/afxIoImplKit.h"
+#include "../impl/afxIoImplKit.h"
 
 _AFXINL afxError AfxUnloadResource(afxResource res)
 {

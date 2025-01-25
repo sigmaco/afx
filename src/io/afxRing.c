@@ -18,7 +18,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_RING_C
-#include "../dev/afxIoImplKit.h"
+#include "../impl/afxIoImplKit.h"
 
 _AFX afxError AfxDeployRing(afxRing* ring, afxUnit unitSiz, afxUnit32 cap)
 {

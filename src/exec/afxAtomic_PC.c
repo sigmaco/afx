@@ -25,7 +25,7 @@
 #include <stdatomic.h> // compiles on Clang. Yes, even if marked as non-existing in VS.
 #endif
 
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 #ifdef AFX_OS_WIN
 

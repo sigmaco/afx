@@ -55,14 +55,13 @@ _AVXINL afxRasterFlags AfxTestRasterFlags(afxRaster ras, afxRasterFlags mask)
     return ras->flags & mask;
 }
 
-_AVXINL void AfxGetRasterSwizzling(afxRaster ras, afxUnit subIdx, avxColorSwizzling* csw)
+_AVXINL void AfxGetRasterSwizzling(afxRaster ras, avxColorSwizzling* csw)
 {
     afxError err = AFX_ERR_NONE;
     /// ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-    AFX_ASSERT_RANGE(ras->subCnt, subIdx, 1);
     AFX_ASSERT(csw);
-    *csw = ras->subs[subIdx].swizzling;
+    *csw = ras->swizzling;
 }
 
 _AVXINL afxWhd AfxGetRasterExtent(afxRaster ras, afxUnit lodIdx)
@@ -650,6 +649,12 @@ _AVX afxError _AvxRasStdDtorCb(afxRaster ras)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
+    if (ras->base)
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras->base);
+        AfxDisposeObjects(1, &ras->base);
+    }
+
     return err;
 }
 
@@ -662,12 +667,13 @@ _AVX afxError _AvxRasStdCtorCb(afxRaster ras, void** args, afxUnit invokeNo)
 
     afxDrawSystem dsys = AfxGetProvider(ras);
 
-    ras->subCnt = 0;
-    ras->subs = NIL;
+    ras->base = NIL;
 
     //ras->swizzling = NIL; //&AFX_STD_COLOR_SWIZZLING;
-    
+
+    ras->baseLod = 0;
     ras->lodCnt = AfxMax(rasi->lodCnt, 1);
+    ras->baseLayer = 0;
     AfxWhdMax(&ras->extent, AfxWhd(1, 1, 1), rasi->extent);
 
     ras->flags = NIL;;
@@ -695,16 +701,10 @@ _AVX afxError _AvxRasStdCtorCb(afxRaster ras, void** args, afxUnit invokeNo)
         }
     }
 
-    ras->sub0.baseLod = 0;
-    ras->sub0.lodCnt = 1;
-    ras->sub0.baseLayer = 0;
-    ras->sub0.layerCnt = 1;
-    ras->sub0.flags = ras->flags;
-    ras->sub0.fmt = ras->fmt;
-    ras->sub0.swizzling.r = avxColorSwizzle_R;
-    ras->sub0.swizzling.g = avxColorSwizzle_B;
-    ras->sub0.swizzling.b = avxColorSwizzle_G;
-    ras->sub0.swizzling.a = avxColorSwizzle_A;
+    ras->swizzling.r = avxColorSwizzle_R;
+    ras->swizzling.g = avxColorSwizzle_B;
+    ras->swizzling.b = avxColorSwizzle_G;
+    ras->swizzling.a = avxColorSwizzle_A;
 
     ras->udd = rasi->udd;
 
@@ -771,7 +771,7 @@ _AVX afxError AfxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, afxRasterInfo c
         }
     }
 
-    afxClass* cls = AvxGetRasterClass(dsys);
+    afxClass* cls = (afxClass*)_AvxGetRasterClass(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_RAS);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)rasters, (void const*[]) { dsys, info }))

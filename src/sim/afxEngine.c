@@ -18,38 +18,38 @@
 #define _AFX_SYSTEM_C
 #define _AFX_DEVICE_C
 #define _AFX_SIM_C
-#define _AMX_ENGINE_C
-#define _AMX_SIMULATION_C
-#include "impl/amxImplementation.h"
+#define _ASX_ENGINE_C
+#define _ASX_SIMULATION_C
+#include "impl/asxImplementation.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // MATH DEVICE HANDLING                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxUnit AfxCountEnginePorts(afxEngine mdev)
+_ASX afxUnit AfxCountEnginePorts(afxEngine seng)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
-    return mdev->portCnt;
+    AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
+    return seng->portCnt;
 }
 
-_AMX afxBool AfxIsEnginePrompt(afxEngine mdev)
+_ASX afxBool AfxIsEnginePrompt(afxEngine seng)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
-    return mdev->dev.serving;
+    AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
+    return seng->dev.serving;
 }
 
-_AMX afxUnit AfxChooseSimPorts(afxEngine mdev, afxSimPortFlags caps, afxAcceleration accel, afxUnit maxCnt, afxUnit portId[])
+_ASX afxUnit AfxChooseSimPorts(afxEngine seng, afxSimPortFlags caps, afxAcceleration accel, afxUnit maxCnt, afxUnit portId[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
+    AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
     afxUnit rslt = 0;
 
-    for (afxUnit i = mdev->portCnt; i-- > 0;)
+    for (afxUnit i = seng->portCnt; i-- > 0;)
     {
-        afxSimPortCaps const* port = &mdev->ports[i].caps;
+        afxSimPortCaps const* port = &seng->ports[i].caps;
 
         if (!caps || (caps == (caps & port->capabilities)))
         {
@@ -65,120 +65,120 @@ _AMX afxUnit AfxChooseSimPorts(afxEngine mdev, afxSimPortFlags caps, afxAccelera
     return rslt;
 }
 
-_AMX afxError _AmxMdevDtorCb(afxEngine mdev)
+_ASX afxError _AsxMdevDtorCb(afxEngine seng)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
+    AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
 
-    if (mdev->stopCb && mdev->stopCb(mdev))
+    if (seng->stopCb && seng->stopCb(seng))
         AfxThrowError();
 
-    AFX_ASSERT(!mdev->idd);
-    AfxDeregisterChainedClasses(&mdev->dev.classes);
+    AFX_ASSERT(!seng->idd);
+    AfxDeregisterChainedClasses(&seng->dev.classes);
 
-    AfxDismantleMutex(&mdev->relinkedCndMtx);
-    AfxDismantleCondition(&mdev->relinkedCnd);
+    AfxDismantleMutex(&seng->relinkedCndMtx);
+    AfxDismantleCondition(&seng->relinkedCnd);
 
     afxObjectStash stashes[] =
     {
         {
-            .cnt = mdev->portCnt,
-            .siz = sizeof(mdev->ports[0]),
-            .var = (void**)&mdev->ports
+            .cnt = seng->portCnt,
+            .siz = sizeof(seng->ports[0]),
+            .var = (void**)&seng->ports
         }
     };
-    AfxDeallocateInstanceData(mdev, ARRAY_SIZE(stashes), stashes);
+    AfxDeallocateInstanceData(seng, ARRAY_SIZE(stashes), stashes);
 
     return err;
 }
 
-_AMX afxError _AmxMdevCtorCb(afxEngine mdev, void** args, afxUnit invokeNo)
+_ASX afxError _AsxMdevCtorCb(afxEngine seng, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
+    AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &seng);
 
     afxModule icd = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     afxEngineInfo const* info = ((afxEngineInfo const *)args[1]) + invokeNo;
     AFX_ASSERT(info);
 
-    if (_AfxDevBaseImplementation.ctor(&mdev->dev, (void*[]) { icd, (void*)&info->dev }, 0))
+    if (_AfxDevBaseImplementation.ctor(&seng->dev, (void*[]) { icd, (void*)&info->dev }, 0))
     {
         AfxThrowError();
         return err;
     }
 
-    AfxDeployCondition(&mdev->relinkedCnd);
-    AfxDeployMutex(&mdev->relinkedCndMtx, AFX_MTX_PLAIN);
+    AfxDeployCondition(&seng->relinkedCnd);
+    AfxDeployMutex(&seng->relinkedCndMtx, AFX_MTX_PLAIN);
 
-    mdev->idd = NIL;
+    seng->idd = NIL;
 
-    mdev->startCb = info->startCb;
-    mdev->stopCb = info->stopCb;
-    mdev->openSimCb = info->openSimCb;
-    mdev->closeSimCb = info->closeSimCb;
+    seng->startCb = info->startCb;
+    seng->stopCb = info->stopCb;
+    seng->openSimCb = info->openSimCb;
+    seng->closeSimCb = info->closeSimCb;
 
-    mdev->closeMdgeCb = info->closeMdgeCb;
-    mdev->openMdgeCb = info->openMdgeCb;
+    seng->closeMdgeCb = info->closeMdgeCb;
+    seng->openMdgeCb = info->openMdgeCb;
 
-    mdev->portCnt = info->portCnt;
+    seng->portCnt = info->portCnt;
 
     afxObjectStash stashes[] =
     {
         {
-            .cnt = mdev->portCnt,
-            .siz = sizeof(mdev->ports[0]),
-            .var = (void**)&mdev->ports
+            .cnt = seng->portCnt,
+            .siz = sizeof(seng->ports[0]),
+            .var = (void**)&seng->ports
         }
     };
 
-    if (AfxAllocateInstanceData(mdev, ARRAY_SIZE(stashes), stashes))
+    if (AfxAllocateInstanceData(seng, ARRAY_SIZE(stashes), stashes))
     {
         AfxThrowError();
     }
     else
     {
-        if (!mdev->portCnt) AfxThrowError();
+        if (!seng->portCnt) AfxThrowError();
         else
         {
-            AFX_ASSERT(mdev->ports);
+            AFX_ASSERT(seng->ports);
 
-            for (afxUnit i = 0; i < mdev->portCnt; i++)
+            for (afxUnit i = 0; i < seng->portCnt; i++)
             {
-                mdev->ports[i].caps = info->portCaps[i];
+                seng->ports[i].caps = info->portCaps[i];
             }
 
-            if (AfxCallDevice(&mdev->dev, afxFcc_MSYS, NIL)) AfxThrowError();
+            if (AfxCallDevice(&seng->dev, afxFcc_MSYS, NIL)) AfxThrowError();
             else
             {
                 if (err)
                 {
-                    AfxDeregisterChainedClasses(&mdev->dev.classes);
+                    AfxDeregisterChainedClasses(&seng->dev.classes);
                 }
             }
         }
 
         if (err)
-            AfxDeallocateInstanceData(mdev, ARRAY_SIZE(stashes), stashes);
+            AfxDeallocateInstanceData(seng, ARRAY_SIZE(stashes), stashes);
     }
     return err;
 }
 
-_AMX afxClassConfig const _AMX_MDEV_CLASS_CONFIG =
+_ASX afxClassConfig const _ASX_SDEV_CLASS_CONFIG =
 {
-    .fcc = afxFcc_MDEV,
+    .fcc = afxFcc_SDEV,
     .name = "Engine",
     .desc = "Compute Engine Interface",
     .fixedSiz = sizeof(AFX_OBJECT(afxEngine)),
-    .ctor = (void*)_AmxMdevCtorCb,
-    .dtor = (void*)_AmxMdevDtorCb
+    .ctor = (void*)_AsxMdevCtorCb,
+    .dtor = (void*)_AsxMdevDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 // IMPLEMENTATION DISCOVERY                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxUnit AfxInvokeEngines(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*,afxEngine), afxUnit cnt)
+_ASX afxUnit AfxInvokeEngines(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*,afxEngine), afxUnit cnt)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
@@ -186,19 +186,19 @@ _AMX afxUnit AfxInvokeEngines(afxUnit icd, afxUnit first, void *udd, afxBool(*f)
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AmxGetIcd(icd, &mdle))
+    while (_AsxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AMX) == (afxModuleFlag_ICD | afxModuleFlag_AMX));
-        afxClass const* cls = _AmxGetEngineClass(mdle);
-        AFX_ASSERT_CLASS(cls, afxFcc_MDEV);
+        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_ASX) == (afxModuleFlag_ICD | afxModuleFlag_ASX));
+        afxClass const* cls = _AsxGetEngineClass(mdle);
+        AFX_ASSERT_CLASS(cls, afxFcc_SDEV);
         rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
         break;
     }
     return rslt;
 }
 
-_AMX afxUnit AfxEvokeEngines(afxUnit icd, afxUnit first, void* udd, afxBool(*flt)(void*,afxEngine), afxUnit cnt, afxEngine devices[])
+_ASX afxUnit AfxEvokeEngines(afxUnit icd, afxUnit first, void* udd, afxBool(*flt)(void*,afxEngine), afxUnit cnt, afxEngine devices[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(devices);
@@ -206,19 +206,19 @@ _AMX afxUnit AfxEvokeEngines(afxUnit icd, afxUnit first, void* udd, afxBool(*flt
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AmxGetIcd(icd, &mdle))
+    while (_AsxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AMX) == (afxModuleFlag_ICD | afxModuleFlag_AMX));
-        afxClass const* cls = _AmxGetEngineClass(mdle);
-        AFX_ASSERT_CLASS(cls, afxFcc_MDEV);
+        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_ASX) == (afxModuleFlag_ICD | afxModuleFlag_ASX));
+        afxClass const* cls = _AsxGetEngineClass(mdle);
+        AFX_ASSERT_CLASS(cls, afxFcc_SDEV);
         rslt = AfxEvokeObjects(cls, (void*)flt, udd, first, cnt, (afxObject*)devices);
         break;
     }
     return rslt;
 }
 
-_AMX afxUnit AfxEnumerateEngines(afxUnit icd, afxUnit first, afxUnit cnt, afxEngine devices[])
+_ASX afxUnit AfxEnumerateEngines(afxUnit icd, afxUnit first, afxUnit cnt, afxEngine devices[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(devices);
@@ -226,19 +226,19 @@ _AMX afxUnit AfxEnumerateEngines(afxUnit icd, afxUnit first, afxUnit cnt, afxEng
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AmxGetIcd(icd, &mdle))
+    while (_AsxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AMX) == (afxModuleFlag_ICD | afxModuleFlag_AMX));
-        afxClass const* cls = _AmxGetEngineClass(mdle);
-        AFX_ASSERT_CLASS(cls, afxFcc_MDEV);
+        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_ASX) == (afxModuleFlag_ICD | afxModuleFlag_ASX));
+        afxClass const* cls = _AsxGetEngineClass(mdle);
+        AFX_ASSERT_CLASS(cls, afxFcc_SDEV);
         rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)devices);
         break;
     }
     return rslt;
 }
 
-_AMX afxUnit AfxInvokeSimulations(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*, afxSimulation), afxUnit cnt)
+_ASX afxUnit AfxInvokeSimulations(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*, afxSimulation), afxUnit cnt)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
@@ -246,11 +246,11 @@ _AMX afxUnit AfxInvokeSimulations(afxUnit icd, afxUnit first, void *udd, afxBool
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AmxGetIcd(icd, &mdle))
+    while (_AsxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AMX) == (afxModuleFlag_ICD | afxModuleFlag_AMX));
-        afxClass const* cls = _AmxGetSimulationClass(mdle);
+        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_ASX) == (afxModuleFlag_ICD | afxModuleFlag_ASX));
+        afxClass const* cls = _AsxGetSimulationClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_SIM);
         rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
         break;
@@ -258,7 +258,7 @@ _AMX afxUnit AfxInvokeSimulations(afxUnit icd, afxUnit first, void *udd, afxBool
     return rslt;
 }
 
-_AMX afxUnit AfxEvokeSimulations(afxUnit icd, afxUnit first, void* udd, afxBool(*flt)(void*, afxSimulation), afxUnit cnt, afxSimulation simulations[])
+_ASX afxUnit AfxEvokeSimulations(afxUnit icd, afxUnit first, void* udd, afxBool(*flt)(void*, afxSimulation), afxUnit cnt, afxSimulation simulations[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(simulations);
@@ -266,11 +266,11 @@ _AMX afxUnit AfxEvokeSimulations(afxUnit icd, afxUnit first, void* udd, afxBool(
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AmxGetIcd(icd, &mdle))
+    while (_AsxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AMX) == (afxModuleFlag_ICD | afxModuleFlag_AMX));
-        afxClass const* cls = _AmxGetSimulationClass(mdle);
+        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_ASX) == (afxModuleFlag_ICD | afxModuleFlag_ASX));
+        afxClass const* cls = _AsxGetSimulationClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_SIM);
         rslt = AfxEvokeObjects(cls, (void*)flt, udd, first, cnt, (afxObject*)simulations);
         break;
@@ -278,7 +278,7 @@ _AMX afxUnit AfxEvokeSimulations(afxUnit icd, afxUnit first, void* udd, afxBool(
     return rslt;
 }
 
-_AMX afxUnit AfxEnumerateSimulations(afxUnit icd, afxUnit first, afxUnit cnt, afxSimulation simulations[])
+_ASX afxUnit AfxEnumerateSimulations(afxUnit icd, afxUnit first, afxUnit cnt, afxSimulation simulations[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(simulations);
@@ -286,11 +286,11 @@ _AMX afxUnit AfxEnumerateSimulations(afxUnit icd, afxUnit first, afxUnit cnt, af
     afxUnit rslt = 0;
 
     afxModule mdle;
-    while (AmxGetIcd(icd, &mdle))
+    while (_AsxGetIcd(icd, &mdle))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AMX) == (afxModuleFlag_ICD | afxModuleFlag_AMX));
-        afxClass const* cls = _AmxGetSimulationClass(mdle);
+        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_ASX) == (afxModuleFlag_ICD | afxModuleFlag_ASX));
+        afxClass const* cls = _AsxGetSimulationClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_SIM);
         rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)simulations);
         break;

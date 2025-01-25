@@ -875,7 +875,7 @@ _AVX afxError _AvxCamDtorCb(afxCamera cam)
     return err;
 }
 
-_AVX afxClassConfig const _AvxCamClsCfg =
+_AVX afxClassConfig const _AVX_CAM_CLASS_CONFIG =
 {
     .fcc = afxFcc_CAM,
     .name = "Camera",

@@ -43,14 +43,12 @@ AFX_OBJECT(afxDrawInput)
 {
     afxChain            classes;
     afxClass            camCls;
-    afxClass            scnCls;
     afxClass            dtecCls;
     afxClass            txdCls;
     afxClass            texCls;
     afxClass            ibuffers;
     afxClass            vbuffers;
 
-    afxClass            mshCls;
     afxClass            mshtCls;
     afxClass            geomCls;
 
@@ -68,10 +66,6 @@ AFX_OBJECT(afxDrawInput)
     afxUnit             maxIdxBufSiz; // 13500000
 
     afxDrawInputProc    procCb;
-
-
-    afxStringBase   strbJointBiasesTags;
-    afxStringBase   strbMorphTags;
 
     struct _afxDinIdd*  idd;
     void*               udd; // user-defined data
@@ -142,79 +136,6 @@ AFX_OBJECT(afxGeometry)
 
 #endif
 
-#ifdef _AVX_MESH_C
-
-AFX_DEFINE_STRUCT(avxMeshAttr)
-{
-    afxString8          usage; // 8
-    afxVertexFlags      flags;
-    avxFormat           fmt;
-    afxBox              aabb; // mainly used to optimize memory usage with ATV data.
-    afxBool             aabbUpdReq;
-};
-
-AFX_DEFINE_STRUCT(avxVertexBuffer)
-{
-    afxChain    meshes;
-    afxLink  buf;
-
-};
-
-AFX_OBJECT(afxMesh)
-{
-    // TOPOLOGY DATA
-    afxMeshFlags        flags;
-    avxTopology         topology; // actually only TRILIST
-    afxUnit             triCnt; // count of primitives.
-    afxUnit*            sideToAdjacentMap; // [edgeCnt]
-    afxUnit             mtlCnt; // used by sections
-    afxString*          materials; // [mtlCnt]
-    afxUnit             secCnt;
-    afxMeshSection*     sections; // [secCnt]
-    afxUnit             biasCnt;
-    afxMeshBias*        biases;
-    // nested bias identifier strings for fast lookup.
-    afxString*          biasId;
-    afxUnit             jointsForTriCnt;
-    afxUnit*            jointsForTriMap;
-    afxUnit             triToJointCnt;
-    afxUnit*            triToJointMap;
-
-    // VERTEX DATA
-    afxUnit             vtxCnt;
-    afxUnit*            vtxToVtxMap; // [vtxCnt]
-    afxUnit*            vtxToTriMap; // [vtxCnt]
-    afxUnit             minIdxSiz;
-    afxUnit             idxCnt; // count of primitive indices.
-    afxUnit*            indices; // [idxCnt] --- indices into primitive vertices.
-    afxUnit             attrCnt; // used by morphes.
-    afxString*          attrIds;
-    avxMeshAttr*        attrInfo;
-    afxByte**           vtxAttrData; // [attrCnt]
-    
-    // SHAPE DATA
-    afxUnit             morphCnt;
-    afxMeshMorph*       morphs;
-    // nested morph tags for fast lookup.
-    afxString*          morphTags; // [morphCnt]
-    // nested section AABB for fast lookup
-    afxBox*             secAabb; // [morphCnt][secCnt]
-    // nested bias OBB for fast lookup.
-    afxBox*             biasObb; // [morphCnt][biasCnt]
-
-    avxVertexCache      vtxCache; 
-    afxBuffer           ibo;
-    afxUnit32           iboBase;
-    afxUnit32           iboRange;
-    afxUnit32           iboStride;
-
-    afxString           urn; // 32
-    void*               idd;
-    void*               udd;
-};
-
-#endif
-
 AVX afxClassConfig const _AVX_DIN_CLASS_CONFIG;
 
 AVX afxClass const* AvxGetCameraClass(afxDrawInput din);
@@ -222,14 +143,9 @@ AVX afxClass const* AvxGetDrawTechniqueClass(afxDrawInput din);
 AVX afxClass*       AvxGetIndexBufferClass(afxDrawInput din);
 AVX afxClass*       AvxGetVertexBufferClass(afxDrawInput din);
 AVX afxClass const* AvxGetTextureClass(afxDrawInput din);
-AVX afxClass const* AvxGetSceneClass(afxDrawInput din);
 AVX afxClass const* AvxGetTxdClass(afxDrawInput din);
 
-AVX afxClass const* AvxGetMeshClass(afxDrawInput din);
 AVX afxClass const* AvxGetGeometryClass(afxDrawInput din);
 AVX afxClass const* AvxGetMeshTopologyClass(afxDrawInput din);
-
-AVX afxStringBase   AvxGetPivotTagStringBase(afxDrawInput din);
-AVX afxStringBase   AvxGetMorphTagStringBase(afxDrawInput din);
 
 #endif//AVX_IMPL___INPUT_H

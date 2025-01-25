@@ -83,7 +83,7 @@ _AVX afxBool _AvxDpu_ProcCb(avxDpu* dpu)
         if (AfxTryLockMutex(&dque->workChnMtx))
         {
             avxWork* work;
-            AfxChainForEveryLinkageB2F(&dque->workChn, avxWork, hdr.chain, work)
+            AFX_ITERATE_CHAIN_B2F(&dque->workChn, avxWork, hdr.chain, work)
             {
                 AFX_ASSERT(dque->workChn.cnt);
                 AfxGetTime(&work->hdr.pullTime);

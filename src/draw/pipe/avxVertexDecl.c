@@ -201,7 +201,7 @@ _AVX afxError AfxDeclareVertexLayout(afxDrawSystem dsys, afxUnit streamCnt, avxV
 
     avxVertexDecl vsup = NIL;
 
-    afxClass* cls = AvxGetVertexInputClass(dsys);
+    afxClass* cls = (afxClass*)_AvxGetVertexInputClass(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_VIN);
 
     if (AfxAcquireObjects(cls, 1, (afxObject*)&vsup, (void const*[]) { dsys, &streamCnt, streams, &attrCnt, attrs }))

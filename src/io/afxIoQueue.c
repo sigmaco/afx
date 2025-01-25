@@ -21,7 +21,7 @@
 #define _AFX_IO_BRIDGE_C
 #define _AFX_IO_QUEUE_C
 #define _AFX_DRAW_OUTPUT_C
-#include "../dev/afxIoImplKit.h"
+#include "../impl/afxIoImplKit.h"
 #include "qwadro/inc/io/afxIoBridge.h"
 
 _AFX afxError _AfxXquePopWork(afxIoQueue xque, afxStdWork* work)
@@ -57,12 +57,12 @@ _AFX afxUnit AfxGetIoQueuePort(afxIoQueue xque)
     return xque->portId;
 }
 
-_AFX afxContext AfxGetIoQueueContext(afxIoQueue xque)
+_AFX afxDevLink AfxGetIoQueueContext(afxIoQueue xque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
-    afxContext ctx = xque->ctx;
-    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
+    afxDevLink ctx = xque->ctx;
+    AFX_ASSERT_OBJECTS(afxFcc_DEVK, 1, &ctx);
     return ctx;
 }
 

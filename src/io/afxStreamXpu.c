@@ -18,8 +18,8 @@
 
 #define _AFX_CORE_C
 #define _AFX_STREAM_C
-#include "../dev/afxIoImplKit.h"
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxIoImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 _AFX void _DecodeCmdRead(afxIoBridge exu, afxStdCmd const* cmd)
 {
@@ -76,7 +76,7 @@ _AFX afxError _XpuRollStreams(afxIoBridge exu, afxUnit cnt, afxStream streams[])
         }
 
         afxStdCmd* cmdHdr;
-        AfxChainForEveryLinkageB2F(&iob->commands, afxStdCmd, hdr.script, cmdHdr)
+        AFX_ITERATE_CHAIN_B2F(&iob->commands, afxStdCmd, hdr.script, cmdHdr)
         {
             if (cmdHdr->hdr.id == NIL/*ZGL_CMD_END*/)
             {
@@ -102,8 +102,8 @@ _AFX afxError _XpuRollStreams(afxIoBridge exu, afxUnit cnt, afxStream streams[])
         {
             AFX_ASSERT(mix->m.portId == spu->portId);
             mix->m.state = avxCmdbState_INVALID;
-            afxSoundQueue sque = AfxGetProvider(mix);
-            AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
+            afxMixQueue sque = AfxGetProvider(mix);
+            AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &sque);
 
             afxUnit poolIdx = mix->m.poolIdx;
 

@@ -14,11 +14,33 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AMX_MISC_OPS_H
-#define AMX_MISC_OPS_H
+#ifndef ASX_MISC_OPS_H
+#define ASX_MISC_OPS_H
 
 #include "afxSampleContext.h"
+#include "qwadro/inc/sim/io/afxMesh.h"
 
-AMX afxCmdId AmxCmdBindBuffers(afxCatalyst cyst, afxUnit baseSlot, afxUnit cnt, afxBuffer buffers[], afxUnit const offsets[], afxUnit const ranges[]);
+ASX afxCmdId AsxCmdBindBuffers(afxContext ctx, afxUnit baseSlot, afxUnit cnt, afxBuffer buffers[], afxUnit const offsets[], afxUnit const ranges[]);
 
-#endif//AMX_MISC_OPS_H
+// MESH OPS
+
+ASX afxCmdId        AmxCmdChangeMeshMorphes(afxContext mctx, afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, afxMeshMorph const morphes[]);
+
+ASX afxCmdId        AmxCmdResetMeshSections(afxContext mctx, afxMesh msh, afxUnit baseSecIdx, afxUnit cnt, afxMeshSection const sections[]);
+
+ASX afxCmdId        AmxCmdInvertMeshTopology(afxContext mctx, afxMesh msh);
+
+ASX afxCmdId        AmxCmdRemapMeshCoverage(afxContext mctx, afxMesh msh, afxUnit mtlIdxCnt, afxUnit const mtlIdxLut[]);
+
+ASX afxCmdId        AmxCmdUpdateMeshIndices(afxContext mctx, afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void const* src, afxUnit srcIdxSiz);
+ASX afxCmdId        AmxCmdDumpMeshIndices(afxContext mctx, afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void* dst, afxUnit dstIdxSiz);
+
+ASX afxCmdId        AmxCmdRecomputeMeshBounds(afxContext mctx, afxMesh msh, afxUnit morphIdx, afxUnit baseSecIdx, afxUnit cnt, afxUnit posAttrIdx);
+ASX afxCmdId        AmxCmdUpdateMeshBounds(afxContext mctx, afxMesh msh, afxUnit morphIdx, afxUnit baseSecIdx, afxUnit cnt, afxBox const aabbs[]);
+
+ASX afxCmdId        AmxCmdRecomputeMeshNormals(afxContext mctx, afxMesh msh, afxUnit morphIdx, afxUnit posAttrIdx, afxUnit nrmAttrIdx);
+ASX afxCmdId        AmxCmdRecomputeMeshTangents(afxContext mctx, afxMesh msh, afxUnit morphIdx, afxUnit posAttrIdx, afxUnit uvAttrIdx, afxUnit tanAttrIdx, afxUnit bitAttrIdx);
+
+ASX afxCmdId        AmxCmdTransformMeshes(afxContext mctx, afxM3d const ltm, afxM3d const iltm, afxReal ltTol, afxV3d const atv, afxReal atTol, afxFlags flags, afxUnit cnt, afxMesh meshes[]);
+
+#endif//ASX_MISC_OPS_H

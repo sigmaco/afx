@@ -1634,8 +1634,8 @@ _AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx
         AfxUnmapBuffer(wid->ibo, FALSE);
         AfxWaitForDrawSystem(AfxGetBufferContext(wid->ibo), 0);
 
-        AvxCmdBindVertexSources(dctx, 0, 1, &wid->vbo, NIL, (afxUnit[]) { wid->vboSiz }, (afxUnit[]) { 20 });
-        AvxCmdBindIndexSource(dctx, wid->ibo, 0, wid->iboSiz, sizeof(nk_draw_index));
+        AvxCmdBindVertexBuffers(dctx, 0, 1, (avxBufferedStream[]) { {.buf = wid->vbo, .range = wid->vboSiz, .stride = 20 } });
+        AvxCmdBindIndexBuffer(dctx, wid->ibo, 0, wid->iboSiz, sizeof(nk_draw_index));
 
         /* iterate over and execute each draw command */
         nk_draw_foreach(cmd, &wid->nkCtx, &wid->cmds)
@@ -1645,7 +1645,7 @@ _AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx
 
             afxRaster tex_handle = get_tex_ogl_handle(wid, cmd->texture.id);
             AvxCmdBindSamplers(dctx, 0, 1, 1, &wid->font_samp);
-            AvxCmdBindRasters(dctx, 0, 1, 1, &tex_handle, NIL);
+            AvxCmdBindRasters(dctx, 0, 1, 1, &tex_handle);
             //glBindTexture(GL_TEXTURE_2D, (GLuint)cmd->texture.id);
 
             afxRect rc = { 0 };

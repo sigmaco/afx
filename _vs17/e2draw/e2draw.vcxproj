@@ -149,18 +149,20 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\inc\draw\afxDrawInput.h" />
+    <ClInclude Include="..\..\inc\draw\afxDrawOutput.h" />
+    <ClInclude Include="..\..\inc\draw\avxDisplay.h" />
     <ClInclude Include="..\..\inc\draw\io\afxPixel.h" />
     <ClInclude Include="..\..\inc\draw\kit\afxCamera.h" />
     <ClInclude Include="..\..\inc\draw\kit\afxDrawTechnique.h" />
-    <ClInclude Include="..\..\inc\draw\kit\afxMesh.h" />
-    <ClInclude Include="..\..\inc\draw\kit\afxScene.h" />
-    <ClInclude Include="..\..\inc\draw\kit\afxTriangulation.h" />
     <ClInclude Include="..\..\inc\draw\kit\afxTxd.h" />
+    <ClInclude Include="..\..\inc\draw\math\afxColor.h" />
+    <ClInclude Include="..\..\inc\draw\math\afxViewport.h" />
+    <ClInclude Include="..\..\inc\draw\math\avxMatrix.h" />
     <ClInclude Include="..\..\inc\draw\op\afxDrawContext.h" />
-    <ClInclude Include="..\..\inc\draw\op\afxDrawInput.h" />
-    <ClInclude Include="..\..\inc\draw\op\afxDrawOutput.h" />
     <ClInclude Include="..\..\inc\draw\op\avxBufferOps.h" />
     <ClInclude Include="..\..\inc\draw\op\avxDrawOps.h" />
+    <ClInclude Include="..\..\inc\draw\op\avxFence.h" />
     <ClInclude Include="..\..\inc\draw\op\avxQueryOps.h" />
     <ClInclude Include="..\..\inc\draw\op\avxRasterizationOps.h" />
     <ClInclude Include="..\..\inc\draw\op\avxRasterOps.h" />
@@ -181,9 +183,6 @@
     <ClInclude Include="..\..\inc\draw\pipe\avxSampler.h" />
     <ClInclude Include="..\..\inc\draw\pipe\avxShader.h" />
     <ClInclude Include="..\..\inc\draw\pipe\avxVertexDecl.h" />
-    <ClInclude Include="..\..\inc\math\afxColor.h" />
-    <ClInclude Include="..\..\inc\math\afxViewport.h" />
-    <ClInclude Include="..\..\inc\math\avxMatrix.h" />
     <ClInclude Include="..\..\src\draw\impl\avxImpl_Context.h" />
     <ClInclude Include="..\..\src\draw\impl\avxImpl_Executor.h" />
     <ClInclude Include="..\..\src\draw\impl\avxImpl_Pipeline.h" />
@@ -199,9 +198,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\draw\afxDrawBridge.c" />
+    <ClCompile Include="..\..\src\draw\afxDrawInput.c" />
+    <ClCompile Include="..\..\src\draw\afxDrawOutput.c" />
     <ClCompile Include="..\..\src\draw\afxDrawSystem.c" />
     <ClCompile Include="..\..\src\draw\afxDrawDevice.c" />
     <ClCompile Include="..\..\src\draw\afxDrawDefs.c" />
+    <ClCompile Include="..\..\src\draw\avxDisplay.c" />
     <ClCompile Include="..\..\src\draw\impl\avxImplementation.c" />
     <ClCompile Include="..\..\src\draw\impl\avxImpl_Context.c" />
     <ClCompile Include="..\..\src\draw\impl\avxImpl_Executor.c" />
@@ -215,17 +217,15 @@
     <ClCompile Include="..\..\src\draw\io\afxXsh.c" />
     <ClCompile Include="..\..\src\draw\kit\afxCamera.c" />
     <ClCompile Include="..\..\src\draw\kit\afxDrawTechnique.c" />
-    <ClCompile Include="..\..\src\draw\kit\afxMesh.c" />
-    <ClCompile Include="..\..\src\draw\kit\afxMeshBufferization.c" />
-    <ClCompile Include="..\..\src\draw\kit\afxScene.c" />
-    <ClCompile Include="..\..\src\draw\kit\afxTriangulation.c" />
     <ClCompile Include="..\..\src\draw\kit\afxTxd.c" />
+    <ClCompile Include="..\..\src\draw\math\afxColor.c" />
+    <ClCompile Include="..\..\src\draw\math\afxViewport.c" />
+    <ClCompile Include="..\..\src\draw\math\avxMatrix.c" />
     <ClCompile Include="..\..\src\draw\op\afxDrawContext.c" />
-    <ClCompile Include="..\..\src\draw\op\afxDrawInput.c" />
-    <ClCompile Include="..\..\src\draw\op\afxDrawOutput.c" />
     <ClCompile Include="..\..\src\draw\op\afxDrawQueue.c" />
     <ClCompile Include="..\..\src\draw\op\avxBufferOps.c" />
     <ClCompile Include="..\..\src\draw\op\avxDrawOps.c" />
+    <ClCompile Include="..\..\src\draw\op\avxFence.c" />
     <ClCompile Include="..\..\src\draw\op\avxQueryOps.c" />
     <ClCompile Include="..\..\src\draw\op\avxRasterizationOps.c" />
     <ClCompile Include="..\..\src\draw\op\avxRasterOps.c" />
@@ -237,9 +237,6 @@
     <ClCompile Include="..\..\src\draw\pipe\avxSampler.c" />
     <ClCompile Include="..\..\src\draw\pipe\avxShader.c" />
     <ClCompile Include="..\..\src\draw\pipe\avxVertexDecl.c" />
-    <ClCompile Include="..\..\src\math\afxColor.c" />
-    <ClCompile Include="..\..\src\math\afxViewport.c" />
-    <ClCompile Include="..\..\src\math\avxMatrix.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">

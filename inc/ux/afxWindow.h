@@ -34,7 +34,7 @@
 #define AUX_WINDOW_H
 
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/math/afxViewport.h"
+#include "qwadro/inc/draw/math/afxViewport.h"
 
 // our facade
 

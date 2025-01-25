@@ -16,23 +16,23 @@
 
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
-#define _AMX_ENGINE_C
-#define _AMX_SIM_BRIDGE_C
-#define _AMX_SIM_QUEUE_C
-#define _AMX_CATALYST_C
-#include "../impl/amxImplementation.h"
+#define _ASX_ENGINE_C
+#define _ASX_SIM_BRIDGE_C
+#define _ASX_SIM_QUEUE_C
+#define _ASX_CONTEXT_C
+#include "../impl/asxImplementation.h"
 
 
-_AMX afxCmdId AmxCmdBindMemory(afxCatalyst cyst, afxUnit slot, void* ptr, afxSize siz)
+_ASX afxCmdId AmxCmdBindMemory(afxContext ctx, afxUnit slot, void* ptr, afxSize siz)
 {
     afxError err = AFX_ERR_NONE;
-    /// cyst must be a valid afxCatalyst handle.
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
-    /// cyst must be in the recording state.
-    AFX_ASSERT(cyst->state == amxCatalystState_RECORDING);
+    /// ctx must be a valid afxContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
+    /// ctx must be in the recording state.
+    AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxCystPushCmd(cyst, AMX_GET_STD_CMD_ID(BindMemory), sizeof(cmd->BindMemory), &cmdId);
+    asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(BindMemory), sizeof(cmd->BindMemory), &cmdId);
     AFX_ASSERT(cmd);
 
     cmd->BindMemory.slot = slot;
@@ -42,16 +42,16 @@ _AMX afxCmdId AmxCmdBindMemory(afxCatalyst cyst, afxUnit slot, void* ptr, afxSiz
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdBindBuffers(afxCatalyst cyst, afxUnit baseSlot, afxUnit cnt, afxBuffer buffers[], afxUnit const offsets[], afxUnit const ranges[])
+_ASX afxCmdId AsxCmdBindBuffers(afxContext ctx, afxUnit baseSlot, afxUnit cnt, afxBuffer buffers[], afxUnit const offsets[], afxUnit const ranges[])
 {
     afxError err = AFX_ERR_NONE;
-    /// cyst must be a valid afxCatalyst handle.
-    AFX_ASSERT_OBJECTS(afxFcc_CYST, 1, &cyst);
-    /// cyst must be in the recording state.
-    AFX_ASSERT(cyst->state == amxCatalystState_RECORDING);
+    /// ctx must be a valid afxContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
+    /// ctx must be in the recording state.
+    AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxCystPushCmd(cyst, AMX_GET_STD_CMD_ID(BindBuffers), sizeof(cmd->BindBuffers) + (cnt * sizeof(cmd->BindBuffers.items[0])), &cmdId);
+    asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(BindBuffers), sizeof(cmd->BindBuffers) + (cnt * sizeof(cmd->BindBuffers.items[0])), &cmdId);
     AFX_ASSERT(cmd);
 
     cmd->BindBuffers.baseSlot = baseSlot;

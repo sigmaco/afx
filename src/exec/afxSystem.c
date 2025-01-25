@@ -19,7 +19,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
-#include "../dev/afxExecImplKit.h"
+#include "../impl/afxExecImplKit.h"
 
 _AFX afxChar const _rwBuildDateTime[];
 static afxChar const  _rwBuildDateTime[] = "\nCore built at " __DATE__ " " __TIME__ "\n";
@@ -334,31 +334,31 @@ _AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
     }
     //AfxZero(&sys->aux, sizeof(sys->aux));
 
-    ssysReady = FALSE;
+    msysReady = FALSE;
 #if 0
     if (sys->asx.ssys)
     {
         sys->asx.ioctl(sys, sys->asx.e2soundDll, 4, NIL);
     }
 #endif
-    if (sys->asx.e2soundDll)
+    if (sys->amx.e2mixDll)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->asx.e2soundDll);
-        AfxDisposeObjects(1, &sys->asx.e2soundDll);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->amx.e2mixDll);
+        AfxDisposeObjects(1, &sys->amx.e2mixDll);
     }
     //AfxZero(&sys->asx, sizeof(sys->asx));
 
-    msysReady = FALSE;
+    ssysReady = FALSE;
 #if 0
     if (sys->amx.msys)
     {
         sys->amx.ioctl(sys, sys->amx.e2simDll, 4, NIL);
 }
 #endif
-    if (sys->amx.e2simDll)
+    if (sys->asx.e2simDll)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->amx.e2simDll);
-        AfxDisposeObjects(1, &sys->amx.e2simDll);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->asx.e2simDll);
+        AfxDisposeObjects(1, &sys->asx.e2simDll);
     }
     //AfxZero(&sys->amx, sizeof(sys->amx));
 #if 0
@@ -565,7 +565,7 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
-    if (!(sys->avx.disabled))
+    //if (!(sys->avx.disabled))
     {
         //AfxDbgLogf(6, NIL, "Doing the AVX start up...");
 
@@ -611,11 +611,11 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
         }
     }
 
-    if (!(sys->amx.disabled))
+    //if (!(sys->amx.disabled))
     {
-        //AfxDbgLogf(6, NIL, "Doing the AMX start up...");
+        //AfxDbgLogf(6, NIL, "Doing the ASX start up...");
 
-        AfxDeployChain(&sys->amx.icdChain, sys);
+        AfxDeployChain(&sys->asx.icdChain, sys);
 
         afxUri uri;
         AfxMakeUri(&uri, 0, "e2combo", 0);
@@ -625,7 +625,7 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2simDll);
-            sys->amx.e2simDll = e2simDll;
+            sys->asx.e2simDll = e2simDll;
 
             afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2simDll, "afxScmHook");
 
@@ -651,34 +651,34 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
 #endif
             if (err)
             {
-                AfxDisposeObjects(1, &sys->amx.e2simDll);
-                sys->amx.e2simDll = NIL;
+                AfxDisposeObjects(1, &sys->asx.e2simDll);
+                sys->asx.e2simDll = NIL;
             }
         }
     }
 
-    if (!(sys->asx.disabled))
+    //if (!(sys->asx.disabled))
     {
         //AfxDbgLogf(6, NIL, "Doing the ASX start up...");
         
-        AfxDeployChain(&sys->asx.icdChain, sys);
+        AfxDeployChain(&sys->amx.icdChain, sys);
 
         afxUri uri;
-        AfxMakeUri(&uri, 0, "e2sound", 0);
-        afxModule e2soundDll = NIL;
+        AfxMakeUri(&uri, 0, "e2mix", 0);
+        afxModule e2mixDll = NIL;
 
-        if (AfxLoadModule(&uri, AFX_BIT(8), &e2soundDll)) AfxThrowError();
+        if (AfxLoadModule(&uri, AFX_BIT(8), &e2mixDll)) AfxThrowError();
         else
         {
-            AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2soundDll);
-            sys->asx.e2soundDll = e2soundDll;
+            AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2mixDll);
+            sys->amx.e2mixDll = e2mixDll;
 
-            afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2soundDll, "afxScmHook");
+            afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2mixDll, "afxScmHook");
 
             if (!scmHookFn) AfxThrowError();
             else
             {
-                if (scmHookFn(e2soundDll, ini)) AfxThrowError();
+                if (scmHookFn(e2mixDll, ini)) AfxThrowError();
                 else
                 {
 
@@ -697,13 +697,13 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
 #endif
             if (err)
             {
-                AfxDisposeObjects(1, &sys->asx.e2soundDll);
-                sys->asx.e2soundDll = NIL;
+                AfxDisposeObjects(1, &sys->amx.e2mixDll);
+                sys->amx.e2mixDll = NIL;
             }
         }
     }
 
-    if (!(sys->aux.disabled))
+    //if (!(sys->aux.disabled))
     {
         //AfxDbgLogf(6, NIL, "Doing the AUX start up...");
 

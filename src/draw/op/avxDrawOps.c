@@ -56,8 +56,8 @@ _AVX afxString const afxDrawCmdStrings[] =
     AFX_STRING("ResetAreas"),
     AFX_STRING("UpdateAreas"),
 
-    AFX_STRING("BindIndexSource"),
-    AFX_STRING("BindVertexSources"),
+    AFX_STRING("BindIndexBuffer"),
+    AFX_STRING("BindVertexBuffers"),
 
     AFX_STRING("Draw"),
     AFX_STRING("DrawIndirect"),
@@ -90,7 +90,7 @@ _AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, afxUnit segment, avxPipeli
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, afxBuffer buffers[], afxUnit offsets[], afxUnit ranges[])
+_AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, afxBufferMap const maps[])
 {
     afxError err = AFX_ERR_NONE;
     /// dctx must be a valid afxDrawContext handle.
@@ -101,7 +101,7 @@ _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseId
     AFX_ASSERT(!dctx->inVideoCoding);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindBuffers), sizeof(cmd->BindBuffers) + (cnt * sizeof(cmd->BindBuffers.items[0])), &cmdId);
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindBuffers), sizeof(cmd->BindBuffers) + (cnt * sizeof(cmd->BindBuffers.maps[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->BindBuffers.set = set;
     cmd->BindBuffers.baseIdx = baseIdx;
@@ -109,14 +109,15 @@ _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseId
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        cmd->BindBuffers.items[i].buf = buffers ? buffers[i] : NIL;
-        cmd->BindBuffers.items[i].offset = offsets ? offsets[i] : 0;
-        cmd->BindBuffers.items[i].range = ranges ? ranges[i] : 0;
+        afxBufferMap const* map = &maps[i];
+        cmd->BindBuffers.maps[i].buf = map->buf;
+        cmd->BindBuffers.maps[i].offset = map->offset;
+        cmd->BindBuffers.maps[i].range = map->range;
     }
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, afxRaster rasters[], afxUnit const subIdx[])
+_AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, afxRaster const rasters[])
 {
     afxError err = AFX_ERR_NONE;
     /// dctx must be a valid afxDrawContext handle.
@@ -127,7 +128,7 @@ _AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseId
     AFX_ASSERT(!dctx->inVideoCoding);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindRasters), sizeof(cmd->BindRasters) + (cnt * sizeof(cmd->BindRasters.items[0])), &cmdId);
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindRasters), sizeof(cmd->BindRasters) + (cnt * sizeof(cmd->BindRasters.rasters[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->BindRasters.set = set;
     cmd->BindRasters.baseIdx = baseIdx;
@@ -135,13 +136,12 @@ _AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseId
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        cmd->BindRasters.items[i].ras = rasters ? rasters[i] : NIL;
-        cmd->BindRasters.items[i].subIdx = subIdx ? subIdx[i] : 0;
+        cmd->BindRasters.rasters[i] = rasters ? rasters[i] : NIL;
     }
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxSampler samplers[])
+_AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxSampler const samplers[])
 {
     afxError err = AFX_ERR_NONE;
     /// dctx must be a valid afxDrawContext handle.
@@ -209,8 +209,8 @@ _AVX afxCmdId AvxCmdDraw(afxDrawContext dctx, afxUnit vtxCnt, afxUnit instCnt, a
     AFX_ASSERT(cmd);
     cmd->Draw.data.vtxCnt = vtxCnt;
     cmd->Draw.data.instCnt = instCnt;
-    cmd->Draw.data.firstVtx = firstVtxIdx;
-    cmd->Draw.data.firstInst = firstInstIdx;
+    cmd->Draw.data.baseVtx = firstVtxIdx;
+    cmd->Draw.data.baseInst = firstInstIdx;
     return cmdId;
 }
 
@@ -293,8 +293,8 @@ _AVX afxCmdId AvxCmdDrawIndexed(afxDrawContext dctx, afxUnit idxCnt, afxUnit ins
     afxCmdId cmdId;
     avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(DrawIndexed), sizeof(cmd->DrawIndexed), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->DrawIndexed.data.firstIdx = firstIdx;
-    cmd->DrawIndexed.data.firstInst = firstInstIdx;
+    cmd->DrawIndexed.data.baseIdx = firstIdx;
+    cmd->DrawIndexed.data.baseInst = firstInstIdx;
     cmd->DrawIndexed.data.idxCnt = idxCnt;
     cmd->DrawIndexed.data.instCnt = instCnt;
     cmd->DrawIndexed.data.vtxOff = vtxOff;
@@ -313,11 +313,35 @@ _AVX afxCmdId AvxCmdDrawIndexedIndirect(afxDrawContext dctx, afxBuffer buf, afxU
     /// This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
+    /*
+        @buf must have been created with the afxBufferUsage_INDIRECT bit set.
+
+        @offset must be a multiple of 4.
+
+        If the multiDrawIndirect feature is not enabled, 
+            @drawCnt must be 0 or 1.
+
+        @drawCnt must be less than or equal to device's maxDrawIndirectCnt.
+
+        If @drawCnt is greater than 1, 
+            @stride must be a multiple of 4 and must be greater than or equal to sizeof(avxDrawIndexedIndirect).
+
+        If @drawCnt is equal to 1, 
+            (offset + sizeof(avxDrawIndexedIndirect)) must be less than or equal to the size of @buf.
+
+        If @drawCnt is greater than 1, 
+            (@stride * (@drawCnt - 1) + offset + sizeof(avxDrawIndexedIndirect)) must be less than or equal to the size of @buf.
+    */
+
     /// buf must be a valid afxBuffer handle.
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-
-    AFX_ASSERT(drawCnt);
-    AFX_ASSERT(stride);
+    AFX_ASSERT(AfxTestBufferUsage(buf, afxBufferUsage_INDIRECT));
+    afxSize bufCap = AfxGetBufferCapacity(buf, 0);
+    AFX_ASSERT(offset % sizeof(afxUnit32) == 0);
+    AFX_ASSERT(stride % sizeof(afxUnit32) == 0);
+    AFX_ASSERT_RANGE(bufCap, offset, (stride * (drawCnt ? drawCnt - 1 : 0) + sizeof(avxDrawIndexedIndirect)));
+    AFX_ASSERT(!stride || (stride >= sizeof(avxDrawIndexedIndirect)));
+    AFX_ASSERT_RANGE(drawCnt, 0, dctx->devLimits->maxDrawIndirectCnt);
 
     afxCmdId cmdId;
     avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(DrawIndexedIndirect), sizeof(cmd->DrawIndexedIndirect), &cmdId);
@@ -415,8 +439,8 @@ _AVX afxCmdId AvxCmdPushConstants(afxDrawContext dctx, afxUnit offset, afxUnit s
     /// This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
-    AFX_ASSERT(offset % 4 == 0);
-    AFX_ASSERT(siz % 4 == 0);
+    AFX_ASSERT(offset % sizeof(afxUnit32) == 0);
+    AFX_ASSERT(siz % sizeof(afxUnit32) == 0);
 
     afxCmdId cmdId;
     avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(PushConstants), sizeof(cmd->PushConstants) + siz, &cmdId);
