@@ -161,7 +161,7 @@ _AFX afxError _AfxSvcCtor(afxService svc, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AFX afxClassConfig const _AfxSvcMgrCfg =
+_AFX afxClassConfig const _AFX_SVC_CLASS_CONFIG =
 {
     .fcc = afxFcc_SVC,
     .name = "Service",

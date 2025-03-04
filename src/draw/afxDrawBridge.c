@@ -29,7 +29,7 @@
 _AVX afxClass const* _AvxGetDrawQueueClass(afxDrawBridge dexu)
 {
     afxError err = AFX_ERR_NONE;
-    /// dexu must be a valid afxDrawBridge handle.
+    // dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     afxClass const* cls = &dexu->dqueCls;
     AFX_ASSERT_CLASS(cls, afxFcc_DQUE);
@@ -45,7 +45,7 @@ _AVX afxDrawDevice AfxGetDrawBridgeDevice(afxDrawBridge dexu)
     return ddev;
 }
 
-_AVX afxDrawSystem AfxGetDrawBridgeContext(afxDrawBridge dexu)
+_AVX afxDrawSystem AfxGetBridgedDrawSystem(afxDrawBridge dexu)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
@@ -71,9 +71,9 @@ _AVX afxUnit AfxQueryDrawBridgePort(afxDrawBridge dexu, afxDrawDevice* device)
 _AVX afxUnit AfxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cnt, afxDrawQueue queues[])
 {
     afxError err = AFX_ERR_NONE;
-    /// dexu must be a valid afxDrawBridge handle.
+    // dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-    /// queues must be a valid pointer to the afxDrawQueue handles.
+    // queues must be a valid pointer to the afxDrawQueue handles.
     AFX_ASSERT(queues);
 
     afxClass const* dqueCls = _AvxGetDrawQueueClass(dexu);
@@ -86,7 +86,7 @@ _AVX afxUnit AfxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cn
 _AVX afxError AfxWaitForIdleDrawBridge(afxDrawBridge dexu, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    /// dexu must be a valid afxDrawBridge handle.
+    // dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 
     if (dexu->pingCb)
@@ -115,14 +115,18 @@ _AVX afxError _AvxDexuDtorCb(afxDrawBridge dexu)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 
-    afxDrawSystem dsys = AfxGetDrawBridgeContext(dexu);
+    afxDrawSystem dsys = AfxGetBridgedDrawSystem(dexu);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    AfxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
-    AfxWaitForDrawSystem(dsys, AFX_TIME_INFINITE); // yes, two times.
+    //AfxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
+    //AfxWaitForDrawSystem(dsys, AFX_TIME_INFINITE); // yes, two times.
 
     if (dexu->worker)
     {
+        while (AfxIsThreadRunning(dexu->worker))
+        {
+            AfxRequestThreadInterruption(dexu->worker);
+        }
         afxInt exitCode;
         AfxWaitForThreadExit(dexu->worker, &exitCode);
         AfxDisposeObjects(1, &dexu->worker);
@@ -175,8 +179,8 @@ _AVX afxError _AvxDexuCtorCb(afxDrawBridge dexu, void** args, afxUnit invokeNo)
 
     afxClass* dqueCls = (afxClass*)_AvxGetDrawQueueClass(dexu);
     AFX_ASSERT_CLASS(dqueCls, afxFcc_DQUE);
-    afxDrawQueue queues[AFX_MAX_DRAW_QUEUE_PER_BRIDGE];
-    AFX_ASSERT(AFX_MAX_DRAW_QUEUE_PER_BRIDGE >= cfg->minQueCnt);
+    afxDrawQueue queues[AVX_MAX_QUEUES_PER_BRIDGE];
+    AFX_ASSERT(AVX_MAX_QUEUES_PER_BRIDGE >= cfg->minQueCnt);
 
     if (AfxAcquireObjects(dqueCls, cfg->minQueCnt, (afxObject*)queues, (void const*[]) { dexu, cfg }))
     {

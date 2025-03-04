@@ -86,7 +86,7 @@ afxUnit64 AfxGetTicksPerSecond(void)
             QueryPerformanceCounter((LARGE_INTEGER*)&(qticks));
 
             ///
-            ///    Sleep for a little while
+            //    Sleep for a little while
             ///
             volatile afxInt32 x = 1;
 

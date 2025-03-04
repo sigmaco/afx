@@ -154,3 +154,31 @@ _AFX void const* _AfxFind(void const* first, void const* last, afxSize unitSiz, 
     }
     return last;
 }
+
+_AFXINL afxFixed AfxFixedFromFloat(afxReal f)
+{
+#if !0 // RW way
+    return (afxFixed)(f * 65536.0f);
+#else // DX way
+    return (afxFixed)((afxUnit16)((((afxUnit32)f) >> 16) & 0xffff) << 16) | (afxUnit16)(((afxUnit32)f) & 0xffff);
+#endif
+}
+
+_AFXINL afxReal AfxRealFromFixed(afxFixed f)
+{
+#if !0 // RW way
+    return ((afxReal)(((afxReal)(f)) * (1.0f / 65536.0f)));
+#else // DXVA way
+    return (afxReal)((((afxUnit32)f) >> 16) & 0xffff) + (afxReal)(((afxUnit32)f) & 0xffff) / 0x10000;
+#endif
+}
+
+_AFXINL afxFixed AfxFixedFromInt(afxInt i)
+{
+    return (afxFixed)((i) << 16);
+}
+
+_AFXINL afxInt AfxIntFromFixed(afxFixed f)
+{
+    return ((f) >> 16);
+}

@@ -53,9 +53,9 @@ _AFX afxUnit AfxGetIoBridgePort(afxIoBridge exu)
 _AFX afxUnit AfxGetIoQueues(afxIoBridge exu, afxUnit baseQueIdx, afxUnit cnt, afxIoQueue queues[])
 {
     afxError err = AFX_ERR_NONE;
-    /// exu must be a valid afxIoBridge handle.
+    // exu must be a valid afxIoBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
-    /// queues must be a valid pointer to the afxIoQueue handles.
+    // queues must be a valid pointer to the afxIoQueue handles.
     AFX_ASSERT(queues);
     afxUnit rslt = 0;
 
@@ -77,7 +77,7 @@ _AFX afxUnit AfxGetIoQueues(afxIoBridge exu, afxUnit baseQueIdx, afxUnit cnt, af
 _AFX afxError _AfxWaitForEmptyIoQueue(afxIoBridge exu, afxUnit queIdx, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    /// exu must be a valid afxIoBridge handle.
+    // exu must be a valid afxIoBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
 
     afxIoQueue xque;
@@ -110,7 +110,7 @@ _AFX afxError _AfxWaitForEmptyIoQueue(afxIoBridge exu, afxUnit queIdx, afxTime t
 _AFX afxError _AfxWaitForIdleIoBridge(afxIoBridge exu, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    /// exu must be a valid afxIoBridge handle.
+    // exu must be a valid afxIoBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
     
     if (!exu->waitCb)
@@ -164,7 +164,7 @@ _AFX afxError _AfxSubmitIoOperation(afxIoBridge exu, afxSubmission const* ctrl, 
     return err;
 }
 
-_AFX afxError _AfxExuStdDtorCb(afxIoBridge exu)
+_AFX afxError _AfxExuDtorCb(afxIoBridge exu)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
@@ -198,7 +198,7 @@ _AFX afxError _AfxExuStdDtorCb(afxIoBridge exu)
     return err;
 }
 
-_AFX afxError _AfxExuStdCtorCb(afxIoBridge exu, void** args, afxUnit invokeNo)
+_AFX afxError _AfxExuCtorCb(afxIoBridge exu, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
@@ -280,14 +280,14 @@ _AFX afxError _AfxExuStdCtorCb(afxIoBridge exu, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AFX afxClassConfig const _AfxExuStdImplementation =
+_AFX afxClassConfig const _AFX_EXU_CLASS_CONFIG =
 {
     .fcc = afxFcc_EXU,
     .name = "IoBridge",
     .desc = "I/O Device Execution Bridge",
     .fixedSiz = sizeof(AFX_OBJECT(afxIoBridge)),
-    .ctor = (void*)_AfxExuStdCtorCb,
-    .dtor = (void*)_AfxExuStdDtorCb
+    .ctor = (void*)_AfxExuCtorCb,
+    .dtor = (void*)_AfxExuDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////

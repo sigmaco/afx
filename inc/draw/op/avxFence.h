@@ -42,28 +42,28 @@ AVX afxBool         AfxIsFenceSignaled(avxFence fenc);
 AVX afxError        AfxAcquireFences
 /// Create a new fence object.
 (
-    afxDrawSystem   dsys, /// the draw system that creates the fence.
-    afxBool         signaled, /// fence object is created in the signaled state.
+    afxDrawSystem   dsys, // the draw system that creates the fence.
+    afxBool         signaled, // fence object is created in the signaled state.
     afxUnit         cnt,
-    avxFence        fences[] /// a array of handles in which the resulting fence objects are returned.
+    avxFence        fences[] // a array of handles in which the resulting fence objects are returned.
 );
 
 AVX afxError        AfxWaitForFences
 /// Wait for one or more fences to become signaled.
 (
     afxDrawSystem   dsys,
-    afxBool         waitAll, /// the condition is that all fences must be signaled, else at least one fence is signaled.
-    afxUnit64       timeout, /// the timeout period in units of nanoseconds.
-    afxUnit         cnt, /// the number of fences to wait on.
-    avxFence const  fences[] /// an array of cnt fence handles.    
+    afxBool         waitAll, // the condition is that all fences must be signaled, else at least one fence is signaled.
+    afxUnit64       timeout, // the timeout period in units of nanoseconds.
+    afxUnit         cnt, // the number of fences to wait on.
+    avxFence const  fences[] // an array of cnt fence handles.    
 );
 
 AVX afxError        AfxResetFences
 /// Resets one or more fence objects.
 (
     afxDrawSystem   dsys,
-    afxUnit         cnt, /// the number of fences to reset.
-    avxFence const  fences[] /// an array of fence handles to reset.
+    afxUnit         cnt, // the number of fences to reset.
+    avxFence const  fences[] // an array of fence handles to reset.
 );
 
 #endif//AVX_FENCE_H

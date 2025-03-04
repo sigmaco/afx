@@ -45,9 +45,10 @@ _AFX afxClass* _AfxGetSysMgr(void)
     {
         .fcc = afxFcc_SYS,
         .name = "System",
-        .desc = "Basic I/O System",
+        .desc = "Base I/O System",
         .maxCnt = 1,
         //.fixedSiz = sizeof(AFX_OBJECT(afxSystem)),
+        .fixedSiz = 0,
         .ctor = (void*)_AfxSysCtor,
         .dtor = (void*)_AfxSysDtor
     };
@@ -460,30 +461,8 @@ _AFX afxBool _AfxLoadAndAttachIcd(void* udd, afxUnit diskId, afxUnit endpointIdx
     AfxFormatUri(&dllFile.uri, "%.*s/%.*s.dll", AfxPushString(&basePath.str), AfxPushString(&fname.str));
 
     afxModule icd;
-
-    if (AfxLoadModule(&dllFile.uri, NIL, &icd)) AfxThrowError();
-    else
-    {
-        afxError(*icdHookFn)(afxModule, afxUri const*) = AfxFindModuleSymbol(icd, "afxIcdHook");
-
-        if (icdHookFn)
-        {
-            if (_AfxAttachDriver(icd, &ini, NIL))
-            {
-
-            }
-        }
-        else
-        {
-            afxError(*asiHookFn)(afxModule, afxUri const*) = AfxFindModuleSymbol(icd, "afxAsiHook");
-
-            if (!asiHookFn) AfxThrowError();
-            else
-            {
-
-            }
-        }
-    }
+    if (AfxLoadModule(&dllFile.uri, NIL, &icd))
+        AfxThrowError();
 
     AfxDismantleManifest(&ini);
 
@@ -560,19 +539,62 @@ _AFX afxError _AfxScanIcdManifests(afxSystem sys, afxManifest const* sysIni)
     int a = 0;
 }
 
-_AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
+_AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
-    //if (!(sys->avx.disabled))
+    if (!AfxReacquireConsole())
     {
-        //AfxDbgLogf(6, NIL, "Doing the AVX start up...");
+        AfxThrowError();
+        return err;
+    }
 
-        AfxDeployChain(&sys->avx.icdChain, sys);
+    afxSystem sys;
+    if (AfxGetSystem(&sys))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+
+#ifndef _AFX_DISABLE_DEBUGGER
+    _AfxDbgAttach(NIL);
+#endif
+    AfxDbgLogf(6, NIL, "Booting...");
+
+    afxManifest ini;
+    AfxDeployManifest(&ini);
+    // platform-dependent ctor will load the correct ini file.
+
+    afxClass* cls = _AfxGetSysMgr();
+    AFX_ASSERT_CLASS(cls, afxFcc_SYS);
+
+    AFX_ASSERT(TheSystem == sys);
+    AfxZero(TheSystem, sizeof(afxObjectBase));
+    if (_AfxConstructObjects(cls, 1, (void**)&TheSystem, (void*[]) { &ini, (void*)config }))
+        AfxThrowError();
+    else
+    {
+        AFX_ASSERT(TheSystem != sys); // Attention! Ctor moves the object pointer to hide out the object base.
+        sys = TheSystem;
+        AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+
+        AfxLogY("Memory page Size: %d", sys->memPageSiz);
+        AfxLogY("HW threading: %d", sys->hwThreadingCap);
+    }
+
+    // Loading modulations
+    AfxDeployChain(&sys->avx.icdChain, sys);
+    AfxDeployChain(&sys->amx.icdChain, sys);
+    AfxDeployChain(&sys->aux.icdChain, sys);
+    AfxDeployChain(&sys->asx.icdChain, sys);
+
+    if (!err)
+    {
+        // Loading AVX
 
         afxUri uri;
-        AfxMakeUri(&uri, 0, "e2draw", 0);
+        AfxMakeUri(&uri, 0, "e2targa", 0);
         afxModule e2drawDll = NIL;
 
         if (AfxLoadModule(&uri, AFX_BIT(8), &e2drawDll)) AfxThrowError();
@@ -580,45 +602,15 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
         {
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2drawDll);
             sys->avx.e2drawDll = e2drawDll;
-
-            afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2drawDll, "afxScmHook");
-
-            if (!scmHookFn) AfxThrowError();
-            else
-            {
-                if (scmHookFn(e2drawDll, ini)) AfxThrowError();
-                else
-                {
-
-                }
-            }
-#if 0
-            if (!(sys->avx.ioctl = AfxFindModuleSymbol(e2drawDll, "AfxSystemIoctl"))) AfxThrowError();
-            else
-            {
-                if (sys->avx.ioctl(sys, e2drawDll, 3, (void*[]) { &ini, &sys->classes })) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(sys->avx.dsys);
-                }
-            }
-#endif
-            if (err)
-            {
-                AfxDisposeObjects(1, &sys->avx.e2drawDll);
-                sys->avx.e2drawDll = NIL;
-            }
         }
     }
 
-    //if (!(sys->amx.disabled))
+    if (!err)
     {
-        //AfxDbgLogf(6, NIL, "Doing the ASX start up...");
-
-        AfxDeployChain(&sys->asx.icdChain, sys);
+        // Loading ASX
 
         afxUri uri;
-        AfxMakeUri(&uri, 0, "e2combo", 0);
+        AfxMakeUri(&uri, 0, "e2synerg", 0);
         afxModule e2simDll = NIL;
 
         if (AfxLoadModule(&uri, AFX_BIT(8), &e2simDll)) AfxThrowError();
@@ -626,45 +618,15 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
         {
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2simDll);
             sys->asx.e2simDll = e2simDll;
-
-            afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2simDll, "afxScmHook");
-
-            if (!scmHookFn) AfxThrowError();
-            else
-            {
-                if (scmHookFn(e2simDll, ini)) AfxThrowError();
-                else
-                {
-
-                }
-            }
-#if 0
-            if (!(sys->amx.ioctl = AfxFindModuleSymbol(e2soundDll, "AfxSystemIoctl"))) AfxThrowError();
-            else
-            {
-                if (sys->amx.ioctl(sys, e2simDll, 3, (void*[]) { &ini, &sys->classes })) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(sys->amx.msys);
-                }
-            }
-#endif
-            if (err)
-            {
-                AfxDisposeObjects(1, &sys->asx.e2simDll);
-                sys->asx.e2simDll = NIL;
-            }
         }
     }
 
-    //if (!(sys->asx.disabled))
+    if (!err)
     {
-        //AfxDbgLogf(6, NIL, "Doing the ASX start up...");
-        
-        AfxDeployChain(&sys->amx.icdChain, sys);
+        // Loding AMX
 
         afxUri uri;
-        AfxMakeUri(&uri, 0, "e2mix", 0);
+        AfxMakeUri(&uri, 0, "e2mixva", 0);
         afxModule e2mixDll = NIL;
 
         if (AfxLoadModule(&uri, AFX_BIT(8), &e2mixDll)) AfxThrowError();
@@ -672,42 +634,12 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
         {
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2mixDll);
             sys->amx.e2mixDll = e2mixDll;
-
-            afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2mixDll, "afxScmHook");
-
-            if (!scmHookFn) AfxThrowError();
-            else
-            {
-                if (scmHookFn(e2mixDll, ini)) AfxThrowError();
-                else
-                {
-
-                }
-            }
-#if 0
-            if (!(sys->asx.ioctl = AfxFindModuleSymbol(e2soundDll, "AfxSystemIoctl"))) AfxThrowError();
-            else
-            {
-                if (sys->asx.ioctl(sys, e2soundDll, 3, (void*[]) { &ini, &sys->classes })) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(sys->asx.ssys);
-                }
-            }
-#endif
-            if (err)
-            {
-                AfxDisposeObjects(1, &sys->amx.e2mixDll);
-                sys->amx.e2mixDll = NIL;
-            }
         }
     }
 
-    //if (!(sys->aux.disabled))
+    if (!err)
     {
-        //AfxDbgLogf(6, NIL, "Doing the AUX start up...");
-
-        AfxDeployChain(&sys->aux.icdChain, sys);
+        // Loading AUX
 
         afxUri uri;
         AfxMakeUri(&uri, 0, "e2mmux", 0);
@@ -719,28 +651,6 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2mmuxDll);
             sys->aux.e2mmuxDll = e2mmuxDll;
 
-            afxError(*scmHookFn)(afxModule, afxManifest const*) = AfxFindModuleSymbol(e2mmuxDll, "afxScmHook");
-
-            if (!scmHookFn) AfxThrowError();
-            else
-            {
-                if (scmHookFn(e2mmuxDll, ini)) AfxThrowError();
-                else
-                {
-
-                }
-            }
-#if 0
-            if (!(sys->aux.ioctl = AfxFindModuleSymbol(e2mmuxDll, "AfxSystemIoctl"))) AfxThrowError();
-            else
-            {
-                if (sys->aux.ioctl(sys, e2mmuxDll, 3, (void*[]) { &ini, &sys->classes })) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(sys->aux.usys);
-                }
-            }
-#endif
             if (err)
             {
                 AfxDisposeObjects(1, &sys->aux.e2mmuxDll);
@@ -749,122 +659,74 @@ _AFX afxError _AfxDoSubsystemStartUp(afxSystem sys, afxManifest const* ini)
         }
     }
 
-    _AfxScanIcdManifests(sys, ini);
-
-    return err;
-}
-
-_AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
-{
-    afxError err = AFX_ERR_NONE;
-
-    if (!AfxReacquireConsole()) AfxThrowError();
-    else
-    {
-#ifndef _AFX_DISABLE_DEBUGGER
-        _AfxDbgAttach(NIL);
-#endif
-        afxSystem sys;
-
-        if (AfxGetSystem(&sys)) AfxThrowError();
-        else
-        {
-            AfxDbgLogf(6, NIL, "Booting...\n");
-
-            afxManifest ini;
-            AfxDeployManifest(&ini);
-            // platform-dependent ctor will load the correct ini file.
-
-            AFX_ASSERT(TheSystem == sys);
-            AfxZero(TheSystem, sizeof(afxObjectBase));
-            //TheSystem = malloc(sizeof(afxObjectBase) + sizeof(TheSystem[0]));
-
-            afxClass* cls = _AfxGetSysMgr();
-            AFX_ASSERT_CLASS(cls, afxFcc_SYS);
-
-            if (_AfxConstructObjects(cls, 1, (void**)&TheSystem, (void*[]) { &ini, (void*)config })) AfxThrowError();
-            else
-            {
-                AFX_ASSERT(TheSystem != sys); // Attention! Ctor moves the object pointer to hide out the object base.
-                sys = TheSystem;
-                AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-
-                AfxLogY("Memory page Size: %d", sys->memPageSiz);
-                AfxLogY("HW threading: %d", sys->hwThreadingCap);
-
-                if (!err && _AfxDoSubsystemStartUp(sys, &ini))
-                    AfxThrowError();
-
+    _AfxScanIcdManifests(sys, &ini);
 
 #if 0
-                // Test path
+    // Test path
 
-                afxUri2048 uri, uri2;
-                AfxMakeUri2048(&uri2, NIL);
-                AfxMakeUri2048(&uri, NIL);
+    afxUri2048 uri, uri2;
+    AfxMakeUri2048(&uri2, NIL);
+    AfxMakeUri2048(&uri, NIL);
                 
-                //AfxCanonicalizePath(&uri.uri, TRUE);
+    //AfxCanonicalizePath(&uri.uri, TRUE);
 
-                AfxFormatUri(&uri.uri, "art://./actor/");
-                AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
-                AfxFormatUri(&uri.uri, "//./art/actor/");
-                AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
-                AfxFormatUri(&uri.uri, "system://./e2draw.dll");
-                AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
-                AfxFormatUri(&uri.uri, "//./system/e2draw.dll");                
-                AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
+    AfxFormatUri(&uri.uri, "art://./actor/");
+    AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
+    AfxFormatUri(&uri.uri, "//./art/actor/");
+    AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
+    AfxFormatUri(&uri.uri, "system://./e2draw.dll");
+    AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
+    AfxFormatUri(&uri.uri, "//./system/e2draw.dll");                
+    AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
 #endif
 
-                if (!err)
-                {
+    if (!err)
+    {
 
 #if 0
-                    if (sys->e2sound)
-                    {
+        if (sys->e2sound)
+        {
 
-                        AfxMakeString(&s, "sound", 0);
-                        AfxMakeUri(&uri, 0, "system/sound.xs", 0);
-                        AfxLoadScript(&s, &uri);
-                    }
+            AfxMakeString(&s, "sound", 0);
+            AfxMakeUri(&uri, 0, "system/sound.xs", 0);
+            AfxLoadScript(&s, &uri);
+        }
 
-                    if (sys->e2draw)
-                    {
-                        AfxMakeString(&s, "draw", 0);
-                        AfxMakeUri(&uri, 0, "system/draw.xs", 0);
-                        AfxLoadScript(&s, &uri);
-                    }
+        if (sys->e2draw)
+        {
+            AfxMakeString(&s, "draw", 0);
+            AfxMakeUri(&uri, 0, "system/draw.xs", 0);
+            AfxLoadScript(&s, &uri);
+        }
 #endif
 
-                    if (!err)
-                    {
+        if (!err)
+        {
 
-                        sys->operating = TRUE;
-                        sys->interruptionRequested = FALSE;
-                        sysReady = TRUE;
-                    }
-                }
-
-                if (err)
-                {
-                    if (_AfxDoSubsystemShutdown(sys))
-                        AfxThrowError();
-
-                    if (_AfxDestructObjects(cls, 1, (void*[]) { sys }))
-                        AfxThrowError();
-                }
-            }
-
-            AfxDismantleManifest(&ini);
+            sys->operating = TRUE;
+            sys->interruptionRequested = FALSE;
+            sysReady = TRUE;
         }
     }
+
+    if (err)
+    {
+        if (_AfxDoSubsystemShutdown(sys))
+            AfxThrowError();
+
+        if (_AfxDestructObjects(cls, 1, (void*[]) { sys }))
+            AfxThrowError();
+    }
+
+    AfxDismantleManifest(&ini);
     return err;
 }
 
 _AFX void AfxDoSystemShutdown(afxInt exitCode)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
 
+    afxSystem sys;
     if (AfxGetSystem(&sys))
     {
         AfxDbgLogf(6, NIL, "Shutting down...\n");
@@ -885,13 +747,13 @@ _AFX void AfxDoSystemShutdown(afxInt exitCode)
         AFX_ASSERT_CLASS(cls, afxFcc_SYS);
 
         AFX_ASSERT(TheSystem == sys);
-
         if (_AfxDestructObjects(cls, 1, (void**)&TheSystem))
             AfxThrowError();
 
+        AfxDismountClass(cls);
+
         AFX_ASSERT(TheSystem != sys); // Attention! Dtor moves the object pointer to expose the object hdr.
         AfxZero(TheSystem, sizeof(afxObjectBase));
-        AfxDismountClass(cls);
     }
 #ifndef _AFX_DISABLE_DEBUGGER
     _AfxDbgDetach();

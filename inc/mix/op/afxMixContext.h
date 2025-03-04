@@ -36,8 +36,8 @@
 // Mixer
 // A mixer is a device for merging input signals to produce a combined output in the form of sound.
 
-#ifndef AMX_MIXER_H
-#define AMX_MIXER_H
+#ifndef AMX_MIX_CONTEXT_H
+#define AMX_MIX_CONTEXT_H
 
 #include "qwadro/inc/mix/io/afxAudio.h"
 
@@ -206,27 +206,102 @@ AMX afxUnit         AfxGetMixerPort(afxMixContext mix);
 AMX afxUnit         AfxGetMixerPool(afxMixContext mix);
 AMX amxMixState     AfxGetMixerState(afxMixContext mix);
 
-AMX afxCmdId        AsxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope);
-AMX afxCmdId        AsxCmdConcludeMixScope(afxMixContext mix);
+AMX afxCmdId        AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope);
+AMX afxCmdId        AmxCmdConcludeMixScope(afxMixContext mix);
 
-AMX afxCmdId        AsxCmdReverb(afxMixContext mix, afxReal wetMix, afxReal roomSiz, afxReal width, afxReal damp, afxReal dryMix);
-AMX afxCmdId        AsxCmdPhaser(afxMixContext mix, afxReal floor, afxReal ceil, afxReal rate, afxReal feedback, afxReal depth, afxReal phase, afxUnit stageCnt);
-AMX afxCmdId        AsxCmdGainer(afxMixContext mix, afxReal gain, afxReal pan, afxMask invChan);
-AMX afxCmdId        AsxCmdFlanger(afxMixContext mix, afxReal amount, afxReal rate, afxReal amplitude, afxReal feedback, afxReal delay, afxReal phase, afxUnit flt);
-AMX afxCmdId        AsxCmdAnalog(afxMixContext mix, afxUnit type, afxUnit flt, afxReal cutoff, afxReal resonance, afxReal inertia, afxReal drive, afxUnit oversamp, afxReal start, afxReal end);
-AMX afxCmdId        AsxCmdCompressor(afxMixContext mix, afxReal threshold, afxReal ratio, afxReal attack, afxReal release, afxReal makeup);
+AMX afxCmdId        AmxCmdReverb(afxMixContext mix, afxReal wetMix, afxReal roomSiz, afxReal width, afxReal damp, afxReal dryMix);
+AMX afxCmdId        AmxCmdPhaser(afxMixContext mix, afxReal floor, afxReal ceil, afxReal rate, afxReal feedback, afxReal depth, afxReal phase, afxUnit stageCnt);
+AMX afxCmdId        AmxCmdGainer(afxMixContext mix, afxReal gain, afxReal pan, afxMask invChan);
+AMX afxCmdId        AmxCmdFlanger(afxMixContext mix, afxReal amount, afxReal rate, afxReal amplitude, afxReal feedback, afxReal delay, afxReal phase, afxUnit flt);
+AMX afxCmdId        AmxCmdAnalog(afxMixContext mix, afxUnit type, afxUnit flt, afxReal cutoff, afxReal resonance, afxReal inertia, afxReal drive, afxUnit oversamp, afxReal start, afxReal end);
+AMX afxCmdId        AmxCmdCompressor(afxMixContext mix, afxReal threshold, afxReal ratio, afxReal attack, afxReal release, afxReal makeup);
 
-AMX afxCmdId        AsxCmdLineIn(afxMixContext mix, afxUnit line, afxMask chanMask, afxUnit latency, afxReal pan, afxReal vol);
-AMX afxCmdId        AsxCmdRemoteIn(afxMixContext mix, afxUnit src, afxMask chanMask, afxReal pan, afxReal vol);
+AMX afxCmdId        AmxCmdLineIn(afxMixContext mix, afxUnit line, afxMask chanMask, afxUnit latency, afxReal pan, afxReal vol);
+AMX afxCmdId        AmxCmdRemoteIn(afxMixContext mix, afxUnit src, afxMask chanMask, afxReal pan, afxReal vol);
 
-AMX afxCmdId        AsxCmdSend(afxMixContext mix, afxBool muteSrc, afxReal amount, afxReal pan, afxUnit receiverSubmix);
+AMX afxCmdId        AmxCmdSend(afxMixContext mix, afxBool muteSrc, afxReal amount, afxReal pan, afxUnit receiverSubmix);
 
-AMX afxCmdId        AsxCmdResampleAudio(afxMixContext mix, afxAudio src, afxAudio dst, afxWaveInterval const* srci, afxWaveInterval const* dsti);
+AMX afxCmdId        AmxCmdResampleAudio(afxMixContext mix, afxAudio src, afxAudio dst, afxWaveInterval const* srci, afxWaveInterval const* dsti);
 
-AMX afxCmdId        AsxCmdFetchAudition(afxMixContext mix, afxUnit headIdx);
+AMX afxCmdId        AmxCmdFetchAudition(afxMixContext mix, afxUnit headIdx);
+
+AFX_DEFINE_STRUCT(amxVideoPicture)
+{
+    // the offset in texels of the image subregion to use.
+    avxOrigin       codedOrigin; // D is the base layer.
+    // the size in pixels of the coded image data.
+    avxRange2      codedExtent;
+    // the video picture resource.
+    afxRaster       rasBinding;
+};
+
+AFX_DEFINE_STRUCT(amxVideoDecode)
+{
+    afxFlags            flags;
+    avxBuffer           srcBuf;
+    afxSize             srcOffset;
+    afxUnit             srcRange;
+    amxVideoPicture     dstPicRsrc;
+    //const VkVideoReferenceSlotInfoKHR*    pSetupReferenceSlot;
+    uint32_t                              referenceSlotCount;
+    //const VkVideoReferenceSlotInfoKHR*    pReferenceSlots;
+};
+
+AMX afxCmdId        AmxCmdDecodeVideo(afxMixContext mix, amxVideoDecode const* param);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 AMX afxError        AfxAcquireMixContext(afxMixSystem msys, afxUnit exuIdx, afxUnit poolIdx, afxMixContext* mixer);
 
-#endif//AMX_MIXER_H
+AFX_DEFINE_STRUCT(amxSession)
+// This interface is the primary interface that applications use to control the pipeline.
+{
+
+};
+
+// The transport control methods:
+// Pauses the session.
+// This method pauses the presentation clock.
+// This method is asynchronous. When the operation completes, the session sends an MESessionPaused event.
+// This method fails if the session is stopped.
+afxError AmxPauseSession(amxSession mses);
+// Starts the session.
+// When this method is called, the session starts the presentation clock and begins to process media samples.
+// This method is asynchronous. When the method completes, the session sends an MESessionStarted event.
+afxError AmxStartSession(amxSession mses);
+// Stops the session.
+// This method is asynchronous. When the operation completes, the session sends an MESessionStopped event.
+afxError AmxStopSession(amxSession mses);
+// Retrieves the capabilities of the Media Session, based on the current presentation.
+
+// Closes the Media Session and releases all of the resources it is using.
+// This method is asynchronous. When the operation completes, the session sends an MESessionClosed event.
+afxError AmxCloseSession(amxSession mses);
+// Retrieves the session's presentation clock.
+afxError AmxGetSessionClock(amxSession mses, afxClock* clock);
+afxError AmxGetSessionCapabilies(amxSession mses, void* caps);
+// Shuts down the session and releases all the resources used by the session.
+// DisposeObjects(1, &mses);
+
+AFX_DEFINE_STRUCT(amxSink)
+// Media sinks. Stream sinks handle the actual processing of data on each stream.
+{
+
+};
+
+// Sets the presentation clock on the media sink.
+// During streaming, the media sink attempts to match rates with the presentation clock. Ideally, the media sink presents samples at the correct time according to the presentation clock and does not fall behind. Rateless media sinks are an exception to this rule, as they consume samples as quickly as possible and ignore the clock.
+afxError AmxSetSinkClock(amxSink msnk, afxClock* clock);
+// Shuts down the media sink and releases the resources it is using.
+// AfxDisposeObjects(1, &msnk)
+
+AFX_DEFINE_STRUCT(amxStream)
+// Represents one stream in a media source.
+{
+
+};
+
+// Requests a sample from the media source.
+afxError AmxRequestStreamSample(amxSink msnk);
+
+#endif//AMX_MIX_CONTEXT_H

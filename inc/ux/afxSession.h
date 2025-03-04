@@ -84,12 +84,12 @@ AFX_DEFINE_STRUCT(afxSessionConfig)
     afxDrawSystem       dsys;
     afxUnit             sdevId;
     afxUnit             soutIdx;
-    afxMixSystem      ssys;
+    afxMixSystem        msys;
 };
 
 AUX afxUnit         AfxEnumerateWidgets(afxWindow wnd, afxUnit first, afxUnit cnt, afxWidget widgets[]);
 
-AUX afxError        AfxCloseSession(afxSession ses);
+AUX afxError        AfxCloseSession(void);
 AUX afxError        AfxOpenSession(afxSession ses, afxUri const* host, afxAuthMethod method, afxString const* credential);
 
 AUX afxError        AfxStepSession(afxSession ses, void const*, void*);
@@ -104,11 +104,21 @@ AUX afxError        AfxEndFrame(afxSession ses);
 
 AUX afxError        AfxReconnectKeyboard(afxSession ses, afxUnit portIdx, afxUnit hidNo);
 
-AUX afxTime         AfxPollInput(afxSession ses);
+AUX afxTime         AfxPollInput(afxFlags flags, afxTime timeout);
+
+AUX afxError        AfxImmergeWindow(afxWindow wnd, afxBool fullscreen);
+
+AUX afxBool         AfxGetCursorPosition(afxWindow wnd, afxInt position[2]);
+
+AUX afxBool         AfxHasClipboardContent(afxFlags flags);
+AUX afxUnit         AfxGetClipboardContent(afxString* buf);
+AUX afxError        AfxSetClipboardContent(afxString const* text);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 AUX afxUnit         AfxGetSid(afxSession ses); // can be NIL
+
+AUX afxBool         AfxGetSession(afxSession* session);
 
 AUX afxError        AfxAcquireSession(afxUnit sshId, afxSessionConfig const* cfg, afxSession* session);
 

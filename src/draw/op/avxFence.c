@@ -101,7 +101,7 @@ _AVX afxError AfxAcquireFences(afxDrawSystem dsys, afxBool signaled, afxUnit cnt
     AFX_ASSERT(cnt);
     AFX_ASSERT(fences);
 
-    afxClass* cls = (afxClass*)_AvxGetFenceClass(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->fencCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_FENC);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)fences, (void const*[]) { dsys, &signaled }))

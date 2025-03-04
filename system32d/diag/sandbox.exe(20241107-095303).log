@@ -1,8 +1,0 @@
-Booting...
-Threading... #4808 (afxSystem_w32.c:426)Mounting... <//./z/>(''),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system'),5Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32'),7Mounting... <//./z/>('E:\qwadro\repo\bangitk\system32d'),7Mounting... <//./c/>('C:\Windows\SysWow64'),5Loading... <e2coree.dll>afxIoBridge.c:207
-afxIoBridge.c:207
-((!1) || ((&dev) && !(_AfxAssertObjects((1), (afxObject const*)(&dev),(afxFcc_DEV)))))
-    InvalidafxClass.c:1101
-afxClass.c:1101
-(hdr)
-    Invalid

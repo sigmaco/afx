@@ -463,7 +463,7 @@ _ASX afxError AfxArchiveMeshes(afxStream out, afxString* sdb, afxUnit cnt, afxMe
             msvas[i].flags = msh->attrInfo[i].flags;
 
             avxFormatDescription pfd;
-            AfxDescribePixelFormat(msvas[i].encodedFmt, &pfd);
+            AvxDescribeFormats(1, &msvas[i].encodedFmt, &pfd);
 
             afxSize fmtSiz = pfd.stride;// AfxVertexFormatGetSize(msvas[i].encodedFmt);
             msvas[i].baseDataOffset = AfxAskStreamPosn(out);
@@ -595,7 +595,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
 
     for (afxUnit i = 0; i < mdlHdr.rigCnt; i++)
     {
-        afxMeshRig* rig = mdl->rigs[i];
+        asxMeshRig* rig = mdl->rigs[i];
         if (!rig) continue;
         afxMesh msh = rig->msh;
         AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &msh);
@@ -605,7 +605,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
             afxBool skip = FALSE;
             for (afxUnit j = 0; j < i; j++)
             {
-                afxMeshRig* prevRig = mdl->rigs[j];
+                asxMeshRig* prevRig = mdl->rigs[j];
 
                 // must skip this mesh if this has already been included before.
                 if (!prevRig || (prevRig->msh == msh))
@@ -629,7 +629,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
 
     for (afxUnit i = 0; i < mdlHdr.rigCnt; i++)
     {
-        afxMeshRig* rig = mdl->rigs[i];
+        asxMeshRig* rig = mdl->rigs[i];
         if (!rig) continue;
         afxMesh msh = rig->msh;
         AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &msh);
@@ -640,7 +640,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
 
             for (afxUnit j = 0; j < i; j++)
             {
-                afxMeshRig* prevRig = mdl->rigs[j];
+                asxMeshRig* prevRig = mdl->rigs[j];
 
                 // reuse mesh already included before.
                 if (prevRig && (prevRig->msh == msh))
@@ -694,7 +694,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
     return err;
 }
 
-_ASX afxError AfxArchiveModel(afxModel mdl, afxUri const* uri)
+_ASX afxError AsxArchiveModel(afxModel mdl, afxUri const* uri)
 {
     afxError err = NIL;
     afxStream iob;
@@ -758,26 +758,26 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
         if (AfxReadStreamAt(in, mdlHdr.jntPiBase, mdlHdr.jntCnt * sizeof(parentIdx[0]), 0, parentIdx))
             AfxThrowError();
 
-        AfxReparentJoints(mdl, 0, mdlb.jointCnt, parentIdx, sizeof(parentIdx[0]));
+        AsxReparentJoints(mdl, 0, mdlb.jointCnt, parentIdx, sizeof(parentIdx[0]));
 
         afxTransform* local = AfxRequestArenaUnit(&arena, mdlHdr.jntCnt * sizeof(afxTransform));
         if (AfxReadStreamAt(in, mdlHdr.jntLtBase, mdlHdr.jntCnt * sizeof(local[0]), 0, local))
             AfxThrowError();
 
-        AfxResetJointTransforms(mdl, 0, mdlb.jointCnt, local);
+        AsxResetJointTransforms(mdl, 0, mdlb.jointCnt, local);
 
         afxM4d* iw = AfxRequestArenaUnit(&arena, mdlHdr.jntCnt * sizeof(afxM4d));
         AfxSeekStream(in, mdlHdr.jntIwBase, afxSeekOrigin_BEGIN);
         if (AfxReadStreamAt(in, mdlHdr.jntIwBase, mdlHdr.jntCnt * sizeof(iw[0]), 0, iw))
             AfxThrowError();
 
-        AfxResetJointMatrices(mdl, 0, mdlb.jointCnt, iw, sizeof(iw[0]));
+        AsxResetJointInversors(mdl, 0, mdlb.jointCnt, iw, sizeof(iw[0]));
 
         afxReal* lodErr = AfxRequestArenaUnit(&arena, mdlHdr.jntCnt * sizeof(afxReal32));
         if (AfxReadStreamAt(in, mdlHdr.jntLeBase, mdlHdr.jntCnt * sizeof(lodErr[0]), 0, lodErr))
             AfxThrowError();
 
-        AfxResetJointLodErrors(mdl, 0, mdlb.jointCnt, lodErr);
+        AsxResetJointLodErrors(mdl, 0, mdlb.jointCnt, lodErr);
     }
 
     AfxSeekStream(in, mdlHdr.mshIdBase, afxSeekOrigin_BEGIN);
@@ -855,7 +855,7 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
             for (afxUnit k = 0; k < mshHdr->morphCnt; k++)
             {
                 avxFormatDescription pfd;
-                AfxDescribePixelFormat(vaHdr.encodedFmt, &pfd);
+                AvxDescribeFormats(1, &vaHdr.encodedFmt, &pfd);
                 afxUnit stride = pfd.stride;// AfxVertexFormatGetSize(vaHdr.encodedFmt);
                 AfxUploadVertexData(msh, j, k, 0, mshHdr->vtxCnt, in, stride);
             }
@@ -897,7 +897,7 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
 
         AfxRigMeshes(mdl, NIL, i, 1, &meshes[mshrHdr.mshIdx]);
 
-        afxMeshRig* rig = mdl->rigs[i];
+        asxMeshRig* rig = mdl->rigs[i];
         if (!rig) continue;
         rig->flags |= mshrHdr.flags;
     }

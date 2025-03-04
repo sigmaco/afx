@@ -66,9 +66,9 @@ _ASX afxError AfxCompileSimCommands(afxContext ctx)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
 
-    /// If there was an error during recording, the application will be notified by an unsuccessful return 
-    /// code returned by AfxEndCommandBuffer, and the command buffer will be moved to the invalid state.
-    /// The command buffer must have been in the recording state, and, if successful, is moved to the executable state.
+    // If there was an error during recording, the application will be notified by an unsuccessful return 
+    // code returned by AfxEndCommandBuffer, and the command buffer will be moved to the invalid state.
+    // The command buffer must have been in the recording state, and, if successful, is moved to the executable state.
 
     if (ctx->state != asxContextState_RECORDING)
     {
@@ -98,7 +98,7 @@ _ASX afxError AfxRecycleCatalyst(afxContext ctx, afxBool freeRes)
     afxSimQueue sque = AfxGetProvider(ctx);
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    afxUnit poolIdx = ctx->poolIdx;
+    //afxUnit poolIdx = ctx->poolIdx;
 
     if (AfxTryEnterSlockExclusive(&sque->cmdbReqLock))
     {
@@ -174,8 +174,8 @@ _ASX afxError _AsxCtxCtorCb(afxContext ctx, void** args, afxUnit invokeNo)
 _ASX afxClassConfig const _ASX_CTX_CLASS_CONFIG =
 {
     .fcc = afxFcc_CTX,
-    .name = "Catalyst",
-    .desc = "Simulation Catalyst",
+    .name = "Context",
+    .desc = "Sample Context",
     .fixedSiz = sizeof(AFX_OBJECT(afxContext)),
     .ctor = (void*)_AsxCtxCtorCb,
     .dtor = (void*)_AsxCtxDtorCb

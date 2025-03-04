@@ -51,8 +51,8 @@ AFX_DEFINE_STRUCT(afxUri)
 /// An object representing a uniform resource identifier (URI).
 {
     afxString   str;
-    afxUnit8    schem, user, host, port, root, fname, fext, frag; // max AFX_N8_MAX long
-    afxUnit16   dir, query; // max AFX_N16_MAX long
+    afxUnit8    schem, user, host, port, root, fname, fext, frag; // max AFX_U8_MAX long
+    afxUnit16   dir, query; // max AFX_U16_MAX long
 };
 
 AFX_DEFINE_STRUCT(afxUri8) { afxUri uri; afxByte buf[8]; };

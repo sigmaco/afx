@@ -69,6 +69,22 @@ AFX_OBJECT(afxShell)
 };
 #endif//_AUX_SHELL_C
 
+#ifndef _AUX_UX_C
+AFX_DECLARE_STRUCT(_auxSesImpl);
+#else
+AFX_DEFINE_STRUCT(_auxSesImpl)
+{
+    afxTime(*pump)(afxSession,afxFlags,afxTime);
+    afxBool(*hasClipContent)(afxSession, afxFlags);
+    afxUnit(*getClipContent)(afxSession, afxString*);
+    afxError(*setClipContent)(afxSession, afxString const*);
+    afxBool(*getCurPos)(afxSession,afxWindow,afxInt[]);
+    afxError(*immerge)(afxSession,afxWindow,afxBool);
+    afxError(*promote)(afxSession, afxWindow);
+    afxError(*grabCursor)(afxSession, afxWindow, afxBool);
+};
+#endif
+
 #ifdef _AUX_SESSION_C
 #ifdef _AUX_SESSION_IMPL
 AFX_OBJECT(_auxSession)
@@ -76,6 +92,9 @@ AFX_OBJECT(_auxSession)
 AFX_OBJECT(afxSession)
 #endif
 {
+    _auxSesImpl const*  pimpl;
+    void*               idd;
+
     afxChain            classes;
     afxClass            termCls;
     afxClass            wndCls;
@@ -83,21 +102,20 @@ AFX_OBJECT(afxSession)
 
     afxWindow           focusedWnd;
     afxWindow           curCapturedOn;
-
-    afxTime(*pumpCb)(afxSession);
+    afxInt              curPos[2];
 
     struct
     {
-        afxUnit          hidNo;
+        afxUnit         hidNo;
 
         // keyboard
-        afxUnit          fnKeyCnt;
-        afxUnit          keyCnt;
-        afxUnit8         keyState[2][afxKey_TOTAL];
+        afxUnit         fnKeyCnt;
+        afxUnit         keyCnt;
+        afxUnit8        keyState[2][afxKey_TOTAL];
 
         // mouse
-        afxUnit          buttonCnt;
-        afxUnit          sampleRate;
+        afxUnit         buttonCnt;
+        afxUnit         sampleRate;
         afxBool         mbState[2][AFX_MB_TOTAL]; // [ last, prev ][i]
         afxReal         wheelDelta[2]; // [ last, prev ]
         afxV2d          motion[2]; // [ last, prev ]
@@ -114,10 +132,10 @@ AFX_OBJECT(afxSession)
         afxReal         hiFreqVib; // The high-frequency rumble motor (usually the right one).
 
     }                   seats[2];
-    afxUnit              seatCnt;
+    afxUnit             seatCnt;
 
     void*               vm;
-    afxUnit              scriptedEvCnt;
+    afxUnit             scriptedEvCnt;
     afxString const*    scriptedEvNames;
     afxStringBase       scriptedEvNameDb;
     afxPool             scriptedEvHandlers;
@@ -126,15 +144,29 @@ AFX_OBJECT(afxSession)
     afxDesktop          dwm;
 
     afxUnit             vduIdx;
-    afxDrawSystem      dsys;
+    afxDrawSystem       dsys;
     afxUnit             sdevId;
     afxUnit             soutIdx;
-    afxMixSystem     ssys;
+    afxMixSystem     msys;
     afxSink      aso;
 
-    void*               idd;
 };
 #endif//_AUX_SESSION_C
+
+#ifndef _AUX_UX_C
+AFX_DECLARE_STRUCT(_auxWndDdi);
+#else
+AFX_DEFINE_STRUCT(_auxWndDdi)
+{
+    afxBool(*moveCb)(afxWindow, afxUnit const[2]);
+    afxError(*redrawCb)(afxWindow, afxRect const*);
+    afxError(*chIconCb)(afxWindow, afxRaster);
+    afxError(*adjustCb)(afxWindow, afxBool, afxRect const*);
+    void(*focus)(afxWindow);
+    afxBool(*hasFocus)(afxWindow);
+
+};
+#endif
 
 #ifdef _AUX_WINDOW_C
 #ifdef _AUX_WINDOW_IMPL
@@ -143,6 +175,8 @@ AFX_OBJECT(_auxWindow)
 AFX_OBJECT(afxWindow)
 #endif
 {
+    _auxWndDdi const*pimpl;
+
     afxDesktop*     dwm;
     afxChain        classes;
     afxClass        widCls;
@@ -167,7 +201,8 @@ AFX_OBJECT(afxWindow)
     afxUnit          marginR;
     afxUnit          marginB;
 
-    afxString2048   caption;
+    afxRaster       icon;
+    afxString2048   title;
 
     afxBool         active;
     afxBool         focused;
@@ -196,11 +231,6 @@ AFX_OBJECT(afxWindow)
     afxWidget       grabbedWidg;
     afxV2d          grabPoint;
 
-    afxBool         (*moveCb)(afxWindow, afxUnit const[2]);
-    afxError        (*redrawCb)(afxWindow, afxRect const*);
-    afxError        (*chIconCb)(afxWindow, afxRaster);
-    afxError        (*adjustCb)(afxWindow, afxRect const*, afxRect const*);
-
     void*           udd;
 };
 #endif//_AUX_WINDOW_C
@@ -220,7 +250,7 @@ AFX_DEFINE_STRUCT(afxHidInfo)
 AFX_OBJECT(afxHid)
 {
     AFX_OBJ(afxDevice)  dev;
-    afxUnit              port;
+    afxUnit             port;
     afxHidFlag          flags;
     void*               idd;
 };
@@ -233,15 +263,15 @@ AFX_OBJECT(afxHid)
 AFX_OBJECT(afxKeyboard)
 {
     AFX_OBJ(afxDevLink) ctx;
-    afxUnit              port;
+    afxUnit             port;
     afxHidFlag          flags;
     void*               idd;
 
     // keyboard
-    afxUnit              fnKeyCnt;
-    afxUnit              keyCnt;
-    afxUnit8             lastKeyState[afxKey_TOTAL];
-    afxUnit8             prevKeyState[afxKey_TOTAL];
+    afxUnit             fnKeyCnt;
+    afxUnit             keyCnt;
+    afxUnit8            lastKeyState[afxKey_TOTAL];
+    afxUnit8            prevKeyState[afxKey_TOTAL];
 };
 #endif//_AUX_KEYBOARD_C
 
@@ -252,13 +282,13 @@ AFX_OBJECT(afxKeyboard)
 AFX_OBJECT(afxMouse)
 {
     AFX_OBJ(afxDevLink) ctx;
-    afxUnit              port;
+    afxUnit             port;
     afxHidFlag          flags;
     void*               idd;
 
     // mouse
-    afxUnit              buttonCnt;
-    afxUnit              sampleRate;
+    afxUnit             buttonCnt;
+    afxUnit             sampleRate;
     afxBool             lastMbState[AFX_MB_TOTAL];
     afxBool             prevMbState[AFX_MB_TOTAL];
     afxReal             lastWheelDelta;
@@ -326,13 +356,14 @@ AFX_OBJECT(afxWidget)
 
     struct nk_context nkCtx;
     struct nk_glfw nkFw;
+    void* svgCtx;
 
     // dev
     afxBool shouldRebuildData;
     struct nk_buffer cmds;
     struct nk_draw_null_texture tex_null;
-    afxBuffer vbo;
-    afxBuffer ibo;
+    avxBuffer vbo;
+    avxBuffer ibo;
     afxUnit vboSiz, iboSiz;
     avxPipeline pip;
     afxRaster font_tex;
@@ -354,7 +385,11 @@ AUX afxClassConfig const _AuxCtrlStdImplementation;
 AUX afxClassConfig const _AuxKbdStdImplementation;
 AUX afxClassConfig const _AuxMseStdImplementation;
 AUX afxClassConfig const _AUX_SES_CLASS_CONFIG;
+AUX _auxSesImpl const _AUX_SES_IMPL;
+
 AUX afxClassConfig const _AUX_WND_CLASS_CONFIG;
+AUX _auxWndDdi const _AUX_WND_IMPL;
+
 AUX afxClassConfig const _AUX_WID_CLASS_CONFIG;
 
 AUX afxClass const* AfxGetMouseClass(afxShell ssh);
@@ -362,8 +397,8 @@ AUX afxClass const* AfxGetKeyboardClass(afxShell ssh);
 AUX afxClass const* AfxGetControllerClass(afxShell ssh);
 AUX afxClass const* _AuxGetSessionClass(afxModule icd);
 
-AUX afxClass const* AuxGetWidgetClass(afxWindow wnd);
-AUX afxClass const* AfxGetWindowClass(afxSession ses);
-AUX afxClass const* AfxGetScriptClass(afxSession ses);
+AUX afxClass const* _AuxWndGetWidgetClass(afxWindow wnd);
+AUX afxClass const* _AuxSesGetWndClass(afxSession ses);
+AUX afxClass const* _AuxSesGetXssClass(afxSession ses);
 
 #endif//AUX_IMPL___SHELL_H

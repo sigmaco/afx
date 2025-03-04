@@ -100,7 +100,7 @@ _ASX afxError AfxRecomputeTriangularTangents(afxUnit triCnt, afxUnit const indic
     return err;
 }
 
-_ASX afxError AfxRecomputeTriangularNormals(afxUnit triCnt, afxUnit const indices[], afxV3d const pos[], afxV3d const nrm[])
+_ASX afxError AfxRecomputeTriangularNormals(afxUnit triCnt, afxUnit const indices[], afxV3d const pos[], afxV3d nrm[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(indices);

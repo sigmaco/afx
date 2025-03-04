@@ -35,6 +35,7 @@
 
 //#include "qwadro/inc/cad/afxSkeleton.h"
 #include "qwadro/inc/sim/io/afxCurve.h"
+#include "qwadro/inc/sim/io/asxBuffer.h"
 
 #include "qwadro/inc/sim/io/afxModel.h"
 #include "qwadro/inc/sim/body/afxMaterial.h"
@@ -94,7 +95,7 @@ ASX afxDrawInput    AfxGetSimulationDrawInput(afxSimulation sim);
 ASX afxUnit         AfxEnumerateBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBody bodies[]);
 ASX afxUnit         AfxInvokeBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBool(*f)(afxBody, void*), void *udd);
 
-ASX afxError        AfxRollSimCommands(afxSimulation sim, asxSubmission* ctrl, afxUnit cnt, afxContext contexts[]);
+ASX afxError        AfxExecuteSampleCommands(afxSimulation sim, asxSubmission* ctrl, afxUnit cnt, afxContext contexts[]);
 
 ASX afxError        AfxCullBodies(afxSimulation sim, afxFrustum const* f, afxArray* pvs);
 

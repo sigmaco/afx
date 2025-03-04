@@ -215,7 +215,7 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AFX afxClassConfig const _AfxDevBaseImplementation =
+_AFX afxClassConfig const _AFX_DEV_CLASS_CONFIG =
 {
     .fcc = afxFcc_DEV,
     .name = "Device",

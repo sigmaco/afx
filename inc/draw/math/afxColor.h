@@ -22,14 +22,6 @@
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/math/afxVector.h"
 
-typedef enum avxColorChannel
-{
-    avxColorChannel_R,
-    avxColorChannel_G,
-    avxColorChannel_B,
-    avxColorChannel_A
-}avxColorChannel;
-
 typedef afxV4d      AFX_SIMD afxColor;
 
 typedef afxUnit8     AFX_SIMD afxRgb8[3];
@@ -41,26 +33,40 @@ typedef enum avxColorSpace
     avxColorSpace_STANDARD // sRGB
 } avxColorSpace;
 
+typedef enum avxColorChannel
+{
+    avxColorChannel_R,
+    avxColorChannel_G,
+    avxColorChannel_B,
+    avxColorChannel_A
+}avxColorChannel;
+
 typedef enum avxColorSwizzle
 {
-    avxColorSwizzle_ZERO,
-    avxColorSwizzle_ONE,
-    avxColorSwizzle_A,
     avxColorSwizzle_R,
     avxColorSwizzle_G,
-    avxColorSwizzle_B
+    avxColorSwizzle_B,
+    avxColorSwizzle_A,
+    avxColorSwizzle_ONE,
+    avxColorSwizzle_ZERO,
+
+    avxColorSwizzle_TOTAL
 } avxColorSwizzle;
 
-AFX_DEFINE_STRUCT(avxColorSwizzling)
+AFX_DEFINE_STRUCT(avxSwizzling)
 {
     avxColorSwizzle r, g, b, a;
 };
 
-#define AFX_COLOR(x_, y_, z_, w_) (afxColor const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)w_ }
+#define AFX_COLOR(x_, y_, z_, w_) (afxColor const){ (afxReal)(x_), (afxReal)(y_), (afxReal)(z_), (afxReal)(w_) }
 
-#define AFX_ARGB(a, r, g, b) (afxUnit32)(((a) << 24) | ((r) << 16) | ((g) << 8) | (b))
+#ifdef AFX_LE
+#   define AFX_ARGB(a, r, g, b) (afxUnit32)(((a) << 24) | ((r) << 16) | ((g) << 8) | (b))
+#else
+#   define AFX_ARGB(a, r, g, b) (afxUnit32)(((b) << 24) | ((g) << 16) | ((r) << 8) | (a))
+#endif
 
-AVX avxColorSwizzling const AFX_STD_COLOR_SWIZZLING;
+AVX avxSwizzling const AFX_STD_COLOR_SWIZZLING;
 
 AVXINL void     AfxColorReset(afxColor c);
 

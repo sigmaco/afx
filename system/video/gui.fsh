@@ -1,6 +1,6 @@
 #include <//./z/video/stdEnv.inc>
 
-UNIFORM_UNIT(0, 1, frag)
+UNIFORM(0, 1, std140, frag)
 {
     mat3 scissorMat;
     mat3 paintMat;
@@ -17,7 +17,7 @@ UNIFORM_UNIT(0, 1, frag)
     int type;
 };
 
-SAMPLING_UNIT(0, 2, sampler2D, tex);
+TEXTURE(0, 2, sampler2D, tex);
 
 in block
 {

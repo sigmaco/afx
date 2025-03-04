@@ -16,7 +16,7 @@
 
  // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#define _AMX_SOUND_C
+#define _AMX_MIX_C
 #define _AMX_MIX_SYSTEM_C
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
@@ -68,7 +68,7 @@ _AMX afxError AfxRequestSinkBuffer(afxSink sink, afxTime timeout, afxUnit *bufId
 // Pull an available sink buffer
 {
     afxError err = AFX_ERR_NONE;
-    /// sink must be a valid afxSink handle.
+    // sink must be a valid afxSink handle.
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
     afxUnit bufIdx2 = AFX_INVALID_INDEX;
 
@@ -131,7 +131,7 @@ _AMX afxError AfxRequestSinkBuffer(afxSink sink, afxTime timeout, afxUnit *bufId
 _AMX afxError AfxDiscardSinkBuffer(afxSink sink, afxUnit bufIdx)
 {
     afxError err = AFX_ERR_NONE;
-    /// sink must be a valid afxSink handle.
+    // sink must be a valid afxSink handle.
     AFX_ASSERT_OBJECTS(afxFcc_ASI, 1, &sink);
     AFX_ASSERT_RANGE(sink->latency, bufIdx, 1);
 

@@ -75,7 +75,7 @@ _AVX afxError AfxRequestTextures(afxTxd txd, afxUnit cnt, afxUnit texIdxes[], af
     return err;
 }
 
-_AVX afxError _AvxTxdStdDtorCb(afxTxd txd)
+_AVX afxError _AvxTxdDtorCb(afxTxd txd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_TXD, 1, &txd);
@@ -103,7 +103,7 @@ _AVX afxError _AvxTxdStdDtorCb(afxTxd txd)
     return err;
 }
 
-_AVX afxError _AvxTxdStdCtorCb(afxTxd txd, void** args, afxUnit invokeNo)
+_AVX afxError _AvxTxdCtorCb(afxTxd txd, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_TXD, 1, &txd);
@@ -174,8 +174,8 @@ _AVX afxClassConfig const _AVX_TXD_CLASS_CONFIG =
     .name = "Txd",
     .desc = "Texture Dictionary",
     .fixedSiz = sizeof(AFX_OBJECT(afxTxd)),
-    .ctor = (void*)_AvxTxdStdCtorCb,
-    .dtor = (void*)_AvxTxdStdDtorCb
+    .ctor = (void*)_AvxTxdCtorCb,
+    .dtor = (void*)_AvxTxdDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////

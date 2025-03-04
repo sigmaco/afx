@@ -88,26 +88,26 @@ AFX_OBJECT(afxMotion)
 {
     afxString           id;
     afxMask             flags;
-    afxUnit              pivotCnt; // circuit count
-    afxPivotalMotion* pivotCurve; // uma arranjo de registros da moção de junta de afxSkeleton do correspondente afxModel.
+    afxUnit             pivotCnt; // circuit count
+    afxPivotalMotion*   pivotCurve; // uma arranjo de registros da moção de junta de afxSkeleton do correspondente afxModel.
     afxString*          pivots; // circuit id compatible with skeleton joints.
     //afxUnit              pivotLodErrorCnt;
     afxReal*            pivotLodError;
-    afxUnit              vecCnt;
-    afxVectorialMotion*    vecCurve;
+    afxUnit             vecCnt;
+    afxVectorialMotion* vecCurve;
     afxString*          vectors;
     afxTransform        displacement;
-    afxPivotalMotion* root;
+    afxPivotalMotion*   root;
     afxV3d              loopTranslation;
     akxPeriodicLoop*    periodicLoop;
 
 #if 0
-    afxUnit              curveCnt;
+    afxUnit             curveCnt;
     afxCurve*           curves;
     struct
     {
-        afxUnit          baseCurIdx;
-        afxUnit          curCnt;
+        afxUnit         baseCurIdx;
+        afxUnit         curCnt;
     }*xforms;
     afxMask*            xformFlag;
     afxCurve*           deformation;
@@ -154,8 +154,6 @@ AFX_DEFINE_STRUCT(asxCachedMotionTransform)
 
 AFX_DEFINE_HANDLE(asxInstancedAnimation);
 
-#ifdef _ASX_ANIMATION_C
-
 AFX_DEFINE_STRUCT(asxInstancedAnimationId)
 {
     afxAnimation Animation;
@@ -192,6 +190,8 @@ AFX_DEFINE_STRUCT(asxTrackTarget) // draft
     akxTrackMask *ModelMask; // 48
 };
 
+#ifdef _ASX_ANIMATION_C
+
 AFX_DEFINE_STRUCT(akxLinkedMotion)
 {
     afxMotion           mot;
@@ -221,24 +221,24 @@ AFX_OBJECT(afxAnimation)
 #endif
 {
     afxAnimationFlags   flags;
-    afxUnit              motSlotCnt;
+    afxUnit             motSlotCnt;
     akxLinkedMotion*    motSlots;
 
-    /// @timeStep é o intervalo após oversampling.
-    /// Quando @timeStep e @oversampling forem iguais a 0.00416667 e 4.0, respectivamente, uma animação foi produzida a 60 FPS (0.016667 segundos entre cada frame) com oversampling de 4x.
-    /// Multiplicando @timeStep por @oversampling, pode-se encontrar o intervalo original antes do oversampling.
-    /// Tanto @timeStep quanto @oversampling não são usadas pelo Qwadro.
-    /// Estão aqui de forma informativa preservando conhecimento sobre a intenção original do autor.
-    afxReal             dur; /// especifica quão demorado, em segundos, a animação leva para executar a completação.
-    afxReal             timeStep; /// especifica quão muitos segundos há entre cada frame.
-    afxReal             oversampling; /// 1.f
+    // @timeStep é o intervalo após oversampling.
+    // Quando @timeStep e @oversampling forem iguais a 0.00416667 e 4.0, respectivamente, uma animação foi produzida a 60 FPS (0.016667 segundos entre cada frame) com oversampling de 4x.
+    // Multiplicando @timeStep por @oversampling, pode-se encontrar o intervalo original antes do oversampling.
+    // Tanto @timeStep quanto @oversampling não são usadas pelo Qwadro.
+    // Estão aqui de forma informativa preservando conhecimento sobre a intenção original do autor.
+    afxReal             dur; // especifica quão demorado, em segundos, a animação leva para executar a completação.
+    afxReal             timeStep; // especifica quão muitos segundos há entre cada frame.
+    afxReal             oversampling; // 1.f
 
     afxString           urn;
 };
 #endif
 
-AFX_DECLARE_STRUCT(akxControlledAnimation);
-AFX_DECLARE_STRUCT(akxControlledAttitude);
+AFX_DECLARE_STRUCT(asxControlledAnimation);
+AFX_DECLARE_STRUCT(asxControlledPose);
 
 AFX_DECLARE_STRUCT(asxMotiveCallbacks);
 

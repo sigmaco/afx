@@ -24,7 +24,7 @@
 
 #ifdef _ASX_MATERIAL_C
 
-AFX_DEFINE_STRUCT(akxMaterialMap)
+AFX_DEFINE_STRUCT(asxMaterialMap)
 {
     afxString     usage; // usage 16
     afxMaterial     sub; // afxMaterial
@@ -40,7 +40,7 @@ AFX_OBJECT(afxMaterial)
     afxRaster       tex;
     avxSampler      smp;
     afxUnit         mapCnt;
-    akxMaterialMap* maps;
+    asxMaterialMap* maps;
     void*           extData;
 
     // non-Granny stuff
@@ -62,7 +62,7 @@ AFX_OBJECT(afxMaterial)
 
 #endif//_ASX_MATERIAL_C
 
-AFX_DEFINE_STRUCT(afxMeshRig)
+AFX_DEFINE_STRUCT(asxMeshRig)
 // This new rig representation allow both model and mesh to access rigging info.
 // Access to this info is important to let mesh instantiaion be bundled and to solve vertices' bias index indirection.
 {
@@ -83,7 +83,7 @@ AFX_DEFINE_STRUCT(afxMeshRig)
 
 #ifdef _ASX_MESH_C
 
-AFX_DEFINE_STRUCT(avxMeshAttr)
+AFX_DEFINE_STRUCT(asxMeshAttr)
 {
     afxString8          usage; // 8
     afxVertexFlags      flags;
@@ -128,7 +128,7 @@ AFX_OBJECT(afxMesh)
     afxUnit*            indices; // [idxCnt] --- indices into primitive vertices.
     afxUnit             attrCnt; // used by morphes.
     afxString*          attrIds;
-    avxMeshAttr*        attrInfo;
+    asxMeshAttr*        attrInfo;
     afxByte**           vtxAttrData; // [attrCnt]
 
     // SHAPE DATA
@@ -142,7 +142,7 @@ AFX_OBJECT(afxMesh)
     afxBox*             biasObb; // [morphCnt][biasCnt]
 
     avxVertexCache      vtxCache;
-    afxBuffer           ibo;
+    avxBuffer           ibo;
     afxUnit32           iboBase;
     afxUnit32           iboRange;
     afxUnit32           iboStride;
@@ -185,7 +185,7 @@ AFX_OBJECT(afxModel)
     afxTransform    displacement;
 
     afxUnit         rigCnt;
-    afxMeshRig**    rigs;
+    asxMeshRig**    rigs;
     afxUnit         usedRigCnt;
     afxBox          aabb;
     afxModelFlags   flags;
@@ -196,15 +196,15 @@ AFX_OBJECT(afxModel)
 
 #endif
 
-#ifdef _ASX_POSE_C
-AFX_DEFINE_STRUCT(akxArticulation)
+AFX_DEFINE_STRUCT(asxArticulation)
 {
-    afxReal             weight;
-    afxUnit             cnt;
-    afxTransform        xform;
-    afxUnit             traversalId;
+    afxReal         weight;
+    afxUnit         cnt;
+    afxTransform    xform;
+    afxUnit         traversalId;
 };
 
+#ifdef _ASX_POSE_C
 #ifdef _ASX_POSE_IMPL
 AFX_OBJECT(_asxPose)
 #else
@@ -212,7 +212,7 @@ AFX_OBJECT(afxPose)
 #endif
 {
     afxUnit             artCnt;
-    akxArticulation*    arts;
+    asxArticulation*    arts;
     afxReal             fillThreshold;
     afxUnit             traversalId;
 };
@@ -239,6 +239,17 @@ ASX afxClassConfig const _ASX_MTL_CLASS_CONFIG;
 ASX afxClassConfig const _ASX_MSH_CLASS_CONFIG;
 
 ASX afxPool* _AsxGetMeshRigPool(afxMesh msh);
-ASX afxMeshRig* _AsxGetMeshRig(afxMesh msh, afxUnit rigId);
+ASX asxMeshRig* _AsxGetMeshRig(afxMesh msh, afxUnit rigId);
+
+ASX afxTransform* _AsxMdlGetLtArray(afxModel mdl, afxUnit base);
+ASX afxM4d* _AsxMdlGetIwArray(afxModel mdl, afxUnit base);
+ASX afxUnit* _AsxMdlGetPiArray(afxModel mdl, afxUnit base);
+ASX afxReal* _AsxMdlGetLeArray(afxModel mdl, afxUnit base);
+
+// pose
+ASX asxArticulation* _AsxPoseGetPaArray(afxPose pose, afxUnit base);
+// placement
+ASX afxM4d* _AsxPlceGetWorldArray(afxPlacement plce, afxUnit base);
+ASX afxM4d* _AsxPlceGetDeltaArray(afxPlacement plce, afxUnit base);
 
 #endif//ASX_IMPL___CAD_H

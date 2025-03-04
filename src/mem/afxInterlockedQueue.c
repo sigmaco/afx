@@ -21,10 +21,10 @@ _AFXINL afxError AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxUnit un
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ique);
     AFX_ASSERT(unitSiz);
-    AFX_ASSERT(cap); /// The number of entries. Must be a power of two.
+    AFX_ASSERT(cap); // The number of entries. Must be a power of two.
 
-    /// Initializa a file afxInterlockedQueue e aloca memória para o número especificado de entradas.
-    /// O número de entradas não é mutável após inicialização.
+    // Initializa a file afxInterlockedQueue e aloca memória para o número especificado de entradas.
+    // O número de entradas não é mutável após inicialização.
 
     cap = AfxPowerOfTwo32(cap);
     AFX_ASSERT((cap & (cap - 1)) == 0); // test for power of 2
@@ -61,8 +61,8 @@ _AFXINL afxError AfxDismantleInterlockedQueue(afxInterlockedQueue* ique)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ique);
 
-    /// Libera a memória reservado para a fila e redefine o estado interno.
-    /// A fila deve estar vazia quando esta função for chamada.
+    // Libera a memória reservado para a fila e redefine o estado interno.
+    // A fila deve estar vazia quando esta função for chamada.
 
     if (ique->entrySeqIdx)
     {

@@ -23,16 +23,7 @@
 #define _AUX_WINDOW_C
 #include "impl/auxImplementation.h"
 
-_AUX afxTime AfxPollInput(afxSession ses)
-{
-    afxError err = AFX_ERR_NONE;
-
-    afxTime first, last, dt;
-    AfxGetTime(&first);
-    ses->pumpCb(ses);
-    dt = (AfxGetTime(&last) - first);
-    return dt;
-}
+_AUX afxSession gActiveSes = NIL;
 
 _AUX afxUnit AfxGetSid(afxSession ses)
 {
@@ -40,7 +31,147 @@ _AUX afxUnit AfxGetSid(afxSession ses)
     return ses ? AfxGetObjectId(ses) : 0;
 }
 
-_AUX afxClass const* AfxGetWindowClass(afxSession ses)
+_AUX afxBool AfxGetSession(afxSession* session)
+{
+    afxError err = NIL;
+    afxSession ses = gActiveSes;
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    if (session)
+        *session = ses;
+
+    return !!ses;
+}
+
+_AUX afxTime AfxPollInput(afxFlags flags, afxTime timeout)
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (AfxGetSession(&ses))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+        afxTime first, last, dt;
+        AfxGetTime(&first);
+
+        ses->pimpl->pump(ses, 0, timeout);
+
+        dt = (AfxGetTime(&last) - first);
+        return dt;
+    }
+    return 0;
+}
+
+_AUX afxBool AfxHasClipboardContent(afxFlags flags)
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (AfxGetSession(&ses))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+        return ses->pimpl->hasClipContent(ses, flags);
+    }
+    return FALSE;
+}
+
+_AUX afxUnit AfxGetClipboardContent(afxString* buf)
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (AfxGetSession(&ses))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+        return ses->pimpl->getClipContent(ses, buf);
+    }
+    return 0;
+}
+
+_AUX afxError AfxSetClipboardContent(afxString const* text)
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (AfxGetSession(&ses))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+        
+        if (ses->pimpl->setClipContent(ses, text))
+            AfxThrowError();
+    }
+    return err;
+}
+
+_AUX afxBool AfxGetCursorPosition(afxWindow wnd, afxInt position[2])
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (AfxGetSession(&ses))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+        afxBool(*getCurPos)(afxSession, afxWindow, afxInt[]) = ses->pimpl->getCurPos;
+
+        if (getCurPos)
+        {
+            return getCurPos(ses, wnd, position);
+        }
+        else
+        {
+            if (wnd)
+            {
+                afxRect frame;
+                AfxGetWindowRect(wnd, TRUE, &frame);
+                position[0] = ses->curPos[0] - frame.x;
+                position[1] = ses->curPos[1] - frame.y;
+                return position[0] >= 0 && position[1] >= 0 && position[0] < frame.w && position[1] < frame.h;
+            }
+            else
+            {
+                position[0] = ses->curPos[0];
+                position[1] = ses->curPos[1];
+            }
+        }
+    }
+    return FALSE;
+}
+
+_AUX afxError AfxImmergeWindow(afxWindow wnd, afxBool fullscreen)
+{
+    afxError err = AFX_ERR_NONE;
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return err;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    if (wnd)
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
+
+        if (!fullscreen && wnd->fullscreen)
+        {
+            ses->pimpl->immerge(ses, wnd, FALSE);
+            wnd->fullscreen = FALSE;
+        }
+        else
+        {
+            ses->pimpl->immerge(ses, wnd, fullscreen);
+            wnd->fullscreen = TRUE;
+        }
+    }
+    else
+    {
+        ses->pimpl->immerge(ses, NIL, FALSE);
+    }
+    return err;
+}
+
+_AUX afxClass const* _AuxSesGetWndClass(afxSession ses)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
@@ -49,7 +180,7 @@ _AUX afxClass const* AfxGetWindowClass(afxSession ses)
     return cls;
 }
 
-_AUX afxClass const* AfxGetScriptClass(afxSession ses)
+_AUX afxClass const* _AuxSesGetXssClass(afxSession ses)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
@@ -73,22 +204,28 @@ _AUX afxBool AfxGetSessionAudio(afxSession ses, afxMixSystem* system, afxSink* s
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
-    afxMixSystem ssys = ses->ssys;
-    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &ssys);
+    afxMixSystem msys = ses->msys;
+    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(system);
-    *system = ssys;
+    *system = msys;
     AFX_ASSERT(sink);
     *sink = ses->aso;
-    return !!ssys;
+    return !!msys;
 }
 
-_AUX afxError AfxCloseSession(afxSession ses)
+_AUX afxError AfxCloseSession(void)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
-    AfxExhaustChainedClasses(&ses->classes);
+    afxSession ses;
+    if (AfxGetSession(&ses))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
+        AfxExhaustChainedClasses(&ses->classes);
+
+        gActiveSes = NIL;
+    }
     return err;
 }
 
@@ -97,6 +234,17 @@ _AUX afxError AfxOpenSession(afxSession ses, afxUri const* host, afxAuthMethod m
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     
+    afxSession curr;
+    if (AfxGetSession(&curr))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &curr);
+        AfxCloseSession();
+    }
+
+    if (!gActiveSes)
+    {
+        gActiveSes = ses;
+    }
     return err;
 }
 
@@ -135,6 +283,8 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     _auxSessionAcquisition const* cfg = AFX_CAST(_auxSessionAcquisition const*, args[1]) + invokeNo;
     AFX_ASSERT(cfg);
+
+    ses->pimpl = &_AUX_SES_IMPL;
 
     {
         AfxDeployChain(&ses->classes, ses);
@@ -186,39 +336,28 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
     }
     else
     {
-        afxDrawSystem dsys = NIL;
-        afxUnit ddevId = cfg->ddevId;
-
-        if (ddevId != AFX_INVALID_INDEX)
-        {
-            afxDrawSystemConfig dccfg;
-            AfxConfigureDrawSystem(ddevId, &dccfg);
-
-            if (AfxEstablishDrawSystem(ddevId, &dccfg, &dsys))
-                AfxThrowError();
-        }
-        ses->dsys = dsys;
-        ses->vduIdx = cfg->vduIdx;
+        ses->dsys = NIL;
+        ses->vduIdx = AFX_INVALID_INDEX;
     }
 
     if (!err)
     {
-        if (cfg->ssys)
+        if (cfg->msys)
         {
-            afxMixSystem ssys = cfg->ssys;
-            AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &ssys);
-            AfxReacquireObjects(1, &ssys);
-            afxMixDevice sdev = AfxGetSoundSystemDevice(ssys);
-            AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &sdev);
-            ses->ssys = ssys;
-            ses->sdevId = AfxGetObjectId(sdev);
+            afxMixSystem msys = cfg->msys;
+            AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+            AfxReacquireObjects(1, &msys);
+            ses->msys = msys;
             ses->soutIdx = cfg->soutIdx;
+
             afxSinkConfig asoCfg;
-            AfxConfigureAudioSink(ssys, &asoCfg);
-            AfxOpenAudioSink(ssys, &asoCfg, &ses->aso);
+            AfxConfigureAudioSink(msys, &asoCfg);
+            AfxOpenAudioSink(msys, &asoCfg, &ses->aso);
         }
         else
         {
+            ses->msys = NIL;
+            ses->soutIdx = AFX_INVALID_INDEX;
 #if 0
             afxMixSystem ssys = NIL;
             afxUnit sdevId = cfg->sdevId;
@@ -291,7 +430,7 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
 
             if (err)
             {
-                AfxDisposeObjects(1, &ses->ssys);
+                AfxDisposeObjects(1, &ses->msys);
             }
         }
 
@@ -322,10 +461,11 @@ _AUX afxClassConfig const _AUX_SES_CLASS_CONFIG =
 _AUX afxError AfxAcquireSession(afxUnit icd, afxSessionConfig const* cfg, afxSession* session)
 {
     afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(session);
+    AFX_ASSERT(cfg);
 
     if (!cfg)
     {
-        AFX_ASSERT(cfg);
         AfxThrowError();
         return err;
     }
@@ -366,7 +506,7 @@ _AUX afxError AfxAcquireSession(afxUnit icd, afxSessionConfig const* cfg, afxSes
     cfg2.ddevId = cfg->ddevId;
     cfg2.sdevId = cfg->sdevId;
     cfg2.soutIdx = cfg->soutIdx;
-    cfg2.ssys = cfg->ssys;
+    cfg2.msys = cfg->msys;
 
     afxClass* cls = (afxClass*)_AuxGetSessionClass(driver);
     AFX_ASSERT_CLASS(cls, afxFcc_SES);
@@ -379,7 +519,6 @@ _AUX afxError AfxAcquireSession(afxUnit icd, afxSessionConfig const* cfg, afxSes
     }
 
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
-    AFX_ASSERT(session);
     *session = ses;
 
     return err;

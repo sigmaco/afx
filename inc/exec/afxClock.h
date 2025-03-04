@@ -31,6 +31,8 @@ AFXINL void     AfxResetClock(afxClock* clock);
 
 AFXINL void     AfxCopyClock(afxClock* clock, afxClock const* src);
 
+AFX afxReal64   AfxGetMicrosecondsElapsed(afxClock const* from, afxClock const* until);
+
 /// Find out how many seconds have elapsed from a previous clock up to another clock.
 AFX afxReal64   AfxGetSecondsElapsed(afxClock const* from, afxClock const* until);
 

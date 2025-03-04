@@ -131,10 +131,10 @@ _ASX afxUnit AfxGetSampleQueuePort(afxSimQueue sque)
     return sque->portId;
 }
 
-_ASX afxError _AsxSubmitSimCommands(afxSimQueue sque, asxSubmission const* ctrl, afxUnit cnt, afxContext contexts[])
+_ASX afxError _AsxExecuteSampleCommands(afxSimQueue sque, asxSubmission const* ctrl, afxUnit cnt, afxContext contexts[])
 {
     afxError err = AFX_ERR_NONE;
-    /// sque must be a valid afxContext handle.
+    // sque must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
     AFX_ASSERT(cnt);
     AFX_ASSERT(contexts);
@@ -157,12 +157,12 @@ _ASX afxError _AsxSubmitSimCommands(afxSimQueue sque, asxSubmission const* ctrl,
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        afxContext mctx = contexts[i];
-        AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &mctx);
+        afxContext sctx = contexts[i];
+        AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &sctx);
 
-        AfxReacquireObjects(1, &mctx);
-        work->Execute.cmdbs[i] = mctx;
-        AfxIncAtom32(&mctx->submCnt);
+        AfxReacquireObjects(1, &sctx);
+        work->Execute.cmdbs[i] = sctx;
+        AfxIncAtom32(&sctx->submCnt);
         work->Execute.cmdbs[i]->state = asxContextState_PENDING;
     }
 
@@ -193,6 +193,7 @@ _ASX afxError _AsxSqueDtorCb(afxSimQueue sque)
 
 _ASX afxError _AsxSqueCtorCb(afxSimQueue sque, void** args, afxUnit invokeNo)
 {
+    (void)invokeNo;
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 

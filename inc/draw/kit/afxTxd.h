@@ -40,7 +40,7 @@
 AFX_DEFINE_STRUCT(afxTexture)
 {
     afxUri          name;
-    avxTexelAddress uvw[3];
+    avxTexelWrap uvw[3];
     avxTexelFilter  minFlt;
     avxSampler      samp;
     afxRaster       ras;

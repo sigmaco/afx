@@ -27,17 +27,17 @@
 
 typedef enum
 {
-    /// A light placed infinitely far away. It affects everything in the scene.
+    // A light placed infinitely far away. It affects everything in the scene.
     akxLightType_DIRECTIONAL,
 
-    /// A light that shines equally in all directions from its location, affecting all objects within its Range.
+    // A light that shines equally in all directions from its location, affecting all objects within its Range.
     akxLightType_OMNI,
 
-    /// A light that shines everywhere within a cone defined by Spot Angle and Range. Only objects within this region are affected by the light.
+    // A light that shines everywhere within a cone defined by Spot Angle and Range. Only objects within this region are affected by the light.
     akxLightType_SPOT,
 
-    /// A light that shines in all directions to one side of a rectangular area of a plane. The rectangle is defined by the Width and Height properties.
-    /// Area lights are only available during lightmap baking and have no effect on objects at runtime.
+    // A light that shines in all directions to one side of a rectangular area of a plane. The rectangle is defined by the Width and Height properties.
+    // Area lights are only available during lightmap baking and have no effect on objects at runtime.
     akxLightType_AREA
 } akxLightType;
 
@@ -53,14 +53,14 @@ typedef enum akxLightFlag
 AFX_OBJECT(akxLight)
 {
     afxReal     distFadeBegin; // 40.f
-    /// A luz será suavemente esvanecida afora quando longe da câmera ativa iniciando de distFadeBegin.
-    /// Isto atua como uma forma de LOD. A luz será esmaecida afora sobre distFadeBegin + distFadeLen, após a qual será coligida e não enviada a shader.
+    // A luz será suavemente esvanecida afora quando longe da câmera ativa iniciando de distFadeBegin.
+    // Isto atua como uma forma de LOD. A luz será esmaecida afora sobre distFadeBegin + distFadeLen, após a qual será coligida e não enviada a shader.
 
     afxReal     distFadeLen; // 10.f
-    /// Distância sobre a qual a luz e sua sombra esmaecem. A energia da luz e a opacidade da sombra são progressivamente reduzidas sobre esta distância e é completamente invisível ao fim.
+    // Distância sobre a qual a luz e sua sombra esmaecem. A energia da luz e a opacidade da sombra são progressivamente reduzidas sobre esta distância e é completamente invisível ao fim.
     
     afxReal     distFadeShadow; // 50.f
-    /// A distância da câmera na qual a sombra da luz corta (em unidades 3D).
+    // A distância da câmera na qual a sombra da luz corta (em unidades 3D).
 
     afxReal     angularDist; // 0.f
     

@@ -17,7 +17,7 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #include "../impl/avxImplementation.h"
-#include "qwadro/inc/draw/io/afxTarga.h"
+#include "qwadro/inc/draw/io/afxRasterFile.h"
 
 #pragma pack(push, 1)
 
@@ -58,10 +58,10 @@ inline void flip_block_s3tc(afxByte* BlockDst, afxByte const* BlockSrc, avxForma
 
     switch (fmt)
     {
-    case avxFormat_DXT1:
-    case avxFormat_DXT1std:
+    case avxFormat_DXT1un:
+    case avxFormat_DXT1v:
     case avxFormat_DXT1A:
-    case avxFormat_DXT1Astd:
+    case avxFormat_DXT1Av:
     {
         dxt1_block* Src = (dxt1_block*)BlockSrc;
         dxt1_block* Dst = (dxt1_block*)BlockDst;
@@ -86,8 +86,8 @@ inline void flip_block_s3tc(afxByte* BlockDst, afxByte const* BlockSrc, avxForma
         }
         break;
     }
-    case avxFormat_DXT3:
-    case avxFormat_DXT3std:
+    case avxFormat_DXT3un:
+    case avxFormat_DXT3v:
     {
         dxt3_block* Src = (dxt3_block*)BlockSrc;
         dxt3_block* Dst = (dxt3_block*)BlockDst;
@@ -120,8 +120,8 @@ inline void flip_block_s3tc(afxByte* BlockDst, afxByte const* BlockSrc, avxForma
         }
         break;
     }
-    case avxFormat_DXT5:
-    case avxFormat_DXT5std:
+    case avxFormat_DXT5un:
+    case avxFormat_DXT5v:
     {
         dxt5_block* Src = (dxt5_block*)BlockSrc;
         dxt5_block* Dst = (dxt5_block*)BlockDst;
@@ -178,7 +178,7 @@ inline void flip_s3tc(afxByte* dst, afxByte const* src, afxUnit srcSiz, afxUnit 
         afxSize XBlocks = rowStride <= 4 ? 1 : rowStride / 4;
 
         avxFormatDescription pfd;
-        AfxDescribePixelFormat(fmt, &pfd);
+        AvxDescribeFormats(1, &fmt, &pfd);
         afxUnit blockSiz = pfd.stride;
 
         if (rowCnt == 2)

@@ -34,6 +34,7 @@ typedef enum afxDeviceType
     afxDeviceType_PRAGMA,
     afxDeviceType_DRAW,
     afxDeviceType_DISPLAY,
+    afxDeviceType_MIX,
     afxDeviceType_SOUND,
     afxDeviceType_TELECOM,
     afxDeviceType_SHELL,
@@ -54,19 +55,20 @@ typedef enum afxAcceleration
     afxAcceleration_DSP     = AFX_BIT(9), // digital signal processor --- ex.: waveform processors
     afxAcceleration_ASIC    = AFX_BIT(10), // application-specific integrated circuit
     afxAcceleration_FPGA    = AFX_BIT(11), // field-programmable gate arrays
-    
+    afxAcceleration_DPU     = AFX_BIT(12), // Targa-based drawing processing unit
+
     afxAcceleration_TOTAL   = 12
 } afxAcceleration;
 
 typedef enum afxDeviceStatus
 {
-    // NIL /// The device state is unknown or invalid.
-    afxDeviceStatus_ACTIVE      = AFX_BIT(0), /// The device is active. That is, the adapter that connects to the endpoint device is present and enabled.
-    afxDeviceStatus_DISABLED    = AFX_BIT(1), /// The device is disabled.
-    afxDeviceStatus_AUSENT      = AFX_BIT(2), /// The device is not present because the adapter that connects to the endpoint device has been removed from the system.
-    afxDeviceStatus_UNPLUGGED   = AFX_BIT(3), /// The device is unplugged.
+    // NIL // The device state is unknown or invalid.
+    afxDeviceStatus_ACTIVE      = AFX_BIT(0), // The device is active. That is, the adapter that connects to the endpoint device is present and enabled.
+    afxDeviceStatus_DISABLED    = AFX_BIT(1), // The device is disabled.
+    afxDeviceStatus_AUSENT      = AFX_BIT(2), // The device is not present because the adapter that connects to the endpoint device has been removed from the system.
+    afxDeviceStatus_UNPLUGGED   = AFX_BIT(3), // The device is unplugged.
     
-    afxDeviceStatus_ALL         = afxDeviceStatus_ACTIVE | afxDeviceStatus_DISABLED | afxDeviceStatus_AUSENT | afxDeviceStatus_UNPLUGGED, /// Includes devices in all states.
+    afxDeviceStatus_ALL         = afxDeviceStatus_ACTIVE | afxDeviceStatus_DISABLED | afxDeviceStatus_AUSENT | afxDeviceStatus_UNPLUGGED, // Includes devices in all states.
 } afxDeviceStatus;
 
 AFX_DEFINE_STRUCT(afxDeviceInfo)
@@ -81,10 +83,10 @@ AFX_DEFINE_STRUCT(afxDeviceInfo)
 
 AFX_DEFINE_STRUCT(afxDeviceDescription)
 {
-    afxUnit32            devId; /// Device ID for Qwadro. This is the same as what is returned from GetDeviceId and GetDeviceIdFromName.
-    afxString128        name; /// The user-friendly name for the device.
-    afxDeviceStatus     stateMask; /// Bitmask used to filter the device based on their state.
-    afxBool             isDefault; /// Identify default device. Always false when not supported.
+    afxUnit32            devId; // Device ID for Qwadro. This is the same as what is returned from GetDeviceId and GetDeviceIdFromName.
+    afxString128        name; // The user-friendly name for the device.
+    afxDeviceStatus     stateMask; // Bitmask used to filter the device based on their state.
+    afxBool             isDefault; // Identify default device. Always false when not supported.
 };
 
 AFX afxModule           AfxGetDeviceDriver(afxDevice dev);
@@ -98,6 +100,12 @@ AFX afxError            AfxDoDeviceService(afxDevice dev);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxBool             AfxFindDevice(afxDeviceType order, afxUri const* urn, afxDevice* device);
+AFX afxUnit     AfxCountDevices(afxDeviceType type);
+
+AFX afxBool     AfxFindDevice(afxDeviceType order, afxUri const* urn, afxDevice* device);
+
+AFX afxUnit     AfxEnumerateDevices(afxDeviceType type, afxUnit first, afxUnit cnt, afxDevice devices[]);
+
+AFX afxUnit     AfxInvokeDevices(afxDeviceType type, afxUnit first, afxUnit cnt, afxBool(*f)(afxDevice, void*), void *udd);
 
 #endif//AFX_DEVICE_H

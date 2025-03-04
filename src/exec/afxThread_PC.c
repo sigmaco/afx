@@ -18,8 +18,6 @@
 #define _AFX_THREAD_C
 #include "../impl/afxExecImplKit.h"
 
-#include "../../dep/tinycthread.h"
-#include "../../dep/tinycthread.c"
 #ifdef AFX_OS_WIN
 #   include <combaseapi.h>
 #else
@@ -30,14 +28,27 @@
 #   define W32_INIT_COM
 #endif
 
+#include "../../dep/tinycthread.h"
+#include "../../dep/tinycthread.c"
+
 AFX_THREAD_LOCAL afxUnit32 _currTid = 0;
 AFX_THREAD_LOCAL afxUnit32 _currThrObjId = 0;
 AFX_THREAD_LOCAL afxThread _currThr = { NIL };
 
+afxUnit const sizeOfThr = sizeof(AFX_OBJ(afxThread));
+afxUnit const sizeOfThrAligned = AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT);
+AFX_STATIC_ASSERT(AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT) >= sizeof(AFX_OBJ(afxThread)), "");
+AFX_STATIC_ASSERT(sizeof(AFX_OBJECT(afxThread)) > sizeof(afxThread), "");
+_AFX AFX_ALIGN(16) afxByte thePrimeThrData[AFX_ALIGNED_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) +
+AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT)] = { 0 };
+_AFX afxThread ThePrimeThread = (void*)&thePrimeThrData;
+AFX_STATIC_ASSERT(sizeof(ThePrimeThread[0]) > sizeof(void*), "");
+AFX_STATIC_ASSERT(sizeof(thePrimeThrData) >= (sizeof(afxObjectBase) + sizeof(ThePrimeThread[0])), "");
+
 _AFX afxUnit32 AfxGetTid(void)
 {
 #if defined(_WIN32)
-    afxError err = NIL;
+    //afxError err = NIL;
 
     //if ((_currTid && (_currTid != GetCurrentThreadId())))
     {
@@ -93,7 +104,7 @@ _AFX afxBool AfxFindThread(afxUnit32 tid, afxThread* thread)
 
     if (tid)
     {
-        AfxInvokeThreads(0, AFX_N32_MAX, _ThrFindThreadCb, &param);
+        AfxInvokeThreads(0, AFX_U32_MAX, _ThrFindThreadCb, &param);
         AFX_TRY_ASSERT_OBJECTS(afxFcc_THR, 1, &param.thr);
     }
 
@@ -106,12 +117,12 @@ _AFX afxBool AfxGetThread(afxThread* thread)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(thread);
-#if !0
+#if 0
     *thread = NIL;
     afxUnit32 tid = AfxGetTid();
     return AfxFindThread(tid, thread);
 #else
-#if 0
+#if !0
     *thread = _currThr;
     return !!_currThr;
 #else
@@ -295,7 +306,7 @@ _AFX afxResult AfxWaitForThreadExit(afxThread thr, afxResult* exitCode)
     if (curr == thr) rslt = TRUE;
     else
     {
-        while (AfxIsThreadRunning(thr))
+        while (!thr->finished)
         {
             AfxLockMutex(&thr->statusCndMtx);
 
@@ -508,6 +519,7 @@ _AFX int _AfxExecTxuCb(void** v)
         }
     }
 
+    thr->isInFinish = TRUE;
     _AfxDeinitMmu(thr);
 
 #ifdef W32_INIT_COM
@@ -515,6 +527,9 @@ _AFX int _AfxExecTxuCb(void** v)
 #endif
 
     AfxSignalCondition2(&thr->statusCnd);
+    thr->finished = TRUE;
+    thr->running = FALSE;
+    thr->isInFinish = FALSE;
     thr->tid = 0;
     AfxSignalCondition2(&thr->statusCnd);
     return thr->exitCode;
@@ -620,6 +635,7 @@ _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
+    (void)invokeNo;
 
     //AfxZero(thr, sizeof(thr[0]));
 
@@ -724,7 +740,7 @@ _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AFX afxClassConfig const _AfxThrMgrCfg =
+_AFX afxClassConfig const _AFX_THR_CLASS_CONFIG =
 {
     .fcc = afxFcc_THR,
     .name = "Thread",

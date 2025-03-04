@@ -50,6 +50,13 @@ _ASX afxBool AfxGetBodyPose(afxBody bod, afxPose* pose)
     return (pos != NIL);
 }
 
+_ASX afxUnit AfxCountBodyMotives(afxBody bod)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+    return bod->motives.cnt;
+}
+
 _ASX void AfxUpdateBodyMotives(afxBody bod, afxReal newClock)
 {
     afxError err = AFX_ERR_NONE;
@@ -100,6 +107,194 @@ _ASX void AfxRecenterBodyMotiveClocks(afxBody bod, afxReal currClock)
         AfxRebaseCapstanClocks(currClock, 1, &moto);
     }
 }
+
+_ASX void AfxQueryBodyRootMotionVectors(afxBody bod, afxReal secsElapsed, afxBool inverse, afxV3d translation, afxV3d rotation)
+{
+    // AfxGetBodyRootMotionVectors
+
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+
+    afxReal totalWeight = 0.0;
+    afxV4d t = { 0, 0, 0, 1 }, r = { 0, 0, 0, 0 };
+
+    asxMotive intk;
+    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
+    {
+        afxCapstan moto = intk->moto;
+        AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
+
+        if (AfxCapstanHasEffect(moto))
+        {
+            if (intk->isAnim) // only for anims; poses does not move.
+            {
+                _AsxSimGetAnimVmt(AfxGetProvider(bod))->AnimationAccumulateLoopTransform(intk, secsElapsed, &totalWeight, t, r, inverse);
+            }
+        }
+    }
+
+    if (totalWeight > 0.001)
+    {
+        afxReal s = 1.0 / totalWeight;
+        AfxV3dScale(translation, t, s);
+        AfxV3dScale(rotation, r, s);
+    }
+}
+
+_ASX void AfxUpdateBodyMatrix(afxBody bod, afxReal secsElapsed, afxBool inverse, afxM4d const mm, afxM4d m)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+
+    afxV4d t, r;
+    AfxQueryBodyRootMotionVectors(bod, secsElapsed, inverse, t, r);
+    AfxApplyMatrixRootMotionVectors(t, r, mm, m);
+}
+
+_ASX void AfxAccumulateBodyAnimations(afxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose rslt, afxReal allowedErr, afxUnit const sparseJntMap[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+
+    // AfxAccumulateBodyAnimationsLODSparse
+
+    // if allowedErr == 0.f, won't use LOD.
+    // if sparseBoneArray == NIL, won't use sparse.
+
+    asxMotive intk;
+    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
+    {
+        afxCapstan moto = intk->moto;
+        AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
+
+        if (AfxCapstanHasEffect(moto))
+        {
+            if (intk->isAnim)
+                _AsxSimGetAnimVmt(AfxGetProvider(bod))->AnimationAccumulateBindingState(intk, basePivotIdx, pivotCnt, rslt, allowedErr, sparseJntMap);
+            else
+                _AsxSimGetAnimVmt(AfxGetProvider(bod))->PoseAccumulateBindingState(intk, basePivotIdx, pivotCnt, rslt, allowedErr, sparseJntMap);
+        }
+    }
+}
+
+#if 0
+_ASX void AfxSampleBodyAnimations(afxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose pose, afxReal allowedErr, afxUnit const sparseJntMap[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+
+    // AfxSampleBodyAnimationsLODSparse
+
+    // if allowedErr == 0.f, won't use LOD.
+    // if sparseBoneArray == NIL, won't use sparse.
+
+    AsxCommencePoseAccumulation(pose, basePivotIdx, pivotCnt, sparseJntMap);
+
+    AfxAccumulateBodyAnimations(bod, basePivotIdx, pivotCnt, pose, allowedErr, sparseJntMap);
+
+    AsxConcludePoseAccumulation(pose, basePivotIdx, pivotCnt, bod->mdl, allowedErr, sparseJntMap);
+}
+
+_ASX afxBool AfxSampleSingleBodyAnimation(afxBody bod, afxCapstan moto, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose pose, afxReal allowedErr, afxUnit const sparseJntMap[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+    AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
+
+    // AfxSampleSingleBodyAnimationLODSparse
+
+    afxBool fnd = 0;
+    AsxCommencePoseAccumulation(pose, basePivotIdx, pivotCnt, sparseJntMap);
+
+    asxMotive intk;
+    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
+    {
+        afxCapstan moto2 = intk->moto;
+        AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto2);
+
+        if (moto2 == moto)
+        {
+            if (AfxCapstanHasEffect(moto))
+            {
+                if (intk->isAnim)
+                    _AsxSimGetAnimVmt(AfxGetProvider(bod))->AnimationAccumulateBindingState(intk, basePivotIdx, pivotCnt, pose, allowedErr, sparseJntMap);
+                else
+                    _AsxSimGetAnimVmt(AfxGetProvider(bod))->PoseAccumulateBindingState(intk, basePivotIdx, pivotCnt, pose, allowedErr, sparseJntMap);
+            }
+            ++fnd;
+        }
+    }
+
+    AsxConcludePoseAccumulation(pose, basePivotIdx, pivotCnt, bod->mdl, allowedErr, sparseJntMap);
+    return fnd;
+}
+
+_ASX void AfxSampleBodyAnimationsAccelerated(afxBody bod, afxUnit pivotCnt, afxM4d const displace, afxPose scratch, afxPlacement plce, afxReal allowedErr)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+    AFX_ASSERT(scratch);
+
+    // AfxSampleBodyAnimationsAcceleratedLOD
+
+    afxUnit maxJntCnt = AsxCountJoints(bod->mdl, 0);
+
+    if (pivotCnt > maxJntCnt)
+        pivotCnt = maxJntCnt;
+
+    if (!displace)
+        displace = AFX_M4D_IDENTITY;
+    
+    if (bod->motives.cnt == 1)
+    {
+        // when only one animation is running, we can fast generate a placement.
+        afxLink* lnk = AfxGetLastLink(&bod->motives);
+        asxMotive intk = AFX_REBASE(lnk, AFX_OBJ(asxMotive), bod);
+
+        if (intk->isAnim)
+            _AsxSimGetAnimVmt(AfxGetProvider(bod))->AnimationBuildDirect(intk, pivotCnt, displace, plce, allowedErr);
+        else
+            _AsxSimGetAnimVmt(AfxGetProvider(bod))->PoseBuildDirect(intk, pivotCnt, displace, plce);
+    }
+    else if (bod->motives.cnt > 1)
+    {
+        // when more than one anim is running, we must compute pose by accumulation of all animation samples.
+        afxUnit lodJntCnt = AsxCountJoints(bod->mdl, allowedErr);
+        AfxSampleBodyAnimations(bod, 0, lodJntCnt, scratch, allowedErr, 0);
+        AfxBuildPlacement(plce, scratch, bod->mdl, 0, pivotCnt, 0, lodJntCnt, displace, FALSE);
+    }
+    else
+    {
+        // when no animation is running, we can just compute the rest pose.
+        AfxBuildPlacement(plce, NIL, bod->mdl, 0, pivotCnt, 0, pivotCnt, displace, FALSE);
+    }
+}
+#endif
+
+#if 0
+_ZCL afxBool AfxSampleBodyAnimationsUnified(afxBody bod, afxAnimSampleContext const* ctx)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+    afxBool rslt = TRUE;
+
+    if (ctx->moto)
+    {
+        rslt = AfxSampleSingleBodyAnimation(bod, ctx->moto, ctx->firstPivot, ctx->pivotCnt, ctx->pose, ctx->allowedErr, ctx->sparseBoneArray);
+    }
+    else
+    {
+        if (ctx->accelerated)
+        {
+            AfxSampleBodyAnimationsAccelerated(bod, ctx->pivotCnt, ctx->displacement, ctx->pose, ctx->posb, ctx->allowedErr);
+        }
+        else
+        {
+            AfxSampleBodyAnimations(bod, ctx->firstPivot, ctx->pivotCnt, ctx->pose, ctx->allowedErr, ctx->sparseBoneArray);
+        }
+    }
+}
+#endif
 
 _ASX void AfxDoBodyDynamics(afxBody bod, afxReal dt)
 {
@@ -211,7 +406,7 @@ _ASX afxError _AsxBodCtorCb(afxBody bod, void** args, afxUnit invokeNo)
 
     AfxM4dReset(bod->placement);
 
-    AfxAcquirePoses(sim, 1, (afxUnit[]) { AfxCountJoints(mdl, 0) }, &bod->pose);
+    AfxAcquirePoses(sim, 1, (afxUnit[]) { AsxCountJoints(mdl, 0) }, &bod->pose);
 
     return err;
 }

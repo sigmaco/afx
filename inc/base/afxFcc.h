@@ -64,7 +64,7 @@ typedef enum afxFcc
     afxFcc_DEV      = AFX_MAKE_FCC('d', 'e', 'v', '\0'), // afxDevice
     afxFcc_SYS      = AFX_MAKE_FCC('s', 'y', 's', '\0'), // afxSystem
 
-    //afxFcc_BUF     = AFX_MAKE_FCC('b', 'u', 'f'), // afxBuffer
+    //afxFcc_BUF     = AFX_MAKE_FCC('b', 'u', 'f'), // avxBuffer
     afxFcc_ARR      = AFX_MAKE_FCC('a', 'r', 'r', '\0'), // afxArray
     afxFcc_QUE      = AFX_MAKE_FCC('q', 'u', 'e', '\0'), // afxQueue
     afxFcc_FIFO     = AFX_MAKE_FCC('f', 'i', 'f', 'o'), // afxInterlockedQueue
@@ -232,13 +232,21 @@ typedef enum afxFcc
     afxFcc_MIN      = AFX_MAKE_FCC('m', 'i', 'n', '\0'), // afxMixInput
     afxFcc_ASIO     = AFX_MAKE_FCC('a', 's', 'i', 'o'), // afxSink
     afxFcc_MIX      = AFX_MAKE_FCC('m', 'i', 'x', '\0'), // afxMixContext
+    afxFcc_MSES     = AFX_MAKE_FCC('m', 's', 'e', 's'), // amxSession
+    afxFcc_MCDC     = AFX_MAKE_FCC('m', 'c', 'd', 'c'), // amxCodec
+    afxFcc_MENC     = AFX_MAKE_FCC('m', 'e', 'n', 'c'), // amxEncoder
+    afxFcc_MDEC     = AFX_MAKE_FCC('m', 'd', 'e', 'c'), // amxDecoder
+    afxFcc_MSRC     = AFX_MAKE_FCC('m', 's', 'r', 'c'), // amxSource
     afxFcc_SCTX     = AFX_MAKE_FCC('s', 'c', 't', 'x'), // afxSoundContext
-    afxFcc_SBUF     = AFX_MAKE_FCC('s', 'b', 'u', 'f'), // afxWaveform
+    //afxFcc_SBUF     = AFX_MAKE_FCC('s', 'b', 'u', 'f'), // afxWaveform
+    afxFcc_MBUF     = AFX_MAKE_FCC('m', 'b', 'u', 'f'), // amxBuffer
     afxFcc_WAV      = AFX_MAKE_FCC('w', 'a', 'v', '\0'), // afxWaveform
     afxFcc_TRAX     = AFX_MAKE_FCC('t', 'r', 'a', 'x'), // asxTracker
     afxFcc_BROK     = AFX_MAKE_FCC('b', 'r', 'o', 'k'), // afxBroker
     afxFcc_AUD      = AFX_MAKE_FCC('a', 'u', 'd', '\0'), // afxListener
     afxFcc_SND      = AFX_MAKE_FCC('s', 'n', 'd', '\0'), // afxSound
+    afxFcc_VIDE     = AFX_MAKE_FCC('v', 'i', 'd', 'e'), // afxVideoEncoder
+    afxFcc_VIDD     = AFX_MAKE_FCC('v', 'i', 'd', 'd'), // afxVideoDecoder
 
     // *** e2social ***
 
@@ -262,14 +270,14 @@ typedef enum afxFcc
 
     afxFcc_IMG      = AFX_MAKE_FCC('i', 'm', 'g', '\0'), // afxImage
     afxFcc_SAMP     = AFX_MAKE_FCC('s', 'm', 'p', '\0'), // avxSampler
-    afxFcc_BUF      = AFX_MAKE_FCC('b', 'u', 'f', '\0'), // afxBuffer
+    afxFcc_BUF      = AFX_MAKE_FCC('b', 'u', 'f', '\0'), // avxBuffer
     afxFcc_VBUB     = AFX_MAKE_FCC('v', 'b', 'u', 'b'), // afxVertexBufferBlueprint
     afxFcc_VBUF     = AFX_MAKE_FCC('v', 'b', 'u', 'f'), // afxVertexBuffer
     afxFcc_IBUF     = AFX_MAKE_FCC('i', 'b', 'u', 'f'), // afxIndexBuffer
     afxFcc_IMGH     = AFX_MAKE_FCC('i', 'm', 'g', 'h'), // AfxImageHub
     afxFcc_IMIO     = AFX_MAKE_FCC('i', 'm', 'i', 'o'), // AfxImageIoAssistent
     afxFcc_RAS      = AFX_MAKE_FCC('t', 'e', 'x', '\0'), // afxRaster
-    afxFcc_SURF     = AFX_MAKE_FCC('s', 'u', 'r', 'f'), // afxRasterSlot
+    afxFcc_SURF     = AFX_MAKE_FCC('s', 'u', 'r', 'f'), // avxDrawSurfaceSlot
     afxFcc_TEXB     = AFX_MAKE_FCC('t', 'e', 'x', 'b'), // afxTextureBlueprint
 
     afxFcc_MDL      = AFX_MAKE_FCC('m', 'd', 'l', '\0'), // afxModel
@@ -290,7 +298,7 @@ typedef enum afxFcc
     afxFcc_MSHT     = AFX_MAKE_FCC('m', 's', 'h', 't'), // afxMeshTopology
     afxFcc_MSHS     = AFX_MAKE_FCC('m', 's', 'h', 's'), // afxMeshSection
     afxFcc_MSHM     = AFX_MAKE_FCC('m', 's', 'h', 'm'), // afxMeshMorph
-    afxFcc_MSHR     = AFX_MAKE_FCC('m', 's', 'h', 'r'), // afxMeshRig
+    afxFcc_MSHR     = AFX_MAKE_FCC('m', 's', 'h', 'r'), // asxMeshRig
     afxFcc_MDLM     = AFX_MAKE_FCC('m', 'd', 'l', 'm'), // AfxModelingMechanism
     afxFcc_MDIO     = AFX_MAKE_FCC('m', 'd', 'i', 'o'), // akxModelIoAssistent
     afxFcc_MTL      = AFX_MAKE_FCC('m', 't', 'l', '\0'), // afxMaterial
@@ -321,6 +329,7 @@ typedef enum afxFcc
     afxFcc_MOTV     = AFX_MAKE_FCC('m', 'o', 't', 'v'), // asxMotive
     afxFcc_CUR      = AFX_MAKE_FCC('c', 'u', 'r', '\0'), // afxCurve
     afxFcc_RND      = AFX_MAKE_FCC('r', 'n', 'd', '\0'), // akxRenderer
+    afxFcc_SBUF     = AFX_MAKE_FCC('s', 'b', 'u', 'f'), // asxBuffer
 
     afxFcc_TER      = AFX_MAKE_FCC('t', 'e', 'r', '\0'), // afxTerrain
 

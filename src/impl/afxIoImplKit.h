@@ -155,16 +155,16 @@ AFX_OBJECT(afxStream)
     {
         afxUnit portId;
         afxUnit poolIdx;
-        afxBool disposable; /// if true, at execution end, it is moved to invalid state and considered in recycle chain.
+        afxBool disposable; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
 
         afxUnit state;
         afxChain commands;
-        afxArena cmdArena; /// owned by ssys data for specific port
+        afxArena cmdArena; // owned by ssys data for specific port
 
         afxError(*endCb)(afxStream);
         afxError(*resetCb)(afxStream, afxBool freeMem, afxBool permanent);
-        afxAtom32 submCnt; /// number of submissions
-        afxMask64 submQueMask; /// one for each queue where this dctx was submitted into.
+        afxAtom32 submCnt; // number of submissions
+        afxMask64 submQueMask; // one for each queue where this dctx was submitted into.
     };
 };
 
@@ -373,7 +373,7 @@ AFX_DEFINE_STRUCT(afxStdCmdList)
 AFX afxClass const*     AfxGetFileClass(afxStorage fsys);
 AFX afxClass const*     AfxGetArchiveClass(afxStorage fsys);
 
-AFX afxClassConfig const _AfxExuStdImplementation;
+AFX afxClassConfig const _AFX_EXU_CLASS_CONFIG;
 AFX afxClassConfig const _AfxXqueStdImplementation;
 
 AFX afxError _AfxXquePopWork(afxIoQueue xque, afxStdWork* work);

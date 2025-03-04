@@ -28,7 +28,7 @@ int main(int argc, char const* argv[])
 
     afxSystemConfig sysc;
     AfxConfigureSystem(&sysc);
-    AfxDoSystemBootUp(&sysc);
+    AfxBootstrapSystem(&sysc);
 
     // Acquire hardware device contexts
 
@@ -49,9 +49,9 @@ int main(int argc, char const* argv[])
 
     afxWindowConfig wrc;
     wrc.dsys = dsys;
-    AfxConfigureWindow(ses, &wrc, NIL);
-    AfxAcquireWindow(ses, &wrc, &window);
-    AfxAdjustWindowFromNdc(window, NIL, AFX_V3D(0.5, 0.5, 1));
+    AfxConfigureWindow(&wrc, NIL, AFX_V3D(0.5, 0.5, 1));
+    AfxAcquireWindow(&wrc, &window);
+    //AfxAdjustWindowFromNdc(window, NIL, AFX_V3D(0.5, 0.5, 1));
     AfxGetWindowDrawOutput(window, NIL, &dout);
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
@@ -78,7 +78,7 @@ int main(int argc, char const* argv[])
 
     while (AfxSystemIsExecuting())
     {
-        AfxPollInput(ses);
+        AfxPollInput(NIL, 0);
 
         afxReal64 ct, dt;
         //AfxStepWindow(window, &ct, &dt);
@@ -115,7 +115,7 @@ int main(int argc, char const* argv[])
         }
 
         avxCanvas canv;
-        afxWhd canvWhd;
+        avxRange canvWhd;
         AfxGetDrawOutputCanvas(dout, outBufIdx, &canv);
         AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
         canvWhd = AfxGetCanvasExtent(canv);
@@ -142,7 +142,7 @@ int main(int argc, char const* argv[])
             //dps.depth = &ddt;
             //dps.stencil = &ddt;
 
-            AfxSetRect(&dps.area, 0, 0, canvWhd.x, canvWhd.y);
+            dps.area = AVX_RECT(0, 0, canvWhd.w, canvWhd.h);
             AvxCmdCommenceDrawScope(dctx, &dps);
 
             AfxResetWidget(wid);
@@ -165,7 +165,7 @@ int main(int argc, char const* argv[])
 
         avxSubmission subm = { 0 };
 
-        if (AfxRollDrawCommands(dsys, &subm, 1, &dctx))
+        if (AfxExecuteDrawCommands(dsys, &subm, 1, &dctx, NIL))
         {
             AfxThrowError();
             AfxRecycleDrawOutputBuffer(dout, outBufIdx);
@@ -178,7 +178,7 @@ int main(int argc, char const* argv[])
 
         avxPresentation pres = { 0 };
 
-        if (AfxPresentDrawOutputs(dsys, &pres, 1, &dout, &outBufIdx))
+        if (AfxPresentDrawOutputs(dsys, &pres, NIL, 1, &dout, &outBufIdx, NIL))
         {
             AfxThrowError();
             AfxRecycleDrawOutputBuffer(dout, outBufIdx);

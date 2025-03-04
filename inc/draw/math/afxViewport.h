@@ -22,35 +22,55 @@
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 
-AFX_DEFINE_STRUCT(afxRect)
-/// Rectangles are used to describe a specified rectangular region of pixels within an image or framebuffer.
-/// Rectangles include both an offset and an extent of the same dimensionality, as described above.
+AFX_DEFINE_STRUCT(avxOrigin2)
+// Structure specifying the origin of an area.
 {
-    union
-    {
-        afxInt      origin[2];
-        struct
-        {
-            afxInt  x, y;
-        };
-    };
-    union
-    {
-        afxUnit      extent[2];
-        struct
-        {
-            afxUnit  w, h;
-        };
-    };
+    // the X and Y origins, respectively.
+    afxInt x, y;
+};
+
+AFX_DEFINE_STRUCT(avxOrigin)
+// Structure specifying the origin of a volume.
+{
+    // the X, Y and Z origins, respectively.
+    afxInt x, y, z;
+};
+
+AFX_DEFINE_STRUCT(avxRange2)
+// Structure specifying the extent of a area.
+{
+    // The width and height of the represented area, respectively.
+    afxUnit w, h;
+};
+
+AFX_DEFINE_STRUCT(avxRange)
+// Structure specifying the extent of a volume.
+{
+    // The width, height and depth of the represented volume, respectively.
+    afxUnit w, h, d;
+};
+
+AFX_DEFINE_STRUCT(afxRect)
+// Rectangles are used to describe a specified rectangular region within an bidimensional area.
+{
+    // the rectangle origin.
+    //avxOrigin2 origin;
+    // the X and Y origins, respectively.
+    afxInt x, y;
+    
+    // the rectangle extent.
+    //avxRange2 extent;
+    // The width and height of the represented area, respectively.
+    afxUnit w, h;
 };
 
 AFX_DEFINE_STRUCT(afxViewport)
 /// Structure specifying a viewport
 {
-    afxV2d origin; /// [x, y] are the viewport's bottom left corner (x,y).
-    afxV2d extent; /// [w, h] are the viewport's width and height, respectively.
-    afxReal minDepth; /// is the normalized min depth range for the viewport.
-    afxReal maxDepth; /// is the normalized max depth range for the viewport.
+    afxV2d origin; // [x, y] are the viewport's bottom left corner (x,y).
+    afxV2d extent; // [w, h] are the viewport's width and height, respectively.
+    afxReal minDepth; // is the normalized min depth range for the viewport.
+    afxReal maxDepth; // is the normalized max depth range for the viewport.
 };
 
 /// min depth can be less than, equal to, or greater than max depth.
@@ -74,12 +94,81 @@ AFX_DEFINE_STRUCT(afxViewport)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+AVX afxRect const AVX_RECT_ZERO;
+AVX afxRect const AVX_RECT_MIN;
+AVX afxRect const AVX_RECT_MAX;
+
+AVX afxViewport const AVX_VIEWPORT_MIN;
+AVX afxViewport const AVX_VIEWPORT_MAX;
+
+AVX avxOrigin const AVX_ORIGIN_ZERO;
+AVX avxOrigin const AVX_ORIGIN_MIN;
+AVX avxOrigin const AVX_ORIGIN_MAX;
+
+AVX avxRange const AVX_RANGE_ZERO;
+AVX avxRange const AVX_RANGE_MIN;
+AVX avxRange const AVX_RANGE_MAX;
+
+#define AVX_RANGE(w_, h_, d_) (avxRange){ \
+    .w = (afxUnit)(w_), \
+    .h = (afxUnit)(h_), \
+    .d = (afxUnit)(d_) }
+
+#define AVX_ORIGIN(x_, y_, z_) (avxOrigin){ \
+    .x = (afxInt)(x_), \
+    .y = (afxInt)(y_), \
+    .z = (afxInt)(z_) }
+
+#define AVX_RECT(x_, y_, w_, h_) (afxRect){ \
+    .x = (afxInt)(x_), \
+    .y = (afxInt)(y_), \
+    .w = (afxUnit)(w_), \
+    .h = (afxUnit)(h_) }
+
+#define AVX_VIEWPORT(x_, y_, w_, h_, minDepth_, maxDepth_) (afxViewport){ \
+    .origin = { (afxReal)(x_), (afxReal)(y_) }, \
+    .extent = { (afxReal)(w_), (afxReal)(h_) }, \
+    .minDepth = (afxReal)(minDepth_), \
+    .maxDepth = (afxReal)(maxDepth_) }
+
 AVXINL void         AfxZeroRect(afxRect* rc);
 
 AVXINL void         AfxCopyRect(afxRect* rc, afxRect const* src);
 
-AVXINL void         AfxSetRect(afxRect* rc, afxInt x, afxInt y, afxUnit w, afxUnit h);
+AVXINL void         AfxMakeRect(afxRect* rc, afxInt x, afxInt y, afxUnit w, afxUnit h);
 
-AVXINL void         AfxResetViewport(afxViewport* vp, afxReal x, afxReal y, afxReal w, afxReal h, afxReal minDepth, afxReal maxDepth);
+AVXINL afxBool      AvxDoesRectOverlaps(afxRect const* a, afxRect const* b);
+
+// Compare if rectangle \a a contains rectangle \a b in coordinate, with specified tolerance allowed.
+AVXINL afxBool AvxContainsRectBiased(afxRect const* a, afxRect const* b, afxInt tolX, afxInt tolY);
+
+// Compare if rectangle \a a contains rectangle \a b in coordinate.
+AVXINL afxBool AvxContainsRect(afxRect const* a, afxRect const* b);
+
+AVXINL avxRange AvxMinRange(avxRange const a, avxRange const b);
+AVXINL avxRange AvxMaxRange(avxRange const a, avxRange const b);
+AVXINL avxRange AvxClampRange(avxRange const in, avxRange const min, avxRange const max);
+AVXINL avxRange AvxLimitRange(avxOrigin const origin, avxRange const extent);
+
+
+AVXINL afxBool AvxIsRangeEqual(avxRange const whd, avxRange const other);
+AVXINL afxBool AvxIsRangeLequal(avxRange const whd, avxRange const other);
+AVXINL afxBool AvxIsRangeLess(avxRange const whd, avxRange const other);
+AVXINL afxBool AvxIsRangeZero(avxRange const whd);
+AVXINL avxRange AvxAddRange(avxRange const a, avxRange const b);
+AVXINL avxRange AvxSubtractRange(avxRange const a, avxRange const b);
+AVXINL avxRange AvxDivideRange(avxRange const in, afxUnit div);
+AVXINL avxRange AvxModRange(avxRange const in, afxUnit div);
+AVXINL avxRange AvxScaleRange(avxRange const in, afxUnit s);
+AVXINL avxRange AvxHalfRange(avxRange const in);
+AVXINL afxUnit AvxSumRange(avxRange const whd);
+AVXINL afxUnit AvxMagRange(avxRange const whd);
+AVXINL afxUnit AvxDotRange(avxRange const whd, avxRange const other);
+
+AVXINL avxOrigin AvxClampOrigin(avxOrigin const origin, avxRange const max);
+
+AVXINL avxOrigin AvxHalfOrigin(avxOrigin const in);
+
+AVXINL void         AfxMakeViewport(afxViewport* vp, afxReal x, afxReal y, afxReal w, afxReal h, afxReal minDepth, afxReal maxDepth);
 
 #endif//AVX_VIEWPORT_H

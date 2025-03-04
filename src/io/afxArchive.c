@@ -572,7 +572,7 @@ _AFX afxUnit AfxGetArchivedFileCodec(afxArchive arc, afxUnit idx)
     AFX_ASSERT(idx < arc->entries.pop);
     _afxZipEntry const *e = AfxGetArrayUnit(&arc->entries, idx);
     afxUnit method = e->codec;
-    return method < AFX_N8_MAX ? method : method >> AFX_BYTE_SIZE;
+    return method < AFX_U8_MAX ? method : method >> AFX_BYTE_SIZE;
 }
 
 _AFX afxUnit AfxGetArchivedFileUncompressedSize(afxArchive arc, afxUnit idx)

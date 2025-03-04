@@ -29,7 +29,7 @@ typedef enum avxClipSpaceDepth
 {
     avxClipSpaceDepth_ZERO_TO_ONE, // Qwadro/Vulkan/Direct3D
     avxClipSpaceDepth_NEG_ONE_TO_ONE, // OpenGL
-    avxClipSpaceDepth_NEG_ONE_TO_ZERO // Experimental
+    avxClipSpaceDepth_NEG_ONE_TO_ZERO // Qwadro Experimental Stuff
 } avxClipSpaceDepth;
 
 // Shadow

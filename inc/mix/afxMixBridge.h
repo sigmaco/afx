@@ -19,7 +19,9 @@
 #ifndef AMX_MIX_BRIDGE_H
 #define AMX_MIX_BRIDGE_H
 
-#include "qwadro/inc/mix/afxMixDefs.h"
+#include "qwadro/inc/mix/afxMixQueue.h"
+
+#define AMX_MAX_QUEUES_PER_BRIDGE (32)
 
 typedef enum afxMixPortFlag
 {
@@ -27,7 +29,7 @@ typedef enum afxMixPortFlag
     afxMixPortFlag_SIM = AFX_BIT(1)
 } afxMixPortFlags;
 
-AFX_DEFINE_STRUCT(afxMixPortCaps)
+AFX_DEFINE_STRUCT(afxMixCapabilities)
 {
     afxMixPortFlags     capabilities;
     afxAcceleration     acceleration;
@@ -37,71 +39,15 @@ AFX_DEFINE_STRUCT(afxMixPortCaps)
 
 AFX_DEFINE_STRUCT(afxMixBridgeConfig)
 {
-    afxUnit             sdevId;
+    afxUnit             mdevId;
     afxMixPortFlags     capabilities; // specifies capabilities of queues in a port.
     afxAcceleration     acceleration;
     afxUnit             minQueCnt;
     afxReal const*      queuePriority;
 };
 
-// the submission thing
-
-AFX_DEFINE_STRUCT(amxSubmission)
-{
-    afxUnit             portIdx;
-    afxUnit             baseQueIdx;
-    afxUnit             queCnt;
-
-    afxFlags            flags;
-    afxSemaphore        waitSems;
-    afxSemaphore        signalSems;
-    avxFence            fence;
-};
-
-AFX_DEFINE_STRUCT(amxFlush)
-{
-    afxUnit             portIdx;
-    afxUnit             baseQueIdx;
-    afxUnit             queCnt;
-    afxSemaphore        wait;
-};
-
-AFX_DEFINE_STRUCT(amxTransference)
-{
-    afxUnit             portIdx;
-    afxUnit             baseQueIdx;
-    afxUnit             queCnt;
-
-    afxSemaphore        wait;
-    afxSemaphore        signal;
-    avxFence            fence;
-
-    union
-    {
-        afxAudio    wav;
-        afxBuffer   buf;
-        void*       dst;
-        void const* src;
-        afxStream   iob;
-    }               src;
-    afxFcc          srcFcc;
-    union
-    {
-        afxAudio    wav;
-        afxBuffer   buf;
-        void*       dst;
-        void const* src;
-        afxStream   iob;
-    }               dst;
-    afxFcc          dstFcc;
-
-    afxCodec        codec;
-    afxUnit         encSiz;
-    afxUnit         decSiz;
-};
-
 AMX afxMixDevice    AfxGetMixBridgeDevice(afxMixBridge mexu);
-AMX afxMixSystem    AfxGetMixBridgeSystem(afxMixBridge mexu);
+AMX afxMixSystem    AfxGetBridgedMixSystem(afxMixBridge mexu);
 
 AMX afxUnit         AfxQueryMixBridgePort(afxMixBridge mexu, afxMixDevice* device);
 
@@ -109,11 +55,5 @@ AMX afxUnit         AfxGetMixQueues(afxMixBridge mexu, afxUnit first, afxUnit cn
 
 AMX afxError        AfxWaitForIdleMixBridge(afxMixBridge mexu, afxTime timeout);
 AMX afxError        AfxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxTime timeout);
-
-// MIX QUEUE METHODS
-
-AMX afxMixDevice    AfxGetMixQueueDevice(afxMixQueue mque);
-AMX afxMixSystem    AfxGetMixQueueContext(afxMixQueue mque);
-AMX afxUnit         AfxGetMixQueuePort(afxMixQueue mque);
 
 #endif//AMX_MIX_BRIDGE_H

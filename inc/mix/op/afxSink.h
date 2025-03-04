@@ -38,8 +38,11 @@
 
 #include "qwadro/inc/mix/afxMixDefs.h"
 
+AFX_DECLARE_STRUCT(afxSinkInterface);
+
 AFX_DEFINE_STRUCT(afxSinkConfig)
 {
+    afxUnit     vaioId;
     afxUri      endpoint;
     amxFormat   fmt; // amxFormat_A32f
     afxUnit     chanCnt; // 2 --- stereo
@@ -75,7 +78,7 @@ AFX_DEFINE_STRUCT(afxSinkConfig)
     // wwise init
     uint uNumSamplesPerFrame;		///< Number of samples per audio frame (256, 512, 1024, or 2048).
 #endif
-
+    afxSinkInterface*ctrl;
     void*           udd;
     union
     {
@@ -89,8 +92,23 @@ AFX_DEFINE_STRUCT(afxSinkConfig)
     };
 };
 
-AMX afxMixDevice  AfxGetAudioSinkDevice(afxSink sink);
-AMX afxMixSystem  AfxGetAudioSinkContext(afxSink sink);
+AFX_DEFINE_STRUCT(afxSinkInterface)
+{
+    afxError(*init)(afxSink, afxSinkConfig const*);
+    afxError(*quit)(afxSink);
+    afxError(*start)(afxSink);
+    afxError(*pause)(afxSink);
+    afxError(*stop)(afxSink);
+    afxError(*req)(afxSink);
+    afxError(*push)(afxSink, void const*, afxUnit);
+    afxError(*pull)(afxSink, afxUnit, void*, afxUnit);
+    afxError(*getPushRoom)(afxSink, afxUnit*);
+    afxError(*getPullRoom)(afxSink, afxUnit*);
+    afxError(*ioctl)(afxSink, afxUnit, ...);
+};
+
+AMX afxMixDevice    AfxGetAudioSinkDevice(afxSink sink);
+AMX afxMixSystem    AfxGetAudioSinkContext(afxSink sink);
 
 AMX afxError        AfxGetAudioSinkIdd(afxSink sink, afxUnit code, void* dst);
 

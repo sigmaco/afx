@@ -55,7 +55,7 @@ _ASX afxCmdId _AsxSpuCmd_ApplyRootMotionVectors(asxSpu* spu, asxCmd const* cmd)
 {
     afxError err = AFX_ERR_NONE;
 
-    afxTransform* t = AfxGetPoseTransform(cmd->ApplyRootMotionVectors.pose, 0);
+    afxTransform* t = AsxGetPoseTransform(cmd->ApplyRootMotionVectors.pose, 0);
     AfxV3dAdd(t->position, t->position, cmd->ApplyRootMotionVectors.translation);
 
     afxQuat rot;

@@ -55,7 +55,7 @@ AFX_DEFINE_STRUCT(asxSpu)
 
     struct
     {
-        afxBuffer   buf;
+        avxBuffer   buf;
         afxUnit     base;
         afxUnit     range;
         afxByte*    bytemap;
@@ -213,6 +213,6 @@ ASX afxError _AsxSpuRollContext(asxSpu* spu, afxContext ctx);
 ASX afxClassConfig const _ASX_SEXU_CLASS_CONFIG;
 ASX afxClassConfig const _ASX_SQUE_CLASS_CONFIG;
 
-ASX afxError _AsxSubmitSimCommands(afxSimQueue sque, asxSubmission const* ctrl, afxUnit cnt, afxContext contexts[]);
+ASX afxError _AsxExecuteSampleCommands(afxSimQueue sque, asxSubmission const* ctrl, afxUnit cnt, afxContext contexts[]);
 
 #endif//ASX_IMPL___EXECUTOR_H

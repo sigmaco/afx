@@ -19,28 +19,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
-    The Qwadro draw I/O system refers to the overall framework or set of components involved in creating, managing, and rendering graphical content. 
-    This can include both hardware and software elements that work together to produce and display visual data.
-
-    In the draw system, graphics hardware refers to the physical components that handle the rendering of images and video.
-
-    Graphics Processing Unit (GPU) is a specialized chip designed to accelerate rendering tasks by processing complex graphical computations.
-    Graphics Card is a hardware component that includes the GPU, memory, and video output interfaces to drive displays and manage graphical output.
-
-    Software components of the draw system include the tools and libraries used to create and manage graphical content.
-
-    APIs and libraries like OpenGL, DirectX, Vulkan, or Metal that provide the functions and tools for rendering graphics.
-
-    The rendering pipeline is a series of stages and processes that graphical data goes through to be rendered onto a screen.
-
-    The integration and management aspect of the draw system involves coordinating between different components and ensuring efficient rendering and display.
-    Driver Software manages communication between the system and graphics hardware.
-
-    Draw I/O mechanisms are software systems that integrate various components to render complex scenes.
-*/
-
-/*
-    A draw device typically refers to a hardware or software component used to render or display graphical content. 
+    A draw device refers to a hardware or software component used to render or display graphical content. 
     It is responsible for processing and presenting visual data, whether it's through direct output to a screen or through intermediate rendering processes.
 
     In graphics hardware, a draw device refers to a physical component that handles rendering tasks. It processes graphical instructions and outputs them to a display.
@@ -203,8 +182,8 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
     afxUnit     maxRasterDim2D;
     afxUnit     maxRasterDim3D;
     afxUnit     maxRasterDimCube;
-    afxUnit     maxRasterArrayLayers;
-    afxUnit     maxTexelBufElements;
+    afxUnit     maxRasterLayers;
+    afxUnit     maxTboCap; // in texels
     afxUnit     maxUboRange;
     afxUnit     maxSsboRange;
     afxUnit     maxPushConstsSiz;
@@ -212,7 +191,8 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
     afxUnit     maxSamplerAllocCnt;
     afxSize     bufferRasterGranularity;
     afxSize     sparseAddrSpaceSiz;
-    afxUnit     maxBoundLigaSets;
+    afxUnit     maxBoundPerLigas;
+
     afxUnit     maxPerStageSamplers;
     afxUnit     maxPerStageUbos;
     afxUnit     maxPerStageSsbos;
@@ -220,19 +200,22 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
     afxUnit     maxPerStageStorageImages;
     afxUnit     maxPerStageInputAttachments;
     afxUnit     maxPerStageResources;
-    afxUnit     maxLigaSetSamplers;
-    afxUnit     maxLigaSetUbos;
-    afxUnit     maxLigaSetUbosDynamic;
-    afxUnit     maxLigaSetSsbos;
-    afxUnit     maxLigaSetSsbosDynamic;
-    afxUnit     maxLigaSetSampledImages;
-    afxUnit     maxLigaSetStorageImages;
-    afxUnit     maxLigaSetInputAttachments;
+
+    afxUnit     maxPerLigaSamplers;
+    afxUnit     maxPerLigaUbos;
+    afxUnit     maxPerLigaUbosDynamic;
+    afxUnit     maxPerLigaSsbos;
+    afxUnit     maxPerLigaSsbosDynamic;
+    afxUnit     maxPerLigaSampledImages;
+    afxUnit     maxPerLigaStorageImages;
+    afxUnit     maxPerLigaInputAttachments;
+
     afxUnit     maxVtxIns;
     afxUnit     maxVtxInSrcs;
     afxUnit     maxVtxInOffset;
     afxUnit     maxVtxInSrcStride;
     afxUnit     maxVtxOutCompos;
+
     afxUnit     maxTessGenLvl;
     afxUnit     maxTessPatchSiz;
     afxUnit     maxTessCtrlPerVtxInComps;
@@ -241,34 +224,42 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
     afxUnit     maxTessCtrlTotalOutComps;
     afxUnit     maxTessEvalInComps;
     afxUnit     maxTessEvalOutComps;
+
     afxUnit     maxPrimShadInvocations;
     afxUnit     maxPrimInComps;
     afxUnit     maxPrimOutComps;
     afxUnit     maxPrimOutVertices;
     afxUnit     maxPrimTotalOutComps;
+
     afxUnit     maxFragInComps;
     afxUnit     maxFragOutAttachments;
     afxUnit     maxFragDualSrcAttachments;
     afxUnit     maxFragCombinedOutputResources;
+
     afxUnit     maxComputeSharedMemSiz;
     afxWhd      maxComputeWarpCnt;
     afxUnit     maxComputeWarpInvocations;
     afxWhd      maxComputeWarpSiz;
+
     afxUnit     subPixelPreciBits;
     afxUnit     subTexelPreciBits;
     afxUnit     mipmapPrecisionBits;
     afxUnit     maxDrawIndexedIdxValue;
     afxUnit     maxDrawIndirectCnt;
+
     afxReal     maxSamplerLodBias;
     afxReal     maxSamplerAnisotropy;
+
     afxUnit     maxVpCnt;
     afxUnit     maxVpDimensions[2];
     afxV2d      vpBoundsRange;
     afxUnit     vpSubPixelBits;
-    afxSize     minMemMapAlign;
-    afxSize     minTexelBufOffsetAlign;
+    
+    afxSize     minBufMapAlign;
+    afxSize     minTboOffsetAlign;
     afxSize     minUboOffsetAlign;
     afxSize     minSsboOffsetAlign;
+    
     afxInt      minTexelOffset;
     afxUnit     maxTexelOffset;
     afxInt      minTexelGatherOffset;
@@ -276,73 +267,313 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
     afxReal     minInterpolationOffset;
     afxReal     maxInterpolationOffset;
     afxUnit     subPixelInterpolationOffsetBits;
+
     afxWhd      maxCanvasWhd;
     afxFlags    canvasColorSampleCnts;
     afxFlags    canvasDepthSampleCnts;
     afxFlags    canvasStencilSampleCnts;
     afxFlags    canvasNoAttachmentsSampleCnts;
     afxUnit     maxColorAttachments;
+
     afxFlags    sampledRasterColorSampleCnts;
     afxFlags    sampledRasterIntegerSampleCnts;
     afxFlags    sampledRasterDepthSampleCnts;
     afxFlags    sampledRasterStencilSampleCnts;
     afxFlags    storageRasterSampleCnts;
     afxUnit     maxSampleMaskWords;
+
     afxBool     timestampComputeAndGraphics;
     afxReal     timestampPeriod;
+    
     afxUnit     maxClipDistances;
     afxUnit     maxCullDistances;
     afxUnit     maxCombinedClipAndCullDistances;
+    
     afxUnit     discreteQueuePriorities;
+    
     afxV2d      pointSizRange;
     afxV2d      lineWidthRange;
     afxReal     pointSizGranularity;
     afxReal     lineWidthGranularity;
     afxBool     strictLines;
+    
     afxBool     standardSampleLocations;
+    
     afxSize     optimalBufCopyOffsetAlign;
     afxSize     optimalBufCopyRowPitchAlign;
+    
     afxSize     nonCoherentAtomSiz;
 };
 
 // DRAW DEVICE HANDLING ////////////////////////////////////////////////////////
 
-AVX afxBool         AfxIsDrawDevicePrompt(afxDrawDevice ddev);
+AVX afxBool AfxIsDrawDevicePrompt(afxDrawDevice ddev);
 
-/// Test the features and limits of a draw device.
-AVX afxBool         AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const* features, afxDrawLimits const* limits);
-AVX void            AfxQueryDrawDeviceFeatures(afxDrawDevice ddev, afxDrawFeatures* features);
-AVX void            AfxQueryDrawDeviceLimits(afxDrawDevice ddev, afxDrawLimits* limits);
+/*
+    The AfxQueryDrawDeviceFeatures() function is a way to query and retrieve detailed information about 
+    features of a specific drawing device. The afxDrawFeatures structure holds the queried features, and after calling this function, 
+    you can access the capabilities of the device to make informed decisions about rendering or utilizing the device's features.
+*/
 
-AVX afxUnit         AfxCountDrawPorts(afxDrawDevice ddev);
-AVX void            AfxQueryDrawPortCapabilities(afxDrawDevice ddev, afxUnit portId, afxDrawPortCaps* caps);
-AVX afxUnit         AfxChooseDrawPorts(afxDrawDevice ddev, afxDrawPortFlags caps, afxAcceleration accel, afxUnit maxCnt, afxUnit portId[]);
+AVX void AfxQueryDrawDeviceFeatures
+(
+    // A handle for a drawing device to query for its features.
+    afxDrawDevice ddev,
+
+    // A pointer to a afxDrawFeatures structure where the results will be stored.
+    afxDrawFeatures* features
+);
+
+/*
+    The AfxQueryDrawDeviceLimits() function queries the hardware limits of a specific drawing device. 
+    The device's capabilities are often constrained by the physical hardware, and knowing these limits 
+    is crucial when developing applications that need to operate efficiently within the device's capabilities. 
+    These limits are often critical for tasks such as optimizing memory usage, setting rendering parameters, 
+    or determining which rendering techniques can be supported.
+*/
+
+AVX void AfxQueryDrawDeviceLimits
+(
+    // The device to query for its limits.
+    afxDrawDevice ddev, 
+
+    // A afxDrawLimits structure where the device's limits will be stored.
+    afxDrawLimits* limits
+);
+
+/*
+    The AfxIsDrawDeviceAcceptable() function determines if a given drawing device is suitable for use based on both the 
+    required features and hardware limits. If the device meets both the feature requirements and hardware constraints, it 
+    would be considered acceptable for the application. If it fails to meet either one, the device would not be considered acceptable.
+*/
+
+AVX afxBool AfxIsDrawDeviceAcceptable
+(
+    // The device you are considering for use in your application.
+    afxDrawDevice ddev, 
+    
+    // A afxDrawFeatures structure containing the required features that the drawing device must support.
+    afxDrawFeatures const* features, 
+
+    // A afxDrawLimits structure containing the hardware limits that the drawing device should meet or exceed.
+    afxDrawLimits const* limits
+);
+
+AVX afxUnit AfxCountDrawPorts(afxDrawDevice ddev);
+
+/*
+    The AfxQueryDrawCapabilities() function retrieves the capabilities of a graphics device across multiple ports.
+    It will return the drawing capabilities in the caps[] array. Each element in caps[] corresponds to the drawing 
+    capabilities of a specific port, and this information will help the application understand what features and drawing 
+    methods are supported by each port on the device.
+
+    Returns the number of elements in caps[] array or the number of ports from specified base index.
+*/
+
+AVX afxUnit AfxQueryDrawCapabilities
+(
+    // The drawing device to query.
+    afxDrawDevice ddev, 
+
+    // The index of the starting port.
+    afxUnit basePortIdx, 
+
+    // The count of ports to query.
+    afxUnit portCnt, 
+
+    // An array to store the drawing capabilities for each port.
+    afxDrawCapabilities caps[]
+);
+
+/*
+    The AfxChooseDrawPorts() function is responsible for selecting which of these drawing ports are suitable for a given device and capabilities.
+    Each port represents a unit or endpoint capable of handling drawing operations.
+
+    Returns the number of chosen ports, if any.
+*/
+
+AVX afxUnit AfxChooseDrawPorts
+(
+    // The drawing device you're working with.
+    afxDrawDevice ddev, 
+
+    // The operations or features that the device must supports.
+    afxDrawCapabilities const* caps, 
+
+    // The maximum number of drawing ports to choose from. 
+    // This limits how many available drawing ports the function will select.
+    afxUnit maxCnt, 
+
+    // An array where the function will store the IDs of the selected drawing ports.
+    afxUnit portId[]
+);
 
 // Query draw port support for presentation.
-AVX afxBool         AfxDoesDrawPortSupportPresentation(afxDrawDevice ddev, afxUnit portId, afxDrawOutput dout);
+AVX afxBool AfxDoesDrawPortSupportPresentation(afxDrawDevice ddev, afxUnit portId, afxDrawOutput dout);
+
+/*
+    The AfxHasDrawDeviceExtensions() function checks whether certain extensions are available for the specified drawing device.
+
+    The function will likely iterate over the names, checking if each specified extension is supported by the referenced device.
+    
+    It will return the amount of supported extensions in the specified list.
+*/
+
+AVX afxUnit AfxHasDrawDeviceExtensions
+(
+    // The drawing device for which we want to check the extension support.
+    afxDrawDevice ddev,
+
+    // The count of extensions to check.
+    afxUnit cnt,
+
+    // The list of extension names we want to check for.
+    afxString const names[],
+
+    // This is an output array where the function will store the results.
+    // For each extension name in names[], the corresponding entry in supported[] will indicate whether the device supports that extension.
+    afxBool supported[]
+);
+
+/*
+    The AvxDescribeDeviceFormats() funcion queries a specific drawing device for detailed information about how it 
+    handles specified formats. The function then fills the provided descs[] array with information on each queried format, 
+    such as whether the format is supported and what characteristics are relevant for rendering with that format.
+
+    This is useful for applications that need to understand the device's supported formats before selecting an appropriate one 
+    for tasks like texture loading, rendering, or resource allocation.
+*/
+
+AVX afxError AvxDescribeDeviceFormats
+// Describes draw device's format capabilities.
+(
+    // The device to query for format-related properties.
+    afxDrawDevice ddev, 
+
+    // The number of formats to be queried.
+    afxUnit cnt, 
+
+    // An array of formats whose properties are to be queried.
+    avxFormat const formats[], 
+
+    // An array of structures where the properties and capabilities of each queried format for the specified device.
+    avxFormatDescription descs[]
+);
+
 AVX afxUnit         AfxEnumerateVideoPresentationModes(afxDrawOutput dout, afxUnit first, afxUnit cnt, avxPresentMode modes[]);
 AVX afxUnit         AfxEnumerateVideoOutputFormats(afxDrawOutput dout, afxUnit first, afxUnit cnt, avxFormat formats[]);
 
-AVX void*           AfxGetDrawDeviceIdd(afxDrawDevice ddev);
+AVX afxUnit         AfxEnumerateDisplayModes(afxDrawDevice ddev, afxUnit vdu, afxUnit cnt, avxDisplayMode modes[]);
 
 // IMPLEMENTATION DISCOVERY ////////////////////////////////////////////////////
 
-AVX afxUnit         AfxEnumerateDrawDevices(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawDevice devices[]);
-
-/// Enumerates all draw devices by passing the handle to each device, in turn, to an application-defined callback function. 
-/// AfxEvokeDrawDevices() continues until the last device is enumerated or the callback function returns FALSE.
-AVX afxUnit         AfxInvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawDevice), afxUnit cnt);
-
-AVX afxUnit         AfxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawDevice), afxUnit cnt, afxDrawDevice devices[]);
-
-AVX afxUnit         AfxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, afxDrawLimits const* limits, afxUnit maxCnt, afxUnit ddevIds[]); // return count of found devices
-
 /**
-    The AfxEnumerateDrawDevices() function lets you obtain the handle to each draw device in the current session.
+    The AfxEnumerateDrawDevices() function enumerates the available drawing devices associated with an ICD. 
+    It allows you to discover which devices are available for rendering tasks on a system, which is important in 
+    scenarios where multiple devices (e.g., integrated and discrete GPUs) exist. The function provides the number 
+    of devices found and populates an array with the relevant devices for further processing. This is useful for 
+    applications that need to choose a specific device for rendering or computational tasks.
 
-    @param first the number ordinal for the first draw device to start the iteration from.
-    @param cnt the number of draw devices to be retrieved.
-    @return Returns the number of draw devices inserted in the @param devices.
+    Returns the number of draw devices inserted in the @devices.
 */
+
+AVX afxUnit AfxEnumerateDrawDevices
+(
+    // The ordinal identifier for the installable client driver (ICD).
+    afxUnit icd, 
+
+    // The number ordinal for the first draw device to start the iteration from.
+    afxUnit first, 
+    
+    // The maximum number of draw devices to be retrieved.
+    afxUnit cnt, 
+    
+    // An array that will be populated with the drawing devices found during the enumeration.
+    afxDrawDevice devices[]
+);
+
+/*
+    The AfxInvokeDrawDevices() function provides an iterative mechanism to enumerate available drawing devices (e.g., GPUs) 
+    and invoke a callback function for each device. This approach is useful when you want to perform operations or checks 
+    on multiple devices without having to manually loop through them.
+
+    Returns the count of found devices.
+*/
+
+AVX afxUnit AfxInvokeDrawDevices
+(
+    // The ordinal identifier for the installable client driver (ICD).
+    afxUnit icd, 
+
+    // The ordinal number for the first drawing device to start the iteration from.
+    afxUnit first, 
+
+    // A pointer to user-defined data that will be passed to the callback function for each device.
+    void* udd, 
+
+    // The callback function that will be invoked for each drawing device during enumeration.
+    afxBool(*f)(void*, afxDrawDevice), 
+
+    // The maximum number of drawing devices to be considered during the invocation.
+    afxUnit maxCnt
+);
+
+/*
+    The AfxEvokeDrawDevices() function provides an iterative mechanism to enumerate drawing devices and 
+    process each device through a callback function. It also stores the enumerated devices in the devices[] array, 
+    allowing further operations or checks to be performed after enumeration. This function offers flexibility in 
+    both processing devices and retrieving them for further use, making it useful for applications that need to 
+    interact with multiple available GPUs or drawing devices in a system.
+
+    Returns the count of found devices.
+*/
+
+AVX afxUnit AfxEvokeDrawDevices
+(
+    // The ordinal identifier for the installable client driver (ICD).
+    afxUnit icd,
+
+    // The ordinal number for the first drawing device to start the iteration from.
+    afxUnit first, 
+
+    // A pointer to user-defined data that will be passed to the callback function for each device.
+    void* udd,
+
+    // The callback function that will be invoked for each drawing device during enumeration.
+    afxBool(*f)(void*, afxDrawDevice), 
+
+    // The maximum number of drawing devices to be considered during the invocation.
+    afxUnit maxCnt,
+
+    // An array that will be populated with the drawing devices found during the enumeration process.
+    afxDrawDevice devices[]
+);
+
+/*
+    The AfxChooseDrawDevices() function provides a way to select drawing devices that match specified feature and limit requirements. 
+    It returns the number of selected devices and populates an array with their device IDs. This function is helpful in scenarios 
+    where an application needs to filter and choose devices based on certain hardware capabilities or constraints, such as selecting 
+    GPUs that support specific rendering features or fall within particular performance limits.
+
+    Returns the count of found devices.
+*/
+
+AVX afxUnit AfxChooseDrawDevices
+(
+    // The ordinal identifier for the installable client driver (ICD).
+    afxUnit icd, 
+
+    // A structure that specifies the features that the drawing devices must support.
+    afxDrawFeatures const* features, 
+
+    // A structure that defines the limits that the drawing devices should meet.
+    afxDrawLimits const* limits, 
+
+    // The maximum number of devices to be selected and returned in the @ddevIds array.
+    afxUnit maxCnt, 
+
+    // An array that will be populated with the device IDs of the selected drawing devices.
+    afxUnit ddevIds[]
+);
 
 #endif//AVX_DRAW_DEVICE_H

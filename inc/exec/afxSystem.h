@@ -31,7 +31,7 @@
 // core
 #include "qwadro/inc/exec/afxDevice.h"
 #include "qwadro/inc/exec/afxService.h"
-#include "qwadro/inc/exec/afxConsole.h"
+#include "qwadro/inc/exec/afxTerminal.h"
 #include "qwadro/inc/exec/afxThread.h"
 #include "qwadro/inc/base/afxVersion.h"
 // io
@@ -48,7 +48,6 @@
 #include "qwadro/inc/mem/afxSlabAllocator.h"
 #include "qwadro/inc/mem/afxStack.h"
 
-
 enum // opcodes used for primitive communication bethween engine and executables.
 {
     AFX_OPCODE_CONTINUE,
@@ -58,15 +57,6 @@ enum // opcodes used for primitive communication bethween engine and executables
 
     AFX_OPCODE_DETACH = 0, // informa a um módulo que ele será desacoplado do sistema, dando-lhe uma chance de liberar recursos.
     AFX_OPCODE_ATTACH, // informa a um módulo que ele será acoplado ao sistema, dando-lhe uma chance de realizar sua devida initialização de recursos e operações.
-};
-
-AFX_DEFINE_STRUCT(afxPlatformConfig)
-{
-    afxFcc                  platFcc;
-//#ifdef AFX_OS_WIN
-    /*HINSTANCE*/void*      hInst;
-    /*HWND*/void*           hWnd;
-//#endif
 };
 
 /// All internal memory allocations go through a central allocator.
@@ -100,19 +90,31 @@ AFX_DEFINE_STRUCT(afxSystemConfig)
 
     afxChar const*          root;
 
-    afxPlatformConfig       platform;
-
     afxBool                 avxDisabled;
     afxBool                 asxDisabled;
     afxBool                 auxDisabled;
 
     afxChar const*          appId; // a 32-byte long unique identifier for the application.
+    union
+    {
+#ifdef AFX_OS_WIN
+        struct
+        {
+            /*HINSTANCE*/void* hInst;
+            /*HWND*/void* hWnd;
+        } w32;
+#else
+        struct
+        {
+        } lnx;
+#endif
+    };
 };
 
 // Perform a Qwadro bootstrap.
 
 AFX void                AfxConfigureSystem(afxSystemConfig* cfg);
-AFX afxError            AfxDoSystemBootUp(afxSystemConfig const *config);
+AFX afxError            AfxBootstrapSystem(afxSystemConfig const *config);
 
 AFX void                AfxDoSystemShutdown(afxInt exitCode);
 AFX void                AfxRequestShutdown(afxInt exitCode);
@@ -144,16 +146,5 @@ AFX afxUnit32           AfxGetPrimeTid(void);
 
 AFX afxBool             AfxEmitEvent(afxObject receiver, afxEvent* ev);
 
-AFX afxUnit              AfxCountDevices(afxDeviceType type);
-
-AFX afxUnit              AfxEnumerateDevices(afxDeviceType type, afxUnit first, afxUnit cnt, afxDevice devices[]);
-AFX afxUnit              AfxEnumerateStorages(afxUnit first, afxUnit cnt, afxStorage systems[]);
-AFX afxUnit              AfxEnumerateModules(afxUnit first, afxUnit cnt, afxModule executables[]);
-AFX afxUnit              AfxEnumerateThreads(afxUnit first, afxUnit cnt, afxThread threads[]);
-
-AFX afxUnit              AfxInvokeDevices(afxDeviceType type, afxUnit first, afxUnit cnt, afxBool(*f)(afxDevice, void*), void *udd);
-AFX afxUnit              AfxInvokeStorages(afxUnit first, afxUnit cnt, afxBool(*f)(afxStorage, void*), void *udd);
-AFX afxUnit              AfxInvokeModules(afxUnit first, afxUnit cnt, afxBool(*f)(afxModule, void*), void *udd);
-AFX afxUnit              AfxInvokeThreads(afxUnit first, afxUnit cnt, afxBool(*f)(afxThread, void*), void *udd);
 
 #endif//AFX_SYSTEM_H

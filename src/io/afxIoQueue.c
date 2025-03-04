@@ -66,7 +66,7 @@ _AFX afxDevLink AfxGetIoQueueContext(afxIoQueue xque)
     return ctx;
 }
 
-_AFX afxError _AfxXqueStdDtorCb(afxIoQueue xque)
+_AFX afxError _AfxXqueDtorCb(afxIoQueue xque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
@@ -82,7 +82,7 @@ _AFX afxError _AfxXqueStdDtorCb(afxIoQueue xque)
     return err;
 }
 
-_AFX afxError _AfxXqueStdCtorCb(afxIoQueue xque, void** args, afxUnit invokeNo)
+_AFX afxError _AfxXqueCtorCb(afxIoQueue xque, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
@@ -119,6 +119,6 @@ _AFX afxClassConfig const _AfxXqueStdImplementation =
     .name = "IoQueue",
     .desc = "I/O Submission Queue",
     .fixedSiz = sizeof(AFX_OBJECT(afxIoQueue)),
-    .ctor = (void*)_AfxXqueStdCtorCb,
-    .dtor = (void*)_AfxXqueStdDtorCb
+    .ctor = (void*)_AfxXqueCtorCb,
+    .dtor = (void*)_AfxXqueDtorCb
 };

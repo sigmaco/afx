@@ -14,11 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _ASX_DRAW_C
+//#define _ASX_DRAW_C
 #define _ASX_MODEL_C
 #define _ASX_SKELETON_C
-#define _ASX_PLACEMENT_C
-#define _ASX_POSE_C
+//#define _ASX_PLACEMENT_C
+//#define _ASX_POSE_C
 #include "../../draw/impl/avxImplementation.h"
 #include "../impl/asxImplementation.h"
 
@@ -29,6 +29,34 @@
 // When people speak of a mesh they normally refer to a polygon mesh.
 
 _ASX afxChain* _AsxGetMeshRigs(afxMesh msh);
+
+_ASX afxTransform* _AsxMdlGetLtArray(afxModel mdl, afxUnit base)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
+    return &mdl->jntLt[base];
+}
+
+_ASX afxM4d* _AsxMdlGetIwArray(afxModel mdl, afxUnit base)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
+    return &mdl->jntIw[base];
+}
+
+_ASX afxUnit* _AsxMdlGetPiArray(afxModel mdl, afxUnit base)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
+    return &mdl->jntPi[base];
+}
+
+_ASX afxReal* _AsxMdlGetLeArray(afxModel mdl, afxUnit base)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
+    return &mdl->jntLe[base];
+}
 
 _ASXINL afxBool AfxGetModelUrn(afxModel mdl, afxString* id)
 {
@@ -97,7 +125,7 @@ _ASX void AfxDescribeMeshRig(afxModel mdl, afxUnit rigIdx, afxMeshRigInfo* info)
     // sanitize arguments
     rigIdx = AfxMin(rigIdx, mdl->rigCnt - 1);
 
-    afxMeshRig* rig = mdl->rigs[rigIdx];
+    asxMeshRig* rig = mdl->rigs[rigIdx];
     if (!rig) *info = (afxMeshRigInfo) { 0 };
     else
     {
@@ -119,7 +147,7 @@ _ASXINL afxBool AfxIsRiggedMeshTransplanted(afxModel mdl, afxUnit rigIdx)
     // sanitize arguments
     rigIdx = AfxMin(rigIdx, mdl->rigCnt - 1);
 
-    afxMeshRig* rig = mdl->rigs[rigIdx];
+    asxMeshRig* rig = mdl->rigs[rigIdx];
     return (rig && (rig->flags & afxMeshRigFlag_TRANSPLANTED));
 }
 
@@ -139,7 +167,7 @@ _ASXINL afxUnit AfxGetRiggedMeshes(afxModel mdl, afxUnit baseRigIdx, afxUnit rig
         afxUnit rigIdx = baseRigIdx + i;
         AFX_ASSERT_RANGE(mdl->rigCnt, rigIdx, 1);
 
-        afxMeshRig* rig = mdl->rigs[rigIdx];
+        asxMeshRig* rig = mdl->rigs[rigIdx];
         if (!rig) continue;
         afxMesh msh = rig->msh;
 
@@ -153,12 +181,12 @@ _ASXINL afxUnit AfxGetRiggedMeshes(afxModel mdl, afxUnit baseRigIdx, afxUnit rig
     return rslt;
 }
 
-_ASX afxError _AsxPopMeshRig(afxMeshRig **pRig)
+_ASX afxError _AsxPopMeshRig(asxMeshRig **pRig)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pRig);
 
-    afxMeshRig* rig = *pRig;
+    asxMeshRig* rig = *pRig;
 
     afxMesh msh = rig->msh;
     AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &msh);
@@ -199,8 +227,8 @@ _ASX afxError AfxRigMeshes(afxModel mdl, afxModel skl, afxUnit baseRigIdx, afxUn
     {
         afxMesh msh = meshes ? meshes[i] : NIL;
         afxUnit rigIdx = baseRigIdx + i;
-        afxMeshRig** pRig = &mdl->rigs[rigIdx];
-        afxMeshRig* rig = *pRig;
+        asxMeshRig** pRig = &mdl->rigs[rigIdx];
+        asxMeshRig* rig = *pRig;
         afxMesh mshCurr = NIL;
 
         if (rig)
@@ -241,7 +269,7 @@ _ASX afxError AfxRigMeshes(afxModel mdl, afxModel skl, afxUnit baseRigIdx, afxUn
                     afxString* biasTags = AfxGetMeshBiasTags(msh, 0);
                     afxUnit biasMappedCnt = 0;
 
-                    if (biasCnt != (biasMappedCnt = AfxFindJoints(mdl, biasCnt, biasTags, biasToJntMap)))
+                    if (biasCnt != (biasMappedCnt = AsxFindJoints(mdl, biasCnt, biasTags, biasToJntMap)))
                     {
                         //AfxLogAdvertence("%u biases mapped to joints from %u", biasMappedCnt, biasCnt);
                     }
@@ -250,7 +278,7 @@ _ASX afxError AfxRigMeshes(afxModel mdl, afxModel skl, afxUnit baseRigIdx, afxUn
                     else if (AfxAllocate(biasCnt * sizeof(biasFromJntMap[0]), 0, AfxHere(), (void**)&biasFromJntMap)) AfxThrowError();
                     else
                     {
-                        if (biasCnt != (biasMappedCnt = AfxFindJoints(skl, biasCnt, biasTags, biasFromJntMap)))
+                        if (biasCnt != (biasMappedCnt = AsxFindJoints(skl, biasCnt, biasTags, biasFromJntMap)))
                         {
                             //AfxLogAdvertence("%u joints to biases mapped from %u", biasMappedCnt, biasCnt);
                         }
@@ -291,7 +319,7 @@ _ASX afxError AfxRigMeshes(afxModel mdl, afxModel skl, afxUnit baseRigIdx, afxUn
             else
             {
                 afxUnit idx;
-                afxMeshRig* rig = AfxPushPoolUnit(_AsxGetMeshRigPool(msh), &idx);
+                asxMeshRig* rig = AfxPushPoolUnit(_AsxGetMeshRigPool(msh), &idx);
                 if (!rig) AfxThrowError();
                 else
                 {
@@ -354,7 +382,7 @@ _ASX afxError AfxRigMeshes(afxModel mdl, afxModel skl, afxUnit baseRigIdx, afxUn
     return err;
 }
 
-_ASXINL void AfxComputeRiggedMeshMatrices(afxModel mdl, afxUnit rigIdx, afxPlacement const plce, afxUnit baseBiasIdx, afxUnit biasCnt, afxM4d matrices[])
+_ASXINL void AfxComputeRiggedMeshMatrices(afxModel mdl, afxUnit rigIdx, afxPlacement plce, afxUnit baseBiasIdx, afxUnit biasCnt, afxM4d matrices[])
 {
     // Should be compatible with BuildMeshBinding4x4Array(rig, wp, baseJnt, jntCnt, matrix4x4Array)
 
@@ -365,7 +393,7 @@ _ASXINL void AfxComputeRiggedMeshMatrices(afxModel mdl, afxUnit rigIdx, afxPlace
     // sanitize arguments
     rigIdx = AfxMin(rigIdx, mdl->rigCnt - 1);
 
-    afxMeshRig* rig = mdl->rigs[rigIdx];
+    asxMeshRig* rig = mdl->rigs[rigIdx];
     if (!rig) return;
 
     afxMesh msh = rig->msh;
@@ -381,15 +409,15 @@ _ASXINL void AfxComputeRiggedMeshMatrices(afxModel mdl, afxUnit rigIdx, afxPlace
     baseBiasIdx = AfxMin(baseBiasIdx, mshi.biasCnt - 1);
     biasCnt = AfxMin(biasCnt, mshi.biasCnt - baseBiasIdx);
 
-    afxM4d* w = AfxGetPlacementMatrices(plce, 0);
+    afxM4d* w = _AsxPlceGetWorldArray(plce, 0);
     afxM4d* iw = rig->skl->jntIw;
     afxUnit const* biasToJntMap = rig->biasToJntMap;
     afxUnit const* biasFromJntMap = rig->biasFromJntMap;
 
     for (afxUnit i = 0; i < biasCnt; i++)
     {
-        afxUnit artIdx = baseBiasIdx + i;
-        AfxM4dMultiplyAffine(matrices[i], iw[biasFromJntMap[i]], w[biasToJntMap[artIdx]]);
+        afxUnit biasIdx = baseBiasIdx + i;
+        AfxM4dMultiplyAffine(matrices[i], iw[biasFromJntMap[i]], w[biasToJntMap[biasIdx]]);
     }
 }
 
@@ -402,7 +430,7 @@ _ASXINL void AfxSetMeshRigTxd(afxModel mdl, afxUnit rigIdx, afxMaterial mtl)
     // sanitize arguments
     rigIdx = AfxMin(rigIdx, mdl->rigCnt - 1);
 
-    afxMeshRig* rig = mdl->rigs[rigIdx];
+    asxMeshRig* rig = mdl->rigs[rigIdx];
     if (!rig) return;
 
     afxMesh msh = rig->msh;
@@ -439,7 +467,7 @@ _ASXINL afxBool AfxFindMeshRigMaterial(afxModel mdl, afxUnit rigIdx, afxString c
     // sanitize arguments
     rigIdx = AfxMin(rigIdx, mdl->rigCnt - 1);
 
-    afxMeshRig* rig = mdl->rigs[rigIdx];
+    asxMeshRig* rig = mdl->rigs[rigIdx];
     if (!rig) return FALSE;
 
     afxMesh msh = rig->msh;
@@ -467,7 +495,41 @@ _ASXINL afxBool AfxFindMeshRigMaterial(afxModel mdl, afxUnit rigIdx, afxString c
 
 // SKELETON
 
-_ASX afxError AfxReparentJoints(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void const* indices, afxUnit stride)
+_ASX afxUnit AsxGetJointParents(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void* indices, afxUnit stride)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
+    AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
+    AFX_ASSERT(indices);
+
+    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+
+    switch (stride)
+    {
+        case sizeof(afxUnit8) :
+        {
+            afxUnit8* dst = indices;
+            for (afxUnit i = 0; i < cnt; i++) dst[i] = mdl->jntPi[baseJntIdx + i];
+            break;
+        }
+        case sizeof(afxUnit16) :
+        {
+            afxUnit16* dst = indices;
+            for (afxUnit i = 0; i < cnt; i++) dst[i] = mdl->jntPi[baseJntIdx + i];
+            break;
+        }
+        case sizeof(afxUnit32) :
+        {
+            afxUnit32* dst = indices;
+            for (afxUnit i = 0; i < cnt; i++) dst[i] = mdl->jntPi[baseJntIdx + i];
+            break;
+        }
+        default: AfxThrowError(); break;
+    }
+    return cnt;
+}
+
+_ASX afxError AsxReparentJoints(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void const* indices, afxUnit stride)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
@@ -476,39 +538,42 @@ _ASX afxError AfxReparentJoints(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, v
 
     cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
 
-    if (!indices) for (afxUnit i = 0; i < cnt; i++) mdl->jntPi[i] = AFX_INVALID_INDEX;
+    if (!indices) for (afxUnit i = 0; i < cnt; i++) mdl->jntPi[baseJntIdx + i] = AFX_INVALID_INDEX;
     else switch (stride)
     {
         case sizeof(afxUnit8) :
         {
+            afxUnit8 const* src = indices;
+
             for (afxUnit i = 0; i < cnt; i++)
             {
-                afxUnit8 const* src = indices;
                 afxUnit parentIdx = src[i];
                 AfxAssertOR(parentIdx == AFX_INVALID_INDEX, parentIdx < mdl->jntCnt);
-                mdl->jntPi[i] = parentIdx;
+                mdl->jntPi[baseJntIdx + i] = parentIdx;
             }
             break;
         }
         case sizeof(afxUnit16) :
         {
+            afxUnit16 const* src = indices;
+
             for (afxUnit i = 0; i < cnt; i++)
             {
-                afxUnit16 const* src = indices;
                 afxUnit parentIdx = src[i];
                 AfxAssertOR(parentIdx == AFX_INVALID_INDEX, parentIdx < mdl->jntCnt);
-                mdl->jntPi[i] = parentIdx;
+                mdl->jntPi[baseJntIdx + i] = parentIdx;
             }
             break;
         }
         case sizeof(afxUnit32) :
         {
+            afxUnit32 const* src = indices;
+
             for (afxUnit i = 0; i < cnt; i++)
             {
-                afxUnit32 const* src = indices;
                 afxUnit parentIdx = src[i];
                 AfxAssertOR(parentIdx == AFX_INVALID_INDEX, parentIdx < mdl->jntCnt);
-                mdl->jntPi[i] = parentIdx;
+                mdl->jntPi[baseJntIdx + i] = parentIdx;
             }
             break;
         }
@@ -517,7 +582,60 @@ _ASX afxError AfxReparentJoints(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, v
     return err;
 }
 
-_ASX afxError AfxResetJointMatrices(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void const* matrices, afxUnit stride)
+_ASX afxUnit AsxGetJointInversors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void* matrices, afxUnit stride)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
+    AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
+    AFX_ASSERT(matrices);
+
+    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+
+    switch (stride)
+    {
+    case 0:
+    case sizeof(afxM4d):
+    {
+        afxM4d* dst = matrices;
+
+        for (afxUnit i = 0; i < cnt; i++)
+            AfxM4dCopy(dst[i], mdl->jntIw[baseJntIdx + i]);
+
+        break;
+    }
+    case sizeof(afxAtm3d) :
+    {
+        afxAtm3d* dst = (afxAtm3d*)matrices;
+
+        for (afxUnit i = 0; i < cnt; i++)
+        {
+            AfxV3dCopy(dst[i][0], mdl->jntIw[baseJntIdx + i][0]);
+            AfxV3dCopy(dst[i][1], mdl->jntIw[baseJntIdx + i][1]);
+            AfxV3dCopy(dst[i][2], mdl->jntIw[baseJntIdx + i][2]);
+            AfxV3dCopy(dst[i][3], mdl->jntIw[baseJntIdx + i][3]);
+        }
+        break;
+    }
+    case sizeof(afxM3d) :
+    {
+        afxM3d* dst = (afxM3d*)matrices;
+
+        for (afxUnit i = 0; i < cnt; i++)
+        {
+            AfxM3dCopyM4d(dst[i], mdl->jntIw[baseJntIdx + i]);
+        }
+        break;
+    }
+    default:
+    {
+        AfxThrowError();
+        break;
+    }
+    }
+    return cnt;
+}
+
+_ASX afxError AsxResetJointInversors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void const* matrices, afxUnit stride)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
@@ -525,24 +643,16 @@ _ASX afxError AfxResetJointMatrices(afxModel mdl, afxUnit baseJntIdx, afxUnit cn
 
     cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
 
-    if (!matrices) for (afxUnit i = 0; i < cnt; i++) AfxM4dReset(mdl->jntIw[i]);
+    if (!matrices) for (afxUnit i = 0; i < cnt; i++) AfxM4dReset(mdl->jntIw[baseJntIdx + i]);
     else switch (stride)
     {
     case 0:
-    {
-        afxM4d const* src = matrices;
-
-        for (afxUnit i = 0; i < cnt; i++)
-            AfxM4dCopyAtm(mdl->jntIw[i], src[0]);
-
-        break;
-    }
     case sizeof(afxM4d) :
     {
         afxM4d const* src = matrices;
 
         for (afxUnit i = 0; i < cnt; i++)
-            AfxM4dCopyAtm(mdl->jntIw[i], src[i]);
+            AfxM4dCopy(mdl->jntIw[baseJntIdx + i], src[i]);
 
         break;
     }
@@ -552,7 +662,10 @@ _ASX afxError AfxResetJointMatrices(afxModel mdl, afxUnit baseJntIdx, afxUnit cn
 
         for (afxUnit i = 0; i < cnt; i++)
         {
-            AfxM4dSetAffine(mdl->jntIw[i], src[i][0], src[i][1], src[i][2], src[i][3]);
+            AfxV4dCopyAtv3d(mdl->jntIw[baseJntIdx + i][0], src[i][0]);
+            AfxV4dCopyAtv3d(mdl->jntIw[baseJntIdx + i][1], src[i][1]);
+            AfxV4dCopyAtv3d(mdl->jntIw[baseJntIdx + i][2], src[i][2]);
+            AfxV4dCopyAtv3d(mdl->jntIw[baseJntIdx + i][3], src[i][3]);
         }
         break;
     }
@@ -562,7 +675,7 @@ _ASX afxError AfxResetJointMatrices(afxModel mdl, afxUnit baseJntIdx, afxUnit cn
 
         for (afxUnit i = 0; i < cnt; i++)
         {
-            AfxM4dCopyM3d(mdl->jntIw[i], src[i], AFX_V4D_IDENTITY);
+            AfxM4dCopyM3d(mdl->jntIw[baseJntIdx + i], src[i], AFX_V4D_IDENTITY);
         }
         break;
     }
@@ -575,7 +688,22 @@ _ASX afxError AfxResetJointMatrices(afxModel mdl, afxUnit baseJntIdx, afxUnit cn
     return err;
 }
 
-_ASX afxError AfxResetJointTransforms(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxTransform const transforms[])
+_ASX afxUnit AsxGetJointTransforms(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxTransform transforms[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
+    AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
+    AFX_ASSERT(transforms);
+
+    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+
+    for (afxUnit i = 0; i < cnt; i++)
+        AfxCopyTransform(&transforms[i], &mdl->jntLt[baseJntIdx + i]);
+
+    return cnt;
+}
+
+_ASX afxError AsxResetJointTransforms(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxTransform const transforms[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
@@ -583,14 +711,29 @@ _ASX afxError AfxResetJointTransforms(afxModel mdl, afxUnit baseJntIdx, afxUnit 
 
     cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
 
-    if (!transforms) for (afxUnit i = 0; i < cnt; i++) AfxResetTransform(&mdl->jntLt[i]);
+    if (!transforms) for (afxUnit i = 0; i < cnt; i++) AfxResetTransform(&mdl->jntLt[baseJntIdx + i]);
     else for (afxUnit i = 0; i < cnt; i++)
-        AfxCopyTransform(&mdl->jntLt[i], &transforms[i]);
+        AfxCopyTransform(&mdl->jntLt[baseJntIdx + i], &transforms[i]);
 
     return err;
 }
 
-_ASX afxError AfxResetJointLodErrors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxReal const lodErrors[])
+_ASX afxUnit AsxGetJointLodErrors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxReal lodErrors[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
+    AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
+    AFX_ASSERT(lodErrors);
+
+    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+
+    for (afxUnit i = 0; i < cnt; i++)
+        lodErrors[i] = mdl->jntLe[baseJntIdx + i];
+
+    return cnt;
+}
+
+_ASX afxError AsxResetJointLodErrors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxReal const lodErrors[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
@@ -598,14 +741,14 @@ _ASX afxError AfxResetJointLodErrors(afxModel mdl, afxUnit baseJntIdx, afxUnit c
 
     cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
 
-    if (!lodErrors) for (afxUnit i = 0; i < cnt; i++) mdl->jntLe[i] = -1.0;
+    if (!lodErrors) for (afxUnit i = 0; i < cnt; i++) mdl->jntLe[baseJntIdx + i] = -1.0;
     else for (afxUnit i = 0; i < cnt; i++)
-        mdl->jntLe[i] = lodErrors[i];
+        mdl->jntLe[baseJntIdx + i] = lodErrors[i];
 
     return err;
 }
 
-_ASXINL void AfxQueryModelErrorTolerance(afxModel mdl, afxReal allowedErr, afxReal* allowedErrEnd, afxReal* allowedErrScaler)
+_ASXINL void AsxQueryModelErrorTolerance(afxModel mdl, afxReal allowedErr, afxReal* allowedErrEnd, afxReal* allowedErrScaler)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
@@ -623,7 +766,7 @@ _ASXINL void AfxQueryModelErrorTolerance(afxModel mdl, afxReal allowedErr, afxRe
     }
 }
 
-_ASX afxUnit AfxCountJoints(afxModel mdl, afxReal allowedErr)
+_ASX afxUnit AsxCountJoints(afxModel mdl, afxReal allowedErr)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
@@ -633,7 +776,7 @@ _ASX afxUnit AfxCountJoints(afxModel mdl, afxReal allowedErr)
     else
     {
         afxReal errEnd, errScaler;
-        AfxQueryModelErrorTolerance(mdl, allowedErr, &errEnd, &errScaler);
+        AsxQueryModelErrorTolerance(mdl, allowedErr, &errEnd, &errScaler);
 
         afxUnit jointCnt = mdl->jntCnt;
         afxReal* lodError = mdl->jntLe;
@@ -674,7 +817,7 @@ _ASX afxUnit AfxCountJoints(afxModel mdl, afxReal allowedErr)
     return rslt;
 }
 
-_ASX afxUnit AfxFindJoints(afxModel mdl, afxUnit cnt, afxString const ids[], afxUnit indices[])
+_ASX afxUnit AsxFindJoints(afxModel mdl, afxUnit cnt, afxString const ids[], afxUnit indices[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
@@ -705,136 +848,23 @@ _ASX afxUnit AfxFindJoints(afxModel mdl, afxUnit cnt, afxString const ids[], afx
     return rslt;
 }
 
-_ASX void AfxComputeAttachmentWorldMatrix(afxModel mdl, afxUnit jntIdx, afxPose const pose, afxM4d const offset, afxUnit const* sparseJntMap, afxUnit const* sparseJntMapRev, afxM4d m)
+_ASX void AfxBuildRiggedMeshCompositeMatrices(afxModel mdl, afxUnit rigIdx, afxPlacement plce, afxUnit cnt, afxM4d matrices[])
 {
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
+    // parametrized wrapper
+    // void AfxSklBuildIndexedCompositeBuffer(afxSkeleton skl, afxPlacement const wp, afxUnit const* indices, afxUnit idxCnt, afxM4d buffer[])
+    // AfxSklBuildIndexedCompositeBuffer(skl, pose, mdl->rigs[rigIdx].biasToJointMap, cnt, buffer);
 
-    // Should be compatible with void GetWorldMatrixFromLocalAttitude(const skeleton *Skeleton, int BoneIndex, const local_pose *LocalAttitude, const float *Offset4x4, float *Result4x4, const int *SparseBoneArray, const int *SparseBoneArrayReverse)
-    // void AfxSklGetWorldMatrixFromLocalAttitude(afxSkeleton skl, afxUnit jointIdx, afxPose const lp, afxM4d const offset, afxM4d m, afxUnit const* sparseBoneArray, afxUnit const* sparseBoneArrayReverse)
-    // AfxSklGetWorldMatrixFromLocalAttitude(skl, jntIdx, atti, offset, m, sparseJntMap, sparseJntMapRev);
-
-    AFX_ASSERT_RANGE(pose->artCnt, jntIdx, 1);
-
-    AfxM4dReset(m);
-
-    for (afxUnit i = jntIdx; i != AFX_INVALID_INDEX; i = mdl->jntPi[i])
-    {
-        AFX_ASSERT_RANGE(mdl->jntCnt, i, 1);
-        afxTransform* t = AfxGetPoseTransform(pose, sparseJntMapRev ? sparseJntMapRev[i] : i);
-        afxM4d tmp, tmp2;
-        AfxComputeCompositeTransformM4d(t, tmp);
-        AfxM4dMultiplyAffine(tmp2, m, tmp);
-        AfxM4dCopy(m, tmp2);
-    }
-
-    if (offset)
-    {
-        afxM4d tmp2;
-        AfxM4dMultiplyAffine(tmp2, m, offset);
-        AfxM4dCopy(m, tmp2);
-    }
-}
-
-_ASX void AfxComputeAttachmentOffset(afxModel mdl, afxUnit jntIdx, afxPose const pose, afxM4d const offset, afxUnit const* sparseJntMap, afxUnit const* sparseJntMapRev, afxM4d m)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-
-    // void AfxSklGetSkeletonAttachmentOffset(afxSkeleton skl, afxUnit jntIdx, afxPose const pos, afxM4d const offset, afxM4d m, afxUnit const* sparseArtArray, afxUnit const* sparseArtArrayReverse)
-    // AfxSklGetSkeletonAttachmentOffset(skl, jntIdx, atti, offset, m, sparseJntMap, sparseJntMapRev);
-
-    afxM4d tmp;
-    AfxComputeAttachmentWorldMatrix(mdl, jntIdx, pose, offset, sparseJntMap, sparseJntMapRev, tmp);
-    AfxM4dInvertAffine(m, tmp); // invert it
-}
-
-_ASX void AfxBuildCompositeMatrices(afxModel mdl, afxPlacement const plce, afxUnit baseJnt, afxUnit cnt, afxBool /*3x4*/transposed, afxM4d matrices[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AFX_ASSERT_RANGE(mdl->jntCnt, baseJnt, cnt);
-    AFX_ASSERT_OBJECTS(afxFcc_PLCE, 1, &plce);
-    AFX_ASSERT_RANGE(plce->matCnt, baseJnt, cnt);
-    AFX_ASSERT(matrices);
-
-    if (transposed)
-    {
-        // Should be compatible with BuildCompositeBufferTransposed(skl, firstBone, cnt, wp, compositeBuffer)
-
-        for (afxUnit i = 0; i < cnt; i++)
-        {
-            afxUnit jntIdx = baseJnt + i;
-            BuildSingleCompositeFromWorldPoseTranspose_Generic(mdl->jntIw[jntIdx], plce->world[jntIdx], matrices[i]);
-        }
-    }
-    else
-    {
-        // Should be compatible with BuildCompositeBuffer(skl, firstBone, cnt, wp, compositeBuffer)
-
-        for (afxUnit i = 0; i < cnt; i++)
-        {
-            afxUnit jntIdx = baseJnt + i;
-            BuildSingleCompositeFromWorldPose_Generic(mdl->jntIw[jntIdx], plce->world[jntIdx], matrices[i]);
-        }
-    }
-}
-
-_ASX void AfxBuildIndexedCompositeMatrices(afxModel mdl, afxPlacement const plce, afxUnit cnt, afxUnit const jntMap[], afxBool /*3x4*/transposed, afxM4d matrices[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AFX_ASSERT_RANGE(mdl->jntCnt, 0, cnt);
-    AFX_ASSERT_OBJECTS(afxFcc_PLCE, 1, &plce);
-    AFX_ASSERT_RANGE(plce->matCnt, 0, cnt);
-    AFX_ASSERT(matrices);
-    AFX_ASSERT(jntMap);
-
-    if (transposed)
-    {
-        // void AfxSklBuildIndexedCompositeBufferTransposed(afxSkeleton skl, afxPlacement const posb, afxUnit const* indices, afxUnit idxCnt, afxReal buffer[][3][4])
-        // AfxSklBuildIndexedCompositeBufferTransposed(skl, pose, mdl->rigs[rigIdx].biasToJointMap, cnt, buffer);
-
-        for (afxUnit i = 0; i < cnt; i++)
-        {
-            afxUnit jntIdx = jntMap[i];
-            AFX_ASSERT_RANGE(mdl->jntCnt, jntIdx, 1);
-            AFX_ASSERT_RANGE(plce->matCnt, jntIdx, 1);
-            BuildSingleCompositeFromWorldPoseTranspose_Generic(mdl->jntIw[jntIdx], plce->world[jntIdx], matrices[i]);
-        }
-    }
-    else
-    {
-        // void AfxSklBuildIndexedCompositeBuffer(afxSkeleton skl, afxPlacement const wp, afxUnit const* indices, afxUnit idxCnt, afxM4d buffer[])
-        // AfxSklBuildIndexedCompositeBuffer(skl, pose, mdl->rigs[rigIdx].biasToJointMap, cnt, buffer);
-
-        // joints used to be biasToJointMap of model's mesh rig.
-
-        for (afxUnit i = 0; i < cnt; i++)
-        {
-            afxUnit jntIdx = jntMap[i];
-            AFX_ASSERT_RANGE(mdl->jntCnt, jntIdx, 1);
-            AFX_ASSERT_RANGE(plce->matCnt, jntIdx, 1);
-            BuildSingleCompositeFromWorldPose_Generic(mdl->jntIw[jntIdx], plce->world[jntIdx], matrices[i]);
-        }
-    }
-}
-
-_ASX void AfxBuildRiggedMeshCompositeMatrices(afxModel mdl, afxUnit rigIdx, afxPlacement const plce, afxUnit cnt, afxM4d matrices[])
-{
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
     AFX_ASSERT_RANGE(mdl->rigCnt, rigIdx, 1);
 
-    // void AfxSklBuildIndexedCompositeBuffer(afxSkeleton skl, afxPlacement const wp, afxUnit const* indices, afxUnit idxCnt, afxM4d buffer[])
-    // AfxSklBuildIndexedCompositeBuffer(skl, pose, mdl->rigs[rigIdx].biasToJointMap, cnt, buffer);
-
     AFX_ASSERT(mdl->jntCnt >= cnt);
     AFX_ASSERT(plce);
-    AFX_ASSERT(plce->matCnt >= cnt);
+    afxUnit plceCap = AfxGetPlacementCapacity(plce);
+    AFX_ASSERT(plceCap >= cnt);
     AFX_ASSERT(matrices);
 
-    afxMeshRig* rig = mdl->rigs[rigIdx];
+    asxMeshRig* rig = mdl->rigs[rigIdx];
     if (!rig) return;
 
     afxMesh msh = rig->msh;
@@ -843,234 +873,17 @@ _ASX void AfxBuildRiggedMeshCompositeMatrices(afxModel mdl, afxUnit rigIdx, afxP
     AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &msh);
 
     afxUnit const* biasToJntMap = rig->biasToJntMap;
-
+#if 0
     for (afxUnit i = 0; i < cnt; i++)
     {
-        AFX_ASSERT_RANGE(mdl->jntCnt, biasToJntMap[i], 1);
-        AFX_ASSERT_RANGE(plce->matCnt, biasToJntMap[i], 1);
-        BuildSingleCompositeFromWorldPose_Generic(mdl->jntIw[biasToJntMap[i]], plce->world[biasToJntMap[i]], matrices[i]);
+        afxUnit jntIdx = biasToJntMap[i];
+        AFX_ASSERT_RANGE(mdl->jntCnt, jntIdx, 1);
+        AFX_ASSERT_RANGE(plce->matCnt, jntIdx, 1);
+        BuildSingleCompositeFromWorldPose_Generic(mdl->jntIw[jntIdx], plce->world[jntIdx], matrices[i]);
     }
-}
-
-_ASX void AfxBuildPlacement(afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit baseReqJnt, afxUnit reqJntCnt, afxPose const pose, afxM4d const displace, afxBool noComposite, afxPlacement plce)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, jntCnt);
-    AFX_ASSERT_RANGE(plce->matCnt, baseJntIdx, jntCnt);
-
-    if (!displace)
-        displace = AFX_M4D_IDENTITY;
-
-    afxTransform* lt = mdl->jntLt;
-    afxM4d* iw = mdl->jntIw;
-    afxM4d* w = plce->world;
-    afxM4d* delta = plce->delta;
-
-    if (!pose)
-    {
-        // compute the rest pose whether a attitude is not specified.
-        // rest pose is computed for every joint ignoring baseReqJnt/reqJntCnt;
-        // rest pose always compute composite delta matrices.
-        // Should be compatible with void BuildRestPosture(const skeleton *Skeleton, int FirstBone, int BoneCount, const float *Offset4x4, world_pose *Result)
-        // AfxSklComputeRestPosture(skl, baseJntIdx, jntCnt, offset, pose);
-
-        for (afxUnit i = 0; i < jntCnt; i++)
-        {
-            afxUnit jointIdx = baseJntIdx + i;
-            AFX_ASSERT_RANGE(mdl->jntCnt, jointIdx, 1);
-            afxUnit parentIdx = mdl->jntPi[jointIdx];
-            afxV4d const* parent;
-
-            if (parentIdx == AFX_INVALID_INDEX) parent = displace;
-            else
-            {
-                AFX_ASSERT_RANGE(mdl->jntCnt, parentIdx, 1);
-                parent = w[parentIdx];
-            }
-
-            if (delta) // always computed if present for rest pose.
-            {
-                BWP_Dispatch(&lt[jointIdx], iw[jointIdx], delta[jointIdx], w[jointIdx], parent);
-            }
-            else
-            {
-                BWPNC_Dispatch(&lt[jointIdx], parent, w[jointIdx]);
-            }
-        }
-    }
-    else
-    {
-        AFX_ASSERT_RANGE(pose->artCnt, baseJntIdx, jntCnt);
-
-        if (noComposite || !delta)
-        {
-            // Should be compatible with void BuildPostureNoCompositeLOD(const skeleton *Skeleton, int FirstBone, int BoneCount, int FirstValidLocalBone, int ValidLocalBoneCount, const granny::local_pose *LocalAttitude, const float *Offset4x4, world_pose *Result)
-            // AfxSklComputePostureNoCompositeLod(skl, baseJntIdx, jntCnt, baseReqJnt, reqJntCnt, atti, offset, pose);
-
-            for (afxUnit i = 0; i < jntCnt; i++)
-            {
-                afxUnit jntIdx = baseJntIdx + i;
-                AFX_ASSERT_RANGE(mdl->jntCnt, jntIdx, 1);
-                afxUnit parentIdx = mdl->jntPi[jntIdx];
-                afxV4d const* parent;
-
-                if (parentIdx == AFX_INVALID_INDEX) parent = displace;
-                else
-                {
-                    AFX_ASSERT_RANGE(mdl->jntCnt, parentIdx, 1);
-                    parent = w[parentIdx];
-                }
-
-                afxTransform *t = &pose->arts[jntIdx].xform;
-
-                if (reqJntCnt <= 0)
-                    t = &lt[jntIdx];
-
-                BWPNC_Dispatch(t, parent, w[jntIdx]);
-                --reqJntCnt;
-            }
-        }
-        else
-        {
-            // Should be compatible with void BuildPostureLOD(const skeleton *Skeleton, int FirstBone, int BoneCount, int FirstValidLocalBone, int ValidLocalBoneCount, const local_pose *LocalAttitude, const float *Offset4x4, world_pose *Result)
-            // AfxSklComputePostureLod(skl, baseJntIdx, jntCnt, baseReqJnt, reqJntCnt, atti, offset, pose);
-
-            for (afxUnit i = 0; i < jntCnt; i++)
-            {
-                afxUnit jntIdx = baseJntIdx + i;
-                AFX_ASSERT_RANGE(mdl->jntCnt, jntIdx, 1);
-                afxUnit parentIdx = mdl->jntPi[jntIdx];
-                afxV4d const* parent;
-
-                if (parentIdx == AFX_INVALID_INDEX) parent = displace;
-                else
-                {
-                    AFX_ASSERT_RANGE(mdl->jntCnt, parentIdx, 1);
-                    parent = w[parentIdx];
-                }
-
-                afxTransform *t = &pose->arts[jntIdx].xform;
-
-                if (reqJntCnt <= 0)
-                    t = &lt[jntIdx];
-
-                BWP_Dispatch(t, iw[jntIdx], delta[jntIdx], w[jntIdx], parent);
-                --reqJntCnt;
-            }
-        }
-    }
-}
-
-_ASX void AfxBuildRestPose(afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxPose pose)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-
-    // Should be compatible with void BuildRestLocalAttitude(const skeleton *Skeleton, int FirstBone, int BoneCount, local_pose *LocalAttitude)
-    // AfxSklComputeRestLocalAttitude(skl, baseJntIdx, jntCnt, atti);
-    AFX_ASSERT_RANGE(pose->artCnt, baseJntIdx, jntCnt);
-    AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, jntCnt);
-
-    afxTransform* lt = mdl->jntLt;
-
-    for (afxUnit i = jntCnt; i-- > 0;)
-    {
-        afxUnit jointIdx = baseJntIdx + i;
-        AFX_ASSERT_RANGE(mdl->jntCnt, jointIdx, 1);
-        akxArticulation* t = &pose->arts[jointIdx];
-        t->cnt = 1;
-        t->weight = 1.0;
-        AfxCopyTransform(&t->xform, &lt[jointIdx]);
-    }
-}
-
-_ASX void AfxRebuildPose(afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxM4d const displace, afxPlacement const plce, afxBool rigid, afxPose pose)
-{
-    // Computes the local pose from the world pose.
-    // If rigid is argumented as TRUE, the local pose will not include any scale/shear.
-
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, jntCnt);
-    AFX_ASSERT_RANGE(pose->artCnt, baseJntIdx, jntCnt);
-    AFX_ASSERT_RANGE(plce->matCnt, baseJntIdx, jntCnt);
-    AFX_ASSERT(pose);
-    AFX_ASSERT(plce);
-
-    if (!displace)
-        displace = AFX_M4D_IDENTITY;
-
-    if (rigid)
-    {
-        //AfxSklLocalAttitudeFromPostureNoScale(skl, atti, pose, offset, baseJntIdx, jntCnt);
-        // Should be compatible with void LocalAttitudeFromPostureNoScale(const skeleton *Skeleton, local_pose *Result, const world_pose *Posture, const float *Offset4x4, int FirstBone, int BoneCount)
-
-        for (afxUnit i = jntCnt; i-- > 0;)
-        {
-            afxUnit jointIdx = baseJntIdx + i;
-            afxUnit parentIdx = mdl->jntPi[jointIdx];
-            afxM4d InverseParent;
-
-            if (parentIdx == AFX_INVALID_INDEX) AfxM4dInvertAffine(InverseParent, displace);
-            else
-            {
-                AFX_ASSERT_RANGE(mdl->jntCnt, parentIdx, 1);
-                AfxM4dInvertAffine(InverseParent, plce->world[parentIdx]);
-            }
-
-            afxM4d Local;
-            AfxM4dMultiplyAffine(Local, plce->world[jointIdx], InverseParent);
-            afxTransform* t = AfxGetPoseTransform(pose, jointIdx);
-
-            AfxV3dCopy(t->position, Local[3]);
-            afxM3d Rotation;
-            AfxM3dSet(Rotation, Local[0], Local[1], Local[2]);
-            AfxQuatRotationFromM3d(t->orientation, Rotation);
-            AfxQuatNormalize(t->orientation, t->orientation);
-            AfxM3dReset(t->scaleShear);
-            t->flags = afxTransformFlag_TRANSLATED | afxTransformFlag_ROTATED;
-        }
-    }
-    else
-    {
-        // Should be compatible with void LocalAttitudeFromPosture(const skeleton *Skeleton, local_pose *Result, const world_pose *Posture, const float *Offset4x4, int FirstBone, int BoneCount)
-        //AfxSklLocalAttitudeFromPosture(skl, atti, pose, offset, baseJntIdx, jntCnt);
-
-        for (afxUnit i = jntCnt; i-- > 0;)
-        {
-            afxUnit jointIdx = baseJntIdx + i;
-            AFX_ASSERT_RANGE(mdl->jntCnt, jointIdx, 1);
-            afxUnit parentIdx = mdl->jntPi[jointIdx];
-            afxM4d InverseParent;
-
-            if (parentIdx == AFX_INVALID_INDEX) AfxM4dInvertAffine(InverseParent, displace);
-            else
-            {
-                AFX_ASSERT_RANGE(mdl->jntCnt, parentIdx, 1);
-                AfxM4dInvertAffine(InverseParent, plce->world[parentIdx]);
-            }
-
-            afxM4d Local;
-            AfxM4dMultiplyAffine(Local, plce->world[jointIdx], InverseParent);
-
-            afxM3d Linear;
-            AfxM3dSet(Linear, Local[0], Local[1], Local[2]);
-
-            afxM3d Q, Scale;
-
-            if (!AfxPolarDecomposeM3d(Linear, 0.0000099999997, Q, Scale))
-                AfxLogError("Can't accurately decompose MAX transform Q");
-
-            afxV3d Position;
-            AfxV3dCopy(Position, Local[3]);
-            afxQuat Orientation;
-            AfxQuatRotationFromM3d(Orientation, Q);
-            AfxQuatNormalize(Orientation, Orientation);
-            afxTransform* t = AfxGetPoseTransform(pose, jointIdx);
-            AfxSetTransform(t, Position, Orientation, Scale, TRUE);
-        }
-    }
+#else
+    AfxBuildIndexedCompositeMatrices(plce, mdl, cnt, biasToJntMap, FALSE, matrices);
+#endif
 }
 
 
@@ -1224,13 +1037,13 @@ _ASX afxError _AsxMdlCtorCb(afxModel mdl, void** args, afxUnit invokeNo)
         mdl->udd = NIL;
 
         // reset joint parent indices to avoid crash
-        AfxReparentJoints(mdl, 0, jntCnt, NIL, 0);
+        AsxReparentJoints(mdl, 0, jntCnt, NIL, 0);
 
         // reset other joint attributes
 
-        AfxResetJointMatrices(mdl, 0, jntCnt, NIL, 0);
-        AfxResetJointTransforms(mdl, 0, jntCnt, NIL);
-        AfxResetJointLodErrors(mdl, 0, jntCnt, NIL);
+        AsxResetJointInversors(mdl, 0, jntCnt, NIL, 0);
+        AsxResetJointTransforms(mdl, 0, jntCnt, NIL);
+        AsxResetJointLodErrors(mdl, 0, jntCnt, NIL);
         mdl->jntIdd = NIL;
         mdl->jntUdd = NIL;
 
@@ -1255,7 +1068,7 @@ _ASX afxError _AsxMdlCtorCb(afxModel mdl, void** args, afxUnit invokeNo)
     {
         afxString s;
         AfxGetModelUrn(mdl, &s);
-        afxUnit jntCnt = AfxCountJoints(mdl, 0);
+        afxUnit jntCnt = AsxCountJoints(mdl, 0);
         AfxLogEcho("Skeletal Animable model <%.*s> assembled at %p. %u mesh rigs for %u joints.", AfxPushString(&s), mdl, mdl->rigCnt, jntCnt);
         AfxLogEcho("Listing %u joints..:", jntCnt);
 

@@ -78,7 +78,7 @@ _AMX afxError AfxRouteAudition(afxAudient audi, afxMixContext mix, afxUnit baseS
     return err;
 }
 
-_AMX afxError _AmxAudiStdDtorCb(afxAudient audi)
+_AMX afxError _AmxAudiDtorCb(afxAudient audi)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &audi);
@@ -92,7 +92,7 @@ _AMX afxError _AmxAudiStdDtorCb(afxAudient audi)
     return err;
 }
 
-_AMX afxError _AmxAudiStdCtorCb(afxAudient audi, void** args, afxUnit invokeNo)
+_AMX afxError _AmxAudiCtorCb(afxAudient audi, void** args, afxUnit invokeNo)
 {
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &audi);
@@ -115,8 +115,8 @@ _AMX afxClassConfig const _AMX_AUDI_CLASS_CONFIG =
     .name = "Audition",
     .desc = "Audition Head",
     .fixedSiz = sizeof(AFX_OBJECT(afxAudient)),
-    .ctor = (void*)_AmxAudiStdCtorCb,
-    .dtor = (void*)_AmxAudiStdDtorCb
+    .ctor = (void*)_AmxAudiCtorCb,
+    .dtor = (void*)_AmxAudiDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////

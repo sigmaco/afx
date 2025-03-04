@@ -43,7 +43,7 @@
 #include "qwadro/inc/draw/kit/afxTxd.h"
 #include "qwadro/inc/draw/io/afxVertexStream.h"
 #include "qwadro/inc/draw/kit/afxDrawTechnique.h"
-#include "qwadro/inc/draw/io/afxTarga.h"
+#include "qwadro/inc/draw/io/afxRasterFile.h"
 
 typedef enum avxEventId
 {
@@ -109,8 +109,41 @@ AVX afxError        AfxUplinkTxds(afxDrawInput din, afxUnit baseSlot, afxUnit sl
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxConfigureDrawInput(afxDrawSystem dsys, afxDrawInputConfig* cfg);
+AVX afxUnit AfxEnumerateDrawInputs
+(
+    afxDrawSystem dsys, 
+    afxUnit first, 
+    afxUnit cnt, 
+    afxDrawInput inputs[]
+);
 
-AVX afxError        AfxOpenDrawInput(afxDrawSystem dsys, afxDrawInputConfig const* cfg, afxDrawInput* input);
+AVX afxUnit AfxInvokeDrawInputs
+(
+    afxDrawSystem dsys, 
+    afxUnit first, 
+    afxUnit cnt, 
+    afxBool(*f)(afxDrawInput, void*), 
+    void *udd
+);
+
+AVX afxUnit AfxEvokeDrawInputs
+(
+    afxDrawSystem dsys, 
+    afxBool(*f)(afxDrawInput, void*), 
+    void* udd, 
+    afxUnit first, 
+    afxUnit cnt, 
+    afxDrawInput inputs[]
+);
+
+
+AVX afxError AfxConfigureDrawInput(afxDrawSystem dsys, afxDrawInputConfig* cfg);
+
+AVX afxError AfxOpenDrawInput
+(
+    afxDrawSystem dsys, 
+    afxDrawInputConfig const* cfg, 
+    afxDrawInput* input
+);
 
 #endif//AVX_DRAW_INPUT_H

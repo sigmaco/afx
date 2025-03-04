@@ -118,7 +118,7 @@ _AFX afxError _AfxCdcDtor(afxCodec cdc)
     return err;
 }
 
-_AFX afxClassConfig _AfxCdcMgrCfg =
+_AFX afxClassConfig const _AFX_CDC_CLASS_CONFIG =
 {
     .fcc = afxFcc_CDC,
     .name = "Codec",

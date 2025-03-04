@@ -441,7 +441,7 @@ _AFXINL afxReal AfxQuatMagRecip(afxQuat const q)
 
 _AFXINL void AfxQuatLerp(afxQuat q, afxQuat const a, afxQuat const b, afxReal percent)
 {
-    /// Should be compatible with physicsforgames.blogspot.com/2010/02/quaternions.html
+    // Should be compatible with physicsforgames.blogspot.com/2010/02/quaternions.html
 
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(a);
@@ -653,10 +653,10 @@ _AFXINL void AfxQuatFromTangentM3d(afxQuat q, afxM3d const tbn)
     // yosoygames.com.ar/wp/2018/03/vertex-formats-part-1-compression/
 
 #if !0
-    /// As Crytek found out, this code is faulty when using SNORM. 
-    /// This is because when qTangent.w is exactly 0, there is no negative 0 for SNORM. 
-    /// Crytek’s solution was to add a bias, so that the sign of the bitangent is negative when q.w < bias, instead of testing q.w < 0. 
-    /// This means that q.w can never be 0. It’s a small precision sacrifice to solve an edge case.
+    // As Crytek found out, this code is faulty when using SNORM. 
+    // This is because when qTangent.w is exactly 0, there is no negative 0 for SNORM. 
+    // Crytek’s solution was to add a bias, so that the sign of the bitangent is negative when q.w < bias, instead of testing q.w < 0. 
+    // This means that q.w can never be 0. It’s a small precision sacrifice to solve an edge case.
 
     // Because '-0' sign information is lost when using integers, we need to apply a "bias"; while making sure the Quaternion stays normalized.
     // ** Also our shaders assume qTangent.w is never 0. **
@@ -695,7 +695,7 @@ _AFXINL void AfxQuatFromTangentFrame(afxQuat q, afxV3d const normal, afxV3d cons
 
 _AFXINL void AfxQuatHead(afxQuat q, afxV3d const from, afxV3d const to)
 {
-    /// Should be compatible with physicsforgames.blogspot.com/2010/03/quaternion-tricks.html
+    // Should be compatible with physicsforgames.blogspot.com/2010/03/quaternion-tricks.html
     
     afxV3d h;
     AfxV3dAdd(h, from, to);

@@ -1,0 +1,23 @@
+[Qwadro.Icd]
+DriverDate=2024/05/08
+DriverVer=0.1.2
+Vendor=SIGMA Technology Group
+Href=https://sigmaco.org
+FeatureScore=1
+Service=pragma
+DllFile=catalyst.dll
+Devices=Icd.Devices
+
+[Icd.Devices]
+=Device.Combo
+
+[Device.Combo]
+Class=PRAGMA
+Description=Math Computation Accelerator
+PortCount=1
+Ports=Combo.Ports
+; device internal
+MxuCount=1
+
+[Combo.Ports]
+=Combo.Port0

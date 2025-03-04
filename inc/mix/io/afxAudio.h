@@ -31,8 +31,8 @@
     Temporary data is stored in the buffer until it is processed and transferred to another location within the system.
 */
 
-#ifndef AMX_BUFFER_H
-#define AMX_BUFFER_H
+#ifndef AMX_AUDIO_H
+#define AMX_AUDIO_H
 
 #include "qwadro/inc/mix/afxMixDefs.h"
 
@@ -245,4 +245,4 @@ AMX afxError    AfxAcquireAudios(afxMixSystem msys, afxUnit cnt, afxAudioInfo co
 
 AMX afxError    AmxLoadAudios(afxMixSystem msys, afxUnit cnt, afxUri const uris[], afxAudio buffers[]);
 
-#endif//AMX_BUFFER_H
+#endif//AMX_AUDIO_H

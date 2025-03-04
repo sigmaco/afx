@@ -1,7 +1,7 @@
 #include <//./z/video/stdEnv.inc>
 
-//UNIFORM_UNIT(0, 0, buffer)
-PUSHABLE(buffer)
+//UNIFORM(0, 0, buffer)
+PUSH(buffer)
 {
     mat4 p;
 };

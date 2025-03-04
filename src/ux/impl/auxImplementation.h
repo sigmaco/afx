@@ -36,7 +36,7 @@ AFX_DEFINE_STRUCT(_auxSessionAcquisition)
     afxDrawSystem       dsys;
     afxUnit             sdevId;
     afxUnit             soutIdx;
-    afxMixSystem      ssys;
+    afxMixSystem      msys;
 
     afxClassConfig const* wndClsCfg;
     afxClassConfig const* xssClsCfg;

@@ -1,5 +1,0 @@
-Booting...
-Acquiring...  Thread Execution Unit 7092 @ afxSystem_w32.c:447afxClass.c:693
-afxClass.c:693
-((((uintptr_t)(const void *)((uintptr_t)hdr)) % (16u) == 0))
-    Invalid

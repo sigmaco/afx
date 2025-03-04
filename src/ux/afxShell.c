@@ -106,7 +106,7 @@ _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxUnit invokeNo)
     afxShellInfo const* info = ((afxShellInfo const *)args[1]) + invokeNo;
     AFX_ASSERT(info);
 
-    if (_AfxDevBaseImplementation.ctor(&ssh->dev, (void*[]) { icd, (void*)&info->dev }, 0)) AfxThrowError();
+    if (_AFX_DEV_CLASS_CONFIG.ctor(&ssh->dev, (void*[]) { icd, (void*)&info->dev }, 0)) AfxThrowError();
     else
     {
         //AfxGetSubClass(AfxGetShellClass(ssh))->ctor(ssh, args, invokeNo);

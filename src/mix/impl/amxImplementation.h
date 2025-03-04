@@ -26,12 +26,12 @@
 #include "amxImpl_Executor.h"
 #include "amxImpl_System.h"
 
-AFX_DEFINE_STRUCT(afxMixDeviceInfo)
+AFX_DEFINE_STRUCT(_amxMixDeviceRegistration)
 {
-    afxDeviceInfo           dev;
-    afxMixLimits          limits;
-    afxMixFeatures        features;
-    afxUnit                 portCnt;
+    afxDeviceInfo       dev;
+    afxMixLimits        limits;
+    afxMixFeatures      features;
+    afxUnit             portCnt;
 };
 
 #ifdef _AMX_MIX_DEVICE_C
@@ -49,12 +49,13 @@ AFX_OBJECT(afxMixDevice)
     afxMixFeatures    features;
     struct
     {
-        afxString8      urn;
-        afxString128    desc;
-        afxMixPortCaps caps;
+        afxString8          urn;
+        afxString128        desc;
+        afxMixCapabilities  caps;
     }*ports;
     afxUnit             portCnt;
 
+    afxClass            asioCls;
     struct _afxSdevIdd* idd;
 };
 #endif//_AMX_MIX_DEVICE_C
@@ -107,7 +108,9 @@ AMX afxClass const* _AmxGetMixSystemClass(afxModule icd);
 
 
 
-AMX afxError _AmxImplementMixSystem(afxModule icd, afxClassConfig const* asiCls, afxClassConfig const* mdevCls, afxClassConfig const* msysCls);
-AMX afxError _AmxRegisterMixDevices(afxModule icd, afxUnit cnt, afxMixDeviceInfo const infos[], afxMixDevice devices[]);
+AMX afxError _AmxImplementMixSystem(afxModule icd, afxClassConfig const* mdevCls, afxClassConfig const* msysCls);
+AMX afxError _AmxRegisterMixDevices(afxModule icd, afxUnit cnt, _amxMixDeviceRegistration const infos[], afxMixDevice devices[]);
+
+AMX afxError _AmxRegisterAudioServices(afxModule icd, afxUnit cnt, afxMixDeviceInfo const infos[], afxDevice devices[]);
 
 #endif//AMX_IMPLEMENTATION_H

@@ -63,16 +63,17 @@ _ASX afxError AfxLoadHeighmap(afxTerrain ter, afxUnit secIdx, afxUri const* uri)
         AfxThrowError();
         return err;
     }
-    afxTargaFile tga;
-    AfxReadTarga(iob, &tga);
+    afxRasterFile tga;
+    AfxReadRasterFile(&tga, iob);
 
     afxByte* data;
-    AfxAllocate(tga.decodedSiz, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&data);
-    AfxDecodeTarga(iob, &tga, data);
+    AfxAllocate(tga.decSiz, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&data);
+    AfxDecodeRasterFile(&tga, iob, data);
     AfxDisposeObjects(1, &iob);
 
+    avxFormat fmt = tga.fmt;
     avxFormatDescription pfd;
-    AfxDescribePixelFormat(tga.fmt, &pfd);
+    AvxDescribeFormats(1, &fmt, &pfd);
 
 
 
@@ -222,7 +223,7 @@ _ASX afxError AfxAcquireTerrain(afxSimulation sim, afxUnit secCnt, afxTerrain* t
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    if (AfxAcquireObjects(_AsxGetTerrainClass(sim), 1, (afxObject*)terrain, (void const*[]) { sim, &secCnt } ))
+    if (AfxAcquireObjects((afxClass *)_AsxGetTerrainClass(sim), 1, (afxObject*)terrain, (void const*[]) { sim, &secCnt } ))
         AfxThrowError();
 
     return err;
@@ -268,15 +269,16 @@ _ASX afxError AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* ur
     AfxAcquireStream(1, &iobi, &iob);
     AfxReopenFile(iob, uri, afxFileFlag_R);
 
-    afxTargaFile tga;
-    AfxReadTarga(iob, &tga);
+    afxRasterFile tga;
+    AfxReadRasterFile(&tga, iob);
 
     afxByte* data;
-    AfxAllocate(tga.decodedSiz, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&data);
-    AfxDecodeTarga(iob, &tga, data);
+    AfxAllocate(tga.decSiz, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&data);
+    AfxDecodeRasterFile(&tga, iob, data);
 
+    avxFormat fmt = tga.fmt;
     avxFormatDescription pfd;
-    AfxDescribePixelFormat(tga.fmt, &pfd);
+    AvxDescribeFormats(1, &fmt, &pfd);
 
     //tga.width = tga.width, tga.height = tga.height / 8;
 

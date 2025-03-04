@@ -25,17 +25,44 @@
 
 #include "qwadro/inc/draw/afxDrawSystem.h"
 
-#define AFX_MAX_DRAW_BRIDGE_PER_SYSTEM 16
-#define AFX_MAX_DRAW_QUEUE_PER_BRIDGE 32
+#ifndef _AVX_DRAW_C
+AFX_DECLARE_STRUCT(_avxDsysImpl);
+#else
+AFX_DEFINE_STRUCT(_avxDsysImpl)
+{
+    afxError(*waitCb)(afxDrawSystem, afxTime);
+    afxError(*waitFenc)(afxDrawSystem, afxBool, afxUnit64, afxUnit, avxFence const[]);
+    afxError(*resetFenc)(afxDrawSystem, afxUnit, avxFence const[]);
+    afxError(*flushMaps)(afxDrawSystem, afxUnit, avxBufferMap const[]);
+    afxError(*syncMaps)(afxDrawSystem, afxUnit, avxBufferMap const[]);
+    afxError(*mapBufs)(afxDrawSystem, afxUnit, avxBufferMap const[]);
+    afxError(*unmapBufs)(afxDrawSystem, afxUnit, avxBufferMap const[]);
+    afxUnit(*getProcs)(afxDrawSystem, afxUnit, afxString const[], void*[]);
+
+    afxClass const*(*dexuCls)(afxDrawSystem);
+    afxClass const*(*fencCls)(afxDrawSystem);
+    afxClass const*(*doutCls)(afxDrawSystem);
+    afxClass const*(*dinCls)(afxDrawSystem);
+    afxClass const*(*qrypCls)(afxDrawSystem);
+    afxClass const*(*vtxdCls)(afxDrawSystem);
+    afxClass const*(*rasCls)(afxDrawSystem);
+    afxClass const*(*bufCls)(afxDrawSystem);
+    afxClass const*(*sampCls)(afxDrawSystem);
+    afxClass const*(*pipCls)(afxDrawSystem);
+    afxClass const*(*canvCls)(afxDrawSystem);
+    afxClass const*(*shadCls)(afxDrawSystem);
+    afxClass const*(*ligaCls)(afxDrawSystem);
+};
+#endif
 
 #ifdef _AVX_DRAW_SYSTEM_C
 
 AFX_DEFINE_STRUCT(_avxDrawSystemAcquisition)
 {
     afxUnit             bridgeCnt;
-    afxDrawFeatures     requirements;
-    afxUnit             extensionCnt;
-    afxString const*    extensions;
+    afxDrawFeatures     reqFeatures;
+    afxUnit             reqExtCnt;
+    afxString const*    reqExts;
     void*               udd;
 
     afxClassConfig const* bufClsCfg;
@@ -67,11 +94,16 @@ AFX_OBJECT(afxDrawSystem)
 #endif
 {
     AFX_OBJ(afxDevLink) ctx;
+    _avxDsysImpl const* pimpl;
+    struct _afxDsysIdd* idd;
+    void* udd[4]; // user-defined data
+
     afxBool         running;
     afxUnit         bridgeCnt; // one per bridge
     afxDrawBridge*  bridges;
 
     afxDrawFeatures requirements;
+    afxDrawLimits const*limits;
 
     //afxChain classes;
     afxClass        bufCls;
@@ -91,23 +123,12 @@ AFX_OBJECT(afxDrawSystem)
 
     afxClass        dexuCls;
     afxClass        fencCls;
-    afxError        (*waitFenc)(afxDrawSystem,afxBool,afxUnit64,afxUnit,avxFence const[]);
-    afxError        (*resetFenc)(afxDrawSystem,afxUnit,avxFence const[]);
 
     afxStringBase   shdStrb;
 
     afxBool     leftHandedSpace;
     avxClipSpaceDepth clipSpaceDepth;
 
-    afxError(*waitCb)(afxDrawSystem,afxTime);
-
-    afxError(*flushMapsCb)(afxDrawSystem, afxUnit, afxBufferMap const[]);
-    afxError(*syncMapsCb)(afxDrawSystem,afxUnit,afxBufferMap const[]);
-    afxError(*mapBufsCb)(afxDrawSystem, afxUnit, afxBufferMap const[]);
-    afxError(*unmapBufsCb)(afxDrawSystem, afxUnit, afxBufferMap const[]);
-
-    struct _afxDsysIdd* idd;
-    void* udd[4]; // user-defined data
 };
 #ifdef _AVX_DRAW_SYSTEM_IMPL
 //AFX_STATIC_ASSERT(offsetof(AFX_OBJECT(afxDrawSystem), m) == 0x00, "");
@@ -117,21 +138,26 @@ AFX_OBJECT(afxDrawSystem)
 #endif//_AVX_DRAW_SYSTEM_C
 
 AVX afxClassConfig const _AVX_DSYS_CLASS_CONFIG;
+AVX _avxDsysImpl const _AVX_DSYS_IMPL;
 
-AVX afxClass const* _AvxGetDrawBridgeClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetDrawOutputClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetDrawInputClass(afxDrawSystem dsys);
+AVX _avxDsysImpl const* _AvxDsysGetImpl(afxDrawSystem dsys);
 
-AVX afxClass const* _AvxGetFenceClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetBufferClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetCanvasClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetLigatureClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetPipelineClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetQueryPoolClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetRasterClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetSamplerClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetShaderClass(afxDrawSystem dsys);
-AVX afxClass const* _AvxGetVertexInputClass(afxDrawSystem dsys);
+#ifdef AVX_DRIVER_SRC
+AVX afxClass const* _AvxDsysGetDexuClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetDoutClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetDinClass(afxDrawSystem dsys);
+
+AVX afxClass const* _AvxDsysGetFencClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetBufClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetCanvClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetLigaClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetPipClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetQrypClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetRasClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetSampClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetShadClass(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetVtxdClass(afxDrawSystem dsys);
+#endif
 
 AVX afxError    _AvxLoadGlScript(afxStream file, afxArray* fCode);
 
@@ -139,6 +165,7 @@ AVX afxBool     AvxGetShaderStringBase(afxDrawSystem dsys, afxStringBase* base);
 
 AVX afxError _AvxTransferVideoMemory(afxDrawSystem dsys, avxTransference* ctrl, afxUnit opCnt, void const* ops);
 
-AVX afxDrawFeatures const* _AvxAccessDrawRequirements(afxDrawSystem dsys);
+AVX afxDrawFeatures const* _AvxDsysAccessReqFeatures(afxDrawSystem dsys);
+AVX afxDrawLimits const* _AvxDsysAccessLimits(afxDrawSystem dsys);
 
 #endif//AVX_IMPL___SYSTEM_H

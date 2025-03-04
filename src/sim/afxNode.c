@@ -43,7 +43,7 @@ _ASXINL afxError AfxAcquireNodes(afxSimulation sim, afxUnit cnt, afxNode nod[], 
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    if (AfxAcquireObjects(_AsxGetNodeClass(sim), cnt, (afxObject*)nod, (void const*[]) { (void*)config }))
+    if (AfxAcquireObjects((afxClass *)_AsxGetNodeClass(sim), cnt, (afxObject*)nod, (void const*[]) { (void*)config }))
         AfxThrowError();
 
     AFX_ASSERT_OBJECTS(afxFcc_NOD, cnt, nod);

@@ -34,20 +34,21 @@
 
 // COMMAND BATCH --- a group of records processed as a single unit, usually without input from a user.
 
-#include "qwadro/inc/draw/op/avxDrawOps.h"
+#include "qwadro/inc/draw/op/avxDrawing.h"
+#include "qwadro/inc/draw/afxDrawBridge.h"
 
 typedef enum avxCmdbUsage
 {
-    /// specifies that each recording of the command buffer will only be submitted once, 
-    /// and the command buffer will be reset and recorded again between each submission.
+    // specifies that each recording of the command buffer will only be submitted once, 
+    // and the command buffer will be reset and recorded again between each submission.
     avxCmdbUsage_ONCE,
 
-    /// specifies that a secondary command buffer is considered to be entirely inside a render canvas.
-    /// If this is a primary command buffer, then this bit is ignored.
+    // specifies that a secondary command buffer is considered to be entirely inside a render canvas.
+    // If this is a primary command buffer, then this bit is ignored.
     avxCmdbUsage_RESUME,
 
-    /// specifies that a command buffer can be resubmitted to any queue of the same queue family while it is in the pending state, 
-    /// and recorded into multiple primary command buffers.
+    // specifies that a command buffer can be resubmitted to any queue of the same queue family while it is in the pending state, 
+    // and recorded into multiple primary command buffers.
     avxCmdbUsage_SIMULTANEOUS,
 } avxCmdbUsage;
 
@@ -76,5 +77,40 @@ AVX afxError    AfxRecycleDrawContext(afxDrawContext dctx, afxBool exhaust);
 /// set all entries of the buffers[] array to NIL and return the error.
 
 AVX afxError    AfxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxUnit cnt, afxDrawContext batches[]);
+
+// NOTE 1: In Mantle, unlike Vulkan, we specify the queue capabilites instead of exuIdx.
+// NOTE 2: In Mantle and Vulkan, we specify optimization hints (like ONE_TIME) when we starts recording a context (with a Begin() function);
+
+
+/*
+    The AfxExecuteDrawCommands() function submits multiple draw commands to a drawing system for execution.
+    It allows for synchronized execution using a fence object, ensuring that commands are executed in the proper order.
+    This function is useful in graphics systems where multiple draw contexts (command buffers) need to be processed,
+    and synchronization between CPU and GPU tasks is required. By managing the submission through a control structure
+    and using a fence for synchronization, the function ensures that drawing commands are executed efficiently and correctly.
+*/
+
+AVX afxError AfxExecuteDrawCommands
+(
+    // The drawing system where the draw commands will be executed.
+    afxDrawSystem dsys,
+
+    // A control structure that might define various parameters related to how the draw commands are submitted, 
+    // such as synchronization or execution order. This encapsulate details like submission flags, 
+    // command queues, or context properties that manage how and when the draw commands are executed.
+    avxSubmission* ctrl,
+
+    // The number of draw contexts to be executed.
+    // This tells the function how many contexts in the @contexts array should be processed.
+    afxUnit cnt,
+
+    // An array of draw contexts that represent the individual drawing commands or operations to be executed. 
+    // Each afxDrawContext could contain specific information about a set of drawing commands, such as commands 
+    // for rendering objects, setting up shaders, and managing resources.
+    afxDrawContext contexts[],
+
+    // A fence object to be signaled, used for synchronization.
+    avxFence fence
+);
 
 #endif//AVX_DRAW_CONTEXT_H

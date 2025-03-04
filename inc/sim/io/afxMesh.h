@@ -29,7 +29,7 @@
 
     Para determinar quais articulações uma afxMesh está ligada a (uma para afxMesh rígida, muitas para afxMesh deformável), você pode acessar o arranjo de afxMeshBias's. 
     Este arranjo contém nomes das articulações as quais a afxMesh está ligada, bem como parâmetros de "oriented bounding box" para as partes da afxMesh que estão ligadas àquela articulação e outra informação pertinente a ligação malha-a-articulação.
-    Note que na maioria dos casos você não necessitará de usar os nomes das articulações no afxMeshBias diretamente, porque você pode usar um objeto afxMeshRig para fazer este trabalho (e outro trabalho necessário de ligação) para você.
+    Note que na maioria dos casos você não necessitará de usar os nomes das articulações no afxMeshBias diretamente, porque você pode usar um objeto asxMeshRig para fazer este trabalho (e outro trabalho necessário de ligação) para você.
 
     Os dados de índice para uma afxMesh, dado por um afxMesh referenciado pelo afxMesh, contém todos os índices para os triângulos na afxMesh.
     Estes índices sempre descrevem uma lista de triângulo - isso é, cada grupo de três índices descrevem um singelo triângulo - os dados não são organizados em "strips" ou "fans".
@@ -171,13 +171,13 @@ typedef enum afxVertexFlag
     afxVertexFlag_RASTERIZATION = AFX_BIT(5),
 
     afxVertexFlag_ATV = AFX_BIT(10),
-    /// affected by affine transformations (ex.: position). Non-delta spatial attributes should receive affine transformations.
+    // affected by affine transformations (ex.: position). Non-delta spatial attributes should receive affine transformations.
 
     afxVertexFlag_LTM = AFX_BIT(11),
-    /// affected by linear transformations (ex.: tangent, binormal). Delta spatial attributes should receive linear transformations (ex.: normal, tangent/binormal cross).
+    // affected by linear transformations (ex.: tangent, binormal). Delta spatial attributes should receive linear transformations (ex.: normal, tangent/binormal cross).
 
     afxVertexFlag_ILTM = AFX_BIT(12),
-    /// affected by inverse linear transformations. Non-delta spatial attributes should receive inverse linear transformations (ex.: normal, tangent/binormal cross).
+    // affected by inverse linear transformations. Non-delta spatial attributes should receive inverse linear transformations (ex.: normal, tangent/binormal cross).
 
     afxVertexFlag_DELTA = AFX_BIT(13), // treat as delta
 
@@ -188,7 +188,7 @@ AFX_DEFINE_STRUCT(avxVertexCache)
 {
     afxLink          vbuf;
     avxVertexDecl      vin;
-    afxBuffer           buf;
+    avxBuffer           buf;
     struct
     {
         afxUnit32       base;
@@ -206,7 +206,7 @@ AFX_DEFINE_STRUCT(afxVertexBias)
 AFX_DEFINE_STRUCT(avxIndexCache)
 {
     afxLink          stream;
-    afxBuffer           buf;
+    avxBuffer           buf;
     afxUnit32           base;
     afxUnit32           range;
     afxUnit32           stride; // idxSiz

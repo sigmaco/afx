@@ -1,6 +1,6 @@
 #include <//./z/video/stdEnv.inc>
 
-SAMPLING_UNIT(0, 1, sampler2D, tex);
+TEXTURE(0, 1, sampler2D, tex);
 
 in block
 {

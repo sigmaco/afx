@@ -61,10 +61,10 @@ AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxSphericalCoord)
 AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxSpace)
 /// A 3D coordinate system, expressed relative to a canonical coordinate system.
 {
-    afxV3d  right; /// Unit vector pointing to the right (local +x axis).
-    afxV3d  up; /// Unit vector pointing upwards (local +y axis).
-    afxV3d  ahead; /// Unit vector pointing forwards (local -z axis).
-    afxV3d  origin; /// The origin, relative to the canonical coordinate system.
+    afxV3d  right; // Unit vector pointing to the right (local +x axis).
+    afxV3d  up; // Unit vector pointing upwards (local +y axis).
+    afxV3d  ahead; // Unit vector pointing forwards (local -z axis).
+    afxV3d  origin; // The origin, relative to the canonical coordinate system.
 };
 
 #endif//AFX_SPACE_H

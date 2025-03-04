@@ -110,28 +110,28 @@ _AVX afxClass const* _AvxGetDrawBatchClass(afxDrawQueue dque)
 _AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, afxColor const color)
 {
     afxError err = AFX_ERR_NONE;
-    /// dque must be a valid afxDrawQueue handle.
+    // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 }
 
 _AVX void _AvxEndDrawQueueDebugScope(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
-    /// dque must be a valid afxDrawQueue handle.
+    // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 }
 
 _AVX void _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, afxColor const color)
 {
     afxError err = AFX_ERR_NONE;
-    /// dque must be a valid afxDrawQueue handle.
+    // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 }
 
 _AVX afxError AfxWaitForEmptyDrawQueue(afxDrawQueue dque, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    /// dque must be a valid afxDrawQueue handle.
+    // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
     if (!dque->waitCb)
@@ -156,7 +156,7 @@ _AVX afxError AfxWaitForEmptyDrawQueue(afxDrawQueue dque, afxTime timeout)
 _AVX afxError _AvxSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), void* udd)
 {
     afxError err = AFX_ERR_NONE;
-    /// dque must be a valid afxDrawQueue handle.
+    // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
     AFX_ASSERT(f);
 
@@ -175,10 +175,10 @@ _AVX afxError _AvxSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), void
     return err;
 }
 
-_AVX afxError _AvxSubmitDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence)
+_AVX afxError _AvxExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence)
 {
     afxError err = AFX_ERR_NONE;
-    /// dque must be a valid afxDrawQueue handle.
+    // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
     AFX_ASSERT(cnt);
     AFX_ASSERT(contexts);
@@ -224,7 +224,7 @@ _AVX afxError _AvxSubmitDrawCommands(afxDrawQueue dque, avxSubmission const* ctr
 _AVX afxError _AvxSubmitTransferences(afxDrawQueue dque, avxTransference const* ctrl, afxUnit opCnt, void const* ops)
 {
     afxError err = AFX_ERR_NONE;
-    /// dque must be a valid afxDrawQueue handle.
+    // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
@@ -320,7 +320,7 @@ _AVX afxError _AvxSubmitTransferences(afxDrawQueue dque, avxTransference const* 
     }
     else
     {
-        afxBufferIo const* biops = ops;
+        avxBufferIo const* biops = ops;
         for (afxUnit i = 0; i < opCnt; i++)
         {
             AFX_ASSERT((ctrl->srcFcc == afxFcc_BUF || ctrl->dstFcc == afxFcc_BUF));
@@ -334,10 +334,10 @@ _AVX afxError _AvxSubmitTransferences(afxDrawQueue dque, avxTransference const* 
     return err;
 }
 
-_AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, afxBufferRemap const maps[], afxUnit unmapCnt, afxBuffer const unmaps[])
+_AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, avxBufferRemap const maps[], afxUnit unmapCnt, avxBuffer const unmaps[])
 {
     afxError err = AFX_ERR_NONE;
-    /// dque must be a valid afxDrawQueue handle.
+    // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
     if (AfxLockMutex(&dque->workChnMtx))
@@ -354,7 +354,7 @@ _AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, afxBufferRe
 
         for (afxUnit i = 0; i < mapCnt; i++)
         {
-            afxBufferRemap const* map = &maps[i];
+            avxBufferRemap const* map = &maps[i];
 
             work->Remap.mapOps[i].buf = map->buf;
             work->Remap.mapOps[i].offset = map->offset;
@@ -378,7 +378,7 @@ _AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, afxBufferRe
 
         for (afxUnit i = 0; i < unmapCnt; i++)
         {
-            afxBuffer buf = unmaps[i];
+            avxBuffer buf = unmaps[i];
 
             work->Remap.unmapOps[i] = buf;
             
@@ -392,10 +392,10 @@ _AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, afxBufferRe
     return err;
 }
 
-_AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, afxBufferMap const flushes[], afxUnit fetchCnt, afxBufferMap const fetches[])
+_AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferMap const flushes[], afxUnit fetchCnt, avxBufferMap const fetches[])
 {
     afxError err = AFX_ERR_NONE;
-    /// dque must be a valid afxDrawQueue handle.
+    // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
     if (AfxLockMutex(&dque->workChnMtx))
@@ -414,7 +414,7 @@ _AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, afxBufferM
 
         for (afxUnit i = 0; i < flushCnt; i++)
         {
-            afxBufferMap const* map = &flushes[i];
+            avxBufferMap const* map = &flushes[i];
 
             work->SyncMaps.ops[i].buf = map->buf;
             work->SyncMaps.ops[i].offset = map->offset;
@@ -437,7 +437,7 @@ _AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, afxBufferM
 
         for (afxUnit i = 0; i < fetchCnt; i++)
         {
-            afxBufferMap const* map = &fetches[i];
+            avxBufferMap const* map = &fetches[i];
 
             work->SyncMaps.ops[i].buf = map->buf;
             work->SyncMaps.ops[i].offset = map->offset;
@@ -452,7 +452,7 @@ _AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, afxBufferM
     return err;
 }
 
-_AVX afxError _AvxDqueStdDtorCb(afxDrawQueue dque)
+_AVX afxError _AvxDqueDtorCb(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
@@ -472,7 +472,7 @@ _AVX afxError _AvxDqueStdDtorCb(afxDrawQueue dque)
     return err;
 }
 
-_AVX afxError _AvxDqueStdCtorCb(afxDrawQueue dque, void** args, afxUnit invokeNo)
+_AVX afxError _AvxDqueCtorCb(afxDrawQueue dque, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
@@ -486,7 +486,7 @@ _AVX afxError _AvxDqueStdCtorCb(afxDrawQueue dque, void** args, afxUnit invokeNo
     dque->ddev = cfg->ddev;
     dque->portId = cfg->portId;
     dque->exuIdx = cfg->exuIdx;
-    dque->dsys = AfxGetDrawBridgeContext(dexu);
+    dque->dsys = AfxGetBridgedDrawSystem(dexu);
 
     dque->immediate = 0;// !!spec->immedate;
 
@@ -520,6 +520,6 @@ _AVX afxClassConfig const _AVX_DQUE_CLASS_CONFIG =
     .name = "DrawQueue",
     .desc = "Draw Bridge Submission Queue",
     .fixedSiz = sizeof(AFX_OBJECT(afxDrawQueue)),
-    .ctor = (void*)_AvxDqueStdCtorCb,
-    .dtor = (void*)_AvxDqueStdDtorCb
+    .ctor = (void*)_AvxDqueCtorCb,
+    .dtor = (void*)_AvxDqueDtorCb
 };

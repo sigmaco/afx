@@ -224,7 +224,7 @@ _AFXINL afxUnit AfxFindSubstring(afxString const* s, afxString const* excerpt)
     AFX_ASSERT(s);
     AFX_ASSERT(excerpt);
     afxChar const* start = s->start ? AfxStrnstr(s->start, s->len, excerpt->start, excerpt->len) : NIL;
-    return start ? (afxUnit)(afxSize)start : AFX_INVALID_INDEX;
+    return start ? (afxUnit)(afxSize)(start - s->start) : AFX_INVALID_INDEX;
 }
 
 _AFXINL afxResult AfxCompareString(afxString const* s, afxUnit base, afxChar const* start, afxUnit len, afxBool ci)
@@ -498,7 +498,7 @@ _AFXINL afxUnit AfxCopySubstring(afxString* s, afxString const* in, afxUnit base
 
         s->len = effectiveRange;
         clippedRange = len - effectiveRange;
-        AfxAssertAbs(clippedRange);
+        AFX_ASSERT_ABS(clippedRange);
     }
     return clippedRange;
 }
@@ -830,4 +830,144 @@ _AFXINL afxError AfxReadString(afxString* s, afxStream in, afxUnit len)
 
     s->len = len - errLen;
     return errLen;
+}
+
+_AFXINL afxUnit AfxExportString16SIGMA(afxString const* s, afxUnit bufCap, wchar_t* wideBuf)
+// Helper function to convert UTF-8 to UTF-16
+{
+    afxError err = NIL;
+    AFX_ASSERT(s);
+
+    // Estimate the maximum size of the wide char string (UTF-16)
+    // wideBuf is the maximum size (worst case each UTF-8 byte is 1 UTF-16 character)
+
+    afxUnit utf8Index = 0;
+    afxUnit wideIndex = 0;
+    afxChar const* utf8Str = s->start;
+
+    while (utf8Str[utf8Index] != '\0')
+    {
+        afxByte c = utf8Str[utf8Index];
+
+        if (c <= 0x7F)
+        {  // 1-byte character (ASCII)
+            wideBuf[wideIndex++] = (wchar_t)c;
+            utf8Index++;
+        }
+        else if (c >= 0xC2 && c <= 0xDF)
+        {  // 2-byte character (UTF-8)
+            afxByte c2 = utf8Str[utf8Index + 1];
+            wideBuf[wideIndex++] = ((wchar_t)(c & 0x1F) << 6) | (c2 & 0x3F);
+            utf8Index += 2;
+        }
+        else if (c >= 0xE0 && c <= 0xEF)
+        {  // 3-byte character (UTF-8)
+            afxByte c2 = utf8Str[utf8Index + 1];
+            afxByte c3 = utf8Str[utf8Index + 2];
+            wideBuf[wideIndex++] = ((wchar_t)(c & 0x0F) << 12) | ((c2 & 0x3F) << 6) | (c3 & 0x3F);
+            utf8Index += 3;
+        }
+        else if (c >= 0xF0 && c <= 0xF4)
+        {  // 4-byte character (UTF-8)
+            afxByte c2 = utf8Str[utf8Index + 1];
+            afxByte c3 = utf8Str[utf8Index + 2];
+            afxByte c4 = utf8Str[utf8Index + 3];
+            afxInt32 wc = ((wchar_t)(c & 0x07) << 18) | ((c2 & 0x3F) << 12) | ((c3 & 0x3F) << 6) | (c4 & 0x3F);
+            
+            // Handle surrogate pairs for characters beyond 0xFFFF
+            if (wc >= 0x10000 && wc <= 0x10FFFF)
+            {
+                // UTF-16 surrogate pair encoding
+                wc -= 0x10000;
+                wchar_t highSurrogate = (wchar_t)((wc >> 10) + 0xD800);  // High surrogate
+                wchar_t lowSurrogate = (wchar_t)((wc & 0x3FF) + 0xDC00);  // Low surrogate
+                wideBuf[wideIndex++] = highSurrogate;
+                wideBuf[wideIndex++] = lowSurrogate;
+            }
+            else
+            {
+                // For characters within the BMP (<= 0xFFFF), just store as normal
+                wideBuf[wideIndex++] = wc;
+            }
+            utf8Index += 4;
+        }
+        else
+        {
+            // Invalid UTF-8 byte sequence
+            return 0;
+        }
+    }
+    wideBuf[wideIndex] = L'\0';  // Null-terminate the wide character string
+    return utf8Index;
+}
+
+_AFXINL afxUnit AfxImportString16SIGMA(afxString* s, wchar_t const* wideStr, afxUnit wideStrLen)
+// Function to convert wide character (UTF-16) to UTF-8 string
+{
+    afxError err = NIL;
+    AFX_ASSERT(s);
+
+    // Estimate the maximum size of the UTF-8 string
+    if (!wideStrLen)
+        wideStrLen = wcslen(wideStr);
+
+    afxUnit utf8Size = wideStrLen * 4 + 1;  // UTF-8 can use up to 4 bytes per character, plus null terminator
+
+    // Allocate memory for the UTF-8 string
+    afxChar* utf8Str = s->buf;
+
+    afxUnit utf8Index = 0;
+    for (afxUnit i = 0; i < wideStrLen; i++)
+    {
+        afxInt32 wc = wideStr[i];
+
+        // Check for surrogate pairs (characters outside the BMP)
+        if (wc >= 0xD800 && wc <= 0xDBFF && i + 1 < wideStrLen)
+        {
+            // High surrogate (0xD800 - 0xDBFF)
+            wchar_t lowSurrogate = wideStr[i + 1];
+            if (lowSurrogate >= 0xDC00 && lowSurrogate <= 0xDFFF)
+            {
+                // Low surrogate (0xDC00 - 0xDFFF)
+                // Combine high and low surrogates to form a code point (32-bit value)
+                wc = 0x10000 + ((wc - 0xD800) << 10) + (lowSurrogate - 0xDC00);
+                i++;  // Skip the next code unit (low surrogate)
+            }
+            else
+            {
+                return 0;  // Invalid surrogate pair (low surrogate missing or incorrect)
+            }
+        }
+
+        if (wc <= 0x7F)
+        {  // 1-byte UTF-8 (ASCII)
+            utf8Str[utf8Index++] = (afxChar)wc;
+        }
+        else if (wc <= 0x7FF)
+        {  // 2-byte UTF-8
+            utf8Str[utf8Index++] = (afxChar)((wc >> 6) | 0xC0);
+            utf8Str[utf8Index++] = (afxChar)((wc & 0x3F) | 0x80);
+        }
+        else if (wc <= 0xFFFF)
+        {  // 3-byte UTF-8
+            utf8Str[utf8Index++] = (afxChar)((wc >> 12) | 0xE0);
+            utf8Str[utf8Index++] = (afxChar)(((wc >> 6) & 0x3F) | 0x80);
+            utf8Str[utf8Index++] = (afxChar)((wc & 0x3F) | 0x80);
+        }
+        else if (wc <= 0x10FFFF)
+        {  // 4-byte UTF-8 (for supplementary characters)
+            utf8Str[utf8Index++] = (afxChar)((wc >> 18) | 0xF0);
+            utf8Str[utf8Index++] = (afxChar)(((wc >> 12) & 0x3F) | 0x80);
+            utf8Str[utf8Index++] = (afxChar)(((wc >> 6) & 0x3F) | 0x80);
+            utf8Str[utf8Index++] = (afxChar)((wc & 0x3F) | 0x80);
+        }
+        else
+        {
+            // Invalid UTF-16 code unit (out of range)
+            return 0;
+        }
+    }
+
+    utf8Str[utf8Index] = '\0';  // Null-terminate the UTF-8 string
+    return utf8Index;
 }

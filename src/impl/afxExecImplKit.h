@@ -70,6 +70,7 @@ AFX_OBJECT(afxModule)
 
     struct
     {
+        afxError(*scmHookFn)(afxModule, afxUri const*); // initializes system-wide data structures and resources.
         afxError(*icdHookFn)(afxModule, afxUri const*); // initializes driver-wide data structures and resources.
         afxError(*icdUnloadFn)(afxModule); // performs any operations that are necessary before the system unloads the driver.
         afxByte icdCache[64];
@@ -80,7 +81,7 @@ AFX_OBJECT(afxModule)
         afxLink asx; // ICD attachment for ASX implementations
         afxLink aux; // ICD attachment for AUX implementations
 
-        afxClass vduCls;
+        afxClass viddCls;
         afxClass ddevCls;
         afxClass dsysCls;
 
@@ -154,11 +155,11 @@ AFX_OBJECT(afxService)
     afxInterlockedQueue         jobTypeQue;
 
 
-    afxReqWorkerFn  reqJobWorkerFn; /// Function called by the job manager when a new worker needs to be requested. When null, all jobs will be executed on the same thread that calls DoService().
-    afxUnit          maxActiveWorkers; /// The maximum number of concurrent workers that will be requested. Must be >= 1 for each job type.
-    afxUnit          memSlabCnt; /// Number of memory slabs to pre-allocate for job manager memory. At least one slab per worker thread should be pre-allocated. Default is 1.
-    afxUnit          memSlabSiz; /// Size of each memory slab used for job manager memory. Must be a power of two. Default is 8K.
-    void*           udd; /// Arbitrary data that will be passed back to the client when calling afxReqWorkerFn.
+    afxReqWorkerFn  reqJobWorkerFn; // Function called by the job manager when a new worker needs to be requested. When null, all jobs will be executed on the same thread that calls DoService().
+    afxUnit          maxActiveWorkers; // The maximum number of concurrent workers that will be requested. Must be >= 1 for each job type.
+    afxUnit          memSlabCnt; // Number of memory slabs to pre-allocate for job manager memory. At least one slab per worker thread should be pre-allocated. Default is 1.
+    afxUnit          memSlabSiz; // Size of each memory slab used for job manager memory. Must be a power of two. Default is 8K.
+    void*           udd; // Arbitrary data that will be passed back to the client when calling afxReqWorkerFn.
 };
 #endif//_AFX_SERVICE_C
 
@@ -247,11 +248,15 @@ AFX_OBJECT(afxSystem)
 
     afxModule               e2coree;
 
+
     // avx
     struct
     {
         afxBool             disabled;
         afxModule           e2drawDll;
+        afxClass            viddCls;
+        afxClass            ddevCls;
+        afxClass            dsysCls;
         afxChain            icdChain;
         afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
     }                       avx;
@@ -260,6 +265,9 @@ AFX_OBJECT(afxSystem)
     {
         afxBool             disabled;
         afxModule           e2mixDll;
+        afxClass            asiCls;
+        afxClass            mdevCls;
+        afxClass            msysCls;
         afxChain            icdChain;
         afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
     }                       amx;
@@ -268,8 +276,9 @@ AFX_OBJECT(afxSystem)
     {
         afxBool             disabled;
         afxModule           e2simDll;
-        afxChain            icdChain;
         afxClass            sdevCls;
+        afxClass            simCls;
+        afxChain            icdChain;
         afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
     }                       asx;
     // aux (shell)
@@ -278,12 +287,11 @@ AFX_OBJECT(afxSystem)
         afxBool             disabled;
         afxModule           e2mmuxDll;
         afxChain            icdChain;
-        afxClass            hidCls;
         afxClass            sshCls;
+        afxClass            sesCls;
+        afxClass            hidCls;
         afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
     }                       aux;
-
-    afxModule               e2sim;
 
     struct
     {
@@ -296,7 +304,16 @@ AFX_OBJECT(afxSystem)
 };
 #endif//_AFX_SYSTEM_C
 
-AFX afxClassConfig const _AfxDevBaseImplementation;
+AFX afxClassConfig const _AFX_DEV_CLASS_CONFIG;
+AFX afxClassConfig const _AFX_STRB_CLASS_CONFIG;
+AFX afxClassConfig const _AFX_THR_CLASS_CONFIG;
+AFX afxClassConfig const _AFX_MMU_CLASS_CONFIG;
+AFX afxClassConfig const _AFX_SVC_CLASS_CONFIG;
+AFX afxClassConfig const _AFX_CDC_CLASS_CONFIG;
+AFX afxClassConfig const _AFX_IOB_CLASS_CONFIG;
+AFX afxClassConfig const _AFX_FSYS_CLASS_CONFIG;
+AFX afxClassConfig const _AFX_MDLE_CLASS_CONFIG;
+AFX afxClassConfig const _AFX_EXU_CLASS_CONFIG;
 
 AFX afxClass*           AfxGetSemaphoreClass(afxDevLink ctx);
 
@@ -312,5 +329,10 @@ AFX afxClass*           AfxGetThreadClass(void);
 AFX afxClass const*     AfxGetDeviceClass(void);
 AFX afxClass const*     AfxGetIoBridgeClass(void);
 
+AFX afxError _AfxAttachCoreModule(afxModule* e2coree);
+AFX afxError _AfxAttachTargaModule(afxModule* e2targa);
+AFX afxError _AfxAttachMixModule(afxModule* e2mixva);
+AFX afxError _AfxAttachUxModule(afxModule* e2mmux);
+AFX afxError _AfxAttachSimModule(afxModule* e2synerg);
 
 #endif//AFX_EXEC_IMPL_KIT_H

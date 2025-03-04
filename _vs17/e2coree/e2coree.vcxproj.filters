@@ -34,9 +34,6 @@
     <Filter Include="qwadro\impl\xss">
       <UniqueIdentifier>{19183132-f8c7-4476-bbc4-953c4b5cc7d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\xss">
-      <UniqueIdentifier>{c5d081a9-db22-4d59-b3dd-199b4a3c63d8}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\afxQwadro.h">
@@ -216,9 +213,6 @@
     <ClInclude Include="..\..\inc\math\afxScalar.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\exec\afxConsole.h">
-      <Filter>qwadro\exec</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\mem\afxMemory.h">
       <Filter>qwadro\mem</Filter>
     </ClInclude>
@@ -297,11 +291,17 @@
     <ClInclude Include="..\..\src\impl\xss\xssCommon.h">
       <Filter>qwadro\impl\xss</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\xss\afxScript.h">
-      <Filter>qwadro\xss</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\impl\xss\xss.h">
       <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\exec\afxScript.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\exec\afxProcess.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\exec\afxTerminal.h">
+      <Filter>qwadro\exec</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -498,9 +498,6 @@
     <ClCompile Include="..\..\src\mem\afxMemory.c">
       <Filter>qwadro\mem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\exec\afxConsole_w32.c">
-      <Filter>qwadro\exec</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\exec\afxModule_w32.c">
       <Filter>qwadro\exec</Filter>
     </ClCompile>
@@ -576,8 +573,20 @@
     <ClCompile Include="..\..\src\impl\xss\xssVm.c">
       <Filter>qwadro\impl\xss</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\afxScript.c">
+    <ClCompile Include="..\..\src\exec\afxScript.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\xssInterfaceIo.c">
       <Filter>qwadro\impl\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\exec\afxProcess_W32.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\exec\afxTerminal_w32.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\exec\afxSystemModules.c">
+      <Filter>qwadro\exec</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

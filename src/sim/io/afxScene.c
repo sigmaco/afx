@@ -221,7 +221,7 @@ AFX_OBJECT(afxScene)
     afxColor        centreCol;
     struct
     {
-        afxBuffer       cube;
+        avxBuffer       cube;
         afxRaster       cubemap;
         afxReal         cubemapColorIntensity;
         afxV3d          fogColor;
@@ -493,33 +493,38 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
         AfxMakeUri(&uri, 0, "../data/pipeline/skybox/skybox.xsh.xml", 0);
         AfxLoadDrawTechnique(din, &uri, &scn->sky.skyDtec);
 
-        avxVertexFetch const vinStreams[] =
+        avxVertexLayout skyVtxl =
         {
+            .srcCnt = 1,
+            .srcs =
             {
-                .instanceRate = 0,
-                .srcIdx = 0
-            }
-        };
-        avxVertexInput const vinAttrs[] =
-        {
+                {
+                    .instanceRate = 0,
+                    .srcIdx = 0
+                }
+            },
+            .attrCnt = 1,
+            .attrs =
             {
-                .location = 0,
-                .srcIdx = 0,
-                .offset = 0,
-                .fmt = avxFormat_RGB32f
+                {
+                    .location = 0,
+                    .srcIdx = 0,
+                    .offset = 0,
+                    .fmt = avxFormat_RGB32f
+                }
             }
         };
 
-        AfxDeclareVertexLayout(dsys, 1, vinStreams, 1, vinAttrs, &scn->sky.skyVin);
+        AfxDeclareVertexLayouts(dsys, 1, &skyVtxl, &scn->sky.skyVin);
         AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &scn->sky.skyVin);
 
         avxSamplerInfo smpSpec = { 0 };
         smpSpec.magnify = avxTexelFilter_LINEAR;
         smpSpec.minify = avxTexelFilter_LINEAR;
-        smpSpec.mipify = avxTexelFilter_LINEAR;
-        smpSpec.uvw[0] = avxTexelAddress_CLAMP;
-        smpSpec.uvw[1] = avxTexelAddress_CLAMP;
-        smpSpec.uvw[2] = avxTexelAddress_CLAMP;
+        smpSpec.mipFlt = avxTexelFilter_LINEAR;
+        smpSpec.uvw[0] = avxTexelWrap_EDGE;
+        smpSpec.uvw[1] = avxTexelWrap_EDGE;
+        smpSpec.uvw[2] = avxTexelWrap_EDGE;
 
         AfxDeclareSamplers(dsys, 1, &smpSpec, &scn->sky.smp);
         AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &scn->sky.smp);
@@ -546,12 +551,12 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
             afxM4d p, v, m;
             afxV4d apexCol, centreCol;
         } data;
-        afxBuffer buf;
-        afxBufferInfo bufi = { 0 };
+        avxBuffer buf;
+        avxBufferInfo bufi = { 0 };
         bufi.cap = sizeof(data);
-        bufi.usage = afxBufferUsage_UNIFORM;
-        bufi.flags = afxBufferFlag_W;
-        AfxAcquireBuffers(dsys, 1, &bufi, &buf);
+        bufi.usage = avxBufferUsage_UNIFORM;
+        bufi.flags = avxBufferFlag_W;
+        AvxAcquireBuffers(dsys, 1, &bufi, &buf);
         
     }
     return err;

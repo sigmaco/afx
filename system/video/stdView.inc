@@ -1,5 +1,5 @@
 
-UNIFORM_UNIT(0, 0, sgl_view)
+UNIFORM(0, 0, sgl_view)
 {
     mat4 v;
     mat4 iv;

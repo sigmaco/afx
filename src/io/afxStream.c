@@ -1077,7 +1077,7 @@ _AFX afxError AfxDoStreamOutput(afxStream out, afxUnit rowStride, afxUnit rowCnt
     afxUnit errSiz = 0;
 
     afxUnit outPadding = rowStride > srcStride ? rowStride - srcStride : 0;
-    afxByte zero[AFX_N16_MAX] = { 0 };
+    afxByte zero[AFX_U16_MAX] = { 0 };
 
     for (afxUnit i = 0; i < rowCnt; i++)
     {
@@ -1142,7 +1142,7 @@ _AFX afxError AfxDoStreamInput(afxStream in, afxUnit rowStride, afxUnit rowCnt, 
     afxUnit errSiz = 0;
 
     afxUnit outPadding = rowStride > dstStride ? rowStride - dstStride : 0;
-    afxByte zero[AFX_N16_MAX] = { 0 };
+    afxByte zero[AFX_U16_MAX] = { 0 };
 
     for (afxUnit i = 0; i < rowCnt; i++)
     {
@@ -1506,7 +1506,7 @@ _AFX afxError _AfxIosCtorCb(afxStream iob, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AFX afxClassConfig const _AfxIosClsCfg =
+_AFX afxClassConfig const _AFX_IOB_CLASS_CONFIG =
 {
     .fcc = afxFcc_IOB,
     .name = "Stream",
