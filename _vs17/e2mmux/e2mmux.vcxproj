@@ -67,19 +67,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)d\</OutDir>
+    <OutDir>$(SolutionDir)..\system\w$(PlatformArchitecture)d\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\system\w$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)d\</OutDir>
+    <OutDir>$(SolutionDir)..\system\w$(PlatformArchitecture)d\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\system\w$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -155,15 +155,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\dep_\vgl1\vgl1.c" />
-    <ClCompile Include="..\..\..\..\dep_\vgl\vgl.c">
+    <ClCompile Include="..\..\..\..\dep_\vgl1\vgl1.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\dep_\vgl\vgl.c" />
     <ClCompile Include="..\..\src\ux\afxSession.c" />
-    <ClCompile Include="..\..\src\ux\afxTerminal.c" />
     <ClCompile Include="..\..\src\ux\afxWindow.c" />
     <ClCompile Include="..\..\src\ux\afxShell.c" />
     <ClCompile Include="..\..\src\ux\afxWidget.c" />
@@ -172,6 +171,9 @@
     <ClCompile Include="..\..\src\ux\hid\afxKeyboard.c" />
     <ClCompile Include="..\..\src\ux\hid\afxMouse.c" />
     <ClCompile Include="..\..\src\ux\impl\auxImplementation.c" />
+    <ClCompile Include="..\..\src\ux\impl\auxImpl_Session.c" />
+    <ClCompile Include="..\..\src\ux\impl\auxImpl_Widget.c" />
+    <ClCompile Include="..\..\src\ux\impl\auxImpl_Window.c" />
     <ClCompile Include="..\..\src\ux\va\auxPaint.c" />
   </ItemGroup>
   <ItemGroup>
@@ -184,7 +186,6 @@
     <ClInclude Include="..\..\src\ux\impl\auxImplementation.h" />
     <ClInclude Include="..\..\src\ux\impl\auxImpl_Shell.h" />
     <ClInclude Include="..\..\inc\ux\afxSession.h" />
-    <ClInclude Include="..\..\inc\ux\afxTerminal.h" />
     <ClInclude Include="..\..\inc\ux\afxWindow.h" />
     <ClInclude Include="..\..\inc\ux\afxShell.h" />
     <ClInclude Include="..\..\inc\ux\afxUxDefs.h" />
@@ -198,11 +199,11 @@
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\e2draw\e2draw.vcxproj">
-      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\e2sound\e2sound.vcxproj">
+    <ProjectReference Include="..\e2mixva\e2mixva.vcxproj">
       <Project>{1685d511-3934-4f31-b8a3-afa740f612b3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\e2targa\e2targa.vcxproj">
+      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

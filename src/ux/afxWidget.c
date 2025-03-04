@@ -22,6 +22,7 @@
 #include "../../../../dep_/vgl/vgl.h"
 #include "../../../../dep_/vgl1/vgl1.h"
 
+#if NK
 static int
 overview(struct nk_context *ctx)
 {
@@ -1387,6 +1388,7 @@ overview(struct nk_context *ctx)
     nk_end(ctx);
     return !nk_window_is_closed(ctx, "Overview");
 }
+#endif
 
 NK_API afxRaster get_tex_ogl_handle(afxWidget wid, int tex_index)
 {
@@ -1403,10 +1405,11 @@ _AUX afxError AfxResetWidget(afxWidget wid)
 {
     afxError err = NIL;
 
+#if NK
     nk_clear(&wid->nkCtx);
     nk_buffer_clear(&wid->cmds);
     wid->shouldRebuildData = TRUE;
-
+#endif
     return err;
 }
 
@@ -1416,6 +1419,8 @@ _AUX afxError AfxDoWidgetInput(afxWidget wid)
 
     afxWindow wnd = AfxGetProvider(wid);
     afxSession ses = AfxGetProvider(wnd);
+
+#if NK
 
     //nk_glfw3_new_frame(&glfw);
     {
@@ -1515,6 +1520,7 @@ _AUX afxError AfxDoWidgetInput(afxWidget wid)
         //wid->text_len = 0;
         wid->scroll = nk_vec2(0, 0);
     }
+#endif
     return err;
 }
 
@@ -1522,11 +1528,15 @@ _AUX afxError AfxTestWidget(afxWidget wid)
 {
     afxError err = NIL;
 
+#if NK
     struct nk_context* ctx = &wid->nkCtx;
 
+    nk_clear(ctx);
+    AfxDoWidgetInput(wid);
 
-    overview(ctx);
-    return err;
+
+    //overview(ctx);
+    //return err;
 
     struct nk_colorf bg;
     bg.r = 0.10f, bg.g = 0.18f, bg.b = 0.24f, bg.a = 1.0f;
@@ -1565,6 +1575,8 @@ _AUX afxError AfxTestWidget(afxWidget wid)
         }
     }
     nk_end(ctx);
+#else
+#endif
 
     return err;
 }
@@ -1573,6 +1585,11 @@ _AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
+
+#if !0
+    TestSvg(wid->svgCtx, dctx, whd);
+#else
+    AfxTestWidget(wid);
 
     AvxCmdBindPipeline(dctx, 0, wid->pip, NIL, NIL);
 
@@ -1589,7 +1606,7 @@ _AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx
     AvxCmdPushConstants(dctx, 0, sizeof(ortho), ortho);
 
     afxViewport vp;
-    AfxResetViewport(&vp, 0, 0, whd.w, whd.h, 0, 1);
+    AfxMakeViewport(&vp, 0, 0, whd.w, whd.h, 0, 1);
     AvxCmdAdjustViewports(dctx, 0, 1, &vp);
 
     {
@@ -1599,9 +1616,9 @@ _AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx
         void *elements = NIL;
         nk_size offset = 0;
 
-        AfxMapBuffer(wid->vbo, 0, wid->vboSiz, NIL, &vertices);
-        AfxMapBuffer(wid->ibo, 0, wid->iboSiz, NIL, &elements);
-        AfxWaitForDrawSystem(AfxGetBufferContext(wid->ibo), 0);
+        AvxMapBuffer(wid->vbo, 0, wid->vboSiz, NIL, &vertices);
+        AvxMapBuffer(wid->ibo, 0, wid->iboSiz, NIL, &elements);
+        AfxWaitForDrawSystem(AvxGetBufferContext(wid->ibo), 0);
         {
             enum nk_anti_aliasing AA = NK_ANTI_ALIASING_OFF;
             /* fill convert configuration */
@@ -1630,9 +1647,9 @@ _AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx
             nk_buffer_init_fixed(&ebuf, elements, (size_t)wid->iboSiz);
             nk_convert(&wid->nkCtx, &wid->cmds, &vbuf, &ebuf, &config);
         }
-        AfxUnmapBuffer(wid->vbo, FALSE);
-        AfxUnmapBuffer(wid->ibo, FALSE);
-        AfxWaitForDrawSystem(AfxGetBufferContext(wid->ibo), 0);
+        AvxUnmapBuffer(wid->vbo, FALSE);
+        AvxUnmapBuffer(wid->ibo, FALSE);
+        AfxWaitForDrawSystem(AvxGetBufferContext(wid->ibo), 0);
 
         AvxCmdBindVertexBuffers(dctx, 0, 1, (avxBufferedStream[]) { {.buf = wid->vbo, .range = wid->vboSiz, .stride = 20 } });
         AvxCmdBindIndexBuffer(dctx, wid->ibo, 0, wid->iboSiz, sizeof(nk_draw_index));
@@ -1675,6 +1692,7 @@ _AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx
         //nk_clear(&wid->nkCtx);
         nk_buffer_clear(&wid->cmds);
     }
+#endif
     return err;
 }
 
@@ -1683,7 +1701,8 @@ _AUX afxError _AuxWidDtorCb(afxWidget wid)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
 
-    //AvxReleaseGraphic(vg);
+    if (wid->svgCtx)
+        AvxReleaseGraphic(wid->svgCtx);
 
     return err;
 }
@@ -1703,29 +1722,30 @@ _AUX afxError _AuxWidCtorCb(afxWidget wid, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     afxDrawSystem dsys = AfxGetDrawOutputContext(dout);
 
+#if NK
     avxSampler samp;
     avxSamplerInfo sampi = { 0 };
     sampi.magnify = avxTexelFilter_LINEAR;
     sampi.minify = avxTexelFilter_LINEAR;
-    sampi.mipify = avxTexelFilter_LINEAR;
+    sampi.mipFlt = avxTexelFilter_LINEAR;
     sampi.anisotropyMaxDegree = 1;
-    sampi.uvw[0] = avxTexelAddress_CLAMP;
-    sampi.uvw[1] = avxTexelAddress_CLAMP;
-    sampi.uvw[2] = avxTexelAddress_CLAMP;
+    sampi.uvw[0] = avxTexelWrap_EDGE;
+    sampi.uvw[1] = avxTexelWrap_EDGE;
+    sampi.uvw[2] = avxTexelWrap_EDGE;
     sampi.compareOp = avxCompareOp_ALWAYS;
     sampi.compareEnabled = FALSE;
     AfxDeclareSamplers(dsys, 1, &sampi, &samp);
     wid->font_samp = samp;
 
-    afxBuffer bufs[2];
-    afxBufferInfo bufis[2] = { 0 };
+    avxBuffer bufs[2];
+    avxBufferInfo bufis[2] = { 0 };
     bufis[0].cap = (wid->vboSiz = 4096);
-    bufis[0].flags = afxBufferFlag_W;
-    bufis[0].usage = afxBufferUsage_VERTEX;
+    bufis[0].flags = avxBufferFlag_W;
+    bufis[0].usage = avxBufferUsage_VERTEX;
     bufis[1].cap = (wid->iboSiz = 4096);
-    bufis[1].flags = afxBufferFlag_W;
-    bufis[1].usage = afxBufferUsage_INDEX;
-    AfxAcquireBuffers(dsys, ARRAY_SIZE(bufs), bufis, bufs);
+    bufis[1].flags = avxBufferFlag_W;
+    bufis[1].usage = avxBufferUsage_INDEX;
+    AvxAcquireBuffers(dsys, ARRAY_SIZE(bufs), bufis, bufs);
     
     wid->vbo = bufs[0];
     wid->ibo = bufs[1];
@@ -1785,7 +1805,7 @@ _AUX afxError _AuxWidCtorCb(afxWidget wid, void** args, afxUnit invokeNo)
 
     afxRaster ras;
     afxRasterInfo rasi = { 0 };
-    rasi.fmt = avxFormat_RGBA8;
+    rasi.fmt = avxFormat_RGBA8un;
     rasi.extent.w = w;
     rasi.extent.h = h;
     AfxAcquireRasters(dsys, 1, &rasi, &ras);
@@ -1810,7 +1830,8 @@ _AUX afxError _AuxWidCtorCb(afxWidget wid, void** args, afxUnit invokeNo)
         nk_style_set_font(&wid->nkCtx, &wid->atlas.default_font->handle);
 
     nk_style_set_font(&wid->nkCtx, &inter->handle);
-    
+#endif
+    wid->svgCtx = AvxAcquireGraphic(dsys, 0);
 
     return err;
 }
@@ -1832,7 +1853,7 @@ _AUX afxError AfxAcquireWidgets(afxWindow wnd, afxUnit cnt, afxWidgetConfig cfg[
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
 
-    afxClass* cls = (afxClass*)AuxGetWidgetClass(wnd);
+    afxClass* cls = (afxClass*)_AuxWndGetWidgetClass(wnd);
     AFX_ASSERT_CLASS(cls, afxFcc_WID);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)widgets, (void const*[]) { wnd, cfg }))

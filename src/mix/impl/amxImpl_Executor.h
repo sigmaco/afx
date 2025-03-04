@@ -174,7 +174,7 @@ AFX_DEFINE_UNION(amxWork)
         union
         {
             afxAudio    wav;
-            afxBuffer   buf;
+            avxBuffer   buf;
             void*       dst;
             void const* src;
             afxStream   iob;
@@ -183,7 +183,7 @@ AFX_DEFINE_UNION(amxWork)
         union
         {
             afxAudio    wav;
-            afxBuffer   buf;
+            avxBuffer   buf;
             void*       dst;
             void const* src;
             afxStream   iob;

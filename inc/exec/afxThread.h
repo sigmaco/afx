@@ -142,4 +142,8 @@ AFX afxBool     AfxGetPrimeThread(afxThread* thread);
 
 AFX afxError    AfxAcquireThreads(afxHere const hint, afxThreadConfig const* cfg, afxUnit cnt, afxThread threads[]);
 
+AFX afxUnit     AfxEnumerateThreads(afxUnit first, afxUnit cnt, afxThread threads[]);
+
+AFX afxUnit     AfxInvokeThreads(afxUnit first, afxUnit cnt, afxBool(*f)(afxThread, void*), void *udd);
+
 #endif//AFX_THREAD_H

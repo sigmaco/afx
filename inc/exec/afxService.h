@@ -34,11 +34,11 @@ typedef void(*afxReqWorkerFn)(afxWorkerFn workerFn, afxJobType typ, afxUnit work
 
 AFX_DEFINE_STRUCT(afxServiceConfig)
 {
-    afxReqWorkerFn  reqJobWorkerFn; /// Function called by the job manager when a new worker needs to be requested. When null, all jobs will be executed on the same thread that calls DoService().
-    afxUnit         maxActiveWorkers; /// The maximum number of concurrent workers that will be requested. Must be >= 1 for each job type.
-    afxUnit         memSlabCnt; /// Number of memory slabs to pre-allocate for job manager memory. At least one slab per worker thread should be pre-allocated. Default is 1.
-    afxUnit         memSlabSiz; /// Size of each memory slab used for job manager memory. Must be a power of two. Default is 8K.
-    void*           udd; /// Arbitrary data that will be passed back to the client when calling afxReqWorkerFn.
+    afxReqWorkerFn  reqJobWorkerFn; // Function called by the job manager when a new worker needs to be requested. When null, all jobs will be executed on the same thread that calls DoService().
+    afxUnit         maxActiveWorkers; // The maximum number of concurrent workers that will be requested. Must be >= 1 for each job type.
+    afxUnit         memSlabCnt; // Number of memory slabs to pre-allocate for job manager memory. At least one slab per worker thread should be pre-allocated. Default is 1.
+    afxUnit         memSlabSiz; // Size of each memory slab used for job manager memory. Must be a power of two. Default is 8K.
+    void*           udd; // Arbitrary data that will be passed back to the client when calling afxReqWorkerFn.
 };
 
 AFX afxError        AfxDoService(afxService svc, afxTime timeout);

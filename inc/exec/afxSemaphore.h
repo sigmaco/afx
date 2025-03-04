@@ -39,15 +39,15 @@ AFX void*               AfxGetSemaphoreContext(afxSemaphore sem);
 AFX afxError            AfxSignalSemaphore
 /// Signal a timeline semaphore on the host
 (
-    afxSemaphore        sem, /// the semaphore to signal.
-    afxUnit64            value /// the value to signal.
+    afxSemaphore        sem, // the semaphore to signal.
+    afxUnit64            value // the value to signal.
 );
 
 AFX afxError            AfxGetSemaphoreValue
 /// Query the current state of a timeline semaphore.
 (
-    afxSemaphore        sem, /// the semaphore to query.
-    afxUnit64*           value /// a 64-bit integer var in which the current counter value of the semaphore is returned.
+    afxSemaphore        sem, // the semaphore to query.
+    afxUnit64*           value // a 64-bit integer var in which the current counter value of the semaphore is returned.
 );
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,19 +55,19 @@ AFX afxError            AfxGetSemaphoreValue
 AFX afxError            AfxAcquireSemaphores
 /// Create a new queue semaphore object.
 (
-    void*               ctx, /// the logical device that creates the semaphore.
+    void*               ctx, // the logical device that creates the semaphore.
     afxUnit              cnt,
-    afxSemaphore        semaphores[] /// a array of handles in which the resulting semaphore objects are returned.
+    afxSemaphore        semaphores[] // a array of handles in which the resulting semaphore objects are returned.
 );
 
 AFX afxError            AfxWaitForSemaphores
 /// Wait for one or more timeline semaphores to reach particular counter values.
 (
-    afxUnit64            timeout, /// the timeout period in units of nanoseconds.
-    afxBool             waitAll, /// the condition is that all semaphores must reach the specified value, else at least one semaphore has reached.
-    afxUnit              cnt, /// the number of semaphores to wait on.
-    afxSemaphore const  semaphores[], /// an array of cnt semaphores handles.
-    afxUnit64 const      values[] /// an array of timeline values
+    afxUnit64            timeout, // the timeout period in units of nanoseconds.
+    afxBool             waitAll, // the condition is that all semaphores must reach the specified value, else at least one semaphore has reached.
+    afxUnit              cnt, // the number of semaphores to wait on.
+    afxSemaphore const  semaphores[], // an array of cnt semaphores handles.
+    afxUnit64 const      values[] // an array of timeline values
 );
 
 #endif//AFX_SEMAPHORE_H

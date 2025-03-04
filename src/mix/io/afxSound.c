@@ -16,7 +16,7 @@
 
 #define _AMX_AUDIO_C
 #define _AMX_WAVEFORM_C
-#define _AMX_SOUND_C
+#define _AMX_MIX_C
 //#define _AMX_MIX_SYSTEM_C
 #include "../impl/amxImplementation.h"
 
@@ -73,7 +73,7 @@ _AMX afxBool AmxHasSoundEnded(afxSound snd)
     return 0;
 }
 
-_AMX afxError _AmxSndStdDtorCb(afxSound snd)
+_AMX afxError _AmxSndDtorCb(afxSound snd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
@@ -85,7 +85,7 @@ _AMX afxError _AmxSndStdDtorCb(afxSound snd)
     return err;
 }
 
-_AMX afxError _AmxSndStdCtorCb(afxSound snd, void** args, afxUnit invokeNo)
+_AMX afxError _AmxSndCtorCb(afxSound snd, void** args, afxUnit invokeNo)
 {
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
@@ -126,8 +126,8 @@ _AMX afxClassConfig const _AMX_SND_CLASS_CONFIG =
     .name = "Sound",
     .desc = "Sound Source",
     .fixedSiz = sizeof(AFX_OBJECT(afxSound)),
-    .ctor = (void*)_AmxSndStdCtorCb,
-    .dtor = (void*)_AmxSndStdDtorCb
+    .ctor = (void*)_AmxSndCtorCb,
+    .dtor = (void*)_AmxSndDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////

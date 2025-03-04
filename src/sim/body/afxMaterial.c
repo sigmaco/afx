@@ -140,7 +140,7 @@ _ASX void AfxRebindSubmaterial(afxMaterial mtl, afxUnit mapIdx, afxMaterial subM
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
     AFX_ASSERT(mapIdx < mtl->mapCnt);
-    akxMaterialMap* map = &mtl->maps[mapIdx];
+    asxMaterialMap* map = &mtl->maps[mapIdx];
 
     afxMaterial subMtl2 = map->sub;
 
@@ -166,7 +166,7 @@ _ASX void AfxResetMaterialMap(afxMaterial mtl, afxUnit mapIdx, afxString const* 
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
     AFX_ASSERT_RANGE(mtl->mapCnt, mapIdx, 1);
-    akxMaterialMap* map = &mtl->maps[mapIdx];
+    asxMaterialMap* map = &mtl->maps[mapIdx];
 
     AfxDeallocateString(&map->usage);
     AfxCloneString(&map->usage, usage);
@@ -253,7 +253,7 @@ _ASX afxError _AsxMtlCtorCb(afxMaterial mtl, void** args, afxUnit invokeNo)
         {
             //akxMaterialBlueprintMap *mapBp = AfxGetArrayUnit(&blueprint->maps, i);
             
-            akxMaterialMap *map = &mtl->maps[i];
+            asxMaterialMap *map = &mtl->maps[i];
             //AfxCloneString(&map->usage, &(mapBp->semantic.str));
             AfxResetStrings(1, &map->usage);
             

@@ -32,9 +32,9 @@
 
 AFX_DEFINE_STRUCT(afxSource)
 {
-    /// Cookie identifying the source, given by hashing the name of the source given in the project.
+    // Cookie identifying the source, given by hashing the name of the source given in the project.
     afxUnit32   iExternalSrcCookie;
-    /// Codec ID for the file.
+    // Codec ID for the file.
     afxUnit32   idCodec;
     // File path for the source. If not NULL, the source will be streaming from disk. Set buf to NULL. If file is set, this field is used as stream name (for profiling purposes).
     afxUri      uri; 

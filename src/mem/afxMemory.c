@@ -448,7 +448,7 @@ _AFX afxError _AfxMmuDtor(afxMmu mmu)
     return err;
 }
 
-_AFX afxClassConfig const _AfxMmuMgrCfg =
+_AFX afxClassConfig const _AFX_MMU_CLASS_CONFIG =
 {
     .fcc = afxFcc_MMU,
     .name = "Memory Management Unit",

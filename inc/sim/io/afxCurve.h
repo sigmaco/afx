@@ -50,26 +50,26 @@ typedef enum afxCurveFlag
 
 typedef enum afxCurveFormat
 {
-    afxCurveFormat_DaKeyframes32f, /// Da, Keyframes32f
-    afxCurveFormat_DaK32fC32f, /// Da, K32f, C32f
-    afxCurveFormat_DaIdentity, /// Da, Identity
-    afxCurveFormat_DaConstant32f, /// Da, Constant32f
-    afxCurveFormat_D3Constant32f, /// D3, Constant32f
-    afxCurveFormat_D4Constant32f, /// D4, Constant32f
+    afxCurveFormat_DaKeyframes32f, // Da, Keyframes32f
+    afxCurveFormat_DaK32fC32f, // Da, K32f, C32f
+    afxCurveFormat_DaIdentity, // Da, Identity
+    afxCurveFormat_DaConstant32f, // Da, Constant32f
+    afxCurveFormat_D3Constant32f, // D3, Constant32f
+    afxCurveFormat_D4Constant32f, // D4, Constant32f
     // still unsupported
-    afxCurveFormat_DaK16uC16u, /// Da, K16u, C16u
-    afxCurveFormat_DaK8uC8u, /// Da, K8u, C8u
-    afxCurveFormat_D4nK16uC15u, /// D4n, K16u, C15u
-    afxCurveFormat_D4nK8uC7u, /// D4n, K8u, C7u
-    afxCurveFormat_D3K16uC16u, /// D3, K16u, C16u
-    afxCurveFormat_D3K8uC8u, /// D3, K8u, C8u
-    afxCurveFormat_D9i1K16uC16u, /// D9i1, K16u, C16u    
-    afxCurveFormat_D9i3K16uC16u, /// D9i3, K16u, C16u
-    afxCurveFormat_D9i1K8uC8u, /// D9i1, K8u, C8u
-    afxCurveFormat_D9i3K8uC8u, /// D9i3, K8u, C8u
-    afxCurveFormat_D3i1K32fC32f, /// D3i1, K32f, C32f
-    afxCurveFormat_D3i1K16uC16u, /// D3i1, K16u, C16u
-    afxCurveFormat_D3i1K8uC8u /// D3i1, K8u, C8u    
+    afxCurveFormat_DaK16uC16u, // Da, K16u, C16u
+    afxCurveFormat_DaK8uC8u, // Da, K8u, C8u
+    afxCurveFormat_D4nK16uC15u, // D4n, K16u, C15u
+    afxCurveFormat_D4nK8uC7u, // D4n, K8u, C7u
+    afxCurveFormat_D3K16uC16u, // D3, K16u, C16u
+    afxCurveFormat_D3K8uC8u, // D3, K8u, C8u
+    afxCurveFormat_D9i1K16uC16u, // D9i1, K16u, C16u    
+    afxCurveFormat_D9i3K16uC16u, // D9i3, K16u, C16u
+    afxCurveFormat_D9i1K8uC8u, // D9i1, K8u, C8u
+    afxCurveFormat_D9i3K8uC8u, // D9i3, K8u, C8u
+    afxCurveFormat_D3i1K32fC32f, // D3i1, K32f, C32f
+    afxCurveFormat_D3i1K16uC16u, // D3i1, K16u, C16u
+    afxCurveFormat_D3i1K8uC8u // D3i1, K8u, C8u    
 } afxCurveFormat;
 
 AFX_DEFINE_STRUCT(afxCurveBlueprint)

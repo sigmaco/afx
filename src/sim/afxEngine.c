@@ -102,7 +102,7 @@ _ASX afxError _AsxMdevCtorCb(afxEngine seng, void** args, afxUnit invokeNo)
     afxEngineInfo const* info = ((afxEngineInfo const *)args[1]) + invokeNo;
     AFX_ASSERT(info);
 
-    if (_AfxDevBaseImplementation.ctor(&seng->dev, (void*[]) { icd, (void*)&info->dev }, 0))
+    if (_AFX_DEV_CLASS_CONFIG.ctor(&seng->dev, (void*[]) { icd, (void*)&info->dev }, 0))
     {
         AfxThrowError();
         return err;

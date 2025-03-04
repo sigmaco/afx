@@ -1,5 +1,5 @@
 
-struct DrawArraysIndirectCommand
+struct DrawArraysIndirect
 {
     uint vtxCnt;
     uint instCnt;
@@ -7,10 +7,10 @@ struct DrawArraysIndirectCommand
     uint baseInst;
     // Optional user-defined data goes here - if nothing, stride is 0
 };
-// sizeof(DrawArraysIndirectCommand) == 16
+// sizeof(DrawArraysIndirect) == 16
 
 // Struct for MultiDrawElements
-struct DrawElementsIndirectCommand
+struct DrawElementsIndirect
 {
     uint idxCnt;
     uint instaCnt;
@@ -19,4 +19,4 @@ struct DrawElementsIndirectCommand
     uint baseInst;
     // Optional user-defined data goes here - if nothing, stride is 0
 };
-// sizeof(DrawElementsIndirectCommand) == 20
+// sizeof(DrawElementsIndirect) == 20

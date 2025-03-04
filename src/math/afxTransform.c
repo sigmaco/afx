@@ -446,7 +446,7 @@ void BuildPositionOrientationWorldPoseComposite_Generic(afxV3d const Position, a
     BuildSingleCompositeFromWorldPose_Generic(InverseWorld4x4, ResultWorldMatrix, ResultComposite);
 }
 
-void BWP_Dispatch(afxTransform* t, afxM4d const InverseWorld4x4, afxM4d Composite, afxM4d World, afxM4d const ParentWorld)
+void BWP_Dispatch(afxTransform const* t, afxM4d const InverseWorld4x4, afxM4d Composite, afxM4d World, afxM4d const ParentWorld)
 {
     afxTransformFlags flags = t->flags;
 
@@ -468,7 +468,7 @@ void BWP_Dispatch(afxTransform* t, afxM4d const InverseWorld4x4, afxM4d Composit
     }
 }
 
-void BWPNC_Dispatch(afxTransform* t, afxM4d const ParentWorld, afxM4d World)
+void BWPNC_Dispatch(afxTransform const* t, afxM4d const ParentWorld, afxM4d World)
 {
     afxTransformFlags flags = t->flags;
 

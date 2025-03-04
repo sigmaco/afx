@@ -233,15 +233,15 @@ typedef afxChar32   afxC32;
 
 #define AFX_I8_MIN  ((afxInt8)INT8_MIN)
 #define AFX_I8_MAX  ((afxInt8)INT8_MAX)
-#define AFX_N8_MAX  ((afxUnit8)UINT8_MAX)
+#define AFX_U8_MAX  ((afxUnit8)UINT8_MAX)
 
 #define AFX_I16_MIN ((afxInt16)INT16_MIN)
 #define AFX_I16_MAX ((afxInt16)INT16_MAX)
-#define AFX_N16_MAX ((afxUnit16)UINT16_MAX)
+#define AFX_U16_MAX ((afxUnit16)UINT16_MAX)
 
 #define AFX_I32_MIN ((afxInt32)INT32_MIN)
 #define AFX_I32_MAX ((afxInt32)INT32_MAX)
-#define AFX_N32_MAX ((afxUnit32)UINT32_MAX)
+#define AFX_U32_MAX ((afxUnit32)UINT32_MAX)
 
 #define AFX_I64_MIN ((afxInt64)INT64_MIN)
 #define AFX_I64_MAX ((afxInt64)INT64_MAX)

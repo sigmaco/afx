@@ -111,7 +111,7 @@ _AVX afxInt _AVX_DPU_THREAD_PROC(afxDrawBridge dexu)
     AFX_ASSERT(thr == dexu->worker);
 
     afxDrawDevice ddev = AfxGetDrawBridgeDevice(dexu);
-    afxDrawSystem dsys = AfxGetDrawBridgeContext(dexu);
+    afxDrawSystem dsys = AfxGetBridgedDrawSystem(dexu);
     afxUnit portId = dexu->portId;
 
     avxDpu* dpu;

@@ -23,12 +23,12 @@
 #include "../impl/asxImplementation.h"
 
 
-_ASX afxCmdId AmxCmdBindMemory(afxContext ctx, afxUnit slot, void* ptr, afxSize siz)
+_ASX afxCmdId AsxCmdBindMemory(afxContext ctx, afxUnit slot, void* ptr, afxSize siz)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -42,12 +42,12 @@ _ASX afxCmdId AmxCmdBindMemory(afxContext ctx, afxUnit slot, void* ptr, afxSize 
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdBindBuffers(afxContext ctx, afxUnit baseSlot, afxUnit cnt, afxBuffer buffers[], afxUnit const offsets[], afxUnit const ranges[])
+_ASX afxCmdId AsxCmdBindBuffers(afxContext ctx, afxUnit baseSlot, afxUnit cnt, avxBuffer buffers[], afxUnit const offsets[], afxUnit const ranges[])
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -59,14 +59,14 @@ _ASX afxCmdId AsxCmdBindBuffers(afxContext ctx, afxUnit baseSlot, afxUnit cnt, a
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        afxBuffer buf = buffers[i];
+        avxBuffer buf = buffers[i];
         afxUnit offset = offsets ? offsets[i] : 0;
         afxUnit range = ranges ? ranges[i] : 0;
 
         if (buf)
         {
             AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-            afxUnit bufCap = AfxGetBufferCapacity(buf, 0);
+            afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
             AFX_ASSERT_RANGE(bufCap, offset, range);
 
             offset = AfxMin(offset, bufCap - 1);

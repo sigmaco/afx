@@ -34,7 +34,7 @@
 
 #include "qwadro/inc/draw/afxDrawSystem.h"
 
-#ifndef __e2combo__
+#ifndef __e2synerg__
 #   ifdef _DEBUG
 #       define ASX DLLIMPORT extern 
 #       define ASXINL DLLIMPORT EMBED
@@ -82,6 +82,8 @@ AFX_DEFINE_HANDLE(afxSkeleton);
 
 AFX_DEFINE_HANDLE(afxMaterial);
 AFX_DEFINE_HANDLE(afxModel);
+
+AFX_DEFINE_HANDLE(asxBuffer);
 
 AFX_DEFINE_STRUCT(akxTrackMask)
 {

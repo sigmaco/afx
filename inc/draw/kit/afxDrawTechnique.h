@@ -27,8 +27,8 @@
 #ifndef AVX_DRAW_TECHNIQUE_H
 #define AVX_DRAW_TECHNIQUE_H
 
-#include "qwadro/inc/draw/pipe/avxPipeline.h"
-#include "qwadro/inc/draw/op/avxRasterizationOps.h"
+#include "qwadro/inc/draw/op/avxPipeline.h"
+#include "qwadro/inc/draw/op/avxRasterization.h"
 
 AFX_DEFINE_STRUCT(afxDrawPass)
 {

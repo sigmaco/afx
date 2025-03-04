@@ -782,7 +782,7 @@ _AFX afxError _AfxFsysDtorCb(afxStorage fsys)
     return err;
 }
 
-_AFX afxClassConfig const _AfxFsysMgrCfg =
+_AFX afxClassConfig const _AFX_FSYS_CLASS_CONFIG =
 {
     .fcc = afxFcc_FSYS,
     .name = "Storage",

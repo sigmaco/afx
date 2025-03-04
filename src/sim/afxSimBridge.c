@@ -26,7 +26,7 @@
 _ASX afxClass const* _AsxGetSimQueueClass(afxSimBridge sexu)
 {
     afxError err = AFX_ERR_NONE;
-    /// sexu must be a valid afxSimBridge handle.
+    // sexu must be a valid afxSimBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
     afxClass const* cls = &sexu->squeCls;
     AFX_ASSERT_CLASS(cls, afxFcc_SQUE);
@@ -68,9 +68,9 @@ _ASX afxUnit AfxQuerySimBridgePort(afxSimBridge sexu, afxEngine* engine)
 _ASX afxUnit AfxGetSimQueues(afxSimBridge sexu, afxUnit baseQueIdx, afxUnit cnt, afxSimQueue queues[])
 {
     afxError err = AFX_ERR_NONE;
-    /// sexu must be a valid afxSimBridge handle.
+    // sexu must be a valid afxSimBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
-    /// queues must be a valid pointer to the afxSimQueue handles.
+    // queues must be a valid pointer to the afxSimQueue handles.
     AFX_ASSERT(queues);
 
     afxClass const* squeCls = _AsxGetSimQueueClass(sexu);
@@ -83,7 +83,7 @@ _ASX afxUnit AfxGetSimQueues(afxSimBridge sexu, afxUnit baseQueIdx, afxUnit cnt,
 _ASX afxError AfxWaitForEmptySimQueue(afxSimBridge sexu, afxUnit queIdx, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    /// sexu must be a valid afxSimBridge handle.
+    // sexu must be a valid afxSimBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
 
     afxSimQueue sque;
@@ -117,7 +117,7 @@ _ASX afxError AfxWaitForEmptySimQueue(afxSimBridge sexu, afxUnit queIdx, afxTime
 _ASX afxError AfxWaitForIdleSimBridge(afxSimBridge sexu, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    /// sexu must be a valid afxSimBridge handle.
+    // sexu must be a valid afxSimBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
 
     if (sexu->pingCb)

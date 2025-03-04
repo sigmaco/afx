@@ -18,6 +18,22 @@
 
 #include "impl/avxImplementation.h"
 
+_AVX afxString const sigmaDrawSignature = AFX_STRING(
+    "      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      \n"
+    "     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     \n"
+    "     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     \n"
+    "     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     \n"
+    "     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     \n"
+    "     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     \n"
+    "      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      \n"
+    "                                                                               \n"
+    "    Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E    \n"
+    "                                                                               \n"
+    "                               Public Test Build                               \n"
+    "                           (c) 2017 SIGMA FEDERATION                           \n"
+    "                                www.sigmaco.org                                \n"
+    "                                                                               \n"
+);
 
 _AVX afxString const g_str_Qwadro = AFX_STRING("Qwadro");
 _AVX afxString const g_str_Draw = AFX_STRING("Draw");

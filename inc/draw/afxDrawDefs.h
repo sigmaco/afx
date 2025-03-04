@@ -14,14 +14,39 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // SIGMA Unified High Fidelity Video Graphics Infrastructure                //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
+/*
+    The Qwadro draw I/O system refers to the overall framework or set of components involved in creating, managing, and rendering graphical content. 
+    This can include both hardware and software elements that work together to produce and display visual data.
+
+    In the draw system, graphics hardware refers to the physical components that handle the rendering of images and video.
+
+    Graphics Processing Unit (GPU) is a specialized chip designed to accelerate rendering tasks by processing complex graphical computations.
+    Graphics Card is a hardware component that includes the GPU, memory, and video output interfaces to drive displays and manage graphical output.
+
+    Software components of the draw system include the tools and libraries used to create and manage graphical content.
+
+    APIs and libraries like OpenGL, DirectX, Vulkan, or Metal that provide the functions and tools for rendering graphics.
+
+    The rendering pipeline is a series of stages and processes that graphical data goes through to be rendered onto a screen.
+
+    The integration and management aspect of the draw system involves coordinating between different components and ensuring efficient rendering and display.
+    Driver Software manages communication between the system and graphics hardware.
+
+    Draw I/O mechanisms are software systems that integrate various components to render complex scenes.
+*/
 
 #ifndef AVX_DRAW_DEFS_H
 #define AVX_DRAW_DEFS_H
 
 #include "qwadro/inc/exec/afxSystem.h"
 
-#ifndef __e2draw__
+#ifndef __e2targa__
 #   ifdef _DEBUG
 #       define AVX DLLIMPORT extern 
 #       define AVXINL DLLIMPORT EMBED
@@ -130,10 +155,10 @@ typedef enum avxCullMode
 /// Once the orientation of triangles is determined, they are culled according to the cull mode.
 /// Following culling, fragments are produced for any triangles which have not been discarded.
 {
-    avxCullMode_NONE, /// specifies that no triangles are discarded.
-    avxCullMode_FRONT   = AFX_BIT(0), /// specifies that front-facing triangles are discarded.
-    avxCullMode_BACK    = AFX_BIT(1), /// specifies that back-facing triangles are discarded.
-    avxCullMode_BOTH    = avxCullMode_FRONT | avxCullMode_BACK, /// specifies that all triangles are discarded.
+    avxCullMode_NONE, // specifies that no triangles are discarded.
+    avxCullMode_FRONT   = AFX_BIT(0), // specifies that front-facing triangles are discarded.
+    avxCullMode_BACK    = AFX_BIT(1), // specifies that back-facing triangles are discarded.
+    avxCullMode_BOTH    = avxCullMode_FRONT | avxCullMode_BACK, // specifies that all triangles are discarded.
     
     avxCullMode_TOTAL
 } avxCullMode;
@@ -163,80 +188,80 @@ typedef enum avxBlendFactor
 /// Rc,Gc,Bc and Ac represent the blend constant R, G, B, and A components, respectively.
 {
     avxBlendFactor_ZERO,
-    /// (0,0,0)
-    /// 0
+    // (0,0,0)
+    // 0
 
     avxBlendFactor_ONE,
-    /// (1,1,1)
-    /// 1
+    // (1,1,1)
+    // 1
 
     avxBlendFactor_SRC_RGB,
-    /// (Rs0,Gs0,Bs0)
-    /// As0
+    // (Rs0,Gs0,Bs0)
+    // As0
 
     avxBlendFactor_ONE_MINUS_SRC_RGB,
-    /// (1-Rs0,1-Gs0,1-Bs0)
-    /// 1-As0
+    // (1-Rs0,1-Gs0,1-Bs0)
+    // 1-As0
 
     avxBlendFactor_DST_RGB,
-    /// (Rd,Gd,Bd)
-    /// Ad
+    // (Rd,Gd,Bd)
+    // Ad
 
     avxBlendFactor_ONE_MINUS_DST_RGB,
-    /// (1-Rd,1-Gd,1-Bd)
-    /// 1-Ad
+    // (1-Rd,1-Gd,1-Bd)
+    // 1-Ad
 
     avxBlendFactor_SRC_A,
-    /// (As0,As0,As0)
-    /// As0
+    // (As0,As0,As0)
+    // As0
 
     avxBlendFactor_ONE_MINUS_SRC_A,
-    /// (1-As0,1-As0,1-As0)
-    /// 1-As0
+    // (1-As0,1-As0,1-As0)
+    // 1-As0
 
     avxBlendFactor_DST_A,
-    /// (Ad,Ad,Ad)
-    /// Ad
+    // (Ad,Ad,Ad)
+    // Ad
 
     avxBlendFactor_ONE_MINUS_DST_A,
-    /// (1-Ad,1-Ad,1-Ad)
-    /// 1-Ad
+    // (1-Ad,1-Ad,1-Ad)
+    // 1-Ad
 
-    avxBlendFactor_CONSTANT_RGB,
-    /// (Rc,Gc,Bc)
-    /// Ac
+    avxBlendFactor_CONST_RGB,
+    // (Rc,Gc,Bc)
+    // Ac
 
     avxBlendFactor_ONE_MINUS_CONST_RGB,
-    /// (1-Rc,1-Gc,1-Bc)
-    /// 1-Ac
+    // (1-Rc,1-Gc,1-Bc)
+    // 1-Ac
 
     avxBlendFactor_CONST_A,
-    /// (Ac,Ac,Ac)
-    /// Ac
+    // (Ac,Ac,Ac)
+    // Ac
 
     avxBlendFactor_ONE_MINUS_CONST_A,
-    /// (1-Ac,1-Ac,1-Ac)
-    /// 1-Ac
+    // (1-Ac,1-Ac,1-Ac)
+    // 1-Ac
 
     avxBlendFactor_SRC_A_SATURATE,
-    /// (f,f,f); f = min(As0,1-Ad)
-    /// 1
+    // (f,f,f); f = min(As0,1-Ad)
+    // 1
 
     avxBlendFactor_SRC1_RGB,
-    /// (Rs1,Gs1,Bs1)
-    /// As1
+    // (Rs1,Gs1,Bs1)
+    // As1
 
     avxBlendFactor_ONE_MINUS_SRC1_RGB,
-    /// (1-Rs1,1-Gs1,1-Bs1)
-    /// 1-As1
+    // (1-Rs1,1-Gs1,1-Bs1)
+    // 1-As1
 
     avxBlendFactor_SRC1_A,
-    /// (As1,As1,As1)
-    /// As1
+    // (As1,As1,As1)
+    // As1
 
     avxBlendFactor_ONE_MINUS_SRC1_A,
-    /// (1-As1,1-As1,1-As1)
-    /// 1-As1
+    // (1-As1,1-As1,1-As1)
+    // 1-As1
 
     avxBlendFactor_TOTAL
 } avxBlendFactor;
@@ -247,34 +272,34 @@ typedef enum avxBlendOp
 /// RGB and alpha components can use different operations.
 {
     avxBlendOp_ADD,
-    /// R = Rs0 × Sr + Rd × Dr
-    /// G = Gs0 × Sg + Gd × Dg
-    /// B = Bs0 × Sb + Bd × Db
-    /// A = As0 × Sa + Ad × Da
+    // R = Rs0 × Sr + Rd × Dr
+    // G = Gs0 × Sg + Gd × Dg
+    // B = Bs0 × Sb + Bd × Db
+    // A = As0 × Sa + Ad × Da
 
     avxBlendOp_SUB,
-    /// R = Rs0 × Sr - Rd × Dr
-    /// G = Gs0 × Sg - Gd × Dg
-    /// B = Bs0 × Sb - Bd × Db
-    /// A = As0 × Sa - Ad × Da
+    // R = Rs0 × Sr - Rd × Dr
+    // G = Gs0 × Sg - Gd × Dg
+    // B = Bs0 × Sb - Bd × Db
+    // A = As0 × Sa - Ad × Da
 
     avxBlendOp_REV_SUB,
-    /// R = Rd × Dr - Rs0 × Sr
-    /// G = Gd × Dg - Gs0 × Sg
-    /// B = Bd × Db - Bs0 × Sb
-    /// A = Ad × Da - As0 × Sa
+    // R = Rd × Dr - Rs0 × Sr
+    // G = Gd × Dg - Gs0 × Sg
+    // B = Bd × Db - Bs0 × Sb
+    // A = Ad × Da - As0 × Sa
 
     avxBlendOp_MIN,
-    /// R = min(Rs0, Rd)
-    /// G = min(Gs0, Gd)
-    /// B = min(Bs0, Bd)
-    /// A = min(As0, Ad)
+    // R = min(Rs0, Rd)
+    // G = min(Gs0, Gd)
+    // B = min(Bs0, Bd)
+    // A = min(As0, Ad)
 
     avxBlendOp_MAX
-    /// R = max(Rs0, Rd)
-    /// G = max(Gs0, Gd)
-    /// B = max(Bs0, Bd)
-    /// A = max(As0, Ad)
+    // R = max(Rs0, Rd)
+    // G = max(Gs0, Gd)
+    // B = max(Bs0, Bd)
+    // A = max(As0, Ad)
 } avxBlendOp;
 
 typedef enum avxCompareOp
@@ -373,7 +398,7 @@ AFX_DEFINE_HANDLE(avxShader);
 AFX_DEFINE_HANDLE(avxLigature);
 AFX_DEFINE_HANDLE(avxSampler);
 AFX_DEFINE_HANDLE(avxQueryPool);
-AFX_DEFINE_HANDLE(afxBuffer);
+AFX_DEFINE_HANDLE(avxBuffer);
 AFX_DEFINE_HANDLE(afxRaster);
 AFX_DEFINE_HANDLE(avxCanvas);
 

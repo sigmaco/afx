@@ -33,9 +33,9 @@ _ASX afxError _AsxSpuWork_ExecuteCb(asxSpu* spu, asxWork* work)
 
     for (afxUnit i = 0; i < work->Execute.cmdbCnt; i++)
     {
-        afxContext mctx = work->Execute.cmdbs[i];
-        AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &mctx);
-        _AsxSpuRollContext(spu, mctx);
+        afxContext sctx = work->Execute.cmdbs[i];
+        AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &sctx);
+        _AsxSpuRollContext(spu, sctx);
     }
     return err;
 }

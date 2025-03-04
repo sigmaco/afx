@@ -34,7 +34,21 @@
     Present: Displays the contents of the current frame buffer on the screen, making the rendered image visible to the user.
 */
 
+#ifndef _AVX_DRAW_C
+AFX_DECLARE_STRUCT(_avxDoutDdi);
+#else
+AFX_DEFINE_STRUCT(_avxDoutDdi)
+{
+    afxError(*ioctl)(afxDrawOutput, afxUnit, va_list ap);
+    afxError(*adjust)(afxDrawOutput, avxRange);
+    afxError(*present)(afxDrawQueue, avxPresentation*, avxFence wait, afxDrawOutput, afxUnit bufIdx, avxFence signal);
+    afxError(*reqBuf)(afxDrawOutput dout, afxTime timeout, afxUnit *bufIdx);
+    afxError(*recycBuf)(afxDrawOutput dout, afxUnit bufIdx);
+};
+#endif
+
 #ifdef _AVX_DRAW_OUTPUT_C
+
 AFX_DEFINE_STRUCT(afxVideoEndpoint)
 {
     afxUri32            urn;
@@ -51,8 +65,8 @@ AFX_DEFINE_STRUCT(afxVideoEndpoint)
     };
     afxObject           endpointNotifyObj; // must ensure life of draw output
     avxPresentNotifier  endpointNotifyFn;
-    avxPresentAlpha     presentAlpha; // consider transparency for external composing (usually on windowing system).
-    avxPresentTransform presentTransform; // NIL leaves it as it is.
+    avxVideoAlpha     presentAlpha; // consider transparency for external composing (usually on windowing system).
+    avxVideoTransform presentTransform; // NIL leaves it as it is.
     avxPresentMode      presentMode; // FIFO
     afxBool             doNotClip; // usually false to don't do off-screen draw on compositor-based endpoints (aka window).
 };
@@ -63,6 +77,7 @@ AFX_OBJECT(_avxDrawOutput)
 AFX_OBJECT(afxDrawOutput)
 #endif
 {
+    _avxDoutDdi const* pimpl;
     void*               udd[4]; // user-defined data    
     // endpoint
     afxVideoEndpoint    endp;
@@ -71,11 +86,9 @@ AFX_OBJECT(afxDrawOutput)
     afxError            (*lockCb)(afxDrawOutput, afxTime timeout, afxUnit*bufIdx);
     afxError            (*unlockCb)(afxDrawOutput, afxUnit cnt, afxUnit const bufIdx[]);
     afxError            (*presentCb)(afxDrawQueue dque, avxPresentation* ctrl, afxDrawOutput,afxUnit bufIdx);
-    afxError            (*adjustCb)(afxDrawOutput,afxWhd const);
-    afxBool             (*iddCb)(afxDrawOutput,afxUnit,void*);
     struct _afxDoutIdd* idd; // alloc'ed by the driver
 
-    afxWhd              resolution; // Screen resolution. Absolute extent available.
+    avxRange           resolution; // Screen resolution. Absolute extent available.
     afxReal64           wrOverHr; // (usually screen) resolution w/h
     afxReal64           wpOverHp; // physical w/h
     afxReal             refreshRate;
@@ -84,13 +97,10 @@ AFX_OBJECT(afxDrawOutput)
 
     // canvas
     avxColorSpace       colorSpc; // raster color space. sRGB is the default.    
-    avxFormat           pixelFmt; // pixel format of raster surfaces.
-    avxFormat           pixelFmtDs[2]; // pixel format for depth/stencil. D24/S8/D24S8
-    afxRasterUsage      bufUsage; // raster usage
-    afxRasterUsage      bufUsageDs[2]; // raster usage for depth/stencil
-    afxRasterFlags      bufFlags; // raster flags. What evil things we will do with it?
-    afxRasterFlags      bufFlagsDs[2]; // raster flags for depth/stencil
-    afxWhd              extent;
+    avxFormat           bufFmt[3]; // format for color, depth and stencil surfaces, respectively.
+    afxRasterUsage      bufUsage[3]; // raster usage for color, depth and stencil, respectively.
+    afxRasterFlags      bufFlags[3]; // raster flags for color, depth and stencil, respectively.
+    avxRange           extent;
     afxReal64           wwOverHw; // window w/h
     afxBool             resizing;
 
@@ -100,8 +110,8 @@ AFX_OBJECT(afxDrawOutput)
     afxInterlockedQueue freeBuffers;
     afxAtom32           presentingBufIdx;
     avxPresentMode      presentMode; // FIFO
-    avxPresentAlpha     presentAlpha; // consider transparency for external composing (usually on windowing system).
-    avxPresentTransform presentTransform; // NIL leaves it as it is.
+    avxVideoAlpha     presentAlpha; // consider transparency for external composing (usually on windowing system).
+    avxVideoTransform presentTransform; // NIL leaves it as it is.
     afxBool             doNotClip; // usually false to don't do off-screen draw on compositor-based endpoints (aka window).
 
     afxUnit             suspendCnt;
@@ -119,8 +129,13 @@ AFX_OBJECT(afxDrawOutput)
 #endif//_AVX_DRAW_OUTPUT_C
 
 AVX afxClassConfig const _AVX_DOUT_CLASS_CONFIG;
+AVX _avxDoutDdi const _AVX_DOUT_DDI;
 
-AVX afxError _AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd whd);
-AVX afxError _AvxPresentDrawOutput(afxDrawQueue dque, avxPresentation* ctrl, avxFence wait, afxDrawOutput dout, afxUnit bufIdx, avxFence signal);
+AVX afxError _AvxDoutImplIoctlCb(afxDrawOutput dout, afxUnit code, afxUnit inSiz, void* in, afxUnit outCap, void* out, afxUnit32* outSiz, avxFence signal);
+AVX afxError _AvxDoutImplAdjustCb(afxDrawOutput dout, avxRange whd);
+AVX afxError _AvxDoutImplPresentCb(afxDrawQueue dque, avxPresentation* ctrl, avxFence wait, afxDrawOutput dout, afxUnit bufIdx, avxFence signal);
+AVX afxError _AvxDoutImplRequestBufferCb(afxDrawOutput dout, afxTime timeout, afxUnit *bufIdx);
+AVX afxError _AvxDoutImplRecycleBufferCb(afxDrawOutput dout, afxUnit bufIdx);
+
 
 #endif//AVX_IMPL___OUTPUT_H

@@ -34,7 +34,9 @@
 #include "qwadro/inc/sim/afxCapstan.h"
 
 ASX afxBool     AfxGetBodyModel(afxBody bod, afxModel* model);
-    
+
+ASX afxUnit     AfxCountBodyMotives(afxBody bod);
+
 ASX void        AsxResetBodyClock(afxBody bod);
 
 ASX void        AfxRecenterBodyMotiveClocks(afxBody bod, afxReal currClock);
@@ -43,6 +45,13 @@ ASX void        AfxRecenterBodyMotiveClocks(afxBody bod, afxReal currClock);
 ASX void        AfxUpdateBodyMotives(afxBody bod, afxReal newClock);
 
 ASX void        AfxPurgeTerminatedMotives(afxBody bod);
+
+ASX void        AfxUpdateBodyMatrix(afxBody bod, afxReal secsElapsed, afxBool inverse, afxM4d const mm, afxM4d m);
+
+ASX void        AfxAccumulateBodyAnimations(afxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose rslt, afxReal allowedErr, afxUnit const sparseJntMap[]);
+
+ASX void        AfxQueryBodyRootMotionVectors(afxBody bod, afxReal secsElapsed, afxBool inverse, afxV3d translation, afxV3d rotation);
+
 
 AFX_DEFINE_STRUCT(afxAnimSampleContext)
 {
@@ -57,18 +66,18 @@ AFX_DEFINE_STRUCT(afxAnimSampleContext)
     afxUnit const*  sparseBoneArray;
 };
 
-ASX afxBool     AfxSampleBodyAnimations(afxBody bod, afxAnimSampleContext const* ctx);
+ASX afxBool     AfxSampleBodyAnimationsUnified(afxBody bod, afxAnimSampleContext const* ctx);
 
-ASX void        AmxCmdBindAttitude(afxDrawContext dctx, afxPose pose);
-ASX void        AmxCmdBindPosture(afxDrawContext dctx, afxPlacement wp);
-ASX void        AmxCmdBindSparsePivotMap(afxDrawContext dctx, afxUnit const* sparseBoneArray);
-ASX void        AmxCmdSetAllowedSamplingError(afxDrawContext dctx, afxReal allowedErr);
-ASX void        AmxCmdSampleBodyMotions(afxDrawContext dctx, afxBody bod, afxUnit basePivot, afxUnit pivotCnt);
+ASX void        AsxCmdBindAttitude(afxDrawContext dctx, afxPose pose);
+ASX void        AsxCmdBindPosture(afxDrawContext dctx, afxPlacement wp);
+ASX void        AsxCmdBindSparsePivotMap(afxDrawContext dctx, afxUnit const* sparseBoneArray);
+ASX void        AsxCmdSetAllowedSamplingError(afxDrawContext dctx, afxReal allowedErr);
+ASX void        AsxCmdSampleBodyMotions(afxDrawContext dctx, afxBody bod, afxUnit basePivot, afxUnit pivotCnt);
 
 ASX void        AfxSetBodyMass(afxBody bod, afxV3d mass);
 
-ASX void    AfxDoBodyDynamics(afxBody bod, afxReal dt);
-ASX void    AfxApplyForceAndTorque(afxBody bod, afxV3d const force, afxV3d const torque);
+ASX void        AfxDoBodyDynamics(afxBody bod, afxReal dt);
+ASX void        AfxApplyForceAndTorque(afxBody bod, afxV3d const force, afxV3d const torque);
 
 ASX afxBool     AfxGetBodyPose(afxBody bod, afxPose* pose);
 
@@ -78,6 +87,6 @@ ASX afxError    AfxSpawnBodies(afxModel proto, afxUnit cnt, afxBody bod[]);
 
 ASX afxError    AfxAcquireBodies(afxSimulation sim, afxModel mdl, afxUnit cnt, afxBody bodies[]);
 
-ASX afxUnit     AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, akxTrackMask* modelMask, afxUnit cnt, afxBody bodies[]);
+ASX afxUnit     AsxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, akxTrackMask* modelMask, afxUnit cnt, afxBody bodies[]);
 
 #endif//ASX_BODY_H

@@ -1,6 +1,6 @@
 #include <//./z/video/stdEnv.inc>
 
-SAMPLING_UNIT(0, 0, sampler2D, samp);
+TEXTURE(0, 0, sampler2D, samp);
 
 uniform sampler2D tex;
 uniform sampler2D noise_tex;

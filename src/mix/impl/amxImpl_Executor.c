@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA A4D <https://sigmaco.org/a4d>
 
-#define _AMX_SOUND_C
+#define _AMX_MIX_C
 #define _AMX_MIX_BRIDGE_C
 #define _AMX_MIX_QUEUE_C
 #define _AMX_BUFFER_C
@@ -227,7 +227,7 @@ _AMX afxInt _AMX_MPU_THREAD_PROC(afxMixBridge mexu)
     AfxGetThread(&thr);
     AFX_ASSERT(thr == mexu->worker);
 
-    afxMixSystem msys = AfxGetMixBridgeSystem(mexu);
+    afxMixSystem msys = AfxGetBridgedMixSystem(mexu);
     afxUnit portId = mexu->portId;
 
     amxMpu* mpu;

@@ -30,11 +30,11 @@ _ASX afxPool* _AsxGetMeshRigPool(afxMesh msh)
     return &msh->rigs;
 }
 
-_ASX afxMeshRig* _AsxGetMeshRig(afxMesh msh, afxUnit rigId)
+_ASX asxMeshRig* _AsxGetMeshRig(afxMesh msh, afxUnit rigId)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &msh);
-    afxMeshRig* rig = NIL;
+    asxMeshRig* rig = NIL;
     AfxGetPoolUnit(&msh->rigs, rigId, (void**)&rig);
     return rig;
 }
@@ -345,7 +345,7 @@ _ASX afxError AfxFormatVertexAttribute(afxMesh msh, afxUnit attrIdx, avxFormat f
     // sanitize arguments
     attrIdx = AfxMin(attrIdx, msh->attrCnt - 1);
 
-    avxMeshAttr* attr = &msh->attrInfo[attrIdx];
+    asxMeshAttr* attr = &msh->attrInfo[attrIdx];
     attr->fmt = fmt;
     attr->flags = flags;
     AfxCopyString(&attr->usage.str, usage);
@@ -373,7 +373,7 @@ _ASX void* AfxAccessVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphIdx, a
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
-    AfxDescribePixelFormat(fmt, &pfd);
+    AvxDescribeFormats(1, &fmt, &pfd);
     afxUnit32 unitSiz = pfd.stride;// AfxVertexFormatGetSize(fmt);
     
     afxUnit32 attrBit = AFX_BIT(attrIdx);
@@ -423,7 +423,7 @@ _ASX afxError AfxInvertVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphIdx
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
-    AfxDescribePixelFormat(fmt, &pfd);
+    AvxDescribeFormats(1, &fmt, &pfd);
     afxUnit32 unitSiz = pfd.stride;// AfxVertexFormatGetSize(fmt);
 
     void* data;
@@ -467,7 +467,7 @@ _ASX afxError AfxNormalizeVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morph
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
-    AfxDescribePixelFormat(fmt, &pfd);
+    AvxDescribeFormats(1, &fmt, &pfd);
     afxUnit32 unitSiz = pfd.stride;// AfxVertexFormatGetSize(fmt);
 
     void* data;
@@ -516,7 +516,7 @@ _ASX afxError AfxUpdateVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphIdx
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
-    AfxDescribePixelFormat(fmt, &pfd);
+    AvxDescribeFormats(1, &fmt, &pfd);
     afxUnit32 unitSiz = pfd.stride;// AfxVertexFormatGetSize(fmt);
 
     void* data;
@@ -549,7 +549,7 @@ _ASX afxError AfxUploadVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphIdx
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
-    AfxDescribePixelFormat(fmt, &pfd);
+    AvxDescribeFormats(1, &fmt, &pfd);
     afxUnit32 unitSiz = pfd.stride;// AfxVertexFormatGetSize(fmt);
 
     void* data;
@@ -583,7 +583,7 @@ _ASX afxError AfxDownloadVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphI
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
-    AfxDescribePixelFormat(fmt, &pfd);
+    AvxDescribeFormats(1, &fmt, &pfd);
     afxUnit32 unitSiz = pfd.stride;// AfxVertexFormatGetSize(fmt);
 
     void const* data;
@@ -628,7 +628,7 @@ _ASX afxError AfxRecomputeMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit base
 
     avxFormat attrFmt = msh->attrInfo[posAttrIdx].fmt;
     avxFormatDescription pfd;
-    AfxDescribePixelFormat(attrFmt, &pfd);
+    AvxDescribeFormats(1, &attrFmt, &pfd);
     afxUnit32 unitSiz = pfd.stride;// AfxVertexFormatGetSize(fmt);
 
     if (attrFmt == avxFormat_RGB32f)
@@ -901,7 +901,7 @@ _ASX afxError _AsxMshDtorCb(afxMesh msh)
 
     for (afxUnit i = 0; i < msh->rigs.totalUsedCnt; i++)
     {
-        afxMeshRig* rig;
+        asxMeshRig* rig;
         AfxGetPoolUnit(&msh->rigs, i, (void**)&rig);
         AFX_ASSERT(rig);
 
@@ -1256,7 +1256,7 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
     // vertex data
 
     msh->vtxCnt = vtxCnt;
-    msh->minIdxSiz = (msh->vtxCnt > AFX_N8_MAX ? (msh->vtxCnt > AFX_N16_MAX ? sizeof(afxUnit32) : sizeof(afxUnit16)) : sizeof(afxUnit8));
+    msh->minIdxSiz = (msh->vtxCnt > AFX_U8_MAX ? (msh->vtxCnt > AFX_U16_MAX ? sizeof(afxUnit32) : sizeof(afxUnit16)) : sizeof(afxUnit8));
     msh->idxCnt = idxCnt;
 
     msh->attrCnt = attrCnt;
@@ -1269,7 +1269,7 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
 
     for (afxUnit i = 0; i < attrCnt; i++)
     {
-        avxMeshAttr* attr = &msh->attrInfo[i];
+        asxMeshAttr* attr = &msh->attrInfo[i];
 
         allAttrEnabledMask |= AFX_BIT(i);
 
@@ -1324,7 +1324,7 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
     msh->idd = NIL;
     msh->udd = NIL;
 
-    AfxDeployPool(&msh->rigs, sizeof(afxMeshRig), 1, NIL);
+    AfxDeployPool(&msh->rigs, sizeof(asxMeshRig), 1, NIL);
 
     if (!err)
     {
@@ -1404,7 +1404,7 @@ _ASX afxError AfxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxReal lt
                 if (!(msh->morphs[morphIdx].morphedAttrs & attrBit))
                     continue;
 
-                avxMeshAttr* va = &msh->attrInfo[attrIdx];
+                asxMeshAttr* va = &msh->attrInfo[attrIdx];
                     
                 void* data = AfxAccessVertexData(msh, attrIdx, morphIdx, 0);
                 afxBool linearFlag = va->flags & afxVertexFlag_LTM;

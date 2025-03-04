@@ -41,9 +41,9 @@ _AFX afxStdCmd* _AfxIobPushCmd(afxStream iob, afxUnit id, afxUnit siz, afxCmdId*
 _AFX afxCmdId AfxCmdReadAt(afxStream iob, afxSize at, afxUnit rowStride, afxUnit rowCnt, afxUnit dstCap, void *dst)
 {
     afxError err = AFX_ERR_NONE;
-    /// iob must be a valid afxStream handle.
+    // iob must be a valid afxStream handle.
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
-    /// iob must be in the recording state.
+    // iob must be in the recording state.
     AFX_ASSERT(iob->state == 1); // recording
 
     afxCmdId cmdId;
@@ -63,9 +63,9 @@ _AFX afxCmdId AfxCmdReadAt(afxStream iob, afxSize at, afxUnit rowStride, afxUnit
 _AFX afxCmdId AfxCmdRead(afxStream iob, afxUnit rowStride, afxUnit rowCnt, afxUnit dstCap, void *dst)
 {
     afxError err = AFX_ERR_NONE;
-    /// iob must be a valid afxStream handle.
+    // iob must be a valid afxStream handle.
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
-    /// iob must be in the recording state.
+    // iob must be in the recording state.
     AFX_ASSERT(iob->state == 1); // recording
 
     afxCmdId cmdId;
@@ -85,9 +85,9 @@ _AFX afxCmdId AfxCmdRead(afxStream iob, afxUnit rowStride, afxUnit rowCnt, afxUn
 _AFX afxCmdId AfxCmdWriteAt(afxStream iob, afxSize at, afxUnit rowStride, afxUnit rowCnt, void const* src, afxUnit srcSiz)
 {
     afxError err = AFX_ERR_NONE;
-    /// iob must be a valid afxStream handle.
+    // iob must be a valid afxStream handle.
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
-    /// iob must be in the recording state.
+    // iob must be in the recording state.
     AFX_ASSERT(iob->state == 1); // recording
 
     afxCmdId cmdId;
@@ -107,9 +107,9 @@ _AFX afxCmdId AfxCmdWriteAt(afxStream iob, afxSize at, afxUnit rowStride, afxUni
 _AFX afxCmdId AfxCmdWrite(afxStream iob, afxUnit rowStride, afxUnit rowCnt, void const* src, afxUnit srcSiz)
 {
     afxError err = AFX_ERR_NONE;
-    /// iob must be a valid afxStream handle.
+    // iob must be a valid afxStream handle.
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
-    /// iob must be in the recording state.
+    // iob must be in the recording state.
     AFX_ASSERT(iob->state == 1); // recording
 
     afxCmdId cmdId;
@@ -129,9 +129,9 @@ _AFX afxCmdId AfxCmdWrite(afxStream iob, afxUnit rowStride, afxUnit rowCnt, void
 _AFX afxCmdId AfxCmdMerge(afxStream iob, afxStream src, afxSize from, afxUnit range)
 {
     afxError err = AFX_ERR_NONE;
-    /// iob must be a valid afxStream handle.
+    // iob must be a valid afxStream handle.
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
-    /// iob must be in the recording state.
+    // iob must be in the recording state.
     AFX_ASSERT(iob->state == 1); // recording
 
     afxCmdId cmdId;
@@ -150,9 +150,9 @@ _AFX afxCmdId AfxCmdMerge(afxStream iob, afxStream src, afxSize from, afxUnit ra
 _AFX afxCmdId AfxCmdMergeAt(afxStream iob, afxSize at, afxStream src, afxSize from, afxUnit range)
 {
     afxError err = AFX_ERR_NONE;
-    /// iob must be a valid afxStream handle.
+    // iob must be a valid afxStream handle.
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
-    /// iob must be in the recording state.
+    // iob must be in the recording state.
     AFX_ASSERT(iob->state == 1); // recording
 
     afxCmdId cmdId;
@@ -171,9 +171,9 @@ _AFX afxCmdId AfxCmdMergeAt(afxStream iob, afxSize at, afxStream src, afxSize fr
 _AFX afxCmdId AfxCmdDecode(afxStream iob, afxSize at, afxUnit encSiz, afxFcc codec, afxUnit stop0, afxUnit stop1, afxUnit stop2, void* dst)
 {
     afxError err = AFX_ERR_NONE;
-    /// iob must be a valid afxStream handle.
+    // iob must be a valid afxStream handle.
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
-    /// iob must be in the recording state.
+    // iob must be in the recording state.
     AFX_ASSERT(iob->state == 1); // recording
 
     afxCmdId cmdId;
@@ -195,9 +195,9 @@ _AFX afxCmdId AfxCmdDecode(afxStream iob, afxSize at, afxUnit encSiz, afxFcc cod
 _AFX afxCmdId AfxCmdEncode(afxStream iob, afxSize at, afxUnit decSiz, afxFcc codec, afxUnit stop0, afxUnit stop1, afxUnit stop2, void* src)
 {
     afxError err = AFX_ERR_NONE;
-    /// iob must be a valid afxStream handle.
+    // iob must be a valid afxStream handle.
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
-    /// iob must be in the recording state.
+    // iob must be in the recording state.
     AFX_ASSERT(iob->state == 1); // recording
 
     afxCmdId cmdId;

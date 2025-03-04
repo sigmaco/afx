@@ -99,7 +99,7 @@ AFXINL void BuildPositionWorldPoseComposite_Generic(afxV3d const Position, afxM4
 AFXINL void BuildFullWorldPoseComposite_Generic(afxTransform const* t, afxM4d const ParentMatrix, afxM4d const InverseWorld4x4, afxM4d ResultComposite, afxM4d ResultWorldMatrix);
 AFXINL void BuildPositionOrientationWorldPoseOnly_Generic(afxV3d const Position, afxQuat const Orientation, afxM4d const ParentMatrix, afxM4d ResultWorldMatrix);
 AFXINL void BuildPositionOrientationWorldPoseComposite_Generic(afxV3d const Position, afxQuat const Orientation, afxM4d const ParentMatrix, afxM4d const InverseWorld4x4, afxM4d ResultComposite, afxM4d ResultWorldMatrix);
-AFXINL void BWP_Dispatch(afxTransform* t, afxM4d const InverseWorld4x4, afxM4d Composite, afxM4d World, afxM4d const ParentWorld);
-AFXINL void BWPNC_Dispatch(afxTransform* t, afxM4d const ParentWorld, afxM4d World);
+AFXINL void BWP_Dispatch(afxTransform const* t, afxM4d const InverseWorld4x4, afxM4d Composite, afxM4d World, afxM4d const ParentWorld);
+AFXINL void BWPNC_Dispatch(afxTransform const* t, afxM4d const ParentWorld, afxM4d World);
 
 #endif//AFX_TRANSFORM_H

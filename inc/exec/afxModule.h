@@ -60,8 +60,12 @@ AFX afxManifest const*  AfxGetModuleManifest(afxModule icd);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxBool             AfxFindModule(afxUri const *uri, afxModule* mdle);
+AFX afxBool     AfxFindModule(afxUri const *uri, afxModule* mdle);
 
-AFX afxError            AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* mdle);
+AFX afxError    AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* mdle);
+
+AFX afxUnit     AfxEnumerateModules(afxUnit first, afxUnit cnt, afxModule executables[]);
+
+AFX afxUnit     AfxInvokeModules(afxUnit first, afxUnit cnt, afxBool(*f)(afxModule, void*), void *udd);
 
 #endif//AFX_MODULE_H

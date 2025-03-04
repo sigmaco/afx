@@ -66,7 +66,7 @@ _AVX void* AfxGetDrawInputUdd(afxDrawInput din)
 _AVX afxClass const* AvxGetTxdClass(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
-    /// din must be a valid afxDrawInput handle.
+    // din must be a valid afxDrawInput handle.
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
     afxClass const* cls = &din->txdCls;
     AFX_ASSERT_CLASS(cls, afxFcc_TXD);
@@ -76,7 +76,7 @@ _AVX afxClass const* AvxGetTxdClass(afxDrawInput din)
 _AVX afxClass const* AvxGetTextureClass(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
-    /// din must be a valid afxDrawInput handle.
+    // din must be a valid afxDrawInput handle.
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
     afxClass const* cls = &din->texCls;
     AFX_ASSERT_CLASS(cls, afxFcc_TEX);
@@ -423,10 +423,10 @@ _AVX afxError AfxOpenDrawInput(afxDrawSystem dsys, afxDrawInputConfig const* cfg
         return err;
     }
 
-    afxClass* cls = (afxClass*)_AvxGetDrawInputClass(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->dinCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_DIN);
-    afxDrawInput din;
 
+    afxDrawInput din;
     if (AfxAcquireObjects(cls, 1, (afxObject*)&din, (void const*[]) { dsys, cfg }))
     {
         AfxThrowError();
@@ -437,4 +437,35 @@ _AVX afxError AfxOpenDrawInput(afxDrawSystem dsys, afxDrawInputConfig const* cfg
     AFX_ASSERT(input);
     *input = din;
     return err;
+}
+
+_AVX afxUnit AfxEnumerateDrawInputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxDrawInput inputs[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(!cnt || inputs);
+    afxClass const* cls = _AvxDsysGetImpl(dsys)->dinCls(dsys);
+    AFX_ASSERT_CLASS(cls, afxFcc_DIN);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)inputs);
+}
+
+_AVX afxUnit AfxEvokeDrawInputs(afxDrawSystem dsys, afxBool(*f)(afxDrawInput, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawInput inputs[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(inputs);
+    AFX_ASSERT(f);
+    afxClass const* cls = _AvxDsysGetImpl(dsys)->dinCls(dsys);
+    AFX_ASSERT_CLASS(cls, afxFcc_DIN);
+    return AfxEvokeObjects(cls, (void*)f, udd, first, cnt, (afxObject*)inputs);
+}
+
+_AVX afxUnit AfxInvokeDrawInputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxBool(*f)(afxDrawInput, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(f);
+    afxClass const* cls = _AvxDsysGetImpl(dsys)->dinCls(dsys);
+    AFX_ASSERT_CLASS(cls, afxFcc_DIN);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }

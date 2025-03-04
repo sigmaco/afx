@@ -384,6 +384,14 @@ _AFX afxError _AfxMdleCtorCb(afxModule mdle, void** args, afxUnit invokeNo)
         AfxPushLink(&mdle->icd.asx, NIL);
         AfxPushLink(&mdle->icd.aux, NIL);
 
+        afxError(*scmHookFn)(afxModule, afxUri const*) = AfxFindModuleSymbol(mdle, "afxScmHook");
+
+        if (scmHookFn)
+        {
+            mdle->icd.scmHookFn = scmHookFn;
+            mdle->flags |= afxModuleFlag_SYS;
+        }
+
         afxError(*icdHookFn)(afxModule, afxUri const*) = AfxFindModuleSymbol(mdle, "afxIcdHook");
 
         if (icdHookFn)
@@ -404,7 +412,7 @@ _AFX afxError _AfxMdleCtorCb(afxModule mdle, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AFX afxClassConfig const _AfxMdleMgrCfg =
+_AFX afxClassConfig const _AFX_MDLE_CLASS_CONFIG =
 {
     .fcc = afxFcc_MDLE,
     .name = "Module",
@@ -612,17 +620,36 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
             AfxGetModuleVersion(mdle, &verMajor, &verMinor, &verPatch);
             AfxGetModuleInfo(mdle, &s.str, &providerName.str, &devDesc.str);
 
+#define AFX_ITERATE_CHAIN_(ch_, type_, offset_, lnk_) \
+    for (afxLink const* _curr##lnk_ = (ch_)->anchor.next, *_next##lnk_ = (afxLink*)NIL; \
+    (lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_)), (_next##lnk_ = (_curr##lnk_)->next), ((_curr##lnk_) != &(ch_)->anchor); \
+    (_curr##lnk_ = _next##lnk_))
+
+#define AFX_ITERATE_CHAIN_B2F_(ch_, type_, offset_, lnk_) \
+    for (afxLink const *_last##lnk_ = (afxLink *)NIL, *_curr##lnk_ = (ch_)->anchor.prev; \
+         (_curr##lnk_) != &(ch_)->anchor; \
+         (_last##lnk_ = (_curr##lnk_)->prev), \
+         (lnk_ = (type_ *)AFX_REBASE(_curr##lnk_, type_, offset_)), \
+         (_curr##lnk_ = _last##lnk_))
+
+
             afxDevice dev;
-            AFX_ITERATE_CHAIN_B2F(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
+            AFX_ITERATE_CHAIN_(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
             {
                 AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 
                 AfxLogY("\t<//./%.*s/>(\"%.*s\") %.*s %u.%u.%u %.*s",
                     AfxPushString(&dev->urn.uri.str), AfxPushString(&s.str), AfxPushString(&devDesc.str), verMajor, verMinor, verPatch, AfxPushString(&providerName.str));
+                break;
             };
 
             mdle->attached = TRUE;
         }
+    }
+
+    if (mdle->icd.scmHookFn)
+    {
+        mdle->icd.scmHookFn(mdle, NIL);
     }
 
     AFX_ASSERT(module);

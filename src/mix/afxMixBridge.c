@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA A4D <https://sigmaco.org/a4d>
 
-#define _AMX_SOUND_C
+#define _AMX_MIX_C
 #define _AMX_MIX_BRIDGE_C
 #define _AMX_MIX_QUEUE_C
 #define _AMX_MIX_CONTEXT_C
@@ -31,7 +31,7 @@ _AMX afxMixDevice AfxGetMixBridgeDevice(afxMixBridge mexu)
     return mdev;
 }
 
-_AMX afxMixSystem AfxGetMixBridgeSystem(afxMixBridge mexu)
+_AMX afxMixSystem AfxGetBridgedMixSystem(afxMixBridge mexu)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
@@ -57,7 +57,7 @@ _AMX afxUnit AfxQueryMixBridgePort(afxMixBridge mexu, afxMixDevice* device)
 _AMX afxClass const* _AmxGetMixQueueClass(afxMixBridge mexu)
 {
     afxError err = AFX_ERR_NONE;
-    /// mexu must be a valid afxMixBridge handle.
+    // mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     afxClass const* cls = &mexu->squeCls;
     AFX_ASSERT_CLASS(cls, afxFcc_MQUE);
@@ -67,9 +67,9 @@ _AMX afxClass const* _AmxGetMixQueueClass(afxMixBridge mexu)
 _AMX afxUnit AfxGetMixQueues(afxMixBridge mexu, afxUnit first, afxUnit cnt, afxMixQueue queues[])
 {
     afxError err = AFX_ERR_NONE;
-    /// mexu must be a valid afxMixBridge handle.
+    // mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    /// queues must be a valid pointer to the afxMixQueue handles.
+    // queues must be a valid pointer to the afxMixQueue handles.
     AFX_ASSERT(queues);
 
     afxClass const* squeCls = _AmxGetMixQueueClass(mexu);
@@ -82,7 +82,7 @@ _AMX afxUnit AfxGetMixQueues(afxMixBridge mexu, afxUnit first, afxUnit cnt, afxM
 _AMX afxError AfxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    /// mexu must be a valid afxMixBridge handle.
+    // mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
     afxMixQueue mque;
@@ -116,7 +116,7 @@ _AMX afxError AfxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxTime
 _AMX afxError AfxWaitForIdleMixBridge(afxMixBridge mexu, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    /// mexu must be a valid afxMixBridge handle.
+    // mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
     if (mexu->pingCb)
@@ -341,10 +341,10 @@ _AMX afxError _AmxSexuDtorCb(afxMixBridge mexu)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
-    afxMixSystem msys = AfxGetMixBridgeSystem(mexu);
+    afxMixSystem msys = AfxGetBridgedMixSystem(mexu);
 
-    AfxWaitForSoundSystem(msys, AFX_TIME_INFINITE);
-    AfxWaitForSoundSystem(msys, AFX_TIME_INFINITE); // yes, two times.
+    AfxWaitForMixSystem(msys, AFX_TIME_INFINITE);
+    AfxWaitForMixSystem(msys, AFX_TIME_INFINITE); // yes, two times.
     
     AfxDeregisterChainedClasses(&mexu->classes);
 
@@ -398,8 +398,8 @@ _AMX afxError _AmxSexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
 
     afxClass* squeCls = (afxClass*)_AmxGetMixQueueClass(mexu);
     AFX_ASSERT_CLASS(squeCls, afxFcc_MQUE);
-    afxDrawQueue queues[AFX_MAX_SOUND_QUEUE_PER_BRIDGE];
-    AFX_ASSERT(AFX_MAX_SOUND_QUEUE_PER_BRIDGE >= cfg->minQueCnt);
+    afxDrawQueue queues[AMX_MAX_QUEUES_PER_BRIDGE];
+    AFX_ASSERT(AMX_MAX_QUEUES_PER_BRIDGE >= cfg->minQueCnt);
 
     if (AfxAcquireObjects(squeCls, cfg->minQueCnt, (afxObject*)queues, (void const*[]) { mexu, cfg }))
     {
@@ -435,7 +435,7 @@ _AMX afxError _AmxSexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
 _AMX afxClassConfig const _AMX_MEXU_CLASS_CONFIG =
 {
     .fcc = afxFcc_MEXU,
-    .name = "SoundBridge",
+    .name = "MixBridge",
     .desc = "Sound Device Execution Bridge",
     .fixedSiz = sizeof(AFX_OBJECT(afxMixBridge)),
     .ctor = (void*)_AmxSexuCtorCb,

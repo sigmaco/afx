@@ -1,8 +1,8 @@
 #include <//./z/video/stdEnv.inc>
 
-SAMPLING_UNIT(0, 0, sampler2D, samp0);
-SAMPLING_UNIT(0, 1, sampler2D, samp1);
-SAMPLING_UNIT(0, 2, sampler2D, samp2);
+TEXTURE(0, 0, sampler2D, samp0);
+TEXTURE(0, 1, sampler2D, samp1);
+TEXTURE(0, 2, sampler2D, samp2);
 
 in block
 {

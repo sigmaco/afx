@@ -94,7 +94,7 @@ _ASX afxError AfxAcquireDirectionalLights(afxSimulation sim, afxUnit cnt, afxUni
     akxLight lit;
 
     for (afxUnit i = 0; i < cnt; i++)
-        if (AfxAcquireObjects(_AsxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_DIRECTIONAL } })) AfxThrowError();
+        if (AfxAcquireObjects((afxClass *)_AsxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_DIRECTIONAL } })) AfxThrowError();
         else
             uid[i] = AfxGetObjectId(lit);
 
@@ -108,7 +108,7 @@ _ASX afxError AfxAcquireOmniLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]
     akxLight lit;
 
     for (afxUnit i = 0; i < cnt; i++)
-        if (AfxAcquireObjects(_AsxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_OMNI } })) AfxThrowError();
+        if (AfxAcquireObjects((afxClass *)_AsxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_OMNI } })) AfxThrowError();
         else
             uid[i] = AfxGetObjectId(lit);
 
@@ -122,7 +122,7 @@ _ASX afxError AfxAcquireSpotLights(afxSimulation sim, afxUnit cnt, afxUnit uid[]
     akxLight lit;
 
     for (afxUnit i = 0; i < cnt; i++)
-        if (AfxAcquireObjects(_AsxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_SPOT } })) AfxThrowError();
+        if (AfxAcquireObjects((afxClass *)_AsxGetLightClass(sim), 1, (afxObject*)&lit, (void const*[]) { sim, (akxLightType[]) { akxLightType_SPOT } })) AfxThrowError();
         else
             uid[i] = AfxGetObjectId(lit);
 

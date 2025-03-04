@@ -1785,9 +1785,12 @@ _AFXINL afxChar* AfxStrpbrk(afxChar const* str1, afxChar const* stopset)
 _AFXINL afxChar* AfxStrnstr(afxChar const* str, afxUnit strLen, afxChar const* substr, afxUnit substrLen)
 {
     // C doesn't have a equivalent function
-
+#if 0
     afxChar const *p = str;
-    strLen = strLen ? strLen : AfxStrlen(str);
+
+    if (!strLen)
+        strLen = AfxStrlen(str);
+
     afxSize const len2 = substrLen ? substrLen : AfxStrlen(substr);
 
     if (!len2)
@@ -1801,6 +1804,22 @@ _AFXINL afxChar* AfxStrnstr(afxChar const* str, afxUnit strLen, afxChar const* s
             return (char *)p;
     }
     return NIL;
+#else
+    // Check for null pointers or invalid lengths
+    if (!str || !substr || !substrLen || (strLen < substrLen))
+        return NIL;
+
+    // Loop through the main string to find the first occurrence of the substring
+    for (afxUnit i = 0; i <= (strLen - substrLen); i++)
+    {
+        // Compare the substring starting at str[i] with substr
+        if (AfxStrncmp(&str[i], substr, substrLen) == 0)
+        {
+            return (afxChar*)&str[i];  // Found match, return the pointer to the start of the match
+        }
+    }
+    return NIL;  // No match found
+#endif
 }
 
 _AFXINL afxChar* AfxStrstr(afxChar const* str, afxChar const* excerpt)

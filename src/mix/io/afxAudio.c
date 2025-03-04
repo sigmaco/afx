@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _AMX_SOUND_C
+#define _AMX_MIX_C
 #define _AMX_BUFFER_C
 #define _AMX_WAVEFORM_C
 #include "../impl/amxImplementation.h"
@@ -117,7 +117,7 @@ _AMX afxError AfxUpdateAudio(afxAudio wav, afxUnit opCnt, afxWaveIo const ops[],
     afxMixBridge mexu;
     afxMixSystem msys = AfxGetAudioContext(wav);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    if (!AfxGetSoundBridges(msys, portIdx, 1, &mexu))
+    if (!AfxGetMixBridges(msys, portIdx, 1, &mexu))
     {
         AfxThrowError();
         return err;
@@ -145,7 +145,7 @@ _AMX afxError AfxUpdateAudio(afxAudio wav, afxUnit opCnt, afxWaveIo const ops[],
     }
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
-    if (AfxWaitForIdleSoundQueue(msys, portIdx, transfer.baseQueIdx))
+    if (AfxWaitForIdleMixQueue(msys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
     return err;
@@ -155,7 +155,7 @@ _AMX afxError AfxDumpAudio(afxAudio wav, afxUnit opCnt, afxWaveIo const ops[], v
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
-    AFX_ASSERT(((wav->bufFlags & afxBufferFlag_ACCESS) & afxBufferFlag_R));
+    AFX_ASSERT(((wav->bufFlags & avxBufferFlag_ACCESS) & avxBufferFlag_R));
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
     AFX_ASSERT(dst);
@@ -163,7 +163,7 @@ _AMX afxError AfxDumpAudio(afxAudio wav, afxUnit opCnt, afxWaveIo const ops[], v
     afxMixBridge mexu;
     afxMixSystem msys = AfxGetAudioContext(wav);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    if (!AfxGetSoundBridges(msys, portId, 1, &mexu))
+    if (!AfxGetMixBridges(msys, portId, 1, &mexu))
     {
         AfxThrowError();
         return err;
@@ -189,7 +189,7 @@ _AMX afxError AfxDumpAudio(afxAudio wav, afxUnit opCnt, afxWaveIo const ops[], v
     }
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
-    if (AfxWaitForIdleSoundQueue(dsys, portIdx, transfer.baseQueIdx))
+    if (AfxWaitForIdleMixQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
     return err;
@@ -205,7 +205,7 @@ _AMX afxError AfxUploadAudio(afxAudio wav, afxUnit opCnt, afxWaveIo const ops[],
     afxMixBridge mexu;
     afxMixSystem msys = AfxGetAudioContext(wav);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    if (!AfxGetSoundBridges(msys, portId, 1, &mexu))
+    if (!AfxGetMixBridges(msys, portId, 1, &mexu))
     {
         AfxThrowError();
         return err;
@@ -232,7 +232,7 @@ _AMX afxError AfxUploadAudio(afxAudio wav, afxUnit opCnt, afxWaveIo const ops[],
     }
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
-    if (AfxWaitForSoundQueue(dsys, portIdx, transfer.baseQueIdx))
+    if (AfxWaitForMixQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
     return err;
@@ -246,7 +246,7 @@ _AMX afxError AfxDownloadAudio(afxAudio wav, afxUnit opCnt, afxWaveIo const ops[
     afxMixBridge mexu;
     afxMixSystem msys = AfxGetAudioContext(wav);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    if (!AfxGetSoundBridges(msys, portId, 1, &mexu))
+    if (!AfxGetMixBridges(msys, portId, 1, &mexu))
     {
         AfxThrowError();
         return err;
@@ -274,7 +274,7 @@ _AMX afxError AfxDownloadAudio(afxAudio wav, afxUnit opCnt, afxWaveIo const ops[
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
-    if (AfxWaitForSoundQueue(dsys, portIdx, transfer.baseQueIdx))
+    if (AfxWaitForMixQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
     return err;
@@ -408,7 +408,7 @@ _AMX afxError AfxPrintAudio(afxAudio wav, afxWaveInterval const* op, afxUri cons
 
     afxMixSystem msys = AfxGetAudioContext(wav);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    if (AfxWaitForSoundBridge(msys, 0, 0))
+    if (AfxWaitForMixBridge(msys, 0, 0))
         AfxThrowError();
 
     AfxDisposeObjects(1, &file);
@@ -418,7 +418,7 @@ _AMX afxError AfxPrintAudio(afxAudio wav, afxWaveInterval const* op, afxUri cons
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError _AmxWavStdDtorCb(afxAudio wav)
+_AMX afxError _AmxWavDtorCb(afxAudio wav)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
@@ -447,7 +447,7 @@ _AMX afxError _AmxWavStdDtorCb(afxAudio wav)
     return err;
 }
 
-_AMX afxError _AmxWavStdCtorCb(afxAudio wav, void** args, afxUnit invokeNo)
+_AMX afxError _AmxWavCtorCb(afxAudio wav, void** args, afxUnit invokeNo)
 {
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
@@ -528,8 +528,8 @@ _AMX afxClassConfig const _AMX_WAV_CLASS_CONFIG =
     .name = "Audio",
     .desc = "Formatted Audio Buffer",
     .fixedSiz = sizeof(AFX_OBJECT(afxAudio)),
-    .ctor = (void*)_AmxWavStdCtorCb,
-    .dtor = (void*)_AmxWavStdDtorCb
+    .ctor = (void*)_AmxWavCtorCb,
+    .dtor = (void*)_AmxWavDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -619,7 +619,7 @@ _AMX afxError AmxLoadAudios(afxMixSystem msys, afxUnit cnt, afxUri const uris[],
         //iop.fmt = fmt;
         //AfxUploadAudio(buffers[fIdx], 1, &iop, iob, 0);
         //_AmxUploadAudio(buffers[fIdx], &iop, iob);
-        AfxWaitForSoundBridge(msys, 0, 0);
+        AfxWaitForMixBridge(msys, 0, 0);
         
         _AmxUpdateAudio(buffers[fIdx], &iop, data);
         AfxDeallocate((void**)&data, AfxHere());

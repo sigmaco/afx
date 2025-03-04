@@ -32,16 +32,16 @@ AFX_OBJECT(afxMixContext)
 {
     afxUnit     portId;
     afxUnit     poolIdx;
-    afxBool     disposable; /// if true, at execution end, it is moved to invalid state and considered in recycle chain.
+    afxBool     disposable; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
 
     amxMixState state;
     afxChain    commands;
-    afxArena    cmdArena; /// owned by msys data for specific port
+    afxArena    cmdArena; // owned by msys data for specific port
 
     afxError    (*endCb)(afxMixContext);
     afxError    (*resetCb)(afxMixContext, afxBool freeMem, afxBool permanent);
-    afxAtom32   submCnt; /// number of submissions
-    afxMask64   submQueMask; /// one for each queue where this dctx was submitted into.
+    afxAtom32   submCnt; // number of submissions
+    afxMask64   submQueMask; // one for each queue where this dctx was submitted into.
 
     //afxUnit     latency; // samples per audio frame (256, 512, 1024, or 2048).
     //afxUnit     chanCnt; // 2 --- stereo

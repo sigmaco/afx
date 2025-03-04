@@ -42,17 +42,17 @@ AFX_OBJECT(_asxContext)
 AFX_OBJECT(afxContext)
 #endif
 {
-    afxArena        cmdArena; /// owned by dsys data for specific port
+    afxArena        cmdArena; // owned by dsys data for specific port
     afxChain        commands;
     asxContextState state;
     afxError        (*endCb)(afxContext);
     afxError        (*resetCb)(afxContext, afxBool freeMem, afxBool permanent);
-    afxAtom32       submCnt; /// number of submissions
-    afxMask64       submQueMask; /// one for each queue where this dctx was submitted into.
+    afxAtom32       submCnt; // number of submissions
+    afxMask64       submQueMask; // one for each queue where this dctx was submitted into.
 
     afxUnit         portId;
     afxUnit         poolIdx;
-    afxBool         disposable; /// if true, at execution end, it is moved to invalid state and considered in recycle chain.
+    afxBool         disposable; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
 
     struct
     {
@@ -114,7 +114,7 @@ AFX_DEFINE_UNION(asxCmd)
         afxUnit cnt;
         struct
         {
-            afxBuffer buf;
+            avxBuffer buf;
             afxUnit offset;
             afxUnit range;
         } /*AFX_SIMD*/ items[];
@@ -146,7 +146,7 @@ AFX_DEFINE_UNION(asxCmd)
 
         afxBody bod;
         afxUnit pivotCnt;
-        afxM4d offset;
+        afxM4d displace;
         afxPose scratch;
         afxPlacement plce;
         afxReal allowedErr;
@@ -199,7 +199,7 @@ AFX_DEFINE_UNION(asxCmd)
         afxModel mdl;
         afxUnit baseJntIdx;
         afxUnit jntCnt;
-        afxM4d displacement;
+        afxM4d displace;
         afxPlacement plce;
         afxBool rigid;
         afxPose pose;
@@ -261,7 +261,7 @@ AFX_DEFINE_UNION(asxCmd)
         afxUnit baseReqJnt;
         afxUnit reqJntCnt;
         afxPose pose;
-        afxM4d displacement;
+        afxM4d displace;
         afxBool noComposite;
         afxPlacement plce;
     } BuildPlacement;

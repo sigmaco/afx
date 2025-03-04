@@ -34,10 +34,15 @@
 #define _AFX_SYSTEM_C
 #include "../impl/afxExecImplKit.h"
 
-AFX_STATIC_ASSERT(sizeof(AFX_OBJECT(afxSystem)) > sizeof(void*), "");
+afxUnit const sizeOfSys = sizeof(AFX_OBJ(afxSystem));
+afxUnit const sizeOfSysAligned = AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT);
+AFX_STATIC_ASSERT(AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT) >= sizeof(AFX_OBJ(afxSystem)), "");
+AFX_STATIC_ASSERT(sizeof(AFX_OBJECT(afxSystem)) > sizeof(afxSystem), "");
+
 _AFX afxBool sysReady = FALSE;
 #if !0
-_AFX AFX_ALIGN(16) afxByte theSysData[AFX_ALIGNED_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) + AFX_ALIGNED_SIZE(sizeof(((afxSystem)0)[0]), AFX_SIMD_ALIGNMENT)] = { 0 };
+_AFX AFX_ALIGN(16) afxByte theSysData[  AFX_ALIGNED_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) + 
+                                        AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT)] = { 0 };
 _AFX afxSystem TheSystem = (void*)&theSysData;
 AFX_STATIC_ASSERT(sizeof(TheSystem[0]) > sizeof(void*), "");
 AFX_STATIC_ASSERT(sizeof(theSysData) >= (sizeof(afxObjectBase) + sizeof(TheSystem[0])), "");
@@ -45,19 +50,6 @@ AFX_STATIC_ASSERT(sizeof(theSysData) >= (sizeof(afxObjectBase) + sizeof(TheSyste
 _AFX afxSystem TheSystem = NIL;
 #endif
 extern afxReal64 const renderwareUnitsPerMeter;
-
-extern afxClassConfig const _AfxMmuMgrCfg;
-extern afxClassConfig const _AfxMdleMgrCfg;
-extern afxClassConfig const _AfxIcdClsCfg;
-extern afxClassConfig const _AfxThrMgrCfg;
-extern afxClassConfig const _AfxCdcMgrCfg;
-extern afxClassConfig const _AfxSimMgrCfg;
-extern afxClassConfig const _AfxSvcMgrCfg;
-extern afxClassConfig const _AfxIosClsCfg;
-extern afxClassConfig const _AfxFsysMgrCfg;
-extern afxClassConfig const _AfxStrbMgrCfg;
-extern afxClassConfig const _AfxShMgrCfg;
-extern afxClassConfig const _AfxExuStdImplementation;
 
 AFX afxError _AfxInitMmu(afxThread thr);
 AFX afxError _AfxDeinitMmu(afxThread thr);
@@ -221,27 +213,28 @@ _AFX afxError MountHostVolumes()
 _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    
-    afxUri point, location;
-    AfxMakeUri(&location, 0, "", 0);
+
+    afxUri point;
+    afxUri2048 location;
+    AfxMakeUri2048(&location, NIL);
 
     if (AfxMountStorageUnit('z', &location, afxFileFlag_RX)) AfxThrowError();
     else
     {
-        AfxMakeUri(&location, 0, "system", 0);
+        AfxFormatUri(&location.uri, "%.*s", AfxPushString(AfxGetSystemDirectoryString(NIL)));
 
         if (AfxMountStorageUnit('z', &location, afxFileFlag_RX)) AfxThrowError();
         else
         {
 #ifdef AFX_ISA_X86_64
 #   ifdef AFX_OS_WIN
-            AfxMakeUri(&location, 0, "system64", 0);
+            AfxMakeUri(&location, 0, "w64", 0);
 
             if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, 0, "system64d", 0);
+                AfxMakeUri(&location, 0, "w64d", 0);
 
                 if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX))
                     AfxThrowError();
@@ -252,13 +245,13 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
             if (AfxMountStorageUnit('c', &location, afxFileFlag_RX))
                 AfxThrowError();
 #   elif defined(AFX_OS_LNX)
-            AfxMakeUri(&location, 0, "system64x", 0);
+            AfxMakeUri(&location, 0, "x64", 0);
 
             if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, 0, "system64xd", 0);
+                AfxMakeUri(&location, 0, "x64d", 0);
 
                 if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX))
                     AfxThrowError();
@@ -267,13 +260,13 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
 #   endif
 #elif defined(AFX_ISA_X86_32)
 #   ifdef AFX_OS_WIN
-            AfxMakeUri(&location, 0, "system32", 0);
+            AfxMakeUri(&location, 0, "w32", 0);
 
             if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, 0, "system32d", 0);
+                AfxMakeUri(&location, 0, "w32d", 0);
 
                 if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX))
                     AfxThrowError();
@@ -285,13 +278,13 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
             if (AfxMountStorageUnit('c', &location, afxFileFlag_RX))
                 AfxThrowError();
 #   elif defined(AFX_OS_LNX)
-            AfxMakeUri(&location, 0, "systemx", 0);
+            AfxMakeUri(&location, 0, "x32", 0);
 
             if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, 0, "system32xd", 0);
+                AfxMakeUri(&location, 0, "x32d", 0);
 
                 if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX))
                     AfxThrowError();
@@ -352,7 +345,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 
     afxChain* classes = &sys->classes;
     AfxDeployChain(classes, sys);
-    AfxMountClass(&sys->strbCls, NIL, classes, &_AfxStrbMgrCfg);
+    AfxMountClass(&sys->strbCls, NIL, classes, &_AFX_STRB_CLASS_CONFIG);
 
     // setting the process working directory and the Qwadro/system working directory...
     afxUri uri;
@@ -398,28 +391,28 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 
     afxClassConfig clsCfg;
 
-    clsCfg = _AfxThrMgrCfg;
+    clsCfg = _AFX_THR_CLASS_CONFIG;
     clsCfg.unitsPerPage = sys->hwThreadingCap;
     AfxMountClass(&sys->thrCls, NIL, classes, &clsCfg); // require txu
 
-    AfxMountClass(&sys->mmuCls, NIL, classes, &_AfxMmuMgrCfg);
+    AfxMountClass(&sys->mmuCls, NIL, classes, &_AFX_MMU_CLASS_CONFIG);
 
-    clsCfg = _AfxDevBaseImplementation;
+    clsCfg = _AFX_DEV_CLASS_CONFIG;
     clsCfg.ctor = NIL; // must be called by specialized device constructor. It is needed to perform nested specialized device creation.
     AfxMountClass(&sys->devCls, NIL, classes, &clsCfg);
 
-    AfxMountClass(&sys->svcCls, NIL, classes, &_AfxSvcMgrCfg);
+    AfxMountClass(&sys->svcCls, NIL, classes, &_AFX_SVC_CLASS_CONFIG);
     //AfxMountClass(&sys->fileMgr, NIL, classes, &_AfxFileMgrConfig);
-    AfxMountClass(&sys->cdcCls, NIL, classes, &_AfxCdcMgrCfg);
+    AfxMountClass(&sys->cdcCls, NIL, classes, &_AFX_CDC_CLASS_CONFIG);
 
-    AfxMountClass(&sys->iosCls, NIL, classes, &_AfxIosClsCfg);
+    AfxMountClass(&sys->iosCls, NIL, classes, &_AFX_IOB_CLASS_CONFIG);
 
-    AfxMountClass(&sys->fsysCls, NIL, classes, &_AfxFsysMgrCfg); // require iob, arch
+    AfxMountClass(&sys->fsysCls, NIL, classes, &_AFX_FSYS_CLASS_CONFIG); // require iob, arch
 
-    AfxMountClass(&sys->mdleCls, NIL, classes, &_AfxMdleMgrCfg);
-    //AfxMountClass(&sys->icdCls, &sys->exeMgr, classes, &_AfxIcdClsCfg);
+    AfxMountClass(&sys->mdleCls, NIL, classes, &_AFX_MDLE_CLASS_CONFIG);
+    //AfxMountClass(&sys->icdCls, &sys->exeMgr, classes, &_AFX_ICD_CLASS_CONFIG);
     
-    clsCfg = _AfxExuStdImplementation;
+    clsCfg = _AFX_EXU_CLASS_CONFIG;
     AfxMountClass(&sys->exuCls, NIL, classes, &clsCfg);
 
     afxThreadConfig thrCfg = { 0 };
@@ -562,9 +555,9 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
     //if (platform)
     {
 #ifdef AFX_OS_WIN
-        AfxZero(&cfg.platform, sizeof(cfg.platform));
-        cfg.platform.hInst = GetModuleHandle(NULL);
-        cfg.platform.hWnd = GetActiveWindow();
+        AfxZero(&cfg.w32, sizeof(cfg.w32));
+        cfg.w32.hInst = GetModuleHandle(NULL);
+        cfg.w32.hWnd = GetActiveWindow();
 #endif
     }
 
@@ -573,7 +566,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
         cfg.avxDisabled = FALSE;
     }
 
-    if (!(AfxGetInitializationBool(&ini, &AfxString("SoundSystem"), &AfxString("bDisabled"), &cfg.asxDisabled)))
+    if (!(AfxGetInitializationBool(&ini, &AfxString("MixSystem"), &AfxString("bDisabled"), &cfg.asxDisabled)))
     {
         cfg.asxDisabled = FALSE;
     }

@@ -822,33 +822,44 @@ _AFXINL afxUnit AfxExcerptPathSegments(afxUri const* uri, afxUri* root, afxUri* 
     {
         if (dir == root)
         {
-            AfxExcerptString(&uri->str, _URI_PATH_OFF(uri), uri->root + uri->dir, &root->str);
-            root->dir = uri->dir;
+            dir->str.len += uri->dir;
+            dir->dir = uri->dir;
         }
         else
         {
             AfxResetUris(1, dir);
             AfxExcerptString(&uri->str, _URI_PATH_OFF(uri) + uri->root, uri->dir, &dir->str);
+            dir->dir = uri->dir;
         }
     }
 
     if (file)
     {
-        if (file == dir) dir->fname = uri->fname;
+        if (file == dir)
+        {
+            file->str.len += uri->fname;
+            file->fname = uri->fname;
+        }
         else
         {
             AfxResetUris(1, file);
             AfxExcerptString(&uri->str, _URI_PATH_OFF(uri) + uri->root + uri->dir, uri->fname, &file->str);
+            file->fname = uri->fname;
         }
     }
 
     if (ext)
     {
-        if (ext == file) file->fext = uri->fext;
+        if (ext == file)
+        {
+            ext->str.len += uri->fext;
+            ext->fext = uri->fext;
+        }
         else
         {
             AfxResetUris(1, ext);
             AfxExcerptString(&uri->str, _URI_PATH_OFF(uri) + uri->root + uri->dir + uri->fname, uri->fext, &ext->str);
+            ext->fext = uri->fext;
         }
     }
     return len;

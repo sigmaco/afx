@@ -83,7 +83,7 @@ _AUX afxResult _AuxHidCtorCb(afxHid hid, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     afxHidInfo const* info = (afxHidInfo const*)(args[1]) + invokeNo;
 
-    if (_AfxDevBaseImplementation.ctor(&hid->dev, (void*[]) { icd, (void*)&info->dev }, 0)) AfxThrowError();
+    if (_AFX_DEV_CLASS_CONFIG.ctor(&hid->dev, (void*[]) { icd, (void*)&info->dev }, 0)) AfxThrowError();
     else
     {
         afxUnit port = 0;

@@ -30,31 +30,41 @@
 typedef enum avxCmdbState
 /// Each command buffer is always in one of the following states
 {
-    /// When a command buffer is allocated, it is in the initial state.
-    /// Some commands are able to reset a command buffer (or a set of command buffers) back to this state from any of the executable, recording or invalid state.
-    /// Command buffers in the initial state canv only be moved to the recording state, or freed.
+    // When a command buffer is allocated, it is in the initial state.
+    // Some commands are able to reset a command buffer (or a set of command buffers) back to this state from any of the executable, recording or invalid state.
+    // Command buffers in the initial state canv only be moved to the recording state, or freed.
     avxCmdbState_INITIAL,
 
-    /// BeginCmdBuffer() changes the state of a command buffer from the initial state to the recording state.
-    /// Once a command buffer is in the recording state, AvxCmd* commands canv be used to record to the command buffer.
+    // BeginCmdBuffer() changes the state of a command buffer from the initial state to the recording state.
+    // Once a command buffer is in the recording state, AvxCmd* commands canv be used to record to the command buffer.
     avxCmdbState_RECORDING,
 
-    /// AfxCompileCmdBuffer() ends the recording of a command buffer, and moves it from the recording state to the executable state.
-    /// Executable command buffers canv be submitted, reset, or recorded to another command buffer.
+    // AfxCompileCmdBuffer() ends the recording of a command buffer, and moves it from the recording state to the executable state.
+    // Executable command buffers canv be submitted, reset, or recorded to another command buffer.
     avxCmdbState_EXECUTABLE,
 
-    /// Queue submission of a command buffer changes the state of a command buffer from the executable state to the pending state.
-    /// Whilst in the pending state, applications must not attempt to modify the command buffer in any way - as the device may be processing the commands recorded to it.
-    /// Once execution of a command buffer completes, the command buffer either reverts back to the executable state, or if it was recorded with ONCE flag, it moves to the invalid state.
-    /// A synchronization command should be used to detect when this occurs.
+    // Queue submission of a command buffer changes the state of a command buffer from the executable state to the pending state.
+    // Whilst in the pending state, applications must not attempt to modify the command buffer in any way - as the device may be processing the commands recorded to it.
+    // Once execution of a command buffer completes, the command buffer either reverts back to the executable state, or if it was recorded with ONCE flag, it moves to the invalid state.
+    // A synchronization command should be used to detect when this occurs.
     avxCmdbState_PENDING,
 
-    /// Some operations, such as modifying or deleting a resource that was used in a command recorded to a command buffer, will transition the state of that command buffer into the invalid state.
-    /// Command buffers in the invalid state canv only be reset or freed.
+    // Some operations, such as modifying or deleting a resource that was used in a command recorded to a command buffer, will transition the state of that command buffer into the invalid state.
+    // Command buffers in the invalid state canv only be reset or freed.
     avxCmdbState_INVALID,
 
     avxCmdbState_INTERNAL_EXECUTING,
 } avxCmdbState;
+
+#ifndef _AVX_DRAW_C
+AFX_DECLARE_STRUCT(_avxDctxDdi);
+#else
+AFX_DEFINE_STRUCT(_avxDctxDdi)
+{
+    afxError(*end)(afxDrawContext);
+    afxError(*reset)(afxDrawContext, afxBool freeMem, afxBool permanent);
+};
+#endif
 
 #ifdef _AVX_DRAW_CONTEXT_C
 #ifdef _AVX_CMD_BUFFER_IMPL
@@ -63,23 +73,33 @@ AFX_OBJECT(_avxDrawContext)
 AFX_OBJECT(afxDrawContext)
 #endif
 {
-    afxArena        cmdArena; /// owned by dsys data for specific port
+    _avxDctxDdi const*pimpl;
+    afxArena        cmdArena; // owned by dsys data for specific port
     afxChain        commands;
     avxCmdbState    state;
-    afxError(*endCb)(afxDrawContext);
-    afxError(*resetCb)(afxDrawContext, afxBool freeMem, afxBool permanent);
-    afxAtom32       submCnt; /// number of submissions
-    afxMask64       submQueMask; /// one for each queue where this dctx was submitted into.
+
+    afxAtom32       submCnt; // number of submissions
+    afxMask64       submQueMask; // one for each queue where this dctx was submitted into.
 
     afxUnit         portId;
     afxUnit         poolIdx;
-    afxBool         disposable; /// if true, at execution end, it is moved to invalid state and considered in recycle chain.
+    afxBool         disposable; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
+
+    afxDrawLimits const* devLimits;
+    afxDrawFeatures const* enabledFeatures;
 
     afxBool         inRenderPass;
     afxBool         inVideoCoding;
 
-    afxDrawLimits const* devLimits;
-    afxDrawFeatures const* enabledFeatures;
+    struct
+    {
+        avxCanvas           canv;
+        afxRect             area;
+        avxPipeline         pip;
+        avxVertexDecl       vtxd;
+        avxBufferedStream   vbos[16];
+        avxBuffer           ibo;
+    };
 };
 #endif//_AVX_DRAW_CONTEXT_C
 
@@ -100,16 +120,16 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxBuffer src;
-        afxBuffer dst;
+        avxBuffer src;
+        avxBuffer dst;
         afxUnit opCnt;
-        afxBufferCopy AFX_SIMD ops[];
+        avxBufferCopy AFX_SIMD ops[];
     } CopyBuffer;
     struct
     {
         avxCmdHdr hdr;
 
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit offset;
         afxUnit range;
         afxUnit value;
@@ -118,7 +138,7 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit offset;
         afxUnit range;
     } ClearBuffer;
@@ -126,7 +146,7 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit offset;
         afxUnit range;
         afxByte AFX_SIMD data[];
@@ -137,7 +157,7 @@ AFX_DEFINE_UNION(avxCmd)
         avxCmdHdr hdr;
 
         afxRaster ras;
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit opCnt;
         afxRasterIo AFX_SIMD ops[];
     } PackRaster;
@@ -146,7 +166,7 @@ AFX_DEFINE_UNION(avxCmd)
         avxCmdHdr hdr;
 
         afxRaster ras;
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit opCnt;
         afxRasterIo AFX_SIMD ops[];
     } UnpackRaster;
@@ -216,7 +236,7 @@ AFX_DEFINE_UNION(avxCmd)
         afxUnit set;
         afxUnit baseIdx;
         afxUnit cnt;
-        afxBufferMap AFX_SIMD maps[];
+        avxBufferMap AFX_SIMD maps[];
     } BindBuffers;
     struct
     {
@@ -253,7 +273,7 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit32 offset;
         afxUnit32 drawCnt;
         afxUnit32 stride;
@@ -262,9 +282,9 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit32 offset;
-        afxBuffer cntBuf;
+        avxBuffer cntBuf;
         afxUnit32 cntBufOff;
         afxUnit32 maxDrawCnt;
         afxUnit32 stride;
@@ -279,7 +299,7 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit32 offset;
         afxUnit32 drawCnt;
         afxUnit32 stride;
@@ -288,9 +308,9 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit32 offset;
-        afxBuffer cntBuf;
+        avxBuffer cntBuf;
         afxUnit32 cntBufOff;
         afxUnit32 maxDrawCnt;
         afxUnit32 stride;
@@ -305,7 +325,7 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit32 offset;
     } DispatchIndirect;
     struct
@@ -366,7 +386,7 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxBuffer buf;
+        avxBuffer buf;
         afxUnit32 offset;
         afxUnit32 range;
         afxUnit32 idxSiz;
@@ -536,7 +556,7 @@ AFX_DEFINE_UNION(avxCmd)
         avxQueryPool pool;
         afxUnit baseQuery;
         afxUnit queryCnt;
-        afxBuffer buf;
+        avxBuffer buf;
         afxSize offset;
         afxSize stride;
         afxQueryResultFlags flags;
@@ -661,14 +681,14 @@ AFX_DEFINE_UNION(avxCmdList)
 #define AVX_GET_STD_CMD_ID(cmdName_) (offsetof(avxCmdList, cmdName_) / sizeof(void*))
 
 AVX avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxCmdId* cmdId);
-AVX afxError _AvxDctxResetCb(afxDrawContext dctx, afxBool freeMem, afxBool permanent);
-AVX afxError _AvxDctxEndCb(afxDrawContext dctx);
+AVX afxError _AvxDctxImplResetCb(afxDrawContext dctx, afxBool freeMem, afxBool permanent);
+AVX afxError _AvxDctxImplEndCb(afxDrawContext dctx);
 
 
 AVX avxCmdbState    _AvxGetCommandStatus(afxDrawContext dctx);
 
 AVX afxClassConfig const _AVX_DCTX_CLASS_CONFIG;
-
+AVX _avxDctxDdi const _AVX_DCTX_DDI;
 
 
 #endif//AVX_IMPL___CONTEXT_H

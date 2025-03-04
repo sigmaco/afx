@@ -87,7 +87,7 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
 
         afxDrawQueue dque = AfxGetProvider(dctx);
         AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
-
+#if 0
         //afxUnit poolIdx = dctx->poolIdx;
 
         AfxEnterSlockExclusive(&dque->cmdbReqLock);
@@ -98,13 +98,14 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
         }
 
         AfxExitSlockExclusive(&dque->cmdbReqLock);
+#endif
     }
     AfxDecAtom32(&dctx->submCnt);
     AfxDisposeObjects(1, &dctx);
     return err;
 }
 
-_AVX afxError _AvxDctxResetCb(afxDrawContext dctx, afxBool freeMem, afxBool permanent)
+_AVX afxError _AvxDctxImplResetCb(afxDrawContext dctx, afxBool freeMem, afxBool permanent)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(dctx->state != avxCmdbState_PENDING);
@@ -117,9 +118,15 @@ _AVX afxError _AvxDctxResetCb(afxDrawContext dctx, afxBool freeMem, afxBool perm
     return err;
 }
 
-_AVX afxError _AvxDctxEndCb(afxDrawContext dctx)
+_AVX afxError _AvxDctxImplEndCb(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     return err;
 }
+
+_AVX _avxDctxDdi const _AVX_DCTX_DDI =
+{
+    .end = _AvxDctxImplEndCb,
+    .reset = _AvxDctxImplResetCb,
+};

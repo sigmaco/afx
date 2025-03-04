@@ -154,7 +154,7 @@ AFX afxError                AfxDeallocate(void** pp, afxHere const hint);
 AFX void                    AfxStream2(afxUnit cnt, void const* src, afxSize srcStride, void* dst, afxUnit dstStride);
 AFX void                    AfxStream3(afxUnit cnt, void const* src, afxUnit srcOffset, afxSize srcStride, void* dst, afxUnit dstOffset, afxUnit dstStride);
 
-#define AFX_ALIGNED_SIZE(operand_,alignment_) ((operand_ + (alignment_ - 1)) & ~(alignment_ - 1))
+#define AFX_ALIGNED_SIZE(operand_,alignment_) (((operand_) + ((alignment_) - 1)) & ~((alignment_) - 1))
 
 
 AFX afxInt          AfxMemcmp(void const* buf1, void const* buf2, afxSize siz);

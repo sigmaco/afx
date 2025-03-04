@@ -67,7 +67,7 @@
 #   define offsetof(s,m) ((afxSize)&(((s*)0)->m))
 #endif
 #ifndef ARRAY_SIZE
-#   define ARRAY_SIZE(static_array_) (sizeof(static_array_) / sizeof((static_array_)[0]))
+#   define ARRAY_SIZE(static_array_) (sizeof((static_array_)) / sizeof(((static_array_))[0]))
 #endif
 #ifndef countof
 #   define countof ARRAY_SIZE
@@ -101,10 +101,10 @@
 #define AFX_INVALID_INDEX32 ((afxUnit32)(~((afxUnit32)0)))
 #define AFX_INVALID_INDEX64 ((afxUnit64)(~((afxUnit64)0)))
 
-AFX_STATIC_ASSERT(AFX_INVALID_INDEX == AFX_N32_MAX, "");
-AFX_STATIC_ASSERT(AFX_INVALID_INDEX8 == AFX_N8_MAX, "");
-AFX_STATIC_ASSERT(AFX_INVALID_INDEX16 == AFX_N16_MAX, "");
-AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
+AFX_STATIC_ASSERT(AFX_INVALID_INDEX == AFX_U32_MAX, "");
+AFX_STATIC_ASSERT(AFX_INVALID_INDEX8 == AFX_U8_MAX, "");
+AFX_STATIC_ASSERT(AFX_INVALID_INDEX16 == AFX_U16_MAX, "");
+AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_U32_MAX, "");
 
 #define AFX_BIT_OFFSET(bit_) ((afxUnit32)1 << (afxUnit32)(bit_)) // get bit offset
 #define AFX_BIT AFX_BIT_OFFSET  // get bit offset
@@ -114,6 +114,17 @@ AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 #define AFX_MASK_ALL 0xFFFFFFFF
 #define AFX_MASK_NONE 0xFFFFFFFF
 #define AFX_FORCE_ENUM_N32 0x7fffffff
+
+// 4 bytes interpreted as 16:16 fixed.
+typedef afxInt32 afxFixed;
+
+AFXINL afxFixed AfxFixedFromFloat(afxReal f);
+
+AFXINL afxReal AfxRealFromFixed(afxFixed f);
+
+AFXINL afxFixed AfxFixedFromInt(afxInt i);
+
+AFXINL afxInt AfxIntFromFixed(afxFixed f);
 
 ////////////////////////////////////////////////////////////////////////////////
 

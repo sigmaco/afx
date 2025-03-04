@@ -16,12 +16,12 @@
 
 // This code is part of SIGMA A4D <https://sigmaco.org/a4d>
 
-#define _AMX_SOUND_C
+#define _AMX_MIX_C
 #define _AMX_MIX_BRIDGE_C
 #define _AMX_MIX_QUEUE_C
 #include "../impl/amxImplementation.h"
 
-_AMX afxError _AmxUnlockSoundQueue(afxMixQueue mque)
+_AMX afxError _AmxUnlockMixQueue(afxMixQueue mque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
@@ -29,7 +29,7 @@ _AMX afxError _AmxUnlockSoundQueue(afxMixQueue mque)
     return err;
 }
 
-_AMX afxError _AmxLockSoundQueue(afxMixQueue mque, afxBool wait, afxTimeSpec const* ts)
+_AMX afxError _AmxLockMixQueue(afxMixQueue mque, afxBool wait, afxTimeSpec const* ts)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
@@ -121,7 +121,7 @@ _AMX afxUnit AfxGetMixQueuePort(afxMixQueue mque)
     return mque->portId;
 }
 
-_AMX afxError _AmxSqueStdDtorCb(afxMixQueue mque)
+_AMX afxError _AmxSqueDtorCb(afxMixQueue mque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
@@ -135,7 +135,7 @@ _AMX afxError _AmxSqueStdDtorCb(afxMixQueue mque)
     return err;
 }
 
-_AMX afxError _AmxSqueStdCtorCb(afxMixQueue mque, void** args, afxUnit invokeNo)
+_AMX afxError _AmxSqueCtorCb(afxMixQueue mque, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
@@ -148,7 +148,7 @@ _AMX afxError _AmxSqueStdCtorCb(afxMixQueue mque, void** args, afxUnit invokeNo)
     mque->mdev = cfg->mdev;
     mque->portId = cfg->portId;
     mque->exuIdx = cfg->exuIdx;
-    mque->msys = AfxGetMixBridgeSystem(mexu);
+    mque->msys = AfxGetBridgedMixSystem(mexu);
 
     mque->immediate = 0;// !!spec->immedate;
 
@@ -168,9 +168,9 @@ _AMX afxError _AmxSqueStdCtorCb(afxMixQueue mque, void** args, afxUnit invokeNo)
 _AMX afxClassConfig const _AMX_MQUE_CLASS_CONFIG =
 {
     .fcc = afxFcc_MQUE,
-    .name = "SoundQueue",
+    .name = "MixQueue",
     .desc = "Sound Device Submission Queue",
     .fixedSiz = sizeof(AFX_OBJECT(afxMixQueue)),
-    .ctor = (void*)_AmxSqueStdCtorCb,
-    .dtor = (void*)_AmxSqueStdDtorCb
+    .ctor = (void*)_AmxSqueCtorCb,
+    .dtor = (void*)_AmxSqueDtorCb
 };

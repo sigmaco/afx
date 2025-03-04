@@ -60,6 +60,16 @@ AFX_DEFINE_HANDLE(afxAudio);
 AFX_DEFINE_HANDLE(afxSound);
 AFX_DEFINE_HANDLE(afxAudient);
 
+AFX_DEFINE_HANDLE(amxBuffer);
+
+AFX_DEFINE_HANDLE(afxVideoDecoder);
+AFX_DEFINE_HANDLE(afxVideoEncoder);
+
+AFX_DEFINE_HANDLE(amxSource);
+AFX_DEFINE_HANDLE(amxCodec);
+AFX_DEFINE_HANDLE(amxEncoder);
+AFX_DEFINE_HANDLE(amxDecoder);
+
 typedef enum amxFormat
 // Sound sample formats.
 {

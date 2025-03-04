@@ -1,6 +1,6 @@
 #include <//./z/video/stdEnv.inc>
 
-UNIFORM_UNIT(0, 0, buffer)
+UNIFORM(0, 0, std140, buffer)
 {
     vec2 viewSize;
 };

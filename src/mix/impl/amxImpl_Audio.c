@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA A4D <https://sigmaco.org/a4d>
 
-#define _AMX_SOUND_C
+#define _AMX_MIX_C
 //#define _AMX_MIX_BRIDGE_C
 //#define _AMX_MIX_SYSTEM_C
 //#define _AMX_MIX_QUEUE_C

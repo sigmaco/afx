@@ -151,7 +151,7 @@ _AUX afxBool _AuxGetIcd(afxUnit icdIdx, afxModule* driver)
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
-    afxModule icd;
+    afxModule icd = NIL;
     while ((icdIdx < sys->aux.icdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->aux.icdChain, icdIdx), AFX_OBJ(afxModule), icd.aux)))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);

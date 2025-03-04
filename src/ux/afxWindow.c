@@ -20,7 +20,7 @@
 #define _AUX_WINDOW_C
 #include "impl/auxImplementation.h"
 
-_AUX afxClass const* AuxGetWidgetClass(afxWindow wnd)
+_AUX afxClass const* _AuxWndGetWidgetClass(afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
@@ -29,14 +29,41 @@ _AUX afxClass const* AuxGetWidgetClass(afxWindow wnd)
     return cls;
 }
 
-_AUX afxError AfxChangeWindowIcon(afxWindow wnd, afxRaster ras)
+_AUX afxError AfxChangeWindowIcon(afxWindow wnd, afxRaster icon)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     
-    if (wnd->chIconCb && wnd->chIconCb(wnd, ras))
-        AfxThrowError();
+    AFX_ASSERT(AfxGetTid() == AfxGetObjectTid(wnd));
 
+    afxError(*chIconCb)(afxWindow, afxRaster) = wnd->pimpl->chIconCb;
+
+    if (chIconCb)
+    {
+        if (chIconCb(wnd, icon))
+            AfxThrowError();
+        return err;
+    }
+
+    // If the host platform doesn't offer custom icon support, we do with via draw system.
+    afxRaster curr = wnd->icon;
+
+    if (curr != icon)
+    {
+        if (curr)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &curr);
+            AfxDisposeObjects(1, &curr);
+            wnd->icon = NIL;
+        }
+
+        if (icon)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &icon);
+            AfxReacquireObjects(1, &icon);
+            wnd->icon = icon;
+        }
+    }
     return err;
 }
 
@@ -45,6 +72,7 @@ _AUX afxError AfxLoadWindowIcon(afxWindow wnd, afxUri const* uri)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(uri);
+
     afxDrawSystem dsys = AfxGetDrawOutputContext(wnd->dout ? wnd->dout : wnd->frameDout);
     
     afxRasterInfo rasi = { 0 };
@@ -70,10 +98,20 @@ _AUX afxError AfxRedrawWindow(afxWindow wnd, afxRect const* rc)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
-    
-    if (wnd->redrawCb && wnd->redrawCb(wnd, rc))
-        AfxThrowError();
-    
+
+    AFX_ASSERT(AfxGetTid() == AfxGetObjectTid(wnd));
+
+    afxError(*redrawCb)(afxWindow, afxRect const*) = wnd->pimpl->redrawCb;
+
+    if (redrawCb)
+    {
+        if (redrawCb(wnd, rc))
+            AfxThrowError();
+    }
+    else
+    {
+
+    }
     return err;
 }
 
@@ -82,9 +120,11 @@ _AUX afxError AfxRedrawWidgets(afxWindow wnd, afxDrawContext dctx)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
 
+    afxClass const* cls = _AuxWndGetWidgetClass(wnd);
+
     afxUnit i = 0;
     afxWidget wid;
-    while (AfxEnumerateObjects(AuxGetWidgetClass(wnd), i, 1, (afxObject*)&wid))
+    while (AfxEnumerateObjects(cls, i, 1, (afxObject*)&wid))
     {
         AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
         afxWhd whd;
@@ -97,11 +137,11 @@ _AUX afxError AfxRedrawWidgets(afxWindow wnd, afxDrawContext dctx)
     return err;
 }
 
-_AUX afxBool AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, afxDrawOutput* surface)
+_AUX afxBool AfxGetWindowDrawOutput(afxWindow wnd, afxBool frame, afxDrawOutput* output)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
-    AFX_ASSERT(frame || surface);
+    AFX_ASSERT(output);
     afxDrawOutput dout;
     afxBool rslt = 0;
 
@@ -112,17 +152,16 @@ _AUX afxBool AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, afxDraw
             AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
             ++rslt;
         }
-        *frame = dout;
+        *output = dout;
     }
-
-    if (surface)
+    else
     {
         if ((dout = wnd->dout))
         {
             AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
             ++rslt;
         }
-        *surface = dout;
+        *output = dout;
     }
     return rslt;
 }
@@ -140,30 +179,35 @@ _AUX void _AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt)
     wnd->lastClock = currClock;
 }
 
-_AUX afxUnit AfxFormatWindowCaption(afxWindow wnd, afxChar const* fmt, ...)
+_AUX afxUnit AfxFormatWindowTitle(afxWindow wnd, afxChar const* fmt, ...)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
+
+    AFX_ASSERT(AfxGetTid() == AfxGetObjectTid(wnd));
+
     AFX_ASSERT(fmt);
     va_list va;
     va_start(va, fmt);
-    afxUnit len = AfxFormatStringArg(&wnd->caption.str, fmt, va);
+    afxUnit len = AfxFormatStringArg(&wnd->title.str, fmt, va);
     wnd->redrawFrameRequested = TRUE;
     va_end(va);
+
     return len;
 }
 
-_AUX void AfxGetWindowRect(afxWindow wnd, afxRect* frame, afxRect* surface)
+_AUX void AfxGetWindowRect(afxWindow wnd, afxBool frame, afxRect* rc)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
-    AFX_ASSERT(frame || surface);
+    AFX_ASSERT(frame || rc);
+
+    AFX_ASSERT(AfxGetTid() == AfxGetObjectTid(wnd));
 
     if (frame)
-        *frame = wnd->frameRect;
-
-    if (surface)
-        *surface = wnd->surfaceRect;
+        *rc = wnd->frameRect;
+    else
+        *rc = wnd->surfaceRect;
 }
 
 _AUX afxBool AfxTraceScreenToSurface(afxWindow wnd, afxUnit const screenPos[2], afxUnit surfPos[2])
@@ -172,6 +216,9 @@ _AUX afxBool AfxTraceScreenToSurface(afxWindow wnd, afxUnit const screenPos[2], 
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(screenPos);
     AFX_ASSERT(surfPos);
+
+    AFX_ASSERT(AfxGetTid() == AfxGetObjectTid(wnd));
+
     afxBool rslt = 0;
     surfPos[0] = screenPos[0] - wnd->frameRect.x;
     surfPos[1] = screenPos[1] - wnd->frameRect.y;
@@ -184,6 +231,9 @@ _AUX afxBool AfxTraceSurfaceToScreen(afxWindow wnd, afxUnit const surfPos[2], af
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(screenPos);
     AFX_ASSERT(surfPos);
+
+    AFX_ASSERT(AfxGetTid() == AfxGetObjectTid(wnd));
+
     afxBool rslt = 0;
     screenPos[0] = surfPos[0] + wnd->frameRect.x;
     screenPos[1] = surfPos[1] + wnd->frameRect.y;
@@ -195,56 +245,111 @@ _AUX afxBool AfxMoveWindow(afxWindow wnd, afxUnit const pos[2])
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(pos);
+
+    AFX_ASSERT(AfxGetTid() == AfxGetObjectTid(wnd));
     
-    if (wnd->moveCb && wnd->moveCb(wnd, pos)) AfxThrowError();
-    else
+    afxBool(*moveCb)(afxWindow, afxUnit const[2]) = wnd->pimpl->moveCb;
+
+    if (moveCb)
     {
-        wnd->frameRect.x = pos[0];
-        wnd->frameRect.y = pos[1];
+        if (moveCb(wnd, pos))
+            AfxThrowError();
+        return err;
     }
+
+    wnd->frameRect.x = pos[0];
+    wnd->frameRect.y = pos[1];
+
     return !err;
 }
 
-_AUX afxError AfxAdjustWindow(afxWindow wnd, afxRect const* frame, afxRect const* surface)
+_AUX afxError AfxAdjustWindow(afxWindow wnd, afxBool frame, afxRect const* rc)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     afxDesktop* dwm = wnd->dwm;
 
-    if (wnd->adjustCb && wnd->adjustCb(wnd, frame, surface)) AfxThrowError();
+    afxError(*adjustCb)(afxWindow, afxBool, afxRect const*) = wnd->pimpl->adjustCb;
+
+    if (adjustCb)
+    {
+        if (adjustCb(wnd, frame, rc))
+            AfxThrowError();
+
+        return err;
+    }
+
+    if (frame)
+    {
+        afxRect rc2;
+        rc2.x = AfxMinu(rc->x, dwm->res.x - 1);
+        rc2.y = AfxMinu(rc->y, dwm->res.y - 1);
+        rc2.w = AfxMax(1, AfxMin(rc->w, dwm->res.w));
+        rc2.h = AfxMax(1, AfxMin(rc->h, dwm->res.y));
+
+        if ((wnd->frameRect.x != rc2.x) ||
+            (wnd->frameRect.y != rc2.y) ||
+            (wnd->frameRect.w != rc2.w) ||
+            (wnd->frameRect.h != rc2.h))
+        {
+
+            AfxAssert2(rc2.w, rc2.h);
+            wnd->frameRect = rc2;
+
+            wnd->surfaceRect.x = wnd->marginL;
+            wnd->surfaceRect.y = wnd->marginT;
+            wnd->surfaceRect.w = AfxMin(AfxMax(1, rc2.w - wnd->marginR - wnd->marginL), wnd->frameRect.w);
+            wnd->surfaceRect.h = AfxMin(AfxMax(1, rc2.h - wnd->marginB - wnd->marginT), wnd->frameRect.h);
+
+            //if (!SetWindowPos(wnd->hWnd, NULL, 0, 0, wnd->frameRect.w, wnd->frameRect.h, SWP_NOZORDER))
+                //  AfxThrowError();
+
+            avxRange whd;
+            afxDrawOutput dout = wnd->dout;
+            AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
+            whd;
+            AfxQueryDrawOutputExtent(dout, &whd, NIL);
+            whd.w = wnd->surfaceRect.w;
+            whd.h = wnd->surfaceRect.h;
+
+            if (AfxAdjustDrawOutput(dout, whd))
+                AfxThrowError();
+        }
+    }
     else
     {
-        if (frame)
+        AfxAssert2(wnd->frameRect.w > (afxUnit)rc->x, wnd->frameRect.h > (afxUnit)rc->y);
+        //AfxAssert4(surface->w, wnd->m.frameRect.w > (afxUnit)area->w, surface->h, wnd->m.frameRect.h > (afxUnit)surface->h);
+
+        afxRect rc2;
+        rc2.x = AfxMinu(rc->x, wnd->frameRect.w - 1);
+        rc2.y = AfxMinu(rc->y, wnd->frameRect.h - 1);
+        rc2.w = AfxMax(1, rc->w/*AfxMin(surface->w, wnd->m.frameRect.w)*/);
+        rc2.h = AfxMax(1, rc->h/*AfxMin(surface->h, wnd->m.frameRect.h)*/);
+
+        if ((wnd->surfaceRect.x != rc2.x) ||
+            (wnd->surfaceRect.y != rc2.y) ||
+            (wnd->surfaceRect.w != rc2.w) ||
+            (wnd->surfaceRect.h != rc2.h))
         {
-            AfxAssert3(frame, frame->w, frame->h);
+            afxInt32 extraWndWidth = 0, extraWndHeight = 0;
+            //CalcWindowValuesW32(wnd->hWnd, &extraWndWidth, &extraWndHeight);
 
-            afxRect rc2;
-            rc2.x = AfxMinu(frame->x, dwm->res.x - 1);
-            rc2.y = AfxMinu(frame->y, dwm->res.y - 1);
-            rc2.w = AfxMax(1, AfxMin(frame->w, dwm->res.w));
-            rc2.h = AfxMax(1, AfxMin(frame->h, dwm->res.y));
+            AfxAssert2(rc2.w, rc2.h);
+            wnd->frameRect.w = rc2.w + extraWndWidth;
+            wnd->frameRect.h = rc2.h + extraWndHeight;
+            wnd->surfaceRect = rc2;
 
-            if ((wnd->frameRect.x != rc2.x) ||
-                (wnd->frameRect.y != rc2.y) ||
-                (wnd->frameRect.w != rc2.w) ||
-                (wnd->frameRect.h != rc2.h))
+            //if (!SetWindowPos(wnd->hWnd, NULL, 0, 0, wnd->m.frameRect.w, wnd->m.frameRect.h, SWP_NOMOVE | SWP_NOZORDER))
+                //AfxThrowError();
+
+            afxDrawOutput dout = wnd->dout;
+
+            if (dout)
             {
-
-                AfxAssert2(rc2.w, rc2.h);
-                wnd->frameRect = rc2;
-
-                wnd->surfaceRect.x = wnd->marginL;
-                wnd->surfaceRect.y = wnd->marginT;
-                wnd->surfaceRect.w = AfxMin(AfxMax(1, rc2.w - wnd->marginR - wnd->marginL), wnd->frameRect.w);
-                wnd->surfaceRect.h = AfxMin(AfxMax(1, rc2.h - wnd->marginB - wnd->marginT), wnd->frameRect.h);
-
-                //if (!SetWindowPos(wnd->hWnd, NULL, 0, 0, wnd->frameRect.w, wnd->frameRect.h, SWP_NOZORDER))
-                  //  AfxThrowError();
-
-                afxWhd whd;
-                afxDrawOutput dout = wnd->dout;
                 AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-                whd;
+
+                avxRange whd;
                 AfxQueryDrawOutputExtent(dout, &whd, NIL);
                 whd.w = wnd->surfaceRect.w;
                 whd.h = wnd->surfaceRect.h;
@@ -253,55 +358,11 @@ _AUX afxError AfxAdjustWindow(afxWindow wnd, afxRect const* frame, afxRect const
                     AfxThrowError();
             }
         }
-
-        if (surface)
-        {
-            AfxAssert2(wnd->frameRect.w > (afxUnit)surface->x, wnd->frameRect.h > (afxUnit)surface->y);
-            //AfxAssert4(surface->w, wnd->m.frameRect.w > (afxUnit)area->w, surface->h, wnd->m.frameRect.h > (afxUnit)surface->h);
-
-            afxRect rc2;
-            rc2.x = AfxMinu(surface->x, wnd->frameRect.w - 1);
-            rc2.y = AfxMinu(surface->y, wnd->frameRect.h - 1);
-            rc2.w = AfxMax(1, surface->w/*AfxMin(surface->w, wnd->m.frameRect.w)*/);
-            rc2.h = AfxMax(1, surface->h/*AfxMin(surface->h, wnd->m.frameRect.h)*/);
-
-            if ((wnd->surfaceRect.x != rc2.x) ||
-                (wnd->surfaceRect.y != rc2.y) ||
-                (wnd->surfaceRect.w != rc2.w) ||
-                (wnd->surfaceRect.h != rc2.h))
-            {
-                afxInt32 extraWndWidth = 0, extraWndHeight = 0;
-                //CalcWindowValuesW32(wnd->hWnd, &extraWndWidth, &extraWndHeight);
-
-                AfxAssert2(rc2.w, rc2.h);
-                wnd->frameRect.w = rc2.w + extraWndWidth;
-                wnd->frameRect.h = rc2.h + extraWndHeight;
-                wnd->surfaceRect = rc2;
-
-                //if (!SetWindowPos(wnd->hWnd, NULL, 0, 0, wnd->m.frameRect.w, wnd->m.frameRect.h, SWP_NOMOVE | SWP_NOZORDER))
-                    //AfxThrowError();
-
-                afxDrawOutput dout = wnd->dout;
-
-                if (dout)
-                {
-                    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-
-                    afxWhd whd;
-                    AfxQueryDrawOutputExtent(dout, &whd, NIL);
-                    whd.w = wnd->surfaceRect.w;
-                    whd.h = wnd->surfaceRect.h;
-
-                    if (AfxAdjustDrawOutput(dout, whd))
-                        AfxThrowError();
-                }
-            }
-        }
     }
     return err;
 }
 
-_AUX afxError AfxAdjustWindowFromNdc(afxWindow wnd, afxV2d const offset, afxV2d const extent)
+_AUX afxError _AuxAdjustWindowFromNdc(afxWindow wnd, afxV2d const offset, afxV2d const extent)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
@@ -320,13 +381,13 @@ _AUX afxError AfxAdjustWindowFromNdc(afxWindow wnd, afxV2d const offset, afxV2d 
     rc.w = (afxUnit)AfxUnndcf(extent[0], dwm->res.w);
     rc.h = (afxUnit)AfxUnndcf(extent[1], dwm->res.h);
 
-    if (AfxAdjustWindow(wnd, &rc, NIL))
+    if (AfxAdjustWindow(wnd, FALSE, &rc))
         AfxThrowError();
 
     return err;
 }
 
-_AUX afxError AfxAdjustWindowSurfaceFromNdc(afxWindow wnd, afxV2d const offset, afxV2d const extent)
+_AUX afxError _AuxAdjustWindowSurfaceFromNdc(afxWindow wnd, afxV2d const offset, afxV2d const extent)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
@@ -368,7 +429,21 @@ _AUX afxBool _AuxWndStdEventCb(afxWindow wnd, auxEvent *ev)
                 AfxFormatUri(&uri.uri, "../tmp/ss-wnd%u-%u.tga", AfxGetObjectId((void*)wnd), AfxGetTimer());
                 AfxPrintDrawOutput(wnd->dout, 0, 0, &uri.uri);
             }
-        }   
+        }
+        else if (AfxWasKeyPressed(AfxGetProvider(wnd), 0, afxKey_ESC))
+        {
+            if (wnd->cursorConfined)
+            {
+                
+            }
+        }
+        else if (AfxWasKeyPressed(AfxGetProvider(wnd), 0, afxKey_LALT))
+        {
+            if (AfxWasKeyPressed(AfxGetProvider(wnd), 0, afxKey_F11))
+            {
+                AfxImmergeWindow(wnd, !wnd->fullscreen);
+            }
+        }
         break;
     }
     }
@@ -399,50 +474,51 @@ _AUX afxError _AuxWndCtorCb(afxWindow wnd, void** args, afxUnit invokeNo)
     afxWindowConfig const* cfg = (afxWindowConfig const*)(args[1]) + invokeNo;
     afxClassConfig const* widClsCfg = args[2];
 
-    if (!cfg) AfxThrowError();
-    else
+    if (!cfg)
     {
-        //if (cfg->eventCb)
-            //AfxResetEventHandler((void*)wnd, (void*)cfg->eventCb);
-
-        wnd->dwm = &ses->dwm;
-
-        wnd->active = FALSE;
-        wnd->focused = FALSE;
-        AfxV2dZero(wnd->cursorPos);
-        AfxV2dZero(wnd->cursorMove);
-        AfxV2dZero(wnd->cursorPosNdc);
-        AfxV2dZero(wnd->cursorMoveNdc);
-
-        AfxGetClock(&wnd->startClock);
-        wnd->lastClock = wnd->startClock;
-
-        AfxV2dZero(wnd->grabPoint);
-        AfxV2dZero(wnd->hoveredPoint);
-
-        wnd->grabbedWidg = NIL;
-        wnd->hoveredWidg = NIL;
-        wnd->focusedWidg = NIL;
-
-        AfxDeployChain(&wnd->classes, wnd);
-
-        AfxMakeString2048(&wnd->caption, &AfxString("Multimedia User Experience Infrastructure --- Qwadro Execution Ecosystem (c) 2017 SIGMA --- Public Test Build"));
-
-        afxBool fullscreen = FALSE;
-        afxBool decorated = TRUE;
-        afxBool resizable = TRUE;
-        afxBool floating = FALSE;
-
-        wnd->decorated = decorated;
-        wnd->floating = floating;
-        wnd->focused = FALSE;
-        wnd->resizable = TRUE;
-
-
-        afxClassConfig clsCfg;
-        clsCfg = widClsCfg ? *widClsCfg : _AUX_WID_CLASS_CONFIG;
-        AfxMountClass(&wnd->widCls, NIL, &wnd->classes, &clsCfg);
+        AfxThrowError();
+        return err;
     }
+    
+    wnd->pimpl = &_AUX_WND_IMPL;
+    wnd->dwm = &ses->dwm;
+
+    wnd->active = FALSE;
+    wnd->focused = FALSE;
+    AfxV2dZero(wnd->cursorPos);
+    AfxV2dZero(wnd->cursorMove);
+    AfxV2dZero(wnd->cursorPosNdc);
+    AfxV2dZero(wnd->cursorMoveNdc);
+
+    AfxGetClock(&wnd->startClock);
+    wnd->lastClock = wnd->startClock;
+
+    AfxV2dZero(wnd->grabPoint);
+    AfxV2dZero(wnd->hoveredPoint);
+
+    wnd->grabbedWidg = NIL;
+    wnd->hoveredWidg = NIL;
+    wnd->focusedWidg = NIL;
+
+    AfxDeployChain(&wnd->classes, wnd);
+
+    AfxMakeString2048(&wnd->title, &AfxString("Multimedia UX Infrastructure --- Qwadro Execution Ecosystem (c) 2017 SIGMA --- Public Test Build"));
+
+    afxBool fullscreen = FALSE;
+    afxBool decorated = TRUE;
+    afxBool resizable = TRUE;
+    afxBool floating = FALSE;
+
+    wnd->decorated = decorated;
+    wnd->floating = floating;
+    wnd->focused = FALSE;
+    wnd->resizable = resizable;
+
+
+    afxClassConfig clsCfg;
+    clsCfg = widClsCfg ? *widClsCfg : _AUX_WID_CLASS_CONFIG;
+    AfxMountClass(&wnd->widCls, NIL, &wnd->classes, &clsCfg);
+    
     return err;
 }
 
@@ -459,32 +535,75 @@ _AUX afxClassConfig const _AUX_WND_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AUX afxError AfxConfigureWindow(afxSession ses, afxWindowConfig* cfg, afxV2d const nde)
+_AUX afxError AfxConfigureWindow(afxWindowConfig* cfg, afxV2d const origin, afxV2d const extent)
 {
     afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(cfg);
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return err;
+    }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     afxDrawSystem dsys = cfg->dsys;
-    *cfg = (afxWindowConfig) { 0 };
-    cfg->dsys = dsys;
-    cfg->eventCb = _AuxWndStdEventCb;
+    
+    afxWindowConfig cfg2 = { 0 };
+    cfg2.dsys = dsys;
+    cfg2.eventCb = _AuxWndStdEventCb;
 
     AfxConfigureDrawOutput(cfg->dsys, &cfg->frame);
-    cfg->frame.doNotClip = FALSE;
-    cfg->frame.presentAlpha = avxPresentAlpha_PREMUL;
+    cfg2.frame.doNotClip = FALSE;
+    cfg2.frame.presentAlpha = avxVideoAlpha_PREMUL;
     AfxConfigureDrawOutput(cfg->dsys, &cfg->surface);
-    cfg->surface.bufFlags = afxRasterUsage_DRAW | afxRasterUsage_SAMPLING;
-    cfg->surface.bufFlagsDs[0] = afxRasterUsage_DRAW | afxRasterUsage_SAMPLING;
+    cfg2.surface.bufUsage[0] |= afxRasterUsage_DRAW | afxRasterUsage_SAMPLING;
+    cfg2.surface.bufUsage[1] |= afxRasterUsage_DRAW | afxRasterUsage_SAMPLING;
 
+
+    afxDesktop* dwm = &ses->dwm;
+    afxRect rc = { 0 };
+
+    if (origin)
+    {
+        rc.x = (afxUnit)AfxUnndcf(origin[0], dwm->res.x - 1);
+        rc.y = (afxUnit)AfxUnndcf(origin[1], dwm->res.y - 1);
+    }
+
+    if (extent)
+    {
+        rc.w = (afxUnit)AfxUnndcf(extent[0], dwm->res.w);
+        rc.h = (afxUnit)AfxUnndcf(extent[1], dwm->res.h);
+    }
+    else
+    {
+        rc.w = (afxUnit)dwm->res.w / 2;
+        rc.h = (afxUnit)dwm->res.h / 2;
+    }
+
+    cfg2.rc = rc;
+    cfg2.surface.extent.w = rc.w;
+    cfg2.surface.extent.h = rc.h;
+    *cfg = cfg2;
     return err;
 }
 
-_AUX afxError AfxAcquireWindow(afxSession ses, afxWindowConfig const* cfg, afxWindow* window)
+_AUX afxError AfxAcquireWindow(afxWindowConfig const* cfg, afxWindow* window)
 {
     afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(window);
+    AFX_ASSERT(cfg);
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return err;
+    }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
-    afxClass* cls = (afxClass*)AfxGetWindowClass(ses);
+    afxClass* cls = (afxClass*)_AuxSesGetWndClass(ses);
     AFX_ASSERT_CLASS(cls, afxFcc_WND);
     afxWindow wnd;
 

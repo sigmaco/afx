@@ -28,7 +28,7 @@
 AFX_DEFINE_STRUCT(avxIndexBuffer)
 {
     afxChain    rows;
-    afxBuffer   buf;
+    avxBuffer   buf;
     afxChain    rooms;
 };
 
@@ -36,7 +36,7 @@ AFX_DEFINE_STRUCT(freeVBlistEntry)
 {
     freeVBlistEntry*        next;
     freeVBlistEntry*        prev;
-    afxBuffer               vbo;
+    avxBuffer               vbo;
     afxUnit32                offset;
     afxUnit32                size;
 };
@@ -44,10 +44,10 @@ AFX_DEFINE_STRUCT(freeVBlistEntry)
 AFX_DEFINE_STRUCT(createdVBlistEntry)
 {
     createdVBlistEntry*     next;
-    afxBuffer               vbo;
+    avxBuffer               vbo;
 };
 
-AFX_OBJECT(afxBufferizer)
+AFX_OBJECT(avxBufferizer)
 {
     afxDrawInput        din;
     afxUnit32           DefaultVBSize;
@@ -59,7 +59,7 @@ AFX_OBJECT(afxBufferizer)
 };
 
 #if !0
-afxBool AfxBufferizeIndices(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size, avxIndexCache* cache)
+afxBool AfxBufferizeIndices(avxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size, avxIndexCache* cache)
 {
     // based on RwD3D9CreateVertexBuffer
 
@@ -91,13 +91,13 @@ afxBool AfxBufferizeIndices(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 siz
         
         afxDrawSystem dsys = AfxGetDrawInputContext(vbMgr->din);
 
-        afxBuffer vbo;
-        afxBufferInfo spec = { 0 };
+        avxBuffer vbo;
+        avxBufferInfo spec = { 0 };
         spec.cap = freelist->size;
-        spec.flags = afxBufferFlag_W;
-        spec.usage = afxBufferUsage_INDEX;
+        spec.flags = avxBufferFlag_W;
+        spec.usage = avxBufferUsage_INDEX;
 
-        if (AfxAcquireBuffers(dsys, 1, &spec, &vbo))
+        if (AvxAcquireBuffers(dsys, 1, &spec, &vbo))
         {
             AfxPopSlabUnit(&vbMgr->FreeVBFreeList, freelist);            
             return FALSE;
@@ -153,7 +153,7 @@ afxBool AfxBufferizeIndices(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 siz
     return TRUE;
 }
 
-void DestroyIndexBuffer(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size, afxBuffer vbo, afxUnit32 offset)
+void DestroyIndexBuffer(avxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size, avxBuffer vbo, afxUnit32 offset)
 {
     // based on RwD3D9DestroyVertexBuffer
 
@@ -282,7 +282,7 @@ void DestroyIndexBuffer(afxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size, a
 #endif
 }
 
-afxBool _IndexBufferManagerOpen(afxBufferizer vbMgr)
+afxBool _IndexBufferManagerOpen(avxBufferizer vbMgr)
 {
     afxError err = NIL;
     //avxVertexBufferizer* vbMgr = AfxAllocate(1, sizeof(vbMgr[0]), 0, AfxHere());
@@ -295,7 +295,7 @@ afxBool _IndexBufferManagerOpen(afxBufferizer vbMgr)
     return TRUE;
 }
 
-void _IndexBufferManagerClose(afxBufferizer vbMgr)
+void _IndexBufferManagerClose(avxBufferizer vbMgr)
 {
     //avxVertexBufferizer* vbMgr = *vbMgrPtr;
 #if defined(RWDEBUG)
@@ -361,7 +361,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
 
         for (afxUnit i = 0; i < msh->attrCnt; i++)
         {
-            avxMeshAttr* attr = &msh->attrInfo[i];
+            asxMeshAttr* attr = &msh->attrInfo[i];
             avxFormat fmt = attr->fmt;
             AFX_ASSERT(fmt < avxFormat_TOTAL);
 
@@ -423,7 +423,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
             }
             cachedAttrOffset[i] = cacheStride[cacheIdx[i]];
             avxFormatDescription pfd;
-            AfxDescribePixelFormat(fmt, &pfd);
+            AvxDescribeFormats(1, &fmt, &pfd);
             cacheStride[cacheIdx[i]] += pfd.stride;//AfxVertexFormatGetSize(cachedAttrFmt[i]);
         }
 
@@ -431,40 +431,40 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
         AfxPushLink(&cache->vbuf, NIL);
         cache->vin = NIL;
 
-        afxBufferInfo vboSpec = { 0 };
-        vboSpec.flags = afxBufferFlag_W;
-        vboSpec.usage = afxBufferUsage_VERTEX;
+        avxBufferInfo vboSpec = { 0 };
+        vboSpec.flags = avxBufferFlag_W;
+        vboSpec.usage = avxBufferUsage_VERTEX;
         vboSpec.cap = 0;
 
         for (afxUnit i = 0; i < 2; i++)
         {
             cache->streams[i].base = i ? msh->vtxCache.streams[i - 1].range : 0;
-            cache->streams[i].range = AFX_ALIGNED_SIZE(cacheStride[i] * msh->vtxCnt, AFX_BUF_ALIGNMENT);
+            cache->streams[i].range = AFX_ALIGNED_SIZE(cacheStride[i] * msh->vtxCnt, AVX_BUFFER_ALIGNMENT);
             cache->streams[i].stride = cacheStride[i];
 
             vboSpec.cap += cache->streams[i].range;
         }
 
-        afxBuffer buf;
+        avxBuffer buf;
         afxSimulation sim = AfxGetProvider(msh);
         afxDrawSystem dsys = AfxGetSimulationDrawSystem(sim);
-        AfxAcquireBuffers(/*din*/dsys, 1, &vboSpec, &buf);
+        AvxAcquireBuffers(/*din*/dsys, 1, &vboSpec, &buf);
         cache->buf = buf;
 
         for (afxUnit srcIdx = 0; srcIdx < 2; srcIdx++)
         {
             AFX_ASSERT(cacheStride[srcIdx]);
-            AFX_ASSERT_RANGE(AfxGetBufferCapacity(cache->buf, 0), cache->streams[srcIdx].base, cache->streams[srcIdx].range);
+            AFX_ASSERT_RANGE(AvxGetBufferCapacity(cache->buf, 0), cache->streams[srcIdx].base, cache->streams[srcIdx].range);
             void* dst;
 
-            if (AfxMapBuffer(cache->buf, cache->streams[srcIdx].base, cache->streams[srcIdx].range, NIL, &dst)) AfxThrowError();
+            if (AvxMapBuffer(cache->buf, cache->streams[srcIdx].base, cache->streams[srcIdx].range, NIL, &dst)) AfxThrowError();
             else
             {
                 for (afxUnit j = 0; j < msh->attrCnt; j++)
                 {
                     if (cacheIdx[j] == srcIdx)
                     {
-                        avxMeshAttr* attr = &msh->attrInfo[j];
+                        asxMeshAttr* attr = &msh->attrInfo[j];
                         //AFX_ASSERT(data);
                         avxFormat fmt = attr->fmt;
                         AFX_ASSERT(fmt < avxFormat_TOTAL);
@@ -474,14 +474,14 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
                         if (data)
                         {
                             avxFormatDescription pfd;
-                            AfxDescribePixelFormat(fmt, &pfd);
+                            AvxDescribeFormats(1, &fmt, &pfd);
                             afxSize srcStride = pfd.stride;// AfxVertexFormatGetSize(fmt);
                             AFX_ASSERT(srcStride);
                             AfxStream3(msh->vtxCnt, data, 0, srcStride, dst, cachedAttrOffset[j], cache->streams[srcIdx].stride);
                         }
                     }
                 }
-                AfxUnmapBuffer(cache->buf, TRUE);
+                AvxUnmapBuffer(cache->buf, TRUE);
             }
         }
 
@@ -499,11 +499,11 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
 
         afxUnit idxSiz = msh->minIdxSiz;
 
-        afxBufferInfo bufi = { 0 };
+        avxBufferInfo bufi = { 0 };
         bufi.cap = msh->idxCnt * idxSiz;
-        bufi.flags = afxBufferFlag_W;
-        bufi.usage = afxBufferUsage_INDEX;
-        if (AfxAcquireBuffers(dsys, 1, &bufi, &msh->ibo)) AfxThrowError();
+        bufi.flags = avxBufferFlag_W;
+        bufi.usage = avxBufferUsage_INDEX;
+        if (AvxAcquireBuffers(dsys, 1, &bufi, &msh->ibo)) AfxThrowError();
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &msh->ibo);
@@ -515,29 +515,29 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
             //cache->idxSiz = idxSiz;
         }
 
-        afxBuffer buf;
+        avxBuffer buf;
 
         if ((buf = msh->ibo))
         {
             AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
 
             AFX_ASSERT(msh->iboStride);
-            AFX_ASSERT_RANGE(AfxGetBufferCapacity(buf, 0), msh->iboBase, msh->iboRange);
-            //AfxUpdateBuffer2(cache->buf, cache->base, cache->range, cache->stride, msht->vtxIdx, sizeof(msht->vtxIdx[0]));
+            AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), msh->iboBase, msh->iboRange);
+            //AvxUpdateBuffer2(cache->buf, cache->base, cache->range, cache->stride, msht->vtxIdx, sizeof(msht->vtxIdx[0]));
 
             afxUnit* indices = msh->indices;
 
-            afxBufferIo iop = { 0 };
+            avxBufferIo iop = { 0 };
             iop.dstOffset = msh->iboBase;
             iop.dstStride = msh->iboStride;
             iop.srcStride = sizeof(indices[0]);
             iop.rowCnt = msh->idxCnt;
-            AfxUpdateBuffer(msh->ibo, 1, &iop, 0, indices);
+            AvxUpdateBuffer(msh->ibo, 1, &iop, 0, indices);
 
 #if 0//_AFX_DEBUG
             void* p;
             AfxWaitForDrawBridge(dsys, 0, 0);
-            AfxMapBuffer(cache->buf, cache->base, cache->range, NIL, &p);
+            AvxMapBuffer(cache->buf, cache->base, cache->range, NIL, &p);
 
             for (afxUnit i = 0; i < mshi.idxCnt; i++)
             {
@@ -563,7 +563,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
                 }
             }
 
-            AfxUnmapBuffer(cache->buf, FALSE);
+            AvxUnmapBuffer(cache->buf, FALSE);
 #endif
         }
     }

@@ -107,5 +107,7 @@ AFX_OBJECT(afxBody)
 
 
 ASX afxClassConfig _ASX_BOD_CLASS_CONFIG;
+ASX afxClassConfig const _ASX_MOTV_CLASS_CONFIG;
+ASX afxClassConfig const _ASX_ANIK_CLASS_CONFIG;
 
 #endif//ASX_IMPL___BODY_H

@@ -25,14 +25,21 @@
 
 ASX afxError        AfxAcquirePoses(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxPose lp[]);
 
-ASX afxUnit         AfxGetPoseCapacity(afxPose const lp);
+ASX afxUnit         AsxGetPoseCapacity(afxPose pose);
 
-ASX afxTransform*   AfxGetPoseTransform(afxPose const pose, afxUnit artIdx);
+ASX afxTransform*   AsxGetPoseTransform(afxPose pose, afxUnit artIdx);
 
-ASX void            AfxCopyPose(afxPose pose, afxPose const from);
+ASX void            AsxCopyPose(afxPose pose, afxPose from);
 
-ASX void            AfxApplyRootMotionVectorsToPose(afxPose pose, afxV3d const translation, afxV3d const rotation);
+ASX void            AfxComputeAttachmentWorldMatrix(afxPose pose, afxModel skl, afxUnit jntIdx, afxUnit const sparseJntMap[], afxUnit const sparseJntMapRev[], afxM4d const displace, afxM4d m);
+ASX void            AfxComputeAttachmentOffset(afxPose pose, afxModel skl, afxUnit jntIdx, afxUnit const sparseJntMap[], afxUnit const sparseJntMapRev[], afxM4d const displace, afxM4d m);
 
-ASX void            AfxAccumulateLocalTransform(afxPose LocalAttitude, int LocalAttitudeBoneIndex, int SkeletonBoneIndex, float Weight, const afxModel ReferenceSkeleton, afxQuatBlend Mode, const afxTransform *Transform);
+ASX void            AfxRebuildRestPose(afxPose pose, afxModel skl, afxUnit baseJntIdx, afxUnit jntCnt);
+
+ASX void            AsxApplyPoseRootMotionVectors(afxPose pose, afxV3d const translation, afxV3d const rotation);
+
+ASX void            AsxCommencePoseAccumulation(afxPose pose, afxUnit baseArtIdx, afxUnit artCnt, afxUnit const jntMap[]);
+ASX void            AsxConcludePoseAccumulation(afxPose pose, afxUnit baseArtIdx, afxUnit artCnt, afxModel skl, afxReal allowedErr, afxUnit const jntMap[]);
+ASX void            AsxAccumulateLocalTransform(afxPose pose, afxUnit artIdx, afxUnit sklJntIdx, afxReal weight, afxModel skl, afxQuatBlend blendOp, afxTransform const* t);
 
 #endif//ASX_POSE_H

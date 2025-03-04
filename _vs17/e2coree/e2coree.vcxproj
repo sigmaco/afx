@@ -41,11 +41,13 @@
     <ClInclude Include="..\..\inc\exec\afxDevice.h" />
     <ClInclude Include="..\..\inc\exec\afxModule.h" />
     <ClInclude Include="..\..\inc\exec\afxMutex.h" />
+    <ClInclude Include="..\..\inc\exec\afxProcess.h" />
+    <ClInclude Include="..\..\inc\exec\afxScript.h" />
     <ClInclude Include="..\..\inc\exec\afxSemaphore.h" />
     <ClInclude Include="..\..\inc\exec\afxService.h" />
     <ClInclude Include="..\..\inc\exec\afxSlock.h" />
     <ClInclude Include="..\..\inc\exec\afxSystem.h" />
-    <ClInclude Include="..\..\inc\exec\afxConsole.h" />
+    <ClInclude Include="..\..\inc\exec\afxTerminal.h" />
     <ClInclude Include="..\..\inc\exec\afxThread.h" />
     <ClInclude Include="..\..\inc\exec\afxTime.h" />
     <ClInclude Include="..\..\inc\io\afxArchive.h" />
@@ -90,7 +92,6 @@
     <ClInclude Include="..\..\inc\mem\afxQueue.h" />
     <ClInclude Include="..\..\inc\mem\afxSlabAllocator.h" />
     <ClInclude Include="..\..\inc\mem\afxStack.h" />
-    <ClInclude Include="..\..\inc\xss\afxScript.h" />
     <ClInclude Include="..\..\src\impl\afxExecImplKit.h" />
     <ClInclude Include="..\..\src\impl\afxIoImplKit.h" />
     <ClInclude Include="..\..\src\impl\xss\xss.h" />
@@ -129,10 +130,18 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\afxScript.c" />
+    <ClCompile Include="..\..\src\exec\afxProcess_W32.c" />
+    <ClCompile Include="..\..\src\exec\afxScript.c" />
+    <ClCompile Include="..\..\src\exec\afxSystemModules.c" />
     <ClCompile Include="..\..\src\impl\xss\xssCompiler.c" />
     <ClCompile Include="..\..\src\impl\xss\xssCore.c" />
     <ClCompile Include="..\..\src\impl\xss\xssDebug.c" />
+    <ClCompile Include="..\..\src\impl\xss\xssInterfaceIo.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\src\impl\xss\xssOptMeta.c" />
     <ClCompile Include="..\..\src\impl\xss\xssOptRandom.c" />
     <ClCompile Include="..\..\src\impl\xss\xssPrimitive.c" />
@@ -168,7 +177,7 @@
     <ClCompile Include="..\..\src\exec\afxSlock_w32.c" />
     <ClCompile Include="..\..\src\exec\afxSystem.c" />
     <ClCompile Include="..\..\src\exec\afxSystem_w32.c" />
-    <ClCompile Include="..\..\src\exec\afxConsole_w32.c" />
+    <ClCompile Include="..\..\src\exec\afxTerminal_w32.c" />
     <ClCompile Include="..\..\src\exec\afxThread_PC.c" />
     <ClCompile Include="..\..\src\exec\afxTime_w32.c" />
     <ClCompile Include="..\..\src\io\afxArchive.c" />
@@ -264,19 +273,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)d\</OutDir>
+    <OutDir>$(SolutionDir)..\system\w$(PlatformArchitecture)d\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\system\w$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)d\</OutDir>
+    <OutDir>$(SolutionDir)..\system\w$(PlatformArchitecture)d\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\system\w$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

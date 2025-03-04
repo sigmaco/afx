@@ -25,12 +25,12 @@
 #include "../impl/asxImplementation.h"
 
 
-_ASX afxCmdId AmxCmdCopyPose(afxContext ctx, afxPose src, afxUnit from, afxPose dst, afxUnit base, afxUnit cnt)
+_ASX afxCmdId AsxCmdCopyPose(afxContext ctx, afxPose src, afxUnit from, afxPose dst, afxUnit base, afxUnit cnt)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     AFX_ASSERT(dst);
@@ -57,12 +57,12 @@ _ASX afxCmdId AmxCmdCopyPose(afxContext ctx, afxPose src, afxUnit from, afxPose 
     return 0;
 }
 
-_ASX afxCmdId AmxCmdApplyRootMotionVectors(afxContext ctx, afxPose pose, afxV3d const translation, afxV3d const rotation)
+_ASX afxCmdId AsxCmdApplyRootMotionVectors(afxContext ctx, afxPose pose, afxV3d const translation, afxV3d const rotation)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -76,12 +76,12 @@ _ASX afxCmdId AmxCmdApplyRootMotionVectors(afxContext ctx, afxPose pose, afxV3d 
     return 0;
 }
 
-_ASX afxCmdId AmxCmdSampleBodyAnimationsLODSparse(afxContext ctx, afxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray)
+_ASX afxCmdId AsxCmdSampleBodyAnimationsLODSparse(afxContext ctx, afxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -98,12 +98,12 @@ _ASX afxCmdId AmxCmdSampleBodyAnimationsLODSparse(afxContext ctx, afxBody bod, a
     cmd->SampleBodyAnimations.sparseBoneArray = sparseBoneArray;
 }
 
-_ASX afxCmdId AmxCmdSampleSingleBodyAnimationLODSparse(afxContext ctx, afxBody bod, afxCapstan moto, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray)
+_ASX afxCmdId AsxCmdSampleSingleBodyAnimationLODSparse(afxContext ctx, afxBody bod, afxCapstan moto, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -124,12 +124,12 @@ _ASX afxCmdId AmxCmdSampleSingleBodyAnimationLODSparse(afxContext ctx, afxBody b
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdSampleBodyAnimationsAcceleratedLOD(afxContext ctx, afxBody bod, afxUnit pivotCnt, afxM4d const offset, afxPose scratch, afxPlacement plce, afxReal allowedErr)
+_ASX afxCmdId AsxCmdSampleBodyAnimationsAcceleratedLOD(afxContext ctx, afxBody bod, afxUnit pivotCnt, afxM4d const displace, afxPose scratch, afxPlacement plce, afxReal allowedErr)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -141,7 +141,7 @@ _ASX afxCmdId AsxCmdSampleBodyAnimationsAcceleratedLOD(afxContext ctx, afxBody b
 
     cmd->SampleBodyAnimationsAccelerated.bod = bod;
     cmd->SampleBodyAnimationsAccelerated.allowedErr = allowedErr;
-    AfxM4dCopy(cmd->SampleBodyAnimationsAccelerated.offset, offset ? offset : AFX_M4D_IDENTITY);
+    AfxM4dCopy(cmd->SampleBodyAnimationsAccelerated.displace, displace ? displace : AFX_M4D_IDENTITY);
     cmd->SampleBodyAnimationsAccelerated.pivotCnt = pivotCnt;
     cmd->SampleBodyAnimationsAccelerated.plce = plce;
     cmd->SampleBodyAnimationsAccelerated.scratch = scratch;
@@ -151,12 +151,12 @@ _ASX afxCmdId AsxCmdSampleBodyAnimationsAcceleratedLOD(afxContext ctx, afxBody b
 
 // MODEL OPS
 
-_ASX afxCmdId AmxCmdDisplaceModel(afxContext ctx, afxModel mdl, afxTransform const* t)
+_ASX afxCmdId AsxCmdDisplaceModel(afxContext ctx, afxModel mdl, afxTransform const* t)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -173,12 +173,12 @@ _ASX afxCmdId AmxCmdDisplaceModel(afxContext ctx, afxModel mdl, afxTransform con
     return cmdId;
 }
 
-_ASX afxCmdId AmxCmdBuildRiggedMeshCompositeMatrices(afxContext ctx, afxModel mdl, afxUnit rigIdx, afxPlacement const plce, afxUnit cnt, afxUnit bufIdx, afxSize offset)
+_ASX afxCmdId AsxCmdBuildRiggedMeshCompositeMatrices(afxContext ctx, afxModel mdl, afxUnit rigIdx, afxPlacement const plce, afxUnit cnt, afxUnit bufIdx, afxSize offset)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -207,12 +207,12 @@ _ASX afxCmdId AmxCmdBuildRiggedMeshCompositeMatrices(afxContext ctx, afxModel md
 
 // SKELETON OPS
 
-_ASX afxCmdId AmxCmdReparentJoints(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit idxSiz, void const* idxData)
+_ASX afxCmdId AsxCmdReparentJoints(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit idxSiz, void const* idxData)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -236,12 +236,12 @@ _ASX afxCmdId AmxCmdReparentJoints(afxContext ctx, afxModel mdl, afxUnit baseJnt
     return cmdId;
 }
 
-_ASX afxCmdId AmxCmdResetJointTransforms(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxTransform const transforms[])
+_ASX afxCmdId AsxCmdResetJointTransforms(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxTransform const transforms[])
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -265,12 +265,12 @@ _ASX afxCmdId AmxCmdResetJointTransforms(afxContext ctx, afxModel mdl, afxUnit b
     return cmdId;
 }
 
-_ASX afxCmdId AmxCmdResetJointInversors(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit mtxSiz, void const* matrices)
+_ASX afxCmdId AsxCmdResetJointInversors(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit mtxSiz, void const* matrices)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -294,12 +294,12 @@ _ASX afxCmdId AmxCmdResetJointInversors(afxContext ctx, afxModel mdl, afxUnit ba
     return cmdId;
 }
 
-_ASX afxCmdId AmxCmdResetJointLodErrors(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxReal const lodErrors[])
+_ASX afxCmdId AsxCmdResetJointLodErrors(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxReal const lodErrors[])
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -321,12 +321,12 @@ _ASX afxCmdId AmxCmdResetJointLodErrors(afxContext ctx, afxModel mdl, afxUnit ba
     return cmdId;
 }
 
-_ASX afxCmdId AmxCmdRebuildPose(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxM4d const displace, afxPlacement plce, afxBool rigid, afxPose pose)
+_ASX afxCmdId AsxCmdRebuildPose(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxM4d const displace, afxPlacement plce, afxBool rigid, afxPose pose)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -352,19 +352,19 @@ _ASX afxCmdId AmxCmdRebuildPose(afxContext ctx, afxModel mdl, afxUnit baseJntIdx
     cmd->RebuildPose.pose = pose;
 
     if (displace)
-        AfxM4dCopy(cmd->RebuildPose.displacement, displace);
+        AfxM4dCopy(cmd->RebuildPose.displace, displace);
     else
-        AfxM4dReset(cmd->RebuildPose.displacement);
+        AfxM4dReset(cmd->RebuildPose.displace);
 
     return cmdId;
 }
 
-_ASX afxCmdId AmxCmdBuildRestPose(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxPose pose)
+_ASX afxCmdId AsxCmdBuildRestPose(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxPose pose)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -386,12 +386,12 @@ _ASX afxCmdId AmxCmdBuildRestPose(afxContext ctx, afxModel mdl, afxUnit baseJntI
     return cmdId;
 }
 
-_ASX afxCmdId AmxCmdBuildPlacement(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit baseReqJnt, afxUnit reqJntCnt, afxPose pose, afxM4d const displace, afxBool noComposite, afxPlacement plce)
+_ASX afxCmdId AsxCmdBuildPlacement(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit baseReqJnt, afxUnit reqJntCnt, afxPose pose, afxM4d const displace, afxBool noComposite, afxPlacement plce)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -416,9 +416,9 @@ _ASX afxCmdId AmxCmdBuildPlacement(afxContext ctx, afxModel mdl, afxUnit baseJnt
     cmd->BuildPlacement.plce = plce;
 
     if (displace)
-        AfxM4dCopy(cmd->BuildPlacement.displacement, displace);
+        AfxM4dCopy(cmd->BuildPlacement.displace, displace);
     else
-        AfxM4dReset(cmd->BuildPlacement.displacement);
+        AfxM4dReset(cmd->BuildPlacement.displace);
 
     return cmdId;
 }
@@ -426,9 +426,9 @@ _ASX afxCmdId AmxCmdBuildPlacement(afxContext ctx, afxModel mdl, afxUnit baseJnt
 _ASX afxCmdId AsxCmdBuildCompositeMatrices(afxContext ctx, afxModel mdl, afxPlacement plce, afxUnit baseJnt, afxUnit jntCnt, afxBool /*3x4*/transposed, afxUnit bufIdx, afxSize offset)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;
@@ -453,12 +453,12 @@ _ASX afxCmdId AsxCmdBuildCompositeMatrices(afxContext ctx, afxModel mdl, afxPlac
     return cmdId;
 }
 
-_ASX afxCmdId AmxCmdBuildIndexedCompositeMatrices(afxContext ctx, afxModel mdl, afxPlacement plce, afxUnit jntCnt, afxUnit const jntMap[], afxBool /*3x4*/transposed, afxUnit bufIdx, afxSize offset)
+_ASX afxCmdId AsxCmdBuildIndexedCompositeMatrices(afxContext ctx, afxModel mdl, afxPlacement plce, afxUnit jntCnt, afxUnit const jntMap[], afxBool /*3x4*/transposed, afxUnit bufIdx, afxSize offset)
 {
     afxError err = AFX_ERR_NONE;
-    /// ctx must be a valid afxContext handle.
+    // ctx must be a valid afxContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    /// ctx must be in the recording state.
+    // ctx must be in the recording state.
     AFX_ASSERT(ctx->state == asxContextState_RECORDING);
 
     afxCmdId cmdId;

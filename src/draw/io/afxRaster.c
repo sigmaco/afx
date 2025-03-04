@@ -33,96 +33,162 @@ AVX afxError _AfxFetchRasterFromTarga(afxRaster ras, afxUnit opCnt, afxRasterIo 
 
 _AVXINL avxFormat AfxGetRasterFormat(afxRaster ras)
 {
+#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+#endif
     return ras->fmt;
+}
+
+_AVXINL avxFormat AfxDescribeRasterFormat(afxRaster ras, afxUnit exuIdx, avxFormatDescription* pfd)
+{
+    afxError err = AFX_ERR_NONE;
+#if AVX_VALIDATION_ENABLED
+    // @ras must be a valid afxRaster handle.
+    AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+    AFX_ASSERT_S(pfd, "must be a valid pointer to a avxFormatDescription structure.");
+#endif//AVX_VALIDATION_ENABLED
+
+    // This function is a utility to ease introdution of device-dependent formats.
+    // Give the multi-device nature of Qwadro, it takes a index of a bridge established in the provider system.
+
+    afxDrawSystem dsys = AfxGetProvider(ras);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    afxDrawBridge dexu;
+    AfxGetDrawBridges(dsys, exuIdx, 1, &dexu);
+    AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
+    afxDrawDevice ddev = AfxGetDrawBridgeDevice(dexu);
+    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
+
+    avxFormat fmt = ras->fmt;
+    avxFormatDescription desc;
+    if (AvxDescribeDeviceFormats(ddev, 1, &fmt, &desc))
+    {
+        AfxThrowError();
+        *pfd = (avxFormatDescription) { 0 };
+        return NIL;
+    }
+    else
+    {
+        *pfd = desc;
+        return fmt;
+    }
 }
 
 _AVXINL afxRasterUsage AfxTestRasterUsage(afxRaster ras, afxRasterUsage mask)
 {
+#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+#endif//AVX_VALIDATION_ENABLED
     return ras->usage & mask;
 }
 
 _AVXINL afxRasterFlags AfxTestRasterFlags(afxRaster ras, afxRasterFlags mask)
 {
+#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+#endif//AVX_VALIDATION_ENABLED
     return ras->flags & mask;
 }
 
-_AVXINL void AfxGetRasterSwizzling(afxRaster ras, avxColorSwizzling* csw)
+_AVXINL void AfxGetRasterSwizzling(afxRaster ras, avxSwizzling* csw)
 {
+#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(csw);
+#endif//AVX_VALIDATION_ENABLED
     *csw = ras->swizzling;
 }
 
-_AVXINL afxWhd AfxGetRasterExtent(afxRaster ras, afxUnit lodIdx)
+_AVXINL avxRange AfxGetRasterExtent(afxRaster ras, afxUnit lodIdx)
 {
+#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-    AFX_ASSERT_RANGE(ras->lodCnt, lodIdx, 1);        
-    afxWhd whd = ras->extent;
-    
-    while (lodIdx--)
+    AFX_ASSERT_RANGE(ras->lodCnt, lodIdx, 1);
+#endif//AVX_VALIDATION_ENABLED
+
+    avxRange whd = ras->extent;
+    if (AfxTestRasterFlags(ras, afxRasterFlag_RESAMPLED))
     {
-        whd.w = whd.w >> 1;
-        whd.h = whd.h >> 1;
-        whd.d = whd.d >> 1;
+        while (lodIdx--)
+        {
+            whd.w = whd.w * 2;
+            whd.h = whd.h * 2;
+            whd.d = whd.d * 2;
+        }
     }
-    AfxWhdMax(&whd, AfxWhd(1, 1, 1), whd);
+    else
+    {
+        while (lodIdx--)
+        {
+            whd.w = whd.w >> 1;
+            whd.h = whd.h >> 1;
+            whd.d = whd.d >> 1;
+        }
+        whd = AvxMaxRange(AVX_RANGE(1, 1, 1), whd);
+    }
     return whd;
 }
 
 _AVXINL void AfxDescribeRaster(afxRaster ras, afxRasterInfo* desc)
 {
+#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(desc);
+#endif//AVX_VALIDATION_ENABLED
     desc->lodCnt = ras->lodCnt;
     desc->extent = AfxGetRasterExtent(ras, 0);
     desc->fmt = ras->fmt;
     desc->flags = ras->flags;
     desc->usage = ras->usage;
+    desc->base = ras->base;
+    desc->baseLayer = ras->baseLayer;
+    desc->baseLod = ras->baseLod;
 }
 
 _AVXINL void _AvxSanitizeRasterRegion(afxRaster ras, afxRasterRegion const* raw, afxRasterRegion* san)
 {
+#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(raw);
     AFX_ASSERT(san);
+#endif//AVX_VALIDATION_ENABLED
 
     /*
         This code sanitizes a afxRasterRegion struct to be within the bounds of a raster object.
     */
 
     san->lodIdx = AfxMin(raw->lodIdx, ras->lodCnt - 1);
-    san->origin.x = AfxMin(raw->origin.x, ras->extent.x - 1);
-    san->origin.y = AfxMin(raw->origin.y, ras->extent.y - 1);
-    san->origin.z = AfxMin(raw->origin.z, ras->extent.z - 1);
-    san->extent.x = AfxClamp(raw->extent.x, 1, ras->extent.x - san->origin.x);
-    san->extent.y = AfxClamp(raw->extent.y, 1, ras->extent.y - san->origin.y);
-    san->extent.z = AfxClamp(raw->extent.z, 1, ras->extent.z - san->origin.z);
+    san->origin.x = AfxMin(raw->origin.x, (afxInt)(ras->extent.w - 1));
+    san->origin.y = AfxMin(raw->origin.y, (afxInt)(ras->extent.h - 1));
+    san->origin.z = AfxMin(raw->origin.z, (afxInt)(ras->extent.d - 1));
+    san->extent.w = AfxClamp(raw->extent.w, 1, ras->extent.w - san->origin.x);
+    san->extent.h = AfxClamp(raw->extent.h, 1, ras->extent.h - san->origin.y);
+    san->extent.d = AfxClamp(raw->extent.d, 1, ras->extent.d - san->origin.z);
 }
 
 _AVXINL void _AvxSanitizeRasterIo(afxRaster ras, afxSize bufCap, afxRasterIo const* raw, afxRasterIo* san)
 {
+#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(raw);
     AFX_ASSERT(san);
+#endif//AVX_VALIDATION_ENABLED
 
     /*
         This code sanitizes a afxRasterIo struct to be within the bounds of a raster object.
@@ -137,54 +203,60 @@ _AVXINL void _AvxSanitizeRasterIo(afxRaster ras, afxSize bufCap, afxRasterIo con
 
 _AVXINL void _AvxSanitizeRasterCopy(afxRaster src, afxRaster dst, afxRasterCopy const* raw, afxRasterCopy* san)
 {
+#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
-    /// src must be a valid afxRaster handle.
+    // src must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &src);
-    /// dst must be a valid afxRaster handle.
+    // dst must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &dst);
     AFX_ASSERT(raw);
     AFX_ASSERT(san);
+#endif//AVX_VALIDATION_ENABLED
 
     /*
         This code sanitizes a afxRasterCopy struct to be within the bounds of two raster objects.
     */
 
     san->src.lodIdx = AfxMin(raw->src.lodIdx, src->lodCnt - 1);
-    san->src.origin.x = AfxMin(raw->src.origin.x, src->extent.x - 1);
-    san->src.origin.y = AfxMin(raw->src.origin.y, src->extent.y - 1);
-    san->src.origin.z = AfxMin(raw->src.origin.z, src->extent.z - 1);
+    san->src.origin.x = AfxMin(raw->src.origin.x, (afxInt)(src->extent.w - 1));
+    san->src.origin.y = AfxMin(raw->src.origin.y, (afxInt)(src->extent.h - 1));
+    san->src.origin.z = AfxMin(raw->src.origin.z, (afxInt)(src->extent.d - 1));
 
     san->dstLodIdx = AfxMin(raw->dstLodIdx, dst->lodCnt - 1);
-    san->dstOrigin.x = AfxMin(raw->dstOrigin.x, dst->extent.x - 1);
-    san->dstOrigin.y = AfxMin(raw->dstOrigin.y, dst->extent.y - 1);
-    san->dstOrigin.z = AfxMin(raw->dstOrigin.z, dst->extent.z - 1);
+    san->dstOrigin.x = AfxMin(raw->dstOrigin.x, (afxInt)(dst->extent.w - 1));
+    san->dstOrigin.y = AfxMin(raw->dstOrigin.y, (afxInt)(dst->extent.h - 1));
+    san->dstOrigin.z = AfxMin(raw->dstOrigin.z, (afxInt)(dst->extent.d - 1));
 
-    san->src.extent.x = AfxClamp(raw->src.extent.x, 1, AfxMin(src->extent.x - san->src.origin.x, dst->extent.x - san->dstOrigin.x));
-    san->src.extent.x = AfxClamp(raw->src.extent.y, 1, AfxMin(src->extent.y - san->src.origin.y, dst->extent.y - san->dstOrigin.y));
-    san->src.extent.x = AfxClamp(raw->src.extent.z, 1, AfxMin(src->extent.z - san->src.origin.z, dst->extent.z - san->dstOrigin.z));
+    san->src.extent.w = AfxClamp(raw->src.extent.w, 1, AfxMin((afxInt)(src->extent.w - san->src.origin.x), (afxInt)(dst->extent.w - san->dstOrigin.x)));
+    san->src.extent.h = AfxClamp(raw->src.extent.h, 1, AfxMin((afxInt)(src->extent.h - san->src.origin.y), (afxInt)(dst->extent.h - san->dstOrigin.y)));
+    san->src.extent.d = AfxClamp(raw->src.extent.d, 1, AfxMin((afxInt)(src->extent.d - san->src.origin.z), (afxInt)(dst->extent.d - san->dstOrigin.z)));
 }
 
 _AVX afxBool AfxQueryRasterLayout(afxRaster ras, afxUnit lodIdx, afxUnit layerIdx, afxRasterLayout* layout)
 {
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+#if AVX_VALIDATION_ENABLED
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT_RANGE(ras->lodCnt, lodIdx, 1);
     AFX_ASSERT_RANGE(ras->extent.d, layerIdx, 1);
+#endif//AVX_VALIDATION_ENABLED
 
     afxBool is3d = AfxTestRasterFlags(ras, afxRasterFlag_3D);
     AFX_ASSERT(!layerIdx || !is3d);
 
-    afxWhd whd = AfxGetRasterExtent(ras, lodIdx);
+    avxRange whd = AfxGetRasterExtent(ras, lodIdx);
+
+    avxFormatDescription pfd;
+    AvxDescribeFormats(1, &ras->fmt, &pfd);
     
-    afxUnit pixelStride = AFX_ALIGNED_SIZE(AfxGetBpp(ras->fmt), AFX_BYTE_SIZE) / AFX_BYTE_SIZE;
-    afxUnit rowStride = AFX_ALIGNED_SIZE(pixelStride * whd.w, AFX_SIMD_ALIGNMENT);
-    afxUnit depthStride = whd.h * rowStride;
+    afxUnit rowStride = AFX_ALIGNED_SIZE(pfd.stride * whd.w, AFX_SIMD_ALIGNMENT);
+    afxUnit imgStride = whd.h * rowStride;
     AFX_ASSERT(layout);
-    layout->depthStride = depthStride;
+    layout->imgStride = imgStride;
     layout->rowStride = rowStride;
     layout->offset = 0;
-    layout->siz = is3d ? whd.d * depthStride : depthStride;
+    layout->size = is3d ? whd.d * imgStride : whd.d * imgStride;
     return !err;
 }
 
@@ -193,20 +265,21 @@ _AVX afxBool AfxQueryRasterLayout(afxRaster ras, afxUnit lodIdx, afxUnit layerId
 _AVX afxError AfxUpdateRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[], afxUnit exuIdx, void const* src)
 {
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+#if AVX_VALIDATION_ENABLED
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
     AFX_ASSERT(src);
 
-#if _AFX_DEBUG
     for (afxUnit i = 0; i < opCnt; i++)
     {
         afxRasterIo const* op = &ops[i];
         AFX_ASSERT_RANGE(ras->lodCnt, op->rgn.lodIdx, 1);
         AFX_ASSERT_RANGE_WHD(AfxGetRasterExtent(ras, op->rgn.lodIdx), op->rgn.origin, op->rgn.extent);
     }
-#endif
+#endif//AVX_VALIDATION_ENABLED
 
     avxTransference transfer = { 0 };
     transfer.exuIdx = exuIdx;
@@ -224,30 +297,27 @@ _AVX afxError AfxUpdateRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const op
     }
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
-#if 0
-    if (AfxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
-        AfxThrowError();
-#endif
     return err;
 }
 
 _AVX afxError AfxDumpRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[], afxUnit exuIdx, void* dst)
 {
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
     AFX_ASSERT(dst);
 
-#if _AFX_DEBUG
+#if AVX_VALIDATION_ENABLED
+
     for (afxUnit i = 0; i < opCnt; i++)
     {
         afxRasterIo const* op = &ops[i];
         AFX_ASSERT_RANGE(ras->lodCnt, op->rgn.lodIdx, 1);
         AFX_ASSERT_RANGE_WHD(AfxGetRasterExtent(ras, op->rgn.lodIdx), op->rgn.origin, op->rgn.extent);
     }
-#endif
+#endif//AVX_VALIDATION_ENABLED
 
     avxTransference transfer = { 0 };
     transfer.exuIdx = exuIdx;
@@ -265,33 +335,30 @@ _AVX afxError AfxDumpRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[
     }
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
-#if 0
-    if (AfxWaitForDrawQueue(dsys, portIdx, queIdx))
-        AfxThrowError();
-#endif
     return err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxPackRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[], afxUnit exuIdx, afxBuffer buf)
+_AVX afxError AfxPackRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[], afxUnit exuIdx, avxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-    /// buf must be a valid afxBuffer handle.
+    // @buf must be a valid avxBuffer handle.
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
 
-#if _AFX_DEBUG
+#if AVX_VALIDATION_ENABLED
+
     for (afxUnit i = 0; i < opCnt; i++)
     {
         afxRasterIo const* op = &ops[i];
         AFX_ASSERT_RANGE(ras->lodCnt, op->rgn.lodIdx, 1);
         AFX_ASSERT_RANGE_WHD(AfxGetRasterExtent(ras, op->rgn.lodIdx), op->rgn.origin, op->rgn.extent);
     }
-#endif
+#endif//AVX_VALIDATION_ENABLED
 
     avxTransference transfer = { 0 };
     transfer.exuIdx = exuIdx;
@@ -310,31 +377,27 @@ _AVX afxError AfxPackRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[
     }
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
-#if 0
-    if (AfxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
-        AfxThrowError();
-#endif
     return err;
 }
 
-_AVX afxError AfxUnpackRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[], afxUnit exuIdx, afxBuffer buf)
+_AVX afxError AfxUnpackRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[], afxUnit exuIdx, avxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-    /// buf must be a valid afxBuffer handle.
+    // @buf must be a valid avxBuffer handle.
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
 
-#if _AFX_DEBUG
+#if AVX_VALIDATION_ENABLED
     for (afxUnit i = 0; i < opCnt; i++)
     {
         afxRasterIo const* op = &ops[i];
         AFX_ASSERT_RANGE(ras->lodCnt, op->rgn.lodIdx, 1);
         AFX_ASSERT_RANGE_WHD(AfxGetRasterExtent(ras, op->rgn.lodIdx), op->rgn.origin, op->rgn.extent);
     }
-#endif
+#endif//AVX_VALIDATION_ENABLED
 
     avxTransference transfer = { 0 };
     transfer.exuIdx = exuIdx;
@@ -353,10 +416,6 @@ _AVX afxError AfxUnpackRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const op
     }
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
-#if 0
-    if (AfxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
-        AfxThrowError();
-#endif
     return err;
 }
 
@@ -365,21 +424,22 @@ _AVX afxError AfxUnpackRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const op
 _AVX afxError AfxUploadRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[], afxUnit exuIdx, afxStream in)
 {
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-    /// in must be a valid afxStream handle.
+    // @in must be a valid afxStream handle.
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
 
-#if _AFX_DEBUG
+#if AVX_VALIDATION_ENABLED
+
     for (afxUnit i = 0; i < opCnt; i++)
     {
         afxRasterIo const* op = &ops[i];
         AFX_ASSERT_RANGE(ras->lodCnt, op->rgn.lodIdx, 1);
         AFX_ASSERT_RANGE_WHD(AfxGetRasterExtent(ras, op->rgn.lodIdx), op->rgn.origin, op->rgn.extent);
     }
-#endif
+#endif//AVX_VALIDATION_ENABLED
 
     avxTransference transfer = { 0 };
     transfer.exuIdx = exuIdx;
@@ -398,31 +458,27 @@ _AVX afxError AfxUploadRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const op
     }
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
-#if 0
-    if (AfxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
-        AfxThrowError();
-#endif
     return err;
 }
 
 _AVX afxError AfxDownloadRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[], afxUnit exuIdx, afxStream out)
 {
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-    /// in must be a valid afxStream handle.
+    // @in must be a valid afxStream handle.
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
 
-#if _AFX_DEBUG
+#if AVX_VALIDATION_ENABLED
     for (afxUnit i = 0; i < opCnt; i++)
     {
         afxRasterIo const* op = &ops[i];
         AFX_ASSERT_RANGE(ras->lodCnt, op->rgn.lodIdx, 1);
         AFX_ASSERT_RANGE_WHD(AfxGetRasterExtent(ras, op->rgn.lodIdx), op->rgn.origin, op->rgn.extent);
     }
-#endif
+#endif//AVX_VALIDATION_ENABLED
 
     avxTransference transfer = { 0 };
     transfer.exuIdx = exuIdx;
@@ -441,10 +497,6 @@ _AVX afxError AfxDownloadRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const 
     }
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
-#if 0
-    if (AfxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
-        AfxThrowError();
-#endif
     return err;
 }
 
@@ -453,7 +505,7 @@ _AVX afxError AfxDownloadRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const 
 _AVX afxError AfxPrintRaster(afxRaster ras, afxRasterIo const* iop, afxUnit lodCnt, afxUnit exuIdx, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
     afxStream file;
@@ -478,26 +530,24 @@ _AVX afxError AfxPrintRaster(afxRaster ras, afxRasterIo const* iop, afxUnit lodC
             afxUnit lodIdxClamped = AfxMin(iop->rgn.lodIdx, maxLodCnt - 1);
             lodCnt = AfxMin(lodCnt, maxLodCnt - lodIdxClamped);
 
-            afxWhd maxWhd, maxXyz;
+            avxRange maxWhd, maxXyz;
             maxWhd = AfxGetRasterExtent(ras, lodIdxClamped);
             AFX_ASSERT_RANGE_WHD(maxWhd, iop->rgn.origin, iop->rgn.extent);
 
-            AfxWhdClampOffset(&iopClamped.rgn.origin, iop->rgn.origin, maxWhd);
+            iopClamped.rgn.origin = AvxClampOrigin(iop->rgn.origin, maxWhd);
 
-            afxWhd maxRgnWhd;
-            AfxWhdSub(&maxRgnWhd, maxWhd, iopClamped.rgn.origin);
-            AfxWhdClamp(&iopClamped.rgn.extent, iop->rgn.extent, AfxWhd(1, 1, 1), maxRgnWhd);
+            avxRange maxRgnWhd;
+            maxRgnWhd = AvxSubtractRange(maxWhd, AVX_RANGE(iopClamped.rgn.origin.x, iopClamped.rgn.origin.y, iopClamped.rgn.origin.z));
+            iopClamped.rgn.extent = AvxClampRange(iop->rgn.extent, AVX_RANGE(1, 1, 1), maxRgnWhd);
 
             iopClamped.rgn = iop->rgn;
             iopClamped.rgn.lodIdx = lodIdxClamped;
         }
 
         afxRasterLayout layout;
-        AfxQueryRasterLayout(ras, 0, 0, &layout);
-        avxFormat fmt = AfxGetRasterFormat(ras);
-
         avxFormatDescription pfd;
-        AfxDescribePixelFormat(fmt, &pfd);
+        AfxQueryRasterLayout(ras, 0, 0, &layout);
+        avxFormat fmt = AfxDescribeRasterFormat(ras, exuIdx, &pfd);
 
         afxTargaFlags flags = NIL;
 
@@ -510,7 +560,7 @@ _AVX afxError AfxPrintRaster(afxRaster ras, afxRasterIo const* iop, afxUnit lodC
         iopClamped.rowStride = AFX_ALIGNED_SIZE(iopClamped.rgn.extent.w * pfd.stride, AFX_SIMD_ALIGNMENT);
         iopClamped.rowsPerImg = iopClamped.rgn.extent.h;
 
-        if (AfxWriteTarga(file, &iopClamped, lodCnt, fmt, (afxRasterFlags) flags, 0, NIL)) AfxThrowError();
+        if (AfxWriteRasterFile(file, &iopClamped, lodCnt, fmt, (afxRasterFlags) flags, 0)) AfxThrowError();
         else
         {
             // write data for each segment
@@ -530,8 +580,8 @@ _AVX afxError AfxPrintRaster(afxRaster ras, afxRasterIo const* iop, afxUnit lodC
                 if (AfxDownloadRaster(ras, 1, &iopTmp, exuIdx, file))
                     AfxThrowError();
 
-                AfxWhdHalf(&iopTmp.rgn.origin, iopTmp.rgn.origin);
-                AfxWhdHalf(&iopTmp.rgn.extent, iopTmp.rgn.extent);
+                iopTmp.rgn.origin = AvxHalfOrigin(iopTmp.rgn.origin);
+                iopTmp.rgn.extent = AvxHalfRange(iopTmp.rgn.extent);
             }
         }
 
@@ -545,7 +595,7 @@ _AVX afxError AfxPrintRaster(afxRaster ras, afxRasterIo const* iop, afxUnit lodC
 _AVX afxError AfxFetchRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops[], afxUnit lodCnt, afxUnit exuIdx, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
-    /// ras must be a valid afxRaster handle.
+    // @ras must be a valid afxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(uri);
 
@@ -561,8 +611,8 @@ _AVX afxError AfxFetchRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops
         return err;
     }
     
-    afxTargaFile tgai = { 0 };
-    if (AfxReadTarga(file, &tgai)) AfxThrowError();
+    afxRasterFile tgai = { 0 };
+    if (AfxReadRasterFile(&tgai, file)) AfxThrowError();
     else
     {
         afxDrawSystem dsys = AfxGetProvider(ras);
@@ -591,23 +641,23 @@ _AVX afxError AfxFetchRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops
                 afxUnit lodIdxClamped = AfxMin(iop->rgn.lodIdx, maxLodCnt - 1);
                 lodCnt = AfxMin(lodCnt, maxLodCnt - lodIdxClamped);
 
-                afxWhd maxWhd, maxXyz;
+                avxRange maxWhd, maxXyz;
                 maxWhd = AfxGetRasterExtent(ras, lodIdxClamped);
                 AFX_ASSERT_RANGE_WHD(maxWhd, iop->rgn.origin, iop->rgn.extent);
 
-                AfxWhdClampOffset(&iopClamped.rgn.origin, iop->rgn.origin, maxWhd);
+                iopClamped.rgn.origin = AvxClampOrigin(iop->rgn.origin, maxWhd);
 
-                afxWhd maxRgnWhd;
-                AfxWhdSub(&maxRgnWhd, maxWhd, iopClamped.rgn.origin);
-                AfxWhdClamp(&iopClamped.rgn.extent, iop->rgn.extent, AfxWhd(1, 1, 1), maxRgnWhd);
+                avxRange maxRgnWhd;
+                maxRgnWhd = AvxSubtractRange(maxWhd, AVX_RANGE(iopClamped.rgn.origin.x, iopClamped.rgn.origin.y, iopClamped.rgn.origin.z));
+                iopClamped.rgn.extent = AvxClampRange(iop->rgn.extent, AVX_RANGE(1, 1, 1), maxRgnWhd);
 
                 iopClamped.rgn = iop->rgn;
                 iopClamped.rgn.lodIdx = lodIdxClamped;
 
                 void* data;
-                AfxAllocate(tgai.decodedSiz, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&data);
+                AfxAllocate(tgai.decSiz, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&data);
 
-                AfxDecodeTarga(file, &tgai, data);
+                AfxDecodeRasterFile(&tgai, file, data);
                 AfxUpdateRaster(ras, 1, &iopClamped, exuIdx, data);
 
                 AfxWaitForDrawBridge(AfxGetProvider(ras), exuIdx, AFX_TIME_INFINITE);
@@ -626,9 +676,9 @@ _AVX afxError AfxFetchRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops
             op.rowsPerImg = tgai.height;
 
             void* data;
-            AfxAllocate(tgai.decodedSiz, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&data);
+            AfxAllocate(tgai.decSiz, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&data);
 
-            AfxDecodeTarga(file, &tgai, data);
+            AfxDecodeRasterFile(&tgai, file, data);
             AfxUpdateRaster(ras, 1, &op, exuIdx, data);
 
             AfxWaitForDrawBridge(AfxGetProvider(ras), exuIdx, AFX_TIME_INFINITE);
@@ -644,7 +694,7 @@ _AVX afxError AfxFetchRaster(afxRaster ras, afxUnit opCnt, afxRasterIo const ops
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError _AvxRasStdDtorCb(afxRaster ras)
+_AVX afxError _AvxRasDtorCb(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
@@ -658,7 +708,7 @@ _AVX afxError _AvxRasStdDtorCb(afxRaster ras)
     return err;
 }
 
-_AVX afxError _AvxRasStdCtorCb(afxRaster ras, void** args, afxUnit invokeNo)
+_AVX afxError _AvxRasCtorCb(afxRaster ras, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
@@ -666,7 +716,8 @@ _AVX afxError _AvxRasStdCtorCb(afxRaster ras, void** args, afxUnit invokeNo)
     afxRasterInfo const* rasi = ((afxRasterInfo const *)args[1]) + invokeNo;
 
     afxDrawSystem dsys = AfxGetProvider(ras);
-
+    
+    ras->label = rasi->label;
     ras->base = NIL;
 
     //ras->swizzling = NIL; //&AFX_STD_COLOR_SWIZZLING;
@@ -674,9 +725,9 @@ _AVX afxError _AvxRasStdCtorCb(afxRaster ras, void** args, afxUnit invokeNo)
     ras->baseLod = 0;
     ras->lodCnt = AfxMax(rasi->lodCnt, 1);
     ras->baseLayer = 0;
-    AfxWhdMax(&ras->extent, AfxWhd(1, 1, 1), rasi->extent);
+    ras->extent = AvxMaxRange(AVX_RANGE(1, 1, 1), rasi->extent);
 
-    ras->flags = NIL;;
+    ras->flags = NIL;
     ras->usage = rasi->usage;
 
     ras->fmt = rasi->fmt;
@@ -690,14 +741,14 @@ _AVX afxError _AvxRasStdCtorCb(afxRaster ras, void** args, afxUnit invokeNo)
             if (!(ras->flags & flags))
                 ras->flags |= afxRasterFlag_MIPMAP;
 
-        flags = (afxRasterFlag_3D | /*afxRasterFlag_CUBEMAP | */afxRasterFlag_MULTIMAP);
+        flags = (afxRasterFlag_3D | /*afxRasterFlag_CUBEMAP | */afxRasterFlag_LAYERED);
 
         if ((ras->flags = (rasi->flags & flags)) == flags) AfxThrowError();
         else
         {
             if (ras->extent.d > 1)
                 if (!(ras->flags & flags))
-                    ras->flags = afxRasterFlag_MULTIMAP;
+                    ras->flags = afxRasterFlag_LAYERED;
         }
     }
 
@@ -708,6 +759,54 @@ _AVX afxError _AvxRasStdCtorCb(afxRaster ras, void** args, afxUnit invokeNo)
 
     ras->udd = rasi->udd;
 
+    // STORAGE
+    {
+        avxFormatDescription pfd;
+        AvxDescribeFormats(1, &ras->fmt, &pfd);
+
+        afxUnit align = AVX_RASTER_ALIGNMENT;
+        afxUnit size = 0;
+
+        afxWhd whd = { ras->extent.w, ras->extent.h, ras->extent.d };
+        afxBool is3d = !!AfxTestRasterFlags(ras, afxRasterFlag_3D);
+
+        if (AfxTestRasterFlags(ras, afxRasterFlag_RESAMPLED))
+        {
+            for (afxUnit i = 0; i < ras->lodCnt; i++)
+            {
+                afxUnit rowStride = AFX_ALIGNED_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
+                afxUnit imgStride = AFX_ALIGNED_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
+                size += whd.d * imgStride;
+
+                whd.w = AfxMax(1, whd.w * 2);
+                whd.h = AfxMax(1, whd.h * 2);
+                if (is3d) whd.d = AfxMax(1, whd.d * 2);
+            }
+        }
+        else
+        {
+            for (afxUnit i = 0; i < ras->lodCnt; i++)
+            {
+                afxUnit rowStride = AFX_ALIGNED_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
+                afxUnit imgStride = AFX_ALIGNED_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
+                size += whd.d * imgStride;
+
+                whd.w = AfxMax(1, whd.w >> 1);
+                whd.h = AfxMax(1, whd.h >> 1);
+                if (is3d) whd.d = AfxMax(1, whd.d >> 1);
+            }
+        }
+
+        size = AFX_ALIGNED_SIZE(size, align);
+
+        ras->storage[0].size = size;
+        ras->storage[0].alignment = align;
+        ras->storage[0].memType = NIL;
+
+        ras->storage[0].mmu = AFX_INVALID_INDEX;
+        ras->storage[0].offset = 0;
+        ras->storage[0].hostedData.addr = NIL;
+    }
     return err;
 }
 
@@ -717,8 +816,8 @@ _AVX afxClassConfig const _AVX_RAS_CLASS_CONFIG =
     .name = "Raster",
     .desc = "Formatted Video Buffer",
     .fixedSiz = sizeof(AFX_OBJECT(afxRaster)),
-    .ctor = (void*)_AvxRasStdCtorCb,
-    .dtor = (void*)_AvxRasStdDtorCb
+    .ctor = (void*)_AvxRasCtorCb,
+    .dtor = (void*)_AvxRasDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -731,6 +830,7 @@ _AVX afxError AfxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, afxRasterInfo c
     AFX_ASSERT(info);
     AFX_ASSERT(cnt);
 
+#if AVX_VALIDATION_ENABLED
     for (afxUnit i = 0; i < cnt; i++)
     {
         afxRasterFlags flags = info[i].flags;
@@ -740,9 +840,9 @@ _AVX afxError AfxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, afxRasterInfo c
             AFX_ASSERT(info[i].extent.d % 6 == 0);
             AfxThrowError();
 
-            if ((info[i].extent.d / 6) && !(flags & afxRasterFlag_MULTIMAP))
+            if ((info[i].extent.d / 6) && !(flags & afxRasterFlag_LAYERED))
             {
-                AfxAssertAND((info[i].extent.d / 6), (flags & afxRasterFlag_MULTIMAP));
+                AfxAssertAND((info[i].extent.d / 6), (flags & afxRasterFlag_LAYERED));
                 AfxThrowError();
             }
         }
@@ -752,26 +852,27 @@ _AVX afxError AfxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, afxRasterInfo c
             AFX_ASSERT(1 >= info[i].extent.h);
             AfxThrowError();
 
-            if ((info[i].extent.d > 1) && !(flags & afxRasterFlag_MULTIMAP))
+            if ((info[i].extent.d > 1) && !(flags & afxRasterFlag_LAYERED))
             {
-                AfxAssertOR(1 >= info[i].extent.d, flags & afxRasterFlag_MULTIMAP);
+                AfxAssertOR(1 >= info[i].extent.d, flags & afxRasterFlag_LAYERED);
                 AfxThrowError();
             }
         }
 
-        if ((flags & afxRasterFlag_2D) && (info[i].extent.d > 1) && !(flags & afxRasterFlag_MULTIMAP))
+        if ((flags & afxRasterFlag_2D) && (info[i].extent.d > 1) && !(flags & afxRasterFlag_LAYERED))
         {
             AfxThrowError();
 
-            if ((info[i].extent.d > 1) && !(flags & afxRasterFlag_MULTIMAP))
+            if ((info[i].extent.d > 1) && !(flags & afxRasterFlag_LAYERED))
             {
-                AfxAssertOR(1 >= info[i].extent.d, flags & afxRasterFlag_MULTIMAP);
+                AfxAssertOR(1 >= info[i].extent.d, flags & afxRasterFlag_LAYERED);
                 AfxThrowError();
             }
         }
     }
+#endif//AVX_VALIDATION_ENABLED
 
-    afxClass* cls = (afxClass*)_AvxGetRasterClass(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->rasCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_RAS);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)rasters, (void const*[]) { dsys, info }))
@@ -806,9 +907,9 @@ _AVX afxError AfxLoadRasters(afxDrawSystem dsys, afxUnit cnt, afxRasterInfo cons
         if (AfxReopenFile(file, &uri[i], afxFileFlag_R)) AfxThrowError();
         else
         {
-            afxTargaFile tgai = { 0 };
+            afxRasterFile tgai = { 0 };
 
-            if (AfxReadTarga(file, &tgai))
+            if (AfxReadRasterFile(&tgai, file))
             {
                 AfxThrowError();
                 rasters[i] = NIL;
@@ -861,9 +962,9 @@ _AVX afxError AfxLoadRasters(afxDrawSystem dsys, afxUnit cnt, afxRasterInfo cons
                     //op.rowCnt = tgai.extent[1];
                     //op.decSiz = tgai.decSiz;
 
-                    void* data = AfxRequestArenaUnit(&arena, tgai.decodedSiz);
+                    void* data = AfxRequestArenaUnit(&arena, tgai.decSiz);
 
-                    AfxDecodeTarga(file, &tgai, data);
+                    AfxDecodeRasterFile(&tgai, file, data);
                     AfxUpdateRaster(rasters[i], 1, &op, portId, data);
                 }
             }

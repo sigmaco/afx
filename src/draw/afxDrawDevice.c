@@ -29,33 +29,147 @@
 #include "impl/avxImplementation.h"
 #include "../impl/afxExecImplKit.h"
 
-_AVX afxString const sigmaDrawSignature = AFX_STRING(
-    "      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      \n"
-    "     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     \n"
-    "     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     \n"
-    "     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     \n"
-    "     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     \n"
-    "     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     \n"
-    "      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      \n"
-    "                                                                               \n"
-    "    Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E    \n"
-    "                                                                               \n"
-    "                               Public Test Build                               \n"
-    "                           (c) 2017 SIGMA FEDERATION                           \n"
-    "                                www.sigmaco.org                                \n"
-    "                                                                               \n"
-);
-
 //extern afxChain* _AfxGetSystemClassChain(void);
 AFX afxChain* _AfxGetSystemClassChain(void);
+
+afxDrawLimits const AVX_STD_DRAW_LIMITS =
+{
+    // buffer and raster storage
+    .minBufMapAlign = AVX_BUFFER_ALIGNMENT,
+    .optimalBufCopyOffsetAlign = AFX_SIMD_ALIGNMENT,
+    .optimalBufCopyRowPitchAlign = AFX_SIMD_ALIGNMENT,
+
+    .minUboOffsetAlign = AVX_BUFFER_ALIGNMENT,
+    .maxUboRange = 16384,
+    .minSsboOffsetAlign = AVX_BUFFER_ALIGNMENT,
+    .maxSsboRange = 128000000, // 128MB
+    .minTboOffsetAlign = AVX_BUFFER_ALIGNMENT,
+    .maxTboCap = 65536,
+    .bufferRasterGranularity = AVX_RASTER_ALIGNMENT,
+
+    // texture
+
+    .maxRasterDim1D = 1024,
+    .maxRasterDim2D = 1024,
+    .maxRasterDim3D = 64,
+    .maxRasterDimCube = 1024,
+    .maxRasterLayers = 256,
+
+    .maxSamplerLodBias = 2.f,
+    .maxSamplerAnisotropy = 0.f,
+
+    // vertex assembler
+
+    .maxVtxIns = 16,
+    .maxVtxOutCompos = 64,
+    .maxVtxInSrcs = 1,
+    .maxVtxInOffset = 1024,
+    .maxVtxInSrcStride = 2048,
+
+    .maxClipDistances = 8,
+    .maxCullDistances = 8,
+    .maxCombinedClipAndCullDistances = 8,
+
+    // viewport transformation
+
+    .maxVpCnt = 16,
+    .maxVpDimensions[0] = 1,
+    .maxVpDimensions[1] = 1,
+    .vpBoundsRange[0] = -32768,
+    .vpBoundsRange[1] = 32767,
+    .vpSubPixelBits = 0,
+
+    // geometry shader
+
+    .maxPrimInComps = 64,
+    .maxPrimOutComps = 64,
+    .maxPrimShadInvocations = 0,
+    .maxPrimOutVertices = 0,
+    .maxPrimTotalOutComps = 0,
+
+    // tesselation
+
+    .maxTessGenLvl = 0,
+    .maxTessPatchSiz = 0,
+    .maxTessCtrlPerVtxInComps = 0,
+    .maxTessCtrlPerVtxOutComps = 0,
+    .maxTessCtrlPerPatchOutComps = 0,
+    .maxTessCtrlTotalOutComps = 0,
+    .maxTessEvalInComps = 0,
+    .maxTessEvalOutComps = 0,
+
+    // canvas
+
+    .maxColorAttachments = 8,
+    .maxCanvasWhd.w = 16384,
+    .maxCanvasWhd.h = 16384,
+    .maxCanvasWhd.d = 2048,
+    .canvasNoAttachmentsSampleCnts = 4,
+
+    .maxSampleMaskWords = 0,
+    .sampledRasterIntegerSampleCnts = 0,
+    .sampledRasterColorSampleCnts = 0,
+    .canvasColorSampleCnts = 0,
+    .sampledRasterDepthSampleCnts = 0,
+    .sampledRasterStencilSampleCnts = 0,
+    .canvasDepthSampleCnts = 0,
+    .canvasStencilSampleCnts = 0,
+
+    .pointSizRange[0] = 1,
+    .pointSizRange[1] = 1,
+    .pointSizGranularity = 1,
+    .lineWidthRange[0] = 1,
+    .lineWidthRange[1] = 1,
+    .lineWidthGranularity = 1,
+
+    .maxFragInComps = 128,
+    .maxFragOutAttachments = 8,
+    .maxFragDualSrcAttachments = 1,
+    .minTexelOffset = -8,
+    .maxTexelOffset = 7,
+    .minTexelGatherOffset = 1,
+    .maxTexelGatherOffset = 1,
+
+    .minInterpolationOffset = 1,
+    .maxInterpolationOffset = 1,
+    .subPixelInterpolationOffsetBits = 1,
+
+    .maxComputeWarpInvocations = 0,
+    .maxComputeWarpCnt.w = 0,
+    .maxComputeWarpCnt.h = 0,
+    .maxComputeWarpCnt.d = 0,
+
+    .maxComputeWarpSiz.w = 0,
+    .maxComputeWarpSiz.h = 0,
+    .maxComputeWarpSiz.d = 0,
+
+    .maxComputeSharedMemSiz = 0,
+    
+    .maxDrawIndexedIdxValue = sizeof(afxUnit32),
+
+    .maxBoundPerLigas = 4,
+    .maxPushConstsSiz = 128,
+
+    .maxPerStageUbos = 70,
+    .maxPerStageSsbos = 70,
+    .maxPerStageSampledImages = 70,
+    .maxPerStageSamplers = 70,
+
+    .maxPerLigaSamplers = 16,
+    .maxPerLigaSampledImages = 16,
+
+    .maxPerLigaUbos = 36,
+    .maxPerLigaSsbos = 8
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // DRAW DEVICE HANDLING                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxDrawLimits const* _AvxAccessDrawLimits(afxDrawDevice ddev)
+_AVX afxDrawLimits const* _AvxDdevGetLimits(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     return &ddev->limits;
 }
@@ -63,13 +177,15 @@ _AVX afxDrawLimits const* _AvxAccessDrawLimits(afxDrawDevice ddev)
 _AVX afxBool AfxIsDrawDevicePrompt(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     return ddev->dev.serving;
 }
 
-_AVX void* AfxGetDrawDeviceIdd(afxDrawDevice ddev)
+_AVX void* _AvxGetDrawDeviceIdd(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     return ddev->idd;
 }
@@ -77,6 +193,7 @@ _AVX void* AfxGetDrawDeviceIdd(afxDrawDevice ddev)
 _AVX afxUnit AfxCountDrawPorts(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     return ddev->portCnt;
 }
@@ -84,45 +201,269 @@ _AVX afxUnit AfxCountDrawPorts(afxDrawDevice ddev)
 _AVX void AfxQueryDrawDeviceLimits(afxDrawDevice ddev, afxDrawLimits* limits)
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     AFX_ASSERT(limits);
     *limits = ddev->limits;
 }
 
+_AVX void AfxLogDrawDeviceLimits(afxDrawDevice ddev)
+{
+    afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
+    afxDrawLimits limits;
+    AfxQueryDrawDeviceLimits(ddev, &limits);
+
+    afxChar buf[AFX_U16_MAX];
+    afxString s;
+    AfxMakeString(&s, sizeof(buf), buf, 0);
+
+#if 0
+    AfxFormatString
+    (&s,
+        "maxRasterDim1D : %u\n"
+        "maxRasterDim2D : %u\n"
+        "maxRasterDim3D : %u\n"
+        "maxRasterDimCube : %u\n"
+        "maxRasterArrayLayers : %u\n"
+        "maxTexelBufElements : %u\n"
+        "maxUboRange : %u\n"
+        "maxSsboRange : %u\n"
+        "maxPushConstsSiz : %u\n"
+        "maxMemAllocCnt : %u\n"
+        "maxSamplerAllocCnt : %u\n"
+        "maxBoundPerLigas : %u\n"
+        "maxPerStageSamplers : %u\n"
+        "maxPerStageUbos : %u\n"
+        "maxPerStageSsbos : %u\n"
+        "maxPerStageSampledImages : %u\n"
+        "maxPerStageStorageImages : %u\n"
+        "maxPerStageInputAttachments : %u\n"
+        "maxPerStageResources : %u\n"
+        "maxPerLigaSamplers : %u\n"
+        "maxPerLigaUbos : %u\n"
+        "maxPerLigaUbosDynamic : %u\n"
+        "maxPerLigaSsbos : %u\n"
+        "maxPerLigaSsbosDynamic : %u\n"
+        "maxPerLigaSampledImages : %u\n"
+        "maxPerLigaStorageImages : %u\n"
+        "maxPerLigaInputAttachments : %u\n"
+        "maxVtxIns : %u\n"
+        "maxVtxInSrcs : %u\n"
+        "maxVtxInOffset : %u\n"
+        "maxVtxInSrcStride : %u\n"
+        "maxVtxOutCompos : %u\n"
+        "maxTessGenLvl : %u\n"
+        "maxTessPatchSiz : %u\n"
+        "maxTessCtrlPerVtxInComps : %u\n"
+        "maxTessCtrlPerVtxOutComps : %u\n"
+        "maxTessCtrlPerPatchOutComps : %u\n"
+        "maxTessCtrlTotalOutComps : %u\n"
+        "maxTessEvalInComps : %u\n"
+        "maxTessEvalOutComps : %u\n"
+        "maxPrimShadInvocations : %u\n"
+        "maxPrimInComps : %u\n"
+        "maxPrimOutComps : %u\n"
+        "maxPrimOutVertices : %u\n"
+        "maxPrimTotalOutComps : %u\n"
+        "maxFragInComps : %u\n"
+        "maxFragOutAttachments : %u\n"
+        "maxFragDualSrcAttachments : %u\n"
+        "maxFragCombinedOutputResources : %u\n"
+        "maxComputeSharedMemSiz : %u\n"
+        "maxComputeWarpCnt.w : %u\n"
+        "maxComputeWarpCnt.h : %u\n"
+        "maxComputeWarpCnt.d : %u\n"
+        "maxComputeWarpInvocations : %u\n"
+        "maxComputeWarpSiz.w : %u\n"
+        "maxComputeWarpSiz.h : %u\n"
+        "maxComputeWarpSiz.d : %u\n"
+        "subPixelPreciBits : %u\n"
+        "subTexelPreciBits : %u\n"
+        "mipmapPrecisionBits : %u\n"
+        "maxDrawIndexedIdxValue : %u\n"
+        "maxDrawIndirectCnt : %u\n"
+        " : %u\n"
+        " : %u\n"
+        " : %u\n"
+        " : %u\n"
+        " : %u\n",
+
+        limits.maxRasterDim1D,
+        limits.maxRasterDim2D,
+        limits.maxRasterDim3D,
+        limits.maxRasterDimCube,
+        limits.maxRasterArrayLayers,
+        limits.maxTexelBufElements,
+        limits.maxUboRange,
+        limits.maxSsboRange,
+        limits.maxPushConstsSiz,
+        limits.maxMemAllocCnt,
+        limits.maxSamplerAllocCnt,
+        limits.maxBoundPerLigas,
+        limits.maxPerStageSamplers,
+        limits.maxPerStageUbos,
+        limits.maxPerStageSsbos,
+        limits.maxPerStageSampledImages,
+        limits.maxPerStageStorageImages,
+        limits.maxPerStageInputAttachments,
+        limits.maxPerStageResources,
+        limits.maxPerLigaSamplers,
+        limits.maxPerLigaUbos,
+        limits.maxPerLigaUbosDynamic,
+        limits.maxPerLigaSsbos,
+        limits.maxPerLigaSsbosDynamic,
+        limits.maxPerLigaSampledImages,
+        limits.maxPerLigaStorageImages,
+        limits.maxPerLigaInputAttachments,
+        limits.maxVtxIns,
+        limits.maxVtxInSrcs,
+        limits.maxVtxInOffset,
+        limits.maxVtxInSrcStride,
+        limits.maxVtxOutCompos,
+        limits.maxTessGenLvl,
+        limits.maxTessPatchSiz,
+        limits.maxTessCtrlPerVtxInComps,
+        limits.maxTessCtrlPerVtxOutComps,
+        limits.maxTessCtrlPerPatchOutComps,
+        limits.maxTessCtrlTotalOutComps,
+        limits.maxTessEvalInComps,
+        limits.maxTessEvalOutComps,
+        limits.maxPrimShadInvocations,
+        limits.maxPrimInComps,
+        limits.maxPrimOutComps,
+        limits.maxPrimOutVertices,
+        limits.maxPrimTotalOutComps,
+        limits.maxFragInComps,
+        limits.maxFragOutAttachments,
+        limits.maxFragDualSrcAttachments,
+        limits.maxFragCombinedOutputResources,
+        limits.maxComputeSharedMemSiz,
+        limits.maxComputeWarpCnt.w,
+        limits.maxComputeWarpCnt.h,
+        limits.maxComputeWarpCnt.d,
+        limits.maxComputeWarpInvocations,
+        limits.maxComputeWarpSiz.w,
+        limits.maxComputeWarpSiz.h,
+        limits.maxComputeWarpSiz.d,
+        limits.subPixelPreciBits,
+        limits.subTexelPreciBits,
+        limits.mipmapPrecisionBits,
+        limits.maxDrawIndexedIdxValue,
+        limits.maxDrawIndirectCnt,
+
+        );
+
+    afxSize     bufferRasterGranularity;
+    afxSize     sparseAddrSpaceSiz;
+
+    afxReal     maxSamplerLodBias;
+    afxReal     maxSamplerAnisotropy;
+    afxUnit     maxVpCnt;
+    afxUnit     maxVpDimensions[2];
+    afxV2d      vpBoundsRange;
+    afxUnit     vpSubPixelBits;
+    afxSize     minMemMapAlign;
+    afxSize     minTexelBufOffsetAlign;
+    afxSize     minUboOffsetAlign;
+    afxSize     minSsboOffsetAlign;
+    afxInt      minTexelOffset;
+    afxUnit     maxTexelOffset;
+    afxInt      minTexelGatherOffset;
+    afxUnit     maxTexelGatherOffset;
+    afxReal     minInterpolationOffset;
+    afxReal     maxInterpolationOffset;
+    afxUnit     subPixelInterpolationOffsetBits;
+    afxWhd      maxCanvasWhd;
+    afxFlags    canvasColorSampleCnts;
+    afxFlags    canvasDepthSampleCnts;
+    afxFlags    canvasStencilSampleCnts;
+    afxFlags    canvasNoAttachmentsSampleCnts;
+    afxUnit     maxColorAttachments;
+    afxFlags    sampledRasterColorSampleCnts;
+    afxFlags    sampledRasterIntegerSampleCnts;
+    afxFlags    sampledRasterDepthSampleCnts;
+    afxFlags    sampledRasterStencilSampleCnts;
+    afxFlags    storageRasterSampleCnts;
+    afxUnit     maxSampleMaskWords;
+    afxBool     timestampComputeAndGraphics;
+    afxReal     timestampPeriod;
+    afxUnit     maxClipDistances;
+    afxUnit     maxCullDistances;
+    afxUnit     maxCombinedClipAndCullDistances;
+    afxUnit     discreteQueuePriorities;
+    afxV2d      pointSizRange;
+    afxV2d      lineWidthRange;
+    afxReal     pointSizGranularity;
+    afxReal     lineWidthGranularity;
+    afxBool     strictLines;
+    afxBool     standardSampleLocations;
+    afxSize     optimalBufCopyOffsetAlign;
+    afxSize     optimalBufCopyRowPitchAlign;
+    afxSize     nonCoherentAtomSiz;
+#else
+    // TODO nest by feature
+#endif
+}
+
 _AVX void AfxQueryDrawDeviceFeatures(afxDrawDevice ddev, afxDrawFeatures* features)
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     AFX_ASSERT(features);
     *features = ddev->features;
 }
 
-_AVX void AfxQueryDrawPortCapabilities(afxDrawDevice ddev, afxUnit portId, afxDrawPortCaps* caps)
+_AVX afxUnit AfxQueryDrawCapabilities(afxDrawDevice ddev, afxUnit basePortIdx, afxUnit portCnt, afxDrawCapabilities caps[])
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
-    AFX_ASSERT_RANGE(ddev->portCnt, portId, 1);
-    AFX_ASSERT(caps);
-    *caps = ddev->ports[portId].caps;
+    //AFX_ASSERT_RANGE(ddev->portCnt, basePortIdx, portCnt);
+    //AFX_ASSERT(caps);
+    afxUnit rslt = 0;
+
+    // count must be evaluated first to avoid clamp.
+    portCnt = AfxMin(portCnt, ddev->portCnt - basePortIdx);
+    basePortIdx = AfxMin(basePortIdx, ddev->portCnt - 1);
+
+    if (!caps) rslt = portCnt; 
+    else for (afxUnit i = 0; i < portCnt; i++)
+    {
+        afxUnit portId = basePortIdx + i;
+        caps[i] = ddev->ports[portId].caps;
+        ++rslt;
+    }
+
+    return rslt;
 }
 
-_AVX afxUnit AfxChooseDrawPorts(afxDrawDevice ddev, afxDrawPortFlags caps, afxAcceleration accel, afxUnit maxCnt, afxUnit portId[])
+_AVX afxUnit AfxChooseDrawPorts(afxDrawDevice ddev, afxDrawCapabilities const* caps, afxUnit maxCnt, afxUnit portIds[])
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     afxUnit rslt = 0;
 
     for (afxUnit i = ddev->portCnt; i-- > 0;)
     {
-        afxDrawPortCaps const* port = &ddev->ports[i].caps;
+        afxDrawCapabilities const* port = &ddev->ports[i].caps;
         
-        if (!caps || (caps == (caps & port->capabilities)))
-        {
-            if (!accel || (accel == (accel & port->acceleration)))
-            {
-                portId[rslt++] = i;
-            }
-        }
+        if ((port->capabilities & caps->capabilities) != caps->capabilities)
+            continue;
+
+        if ((port->acceleration & caps->acceleration) != caps->acceleration)
+            continue;
+
+        if (port->minQueCnt < caps->minQueCnt)
+            continue;
+
+        if (port->maxQueCnt < caps->maxQueCnt)
+            continue;
+
+        portIds[rslt++] = i;
 
         if (rslt == maxCnt)
             break;
@@ -133,6 +474,7 @@ _AVX afxUnit AfxChooseDrawPorts(afxDrawDevice ddev, afxDrawPortFlags caps, afxAc
 _AVX afxBool AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const* features, afxDrawLimits const* limits)
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     AFX_ASSERT(limits);
     AFX_ASSERT(features);
@@ -206,8 +548,8 @@ _AVX afxBool AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const
             (limits->maxRasterDim2D > ddev->limits.maxRasterDim2D) ||
             (limits->maxRasterDim3D > ddev->limits.maxRasterDim3D) ||
             (limits->maxRasterDimCube > ddev->limits.maxRasterDimCube) ||
-            (limits->maxRasterArrayLayers > ddev->limits.maxRasterArrayLayers) ||
-            (limits->maxTexelBufElements > ddev->limits.maxTexelBufElements) ||
+            (limits->maxRasterLayers > ddev->limits.maxRasterLayers) ||
+            (limits->maxTboCap > ddev->limits.maxTboCap) ||
             (limits->maxUboRange > ddev->limits.maxUboRange) ||
             (limits->maxSsboRange > ddev->limits.maxSsboRange) ||
             (limits->maxPushConstsSiz > ddev->limits.maxPushConstsSiz) ||
@@ -215,7 +557,7 @@ _AVX afxBool AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const
             (limits->maxSamplerAllocCnt > ddev->limits.maxSamplerAllocCnt) ||
             (limits->bufferRasterGranularity > ddev->limits.bufferRasterGranularity) ||
             (limits->sparseAddrSpaceSiz > ddev->limits.sparseAddrSpaceSiz) ||
-            (limits->maxBoundLigaSets > ddev->limits.maxBoundLigaSets) ||
+            (limits->maxBoundPerLigas > ddev->limits.maxBoundPerLigas) ||
             (limits->maxPerStageSamplers > ddev->limits.maxPerStageSamplers) ||
             (limits->maxPerStageUbos > ddev->limits.maxPerStageUbos) ||
             (limits->maxPerStageSsbos > ddev->limits.maxPerStageSsbos) ||
@@ -223,14 +565,14 @@ _AVX afxBool AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const
             (limits->maxPerStageStorageImages > ddev->limits.maxPerStageStorageImages) ||
             (limits->maxPerStageInputAttachments > ddev->limits.maxPerStageInputAttachments) ||
             (limits->maxPerStageResources > ddev->limits.maxPerStageResources) ||
-            (limits->maxLigaSetSamplers > ddev->limits.maxLigaSetSamplers) ||
-            (limits->maxLigaSetUbos > ddev->limits.maxLigaSetUbos) ||
-            (limits->maxLigaSetUbosDynamic > ddev->limits.maxLigaSetUbosDynamic) ||
-            (limits->maxLigaSetSsbos > ddev->limits.maxLigaSetSsbos) ||
-            (limits->maxLigaSetSsbosDynamic > ddev->limits.maxLigaSetSsbosDynamic) ||
-            (limits->maxLigaSetSampledImages > ddev->limits.maxLigaSetSampledImages) ||
-            (limits->maxLigaSetStorageImages > ddev->limits.maxLigaSetStorageImages) ||
-            (limits->maxLigaSetInputAttachments > ddev->limits.maxLigaSetInputAttachments) ||
+            (limits->maxPerLigaSamplers > ddev->limits.maxPerLigaSamplers) ||
+            (limits->maxPerLigaUbos > ddev->limits.maxPerLigaUbos) ||
+            (limits->maxPerLigaUbosDynamic > ddev->limits.maxPerLigaUbosDynamic) ||
+            (limits->maxPerLigaSsbos > ddev->limits.maxPerLigaSsbos) ||
+            (limits->maxPerLigaSsbosDynamic > ddev->limits.maxPerLigaSsbosDynamic) ||
+            (limits->maxPerLigaSampledImages > ddev->limits.maxPerLigaSampledImages) ||
+            (limits->maxPerLigaStorageImages > ddev->limits.maxPerLigaStorageImages) ||
+            (limits->maxPerLigaInputAttachments > ddev->limits.maxPerLigaInputAttachments) ||
             (limits->maxVtxIns > ddev->limits.maxVtxIns) ||
             (limits->maxVtxInSrcs > ddev->limits.maxVtxInSrcs) ||
             (limits->maxVtxInOffset > ddev->limits.maxVtxInOffset) ||
@@ -274,8 +616,8 @@ _AVX afxBool AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const
             (limits->vpBoundsRange[0] > ddev->limits.vpBoundsRange[0]) ||
             (limits->vpBoundsRange[1] > ddev->limits.vpBoundsRange[1]) ||
             (limits->vpSubPixelBits > ddev->limits.vpSubPixelBits) ||
-            (limits->minMemMapAlign > ddev->limits.minMemMapAlign) ||
-            (limits->minTexelBufOffsetAlign > ddev->limits.minTexelBufOffsetAlign) ||
+            (limits->minBufMapAlign > ddev->limits.minBufMapAlign) ||
+            (limits->minTboOffsetAlign > ddev->limits.minTboOffsetAlign) ||
             (limits->minUboOffsetAlign > ddev->limits.minUboOffsetAlign) ||
             (limits->minSsboOffsetAlign > ddev->limits.minSsboOffsetAlign) ||
             (limits->minTexelOffset > ddev->limits.minTexelOffset) ||
@@ -323,26 +665,25 @@ _AVX afxBool AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const
     return rslt;
 }
 
-_AVX afxError _AvxRegisterDisplays(afxDrawDevice ddev, afxUnit cnt, avxDisplayInfo const infos[], afxDisplay displays[])
+_AVX afxError AvxDescribeDeviceFormats(afxDrawDevice ddev, afxUnit cnt, avxFormat const formats[], avxFormatDescription descs[])
 {
     afxError err = AFX_ERR_NONE;
+#if AVX_VALIDATION_ENABLED
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
-    AFX_ASSERT(displays);
-    AFX_ASSERT(infos);
+    // @formats must be an array of valid avxFormat values.
+    AFX_ASSERT(formats);
+    // @descs must be a valid pointer to an array of avxFormatDescription structure.
+    AFX_ASSERT(descs);
+    // @cnt must be greater or equal to 1.
     AFX_ASSERT(cnt);
+#endif
 
-    afxClass* cls = (afxClass*)&ddev->vduCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_VDU);
-
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)displays, (void const*[]) { ddev, infos, NIL }))
+    for (afxUnit i = 0; i < cnt; i++)
     {
-        AfxThrowError();
-        return err;
-    }
-    else
-    {
-        AFX_ASSERT_OBJECTS(afxFcc_VDU, cnt, displays);
-
+        AFX_ASSERT_RANGE(avxFormat_TOTAL, 0, formats[i]);
+        avxFormatDescription const* pfd = &ddev->pfds[formats[i]];
+        descs[i] = *pfd;
     }
     return err;
 }
@@ -350,6 +691,7 @@ _AVX afxError _AvxRegisterDisplays(afxDrawDevice ddev, afxUnit cnt, avxDisplayIn
 _AVX afxError _AvxDdevDtorCb(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
 
     AfxDeregisterChainedClasses(&ddev->dev.classes);
@@ -375,15 +717,15 @@ _AVX afxError _AvxDdevDtorCb(afxDrawDevice ddev)
 _AVX afxError _AvxDdevCtorCb(afxDrawDevice ddev, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
+    // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
 
     afxModule icd = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     afxDrawDeviceInfo const* info = AFX_CAST(afxDrawDeviceInfo const*, args[1]) + invokeNo;
     AFX_ASSERT(info);
-    afxClassConfig* vduClsCfg = AFX_CAST(afxClassConfig*, args[2]) + invokeNo;
 
-    if (_AfxDevBaseImplementation.ctor(&ddev->dev, (void*[]){ icd, (void*)&info->dev }, 0)) AfxThrowError();
+    if (_AFX_DEV_CLASS_CONFIG.ctor(&ddev->dev, (void*[]){ icd, (void*)&info->dev }, 0)) AfxThrowError();
     else
     {
         ddev->leftHandedSpace = FALSE;
@@ -397,6 +739,8 @@ _AVX afxError _AvxDdevCtorCb(afxDrawDevice ddev, void** args, afxUnit invokeNo)
         ddev->clipSpaceDepth = info->clipSpaceDepth;
 
         ddev->portCnt = info->portCnt;
+
+        ddev->pfds = &_AvxStdPfds[0];
 
         afxObjectStash stashes[] =
         {
@@ -417,13 +761,11 @@ _AVX afxError _AvxDdevCtorCb(afxDrawDevice ddev, void** args, afxUnit invokeNo)
 
                 for (afxUnit i = 0; i < ddev->portCnt; i++)
                 {
-                    ddev->ports[i].caps = (afxDrawPortCaps) { 0 };
+                    ddev->ports[i].caps = (afxDrawCapabilities) { 0 };
                     AfxMakeString128(&ddev->ports[i].desc, NIL);
                     AfxMakeString8(&ddev->ports[i].urn, NIL);
                 }
 
-                AfxMountClass(&ddev->vduCls, (afxClass*)AfxGetDeviceClass(), &ddev->dev.classes, vduClsCfg ? vduClsCfg : &_AVX_VDU_CLASS_CONFIG);
-                
                 if (AfxCallDevice(&ddev->dev, afxFcc_DSYS, NIL)) AfxThrowError();
                 else
                 {
@@ -470,6 +812,8 @@ _AVX afxUnit AfxEnumerateDrawDevices(afxUnit icd, afxUnit first, afxUnit cnt, af
         afxClass const* cls = _AvxGetDrawDeviceClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DDEV);
         rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)devices);
+        // devices must be an array of valid afxDrawDevice handles.
+        AFX_ASSERT_OBJECTS(afxFcc_DDEV, rslt, devices);
         break;
     }
     return rslt;
@@ -510,6 +854,8 @@ _AVX afxUnit AfxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(
         afxClass const* cls = _AvxGetDrawDeviceClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DDEV);
         rslt = AfxEvokeObjects(cls, (void*)f, udd, first, cnt, (afxObject*)devices);
+        // @devices must be an array of valid afxDrawDevice handles.
+        AFX_ASSERT_OBJECTS(afxFcc_DDEV, rslt, devices);
         break;
     }
     return rslt;
@@ -550,61 +896,32 @@ _AVX afxUnit AfxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, 
     return rslt;
 }
 
-_AVX afxUnit AfxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt)
+_AVX afxError _AvxRegisterDrawDevices(afxModule icd, afxUnit cnt, afxDrawDeviceInfo const infos[], afxDrawDevice devices[])
 {
     afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
+    AFX_ASSERT(devices);
+    AFX_ASSERT(infos);
     AFX_ASSERT(cnt);
-    AFX_ASSERT(f);
-    afxUnit rslt = 0;
 
-    afxModule mdle;
-    while (_AvxGetIcd(icd, &mdle))
+    if (!AfxTestModule(icd, afxModuleFlag_ICD | afxModuleFlag_AVX))
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
-        afxClass const* cls = _AvxGetDrawSystemClass(mdle);
-        AFX_ASSERT_CLASS(cls, afxFcc_DSYS);
-        rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
-        break;
+        AfxThrowError();
+        return err;
     }
-    return rslt;
-}
 
-_AVX afxUnit AfxEvokeDrawSystems(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt, afxDrawSystem systems[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(systems);
-    AFX_ASSERT(f);
-    afxUnit rslt = 0;
+    afxClass* cls = (afxClass*)_AvxGetDrawDeviceClass(icd);
+    AFX_ASSERT_CLASS(cls, afxFcc_DDEV);
 
-    afxModule mdle;
-    while (_AvxGetIcd(icd, &mdle))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)devices, (void const*[]) { icd, infos, NIL }))
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
-        afxClass const* cls = _AvxGetDrawSystemClass(mdle);
-        AFX_ASSERT_CLASS(cls, afxFcc_DSYS);
-        rslt = AfxEvokeObjects(cls, (void*)f, udd, first, cnt, (afxObject*)systems);
-        break;
+        AfxThrowError();
+        return err;
     }
-    return rslt;
-}
-
-_AVX afxUnit AfxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawSystem systems[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(systems);
-    AFX_ASSERT(cnt);
-    afxUnit rslt = 0;
-
-    afxModule mdle;
-    while (_AvxGetIcd(icd, &mdle))
+    else
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-        AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
-        afxClass const* cls = _AvxGetDrawSystemClass(mdle);
-        AFX_ASSERT_CLASS(cls, afxFcc_DSYS);
-        rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)systems);
-        break;
+        AFX_ASSERT_OBJECTS(afxFcc_DDEV, cnt, devices);
+
     }
+    return err;
 }

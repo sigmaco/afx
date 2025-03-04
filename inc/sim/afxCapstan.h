@@ -129,7 +129,7 @@ ASX void            AfxResetCapstanLocalClock(afxReal localClock, afxUnit cnt, a
 
 ASX void            AfxRebaseCapstanClocks(afxReal currClock, afxUnit cnt, afxCapstan capstans[]);
 
-/// Update the current motor clock to a new one. /// new absolute time
+/// Update the current motor clock to a new one. // new absolute time
 
 ASX void            AfxUpdateCapstanClock(afxReal time, afxUnit cnt, afxCapstan capstans[]);
 

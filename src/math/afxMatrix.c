@@ -2501,8 +2501,10 @@ _AFXINL void AfxAssimilateAtm4d(afxM3d const ltm, afxM3d const iltm, afxV4d cons
     }
 }
 
-_AFX void AfxApplyRootMotionVectorsToMatrix(afxV3d const translation, afxV3d const rotation, afxM4d const mm, afxM4d m)
+_AFX void AfxApplyMatrixRootMotionVectors(afxV3d const translation, afxV3d const rotation, afxM4d const mm, afxM4d m)
 {
+    // AfxApplyRootMotionVectorsToMatrix
+
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(translation);
     AFX_ASSERT(rotation);

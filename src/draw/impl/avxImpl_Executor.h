@@ -44,6 +44,22 @@ AFX_DEFINE_STRUCT(avxDpu)
     afxSize         numOfFedIndices;
     afxSize         numOfFedInstances;
 
+    // draw scope
+    avxCanvas           canv;
+    afxRect             area; //  the area that is affected by the draw scope.
+    afxUnit             baseLayer; // the index of the first attachment layer that will be drawn.
+    afxUnit             layerCnt; // the number of layers drawn to in each attachment when viewMask is 0.
+    afxUnit             targetCnt; // the number of video surfaces.
+    avxDrawTarget       targets[8]; // structures describing any color attachments used.
+    afxBool             useDepth;
+    avxDrawTarget       depth; // structure describing a depth attachment.
+    afxBool             useStencil;
+    avxDrawTarget       stencil; // structure describing a stencil attachment.
+
+    // transform scope
+    afxUnit     vpCnt;
+    afxViewport vps[8];
+    afxRect     scissors[8];
 };
 
 AFX_DEFINE_STRUCT(_avxDrawBridgeAcquisition)
@@ -183,7 +199,7 @@ AFX_DEFINE_UNION(avxWork)
         union
         {
             afxRaster   ras;
-            afxBuffer   buf;
+            avxBuffer   buf;
             void*       dst;
             void const* src;
             afxStream   iob;
@@ -192,7 +208,7 @@ AFX_DEFINE_UNION(avxWork)
         union
         {
             afxRaster   ras;
-            afxBuffer   buf;
+            avxBuffer   buf;
             void*       dst;
             void const* src;
             afxStream   iob;
@@ -204,7 +220,7 @@ AFX_DEFINE_UNION(avxWork)
         union
         {
             afxRasterIo AFX_SIMD rasOps[];
-            afxBufferIo AFX_SIMD bufOps[];
+            avxBufferIo AFX_SIMD bufOps[];
         };
     } Transfer;
     struct
@@ -226,8 +242,8 @@ AFX_DEFINE_UNION(avxWork)
         afxUnit     unmapCnt;
         union
         {
-            afxBufferRemap mapOps[];
-            afxBuffer unmapOps[];
+            avxBufferRemap mapOps[];
+            avxBuffer unmapOps[];
         };
     } Remap;
     struct
@@ -239,7 +255,7 @@ AFX_DEFINE_UNION(avxWork)
         afxUnit     fetchCnt;
         union
         {
-            afxBufferMap ops[];
+            avxBufferMap ops[];
         };
     } SyncMaps;
     struct
@@ -296,10 +312,10 @@ AVX afxError _AvxDexu_PingCb(afxDrawBridge dexu, afxUnit queIdx);
 AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx);
 
 // Common queued operations
-AVX afxError _AvxSubmitDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence);
+AVX afxError _AvxExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence);
 AVX afxError _AvxSubmitTransferences(afxDrawQueue dque, avxTransference const* ctrl, afxUnit opCnt, void const* ops);
-AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, afxBufferRemap const maps[], afxUnit unmapCnt, afxBuffer const unmaps[]);
-AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, afxBufferMap const flushes[], afxUnit fetchCnt, afxBufferMap const fetches[]);
+AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, avxBufferRemap const maps[], afxUnit unmapCnt, avxBuffer const unmaps[]);
+AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferMap const flushes[], afxUnit fetchCnt, avxBufferMap const fetches[]);
 AVX afxError _AvxSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), void* udd);
 
 AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, afxColor const color);

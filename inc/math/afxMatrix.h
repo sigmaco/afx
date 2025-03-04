@@ -214,7 +214,7 @@ AFXINL void         AfxM4dTranslation
 /// Builds a translation matrix from the specified vector describing the translations along the x-axis, y-axis, and z-axis.
 (
     afxM4d          m, 
-    afxV3d const    translation /// vector describing the translations along the x-axis, y-axis, and z-axis.
+    afxV3d const    translation // vector describing the translations along the x-axis, y-axis, and z-axis.
 );
 
 // PolarDecompose
@@ -232,22 +232,22 @@ AFXINL void         AfxM4dComposeTransformation
 /// Builds a transformation matrix.
 (
     afxM4d          m, 
-    afxV3d const    scalPivot, /// Vector describing the center of the scaling.
-    afxQuat const   scalOrient, /// Quaternion describing the orientation of the scaling.
-    afxV3d const    scaling, /// Vector containing the scaling factors for the x-axis, y-axis, and z-axis.
-    afxV3d const    rotPivot, /// Vector describing the center of the rotation.
-    afxQuat const   rotQuat, /// Quaternion describing the rotation around the origin indicated by rotOrigin.
-    afxV3d const    translation /// Vector describing the translations along the x-axis, y-axis, and z-axis.
+    afxV3d const    scalPivot, // Vector describing the center of the scaling.
+    afxQuat const   scalOrient, // Quaternion describing the orientation of the scaling.
+    afxV3d const    scaling, // Vector containing the scaling factors for the x-axis, y-axis, and z-axis.
+    afxV3d const    rotPivot, // Vector describing the center of the rotation.
+    afxQuat const   rotQuat, // Quaternion describing the rotation around the origin indicated by rotOrigin.
+    afxV3d const    translation // Vector describing the translations along the x-axis, y-axis, and z-axis.
 );
 
 AFXINL void         AfxM4dComposeAffineTransformation
 /// Builds an affine transformation matrix.
 (
     afxM4d          m, 
-    afxV3d const    scale, /// Vector of scaling factors for each dimension.
-    afxV3d const    rotPivot, /// Point identifying the center of rotation.
-    afxQuat const   rot, /// Rotation factors.
-    afxV3d const    translation /// Translation offsets.
+    afxV3d const    scale, // Vector of scaling factors for each dimension.
+    afxV3d const    rotPivot, // Point identifying the center of rotation.
+    afxQuat const   rot, // Rotation factors.
+    afxV3d const    translation // Translation offsets.
 );
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -320,6 +320,6 @@ AFXINL void     AfxM4dPostMultiplyAtv4dSerialized(afxM4d const m, afxUnit inStri
 AFXINL void     AfxAssimilateLtm3d(afxM3d const ltm, afxM3d const iltm, afxUnit cnt, afxM3d const in[], afxM3d out[]); // make similarity transformation on afxM3d-based scale/shear.
 AFXINL void     AfxAssimilateAtm4d(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxUnit cnt, afxM4d const in[], afxM4d out[]);
 
-AFX void        AfxApplyRootMotionVectorsToMatrix(afxV3d const translation, afxV3d const rotation, afxM4d const mm, afxM4d m);
+AFX void        AfxApplyMatrixRootMotionVectors(afxV3d const translation, afxV3d const rotation, afxM4d const mm, afxM4d m);
 
 #endif//AFX_MATRIX_H

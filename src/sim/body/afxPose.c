@@ -16,19 +16,27 @@
 
 
 #define _ASX_POSE_C
-#define _ASX_SKELETON_C
-#define _ASX_MODEL_C
-#define _ASX_ANIMATION_C
+//#define _ASX_SKELETON_C
+//#define _ASX_MODEL_C
+//#define _ASX_ANIMATION_C
 #include "../impl/asxImplementation.h"
 
-_ASX afxUnit AfxGetPoseCapacity(afxPose const pose)
+_ASX asxArticulation* _AsxPoseGetPaArray(afxPose pose, afxUnit base)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(pose);
+    AFX_ASSERT_RANGE(pose->artCnt, base, 1);
+    return &pose->arts[base];
+}
+
+_ASX afxUnit AsxGetPoseCapacity(afxPose pose)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pose);
     return pose->artCnt;
 }
 
-_ASX afxTransform* AfxGetPoseTransform(afxPose const pose, afxUnit artIdx)
+_ASX afxTransform* AsxGetPoseTransform(afxPose pose, afxUnit artIdx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pose);
@@ -36,7 +44,7 @@ _ASX afxTransform* AfxGetPoseTransform(afxPose const pose, afxUnit artIdx)
     return &pose->arts[artIdx].xform;
 }
 
-_ASX void AfxCopyPose(afxPose pose, afxPose const from)
+_ASX void AsxCopyPose(afxPose pose, afxPose from)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pose);
@@ -44,16 +52,94 @@ _ASX void AfxCopyPose(afxPose pose, afxPose const from)
 
     for (afxUnit i = 0; i < from->artCnt; i++)
     {
-        pose->arts[i].weight = from->arts[i].weight;
-        pose->arts[i].cnt = from->arts[i].cnt;
-        pose->arts[i].traversalId = from->arts[i].traversalId;
-        AfxCopyTransform(&pose->arts[i].xform, &from->arts[i].xform);
+        asxArticulation* dst = &pose->arts[i];
+        asxArticulation const* src = &pose->arts[i];
+        dst->weight = src->weight;
+        dst->cnt = src->cnt;
+        dst->traversalId = src->traversalId;
+        AfxCopyTransform(&dst->xform, &src->xform);
     }
 }
 
-_ASX void AfxApplyRootMotionVectorsToPose(afxPose pose, afxV3d const translation, afxV3d const rotation)
+_ASX void AfxComputeAttachmentWorldMatrix(afxPose pose, afxModel skl, afxUnit jntIdx, afxUnit const sparseJntMap[], afxUnit const sparseJntMapRev[], afxM4d const displace, afxM4d m)
 {
-    afxTransform* t = AfxGetPoseTransform(pose, 0);
+    // Should be compatible with void GetWorldMatrixFromLocalAttitude(const skeleton *Skeleton, int BoneIndex, const local_pose *LocalAttitude, const float *Offset4x4, float *Result4x4, const int *SparseBoneArray, const int *SparseBoneArrayReverse)
+    // void AfxSklGetWorldMatrixFromLocalAttitude(afxSkeleton skl, afxUnit jointIdx, afxPose const lp, afxM4d const offset, afxM4d m, afxUnit const* sparseBoneArray, afxUnit const* sparseBoneArrayReverse)
+    // AfxSklGetWorldMatrixFromLocalAttitude(skl, jntIdx, atti, offset, m, sparseJntMap, sparseJntMapRev);
+
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_POSE, 1, &pose);
+    AFX_ASSERT_RANGE(pose->artCnt, jntIdx, 1);
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &skl);
+    AFX_ASSERT(m);
+
+    afxUnit maxJntCnt = AsxCountJoints(skl, 0);
+    afxUnit const* pi = _AsxMdlGetPiArray(skl, 0);
+    AfxM4dReset(m);
+
+    for (afxUnit i = jntIdx; i != AFX_INVALID_INDEX; i = pi[i])
+    {
+        AFX_ASSERT_RANGE(maxJntCnt, i, 1);
+        afxTransform* t = AsxGetPoseTransform(pose, sparseJntMapRev ? sparseJntMapRev[i] : i);
+        afxM4d tmp, tmp2;
+        AfxComputeCompositeTransformM4d(t, tmp);
+        AfxM4dMultiplyAffine(tmp2, m, tmp);
+        AfxM4dCopy(m, tmp2);
+    }
+
+    if (displace)
+    {
+        afxM4d tmp2;
+        AfxM4dMultiplyAffine(tmp2, m, displace);
+        AfxM4dCopy(m, tmp2);
+    }
+}
+
+_ASX void AfxComputeAttachmentOffset(afxPose pose, afxModel skl, afxUnit jntIdx, afxUnit const sparseJntMap[], afxUnit const sparseJntMapRev[], afxM4d const displace, afxM4d m)
+{
+    // void AfxSklGetSkeletonAttachmentOffset(afxSkeleton skl, afxUnit jntIdx, afxPose const pos, afxM4d const offset, afxM4d m, afxUnit const* sparseArtArray, afxUnit const* sparseArtArrayReverse)
+    // AfxSklGetSkeletonAttachmentOffset(skl, jntIdx, atti, offset, m, sparseJntMap, sparseJntMapRev);
+
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_POSE, 1, &pose);
+    AFX_ASSERT_RANGE(pose->artCnt, jntIdx, 1);
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &skl);
+    AFX_ASSERT(m);
+
+    afxM4d tmp;
+    AfxComputeAttachmentWorldMatrix(pose, skl, jntIdx, sparseJntMap, sparseJntMapRev, displace, tmp);
+    AfxM4dInvertAffine(m, tmp); // invert it
+}
+
+_ASX void AfxRebuildRestPose(afxPose pose, afxModel skl, afxUnit baseJntIdx, afxUnit jntCnt)
+{
+    // Should be compatible with void BuildRestLocalAttitude(const skeleton *Skeleton, int FirstBone, int BoneCount, local_pose *LocalAttitude)
+    // AfxSklComputeRestLocalAttitude(skl, baseJntIdx, jntCnt, atti);
+
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &skl);
+
+    AFX_ASSERT_RANGE(pose->artCnt, baseJntIdx, jntCnt);
+
+    afxUnit maxJntCnt = AsxCountJoints(skl, 0);
+    AFX_ASSERT_RANGE(maxJntCnt, baseJntIdx, jntCnt);
+
+    afxTransform const* lt = _AsxMdlGetLtArray(skl, 0);
+
+    for (afxUnit i = jntCnt; i-- > 0;)
+    {
+        afxUnit jntIdx = baseJntIdx + i;
+        AFX_ASSERT_RANGE(maxJntCnt, jntIdx, 1);
+        asxArticulation* pa = &pose->arts[jntIdx];
+        pa->cnt = 1;
+        pa->weight = 1.0;
+        AfxCopyTransform(&pa->xform, &lt[jntIdx]);
+    }
+}
+
+_ASX void AsxApplyPoseRootMotionVectors(afxPose pose, afxV3d const translation, afxV3d const rotation)
+{
+    afxTransform* t = AsxGetPoseTransform(pose, 0);
     AfxV3dAdd(t->position, t->position, translation);
 
     afxQuat rot;
@@ -61,123 +147,142 @@ _ASX void AfxApplyRootMotionVectorsToPose(afxPose pose, afxV3d const translation
     AfxQuatMultiply(t->orientation, rot, t->orientation);
 }
 
-_ASX void AfxAccumulateLocalTransform(afxPose pose, int LocalAttitudeBoneIndex, int SkeletonBoneIndex, float Weight, const afxModel ReferenceSkeleton, afxQuatBlend Mode, const afxTransform *Transform)
+_ASX void AsxCommencePoseAccumulation(afxPose pose, afxUnit baseArtIdx, afxUnit artCnt, afxUnit const jntMap[])
+{
+    ++pose->traversalId;
+}
+
+_ASX void AsxConcludePoseAccumulation(afxPose pose, afxUnit baseArtIdx, afxUnit artCnt, afxModel skl, afxReal allowedErr, afxUnit const jntMap[])
+{
+    afxReal AllowedErrorScaler;
+    afxReal AllowedErrorEnd;
+    afxError err = NIL;
+
+    afxModelInfo mdli;
+    AfxDescribeModel(skl, &mdli);
+
+    if (mdli.lodType)
+    {
+        AsxQueryModelErrorTolerance(skl, allowedErr, &AllowedErrorEnd, &AllowedErrorScaler); // TODO insert allowed error in skeleton due it be skl-dependent?
+    }
+    else
+    {
+        allowedErr = 0.0;
+        AllowedErrorEnd = 0.0;
+        AllowedErrorScaler = 0.0;
+    }
+
+    for (afxUnit artIdx = baseArtIdx; artIdx < artCnt; artIdx++)
+    {
+        afxUnit jointIdx = (jntMap) ? jntMap[artIdx] : artIdx;
+        asxArticulation* pa = &pose->arts[artIdx];
+        afxTransform const* local = &mdli.jntLt[jointIdx];
+
+        if (pa->traversalId != pose->traversalId)
+            pa->xform = *local;
+        else
+        {
+            if (pa->weight < pose->fillThreshold)
+            {
+                AsxAccumulateLocalTransform(pose, artIdx, jointIdx, pose->fillThreshold - pa->weight, skl, afxQuatBlend_ACCUM_ADJACENT, local);
+            }
+
+            afxReal s = (allowedErr - mdli.jntLe[jointIdx]) * AllowedErrorScaler;
+
+            if (s > 0.0)
+            {
+                if (s >= 0.99000001)
+                {
+                    pa->weight = 1.0;
+                    pa->cnt = 1;
+                    pa->xform = mdli.jntLt[jointIdx];
+                }
+                else
+                {
+                    AsxAccumulateLocalTransform(pose, artIdx, jointIdx, pa->weight / (1.0 - s) * s, skl, afxQuatBlend_ADJACENT, local);
+                }
+            }
+
+            afxReal wc = 1.0;
+
+            if (pa->cnt != 1 || pa->weight != wc)
+            {
+                afxReal s2 = 1.0 / pa->weight;
+                AfxV3dScale(pa->xform.position, pa->xform.position, s2);
+                AfxM3dScale(pa->xform.scaleShear, pa->xform.scaleShear, s2);
+            }
+
+            afxReal sq2, sq = AfxV4dSq(pa->xform.orientation);
+
+            if (sq > 1.1 || sq < 0.89999998)
+                sq2 = AfxRsqrtf(sq);
+            else
+                sq2 = (3.0 - sq) * (12.0 - (3.0 - sq) * (3.0 - sq) * sq) * 0.0625;
+
+            AfxV4dScale(pa->xform.orientation, pa->xform.orientation, sq2);
+        }
+    }
+}
+
+_ASX void AsxAccumulateLocalTransform(afxPose pose, afxUnit artIdx, afxUnit sklJntIdx, afxReal weight, afxModel skl, afxQuatBlend blendOp, afxTransform const* t)
 {
     afxError err = NIL;
-    double v10; // st7
-    afxReal f;
+    AFX_ASSERT_OBJECTS(afxFcc_POSE, 1, &pose);
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &skl);
 
-    akxArticulation* pt = &pose->arts[LocalAttitudeBoneIndex];
+    afxReal orientWeight;
 
-#if !0
-    switch (Mode)
-    {
-    case afxQuatBlend_DIRECT:
-    {
-        f = Weight;
-        break;
-    }
-    case afxQuatBlend_INV:
-    {
-        f = -Weight;
-        break;
-    }
-    case afxQuatBlend_ADJACENT:
-    {
-        if (AfxV4dSq(ReferenceSkeleton->jntLt[SkeletonBoneIndex].orientation) >= 0.0)
-            f = Weight;
-        else
-            f = -Weight;
+    asxArticulation* pa = &pose->arts[artIdx];
 
-        break;
-    }
+    afxTransform sklLt;
+    AsxGetJointTransforms(skl, sklJntIdx, 1, &sklLt);
+
+    switch (blendOp)
+    {
+    case afxQuatBlend_DIRECT: orientWeight = weight; break;
+    case afxQuatBlend_INV: orientWeight = -weight; break;
+    case afxQuatBlend_ADJACENT: orientWeight = (AfxV4dSq(sklLt.orientation) >= 0.0) ? weight : (-weight); break;
     case afxQuatBlend_ACCUM_ADJACENT:
     {
-        if (pt->traversalId == pose->traversalId)
-            v10 = AfxQuatDot(pt->xform.orientation, Transform->orientation);
-        else
-            v10 = AfxQuatDot(ReferenceSkeleton->jntLt[SkeletonBoneIndex].orientation, Transform->orientation);
+        afxReal dot;
 
-        if (v10 >= 0.0)
-            f = Weight;
+        if (pa->traversalId == pose->traversalId)
+            dot = AfxQuatDot(pa->xform.orientation, t->orientation);
         else
-            f = -Weight;
+            dot = AfxQuatDot(sklLt.orientation, t->orientation);
 
+        orientWeight = (dot >= 0.0) ? weight : (-weight);
         break;
     }
     default: AfxThrowError(); break;
     }
-#else
 
-    double v11; // st6
-
-    if (Mode != 1)
+    if (pa->traversalId == pose->traversalId)
     {
-        if (Mode == 2)
-        {
-            if (AfxV4dSq(ReferenceSkeleton->jntLt[SkeletonBoneIndex].orientation) >= 0.0)
-            {
-                f = Weight;
-                goto LABEL_13;
-            }
-        }
-        else
-        {
-            if (Mode != 3)
-            {
-                f = Weight;
-                goto LABEL_13;
-            }
-
-            if (pt->traversalId == LocalAttitude->traversalId)
-            {
-                v10 = pt->xform.orientation[3] * Transform->orientation[3] + pt->xform.orientation[2] * Transform->orientation[2] + pt->xform.orientation[1] * Transform->orientation[1];
-                v11 = pt->xform.orientation[0];
-            }
-            else
-            {
-                v10 = ReferenceSkeleton->jntLt[SkeletonBoneIndex].orientation[3] * Transform->orientation[3] + ReferenceSkeleton->jntLt[SkeletonBoneIndex].orientation[2] * Transform->orientation[2] + ReferenceSkeleton->jntLt[SkeletonBoneIndex].orientation[1] * Transform->orientation[1];
-                v11 = ReferenceSkeleton->jntLt[SkeletonBoneIndex].orientation[0];
-            }
-
-            if (v10 + v11 * Transform->orientation[0] >= 0.0)
-            {
-                f = Weight;
-                goto LABEL_13;
-            }
-        }
-    }
-
-    f = -Weight;
-LABEL_13:
-#endif
-
-    if (pt->traversalId == pose->traversalId)
-    {
-        pt->xform.flags |= Transform->flags;
-        AfxV3dMads(pt->xform.position, Weight, Transform->position, pt->xform.position);
-        AfxV3dMads(pt->xform.orientation, f, Transform->orientation, pt->xform.orientation);
-        AfxM3dMads(pt->xform.scaleShear, Weight, Transform->scaleShear, pt->xform.scaleShear);
-        pt->weight += Weight;
-        ++pt->cnt;
+        pa->xform.flags |= t->flags;
+        AfxV3dMads(pa->xform.position, weight, t->position, pa->xform.position);
+        AfxV3dMads(pa->xform.orientation, orientWeight, t->orientation, pa->xform.orientation);
+        AfxM3dMads(pa->xform.scaleShear, weight, t->scaleShear, pa->xform.scaleShear);
+        pa->weight += weight;
+        ++pa->cnt;
     }
     else
     {
-        if (Weight == 1.0) AfxCopyTransform(&pt->xform, Transform);
+        if (weight == 1.0) AfxCopyTransform(&pa->xform, t);
         else
         {
-            pt->xform.flags = Transform->flags;
-            AfxV3dScale(pt->xform.position, Transform->position, Weight);
-            AfxM3dScale(pt->xform.scaleShear, Transform->scaleShear, Weight);
+            pa->xform.flags = t->flags;
+            AfxV3dScale(pa->xform.position, t->position, weight);
+            AfxM3dScale(pa->xform.scaleShear, t->scaleShear, weight);
         }
-        AfxQuatScale(pt->xform.orientation, Transform->orientation, f);
-        pt->weight = Weight;
-        pt->cnt = 1;
-        pt->traversalId = pose->traversalId;
+        AfxQuatScale(pa->xform.orientation, t->orientation, orientWeight);
+        pa->weight = weight;
+        pa->cnt = 1;
+        pa->traversalId = pose->traversalId;
     }
 }
 
-_ASX afxUnit AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, akxTrackMask* modelMask, afxUnit cnt, afxBody bodies[])
+_ASX afxUnit AsxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, akxTrackMask* modelMask, afxUnit cnt, afxBody bodies[])
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_POSE, 1, &pose);
@@ -214,7 +319,7 @@ _ASX afxUnit AfxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal 
     {
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
 
-        asxMotive motives;
+        asxMotive motives[256];
         if (AfxAcquireObjects((afxClass*)_AsxGetMotiveClass(sim), cnt, (afxObject*)motives, (void const*[]) { sim, pose, moto, &targets[0] }))
         {
             AfxThrowError();
@@ -229,8 +334,17 @@ _ASX afxError _AsxPoseDtorCb(afxPose pose)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_POSE, 1, &pose);
 
-    if (pose->arts)
-        AfxDeallocate((void**)&pose->arts, AfxHere());
+    afxObjectStash const stashes[] =
+    {
+        {
+        .cnt = pose->artCnt,
+        .siz = sizeof(pose->arts[0]),
+        .var = (void**)&pose->arts
+        }
+    };
+
+    if (AfxDeallocateInstanceData(pose, ARRAY_SIZE(stashes), stashes))
+        AfxThrowError();
 
     return err;
 }
@@ -244,13 +358,30 @@ _ASX afxError _AsxPoseCtorCb(afxPose pose, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     afxUnit artCnt = *(((afxUnit const*)(args[1])) + invokeNo);
     
+    pose->arts = NIL;
+
+    afxObjectStash const stashes[]=
+    {
+        {
+        .cnt = artCnt,
+        .siz = sizeof(pose->arts[0]),
+        .var = (void**)&pose->arts
+        }
+    };
+    if (AfxAllocateInstanceData(pose, ARRAY_SIZE(stashes), stashes))
+    {
+        AfxThrowError();
+        return err;
+    }
+
     pose->artCnt = AfxMax(1, artCnt);
     pose->fillThreshold = 0.2;
     pose->traversalId = 0;
-    AfxAllocate(pose->artCnt * sizeof(pose->arts[0]), 0, AfxHere(), (void**)&pose->arts);
     AFX_ASSERT(pose->arts);
-    AfxZero2(pose->arts, sizeof(pose->arts[0]), pose->artCnt);
     
+    // need to be zeroed because of demilitarized traversalId comparisons.
+    AfxZero2(pose->arts, sizeof(pose->arts[0]), pose->artCnt);
+
     return err;
 }
 

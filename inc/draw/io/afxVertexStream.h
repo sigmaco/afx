@@ -19,10 +19,10 @@
 #ifndef AVX_BUFFERIZER_H
 #define AVX_BUFFERIZER_H
 
-#include "qwadro/inc/draw/io/afxBuffer.h"
-#include "qwadro/inc/draw/pipe/avxVertexDecl.h"
+#include "qwadro/inc/draw/io/avxBuffer.h"
+#include "qwadro/inc/draw/op/avxVertexDecl.h"
 
-AFX_DEFINE_HANDLE(afxBufferizer);
+AFX_DEFINE_HANDLE(avxBufferizer);
 
 #ifdef _AVX_DRAW_C
 #ifdef _AVX_VERTEX_BUFFER_C
@@ -30,16 +30,16 @@ AFX_DEFINE_HANDLE(afxBufferizer);
 #endif//_AVX_VERTEX_BUFFER_C
 #endif//_AVX_DRAW_C
 
-AFX_DEFINE_STRUCT(afxBufferizerInfo)
+AFX_DEFINE_STRUCT(avxBufferizerInfo)
 {
     afxUnit         bufCap;
-    afxBufferFlags  access;
-    afxBufferUsage  usage;
+    avxBufferFlags  access;
+    avxBufferUsage  usage;
 };
 
-AVX afxError        AfxAcquireBufferizer(afxDrawInput din, afxBufferizerInfo const* info, afxBufferizer* bufferizer);
+AVX afxError        AfxAcquireBufferizer(afxDrawInput din, avxBufferizerInfo const* info, avxBufferizer* bufferizer);
 
-AVX afxBuffer       AfxGetVertexBufferStorage(afxVertexBuffer vbuf);
+AVX avxBuffer       AfxGetVertexBufferStorage(afxVertexBuffer vbuf);
 AVX afxUnit         AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
 AVX avxVertexDecl  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
 AVX afxUnit         AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);

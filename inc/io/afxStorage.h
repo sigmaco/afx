@@ -108,22 +108,28 @@ AFX_DEFINE_STRUCT(afxFileInfo)
     afxTime     creationTime;
 };
 
-AFX afxBool             AfxGetStorage(afxChar diskId, afxStorage* disk);
-AFX afxBool             AfxFindStorage(afxUri const* uri, afxStorage* disk);
+AFX afxBool     AfxGetStorage(afxChar diskId, afxStorage* disk);
+AFX afxBool     AfxFindStorage(afxUri const* uri, afxStorage* disk);
 
-AFX afxError            AfxMountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFileFlags ioFlags);
-AFX afxError            AfxDismountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFileFlags ioFlags);
+AFX afxError    AfxMountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFileFlags ioFlags);
+AFX afxError    AfxDismountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFileFlags ioFlags);
 
-AFX afxUnit             AfxFindStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFileFlags ioFlags);
+AFX afxUnit     AfxFindStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFileFlags ioFlags);
 
 // TODO: Directories starting with "//./" will be resolved as devices instead of paths. Ex.: "//./e/dir/file.ext" -> "E:\\dir\\file.ext"
 
-AFX afxError            AfxResolveUri(afxFileFlags permissions, afxUri const *in, afxUri *out);
-AFX afxError            AfxResolveUris(afxFileFlags const permissions, afxUnit cnt, afxUri const in[], afxUri out[]);
+AFX afxError    AfxResolveUri(afxFileFlags permissions, afxUri const *in, afxUri *out);
+AFX afxError    AfxResolveUris(afxFileFlags const permissions, afxUnit cnt, afxUri const in[], afxUri out[]);
 
-AFX afxError            AfxResolveUri2(afxFileFlags permissions, afxUri const *in, afxUri *out, afxUnit* diskId);
+AFX afxError    AfxResolveUri2(afxFileFlags permissions, afxUri const *in, afxUri *out, afxUnit* diskId);
 
-AFX afxUnit             AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*proc)(void* udd, afxUnit diskId, afxUnit endpointIdx, afxUri const* path, afxUri const* osPath), void* udd);
-AFX afxError            AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags, afxBool(*proc)(void* udd, afxUri const* uri), void* udd);
+AFX afxUnit     AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*proc)(void* udd, afxUnit diskId, afxUnit endpointIdx, afxUri const* path, afxUri const* osPath), void* udd);
+AFX afxError    AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags, afxBool(*proc)(void* udd, afxUri const* uri), void* udd);
+
+
+AFX afxUnit     AfxEnumerateStorages(afxUnit first, afxUnit cnt, afxStorage systems[]);
+
+AFX afxUnit     AfxInvokeStorages(afxUnit first, afxUnit cnt, afxBool(*f)(afxStorage, void*), void *udd);
+
 
 #endif//AFX_STORAGE_H

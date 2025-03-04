@@ -122,38 +122,27 @@ ASX afxBool     AfxIsRiggedMeshTransplanted(afxModel mdl, afxUnit rigIdx);
 ASX void        AfxSetMeshRigTxd(afxModel mdl, afxUnit rigIdx, afxMaterial mtl);
 ASX afxBool     AfxFindMeshRigMaterial(afxModel mdl, afxUnit rigIdx, afxString const* id, afxMaterial* material);
 
-ASX void        AfxComputeRiggedMeshMatrices(afxModel mdl, afxUnit rigIdx, afxPlacement const plce, afxUnit baseBiasIdx, afxUnit biasCnt, afxM4d matrices[]);
+ASX void        AfxComputeRiggedMeshMatrices(afxModel mdl, afxUnit rigIdx, afxPlacement plce, afxUnit baseBiasIdx, afxUnit biasCnt, afxM4d matrices[]);
 
 // SKELETON
 
-ASX afxError    AfxReparentJoints(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void const* indices, afxUnit stride);
-ASX afxError    AfxResetJointTransforms(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxTransform const transforms[]);
-ASX afxError    AfxResetJointMatrices(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void const* matrices, afxUnit stride);
-ASX afxError    AfxResetJointLodErrors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxReal const lodErrors[]);
+ASX afxUnit     AsxGetJointTransforms(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxTransform transforms[]);
+ASX afxUnit     AsxGetJointLodErrors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxReal lodErrors[]);
+ASX afxUnit     AsxGetJointInversors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void* matrices, afxUnit stride);
+ASX afxUnit     AsxGetJointParents(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void* indices, afxUnit stride);
 
-ASX afxUnit     AfxCountJoints(afxModel mdl, afxReal allowedErr);
-ASX afxUnit     AfxFindJoints(afxModel mdl, afxUnit cnt, afxString const ids[], afxUnit indices[]);
-ASX void        AfxQueryModelErrorTolerance(afxModel mdl, afxReal allowedErr, afxReal* allowedErrEnd, afxReal* allowedErrScaler);
+ASX afxError    AsxReparentJoints(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void const* indices, afxUnit stride);
+ASX afxError    AsxResetJointTransforms(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxTransform const transforms[]);
+ASX afxError    AsxResetJointInversors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, void const* matrices, afxUnit stride);
+ASX afxError    AsxResetJointLodErrors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, afxReal const lodErrors[]);
 
-ASX void        AfxComputeAttachmentWorldMatrix(afxModel mdl, afxUnit jntIdx, afxPose const pose, afxM4d const offset, afxUnit const* sparseJntMap, afxUnit const* sparseJntMapRev, afxM4d m);
-ASX void        AfxComputeAttachmentOffset(afxModel mdl, afxUnit jntIdx, afxPose const pose, afxM4d const offset, afxUnit const* sparseJntMap, afxUnit const* sparseJntMapRev, afxM4d m);
+ASX afxUnit     AsxCountJoints(afxModel mdl, afxReal allowedErr);
+ASX afxUnit     AsxFindJoints(afxModel mdl, afxUnit cnt, afxString const ids[], afxUnit indices[]);
+ASX void        AsxQueryModelErrorTolerance(afxModel mdl, afxReal allowedErr, afxReal* allowedErrEnd, afxReal* allowedErrScaler);
 
-ASX void        AfxBuildCompositeMatrices(afxModel mdl, afxPlacement const plce, afxUnit baseJnt, afxUnit cnt, afxBool /*3x4*/transposed, afxM4d matrices[]);
-ASX void        AfxBuildIndexedCompositeMatrices(afxModel mdl, afxPlacement const plce, afxUnit cnt, afxUnit const jntMap[], afxBool /*3x4*/transposed, afxM4d matrices[]);
+ASX void        AfxBuildRiggedMeshCompositeMatrices(afxModel mdl, afxUnit rigIdx, afxPlacement plce, afxUnit cnt, afxM4d matrices[]);
 
-ASX void        AfxBuildRiggedMeshCompositeMatrices(afxModel mdl, afxUnit rigIdx, afxPlacement const plce, afxUnit cnt, afxM4d matrices[]);
-
-ASX void        AfxBuildRestPose(afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxPose pose);
-
-// Pass NIL as atti to AfxBuildPlacement() to compute the rest placement.
-// Pass TRUE as composite to AfxBuildPlacement() to compute the placement's composite buffer.
-
-ASX void        AfxBuildPlacement(afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit baseReqJnt, afxUnit reqJntCnt, afxPose const pose, afxM4d const displace, afxBool noComposite, afxPlacement plce);
-
-// extract the pose
-ASX void        AfxRebuildPose(afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxM4d const displace, afxPlacement const plce, afxBool rigid, afxPose pose);
-
-ASX afxError    AfxArchiveModel(afxModel mdl, afxUri const* uri);
+ASX afxError    AsxArchiveModel(afxModel mdl, afxUri const* uri);
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -596,6 +596,8 @@ _ASX afxError _AsxMotoDtorCb(afxCapstan caps)
 
 _ASX afxError _AsxMotoCtorCb(afxCapstan caps, void** args, afxUnit invokeNo)
 {
+    (void)invokeNo;
+
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
 
@@ -684,7 +686,8 @@ _ASX afxBool AfxReleaseOnceUnusedCapstans(afxUnit cnt, afxCapstan capstans[])
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(capstans);
     AFX_ASSERT(cnt);
-    afxBool rslt = 0;
+
+    //afxBool rslt = 0;
     afxCapstan caps;
 
     for (afxUnit i = cnt; i-- > 0;)
@@ -704,7 +707,7 @@ _ASX afxError AfxAcquireCapstans(afxSimulation sim, afxCapstanConfig const* cfg,
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     AFX_ASSERT(cfg);
 
-    afxClass *cls = _AsxGetCapstanClass(sim);
+    afxClass *cls = (afxClass *)_AsxGetCapstanClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_MOTO);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)capstans, (void const*[]) { sim, cfg }))
@@ -723,7 +726,7 @@ _ASX afxUnit AfxRecenterAllCapstanClocks(afxSimulation sim, afxReal dCurrentCloc
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);    
     afxUnit i = 0;
     afxCapstan caps;
-    afxClass *cls = _AsxGetCapstanClass(sim);
+    afxClass *cls = (afxClass *)_AsxGetCapstanClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_MOTO);    
     while (!AfxEnumerateObjects(cls, i++, 1, (afxObject*)&caps))
     {

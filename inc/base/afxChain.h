@@ -102,11 +102,39 @@ AFXINL afxLink*         AfxGetNextLink(afxLink const *lnk);
 
 AFXINL afxLink*         AfxGetPrevLink(afxLink const *lnk);
 
-#define AFX_ITERATE_CHAIN2(ch_, type_, offset_, lnk_) for (afxLink const*_next##lnk2_ = (afxLink*)NIL, *_curr##lnk2_ = (ch_)->anchor.next; _next##lnk2_ = (_curr##lnk2_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk2_, type_, offset_), (_curr##lnk2_) != &(ch_)->anchor; _curr##lnk2_ = _next##lnk2_)
-#define AFX_ITERATE_CHAIN(ch_, type_, offset_, lnk_) for (afxLink const*_next##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.next; _next##lnk_ = (_curr##lnk_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _next##lnk_)
-#define AFX_ITERATE_CHAIN_B2F(ch_, type_, offset_, lnk_) for (afxLink const*_last##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; _last##lnk_ = (_curr##lnk_)->prev, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _last##lnk_)
+#define AFX_ITERATE_CHAIN2(ch_, type_, offset_, lnk_) \
+    for (afxLink const*_next##lnk2_ = (afxLink*)&(ch_)->anchor, *_curr##lnk2_ = (ch_)->anchor.next; \
+        _next##lnk2_ = (_curr##lnk2_)->next, \
+        lnk_ = (type_*)AFX_REBASE(_curr##lnk2_, type_, offset_), \
+        (_curr##lnk2_) != &(ch_)->anchor; \
+        _curr##lnk2_ = _next##lnk2_)
 
-#define AfxIterateLinkage(type_, lnk_, ch_, offset_) for (afxLink const*_next##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.next; _next##lnk_ = (_curr##lnk_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _next##lnk_)
-#define AfxIterateLinkageB2F(type_, lnk_, ch_, offset_) for (afxLink const*_last##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; _last##lnk_ = (_curr##lnk_)->prev, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _last##lnk_)
+#define AFX_ITERATE_CHAIN(ch_, type_, offset_, lnk_) \
+    for (afxLink const*_next##lnk_ = (afxLink*)&(ch_)->anchor, *_curr##lnk_ = (ch_)->anchor.next; \
+        _next##lnk_ = (_curr##lnk_)->next, \
+        lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
+        (_curr##lnk_) != &(ch_)->anchor; \
+        _curr##lnk_ = _next##lnk_)
+
+#define AFX_ITERATE_CHAIN_B2F(ch_, type_, offset_, lnk_) \
+    for (afxLink const*_last##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; \
+        (_last##lnk_ = (_curr##lnk_)->prev), \
+        (lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_)), \
+        ((_curr##lnk_) != &(ch_)->anchor); \
+        (_curr##lnk_ = _last##lnk_))
+
+#define AfxIterateLinkage(type_, lnk_, ch_, offset_) \
+    for (afxLink const*_next##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.next; \
+        _next##lnk_ = (_curr##lnk_)->next, \
+        lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
+        (_curr##lnk_) != &(ch_)->anchor; \
+        _curr##lnk_ = _next##lnk_)
+
+#define AfxIterateLinkageB2F(type_, lnk_, ch_, offset_) \
+    for (afxLink const*_prev##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; \
+        _prev##lnk_ = (_curr##lnk_)->prev, \
+        lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
+        (_curr##lnk_) != &(ch_)->anchor; \
+        _curr##lnk_ = _prev##lnk_)
 
 #endif//AFX_CHAIN_H

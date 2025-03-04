@@ -18,7 +18,7 @@
 
 #include "../impl/avxImplementation.h"
 
-_AVX avxColorSwizzling const AFX_STD_COLOR_SWIZZLING =
+_AVX avxSwizzling const AFX_STD_COLOR_SWIZZLING =
 {
     avxColorSwizzle_R,
     avxColorSwizzle_G,
