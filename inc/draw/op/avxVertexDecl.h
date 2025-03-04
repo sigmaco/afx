@@ -62,6 +62,7 @@ AFX_DEFINE_STRUCT(avxVertexLayout)
     avxVertexFetch  srcs[AVX_MAX_VERTEX_SOURCES];
     afxUnit         attrCnt;
     avxVertexInput  attrs[AVX_MAX_VERTEX_ATTRIBS];
+    afxChar const*const*label;
 };
 
 AVX afxUnit     AfxCountVertexInputStreams(avxVertexDecl vin);

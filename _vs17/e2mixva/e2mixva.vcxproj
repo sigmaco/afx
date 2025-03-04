@@ -151,26 +151,6 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\mix\afxMixBridge.h" />
-    <ClInclude Include="..\..\inc\mix\afxMixDefs.h" />
-    <ClInclude Include="..\..\inc\mix\afxMixDevice.h" />
-    <ClInclude Include="..\..\inc\mix\afxMixQueue.h" />
-    <ClInclude Include="..\..\inc\mix\afxMixSystem.h" />
-    <ClInclude Include="..\..\inc\mix\io\afxAudient.h" />
-    <ClInclude Include="..\..\inc\mix\io\afxAudio.h" />
-    <ClInclude Include="..\..\inc\mix\io\afxSound.h" />
-    <ClInclude Include="..\..\inc\mix\io\afxVideo.h" />
-    <ClInclude Include="..\..\inc\mix\io\amxBuffer.h" />
-    <ClInclude Include="..\..\inc\mix\op\afxMixContext.h" />
-    <ClInclude Include="..\..\inc\mix\op\afxSink.h" />
-    <ClInclude Include="..\..\inc\mix\op\amxCodec.h" />
-    <ClInclude Include="..\..\inc\mix\op\amxSession.h" />
-    <ClInclude Include="..\..\inc\mix\op\amxSource.h" />
-    <ClInclude Include="..\..\src\mix\impl\amxImplementation.h" />
-    <ClInclude Include="..\..\src\mix\impl\amxImpl_Audio.h" />
-    <ClInclude Include="..\..\src\mix\impl\amxImpl_Executor.h" />
-    <ClInclude Include="..\..\src\mix\impl\amxImpl_MixContext.h" />
-    <ClInclude Include="..\..\src\mix\impl\amxImpl_System.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -183,27 +163,6 @@
     <ProjectReference Include="..\e2targa\e2targa.vcxproj">
       <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\mix\afxMixBridge.c" />
-    <ClCompile Include="..\..\src\mix\afxMixDefs.c" />
-    <ClCompile Include="..\..\src\mix\afxMixDevice.c" />
-    <ClCompile Include="..\..\src\mix\afxMixSystem.c" />
-    <ClCompile Include="..\..\src\mix\impl\amxImplementation.c" />
-    <ClCompile Include="..\..\src\mix\impl\amxImpl_Audio.c" />
-    <ClCompile Include="..\..\src\mix\impl\amxImpl_Executor.c" />
-    <ClCompile Include="..\..\src\mix\impl\amxImpl_MixContext.c" />
-    <ClCompile Include="..\..\src\mix\io\afxAudient.c" />
-    <ClCompile Include="..\..\src\mix\io\afxAudio.c" />
-    <ClCompile Include="..\..\src\mix\io\afxSound.c" />
-    <ClCompile Include="..\..\src\mix\io\afxVideo.c" />
-    <ClCompile Include="..\..\src\mix\io\amxBuffer.c" />
-    <ClCompile Include="..\..\src\mix\op\afxMixContext.c" />
-    <ClCompile Include="..\..\src\mix\op\afxMixQueue.c" />
-    <ClCompile Include="..\..\src\mix\op\afxSink.c" />
-    <ClCompile Include="..\..\src\mix\op\amxCodec.c" />
-    <ClCompile Include="..\..\src\mix\op\amxSession.c" />
-    <ClCompile Include="..\..\src\mix\op\amxSource.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

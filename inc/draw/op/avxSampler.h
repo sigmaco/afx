@@ -128,6 +128,7 @@ AFX_DEFINE_UNION(avxClearValue)
 
 AFX_DEFINE_STRUCT(avxSamplerInfo)
 {
+    afxChar const*const*label;
     avxSamplerFlags     flags;
 
     // Sets the wrap parameter for texture coordinates.

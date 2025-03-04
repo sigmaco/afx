@@ -94,6 +94,8 @@ _AVX afxError _AvxVtxdCtorCb(avxVertexDecl vin, void** args, afxUnit invokeNo)
     avxVertexLayout const* layout = AFX_CAST(avxVertexLayout const*, args[1]) + invokeNo;
     AFX_ASSERT(args[1]);
 
+    vin->label = layout->label;
+
 #ifdef _AFX_DEBUG
     if (layout->attrCnt)
     {
@@ -204,10 +206,33 @@ _AVX afxError AfxDeclareVertexLayouts(afxDrawSystem dsys, afxUnit cnt, avxVertex
     if (AfxAcquireObjects(cls, cnt, (afxObject*)declarations, (void const*[]) { dsys, layouts }))
     {
         AfxThrowError();
+        return err;
     }
-    else
+
+    AFX_ASSERT_OBJECTS(afxFcc_VIN, cnt, declarations);
+
+#if AVX_VALIDATION_ENABLED
+    for (afxUnit i = 0; i < cnt; i++)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_VIN, cnt, declarations);        
+        avxVertexDecl vtxd = declarations[i];
+
+        AFX_ASSERT(vtxd->attrCnt == layouts[i].attrCnt);
+        AFX_ASSERT(vtxd->srcCnt == layouts[i].srcCnt);
+
+        for (afxUnit j = 0; j < vtxd->attrCnt; j++)
+        {
+            AFX_ASSERT(vtxd->attrs[j].fmt == layouts[i].attrs[j].fmt);
+            AFX_ASSERT(vtxd->attrs[j].location == layouts[i].attrs[j].location);
+            AFX_ASSERT(vtxd->attrs[j].offset == layouts[i].attrs[j].offset);
+            AFX_ASSERT(vtxd->attrs[j].srcIdx == layouts[i].attrs[j].srcIdx);
+        }
+
+        for (afxUnit j = 0; j < vtxd->srcCnt; j++)
+        {
+            AFX_ASSERT(vtxd->srcs[j].instanceRate == layouts[i].srcs[j].instanceRate);
+            AFX_ASSERT(vtxd->srcs[j].srcIdx == layouts[i].srcs[j].srcIdx);
+        }
     }
+#endif
     return err;
 }

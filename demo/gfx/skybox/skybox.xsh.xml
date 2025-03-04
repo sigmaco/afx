@@ -1,0 +1,6 @@
+<DrawTechnique>
+    <Pass cullMode='BACK' topology='TRI_LIST' fillMode='SOLID' depthTestEnabled depthWriteEnabled depthCompareOp='LEQUAL'>
+        <Shader stage='VERTEX' uri='//./d/gfx/skybox/skybox.vsh' />
+        <Shader stage='FRAGMENT' uri='//./d/gfx/skybox/sampleOutRgbaCube.fsh' />
+    </Pass>
+</DrawTechnique>

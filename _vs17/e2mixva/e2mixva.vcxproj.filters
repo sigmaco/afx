@@ -7,146 +7,15 @@
     <Filter Include="_dll">
       <UniqueIdentifier>{e079bb88-1f5f-4aad-abba-47ccd6d6b3a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\mix">
-      <UniqueIdentifier>{1a7fbbe2-4370-4aff-99a9-c90ce4e9dc62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\mix\op">
-      <UniqueIdentifier>{320f4d43-59aa-4508-8b2d-eed3ff072898}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\mix\io">
-      <UniqueIdentifier>{b092a717-db40-4149-a68a-c5ccd57f07b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\mix\impl">
-      <UniqueIdentifier>{ff360572-d41e-491d-a4a0-746a3a124f06}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>_dll</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\mix\impl\amxImpl_System.h">
-      <Filter>qwadro\mix\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\mix\impl\amxImplementation.h">
-      <Filter>qwadro\mix\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\mix\impl\amxImpl_Audio.h">
-      <Filter>qwadro\mix\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\mix\impl\amxImpl_Executor.h">
-      <Filter>qwadro\mix\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\afxMixDefs.h">
-      <Filter>qwadro\mix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\afxMixDevice.h">
-      <Filter>qwadro\mix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\afxMixSystem.h">
-      <Filter>qwadro\mix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\afxMixBridge.h">
-      <Filter>qwadro\mix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\io\afxAudio.h">
-      <Filter>qwadro\mix\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\io\afxSound.h">
-      <Filter>qwadro\mix\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\io\afxAudient.h">
-      <Filter>qwadro\mix\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\op\afxSink.h">
-      <Filter>qwadro\mix\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\op\afxMixContext.h">
-      <Filter>qwadro\mix\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\mix\impl\amxImpl_MixContext.h">
-      <Filter>qwadro\mix\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\io\afxVideo.h">
-      <Filter>qwadro\mix\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\afxMixQueue.h">
-      <Filter>qwadro\mix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\op\amxSession.h">
-      <Filter>qwadro\mix\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\op\amxCodec.h">
-      <Filter>qwadro\mix\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\op\amxSource.h">
-      <Filter>qwadro\mix\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\mix\io\amxBuffer.h">
-      <Filter>qwadro\mix\io</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="e2mixva.rc">
       <Filter>_dll</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\mix\afxMixBridge.c">
-      <Filter>qwadro\mix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\afxMixDefs.c">
-      <Filter>qwadro\mix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\afxMixDevice.c">
-      <Filter>qwadro\mix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\afxMixSystem.c">
-      <Filter>qwadro\mix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\op\afxMixQueue.c">
-      <Filter>qwadro\mix\op</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\op\afxSink.c">
-      <Filter>qwadro\mix\op</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\op\afxMixContext.c">
-      <Filter>qwadro\mix\op</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\io\afxSound.c">
-      <Filter>qwadro\mix\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\io\afxAudient.c">
-      <Filter>qwadro\mix\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\io\afxAudio.c">
-      <Filter>qwadro\mix\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\impl\amxImplementation.c">
-      <Filter>qwadro\mix\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\impl\amxImpl_Audio.c">
-      <Filter>qwadro\mix\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\impl\amxImpl_Executor.c">
-      <Filter>qwadro\mix\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\impl\amxImpl_MixContext.c">
-      <Filter>qwadro\mix\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\io\afxVideo.c">
-      <Filter>qwadro\mix\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\op\amxSession.c">
-      <Filter>qwadro\mix\op</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\op\amxCodec.c">
-      <Filter>qwadro\mix\op</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\op\amxSource.c">
-      <Filter>qwadro\mix\op</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\io\amxBuffer.c">
-      <Filter>qwadro\mix\io</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

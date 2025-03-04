@@ -388,6 +388,7 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
     else if (!bufi->usage)
         AfxThrowError();
 
+    buf->label = bufi->label;
     buf->data = NIL;
     avxBuffer src = buf->src;
 
@@ -521,7 +522,29 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
             AFX_ASSERT_CLASS(cls, afxFcc_BUF);
 
             if (AfxAcquireObjects(cls, cnt, (afxObject*)buffers, (void const*[]) { dsys, (void*)infos }))
+            {
                 AfxThrowError();
+                return err;
+            }
+
+            AFX_ASSERT_OBJECTS(afxFcc_BUF, cnt, buffers);
+
+#ifdef AVX_VALIDATION_ENABLED
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                avxBuffer buf = buffers[i];
+
+                AFX_ASSERT(buf->src == infos[i].base);
+                AFX_ASSERT(buf->cap >= infos[i].cap);
+                AFX_ASSERT((buf->flags & infos[i].flags) == infos[i].flags);
+                AFX_ASSERT(buf->fmt == infos[i].fmt);
+                AFX_ASSERT(buf->start == infos[i].from);
+                AFX_ASSERT(buf->sharingMask == infos[i].sharingMask);
+                AFX_ASSERT(buf->udd == infos[i].udd);
+                AFX_ASSERT((buf->usage & infos[i].usage) == infos[i].usage);
+                AFX_ASSERT(buf->label == infos[i].label);
+            }
+#endif
         }
     }
     return err;

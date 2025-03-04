@@ -37,6 +37,10 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo);
 _AFX afxError _AfxSysDtor(afxSystem sys);
 extern afxError _AfxAttachDriver(afxModule mdle, afxUri const* manifest, void* udd);
 
+extern afxError avxScmHook(afxModule mdle, afxManifest const* ini);
+extern afxError amxScmHook(afxModule mdle, afxManifest const* ini);
+extern afxError auxScmHook(afxModule mdle, afxManifest const* ini);
+
 _AFX afxClass* _AfxGetSysMgr(void)
 {
     //afxError err = AFX_ERR_NONE;
@@ -589,6 +593,11 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
     AfxDeployChain(&sys->aux.icdChain, sys);
     AfxDeployChain(&sys->asx.icdChain, sys);
 
+    avxScmHook(sys->e2coree, &ini);
+    amxScmHook(sys->e2coree, &ini);
+    auxScmHook(sys->e2coree, &ini);
+
+#if 0
     if (!err)
     {
         // Loading AVX
@@ -602,22 +611,6 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         {
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2drawDll);
             sys->avx.e2drawDll = e2drawDll;
-        }
-    }
-
-    if (!err)
-    {
-        // Loading ASX
-
-        afxUri uri;
-        AfxMakeUri(&uri, 0, "e2synerg", 0);
-        afxModule e2simDll = NIL;
-
-        if (AfxLoadModule(&uri, AFX_BIT(8), &e2simDll)) AfxThrowError();
-        else
-        {
-            AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2simDll);
-            sys->asx.e2simDll = e2simDll;
         }
     }
 
@@ -656,6 +649,23 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
                 AfxDisposeObjects(1, &sys->aux.e2mmuxDll);
                 sys->aux.e2mmuxDll = NIL;
             }
+        }
+    }
+#endif
+
+    if (!err)
+    {
+        // Loading ASX
+
+        afxUri uri;
+        AfxMakeUri(&uri, 0, "e2synerg", 0);
+        afxModule e2simDll = NIL;
+
+        if (AfxLoadModule(&uri, AFX_BIT(8), &e2simDll)) AfxThrowError();
+        else
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2simDll);
+            sys->asx.e2simDll = e2simDll;
         }
     }
 

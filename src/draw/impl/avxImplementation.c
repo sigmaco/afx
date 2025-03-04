@@ -205,7 +205,7 @@ _AVX afxBool _AvxGetIcd(afxUnit icdIdx, afxModule* driver)
     return found;
 }
 
-_AVX afxError afxScmHook(afxModule mdle, afxManifest const* ini)
+_AVX afxError avxScmHook(afxModule mdle, afxManifest const* ini)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);

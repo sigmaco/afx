@@ -58,6 +58,11 @@ _AFX afxError _AfxIobSeekFileCb(afxStream file, afxSize offset, afxSeekOrigin or
     if (NIL != fseek(file->idd.f.fd, (long)offset, (int)origin))
         AfxThrowError();
 
+    file->posn = ftell(file->idd.f.fd);
+
+    if (origin == afxSeekOrigin_END)
+        file->length = ftell(file->idd.f.fd) + offset;
+
     return err;
 }
 

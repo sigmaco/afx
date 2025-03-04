@@ -265,6 +265,7 @@ AFX_DEFINE_STRUCT(avxColorOutput)
 
 AFX_DEFINE_STRUCT(avxPipelineInfo)
 {
+    afxChar const*const*label;
     afxUnit             stageCnt;
     avxLigature         liga;
 
@@ -328,6 +329,7 @@ AFX_DEFINE_STRUCT(avxPipelineInfo)
 
 AFX_DEFINE_STRUCT(avxPipelineBlueprint)
 {
+    afxChar const*const*label;
     afxUnit             stageCnt;
     
     afxBool             transformationDisabled;

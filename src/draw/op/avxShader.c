@@ -669,7 +669,16 @@ _AVX afxError AfxAcquireShaders(afxDrawSystem dsys, afxUnit cnt, afxUri const ur
     AFX_ASSERT_CLASS(cls, afxFcc_SHD);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)shaders, (void const*[]) { dsys, uris, codes }))
+    {
         AfxThrowError();
+        return err;
+    }
+
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, cnt, shaders);
+
+#if AVX_VALIDATION_ENABLED
+
+#endif
 
     return err;
 }

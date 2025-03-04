@@ -39,6 +39,7 @@ AFX_OBJECT(_avxLigature)
 AFX_OBJECT(avxLigature)
 #endif
 {
+    afxChar const*const*label;
     afxUnit             totalEntryCnt;
     avxLigatureEntry*   totalEntries; // The map of binding indices pointing to the avxLigatureEntry, which this avxLigature describes.
 
@@ -65,6 +66,7 @@ AFX_OBJECT(_avxPipeline)
 AFX_OBJECT(avxPipeline)
 #endif
 {
+    afxChar const*const*label;
     avxPipelineType     type;
     afxUnit             stageCnt;
     avxShaderSlot*      stages;    
@@ -159,6 +161,7 @@ AFX_OBJECT(_avxVertexDecl)
 AFX_OBJECT(avxVertexDecl)
 #endif
 {
+    afxChar const*const*label;
     afxUnit         attrCnt;
     avxVertexInput* attrs;
     afxUnit         srcCnt;
@@ -173,6 +176,7 @@ AFX_OBJECT(_avxShader)
 AFX_OBJECT(avxShader)
 #endif
 {
+    afxChar const*const*label;
     afxUri128               uri;
     avxShaderStage          stage;
 
@@ -200,6 +204,7 @@ AFX_OBJECT(_avxQueryPool)
 AFX_OBJECT(avxQueryPool)
 #endif
 {
+    afxChar const*const*label;
     afxQueryType    type;
     afxUnit         cap;
 };
@@ -222,6 +227,7 @@ AFX_OBJECT(_avxCanvas)
 AFX_OBJECT(avxCanvas)
 #endif
 {
+    afxChar const*const*label;
     avxRange       extent; // D is layered    
     avxRange       whdMin; // when a user-provided raster are attached
     avxRange       whdMax; // when a user-provided raster are attached    
@@ -245,6 +251,7 @@ AFX_OBJECT(_avxSampler)
 AFX_OBJECT(avxSampler)
 #endif
 {
+    afxChar const*const*label;
     afxUnit32           crc;
     avxSamplerInfo      cfg;
 };

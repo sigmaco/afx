@@ -192,7 +192,30 @@ _AFXINL afxError AfxSeekStream(afxStream iob, afxSize offset, afxSeekOrigin orig
     AFX_ASSERT_RANGE(3, afxSeekOrigin_BEGIN, afxSeekOrigin_END);
     
     if (iob->pimpl->seek)
-        return iob->pimpl->seek(iob, offset, origin);
+    {
+        afxUnit bkp = (origin == afxSeekOrigin_CURR) ? AfxAskStreamPosn(iob) : 0;
+
+        err = iob->pimpl->seek(iob, offset, origin);
+
+        if (err)
+            AfxThrowError();
+        else
+        {
+            if (origin == afxSeekOrigin_BEGIN)
+            {
+                AFX_ASSERT(offset == AfxAskStreamPosn(iob));
+            }
+            else if (origin == afxSeekOrigin_CURR)
+            {
+                AFX_ASSERT((bkp + offset) == AfxAskStreamPosn(iob));
+            }
+            else if (origin == afxSeekOrigin_END)
+            {
+                AFX_ASSERT((iob->length - offset) == AfxAskStreamPosn(iob));
+            }
+        }
+        return err;
+    }
 
     // case it is not overloaded, then...
 
@@ -236,8 +259,13 @@ _AFXINL afxError AfxRewindStream(afxStream iob)
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
 
     if (AfxSeekStream(iob, 0, afxSeekOrigin_BEGIN))
+    {
         AfxThrowError();
-
+    }
+    else
+    {
+        AFX_ASSERT(iob->posn == 0);
+    }
     return err;
 }
 
@@ -247,9 +275,17 @@ _AFXINL afxError AfxRecedeStream(afxStream iob, afxUnit range)
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     //AFX_ASSERT(AfxTestFlags(iob->flags, afxIoFlag_X));
     
-    if (range && AfxSeekStream(iob, /*-*/range, afxSeekOrigin_CURR))
-        AfxThrowError();
+    if (range)
+    {
+        afxUnit bkp = AfxAskStreamPosn(iob);
 
+        if (AfxSeekStream(iob, /*-*/range, afxSeekOrigin_CURR))
+            AfxThrowError();
+        else
+        {
+            AFX_ASSERT((bkp + range) == AfxAskStreamPosn(iob));
+        }
+    }
     return err;
 }
 
@@ -259,9 +295,17 @@ _AFXINL afxError AfxAdvanceStream(afxStream iob, afxUnit range)
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     //AFX_ASSERT(AfxTestFlags(iob->flags, afxIoFlag_X));
     
-    if (range && AfxSeekStream(iob, range, afxSeekOrigin_CURR))
-        AfxThrowError();
+    if (range)
+    {
+        afxUnit bkp = AfxAskStreamPosn(iob);
 
+        if (AfxSeekStream(iob, range, afxSeekOrigin_CURR))
+            AfxThrowError();
+        else
+        {
+            AFX_ASSERT((bkp - range) == AfxAskStreamPosn(iob));
+        }
+    }
     return err;
 }
 
@@ -380,7 +424,7 @@ _AFX afxError AfxBufferizeStream(afxStream iob, afxUnit bufCap, void* buf)
             iob->buf = start;
 
             if (iob->posn >= alignedSiz)
-                iob->posn = alignedSiz - 1;
+                iob->posn = alignedSiz ? alignedSiz - 1 : alignedSiz;
         }
     }
     return err;

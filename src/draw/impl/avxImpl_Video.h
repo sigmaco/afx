@@ -32,6 +32,7 @@ AFX_OBJECT(_avxBuffer)
 AFX_OBJECT(avxBuffer)
 #endif
 {
+    afxChar const*const*label;
     avxBufferFlags  flags;
     avxBufferUsage  usage;
     afxUnit         cap; // capacity
@@ -85,6 +86,7 @@ AFX_OBJECT(_avxRaster)
 AFX_OBJECT(afxRaster)
 #endif
 {
+    afxChar const*const*label;
     afxRaster       base; // sub
     afxRasterFlags  flags;
     afxRasterUsage  usage;
@@ -120,8 +122,6 @@ AFX_OBJECT(afxRaster)
             afxV4d* rgba32f;
         }hostedData;
     } storage[1]; // non-sparse
-
-    afxChar const*const*label;
 
     afxBool _dout; // DOUT buffer
     afxBool _doutBlitSrc; // it will never be scanout directly to display but will be copied to a dma-buf that can be scanout.

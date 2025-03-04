@@ -19,11 +19,54 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\qwadro\inc\sim\io\afxCurve.h" />
+    <ClInclude Include="..\..\..\qwadro\inc\sim\io\asxBuffer.h" />
+    <ClInclude Include="..\..\inc\sim\afxCapstan.h" />
+    <ClInclude Include="..\..\inc\sim\afxEngine.h" />
+    <ClInclude Include="..\..\inc\sim\afxNode.h" />
+    <ClInclude Include="..\..\inc\sim\afxSimBridge.h" />
+    <ClInclude Include="..\..\inc\sim\afxSimDefs.h" />
+    <ClInclude Include="..\..\inc\sim\afxSimulation.h" />
+    <ClInclude Include="..\..\inc\sim\afxTerrain.h" />
+    <ClInclude Include="..\..\inc\sim\akxLighting.h" />
+    <ClInclude Include="..\..\inc\sim\akxRenderer.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxBody.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxMaterial.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxPlacement.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxPose.h" />
+    <ClInclude Include="..\..\inc\sim\io\afxAnimation.h" />
+    <ClInclude Include="..\..\inc\sim\io\afxMesh.h" />
+    <ClInclude Include="..\..\inc\sim\io\afxModel.h" />
+    <ClInclude Include="..\..\inc\sim\io\afxMotion.h" />
+    <ClInclude Include="..\..\inc\sim\io\afxScene.h" />
+    <ClInclude Include="..\..\inc\sim\io\afxTriangulation.h" />
+    <ClInclude Include="..\..\inc\sim\op\afxMiscOps.h" />
+    <ClInclude Include="..\..\inc\sim\op\afxPoseOps.h" />
+    <ClInclude Include="..\..\inc\sim\op\afxSampleContext.h" />
+    <ClInclude Include="..\..\src\sim\impl\asxImplementation.h" />
+    <ClInclude Include="..\..\src\sim\impl\asxImpl_Animation.h" />
+    <ClInclude Include="..\..\src\sim\impl\asxImpl_Body.h" />
+    <ClInclude Include="..\..\src\sim\impl\asxImpl_Context.h" />
+    <ClInclude Include="..\..\src\sim\impl\asxImpl_Curve.h" />
+    <ClInclude Include="..\..\src\sim\impl\asxImpl_Executor.h" />
+    <ClInclude Include="..\..\src\sim\impl\asxImpl_Model.h" />
+    <ClInclude Include="..\..\src\sim\impl\asxImpl_Simulation.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2synerg.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\e2coree\e2coree.vcxproj">
+      <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\sim\afxCapstan.c" />
+    <ClCompile Include="..\..\src\sim\afxEngine.c" />
+    <ClCompile Include="..\..\src\sim\afxNode.c" />
     <ClCompile Include="..\..\src\sim\afxSampleContext.c" />
     <ClCompile Include="..\..\src\sim\afxSimBridge.c" />
-    <ClCompile Include="..\..\src\sim\afxEngine.c" />
-    <ClCompile Include="..\..\src\sim\afxCapstan.c" />
-    <ClCompile Include="..\..\src\sim\afxNode.c" />
     <ClCompile Include="..\..\src\sim\afxSimQueue.c" />
     <ClCompile Include="..\..\src\sim\afxSimulation.c" />
     <ClCompile Include="..\..\src\sim\afxTerrain.c" />
@@ -53,52 +96,6 @@
     <ClCompile Include="..\..\src\sim\op\afxMeshBufferization.c" />
     <ClCompile Include="..\..\src\sim\op\afxMiscOps.c" />
     <ClCompile Include="..\..\src\sim\op\afxPoseOps.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\qwadro\inc\sim\io\afxCurve.h" />
-    <ClInclude Include="..\..\..\qwadro\inc\sim\io\asxBuffer.h" />
-    <ClInclude Include="..\..\inc\sim\afxSimBridge.h" />
-    <ClInclude Include="..\..\inc\sim\afxEngine.h" />
-    <ClInclude Include="..\..\inc\sim\afxSimulation.h" />
-    <ClInclude Include="..\..\inc\sim\afxTerrain.h" />
-    <ClInclude Include="..\..\inc\sim\akxLighting.h" />
-    <ClInclude Include="..\..\inc\sim\akxRenderer.h" />
-    <ClInclude Include="..\..\inc\sim\afxCapstan.h" />
-    <ClInclude Include="..\..\inc\sim\afxNode.h" />
-    <ClInclude Include="..\..\inc\sim\afxSimDefs.h" />
-    <ClInclude Include="..\..\inc\sim\body\afxBody.h" />
-    <ClInclude Include="..\..\inc\sim\body\afxMaterial.h" />
-    <ClInclude Include="..\..\inc\sim\body\afxPlacement.h" />
-    <ClInclude Include="..\..\inc\sim\body\afxPose.h" />
-    <ClInclude Include="..\..\inc\sim\io\afxAnimation.h" />
-    <ClInclude Include="..\..\inc\sim\io\afxMesh.h" />
-    <ClInclude Include="..\..\inc\sim\io\afxModel.h" />
-    <ClInclude Include="..\..\inc\sim\io\afxMotion.h" />
-    <ClInclude Include="..\..\inc\sim\io\afxScene.h" />
-    <ClInclude Include="..\..\inc\sim\io\afxTriangulation.h" />
-    <ClInclude Include="..\..\inc\sim\op\afxMiscOps.h" />
-    <ClInclude Include="..\..\inc\sim\op\afxPoseOps.h" />
-    <ClInclude Include="..\..\inc\sim\op\afxSampleContext.h" />
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Animation.h" />
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Context.h" />
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Curve.h" />
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Executor.h" />
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Model.h" />
-    <ClInclude Include="..\..\src\sim\impl\asxImplementation.h" />
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Body.h" />
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Simulation.h" />
-    <ClInclude Include="resource.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="e2synerg.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\e2coree\e2coree.vcxproj">
-      <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\e2targa\e2targa.vcxproj">
-      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
