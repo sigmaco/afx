@@ -26,11 +26,12 @@
 #include "../../impl/afxExecImplKit.h"
 #include "../../impl/afxIoImplKit.h"
 
+#ifdef _AFX_DEBUG
 // hardcoded validation controls
 #define AVX_FEATURE_VALIDATION_ENABLED TRUE
 #define AVX_LIMIT_VALIDATION_ENABLED TRUE
 #define AVX_VALIDATION_ENABLED TRUE
-
+#endif
 
 #include "qwadro/inc/draw/afxDrawSystem.h"
 #include "avxImpl_System.h"

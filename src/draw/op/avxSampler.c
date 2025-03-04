@@ -117,6 +117,7 @@ _AVX afxError _AvxSampCtorCb(avxSampler samp, void** args, afxUnit invokeNo)
     avxSamplerInfo const *cfg = ((avxSamplerInfo const *)args[1]) + invokeNo;
     
     AFX_ASSERT(cfg);
+    samp->label = cfg->label;
     samp->cfg = *cfg;
     samp->crc = 0;
     //AfxAccumulateCrc32(&samp->crc, cfg, yuv ? sizeof(avxYuvSamplerInfo) : sizeof(avxSamplerInfo));
@@ -281,7 +282,19 @@ _AVX afxError AfxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo
             }
         }
     }
-    AFX_TRY_ASSERT_OBJECTS(afxFcc_SAMP, cnt, samplers);
+
+    if (err)
+        return err;
+
+    AFX_ASSERT_OBJECTS(afxFcc_SAMP, cnt, samplers);
+
+#if AVX_VALIDATION_ENABLED
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxSampler smp = samplers[i];
+    }
+#endif
+
     return err;
 }
 

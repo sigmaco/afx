@@ -108,6 +108,8 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
     afxUnit shaderCnt = cfg->shaderCnt;
     avxShader* shaders = cfg->shaders;
     
+    liga->label = cfg->label;
+
     liga->pushables = FALSE;
 
     afxArray sets;
@@ -319,7 +321,19 @@ _AVX afxError AfxDeclareLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureCo
     AFX_ASSERT_CLASS(cls, afxFcc_LIGA);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)ligatures, (void const*[]) { dsys, cfg }))
+    {
         AfxThrowError();
+        return err;
+    }
+
+    AFX_ASSERT_OBJECTS(afxFcc_LIGA, cnt, ligatures);
+
+#if AVX_VALIDATION_ENABLED
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxLigature liga = ligatures[i];
+    }
+#endif
 
     return err;
 }

@@ -66,6 +66,7 @@ AFX_DEFINE_STRUCT(avxLigatureConfig)
 {
     afxUnit         shaderCnt;
     avxShader*      shaders;
+    afxChar const*const*label;
 };
 
 AVX afxUnit32       AfxGetLigatureHash(avxLigature liga, afxUnit set);

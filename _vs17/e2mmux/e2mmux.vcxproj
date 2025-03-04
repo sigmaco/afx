@@ -155,41 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\dep_\vgl1\vgl1.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\dep_\vgl\vgl.c" />
-    <ClCompile Include="..\..\src\ux\afxSession.c" />
-    <ClCompile Include="..\..\src\ux\afxWindow.c" />
-    <ClCompile Include="..\..\src\ux\afxShell.c" />
-    <ClCompile Include="..\..\src\ux\afxWidget.c" />
-    <ClCompile Include="..\..\src\ux\hid\afxGamepad.c" />
-    <ClCompile Include="..\..\src\ux\hid\afxHid.c" />
-    <ClCompile Include="..\..\src\ux\hid\afxKeyboard.c" />
-    <ClCompile Include="..\..\src\ux\hid\afxMouse.c" />
-    <ClCompile Include="..\..\src\ux\impl\auxImplementation.c" />
-    <ClCompile Include="..\..\src\ux\impl\auxImpl_Session.c" />
-    <ClCompile Include="..\..\src\ux\impl\auxImpl_Widget.c" />
-    <ClCompile Include="..\..\src\ux\impl\auxImpl_Window.c" />
-    <ClCompile Include="..\..\src\ux\va\auxPaint.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\dep_\vgl1\vgl1.h" />
-    <ClInclude Include="..\..\inc\ux\hid\afxGamepad.h" />
-    <ClInclude Include="..\..\inc\ux\hid\afxHid.h" />
-    <ClInclude Include="..\..\inc\ux\hid\afxKeyboard.h" />
-    <ClInclude Include="..\..\inc\ux\hid\afxMouse.h" />
-    <ClInclude Include="..\..\inc\ux\va\auxPaint.h" />
-    <ClInclude Include="..\..\src\ux\impl\auxImplementation.h" />
-    <ClInclude Include="..\..\src\ux\impl\auxImpl_Shell.h" />
-    <ClInclude Include="..\..\inc\ux\afxSession.h" />
-    <ClInclude Include="..\..\inc\ux\afxWindow.h" />
-    <ClInclude Include="..\..\inc\ux\afxShell.h" />
-    <ClInclude Include="..\..\inc\ux\afxUxDefs.h" />
-    <ClInclude Include="..\..\inc\ux\afxWidget.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -198,9 +163,6 @@
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\e2mixva\e2mixva.vcxproj">
-      <Project>{1685d511-3934-4f31-b8a3-afa740f612b3}</Project>
     </ProjectReference>
     <ProjectReference Include="..\e2targa\e2targa.vcxproj">
       <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>

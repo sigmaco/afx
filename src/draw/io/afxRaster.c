@@ -155,6 +155,10 @@ _AVXINL void AfxDescribeRaster(afxRaster ras, afxRasterInfo* desc)
     desc->base = ras->base;
     desc->baseLayer = ras->baseLayer;
     desc->baseLod = ras->baseLod;
+    desc->exuIdx = 0;
+    desc->label = ras->label;
+    desc->swizzle = ras->swizzling;
+    desc->udd = ras->udd;
 }
 
 _AVXINL void _AvxSanitizeRasterRegion(afxRaster ras, afxRasterRegion const* raw, afxRasterRegion* san)
@@ -713,10 +717,9 @@ _AVX afxError _AvxRasCtorCb(afxRaster ras, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
+    afxDrawSystem dsys = AfxGetProvider(ras);
     afxRasterInfo const* rasi = ((afxRasterInfo const *)args[1]) + invokeNo;
 
-    afxDrawSystem dsys = AfxGetProvider(ras);
-    
     ras->label = rasi->label;
     ras->base = NIL;
 
@@ -732,34 +735,66 @@ _AVX afxError _AvxRasCtorCb(afxRaster ras, void** args, afxUnit invokeNo)
 
     ras->fmt = rasi->fmt;
 
-    afxRasterFlags flags = (afxRasterFlag_MIPMAP | afxRasterFlag_RESAMPLED);
-
-    if ((ras->flags = (rasi->flags & flags)) == flags) AfxThrowError();
-    else
-    {
-        if (ras->lodCnt > 1)
-            if (!(ras->flags & flags))
-                ras->flags |= afxRasterFlag_MIPMAP;
-
-        flags = (afxRasterFlag_3D | /*afxRasterFlag_CUBEMAP | */afxRasterFlag_LAYERED);
-
-        if ((ras->flags = (rasi->flags & flags)) == flags) AfxThrowError();
-        else
-        {
-            if (ras->extent.d > 1)
-                if (!(ras->flags & flags))
-                    ras->flags = afxRasterFlag_LAYERED;
-        }
-    }
-
-    ras->swizzling.r = avxColorSwizzle_R;
-    ras->swizzling.g = avxColorSwizzle_B;
-    ras->swizzling.b = avxColorSwizzle_G;
-    ras->swizzling.a = avxColorSwizzle_A;
+    ras->swizzling.r = rasi->swizzle.r;
+    ras->swizzling.g = rasi->swizzle.g;
+    ras->swizzling.b = rasi->swizzle.b;
+    ras->swizzling.a = rasi->swizzle.a;
 
     ras->udd = rasi->udd;
 
+    // FLAGS
+
+    afxRasterFlags const mipAndMs = (afxRasterFlag_MIPMAP | afxRasterFlag_RESAMPLED);
+    afxRasterFlags flags = (rasi->flags & mipAndMs);
+
+    if (flags == mipAndMs)
+    {
+        // can not be mipmapped and multisampled at same time.
+        AfxThrowError();
+        return err;
+    }
+    else if ((flags == NIL) && (ras->lodCnt > 1))
+    {
+        // If not specified, default to mipmap
+        ras->flags |= afxRasterFlag_MIPMAP;
+    }
+    else
+    {
+        ras->flags |= (flags & mipAndMs);
+    }
+    
+    flags = (rasi->flags & (afxRasterFlag_3D | afxRasterFlag_CUBEMAP | afxRasterFlag_LAYERED));
+
+    if ((flags == (afxRasterFlag_3D | afxRasterFlag_LAYERED)) &&
+        (flags == (afxRasterFlag_3D | afxRasterFlag_CUBEMAP)))
+    {
+        // can not be volumetric (3D) and layered or cubemap at same time.
+        AfxThrowError();
+        return err;
+    }
+    else if ((flags == NIL) && (ras->extent.d > 1))
+    {
+        // If not specified, default to layered.
+        ras->flags |= afxRasterFlag_LAYERED;
+    }
+    else
+    {
+        ras->flags |= (flags & (afxRasterFlag_3D | afxRasterFlag_CUBEMAP | afxRasterFlag_LAYERED));
+
+        if (flags & afxRasterFlag_CUBEMAP)
+        {
+            // if cubemap, layers must be a multiple of 6.
+
+            if (ras->extent.d % 6)
+            {
+                AfxThrowError();
+                return err;
+            }
+        }
+    }
+
     // STORAGE
+
     {
         avxFormatDescription pfd;
         AvxDescribeFormats(1, &ras->fmt, &pfd);
@@ -876,9 +911,38 @@ _AVX afxError AfxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, afxRasterInfo c
     AFX_ASSERT_CLASS(cls, afxFcc_RAS);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)rasters, (void const*[]) { dsys, info }))
+    {
         AfxThrowError();
+        return err;
+    }
 
     AFX_ASSERT_OBJECTS(afxFcc_RAS, cnt, rasters);
+
+#if AVX_VALIDATION_ENABLED
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        afxRasterInfo rasi;
+        AfxDescribeRaster(rasters[i], &rasi);
+
+        AFX_ASSERT(rasi.base == info[i].base);
+        AFX_ASSERT(rasi.lodCnt >= info[i].lodCnt);
+        AFX_ASSERT(rasi.baseLayer == info[i].baseLayer);
+        AFX_ASSERT(rasi.baseLod == info[i].baseLod);
+        AFX_ASSERT(rasi.extent.w >= info[i].extent.w);
+        AFX_ASSERT(rasi.extent.h >= info[i].extent.h);
+        AFX_ASSERT(rasi.extent.d >= info[i].extent.d);
+        AFX_ASSERT(rasi.exuIdx == info[i].exuIdx);
+        AFX_ASSERT((rasi.flags & info[i].flags) == info[i].flags);
+        AFX_ASSERT(rasi.fmt == info[i].fmt);
+        AFX_ASSERT(rasi.label == info[i].label);
+        AFX_ASSERT(rasi.swizzle.r == info[i].swizzle.r);
+        AFX_ASSERT(rasi.swizzle.g == info[i].swizzle.g);
+        AFX_ASSERT(rasi.swizzle.b == info[i].swizzle.b);
+        AFX_ASSERT(rasi.swizzle.a == info[i].swizzle.a);
+        AFX_ASSERT(rasi.udd == info[i].udd);
+        AFX_ASSERT((rasi.usage & info[i].usage) == info[i].usage);
+    }
+#endif
 
     return err;
 }
@@ -959,7 +1023,7 @@ _AVX afxError AfxLoadRasters(afxDrawSystem dsys, afxUnit cnt, afxRasterInfo cons
                     op.rgn.extent.d = tgai.depth;
                     op.offset = 0;
                     op.rowStride = tgai.rowStride;
-                    //op.rowCnt = tgai.extent[1];
+                    op.rowsPerImg = tgai.rowsPerImg;
                     //op.decSiz = tgai.decSiz;
 
                     void* data = AfxRequestArenaUnit(&arena, tgai.decSiz);

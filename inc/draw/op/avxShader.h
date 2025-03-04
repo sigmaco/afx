@@ -65,6 +65,7 @@ AFX_DEFINE_STRUCT(avxShaderConfig)
     afxUnit         verMajor;
     afxUnit         verMinor;
     afxBool         extended;
+    afxChar const*const*label;
 };
 
 AVX avxShaderStage  AfxGetShaderStage(avxShader shd);

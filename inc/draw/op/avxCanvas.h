@@ -55,10 +55,11 @@ AFX_DEFINE_STRUCT(avxCanvasConfig)
 {
     afxFlags        flags;
     // the dimensions of the canvas.
-    avxRange       whd;
+    avxRange        whd;
     // the number of attachments.
     afxUnit         surCnt;
     avxDrawSurface  surfs[AVX_MAX_CANVAS_BUFFERS];
+    afxChar const*const*label;
 };
 
 /*

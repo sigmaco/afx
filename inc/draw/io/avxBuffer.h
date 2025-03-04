@@ -91,6 +91,7 @@ AFX_DEFINE_STRUCT(avxBufferInfo)
     afxMask         sharingMask;
     // A user-defined data.
     void*           udd;
+    afxChar const*const*label;
 };
 
 AFX_DEFINE_STRUCT(avxBufferCopy)

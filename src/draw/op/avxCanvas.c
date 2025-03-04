@@ -445,6 +445,7 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
     AFX_ASSERT_RANGE(limits->maxColorAttachments, 0, colorCnt);
     canv->colorCnt = colorCnt;
     canv->ownershipMask = NIL;
+    canv->label = cfg->label;
 
     if (stencilInIdx == AFX_INVALID_INDEX)
         canv->dsSlotIdx[1] = AFX_INVALID_INDEX;
@@ -615,7 +616,43 @@ _AVX afxError AfxCoacquireCanvas(afxDrawSystem dsys, avxCanvasConfig const* cfg,
     AFX_ASSERT_CLASS(cls, afxFcc_CANV);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)canvases, (void const*[]) { dsys, cfg }))
+    {
         AfxThrowError();
+        return err;
+    }
 
+    AFX_ASSERT_OBJECTS(afxFcc_CANV, cnt, canvases);
+
+#if AVX_VALIDATION_ENABLED
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxCanvas canv = canvases[i];
+
+        AFX_ASSERT(canv->slotCnt >= cfg->surCnt);
+        AFX_ASSERT(canv->extent.w >= cfg->whd.w);
+        AFX_ASSERT(canv->extent.h >= cfg->whd.h);
+        AFX_ASSERT(canv->extent.d >= cfg->whd.d);
+        AFX_ASSERT((canv->flags & cfg->flags) == cfg->flags);
+        AFX_ASSERT(canv->label == cfg->label);
+
+        for (afxUnit j = 0; j < cfg->surCnt; j++)
+        {
+            avxDrawSurfaceSlot* surf = &canv->slots[j];
+
+            if (!cfg->surfs[j].ras)
+            {
+                AFX_ASSERT((surf->fmt == cfg->surfs[j].fmt) || !(cfg->surfs[j].fmt));
+                AFX_ASSERT((surf->flags & cfg->surfs[j].rasFlags) == cfg->surfs[j].rasFlags);
+                AFX_ASSERT((surf->usage & cfg->surfs[j].rasUsage) == cfg->surfs[j].rasUsage);
+                AFX_ASSERT((surf->usage & afxRasterUsage_DRAW) == afxRasterUsage_DRAW);
+                AFX_ASSERT(surf->sampleCnt >= cfg->surfs[j].sampleCnt);
+            }
+            else
+            {
+                AFX_ASSERT(surf->ras == cfg->surfs[j].ras);
+            }
+        }
+    }
+#endif
     return err;
 }

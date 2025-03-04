@@ -253,7 +253,7 @@ _AMX afxBool _AmxGetIcd(afxUnit icdIdx, afxModule* driver)
     return found;
 }
 
-_AMX afxError afxScmHook(afxModule mdle, afxManifest const* ini)
+_AMX afxError amxScmHook(afxModule mdle, afxManifest const* ini)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
@@ -274,7 +274,7 @@ _AMX afxError afxScmHook(afxModule mdle, afxManifest const* ini)
     return err;
 }
 
-_AMX afxError afxIcdHook(afxModule icd, afxUri const* manifest)
+_AMX afxError amxIcdHook(afxModule icd, afxUri const* manifest)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);

@@ -34,6 +34,48 @@
     <Filter Include="qwadro\impl\xss">
       <UniqueIdentifier>{19183132-f8c7-4476-bbc4-953c4b5cc7d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="qwadro\draw">
+      <UniqueIdentifier>{3afda542-c68a-4419-8b07-5dbbd7f435b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\draw\io">
+      <UniqueIdentifier>{fe54780f-c660-49ae-a726-7ddf961b59ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\draw\op">
+      <UniqueIdentifier>{e80395e3-ca28-436b-acf2-f14675fb1b70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\draw\kit">
+      <UniqueIdentifier>{82a859d1-1a20-4630-b0aa-a605dc3480e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\draw\impl">
+      <UniqueIdentifier>{34d36dff-422a-42fd-9041-c64cf94ada46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\draw\math">
+      <UniqueIdentifier>{6170368b-7488-4e50-9166-f7384b644f92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux">
+      <UniqueIdentifier>{48d030f3-72a8-4944-bc51-b137ff852524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux\va">
+      <UniqueIdentifier>{a139ba27-3568-4216-ab24-0ddd42ab2971}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux\impl">
+      <UniqueIdentifier>{d119a132-1339-4d7f-ae88-944ecf39d639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux\hid">
+      <UniqueIdentifier>{6d1dc020-270a-47c3-bb42-64c4920abbd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\mix">
+      <UniqueIdentifier>{02e05501-02c0-4506-b384-5a64efed05b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\mix\op">
+      <UniqueIdentifier>{f1184474-0d11-4835-b562-332fb736384a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\mix\io">
+      <UniqueIdentifier>{9747619b-e135-4031-8539-a6c604feaca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\mix\impl">
+      <UniqueIdentifier>{3a1c38c1-97f8-4d0e-bcb8-c996264af18a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\afxQwadro.h">
@@ -302,6 +344,231 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\exec\afxTerminal.h">
       <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\afxDrawInput.h">
+      <Filter>qwadro\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\afxDrawOutput.h">
+      <Filter>qwadro\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\afxDrawQueue.h">
+      <Filter>qwadro\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\avxDisplay.h">
+      <Filter>qwadro\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\afxDrawBridge.h">
+      <Filter>qwadro\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\afxDrawSystem.h">
+      <Filter>qwadro\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\afxDrawDevice.h">
+      <Filter>qwadro\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\afxDrawDefs.h">
+      <Filter>qwadro\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\io\avxFormat.h">
+      <Filter>qwadro\draw\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\io\avxBuffer.h">
+      <Filter>qwadro\draw\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\io\afxRaster.h">
+      <Filter>qwadro\draw\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\io\afxRasterFile.h">
+      <Filter>qwadro\draw\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\io\afxVertexStream.h">
+      <Filter>qwadro\draw\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\afxDrawContext.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxCanvas.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxDrawing.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxFence.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxLigature.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxPipeline.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxQueryPool.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxSampler.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxShader.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxSynchronization.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxRasterization.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxTransference.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxTransformation.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxTransformationEXT.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\op\avxVertexDecl.h">
+      <Filter>qwadro\draw\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\kit\afxCamera.h">
+      <Filter>qwadro\draw\kit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\kit\afxDrawTechnique.h">
+      <Filter>qwadro\draw\kit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\kit\afxTxd.h">
+      <Filter>qwadro\draw\kit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\draw\impl\avxImpl_Context.h">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\draw\impl\avxImpl_Executor.h">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\draw\impl\avxImpl_Pipeline.h">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\draw\impl\avxImpl_System.h">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\draw\impl\avxImpl_Output.h">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\draw\impl\avxImplementation.h">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\draw\impl\avxImpl_Input.h">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\draw\impl\avxImpl_Video.h">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\math\afxColor.h">
+      <Filter>qwadro\draw\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\math\afxViewport.h">
+      <Filter>qwadro\draw\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\math\avxMatrix.h">
+      <Filter>qwadro\draw\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\afxSession.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\afxWindow.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\afxShell.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\afxUxDefs.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\afxWidget.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\dep_\vgl1\vgl1.h">
+      <Filter>qwadro\ux\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\va\auxPaint.h">
+      <Filter>qwadro\ux\va</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ux\impl\auxImplementation.h">
+      <Filter>qwadro\ux\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ux\impl\auxImpl_Shell.h">
+      <Filter>qwadro\ux\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\hid\afxGamepad.h">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\hid\afxHid.h">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\hid\afxKeyboard.h">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\ux\hid\afxMouse.h">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\afxMixBridge.h">
+      <Filter>qwadro\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\afxMixDefs.h">
+      <Filter>qwadro\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\afxMixDevice.h">
+      <Filter>qwadro\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\afxMixQueue.h">
+      <Filter>qwadro\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\afxMixSystem.h">
+      <Filter>qwadro\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\op\afxMixContext.h">
+      <Filter>qwadro\mix\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\op\afxSink.h">
+      <Filter>qwadro\mix\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\op\amxCodec.h">
+      <Filter>qwadro\mix\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\op\amxSession.h">
+      <Filter>qwadro\mix\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\op\amxSource.h">
+      <Filter>qwadro\mix\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\io\afxAudient.h">
+      <Filter>qwadro\mix\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\io\afxAudio.h">
+      <Filter>qwadro\mix\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\io\afxSound.h">
+      <Filter>qwadro\mix\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\io\afxVideo.h">
+      <Filter>qwadro\mix\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\mix\io\amxBuffer.h">
+      <Filter>qwadro\mix\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mix\impl\amxImplementation.h">
+      <Filter>qwadro\mix\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mix\impl\amxImpl_Audio.h">
+      <Filter>qwadro\mix\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mix\impl\amxImpl_Executor.h">
+      <Filter>qwadro\mix\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mix\impl\amxImpl_MixContext.h">
+      <Filter>qwadro\mix\impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mix\impl\amxImpl_System.h">
+      <Filter>qwadro\mix\impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -587,6 +854,234 @@
     </ClCompile>
     <ClCompile Include="..\..\src\exec\afxSystemModules.c">
       <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\afxDrawBridge.c">
+      <Filter>qwadro\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\afxDrawInput.c">
+      <Filter>qwadro\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\afxDrawOutput.c">
+      <Filter>qwadro\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\afxDrawSystem.c">
+      <Filter>qwadro\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\afxDrawDevice.c">
+      <Filter>qwadro\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\afxDrawDefs.c">
+      <Filter>qwadro\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\avxDisplay.c">
+      <Filter>qwadro\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\io\avxBuffer.c">
+      <Filter>qwadro\draw\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\io\avxFormat.c">
+      <Filter>qwadro\draw\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\io\afxRaster.c">
+      <Filter>qwadro\draw\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\io\afxRasterFile.c">
+      <Filter>qwadro\draw\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\io\afxTexelBlockCompression.c">
+      <Filter>qwadro\draw\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\io\afxVertexStream.c">
+      <Filter>qwadro\draw\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\afxDrawContext.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\afxDrawQueue.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxCanvas.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxDrawing.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxFence.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxLigature.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxPipeline.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxQueryPool.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxSampler.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxShader.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxSynchronization.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxRasterization.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxTransference.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxTransformation.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\op\avxVertexDecl.c">
+      <Filter>qwadro\draw\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\kit\afxCamera.c">
+      <Filter>qwadro\draw\kit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\kit\afxDrawTechnique.c">
+      <Filter>qwadro\draw\kit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\kit\afxTxd.c">
+      <Filter>qwadro\draw\kit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\impl\avxImplementation.c">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\impl\avxImpl_Context.c">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\impl\avxImpl_Executor.c">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\impl\avxImpl_Rasterization.c">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\impl\avxImpl_Output.c">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\impl\avxImpl_Transference.c">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\impl\avxImpl_Transformation.c">
+      <Filter>qwadro\draw\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\math\afxColor.c">
+      <Filter>qwadro\draw\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\math\afxViewport.c">
+      <Filter>qwadro\draw\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\math\avxMatrix.c">
+      <Filter>qwadro\draw\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\afxSession.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\afxWindow.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\afxShell.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\afxWidget.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\dep_\vgl1\vgl1.c">
+      <Filter>qwadro\ux\va</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\dep_\vgl\vgl.c">
+      <Filter>qwadro\ux\va</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\va\auxPaint.c">
+      <Filter>qwadro\ux\va</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\impl\auxImplementation.c">
+      <Filter>qwadro\ux\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\impl\auxImpl_Session.c">
+      <Filter>qwadro\ux\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\impl\auxImpl_Widget.c">
+      <Filter>qwadro\ux\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\impl\auxImpl_Window.c">
+      <Filter>qwadro\ux\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\hid\afxGamepad.c">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\hid\afxHid.c">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\hid\afxKeyboard.c">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\hid\afxMouse.c">
+      <Filter>qwadro\ux\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\afxMixBridge.c">
+      <Filter>qwadro\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\afxMixDefs.c">
+      <Filter>qwadro\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\afxMixDevice.c">
+      <Filter>qwadro\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\afxMixSystem.c">
+      <Filter>qwadro\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\op\afxMixContext.c">
+      <Filter>qwadro\mix\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\op\afxMixQueue.c">
+      <Filter>qwadro\mix\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\op\afxSink.c">
+      <Filter>qwadro\mix\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\op\amxCodec.c">
+      <Filter>qwadro\mix\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\op\amxSession.c">
+      <Filter>qwadro\mix\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\op\amxSource.c">
+      <Filter>qwadro\mix\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\io\afxAudient.c">
+      <Filter>qwadro\mix\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\io\afxAudio.c">
+      <Filter>qwadro\mix\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\io\afxSound.c">
+      <Filter>qwadro\mix\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\io\afxVideo.c">
+      <Filter>qwadro\mix\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\io\amxBuffer.c">
+      <Filter>qwadro\mix\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\impl\amxImplementation.c">
+      <Filter>qwadro\mix\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\impl\amxImpl_Audio.c">
+      <Filter>qwadro\mix\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\impl\amxImpl_Executor.c">
+      <Filter>qwadro\mix\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\impl\amxImpl_MixContext.c">
+      <Filter>qwadro\mix\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dep\c11threads\c11threads_win32.c">
+      <Filter>qwadro\dep</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

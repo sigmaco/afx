@@ -412,7 +412,7 @@ _AFXINL afxResult _AfxDbgLock(void)
                 {
                     afxChar msg2[512];
                     stbsp_sprintf(msg2, "Entering the Thread Execution Environment %2u\n", debugger.unitLockerIdx);
-                    AfxDbgLogf(6, NIL, msg2);
+                    //AfxDbgLogf(6, NIL, msg2);
                 }
             }
 
@@ -533,7 +533,7 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
 #else
             if (AfxReacquireConsole())
             {
-                _AfxDbgUnlock();
+                //_AfxDbgUnlock();
                 return TRUE;
             }
 #endif

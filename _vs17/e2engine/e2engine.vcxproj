@@ -175,17 +175,8 @@
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\e2mixva\e2mixva.vcxproj">
-      <Project>{1685d511-3934-4f31-b8a3-afa740f612b3}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\e2mmux\e2mmux.vcxproj">
-      <Project>{b86a5b24-69ef-42ad-86d9-e3ac4405a9ce}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\e2synerg\e2synerg.vcxproj">
       <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\e2targa\e2targa.vcxproj">
-      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

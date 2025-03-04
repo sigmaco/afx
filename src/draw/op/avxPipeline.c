@@ -925,6 +925,8 @@ _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
     afxUnit sampleMaskCnt = AfxMin(razb->sampleLvl, AVX_MAX_SAMPLE_MASKS);
     afxUnit colorOutCnt = AfxMin(AfxMax(1, razb->colorOutCnt), AVX_MAX_COLOR_OUTPUTS);
 
+    pip->label = pipb->label;
+
     pip->liga = NIL;
 
     pip->transformationDisabled = !!pipb->transformationDisabled;
@@ -1088,7 +1090,19 @@ _AVX afxError AfxAssembleComputePipelines(afxDrawSystem dsys, afxUnit cnt, avxPi
     AFX_ASSERT_CLASS(cls, afxFcc_PIP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)pipelines, (void const*[]) { dsys, (void*)blueprints, (void*)blueprints }))
+    {
         AfxThrowError();
+        return err;
+    }
+
+    AFX_ASSERT_OBJECTS(afxFcc_PIP, cnt, pipelines);
+
+#if AVX_VALIDATION_ENABLED
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxPipeline pip = pipelines[i];
+    }
+#endif
 
     return err;
 }
@@ -1105,7 +1119,19 @@ _AVX afxError AfxAssemblePipelines(afxDrawSystem dsys, afxUnit cnt, avxPipelineB
     AFX_ASSERT_CLASS(cls, afxFcc_PIP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)pipelines, (void const*[]) { dsys, (void*)cfg, (void*)cfg }))
+    {
         AfxThrowError();
+        return err;
+    }
+
+    AFX_ASSERT_OBJECTS(afxFcc_PIP, cnt, pipelines);
+
+#if AVX_VALIDATION_ENABLED
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxPipeline pip = pipelines[i];
+    }
+#endif
 
     return err;
 }

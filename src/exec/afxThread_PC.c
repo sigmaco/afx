@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+//#define USE_C11_THREADS
+
 #define _AFX_CORE_C
 #define _AFX_THREAD_C
 #include "../impl/afxExecImplKit.h"
@@ -28,8 +30,9 @@
 #   define W32_INIT_COM
 #endif
 
-#include "../../dep/tinycthread.h"
-#include "../../dep/tinycthread.c"
+//#include "../../dep/tinycthread.h"
+//#include "../../dep/cthreads.h"
+#include "../../dep/c11threads/c11threads.h"
 
 AFX_THREAD_LOCAL afxUnit32 _currTid = 0;
 AFX_THREAD_LOCAL afxUnit32 _currThrObjId = 0;
@@ -60,7 +63,8 @@ _AFX afxUnit32 AfxGetTid(void)
 #endif
     //return _currTid;
     //return GetCurrentThreadId();
-    return (_currTid = GetCurrentThreadId());// _currTid ? _currTid : (_currTid = GetCurrentThreadId());
+    //return (_currTid = GetCurrentThreadId());// _currTid ? _currTid : (_currTid = GetCurrentThreadId());
+    return thrd_current();
 }
 
 _AFX void AfxSleep(afxUnit ms)
@@ -565,7 +569,7 @@ _AFX afxError AfxRunThread(afxThread thr, afxInt(*proc)(void* arg), void* arg)
         {
             AFX_ASSERT(!thr->osHandle);
             
-            if (thrd_success != thrd_create((thrd_t)&thr->osHandle, (void*)_AfxExecTxuCb, (void*[]) { thr, proc, arg })) AfxThrowError();
+            if (thrd_success != thrd_create((thrd_t*)&thr->osHandle, (void*)_AfxExecTxuCb, (void*[]) { thr, proc, arg })) AfxThrowError();
             else
             {
                 // we have to set the real OS handle from outside the thread proc.
@@ -579,12 +583,15 @@ _AFX afxError AfxRunThread(afxThread thr, afxInt(*proc)(void* arg), void* arg)
                 AfxUnlockMutex(&thr->statusCndMtx);
                 AFX_ASSERT(thr->tid);
 
-                AFX_ASSERT(GetThreadId(thr->osHandle) == thr->tid);
+                //AFX_ASSERT(GetThreadId(thr->osHandle) == thr->tid);
                 AFX_ASSERT(thr->osHandle == thr->osHandle);
 
+
+#ifdef AFX_OS_WIN
                 afxString s;
                 AfxMakeString(&s, 0, thr->_func_, 0);
                 _AfxRenameThreadW32(thr->tid, &s);
+#endif
                 
                 AfxLogEcho("Running... %p#%u --- %s:%i", thr, thr->tid, _AfxDbgTrimFilename((char const *const)thr->_file_), (int)thr->_line_);
             }

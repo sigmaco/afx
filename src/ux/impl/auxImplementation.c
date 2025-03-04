@@ -168,7 +168,7 @@ _AUX afxBool _AuxGetIcd(afxUnit icdIdx, afxModule* driver)
     return found;
 }
 
-_AUX afxError afxScmHook(afxModule mdle, afxManifest const* ini)
+_AUX afxError auxScmHook(afxModule mdle, afxManifest const* ini)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
