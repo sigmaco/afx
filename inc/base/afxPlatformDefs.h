@@ -251,18 +251,4 @@ typedef afxChar32   afxC32;
 #define AFX_ATOMIC_MIN SIG_ATOMIC_MIN
 #define AFX_ATOMIC_MAX SIG_ATOMIC_MAX
 
-////////////////////////////////////////////////////////////////////////////////
-
-#ifdef _DEBUG // after afxDebug!!!
-#   define VLD_FORCE_ENABLE
-#endif
-
-#if !0
-#if (defined(_WIN64) || defined(_WIN32))
-#   ifdef VLD_FORCE_ENABLE
-#       include <vld.h>
-#   endif
-#endif
-#endif
-
 #endif//AFX_PLATFORM_DEFS_H

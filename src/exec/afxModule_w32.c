@@ -537,7 +537,7 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
     else
         AfxFormatUri(&urib.uri, "%.*s.dll", AfxPushString(&uri->str));
 
-    AfxLogEcho("Loading... <%.*s>", AfxPushString(uri ? AfxGetUriString(&urib.uri) : &AFX_STR_EMPTY));
+    AfxLogEcho("Loading... <%.*s>", AfxPushString(uri ? AfxGetUriString(&urib.uri) : &AFX_STRING_EMPTY));
 
     // find for the module file.
 

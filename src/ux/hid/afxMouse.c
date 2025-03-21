@@ -25,9 +25,16 @@
 #define _AUX_SESSION_C
 #include "../impl/auxImplementation.h"
 
-_AUX void AfxGetMouseMotion(afxSession ses, afxUnit seat, afxReal motion[2])
+_AUX void AfxGetMouseMotion(afxUnit seat, afxReal motion[2])
 {
     afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return;
+    }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -37,9 +44,16 @@ _AUX void AfxGetMouseMotion(afxSession ses, afxUnit seat, afxReal motion[2])
     }
 }
 
-_AUX afxReal AfxGetMouseWheelDelta(afxSession ses, afxUnit seat)
+_AUX afxReal AfxGetMouseWheelDelta(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return 0;
+    }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -48,11 +62,18 @@ _AUX afxReal AfxGetMouseWheelDelta(afxSession ses, afxUnit seat)
     return 0;
 }
 
-_AUX afxBool AfxIsLmbPressed(afxSession ses, afxUnit seat)
+_AUX afxBool AfxIsLmbPressed(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[0][AFX_LMB]);
@@ -60,11 +81,18 @@ _AUX afxBool AfxIsLmbPressed(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxIsRmbPressed(afxSession ses, afxUnit seat)
+_AUX afxBool AfxIsRmbPressed(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[0][AFX_RMB]);
@@ -72,11 +100,18 @@ _AUX afxBool AfxIsRmbPressed(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxIsMmbPressed(afxSession ses, afxUnit seat)
+_AUX afxBool AfxIsMmbPressed(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[0][AFX_MMB]);
@@ -84,11 +119,18 @@ _AUX afxBool AfxIsMmbPressed(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxIsXmb1Pressed(afxSession ses, afxUnit seat)
+_AUX afxBool AfxIsXmb1Pressed(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[0][AFX_XMB1]);
@@ -96,11 +138,18 @@ _AUX afxBool AfxIsXmb1Pressed(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxIsXmb2Pressed(afxSession ses, afxUnit seat)
+_AUX afxBool AfxIsXmb2Pressed(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[0][AFX_XMB2]);
@@ -108,11 +157,18 @@ _AUX afxBool AfxIsXmb2Pressed(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxWasLmbPressed(afxSession ses, afxUnit seat)
+_AUX afxBool AfxWasLmbPressed(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[0][AFX_LMB] && !(ses->seats[seat].mbState[1][AFX_LMB]));
@@ -120,11 +176,18 @@ _AUX afxBool AfxWasLmbPressed(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxWasRmbPressed(afxSession ses, afxUnit seat)
+_AUX afxBool AfxWasRmbPressed(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[0][AFX_RMB] && !(ses->seats[seat].mbState[1][AFX_RMB]));
@@ -132,11 +195,18 @@ _AUX afxBool AfxWasRmbPressed(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxWasMmbPressed(afxSession ses, afxUnit seat)
+_AUX afxBool AfxWasMmbPressed(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[0][AFX_MMB] && !(ses->seats[seat].mbState[1][AFX_MMB]));
@@ -144,11 +214,18 @@ _AUX afxBool AfxWasMmbPressed(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxWasXmb1Pressed(afxSession ses, afxUnit seat)
+_AUX afxBool AfxWasXmb1Pressed(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[0][AFX_XMB1] && !(ses->seats[seat].mbState[1][AFX_XMB1]));
@@ -156,11 +233,18 @@ _AUX afxBool AfxWasXmb1Pressed(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxWasXmb2Pressed(afxSession ses, afxUnit seat)
+_AUX afxBool AfxWasXmb2Pressed(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[0][AFX_XMB2] && !(ses->seats[seat].mbState[1][AFX_XMB2]));
@@ -168,11 +252,18 @@ _AUX afxBool AfxWasXmb2Pressed(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxWasLmbReleased(afxSession ses, afxUnit seat)
+_AUX afxBool AfxWasLmbReleased(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[1][AFX_LMB] && !(ses->seats[seat].mbState[0][AFX_LMB]));
@@ -180,11 +271,18 @@ _AUX afxBool AfxWasLmbReleased(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxWasRmbReleased(afxSession ses, afxUnit seat)
+_AUX afxBool AfxWasRmbReleased(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[1][AFX_RMB] && !(ses->seats[seat].mbState[0][AFX_RMB]));
@@ -192,11 +290,18 @@ _AUX afxBool AfxWasRmbReleased(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxWasMmbReleased(afxSession ses, afxUnit seat)
+_AUX afxBool AfxWasMmbReleased(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[1][AFX_MMB] && !(ses->seats[seat].mbState[0][AFX_MMB]));
@@ -204,11 +309,18 @@ _AUX afxBool AfxWasMmbReleased(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxWasXmb1Released(afxSession ses, afxUnit seat)
+_AUX afxBool AfxWasXmb1Released(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[1][AFX_XMB1] && !(ses->seats[seat].mbState[0][AFX_XMB1]));
@@ -216,11 +328,18 @@ _AUX afxBool AfxWasXmb1Released(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxWasXmb2Released(afxSession ses, afxUnit seat)
+_AUX afxBool AfxWasXmb2Released(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (ses->seats[seat].mbState[1][AFX_XMB2] && !(ses->seats[seat].mbState[0][AFX_XMB2]));
@@ -228,11 +347,18 @@ _AUX afxBool AfxWasXmb2Released(afxSession ses, afxUnit seat)
     return rslt;
 }
 
-_AUX afxBool AfxMouseHasHorizontalChanged(afxSession ses, afxUnit seat, afxInt tolerance)
+_AUX afxBool AfxMouseHasHorizontalChanged(afxUnit seat, afxInt tolerance)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (((afxReal)AfxAbs(ses->seats[seat].motion[0][0] - ses->seats[seat].motion[1][0])) >= (afxReal)tolerance);
@@ -240,11 +366,18 @@ _AUX afxBool AfxMouseHasHorizontalChanged(afxSession ses, afxUnit seat, afxInt t
     return rslt;
 }
 
-_AUX afxBool AfxMouseHasVerticalChanged(afxSession ses, afxUnit seat, afxInt tolerance)
+_AUX afxBool AfxMouseHasVerticalChanged(afxUnit seat, afxInt tolerance)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return rslt;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
         rslt = (((afxReal)AfxAbs(ses->seats[seat].motion[0][1] - ses->seats[seat].motion[1][1])) >= (afxReal)tolerance);
@@ -252,9 +385,16 @@ _AUX afxBool AfxMouseHasVerticalChanged(afxSession ses, afxUnit seat, afxInt tol
     return rslt;
 }
 
-_AUX afxError AfxEmulateMouseMotion(afxSession ses, afxUnit seat, afxReal const motion[2], afxWindow wnd)
+_AUX afxError AfxEmulateMouseMotion(afxUnit seat, afxReal const motion[2], afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return err;
+    }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -276,9 +416,16 @@ _AUX afxError AfxEmulateMouseMotion(afxSession ses, afxUnit seat, afxReal const 
     return err;
 }
 
-_AUX afxError AfxEmulateMouseWheelAction(afxSession ses, afxUnit seat, afxReal delta, afxWindow wnd)
+_AUX afxError AfxEmulateMouseWheelAction(afxUnit seat, afxReal delta, afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return err;
+    }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -297,9 +444,16 @@ _AUX afxError AfxEmulateMouseWheelAction(afxSession ses, afxUnit seat, afxReal d
     return err;
 }
 
-_AUX afxError AfxEmulateMouseButtonActions(afxSession ses, afxUnit seat, afxUnit cnt, afxMouseButton const butt[], afxBool const pressed[], afxWindow wnd)
+_AUX afxError AfxEmulateMouseButtonActions(afxUnit seat, afxUnit cnt, afxMouseButton const butt[], afxBool const pressed[], afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return err;
+    }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -365,9 +519,16 @@ _AUX afxError AfxEmulateMouseButtonActions(afxSession ses, afxUnit seat, afxUnit
     return err;
 }
 
-_AUX afxError AfxReleaseMouseButtons(afxSession ses, afxUnit seat, afxWindow wnd)
+_AUX afxError AfxReleaseMouseButtons(afxUnit seat, afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return err;
+    }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -400,7 +561,6 @@ _AUX afxError _AuxMseDtorCb(afxMouse mse)
     AFX_ASSERT_OBJECTS(afxFcc_MSE, 1, &mse);
 
 
-
     return err;
 }
 
@@ -409,7 +569,9 @@ _AUX afxResult _AuxMseCtorCb(afxMouse mse, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MSE, 1, &mse);
 
-    afxUnit const *ports = args[0];
+    afxSession ses = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    afxUnit const *ports = args[1];
     afxUnit seat = (afxUnit)ports[invokeNo];
 
     mse->flags = NIL;

@@ -218,75 +218,75 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
     afxUri2048 location;
     AfxMakeUri2048(&location, NIL);
 
-    if (AfxMountStorageUnit('z', &location, afxFileFlag_RX)) AfxThrowError();
+    if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RX)) AfxThrowError();
     else
     {
         AfxFormatUri(&location.uri, "%.*s", AfxPushString(AfxGetSystemDirectoryString(NIL)));
 
-        if (AfxMountStorageUnit('z', &location, afxFileFlag_RX)) AfxThrowError();
+        if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RX)) AfxThrowError();
         else
         {
 #ifdef AFX_ISA_X86_64
 #   ifdef AFX_OS_WIN
-            AfxMakeUri(&location, 0, "w64", 0);
+            AfxMakeUri(&location.uri, 0, "w64", 0);
 
-            if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX)) AfxThrowError();
+            if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, 0, "w64d", 0);
+                AfxMakeUri(&location.uri, 0, "w64d", 0);
 
-                if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX))
+                if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX))
                     AfxThrowError();
             }
 #       endif
-            AfxMakeUri(&location, 0, "C:\\Windows\\System32", 0);
+            AfxMakeUri(&location.uri, 0, "C:\\Windows\\System32", 0);
 
-            if (AfxMountStorageUnit('c', &location, afxFileFlag_RX))
+            if (AfxMountStorageUnit('c', &location.uri, afxFileFlag_RX))
                 AfxThrowError();
 #   elif defined(AFX_OS_LNX)
-            AfxMakeUri(&location, 0, "x64", 0);
+            AfxMakeUri(&location.uri, 0, "x64", 0);
 
-            if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX)) AfxThrowError();
+            if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, 0, "x64d", 0);
+                AfxMakeUri(&location.uri, 0, "x64d", 0);
 
-                if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX))
+                if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX))
                     AfxThrowError();
             }
 #       endif
 #   endif
 #elif defined(AFX_ISA_X86_32)
 #   ifdef AFX_OS_WIN
-            AfxMakeUri(&location, 0, "w32", 0);
+            AfxMakeUri(&location.uri, 0, "w32", 0);
 
-            if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX)) AfxThrowError();
+            if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, 0, "w32d", 0);
+                AfxMakeUri(&location.uri, 0, "w32d", 0);
 
-                if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX))
+                if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX))
                     AfxThrowError();
             }
 #       endif
 
-            AfxMakeUri(&location, 0, "C:\\Windows\\SysWow64", 0);
+            AfxMakeUri(&location.uri, 0, "C:\\Windows\\SysWow64", 0);
 
-            if (AfxMountStorageUnit('c', &location, afxFileFlag_RX))
+            if (AfxMountStorageUnit('c', &location.uri, afxFileFlag_RX))
                 AfxThrowError();
 #   elif defined(AFX_OS_LNX)
-            AfxMakeUri(&location, 0, "x32", 0);
+            AfxMakeUri(&location.uri, 0, "x32", 0);
 
-            if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX)) AfxThrowError();
+            if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX)) AfxThrowError();
 #       ifdef _DEBUG
             else
             {
-                AfxMakeUri(&location, 0, "x32d", 0);
+                AfxMakeUri(&location.uri, 0, "x32d", 0);
 
-                if (AfxMountStorageUnit('z', &location, afxFileFlag_RWX))
+                if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX))
                     AfxThrowError();
             }
 #       endif
@@ -297,29 +297,29 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
 #if 0
     if (!err)
     {
-        AfxMakeUri(&location, "code", 0);
+        AfxMakeUri(&location.uri, "code", 0);
 
-        if (AfxMountStorageUnit('c', &location, afxFileFlag_RX)) AfxThrowError();
+        if (AfxMountStorageUnit('c', &location.uri, afxFileFlag_RX)) AfxThrowError();
         else
         {
-            AfxMakeUri(&location, "sound", 0);
+            AfxMakeUri(&location.uri, "sound", 0);
 
-            if (AfxMountStorageUnit('s', &location, afxFileFlag_RX)) AfxThrowError();
+            if (AfxMountStorageUnit('s', &location.uri, afxFileFlag_RX)) AfxThrowError();
             else
             {
-                AfxMakeUri(&location, "data", 0);
+                AfxMakeUri(&location.uri, "data", 0);
 
-                if (AfxMountStorageUnit('d', &location, afxFileFlag_RX)) AfxThrowError();
+                if (AfxMountStorageUnit('d', &location.uri, afxFileFlag_RX)) AfxThrowError();
                 else
                 {
-                    AfxMakeUri(&location, "art", 0);
+                    AfxMakeUri(&location.uri, "art", 0);
 
-                    if (AfxMountStorageUnit('a', &location, afxFileFlag_RX)) AfxThrowError();
+                    if (AfxMountStorageUnit('a', &location.uri, afxFileFlag_RX)) AfxThrowError();
                     else
                     {
-                        AfxMakeUri(&location, "tmp", 0);
+                        AfxMakeUri(&location.uri, "tmp", 0);
 
-                        if (AfxMountStorageUnit('t', &location, afxFileFlag_RWX))
+                        if (AfxMountStorageUnit('t', &location.uri, afxFileFlag_RWX))
                             AfxThrowError();
                     }
                 }
@@ -505,17 +505,17 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
 
     afxString sSystem = AFX_STRING("System");
 
-    if (!AfxGetInitializationNat(&ini, &sSystem, &AfxString("nIoBufferSize"), &cfg.ioBufSiz) || !cfg.ioBufSiz)
+    if (!AfxGetInitializationNat(&ini, &sSystem, &AFX_STRING("nIoBufferSize"), &cfg.ioBufSiz) || !cfg.ioBufSiz)
     {
         cfg.ioBufSiz = BUFSIZ;
     }
 
-    if (!AfxGetInitializationReal(&ini, &sSystem, &AfxString("fUnitsPerMeter"), &cfg.unitsToMeter) || !cfg.unitsToMeter)
+    if (!AfxGetInitializationReal(&ini, &sSystem, &AFX_STRING("fUnitsPerMeter"), &cfg.unitsToMeter) || !cfg.unitsToMeter)
     {
         cfg.unitsToMeter = renderwareUnitsPerMeter;
     }
 
-    if (!AfxGetInitializationNat(&ini, &sSystem, &AfxString("nHwThreadingCapacity"), &cfg.hwThreadingCap) || !cfg.hwThreadingCap)
+    if (!AfxGetInitializationNat(&ini, &sSystem, &AFX_STRING("nHwThreadingCapacity"), &cfg.hwThreadingCap) || !cfg.hwThreadingCap)
     {
         cfg.hwThreadingCap =
 #ifdef AFX_OS_WIN
@@ -525,7 +525,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
 #endif
     }
 
-    if (!AfxGetInitializationNat(&ini, &sSystem, &AfxString("nMemoryPageSize"), &cfg.memPageSiz) || !cfg.memPageSiz)
+    if (!AfxGetInitializationNat(&ini, &sSystem, &AFX_STRING("nMemoryPageSize"), &cfg.memPageSiz) || !cfg.memPageSiz)
     {
         cfg.memPageSiz =
 #ifdef AFX_OS_WIN
@@ -535,7 +535,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
 #endif
     }
 
-    if (!AfxGetInitializationNat(&ini, &sSystem, &AfxString("nAllocationGranularity"), &cfg.allocGranularity) || !cfg.allocGranularity)
+    if (!AfxGetInitializationNat(&ini, &sSystem, &AFX_STRING("nAllocationGranularity"), &cfg.allocGranularity) || !cfg.allocGranularity)
     {
         cfg.allocGranularity =
 #ifdef AFX_OS_WIN
@@ -561,17 +561,17 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
 #endif
     }
 
-    if (!(AfxGetInitializationBool(&ini, &AfxString("DrawSystem"), &AfxString("bDisabled"), &cfg.avxDisabled)))
+    if (!(AfxGetInitializationBool(&ini, &AFX_STRING("DrawSystem"), &AFX_STRING("bDisabled"), &cfg.avxDisabled)))
     {
         cfg.avxDisabled = FALSE;
     }
 
-    if (!(AfxGetInitializationBool(&ini, &AfxString("MixSystem"), &AfxString("bDisabled"), &cfg.asxDisabled)))
+    if (!(AfxGetInitializationBool(&ini, &AFX_STRING("MixSystem"), &AFX_STRING("bDisabled"), &cfg.asxDisabled)))
     {
         cfg.asxDisabled = FALSE;
     }
 
-    if (!(AfxGetInitializationBool(&ini, &AfxString("Shell"), &AfxString("bDisabled"), &cfg.auxDisabled)))
+    if (!(AfxGetInitializationBool(&ini, &AFX_STRING("Shell"), &AFX_STRING("bDisabled"), &cfg.auxDisabled)))
     {
         cfg.auxDisabled = FALSE;
     }

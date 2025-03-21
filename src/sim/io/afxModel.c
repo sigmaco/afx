@@ -548,7 +548,7 @@ _ASX afxError AsxReparentJoints(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, v
             for (afxUnit i = 0; i < cnt; i++)
             {
                 afxUnit parentIdx = src[i];
-                AfxAssertOR(parentIdx == AFX_INVALID_INDEX, parentIdx < mdl->jntCnt);
+                AFX_ASSERT_OR(parentIdx == AFX_INVALID_INDEX, parentIdx < mdl->jntCnt);
                 mdl->jntPi[baseJntIdx + i] = parentIdx;
             }
             break;
@@ -560,7 +560,7 @@ _ASX afxError AsxReparentJoints(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, v
             for (afxUnit i = 0; i < cnt; i++)
             {
                 afxUnit parentIdx = src[i];
-                AfxAssertOR(parentIdx == AFX_INVALID_INDEX, parentIdx < mdl->jntCnt);
+                AFX_ASSERT_OR(parentIdx == AFX_INVALID_INDEX, parentIdx < mdl->jntCnt);
                 mdl->jntPi[baseJntIdx + i] = parentIdx;
             }
             break;
@@ -572,7 +572,7 @@ _ASX afxError AsxReparentJoints(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, v
             for (afxUnit i = 0; i < cnt; i++)
             {
                 afxUnit parentIdx = src[i];
-                AfxAssertOR(parentIdx == AFX_INVALID_INDEX, parentIdx < mdl->jntCnt);
+                AFX_ASSERT_OR(parentIdx == AFX_INVALID_INDEX, parentIdx < mdl->jntCnt);
                 mdl->jntPi[baseJntIdx + i] = parentIdx;
             }
             break;
@@ -603,9 +603,9 @@ _ASX afxUnit AsxGetJointInversors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt,
 
         break;
     }
-    case sizeof(afxAtm3d) :
+    case sizeof(afxM4r) :
     {
-        afxAtm3d* dst = (afxAtm3d*)matrices;
+        afxM4r* dst = (afxM4r*)matrices;
 
         for (afxUnit i = 0; i < cnt; i++)
         {
@@ -656,9 +656,9 @@ _ASX afxError AsxResetJointInversors(afxModel mdl, afxUnit baseJntIdx, afxUnit c
 
         break;
     }
-    case sizeof(afxAtm3d) :
+    case sizeof(afxM4r) :
     {
-        afxAtm3d const* src = (afxAtm3d const*)matrices;
+        afxM4r const* src = (afxM4r const*)matrices;
 
         for (afxUnit i = 0; i < cnt; i++)
         {
@@ -971,7 +971,7 @@ _ASX afxError _AsxMdlCtorCb(afxModel mdl, void** args, afxUnit invokeNo)
     else
         AfxCopyTransform(&mdl->displacement, displacement);
 
-    AfxBoxReset(&mdl->aabb);
+    AfxResetBoxes(1, &mdl->aabb);
 
     afxUnit rigCnt = AfxMax(1, mdlb->rigCnt);
     afxUnit baseMshIdx = 0;

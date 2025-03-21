@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_BUFFER_C
-#define _AVX_VERTEX_DECL_C
+#define _AVX_VERTEX_INPUT_C
 #include "avxImplementation.h"
 
 afxError AfxReadBuffer(avxBuffer buf, afxSize offset, afxUnit range, afxUnit stride, void* data)
@@ -31,7 +31,7 @@ void DoVertex(afxUnit vtxId, void* data)
 
 }
 
-void _AvxFetchVertices(avxVertexDecl vtxd, afxUnit vtxCnt, afxUnit instCnt, avxBufferedStream const streams[], afxByte* data)
+void _AvxFetchVertices(avxVertexInput vtxd, afxUnit vtxCnt, afxUnit instCnt, avxBufferedStream const streams[], afxByte* data)
 {
     avxBuffer srcBuf[AVX_MAX_VERTEX_SOURCES];
     afxByte* srcPtr[AVX_MAX_VERTEX_SOURCES];
@@ -55,7 +55,7 @@ void _AvxFetchVertices(avxVertexDecl vtxd, afxUnit vtxCnt, afxUnit instCnt, avxB
 
     for (afxUnit aIdx = 0; aIdx < vtxd->attrCnt; aIdx++)
     {
-        avxVertexInput const* vtxa = &vtxd->attrs[aIdx];
+        avxVertexAttr const* vtxa = &vtxd->attrs[aIdx];
         AvxDescribeFormats(1, &vtxa->fmt, &attrFd[aIdx]);
     }
 
@@ -65,7 +65,7 @@ void _AvxFetchVertices(avxVertexDecl vtxd, afxUnit vtxCnt, afxUnit instCnt, avxB
         {
             for (afxUnit aIdx = 0; aIdx < vtxd->attrCnt; aIdx++)
             {
-                avxVertexInput const* vtxa = &vtxd->attrs[aIdx];
+                avxVertexAttr const* vtxa = &vtxd->attrs[aIdx];
                 AfxCopy(data, &srcPtr[vtxa->srcIdx][vtxa->offset], attrFd[aIdx].stride);
                 data += attrFd[aIdx].stride;
             }

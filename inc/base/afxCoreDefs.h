@@ -188,6 +188,7 @@ typedef enum afxError
     afxError_OUT_OF_RANGE,
     afxError_INSUFFICIENT,
     afxError_DENIED,
+    afxError_BUSY,
     afxError_VIOLATION,
     afxError_UNSUPPORTED,
     afxError_UNINITIALIZED,

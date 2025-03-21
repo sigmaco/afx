@@ -347,7 +347,7 @@ _AFXINL void AfxM2dCopy(afxM2d m, afxM2d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(in);
     AFX_ASSERT(m);
-    AfxAssertDiffSoft(m, in);
+    AFX_ASSERT_DIFF(m, in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -361,7 +361,7 @@ _AFXINL void AfxM3dCopy(afxM3d m, afxM3d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(in);
     AFX_ASSERT(m);
-    AfxAssertDiffSoft(m, in);
+    AFX_ASSERT_DIFF(m, in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -381,7 +381,7 @@ _AFXINL void AfxM4dCopy(afxM4d m, afxM4d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(in);
     AFX_ASSERT(m);
-    AfxAssertDiffSoft(m, in);
+    AFX_ASSERT_DIFF(m, in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -407,7 +407,7 @@ _AFXINL void AfxM4dCopy(afxM4d m, afxM4d const in)
 _AFXINL void AfxM4dCopyLtm(afxM4d m, afxM4d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert2(in, m);
+    AFX_ASSERT2(in, m);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -433,7 +433,7 @@ _AFXINL void AfxM4dCopyLtm(afxM4d m, afxM4d const in)
 _AFXINL void AfxM4dCopyAtm(afxM4d m, afxM4d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert2(in, m);
+    AFX_ASSERT2(in, m);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -459,7 +459,7 @@ _AFXINL void AfxM4dCopyAtm(afxM4d m, afxM4d const in)
 _AFXINL void AfxM4dTransposeLtm(afxM4d m, afxM4d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(in, m, m != in);
+    AFX_ASSERT3(in, m, m != in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[1][0];
@@ -485,7 +485,7 @@ _AFXINL void AfxM4dTransposeLtm(afxM4d m, afxM4d const in)
 _AFXINL void AfxM4dTransposeAtm(afxM4d m, afxM4d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(in, m, m != in);
+    AFX_ASSERT3(in, m, m != in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[1][0];
@@ -515,7 +515,7 @@ _AFXINL void AfxM2dCopyM3d(afxM2d m, afxM3d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
     AFX_ASSERT(in);
-    AfxAssertDiff(in, m);
+    AFX_ASSERT_DIFF(in, m);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -527,7 +527,7 @@ _AFXINL void AfxM2dCopyM3d(afxM2d m, afxM3d const in)
 _AFXINL void AfxM3dCopyM4d(afxM3d m, afxM4d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, in, (void*)m != (void*)in);
+    AFX_ASSERT3(m, in, (void*)m != (void*)in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -545,7 +545,7 @@ _AFXINL void AfxM3dCopyM4d(afxM3d m, afxM4d const in)
 _AFXINL void AfxM3dTransposeM4d(afxM3d m, afxM4d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, in, (void*)m != (void*)in);
+    AFX_ASSERT3(m, in, (void*)m != (void*)in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[1][0];
@@ -565,7 +565,7 @@ _AFXINL void AfxM3dCopyM2d(afxM3d m, afxM2d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
     AFX_ASSERT(in);
-    AfxAssertDiff(m, in);
+    AFX_ASSERT_DIFF(m, in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -585,7 +585,7 @@ _AFXINL void AfxM4dCopyM2d(afxM4d m, afxM2d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
     AFX_ASSERT(in);
-    AfxAssertDiff(m, in);
+    AFX_ASSERT_DIFF(m, in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -614,7 +614,7 @@ _AFXINL void AfxM4dCopyM3d(afxM4d m, afxM3d const ltm, afxV4d const atv)
     AFX_ASSERT(m);
     AFX_ASSERT(ltm);
     AFX_ASSERT(atv);
-    AfxAssertDiff(m, ltm);
+    AFX_ASSERT_DIFF(m, ltm);
 
     m[0][0] = ltm[0][0];
     m[0][1] = ltm[0][1];
@@ -637,12 +637,12 @@ _AFXINL void AfxM4dCopyM3d(afxM4d m, afxM3d const ltm, afxV4d const atv)
     m[3][3] = 1.f;
 }
 
-_AFXINL void AfxAtm3dCopy(afxAtm3d m, afxAtm3d const in)
+_AFXINL void AfxM4rCopy(afxM4r m, afxM4r const in)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
     AFX_ASSERT(in);
-    AfxAssertDiff(m, in);
+    AFX_ASSERT_DIFF(m, in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -661,12 +661,12 @@ _AFXINL void AfxAtm3dCopy(afxAtm3d m, afxAtm3d const in)
     m[3][2] = in[3][2];
 }
 
-_AFXINL void AfxAtm3dCopyM3d(afxAtm3d m, afxM3d const in)
+_AFXINL void AfxM4rCopyM3d(afxM4r m, afxM3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
     AFX_ASSERT(in);
-    AfxAssertDiff(m, in);
+    AFX_ASSERT_DIFF(m, in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -685,12 +685,12 @@ _AFXINL void AfxAtm3dCopyM3d(afxAtm3d m, afxM3d const in)
     m[3][2] = 0.f;
 }
 
-_AFXINL void AfxAtm3dCopyM4d(afxAtm3d m, afxM4d const in)
+_AFXINL void AfxM4rCopyM4d(afxM4r m, afxM4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
     AFX_ASSERT(in);
-    AfxAssertDiff(m, in);
+    AFX_ASSERT_DIFF(m, in);
 
     m[0][0] = in[0][0];
     m[0][1] = in[0][1];
@@ -988,7 +988,7 @@ _AFXINL void AfxM4dMads(afxM4d m, afxReal scale, afxM4d const b, afxM4d const c)
 _AFXINL void AfxM2dMix(afxM2d m, afxM2d const a, afxM2d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] * (1.f - t) + b[0][0] * t;
     m[0][1] = a[0][1] * (1.f - t) + b[0][1] * t;
@@ -1006,7 +1006,7 @@ _AFXINL void AfxM2dMix(afxM2d m, afxM2d const a, afxM2d const b, afxReal t)
 _AFXINL void AfxM3dMix(afxM3d m, afxM3d const a, afxM3d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] * (1.f - t) + b[0][0] * t;
     m[0][1] = a[0][1] * (1.f - t) + b[0][1] * t;
@@ -1028,7 +1028,7 @@ _AFXINL void AfxM3dMix(afxM3d m, afxM3d const a, afxM3d const b, afxReal t)
 _AFXINL void AfxM4dMix(afxM4d m, afxM4d const a, afxM4d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] * (1.f - t) + b[0][0] * t;
     m[0][1] = a[0][1] * (1.f - t) + b[0][1] * t;
@@ -1054,7 +1054,7 @@ _AFXINL void AfxM4dMix(afxM4d m, afxM4d const a, afxM4d const b, afxReal t)
 _AFXINL void AfxM3dMixAffine(afxM3d m, afxM3d const a, afxM3d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] * (1.f - t) + b[0][0] * t;
     m[0][1] = a[0][1] * (1.f - t) + b[0][1] * t;
@@ -1072,7 +1072,7 @@ _AFXINL void AfxM3dMixAffine(afxM3d m, afxM3d const a, afxM3d const b, afxReal t
 _AFXINL void AfxM4dMixAffine(afxM4d m, afxM4d const a, afxM4d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] * (1.f - t) + b[0][0] * t;
     m[0][1] = a[0][1] * (1.f - t) + b[0][1] * t;
@@ -1098,7 +1098,7 @@ _AFXINL void AfxM4dMixAffine(afxM4d m, afxM4d const a, afxM4d const b, afxReal t
 _AFXINL void AfxM4dMixLinear(afxM4d m, afxM4d const a, afxM4d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] * (1.f - t) + b[0][0] * t;
     m[0][1] = a[0][1] * (1.f - t) + b[0][1] * t;
@@ -1129,7 +1129,7 @@ _AFXINL void AfxM4dMixLinear(afxM4d m, afxM4d const a, afxM4d const b, afxReal t
 _AFXINL void AfxM2dLerp(afxM2d m, afxM2d const a, afxM2d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] + t * (b[0][0] - a[0][0]);
     m[0][1] = a[0][1] + t * (b[0][1] - a[0][1]);
@@ -1147,7 +1147,7 @@ _AFXINL void AfxM2dLerp(afxM2d m, afxM2d const a, afxM2d const b, afxReal t)
 _AFXINL void AfxM3dLerp(afxM3d m, afxM3d const a, afxM3d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] + t * (b[0][0] - a[0][0]);
     m[0][1] = a[0][1] + t * (b[0][1] - a[0][1]);
@@ -1169,7 +1169,7 @@ _AFXINL void AfxM3dLerp(afxM3d m, afxM3d const a, afxM3d const b, afxReal t)
 _AFXINL void AfxM4dLerp(afxM4d m, afxM4d const a, afxM4d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] + t * (b[0][0] - a[0][0]);
     m[0][1] = a[0][1] + t * (b[0][1] - a[0][1]);
@@ -1195,7 +1195,7 @@ _AFXINL void AfxM4dLerp(afxM4d m, afxM4d const a, afxM4d const b, afxReal t)
 _AFXINL void AfxM3dLerpAffine(afxM3d m, afxM3d const a, afxM3d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] + t * (b[0][0] - a[0][0]);
     m[0][1] = a[0][1] + t * (b[0][1] - a[0][1]);
@@ -1213,7 +1213,7 @@ _AFXINL void AfxM3dLerpAffine(afxM3d m, afxM3d const a, afxM3d const b, afxReal 
 _AFXINL void AfxM4dLerpAffine(afxM4d m, afxM4d const a, afxM4d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] + t * (b[0][0] - a[0][0]);
     m[0][1] = a[0][1] + t * (b[0][1] - a[0][1]);
@@ -1239,7 +1239,7 @@ _AFXINL void AfxM4dLerpAffine(afxM4d m, afxM4d const a, afxM4d const b, afxReal 
 _AFXINL void AfxM4dLerpLinear(afxM4d m, afxM4d const a, afxM4d const b, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(m, a, b);
+    AFX_ASSERT3(m, a, b);
 
     m[0][0] = a[0][0] + t * (b[0][0] - a[0][0]);
     m[0][1] = a[0][1] + t * (b[0][1] - a[0][1]);
@@ -1438,7 +1438,7 @@ _AFXINL void AfxM3dScaling(afxM3d m, afxV3d const scale)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
     AFX_ASSERT(scale);
-    AfxAssertDiff(m, scale);
+    AFX_ASSERT_DIFF(m, scale);
     AfxM3dReset(m);
     m[0][0] = scale[0];
     m[1][1] = scale[1];
@@ -1450,7 +1450,7 @@ _AFXINL void AfxM4dScaling(afxM4d m, afxV3d const scale)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
     AFX_ASSERT(scale);
-    AfxAssertDiff(m, scale);
+    AFX_ASSERT_DIFF(m, scale);
     AfxM4dReset(m);
     m[0][0] = scale[0];
     m[1][1] = scale[1];
@@ -1466,7 +1466,7 @@ _AFXINL void AfxM3dRotationFromQuat(afxM3d m, afxQuat const q)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
     AFX_ASSERT(q);
-    AfxAssertDiff(m, q);
+    AFX_ASSERT_DIFF(m, q);
 
     afxReal qx = q[0], qxx = qx * qx;
     afxReal qy = q[1], qyy = qy * qy;
@@ -1493,7 +1493,7 @@ _AFXINL void AfxM4dRotationFromQuat(afxM4d m, afxQuat const q)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
     AFX_ASSERT(q);
-    AfxAssertDiff(m, q);
+    AFX_ASSERT_DIFF(m, q);
 
     afxReal qx = q[0], qxx = qx * qx;
     afxReal qy = q[1], qyy = qy * qy;

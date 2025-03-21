@@ -72,14 +72,18 @@ AFX_DEFINE_STRUCT(afxString)
     };
 };
 
-#define AFX_STRING(text_) { .len = (afxUnit)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), .start = (afxChar const*)(text_) }
-#define AfxString(text_) (afxString const)AFX_STRING((text_))
-#define AfxStaticString(text_) (afxString const)AFX_STRING((text_))
+#define AFX_STRING(text_) (afxString) { \
+    .len = (afxUnit)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), \
+    .cap = 0, \
+    .start = (afxChar const*)(text_) \
+    }
 
-AFX afxString const     AFX_STR_EMPTY;
+#define AfxString(text_) (afxString const)AFX_STRING((text_))
+
+AFX afxString const     AFX_STRING_EMPTY;
 
 // NOTE: When 'cap' is zero, a string can't be modified.
-//#define AfxAssertString(str_) AfxAssert3(((afxChar*)&((str_)->fcc))[0] == 's', ((afxChar*)&((str_)->fcc))[1] == 't', ((afxChar*)&((str_)->fcc))[2] == 'r')
+//#define AfxAssertString(str_) AFX_ASSERT3(((afxChar*)&((str_)->fcc))[0] == 's', ((afxChar*)&((str_)->fcc))[1] == 't', ((afxChar*)&((str_)->fcc))[2] == 'r')
 
 // used for formatted string input with %.*s specifier. // %.*s
 #define AfxPushString(str_) ((str_) ? AfxGetStringLength((str_)) : 0), ((str_) ? AfxGetStringData((str_), 0) : "")
@@ -88,7 +92,7 @@ AFXINL void             AfxResetStrings(afxUnit cnt, afxString strings[]);
 
 AFXINL void             AfxClearStrings(afxUnit cnt, afxString strings[]);
 
-AFXINL void             AfxMakeString(afxString* s, afxUnit cap, void const *start, afxUnit len); // wraps constant (read-only) data as a Qwadro string.
+AFXINL afxString*       AfxMakeString(afxString* s, afxUnit cap, void const *start, afxUnit len); // wraps constant (read-only) data as a Qwadro string.
 
 // Makes a excerpt string from another string.
 AFXINL void             AfxReflectString(afxString const* s, afxString* reflection); // wraps the same content mapped or buffered by other string as read-only data.

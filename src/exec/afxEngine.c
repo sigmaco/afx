@@ -34,8 +34,8 @@ int main(int argc, char const* argv[])
 
     afxUnit ddevId = 0;
     afxDrawSystemConfig dsyc;
-    AfxConfigureDrawSystem(ddevId, &dsyc);
-    AfxEstablishDrawSystem(ddevId, &dsyc, &dsys);
+    AvxConfigureDrawSystem(ddevId, &dsyc);
+    AvxEstablishDrawSystem(ddevId, &dsyc, &dsys);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     // Open a session
@@ -60,7 +60,7 @@ int main(int argc, char const* argv[])
     afxDrawInput din;
     afxDrawInputConfig dinCfg;
     AfxConfigureDrawInput(dsys, &dinCfg);
-    AfxOpenDrawInput(dsys, &dinCfg, &din);
+    AvxOpenDrawInput(dsys, &dinCfg, &din);
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
 
     afxWidget wid;
@@ -100,25 +100,25 @@ int main(int argc, char const* argv[])
 
         afxUnit outBufIdx = 0;
 
-        if (AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx))
+        if (AvxRequestDrawOutputBuffer(dout, 0, &outBufIdx))
             continue;
 
         afxDrawContext dctx;
         afxUnit queIdx = 0;
         afxUnit portId = 0;
 
-        if (AfxAcquireDrawContexts(dsys, portId, queIdx, 1, &dctx))
+        if (AvxAcquireDrawContexts(dsys, portId, queIdx, 1, &dctx))
         {
             AfxThrowError();
-            AfxRecycleDrawOutputBuffer(dout, outBufIdx);
+            AvxRecycleDrawOutputBuffer(dout, outBufIdx);
             continue;
         }
 
         avxCanvas canv;
         avxRange canvWhd;
-        AfxGetDrawOutputCanvas(dout, outBufIdx, &canv);
+        AvxGetDrawOutputCanvas(dout, outBufIdx, &canv);
         AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-        canvWhd = AfxGetCanvasExtent(canv);
+        canvWhd = AvxGetCanvasExtent(canv);
 
         {
             avxDrawTarget rdt = { 0 };
@@ -156,19 +156,19 @@ int main(int argc, char const* argv[])
 
         afxSemaphore dscrCompleteSem = NIL;
 
-        if (AfxCompileDrawCommands(dctx))
+        if (AvxCompileDrawCommands(dctx))
         {
             AfxThrowError();
-            AfxRecycleDrawOutputBuffer(dout, outBufIdx);
+            AvxRecycleDrawOutputBuffer(dout, outBufIdx);
             continue;
         }
 
         avxSubmission subm = { 0 };
 
-        if (AfxExecuteDrawCommands(dsys, &subm, 1, &dctx, NIL))
+        if (AvxExecuteDrawCommands(dsys, &subm, 1, &dctx, NIL))
         {
             AfxThrowError();
-            AfxRecycleDrawOutputBuffer(dout, outBufIdx);
+            AvxRecycleDrawOutputBuffer(dout, outBufIdx);
             continue;
         }
 
@@ -178,10 +178,10 @@ int main(int argc, char const* argv[])
 
         avxPresentation pres = { 0 };
 
-        if (AfxPresentDrawOutputs(dsys, &pres, NIL, 1, &dout, &outBufIdx, NIL))
+        if (AvxPresentDrawOutputs(dsys, &pres, NIL, 1, &dout, &outBufIdx, NIL))
         {
             AfxThrowError();
-            AfxRecycleDrawOutputBuffer(dout, outBufIdx);
+            AvxRecycleDrawOutputBuffer(dout, outBufIdx);
             continue;
         }
     }

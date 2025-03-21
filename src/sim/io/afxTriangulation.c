@@ -453,9 +453,9 @@ _ASX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxV3d whd, afxReal s
     afxMesh msh;
     AfxCompileMeshes(sim, 1, &mshb, &msh);
 
-    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AfxString("pos"));
-    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("nrm"));
-    AfxFormatVertexAttribute(msh, 2, avxFormat_RG32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("uv"));
+    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
+    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
+    AfxFormatVertexAttribute(msh, 2, avxFormat_RG32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("uv"));
 
     AfxUpdateVertexData(msh, 0, 0, 0, mshb.vtxCnt, vertData, sizeof(vertData[0]));
 
@@ -508,9 +508,9 @@ _ASX afxMesh AfxBuildDomeMesh2(afxSimulation sim, afxReal radius, afxUnit stacks
     afxMesh msh;
     AfxCompileMeshes(sim, 1, &mshb, &msh);
 
-    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AfxString("pos"));
-    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("nrm"));
-    AfxFormatVertexAttribute(msh, 2, avxFormat_RG32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("uv"));
+    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
+    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
+    AfxFormatVertexAttribute(msh, 2, avxFormat_RG32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("uv"));
 
     afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
     afxV3d* nrm = AfxAccessVertexData(msh, 1, 0, 0);
@@ -654,9 +654,9 @@ _ASX afxMesh AfxBuildCapsuleMesh(afxSimulation sim, afxReal radius, afxReal heig
     afxMesh msh;
     AfxCompileMeshes(sim, 1, &mshb, &msh);
 
-    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AfxString("pos"));
-    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("nrm"));
-    AfxFormatVertexAttribute(msh, 2, avxFormat_RG32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("uv"));
+    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
+    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
+    AfxFormatVertexAttribute(msh, 2, avxFormat_RG32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("uv"));
 
     afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
     afxV3d* nrm = AfxAccessVertexData(msh, 1, 0, 0);
@@ -812,9 +812,9 @@ _ASX afxMesh AfxBuildPlaneMesh(afxSimulation sim, afxUnit gridSizeX, afxUnit gri
     afxMesh msh;
     AfxCompileMeshes(sim, 1, &mshb, &msh);
 
-    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AfxString("pos"));
-    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("nrm"));
-    AfxFormatVertexAttribute(msh, 2, avxFormat_RG32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("uv"));
+    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
+    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
+    AfxFormatVertexAttribute(msh, 2, avxFormat_RG32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("uv"));
 
     afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
     afxV3d* nrm = AfxAccessVertexData(msh, 1, 0, 0);
@@ -910,9 +910,9 @@ _ASX afxMesh AfxBuildSphereMesh(afxSimulation sim, afxReal radius, afxUnit stack
     afxMesh msh;
     AfxCompileMeshes(sim, 1, &mshb, &msh);
 
-    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AfxString("pos"));
-    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("nrm"));
-    AfxFormatVertexAttribute(msh, 2, avxFormat_RG32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("uv"));
+    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
+    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
+    AfxFormatVertexAttribute(msh, 2, avxFormat_RG32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("uv"));
 
     afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
     afxV3d* nrm = AfxAccessVertexData(msh, 1, 0, 0);
@@ -1141,10 +1141,10 @@ _ASX afxError AfxBuildBoxMesh(afxSimulation sim, afxV3d const whd, afxUnit secCn
     afxMesh msh;
     AfxCompileMeshes(sim, 1, &mshb, &msh);
 
-    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AfxString("pos"));
-    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("nrm"));
-    AfxFormatVertexAttribute(msh, 2, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AfxString("tan"));
-    AfxFormatVertexAttribute(msh, 3, avxFormat_RG32f, afxVertexFlag_NORMALIZED, &AfxString("uv"));
+    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
+    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
+    AfxFormatVertexAttribute(msh, 2, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("tan"));
+    AfxFormatVertexAttribute(msh, 3, avxFormat_RG32f, afxVertexFlag_NORMALIZED, &AFX_STRING("uv"));
 
     AfxUpdateVertexData(msh, 0, 0, 0, mshb.vtxCnt, cubeVertices, sizeof(cubeVertices[0]));
     AfxUpdateVertexData(msh, 1, 0, 0, mshb.vtxCnt, cubeNormals, sizeof(cubeNormals[0]));
@@ -1156,7 +1156,7 @@ _ASX afxError AfxBuildBoxMesh(afxSimulation sim, afxV3d const whd, afxUnit secCn
     afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
 
     afxV3d whdSanitized;
-    AfxMaxV3d(whdSanitized, AFX_V3D_ONE, whd);
+    AfxV3dMax(whdSanitized, AFX_V3D_ONE, whd);
 
     for (afxUnit i = 0; i < mshb.vtxCnt; i++)
         AfxV3dMultiply(pos[i], pos[i], whdSanitized);
@@ -1190,10 +1190,10 @@ _ASX afxError AfxBuildGridMesh(afxSimulation sim, afxUnit rows, afxUnit layers, 
 
     afxUnit* indices = AfxGetMeshIndices(msh, 0);
 
-    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_ATV, &AfxString("pos"));
-    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_LTM, &AfxString("nrm"));
-    AfxFormatVertexAttribute(msh, 2, avxFormat_RGB32f, afxVertexFlag_LTM, &AfxString("tan"));
-    AfxFormatVertexAttribute(msh, 3, avxFormat_RG32f, NIL, &AfxString("uv"));
+    AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_ATV, &AFX_STRING("pos"));
+    AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_LTM, &AFX_STRING("nrm"));
+    AfxFormatVertexAttribute(msh, 2, avxFormat_RGB32f, afxVertexFlag_LTM, &AFX_STRING("tan"));
+    AfxFormatVertexAttribute(msh, 3, avxFormat_RG32f, NIL, &AFX_STRING("uv"));
     afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
     afxV3d* nrm = AfxAccessVertexData(msh, 1, 0, 0);
     afxV3d* tan = AfxAccessVertexData(msh, 2, 0, 0);

@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
- // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #define _AMX_MIX_C
 #define _AMX_MIX_SYSTEM_C
@@ -29,6 +29,13 @@
 #define _AMX_AUDIO_C
 #define _AMX_WAVEFORM_C
 #include "../impl/amxImplementation.h"
+#include "qwadro/inc/mix/op/amxSession.h"
+
+AFX_OBJECT(amxSession)
+// This interface is the primary interface that applications use to control the pipeline.
+{
+    int a;
+};
 
 _AMX afxError _AmxMsesDtorCb(amxSession mses)
 {
@@ -60,14 +67,14 @@ _AMX afxClassConfig const _AMX_MSES_CLASS_CONFIG =
     .fcc = afxFcc_MSES,
     .name = "MediaSession",
     .desc = "Media Session",
-    //.fixedSiz = sizeof(AFX_OBJECT(amxSession)),
+    .fixedSiz = sizeof(AFX_OBJECT(amxSession)),
     .ctor = (void*)_AmxMsesCtorCb,
     .dtor = (void*)_AmxMsesDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AfxAcquireMediaSession(afxMixSystem msys, afxUnit exuIdx, amxSession* session)
+_AMX afxError AmxAcquireMediaSession(afxMixSystem msys, amxSessionConfig const* cfg, amxSession* session)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
@@ -77,7 +84,7 @@ _AMX afxError AfxAcquireMediaSession(afxMixSystem msys, afxUnit exuIdx, amxSessi
     AFX_ASSERT_CLASS(cls, afxFcc_MSES);
     
     amxSession mses;
-    if (AfxAcquireObjects(cls, 1, (afxObject*)&mses, (void const*[]) { msys, &exuIdx }))
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&mses, (void const*[]) { msys, cfg }))
     {
         AfxThrowError();
         return err;

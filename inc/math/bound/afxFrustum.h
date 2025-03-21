@@ -69,16 +69,16 @@ AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxFrustum)
     afxV4d      origin;
 };
 
-AFXINL void     AfxFrustumCopy(afxFrustum* f, afxFrustum const* in);
+AFXINL void     AfxCopyFrustum(afxFrustum* f, afxFrustum const* in);
 
-AFXINL afxBool  AfxFrustumDoesCullSphere(afxFrustum const* f, afxSphere const* sph);
-AFXINL afxBool  AfxFrustumTestAabbs(afxFrustum const* f, afxUnit cnt, afxBox const aabb[]);
-AFXINL afxBool  AfxFrustumDoesCullFrustum(afxFrustum const* f, afxFrustum const* other);
+AFXINL afxBool  AfxDoesFrustumCullAabbs(afxFrustum const* f, afxUnit cnt, afxBox const aabb[]);
+AFXINL afxBool  AfxDoesFrustumCullSpheres(afxFrustum const* f, afxUnit cnt, afxSphere const spheres[]);
+AFXINL afxBool  AfxDoesFrustumCullFrustums(afxFrustum const* f, afxUnit cnt, afxFrustum const others[]);
 
 // frustrum and matrix must be in same space
 AFXINL void     AfxRecomputeFrustum3(afxFrustum* f, afxM4d const pv);
 AFXINL void     AfxRecomputeFrustum(afxFrustum* f, afxM4d const v, afxM4d const p);
 
-AFXINL void     AfxAabbAbsorbFrustum(afxBox* aabb, afxFrustum const* f);
+AFXINL void     AfxEmboxFrustum(afxBox* aabb, afxFrustum const* f);
 
 #endif//AFX_FRUSTUM_H

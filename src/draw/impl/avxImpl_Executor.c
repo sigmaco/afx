@@ -70,7 +70,7 @@ _AVX afxBool _AvxDpu_ProcCb(avxDpu* dpu)
     for (afxUnit queIdx = 0; queIdx < totalQueCnt; queIdx++)
     {
         afxDrawQueue dque;
-        if (!AfxGetDrawQueues(dexu, queIdx, 1, &dque) || !dque)
+        if (!AvxGetDrawQueues(dexu, queIdx, 1, &dque) || !dque)
         {
             AfxThrowError();
             continue;
@@ -110,7 +110,7 @@ _AVX afxInt _AVX_DPU_THREAD_PROC(afxDrawBridge dexu)
     AfxGetThread(&thr);
     AFX_ASSERT(thr == dexu->worker);
 
-    afxDrawDevice ddev = AfxGetDrawBridgeDevice(dexu);
+    afxDrawDevice ddev = AvxGetDrawBridgeDevice(dexu);
     afxDrawSystem dsys = AfxGetBridgedDrawSystem(dexu);
     afxUnit portId = dexu->portId;
 

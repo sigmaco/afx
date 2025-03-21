@@ -26,7 +26,7 @@ The codebase was written for compilation in LLVM/Clang. No other toolset was tes
 Qwadro was firstly designed for POSIX/Unix/Linux systems. Due to complexities handling multiple OpenGL contexts in Windows, we were forced to move to Windows and stay there still now. Game-related works featured in Qwadro are strongely inspired in notorious engineering works on Bang! Engine by Ensemble Studios and MaxFX by Remedy Entertainment.
 
 There are several strange names in Qwadro, because Qwadro is an experiment that implements several paradigms of the same concept with random names to test both in parallel, and its API changes frequently depending on usage optimization. And... it is governed by methodist laws of Go Horse.
-There is some RenderWare semantics heritage still present. For example, we have afxRaster, afxQuat, afxV3d, afxV4d.
+There is some RenderWare semantics heritage still present. For example, we have avxRaster, afxQuat, afxV3d, afxV4d.
 
 E no Qwadro é assim: o que funciona está bugado, e o que não está bugado não funciona.
 

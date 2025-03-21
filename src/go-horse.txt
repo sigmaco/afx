@@ -47,6 +47,8 @@ Wrong indexation counter inside array element accessor. Ex.: [idx++] // Increase
 
 Allocated memory data corruption occurying after the first iteration may be caused by the *counter* missing the sizeof(type).
 
+If the frame image is blinking, one frame drawn and one or more frame not drawn (just clean), your present call is not waiting for DPU work readiness.
+
 // POSSÍVEIS ABORDAGENS
 
 NORM#1 O Qwadro não mais vai tentar evitar erros internos, apenas em entrada e saída de dados. O Qwadro apenas vai tentar informar argumentos inválidos. É responsabilidade do programador a resiliência e qualidade do código.

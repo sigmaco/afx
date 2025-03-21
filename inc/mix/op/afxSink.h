@@ -40,6 +40,28 @@
 
 AFX_DECLARE_STRUCT(afxSinkInterface);
 
+// one video frame is equivalent to one audio interval
+
+typedef enum amxUsage { amxUsage_CAPTURE, amxUsage_MIX, amxUsage_RESAMPLE, amxUsage_STORAGE, amxUsage_SOUND } amxUsage;
+typedef enum amxFlag { amxFlag_X } amxFlags;
+
+AFX_DEFINE_STRUCT(amxSinkPin)
+{
+    amxFormat   fmt; // amxFormat_A32f
+    amxUsage    bufUsage;
+    amxFlags    bufFlags;
+    afxUnit     chanCnt; // 2 --- stereo
+    afxUnit     freq; // 48000 --- 48kHz
+    afxUnit     samplesPerFrame; // (freq / 60)
+    afxUnit     latency; // 3
+};
+
+AFX_DEFINE_STRUCT(amxSinkConfig)
+{
+    afxUnit     pinCnt;
+    amxSinkPin  pins[32];
+};
+
 AFX_DEFINE_STRUCT(afxSinkConfig)
 {
     afxUnit     vaioId;

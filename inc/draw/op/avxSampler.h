@@ -24,7 +24,7 @@
 #define AVX_SAMPLER_H
 
 #include "qwadro/inc/draw/io/avxFormat.h"
-#include "qwadro/inc/draw/math/afxColor.h"
+#include "qwadro/inc/draw/math/avxColor.h"
 
 typedef enum avxSamplerFlag
 {
@@ -62,7 +62,7 @@ typedef enum avxTexelWrap
 typedef enum avxTexelFilter
 // Specify filters used for texel map lookups.
 {
-    avxTexelFilter_POINT, // Use point sampling (aka NEAREST). Supported for Lods.
+    avxTexelFilter_NEAREST, // Use point sampling (aka NEAREST). Supported for Lods.
     avxTexelFilter_LINEAR, // Use linear interpolation. Supported for Lods.
     avxTexelFilter_ANISOTROPIC, // Use anisotropic interpolation.
 
@@ -112,15 +112,18 @@ typedef enum avxColorMatrix
 } avxColorMatrix;
 
 AFX_DEFINE_UNION(avxClearValue)
+// Union specifying a clear value.
 {
     union
     {
+        // The clear values to use when clearing a color buffer.
         afxV4d  rgba;
         afxInt  rgbai[4];
         afxUnit rgban[4];
     };
     struct
     {
+        // The clear values to use when clearing a depth and/or stencil buffer.
         afxReal depth; // 1.f (for avxCompareOp_LESS) or 0.f (for avxCompareOp_GREATER).
         afxUnit stencil; // 0
     };
@@ -128,7 +131,6 @@ AFX_DEFINE_UNION(avxClearValue)
 
 AFX_DEFINE_STRUCT(avxSamplerInfo)
 {
-    afxChar const*const*label;
     avxSamplerFlags     flags;
 
     // Sets the wrap parameter for texture coordinates.
@@ -187,24 +189,25 @@ AFX_DEFINE_STRUCT(avxSamplerInfo)
     avxTexelFilter      chromaFilter;
     // Ensure that reconstruction is done explicitly, if supported.
     afxBool             forceExplicitReconstr;
+
+    afxString           tag;
 };
 
 #define AVX_COLOR_VALUE(r_, g_, b_, a_) (avxClearValue const){ { .rgba = { (r_), (g_), (b_), (a_) } } }
-#define AVX_DEPTH_VALUE(val_) (avxClearValue const){ { .depth = (val_) } }
-#define AVX_STENCIL_VALUE(val_) (avxClearValue const){ { .stencil = (val_) } }
+#define AVX_DEPTH_VALUE(d_, s_) (avxClearValue const){ { .depth = (d_), .stencil = (s_) } }
 
 AVX avxSamplerInfo const AVX_SAMPLER_DEFAULT;
 
-AVX void            AfxDescribeSampler(avxSampler samp, avxSamplerInfo* desc);
+AVX void            AvxDescribeSampler(avxSampler samp, avxSamplerInfo* desc);
 
-AVX void            AfxGetSamplerBorderColor(avxSampler samp, avxClearValue* val);
+AVX void            AvxGetSamplerBorderColor(avxSampler samp, avxClearValue* val);
 
-AVX afxBool         AfxIsSamplerYuvCapable(avxSampler samp);
+AVX afxBool         AvxIsSamplerYuvCapable(avxSampler samp);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxError        AvxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
 
-AVX afxBool         AfxFindSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
+AVX afxBool         AvxFindSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[]);
 
 #endif//AVX_SAMPLER_H

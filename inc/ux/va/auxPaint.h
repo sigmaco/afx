@@ -18,7 +18,7 @@
 #define AUX_PAINT_H
 
 #include "qwadro/inc/draw/afxDrawDefs.h"
-#include "qwadro/inc/draw/math/afxColor.h"
+#include "qwadro/inc/draw/math/avxColor.h"
 #include "qwadro/inc/ux/afxUxDefs.h"
 
 AFX_DEFINE_HANDLE(avxVectorizer);
@@ -55,7 +55,7 @@ AUX void        AuxCmdBeginImm2d(afxDrawContext dctx);
 AUX void        AuxCmdEndImm2d(afxDrawContext dctx);
 AUX void        AuxCmdTransformImmVertices(afxDrawContext dctx, afxM4d const m, afxUnit cnt, avxImmVertex vertices[]);
 
-AUX void        AuxImmSetColor(afxDrawContext dctx, afxColor const inner, afxColor const outer);
+AUX void        AuxImmSetColor(afxDrawContext dctx, avxColor const inner, avxColor const outer);
 AUX void        AuxImmBindRasters();
 AUX void        AuxImmBindRasterizer(afxDrawContext dctx, avxRasterizer razr);
 
@@ -81,18 +81,18 @@ AUX afxBool     AuxAngleArc(avxVectorizer vecr, afxV2d const pos, afxReal r, afx
 
 
 AUX void AuxGraphRoundedRect(avxGraph* gra, afxV2d pos, afxV2d extent, afxReal cornerRadius);
-AUX void AuxGraphSetFillColor(avxGraph* gra, afxColor const cor);
+AUX void AuxGraphSetFillColor(avxGraph* gra, avxColor const cor);
 
 AUX void AuxGraphRect(avxGraph* gra, afxV2d pos, afxV2d extent);
-AUX afxUnit AuxGraphBoxGradient(avxGraph* gra, afxV2d pos, afxV2d extent, afxReal radiusunk, afxReal unk, afxColor src, afxColor dst);
+AUX afxUnit AuxGraphBoxGradient(avxGraph* gra, afxV2d pos, afxV2d extent, afxReal radiusunk, afxReal unk, avxColor src, avxColor dst);
 
 AUX void AuxGraphWinding(avxGraph* gra, afxBool hole);
 
 AUX void AuxGraphFillPaint(avxGraph* gra, afxUnit paintId);
 
-AUX afxUnit AuxGraphLinearGradient(avxGraph* gra, afxV2d pos, afxV2d extent, afxColor src, afxColor dst);
+AUX afxUnit AuxGraphLinearGradient(avxGraph* gra, afxV2d pos, afxV2d extent, avxColor src, avxColor dst);
 
-AUX void AuxGraphStrokeColor(avxGraph* gra, afxColor cor);
+AUX void AuxGraphStrokeColor(avxGraph* gra, avxColor cor);
 AUX void AuxGraphStroke(avxGraph* gra);
 
 AUX void AuxGraphFontSize(avxGraph* gra, afxReal siz);

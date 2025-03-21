@@ -398,8 +398,8 @@ _AFX afxBool _AfxParseDdevManifestCb(afxUri const* manifestUri, void* udd)
     afxString devPag, rec, s;
     afxUri dllFile;
 
-    if (AfxFindInitializationSection(&ini, &AfxString("Qwadro.Icd"), &icdPagIdx) &&
-        AfxFindInitializationRecord(&ini, icdPagIdx, &AfxString("DllFile"), &recIdx) &&
+    if (AfxFindInitializationSection(&ini, &AFX_STRING("Qwadro.Icd"), &icdPagIdx) &&
+        AfxFindInitializationRecord(&ini, icdPagIdx, &AFX_STRING("DllFile"), &recIdx) &&
         AfxGetManifestUri(&ini, icdPagIdx, recIdx, &dllFile))
     {
         afxDriver icd;
@@ -430,8 +430,8 @@ _AFX afxBool _AfxParseDriverManifestCb(afxSystem sys, afxUri const* manifestUri)
     afxString devPag, rec, s;
     afxUri dllFile;
 
-    if (AfxFindInitializationSection(&ini, &AfxString("Qwadro.Icd"), &icdPagIdx) &&
-        AfxFindInitializationRecord(&ini, icdPagIdx, &AfxString("DllFile"), &recIdx) &&
+    if (AfxFindInitializationSection(&ini, &AFX_STRING("Qwadro.Icd"), &icdPagIdx) &&
+        AfxFindInitializationRecord(&ini, icdPagIdx, &AFX_STRING("DllFile"), &recIdx) &&
         AfxGetManifestUri(&ini, icdPagIdx, recIdx, &dllFile))
     {
         afxDriver icd;
@@ -661,7 +661,11 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         AfxMakeUri(&uri, 0, "e2synerg", 0);
         afxModule e2simDll = NIL;
 
-        if (AfxLoadModule(&uri, AFX_BIT(8), &e2simDll)) AfxThrowError();
+        if (AfxLoadModule(&uri, AFX_BIT(8), &e2simDll))
+        {
+            AfxThrowError();
+            err = 0;
+        }
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2simDll);

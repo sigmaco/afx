@@ -53,24 +53,12 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .flags = NIL
     },
 
-    [avxFormat_BGR8v] = // B8G8R8X8_UNORM_SRGB (0xEA)
+    ////////////////////////////////////////////////////////////////////////////
+    // 8-bit precise sRGB
+
+    [avxFormat_RGBA8v] = // R8G8B8A8_UNORM_SRGB (0xC8)
     {
-        .name = AFX_STRING("BGR8std"),
-        .type = {avxFormatType_UN, avxFormatType_UN, avxFormatType_UN, avxFormatType_UNUSED},
-        .defaults = {0, 0, 0, 0x3f800000},
-        .swizzle = {2, 1, 0, 3},
-        .bpc = {8, 8, 8, 8},
-        .bpp = 24,
-        .stride = 4,
-        .compCnt = 3,
-        .isNormalized = { TRUE, TRUE, TRUE, FALSE },
-        .tof = {1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f},
-        .bcWh = { 1, 1 },
-        .flags = avxFormatFlag_COLOR | avxFormatFlag_sRGB
-    },
-    [avxFormat_RGB8vA8un] = // R8G8B8A8_UNORM_SRGB (0xC8)
-    {
-        .name = AFX_STRING("RGBA8std"),
+        .name = AFX_STRING("RGBA8v"),
         .type = {avxFormatType_UN, avxFormatType_UN, avxFormatType_UN, avxFormatType_UN},
         .defaults = {0, 0, 0, 0x3f800000},
         .swizzle = {0, 1, 2, 3},
@@ -84,9 +72,9 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .flags = avxFormatFlag_COLOR | avxFormatFlag_sRGB,
         .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
-    [avxFormat_BGR8vA8un] =
+    [avxFormat_BGRA8v] =
     {
-        .name = AFX_STRING("BGRA8std"),
+        .name = AFX_STRING("BGRA8v"),
         .bpp = 32,
         .stride = 4,
         .compCnt = 4,
@@ -100,6 +88,24 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .flags = avxFormatFlag_COLOR | avxFormatFlag_sRGB,
         .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
+    [avxFormat_BGR8v] = // B8G8R8X8_UNORM_SRGB (0xEA)
+    {
+        .name = AFX_STRING("BGR8v"),
+        .type = {avxFormatType_UN, avxFormatType_UN, avxFormatType_UN, avxFormatType_UNUSED},
+        .defaults = {0, 0, 0, 0x3f800000},
+        .swizzle = {2, 1, 0, 3},
+        .bpc = {8, 8, 8, 8},
+        .bpp = 24,
+        .stride = 4,
+        .compCnt = 3,
+        .isNormalized = { TRUE, TRUE, TRUE, FALSE },
+        .tof = {1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f},
+        .bcWh = { 1, 1 },
+        .flags = avxFormatFlag_COLOR | avxFormatFlag_sRGB
+    },
+
+    ////////////////////////////////////////////////////////////////////////////
+    // 8-bit precise unsigned normalized integer
 
     [avxFormat_R8un] = // R8_UNORM (0x140)
     {
@@ -181,6 +187,9 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .flags = avxFormatFlag_COLOR
     },
 
+    ////////////////////////////////////////////////////////////////////////////
+    // 8-bit precise signed normalized integer
+
     [avxFormat_R8sn] = // R8_SNORM (0x141)
     {
         .name = AFX_STRING("R8sn"),
@@ -229,55 +238,9 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .flags = avxFormatFlag_COLOR,
         .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
-
-    [avxFormat_BGR5A1un] = // B5G5R5A1_UNORM (0x102)
-    {
-        .name = AFX_STRING("BGR5A1un"),
-        .type = {avxFormatType_UN, avxFormatType_UN, avxFormatType_UN, avxFormatType_UN},
-        .defaults = {0, 0, 0, 0x3f800000},
-        .swizzle = {2, 1, 0, 3},
-        .bpc = {5, 5, 5, 1},
-        .bpp = 16,
-        .stride = 2,
-        .compCnt = 4,
-        .isNormalized = {TRUE, TRUE, TRUE, TRUE },
-        .tof = {1.0f / 31.0f, 1.0f / 31.0f, 1.0f / 31.0f, 1.0f / 1.0f},
-        .bcWh = { 1, 1 },
-        .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
-    },
-    [avxFormat_BGRA4un] = // B4G4R4A4_UNORM (0x104)
-    {
-        .name = AFX_STRING("BGRA4un"),
-        .type = {avxFormatType_UN, avxFormatType_UN, avxFormatType_UN, avxFormatType_UN},
-        .defaults = {0, 0, 0, 0x3f800000},
-        .swizzle = {2, 1, 0, 3},
-        .bpc = {4, 4, 4, 4},
-        .bpp = 16,
-        .stride = 2,
-        .compCnt = 4,
-        .isNormalized = { TRUE, TRUE, TRUE, TRUE },
-        .tof = {1.0f / 15.0f, 1.0f / 15.0f, 1.0f / 15.0f, 1.0f / 15.0f},
-        .bcWh = { 1, 1 },
-        .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
-    },
-    [avxFormat_B5G6R5un] = // B5G6R5_UNORM (0x100)
-    {
-        .name = AFX_STRING("B5G6R5un"),
-        .type = {avxFormatType_UN, avxFormatType_UN, avxFormatType_UN, avxFormatType_UNK},
-        .defaults = {0, 0, 0, 0x3f800000},                         // Defaults for missing components
-        .swizzle = {2, 1, 0, 0},
-        .bpc = {5, 6, 5, 0},
-        .bpp = 16,
-        .stride = 2,
-        .compCnt = 3,
-        .isNormalized = { TRUE, TRUE, TRUE, FALSE },
-        .tof = {1.0f / 31.0f, 1.0f / 63.0f, 1.0f / 31.0f, 0},
-        .bcWh = { 1, 1 },
-        .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
-    },
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // 16-bit precise unsigned normalized integer
 
     [avxFormat_R16un] = // R16_UNORM (0x10a)
     {
@@ -312,6 +275,9 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC
     },
 
+    ////////////////////////////////////////////////////////////////////////////
+    // 16-bit precise signed normalized integer
+
     [avxFormat_R16sn] = // R16_SNORM (0x10b)
     {
         .name = AFX_STRING("R16sn"),
@@ -345,8 +311,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
     },
 
     ////////////////////////////////////////////////////////////////////////////
-    // VECTORS
-    ////////////////////////////////////////////////////////////////////////////
+    // 16-bit precise floating point    
 
     [avxFormat_RG16f] = // R16G16_FLOAT (0xD0)
     {
@@ -380,6 +345,9 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .flags = avxFormatFlag_COLOR,
         .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
+
+    ////////////////////////////////////////////////////////////////////////////
+    // 32-bit precise floating point
 
     [avxFormat_R32f] = // R32_FLOAT (0xD8)
     {
@@ -446,6 +414,9 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
 
+    ////////////////////////////////////////////////////////////////////////////
+    // 32-bit precise unsigned integer
+
     [avxFormat_R32u] = // R32_UINT (0xD7)
     {
         .name = AFX_STRING("R32u"),
@@ -506,6 +477,9 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .bcWh = { 1, 1 },
         .rasterCaps = avxFormatCap_COPY
     },
+
+    ////////////////////////////////////////////////////////////////////////////
+    // 32-bit precise signed integer
 
     [avxFormat_R32i] = // R32_SINT (0xD6)
     {
@@ -568,6 +542,68 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .rasterCaps = avxFormatCap_COPY
     },
 
+    
+
+    ////////////////////////////////////////////////////////////////////////////
+    // 4-bit precise unsigned normalized integer
+
+    [avxFormat_BGRA4un] = // B4G4R4A4_UNORM (0x104)
+    {
+        .name = AFX_STRING("BGRA4un"),
+        .type = {avxFormatType_UN, avxFormatType_UN, avxFormatType_UN, avxFormatType_UN},
+        .defaults = {0, 0, 0, 0x3f800000},
+        .swizzle = {2, 1, 0, 3},
+        .bpc = {4, 4, 4, 4},
+        .bpp = 16,
+        .stride = 2,
+        .compCnt = 4,
+        .isNormalized = { TRUE, TRUE, TRUE, TRUE },
+        .tof = {1.0f / 15.0f, 1.0f / 15.0f, 1.0f / 15.0f, 1.0f / 15.0f},
+        .bcWh = { 1, 1 },
+        .flags = avxFormatFlag_COLOR,
+        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
+    },
+            
+    ////////////////////////////////////////////////////////////////////////////
+    // 5/6-bit precise unsigned normalized integer
+
+    [avxFormat_B5G6R5un] = // B5G6R5_UNORM (0x100)
+    {
+        .name = AFX_STRING("B5G6R5un"),
+        .type = {avxFormatType_UN, avxFormatType_UN, avxFormatType_UN, avxFormatType_UNK},
+        .defaults = {0, 0, 0, 0x3f800000},                         // Defaults for missing components
+        .swizzle = {2, 1, 0, 0},
+        .bpc = {5, 6, 5, 0},
+        .bpp = 16,
+        .stride = 2,
+        .compCnt = 3,
+        .isNormalized = { TRUE, TRUE, TRUE, FALSE },
+        .tof = {1.0f / 31.0f, 1.0f / 63.0f, 1.0f / 31.0f, 0},
+        .bcWh = { 1, 1 },
+        .flags = avxFormatFlag_COLOR,
+        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
+    },
+
+    ////////////////////////////////////////////////////////////////////////////
+    // 5/1-bit precise unsigned normalized integer
+
+    [avxFormat_BGR5A1un] = // B5G5R5A1_UNORM (0x102)
+    {
+        .name = AFX_STRING("BGR5A1un"),
+        .type = {avxFormatType_UN, avxFormatType_UN, avxFormatType_UN, avxFormatType_UN},
+        .defaults = {0, 0, 0, 0x3f800000},
+        .swizzle = {2, 1, 0, 3},
+        .bpc = {5, 5, 5, 1},
+        .bpp = 16,
+        .stride = 2,
+        .compCnt = 4,
+        .isNormalized = {TRUE, TRUE, TRUE, TRUE },
+        .tof = {1.0f / 31.0f, 1.0f / 31.0f, 1.0f / 31.0f, 1.0f / 1.0f},
+        .bcWh = { 1, 1 },
+        .flags = avxFormatFlag_COLOR,
+        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
+    },
+    
     ///////////////////////////////////////////////////////////////////////////
     // DEPTH/STENCIL CAPABLE FORMATS                                         //
     ///////////////////////////////////////////////////////////////////////////
@@ -606,7 +642,19 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
     },
     [avxFormat_D16unS8u] =
     {
-        0 // unsupported
+        .name = AFX_STRING("D16unS8u"),
+        .stride = 3,
+        .compCnt = 2,
+        .bpc = {16, 8, 0, 0},
+        .bpp = 24,
+        .type = { avxFormatType_UN, avxFormatType_U, avxFormatType_UNK, avxFormatType_UNK },
+        .swizzle = {0, 1, 2, 3},
+        .defaults = {0, 0, 0x1, 0x3f800000},
+        .isNormalized = { TRUE, FALSE, FALSE, FALSE },
+        .tof = {1.0f / 65535.0f, 1.f, 0, 0},
+        .bcWh = { 1, 1 },
+        .flags = 0, // UNSUPPORTED IN GL // avxFormatFlag_DEPTH | avxFormatFlag_STENCIL,
+        .rasterCaps = 0, // UNSUPPORTED IN GL // avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
     },
     [avxFormat_X8D24un] = // R24_UNORM_X8_TYPELESS (0xD9)
     {
@@ -694,7 +742,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
     },
     [avxFormat_DXT1v] =
     {
-        .name = AFX_STRING("DXT1std"),
+        .name = AFX_STRING("DXT1v"),
         .bpp = 64,
         .stride = 8,
         .compCnt = 1,
@@ -739,7 +787,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
     },
     [avxFormat_DXT3v] =
     {
-        .name = AFX_STRING("DXT3std"),
+        .name = AFX_STRING("DXT3v"),
         .bpp = 128,
         .stride = 16,
         .compCnt = 1,
@@ -769,7 +817,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
     },
     [avxFormat_DXT5v] =
     {
-        .name = AFX_STRING("DXT5std"),
+        .name = AFX_STRING("DXT5v"),
         .bpp = 128,
         .stride = 16,
         .compCnt = 1,

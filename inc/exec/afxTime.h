@@ -30,7 +30,7 @@ typedef afxInt32 afxMillisecond; // Time in ms
 AFX_DEFINE_STRUCT(afxTimeSpec)
 {
     afxTime     sec;  // Seconds - >= 0
-    afxInt32        nsec; // Nanoseconds - [0, 999999999]
+    afxInt32    nsec; // Nanoseconds - [0, 999999999]
 };
 
 AFX_STATIC_ASSERT(sizeof(afxInt32) == sizeof(long), "");
@@ -43,6 +43,43 @@ AFX afxUnit AfxGetTimer(void);
 AFX afxUnit64 AfxGetTickCounter(void);
 
 AFX afxUnit64 AfxGetTicksPerSecond(void);
+
+/*
+    The AfxMakeTimeSpace() function deploys a new afxTimeSpec converted from a uint64_t value representing 
+    nanoseconds into a afxTimeSpec structure. This structure breaks the uint64_t nanoseconds value into 
+    seconds and the remaining nanoseconds.
+*/
+
+AFX afxTimeSpec* AfxMakeTimeSpec(afxTimeSpec* ts, afxUnit64 nsec);
+
+/*
+    The AfxMakeTimeSpecInterval() function computes the time difference (delta) between two afxTimeSpec structures.
+
+    The seconds and nanoseconds components separately and manage the potential carry-over from nanoseconds into seconds.
+
+    If the end time is earlier than the start time (negative delta), the logic would still work, 
+    though you might want to handle such cases explicitly depending on the use case.
+
+    The code assumes the end time is after the start time, but it can be adapted to handle both directions by checking 
+    for negative differences and taking absolute values if necessary.
+*/
+
+AFX afxTimeSpec* AfxMakeTimeSpecInterval(afxTimeSpec* ts, afxTimeSpec const* start, afxTimeSpec const* end);
+
+/*
+    The AfxGetTimeSpecDelta() function calculates the difference in nanoseconds between two afxTimeSpec structures.
+
+    The delta is computed as the total nanosecond difference between the two afxTimeSpec values.
+    The result is a single value (in nanoseconds) rather than separate seconds and nanoseconds,
+    which is useful for precise calculations or performance measurements where just the nanosecond difference is required.
+
+    If the result is negative (i.e., end time is earlier than start time),
+    the difference will reflect that in negative nanoseconds.
+    If end time is earlier than start time, the result will be negative.
+    For example, if start time is later than end time, the result would show a negative number of nanoseconds.
+*/
+
+AFX afxInt64 AfxGetTimeSpecDelta(afxTimeSpec const* start, afxTimeSpec const* end);
 
 
 #define AfxCompactTimeGetHour(t) ((t)>>11)

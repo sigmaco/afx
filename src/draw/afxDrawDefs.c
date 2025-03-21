@@ -133,20 +133,20 @@ afxChar const *fmtNames[] =
 
 _AVX afxString const shaderStageString[] =
 {
-    AFX_STRING(""),
-    AFX_STRING("VERTEX"),
-    AFX_STRING("FRAGMENT"),
-    AFX_STRING("GEOMETRY"),
-    AFX_STRING("TESS_CTRL"),
-    AFX_STRING("TESS_EVAL"),
-    AFX_STRING("COMPUTE"),
+    [0] = AFX_STRING(""),
+    [avxShaderStage_VERTEX] = AFX_STRING("VERTEX"),
+    [avxShaderStage_FRAGMENT] = AFX_STRING("FRAGMENT"),
+    [avxShaderStage_PRIMITIVE] = AFX_STRING("GEOMETRY"),
+    [avxShaderStage_TESS_CTRL] = AFX_STRING("TESS_CTRL"),
+    [avxShaderStage_TESS_EVAL] = AFX_STRING("TESS_EVAL"),
+    [avxShaderStage_COMPUTE] = AFX_STRING("COMPUTE"),
 };
 
 _AVX afxString const fillModeString[] =
 {
-    AFX_STRING("SOLID"),
-    AFX_STRING("EDGE"),
-    AFX_STRING("POINT")
+    [avxFillMode_SOLID] = AFX_STRING("SOLID"),
+    [avxFillMode_EDGE] = AFX_STRING("EDGE"),
+    [avxFillMode_POINT] = AFX_STRING("POINT")
 };
 
 _AVX afxString const frontFaceString[] =
@@ -157,69 +157,69 @@ _AVX afxString const frontFaceString[] =
 
 _AVX afxString const cullModeString[] =
 {
-    AFX_STRING("NONE"),
-    AFX_STRING("FRONT"),
-    AFX_STRING("BACK"),
-    AFX_STRING("BOTH")
+    [avxCullMode_NONE] = AFX_STRING("NONE"),
+    [avxCullMode_FRONT] = AFX_STRING("FRONT"),
+    [avxCullMode_BACK] = AFX_STRING("BACK"),
+    [avxCullMode_BOTH] = AFX_STRING("BOTH")
 };
 
 _AVX afxString const compareOpString[] =
 {
-    AFX_STRING("NEVER"),
-    AFX_STRING("LESS"),
-    AFX_STRING("LEQUAL"),
-    AFX_STRING("EQUAL"),
-    AFX_STRING("NOTEQUAL"),
-    AFX_STRING("GEQUAL"),
-    AFX_STRING("GREATER"),
-    AFX_STRING("ALWAYS")
+    [avxCompareOp_NEVER] = AFX_STRING("NEVER"),
+    [avxCompareOp_LESS] = AFX_STRING("LESS"),
+    [avxCompareOp_LEQUAL] = AFX_STRING("LEQUAL"),
+    [avxCompareOp_EQUAL] = AFX_STRING("EQUAL"),
+    [avxCompareOp_NOTEQUAL] = AFX_STRING("NOTEQUAL"),
+    [avxCompareOp_GEQUAL] = AFX_STRING("GEQUAL"),
+    [avxCompareOp_GREATER] = AFX_STRING("GREATER"),
+    [avxCompareOp_ALWAYS] = AFX_STRING("ALWAYS")
 };
 
 _AVX afxString const stencilOpString[] =
 {
-    AFX_STRING("KEEP"),
-    AFX_STRING("ZERO"),
-    AFX_STRING("REPLACE"),
-    AFX_STRING("INC_AND_CLAMP"),
-    AFX_STRING("DEC_AND_CLAMP"),
-    AFX_STRING("INVERT"),
-    AFX_STRING("INC_AND_WRAP"),
-    AFX_STRING("DEC_AND_WRAP")
+    [avxStencilOp_KEEP] = AFX_STRING("KEEP"),
+    [avxStencilOp_ZERO] = AFX_STRING("ZERO"),
+    [avxStencilOp_REPLACE] = AFX_STRING("REPLACE"),
+    [avxStencilOp_INC_N_CLAMP] = AFX_STRING("INC_AND_CLAMP"),
+    [avxStencilOp_DEC_N_CLAMP] = AFX_STRING("DEC_AND_CLAMP"),
+    [avxStencilOp_INV] = AFX_STRING("INVERT"),
+    [avxStencilOp_INC_AND_WRAP] = AFX_STRING("INC_AND_WRAP"),
+    [avxStencilOp_DEC_AND_WRAP] = AFX_STRING("DEC_AND_WRAP")
 };
 
 _AVX afxString const logicOpString[] =
 {
-    AFX_STRING("CLEAR"),
-    AFX_STRING("AND"),
-    AFX_STRING("AND_REVERSE"),
-    AFX_STRING("COPY"),
-    AFX_STRING("AND_INVERTED"),
-    AFX_STRING("NO_OP"),
-    AFX_STRING("XOR"),
-    AFX_STRING("OR"),
-    AFX_STRING("NOR"),
-    AFX_STRING("EQUIVALENT"),
-    AFX_STRING("INVERT"),
-    AFX_STRING("OR_REVERSE"),
-    AFX_STRING("COPY_INVERTED"),
-    AFX_STRING("OR_INVERTED"),
-    AFX_STRING("NAND"),
-    AFX_STRING("SET")
+    [avxLogicOp_CLEAR] = AFX_STRING("CLEAR"),
+    [avxLogicOp_AND] = AFX_STRING("AND"),
+    [avxLogicOp_AND_REV] = AFX_STRING("AND_REVERSE"),
+    [avxLogicOp_COPY] = AFX_STRING("COPY"),
+    [avxLogicOp_AND_INV] = AFX_STRING("AND_INVERTED"),
+    [avxLogicOp_NOP] = AFX_STRING("NO_OP"),
+    [avxLogicOp_XOR] = AFX_STRING("XOR"),
+    [avxLogicOp_OR] = AFX_STRING("OR"),
+    [avxLogicOp_NOR] = AFX_STRING("NOR"),
+    [avxLogicOp_EQUIV] = AFX_STRING("EQUIVALENT"),
+    [avxLogicOp_INV] = AFX_STRING("INVERT"),
+    [avxLogicOp_OR_REV] = AFX_STRING("OR_REVERSE"),
+    [avxLogicOp_COPY_INV] = AFX_STRING("COPY_INVERTED"),
+    [avxLogicOp_OR_INV] = AFX_STRING("OR_INVERTED"),
+    [avxLogicOp_NAND] = AFX_STRING("NAND"),
+    [avxLogicOp_SET] = AFX_STRING("SET")
 };
 
 _AVX afxString const primTopologyString[] =
 {
-    AFX_STRING("POINT_LIST"),
-    AFX_STRING("LINE_LIST"),
-    AFX_STRING("LINE_STRIP"),
-    AFX_STRING("TRI_LIST"),
-    AFX_STRING("TRI_STRIP"),
-    AFX_STRING("TRI_FAN"),
-    AFX_STRING("LINE_LIST_ADJACENT"),
-    AFX_STRING("LINE_STRIP_ADJACENT"),
-    AFX_STRING("TRI_LIST_ADJACENT"),
-    AFX_STRING("TRI_STRIP_ADJACENT"),
-    AFX_STRING("PATCH_LIST")
+    [avxTopology_POINT_LIST] = AFX_STRING("POINT_LIST"),
+    [avxTopology_LINE_LIST] = AFX_STRING("LINE_LIST"),
+    [avxTopology_LINE_STRIP] = AFX_STRING("LINE_STRIP"),
+    [avxTopology_TRI_LIST] = AFX_STRING("TRI_LIST"),
+    [avxTopology_TRI_STRIP] = AFX_STRING("TRI_STRIP"),
+    [avxTopology_TRI_FAN] = AFX_STRING("TRI_FAN"),
+    [avxTopology_LINE_LIST_ADJACENT] = AFX_STRING("LINE_LIST_ADJACENT"),
+    [avxTopology_LINE_STRIP_ADJACENT] = AFX_STRING("LINE_STRIP_ADJACENT"),
+    [avxTopology_TRI_LIST_ADJACENT] = AFX_STRING("TRI_LIST_ADJACENT"),
+    [avxTopology_TRI_STRIP_ADJACENT] = AFX_STRING("TRI_STRIP_ADJACENT"),
+    [avxTopology_PATCH_LIST] = AFX_STRING("PATCH_LIST")
 };
 
 #if 0

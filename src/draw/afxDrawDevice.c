@@ -416,7 +416,7 @@ _AVX void AfxQueryDrawDeviceFeatures(afxDrawDevice ddev, afxDrawFeatures* featur
     *features = ddev->features;
 }
 
-_AVX afxUnit AfxQueryDrawCapabilities(afxDrawDevice ddev, afxUnit basePortIdx, afxUnit portCnt, afxDrawCapabilities caps[])
+_AVX afxUnit AvxQueryDrawCapabilities(afxDrawDevice ddev, afxUnit basePortIdx, afxUnit portCnt, afxDrawCapabilities caps[])
 {
     afxError err = AFX_ERR_NONE;
     // @ddev must be a valid afxDrawDevice handle.
@@ -797,7 +797,7 @@ _AVX afxClassConfig const _AVX_DDEV_CLASS_CONFIG =
 // IMPLEMENTATION DISCOVERY                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxUnit AfxEnumerateDrawDevices(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawDevice devices[])
+_AVX afxUnit AvxEnumerateDrawDevices(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawDevice devices[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(devices);

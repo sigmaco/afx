@@ -37,35 +37,35 @@ typedef enum afxMouseButton
 
 // MOUSE AND POINTER
 
-AUX afxBool         AfxIsLmbPressed(afxSession ses, afxUnit seat);
-AUX afxBool         AfxWasLmbPressed(afxSession ses, afxUnit seat);
-AUX afxBool         AfxWasLmbReleased(afxSession ses, afxUnit seat);
+AUX afxBool         AfxIsLmbPressed(afxUnit seat);
+AUX afxBool         AfxWasLmbPressed(afxUnit seat);
+AUX afxBool         AfxWasLmbReleased(afxUnit seat);
 
-AUX afxBool         AfxIsRmbPressed(afxSession ses, afxUnit seat);
-AUX afxBool         AfxWasRmbPressed(afxSession ses, afxUnit seat);
-AUX afxBool         AfxWasRmbReleased(afxSession ses, afxUnit seat);
+AUX afxBool         AfxIsRmbPressed(afxUnit seat);
+AUX afxBool         AfxWasRmbPressed(afxUnit seat);
+AUX afxBool         AfxWasRmbReleased(afxUnit seat);
 
-AUX afxBool         AfxIsMmbPressed(afxSession ses, afxUnit seat);
-AUX afxBool         AfxWasMmbPressed(afxSession ses, afxUnit seat);
-AUX afxBool         AfxWasMmbReleased(afxSession ses, afxUnit seat);
+AUX afxBool         AfxIsMmbPressed(afxUnit seat);
+AUX afxBool         AfxWasMmbPressed(afxUnit seat);
+AUX afxBool         AfxWasMmbReleased(afxUnit seat);
 
-AUX afxBool         AfxIsXmb1Pressed(afxSession ses, afxUnit seat);
-AUX afxBool         AfxWasXmb1Pressed(afxSession ses, afxUnit seat);
-AUX afxBool         AfxWasXmb1Released(afxSession ses, afxUnit seat);
+AUX afxBool         AfxIsXmb1Pressed(afxUnit seat);
+AUX afxBool         AfxWasXmb1Pressed(afxUnit seat);
+AUX afxBool         AfxWasXmb1Released(afxUnit seat);
 
-AUX afxBool         AfxIsXmb2Pressed(afxSession ses, afxUnit seat);
-AUX afxBool         AfxWasXmb2Pressed(afxSession ses, afxUnit seat);
-AUX afxBool         AfxWasXmb2Released(afxSession ses, afxUnit seat);
+AUX afxBool         AfxIsXmb2Pressed(afxUnit seat);
+AUX afxBool         AfxWasXmb2Pressed(afxUnit seat);
+AUX afxBool         AfxWasXmb2Released(afxUnit seat);
 
-AUX void            AfxGetMouseMotion(afxSession ses, afxUnit seat, afxReal motion[2]);
-AUX afxReal         AfxGetMouseWheelDelta(afxSession ses, afxUnit seat);
+AUX void            AfxGetMouseMotion(afxUnit seat, afxReal motion[2]);
+AUX afxReal         AfxGetMouseWheelDelta(afxUnit seat);
 
-AUX afxBool         AfxMouseHasHorizontalChanged(afxSession ses, afxUnit seat, afxInt tolerance);
-AUX afxBool         AfxMouseHasVerticalChanged(afxSession ses, afxUnit seat, afxInt tolerance);
+AUX afxBool         AfxMouseHasHorizontalChanged(afxUnit seat, afxInt tolerance);
+AUX afxBool         AfxMouseHasVerticalChanged(afxUnit seat, afxInt tolerance);
 
-AUX afxError        AfxEmulateMouseMotion(afxSession ses, afxUnit seat, afxReal const motion[2], afxWindow wnd);
-AUX afxError        AfxEmulateMouseWheelAction(afxSession ses, afxUnit seat, afxReal delta, afxWindow wnd);
-AUX afxError        AfxEmulateMouseButtonActions(afxSession ses, afxUnit seat, afxUnit cnt, afxMouseButton const butt[], afxBool const pressed[], afxWindow wnd);
-AUX afxError        AfxReleaseMouseButtons(afxSession ses, afxUnit seat, afxWindow wnd);
+AUX afxError        AfxEmulateMouseMotion(afxUnit seat, afxReal const motion[2], afxWindow wnd);
+AUX afxError        AfxEmulateMouseWheelAction(afxUnit seat, afxReal delta, afxWindow wnd);
+AUX afxError        AfxEmulateMouseButtonActions(afxUnit seat, afxUnit cnt, afxMouseButton const butt[], afxBool const pressed[], afxWindow wnd);
+AUX afxError        AfxReleaseMouseButtons(afxUnit seat, afxWindow wnd);
 
 #endif//AUX_MOUSE_H

@@ -30,7 +30,7 @@
 #define AUX_WIDGET_H
 
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/draw/math/afxColor.h"
+#include "qwadro/inc/draw/math/avxColor.h"
 #include "qwadro/inc/base/afxChain.h"
 #include "qwadro/inc/base/afxObject.h"
 #include "qwadro/inc/io/afxUri.h"

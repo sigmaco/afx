@@ -40,7 +40,7 @@
 #define AVX_DRAW_QUEUE_H
 
 #include "qwadro/inc/draw/op/avxPipeline.h"
-#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/avxRaster.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
 
 AFX_DEFINE_STRUCT(avxSubmission)
@@ -80,7 +80,7 @@ AFX_DEFINE_STRUCT(avxTransference)
 
     union
     {
-        afxRaster   ras;
+        avxRaster   ras;
         avxBuffer   buf;
         void*       dst;
         void const* src;
@@ -89,7 +89,7 @@ AFX_DEFINE_STRUCT(avxTransference)
     afxFcc          srcFcc;
     union
     {
-        afxRaster   ras;
+        avxRaster   ras;
         avxBuffer   buf;
         void*       dst;
         void const* src;
@@ -109,8 +109,8 @@ AVX afxUnit         AfxGetDrawQueuePort(afxDrawQueue dque);
 /// Close a queue debug label region.
 /// Insert a label into a queue.
 
-AVX void            AfxBeginDrawQueueDebugScope(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxString const* name, afxColor const color);
-AVX void            AfxPushDrawQueueDebugLabel(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxString const* name, afxColor const color);
+AVX void            AfxBeginDrawQueueDebugScope(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxString const* name, avxColor const color);
+AVX void            AfxPushDrawQueueDebugLabel(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxString const* name, avxColor const color);
 AVX void            AfxEndDrawQueueDebugScope(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx);
 
 #endif//AVX_DRAW_QUEUE_H

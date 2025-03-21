@@ -24,7 +24,6 @@
 #include "qwadro/inc/sim/afxSimDefs.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/mem/afxArray.h"
-#include "qwadro/inc/draw/math/afxColor.h"
 
 typedef enum avxSkyType
 {

@@ -33,7 +33,7 @@ _ASX afxBool _AsxCaptureBodCb(afxBody bod, void** udd)
     afxReal lodErr = *(afxReal*)udd[1];
     afxArray* pvs = udd[2];
 
-    //AfxFrustumTestAabbs(&frustum, 1, &aabb);
+    //AfxDoesFrustumCullAabbs(&frustum, 1, &aabb);
 
     if (1) // do visibility culling
     {
@@ -164,10 +164,10 @@ _ASX afxError AsxDrawBodies(akxRenderer scn, afxContext sctx, afxDrawContext dct
             //AvxCmdSetCullMode(dctx, NIL);
             //AvxCmdSwitchFrontFace(dctx, AfxRandom2(0, 1));
 
-            //AvxCmdEnableDepthTest(dctx, TRUE);
+            //AvxCmdSwitchDepthTesting(dctx, TRUE);
             //AvxCmdEnableDepthWrite(dctx, TRUE);
 
-            AvxCmdBindBuffers(dctx, 3, 0, 1, (avxBufferMap[]) { {.buf = scn->framesets[scn->frameIdx].objUbo} });
+            AvxCmdBindBuffers(dctx, 3, 0, 1, (avxBufferedMap[]) { {.buf = scn->framesets[scn->frameIdx].objUbo} });
 
             //afxUnit const *ToBoneIndices = AfxGetMeshRigBiasToJointMapping(mdl, mshIdx);
             AfxBuildRiggedMeshCompositeMatrices(mdl, mshIdx, scn->wp[scn->frameIdx], 1, &m);
@@ -298,7 +298,7 @@ _ASX afxError AsxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation
                     //AvxCmdSetCullMode(dctx, NIL);
                     //AvxCmdSwitchFrontFace(dctx, AfxRandom2(0, 1));
 
-                    //AvxCmdEnableDepthTest(dctx, TRUE);
+                    //AvxCmdSwitchDepthTesting(dctx, TRUE);
                     //AvxCmdEnableDepthWrite(dctx, TRUE);
 
 
@@ -403,10 +403,10 @@ _ASX afxError AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt,
                 //AvxCmdSwitchFrontFace(dctx, AfxRandom2(0, 1));
 
 
-                //AvxCmdEnableDepthTest(dctx, TRUE);
+                //AvxCmdSwitchDepthTesting(dctx, TRUE);
                 //AvxCmdEnableDepthWrite(dctx, TRUE);
 
-                AvxCmdBindBuffers(dctx, 3, 0, 1, (avxBufferMap[]) { {.buf = rnd->framesets[rnd->frameIdx].objUbo } });
+                AvxCmdBindBuffers(dctx, 3, 0, 1, (avxBufferedMap[]) { {.buf = rnd->framesets[rnd->frameIdx].objUbo } });
 
                 AfxBuildRiggedMeshCompositeMatrices(mdl, mshIdx, rnd->wp[rnd->frameIdx], 1, &m);
                 //AfxM4dCopyAtm(m, m);
@@ -427,7 +427,7 @@ _ASX afxError AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt,
 
                     if (sec.mtlIdx == AFX_INVALID_INDEX)
                     {
-                        AfxColorSet(mat.Kd, 0.3f, 0.3f, 0.3f, 1.0f);
+                        AvxMakeColor(mat.Kd, 0.3f, 0.3f, 0.3f, 1.0f);
                         mat.hasDiffTex = FALSE;
                         //AvxUpdateBuffer(rnd->framesets[rnd->frameIdx].mtlConstantsBuffer, 0, sizeof(mat), &mat);
                     }
@@ -440,7 +440,7 @@ _ASX afxError AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt,
                         if (mtl)
                         {
                             AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
-                            afxRaster tex = mtl->tex;
+                            avxRaster tex = mtl->tex;
 
                             if (tex)
                             {
@@ -531,7 +531,7 @@ _ASX afxError AsxBeginSceneRendering(akxRenderer rnd, afxCamera cam, afxRect con
     }
     else if (canv)
     {
-        avxRange whd = AfxGetCanvasExtent(canv);
+        avxRange whd = AvxGetCanvasExtent(canv);
         rnd->drawArea.w = whd.w;
         rnd->drawArea.h = whd.h;
 
@@ -572,7 +572,7 @@ _ASX afxError AsxBeginSceneRendering(akxRenderer rnd, afxCamera cam, afxRect con
     }
 
     AvxCmdUpdateBuffer(dctx, rnd->framesets[frameIdx].viewUbo, 0, sizeof(*viewConstants), viewConstants);
-    AvxCmdBindBuffers(dctx, 0, 0, 1, (avxBufferMap[]) { {.buf = rnd->framesets[frameIdx].viewUbo } });
+    AvxCmdBindBuffers(dctx, 0, 0, 1, (avxBufferedMap[]) { {.buf = rnd->framesets[frameIdx].viewUbo } });
     return err;
 }
 
@@ -647,7 +647,7 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         dinConfig.cmdPoolMemStock = 4096;
         dinConfig.estimatedSubmissionCnt = 3;
 
-        AfxOpenDrawInput(dsys, &dinConfig, &din);
+        AvxOpenDrawInput(dsys, &dinConfig, &din);
         AFX_ASSERT(din);
     }
     else
@@ -657,7 +657,7 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
     rnd->din = din;
 
     afxUri uri;
-    avxVertexDecl vin;
+    avxVertexInput vin;
 
     //afxUri name;
 
@@ -718,7 +718,7 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             }
         };
 
-        AfxDeclareVertexLayouts(dsys, 1, &vtxl, &vin);
+        AvxDeclareVertexInputs(dsys, 1, &vtxl, &vin);
         AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
         rnd->testVin = vin;
 
@@ -776,8 +776,8 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         }
     };
 
-    avxVertexDecl skinnedVin;
-    AfxDeclareVertexLayouts(dsys, 1, &skinVtxl, &skinnedVin);
+    avxVertexInput skinnedVin;
+    AvxDeclareVertexInputs(dsys, 1, &skinVtxl, &skinnedVin);
     AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &skinnedVin);
     rnd->skinnedVin = skinnedVin;
 
@@ -819,8 +819,8 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         }
     };
 
-    avxVertexDecl rigidVin;
-    AfxDeclareVertexLayouts(dsys, 1, &rigidVtxl, &rigidVin);
+    avxVertexInput rigidVin;
+    AvxDeclareVertexInputs(dsys, 1, &rigidVtxl, &rigidVin);
     AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &rigidVin);
     rnd->rigidVin = rigidVin;
 
@@ -894,8 +894,8 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             }
         };
 
-        avxVertexDecl vin_p3n3t2_bi_mtl_mtx_jnt;
-        AfxDeclareVertexLayouts(dsys, 1, &vtxl_p3n3t2_bi_mtl_mtx_jnt, &vin_p3n3t2_bi_mtl_mtx_jnt);
+        avxVertexInput vin_p3n3t2_bi_mtl_mtx_jnt;
+        AvxDeclareVertexInputs(dsys, 1, &vtxl_p3n3t2_bi_mtl_mtx_jnt, &vin_p3n3t2_bi_mtl_mtx_jnt);
         AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin_p3n3t2_bi_mtl_mtx_jnt);
         rnd->vin_p3n3t2_bi_mtl_mtx_jnt = vin_p3n3t2_bi_mtl_mtx_jnt;
 
@@ -973,8 +973,8 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             }
         };
 
-        avxVertexDecl vin_p3j1n3t2_bi_mtl_mtx_jnt;
-        AfxDeclareVertexLayouts(dsys, 1, &vtxl_p3j1n3t2_bi_mtl_mtx_jnt, &vin_p3j1n3t2_bi_mtl_mtx_jnt);
+        avxVertexInput vin_p3j1n3t2_bi_mtl_mtx_jnt;
+        AvxDeclareVertexInputs(dsys, 1, &vtxl_p3j1n3t2_bi_mtl_mtx_jnt, &vin_p3j1n3t2_bi_mtl_mtx_jnt);
         AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin_p3j1n3t2_bi_mtl_mtx_jnt);
         rnd->vin_p3j1n3t2_bi_mtl_mtx_jnt = vin_p3j1n3t2_bi_mtl_mtx_jnt;
 
@@ -1058,8 +1058,8 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             }
         };
 
-        avxVertexDecl vin_p3j2n3t2_bi_mtl_mtx_jnt;
-        AfxDeclareVertexLayouts(dsys, 1, &vtxl_p3j2n3t2_bi_mtl_mtx_jnt, &vin_p3j2n3t2_bi_mtl_mtx_jnt);
+        avxVertexInput vin_p3j2n3t2_bi_mtl_mtx_jnt;
+        AvxDeclareVertexInputs(dsys, 1, &vtxl_p3j2n3t2_bi_mtl_mtx_jnt, &vin_p3j2n3t2_bi_mtl_mtx_jnt);
         AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin_p3j2n3t2_bi_mtl_mtx_jnt);
         rnd->vin_p3j2n3t2_bi_mtl_mtx_jnt = vin_p3j2n3t2_bi_mtl_mtx_jnt;
 
@@ -1143,8 +1143,8 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             }
         };
 
-        avxVertexDecl vin_p3j3n3t2_bi_mtl_mtx_jnt;
-        AfxDeclareVertexLayouts(dsys, 1, &vtxl_p3j3n3t2_bi_mtl_mtx_jnt, &vin_p3j3n3t2_bi_mtl_mtx_jnt);
+        avxVertexInput vin_p3j3n3t2_bi_mtl_mtx_jnt;
+        AvxDeclareVertexInputs(dsys, 1, &vtxl_p3j3n3t2_bi_mtl_mtx_jnt, &vin_p3j3n3t2_bi_mtl_mtx_jnt);
         AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin_p3j3n3t2_bi_mtl_mtx_jnt);
         rnd->vin_p3j3n3t2_bi_mtl_mtx_jnt = vin_p3j3n3t2_bi_mtl_mtx_jnt;
 
@@ -1228,8 +1228,8 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             }
         };
 
-        avxVertexDecl vin_p3j4n3t2_bi_mtl_mtx_jnt;
-        AfxDeclareVertexLayouts(dsys, 1, &vtxl_p3j4n3t2_bi_mtl_mtx_jnt, &vin_p3j4n3t2_bi_mtl_mtx_jnt);
+        avxVertexInput vin_p3j4n3t2_bi_mtl_mtx_jnt;
+        AvxDeclareVertexInputs(dsys, 1, &vtxl_p3j4n3t2_bi_mtl_mtx_jnt, &vin_p3j4n3t2_bi_mtl_mtx_jnt);
         AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin_p3j4n3t2_bi_mtl_mtx_jnt);
         rnd->vin_p3j4n3t2_bi_mtl_mtx_jnt = vin_p3j4n3t2_bi_mtl_mtx_jnt;
 
@@ -1237,16 +1237,16 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
     {
         avxBufferInfo bufSpec[] =
         {
-            { .cap = sizeof(akxViewConstants), .flags = avxBufferFlag_W | avxBufferFlag_X | avxBufferFlag_COHERENT, .usage = avxBufferUsage_UNIFORM },
-            { .cap = sizeof(akxShaderConstants), .flags = avxBufferFlag_W | avxBufferFlag_X | avxBufferFlag_COHERENT, .usage = avxBufferUsage_UNIFORM },
-            { .cap = sizeof(akxMaterialConstants), .flags = avxBufferFlag_W | avxBufferFlag_X | avxBufferFlag_COHERENT, .usage = avxBufferUsage_UNIFORM },
-            { .cap = sizeof(akxInstanceConstants), .flags = avxBufferFlag_W | avxBufferFlag_X/* | avxBufferFlag_COHERENT*/, .usage = avxBufferUsage_UNIFORM }
+            { .cap = sizeof(akxViewConstants), .flags = avxBufferFlag_WX | avxBufferFlag_C, .usage = avxBufferUsage_UNIFORM },
+            { .cap = sizeof(akxShaderConstants), .flags = avxBufferFlag_WX | avxBufferFlag_C, .usage = avxBufferUsage_UNIFORM },
+            { .cap = sizeof(akxMaterialConstants), .flags = avxBufferFlag_WX | avxBufferFlag_C, .usage = avxBufferUsage_UNIFORM },
+            { .cap = sizeof(akxInstanceConstants), .flags = avxBufferFlag_WX/* | avxBufferFlag_COHERENT*/, .usage = avxBufferUsage_UNIFORM }
         };
 #if 0
-        afxRasterInfo texiDepthSurfB = { 0 };
+        avxRasterInfo texiDepthSurfB = { 0 };
         texiDepthSurfB.e
         afxTextureBlueprint depthSurfB;
-        AfxAcquireTextureBlueprint(&depthSurfB, (afxWhd) {1024, 1024, 1 }, avxFormat_D24, afxRasterUsage_DRAW);
+        AfxAcquireTextureBlueprint(&depthSurfB, (afxWhd) {1024, 1024, 1 }, avxFormat_D24, avxRasterUsage_DRAW);
         AfxTextureBlueprintAddImage(&depthSurfB, avxFormat_D24, (afxWhd) { 1, 1, 1 }, NIL, 0);
 #endif
 
@@ -1312,7 +1312,7 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             rnd->framesets[i].mtlboPtr = mtlboPtr;
             rnd->framesets[i].icboPtr = icboPtr;
 
-            AfxAcquireFences(dsys, TRUE, 1, &rnd->framesets[i].drawCompletedFence);
+            AvxAcquireFences(dsys, TRUE, 1, &rnd->framesets[i].drawCompletedFence);
         }
 
         //AfxTextureBlueprintEnd(&depthSurfB, 0, NIL);

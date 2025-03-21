@@ -66,15 +66,15 @@ AFX_DEFINE_STRUCT(avxLigatureConfig)
 {
     afxUnit         shaderCnt;
     avxShader*      shaders;
-    afxChar const*const*label;
+    afxString       tag;
 };
 
-AVX afxUnit32       AfxGetLigatureHash(avxLigature liga, afxUnit set);
+AVX afxUnit32       AvxGetLigatureHash(avxLigature liga, afxUnit set);
 
-AVX afxResult       AfxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex first, afxUnit cnt, avxLigatureEntry decl[]);
+AVX afxResult       AvxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex first, afxUnit cnt, avxLigatureEntry decl[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxDeclareLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[]);
+AVX afxError        AvxDeclareLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[]);
 
 #endif//AVX_LIGATURE_H

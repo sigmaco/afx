@@ -69,19 +69,19 @@ ASX afxError AfxSubdivideOctree(afxOctree* tree, afxUnit octantIdx)
         return err;
     }
 
-    afxReal midX = (node->bounds.inf[0] + node->bounds.sup[0]) / 2;
-    afxReal midY = (node->bounds.inf[1] + node->bounds.sup[1]) / 2;
-    afxReal midZ = (node->bounds.inf[2] + node->bounds.sup[2]) / 2;
+    afxReal midX = (node->bounds.min[0] + node->bounds.max[0]) / 2;
+    afxReal midY = (node->bounds.min[1] + node->bounds.max[1]) / 2;
+    afxReal midZ = (node->bounds.min[2] + node->bounds.max[2]) / 2;
 
     afxBox bounds[8];
     for (afxUnit i = 0; i < 8; i++)
     {
-        if (i & 1) bounds[i].inf[0] = midX;
-        else bounds[i].sup[0] = midX;
-        if (i & 2) bounds[i].inf[1] = midY;
-        else bounds[i].sup[1] = midY;
-        if (i & 4) bounds[i].inf[2] = midZ;
-        else bounds[i].sup[2] = midZ;
+        if (i & 1) bounds[i].min[0] = midX;
+        else bounds[i].max[0] = midX;
+        if (i & 2) bounds[i].min[1] = midY;
+        else bounds[i].max[1] = midY;
+        if (i & 4) bounds[i].min[2] = midZ;
+        else bounds[i].max[2] = midZ;
     }
 
     // Create the 8 new children with updated bounding boxes
@@ -121,7 +121,7 @@ void AfxOctreeInsertAabbs(afxOctree* tree, afxUnit octantIdx, afxBox* box)
     afxError err = NIL;
 
     // expand the tree if it does not fit.
-    AfxAabbAbsorb(&tree->root.bounds, 1, box);
+    AfxEmboxAabbs(&tree->root.bounds, 1, box);
 
     afxOctant* node = NIL;
     if (octantIdx == AFX_INVALID_INDEX) node = &tree->root;
@@ -132,7 +132,7 @@ void AfxOctreeInsertAabbs(afxOctree* tree, afxUnit octantIdx, afxBox* box)
     }
 
     // Check if the AABB intersects with the node's bounding box. No intersection, don't insert.
-    if (!AfxAabbContainsAabbs(&node->bounds, 1, box))
+    if (!AfxDoesAabbInclude(&node->bounds, 1, box))
         return;
 
     // If the node doesn't have children, check if it's time to subdivide
@@ -152,7 +152,7 @@ void AfxOctreeInsertAabbs(afxOctree* tree, afxUnit octantIdx, afxBox* box)
             break;
         }
         
-        if (AfxAabbContainsAabbs(&child->bounds, 1, box))
+        if (AfxDoesAabbInclude(&child->bounds, 1, box))
         {
             AfxOctreeInsertAabbs(tree, childIdx, box);  // Insert into the appropriate child
             inserted = TRUE;
@@ -180,7 +180,7 @@ void AfxOctreeInsertAtv3d(afxOctree* tree, afxUnit octantIdx, afxV3d p)
     }
 
     // If the point is outside the bounding box, do not insert
-    if (!AfxAabbContainsAtv3d(&node->bounds, 1, p)) return;
+    if (!AfxDoesAabbIncludeAtv3d(&node->bounds, 1, p)) return;
 
     // If the node doesn't have children, check if it's time to subdivide
     if (node->childIdx[0] == AFX_INVALID_INDEX)
@@ -199,7 +199,7 @@ void AfxOctreeInsertAtv3d(afxOctree* tree, afxUnit octantIdx, afxV3d p)
             break;
         }
 
-        if (AfxAabbContainsAtv3d(&child->bounds, 1, p))
+        if (AfxDoesAabbIncludeAtv3d(&child->bounds, 1, p))
         {
             AfxOctreeInsertAabbs(tree, childIdx, p);  // Insert into the appropriate child
             inserted = TRUE;
@@ -217,25 +217,25 @@ AFX_OBJECT(afxScene)
     afxDrawInput    din;
     avxSkyType      skyType;
     afxMesh         skyMsh;
-    afxColor        apexCol;
-    afxColor        centreCol;
+    avxColor        apexCol;
+    avxColor        centreCol;
     struct
     {
         avxBuffer       cube;
-        afxRaster       cubemap;
+        avxRaster       cubemap;
         afxReal         cubemapColorIntensity;
         afxV3d          fogColor;
         afxReal         fogUpper;
         afxReal         fogLower;
-        afxColor        emissiveColor;
-        afxColor        ambientColor;
+        avxColor        emissiveColor;
+        avxColor        ambientColor;
         afxReal         currRot;
         afxReal         rotSpeed;
         afxV3d          rotPivot;
         afxQuat         rotQuat;
         afxM4d          rotMtx;
         afxDrawTechnique skyDtec;
-        avxVertexDecl  skyVin;
+        avxVertexInput  skyVin;
         avxSampler      smp;
     }               sky;
 };
@@ -334,9 +334,9 @@ _ASX afxError AfxReloadSkyVisual(afxScene scn, afxUri const* uri)
         AfxMakeUri(&faces[4], 0, "front.tga", 0);
         AfxMakeUri(&faces[5], 0, "back.tga", 0);
 
-        afxRasterInfo rasi = { 0 };
-        rasi.flags = afxRasterFlag_CUBEMAP;
-        rasi.usage = afxRasterUsage_SAMPLING;
+        avxRasterInfo rasi = { 0 };
+        rasi.flags = avxRasterFlag_CUBEMAP;
+        rasi.usage = avxRasterUsage_RESAMPLE;
         rasi.extent.d = 6;
 
         afxStream file = NIL;
@@ -349,7 +349,7 @@ _ASX afxError AfxReloadSkyVisual(afxScene scn, afxUri const* uri)
 
         afxUri2048 urib;
         AfxMakeUri2048(&urib, NIL);
-        afxRaster cubemap = NIL;
+        avxRaster cubemap = NIL;
 
         for (afxUnit i = 0; i < rasi.extent.d; i++)
         {
@@ -357,7 +357,7 @@ _ASX afxError AfxReloadSkyVisual(afxScene scn, afxUri const* uri)
 
             if (i == 0)
             {
-                if (AfxLoadRasters(dsys, 1, &rasi, &urib.uri, &cubemap))
+                if (AvxLoadRasters(dsys, 1, &rasi, &urib.uri, &cubemap))
                 {
                     AfxThrowError();
                     break;
@@ -365,12 +365,12 @@ _ASX afxError AfxReloadSkyVisual(afxScene scn, afxUri const* uri)
             }
             else
             {
-                afxRasterIo iop = { 0 };
+                avxRasterIo iop = { 0 };
 
-                if (AfxFetchRaster(cubemap, 1, &iop, 0, portId, &urib.uri)) AfxThrowError();
+                if (AvxFetchRaster(cubemap, 1, &iop, 0, portId, &urib.uri)) AfxThrowError();
                 else
                 {
-                    AfxWaitForDrawBridge(dsys, portId, AFX_TIME_INFINITE);
+                    AvxWaitForDrawBridge(dsys, portId, AFX_TIME_INFINITE);
                 }
             }
         }
@@ -422,8 +422,8 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
     scn->sky.cubemapColorIntensity = 1.f;
     scn->sky.rotSpeed = 0.f;
     scn->sky.currRot = 0.f;
-    AfxColorSet(scn->sky.ambientColor, 0.1, 0.1, 0.1, 1);
-    AfxColorSet(scn->sky.emissiveColor, 0.1, 0.1, 0.1, 1);
+    AvxMakeColor(scn->sky.ambientColor, 0.1, 0.1, 0.1, 1);
+    AvxMakeColor(scn->sky.emissiveColor, 0.1, 0.1, 0.1, 1);
     
     scn->skyType = info->skyType;
 
@@ -436,7 +436,7 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
         AfxCompileMeshes(sim, 1, &mshb, &scn->skyMsh);
         AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &scn->skyMsh);
 
-        AfxFormatVertexAttribute(scn->skyMsh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AfxString("pos"));
+        AfxFormatVertexAttribute(scn->skyMsh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
 
         AfxUpdateVertexData(scn->skyMsh, 0, 0, 0, mshb.vtxCnt, skyboxVertices, sizeof(skyboxVertices[0]) / 3);
 
@@ -479,11 +479,11 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
         afxUri cubeDir;
         AfxMakeUri(&cubeDir, 0, "../art/skybox/purple", 0);
 
-        afxRasterInfo rasi = { 0 };
-        rasi.flags = afxRasterFlag_CUBEMAP;
-        rasi.usage = afxRasterUsage_SAMPLING;
+        avxRasterInfo rasi = { 0 };
+        rasi.flags = avxRasterFlag_CUBEMAP;
+        rasi.usage = avxRasterUsage_RESAMPLE;
 
-        scn->sky.cubemap = AfxLoadCubemapRaster(dsys, &rasi, &cubeDir, facesUri);
+        scn->sky.cubemap = AvxLoadCubemapRaster(dsys, &rasi, &cubeDir, facesUri);
         //AfxFlipRaster(sky->cubemap, FALSE, TRUE);
 
         //for (afxUnit i = 0; i < sizeof(skyboxVertices) / sizeof(skyboxVertices[0]); i++)
@@ -515,7 +515,7 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
             }
         };
 
-        AfxDeclareVertexLayouts(dsys, 1, &skyVtxl, &scn->sky.skyVin);
+        AvxDeclareVertexInputs(dsys, 1, &skyVtxl, &scn->sky.skyVin);
         AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &scn->sky.skyVin);
 
         avxSamplerInfo smpSpec = { 0 };
@@ -526,25 +526,25 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
         smpSpec.uvw[1] = avxTexelWrap_EDGE;
         smpSpec.uvw[2] = avxTexelWrap_EDGE;
 
-        AfxDeclareSamplers(dsys, 1, &smpSpec, &scn->sky.smp);
+        AvxDeclareSamplers(dsys, 1, &smpSpec, &scn->sky.smp);
         AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &scn->sky.smp);
     }
     else
     {
         scn->skyMsh = AfxBuildSphereMesh(sim, 2.0, 20, 20, TRUE);
 
-        AfxColorSet(scn->apexCol, 0.f, 0.15f, 0.66f, 1.f);
-        AfxColorSet(scn->centreCol, 0.81f, 0.38f, 0.66f, 1.f);
+        AvxMakeColor(scn->apexCol, 0.f, 0.15f, 0.66f, 1.f);
+        AvxMakeColor(scn->centreCol, 0.81f, 0.38f, 0.66f, 1.f);
 
         avxPipeline pip;
         avxPipelineBlueprint pipb = { 0 };
-        AfxAssemblePipelines(dsys, 1, &pipb, &pip);
+        AvxAssemblePipelines(dsys, 1, &pipb, &pip);
         
         afxUri uri;
         AfxMakeUri(&uri, 0, "../src/skydome/skydomeVs.glsl", 0);
-        AfxUplinkPipelineFunction(pip, avxShaderStage_VERTEX, &uri, NIL, NIL, NIL);
+        AvxUplinkPipelineFunction(pip, avxShaderStage_VERTEX, &uri, NIL, NIL, NIL);
         AfxMakeUri(&uri, 0, "../src/skydome/skydomeFs.glsl", 0);
-        AfxUplinkPipelineFunction(pip, avxShaderStage_FRAGMENT, AfxUri("../src/skydome/skydomeFs.glsl"), NIL, NIL, NIL);
+        AvxUplinkPipelineFunction(pip, avxShaderStage_FRAGMENT, AfxUri("../src/skydome/skydomeFs.glsl"), NIL, NIL, NIL);
 
         struct
         {

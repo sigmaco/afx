@@ -23,7 +23,7 @@
 #define _AUX_WINDOW_C
 #include "impl/auxImplementation.h"
 
-_AUX afxSession gActiveSes = NIL;
+ _AUX afxSession gActiveSes = NIL;
 
 _AUX afxUnit AfxGetSid(afxSession ses)
 {
@@ -206,10 +206,14 @@ _AUX afxBool AfxGetSessionAudio(afxSession ses, afxMixSystem* system, afxSink* s
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxMixSystem msys = ses->msys;
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    AFX_ASSERT(system);
-    *system = msys;
-    AFX_ASSERT(sink);
-    *sink = ses->aso;
+    AFX_ASSERT(system || sink);
+
+    if (system)
+        *system = msys;
+    
+    if (sink)
+        *sink = ses->aso;
+
     return !!msys;
 }
 
@@ -350,7 +354,7 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
             ses->msys = msys;
             ses->soutIdx = cfg->soutIdx;
 
-            afxSinkConfig asoCfg;
+            afxSinkConfig asoCfg = { 0 };
             AfxConfigureAudioSink(msys, &asoCfg);
             AfxOpenAudioSink(msys, &asoCfg, &ses->aso);
         }

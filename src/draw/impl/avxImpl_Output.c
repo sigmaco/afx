@@ -26,84 +26,6 @@
 //#define _AVX_BUFFER_C
 #include "avxImplementation.h"
 
-_AVX afxError _AvxDoutImplRecycleBufferCb(afxDrawOutput dout, afxUnit bufIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    // @dout must be a valid afxDrawOutput handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    AFX_ASSERT_RANGE(dout->bufCnt, bufIdx, 1);
-
-    if (bufIdx < dout->bufCnt)
-        AfxPushInterlockedQueue(&dout->freeBuffers, (afxUnit[]) { bufIdx });
-    else
-        AfxThrowError();
-
-    return err;
-}
-
-_AVX afxError _AvxDoutImplRequestBufferCb(afxDrawOutput dout, afxTime timeout, afxUnit *bufIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    // @dout must be a valid afxDrawOutput handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    AFX_ASSERT(bufIdx);
-
-    afxUnit bufIdx2 = AFX_INVALID_INDEX;
-    afxBool success = FALSE;
-    afxClock start, last;
-
-    if (timeout != AFX_TIME_INFINITE)
-    {
-        AfxGetClock(&start);
-        last = start;
-    }
-
-    while (1)
-    {
-        afxUnit lockedBufIdx = AFX_INVALID_INDEX;
-
-        if (AfxPopInterlockedQueue(&dout->freeBuffers, &lockedBufIdx))
-        {
-            avxCanvas canv = dout->canvases[lockedBufIdx];
-
-            if (canv)
-            {
-                AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-            }
-            bufIdx2 = lockedBufIdx;
-            AFX_ASSERT(AFX_INVALID_INDEX != bufIdx2);
-            AFX_ASSERT_RANGE(dout->bufCnt, bufIdx2, 1);
-            *bufIdx = bufIdx2;
-            success = TRUE;
-            break;
-        }
-
-        if (timeout == 0)
-        {
-            err = afxError_TIMEOUT;
-            *bufIdx = AFX_INVALID_INDEX;
-            break;
-        }
-        else
-        {
-            if (timeout == AFX_TIME_INFINITE) continue;
-            else
-            {
-                AfxGetClock(&last);
-                afxReal64 elapsed = AfxGetMicrosecondsElapsed(&start, &last);
-
-                if (elapsed >= timeout)
-                {
-                    err = afxError_TIMEOUT;
-                    *bufIdx = AFX_INVALID_INDEX;
-                    break;
-                }
-            }
-        }
-    }
-    return err;
-}
-
 _AVX afxError _AvxDoutImplPresentCb(afxDrawQueue dque, avxPresentation* ctrl, avxFence wait, afxDrawOutput dout, afxUnit bufIdx, avxFence signal)
 {
     afxError err = AFX_ERR_NONE;
@@ -111,6 +33,14 @@ _AVX afxError _AvxDoutImplPresentCb(afxDrawQueue dque, avxPresentation* ctrl, av
 
     AFX_ASSERT(dout->presentingBufIdx == (afxAtom32)AFX_INVALID_INDEX);
     dout->presentingBufIdx = bufIdx;
+
+    if (wait)
+    {
+        while (AvxWaitForFences(AfxGetProvider(dout), FALSE, AFX_TIME_INFINITE, 1, &wait))
+        {
+            AfxYield();
+        }
+    }
 
     if (dout->presentCb && dout->presentCb(dque, ctrl, dout, bufIdx))
         AfxThrowError();
@@ -141,6 +71,7 @@ _AVX afxError _AvxDoutImplPresentCb(afxDrawQueue dque, avxPresentation* ctrl, av
     }
 
     dout->presentingBufIdx = (afxAtom32)AFX_INVALID_INDEX;
+    --dout->buffers[bufIdx].locked;
     AfxPushInterlockedQueue(&dout->freeBuffers, (afxUnit[]) { bufIdx });
     //AfxDecAtom32(&dout->m.submCnt);
 
@@ -159,7 +90,7 @@ _AVX afxError _AvxDoutImplAdjustCb(afxDrawOutput dout, avxRange whd)
     //AfxEventDeploy(&ev, AFX_EVENT_DOUT_EXTENT, &dout->obj, dout->extent);
     //AfxNotifyObject(&dout->obj, &ev);
 
-    AfxRevalidateDrawOutputBuffers(dout);
+    AvxRevalidateDrawOutputBuffers(dout);
     return err;
 }
 
@@ -174,6 +105,6 @@ _AVX _avxDoutDdi const _AVX_DOUT_DDI =
 {
     .adjust = _AvxDoutImplAdjustCb,
     .present = _AvxDoutImplPresentCb,
-    .reqBuf = _AvxDoutImplRequestBufferCb,
-    .recycBuf = _AvxDoutImplRecycleBufferCb,
+    .reqBuf = NIL,
+    .recycBuf = NIL,
 };

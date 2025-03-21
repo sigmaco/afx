@@ -87,8 +87,8 @@ AFX_DEFINE_STRUCT(afxTransference)
     {
         struct
         {
-            //afxRaster       ras;
-            //afxRasterIo     op;
+            //avxRaster       ras;
+            //avxRasterIo     op;
             union
             {
                 void*       dst;

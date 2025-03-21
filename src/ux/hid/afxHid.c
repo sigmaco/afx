@@ -59,7 +59,7 @@ _AUXINL afxUnit AfxGetHidPort(afxHid hid)
 _AUXINL afxResult AfxTestHidFlags(afxHid hid, afxHidFlag flags)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(hid, afxFcc_HID);
+    AFX_ASSERT_OBJECTS(afxFcc_HID, 1, &hid);
     AFX_ASSERT(flags);
     return (hid->flags & flags);
 }

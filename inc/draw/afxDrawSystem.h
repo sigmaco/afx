@@ -25,7 +25,7 @@
 #include "qwadro/inc/draw/afxDrawDevice.h"
 #include "qwadro/inc/draw/op/afxDrawContext.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
-#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/avxRaster.h"
 #include "qwadro/inc/draw/op/avxCanvas.h"
 #include "qwadro/inc/draw/op/avxLigature.h"
 #include "qwadro/inc/draw/op/avxPipeline.h"
@@ -33,7 +33,7 @@
 #include "qwadro/inc/draw/op/avxPipeline.h"
 #include "qwadro/inc/draw/op/avxSampler.h"
 #include "qwadro/inc/draw/op/avxShader.h"
-#include "qwadro/inc/draw/op/avxVertexDecl.h"
+#include "qwadro/inc/draw/op/avxVertexInput.h"
 #include "qwadro/inc/draw/op/avxDrawing.h"
 #include "qwadro/inc/draw/op/avxFence.h"
 
@@ -60,26 +60,26 @@ AFX_DEFINE_STRUCT(afxDrawSystemConfig)
 };
 
 /*
-    The AfxGetDrawSystemIcd() function retrieves the ICD (Installable Client Driver) running a specific drawing system. 
+    The AvxGetDrawSystemIcd() function retrieves the ICD (Installable Client Driver) running a specific drawing system. 
     This allows the application to determine which implementation is being used for the drawing system and to perform 
     further actions with the corresponding driver or module.
 */
 
-AVX afxModule AfxGetDrawSystemIcd
+AVX afxModule AvxGetDrawSystemIcd
 (
     // The drawing system for which the ICD is being queried.
     afxDrawSystem dsys
 );
 
 /*
-    The AfxGetDrawSystemProcedures() function retrieves the address of a device-specific function that allows you to 
+    The AvxGetDrawSystemProcedures() function retrieves the address of a device-specific function that allows you to 
     dynamically load Vulkan function pointers for a device object at runtime. It is part of Qwadro's extensible and 
     dynamic approach, enabling developers to load Qwadro functions based on their needs, instead of hardcoding everything.
 
     Returns the number of procedures found and retrieved.
 */
 
-AVX afxUnit AfxGetDrawSystemProcedures
+AVX afxUnit AvxGetDrawSystemProcedures
 (
     // The established drawing system.
     afxDrawSystem dsys, 
@@ -96,7 +96,7 @@ AVX afxUnit AfxGetDrawSystemProcedures
 );
 
 /*
-    The AfxGetDrawBridges() function retrieves drawing bridges for a established drawing system. 
+    The AvxGetDrawBridges() function retrieves drawing bridges for a established drawing system. 
     Drawing bridges are components that link and provide communication between an established system and its working devices. 
     This function allows applications to query and retrieve information about the established bridges, 
     which can be useful when dealing with systems that involve multiple hardware/software interfaces.
@@ -104,7 +104,7 @@ AVX afxUnit AfxGetDrawSystemProcedures
     Returns the number of arranged bridges.
 */
 
-AVX afxUnit AfxGetDrawBridges
+AVX afxUnit AvxGetDrawBridges
 (
     // The established drawing system.
     afxDrawSystem dsys, 
@@ -120,7 +120,7 @@ AVX afxUnit AfxGetDrawBridges
 );
 
 /*
-    The AfxChooseDrawBridges() function provides a way to select specific drawing bridges in an established drawing system, 
+    The AvxChooseDrawBridges() function provides a way to select specific drawing bridges in an established drawing system, 
     filtered by device ID and port ID. The function returns the selected bridges in an array and allows the application 
     to filter the available bridges based on the provided indices. This is useful for applications that need to work 
     with multiple bridges or interfaces between components in a drawing system, such as managing communication between 
@@ -129,7 +129,7 @@ AVX afxUnit AfxGetDrawBridges
     Returns the number of arranged draw bridges.
 */
 
-AVX afxUnit AfxChooseDrawBridges
+AVX afxUnit AvxChooseDrawBridges
 (
     // The established drawing system.
     afxDrawSystem dsys, 
@@ -154,7 +154,7 @@ AVX afxUnit AfxChooseDrawBridges
 );
 
 /*
-    The AfxWaitForDrawSystem() function waits for a drawing system to become ready, ensuring synchronization between the 
+    The AvxWaitForDrawSystem() function waits for a drawing system to become ready, ensuring synchronization between the 
     application and the graphics context. It is particularly useful for managing asynchronous tasks or ensuring the system 
     is in a stable state before proceeding with further operations. It provides a way to wait for completion or readiness 
     while managing timeouts for better control over the execution flow.
@@ -162,7 +162,7 @@ AVX afxUnit AfxChooseDrawBridges
     If the system is not ready within the given @timeout, the function may return an error or a timeout code.
 */
 
-AVX afxError AfxWaitForDrawSystem
+AVX afxError AvxWaitForDrawSystem
 (
     // The drawing system that you want to wait for.
     afxDrawSystem dsys, 
@@ -170,11 +170,11 @@ AVX afxError AfxWaitForDrawSystem
     // The timeout value that defines how long the function should wait before returning. 
     // It is expressed in microseconds and defines how long to wait for the drawing system 
     // to be ready or for the drawing operation to complete.
-    afxTime timeout
+    afxUnit64 timeout
 );
 
 /*
-    The AfxWaitForDrawBridge() function waits for a specific bridge in a drawing system to become ready or finish its operation. 
+    The AvxWaitForDrawBridge() function waits for a specific bridge in a drawing system to become ready or finish its operation. 
     It is useful for synchronizing tasks in graphics pipelines or handling communication between multiple devices. 
     By providing a timeout, it ensures that the function does not block indefinitely and allows you to proceed with other 
     operations if the bridge does not become ready in time. This function is useful in contexts where bridges or execution 
@@ -183,7 +183,7 @@ AVX afxError AfxWaitForDrawSystem
     If the bridge does not reach the ready state within the timeout, the function might return an error.
 */
 
-AVX afxError AfxWaitForDrawBridge
+AVX afxError AvxWaitForDrawBridge
 (
     // The drawing system to which the specific bridge belongs.
     afxDrawSystem dsys, 
@@ -195,11 +195,11 @@ AVX afxError AfxWaitForDrawBridge
 
     // The timeout period that the function should wait for the bridge to become ready or to complete its operation. 
     // The time is expressed in microseconds, and the function will stop waiting once this period has elapsed.
-    afxTime timeout
+    afxUnit64 timeout
 );
 
 /*
-    The AfxWaitForDrawQueue() function waits for a specific queue in a drawing system to become ready or finish its tasks. 
+    The AvxWaitForDrawQueue() function waits for a specific queue in a drawing system to become ready or finish its tasks. 
     It is useful for managing synchronization in systems that utilize multiple command queues, ensuring that one queue's 
     operations are complete before continuing with the next phase of processing. The timeout parameter provides control 
     over how long to wait, preventing the system from hanging indefinitely.
@@ -207,7 +207,7 @@ AVX afxError AfxWaitForDrawBridge
     If the queue does not become ready within this time frame, the function will return an error.
 */
 
-AVX afxError AfxWaitForDrawQueue
+AVX afxError AvxWaitForDrawQueue
 (
     // The drawing system that contains the queue.
     afxDrawSystem dsys, 
@@ -223,19 +223,19 @@ AVX afxError AfxWaitForDrawQueue
 
     // The timeout period defines how long the function will wait for the queue to become ready. 
     // The time is specified in microseconds.
-    afxTime timeout
+    afxUnit64 timeout
 );
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /*
-    The AfxEnumerateDrawSystems() function enumerates drawing systems established by a given installable client driver (ICD). 
+    The AvxEnumerateDrawSystems() function enumerates drawing systems established by a given installable client driver (ICD). 
     By specifying a starting index and a count of systems to retrieve, you can query and retrieve information about the 
     established drawing systems. This functionality is useful when your application needs to detect and interact with 
     multiple systems, providing a way to select the best system for rendering.
 */
 
-AVX afxUnit AfxEnumerateDrawSystems
+AVX afxUnit AvxEnumerateDrawSystems
 (
     // The installable client driver (ICD) module identifier.
     afxUnit icd, 
@@ -254,13 +254,13 @@ AVX afxUnit AfxEnumerateDrawSystems
 );
 
 /*
-    The AfxInvokeDrawSystems() function performs custom actions on a set of drawing systems established by a given ICD. 
+    The AvxInvokeDrawSystems() function performs custom actions on a set of drawing systems established by a given ICD. 
     By specifying a callback function, you can iterate over multiple drawing systems and apply specific logic to each system. 
     This is useful when you need to perform system-specific operations, such as querying, configuring, or logging properties 
     for each drawing system. The function provides a robust mechanism for handling multiple systems in a streamlined way.
 */
 
-AVX afxUnit AfxInvokeDrawSystems
+AVX afxUnit AvxInvokeDrawSystems
 (
     // The installable client driver (ICD) module identifier.
     afxUnit icd, 
@@ -281,13 +281,13 @@ AVX afxUnit AfxInvokeDrawSystems
 );
 
 /*
-    The AfxEvokeDrawSystems() function retrieves and process drawing systems in one go. 
+    The AvxEvokeDrawSystems() function retrieves and process drawing systems in one go. 
     It not only retrieves the systems but also invokes a callback function on each one to determine when push it to the @systems array, 
     enabling you to perform custom logic while working with the retrieved systems. 
     This function is useful when you need to both enumerate drawing systems and apply specific actions or checks to each system.
 */
 
-AVX afxUnit AfxEvokeDrawSystems
+AVX afxUnit AvxEvokeDrawSystems
 (
     // The installable client driver (ICD) module identifier.
     afxUnit icd, 
@@ -311,7 +311,7 @@ AVX afxUnit AfxEvokeDrawSystems
     afxDrawSystem systems[]
 );
 
-AVX afxError AfxConfigureDrawSystem
+AVX afxError AvxConfigureDrawSystem
 (
     afxUnit icd, 
 
@@ -319,13 +319,13 @@ AVX afxError AfxConfigureDrawSystem
 );
 
 /*
-    The AfxEstablishDrawSystem() function establishes a new drawing system based on a specific driver and configuration. 
+    The AvxEstablishDrawSystem() function establishes a new drawing system based on a specific driver and configuration. 
     It provides the ability to establish a system for rendering and drawing operations, allowing for further interaction 
     with the graphics pipeline (such as rendering, resource management, and more). This function is often used during the 
     initialization phase of an application to prepare the system for graphical tasks.
 */
 
-AVX afxError AfxEstablishDrawSystem
+AVX afxError AvxEstablishDrawSystem
 (
     // The installable client driver (ICD) identifier. 
     // This is an integer that uniquely identifies the driver

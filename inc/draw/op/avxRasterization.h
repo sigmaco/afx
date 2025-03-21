@@ -19,15 +19,16 @@
 #ifndef AVX_RASTERIZATION_H
 #define AVX_RASTERIZATION_H
 
-#include "qwadro/inc/draw/math/afxViewport.h"
+#include "qwadro/inc/draw/math/avxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
-#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/avxRaster.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
 #include "qwadro/inc/draw/op/avxSampler.h"
 #include "qwadro/inc/draw/op/avxQueryPool.h"
 #include "qwadro/inc/draw/op/avxTransference.h"
 
 typedef enum avxResolveOp
+// Bitmask indicating supported depth and stencil resolve modes.
 {
     // no resolve operation is done.
     avxResolveOp_NONE = 0,
@@ -76,204 +77,437 @@ typedef enum avxLoadOp
 } avxLoadOp;
 
 AFX_DEFINE_STRUCT(avxClearRect)
+// Structure specifying a clear rectangle.
 {
-    afxRect             area; // the two-dimensional region to be cleared.
-    afxUnit32           baseLayer; // the first layer to be cleared.
-    afxUnit32           layerCnt; // the number of layers to clear.
+    // the two-dimensional region to be cleared.
+    afxRect             area;
+    // The first layer to be cleared.
+    afxUnit32           baseLayer;
+    // The number of layers to clear.
+    afxUnit32           layerCnt;
 };
 
 AFX_DEFINE_STRUCT(avxDrawTarget)
+// Structure specifying draw target information.
 {
-    avxStoreOp          storeOp; // The store operation to perform on view after executing the render pass.
-    avxLoadOp           loadOp; // Indicates the load operation to perform on view prior to executing the render pass.
-    avxClearValue       clearValue; // Indicates the value to clear view to prior to executing the render pass.
+#if 0 // EXPERIMENTAL
+    // The raster that will be used as buffer for drawing.
+    avxRaster           buf;
+    // An raster used to write resolved data at the end of drawing.
+    avxRaster           resolved;
+    // An value defining how data written to @ras will be resolved into @resolved.
+    avxResolveOp        resolveOp;
+#endif
+    // The store operation to perform on buffer after executing the draw scope.
+    avxStoreOp          storeOp;
+    // Indicates the load operation to perform on buffer prior to executing the draw scope.
+    avxLoadOp           loadOp;
+    // Indicates the value to clear buffer to prior to executing the draw scope.
+    avxClearValue       clearValue;
 };
 
 AFX_DEFINE_STRUCT(avxDrawScope)
+// Structure specifying draw scope begin information.
 {
+    // The canvas containing the attached buffers that are used with the draw scope.
     avxCanvas           canv;
-    afxRect             area; //  the area that is affected by the draw scope.
-    afxUnit             baseLayer; // the index of the first attachment layer that will be drawn.
-    afxUnit             layerCnt; // the number of layers drawn to in each attachment when viewMask is 0.
-    afxUnit             targetCnt; // the number of video surfaces.
-    avxDrawTarget const*targets; // structures describing any color attachments used.
-    avxDrawTarget const*depth; // structure describing a depth attachment.
-    avxDrawTarget const*stencil; // structure describing a stencil attachment.
+    // The area that is affected by the draw scope.
+    afxRect             area;
+    // The index of the first attachment layer that will be drawn.
+    afxUnit             baseLayer;
+    // The number of layers drawn to in each attachment when viewMask is 0.
+    afxUnit             layerCnt;
+    // The number of video surfaces.
+    afxUnit             targetCnt;
+    // Structures describing any color attachments used.
+    avxDrawTarget       targets[AVX_MAX_COLOR_BUFFERS];
+    // Structure describing a depth attachment.
+    avxDrawTarget       depth;
+    // Structure describing a stencil attachment.
+    avxDrawTarget       stencil;
+
+    afxString           tag;
 };
 
   //////////////////////////////////////////////////////////////////////////////
  //// COMMANDS                                                             ////
 //////////////////////////////////////////////////////////////////////////////
 
-/// Begin a dynamic render canvas instance
-/// After beginning a render canvas instance, the command buffer is ready to record draw commands.
+/*
+    The AvxCmdCommenceDrawScope() operation commences a new drawing scope.
+    After beginning a drawing scope, the drawing context is ready to record draw commands.
 
-/// If flags includes resuming then this render pass is resumed from a render canvas instance that has been suspended earlier in submission order.
+    If flags includes resuming then this draw scope is resumed from a drawing scope that has been suspended earlier in submission order.
+*/
 
-AVX afxCmdId                AvxCmdCommenceDrawScope
+AVX afxCmdId AvxCmdCommenceDrawScope
 (
-    afxDrawContext          dctx,
-    avxDrawScope const*     cfg // structure specifying details of the draw scope instance to begin.
+    afxDrawContext      dctx,
+    // Structure specifying details of the draw scope instance to begin.
+    avxDrawScope const* cfg
 );
 
-/// End a dynamic render canvas instance.
-/// If the value of flags used to begin this render pass instance included suspending, then this render canvas is suspended and will be resumed later in submission order.
+/*
+    The AvxCmdConcludeDrawScope() operation concludes the current drawing scope.
 
-AVX afxCmdId                AvxCmdConcludeDrawScope
+    If the value of flags used to begin this draw scope instance included suspending, 
+    then this render canvas is suspended and will be resumed later in submission order.
+*/
+
+AVX afxCmdId AvxCmdConcludeDrawScope
 (
-    afxDrawContext          dctx
+    afxDrawContext      dctx
 );
 
-/// Transition to the next pass of a render canvas.
-/// The pass index for a render canvas begins at zero when AvxCmdCommenceDrawScope is recorded, and increments each time AvxCmdNextPass is recorded.
+/*
+    The AvxCmdNextPass() operation transitions to the next pass of a drawing scope.
+   
+   The pass index for a render canvas begins at zero when AvxCmdCommenceDrawScope is recorded, and increments each time AvxCmdNextPass is recorded.
 
-/// After transitioning to the next pass, the application can record the commands for that pass.
+   After transitioning to the next pass, the application can record the commands for that pass.
+*/
 
-AVX afxCmdId                AvxCmdNextPass
+AVX afxCmdId AvxCmdNextPass
 (
-    afxDrawContext          dctx,
-    afxBool                 useAuxScripts // specifies how the commands in the next subpass will be provided, in the same fashion as the corresponding parameter of vkCmdBeginRenderPass.
+    afxDrawContext      dctx,
+    // specifies how the commands in the next subpass will be provided, in the same fashion as the corresponding parameter of vkCmdBeginRenderPass.
+    afxBool             useAuxScripts
 );
 
-/// Set scissor rectangles dynamically for a command buffer.
-/// This command sets the scissor rectangles for subsequent drawing commands when drawing using shader objects, or when the graphics pipeline is created without scissor set.
+/*
+    The AvxCmdAdjustScissors() operation adjusts scissor rectangles dynamically for a draw context.
 
-/// The scissor rectangles taken from element #i of @rect replace the current state for the scissor index @baseIdx + #i, for #i in [0, @cnt).
+    This command sets the scissor rectangles for subsequent drawing commands when drawing using shader objects, 
+    or when the graphics pipeline is created without scissor set.
 
-AVX afxCmdId                AvxCmdAdjustScissors
+    The scissor rectangles taken from element #i of @rect replace the current state for the scissor index @baseIdx + #i, for #i in [0, @cnt).
+*/
+
+AVX afxCmdId AvxCmdAdjustScissors
 (
-    afxDrawContext          dctx,
-    afxUnit                 baseIdx, // is the index of the first scissor whose state is updated by the command.
-    afxUnit                 cnt, // is the number of scissors whose rectangles are updated by the command.
-    afxRect const           rects[] // is a pointer to an array of afxRect structures defining scissor rectangles.
+    afxDrawContext      dctx,
+    // is the index of the first scissor whose state is updated by the command.
+    afxUnit             baseIdx,
+     // is the number of scissors whose rectangles are updated by the command.
+    afxUnit             cnt,
+     // is a pointer to an array of afxRect structures defining scissor rectangles.
+    afxRect const       rects[]
 );
 
-/// The curtain test behaves like the scissor test, except that the curtain test fails for pixels inside the corresponding rectangle and passes for pixels outside the rectangle. 
-/// If the same rectangle is used for both the scissor and curtain tests, the curtain test will pass if and only if the scissor test fails.
+/*
+    The AvxCmdAdjustCurtainsSIGMA() operation adjusts exclusive scissor rectangles dynamically for a draw context.
 
-AVX afxCmdId                AvxCmdAdjustCurtains
+    The curtain test behaves like the scissor test, except that the curtain test fails for pixels inside the corresponding rectangle and passes for pixels outside the rectangle. 
+    If the same rectangle is used for both the scissor and curtain tests, the curtain test will pass if and only if the scissor test fails.
+*/
+
+AVX afxCmdId AvxCmdAdjustCurtainsSIGMA
 (
-    afxDrawContext          dctx, 
-    afxUnit                 baseIdx, // the first curtain rectangle whose state is updated by the command.
-    afxUnit                 cnt, // the number of curtain rectangles updated by the command.
-    afxRect const           rects[] // an array of afxRect structures defining curtain rectangles.
+    afxDrawContext      dctx, 
+    // the first curtain rectangle whose state is updated by the command.
+    afxUnit             baseIdx,
+     // the number of curtain rectangles updated by the command.
+    afxUnit             cnt,
+     // an array of afxRect structures defining curtain rectangles.
+    afxRect const       rects[]
 );
 
-/// Control whether primitives are discarded before the rasterization stage dynamically for a command buffer.
+/*
+    The AvxCmdSwitchRasterization() operation controls whether primitives are discarded before the 
+    rasterization stage dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdDisableRasterization
+AVX afxCmdId AvxCmdSwitchRasterization
 (
-    afxDrawContext          dctx,
-    afxBool                 disable // controls whether primitives are discarded immediately before the rasterization stage.
+    afxDrawContext      dctx,
+    // controls whether primitives are discarded immediately before the rasterization stage.
+    afxBool             disable
 );
 
-/// Control whether to bias fragment depth values dynamically for a command buffer.
+/*
+    The AvxCmdSwitchDepthBias() operation controls whether to bias fragment depth values dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdEnableDepthBias
+AVX afxCmdId AvxCmdSwitchDepthBias
 (
-    afxDrawContext          dctx,
-    afxBool                 enable // controls whether to bias fragment depth values.
+    afxDrawContext      dctx,
+    // controls whether to bias fragment depth values.
+    afxBool             enable
 );
 
-/// Set depth bias factors and clamp dynamically for a command buffer.
+/*
+    The AvxCmdSetDepthBias() operation sets depth bias factors and clamp dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdSetDepthBias
+AVX afxCmdId AvxCmdSetDepthBias
 (
-    afxDrawContext          dctx,
-    afxReal                 constFactor, // is a scalar factor controlling the constant depth value added to each fragment.
-    afxReal                 clamp, // is the maximum (or minimum) depth bias of a fragment.
-    afxReal                 slopeFactor // is a scalar factor applied to a fragment’s slope in depth bias calculations.
+    afxDrawContext      dctx,
+    // is a scalar factor controlling the constant depth value added to each fragment.
+    afxReal             constFactor,
+     // is the maximum (or minimum) depth bias of a fragment.
+    afxReal             clamp,
+     // is a scalar factor applied to a fragment’s slope in depth bias calculations.
+    afxReal             slopeFactor
 );
 
-/// Set line width dynamically for a command buffer.
+/*
+    The AvxCmdSetLineWidth() operation sets line width dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdSetLineWidth
+AVX afxCmdId AvxCmdSetLineWidth
 (
-    afxDrawContext          dctx,
-    afxReal                 lineWidth // is the width of rasterized line segments.
+    afxDrawContext      dctx,
+    // is the width of rasterized line segments.
+    afxReal             lineWidth
 );
 
-/// Set depth test enable dynamically for a command buffer.
+/*
+    The AvxCmdSwitchDepthTesting() operation sets depth test enable dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdEnableDepthTest
+AVX afxCmdId AvxCmdSwitchDepthTesting
 (
-    afxDrawContext          dctx,
-    afxBool                 enable // specifies if the depth test is enabled.
+    afxDrawContext      dctx,
+    // specifies if the depth test is enabled.
+    afxBool             enable
 );
 
-/// Set depth comparison operator dynamically for a command buffer.
+/*
+    The AvxCmdSetDepthCompareOp() operation sets depth comparison operator dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdSetDepthCompareOp
+AVX afxCmdId AvxCmdSetDepthCompareOp
 (
-    afxDrawContext          dctx,
-    avxCompareOp            op // is a avxCompareOp value specifying the comparison operator used for the Depth Comparison step of the depth test.
+    afxDrawContext      dctx,
+    // A value specifying the comparison operator used for the depth comparison step of the depth test.
+    avxCompareOp        op
 );
 
-/// Set depth write disable dynamically for a command buffer.
+/*
+    The AvxCmdSwitchDepthWrites() operation sets depth write disable dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdDisableDepthWrite
+AVX afxCmdId AvxCmdSwitchDepthWrites
 (
-    afxDrawContext          dctx,
-    afxBool                 disable // specifies if depth writes are disabled.
+    afxDrawContext      dctx,
+    // specifies if depth writes are disabled.
+    afxBool             disable
 );
 
-/// Set stencil test enable dynamically for a command buffer.
+/*
+    The AvxCmdSwitchStencilTesting() operation sets stencil test enable dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdEnableStencilTest
+AVX afxCmdId AvxCmdSwitchStencilTesting
 (
-    afxDrawContext          dctx,
-    afxBool                 enable // specifies if the stencil test is enabled.
+    afxDrawContext      dctx,
+    // specifies if the stencil test is enabled.
+    afxBool             enable
 );
 
-/// Set stencil compare mask dynamically for a command buffer.
+/*
+    The AvxCmdSetStencilCompareMask() operation sets stencil compare mask dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdSetStencilCompareMask
+AVX afxCmdId AvxCmdSetStencilCompareMask
 (
-    afxDrawContext          dctx,
-    afxMask                 faceMask, // is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the compare mask.
-    afxUnit32               compareMask // is the new value to use as the stencil compare mask.
+    afxDrawContext      dctx,
+    // is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the compare mask.
+    avxFaceMask         faceMask,
+     // is the new value to use as the stencil compare mask.
+    afxMask             compareMask
 );
 
-/// Set stencil write mask dynamically for a command buffer.
+/*
+    The AvxCmdSetStencilWriteMask() operation sets stencil write mask dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdSetStencilWriteMask
+AVX afxCmdId AvxCmdSetStencilWriteMask
 (
-    afxDrawContext          dctx,
-    afxMask                 faceMask, // is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the write mask, as described above for vkCmdSetStencilCompareMask.
-    afxUnit32               writeMask // is the new value to use as the stencil write mask.
+    afxDrawContext      dctx,
+    // is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the write mask, as described above for vkCmdSetStencilCompareMask.
+    avxFaceMask         faceMask,
+     // is the new value to use as the stencil write mask.
+    afxMask             writeMask
 );
 
-/// Set stencil reference value dynamically for a command buffer.
+/*
+    The AvxCmdSetStencilReference() operation sets stencil reference value dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdSetStencilReference
+AVX afxCmdId AvxCmdSetStencilReference
 (
-    afxDrawContext          dctx,
-    afxMask                 faceMask, // is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to
-    afxUnit32               reference // is the new value to use as the stencil reference value.
+    afxDrawContext      dctx,
+    // is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to
+    avxFaceMask         faceMask,
+    // is the new value to use as the stencil reference value.
+    afxUnit32           reference
 );
 
-/// Set depth bounds test enable dynamically for a command buffer.
+/*
+    The AvxCmdSetStencilOp() operation sets stencil operation dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdEnableDepthBoundsTest
+AVX afxCmdId AvxCmdSetStencilOp
 (
-    afxDrawContext          dctx,
-    afxBool                 enable // specifies if the depth bounds test is enabled.
+    afxDrawContext      dctx,
+    // is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to
+    avxFaceMask         faceMask,
+    // The action performed on samples that fail the stencil test.
+    avxStencilOp        failOp,
+    // The action performed on samples that pass both the depth and stencil tests.
+    avxStencilOp        passOp,
+    // The action performed on samples that pass the stencil test and fail the depth test.
+    avxStencilOp        depthFailOp,
+    // The comparison operator used in the stencil test.
+    avxCompareOp        compareOp
 );
 
-/// Set depth bounds range dynamically for a command buffer.
+/*
+    The AvxCmdSwitchDepthBoundsTesting() operation sets depth bounds test enable dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdSetDepthBounds
+AVX afxCmdId AvxCmdSwitchDepthBoundsTesting
 (
-    afxDrawContext          dctx,
-    afxV2d const            bounds // is the minimum and maximum depth bounds.
+    afxDrawContext      dctx,
+    // specifies if the depth bounds test is enabled.
+    afxBool             enable
 );
 
-/// Set the values of blend constants.
+/*
+    The AvxCmdSetDepthBounds() operation sets depth bounds range dynamically for a draw context.
+*/
 
-AVX afxCmdId                AvxCmdSetBlendConstants
+AVX afxCmdId AvxCmdSetDepthBounds
 (
-    afxDrawContext          dctx,
-    afxV4d const            blendConstants // is an array of four values specifying the Rc, Gc, Bc, and Ac components of the blend constant color used in blending, depending on the blend factor.
+    afxDrawContext      dctx,
+    // is the minimum and maximum depth bounds.
+    afxV2d const        bounds
+);
+
+/*
+    The AvxCmdSetBlendConstants() operation sets the values of blend constants.
+*/
+
+AVX afxCmdId AvxCmdSetBlendConstants
+(
+    afxDrawContext      dctx,
+    // An array of four values specifying the Rc, Gc, Bc, and Ac components of the 
+    // blend constant color used in blending, depending on the blend factor.
+    afxV4d const        blendConstants
+);
+
+/*
+    The AvxCmdSetRasterizationSamplesEXT() operation specifies the rasterization samples dynamically for a draw context.
+*/
+
+AVX afxCmdId AvxCmdSetRasterizationSamplesEXT
+(
+    afxDrawContext      dctx,
+    afxUnit             sampleLvl
+);
+
+/*
+    The AvxCmdSetSampleMaskEXT() operation specifies the sample mask dynamically for a draw context.
+*/
+
+AVX afxCmdId AvxCmdSetSampleMaskEXT
+(
+    afxDrawContext      dctx,
+    afxUnit             sampleLvl,
+    // An array of mask values, where the array size is based on the sampleLvl parameter.
+    afxMask const       sampleMasks[AVX_MAX_SAMPLE_MASKS]
+);
+
+/*
+    The AvxCmdSwitchAlphaToCoverageEXT() operation specifies the alpha to coverage enable state dynamically for a draw context.
+*/
+
+AVX afxCmdId AvxCmdSwitchAlphaToCoverageEXT
+(
+    afxDrawContext      dctx,
+    afxBool             enable
+);
+
+/*
+    The AvxCmdSwitchAlphaToOneEXT() operation specifies the alpha to one enable state dynamically for a draw context.
+*/
+
+AVX afxCmdId AvxCmdSwitchAlphaToOneEXT
+(
+    afxDrawContext      dctx,
+    afxBool             enable
+);
+
+/*
+    The AvxCmdSwitchColorBlendingEXT() operation specifies the blend state for each attachment dynamically for a draw context.
+*/
+
+AVX afxCmdId AvxCmdSwitchColorBlendingEXT
+(
+    afxDrawContext      dctx,
+    afxUnit             first,
+    afxUnit             cnt,
+    afxBool const       enabled[]
+);
+
+/*
+    The AvxCmdChangeColorBlendEquationEXT() operation specifies the blend factors and operations dynamically for a draw context.
+*/
+
+AVX afxCmdId AvxCmdChangeColorBlendEquationEXT
+(
+    afxDrawContext      dctx,
+    afxUnit             first,
+    afxUnit             cnt,
+    avxColorBlend const equations[]
+);
+
+/*
+    The AvxCmdSetColorWriteMaskEXT() operation specifies the color write masks for each attachment dynamically for a draw context.
+*/
+
+AVX afxCmdId AvxCmdSetColorWriteMaskEXT
+(
+    afxDrawContext      dctx,
+    afxUnit             first,
+    afxUnit             cnt,
+    avxColorMask const  writeMasks[]
+);
+
+/*
+    The AvxCmdSwitchLogicOpEXT() operation specifies dynamically whether logical operations are enabled for a draw context.
+*/
+
+AVX afxCmdId AvxCmdSwitchLogicOpEXT
+(
+    afxDrawContext      dctx,
+    afxBool             enabled
+);
+
+/*
+    The AvxCmdSetDepthClampEnableEXT() operation specifies dynamically whether depth clamping is enabled in the draw context.
+*/
+
+AVX afxCmdId AvxCmdSetDepthClampEnableEXT
+(
+    afxDrawContext      dctx,
+    afxBool             enabled
+);
+
+/*
+    The AvxCmdDiscardRectanglesEXT() operation discards rectangles dynamically for a draw context.
+*/
+
+AVX afxCmdId AvxCmdDiscardRectanglesEXT
+(
+    afxDrawContext      dctx,
+    // The first discard rectangle whose state is updated by the command.
+    afxUnit             first,
+    // The number of discard rectangles whose state are updated by the command.
+    afxUnit             cnt,
+    // An array of afxRect structures specifying discard rectangles.
+    afxRect const*      rects
 );
 
 #endif//AVX_RASTERIZATION_H

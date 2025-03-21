@@ -25,8 +25,8 @@ void ClumpRenderBoundingBox(afxDrawContext dctx, afxBox box, afxM4d const m)
     
     for (int i = 0; i < 8; i++)
     {
-        AfxV3dSet(vtx[i].posn, i & 1 ? box.sup[0] : box.inf[0], i & 2 ? box.sup[1] : box.inf[1], i & 4 ? box.sup[2] : box.inf[2]);
-        vtx[i].col = AFX_ARGB(255, 196, 196, 0);
+        AfxV3dSet(vtx[i].posn, i & 1 ? box.max[0] : box.min[0], i & 2 ? box.max[1] : box.min[1], i & 4 ? box.max[2] : box.min[2]);
+        vtx[i].col = AVX_ARGB(255, 196, 196, 0);
     }
 
     // set flat shade mode

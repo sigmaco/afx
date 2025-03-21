@@ -329,7 +329,7 @@ _AVX afxError _AvxDinDtorCb(afxDrawInput din)
 
 _AVX afxError _AvxDinCtorCb(afxDrawInput din, void** args, afxUnit invokeNo)
 {
-    //AfxEntry("din=%p,uri=%.*s", din, endpoint ? AfxPushString(AfxGetUriString(endpoint)) : &AFX_STR_EMPTY);
+    //AfxEntry("din=%p,uri=%.*s", din, endpoint ? AfxPushString(AfxGetUriString(endpoint)) : &AFX_STRING_EMPTY);
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
 
@@ -402,7 +402,7 @@ _AVX afxClassConfig const _AVX_DIN_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxConfigureDrawInput(afxDrawSystem dsys, afxDrawInputConfig* cfg)
+_AVX afxError AvxConfigureDrawInput(afxDrawSystem dsys, afxDrawInputConfig* cfg)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -411,7 +411,7 @@ _AVX afxError AfxConfigureDrawInput(afxDrawSystem dsys, afxDrawInputConfig* cfg)
     return err;
 }
 
-_AVX afxError AfxOpenDrawInput(afxDrawSystem dsys, afxDrawInputConfig const* cfg, afxDrawInput* input)
+_AVX afxError AvxOpenDrawInput(afxDrawSystem dsys, afxDrawInputConfig const* cfg, afxDrawInput* input)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);

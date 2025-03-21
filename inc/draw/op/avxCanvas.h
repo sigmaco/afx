@@ -17,17 +17,18 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /**
-    No Qwadro, avxCanvas é um recurso que combina operações de framebuffer e render pass em outras APIs.
+    No Qwadro, avxCanvas é um recurso que combina operações de framebuffer e draw scope em outras APIs.
     An surface is a memory location that can act as a buffer for the canvas. Think of it as an image or renderbuffer.
 */
 
 #ifndef AVX_CANVAS_H
 #define AVX_CANVAS_H
 
-#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/avxRaster.h"
 
-#define AVX_MAX_CANVAS_SURFACES (8)
-#define AVX_MAX_CANVAS_BUFFERS (AVX_MAX_CANVAS_SURFACES + 2)
+#define AVX_MAX_AUX_BUFFERS (2)
+#define AVX_MAX_COLOR_BUFFERS (8)
+#define AVX_MAX_CANVAS_BUFFERS (AVX_MAX_COLOR_BUFFERS + AVX_MAX_AUX_BUFFERS)
 
 typedef enum afxCanvasFlag
 {
@@ -38,15 +39,15 @@ typedef enum afxCanvasFlag
 
 AFX_DEFINE_STRUCT(avxDrawSurface)
 {
-    // a afxRaster handle which will be used as the buffer.
-    afxRaster       ras;
+    // a avxRaster handle which will be used as the buffer.
+    avxRaster       ras;
     
     // format used to create an image used with this canvas. Ignored if @ras is present.
     avxFormat       fmt; // layout
     // usage used to create an image used with this canvas. Ignored if @ras is present.
-    afxRasterUsage  rasUsage;
+    avxRasterUsage  rasUsage;
     // flags used to create an image that will be used with this canvas. Ignored if @ras is present.
-    afxRasterFlags  rasFlags;
+    avxRasterFlags  rasFlags;
 
     afxUnit         sampleCnt; // layout. I am still in doubt if I let this here or in pipeline.
 };
@@ -59,15 +60,15 @@ AFX_DEFINE_STRUCT(avxCanvasConfig)
     // the number of attachments.
     afxUnit         surCnt;
     avxDrawSurface  surfs[AVX_MAX_CANVAS_BUFFERS];
-    afxChar const*const*label;
+    afxString       tag;
 };
 
 /*
-    The AfxTestCanvas() function testS specific flags of a specified avxCanvas. 
+    The AvxTestCanvas() function testS specific flags of a specified avxCanvas. 
     It uses a bitmask to check whether certain flags are set for the canvas.
 */
 
-AVX afxResult AfxTestCanvas
+AVX afxResult AvxTestCanvas
 (
     // The canvas object that you want to test.
     avxCanvas canv, 
@@ -78,23 +79,23 @@ AVX afxResult AfxTestCanvas
 );
 
 /*
-    The AfxGetCanvasExtent() function retrieves the dimensions (width and height) of a given canvas. 
+    The AvxGetCanvasExtent() function retrieves the dimensions (width and height) of a given canvas. 
     This information is essential for rendering, scaling, and layout management in graphical applications, 
     particularly when dealing with dynamic or resizable drawing surfaces.
 */
 
-AVX avxRange AfxGetCanvasExtent
+AVX avxRange AvxGetCanvasExtent
 (
     // A canvas object, which represents a framebuffer in the system.
     avxCanvas canv
 );
 
 /*
-    The AfxQueryDrawBufferSlots() function populates the provided pointers (colorSlotCnt, dSlotIdx, and sSlotIdx) 
+    The AvxQueryDrawBufferSlots() function populates the provided pointers (colorSlotCnt, dSlotIdx, and sSlotIdx) 
     with relevant data and returns the total number of attachment slots that can be used.
 */
 
-AVX afxUnit AfxQueryDrawBufferSlots
+AVX afxUnit AvxQueryDrawBufferSlots
 // Returns the total of buffer slots in canvas.
 (
     // The canvas in which the slots are being managed.
@@ -111,14 +112,14 @@ AVX afxUnit AfxQueryDrawBufferSlots
 );
 
 /*
-    The AfxGetDrawBuffers() function retrieves a subset of drawing buffers attached to the specified canvas. 
+    The AvxGetDrawBuffers() function retrieves a subset of drawing buffers attached to the specified canvas. 
     It allows you to specify where to start the query, how many buffers to retrieve, 
     and an recipient array to hold the retrieved buffer handles.
 
     Returns the number of valid slots inserted in the recipient array.
 */
 
-AVX afxUnit AfxGetDrawBuffers
+AVX afxUnit AvxGetDrawBuffers
 (
     // The canvas for which the draw buffers are requested.
     avxCanvas canv, 
@@ -136,7 +137,7 @@ AVX afxUnit AfxGetDrawBuffers
     // An array of rasters that will be populated with the retrieved buffers. 
     // Each element in the array corresponds to a drawing buffer associated with the canvas.
     // Each item in this array represents a buffer that holds rendered data for further processing or display.
-    afxRaster rasters[]
+    avxRaster rasters[]
 );
 
 /*
@@ -162,7 +163,7 @@ AVX afxBool AvxGetColorBuffers
 
     // An recipient array that will be populated with the retrieved color buffers. 
     // Each element in this array will hold one of the color buffers.
-    afxRaster rasters[]
+    avxRaster rasters[]
 );
 
 /*
@@ -177,20 +178,20 @@ AVX afxBool AvxGetDepthBuffers
     // The canvas from which the depth and stencil buffers are being retrieved.
     avxCanvas canv, 
     // A recipient to store the depth buffer associated with the canvas.
-    afxRaster* depth, 
+    avxRaster* depth, 
 
     // A recipient to store the stencil buffer associated with the canvas.
-    afxRaster* stencil
+    avxRaster* stencil
 );
 
 /*
-    The AfxPrintDrawBuffer() function prints (exports) drawing buffers from a canvas to a specified URI. 
+    The AvxPrintDrawBuffer() function prints (exports) drawing buffers from a canvas to a specified URI. 
     It provides control over the printing operation, including options for the output format, execution unit, 
     and destination location. This function can be used for saving graphical content to a file, debugging 
     rendered frames, or exporting buffers to remote destinations.
 */
 
-AVX afxError AfxPrintDrawBuffer
+AVX afxError AvxPrintDrawBuffer
 (
     // The canvas from which the draw buffer is to be printed.
     avxCanvas canv, 
@@ -202,7 +203,7 @@ AVX afxError AfxPrintDrawBuffer
     afxUnit surIdx, 
 
     // A structure specifying the I/O operation on the raster attached to the canvas.
-    afxRasterIo const* op, 
+    avxRasterIo const* op, 
 
     // The execution unit index. 
     // The specific unit that will be used to handle the printing process.
@@ -215,7 +216,7 @@ AVX afxError AfxPrintDrawBuffer
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxCoacquireCanvas
+AVX afxError        AvxCoacquireCanvas
 // Acquire a new buffered drawing canvas object.
 (
     // the draw system that provides the canvas.

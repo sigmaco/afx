@@ -19,6 +19,10 @@
 #define _ASX_MESH_TOPOLOGY_C
 #include "../impl/asxImplementation.h"
 
+#if defined(_AFX_DEBUG)
+#   define ASX_DBG_ECHO_MESH 1
+#endif
+
 ASX afxError AfxAcquireMeshTopology(afxDrawInput din, afxMeshBlueprint const* blueprint, afxMeshTopology* topology);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,8 +114,8 @@ _ASX afxUnit AfxGetMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, a
     AFX_ASSERT_RANGE(msh->morphCnt, baseMorphIdx, cnt);
     
     // sanitize arguments
-    baseMorphIdx = AfxMin(baseMorphIdx, msh->morphCnt - 1);
     cnt = AfxMin(cnt, msh->morphCnt - baseMorphIdx);
+    baseMorphIdx = AfxMin(baseMorphIdx, msh->morphCnt - 1);
 
     for (afxUnit i = 0; i < cnt; i++)
         morphes[i] = msh->morphs[baseMorphIdx + i];
@@ -127,8 +131,8 @@ _ASX afxError AfxChangeMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit cn
     AFX_ASSERT(morphes);
 
     // sanitize arguments
-    baseMorphIdx = AfxMin(baseMorphIdx, msh->morphCnt - 1);
     cnt = AfxMin(cnt, msh->morphCnt - baseMorphIdx);
+    baseMorphIdx = AfxMin(baseMorphIdx, msh->morphCnt - 1);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -155,8 +159,8 @@ _ASX afxUnit AfxGetMeshBiases(afxMesh msh, afxUnit baseBiasIdx, afxUnit cnt, afx
     AFX_ASSERT(biases);
     
     // sanitize arguments
-    baseBiasIdx = AfxMin(baseBiasIdx, msh->biasCnt - 1);
     cnt = AfxMin(cnt, msh->biasCnt - baseBiasIdx);
+    baseBiasIdx = AfxMin(baseBiasIdx, msh->biasCnt - 1);
 
     for (afxUnit i = 0; i < cnt; i++)
         biases[i] = msh->biases[baseBiasIdx + i];
@@ -196,8 +200,8 @@ _ASX afxUnit AfxGetMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit cnt, af
     AFX_ASSERT(sections);
 
     // sanitize arguments
-    baseSecIdx = AfxMin(baseSecIdx, msh->secCnt - 1);
     cnt = AfxMin(cnt, msh->secCnt - baseSecIdx);
+    baseSecIdx = AfxMin(baseSecIdx, msh->secCnt - 1);
 
     for (afxUnit i = 0; i < cnt; i++)
         sections[i] = msh->sections[baseSecIdx + i];
@@ -213,8 +217,8 @@ _ASX afxError AfxResetMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit cnt,
     AFX_ASSERT(sections);
 
     // sanitize arguments
-    baseSecIdx = AfxMin(baseSecIdx, msh->secCnt - 1);
     cnt = AfxMin(cnt, msh->secCnt - baseSecIdx);
+    baseSecIdx = AfxMin(baseSecIdx, msh->secCnt - 1);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -645,7 +649,7 @@ _ASX afxError AfxRecomputeMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit base
             afxUnit idxCnt = mshs.triCnt * ASX_INDICES_PER_TRI;
 
             for (afxUnit i = 0; i < idxCnt; i++)
-                AfxAabbAbsorbAtv3d(&morphSecAabbs[j], 1, &data3[i]);
+                AfxEmboxVectors(&morphSecAabbs[j], 1, &data3[i]);
         }
     }
     else if (attrFmt == avxFormat_RGBA32f)
@@ -662,7 +666,7 @@ _ASX afxError AfxRecomputeMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit base
             afxUnit idxCnt = mshs.triCnt * ASX_INDICES_PER_TRI;
 
             for (afxUnit i = 0; i < idxCnt; i++)
-                AfxAabbAbsorbAtv4d(&morphSecAabbs[j], 1, &data4[i]);
+                AfxEmboxPoints(&morphSecAabbs[j], 1, &data4[i]);
         }
     }
     else AfxThrowError();
@@ -680,8 +684,8 @@ _ASX afxError AfxUpdateMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit baseSec
 
     // sanitize arguments
     morphIdx = AfxMin(morphIdx, msh->morphCnt - 1);
-    baseSecIdx = AfxMin(baseSecIdx, msh->secCnt - 1);
     cnt = AfxMin(cnt, msh->secCnt - baseSecIdx);
+    baseSecIdx = AfxMin(baseSecIdx, msh->secCnt - 1);
 
     afxMeshMorph mshm;
     if (!AfxGetMeshMorphes(msh, morphIdx, 1, &mshm))
@@ -707,8 +711,8 @@ _ASX afxError AfxUpdateMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit triC
     AFX_ASSERT_RANGE(msh->triCnt, baseTriIdx, triCnt);
 
     // sanitize arguments
-    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
     triCnt = AfxMin(triCnt, msh->triCnt - baseTriIdx);
+    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
 
     afxUnit idxCnt = triCnt * ASX_INDICES_PER_TRI;
     afxUnit* indices = AfxGetMeshIndices(msh, baseTriIdx);
@@ -757,8 +761,8 @@ _ASX afxError AfxDumpMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt
     AFX_ASSERT_RANGE(msh->triCnt, baseTriIdx, triCnt);
 
     // sanitize arguments
-    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
     triCnt = AfxMin(triCnt, msh->triCnt - baseTriIdx);
+    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
 
     afxUnit const* indices = AfxGetMeshIndices(msh, baseTriIdx);
 
@@ -778,8 +782,8 @@ _ASX afxError AfxUploadMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit triC
     AFX_ASSERT_RANGE(msh->triCnt, baseTriIdx, triCnt);
 
     // sanitize arguments
-    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
     triCnt = AfxMin(triCnt, msh->triCnt - baseTriIdx);
+    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
 
     afxUnit idxCnt = triCnt * ASX_INDICES_PER_TRI;
     afxUnit* indices = AfxGetMeshIndices(msh, baseTriIdx);
@@ -823,8 +827,8 @@ _ASX afxError AfxDownloadMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit tr
     AFX_ASSERT_RANGE(msh->triCnt, baseTriIdx, triCnt);
 
     // sanitize arguments
-    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
     triCnt = AfxMin(triCnt, msh->triCnt - baseTriIdx);
+    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
 
     afxUnit idxCnt = triCnt * ASX_INDICES_PER_TRI;
     afxUnit* indices = AfxGetMeshIndices(msh, baseTriIdx);
@@ -1614,9 +1618,13 @@ _ASX afxError AfxCompileMeshes(afxSimulation sim, afxUnit cnt, afxMeshBlueprint 
     AFX_ASSERT_CLASS(cls, afxFcc_MSH);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)meshes, (void const*[]) { sim, blueprints }))
+    {
         AfxThrowError();
+        return err;
+    }
     else
     {
+#ifdef _ASX_DBG_ECHO_MESH
         /*
             meshes[cnt]
             +-- mesh <name> ptr
@@ -1675,6 +1683,7 @@ _ASX afxError AfxCompileMeshes(afxSimulation sim, afxUnit cnt, afxMeshBlueprint 
                 AfxLogEcho("|   |   +-- <%.*s>", AfxPushString(&msh->morphTags[i]));
             }
         }
+#endif//_ASX_DGB_ECHO_MESH
     }
     return err;
 }

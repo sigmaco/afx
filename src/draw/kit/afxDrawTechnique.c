@@ -24,7 +24,7 @@ AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, a
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxCmdId AvxCmdApplyDrawTechnique(afxDrawContext dctx, afxDrawTechnique dtec, afxUnit passIdx, avxVertexDecl vin, afxFlags dynamics)
+_AVX afxCmdId AvxCmdApplyDrawTechnique(afxDrawContext dctx, afxDrawTechnique dtec, afxUnit passIdx, avxVertexInput vin, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DTEC, 1, &dtec);
@@ -42,7 +42,7 @@ _AVX afxError AfxUpdateRasterizationPass(afxDrawTechnique dtec, afxUnit passIdx,
     afxDrawSystem dsys = AfxGetDrawInputContext(din);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     avxPipeline pip;
-    AfxAssemblePipelines(dsys, 1, cfg, &pip);
+    AvxAssemblePipelines(dsys, 1, cfg, &pip);
 
     if (dtec->passes[passIdx].pip)
     {
@@ -115,7 +115,7 @@ _AVX afxError AfxLoadDrawTechnique(afxDrawInput din, afxUri const* uri, afxDrawT
         return err;
     }
     //else if (!AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("DrawTechnique"), &AfxStaticString("id"), 1, &query, &xmlElemIdx))
-    else if (!AfxTestXmlRoot(&xml, &AfxStaticString("DrawTechnique")))
+    else if (!AfxTestXmlRoot(&xml, &AFX_STRING("DrawTechnique")))
     {
         AfxThrowError();
         AfxCleanUpXml(&xml);
@@ -124,7 +124,7 @@ _AVX afxError AfxLoadDrawTechnique(afxDrawInput din, afxUri const* uri, afxDrawT
 
     AFX_ASSERT(xmlElemIdx != AFX_INVALID_INDEX);
 
-    afxUnit passCnt = AfxFindXmlTaggedElements(&xml, xmlElemIdx, 0, &AfxStaticString("Pass"), NIL, 0, NIL, NIL);
+    afxUnit passCnt = AfxFindXmlTaggedElements(&xml, xmlElemIdx, 0, &AFX_STRING("Pass"), NIL, 0, NIL, NIL);
 
     afxClass* cls = (afxClass*)AvxGetDrawTechniqueClass(din);
     AFX_ASSERT_CLASS(cls, afxFcc_DTEC);
@@ -146,7 +146,7 @@ _AVX afxError AfxLoadDrawTechnique(afxDrawInput din, afxUri const* uri, afxDrawT
             AfxQueryXmlElement(&xml, nodeIdx, &name, &ncontent);
             afxUnit nodeChildTagCnt = AfxCountXmlTags(&xml, nodeIdx);
 
-            if (0 == AfxCompareStrings(&name, 0, TRUE, 1, &AfxStaticString("Pass")))
+            if (0 == AfxCompareStrings(&name, 0, TRUE, 1, &AFX_STRING("Pass")))
             {
                 afxUnit arrelIdx;
                 avxPipelineBlueprint config = { 0 };
@@ -156,7 +156,7 @@ _AVX afxError AfxLoadDrawTechnique(afxDrawInput din, afxUri const* uri, afxDrawT
 
                 for (afxUnit i = 0; i < config.stageCnt; i++)
                 {
-                    AfxUplinkPipelineFunction((*technique)->passes[passIdx].pip, shaderStages[i], &shaderUris[i], &shaderFns[i], NIL, NIL);
+                    AvxUplinkPipelineFunction((*technique)->passes[passIdx].pip, shaderStages[i], &shaderUris[i], &shaderFns[i], NIL, NIL);
                 }
 
                 ++passIdx;

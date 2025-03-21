@@ -475,28 +475,28 @@ _AFXINL afxBool AfxIsUriBlank(afxUri const* uri)
 _AFXINL afxResult AfxCompareUriString(afxUri const* uri, afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert2(uri, str);
+    AFX_ASSERT2(uri, str);
     return !AfxIsAnValidIndex(AfxCompareStrings(AfxGetUriString(uri), 0, FALSE, 1, str));
 }
 
 _AFXINL afxResult AfxCompareUriStringCi(afxUri const* uri, afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert2(uri, str);
+    AFX_ASSERT2(uri, str);
     return !AfxIsAnValidIndex(AfxCompareStrings(AfxGetUriString(uri), 0, TRUE, 1, str));
 }
 
 _AFXINL afxResult AfxCompareUri(afxUri const* uri, afxUri const *other)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert2(uri, other);
+    AFX_ASSERT2(uri, other);
     return !AfxIsAnValidIndex(AfxCompareStrings(AfxGetUriString(uri), 0, FALSE, 1, AfxGetUriString(other)));
 }
 
 _AFXINL afxResult AfxCompareUriCi(afxUri const* uri, afxUri const *other)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert2(uri, other);
+    AFX_ASSERT2(uri, other);
     return AfxCompareUriStringCi(uri, AfxGetUriString(other));
 }
 
@@ -1258,7 +1258,7 @@ _AFXINL afxBool AfxPathIsDevice(afxUri const* uri)
     afxChar const* h = AfxGetUriData(&host, 0);
     afxChar const* p = AfxGetUriData(&path, 0);
 
-    if (0 == AfxCompareUriString(&host, &AfxString("//.")))
+    if (0 == AfxCompareUriString(&host, &AFX_STRING("//.")))
     {
         afxChar const* v5 = p;
         afxUnit i = 0;
@@ -1289,7 +1289,7 @@ _AFXINL afxUnit AfxClipUriDevice(afxUri* uri, afxUri const* from)
     if (!(devLen = AfxClipPathDirectory2(&dev, from, 3))) AfxResetUris(1, uri);
     else
     {
-        if (!AfxIsAnValidIndex(AfxCompareSubstrings(&AfxString("//./"), 0, 4, FALSE, 1, &dev.str))) AfxResetUris(1, uri);
+        if (!AfxIsAnValidIndex(AfxCompareSubstrings(&AFX_STRING("//./"), 0, 4, FALSE, 1, &dev.str))) AfxResetUris(1, uri);
         else
         {
             len = AfxGetUriLength(&dev);
@@ -1345,7 +1345,7 @@ _AFXINL afxBool AfxIsUriToDevice(afxUri const* uri)
     AFX_ASSERT(uri);
     afxUri hostPort;
     AfxExcerptUriAuthority(uri, NIL, &hostPort, &hostPort);
-    AfxCompareUriString(&hostPort, &AfxString("//."));
+    AfxCompareUriString(&hostPort, &AFX_STRING("//."));
     //AfxClipPathDirectory();
     return AfxCompareString(&uri->str, uri->schem, "//.", 0, TRUE) && AfxCompareString(&uri->str, uri->schem + uri->host, "/", 0, TRUE);
 }

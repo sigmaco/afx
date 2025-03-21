@@ -80,8 +80,8 @@ ASX afxError            AfxWaitForIdleSimBridge(afxSimBridge sexu, afxTime timeo
 
 ASX afxUnit             AfxGetSimQueues(afxSimBridge sexu, afxUnit baseQueIdx, afxUnit cnt, afxSimQueue queues[]);
 
-ASX void                _AsxBeginMathQueueDebugScope(afxSimBridge sexu, afxUnit queIdx, afxString const* name, afxColor const color);
-ASX void                _AsxPushMathQueueDebugLabel(afxSimBridge sexu, afxUnit queIdx, afxString const* name, afxColor const color);
+ASX void                _AsxBeginMathQueueDebugScope(afxSimBridge sexu, afxUnit queIdx, afxString const* name, avxColor const color);
+ASX void                _AsxPushMathQueueDebugLabel(afxSimBridge sexu, afxUnit queIdx, afxString const* name, avxColor const color);
 ASX void                _AsxEndMathQueueDebugScope(afxSimBridge sexu, afxUnit queIdx);
 
 ASX afxUnit             _AsxSubmitMathCommands(afxSimBridge sexu, asxSubmission const* ctrl, afxUnit cnt, afxDrawContext cmdbs[]);

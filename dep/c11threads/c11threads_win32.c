@@ -90,23 +90,23 @@ static void _c11threads_win32_init(void)
 		if (!kernel32) {
 			abort();
 		}
-		_c11threads_win32_InitializeConditionVariable = (_c11threads_win32_InitializeConditionVariable_t)GetProcAddress(kernel32, "InitializeConditionVariable");
+		_c11threads_win32_InitializeConditionVariable = (/*_c11threads_win32_InitializeConditionVariable_t*/void*)GetProcAddress(kernel32, "InitializeConditionVariable");
 		if (!_c11threads_win32_InitializeConditionVariable) {
 			abort();
 		}
-		_c11threads_win32_WakeConditionVariable = (_c11threads_win32_WakeConditionVariable_t)GetProcAddress(kernel32, "WakeConditionVariable");
+		_c11threads_win32_WakeConditionVariable = (/*_c11threads_win32_WakeConditionVariable_t*/void*)GetProcAddress(kernel32, "WakeConditionVariable");
 		if (!_c11threads_win32_WakeConditionVariable) {
 			abort();
 		}
-		_c11threads_win32_WakeAllConditionVariable = (_c11threads_win32_WakeAllConditionVariable_t)GetProcAddress(kernel32, "WakeAllConditionVariable");
+		_c11threads_win32_WakeAllConditionVariable = (/*_c11threads_win32_WakeAllConditionVariable_t*/void*)GetProcAddress(kernel32, "WakeAllConditionVariable");
 		if (!_c11threads_win32_WakeAllConditionVariable) {
 			abort();
 		}
-		_c11threads_win32_SleepConditionVariableCS = (_c11threads_win32_SleepConditionVariableCS_t)GetProcAddress(kernel32, "SleepConditionVariableCS");
+		_c11threads_win32_SleepConditionVariableCS = (/*_c11threads_win32_SleepConditionVariableCS_t*/void*)GetProcAddress(kernel32, "SleepConditionVariableCS");
 		if (!_c11threads_win32_SleepConditionVariableCS) {
 			abort();
 		}
-		_c11threads_win32_InitOnceExecuteOnce = (_c11threads_win32_InitOnceExecuteOnce_t)GetProcAddress(kernel32, "InitOnceExecuteOnce");
+		_c11threads_win32_InitOnceExecuteOnce = (/*_c11threads_win32_InitOnceExecuteOnce_t*/void*)GetProcAddress(kernel32, "InitOnceExecuteOnce");
 		if (!_c11threads_win32_InitOnceExecuteOnce) {
 			abort();
 		}

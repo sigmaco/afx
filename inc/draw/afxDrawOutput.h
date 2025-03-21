@@ -126,25 +126,18 @@ typedef enum avxVideoAlpha
     // If the application does not set the blending mode using native window system commands, then a platform-specific default will be used.
 } avxVideoAlpha;
 
-typedef enum avxPresentMode
+typedef enum avxPresentFlag
+// Flags specifying the presentation rules.
 {
-    // Wait for the next vertical blanking period to update the current image. 
-    // Tearing cannot be observed. An internal queue is used to hold pending presentation requests. 
-    // New requests are appended to the end of the queue, and one request is removed from the beginning of the queue and processed during each vertical blanking period in which the queue is non-empty. 
-    // This is the only value of presentMode that is required to be supported.
-    avxPresentMode_FIFO, // like V-sync'ed double-buffered mode
+    // Frame rate limited.
+    avxPresentFlag_RATE_LIMITED = AFX_BIT(0),
 
-    // Wait for the next vertical blanking period to update the current image. 
-    // Tearing cannot be observed. An internal single-entry queue is used to hold pending presentation requests. 
-    // If the queue is full when a new presentation request is received, the new request replaces the existing entry, and any images associated with the prior entry become available for re-use by the application. 
-    // One request is removed from the queue and processed during each vertical blanking period in which the queue is non-empty.
-    avxPresentMode_LIFO, // like triple-buffered mode
-    
-    // Do not wait for a vertical blanking period to update the current image, meaning this mode may result in visible tearing. 
-    // No internal queuing of presentation requests is needed, as the requests are applied immediately.
-    avxPresentMode_IMMEDIATE,
-    
-} avxPresentMode;
+    // Screen tearing explicitly forbidden
+    avxPresentFlag_NO_TEARING   = AFX_BIT(1),
+
+    // Frame rate limited, screen tearing forbidden. ('vsync on')
+    avxPresentFlag_VSYNC        = (avxPresentFlag_RATE_LIMITED | avxPresentFlag_NO_TEARING),
+} avxPresentFlags;
 
 typedef afxBool(*avxPresentNotifier)(afxObject receiver, afxUnit);
 
@@ -158,10 +151,10 @@ AFX_DEFINE_STRUCT(afxDrawOutputCaps)
     avxVideoTransform   supportedTransforms;
     avxVideoTransform   currTransform;
     avxVideoAlpha       supportedCompositeAlpha;
-    afxRasterFlags      supportedUsageFlags;
+    avxRasterFlags      supportedUsageFlags;
     avxVideoScaling     supportedScaling;
     afxUnit             supportedModeCnt;
-    avxPresentMode      supportedModes;
+    avxPresentFlags     supportedModes;
 };
 
 AFX_DEFINE_STRUCT(afxDrawOutputConfig)
@@ -173,14 +166,14 @@ AFX_DEFINE_STRUCT(afxDrawOutputConfig)
     // canvas
     avxColorSpace       colorSpc; // avxColorSpace_STANDARD; if sRGB isn't present, fall down to LINEAR.
     avxFormat           bufFmt[3]; // formats for color, depth and stencil format, respectively. Pass zero to let driver choose the optimal format. Pass zero to disable depth and/or stencil.
-    afxRasterUsage      bufUsage[3]; // DRAW; used as (drawable) target surface for rasterization.
-    afxRasterFlags      bufFlags[3];
+    avxRasterUsage      bufUsage[3]; // DRAW; used as (drawable) target surface for rasterization.
+    avxRasterFlags      bufFlags[3];
     avxRange            extent;
     afxBool             resizable;
 
     // swapchain
     afxUnit             minBufCnt; // usually 2 or 3; double or triple-buffered.
-    avxPresentMode      presentMode; // FIFO; respect the sequence.
+    avxPresentFlags      presentMode; // FIFO; respect the sequence.
     avxVideoAlpha       presentAlpha; // FALSE; ignore transparency when composing endpoint background, letting it opaque.
     avxVideoTransform   presentTransform; // NIL; don't do any transform.
     afxBool             doNotClip; // FALSE; don't do off-screen draw.
@@ -213,55 +206,55 @@ AFX_DEFINE_STRUCT(afxDrawOutputConfig)
 AVX afxDrawOutputConfig const AVX_DEFAULT_DRAW_OUTPUT_CONFIG;
 
 /*
-    The function AfxGetDrawOutputContext() is used to retrieve the draw system context associated with a specific drawing output. 
+    The function AvxGetDrawOutputContext() is used to retrieve the draw system context associated with a specific drawing output. 
     This context provides access to the drawing system's state, settings, and configuration, which can be necessary for rendering 
     or interacting with the drawing output in a more detailed and controlled manner.
 */
 
-AVX afxDrawSystem AfxGetDrawOutputContext(afxDrawOutput dout);
+AVX afxDrawSystem AvxGetDrawOutputContext(afxDrawOutput dout);
 
 /*
-    The function AfxGetDrawOutputIcd() retrieves the installable client driver (ICD) operating a specific drawing output. 
+    The function AvxGetDrawOutputIcd() retrieves the installable client driver (ICD) operating a specific drawing output. 
     This ICD is a lower-level handle that provides access to the physical or virtual hardware device (ex.: video display adapter) 
     used for rendering or displaying the output. The returned ICD can be used for querying device-specific properties, 
     capabilities, or performing advanced operations directly related to the hardware rendering or display system.
 */
 
-AVX afxModule AfxGetDrawOutputIcd(afxDrawOutput dout);
+AVX afxModule AvxGetDrawOutputIcd(afxDrawOutput dout);
 
 /*
-    The primary purpose of AfxDescribeDrawOutput() is to retrieve descriptive information about a drawing output 
+    The primary purpose of AvxDescribeDrawOutput() is to retrieve descriptive information about a drawing output 
     (e.g., a window, display, or framebuffer). This is useful when you need to know the capabilities or configuration of 
     the drawing output before performing rendering or display operations.
 */
 
-AVX void AfxDescribeDrawOutput(afxDrawOutput dout, afxDrawOutputConfig* cfg);
+AVX void AvxDescribeDrawOutput(afxDrawOutput dout, afxDrawOutputConfig* cfg);
 
 /*
-    The primary purpose of AfxGetDrawOutputUdd() is to retrieve custom, user-defined data that has been associated with a 
+    The primary purpose of AvxGetDrawOutputUdd() is to retrieve custom, user-defined data that has been associated with a 
     specific drawing output (e.g., a render target, display, or framebuffer). This allows the application to store and retrieve 
     arbitrary data that may be needed during rendering or display operations.
 */
 
-AVX void* AfxGetDrawOutputUdd(afxDrawOutput dout, afxUnit slotIdx);
+AVX void* AvxGetDrawOutputUdd(afxDrawOutput dout, afxUnit slotIdx);
 
 /*
-    The function AfxCallDrawOutput() is used to call implementation-specific functionality associated with a specific drawing output 
+    The function AvxCallDrawOutput() is used to call implementation-specific functionality associated with a specific drawing output 
     and store results in a provided destination buffer. This function is designed to interface with the underlying hardware or rendering 
     context, extracting low-level information about the drawing output, which may include hardware-specific data, driver configurations, 
     or other internal details related to the output device.
 */
 
-AVX afxError AfxCallDrawOutput(afxDrawOutput dout, afxUnit code, ...);
+AVX afxError AvxCallDrawOutput(afxDrawOutput dout, afxUnit code, ...);
 
 /*
-    The AfxQueryDrawOutputResolution() function is used to query various display settings or attributes for a specific drawing output. 
+    The AvxQueryDrawOutputResolution() function is used to query various display settings or attributes for a specific drawing output. 
     It provides information about the resolution, refresh rate, and possibly the scaling factors related to the physical aspect ratio 
     of the display output. You would typically call this function when you need to retrieve the current display properties of a 
     particular screen or rendering target.
 */
 
-AVX void AfxQueryDrawOutputResolution
+AVX void AvxQueryDrawOutputResolution
 (
     // The drawing output for which resolution details are queried.
     afxDrawOutput dout,
@@ -280,12 +273,12 @@ AVX void AfxQueryDrawOutputResolution
 );
 
 /*
-    The AfxResetDrawOutputResolution() function is used to change or reset the drawing resolution for a specific output device, 
+    The AvxResetDrawOutputResolution() function is used to change or reset the drawing resolution for a specific output device, 
     adjusting both the display resolution and potentially the refresh rate, while considering the aspect ratio and whether the 
     change is in an exclusive fullscreen mode.
 */
 
-AVX afxError AfxResetDrawOutputResolution
+AVX afxError AvxResetDrawOutputResolution
 (
     // The drawing output to be reset or configured.
     afxDrawOutput dout,
@@ -304,10 +297,10 @@ AVX afxError AfxResetDrawOutputResolution
 );
 
 /*
-    The primary purpose of AfxAdjustDrawOutput() is to adjust the properties (such as resolution, size, or other dimensions) 
+    The primary purpose of AvxAdjustDrawOutput() is to adjust the properties (such as resolution, size, or other dimensions) 
     of the specified drawing output (dout) according to the provided width, height, and depth values (whd).
 */
-AVX afxError AfxAdjustDrawOutput
+AVX afxError AvxAdjustDrawOutput
 (
     // The drawing output whose properties are to be adjusted.
     afxDrawOutput dout, 
@@ -320,15 +313,15 @@ AVX afxError _AvxDoutAdjustNormalized(afxDrawOutput dout, afxV3d const whd);
 AVX void _AvxDoutGetExtentNormalized(afxDrawOutput dout, afxV3d whd); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 
 
-AVX void AfxGetDrawOutputRate(afxDrawOutput dout, afxUnit* rate);
+AVX void AvxGetDrawOutputRate(afxDrawOutput dout, afxUnit* rate);
 
 /*
-    The function AfxQueryDrawOutputExtent is used to query the extent (size or dimensions) of a drawing output, 
+    The function AvxQueryDrawOutputExtent is used to query the extent (size or dimensions) of a drawing output, 
     such as a display surface, framebuffer, or render target. It provides information about the drawing output's 
     resolution and other relevant properties.
 */
 
-AVX void AfxQueryDrawOutputExtent
+AVX void AvxQueryDrawOutputExtent
 (
     // The drawing output whose extent (size) is being queried.
     afxDrawOutput dout, 
@@ -341,13 +334,13 @@ AVX void AfxQueryDrawOutputExtent
 );
 
 /*
-    The AfxGetDrawOutputCanvas() function is used to query a specific canvas (or drawing buffer) associated with a drawing output context. 
+    The AvxGetDrawOutputCanvas() function is used to query a specific canvas (or drawing buffer) associated with a drawing output context. 
     It allows you to retrieve information about a particular rendering surface (e.g., a frame buffer or texture) that may be used 
     for drawing operations. Depending on the system, a canvas might represent an off-screen buffer (like a back buffer for double 
     buffering) or an on-screen rendering target.
 */
 
-AVX afxBool AfxGetDrawOutputCanvas
+AVX afxBool AvxGetDrawOutputCanvas
 (
     // Drawing output for which the canvas is being queried.
     afxDrawOutput dout,
@@ -360,13 +353,13 @@ AVX afxBool AfxGetDrawOutputCanvas
 );
 
 /*
-    The function AfxGetDrawOutputBuffer() is designed to retrieve a specific buffer associated with a drawing output. 
+    The function AvxGetDrawOutputBuffer() is designed to retrieve a specific buffer associated with a drawing output. 
     This function is typically used in graphics systems where multiple rendering buffers are managed and need to be accessed 
     for rendering or presentation. The buffer in question could be a frame buffer, back buffer, or any other type of memory buffer 
     used for rendering.
 */
 
-AVX afxBool AfxGetDrawOutputBuffer
+AVX afxBool AvxGetDrawOutputBuffer
 (
     // The drawing output for which you want to retrieve the buffer.
     afxDrawOutput dout,
@@ -375,13 +368,13 @@ AVX afxBool AfxGetDrawOutputBuffer
     afxUnit bufIdx, 
 
     // A pointer to where the function will store the reference to the retrieved buffer.
-    afxRaster* buffer
+    avxRaster* buffer
 );
 
-AVX afxError AfxRevalidateDrawOutputBuffers(afxDrawOutput dout);
+AVX afxError AvxRevalidateDrawOutputBuffers(afxDrawOutput dout);
 
 /*
-    The AfxRequestDrawOutputBuffer() function is designed to request or reserve a buffer for future use. 
+    The AvxRequestDrawOutputBuffer() function is designed to request or reserve a buffer for future use. 
     Buffers are commonly used in graphics and rendering systems for a variety of purposes:
 
         Double-Buffering: 
@@ -399,29 +392,29 @@ AVX afxError AfxRevalidateDrawOutputBuffers(afxDrawOutput dout);
     You must present or discard it at some time to avoid starvation.
 */
 
-AVX afxError AfxRequestDrawOutputBuffer
+AVX afxError AvxRequestDrawOutputBuffer
 (
     // The drawing output for which to request a buffer.
     afxDrawOutput dout,
 
     // The timeout duration to wait for the buffer to be available.
-    afxTime timeout,
+    afxUnit64 timeout,
 
     // A pointer to store the index of the reserved buffer.
     afxUnit *bufIdx
 );
 
 /*
-    The function AfxRecycleDrawOutputBuffer() is used to dispose of a previously acquired drawing buffer 
+    The function AvxRecycleDrawOutputBuffer() is used to dispose of a previously acquired drawing buffer 
     without presenting it to the screen or any output target. This function helps manage resources by 
     allowing the application to release a buffer that is no longer needed, without having to render or display its contents.
 
-    The primary purpose of AfxRecycleDrawOutputBuffer() is to release or dispose of a buffer that was previously requested 
+    The primary purpose of AvxRecycleDrawOutputBuffer() is to release or dispose of a buffer that was previously requested 
     but is no longer needed. This is often used in cases where the buffer will not be used for rendering or presentation, 
     but the system still needs to manage resources efficiently.
 */
 
-AVX afxError AfxRecycleDrawOutputBuffer
+AVX afxError AvxRecycleDrawOutputBuffer
 (
     // The drawing output associated with the buffer.
     afxDrawOutput dout,
@@ -431,17 +424,17 @@ AVX afxError AfxRecycleDrawOutputBuffer
 );
 
 /*
-    The primary purpose of AfxWaitForDrawOutput() is to synchronize your application with the rendering process. 
+    The primary purpose of AvxWaitForDrawOutput() is to synchronize your application with the rendering process. 
     It allows you to block or wait until the drawing output is ready for further operations (e.g., drawing to a surface, 
     reading from a surface, or performing buffer swaps).
 
-    AfxWaitForDrawOutput() is used to block or wait until a specific drawing output (e.g., a render target, framebuffer, or window) 
+    AvxWaitForDrawOutput() is used to block or wait until a specific drawing output (e.g., a render target, framebuffer, or window) 
     is ready for further operations, with a specified timeout to avoid blocking indefinitely.
     It can be useful for synchronizing operations between the CPU and GPU, ensuring that rendering tasks are completed before 
     proceeding with additional steps.
 */
 
-AVX afxError AfxWaitForDrawOutput
+AVX afxError AvxWaitForDrawOutput
 (
     // The drawing output to wait for.
     afxDrawOutput dout,
@@ -451,7 +444,7 @@ AVX afxError AfxWaitForDrawOutput
 );
 
 /*
-    The AfxPrintDrawOutput() function is designed to "print" or "export" the contents of a drawing output buffer to an external resource. 
+    The AvxPrintDrawOutput() function is designed to "print" or "export" the contents of a drawing output buffer to an external resource. 
     Depending on the library or framework, "printing" could mean saving the rendered buffer to a file, sending it to a printer, 
     or exporting the drawing in a specific format.
 
@@ -459,13 +452,15 @@ AVX afxError AfxWaitForDrawOutput
     exporting frames in a video sequence, or saving images for further processing).
 */
 
-AVX afxError AfxPrintDrawOutput
+AVX afxError AvxPrintDrawOutput
 (
     // The drawing output for which the content is to be printed or saved.
     afxDrawOutput dout, 
 
     // The index of the buffer or canvas (e.g., front buffer, back buffer).
-    afxUnit bufIdx, 
+    afxUnit bufIdx,
+
+    avxRasterIo const* op,
 
     // The index of the execution unit to handle the I/O.
     afxUnit exuIdx, 
@@ -477,14 +472,14 @@ AVX afxError AfxPrintDrawOutput
 ////////////////////////////////////////////////////////////////////////////////
 
 /*
-    The AfxPresentDrawOutputs() function presents rendered outputs (such as frames or images) to a display system or window.
+    The AvxPresentDrawOutputs() function presents rendered outputs (such as frames or images) to a display system or window.
     It handles synchronization between the drawing operations and the presentation phase, ensuring that the outputs are
     presented only after they are fully rendered. It also supports managing multiple outputs and buffer indices for
     double/triple buffering, as well as using fences to signal the completion of the presentation. This function is typically
     used at the end of a rendering cycle to display the final results to the user.
 */
 
-AVX afxError AfxPresentDrawOutputs
+AVX afxError AvxPresentDrawOutputs
 (
     // The drawing system where the outputs will be presented.
     afxDrawSystem dsys,
@@ -518,13 +513,13 @@ AVX afxError AfxPresentDrawOutputs
 );
 
 /*
-    The AfxEnumerateDrawOutputs() function enumerates the drawing outputs open for a established drawing system. 
+    The AvxEnumerateDrawOutputs() function enumerates the drawing outputs open for a established drawing system. 
     This can include devices like display monitors or render targets, allowing applications to discover and 
     interact with these outputs for rendering or display purposes. The function provides the ability to query 
     a specific range of outputs and retrieve information about each one for further processing.
 */
 
-AVX afxUnit AfxEnumerateDrawOutputs
+AVX afxUnit AvxEnumerateDrawOutputs
 (
     // The established draw system associated with the enumeration process.
     // The function will query available drawing outputs for the given drawing system (dsys).
@@ -544,13 +539,13 @@ AVX afxUnit AfxEnumerateDrawOutputs
 );
 
 /*
-    The AfxInvokeDrawOutputs() function enables custom processing of drawing outputs within a drawing system. 
+    The AvxInvokeDrawOutputs() function enables custom processing of drawing outputs within a drawing system. 
     By passing a user-defined function and user data, this function allows the application to query and process 
     drawing outputs in a flexible and extensible way. This could be useful for tasks like querying display properties, 
     updating output settings, or interacting with different display or render target devices.
 */
 
-AVX afxUnit AfxInvokeDrawOutputs
+AVX afxUnit AvxInvokeDrawOutputs
 (
     // The drawing system whose outputs are to be processed.
     afxDrawSystem dsys, 
@@ -574,14 +569,14 @@ AVX afxUnit AfxInvokeDrawOutputs
 );
 
 /*
-    The AfxEvokeDrawOutputs() function enables the application to retrieve a set of drawing outputs from a drawing system 
+    The AvxEvokeDrawOutputs() function enables the application to retrieve a set of drawing outputs from a drawing system 
     and invoke a user-defined function on each output. This allows for customized processing of outputs such as displays, 
     render targets, or other output interfaces. The user-defined data provides flexibility, enabling the user to pass 
     additional context or configuration to the processing function. This function is useful when the application needs to 
     process or configure multiple outputs based on a drawing system.
 */
 
-AVX afxUnit AfxEvokeDrawOutputs
+AVX afxUnit AvxEvokeDrawOutputs
 (
     // The drawing system from which the drawing outputs will be retrieved.
     afxDrawSystem dsys, 
@@ -603,7 +598,7 @@ AVX afxUnit AfxEvokeDrawOutputs
     afxDrawOutput outputs[]
 );
 
-AVX afxError AfxConfigureDrawOutput
+AVX afxError AvxConfigureDrawOutput
 (
     // The drawing system to which the drawing output belongs.
     afxDrawSystem dsys,
@@ -613,7 +608,7 @@ AVX afxError AfxConfigureDrawOutput
 );
 
 /*
-    The AfxOpenDrawOutput() function opens a drawing output with specific settings provided 
+    The AvxOpenDrawOutput() function opens a drawing output with specific settings provided 
     in the configuration structure. This could involve creating a window for rendering, 
     allocating a framebuffer, setting up a full-screen display, or initializing other kinds 
     of graphical outputs.
@@ -622,7 +617,7 @@ AVX afxError AfxConfigureDrawOutput
     which can be used to perform further rendering or interaction.
 */
 
-AVX afxError AfxOpenDrawOutput
+AVX afxError AvxOpenDrawOutput
 (
     // The drawing system where the drawing output will be created or opened.
     afxDrawSystem dsys, 

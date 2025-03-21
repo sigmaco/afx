@@ -65,24 +65,24 @@ AFX_DEFINE_STRUCT(avxShaderConfig)
     afxUnit         verMajor;
     afxUnit         verMinor;
     afxBool         extended;
-    afxChar const*const*label;
+    afxString       tag;
 };
 
-AVX avxShaderStage  AfxGetShaderStage(avxShader shd);
+AVX avxShaderStage  AvxGetShaderStage(avxShader shd);
 
-AVX afxUnit         AfxQueryShaderIoChannels(avxShader shd, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[]);
+AVX afxUnit         AvxQueryShaderIoChannels(avxShader shd, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[]);
 
-AVX afxUnit         AfxQueryShaderInterfaces(avxShader shd, afxUnit first, afxUnit cnt, avxShaderResource rsrc[]);
+AVX afxUnit         AvxQueryShaderInterfaces(avxShader shd, afxUnit first, afxUnit cnt, avxShaderResource rsrc[]);
 
-AVX afxBool         AfxShaderIsDummy(avxShader shd);
+AVX afxBool         AvxShaderIsDummy(avxShader shd);
 
-AVX afxError        AfxDumpShaderCode(avxShader shd, afxArray* arr);
+AVX afxError        AvxDumpShaderCode(avxShader shd, afxArray* arr);
 
-AVX afxError        AfxPrintShader(avxShader shd, afxUri const *uri);
-AVX afxError        AfxSerializeShader(avxShader shd, afxStream ios);
+AVX afxError        AvxPrintShader(avxShader shd, afxUri const *uri);
+AVX afxError        AvxSerializeShader(avxShader shd, afxStream ios);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxAcquireShaders(afxDrawSystem dsys, afxUnit cnt, afxUri const uris[], afxString const codes[], avxShader shaders[]);
+AVX afxError        AvxAcquireShaders(afxDrawSystem dsys, afxUnit cnt, afxUri const uris[], afxString const codes[], avxShader shaders[]);
 
 #endif//AVX_SHADER_H

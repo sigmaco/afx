@@ -137,9 +137,9 @@ AVX afxUnit AfxEvokeDrawInputs
 );
 
 
-AVX afxError AfxConfigureDrawInput(afxDrawSystem dsys, afxDrawInputConfig* cfg);
+AVX afxError AvxConfigureDrawInput(afxDrawSystem dsys, afxDrawInputConfig* cfg);
 
-AVX afxError AfxOpenDrawInput
+AVX afxError AvxOpenDrawInput
 (
     afxDrawSystem dsys, 
     afxDrawInputConfig const* cfg, 

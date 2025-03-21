@@ -25,9 +25,9 @@
     and secondary command buffers, which can be executed by primary command buffers, and which are not directly submitted to queues.
 */
 /*
-    When a pipeline object is bound, any pipeline object state that is not specified as dynamic is applied to the command buffer state.
-    Pipeline object state that is specified as dynamic is not applied to the command buffer state at this time.
-    Instead, dynamic state can be modified at any time and persists for the lifetime of the command buffer, 
+    When a pipeline object is bound, any pipeline object state that is not specified as dynamic is applied to the draw context state.
+    Pipeline object state that is specified as dynamic is not applied to the draw context state at this time.
+    Instead, dynamic state can be modified at any time and persists for the lifetime of the draw context, 
     or until modified by another dynamic state setting command, 
     or made invalid by another pipeline bind with that state specified as static.
 */
@@ -39,58 +39,58 @@
 
 typedef enum avxCmdbUsage
 {
-    // specifies that each recording of the command buffer will only be submitted once, 
-    // and the command buffer will be reset and recorded again between each submission.
+    // specifies that each recording of the draw context will only be submitted once, 
+    // and the draw context will be reset and recorded again between each submission.
     avxCmdbUsage_ONCE,
 
-    // specifies that a secondary command buffer is considered to be entirely inside a render canvas.
-    // If this is a primary command buffer, then this bit is ignored.
+    // specifies that a secondary draw context is considered to be entirely inside a render canvas.
+    // If this is a primary draw context, then this bit is ignored.
     avxCmdbUsage_RESUME,
 
-    // specifies that a command buffer can be resubmitted to any queue of the same queue family while it is in the pending state, 
+    // specifies that a draw context can be resubmitted to any queue of the same queue family while it is in the pending state, 
     // and recorded into multiple primary command buffers.
     avxCmdbUsage_SIMULTANEOUS,
 } avxCmdbUsage;
 
-AVX afxUnit     AfxGetCommandPort(afxDrawContext dctx);
+AVX afxUnit     AvxGetCommandPort(afxDrawContext dctx);
 
-AVX afxUnit     AfxGetCommandPool(afxDrawContext dctx);
+AVX afxUnit     AvxGetCommandPool(afxDrawContext dctx);
 
-/// Finish recording a command buffer.
+/// Finish recording a draw context.
 
-AVX afxError    AfxCompileDrawCommands(afxDrawContext dctx);
+AVX afxError    AvxCompileDrawCommands(afxDrawContext dctx);
 
-/// Reset a command buffer to the initial state.
-/// Any primary command buffer that is in the recording or executable state and has @dctx recorded into it, becomes invalid.
+/// Reset a draw context to the initial state.
+/// Any primary draw context that is in the recording or executable state and has @dctx recorded into it, becomes invalid.
 
 AVX afxError    AfxResetDrawContext(afxDrawContext dctx, afxBool freeMem);
 
-/// 'exhaust' specifies that most or all memory resources currently owned by the command buffer should be returned to the parent command pool. If this flag is not set, then the command buffer may hold onto memory resources and reuse them when recording commands. @dctx is moved to the initial state.
+/// 'exhaust' specifies that most or all memory resources currently owned by the draw context should be returned to the parent command pool. If this flag is not set, then the draw context may hold onto memory resources and reuse them when recording commands. @dctx is moved to the initial state.
 
-AVX afxError    AfxRecycleDrawContext(afxDrawContext dctx, afxBool exhaust);
+AVX afxError    AvxRecycleDrawContext(afxDrawContext dctx, afxBool exhaust);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/// AfxAcquireDrawContexts can be used to allocate multiple command buffers.
+/// AvxAcquireDrawContexts can be used to allocate multiple command buffers.
 /// If the allocation of any of those command buffers fails, 
-/// the implementation must free all successfully allocated command buffer objects from this command, 
+/// the implementation must free all successfully allocated draw context objects from this command, 
 /// set all entries of the buffers[] array to NIL and return the error.
 
-AVX afxError    AfxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxUnit cnt, afxDrawContext batches[]);
+AVX afxError    AvxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxUnit cnt, afxDrawContext batches[]);
 
 // NOTE 1: In Mantle, unlike Vulkan, we specify the queue capabilites instead of exuIdx.
 // NOTE 2: In Mantle and Vulkan, we specify optimization hints (like ONE_TIME) when we starts recording a context (with a Begin() function);
 
 
 /*
-    The AfxExecuteDrawCommands() function submits multiple draw commands to a drawing system for execution.
+    The AvxExecuteDrawCommands() function submits multiple draw commands to a drawing system for execution.
     It allows for synchronized execution using a fence object, ensuring that commands are executed in the proper order.
     This function is useful in graphics systems where multiple draw contexts (command buffers) need to be processed,
     and synchronization between CPU and GPU tasks is required. By managing the submission through a control structure
     and using a fence for synchronization, the function ensures that drawing commands are executed efficiently and correctly.
 */
 
-AVX afxError AfxExecuteDrawCommands
+AVX afxError AvxExecuteDrawCommands
 (
     // The drawing system where the draw commands will be executed.
     afxDrawSystem dsys,

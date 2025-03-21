@@ -69,15 +69,21 @@
 
 #ifndef MFX_ALIGN_ALL
 typedef afxReal afxV2d[2];
+typedef afxReal afxV3d[3];
+typedef afxV3d  afxM3d[3]; // 3D Linear Transform (3x3 Matrix)
+typedef afxV3d  afxM4r[4]; // A 4x3 matrix has 4 rows and 3 columns.
+#else
+typedef afxReal AFX_SIMD afxV2d[2];
+typedef afxReal AFX_SIMD afxV3d[3];
+typedef afxV3d  AFX_SIMD afxM3d[3]; // 3D Linear Transform (3x3 Matrix)
+typedef afxV3d  AFX_SIMD afxM4r[4]; // A 4x3 matrix has 4 rows and 3 columns.
+#endif
+
 typedef afxReal AFX_SIMD afxV4d[4];
 typedef afxV2d  AFX_SIMD afxM2d[2]; // 2D Linear Transform (2x2 Matrix)
-typedef afxV4d  AFX_SIMD afxM4d[4];
-#else
-typedef afxReal AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxV2d[2];
-typedef afxReal AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxV4d[4];
-typedef afxV2d  AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxM2d[2]; // 2D Linear Transform (2x2 Matrix)
-typedef afxV4d  AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxM4d[4];
-#endif
+typedef afxV4d  AFX_SIMD afxM4d[4]; // 4x4
+
+typedef afxV4d  AFX_SIMD afxM4c[3]; // A 3x4 matrix has 3 rows and 4 columns.
 
 typedef afxV4d  AFX_SIMD afxQuat; // 0,1,2 = imaginary, 3 = real
 typedef afxV4d  AFX_SIMD afxRotor; // 0,1,2 = imaginary, 3 = real
@@ -85,31 +91,19 @@ typedef afxV4d  AFX_SIMD afxVector;
 typedef afxV4d  AFX_SIMD afxPoint;
 typedef afxM4d  AFX_SIMD afxMatrix;
 
-#ifndef MFX_ALIGN_ALL
-typedef afxReal afxV3d[3];
-typedef afxV3d  afxM3d[3]; // 3D Linear Transform (3x3 Matrix)
-typedef afxV3d  afxAtm3d[4]; // non-aligned affine space.
-#else
-typedef afxReal AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxV3d[3];
-typedef afxV3d  AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxM3d[3]; // 3D Linear Transform (3x3 Matrix)
-typedef afxV3d  AFX_ALIGN(AFX_SIMD_ALIGNMENT) afxAtm3d[4]; // non-aligned affine space.
-#endif
-
 //typedef  afxUnit afxWhd[3];
 
-#if 0
-// always aligned
-AFX_STATIC_ASSERT(__alignof(afxV4d) == AFX_SIMD_ALIGNMENT, "");
-AFX_STATIC_ASSERT(__alignof(afxQuat) == AFX_SIMD_ALIGNMENT, "");
-AFX_STATIC_ASSERT(__alignof(afxRotor) == AFX_SIMD_ALIGNMENT, "");
-AFX_STATIC_ASSERT(__alignof(afxM4d) == AFX_SIMD_ALIGNMENT, "");
-AFX_STATIC_ASSERT(__alignof(afxMatrix) == AFX_SIMD_ALIGNMENT, "");
-#endif
 #ifdef MFX_ALIGN_ALL
 AFX_STATIC_ASSERT(__alignof(afxV2d) == AFX_SIMD_ALIGNMENT, "");
 AFX_STATIC_ASSERT(__alignof(afxV3d) == AFX_SIMD_ALIGNMENT, "");
 AFX_STATIC_ASSERT(__alignof(afxM3d) == AFX_SIMD_ALIGNMENT, "");
 #endif
+// always aligned
+AFX_STATIC_ASSERT(__alignof(afxM4d) == AFX_SIMD_ALIGNMENT, "");
+AFX_STATIC_ASSERT(__alignof(afxV4d) == AFX_SIMD_ALIGNMENT, "");
+AFX_STATIC_ASSERT(__alignof(afxQuat) == AFX_SIMD_ALIGNMENT, "");
+AFX_STATIC_ASSERT(__alignof(afxRotor) == AFX_SIMD_ALIGNMENT, "");
+AFX_STATIC_ASSERT(__alignof(afxMatrix) == AFX_SIMD_ALIGNMENT, "");
 
 AFXINL void         AfxNdcV2d(afxV2d v, afxV2d const b, afxV2d const total);
 AFXINL void         AfxUnndcV2d(afxV2d v, afxV2d const b, afxV2d const total);

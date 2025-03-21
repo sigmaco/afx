@@ -20,7 +20,7 @@
 #define AVX_DISPLAY_H
 
 #include "qwadro/inc/draw/op/avxPipeline.h"
-#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/avxRaster.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
 #include "qwadro/inc/draw/afxDrawOutput.h"
 
@@ -47,7 +47,7 @@ AFX_DEFINE_STRUCT(avxDisplayCapabilities)
     avxVideoTransform   currTransform;
     avxVideoTransform   supportedTransforms;
     avxVideoAlpha       supportedCompositeAlpha;
-    afxRasterUsage      supportedUsage;
+    avxRasterUsage      supportedUsage;
 };
 
 typedef enum avxScanlining

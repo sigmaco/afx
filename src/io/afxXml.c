@@ -763,7 +763,7 @@ afxError _AfxXmlOpen(afxXml* xml, afxStream file)
 _AFX afxXmlNode* AfxGetXmlRoot(afxXml* xml)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(xml, afxFcc_XML);
+    //AFX_ASSERT(xml->fcc == afxFcc_XML);
     return xml->root;
 }
 
@@ -1271,7 +1271,7 @@ _AFX afxError AfxLoadXml(afxXml* xml, afxUri const *uri)
     afxError err = AFX_ERR_NONE;
     *xml = (afxXml) { 0 };
 
-    //AfxEntry("uri:%.*s", AfxPushString(uri ? AfxGetUriString(uri) : &AFX_STR_EMPTY));
+    //AfxEntry("uri:%.*s", AfxPushString(uri ? AfxGetUriString(uri) : &AFX_STRING_EMPTY));
     afxStream file;
     afxStreamInfo iobi = { 0 };
     iobi.usage = afxIoUsage_FILE;

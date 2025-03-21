@@ -34,21 +34,21 @@ _ASX void AfxShineMaterial(afxMaterial mtl, afxReal shininess)
     mtl->shininess = shininess;
 }
 
-_ASX afxRaster AfxGetMaterialTexture(afxMaterial mtl)
+_ASX avxRaster AfxGetMaterialTexture(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
-    afxRaster tex = mtl->tex;
+    avxRaster tex = mtl->tex;
     AFX_TRY_ASSERT_OBJECTS(afxFcc_RAS, 1, &tex);
     return tex;
 }
 
-_ASX void AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex)
+_ASX void AfxRebindMaterialTexture(afxMaterial mtl, avxRaster tex)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
 
-    afxRaster tex2 = mtl->tex;
+    avxRaster tex2 = mtl->tex;
 
     if (tex2)
     {
@@ -70,7 +70,7 @@ _ASX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
 
-    afxRaster tex2 = mtl->tex;
+    avxRaster tex2 = mtl->tex;
 
     if (tex2)
     {
@@ -89,10 +89,10 @@ _ASX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
 
         afxDrawSystem dsys = AfxGetDrawInputContext(din);
 
-        afxRasterInfo rasi = { 0 };
-        rasi.usage = afxRasterUsage_SAMPLING;
+        avxRasterInfo rasi = { 0 };
+        rasi.usage = avxRasterUsage_RESAMPLE;
 
-        if (AfxLoadRasters(dsys, 1, &rasi, &tex[0], &mtl->tex)) AfxThrowError();
+        if (AvxLoadRasters(dsys, 1, &rasi, &tex[0], &mtl->tex)) AfxThrowError();
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &mtl->tex);
@@ -231,7 +231,7 @@ _ASX afxError _AsxMtlCtorCb(afxMaterial mtl, void** args, afxUnit invokeNo)
     afxSimulation sim = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     afxString const* id = args[1];
-    afxRaster tex = args[2];
+    avxRaster tex = args[2];
     afxUnit mapCnt = *((afxUnit const *)args[2]);
     
     AfxCloneString(&mtl->urn, id);
@@ -365,7 +365,7 @@ _ASX afxUnit AfxFindMaterialIndices(afxSimulation sim, afxUnit cnt, afxString co
     return rslt;
 }
 
-_ASX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxUnit subCnt, afxMaterial *mtl)
+_ASX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, avxRaster tex, afxUnit subCnt, afxMaterial *mtl)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);

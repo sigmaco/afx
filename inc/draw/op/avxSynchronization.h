@@ -22,7 +22,7 @@
 #include "qwadro/inc/draw/op/avxQueryPool.h"
 
 AVX afxCmdId            AvxCmdBeginQuery
-/// Begin a query. After beginning a query, that query is considered active within the command buffer it was called in until that same query is ended.
+/// Begin a query. After beginning a query, that query is considered active within the draw context it was called in until that same query is ended.
 (
     afxDrawContext      dctx,
     avxQueryPool        pool, // the query pool that will manage the results of the query.
@@ -48,7 +48,7 @@ AVX afxCmdId            AvxCmdCopyQueryResults
     avxBuffer           buf, // a avxBuffer object that will receive the results of the copy command.
     afxSize             offset, // an offset into dstBuffer.
     afxSize             stride, // the stride in bytes between results for individual queries within dstBuffer.
-    afxQueryResultFlags flags
+    avxQueryResultFlags flags
 );
 
 AVX afxCmdId            AvxCmdResetQueries

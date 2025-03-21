@@ -261,7 +261,7 @@ void DecodeRle8(afxUnit w, afxUnit h, afxByte const* in, afxByte* out)
     }
 }
 
-_AVX afxError AfxWriteRasterFile(afxStream out, afxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, afxRasterFlags flags, afxUnit uddSiz)
+_AVX afxError AfxWriteRasterFile(afxStream out, avxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, avxRasterFlags flags, afxUnit uddSiz)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
@@ -326,10 +326,10 @@ _AVX afxError AfxWriteRasterFile(afxStream out, afxRasterIo* iop, afxUnit lodCnt
     tgai.bpp = pfd.bpp / pfd.bcWh[0];
     tgai.descriptor = 0;
 
-    if (flags & afxRasterFlag_CUBEMAP)
+    if (flags & avxRasterFlag_CUBEMAP)
         tgai.flags |= afxTargaFlag_CUBEMAP;
 
-    if (flags & afxRasterFlag_3D)
+    if (flags & avxRasterFlag_3D)
         tgai.flags |= afxTargaFlag_3D;
 
     // ignored for block compressed types.

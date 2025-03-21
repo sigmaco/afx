@@ -28,28 +28,28 @@
 #include "qwadro/inc/mem/afxSlabAllocator.h"
 
 typedef enum avxCmdbState
-/// Each command buffer is always in one of the following states
+/// Each draw context is always in one of the following states
 {
-    // When a command buffer is allocated, it is in the initial state.
-    // Some commands are able to reset a command buffer (or a set of command buffers) back to this state from any of the executable, recording or invalid state.
+    // When a draw context is allocated, it is in the initial state.
+    // Some commands are able to reset a draw context (or a set of command buffers) back to this state from any of the executable, recording or invalid state.
     // Command buffers in the initial state canv only be moved to the recording state, or freed.
     avxCmdbState_INITIAL,
 
-    // BeginCmdBuffer() changes the state of a command buffer from the initial state to the recording state.
-    // Once a command buffer is in the recording state, AvxCmd* commands canv be used to record to the command buffer.
+    // BeginCmdBuffer() changes the state of a draw context from the initial state to the recording state.
+    // Once a draw context is in the recording state, AvxCmd* commands canv be used to record to the draw context.
     avxCmdbState_RECORDING,
 
-    // AfxCompileCmdBuffer() ends the recording of a command buffer, and moves it from the recording state to the executable state.
-    // Executable command buffers canv be submitted, reset, or recorded to another command buffer.
+    // AfxCompileCmdBuffer() ends the recording of a draw context, and moves it from the recording state to the executable state.
+    // Executable command buffers canv be submitted, reset, or recorded to another draw context.
     avxCmdbState_EXECUTABLE,
 
-    // Queue submission of a command buffer changes the state of a command buffer from the executable state to the pending state.
-    // Whilst in the pending state, applications must not attempt to modify the command buffer in any way - as the device may be processing the commands recorded to it.
-    // Once execution of a command buffer completes, the command buffer either reverts back to the executable state, or if it was recorded with ONCE flag, it moves to the invalid state.
+    // Queue submission of a draw context changes the state of a draw context from the executable state to the pending state.
+    // Whilst in the pending state, applications must not attempt to modify the draw context in any way - as the device may be processing the commands recorded to it.
+    // Once execution of a draw context completes, the draw context either reverts back to the executable state, or if it was recorded with ONCE flag, it moves to the invalid state.
     // A synchronization command should be used to detect when this occurs.
     avxCmdbState_PENDING,
 
-    // Some operations, such as modifying or deleting a resource that was used in a command recorded to a command buffer, will transition the state of that command buffer into the invalid state.
+    // Some operations, such as modifying or deleting a resource that was used in a command recorded to a draw context, will transition the state of that draw context into the invalid state.
     // Command buffers in the invalid state canv only be reset or freed.
     avxCmdbState_INVALID,
 
@@ -96,7 +96,7 @@ AFX_OBJECT(afxDrawContext)
         avxCanvas           canv;
         afxRect             area;
         avxPipeline         pip;
-        avxVertexDecl       vtxd;
+        avxVertexInput       vtxd;
         avxBufferedStream   vbos[16];
         avxBuffer           ibo;
     };
@@ -141,14 +141,6 @@ AFX_DEFINE_UNION(avxCmd)
         avxBuffer buf;
         afxUnit offset;
         afxUnit range;
-    } ClearBuffer;
-    struct
-    {
-        avxCmdHdr hdr;
-
-        avxBuffer buf;
-        afxUnit offset;
-        afxUnit range;
         afxByte AFX_SIMD data[];
     } UpdateBuffer;
 
@@ -156,65 +148,65 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxRaster ras;
+        avxRaster ras;
         avxBuffer buf;
         afxUnit opCnt;
-        afxRasterIo AFX_SIMD ops[];
+        avxRasterIo AFX_SIMD ops[];
     } PackRaster;
     struct
     {
         avxCmdHdr hdr;
 
-        afxRaster ras;
+        avxRaster ras;
         avxBuffer buf;
         afxUnit opCnt;
-        afxRasterIo AFX_SIMD ops[];
+        avxRasterIo AFX_SIMD ops[];
     } UnpackRaster;
     struct
     {
         avxCmdHdr hdr;
 
-        afxRaster src;
-        afxRaster dst;
+        avxRaster src;
+        avxRaster dst;
         afxUnit opCnt;
-        afxRasterCopy AFX_SIMD ops[];
+        avxRasterCopy AFX_SIMD ops[];
     } CopyRaster;
     struct
     {
         avxCmdHdr hdr;
 
         afxDrawContext dctx;
-        afxRaster src;
-        afxRaster dst;
+        avxRaster src;
+        avxRaster dst;
         avxTexelFilter flt;
         afxUnit opCnt;
-        afxRasterBlit AFX_SIMD ops[];
+        avxRasterBlit AFX_SIMD ops[];
     } BlitRaster;
     struct
     {
         avxCmdHdr hdr;
 
         afxDrawContext dctx;
-        afxRaster src;
-        afxRaster dst;
+        avxRaster src;
+        avxRaster dst;
         afxUnit opCnt;
-        afxRasterCopy AFX_SIMD ops[];
+        avxRasterCopy AFX_SIMD ops[];
     } ResolveRaster;
     struct
     {
         avxCmdHdr hdr;
 
         afxDrawContext dctx;
-        afxRaster ras;
+        avxRaster ras;
         avxClearValue value;
         afxUnit opCnt;
-        afxRasterBlock AFX_SIMD ops[];
+        avxRasterBlock AFX_SIMD ops[];
     } ClearRaster;
     struct
     {
         avxCmdHdr hdr;
 
-        afxRaster ras;
+        avxRaster ras;
         afxUnit baseLod;
         afxUnit lodCnt;
     } SubsampleRaster;
@@ -226,7 +218,7 @@ AFX_DEFINE_UNION(avxCmd)
 
         afxUnit segment;
         avxPipeline pip;
-        avxVertexDecl vin;
+        avxVertexInput vin;
         afxFlags dynamics;
     } BindPipeline;
     struct
@@ -236,7 +228,7 @@ AFX_DEFINE_UNION(avxCmd)
         afxUnit set;
         afxUnit baseIdx;
         afxUnit cnt;
-        avxBufferMap AFX_SIMD maps[];
+        avxBufferedMap AFX_SIMD maps[];
     } BindBuffers;
     struct
     {
@@ -245,7 +237,7 @@ AFX_DEFINE_UNION(avxCmd)
         afxUnit set;
         afxUnit baseIdx;
         afxUnit cnt;
-        afxRaster AFX_SIMD rasters[];
+        avxRaster AFX_SIMD rasters[];
     } BindRasters;
     struct
     {
@@ -352,7 +344,7 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        avxVertexDecl vin;
+        avxVertexInput vin;
     } DeclareVertex;
     struct
     {
@@ -372,7 +364,7 @@ AFX_DEFINE_UNION(avxCmd)
 
         afxUnit baseIdx;
         afxUnit cnt;
-        afxViewport AFX_SIMD viewports[];
+        avxViewport AFX_SIMD viewports[];
     } AdjustViewports;
     struct
     {
@@ -400,6 +392,12 @@ AFX_DEFINE_UNION(avxCmd)
 
     // RASTERIZATION OPERATIOS
 
+    struct
+    {
+        avxCmdHdr hdr;
+        
+        avxFillMode mode;
+    } SetFillModeEXT;
     struct
     {
         avxCmdHdr hdr;
@@ -454,23 +452,33 @@ AFX_DEFINE_UNION(avxCmd)
     {
         avxCmdHdr hdr;
 
-        afxMask faceMask;
-        afxUnit32 compareMask;
+        avxFaceMask faceMask;
+        afxMask compareMask;
     } SetStencilCompareMask;
     struct
     {
         avxCmdHdr hdr;
 
-        afxMask faceMask;
-        afxUnit32 writeMask;
+        avxFaceMask faceMask;
+        afxMask writeMask;
     } SetStencilWriteMask;
     struct
     {
         avxCmdHdr hdr;
 
-        afxMask faceMask;
+        avxFaceMask faceMask;
         afxUnit32 reference;
     } SetStencilReference;
+    struct
+    {
+        avxCmdHdr hdr;
+
+        avxFaceMask faceMask;
+        avxStencilOp failOp;
+        avxStencilOp passOp;
+        avxStencilOp depthFailOp;
+        avxCompareOp compareOp;
+    } SetStencilOp;
     struct
     {
         avxCmdHdr hdr;
@@ -504,11 +512,12 @@ AFX_DEFINE_UNION(avxCmd)
         afxUnit baseIdx;
         afxUnit cnt;
         afxRect AFX_SIMD rects[];
-    } AdjustCurtains;
+    } AdjustCurtainsSIGMA;
     struct
     {
         avxCmdHdr hdr;
 
+        afxString       dbgTag;
         avxCanvas       canv;
         afxRect         area;
         afxBool         hasD;
@@ -532,6 +541,73 @@ AFX_DEFINE_UNION(avxCmd)
 
         afxBool useAuxContexts;
     } NextPass;
+    struct
+    {
+        avxCmdHdr hdr;
+
+        afxUnit sampleLvl;
+    } SetRasterizationSamplesEXT;
+    struct
+    {
+        avxCmdHdr hdr;
+
+        afxUnit sampleLvl;
+        afxMask sampleMasks[AVX_MAX_SAMPLE_MASKS];
+    } SetSampleMaskEXT;
+    struct
+    {
+        avxCmdHdr hdr;
+
+        afxBool enable;
+    } SwitchAlphaToCoverageEXT;    
+    struct
+    {
+        avxCmdHdr hdr;
+
+        afxBool enable;
+    } SwitchAlphaToOneEXT;
+    struct
+    {
+        avxCmdHdr hdr;
+
+        afxUnit first;
+        afxUnit cnt;
+        afxBool enabled[];
+    } SwitchColorBlendingEXT;
+    struct
+    {
+        avxCmdHdr hdr;
+
+        afxUnit first;
+        afxUnit cnt;
+        avxColorBlend equations[];
+    } ChangeColorBlendEquationEXT;
+    struct
+    {
+        avxCmdHdr hdr;
+
+        afxUnit first;
+        afxUnit cnt;
+        avxColorMask masks[];
+    } SetColorWriteMaskEXT;
+    struct
+    {
+        avxCmdHdr hdr;
+        afxBool enabled;
+    } SwitchLogicOpEXT;
+    struct
+    {
+        avxCmdHdr hdr;
+        afxBool enabled;
+    } SetDepthClampEnableEXT;
+    struct
+    {
+        avxCmdHdr hdr;
+
+        afxUnit first;
+        afxUnit cnt;
+        afxRect rects[];
+    }DiscardRectanglesEXT;
 
     // QUERY OPERATIONS
     struct
@@ -559,7 +635,7 @@ AFX_DEFINE_UNION(avxCmd)
         avxBuffer buf;
         afxSize offset;
         afxSize stride;
-        afxQueryResultFlags flags;
+        avxQueryResultFlags flags;
     } CopyQueryResults;
     struct
     {
@@ -597,7 +673,7 @@ AFX_DEFINE_UNION(avxCmd)
 
         afxString2048 label;
         afxV4d color;
-    } InsertDebugLabel;
+    } MarkDebugStep;
 };
 
 AFX_DEFINE_UNION(avxCmdList)
@@ -606,7 +682,6 @@ AFX_DEFINE_UNION(avxCmdList)
     {
         void* CopyBuffer;
         void* FillBuffer;
-        void* ClearBuffer;
         void* UpdateBuffer;
 
         void* PackRaster;
@@ -655,14 +730,26 @@ AFX_DEFINE_UNION(avxCmdList)
         void* SetStencilCompareMask;
         void* SetStencilWriteMask;
         void* SetStencilReference;
+        void* SetStencilOp;
         void* EnableDepthBoundsTest;
         void* SetDepthBounds;
         void* SetBlendConstants;
         void* AdjustScissors;
-        void* AdjustCurtains;
+        void* AdjustCurtainsSIGMA;
         void* CommenceDrawScope;
         void* ConcludeDrawScope;
         void* NextPass;
+        void* SetFillModeEXT;
+        void* SetRasterizationSamplesEXT;
+        void* SetSampleMaskEXT;
+        void* SwitchAlphaToCoverageEXT;
+        void* SwitchAlphaToOneEXT;
+        void* SwitchColorBlendingEXT;
+        void* ChangeColorBlendEquationEXT;
+        void* SetColorWriteMaskEXT;
+        void* SwitchLogicOpEXT;
+        void* SetDepthClampEnableEXT;
+        void* DiscardRectanglesEXT;
 
         // QUERY OPERATIONS
         void* BeginQuery;
@@ -673,7 +760,7 @@ AFX_DEFINE_UNION(avxCmdList)
 
         void* PushDebugScope;
         void* PopDebugScope;
-        void* InsertDebugLabel;
+        void* MarkDebugStep;
     };
     void(*f[])(void*, avxCmd const*);
 };

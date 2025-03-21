@@ -204,11 +204,11 @@ AFXINL void     AfxHalfV3d(afxV3d v, afxV3d const in);
 AFXINL void     AfxHalfV4d(afxV4d v, afxV4d const in);
 
 AFXINL void     AfxMinV2d(afxV2d v, afxV2d const a, afxV2d const b); // v = minor between A and B
-AFXINL void     AfxMinV3d(afxV3d v, afxV3d const a, afxV3d const b); // v = minor between A and B
+AFXINL void     AfxV3dMin(afxV3d v, afxV3d const a, afxV3d const b); // v = minor between A and B
 AFXINL void     AfxMinV4d(afxV4d v, afxV4d const a, afxV4d const b); // v = minor between A and B
 
 AFXINL void     AfxMaxV2d(afxV2d v, afxV2d const a, afxV2d const b); // v = major between A and B
-AFXINL void     AfxMaxV3d(afxV3d v, afxV3d const a, afxV3d const b); // v = major between A and B
+AFXINL void     AfxV3dMax(afxV3d v, afxV3d const a, afxV3d const b); // v = major between A and B
 AFXINL void     AfxMaxV4d(afxV4d v, afxV4d const a, afxV4d const b); // v = major between A and B
 
 AFXINL void     AfxClampV2d(afxV2d v, afxV2d const in, afxV2d const min, afxV2d const max); // v = IN between bounds

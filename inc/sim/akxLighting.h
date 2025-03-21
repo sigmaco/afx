@@ -19,7 +19,6 @@
 
 #include "qwadro/inc/sim/afxNode.h"
 #include "qwadro/inc/mem/afxArray.h"
-#include "qwadro/inc/draw/math/afxColor.h"
 
 #define AFX_LIT_ALIGN AFX_SIMD_ALIGNMENT
 
@@ -65,13 +64,13 @@ AFX_OBJECT(akxLight)
     afxReal     angularDist; // 0.f
     
     afxUnit32    bakeMode; // 2
-    afxColor    color; // [1, 1, 1, 1]
+    avxColor    color; // [1, 1, 1, 1]
     afxMask     cullMask; // 0xFFFFFFFF
     afxReal     energy; // 1.f
     afxReal     indirectEnergy; // 1.f
     afxReal     intensLumens;
     afxReal     intensLux;
-    afxRaster  projector;
+    avxRaster  projector;
     afxReal     size; // 0.f
     afxReal     specular; // 0.5f
     afxReal     temperature;

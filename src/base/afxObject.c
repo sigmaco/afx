@@ -30,7 +30,7 @@
 _AFXINL afxResult _AfxClsTestObjFccRecursive(afxClass const *cls, afxFcc fcc)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
     if (cls->objFcc == fcc) return 1;
     else if (cls->subset.chain)
@@ -42,13 +42,13 @@ _AFXINL afxResult _AfxClsTestObjFccRecursive(afxClass const *cls, afxFcc fcc)
 _AFXINL afxResult AfxTestObjectFcc(afxObject obj, afxFcc fcc)
 {
     afxError err = AFX_ERR_NONE;
-    //AfxAssertType(obj, afxFcc_OBJ);
+    //AFX_ASSERT(obj->fcc == afxFcc_OBJ);
     AFX_ASSERT(fcc);
     afxClass const* cls = AfxGetClass(obj);
 
     if (cls)
     {
-        AfxAssertType(cls, afxFcc_CLS);
+        AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
         if (cls->objFcc == fcc) return 1;
         else if (cls->subset.chain)
@@ -61,18 +61,18 @@ _AFXINL afxResult AfxTestObjectFcc(afxObject obj, afxFcc fcc)
 _AFXINL afxFcc AfxGetObjectFcc(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(obj, afxFcc_OBJ);
+    AFX_ASSERT(obj);
     afxClass const* cls = AfxGetClass(obj);
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     return cls->objFcc;
 }
 
 _AFXINL afxChar const* AfxGetObjectFccAsString(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(obj, afxFcc_OBJ);
+    AFX_ASSERT(obj);
     afxClass const* cls = AfxGetClass(obj);
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     return (afxChar const *)&cls->objFcc;
 }
 
@@ -80,7 +80,7 @@ _AFXINL afxInt32 AfxGetRefCount(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     return AfxLoadAtom32(&hdr->refCnt);
 }
 
@@ -88,7 +88,7 @@ _AFXINL afxUnit32 AfxGetObjectTid(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase const* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     return hdr->tid;
 }
 
@@ -96,9 +96,9 @@ _AFXINL afxClass* AfxGetClass(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase const* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     afxClass *cls = hdr->cls;
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     return cls;
 }
 
@@ -106,17 +106,17 @@ _AFXINL afxBool AfxDoesObjectInherit(afxObject obj, afxClass const* cls)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase const* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
     afxClass const* objCls = hdr->cls;
-    AfxAssertType(objCls, afxFcc_CLS);
+    AFX_ASSERT(objCls->fcc == afxFcc_CLS);
 
     while (1)
     {
         if (cls)
         {
-            AfxAssertType(cls, afxFcc_CLS);
+            AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
             if (objCls == cls)
                 return TRUE;
@@ -131,9 +131,9 @@ _AFXINL void* AfxGetProvider(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase const* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     afxClass const *cls = hdr->cls;
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     return AfxGetLinker(&cls->host);
 }
 
@@ -141,7 +141,7 @@ _AFXINL afxBool AfxTestObjectFlags(afxObject obj, afxObjectFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase const* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     AFX_ASSERT(flags);
     return (hdr->flags & flags);
 }
@@ -150,7 +150,7 @@ _AFXINL afxError AfxObjectAssert(afxObject obj, afxFcc fcc, afxHere const hint, 
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase const* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     AFX_ASSERT(fcc);
     AFX_ASSERT(hint);
     AFX_ASSERT(exp);
@@ -185,7 +185,7 @@ _AFXINL afxObjectFlags AfxSetObjectFlags(afxObject obj, afxObjectFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     return (hdr->flags |= flags);
 }
 
@@ -193,7 +193,7 @@ _AFXINL afxObjectFlags AfxClearObjectFlags(afxObject obj, afxObjectFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     return (hdr->flags &= ~flags);
 }
 
@@ -255,7 +255,7 @@ _AFX void AfxResetEventHandler(afxObject obj, afxBool(*handler)(afxObject,afxEve
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
 
     if (handler) hdr->event = handler;
     else
@@ -278,7 +278,7 @@ _AFX afxError AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watched
             continue;
 
         afxObjectBase* hdr = GET_OBJ_HDR(watched);
-        AfxAssertType(hdr, afxFcc_OBJ);
+        AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
         afxObjectBase* filterInst = GET_OBJ_HDR(obj);
         AfxLogEcho("Deinstalling watcher <%p> for %p", obj, watched);
         
@@ -345,9 +345,9 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
             continue;
 
         afxObjectBase* hdr = GET_OBJ_HDR(watched);
-        AfxAssertType(hdr, afxFcc_OBJ);
+        AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
         afxObjectBase* filterInst = GET_OBJ_HDR(obj);
-        AfxAssertType(filterInst, afxFcc_OBJ);
+        AFX_ASSERT(filterInst->fcc == afxFcc_OBJ);
         AfxLogEcho("Installing watcher <%p> for %p...", obj, watched);
         //AFX_ASSERT(fn);
 
@@ -436,7 +436,7 @@ _AFX afxBool AfxNotifyObject(afxObject obj, afxEvent* ev)
     // This virtual function receives events to an object and should return true if the event e was recognized and processed.
 
     afxObjectBase const* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     //AfxAssertType(ev, afxFcc_EVNT);
 
     // An event filter is an object that receives all events that are sent to this object. 
@@ -455,7 +455,7 @@ _AFX afxBool AfxNotifyObject(afxObject obj, afxEvent* ev)
         {
             AFX_ASSERT(AfxGetLinker(&flt->watched) == obj);
             afxObjectBase* watcherHdr = GET_OBJ_HDR(AfxGetLinker(&flt->holder));
-            AfxAssertType(watcherHdr, afxFcc_OBJ);            
+            AFX_ASSERT(watcherHdr->fcc == afxFcc_OBJ);
             AFX_ASSERT(flt->fn);
             intercept |= flt->fn(AfxGetLinker(&flt->holder), obj, ev);
         }

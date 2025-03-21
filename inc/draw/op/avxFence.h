@@ -19,8 +19,8 @@
 /// Fences are a synchronization primitive that can be used to insert a dependency from a queue to the host.
 /// Fences have two states - signaled and unsignaled. 
 /// A fence can be signaled as part of the execution of a queue submission command. 
-/// Fences can be unsignaled on the host with AfxResetFences.
-/// Fences can be waited on by the host with the AfxWaitForFences command, and the current state can be queried with AfxGetFenceStatus.
+/// Fences can be unsignaled on the host with AvxResetFences.
+/// Fences can be waited on by the host with the AvxWaitForFences command, and the current state can be queried with AfxGetFenceStatus.
 
 /// The internal data of a fence may include a reference to any resources and pending work associated with signal or unsignal operations performed on that fence object, collectively referred to as the fence’s payload.
 /// Mechanisms to import and export that internal data to and from fences are provided below. 
@@ -32,14 +32,14 @@
 #include "qwadro/inc/draw/afxDrawDefs.h"
 
 /// Return the draw system witch this fence belongs to.
-AVX afxDrawSystem   AfxGetFenceContext(avxFence fenc);
+AVX afxDrawSystem   AvxGetFenceContext(avxFence fenc);
 
 /// Return the status of this fence.
-AVX afxBool         AfxIsFenceSignaled(avxFence fenc);
+AVX afxBool         AvxIsFenceSignaled(avxFence fenc);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxAcquireFences
+AVX afxError        AvxAcquireFences
 /// Create a new fence object.
 (
     afxDrawSystem   dsys, // the draw system that creates the fence.
@@ -48,7 +48,7 @@ AVX afxError        AfxAcquireFences
     avxFence        fences[] // a array of handles in which the resulting fence objects are returned.
 );
 
-AVX afxError        AfxWaitForFences
+AVX afxError        AvxWaitForFences
 /// Wait for one or more fences to become signaled.
 (
     afxDrawSystem   dsys,
@@ -58,7 +58,7 @@ AVX afxError        AfxWaitForFences
     avxFence const  fences[] // an array of cnt fence handles.    
 );
 
-AVX afxError        AfxResetFences
+AVX afxError        AvxResetFences
 /// Resets one or more fence objects.
 (
     afxDrawSystem   dsys,

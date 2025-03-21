@@ -20,7 +20,7 @@
 #define AVX_BUFFERIZER_H
 
 #include "qwadro/inc/draw/io/avxBuffer.h"
-#include "qwadro/inc/draw/op/avxVertexDecl.h"
+#include "qwadro/inc/draw/op/avxVertexInput.h"
 
 AFX_DEFINE_HANDLE(avxBufferizer);
 
@@ -41,7 +41,7 @@ AVX afxError        AfxAcquireBufferizer(afxDrawInput din, avxBufferizerInfo con
 
 AVX avxBuffer       AfxGetVertexBufferStorage(afxVertexBuffer vbuf);
 AVX afxUnit         AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
-AVX avxVertexDecl  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
+AVX avxVertexInput  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
 AVX afxUnit         AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
 
 #endif//AVX_BUFFERIZER_H

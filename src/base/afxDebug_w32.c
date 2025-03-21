@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <signal.h>
 #include <Windows.h>
 #include <Shlwapi.h>
 //#include <Mmsystem.h>
@@ -447,6 +448,44 @@ _AFXINL afxResult _AfxDbgDetach(void)
     return 0;
 }
 
+void sigHandler(int s)
+{
+    switch (s)
+    {
+    case SIGTERM:
+    {
+        _AfxDbgLogFn(0, "termination request, sent to the program.", 0);
+        break;
+    }
+    case SIGSEGV:
+    {
+        _AfxDbgLogFn(0, "invalid memory access (segmentation fault).", 0);
+        break;
+    }
+    case SIGINT:
+    {
+        _AfxDbgLogFn(0, "external interrupt, usually initiated by the user.", 0);
+        break;
+    }
+    case SIGILL:
+    {
+        _AfxDbgLogFn(0, "invalid program image, such as invalid instruction.", 0);
+        break;
+    }
+    case SIGABRT:
+    {
+        _AfxDbgLogFn(0, "abnormal termination condition, as is e.g. initiated by abort().", 0);
+        break;
+    }
+    case SIGFPE:
+    {
+        _AfxDbgLogFn(0, "erroneous arithmetic operation such as divide by zero.", 0);
+        break;
+    }
+    default: break;
+    }
+}
+
 _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
 {
     (void)file;
@@ -457,6 +496,13 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
         AfxDeployMutex(&(debugger.mtx), AFX_MTX_RECURSIVE);
         AfxDeployCondition(&(debugger.cond));
         debugger.isLocked = TRUE;
+
+        signal(SIGTERM, sigHandler);
+        signal(SIGSEGV, sigHandler);
+        signal(SIGINT, sigHandler);
+        signal(SIGILL, sigHandler);
+        signal(SIGABRT, sigHandler);
+        signal(SIGFPE, sigHandler);
 
         afxChar path[1024];
 
@@ -485,7 +531,7 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
             struct tm * ti;
             ti = localtime(&t);
             
-            AfxSprintf(path, "%s\\diag\\%s(%04i%02i%02i-%02i%02i%02i).log", sys, exeName, 1900 + ti->tm_year, ti->tm_mon, ti->tm_mday, ti->tm_hour, ti->tm_min, ti->tm_sec);
+            AfxSprintf(path, "%s(%04i%02i%02i-%02i%02i%02i).log", exeName, 1900 + ti->tm_year, ti->tm_mon, ti->tm_mday, ti->tm_hour, ti->tm_min, ti->tm_sec);
             
             if (!(debugger.dump = fopen(path, "w+"))) AfxThrowError();
             else

@@ -52,8 +52,8 @@ AFX_DEFINE_STRUCT(afxVideoDesc)
     afxReal outFrameFreq;
 };
 
-AMX afxError AfxBindVideoSamples(afxVideoDecoder vidd, afxUnit cnt, avxBufferMap const maps[]);
-AMX afxError AfxBindVideoBuffer(afxVideoDecoder vidd, afxRaster ras);
+AMX afxError AfxBindVideoSamples(afxVideoDecoder vidd, afxUnit cnt, avxBufferedMap const maps[]);
+AMX afxError AfxBindVideoBuffer(afxVideoDecoder vidd, avxRaster ras);
 
 AMX afxError AfxBlitVideo(afxVideoDecoder vidd, afxUnit opCnt, afxRect ops[]);
 

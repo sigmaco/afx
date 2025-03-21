@@ -363,7 +363,7 @@ _AFX afxUnit AfxCountArchivedFiles(afxArchive arc)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
-    AfxAssertType(&arc->entries, afxFcc_ARR);
+    //AFX_ASSERT(&arc->entries.fcc afxFcc_ARR);
     return arc->entries.pop;
 }
 
@@ -519,7 +519,7 @@ _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxUnit idx, afxStream *in)
     else
     {
         *in = in2;
-        AfxAssertType(in2, afxFcc_IOB);
+        AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in2);
 
         //if (AfxCopyStreamRange(arc->file, e->offset, size, 0, in2))
             AfxThrowError();

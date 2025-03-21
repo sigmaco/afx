@@ -22,7 +22,7 @@
 #define AUX_SESSION_H
 
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/draw/math/afxViewport.h"
+#include "qwadro/inc/draw/math/avxViewport.h"
 #include "qwadro/inc/ux/hid/afxKeyboard.h"
 #include "qwadro/inc/ux/hid/afxMouse.h"
 

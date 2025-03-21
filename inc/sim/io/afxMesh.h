@@ -187,7 +187,7 @@ typedef enum afxVertexFlag
 AFX_DEFINE_STRUCT(avxVertexCache)
 {
     afxLink          vbuf;
-    avxVertexDecl      vin;
+    avxVertexInput      vin;
     avxBuffer           buf;
     struct
     {

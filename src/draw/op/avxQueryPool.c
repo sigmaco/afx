@@ -20,7 +20,7 @@
 #define _AVX_QUERY_POOL_C
 #include "../impl/avxImplementation.h"
 
-AVX afxResult AfxGetQueryResults(avxQueryPool qryp, afxUnit baseQuery, afxUnit queryCnt, void* dst, afxSize cap, afxSize stride, afxQueryResultFlags flags)
+AVX afxResult AvxGetQueryResults(avxQueryPool qryp, afxUnit baseQuery, afxUnit queryCnt, void* dst, afxSize cap, afxSize stride, avxQueryResultFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &qryp);
@@ -30,7 +30,7 @@ AVX afxResult AfxGetQueryResults(avxQueryPool qryp, afxUnit baseQuery, afxUnit q
     return 0;
 }
 
-AVX void AfxResetQueries(avxQueryPool qryp, afxUnit baseQuery, afxUnit queryCnt)
+AVX void AvxResetQueries(avxQueryPool qryp, afxUnit baseQuery, afxUnit queryCnt)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &qryp);
@@ -38,7 +38,7 @@ AVX void AfxResetQueries(avxQueryPool qryp, afxUnit baseQuery, afxUnit queryCnt)
 
 }
 
-_AVX afxDrawSystem AfxGetQueryPoolContext(avxQueryPool qryp)
+_AVX afxDrawSystem AvxGetQueryPoolContext(avxQueryPool qryp)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &qryp);
@@ -60,22 +60,23 @@ _AVX afxError _AvxQrypCtorCb(avxQueryPool qryp, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &qryp);
 
     afxDrawSystem dsys = args[0];
-    afxQueryType type = *(afxQueryType const*)args[1];
+    avxQueryType type = *(avxQueryType const*)args[1];
     afxUnit cap = *(afxUnit const*)args[2];
     AFX_ASSERT(cap);
 
-    if (type > afxQueryType_TOTAL) AfxThrowError();
+    if (type > avxQueryType_TOTAL) AfxThrowError();
     else
     {
         qryp->type = type;
         qryp->cap = cap;
+        qryp->tag = (afxString) { 0 };
     }
     return err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxAcquireQueryPools(afxDrawSystem dsys, afxQueryType type, afxUnit cap, afxUnit cnt, avxQueryPool pools[])
+_AVX afxError AfxAcquireQueryPools(afxDrawSystem dsys, avxQueryType type, afxUnit cap, afxUnit cnt, avxQueryPool pools[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);

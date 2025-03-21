@@ -45,7 +45,7 @@ _AVX avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxCm
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxCmdId AvxCmdPushDebugScope(afxDrawContext dctx, afxString const* name, afxColor const color)
+_AVX afxCmdId AvxCmdPushDebugScope(afxDrawContext dctx, afxString const* name, avxColor const color)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -62,9 +62,9 @@ _AVX afxCmdId AvxCmdPushDebugScope(afxDrawContext dctx, afxString const* name, a
     AfxMakeString2048(&cmd->PushDebugScope.label, name);
 
     if (color)
-        AfxColorCopy(cmd->PushDebugScope.color, color);
+        AvxCopyColor(cmd->PushDebugScope.color, color);
     else
-        AfxColorReset(cmd->PushDebugScope.color);
+        AvxResetColor(cmd->PushDebugScope.color);
 
     return cmdId;
 }
@@ -86,7 +86,7 @@ _AVX afxCmdId AvxCmdPopDebugScope(afxDrawContext dctx)
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdInsertDebugLabel(afxDrawContext dctx, afxString const* name, afxColor const color)
+_AVX afxCmdId AvxCmdMarkDebugStep(afxDrawContext dctx, afxString const* name, avxColor const color)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -97,15 +97,15 @@ _AVX afxCmdId AvxCmdInsertDebugLabel(afxDrawContext dctx, afxString const* name,
     AFX_ASSERT(!dctx->inVideoCoding);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(InsertDebugLabel), sizeof(cmd->InsertDebugLabel), &cmdId);
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(MarkDebugStep), sizeof(cmd->MarkDebugStep), &cmdId);
     AFX_ASSERT(cmd);
 
-    AfxMakeString2048(&cmd->InsertDebugLabel.label, name);
+    AfxMakeString2048(&cmd->MarkDebugStep.label, name);
 
     if (color)
-        AfxColorCopy(cmd->InsertDebugLabel.color, color);
+        AvxCopyColor(cmd->MarkDebugStep.color, color);
     else
-        AfxColorReset(cmd->InsertDebugLabel.color);
+        AvxResetColor(cmd->MarkDebugStep.color);
 
     return cmdId;
 }
@@ -119,28 +119,28 @@ _AVX avxCmdbState _AvxGetCommandStatus(afxDrawContext dctx)
     return dctx->state;
 }
 
-_AVX afxUnit AfxGetCommandPort(afxDrawContext dctx)
+_AVX afxUnit AvxGetCommandPort(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     return dctx->portId;
 }
 
-_AVX afxUnit AfxGetCommandPool(afxDrawContext dctx)
+_AVX afxUnit AvxGetCommandPool(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     return dctx->poolIdx;
 }
 
-_AVX afxError AfxCompileDrawCommands(afxDrawContext dctx)
+_AVX afxError AvxCompileDrawCommands(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     // If there was an error during recording, the application will be notified by an unsuccessful return 
-    // code returned by AfxEndCommandBuffer, and the command buffer will be moved to the invalid state.
-    // The command buffer must have been in the recording state, and, if successful, is moved to the executable state.
+    // code returned by AfxEndCommandBuffer, and the draw context will be moved to the invalid state.
+    // The draw context must have been in the recording state, and, if successful, is moved to the executable state.
 
     if (dctx->state != avxCmdbState_RECORDING) AfxThrowError();
     else
@@ -154,7 +154,7 @@ _AVX afxError AfxCompileDrawCommands(afxDrawContext dctx)
     return err;
 }
 
-_AVX afxError AfxRecycleDrawContext(afxDrawContext dctx, afxBool freeRes)
+_AVX afxError AvxRecycleDrawContext(afxDrawContext dctx, afxBool freeRes)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
@@ -226,7 +226,7 @@ _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     afxDrawSystem dsys = AfxGetProvider(dexu);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    afxDrawDevice ddev = AfxGetDrawBridgeDevice(dexu);
+    afxDrawDevice ddev = AvxGetDrawBridgeDevice(dexu);
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     dctx->devLimits = _AvxDdevGetLimits(ddev);
     dctx->enabledFeatures = _AvxDsysAccessReqFeatures(dsys);
@@ -259,7 +259,7 @@ _AVX afxClassConfig const _AVX_DCTX_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxUnit cnt, afxDrawContext batches[])
+_AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxUnit cnt, afxDrawContext batches[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -267,7 +267,7 @@ _AVX afxError AfxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit
     AFX_ASSERT(cnt);
 
     afxDrawBridge dexu;
-    if (!AfxGetDrawBridges(dsys, exuIdx, 1, &dexu))
+    if (!AvxGetDrawBridges(dsys, exuIdx, 1, &dexu))
     {
         AfxThrowError();
         return err;
@@ -275,7 +275,7 @@ _AVX afxError AfxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 
     afxDrawQueue dque;
-    if (!AfxGetDrawQueues(dexu, queIdx, 1, &dque))
+    if (!AvxGetDrawQueues(dexu, queIdx, 1, &dque))
     {
         AfxThrowError();
         return err;
@@ -329,7 +329,7 @@ _AVX afxError AfxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit
             AfxThrowError();
 
             for (afxUnit j = cnt2; j-->0;)
-                AfxRecycleDrawContext(batches[j], TRUE);
+                AvxRecycleDrawContext(batches[j], TRUE);
 
             cnt2 = 0;
         }
@@ -355,7 +355,7 @@ _AVX afxError AfxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit
     return err;
 }
 
-_AVX afxError AfxExecuteDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence)
+_AVX afxError AvxExecuteDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -365,13 +365,13 @@ _AVX afxError AfxExecuteDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, af
     AFX_ASSERT(cnt);
 
     /*
-        If any command buffer submitted to this queue is in the executable state, it is moved to the pending state.
-        Once execution of all submissions of a command buffer complete, it moves from the pending state, back to the executable state.
-        If a command buffer was recorded with the VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT flag, it instead moves back to the invalid state.
+        If any draw context submitted to this queue is in the executable state, it is moved to the pending state.
+        Once execution of all submissions of a draw context complete, it moves from the pending state, back to the executable state.
+        If a draw context was recorded with the VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT flag, it instead moves back to the invalid state.
     */
 
     afxDrawBridge dexu;
-    if (!AfxGetDrawBridges(dsys, ctrl->exuIdx, 1, &dexu))
+    if (!AvxGetDrawBridges(dsys, ctrl->exuIdx, 1, &dexu))
     {
         AfxThrowError();
         return err;
@@ -393,7 +393,7 @@ _AVX afxError AfxExecuteDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, af
             afxUnit queIdx = baseQueIdx + i;
 
             afxDrawQueue dque;
-            if (!AfxGetDrawQueues(dexu, queIdx, 1, &dque))
+            if (!AvxGetDrawQueues(dexu, queIdx, 1, &dque))
             {
                 AfxThrowError();
                 break;

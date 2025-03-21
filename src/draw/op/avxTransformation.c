@@ -20,7 +20,7 @@
 #define _AVX_DRAW_CONTEXT_C
 #include "../impl/avxImplementation.h"
 
-_AVX afxCmdId AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexDecl vin)
+_AVX afxCmdId AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -59,7 +59,7 @@ _AVX afxCmdId AvxCmdSwitchFrontFace(afxDrawContext dctx, afxBool cw)
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdSetCullMode(afxDrawContext dctx, avxCullMode mode)
+_AVX afxCmdId AvxCmdChangeCullMode(afxDrawContext dctx, avxCullMode mode)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -80,7 +80,7 @@ _AVX afxCmdId AvxCmdSetCullMode(afxDrawContext dctx, avxCullMode mode)
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUnit cnt, afxViewport const viewports[])
+_AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUnit cnt, avxViewport const viewports[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -95,7 +95,7 @@ _AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUni
     // cnt must be greater than 0.
     AFX_ASSERT(cnt);
 
-    // viewports must be a valid pointer to an array of cnt valid afxViewport structures.
+    // viewports must be a valid pointer to an array of cnt valid avxViewport structures.
     AFX_ASSERT(viewports);
 
 #if AVX_LIMIT_VALIDATION_ENABLED
@@ -126,7 +126,7 @@ _AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUni
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        afxViewport const* vp = &viewports[i];
+        avxViewport const* vp = &viewports[i];
 #if AVX_VALIDATION_ENABLED
 #if AVX_LIMIT_VALIDATION_ENABLED
         AFX_ASSERT_RANGE(dctx->devLimits->maxVpDimensions[0], vp->origin[0], vp->extent[0]);
@@ -294,5 +294,24 @@ _AVX afxCmdId AvxCmdSetPrimitiveTopology(afxDrawContext dctx, avxTopology topolo
     avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SetPrimitiveTopology), sizeof(cmd->SetPrimitiveTopology), &cmdId);
     AFX_ASSERT(cmd);
     cmd->SetPrimitiveTopology.topology = topology;
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdChangeFillModeEXT(afxDrawContext dctx, avxFillMode mode)
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    AFX_ASSERT(mode < avxFillMode_TOTAL);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SetFillModeEXT), sizeof(cmd->SetFillModeEXT), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->SetFillModeEXT.mode = mode;
     return cmdId;
 }

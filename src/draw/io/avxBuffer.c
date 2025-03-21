@@ -149,7 +149,7 @@ _AVX afxError AvxFlushBuffer(avxBuffer buf, afxSize offset, afxUnit range)
     AFX_ASSERT_RANGE(buf->cap, offset, range);
     AFX_ASSERT(AFX_IS_ALIGNED(offset, AVX_BUFFER_ALIGNMENT));
 
-    avxBufferMap map = { 0 };
+    avxBufferedMap map = { 0 };
     map.buf = buf;
     map.offset = offset;
     map.range = range;
@@ -170,7 +170,7 @@ _AVX afxError AvxSyncBuffer(avxBuffer buf, afxSize offset, afxUnit range)
     AFX_ASSERT_RANGE(buf->cap, offset, range);
     AFX_ASSERT(AFX_IS_ALIGNED(offset, AVX_BUFFER_ALIGNMENT));
 
-    avxBufferMap map = { 0 };
+    avxBufferedMap map = { 0 };
     map.buf = buf;
     map.offset = offset;
     map.range = range;
@@ -199,7 +199,7 @@ _AVX afxError AvxDumpBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[
     for (afxUnit i = 0; i < opCnt; i++)
     {
         avxBufferIo const* op = &ops[i];
-        AfxAssertAlign(op->srcOffset, AVX_BUFFER_ALIGNMENT);
+        AFX_ASSERT_ALIGNMENT(op->srcOffset, AVX_BUFFER_ALIGNMENT);
         AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->srcOffset, AfxMax(1, op->rowCnt) * AfxMax(1, op->dstStride));
     }
 #endif//AVX_VALIDATION_ENABLED
@@ -221,7 +221,7 @@ _AVX afxError AvxDumpBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
-    if (AfxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
+    if (AvxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
     return err;
@@ -240,7 +240,7 @@ _AVX afxError AvxUpdateBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const op
     for (afxUnit i = 0; i < opCnt; i++)
     {
         avxBufferIo const* op = &ops[i];
-        AfxAssertAlign(op->dstOffset, AVX_BUFFER_ALIGNMENT);
+        AFX_ASSERT_ALIGNMENT(op->dstOffset, AVX_BUFFER_ALIGNMENT);
         AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->dstOffset, AfxMax(1, op->rowCnt) * AfxMax(1, op->dstStride));
     }
 #endif//AVX_VALIDATION_ENABLED
@@ -262,7 +262,7 @@ _AVX afxError AvxUpdateBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const op
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
-    if (AfxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
+    if (AvxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
     return err;
@@ -280,7 +280,7 @@ _AVX afxError AvxUploadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const op
     for (afxUnit i = 0; i < opCnt; i++)
     {
         avxBufferIo const* op = &ops[i];
-        AfxAssertAlign(op->dstOffset, AVX_BUFFER_ALIGNMENT);
+        AFX_ASSERT_ALIGNMENT(op->dstOffset, AVX_BUFFER_ALIGNMENT);
         AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->dstOffset, AfxMax(1, op->rowCnt) * AfxMax(1, op->dstStride));
     }
 #endif//AVX_VALIDATION_ENABLED
@@ -303,7 +303,7 @@ _AVX afxError AvxUploadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const op
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
-    if (AfxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
+    if (AvxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
     return err;
@@ -319,7 +319,7 @@ _AVX afxError AvxDownloadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const 
     for (afxUnit i = 0; i < opCnt; i++)
     {
         avxBufferIo const* op = &ops[i];
-        AfxAssertAlign(op->srcOffset, AVX_BUFFER_ALIGNMENT);
+        AFX_ASSERT_ALIGNMENT(op->srcOffset, AVX_BUFFER_ALIGNMENT);
         AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->srcOffset, AfxMax(1, op->rowCnt) * AfxMax(1, op->dstStride));
     }
 #endif//AVX_VALIDATION_ENABLED
@@ -342,7 +342,7 @@ _AVX afxError AvxDownloadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const 
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
-    if (AfxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
+    if (AvxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
     return err;
@@ -388,7 +388,7 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
     else if (!bufi->usage)
         AfxThrowError();
 
-    buf->label = bufi->label;
+    buf->tag = bufi->tag;
     buf->data = NIL;
     avxBuffer src = buf->src;
 
@@ -542,7 +542,7 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
                 AFX_ASSERT(buf->sharingMask == infos[i].sharingMask);
                 AFX_ASSERT(buf->udd == infos[i].udd);
                 AFX_ASSERT((buf->usage & infos[i].usage) == infos[i].usage);
-                AFX_ASSERT(buf->label == infos[i].label);
+                AFX_ASSERT(buf->tag.start == infos[i].tag.start);
             }
 #endif
         }
@@ -555,7 +555,7 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
     such that they can be made available to the device memory domain via memory domain operations using the WRITE access type.
 */
 
-_AVX afxError AvxFlushBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferMap const maps[])
+_AVX afxError AvxFlushBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap const maps[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -564,7 +564,7 @@ _AVX afxError AvxFlushBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferMap c
 #if AVX_VALIDATION_ENABLED
     for (afxUnit i = 0; i < cnt; i++)
     {
-        avxBufferMap const* map = &maps[i];
+        avxBufferedMap const* map = &maps[i];
         avxBuffer buf = map->buf;
 
         if (!buf) continue;
@@ -592,15 +592,15 @@ _AVX afxError AvxFlushBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferMap c
         return err;
 #endif//AVX_VALIDATION_ENABLED
 
-    afxError(*flushMapsCb)(afxDrawSystem, afxUnit, avxBufferMap const[]) = _AvxDsysGetImpl(dsys)->flushMaps;
+    afxError(*flushMapsCb)(afxDrawSystem, afxUnit, avxBufferedMap const[]) = _AvxDsysGetImpl(dsys)->flushMaps;
 
     if (!flushMapsCb)
     {
         afxDrawQueue dque;
         afxDrawBridge dexu;
         afxUnit portId = 0;
-        AfxGetDrawBridges(dsys, portId, 1, &dexu);
-        AfxGetDrawQueues(dexu, 0, 1, &dque);
+        AvxGetDrawBridges(dsys, portId, 1, &dexu);
+        AvxGetDrawQueues(dexu, 0, 1, &dque);
         AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
         if (_AvxSubmitSyncMaps(dque, cnt, maps, 0, NIL))
@@ -621,7 +621,7 @@ _AVX afxError AvxFlushBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferMap c
     invalidated without first being flushed, its contents are undefined.
 */
 
-_AVX afxError AvxSyncBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferMap const maps[])
+_AVX afxError AvxSyncBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap const maps[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -630,7 +630,7 @@ _AVX afxError AvxSyncBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferMap co
 #if AVX_VALIDATION_ENABLED
     for (afxUnit i = 0; i < cnt; i++)
     {
-        avxBufferMap const* map = &maps[i];
+        avxBufferedMap const* map = &maps[i];
         avxBuffer buf = map->buf;
 
         if (!buf) continue;
@@ -658,15 +658,15 @@ _AVX afxError AvxSyncBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferMap co
         return err;
 #endif//AVX_VALIDATION_ENABLED
 
-    afxError(*syncMapsCb)(afxDrawSystem, afxUnit, avxBufferMap const[]) = _AvxDsysGetImpl(dsys)->syncMaps;
+    afxError(*syncMapsCb)(afxDrawSystem, afxUnit, avxBufferedMap const[]) = _AvxDsysGetImpl(dsys)->syncMaps;
 
     if (!syncMapsCb)
     {
         afxDrawQueue dque;
         afxDrawBridge dexu;
         afxUnit portId = 0;
-        AfxGetDrawBridges(dsys, portId, 1, &dexu);
-        AfxGetDrawQueues(dexu, 0, 1, &dque);
+        AvxGetDrawBridges(dsys, portId, 1, &dexu);
+        AvxGetDrawQueues(dexu, 0, 1, &dque);
         AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
         if (_AvxSubmitSyncMaps(dque, 0, NIL, cnt, maps))
@@ -698,6 +698,8 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferRemap maps
         if (!buf) continue;
         AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
 
+        afxUnit range = map->range;
+        afxSize offset = map->offset;
         afxSize bufCap = AvxGetBufferCapacity(buf, 0);
 #if AVX_VALIDATION_ENABLED
         if (bufCap < map->offset + map->range)
@@ -716,8 +718,6 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferRemap maps
             break;
         }
 
-        afxSize offset = map->offset;
-        afxUnit range = map->range;
         AFX_ASSERT_RANGE(bufCap, offset, range);
         AFX_ASSERT(AFX_IS_ALIGNED(offset, AVX_BUFFER_ALIGNMENT));
 
@@ -792,8 +792,8 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferRemap maps
         afxDrawQueue dque;
         afxDrawBridge dexu;
         afxUnit portId = 0;
-        AfxGetDrawBridges(dsys, portId, 1, &dexu);
-        AfxGetDrawQueues(dexu, 0, 1, &dque);
+        AvxGetDrawBridges(dsys, portId, 1, &dexu);
+        AvxGetDrawQueues(dexu, 0, 1, &dque);
         AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
         if (_AvxSubmitRemapping(dque, opCnt, maps2, 0, NIL))
@@ -802,7 +802,7 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferRemap maps
         }
         else
         {
-            if (AfxWaitForEmptyDrawQueue(dque, AFX_TIME_INFINITE))
+            if (AvxWaitForEmptyDrawQueue(dque, AFX_TIME_INFINITE))
                 AfxThrowError();
         }
     }
@@ -892,8 +892,8 @@ _AVX afxError AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBuffer buffers
         afxDrawQueue dque;
         afxDrawBridge dexu;
         afxUnit portId = 0;
-        AfxGetDrawBridges(dsys, portId, 1, &dexu);
-        AfxGetDrawQueues(dexu, 0, 1, &dque);
+        AvxGetDrawBridges(dsys, portId, 1, &dexu);
+        AvxGetDrawQueues(dexu, 0, 1, &dque);
         AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
         if (_AvxSubmitRemapping(dque, 0, NIL, cnt, unmaps2))

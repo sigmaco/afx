@@ -211,64 +211,64 @@ _ASXINL afxReal* AfxGetCurveControls(afxCurve c)
 
 _ASXINL afxUnit _FindKnot(afxReal t, afxInt knotCnt, afxReal const knots[])
 {
-    afxBool v6;
-    afxInt v3 = 0;
-    afxReal const* v4 = knots;
-    afxInt v5 = knotCnt;
+    afxBool rslt;
+    afxInt idx = 0;
+    afxReal const* k = knots;
+    afxInt kc = knotCnt;
 
-    while (v5 > 1)
+    while (kc > 1)
     {
-        v6 = (v5 & 1) == 0;
-        v5 /= 2;
+        rslt = (kc & 1) == 0;
+        kc /= 2;
 
-        if (v6)
+        if (rslt)
         {
-            if (t >= v4[v5])
+            if (t >= k[kc])
             {
-                if (v3 + v5 + 1 >= knotCnt || t < v4[v5 + 1])
+                if (idx + kc + 1 >= knotCnt || t < k[kc + 1])
                 {
-                    v3 += v5;
-                    v4 += v5;
+                    idx += kc;
+                    k += kc;
                     break;
                 }
 
-                v3 += v5 + 1;
-                v4 += v5-- + 1;
+                idx += kc + 1;
+                k += kc-- + 1;
             }
         }
         else
         {
-            if (t >= v4[v5])
+            if (t >= k[kc])
             {
-                v3 += v5;
-                v4 += v5;
+                idx += kc;
+                k += kc;
             }
-            ++v5;
+            ++kc;
         }
     }
 
-    v6 = v3 == knotCnt;
+    rslt = idx == knotCnt;
 
-    if (v3 < knotCnt)
+    if (idx < knotCnt)
     {
         do
         {
-            if (*v4 > t)
+            if (*k > t)
                 break;
 
-            ++v3;
-            ++v4;
-        } while (v3 < knotCnt);
+            ++idx;
+            ++k;
+        } while (idx < knotCnt);
 
-        v6 = v3 == knotCnt;
+        rslt = idx == knotCnt;
     }
 
-    if (v6 && v3 > 0)
-        --v3;
+    if (rslt && idx > 0)
+        --idx;
     
     afxError err;
-    AFX_ASSERT(v3 >= 0);
-    return v3;
+    AFX_ASSERT(idx >= 0);
+    return idx;
 }
 
 _ASXINL afxUnit _FindCloseKnot(afxReal t, afxUnit baseIdx, afxUnit knotCnt, afxReal const knots[])

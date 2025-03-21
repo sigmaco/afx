@@ -413,7 +413,7 @@ _AFX afxError AfxReopenFile(afxStream iob, afxUri const* uri, afxFileFlags flags
     if (!AfxFindFiles(uri, flags, _AfxOpenFileCb, (void*[]) { &diskId, &endpointIdx, &iob->idd.f.url.uri, &iob->idd.f.resolvedUrl.uri }))
     {
         AfxThrowError();
-        AfxLogError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STR_EMPTY));
+        AfxLogError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STRING_EMPTY));
         return err;
     }
     
@@ -446,7 +446,7 @@ _AFX afxError AfxReopenFile(afxStream iob, afxUri const* uri, afxFileFlags flags
     if (!(iob->idd.f.fd = fopen((char const*)(iob->idd.f.resolvedUrl.buf), mode)))
     {
         AfxThrowError();
-        AfxLogError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STR_EMPTY));
+        AfxLogError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STRING_EMPTY));
         return err;
     }
 
@@ -479,7 +479,7 @@ _AFX afxError AfxReloadFile(afxStream iob, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
-    AfxAssert2(uri, !AfxIsUriBlank(uri));
+    AFX_ASSERT2(uri, !AfxIsUriBlank(uri));
 
     if (iob->usage != afxIoUsage_FILE)
     {
@@ -567,7 +567,7 @@ _AFX afxError AfxOpenFile(afxUri const* uri, afxFileFlags flags, afxStream* file
     if (AfxReopenFile(iob, uri, flags))
     {
         AfxThrowError();
-        AfxLogError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STR_EMPTY));
+        AfxLogError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STRING_EMPTY));
     }
     else if (!iob->idd.f.fd)
         AfxThrowError();
@@ -608,7 +608,7 @@ _AFX afxError AfxLoadFile(afxUri const* uri, afxStream* file)
     if (AfxReloadFile(iob, uri))
     {
         AfxThrowError();
-        AfxLogError("Couldn't load <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STR_EMPTY));
+        AfxLogError("Couldn't load <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STRING_EMPTY));
     }
 
     if (err)
