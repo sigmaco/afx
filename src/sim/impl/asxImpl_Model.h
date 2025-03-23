@@ -37,7 +37,7 @@ AFX_OBJECT(afxMaterial)
 #endif
 {
     afxString       urn; // 128
-    afxRaster       tex;
+    avxRaster       tex;
     avxSampler      smp;
     afxUnit         mapCnt;
     asxMaterialMap* maps;

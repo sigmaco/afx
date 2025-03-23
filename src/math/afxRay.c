@@ -25,7 +25,7 @@
 _AFXINL afxReal AfxRayIntersectsPlaneAt(afxRay const* ray, afxPlane plane, afxReal* T)
 {
     afxError err = NIL;
-    AfxAssert2(ray, T);
+    AFX_ASSERT2(ray, T);
     afxReal dot = AfxV3dDot(ray->normal, plane.normal);
 
     if (dot != 0.0)
@@ -40,7 +40,7 @@ _AFXINL afxReal AfxRayIntersectsPlaneAt(afxRay const* ray, afxPlane plane, afxRe
 _AFXINL afxReal AfxRayIntersectsSphere(afxRay const* ray, afxSphere const* sph)
 {
     afxError err = NIL;
-    AfxAssert2(ray, sph);
+    AFX_ASSERT2(ray, sph);
     afxV3d o;
     AfxV3dSub(o, sph->centre, ray->origin);
     afxReal dot = AfxV3dDot(o, ray->normal);
@@ -50,7 +50,7 @@ _AFXINL afxReal AfxRayIntersectsSphere(afxRay const* ray, afxSphere const* sph)
 _AFXINL afxInt AfxRayIntersectsSphereAt(afxRay const* ray, afxSphere const* sph, afxReal* minT, afxReal* maxT)
 {
     afxError err = NIL;
-    AfxAssert4(ray, sph, minT, maxT);
+    AFX_ASSERT4(ray, sph, minT, maxT);
     afxInt rslt = 0;
     
     afxV3d o;

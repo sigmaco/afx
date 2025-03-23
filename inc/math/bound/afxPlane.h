@@ -22,9 +22,6 @@
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/math/bound/afxBox.h"
 
-#define AFX_PLANE_OFFSET 3
-#define AFX_PLANE_DIST 3
-
 typedef enum afxFloorPlane
 // The orientation of the the floor plane with respect to the X,Y,Z axes, and which axes represent the side, front and up vectors as a basis for rotations.
 {
@@ -51,20 +48,20 @@ AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxPlane)
     };
 };
 
-AFXINL void         AfxPlaneCopy(afxPlane* p, afxPlane const* in);
+#define AFX_PLANE(x_, y_, z_, dist_) (afxPlane){ .normal = { (x_), (y_), (z_) }, .dist = (dist_) }
 
-AFXINL void         AfxPlaneReset(afxPlane* p, afxV3d const normal, afxReal dist);
+AFXINL void         AfxMakePlane(afxPlane* p, afxV3d const normal, afxReal dist);
 
-AFXINL void         AfxPlaneFromTriangle(afxPlane* p, afxV3d const a, afxV3d const b, afxV3d const c);
+AFXINL void         AfxMakePlaneFromTriangle(afxPlane* p, afxV3d const a, afxV3d const b, afxV3d const c);
 
-AFXINL void         AfxPlaneGetNormal(afxPlane* p, afxV3d normal);
+AFXINL void         AfxGetPlaneNormal(afxPlane* p, afxV3d normal);
 
-AFXINL afxReal      AfxPlaneGetOffset(afxPlane const* p); // aka GetPlaneDistance
-#define AfxPlaneGetDistance AfxPlaneGetOffset
+AFXINL afxReal      AfxGetPlaneOffset(afxPlane const* p); // aka GetPlaneDistance
+#define AfxGetPlaneDistance AfxGetPlaneOffset
 
-AFXINL afxReal      AfxPlaneFindV3d(afxPlane const* p, afxV3d const point);
+AFXINL afxReal      AfxFindPlaneDistance(afxPlane const* p, afxV3d const point);
 
-AFXINL afxReal      AfxPlaneFindHitInterpolationConstant(afxPlane const* p, afxV3d const a, afxV3d const b);
+AFXINL afxReal      AfxFindPlaneHitInterpolationConstant(afxPlane const* p, afxV3d const a, afxV3d const b);
 
 // Test this plane with an AABB
 // <0 if the box is completly on the back side of the plane
@@ -74,5 +71,9 @@ AFXINL afxResult    AfxPlaneTestAabbs(afxPlane const* p, afxUnit cnt, afxBox con
 
 // Test this plane with a collision sphere.
 AFXINL afxResult    AfxPlaneTestSpheres(afxPlane const* p, afxUnit cnt, afxSphere const spheres[]);
+
+////////////////////////////////////////
+
+AFXINL void         AfxCopyPlanes(afxUnit cnt, afxPlane const src[], afxPlane dst[]);
 
 #endif//AFX_PLANE_H

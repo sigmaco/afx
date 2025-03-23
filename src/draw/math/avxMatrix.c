@@ -69,7 +69,7 @@ _AVXINL void AfxComputeShadowM4d(afxM4d m, afxPlane const p, afxReal const light
     AFX_ASSERT(!AfxV3dIsInfinite(p.normal));
 
     // plane must be normalized
-    afxReal d = AfxPlaneFindV3d(&p, lightPos);
+    afxReal d = AfxFindPlaneDistance(&p, lightPos);
 #if !0
     m[0][0] = d - lightPos[0] * p.normal[0];
     m[1][0] = -lightPos[0] * p.normal[1];
@@ -398,7 +398,7 @@ _AVXINL void AfxComputeBoundingOrthographicMatrix(afxM4d m, afxBox const aabb, a
     //AFX_ASSERT(aabb); // afxBox deve estar no view space.
 
     // OpenGL
-    AfxComputeOffcenterOrthographicMatrix(m, aabb.sup[0], aabb.inf[0], aabb.sup[1], aabb.inf[1], -aabb.inf[2], -aabb.sup[2], nonRh, clip);
+    AfxComputeOffcenterOrthographicMatrix(m, aabb.max[0], aabb.min[0], aabb.max[1], aabb.min[1], -aabb.min[2], -aabb.max[2], nonRh, clip);
 }
 
 _AVXINL void AfxComputeBasicOrthographicMatrix(afxM4d m, afxReal aspectRatio, afxReal scale, afxReal range, afxBool nonRh, avxClipSpaceDepth clip)
@@ -641,7 +641,7 @@ _AVXINL void AfxComputeRenderWareViewM4d(afxM4d m, afxM4d const cam)
 // MakeProjection
 // Memory layout:
 
-_AVXINL void AfxComputeRenderWareProjectionM4d(afxM4d m, afxViewport const* vp, afxBool perspective)
+_AVXINL void AfxComputeRenderWareProjectionM4d(afxM4d m, avxViewport const* vp, afxBool perspective)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);

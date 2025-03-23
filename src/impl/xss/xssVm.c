@@ -403,15 +403,15 @@ static LunaForeignMethodFn findForeignMethod(xssVm vm,
 
   afxUri uri;
 
-  if (0 == AfxCompareString(&AfxString("core"), 0, moduleName, 0, FALSE))
+  if (0 == AfxCompareString(&AFX_STRING("core"), 0, moduleName, 0, FALSE))
       AfxMakeUri(&uri, 0, "e2ux", 0); //AfxMakeUri(&uri, "e2coree", 0);
-  else if (0 == AfxCompareString(&AfxString("draw"), 0, moduleName, 0, FALSE))
+  else if (0 == AfxCompareString(&AFX_STRING("draw"), 0, moduleName, 0, FALSE))
       AfxMakeUri(&uri, 0, "e2ux", 0); //AfxMakeUri(&uri, "e2draw", 0);
-  else if (0 == AfxCompareString(&AfxString("sound"), 0, moduleName, 0, FALSE))
+  else if (0 == AfxCompareString(&AFX_STRING("sound"), 0, moduleName, 0, FALSE))
       AfxMakeUri(&uri, 0, "e2ux", 0); //AfxMakeUri(&uri, "e2sound", 0);
-  else if (0 == AfxCompareString(&AfxString("sim"), 0, moduleName, 0, FALSE))
+  else if (0 == AfxCompareString(&AFX_STRING("sim"), 0, moduleName, 0, FALSE))
       AfxMakeUri(&uri, 0, "e2ux", 0); //AfxMakeUri(&uri, "e2sim", 0);
-  else if (0 == AfxCompareString(&AfxString("ux"), 0, moduleName, 0, FALSE))
+  else if (0 == AfxCompareString(&AFX_STRING("ux"), 0, moduleName, 0, FALSE))
       AfxMakeUri(&uri, 0, "e2ux", 0);
   else
       AfxMakeUri(&uri, 0, moduleName, 0);
@@ -690,15 +690,15 @@ static void bindForeignClass(xssVm vm, ObjClass* classObj, ObjModule* module)
 #else
   afxUri uri;
 
-  if (0 == AfxCompareString(&AfxString("core"), 0, module->name->value, 0, FALSE))
+  if (0 == AfxCompareString(&AFX_STRING("core"), 0, module->name->value, 0, FALSE))
       AfxMakeUri(&uri, 0, "e2ux", 0); //AfxMakeUri(&uri, "e2coree", 0);
-  else if (0 == AfxCompareString(&AfxString("draw"), 0, module->name->value, 0, FALSE))
+  else if (0 == AfxCompareString(&AFX_STRING("draw"), 0, module->name->value, 0, FALSE))
       AfxMakeUri(&uri, 0, "e2ux", 0); //AfxMakeUri(&uri, "e2draw", 0);
-  else if (0 == AfxCompareString(&AfxString("sound"), 0, module->name->value, 0, FALSE))
+  else if (0 == AfxCompareString(&AFX_STRING("sound"), 0, module->name->value, 0, FALSE))
       AfxMakeUri(&uri, 0, "e2ux", 0); //AfxMakeUri(&uri, "e2sound", 0);
-  else if (0 == AfxCompareString(&AfxString("sim"), 0, module->name->value, 0, FALSE))
+  else if (0 == AfxCompareString(&AFX_STRING("sim"), 0, module->name->value, 0, FALSE))
       AfxMakeUri(&uri, 0, "e2ux", 0); //AfxMakeUri(&uri, "e2sim", 0);
-  else if (0 == AfxCompareString(&AfxString("ux"), 0, module->name->value, 0, FALSE))
+  else if (0 == AfxCompareString(&AFX_STRING("ux"), 0, module->name->value, 0, FALSE))
       AfxMakeUri(&uri, 0, "e2ux", 0);
   else
       AfxMakeUri(&uri, 0, module->name->value, 0);

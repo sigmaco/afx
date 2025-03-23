@@ -362,7 +362,7 @@ AVX afxBool AfxIsDrawDeviceAcceptable
 AVX afxUnit AfxCountDrawPorts(afxDrawDevice ddev);
 
 /*
-    The AfxQueryDrawCapabilities() function retrieves the capabilities of a graphics device across multiple ports.
+    The AvxQueryDrawCapabilities() function retrieves the capabilities of a graphics device across multiple ports.
     It will return the drawing capabilities in the caps[] array. Each element in caps[] corresponds to the drawing 
     capabilities of a specific port, and this information will help the application understand what features and drawing 
     methods are supported by each port on the device.
@@ -370,7 +370,7 @@ AVX afxUnit AfxCountDrawPorts(afxDrawDevice ddev);
     Returns the number of elements in caps[] array or the number of ports from specified base index.
 */
 
-AVX afxUnit AfxQueryDrawCapabilities
+AVX afxUnit AvxQueryDrawCapabilities
 (
     // The drawing device to query.
     afxDrawDevice ddev, 
@@ -460,7 +460,7 @@ AVX afxError AvxDescribeDeviceFormats
     avxFormatDescription descs[]
 );
 
-AVX afxUnit         AfxEnumerateVideoPresentationModes(afxDrawOutput dout, afxUnit first, afxUnit cnt, avxPresentMode modes[]);
+AVX afxUnit         AfxEnumerateVideoPresentationModes(afxDrawOutput dout, afxUnit first, afxUnit cnt, avxPresentFlags modes[]);
 AVX afxUnit         AfxEnumerateVideoOutputFormats(afxDrawOutput dout, afxUnit first, afxUnit cnt, avxFormat formats[]);
 
 AVX afxUnit         AfxEnumerateDisplayModes(afxDrawDevice ddev, afxUnit vdu, afxUnit cnt, avxDisplayMode modes[]);
@@ -468,7 +468,7 @@ AVX afxUnit         AfxEnumerateDisplayModes(afxDrawDevice ddev, afxUnit vdu, af
 // IMPLEMENTATION DISCOVERY ////////////////////////////////////////////////////
 
 /**
-    The AfxEnumerateDrawDevices() function enumerates the available drawing devices associated with an ICD. 
+    The AvxEnumerateDrawDevices() function enumerates the available drawing devices associated with an ICD. 
     It allows you to discover which devices are available for rendering tasks on a system, which is important in 
     scenarios where multiple devices (e.g., integrated and discrete GPUs) exist. The function provides the number 
     of devices found and populates an array with the relevant devices for further processing. This is useful for 
@@ -477,7 +477,7 @@ AVX afxUnit         AfxEnumerateDisplayModes(afxDrawDevice ddev, afxUnit vdu, af
     Returns the number of draw devices inserted in the @devices.
 */
 
-AVX afxUnit AfxEnumerateDrawDevices
+AVX afxUnit AvxEnumerateDrawDevices
 (
     // The ordinal identifier for the installable client driver (ICD).
     afxUnit icd, 

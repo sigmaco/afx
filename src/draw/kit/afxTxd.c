@@ -31,7 +31,7 @@ AFX_OBJECT(afxTxd)
     afxUnit              texCnt;
     afxString*          texIds; // nested names to speed up searches.
     afxUnit*             texRefCnt;
-    afxRaster*          texRasters;
+    avxRaster*          texRasters;
 };
 
 #endif//_AVX_TXD_C
@@ -44,7 +44,7 @@ _AVX afxError AfxRenameTextures(afxTxd txd, afxUnit first, afxUnit cnt, afxStrin
     return err;
 }
 
-_AVX afxError AfxRequestTextures(afxTxd txd, afxUnit cnt, afxUnit texIdxes[], afxRaster rasters[])
+_AVX afxError AfxRequestTextures(afxTxd txd, afxUnit cnt, afxUnit texIdxes[], avxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_TXD, 1, &txd);
@@ -63,9 +63,9 @@ _AVX afxError AfxRequestTextures(afxTxd txd, afxUnit cnt, afxUnit texIdxes[], af
             AfxMakeUri2048(&urib, NIL);
             AfxFormatUri(&urib.uri, "%.*s/%.*s.tga", AfxPushString(&txd->url.uri.str), AfxPushString(&txd->texIds[texIdx]));
 
-            afxRasterInfo rasi = { 0 };
+            avxRasterInfo rasi = { 0 };
 
-            if (AfxLoadRasters(dsys, 1, &rasi, &urib.uri, &txd->texRasters[texIdx]))
+            if (AvxLoadRasters(dsys, 1, &rasi, &urib.uri, &txd->texRasters[texIdx]))
                 AfxThrowError();
         }
 
@@ -137,13 +137,13 @@ _AVX afxError _AvxTxdCtorCb(afxTxd txd, void** args, afxUnit invokeNo)
     if (AfxAllocateInstanceData(txd, ARRAY_SIZE(stashes), stashes)) AfxThrowError();
     else
     {
-        afxRaster rasters[256];
+        avxRaster rasters[256];
         avxSampler samplers[256];
 #if 0
-        if (AfxAcquireRasters(dsys, texCnt, txdi->rasters, rasters))
+        if (AvxAcquireRasters(dsys, texCnt, txdi->rasters, rasters))
             AfxThrowError();
 
-        if (AfxDeclareSamplers(dsys, texCnt, txdi->samplers, samplers))
+        if (AvxDeclareSamplers(dsys, texCnt, txdi->samplers, samplers))
             AfxThrowError();
 #endif
         for (afxUnit i = 0; i < texCnt; i++)

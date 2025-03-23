@@ -25,9 +25,16 @@
 #define _AUX_SESSION_C
 #include "../impl/auxImplementation.h"
 
-_AUX afxError AfxEmulatePressedKeys(afxSession ses, afxUnit seat, afxUnit cnt, afxKey const key[], afxUnit8 const pressure[], afxWindow wnd)
+_AUX afxError AfxEmulatePressedKeys(afxUnit seat, afxUnit cnt, afxKey const key[], afxUnit8 const pressure[], afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return err;
+    }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -53,9 +60,16 @@ _AUX afxError AfxEmulatePressedKeys(afxSession ses, afxUnit seat, afxUnit cnt, a
     return err;
 }
 
-_AUX afxError AfxReleaseAllKeys(afxSession ses, afxUnit seat, afxWindow wnd)
+_AUX afxError AfxReleaseAllKeys(afxUnit seat, afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return err;
+    }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -83,10 +97,13 @@ _AUX afxError AfxReleaseAllKeys(afxSession ses, afxUnit seat, afxWindow wnd)
     return err;
 }
 
-_AUX afxBool AfxWereKeysReleased(afxSession ses, afxUnit seat, afxUnit cnt, afxKey const codes[])
+_AUX afxBool AfxWereKeysReleased(afxUnit seat, afxUnit cnt, afxKey const codes[])
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -102,10 +119,13 @@ _AUX afxBool AfxWereKeysReleased(afxSession ses, afxUnit seat, afxUnit cnt, afxK
     return rslt;
 }
 
-_AUX afxBool AfxWasKeyReleased(afxSession ses, afxUnit seat, afxKey code)
+_AUX afxBool AfxWasKeyReleased(afxUnit seat, afxKey code)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -115,10 +135,13 @@ _AUX afxBool AfxWasKeyReleased(afxSession ses, afxUnit seat, afxKey code)
     return rslt;
 }
 
-_AUX afxBool AfxWereKeysPressed(afxSession ses, afxUnit seat, afxUnit cnt, afxKey const codes[])
+_AUX afxBool AfxWereKeysPressed(afxUnit seat, afxUnit cnt, afxKey const codes[])
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -134,10 +157,13 @@ _AUX afxBool AfxWereKeysPressed(afxSession ses, afxUnit seat, afxUnit cnt, afxKe
     return rslt;
 }
 
-_AUX afxBool AfxWasKeyPressed(afxSession ses, afxUnit seat, afxKey code)
+_AUX afxBool AfxWasKeyPressed(afxUnit seat, afxKey code)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -147,10 +173,13 @@ _AUX afxBool AfxWasKeyPressed(afxSession ses, afxUnit seat, afxKey code)
     return rslt;
 }
 
-_AUX afxBool AfxIsKeyPressed(afxSession ses, afxUnit seat, afxKey code)
+_AUX afxBool AfxIsKeyPressed(afxUnit seat, afxKey code)
 {
     afxError err = AFX_ERR_NONE;
     afxBool rslt = FALSE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -160,10 +189,13 @@ _AUX afxBool AfxIsKeyPressed(afxSession ses, afxUnit seat, afxKey code)
     return rslt;
 }
 
-_AUX afxReal AfxGetCombinedKeyPressure(afxSession ses, afxUnit seat, afxKey lhs, afxKey rhs)
+_AUX afxReal AfxGetCombinedKeyPressure(afxUnit seat, afxKey lhs, afxKey rhs)
 {
     afxError err = AFX_ERR_NONE;
     afxReal pressure = 0.0;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -174,10 +206,13 @@ _AUX afxReal AfxGetCombinedKeyPressure(afxSession ses, afxUnit seat, afxKey lhs,
     return pressure;
 }
 
-_AUX afxReal AfxGetKeyPressure(afxSession ses, afxUnit seat, afxKey code)
+_AUX afxReal AfxGetKeyPressure(afxUnit seat, afxKey code)
 {
     afxError err = AFX_ERR_NONE;
     afxReal pressure = 0.0;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -187,10 +222,13 @@ _AUX afxReal AfxGetKeyPressure(afxSession ses, afxUnit seat, afxKey code)
     return pressure;
 }
 
-_AUX afxResult AfxCountPressedKeys(afxSession ses, afxUnit seat)
+_AUX afxResult AfxCountPressedKeys(afxUnit seat)
 {
     afxError err = AFX_ERR_NONE;
     afxResult c = 0;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
@@ -220,7 +258,9 @@ _AUX afxResult _AuxKbdCtorCb(afxKeyboard kbd, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_KBD, 1, &kbd);
 
-    afxUnit const *ports = args[0];
+    afxSession ses = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    afxUnit const *ports = args[1];
     afxUnit seat = (afxUnit)ports[invokeNo];
 
     kbd->flags = NIL;

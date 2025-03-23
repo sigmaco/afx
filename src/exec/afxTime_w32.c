@@ -112,3 +112,75 @@ afxUnit64 AfxGetTicksPerSecond(void)
     }
     return freq;
 }
+
+_AFX afxTimeSpec* AfxMakeTimeSpec(afxTimeSpec* ts, afxUnit64 nsec)
+{
+    afxError err = NIL;
+    AFX_ASSERT(ts);
+
+    if (!nsec) *ts = (afxTimeSpec) { 0 };
+    else
+    {
+        // Convert nanoseconds to timespec
+        afxTimeSpec ts2;
+        
+        // Divides the nanoseconds by 1 billion to get the full seconds (sec).
+        ts2.sec = nsec / 1000000000; // Get full seconds
+
+        // Uses the remainder to get the nanoseconds (nsec), which is the part that doesn't complete a full second.
+        ts2.nsec = nsec % 1000000000; // Get the remainder nanoseconds
+        *ts = ts2;
+    }
+    return ts;
+}
+
+_AFX afxTimeSpec* AfxMakeTimeSpecInterval(afxTimeSpec* ts, afxTimeSpec const* start, afxTimeSpec const* end)
+{
+    afxError err = NIL;
+    AFX_ASSERT(ts);
+    AFX_ASSERT(start);
+    AFX_ASSERT(end);
+
+    // If the end time is earlier than the start time (negative delta), 
+    // the logic would still work, though you might want to handle such cases explicitly depending on the use case.
+    // The code assumes the end time is after the start time, 
+    // but it can be adapted to handle both directions by checking for negative differences and taking absolute values if necessary.
+
+    // Subtract the seconds
+    ts->sec = end->sec - start->sec;
+
+    // Subtract the nanoseconds
+    ts->nsec = end->nsec - start->nsec;
+
+    // If nanoseconds are negative, adjust by borrowing 1 second (1e9 nanoseconds)
+    if (ts->nsec < 0)
+    {
+        ts->nsec += 1000000000; // 1 second in nanoseconds
+        ts->sec -= 1;           // Borrow 1 second
+    }
+
+    return ts;
+}
+
+_AFX afxInt64 AfxGetTimeSpecDelta(afxTimeSpec const* start, afxTimeSpec const* end)
+{
+    afxError err = NIL;
+    AFX_ASSERT(start);
+    AFX_ASSERT(end);
+
+    // The delta is computed as the total nanosecond difference between the two timespec values.
+    // The result is a single value (in nanoseconds) rather than separate seconds and nanoseconds, 
+    // which is useful for precise calculations or performance measurements where just the nanosecond difference is required.
+
+    // If the result is negative (i.e., end time is earlier than start time), 
+    // the difference will reflect that in negative nanoseconds.
+    // If end time is earlier than start time, the result will be negative. 
+    // For example, if start time is later than end time, the result would show a negative number of nanoseconds.
+
+    // Convert both start and end times to nanoseconds
+    afxInt64 startNs = (afxInt64)start->sec * 1000000000 + start->nsec;
+    afxInt64 endNs = (afxInt64)end->sec * 1000000000 + end->nsec;
+
+    // Return the difference in nanoseconds
+    return (endNs - startNs);
+}

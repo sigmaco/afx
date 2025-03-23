@@ -19,9 +19,9 @@
 #ifndef AVX_TRANSFORMATION_EXT_H
 #define AVX_TRANSFORMATION_EXT_H
 
-#include "qwadro/inc/draw/math/afxViewport.h"
+#include "qwadro/inc/draw/math/avxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
-#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/avxRaster.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
 #include "qwadro/inc/draw/op/avxSampler.h"
 #include "qwadro/inc/draw/op/avxQueryPool.h"
@@ -30,7 +30,7 @@
  //// COMMANDS                                                             ////
 //////////////////////////////////////////////////////////////////////////////
 
-AVX afxCmdId AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexDecl vin);
+AVX afxCmdId AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexInput vin);
 
 AFX void AvxCmdBeginTransformFeedbackEXT
 (

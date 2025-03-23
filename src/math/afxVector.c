@@ -368,7 +368,7 @@ _AFXINL void AfxV2dCopy(afxV2d v, afxV2d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(v, in);
+    AFX_ASSERT_DIFF(v, in);
     v[0] = in[0];
     v[1] = in[1];
 }
@@ -378,7 +378,7 @@ _AFXINL void AfxV3dCopy(afxV3d v, afxV3d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(v, in);
+    AFX_ASSERT_DIFF(v, in);
     v[0] = in[0];
     v[1] = in[1];
     v[2] = in[2];
@@ -389,7 +389,7 @@ _AFXINL void AfxV4dCopy(afxV4d v, afxV4d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(v, in);
+    AFX_ASSERT_DIFF(v, in);
     v[0] = in[0];
     v[1] = in[1];
     v[2] = in[2];
@@ -401,7 +401,7 @@ _AFXINL void AfxCopyArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d out[])
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(out);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(out, in);
+    AFX_ASSERT_DIFF(out, in);
 
     for (afxUnit i = 0; i < cnt; i++)
         AfxV2dCopy(out[i], in[i]);
@@ -412,7 +412,7 @@ _AFXINL void AfxCopyArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[])
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(out);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(out, in);
+    AFX_ASSERT_DIFF(out, in);
 
     for (afxUnit i = 0; i < cnt; i++)
         AfxV3dCopy(out[i], in[i]);
@@ -423,7 +423,7 @@ _AFXINL void AfxCopyArrayedV4d(afxUnit cnt, afxV4d const in[], afxV4d out[])
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(out);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(out, in);
+    AFX_ASSERT_DIFF(out, in);
 
     for (afxUnit i = 0; i < cnt; i++)
         AfxV4dCopy(out[i], in[i]);
@@ -434,7 +434,7 @@ _AFXINL void AfxV3dCopyAtv2d(afxV3d v, afxV2d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(v, in);
+    AFX_ASSERT_DIFF(v, in);
     v[0] = in[0];
     v[1] = in[1];
     v[2] = AFX_R(1);
@@ -445,7 +445,7 @@ _AFXINL void AfxV4dCopyAtv3d(afxV4d v, afxV3d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(v, in);
+    AFX_ASSERT_DIFF(v, in);
     v[0] = in[0];
     v[1] = in[1];
     v[2] = in[2];
@@ -459,7 +459,7 @@ _AFXINL void AfxV3dCopyV2d(afxV3d v, afxV2d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(v, in);
+    AFX_ASSERT_DIFF(v, in);
     v[0] = in[0];
     v[1] = in[1];
     v[2] = AFX_R(0);
@@ -470,7 +470,7 @@ _AFXINL void AfxV4dCopyV2d(afxV4d v, afxV2d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(v, in);
+    AFX_ASSERT_DIFF(v, in);
     v[0] = in[0];
     v[1] = in[1];
     v[2] = AFX_R(0);
@@ -482,7 +482,7 @@ _AFXINL void AfxV4dCopyV3d(afxV4d v, afxV3d const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(v, in);
+    AFX_ASSERT_DIFF(v, in);
     v[0] = in[0];
     v[1] = in[1];
     v[2] = in[2];
@@ -558,8 +558,8 @@ _AFXINL void AfxClampV3d(afxV3d v, afxV3d const in, afxV3d const min, afxV3d con
     AFX_ASSERT(min[1] <= max[1]);
     AFX_ASSERT(min[2] <= max[2]);
 
-    AfxMaxV3d(v, min, in);
-    AfxMinV3d(v, max, v);
+    AfxV3dMax(v, min, in);
+    AfxV3dMin(v, max, v);
 }
 
 _AFXINL void AfxClampV4d(afxV4d v, afxV4d const in, afxV4d const min, afxV4d const max)
@@ -658,7 +658,7 @@ _AFXINL void AfxMinV2d(afxV2d v, afxV2d const a, afxV2d const b)
     v[1] = a[1] < b[1] ? a[1] : b[1];
 }
 
-_AFXINL void AfxMinV3d(afxV3d v, afxV3d const a, afxV3d const b)
+_AFXINL void AfxV3dMin(afxV3d v, afxV3d const a, afxV3d const b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
@@ -693,7 +693,7 @@ _AFXINL void AfxMaxV2d(afxV2d v, afxV2d const a, afxV2d const b)
     v[1] = a[1] > b[1] ? a[1] : b[1];
 }
 
-_AFXINL void AfxMaxV3d(afxV3d v, afxV3d const a, afxV3d const b)
+_AFXINL void AfxV3dMax(afxV3d v, afxV3d const a, afxV3d const b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
@@ -1404,7 +1404,7 @@ _AFXINL void AfxResubV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const 
 _AFXINL void AfxV2dMix(afxV2d v, afxV2d const x, afxV2d const y, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(v, x, y);
+    AFX_ASSERT3(v, x, y);
 
     v[0] = x[0] * (1.f - t) + y[0] * t;
     v[1] = x[1] * (1.f - t) + y[1] * t;
@@ -1413,7 +1413,7 @@ _AFXINL void AfxV2dMix(afxV2d v, afxV2d const x, afxV2d const y, afxReal t)
 _AFXINL void AfxV3dMix(afxV3d v, afxV3d const x, afxV3d const y, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(v, x, y);
+    AFX_ASSERT3(v, x, y);
 
     v[0] = x[0] * (1.f - t) + y[0] * t;
     v[1] = x[1] * (1.f - t) + y[1] * t;
@@ -1423,7 +1423,7 @@ _AFXINL void AfxV3dMix(afxV3d v, afxV3d const x, afxV3d const y, afxReal t)
 _AFXINL void AfxV4dMix(afxV4d v, afxV4d const x, afxV4d const y, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(v, x, y);
+    AFX_ASSERT3(v, x, y);
 
     v[0] = x[0] * (1.f - t) + y[0] * t;
     v[1] = x[1] * (1.f - t) + y[1] * t;
@@ -1438,7 +1438,7 @@ _AFXINL void AfxV4dMix(afxV4d v, afxV4d const x, afxV4d const y, afxReal t)
 _AFXINL void AfxV2dLerp(afxV2d v, afxV2d const x, afxV2d const y, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(v, x, y);
+    AFX_ASSERT3(v, x, y);
 
     v[0] = x[0] + t * (y[0] - x[0]);
     v[1] = x[1] + t * (y[1] - x[1]);
@@ -1447,7 +1447,7 @@ _AFXINL void AfxV2dLerp(afxV2d v, afxV2d const x, afxV2d const y, afxReal t)
 _AFXINL void AfxV3dLerp(afxV3d v, afxV3d const x, afxV3d const y, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(v, x, y);
+    AFX_ASSERT3(v, x, y);
 
     v[0] = x[0] + t * (y[0] - x[0]);
     v[1] = x[1] + t * (y[1] - x[1]);
@@ -1457,7 +1457,7 @@ _AFXINL void AfxV3dLerp(afxV3d v, afxV3d const x, afxV3d const y, afxReal t)
 _AFXINL void AfxV4dLerp(afxV4d v, afxV4d const x, afxV4d const y, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert3(v, x, y);
+    AFX_ASSERT3(v, x, y);
 
     v[0] = x[0] + t * (y[0] - x[0]);
     v[1] = x[1] + t * (y[1] - x[1]);

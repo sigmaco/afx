@@ -19,7 +19,7 @@
 #ifndef AVX_DRAW_OPS_H
 #define AVX_DRAW_OPS_H
 
-#include "qwadro/inc/draw/math/afxViewport.h"
+#include "qwadro/inc/draw/math/avxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/draw/op/avxTransference.h"
 #include "qwadro/inc/draw/op/avxTransference.h"
@@ -63,50 +63,50 @@ AFX_DEFINE_STRUCT(avxDispatchIndirect)
 //////////////////////////////////////////////////////////////////////////////
 
 AVX afxCmdId        AvxCmdPushDebugScope
-/// Open a command buffer debug label region.
+/// Open a draw context debug label region.
 (
     afxDrawContext  dctx,
     afxString const*name, // the name of the label.
-    afxColor const  color // is an optional color associated with the label.
+    avxColor const  color // is an optional color associated with the label.
 );
 
 AVX afxCmdId        AvxCmdPopDebugScope
-/// Close a command buffer label region.
+/// Close a draw context label region.
 (
     afxDrawContext  dctx
 );
 
-AVX afxCmdId        AvxCmdInsertDebugLabel
-/// Insert a label into a command buffer.
+AVX afxCmdId        AvxCmdMarkDebugStep
+/// Insert a label into a draw context.
 (
     afxDrawContext  dctx,
     afxString const*name, // the name of the label.
-    afxColor const  color // is an optional color associated with the label.
+    avxColor const  color // is an optional color associated with the label.
 );
 
-/// Bind a pipeline object to a command buffer.
-/// Once bound, a pipeline binding affects subsequent commands that interact with the given pipeline type in the command buffer until a different pipeline of the same type is bound to the bind point, or until the pipeline bind point is disturbed by binding a shader object.
+/// Bind a pipeline object to a draw context.
+/// Once bound, a pipeline binding affects subsequent commands that interact with the given pipeline type in the draw context until a different pipeline of the same type is bound to the bind point, or until the pipeline bind point is disturbed by binding a shader object.
 /// Commands that do not interact with the given pipeline type must not be affected by the pipeline state.
 
 AVX afxCmdId                AvxCmdBindPipeline
 (
-    afxDrawContext          dctx, // is the command buffer that the pipeline will be bound to. 
+    afxDrawContext          dctx, // is the draw context that the pipeline will be bound to. 
     afxUnit                 segment, // is a value specifying to which level the pipeline is bound. Binding one does not disturb the others.
     avxPipeline             pip, // is the pipeline to be bound.
-    avxVertexDecl           vin,
+    avxVertexInput           vin,
     afxFlags                dynamics
 );
 
-/// Execute a secondary command buffer from a primary command buffer.
-/// If any element of @aux was not recorded with the simultaneous use flag, and it was recorded into any other primary command buffer which is currently in the executable or recording state, that primary command buffer becomes invalid.
+/// Execute a secondary draw context from a primary draw context.
+/// If any element of @aux was not recorded with the simultaneous use flag, and it was recorded into any other primary draw context which is currently in the executable or recording state, that primary draw context becomes invalid.
 
-/// If the nested command buffer feature is enabled it is valid usage for AvxCmdExecuteCommands to also be recorded to a secondary command buffer.
+/// If the nested draw context feature is enabled it is valid usage for AvxCmdExecuteCommands to also be recorded to a secondary draw context.
 
 AVX afxCmdId                AvxCmdExecuteCommands
 (
     afxDrawContext          dctx,
     afxUnit                 cnt, // is the length of the @aux array.
-    afxDrawContext          aux[] // is a pointer to an array of @cnt secondary command buffer handles, which are recorded to execute in the primary command buffer in the order they are listed in the array.
+    afxDrawContext          aux[] // is a pointer to an array of @cnt secondary draw context handles, which are recorded to execute in the primary draw context in the order they are listed in the array.
 );
 
 /// Draw primitives.
@@ -221,11 +221,11 @@ AVX afxCmdId                AvxCmdDispatchIndirect
 );
 
 
-AVX afxCmdId            AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxBufferMap const maps[]);
-AVX afxCmdId            AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, afxRaster const rasters[]);
+AVX afxCmdId            AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxBufferedMap const maps[]);
+AVX afxCmdId            AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxRaster const rasters[]);
 AVX afxCmdId            AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxSampler const samplers[]);
 
-AVX afxCmdId            AvxCmdBindFontSIG(afxDrawContext dctx, afxUnit first, afxUnit cnt, afxTypography typ[], avxPipeline pip[], avxSampler smp[], afxRaster ras[]);
+AVX afxCmdId            AvxCmdBindFontSIG(afxDrawContext dctx, afxUnit first, afxUnit cnt, afxTypography typ[], avxPipeline pip[], avxSampler smp[], avxRaster ras[]);
 
 AVX afxCmdId            AvxCmdPushConstants(afxDrawContext dctx, afxUnit offset, afxUnit siz, void const* data);
 

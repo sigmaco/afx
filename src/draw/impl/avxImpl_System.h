@@ -30,13 +30,13 @@ AFX_DECLARE_STRUCT(_avxDsysImpl);
 #else
 AFX_DEFINE_STRUCT(_avxDsysImpl)
 {
-    afxError(*waitCb)(afxDrawSystem, afxTime);
+    afxError(*waitCb)(afxDrawSystem, afxUnit64);
     afxError(*waitFenc)(afxDrawSystem, afxBool, afxUnit64, afxUnit, avxFence const[]);
     afxError(*resetFenc)(afxDrawSystem, afxUnit, avxFence const[]);
-    afxError(*flushMaps)(afxDrawSystem, afxUnit, avxBufferMap const[]);
-    afxError(*syncMaps)(afxDrawSystem, afxUnit, avxBufferMap const[]);
-    afxError(*mapBufs)(afxDrawSystem, afxUnit, avxBufferMap const[]);
-    afxError(*unmapBufs)(afxDrawSystem, afxUnit, avxBufferMap const[]);
+    afxError(*flushMaps)(afxDrawSystem, afxUnit, avxBufferedMap const[]);
+    afxError(*syncMaps)(afxDrawSystem, afxUnit, avxBufferedMap const[]);
+    afxError(*mapBufs)(afxDrawSystem, afxUnit, avxBufferedMap const[]);
+    afxError(*unmapBufs)(afxDrawSystem, afxUnit, avxBufferedMap const[]);
     afxUnit(*getProcs)(afxDrawSystem, afxUnit, afxString const[], void*[]);
 
     afxClass const*(*dexuCls)(afxDrawSystem);
@@ -57,7 +57,7 @@ AFX_DEFINE_STRUCT(_avxDsysImpl)
 
 #ifdef _AVX_DRAW_SYSTEM_C
 
-AFX_DEFINE_STRUCT(_avxDrawSystemAcquisition)
+AFX_DEFINE_STRUCT(_avxDsysAcquisition)
 {
     afxUnit             bridgeCnt;
     afxDrawFeatures     reqFeatures;

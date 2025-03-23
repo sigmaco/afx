@@ -46,7 +46,7 @@ _AFX afxResult AfxExhaustChainedClasses(afxChain *provisions)
     afxClass* cls;
     AfxIterateLinkage(afxClass, cls, provisions, host)
     {
-        AfxAssertType(cls, afxFcc_CLS);
+        AFX_ASSERT(cls->fcc == afxFcc_CLS);
         
         if (cls->objFcc == afxFcc_SYS)
             break; // We can't drop it, it would fuck the entire platform. Break.
@@ -65,7 +65,7 @@ _AFX afxResult AfxDeregisterChainedClasses(afxChain *provisions)
     afxClass* cls;
     AFX_ITERATE_CHAIN(provisions, afxClass, host, cls)
     {
-        AfxAssertType(cls, afxFcc_CLS);
+        AFX_ASSERT(cls->fcc == afxFcc_CLS);
         ++cnt;
 
         if (cls->objFcc != afxFcc_SYS) AfxDismountClass(cls);
@@ -85,7 +85,7 @@ _AFX afxResult AfxDeregisterChainedClasses(afxChain *provisions)
         else
         {
             afxClass *cls = AFX_REBASE(first, afxClass, host);
-            AfxAssertType(cls, afxFcc_CLS);
+            AFX_ASSERT(cls->fcc == afxFcc_CLS);
             ++cnt;
 
             if (cls->objFcc != afxFcc_SYS) AfxDismountClass(cls);
@@ -104,21 +104,21 @@ _AFX afxResult AfxDeregisterChainedClasses(afxChain *provisions)
 _AFXINL afxArena* AfxGetClassArena(afxClass *cls)
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     return &cls->arena;
 }
 
 _AFXINL afxClass* AfxGetSubClass(afxClass const *cls)
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     return AfxGetLinker(&cls->subset);
 }
 
 _AFX afxUnit AfxGetSizeOfObject(afxClass const* cls, afxUnit* strictSize)
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     
     if (strictSize)
     {
@@ -131,7 +131,7 @@ _AFX afxUnit AfxGetSizeOfObject(afxClass const* cls, afxUnit* strictSize)
 _AFX afxUnit _AfxEnumerateObjectsUnlocked(afxClass const* cls, afxBool fromLast, afxUnit first, afxUnit cnt, afxObject objects[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxUnit rslt = 0;
 
     if (first && (first >= cls->pool.totalUsedCnt))
@@ -149,7 +149,7 @@ _AFX afxUnit _AfxEnumerateObjectsUnlocked(afxClass const* cls, afxBool fromLast,
             for (afxUnit i = 0; i < rslt; i++)
             {
                 afxObjectBase* hdr = objects[i];
-                AfxAssertType(hdr, afxFcc_OBJ);
+                AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
                 objects[i] = GET_OBJ_ADDR(hdr);
                 AFX_ASSERT_OBJECTS(cls->objFcc, 1, &objects[i]);
             }
@@ -167,7 +167,7 @@ _AFX afxUnit _AfxEnumerateObjectsUnlocked(afxClass const* cls, afxBool fromLast,
         afxChain const *supersets = &cls->supersets;
         AFX_ITERATE_CHAIN_B2F(supersets, afxClass, subset, superset)
         {
-            AfxAssertType(superset, afxFcc_CLS);
+            AFX_ASSERT(superset->fcc == afxFcc_CLS);
 
             if (first && (first >= superset->pool.totalUsedCnt))
             {
@@ -212,7 +212,7 @@ _AFX afxUnit _AfxEnumerateObjectsUnlocked(afxClass const* cls, afxBool fromLast,
 _AFX afxUnit _AfxEvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, afxBool(*flt)(afxObject, void*), void* fdd, afxUnit first, afxUnit cnt, afxObject objects[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxUnit rslt = 0;
 
     if (first && (first >= cls->pool.totalUsedCnt))
@@ -227,7 +227,7 @@ _AFX afxUnit _AfxEvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, afx
 
         while (AfxEnumeratePoolItems(&cls->pool, j++, 1, (void**)&baseObj))
         {
-            AfxAssertType(baseObj, afxFcc_OBJ);
+            AFX_ASSERT(baseObj->fcc == afxFcc_OBJ);
             afxObject obj = GET_OBJ_ADDR(baseObj);
             AFX_ASSERT_OBJECTS(objFcc, 1, &obj);
 
@@ -253,7 +253,7 @@ _AFX afxUnit _AfxEvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, afx
         afxChain const *supersets = &cls->supersets;
         AFX_ITERATE_CHAIN_B2F(supersets, afxClass, subset, superset)
         {
-            AfxAssertType(superset, afxFcc_CLS);
+            AFX_ASSERT(superset->fcc == afxFcc_CLS);
 
             if (first && (first >= superset->pool.totalUsedCnt))
             {
@@ -298,7 +298,7 @@ _AFX afxUnit _AfxEvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, afx
 _AFX afxUnit AfxEnumerateObjects(afxClass const* cls, afxUnit first, afxUnit cnt, afxObject objects[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(!cnt || objects);
     afxUnit instCnt = 0;
 
@@ -307,7 +307,7 @@ _AFX afxUnit AfxEnumerateObjects(afxClass const* cls, afxUnit first, afxUnit cnt
         afxChain const *supersets = &cls->supersets;
         AFX_ITERATE_CHAIN_B2F(supersets, afxClass, subset, cls)
         {
-            AfxAssertType(cls, afxFcc_CLS);
+            AFX_ASSERT(cls->fcc == afxFcc_CLS);
             instCnt += cls->instCnt;
         }
     }
@@ -323,7 +323,7 @@ _AFX afxUnit AfxEnumerateObjects(afxClass const* cls, afxUnit first, afxUnit cnt
 _AFX afxUnit AfxEvokeObjects(afxClass const* cls, afxBool(*f)(afxObject, void*), void* udd, afxUnit first, afxUnit cnt, afxObject objects[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     //AFX_ASSERT(cnt);
     afxUnit rslt = 0;
 
@@ -339,7 +339,7 @@ _AFX afxUnit AfxEvokeObjects(afxClass const* cls, afxBool(*f)(afxObject, void*),
 _AFX afxUnit _AfxInvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, afxUnit first, afxUnit cnt, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2)
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(f2);
     afxUnit rslt = 0;
     afxUnit i = first;
@@ -383,7 +383,7 @@ _AFX afxUnit _AfxInvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, af
 _AFX afxUnit AfxInvokeClassInstances2(afxClass const* cls, afxUnit first, afxUnit cnt, afxBool(*f)(afxObject, void*), void* udd, afxBool(*f2)(afxObject, void*), void* udd2)
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     //AFX_ASSERT(cnt);
     AFX_ASSERT(f);
     AFX_ASSERT(f2);
@@ -401,7 +401,7 @@ _AFX afxUnit AfxInvokeClassInstances2(afxClass const* cls, afxUnit first, afxUni
 _AFX afxUnit AfxInvokeObjects(afxClass const* cls, afxUnit first, afxUnit cnt, afxBool(*f)(afxObject obj, void *udd), void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     //AFX_ASSERT(cnt);
     AFX_ASSERT(f);
     afxUnit rslt = 0;
@@ -418,7 +418,7 @@ _AFX afxUnit AfxInvokeObjects(afxClass const* cls, afxUnit first, afxUnit cnt, a
 _AFXINL afxBool AfxFindClassPluginSegment(afxClass const* cls, afxUnit extId, afxUnit* off, afxUnit* siz)
 {
     afxError err = NIL;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxBool rslt = FALSE;
 
     afxClassExtension* ext;
@@ -440,9 +440,9 @@ _AFXINL void* AfxGetObjectExtra(afxObject obj, afxUnit pluginId)
 {
     afxError err = NIL;
     afxObjectBase* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     afxClass* cls = hdr->cls;
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
     afxUnit off = 0, siz = 0;
     void* p = NIL;
@@ -458,16 +458,16 @@ _AFXINL void* AfxGetObjectIdd(afxObject obj, afxUnit offset)
 {
     afxError err = NIL;
     afxObjectBase const* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     afxClass const* cls = hdr->cls;
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     return hdr->extra ? &hdr->extra[offset] : NIL;
 }
 
 _AFX afxError _AfxDeallocateObjects(afxClass *cls, afxUnit cnt, afxObject objects[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(objects);
     AFX_ASSERT(cnt);
     
@@ -491,7 +491,7 @@ _AFX afxError _AfxDeallocateObjects(afxClass *cls, afxUnit cnt, afxObject object
 _AFX afxError _AfxAllocateObjects(afxClass *cls, afxUnit cnt, afxObject objects[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(cnt);
 
     afxPool* pool = &cls->pool;
@@ -522,7 +522,7 @@ _AFX afxError _AfxAllocateObjects(afxClass *cls, afxUnit cnt, afxObject objects[
 _AFX afxError _AfxAllocateClassInstancesAt(afxClass *cls, afxUnit subset, afxUnit cnt, afxObject objects[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(cnt);
 
     afxPool* pool = &cls->pool;
@@ -560,7 +560,7 @@ _AFX afxError _AfxAllocateClassInstancesAt(afxClass *cls, afxUnit subset, afxUni
 _AFX afxError _AfxClsObjDtor(afxClass *cls, afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxClass* subset = AfxGetSubClass(cls);
 
     if (cls->dtor && cls->dtor(obj))
@@ -585,7 +585,7 @@ _AFX afxError _AfxClsObjDtor(afxClass *cls, afxObject obj)
 _AFX afxError _AfxClsObjCtor(afxClass *cls, afxObject obj, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxClass* subset = AfxGetSubClass(cls);
 
     if (subset && _AfxClsObjCtor(subset, obj, args, invokeNo)) AfxThrowError();
@@ -611,7 +611,7 @@ _AFX afxError _AfxClsObjCtor(afxClass *cls, afxObject obj, void** args, afxUnit 
 _AFX afxError _AfxDestructObjects(afxClass *cls, afxUnit cnt, afxObject objects[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(objects);
     AFX_ASSERT(cnt);
  
@@ -625,7 +625,7 @@ _AFX afxError _AfxDestructObjects(afxClass *cls, afxUnit cnt, afxObject objects[
         --cls->instCnt;
         //AfxLogEcho("Dismantling %s object (#%d) %p...", cls->name, i, obj[i]);
         afxObjectBase *hdr = GET_OBJ_HDR(obj);
-        AfxAssertType(hdr, afxFcc_OBJ);
+        AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
         AFX_ASSERT(AfxGetClass(obj) == cls);
 
         //afxFcc fcc = AfxGetObjectFcc(item);
@@ -700,7 +700,7 @@ _AFX afxError _AfxDestructObjects(afxClass *cls, afxUnit cnt, afxObject objects[
 _AFX afxError _AfxConstructObjects(afxClass *cls, afxUnit cnt, afxObject objects[], void** udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(cnt);
     AFX_ASSERT(objects);
     //AFX_ASSERT(blueprint);
@@ -790,7 +790,7 @@ _AFX afxError _AfxConstructObjects(afxClass *cls, afxUnit cnt, afxObject objects
 _AFX afxUnit AfxExhaustClass(afxClass *cls)
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxUnit rslt = 0;
 
     if (cls->fixedSiz)
@@ -808,12 +808,12 @@ _AFX afxUnit AfxExhaustClass(afxClass *cls)
 _AFX afxError AfxDismountClass(afxClass *cls)
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
     if (!cls->fcc)
         return err;
 
-    AfxAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
     afxUnit objCnt = AfxEnumerateObjects(cls, 0, 0, NIL);
     afxClass* subset = AfxGetSubClass(cls);
@@ -950,7 +950,7 @@ _AFX afxError AfxMountClass(afxClass* cls, afxClass* subset, afxChain* host, afx
     else
     {
         AFX_ASSERT(subset != cls);
-        AfxAssertType(subset, afxFcc_CLS);
+        AFX_ASSERT(subset->fcc == afxFcc_CLS);
         AFX_ASSERT(cfg->fixedSiz >= subset->fixedSiz);
         AfxPushLink(&cls->subset, &subset->supersets);
         cls->level = subset->level + 1;
@@ -1008,7 +1008,7 @@ _AFX afxUnit AfxGetObjectId(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase* hdr = GET_OBJ_HDR(obj);
-    AfxAssertType(hdr, afxFcc_OBJ);
+    AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     
     afxPool* pool = &(AfxGetClass(obj)->pool);
     //AfxAssertType(pool, afxFcc_POOL);
@@ -1020,7 +1020,7 @@ _AFX afxUnit AfxGetObjectId(afxObject obj)
 _AFX afxError AfxAcquireObjects(afxClass *cls, afxUnit cnt, afxObject objects[], void const* udd[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(cnt);
     AFX_ASSERT(objects);
 
@@ -1085,7 +1085,7 @@ _AFX afxError AfxReacquireObjects(afxUnit cnt, afxObject objects[])
             continue;
 
         afxObjectBase* hdr = GET_OBJ_HDR(obj);
-        AfxAssertType(hdr, afxFcc_OBJ);
+        AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
         AfxIncAtom32(&hdr->refCnt);
     }
     return err;
@@ -1106,7 +1106,7 @@ _AFX afxBool AfxDisposeObjects(afxUnit cnt, afxObject objects[])
             continue;
 
         afxObjectBase* hdr = GET_OBJ_HDR(obj);
-        AfxAssertType(hdr, afxFcc_OBJ);
+        AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
 
         AfxCatchError(err);
 
@@ -1115,7 +1115,7 @@ _AFX afxBool AfxDisposeObjects(afxUnit cnt, afxObject objects[])
         if (0 == refCnt)
         {
             afxClass* cls = hdr->cls;
-            AfxAssertType(cls, afxFcc_CLS);
+            AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
             // se der erro aqui, é porque você provavelmente está passando uma array como elemento aninhado (ex.: AfxDisposeObjects(n, (void*[]){ array })) ao invés de passar a array diretamente (ex.: AfxDisposeObjects(n, array));
 
@@ -1155,7 +1155,7 @@ _AFX afxUnit _AfxAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fc
         }
 
         afxObjectBase* hdr = GET_OBJ_HDR(obj);
-        AfxAssertType(hdr, afxFcc_OBJ);
+        AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
         afxClass const* cls = hdr->cls;
 
         if (!cls)
@@ -1164,7 +1164,7 @@ _AFX afxUnit _AfxAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fc
             AfxCatchError(err);
             continue;
         }
-        AfxAssertType(cls, afxFcc_CLS);
+        AFX_ASSERT(cls->fcc == afxFcc_CLS);
         afxBool found = FALSE;
 
         do if (cls->objFcc == fcc) { found = TRUE;  break; }
@@ -1195,7 +1195,7 @@ _AFX afxUnit _AfxTryAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc
             continue;
 
         afxObjectBase* hdr = GET_OBJ_HDR(obj);
-        AfxAssertType(hdr, afxFcc_OBJ);
+        AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
         afxClass const* cls = hdr->cls;
 
         if (!cls)
@@ -1205,7 +1205,7 @@ _AFX afxUnit _AfxTryAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc
             continue;
         }
 
-        AfxAssertType(cls, afxFcc_CLS);
+        AFX_ASSERT(cls->fcc == afxFcc_CLS);
         afxBool found = FALSE;
 
         do if (cls->objFcc == fcc) { found = TRUE;  break; }
@@ -1231,7 +1231,7 @@ _AFX afxResult AfxWaitForObject(afxTime timeout, afxObject obj)
 _AFX afxError AfxInstallClassExtension(afxClass* cls, afxClassExtension* const ext)
 {
     afxError err = NIL;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
     // Make sure that the library has not been opened yet.
 
@@ -1275,7 +1275,7 @@ _AFX afxError AfxInstallClassExtension(afxClass* cls, afxClassExtension* const e
 afxResult _AfxObjAggrValidation(afxClass* cls, afxObject obj)
 {
     afxError err = NIL;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(obj);
     afxResult invalid = 0;
 
@@ -1299,7 +1299,7 @@ afxResult _AfxObjAggrValidation(afxClass* cls, afxObject obj)
 afxError _AfxObjAggrCtor(afxClass* cls, afxObject obj)
 {
     afxError err = NIL;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(obj);
 
 #ifdef RWDEBUG
@@ -1339,7 +1339,7 @@ afxError _AfxObjAggrCtor(afxClass* cls, afxObject obj)
 afxError _AfxObjAggrDtor(afxClass* cls, afxObject obj)
 {
     afxError err = NIL;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(obj);
 
 #ifdef RWDEBUG
@@ -1365,7 +1365,7 @@ afxError _AfxObjAggrDtor(afxClass* cls, afxObject obj)
 afxError _AfxObjAggrCpy(afxClass* cls, void* dst, void const* src)
 {
     afxError err = NIL;
-    AfxTryAssertType(cls, afxFcc_CLS);
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(dst);
     AFX_ASSERT(src);
 

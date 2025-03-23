@@ -42,7 +42,7 @@ AFX_DEFINE_STRUCT(_avxDoutDdi)
     afxError(*ioctl)(afxDrawOutput, afxUnit, va_list ap);
     afxError(*adjust)(afxDrawOutput, avxRange);
     afxError(*present)(afxDrawQueue, avxPresentation*, avxFence wait, afxDrawOutput, afxUnit bufIdx, avxFence signal);
-    afxError(*reqBuf)(afxDrawOutput dout, afxTime timeout, afxUnit *bufIdx);
+    afxError(*reqBuf)(afxDrawOutput dout, afxUnit64 timeout, afxUnit *bufIdx);
     afxError(*recycBuf)(afxDrawOutput dout, afxUnit bufIdx);
 };
 #endif
@@ -65,10 +65,17 @@ AFX_DEFINE_STRUCT(afxVideoEndpoint)
     };
     afxObject           endpointNotifyObj; // must ensure life of draw output
     avxPresentNotifier  endpointNotifyFn;
-    avxVideoAlpha     presentAlpha; // consider transparency for external composing (usually on windowing system).
-    avxVideoTransform presentTransform; // NIL leaves it as it is.
-    avxPresentMode      presentMode; // FIFO
+    avxVideoAlpha       presentAlpha; // consider transparency for external composing (usually on windowing system).
+    avxVideoTransform   presentTransform; // NIL leaves it as it is.
+    avxPresentFlags     presentMode; // FIFO
     afxBool             doNotClip; // usually false to don't do off-screen draw on compositor-based endpoints (aka window).
+};
+
+AFX_DEFINE_STRUCT(_avxDoutBuffer)
+{
+    afxBool     locked;
+    avxCanvas   canv;
+    avxRaster   ras;
 };
 
 #ifdef _AVX_DRAW_OUTPUT_IMPL
@@ -88,7 +95,7 @@ AFX_OBJECT(afxDrawOutput)
     afxError            (*presentCb)(afxDrawQueue dque, avxPresentation* ctrl, afxDrawOutput,afxUnit bufIdx);
     struct _afxDoutIdd* idd; // alloc'ed by the driver
 
-    avxRange           resolution; // Screen resolution. Absolute extent available.
+    avxRange            resolution; // Screen resolution. Absolute extent available.
     afxReal64           wrOverHr; // (usually screen) resolution w/h
     afxReal64           wpOverHp; // physical w/h
     afxReal             refreshRate;
@@ -98,20 +105,20 @@ AFX_OBJECT(afxDrawOutput)
     // canvas
     avxColorSpace       colorSpc; // raster color space. sRGB is the default.    
     avxFormat           bufFmt[3]; // format for color, depth and stencil surfaces, respectively.
-    afxRasterUsage      bufUsage[3]; // raster usage for color, depth and stencil, respectively.
-    afxRasterFlags      bufFlags[3]; // raster flags for color, depth and stencil, respectively.
-    avxRange           extent;
+    avxRasterUsage      bufUsage[3]; // raster usage for color, depth and stencil, respectively.
+    avxRasterFlags      bufFlags[3]; // raster flags for color, depth and stencil, respectively.
+    avxRange            extent;
     afxReal64           wwOverHw; // window w/h
     afxBool             resizing;
 
     // swapchain
     afxUnit             bufCnt; // usually 2 or 3; double or triple buffered.
-    avxCanvas*          canvases;
+    _avxDoutBuffer*     buffers;
     afxInterlockedQueue freeBuffers;
     afxAtom32           presentingBufIdx;
-    avxPresentMode      presentMode; // FIFO
-    avxVideoAlpha     presentAlpha; // consider transparency for external composing (usually on windowing system).
-    avxVideoTransform presentTransform; // NIL leaves it as it is.
+    avxPresentFlags     presentMode; // FIFO
+    avxVideoAlpha       presentAlpha; // consider transparency for external composing (usually on windowing system).
+    avxVideoTransform   presentTransform; // NIL leaves it as it is.
     afxBool             doNotClip; // usually false to don't do off-screen draw on compositor-based endpoints (aka window).
 
     afxUnit             suspendCnt;
@@ -134,8 +141,6 @@ AVX _avxDoutDdi const _AVX_DOUT_DDI;
 AVX afxError _AvxDoutImplIoctlCb(afxDrawOutput dout, afxUnit code, afxUnit inSiz, void* in, afxUnit outCap, void* out, afxUnit32* outSiz, avxFence signal);
 AVX afxError _AvxDoutImplAdjustCb(afxDrawOutput dout, avxRange whd);
 AVX afxError _AvxDoutImplPresentCb(afxDrawQueue dque, avxPresentation* ctrl, avxFence wait, afxDrawOutput dout, afxUnit bufIdx, avxFence signal);
-AVX afxError _AvxDoutImplRequestBufferCb(afxDrawOutput dout, afxTime timeout, afxUnit *bufIdx);
-AVX afxError _AvxDoutImplRecycleBufferCb(afxDrawOutput dout, afxUnit bufIdx);
 
 
 #endif//AVX_IMPL___OUTPUT_H

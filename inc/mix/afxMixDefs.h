@@ -64,7 +64,7 @@ AFX_DEFINE_HANDLE(amxBuffer);
 
 AFX_DEFINE_HANDLE(afxVideoDecoder);
 AFX_DEFINE_HANDLE(afxVideoEncoder);
-
+AFX_DEFINE_HANDLE(amxSession);
 AFX_DEFINE_HANDLE(amxSource);
 AFX_DEFINE_HANDLE(amxCodec);
 AFX_DEFINE_HANDLE(amxEncoder);

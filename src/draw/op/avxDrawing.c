@@ -67,7 +67,7 @@ _AVX afxString const afxDrawCmdStrings[] =
     AFX_STRING("DrawIndexedIndirectCount"),
 };
 
-_AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, afxUnit segment, avxPipeline pip, avxVertexDecl vin, afxFlags dynamics)
+_AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, afxUnit segment, avxPipeline pip, avxVertexInput vin, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -90,7 +90,7 @@ _AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, afxUnit segment, avxPipeli
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxBufferMap const maps[])
+_AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxBufferedMap const maps[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -109,7 +109,7 @@ _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseId
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        avxBufferMap const* map = &maps[i];
+        avxBufferedMap const* map = &maps[i];
         cmd->BindBuffers.maps[i].buf = map->buf;
         cmd->BindBuffers.maps[i].offset = map->offset;
         cmd->BindBuffers.maps[i].range = map->range;
@@ -117,7 +117,7 @@ _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseId
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, afxRaster const rasters[])
+_AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxRaster const rasters[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -196,7 +196,7 @@ _AVX afxCmdId AvxCmdDraw(afxDrawContext dctx, afxUnit vtxCnt, afxUnit instCnt, a
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called inside of a render pass instance.
+    // This command must only be called inside of a draw scope instance.
     AFX_ASSERT(dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -221,7 +221,7 @@ _AVX afxCmdId AvxCmdDrawIndirect(afxDrawContext dctx, avxBuffer buf, afxUnit32 o
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called inside of a render pass instance.
+    // This command must only be called inside of a draw scope instance.
     AFX_ASSERT(dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -249,7 +249,7 @@ _AVX afxCmdId AvxCmdDrawIndirectCount(afxDrawContext dctx, avxBuffer buf, afxUni
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called inside of a render pass instance.
+    // This command must only be called inside of a draw scope instance.
     AFX_ASSERT(dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -282,7 +282,7 @@ _AVX afxCmdId AvxCmdDrawIndexed(afxDrawContext dctx, afxUnit idxCnt, afxUnit ins
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called inside of a render pass instance.
+    // This command must only be called inside of a draw scope instance.
     AFX_ASSERT(dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -308,7 +308,7 @@ _AVX afxCmdId AvxCmdDrawIndexedIndirect(afxDrawContext dctx, avxBuffer buf, afxU
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called inside of a render pass instance.
+    // This command must only be called inside of a draw scope instance.
     AFX_ASSERT(dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -360,7 +360,7 @@ _AVX afxCmdId AvxCmdDrawIndexedIndirectCount(afxDrawContext dctx, avxBuffer buf,
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called inside of a render pass instance.
+    // This command must only be called inside of a draw scope instance.
     AFX_ASSERT(dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -392,7 +392,7 @@ _AVX afxCmdId AvxCmdDispatch(afxDrawContext dctx, afxUnit grpCntX, afxUnit grpCn
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called outside of a render pass instance.
+    // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(!dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -413,7 +413,7 @@ _AVX afxCmdId AvxCmdDispatchIndirect(afxDrawContext dctx, avxBuffer buf, afxUnit
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called outside of a render pass instance.
+    // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(!dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);

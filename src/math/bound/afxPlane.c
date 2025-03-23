@@ -19,16 +19,7 @@
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/math/bound/afxPlane.h"
 
-_AFXINL void AfxPlaneCopy(afxPlane* p, afxPlane const* in)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(p);
-    AFX_ASSERT(in);
-    AfxV3dCopy(p->normal, in->normal); // dist also will be copied
-    p->offset = in->offset;
-}
-
-_AFXINL void AfxPlaneReset(afxPlane* p, afxV3d const normal, afxReal dist)
+_AFXINL void AfxMakePlane(afxPlane* p, afxV3d const normal, afxReal dist)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(p);
@@ -40,7 +31,7 @@ _AFXINL void AfxPlaneReset(afxPlane* p, afxV3d const normal, afxReal dist)
     p->dist = dist * invLen;
 }
 
-_AFXINL void AfxPlaneFromTriangle(afxPlane* p, afxV3d const a, afxV3d const b, afxV3d const c)
+_AFXINL void AfxMakePlaneFromTriangle(afxPlane* p, afxV3d const a, afxV3d const b, afxV3d const c)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(p);
@@ -56,7 +47,7 @@ _AFXINL void AfxPlaneFromTriangle(afxPlane* p, afxV3d const a, afxV3d const b, a
     p->dist = -AfxV3dDot(p->normal, a);
 }
 
-_AFXINL void AfxPlaneGetNormal(afxPlane* p, afxV3d normal)
+_AFXINL void AfxGetPlaneNormal(afxPlane* p, afxV3d normal)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(p);
@@ -64,14 +55,14 @@ _AFXINL void AfxPlaneGetNormal(afxPlane* p, afxV3d normal)
     AfxV3dCopy(normal, p->normal);
 }
 
-_AFXINL afxReal AfxPlaneGetOffset(afxPlane const* p)
+_AFXINL afxReal AfxGetPlaneOffset(afxPlane const* p)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(p);
     return p->offset;
 }
 
-_AFXINL afxReal AfxPlaneFindV3d(afxPlane const* p, afxV3d const point)
+_AFXINL afxReal AfxFindPlaneDistance(afxPlane const* p, afxV3d const point)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(p);
@@ -79,7 +70,7 @@ _AFXINL afxReal AfxPlaneFindV3d(afxPlane const* p, afxV3d const point)
     return AfxV3dDot(p->normal, point) + p->offset;
 }
 
-_AFXINL afxReal AfxPlaneFindHitInterpolationConstant(afxPlane const* p, afxV3d const a, afxV3d const b)
+_AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const* p, afxV3d const a, afxV3d const b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(p);
@@ -87,13 +78,13 @@ _AFXINL afxReal AfxPlaneFindHitInterpolationConstant(afxPlane const* p, afxV3d c
     AFX_ASSERT(b);
     afxV3d t;
     AfxV3dSub(t, a, b);
-    return (AfxPlaneFindV3d(p, a)) / AfxV3dDot(p->normal, t);
+    return (AfxFindPlaneDistance(p, a)) / AfxV3dDot(p->normal, t);
 }
 
 _AFXINL afxBool AfxPlaneTestSpheres(afxPlane const* p, afxUnit cnt, afxSphere const spheres[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert2(p, spheres);
+    AFX_ASSERT2(p, spheres);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -108,7 +99,7 @@ _AFXINL afxBool AfxPlaneTestSpheres(afxPlane const* p, afxUnit cnt, afxSphere co
 _AFXINL afxResult AfxPlaneTestAabbs(afxPlane const* p, afxUnit cnt, afxBox const aabb[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert2(p, aabb);
+    AFX_ASSERT2(p, aabb);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -117,35 +108,35 @@ _AFXINL afxResult AfxPlaneTestAabbs(afxPlane const* p, afxUnit cnt, afxBox const
 
         if (p->normal[0] > 0.0f)
         {
-            minD = p->normal[0] * aabb[i].inf[0];
-            maxD = p->normal[0] * aabb[i].sup[0];
+            minD = p->normal[0] * aabb[i].min[0];
+            maxD = p->normal[0] * aabb[i].max[0];
         }
         else
         {
-            minD = p->normal[0] * aabb[i].sup[0];
-            maxD = p->normal[0] * aabb[i].inf[0];
+            minD = p->normal[0] * aabb[i].max[0];
+            maxD = p->normal[0] * aabb[i].min[0];
         }
 
         if (p->normal[1] > 0.0f)
         {
-            minD += p->normal[1] * aabb[i].inf[1];
-            maxD += p->normal[1] * aabb[i].sup[1];
+            minD += p->normal[1] * aabb[i].min[1];
+            maxD += p->normal[1] * aabb[i].max[1];
         }
         else
         {
-            minD += p->normal[1] * aabb[i].sup[1];;
-            maxD += p->normal[1] * aabb[i].inf[1];
+            minD += p->normal[1] * aabb[i].max[1];;
+            maxD += p->normal[1] * aabb[i].min[1];
         }
 
         if (p->normal[2] > 0.0f)
         {
-            minD += p->normal[2] * aabb[i].inf[2];
-            maxD += p->normal[2] * aabb[i].sup[2];
+            minD += p->normal[2] * aabb[i].min[2];
+            maxD += p->normal[2] * aabb[i].max[2];
         }
         else
         {
-            minD += p->normal[2] * aabb[i].sup[2];
-            maxD += p->normal[2] * aabb[i].inf[2];
+            minD += p->normal[2] * aabb[i].max[2];
+            maxD += p->normal[2] * aabb[i].min[2];
         }
 
         // What side of the plane
@@ -158,4 +149,20 @@ _AFXINL afxResult AfxPlaneTestAabbs(afxPlane const* p, afxUnit cnt, afxBox const
     }
     //Intersection
     return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+_AFXINL void AfxCopyPlanes(afxUnit cnt, afxPlane const src[], afxPlane dst[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(src);
+    AFX_ASSERT(dst);
+    AFX_ASSERT(cnt);
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        AfxV3dCopy(dst[i].normal, src[i].normal);
+        dst[i].offset = src[i].offset;
+    }
 }

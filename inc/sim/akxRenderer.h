@@ -36,7 +36,7 @@ AFX_DEFINE_STRUCT(akxProto)
     afxUri128       andUri;
 
     afxModel        mdl;
-    afxRaster       ras;
+    avxRaster       ras;
     afxAnimation    ani;
 };
 
@@ -70,7 +70,7 @@ AFX_DEFINE_STRUCT(akxShaderConstants) // pass
 
 AFX_DEFINE_STRUCT(akxMaterialConstants)
 {
-    //afxColor    Ka; // ambient color
+    //avxColor    Ka; // ambient color
     afxV3d  Kd; // diffuse color
     afxV3d  Ks; // specular color
     afxReal Ns; // specular color is weighted by the specular exponent Ns. Ranges between [0...1000].
@@ -153,14 +153,14 @@ AFX_OBJECT(akxRenderer)
     afxDrawTechnique    tutCamUtilDtec;
     afxDrawTechnique    lightingDtec;
 
-    avxVertexDecl      rigidVin;
-    avxVertexDecl   vin_p3n3t2_bi_mtl_mtx_jnt;
-    avxVertexDecl   vin_p3j1n3t2_bi_mtl_mtx_jnt;
-    avxVertexDecl   vin_p3j2n3t2_bi_mtl_mtx_jnt;
-    avxVertexDecl   vin_p3j3n3t2_bi_mtl_mtx_jnt;
-    avxVertexDecl   vin_p3j4n3t2_bi_mtl_mtx_jnt;
-    avxVertexDecl      skinnedVin;
-    avxVertexDecl      testVin;
+    avxVertexInput      rigidVin;
+    avxVertexInput   vin_p3n3t2_bi_mtl_mtx_jnt;
+    avxVertexInput   vin_p3j1n3t2_bi_mtl_mtx_jnt;
+    avxVertexInput   vin_p3j2n3t2_bi_mtl_mtx_jnt;
+    avxVertexInput   vin_p3j3n3t2_bi_mtl_mtx_jnt;
+    avxVertexInput   vin_p3j4n3t2_bi_mtl_mtx_jnt;
+    avxVertexInput      skinnedVin;
+    avxVertexInput      testVin;
 
     afxPose      lp;
     afxPlacement wp[2];

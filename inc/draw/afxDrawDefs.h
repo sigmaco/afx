@@ -112,14 +112,14 @@ typedef enum afxFormat
 
 typedef enum avxStencilOp
 {
-    avxStencilOp_KEEP = 0,
-    avxStencilOp_ZERO = 1,
-    avxStencilOp_REPLACE = 2,
-    avxStencilOp_INC_N_CLAMP = 3,
-    avxStencilOp_DEC_N_CLAMP = 4,
-    avxStencilOp_INV = 5,
-    avxStencilOp_INC_AND_WRAP = 6,
-    avxStencilOp_DEC_AND_WRAP = 7,
+    avxStencilOp_KEEP,
+    avxStencilOp_ZERO,
+    avxStencilOp_REPLACE,
+    avxStencilOp_INC_N_CLAMP,
+    avxStencilOp_DEC_N_CLAMP,
+    avxStencilOp_INV,
+    avxStencilOp_INC_AND_WRAP,
+    avxStencilOp_DEC_AND_WRAP,
 
     avxStencilOp_TOTAL
 } avxStencilOp;
@@ -129,9 +129,6 @@ typedef enum avxLogicOp
 /// Standard C-language operators are used.
 /// As these bitwise operators suggest, the logical operation is applied independently to each bit pair of the source and destination colors.
 {
-    avxLogicOp_NOP,         // d
-    avxLogicOp_CLEAR,       // 0
-    avxLogicOp_SET,         // 1
     avxLogicOp_COPY,        // s
     avxLogicOp_COPY_INV,    // ~s
     avxLogicOp_INV,         // ~d
@@ -146,9 +143,21 @@ typedef enum avxLogicOp
     avxLogicOp_AND_INV,     // ~s & d
     avxLogicOp_OR_REV,      // s | ~d
     avxLogicOp_OR_INV,      // ~s | d
-    
+
+    avxLogicOp_NOP,         // d
+    avxLogicOp_CLEAR,       // 0
+    avxLogicOp_SET,         // 1
+
     avxLogicOp_TOTAL
 } avxLogicOp;
+
+typedef enum avxFaceMask
+{
+    avxFaceMask_NONE,
+    avxFaceMask_FRONT   = AFX_BIT(0),
+    avxFaceMask_BACK    = AFX_BIT(1),
+    avxFaceMask_BOTH    = (avxFaceMask_FRONT | avxFaceMask_BACK),
+} avxFaceMask;
 
 typedef enum avxCullMode
 /// Bitmask controlling triangle culling.
@@ -304,14 +313,14 @@ typedef enum avxBlendOp
 
 typedef enum avxCompareOp
 {
-    avxCompareOp_NEVER, // NIL = Never passes
-    avxCompareOp_LESS, // Passes if the incoming depth value is less than the stored depth value.
-    avxCompareOp_LEQUAL, // Passes if the incoming depth value is less than or equal to the stored depth value.
+    avxCompareOp_ALWAYS, // Always passes.
+    avxCompareOp_GREATER, // Passes if the incoming depth value is greater than the stored depth value.
+    avxCompareOp_GEQUAL, // Passes if the incoming depth value is greater than or equal to the stored depth value.
     avxCompareOp_EQUAL, // Passes if the incoming depth value is equal to the stored depth value.
     avxCompareOp_NOTEQUAL, // Passes if the incoming depth value is not equal to the stored depth value.
-    avxCompareOp_GEQUAL, // Passes if the incoming depth value is greater than or equal to the stored depth value.
-    avxCompareOp_GREATER, // Passes if the incoming depth value is greater than the stored depth value.
-    avxCompareOp_ALWAYS, // Always passes.
+    avxCompareOp_LEQUAL, // Passes if the incoming depth value is less than or equal to the stored depth value.
+    avxCompareOp_LESS, // Passes if the incoming depth value is less than the stored depth value.
+    avxCompareOp_NEVER, // NIL = Never passes
 
     avxCompareOp_TOTAL
 } avxCompareOp;
@@ -393,13 +402,13 @@ AFX_DEFINE_HANDLE(afxDrawContext);
 AFX_DEFINE_HANDLE(afxDrawOutput);
 AFX_DEFINE_HANDLE(avxPipeline);
 AFX_DEFINE_HANDLE(avxRasterizer);
-AFX_DEFINE_HANDLE(avxVertexDecl);
+AFX_DEFINE_HANDLE(avxVertexInput);
 AFX_DEFINE_HANDLE(avxShader);
 AFX_DEFINE_HANDLE(avxLigature);
 AFX_DEFINE_HANDLE(avxSampler);
 AFX_DEFINE_HANDLE(avxQueryPool);
 AFX_DEFINE_HANDLE(avxBuffer);
-AFX_DEFINE_HANDLE(afxRaster);
+AFX_DEFINE_HANDLE(avxRaster);
 AFX_DEFINE_HANDLE(avxCanvas);
 
 AFX_DEFINE_HANDLE(afxDrawOperation);

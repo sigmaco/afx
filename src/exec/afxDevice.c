@@ -327,7 +327,7 @@ _AFX afxUnit AfxCountDevices(afxDeviceType type)
 _AFX afxBool AfxFindDevice(afxDeviceType type, afxUri const* urn, afxDevice* device)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert2(urn, device);
+    AFX_ASSERT2(urn, device);
     afxResult rslt = FALSE;
     
     afxUri target;

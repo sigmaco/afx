@@ -180,7 +180,8 @@ _AMX afxBool _AmxMpu_ProcCb(amxMpu* mpu)
     afxUnit i = 0;
     while (AfxEnumerateObjects(_AmxGetAudioSinkClass(AfxGetProvider(mexu)), i++, 1, (afxObject*)&sink))
     {
-        sink->flushCb(sink);
+        if (sink->flushCb)
+            sink->flushCb(sink);
     }
 
     amxWorkList const* workVmt = mexu->workVmt;

@@ -223,7 +223,10 @@ _ASX afxError AfxAcquireTerrain(afxSimulation sim, afxUnit secCnt, afxTerrain* t
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    if (AfxAcquireObjects((afxClass *)_AsxGetTerrainClass(sim), 1, (afxObject*)terrain, (void const*[]) { sim, &secCnt } ))
+    afxClass* cls = (afxClass *)_AsxGetTerrainClass(sim);
+    AFX_ASSERT_CLASS(cls, afxFcc_TER);
+
+    if (AfxAcquireObjects(cls, 1, (afxObject*)terrain, (void const*[]) { sim, &secCnt } ))
         AfxThrowError();
 
     return err;
@@ -259,9 +262,9 @@ _ASX afxError AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* ur
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    afxRaster ras;
-    AfxLoadRasters(sim->dsys, 1, NIL, uri, &ras);
-    AfxPrintRaster(ras, NIL, 1, 0, AfxUri("../heightmap_dump.tga"));
+    avxRaster ras;
+    AvxLoadRasters(sim->dsys, 1, NIL, uri, &ras);
+    AvxPrintRaster(ras, NIL, 1, 0, AfxUri("../heightmap_dump.tga"));
 
     afxStream iob;
     afxStreamInfo iobi = { 0 };

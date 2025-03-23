@@ -32,7 +32,7 @@ AFX_OBJECT(_avxBuffer)
 AFX_OBJECT(avxBuffer)
 #endif
 {
-    afxChar const*const*label;
+    afxString       tag;
     avxBufferFlags  flags;
     avxBufferUsage  usage;
     afxUnit         cap; // capacity
@@ -83,13 +83,13 @@ AFX_OBJECT(avxBuffer)
 #ifdef _AVX_RASTER_IMPL
 AFX_OBJECT(_avxRaster)
 #else
-AFX_OBJECT(afxRaster)
+AFX_OBJECT(avxRaster)
 #endif
 {
-    afxChar const*const*label;
-    afxRaster       base; // sub
-    afxRasterFlags  flags;
-    afxRasterUsage  usage;
+    afxString       tag;
+    avxRaster       base; // sub
+    avxRasterFlags  flags;
+    avxRasterUsage  usage;
     void*           udd;
     avxFormat       fmt;
     afxUnit         baseLayer; // sub
@@ -131,9 +131,9 @@ AFX_OBJECT(afxRaster)
 AVX afxClassConfig const _AVX_BUF_CLASS_CONFIG;
 AVX afxClassConfig const _AVX_RAS_CLASS_CONFIG;
 
-AVXINL void _AvxSanitizeRasterRegion(afxRaster ras, afxRasterRegion const* raw, afxRasterRegion* san);
-AVXINL void _AvxSanitizeRasterIo(afxRaster ras, afxSize bufCap, afxRasterIo const* raw, afxRasterIo* san);
-AVXINL void _AvxSanitizeRasterCopy(afxRaster src, afxRaster dst, afxRasterCopy const* raw, afxRasterCopy* san);
+AVXINL void _AvxSanitizeRasterRegion(avxRaster ras, avxRasterRegion const* raw, avxRasterRegion* san);
+AVXINL void _AvxSanitizeRasterIo(avxRaster ras, afxSize bufCap, avxRasterIo const* raw, avxRasterIo* san);
+AVXINL void _AvxSanitizeRasterCopy(avxRaster src, avxRaster dst, avxRasterCopy const* raw, avxRasterCopy* san);
 
 AVXINL void _AvxSanitizeBufferCopy(avxBuffer src, avxBuffer dst, avxBufferCopy const* raw, avxBufferCopy* san);
 AVXINL void _AvxSanitizeBufferIo(avxBuffer src, avxBuffer dst, avxBufferIo const* raw, avxBufferIo* san);

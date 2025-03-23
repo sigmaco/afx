@@ -763,7 +763,7 @@ _AFXINL afxResult AfxSscanf(afxChar const* buf, afxChar const* fmt, ...)
 
 AFXINL afxResult AfxStrcmp(afxChar const* str, afxChar const* str2)
 {
-    AfxAssert2(str, str2);
+    AFX_ASSERT2(str, str2);
 
     while (*(str)++ == *(str2)++)
         if (*(str - 1) == 0)
@@ -774,7 +774,7 @@ AFXINL afxResult AfxStrcmp(afxChar const* str, afxChar const* str2)
 
 AFXINL void AfxStrcpy(afxChar* str, afxChar const* from)
 {
-    AfxAssert2(str, from);
+    AFX_ASSERT2(str, from);
     while ((*(str)++ = *(from)++));
 }
 
@@ -788,7 +788,7 @@ AFXINL afxResult AfxStrlen(afxChar const* str)
 
 AFXINL void AfxStrcat(afxChar* str, afxChar const* str2)
 {
-    AfxAssert2(str, str2);
+    AFX_ASSERT2(str, str2);
     AfxStrcpy(str + AfxStrlen(str), str2);
 }
 
@@ -796,7 +796,7 @@ AFXINL void AfxStrcat(afxChar* str, afxChar const* str2)
 
 AFXINL afxResult AfxStricmp(afxChar const* str, afxChar const* str2)
 {
-    AfxAssert2(str, str2);
+    AFX_ASSERT2(str, str2);
 
     while (*(str2) != '\0' && TOUPPER(*(str)) == TOUPPER(*(str2)))
         ++(str), ++(str2);
@@ -832,7 +832,7 @@ AFXINL afxChar* AfxConvertRawStringCpToUtf8(afxChar* str, afxInt cp)
 
 AFXINL void AfxStrncpy(afxChar const* str, afxUnit len, afxChar* to)
 {
-    AfxAssert3(to, str, len);
+    AFX_ASSERT3(to, str, len);
     afxUnit i;
 
     for (i = 0; i < len && str[i] != '\0'; ++(i))

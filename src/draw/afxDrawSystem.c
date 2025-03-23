@@ -203,7 +203,7 @@ _AVX _avxDsysImpl const _AVX_DSYS_IMPL =
     .ligaCls = _AvxDsysGetLigaClass
 };
 
-_AVX afxModule AfxGetDrawSystemIcd(afxDrawSystem dsys)
+_AVX afxModule AvxGetDrawSystemIcd(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -214,7 +214,7 @@ _AVX afxModule AfxGetDrawSystemIcd(afxDrawSystem dsys)
     return icd;
 }
 
-_AVX afxUnit AfxGetDrawSystemProcedures(afxDrawSystem dsys, afxUnit cnt, afxString const names[], void* addresses[])
+_AVX afxUnit AvxGetDrawSystemProcedures(afxDrawSystem dsys, afxUnit cnt, afxString const names[], void* addresses[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -243,7 +243,7 @@ _AVX afxBool AvxGetShaderStringBase(afxDrawSystem dsys, afxStringBase* base)
     return !!strb;
 }
 
-_AVX afxUnit AfxGetDrawBridges(afxDrawSystem dsys, afxUnit baseExuIdx, afxUnit cnt, afxDrawBridge bridges[])
+_AVX afxUnit AvxGetDrawBridges(afxDrawSystem dsys, afxUnit baseExuIdx, afxUnit cnt, afxDrawBridge bridges[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -267,7 +267,7 @@ _AVX afxUnit AfxGetDrawBridges(afxDrawSystem dsys, afxUnit baseExuIdx, afxUnit c
     return rslt;
 }
 
-_AVX afxUnit AfxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, afxUnit portId, afxDrawPortFlags portFlags, afxUnit first, afxUnit maxCnt, afxDrawBridge bridges[])
+_AVX afxUnit AvxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, afxUnit portId, afxDrawPortFlags portFlags, afxUnit first, afxUnit maxCnt, afxDrawBridge bridges[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -296,7 +296,7 @@ _AVX afxUnit AfxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, afxUnit po
         if (portFlags)
         {
             afxDrawCapabilities caps;
-            AfxQueryDrawCapabilities(ddev, portId2, 1, &caps);
+            AvxQueryDrawCapabilities(ddev, portId2, 1, &caps);
             
             if ((caps.capabilities & portFlags) != portFlags)
                 continue;
@@ -321,7 +321,7 @@ _AVX afxUnit AfxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, afxUnit po
     return rslt;
 }
 
-_AVX afxError AfxWaitForDrawQueue(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queId, afxTime timeout)
+_AVX afxError AvxWaitForDrawQueue(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queId, afxUnit64 timeout)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -330,7 +330,7 @@ _AVX afxError AfxWaitForDrawQueue(afxDrawSystem dsys, afxUnit exuIdx, afxUnit qu
     AFX_ASSERT_RANGE((afxUnit)dsys->bridgeCnt, exuIdx, 1);
     
     afxDrawBridge dexu;
-    while (!AfxGetDrawBridges(dsys, exuIdx, 1, &dexu))
+    if (!AvxGetDrawBridges(dsys, exuIdx, 1, &dexu))
     {
         AfxThrowError();
         return err;
@@ -338,20 +338,20 @@ _AVX afxError AfxWaitForDrawQueue(afxDrawSystem dsys, afxUnit exuIdx, afxUnit qu
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 
     afxDrawQueue dque;
-    while (!AfxGetDrawQueues(dexu, queId, 1, &dque))
+    if (!AvxGetDrawQueues(dexu, queId, 1, &dque))
     {
         AfxThrowError();
         return err;
     }
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
-    if (AfxWaitForEmptyDrawQueue(dque, timeout))
+    if (AvxWaitForEmptyDrawQueue(dque, timeout))
         AfxThrowError();
 
     return err;
 }
 
-_AVX afxError AfxWaitForDrawBridge(afxDrawSystem dsys, afxUnit exuIdx, afxTime timeout)
+_AVX afxError AvxWaitForDrawBridge(afxDrawSystem dsys, afxUnit exuIdx, afxUnit64 timeout)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -360,19 +360,19 @@ _AVX afxError AfxWaitForDrawBridge(afxDrawSystem dsys, afxUnit exuIdx, afxTime t
     AFX_ASSERT_RANGE((afxUnit)dsys->bridgeCnt, exuIdx, 1);
     
     afxDrawBridge dexu;
-    while (!AfxGetDrawBridges(dsys, exuIdx, 1, &dexu))
+    if (!AvxGetDrawBridges(dsys, exuIdx, 1, &dexu))
     {
         AfxThrowError();
         return err;
     }
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 
-    AfxWaitForIdleDrawBridge(dexu, timeout);
+    AvxWaitForIdleDrawBridge(dexu, timeout);
 
     return err;
 }
 
-_AVX afxError AfxWaitForDrawSystem(afxDrawSystem dsys, afxTime timeout)
+_AVX afxError AvxWaitForDrawSystem(afxDrawSystem dsys, afxUnit64 timeout)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -383,7 +383,7 @@ _AVX afxError AfxWaitForDrawSystem(afxDrawSystem dsys, afxTime timeout)
         afxUnit bridgeCnt = dsys->bridgeCnt;
 
         for (afxUnit i = 0; i < bridgeCnt; i++)
-            AfxWaitForDrawBridge(dsys, i, timeout);
+            AvxWaitForDrawBridge(dsys, i, timeout);
     }
     else if (dsys->pimpl->waitCb(dsys, timeout))
         AfxThrowError();
@@ -401,7 +401,7 @@ _AVX afxError _AvxTransferVideoMemory(afxDrawSystem dsys, avxTransference* ctrl,
     AFX_ASSERT(ops);
 
     afxDrawBridge dexu;
-    if (!AfxGetDrawBridges(dsys, ctrl->exuIdx, 1, &dexu))
+    if (!AvxGetDrawBridges(dsys, ctrl->exuIdx, 1, &dexu))
     {
         AfxThrowError();
         return err;
@@ -423,7 +423,7 @@ _AVX afxError _AvxTransferVideoMemory(afxDrawSystem dsys, avxTransference* ctrl,
             afxUnit queIdx = baseQueIdx + i;
 
             afxDrawQueue dque;
-            if (!AfxGetDrawQueues(dexu, queIdx, 1, &dque))
+            if (!AvxGetDrawQueues(dexu, queIdx, 1, &dque))
             {
                 AfxThrowError();
                 break;
@@ -454,8 +454,8 @@ _AVX afxError _AvxDsysDtorCb(afxDrawSystem dsys)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    //AfxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
-    //AfxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
+    //AvxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
+    //AvxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
 
     afxUnit bridgeCnt = dsys->bridgeCnt;
 
@@ -506,8 +506,8 @@ _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
 
     afxModule icd = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-    _avxDrawSystemAcquisition const* cfg = AFX_CAST(_avxDrawSystemAcquisition const*, args[1]) + invokeNo;
-    _avxDrawBridgeAcquisition* bridgeCfgs = AFX_CAST(_avxDrawBridgeAcquisition*, args[2]) + invokeNo;
+    _avxDsysAcquisition const* cfg = AFX_CAST(_avxDsysAcquisition const*, args[1]) + invokeNo;
+    _avxDexuAcquisition* bridgeCfgs = AFX_CAST(_avxDexuAcquisition*, args[2]) + invokeNo;
     
     if (!cfg)
     {
@@ -629,7 +629,7 @@ _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
     {
         AFX_ASSERT_OBJECTS(afxFcc_DEXU, dsys->bridgeCnt, dsys->bridges);
         
-        afxDrawDevice ddev = AfxGetDrawBridgeDevice(dsys->bridges[0]);
+        afxDrawDevice ddev = AvxGetDrawBridgeDevice(dsys->bridges[0]);
 
         AfxCallDevice((afxDevice)ddev, 3, dsys);
         AfxCallDevice((afxDevice)ddev, 5, dsys);
@@ -676,7 +676,7 @@ _AVX afxClassConfig const _AVX_DSYS_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxUnit AfxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt)
+_AVX afxUnit AvxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
@@ -695,7 +695,7 @@ _AVX afxUnit AfxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool
     return rslt;
 }
 
-_AVX afxUnit AfxEvokeDrawSystems(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt, afxDrawSystem systems[])
+_AVX afxUnit AvxEvokeDrawSystems(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt, afxDrawSystem systems[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(systems);
@@ -714,7 +714,7 @@ _AVX afxUnit AfxEvokeDrawSystems(afxUnit icd, afxUnit first, void* udd, afxBool(
     return rslt;
 }
 
-_AVX afxUnit AfxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawSystem systems[])
+_AVX afxUnit AvxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawSystem systems[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(systems);
@@ -732,7 +732,7 @@ _AVX afxUnit AfxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, af
     }
 }
 
-_AVX afxError AfxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
+_AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
@@ -757,7 +757,7 @@ _AVX afxError AfxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
 
     afxUnit ddevId = 0;
     afxDrawDevice ddev;
-    if (!AfxEnumerateDrawDevices(icd, ddevId, 1, &ddev))
+    if (!AvxEnumerateDrawDevices(icd, ddevId, 1, &ddev))
     {
         AfxThrowError();
         return err;
@@ -775,7 +775,7 @@ _AVX afxError AfxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
     for (afxUnit i = 0; i < AVX_MAX_BRIDGES_PER_SYSTEM; i++)
     {
         afxDrawCapabilities caps;
-        if (!AfxQueryDrawCapabilities(ddev, i, 1, &caps))
+        if (!AvxQueryDrawCapabilities(ddev, i, 1, &caps))
             break;
 
         cfg->exus[i].capabilities = caps.capabilities;
@@ -788,7 +788,7 @@ _AVX afxError AfxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
     return err;
 }
 
-_AVX afxError AfxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg, afxDrawSystem* system)
+_AVX afxError AvxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg, afxDrawSystem* system)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
@@ -823,7 +823,7 @@ _AVX afxError AfxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg
     // Acquire bridges and queues
     afxUnit totalDqueCnt = 0;
     afxUnit baseQueIdx[AVX_MAX_BRIDGES_PER_SYSTEM] = { 0 };
-    _avxDrawBridgeAcquisition bridgeCfg[AVX_MAX_BRIDGES_PER_SYSTEM] = { 0 };
+    _avxDexuAcquisition bridgeCfg[AVX_MAX_BRIDGES_PER_SYSTEM] = { 0 };
     afxUnit bridgeCnt = 0;
 
     AFX_ASSERT_RANGE(AVX_MAX_BRIDGES_PER_SYSTEM, 0, cfg->exuCnt);
@@ -855,7 +855,7 @@ _AVX afxError AfxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg
             continue;
 
         afxDrawDevice ddev;
-        if (!AfxEnumerateDrawDevices(icd, exuCfg->ddevId, 1, &ddev))
+        if (!AvxEnumerateDrawDevices(icd, exuCfg->ddevId, 1, &ddev))
         {
             AfxThrowError();
             break;
@@ -900,7 +900,7 @@ _AVX afxError AfxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg
         return err;
     }
 
-    _avxDrawSystemAcquisition cfg2 = { 0 };
+    _avxDsysAcquisition cfg2 = { 0 };
     cfg2.bridgeCnt = bridgeCnt;
     cfg2.reqExtCnt = cfg->reqExtCnt;
     cfg2.reqExts = cfg->reqExts;

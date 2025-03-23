@@ -21,7 +21,7 @@
 #define _AVX_SHADER_C
 #include "../impl/avxImplementation.h"
 
-_AVX afxUnit32 AfxGetLigatureHash(avxLigature liga, afxUnit set)
+_AVX afxUnit32 AvxGetLigatureHash(avxLigature liga, afxUnit set)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
@@ -39,7 +39,7 @@ _AVX afxUnit32 AfxGetLigatureHash(avxLigature liga, afxUnit set)
     return crc;
 }
 
-_AVX afxResult AfxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex first, afxUnit cnt, avxLigatureEntry decl[])
+_AVX afxResult AvxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex first, afxUnit cnt, avxLigatureEntry decl[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
@@ -108,7 +108,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
     afxUnit shaderCnt = cfg->shaderCnt;
     avxShader* shaders = cfg->shaders;
     
-    liga->label = cfg->label;
+    liga->tag = cfg->tag;
 
     liga->pushables = FALSE;
 
@@ -127,8 +127,8 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
             continue;
 
         AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
-        avxShaderStage stage = AfxGetShaderStage(shd);
-        afxUnit resCnt = AfxQueryShaderInterfaces(shd, 0, 0, NIL);
+        avxShaderStage stage = AvxGetShaderStage(shd);
+        afxUnit resCnt = AvxQueryShaderInterfaces(shd, 0, 0, NIL);
 
         if (shd->pushConstName.str.len)
             liga->pushables = TRUE;
@@ -136,7 +136,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
         for (afxUnit j = 0; j < resCnt; j++)
         {
             avxShaderResource rsrc;
-            AfxQueryShaderInterfaces(shd, j, 1, &rsrc);
+            AvxQueryShaderInterfaces(shd, j, 1, &rsrc);
             afxIndex setIdx = AFX_INVALID_INDEX;
             //afxIndex resIdx = AFX_INVALID_INDEX;
 
@@ -310,7 +310,7 @@ _AVX afxClassConfig const _AVX_LIGA_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxDeclareLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[])
+_AVX afxError AvxDeclareLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);

@@ -52,7 +52,7 @@ AVX afxCmdId AvxCmdEndQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit quer
     return cmdId;
 }
 
-AVX afxCmdId AvxCmdCopyQueryResults(afxDrawContext dctx, avxQueryPool pool, afxUnit baseQuery, afxUnit queryCnt, avxBuffer buf, afxSize offset, afxSize stride, afxQueryResultFlags flags)
+AVX afxCmdId AvxCmdCopyQueryResults(afxDrawContext dctx, avxQueryPool pool, afxUnit baseQuery, afxUnit queryCnt, avxBuffer buf, afxSize offset, afxSize stride, avxQueryResultFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);

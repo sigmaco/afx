@@ -77,6 +77,6 @@ AFXINL afxUnit   AfxWhdMag(afxWhd const whd);
 AFXINL afxUnit   AfxWhdDot(afxWhd const whd, afxWhd const other);
 
 AFX afxError    _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHere const hint);
-#define         AfxAssertWhd(whd_) AfxAssert3(whd_.w,whd_.h,whd_.d)
+#define         AfxAssertWhd(whd_) AFX_ASSERT3(whd_.w,whd_.h,whd_.d)
 
 #endif//AFX_EXTENT_H

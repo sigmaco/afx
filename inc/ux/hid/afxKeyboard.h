@@ -201,17 +201,17 @@ typedef enum afxKey
 
 // KEYBOARD AND KEYPAD
 
-AUX afxReal         AfxGetKeyPressure(afxSession ses, afxUnit seat, afxKey code);
-AUX afxReal         AfxGetCombinedKeyPressure(afxSession ses, afxUnit seat, afxKey lhs, afxKey rhs);
+AUX afxReal         AfxGetKeyPressure(afxUnit seat, afxKey code);
+AUX afxReal         AfxGetCombinedKeyPressure(afxUnit seat, afxKey lhs, afxKey rhs);
 
-AUX afxBool         AfxIsKeyPressed(afxSession ses, afxUnit seat, afxKey code);
-AUX afxBool         AfxWasKeyPressed(afxSession ses, afxUnit seat, afxKey code);
-AUX afxBool         AfxWasKeyReleased(afxSession ses, afxUnit seat, afxKey code);
+AUX afxBool         AfxIsKeyPressed(afxUnit seat, afxKey code);
+AUX afxBool         AfxWasKeyPressed(afxUnit seat, afxKey code);
+AUX afxBool         AfxWasKeyReleased(afxUnit seat, afxKey code);
 
-AUX afxBool         AfxWereKeysPressed(afxSession ses, afxUnit seat, afxUnit cnt, afxKey const codes[]);
-AUX afxBool         AfxWereKeysReleased(afxSession ses, afxUnit seat, afxUnit cnt, afxKey const codes[]);
+AUX afxBool         AfxWereKeysPressed(afxUnit seat, afxUnit cnt, afxKey const codes[]);
+AUX afxBool         AfxWereKeysReleased(afxUnit seat, afxUnit cnt, afxKey const codes[]);
 
-AUX afxError        AfxEmulatePressedKeys(afxSession ses, afxUnit seat, afxUnit cnt, afxKey const key[], afxUnit8 const pressure[], afxWindow wnd);
-AUX afxError        AfxReleaseAllKeys(afxSession ses, afxUnit seat, afxWindow wnd);
+AUX afxError        AfxEmulatePressedKeys(afxUnit seat, afxUnit cnt, afxKey const key[], afxUnit8 const pressure[], afxWindow wnd);
+AUX afxError        AfxReleaseAllKeys(afxUnit seat, afxWindow wnd);
 
 #endif//AUX_KEYBOARD_H

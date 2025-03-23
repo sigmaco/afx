@@ -29,37 +29,38 @@
 #include "qwadro/inc/math/bound/afxSphere.h"
 
 AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxBox)
+// A set of six 32-bit floats consisting of the minimum x, y, and z values followed by the maximum x, y, and z values.
 {
-    afxV4d  sup; // [ sup/max, inf/min ]
-    afxV4d  inf;
+    // A vector that stores the minimum coordinates (the lower corner of a bounding box in 3D or 4D space).
+    afxV4d  min;
+    // A vector storing the maximum coordinates (the upper corner of a bounding box).
+    afxV4d  max; // [ sup/max, inf/min ]
 };
 
 typedef afxBox afxAabb; // [ sup/max, inf/min ]
 typedef afxBox afxObb;
 
-AFXINL void         AfxBoxReset(afxBox* bb); // make identity
-
-AFXINL void         AfxBoxCopy(afxBox* bb, afxBox const* in);
+AFX afxBox const    AFX_AABB_IDENTITY;
 
 /// Automaticallly constructs an AABB from a list of vertex positions only.
-AFXINL void         AfxAabbSet(afxBox* bb, afxUnit cnt, afxV3d const points[]);
+AFXINL void         AfxMakeAabbFromVertices(afxBox* bb, afxUnit cnt, afxV3d const points[]);
 
 /// Returns the centre point of this AABB and the distance to each side of the box.
-AFXINL void         AfxAabbGetCentre(afxBox const* bb, afxV4d centre);
-AFXINL void         AfxAabbGetExtents(afxBox const* bb, afxV3d extent);
+AFXINL void         AfxGetAabbCentre(afxBox const* bb, afxV4d centre);
+AFXINL void         AfxGetAabbExtents(afxBox const* bb, afxV3d extent);
 
-AFXINL void         AfxAabbGetCorner(afxBox const* bb, afxUnit index, afxV4d corner);
+AFXINL void         AfxGetAabbCorner(afxBox const* bb, afxUnit index, afxV4d corner);
 
-AFXINL void         AfxAabbAbsorb(afxBox* bb, afxUnit cnt, afxBox const other[]);
-AFXINL void         AfxAabbAbsorbAtv4d(afxBox* bb, afxUnit cnt, afxV4d const v[]);
-AFXINL void         AfxAabbAbsorbSpheres(afxBox* bb, afxUnit cnt, afxSphere const sph[]);
-AFXINL void         AfxAabbAbsorbAtv3d(afxBox* bb, afxUnit cnt, afxV3d const v[]);
+AFXINL void         AfxEmboxAabbs(afxBox* bb, afxUnit cnt, afxBox const other[]);
+AFXINL void         AfxEmboxPoints(afxBox* bb, afxUnit cnt, afxV4d const v[]);
+AFXINL void         AfxEmboxSpheres(afxBox* bb, afxUnit cnt, afxSphere const sph[]);
+AFXINL void         AfxEmboxVectors(afxBox* bb, afxUnit cnt, afxV3d const v[]);
 
 // TODO: contains or intersects?
 
-AFXINL afxUnit      AfxAabbContainsAabbs(afxBox const* bb, afxUnit cnt, afxBox const other[]);
-AFXINL afxUnit      AfxAabbContainsAtv3d(afxBox const* bb, afxUnit cnt, afxV3d const v[]);
-AFXINL afxUnit      AfxAabbContainsSpheres(afxBox const* bb, afxUnit cnt, afxSphere const sph[]);
+AFXINL afxUnit      AfxDoesAabbInclude(afxBox const* bb, afxUnit cnt, afxBox const other[]);
+AFXINL afxUnit      AfxDoesAabbIncludeAtv3d(afxBox const* bb, afxUnit cnt, afxV3d const v[]);
+AFXINL afxUnit      AfxDoesAabbIncludeSpheres(afxBox const* bb, afxUnit cnt, afxSphere const sph[]);
 
 //AFXINL afxResult    AfxAabbTestPlanes(afxBox const* aabb, afxUnit cnt, afxPlane const planes[]);
 

@@ -29,22 +29,22 @@
 _AVX afxDrawOutputConfig const AVX_DEFAULT_DRAW_OUTPUT_CONFIG =
 {
     .colorSpc = avxColorSpace_STANDARD,
-    .bufFmt[0] = avxFormat_BGR8vA8un,
+    .bufFmt[0] = avxFormat_BGRA8v,
     .bufFmt[1] = avxFormat_D32f,
     .bufFmt[2] = NIL,
-    .bufUsage[0] = afxRasterUsage_DRAW | afxRasterUsage_SAMPLING,
-    .bufUsage[1] = afxRasterUsage_DRAW,
-    .bufUsage[2] = afxRasterUsage_DRAW,
+    .bufUsage[0] = avxRasterUsage_DRAW | avxRasterUsage_RESAMPLE,
+    .bufUsage[1] = avxRasterUsage_DRAW,
+    .bufUsage[2] = avxRasterUsage_DRAW,
     .bufFlags[0] = NIL,
     .bufFlags[1] = NIL,
     .bufFlags[2] = NIL,
     .extent = { 1, 1, 1 },
     .minBufCnt = 3,
-    .presentMode = avxPresentMode_FIFO,
+    .presentMode = NIL,
     .presentAlpha = FALSE,
     .presentTransform = NIL,
     .doNotClip = FALSE,
-    .resolution = AVX_RANGE(AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX),
+    .resolution = AVX_RANGE(AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX), // ignore the IntelliDumb warning
     .resizable = TRUE,
     .refreshRate = 1,
     .exclusive = FALSE
@@ -85,17 +85,20 @@ _AVX afxError _AvxDoutFreeAllBuffers(afxDrawOutput dout)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
-    if (dout->canvases)
+    if (dout->buffers)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_CANV, dout->bufCnt, dout->canvases);
-        AfxDisposeObjects(dout->bufCnt, dout->canvases);
+        for (afxUnit i = 0; i < dout->bufCnt; i++)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &dout->buffers[i].canv);
+            AfxDisposeObjects(1, &dout->buffers[i].canv);
+        }
     }
     return err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxDrawSystem AfxGetDrawOutputContext(afxDrawOutput dout)
+_AVX afxDrawSystem AvxGetDrawOutputContext(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
@@ -105,19 +108,19 @@ _AVX afxDrawSystem AfxGetDrawOutputContext(afxDrawOutput dout)
     return dsys;
 }
 
-_AVX afxModule AfxGetDrawOutputIcd(afxDrawOutput dout)
+_AVX afxModule AvxGetDrawOutputIcd(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    afxDrawSystem dsys = AfxGetDrawOutputContext(dout);
+    afxDrawSystem dsys = AvxGetDrawOutputContext(dout);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    afxModule icd = AfxGetDrawSystemIcd(dsys);
+    afxModule icd = AvxGetDrawSystemIcd(dsys);
     AFX_ASSERT_OBJECTS(afxFcc_ICD, 1, &icd);
     return icd;
 }
 
-_AVX void* AfxGetDrawOutputUdd(afxDrawOutput dout, afxUnit slotIdx)
+_AVX void* AvxGetDrawOutputUdd(afxDrawOutput dout, afxUnit slotIdx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
@@ -130,7 +133,7 @@ _AVX void* AfxGetDrawOutputUdd(afxDrawOutput dout, afxUnit slotIdx)
     return dout->udd[slotIdx];
 }
 
-_AVX void AfxDescribeDrawOutput(afxDrawOutput dout, afxDrawOutputConfig* cfg)
+_AVX void AvxDescribeDrawOutput(afxDrawOutput dout, afxDrawOutputConfig* cfg)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
@@ -163,7 +166,7 @@ _AVX void AfxDescribeDrawOutput(afxDrawOutput dout, afxDrawOutputConfig* cfg)
     cfg->refreshRate = dout->refreshRate;
 }
 
-_AVX void AfxGetDrawOutputRate(afxDrawOutput dout, afxUnit* rate)
+_AVX void AvxGetDrawOutputRate(afxDrawOutput dout, afxUnit* rate)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
@@ -172,7 +175,7 @@ _AVX void AfxGetDrawOutputRate(afxDrawOutput dout, afxUnit* rate)
     *rate = dout->outRate;
 }
 
-_AVX void AfxQueryDrawOutputResolution(afxDrawOutput dout, afxReal64* wpOverHp, afxReal* refreshRate, avxRange* resolution, afxReal64* wrOverHr)
+_AVX void AvxQueryDrawOutputResolution(afxDrawOutput dout, afxReal64* wpOverHp, afxReal* refreshRate, avxRange* resolution, afxReal64* wrOverHr)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
@@ -192,7 +195,7 @@ _AVX void AfxQueryDrawOutputResolution(afxDrawOutput dout, afxReal64* wpOverHp, 
         *wrOverHr = dout->wrOverHr;
 }
 
-_AVX void AfxQueryDrawOutputExtent(afxDrawOutput dout, avxRange* extent, afxReal64* wwOverHw)
+_AVX void AvxQueryDrawOutputExtent(afxDrawOutput dout, avxRange* extent, afxReal64* wwOverHw)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
@@ -214,24 +217,24 @@ _AVX void _AvxDoutGetExtentNormalized(afxDrawOutput dout, afxV3d whd)
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AFX_ASSERT(whd);
     avxRange whd2;
-    AfxQueryDrawOutputExtent(dout, &whd2, NIL);
+    AvxQueryDrawOutputExtent(dout, &whd2, NIL);
     AfxV3dSet(whd, AfxNdcf(whd2.w, dout->resolution.w), AfxNdcf(whd2.h, dout->resolution.h), (afxReal)1);
 }
 
-_AVX afxError AfxAdjustDrawOutput(afxDrawOutput dout, avxRange whd)
+_AVX afxError AvxAdjustDrawOutput(afxDrawOutput dout, avxRange whd)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
     avxRange whd2;
-    //AfxAssert4(whd, whd.w, whd.h, whd.d);
+    //AFX_ASSERT4(whd, whd.w, whd.h, whd.d);
     whd2.w = AfxMax(whd.w, 1);
     whd2.h = AfxMax(whd.h, 1);
     whd2.d = AfxMax(whd.d, 1);
-    AfxAssertExtent(dout->resolution.w, whd.w);
-    AfxAssertExtent(dout->resolution.h, whd.h);
-    AfxAssertExtent(dout->resolution.d, whd.d);
+    AFX_ASSERT_EXTENT(dout->resolution.w, whd.w);
+    AFX_ASSERT_EXTENT(dout->resolution.h, whd.h);
+    AFX_ASSERT_EXTENT(dout->resolution.d, whd.d);
 
     afxBool changed = (whd2.w != dout->extent.w || whd2.h != dout->extent.h || whd2.d != dout->extent.d);
 
@@ -246,7 +249,7 @@ _AVX afxError AfxAdjustDrawOutput(afxDrawOutput dout, avxRange whd)
         {
             afxV2d ndc;
             whd2;
-            AfxQueryDrawOutputExtent(dout, &whd2, NIL);
+            AvxQueryDrawOutputExtent(dout, &whd2, NIL);
             AfxNdcV2d(ndc, AFX_V2D(whd2.w, whd2.h), AFX_V2D(dout->resolution.w, dout->resolution.h));
 #ifdef _AFX_DOUT_LOGS
             AfxLogEcho("Draw output %03u adjusted. %ux%u %ux%u %.3fx%.3f %f", AfxGetObjectId(dout), whd2.w, whd2.h, dout->resolution.w, dout->resolution.h, ndc[0], ndc[1], dout->wwOverHw);
@@ -264,7 +267,7 @@ _AVX afxError _AvxDoutAdjustNormalized(afxDrawOutput dout, afxV3d const whd)
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    AfxAssert4(whd, whd[0], whd[1], whd[2]);
+    AFX_ASSERT4(whd, whd[0], whd[1], whd[2]);
 
     avxRange const whd2 =
     {
@@ -272,10 +275,10 @@ _AVX afxError _AvxDoutAdjustNormalized(afxDrawOutput dout, afxV3d const whd)
         (afxUnit)AfxUnndcf(AfxMax(1, whd[1]), dout->resolution.h),
         AfxMax(1, whd[2])
     };
-    return AfxAdjustDrawOutput(dout, whd2);
+    return AvxAdjustDrawOutput(dout, whd2);
 }
 
-_AVX afxError AfxResetDrawOutputResolution(afxDrawOutput dout, afxReal64 physAspectRatio, afxReal refreshRate, avxRange resolution, afxBool exclusive)
+_AVX afxError AvxResetDrawOutputResolution(afxDrawOutput dout, afxReal64 physAspectRatio, afxReal refreshRate, avxRange resolution, afxBool exclusive)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
@@ -287,7 +290,7 @@ _AVX afxError AfxResetDrawOutputResolution(afxDrawOutput dout, afxReal64 physAsp
     if (AvxDotRange(resolution, resolution))
     {
 
-        AfxAssert3(resolution.w, resolution.h, resolution.d);
+        AFX_ASSERT3(resolution.w, resolution.h, resolution.d);
         dout->resolution = AvxMaxRange(AVX_RANGE(1, 1, 1), resolution);
         dout->wrOverHr = (afxReal64)dout->resolution.w / (afxReal64)dout->resolution.h;
     }
@@ -305,7 +308,7 @@ _AVX afxError AfxResetDrawOutputResolution(afxDrawOutput dout, afxReal64 physAsp
     // readjust draw output extent if it overflows the new resolution.
 
     avxRange whd;
-    AfxQueryDrawOutputExtent(dout, &whd, NIL);
+    AvxQueryDrawOutputExtent(dout, &whd, NIL);
     afxBool readjust = FALSE;
     
     if (whd.w > dout->resolution.w)
@@ -323,21 +326,21 @@ _AVX afxError AfxResetDrawOutputResolution(afxDrawOutput dout, afxReal64 physAsp
     return err;
 }
 
-_AVX afxError AfxPrintDrawOutput(afxDrawOutput dout, afxUnit bufIdx, afxUnit exuIdx, afxUri const* uri)
+_AVX afxError AvxPrintDrawOutput(afxDrawOutput dout, afxUnit bufIdx, avxRasterIo const* op, afxUnit exuIdx, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AFX_ASSERT_RANGE(dout->bufCnt, bufIdx, 1);
     
     avxCanvas canv;
-    if (!AfxGetDrawOutputCanvas(dout, bufIdx, &canv))
+    if (!AvxGetDrawOutputCanvas(dout, bufIdx, &canv))
     {
         AfxThrowError();
         return err;
     }
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
 
-    if (AfxPrintDrawBuffer(canv, 0, NIL, exuIdx, uri))
+    if (AvxPrintDrawBuffer(canv, 0, op, exuIdx, uri))
         AfxThrowError();
 
     return err;
@@ -345,7 +348,7 @@ _AVX afxError AfxPrintDrawOutput(afxDrawOutput dout, afxUnit bufIdx, afxUnit exu
 
 // BUFFERIZATION ///////////////////////////////////////////////////////////////
 
-_AVX afxError AfxWaitForDrawOutput(afxDrawOutput dout, afxTime timeout)
+_AVX afxError AvxWaitForDrawOutput(afxDrawOutput dout, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
@@ -369,7 +372,7 @@ _AVX afxError AfxWaitForDrawOutput(afxDrawOutput dout, afxTime timeout)
 
 // Pull an available draw output buffer (usually from the WSI).
 
-_AVX afxError AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxUnit *bufIdx)
+_AVX afxError AvxRequestDrawOutputBuffer(afxDrawOutput dout, afxUnit64 timeout, afxUnit *bufIdx)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
@@ -377,7 +380,68 @@ _AVX afxError AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, af
     AFX_ASSERT(bufIdx);
 
     afxUnit bufIdx2 = AFX_INVALID_INDEX;
-    err =  dout->pimpl->reqBuf(dout, timeout, &bufIdx2);
+
+    if (dout->pimpl->reqBuf)
+        err = dout->pimpl->reqBuf(dout, timeout, &bufIdx2);
+    else
+    {
+        afxBool success = FALSE;
+        afxClock start, last;
+        afxBool wait = (timeout != 0);
+        afxBool finite = (timeout != AFX_TIME_INFINITE);
+
+        if (wait && finite)
+        {
+            AfxGetClock(&start);
+            last = start;
+        }
+
+        while (1)
+        {
+            afxUnit lockedBufIdx = AFX_INVALID_INDEX;
+
+            if (AfxPopInterlockedQueue(&dout->freeBuffers, &lockedBufIdx))
+            {
+                _avxDoutBuffer* slot = &dout->buffers[lockedBufIdx];
+                avxCanvas canv = slot->canv;
+
+                if (canv)
+                {
+                    AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
+                }
+                ++slot->locked;
+                bufIdx2 = lockedBufIdx;
+                AFX_ASSERT(AFX_INVALID_INDEX != bufIdx2);
+                AFX_ASSERT_RANGE(dout->bufCnt, bufIdx2, 1);
+                *bufIdx = bufIdx2;
+                success = TRUE;
+                break;
+            }
+
+            if (!wait)
+            {
+                err = afxError_TIMEOUT;
+                *bufIdx = AFX_INVALID_INDEX;
+                break;
+            }
+            else
+            {
+                if (!finite) continue;
+                else
+                {
+                    AfxGetClock(&last);
+                    afxReal64 elapsed = AfxGetMicrosecondsElapsed(&start, &last);
+
+                    if (elapsed >= timeout)
+                    {
+                        err = afxError_TIMEOUT;
+                        *bufIdx = AFX_INVALID_INDEX;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     if (!err)
     {
@@ -393,20 +457,45 @@ _AVX afxError AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, af
     return err;
 }
 
-_AVX afxError AfxRecycleDrawOutputBuffer(afxDrawOutput dout, afxUnit bufIdx)
+_AVX afxError AvxRecycleDrawOutputBuffer(afxDrawOutput dout, afxUnit bufIdx)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AFX_ASSERT_RANGE(dout->bufCnt, bufIdx, 1);
     
-    if (dout->pimpl->recycBuf(dout, bufIdx))
+    if (!(bufIdx < dout->bufCnt))
+    {
         AfxThrowError();
+        return err;
+    }
+
+    _avxDoutBuffer* slot = &dout->buffers[bufIdx];
+
+    if (!slot->locked)
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    if (dout->pimpl->recycBuf)
+    {
+        if (dout->pimpl->recycBuf(dout, bufIdx))
+            AfxThrowError();
+
+        return err;
+    }
+
+    if (!AfxPushInterlockedQueue(&dout->freeBuffers, (afxUnit[]) { bufIdx })) AfxThrowError();
+    else
+    {
+        --slot->locked;
+    }
 
     return err;
 }
 
-_AVX afxBool AfxGetDrawOutputCanvas(afxDrawOutput dout, afxUnit bufIdx, avxCanvas* canvas)
+_AVX afxBool AvxGetDrawOutputCanvas(afxDrawOutput dout, afxUnit bufIdx, avxCanvas* canvas)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
@@ -414,8 +503,8 @@ _AVX afxBool AfxGetDrawOutputCanvas(afxDrawOutput dout, afxUnit bufIdx, avxCanva
     AFX_ASSERT_RANGE(dout->bufCnt, bufIdx, 1);
     avxCanvas canv = NIL;
 
-    if (bufIdx >= dout->bufCnt) AfxThrowError();
-    else if ((canv = dout->canvases[bufIdx]))
+    if (!(bufIdx < dout->bufCnt)) AfxThrowError();
+    else if ((canv = dout->buffers[bufIdx].canv))
     {
         AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
     }
@@ -424,20 +513,20 @@ _AVX afxBool AfxGetDrawOutputCanvas(afxDrawOutput dout, afxUnit bufIdx, avxCanva
     return !!canv;
 }
 
-_AVX afxBool AfxGetDrawOutputBuffer(afxDrawOutput dout, afxUnit bufIdx, afxRaster* buffer)
+_AVX afxBool AvxGetDrawOutputBuffer(afxDrawOutput dout, afxUnit bufIdx, avxRaster* buffer)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AFX_ASSERT_RANGE(dout->bufCnt, bufIdx, 1);
-    afxRaster ras = NIL;
+    avxRaster ras = NIL;
     avxCanvas canv;
 
-    if (AfxGetDrawOutputCanvas(dout, bufIdx, &canv))
+    if (AvxGetDrawOutputCanvas(dout, bufIdx, &canv))
     {
         AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
 
-        if (AfxGetDrawBuffers(canv, 0, 1, &ras))
+        if (AvxGetDrawBuffers(canv, 0, 1, &ras))
         {
             AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
         }
@@ -447,18 +536,13 @@ _AVX afxBool AfxGetDrawOutputBuffer(afxDrawOutput dout, afxUnit bufIdx, afxRaste
     return !!ras;
 }
 
-_AVX afxError AfxRevalidateDrawOutputBuffers(afxDrawOutput dout)
+_AVX afxError AvxRevalidateDrawOutputBuffers(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
-    AFX_TRY_ASSERT_OBJECTS(afxFcc_CANV, dout->bufCnt, dout->canvases);
-    AfxDisposeObjects(dout->bufCnt, dout->canvases);
-    AFX_ASSERT(!dout->canvases[0]);
-    afxDrawSystem dsys = AfxGetDrawOutputContext(dout);
-        
-    AfxWaitForDrawOutput(dout, 0);
+    AvxWaitForDrawOutput(dout, 0);
 
     avxDrawSurface surCfgs[3] =
     {
@@ -521,24 +605,43 @@ _AVX afxError AfxRevalidateDrawOutputBuffers(afxDrawOutput dout)
         }
     };
 
-    if (AfxCoacquireCanvas(dsys, &ccfg, dout->bufCnt, dout->canvases))
-    {
-        AfxThrowError();
-        return err;
-    }
-
-    AFX_ASSERT_OBJECTS(afxFcc_CANV, dout->bufCnt, dout->canvases);
+    afxDrawSystem dsys = AvxGetDrawOutputContext(dout);
 
     for (afxUnit i = 0; i < dout->bufCnt; i++)
     {
-        avxCanvas canv = dout->canvases[i];
-        AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-        //AfxRedoDrawBuffers(canv);
+        _avxDoutBuffer* slot = &dout->buffers[i];
+        ++slot->locked;
+
+        if (slot->canv)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &slot->canv);
+            AfxDisposeObjects(1, &slot->canv);
+            AFX_ASSERT(!slot->canv);
+            slot->ras = FALSE;
+        }
+
+        if (AvxCoacquireCanvas(dsys, &ccfg, 1, &slot->canv))
+        {
+            AfxThrowError();
+            
+            // delete buffers?
+        }
+        else
+        {
+            avxCanvas canv = slot->canv;
+            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
+            avxRaster ras;
+            AvxGetDrawBuffers(canv, 0, 1, &ras);
+            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+            slot->ras = ras;
+        }
+
+        --slot->locked;
     }
     return err;
 }
 
-_AVX afxError AfxCallDrawOutput(afxDrawOutput dout, afxUnit code, ...)
+_AVX afxError AvxCallDrawOutput(afxDrawOutput dout, afxUnit code, ...)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
@@ -571,8 +674,8 @@ _AVX afxError _AvxDoutDtorCb(afxDrawOutput dout)
     {
         {
             .cnt = dout->bufCnt,
-            .siz = sizeof(dout->canvases[0]),
-            .var = (void**)&dout->canvases
+            .siz = sizeof(dout->buffers[0]),
+            .var = (void**)&dout->buffers
         }
     };
 
@@ -600,7 +703,7 @@ _AVX afxError _AvxDoutCtorCb(afxDrawOutput dout, void** args, afxUnit invokeNo)
     AFX_ASSERT(cfg);
     
     afxDrawOutputConfig def;
-    AfxConfigureDrawOutput(dsys, &def);
+    AvxConfigureDrawOutput(dsys, &def);
 
     dout->pimpl = &_AVX_DOUT_DDI;
 
@@ -632,9 +735,9 @@ _AVX afxError _AvxDoutCtorCb(afxDrawOutput dout, void** args, afxUnit invokeNo)
     dout->bufFmt[0] = cfg->bufFmt[0] ? cfg->bufFmt[0] : def.bufFmt[0]; // or avxFormat_RGBA8R ?
     dout->bufFmt[1] = cfg->bufFmt[1] ? cfg->bufFmt[1] : def.bufFmt[1];
     dout->bufFmt[2] = cfg->bufFmt[2] ? cfg->bufFmt[2] : def.bufFmt[2];
-    dout->bufUsage[0] = cfg->bufUsage[0] ? (cfg->bufUsage[0] | afxRasterUsage_DRAW) : def.bufUsage[0];
-    dout->bufUsage[1] = cfg->bufUsage[1] ? (cfg->bufUsage[1] | afxRasterUsage_DRAW) : def.bufUsage[1];
-    dout->bufUsage[2] = cfg->bufUsage[2] ? (cfg->bufUsage[2] | afxRasterUsage_DRAW) : def.bufUsage[2];
+    dout->bufUsage[0] = cfg->bufUsage[0] ? (cfg->bufUsage[0] | avxRasterUsage_DRAW) : def.bufUsage[0];
+    dout->bufUsage[1] = cfg->bufUsage[1] ? (cfg->bufUsage[1] | avxRasterUsage_DRAW) : def.bufUsage[1];
+    dout->bufUsage[2] = cfg->bufUsage[2] ? (cfg->bufUsage[2] | avxRasterUsage_DRAW) : def.bufUsage[2];
     dout->bufFlags[0] = cfg->bufFlags[0] ? cfg->bufFlags[0] : def.bufFlags[0];
     dout->bufFlags[1] = cfg->bufFlags[1] ? cfg->bufFlags[1] : def.bufFlags[1];
     dout->bufFlags[2] = cfg->bufFlags[2] ? cfg->bufFlags[2] : def.bufFlags[2];
@@ -651,21 +754,21 @@ _AVX afxError _AvxDoutCtorCb(afxDrawOutput dout, void** args, afxUnit invokeNo)
     AfxDeployCondition(&dout->idleCnd);
 
     dout->lockCb = NIL;
-    dout->canvases = NIL;
+    dout->buffers = NIL;
 
     afxObjectStash const stashs[] =
     {
         {
             .cnt = dout->bufCnt,
-            .siz = sizeof(dout->canvases[0]),
-            .var = (void**)&dout->canvases
+            .siz = sizeof(dout->buffers[0]),
+            .var = (void**)&dout->buffers
         }
     };
 
     if (AfxAllocateInstanceData(dout, ARRAY_SIZE(stashs), stashs)) AfxThrowError();
     else
     {
-        AfxZero(dout->canvases, sizeof(dout->canvases[0]) * dout->bufCnt);
+        AfxZero(dout->buffers, sizeof(dout->buffers[0]) * dout->bufCnt);
 
         AfxDeployInterlockedQueue(&dout->freeBuffers, sizeof(afxUnit), dout->bufCnt);
 
@@ -675,19 +778,19 @@ _AVX afxError _AvxDoutCtorCb(afxDrawOutput dout, void** args, afxUnit invokeNo)
         AFX_ASSERT(dout->resolution.w);
         AFX_ASSERT(dout->resolution.h);
         AFX_ASSERT(dout->resolution.d);
-        AfxAssertExtent(dout->resolution.w, dout->extent.w);
-        AfxAssertExtent(dout->resolution.h, dout->extent.h);
-        AfxAssertExtent(dout->resolution.d, dout->extent.d);
+        AFX_ASSERT_EXTENT(dout->resolution.w, dout->extent.w);
+        AFX_ASSERT_EXTENT(dout->resolution.h, dout->extent.h);
+        AFX_ASSERT_EXTENT(dout->resolution.d, dout->extent.d);
 
         AFX_ASSERT(dout->bufCnt);
-        AFX_ASSERT(dout->bufUsage[0] & afxRasterUsage_DRAW);
+        AFX_ASSERT(dout->bufUsage[0] & avxRasterUsage_DRAW);
         AFX_ASSERT(dout->refreshRate);
         AFX_ASSERT(dout->wpOverHp);
         AFX_ASSERT(dout->wrOverHr);
         AFX_ASSERT(dout->wwOverHw);
         
         // provoke buffer geneartion
-        AfxAdjustDrawOutput(dout, cfg->extent);
+        AvxAdjustDrawOutput(dout, cfg->extent);
 
         if (err)
             AfxDeallocateInstanceData(dout, ARRAY_SIZE(stashs), stashs);
@@ -706,6 +809,75 @@ _AVX afxClassConfig const _AVX_DOUT_CLASS_CONFIG =
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+
+_AVX afxUnit AvxEnumerateDrawOutputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxDrawOutput outputs[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(!cnt || outputs);
+    afxClass const* cls = _AvxDsysGetImpl(dsys)->doutCls(dsys);
+    AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)outputs);
+}
+
+_AVX afxUnit AvxEvokeDrawOutputs(afxDrawSystem dsys, afxBool(*f)(afxDrawOutput, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawOutput outputs[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(outputs);
+    AFX_ASSERT(f);
+    afxClass const* cls = _AvxDsysGetImpl(dsys)->doutCls(dsys);
+    AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
+    return AfxEvokeObjects(cls, (void*)f, udd, first, cnt, (afxObject*)outputs);
+}
+
+_AVX afxUnit AvxInvokeDrawOutputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxBool(*f)(afxDrawOutput, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(f);
+    afxClass const* cls = _AvxDsysGetImpl(dsys)->doutCls(dsys);
+    AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+}
+
+_AVX afxError AvxConfigureDrawOutput(afxDrawSystem dsys, afxDrawOutputConfig* cfg)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(cfg);
+    *cfg = AVX_DEFAULT_DRAW_OUTPUT_CONFIG;
+    return err;
+}
+
+_AVX afxError AvxOpenDrawOutput(afxDrawSystem dsys, afxDrawOutputConfig const* cfg, afxDrawOutput* output)
+// file, window, desktop, widget, frameserver, etc; physical or virtual VDUs.
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(cfg);
+
+    if (!cfg)
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->doutCls(dsys);
+    AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
+
+    afxDrawOutput dout;
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&dout, (void const*[]) { dsys, cfg }))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
+    AFX_ASSERT(output);
+    *output = dout;
+    return err;
+}
 
 AFX_DEFINE_STRUCT(avxPresent)
 {
@@ -744,7 +916,7 @@ AFX_DEFINE_STRUCT(avxPresent)
     afxBool persistent;
 };
 
-_AVX afxError AfxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, avxFence wait, afxUnit cnt, afxDrawOutput outputs[], afxUnit const bufIdx[], avxFence signal[])
+_AVX afxError AvxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, avxFence wait, afxUnit cnt, afxDrawOutput outputs[], afxUnit const bufIdx[], avxFence signal[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -761,7 +933,7 @@ _AVX afxError AfxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, a
     */
 
     afxDrawBridge dexu;
-    if (!AfxGetDrawBridges(dsys, ctrl->exuIdx, 1, &dexu))
+    if (!AvxGetDrawBridges(dsys, ctrl->exuIdx, 1, &dexu))
     {
         AfxThrowError();
         return err;
@@ -783,7 +955,7 @@ _AVX afxError AfxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, a
             afxUnit queIdx = baseQueIdx + i;
 
             afxDrawQueue dque;
-            if (!AfxGetDrawQueues(dexu, queIdx, 1, &dque))
+            if (!AvxGetDrawQueues(dexu, queIdx, 1, &dque))
             {
                 AfxThrowError();
                 break;
@@ -811,74 +983,5 @@ _AVX afxError AfxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, a
         if (err || queued)
             break; // reiterate if not queue for timeout?
     } while (0);
-    return err;
-}
-
-_AVX afxUnit AfxEnumerateDrawOutputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxDrawOutput outputs[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    AFX_ASSERT(!cnt || outputs);
-    afxClass const* cls = _AvxDsysGetImpl(dsys)->doutCls(dsys);
-    AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)outputs);
-}
-
-_AVX afxUnit AfxEvokeDrawOutputs(afxDrawSystem dsys, afxBool(*f)(afxDrawOutput, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawOutput outputs[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    AFX_ASSERT(outputs);
-    AFX_ASSERT(f);
-    afxClass const* cls = _AvxDsysGetImpl(dsys)->doutCls(dsys);
-    AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
-    return AfxEvokeObjects(cls, (void*)f, udd, first, cnt, (afxObject*)outputs);
-}
-
-_AVX afxUnit AfxInvokeDrawOutputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxBool(*f)(afxDrawOutput, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    AFX_ASSERT(f);
-    afxClass const* cls = _AvxDsysGetImpl(dsys)->doutCls(dsys);
-    AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
-}
-
-_AVX afxError AfxConfigureDrawOutput(afxDrawSystem dsys, afxDrawOutputConfig* cfg)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    AFX_ASSERT(cfg);
-    *cfg = AVX_DEFAULT_DRAW_OUTPUT_CONFIG;
-    return err;
-}
-
-_AVX afxError AfxOpenDrawOutput(afxDrawSystem dsys, afxDrawOutputConfig const* cfg, afxDrawOutput* output)
-// file, window, desktop, widget, frameserver, etc; physical or virtual VDUs.
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    AFX_ASSERT(cfg);
-
-    if (!cfg)
-    {
-        AfxThrowError();
-        return err;
-    }
-
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->doutCls(dsys);
-    AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
-
-    afxDrawOutput dout;
-    if (AfxAcquireObjects(cls, 1, (afxObject*)&dout, (void const*[]) { dsys, cfg }))
-    {
-        AfxThrowError();
-        return err;
-    }
-
-    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    AFX_ASSERT(output);
-    *output = dout;
     return err;
 }

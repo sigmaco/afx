@@ -42,7 +42,7 @@ AFX_DEFINE_STRUCT(avxRasterStorage)
     uint32_t    memType;
 };
 
-_AVX void _AvxGetRasterMemoryRequirements(afxDrawSystem dsys, afxRaster ras, avxMemoryReq* req)
+_AVX void _AvxGetRasterMemoryRequirements(afxDrawSystem dsys, avxRaster ras, avxMemoryReq* req)
 {
     avxMemoryReq req2;
     req2.align = ras->storage[0].alignment;
@@ -59,17 +59,17 @@ _AVX void _AvxGetBufferMemoryRequirements(afxDrawSystem dsys, avxBuffer buf, avx
     req2.memType = buf->storage[0].memType;
 }
 
-_AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, afxRaster ras, afxUnit lodIdx, afxUnit layerIdx, afxRasterLayout* layout)
+_AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit lodIdx, afxUnit layerIdx, avxRasterLayout* layout)
 {
     avxFormat fmt = ras->fmt;
     avxFormatDescription pfd;
     AvxDescribeFormats(1, &fmt, &pfd);
 
-    afxRasterLayout lay2 = { 0 };
+    avxRasterLayout lay2 = { 0 };
     afxWhd whd = { ras->extent.w, ras->extent.h, ras->extent.d };
-    afxBool is3d = !!AfxTestRasterFlags(ras, afxRasterFlag_3D);
+    afxBool is3d = !!AvxTestRasterFlags(ras, avxRasterFlag_3D);
 
-    if (AfxTestRasterFlags(ras, afxRasterFlag_RESAMPLED))
+    if (AvxTestRasterFlags(ras, avxRasterFlag_UPSAMPLED))
     {
         while (lodIdx--)
         {
@@ -122,11 +122,11 @@ _AVX afxError _AvxCommitBuffers(afxDrawSystem dsys, afxUnit exuIdx, afxUnit cnt,
     }
 }
 
-_AVX afxError _AvxCommitRasters(afxDrawSystem dsys, afxUnit exuIdx, afxUnit cnt, afxRaster rasters[], avxFence wait, avxFence signal)
+_AVX afxError _AvxCommitRasters(afxDrawSystem dsys, afxUnit exuIdx, afxUnit cnt, avxRaster rasters[], avxFence wait, avxFence signal)
 {
     for (afxUnit i = 0; i < cnt; i++)
     {
-        afxRaster ras = rasters[i];
+        avxRaster ras = rasters[i];
 
         if (!ras->storage[0].hostedData.addr)
         {
@@ -135,5 +135,5 @@ _AVX afxError _AvxCommitRasters(afxDrawSystem dsys, afxUnit exuIdx, afxUnit cnt,
     }
 }
 
-_AVX afxCmdId AvxCmdPageInRasterSIGMA(afxDrawContext dctx, afxRaster ras, afxUnit rgnCnt, afxRasterRegion const rgns[]);
-_AVX afxCmdId AvxCmdPageOutRasterSIGMA(afxDrawContext dctx, afxRaster ras, afxUnit rgnCnt, afxRasterRegion const rgns[]);
+_AVX afxCmdId AvxCmdPageInRasterSIGMA(afxDrawContext dctx, avxRaster ras, afxUnit rgnCnt, avxRasterRegion const rgns[]);
+_AVX afxCmdId AvxCmdPageOutRasterSIGMA(afxDrawContext dctx, avxRaster ras, afxUnit rgnCnt, avxRasterRegion const rgns[]);

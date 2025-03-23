@@ -28,11 +28,11 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
     
     afxString const mdlAttrNames[] =
     {
-        AfxStaticString("id"),
-        AfxStaticString("position"),
-        AfxStaticString("orientation"),
-        AfxStaticString("scale"),
-        AfxStaticString("lodType")
+        AFX_STRING("id"),
+        AFX_STRING("position"),
+        AFX_STRING("orientation"),
+        AFX_STRING("scale"),
+        AFX_STRING("lodType")
     };
 
     afxString name, content, acontent;
@@ -83,25 +83,25 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
 
     afxString const mdlChildNames[] =
     {
-        AfxStaticString("Joint"),
-        AfxStaticString("Rig"),
-        AfxStaticString("Attachment")
+        AFX_STRING("Joint"),
+        AFX_STRING("Rig"),
+        AFX_STRING("Attachment")
     };
 
     afxString const jntAttrNames[] =
     {
-        AfxStaticString("id"),
-        AfxStaticString("parent"),
-        AfxStaticString("position"),
-        AfxStaticString("orientation"),
-        AfxStaticString("scale"),
-        AfxStaticString("lodError"),
-        AfxStaticString("iw")
+        AFX_STRING("id"),
+        AFX_STRING("parent"),
+        AFX_STRING("position"),
+        AFX_STRING("orientation"),
+        AFX_STRING("scale"),
+        AFX_STRING("lodError"),
+        AFX_STRING("iw")
     };
 
     afxString const rigAttrNames[] =
     {
-        AfxStaticString("uri")
+        AFX_STRING("uri")
     };
 
     afxUnit rigCnt = 0;
@@ -110,7 +110,7 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
     afxTransform locals[256];
     afxUnit parents[256];
     afxReal lodErrors[256];
-    afxAtm3d iws[256];
+    afxM4r iws[256];
     afxUri meshes[256];
 
     afxUnit childCnt = AfxCountXmlChilds(xml, elemIdx);
@@ -131,7 +131,7 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
             afxV3d scale = { 1, 1, 1 };
             afxReal lodError = -1.0;
             afxUnit parentIdx = AFX_INVALID_INDEX;
-            afxAtm3d iw = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 0, 0 } };
+            afxM4r iw = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 0, 0 } };
             afxString id = { 0 };
 
             for (afxUnit j = 0; j < tagCnt; j++)
@@ -182,7 +182,7 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
             afxM3d ss;
             AfxM3dScaling(ss, scale);
             AfxSetTransform(&locals[jointCnt], position, orientation, ss, TRUE);
-            AfxAtm3dCopy(iws[jointCnt], iw);
+            AfxM4rCopy(iws[jointCnt], iw);
             lodErrors[jointCnt] = lodError;
             parents[jointCnt] = parentIdx;
             joints[jointCnt] = id;

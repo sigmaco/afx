@@ -39,7 +39,7 @@ AFX_OBJECT(_avxLigature)
 AFX_OBJECT(avxLigature)
 #endif
 {
-    afxChar const*const*label;
+    afxString           tag;
     afxUnit             totalEntryCnt;
     avxLigatureEntry*   totalEntries; // The map of binding indices pointing to the avxLigatureEntry, which this avxLigature describes.
 
@@ -66,7 +66,7 @@ AFX_OBJECT(_avxPipeline)
 AFX_OBJECT(avxPipeline)
 #endif
 {
-    afxChar const*const*label;
+    afxString           tag;
     avxPipelineType     type;
     afxUnit             stageCnt;
     avxShaderSlot*      stages;    
@@ -77,7 +77,7 @@ AFX_OBJECT(avxPipeline)
     ///////////////////////////////////
     afxBool             transformationDisabled;
 
-    avxVertexDecl      vin;
+    avxVertexInput      vin;
     avxTopology         primTop; // is a option defining the primitive topology. // avxTopology_TRI_LIST
     afxBool             primRestartEnabled; // controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. // FALSE
     
@@ -148,22 +148,22 @@ AFX_OBJECT(avxPipeline)
     // color blending, logical op and writing
     afxUnit             outCnt;
     avxColorOutput*     outs;
-    afxColor            blendConstants; // [ 0, 0, 0, 1 ]
+    avxColor            blendConstants; // [ 0, 0, 0, 1 ]
     afxBool             logicOpEnabled; // FALSE
     avxLogicOp          logicOp; // avxLogicOp_NOP
 };
 #endif//_AVX_PIPELINE_C
 
-#ifdef _AVX_VERTEX_DECL_C
+#ifdef _AVX_VERTEX_INPUT_C
 #ifdef _AVX_VERTEX_DECL_IMPL
-AFX_OBJECT(_avxVertexDecl)
+AFX_OBJECT(_avxVertexInput)
 #else
-AFX_OBJECT(avxVertexDecl)
+AFX_OBJECT(avxVertexInput)
 #endif
 {
-    afxChar const*const*label;
+    afxString       tag;
     afxUnit         attrCnt;
-    avxVertexInput* attrs;
+    avxVertexAttr*  attrs;
     afxUnit         srcCnt;
     avxVertexFetch* srcs;
 };
@@ -176,7 +176,7 @@ AFX_OBJECT(_avxShader)
 AFX_OBJECT(avxShader)
 #endif
 {
-    afxChar const*const*label;
+    afxString               tag;
     afxUri128               uri;
     avxShaderStage          stage;
 
@@ -204,8 +204,8 @@ AFX_OBJECT(_avxQueryPool)
 AFX_OBJECT(avxQueryPool)
 #endif
 {
-    afxChar const*const*label;
-    afxQueryType    type;
+    afxString       tag;
+    avxQueryType    type;
     afxUnit         cap;
 };
 #endif
@@ -213,12 +213,12 @@ AFX_OBJECT(avxQueryPool)
 #ifdef _AVX_CANVAS_C
 AFX_DEFINE_STRUCT(avxDrawSurfaceSlot)
 {
-    afxRaster       ras; // the texture subresource that will be output to for this color attachment.
-    afxRaster       resolve; // the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
+    avxRaster       ras; // the texture subresource that will be output to for this color attachment.
+    avxRaster       resolve; // the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
     afxBool         managed;
     avxFormat       fmt; // the format of the image that will be used for the attachment.
-    afxRasterUsage  usage; // additional properties of the attachment.
-    afxRasterFlags  flags;
+    avxRasterUsage  usage; // additional properties of the attachment.
+    avxRasterFlags  flags;
     afxUnit         sampleCnt; // the number of samples of the image.
 };
 #ifdef _AVX_CANVAS_IMPL
@@ -227,7 +227,7 @@ AFX_OBJECT(_avxCanvas)
 AFX_OBJECT(avxCanvas)
 #endif
 {
-    afxChar const*const*label;
+    afxString       tag;
     avxRange       extent; // D is layered    
     avxRange       whdMin; // when a user-provided raster are attached
     avxRange       whdMax; // when a user-provided raster are attached    
@@ -239,7 +239,7 @@ AFX_OBJECT(avxCanvas)
     afxUnit         dsSlotIdx[2];
     afxCanvasFlags  flags;
     afxError(*readjust)(avxCanvas, afxWhd const);
-    afxError(*relink)(avxCanvas, afxBool, afxUnit, afxUnit, afxRaster[]);
+    afxError(*relink)(avxCanvas, afxBool, afxUnit, afxUnit, avxRaster[]);
     void*           udd[2];
 };
 #endif//_AVX_CANVAS_C
@@ -251,9 +251,9 @@ AFX_OBJECT(_avxSampler)
 AFX_OBJECT(avxSampler)
 #endif
 {
-    afxChar const*const*label;
-    afxUnit32           crc;
-    avxSamplerInfo      cfg;
+    afxString       tag;
+    afxUnit32       crc;
+    avxSamplerInfo  cfg;
 };
 #endif
 

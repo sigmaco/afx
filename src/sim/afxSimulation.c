@@ -508,7 +508,7 @@ _ASX afxBool _AsxCaptureBodCb(afxBody bod, void** udd)
     afxReal lodErr = *(afxReal*)udd[1];
     afxArray* pvs = udd[2];
 
-    //AfxFrustumTestAabbs(&frustum, 1, &aabb);
+    //AfxDoesFrustumCullAabbs(&frustum, 1, &aabb);
 
     if (1) // do visibility culling
     {
@@ -599,7 +599,7 @@ _ASX afxError _AsxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
 #endif
     AfxM3dSet(sim->basis, sim->right, sim->up, sim->back);
 
-    AfxBoxCopy(&sim->extent, &cfg->extent);
+    AfxCopyBoxes(1, &cfg->extent, &sim->extent);
     AfxV3dCopy(sim->origin, cfg->origin);
 
     if (!cfg->unitsPerMeter)
@@ -821,7 +821,7 @@ _ASX afxError AfxConfigureSimulation(afxUnit icd, afxSimulationConfig* cfg)
     AfxV3dSet(cfg->up, 0, 1, 0);
     AfxV3dSet(cfg->back, 0, 0, 1);
     AfxV3dZero(cfg->origin);
-    AfxAabbSet(&cfg->extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
+    AfxMakeAabbFromVertices(&cfg->extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
     cfg->unitsPerMeter = 1.f;
     cfg->allowedLodErrFadingFactor = 0.80000001;
 
@@ -953,7 +953,7 @@ _ASX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg
     AfxV3dCopy(cfg2.up, cfg->up);
     AfxV3dCopy(cfg2.back, cfg->back);
     AfxV3dCopy(cfg2.origin, cfg->origin);
-    AfxBoxCopy(&cfg2.extent, &cfg->extent);
+    AfxCopyBoxes(1, &cfg->extent, &cfg2.extent);
 
     afxClass* cls = (afxClass*)_AsxGetSimulationClass(driver);
     AFX_ASSERT_CLASS(cls, afxFcc_SIM);

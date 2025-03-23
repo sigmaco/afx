@@ -23,7 +23,22 @@
 #include "qwadro/inc/draw/io/avxFormat.h"
 
 #define AVX_BUFFER_ALIGNMENT 64
-#define AFX_BUF_ALIGN(siz_) AFX_ALIGNED_SIZE((siz_), AVX_BUFFER_ALIGNMENT)
+#define AVX_BUF_ALIGN(siz_) AFX_ALIGNED_SIZE((siz_), AVX_BUFFER_ALIGNMENT)
+
+typedef enum avxBufferUsage
+{
+    avxBufferUsage_UPLOAD = AFX_BIT(0), // Can be used as the "source" of a copy operation.
+    avxBufferUsage_DOWNLOAD = AFX_BIT(1), // Can be used as the "destination" of a copy or write operation.
+    avxBufferUsage_VERTEX = AFX_BIT(2), // Can be used as a vertex buffer; aka VBO.
+    avxBufferUsage_INDEX = AFX_BIT(3), // Can be used as an index buffer; aka IBO.
+    avxBufferUsage_UNIFORM = AFX_BIT(4), // Can be used as a uniform buffer; aka UBO.
+    avxBufferUsage_STORAGE = AFX_BIT(5), // Can be used as a storage buffer; aka SSBO.
+    avxBufferUsage_INDIRECT = AFX_BIT(6), // Can be used as to store indirect command arguments; aka DBO.
+    avxBufferUsage_QUERY = AFX_BIT(7), // Can be used to capture query results; aka QBO.    
+    avxBufferUsage_FETCH = AFX_BIT(8), // Can be used to fetch tensor (usually texels) data; aka TFBO.
+    avxBufferUsage_TENSOR = AFX_BIT(9), // Can be used to read/write tensor data; aka storable TBO.
+    avxBufferUsage_FEEDBACK = AFX_BIT(10) // Can be used to store primitive transformation output/feedback.
+} avxBufferUsage;
 
 typedef enum avxBufferFlags
 {
@@ -33,21 +48,25 @@ typedef enum avxBufferFlags
     // Mapped range is writeable by CPU.
     avxBufferFlag_W         = AFX_BIT(1),
 
-    // Mapped range is readable and writeable by CPU.
-    avxBufferFlag_RW        = (avxBufferFlag_R | avxBufferFlag_W),
-
-    // Mapped range will be executable by GPU while persistently being read and/or write by CPU.
+    // Executable. Mapped range will be executable by GPU while persistently being read and/or write by CPU.
     avxBufferFlag_X         = AFX_BIT(2),
-    avxBufferFlag_XR        = (avxBufferFlag_R | avxBufferFlag_X),
-    avxBufferFlag_XW        = (avxBufferFlag_W | avxBufferFlag_X),
-    avxBufferFlag_XRW       = (avxBufferFlag_RW | avxBufferFlag_X),
 
-    // Data written in mapped range will be immediately visible by GPU and CPU.
-    avxBufferFlag_COHERENT  = AFX_BIT(3),
+    // Coherent. Data written in mapped range will be immediately visible by GPU and CPU.
+    avxBufferFlag_C         = AFX_BIT(3),
 
-    avxBufferFlag_HOSTED    = AFX_BIT(4),
+    // Hosted. Determine whether storage is local to the client.
+    avxBufferFlag_H         = AFX_BIT(4),
 
-    avxBufferFlag_ACCESS    = (avxBufferFlag_XRW | avxBufferFlag_COHERENT)
+    // And, to make things compact, there are here convenient combinations frequently used. Thank me later.
+    avxBufferFlag_RW        = (avxBufferFlag_R | avxBufferFlag_W),
+    avxBufferFlag_RX        = (avxBufferFlag_R | avxBufferFlag_X),
+    avxBufferFlag_RXC       = (avxBufferFlag_RX | avxBufferFlag_C),
+    avxBufferFlag_WX        = (avxBufferFlag_W | avxBufferFlag_X),
+    avxBufferFlag_WXC       = (avxBufferFlag_WX | avxBufferFlag_C),
+    avxBufferFlag_RWX       = (avxBufferFlag_RW | avxBufferFlag_X),
+    avxBufferFlag_RWXC      = (avxBufferFlag_RWX | avxBufferFlag_C),
+
+    avxBufferFlag_ACCESS    = (avxBufferFlag_RWX | avxBufferFlag_C)
 } avxBufferFlags;
 
 typedef enum avxBufferMapFlag
@@ -55,21 +74,6 @@ typedef enum avxBufferMapFlag
     avxBufferMapFlag_FLUSH  = AFX_BIT(0), // explicitly flushed
     avxBufferMapFlag_UNSYNC = AFX_BIT(1), // unsynchronized with previous operations
 } avxBufferMapFlags;
-
-typedef enum avxBufferUsage
-{
-    avxBufferUsage_UPLOAD   = AFX_BIT(0), // Can be used as the "source" of a copy operation.
-    avxBufferUsage_DOWNLOAD = AFX_BIT(1), // Can be used as the "destination" of a copy or write operation.
-    avxBufferUsage_VERTEX   = AFX_BIT(2), // Can be used as a vertex buffer; aka VBO.
-    avxBufferUsage_INDEX    = AFX_BIT(3), // Can be used as an index buffer; aka IBO.
-    avxBufferUsage_UNIFORM  = AFX_BIT(4), // Can be used as a uniform buffer; aka UBO.
-    avxBufferUsage_STORAGE  = AFX_BIT(5), // Can be used as a storage buffer; aka SSBO.
-    avxBufferUsage_INDIRECT = AFX_BIT(6), // Can be used as to store indirect command arguments; aka DBO.
-    avxBufferUsage_QUERY    = AFX_BIT(7), // Can be used to capture query results; aka QBO.    
-    avxBufferUsage_FETCH    = AFX_BIT(8), // Can be used to fetch tensor (usually texels) data; aka TFBO.
-    avxBufferUsage_TENSOR   = AFX_BIT(9), // Can be used to read/write tensor data; aka storable TBO.
-    avxBufferUsage_FEEDBACK = AFX_BIT(10) // Can be used to store primitive transformation output/feedback.
-} avxBufferUsage;
 
 AFX_DEFINE_STRUCT(avxBufferInfo)
 {
@@ -91,7 +95,7 @@ AFX_DEFINE_STRUCT(avxBufferInfo)
     afxMask         sharingMask;
     // A user-defined data.
     void*           udd;
-    afxChar const*const*label;
+    afxString       tag;
 };
 
 AFX_DEFINE_STRUCT(avxBufferCopy)
@@ -110,20 +114,39 @@ AFX_DEFINE_STRUCT(avxBufferIo)
     afxUnit         rowCnt; // is the number of rows to stream in/out.
 };
 
-AFX_DEFINE_STRUCT(avxBufferMap)
+AFX_DEFINE_STRUCT(avxBufferedStream)
+// Structured specifying a avxBuffer-backed stream.
 {
+    // A buffer handle.
     avxBuffer       buf;
+    // The start of buffer.
     afxSize         offset;
+    // The size in bytes of data from buffer.
     afxUnit         range;
+    // The byte stride between consecutive elements within the buffer.
+    afxUnit         stride;
+};
+
+AFX_DEFINE_STRUCT(avxBufferedMap)
+// Structured specifying a avxBuffer-backed memory map.
+{
+    // A buffer handle.
+    avxBuffer       buf;
+    // The start of buffer.
+    afxSize         offset;
+    // The size in bytes of data from buffer.
+    afxUnit         range;
+    // A bitmask of flags specifying additional parameters of the memory map operation.
+    afxFlags        flags;
 };
 
 AFX_DEFINE_STRUCT(avxBufferRemap)
 {
-    avxBuffer           buf;
-    afxSize             offset;
-    afxUnit             range;
-    avxBufferMapFlags   flags;
-    void**              placeholder;
+    avxBuffer       buf;
+    afxSize         offset;
+    afxUnit         range;
+    avxBufferMapFlags flags;
+    void**          placeholder;
 };
 
 AVX afxDrawSystem   AvxGetBufferContext(avxBuffer buf);
@@ -160,7 +183,7 @@ AVX afxError        AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBuffer
     such that they can be made available to the device memory domain via memory domain operations using the WRITE access type.
 */
 
-AVX afxError        AvxFlushBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferMap const maps[]);
+AVX afxError        AvxFlushBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap const maps[]);
 
 /*
     AvxSyncBufferMaps guarantees that device writes to the memory ranges described by maps,
@@ -169,7 +192,7 @@ AVX afxError        AvxFlushBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBuffe
     invalidated without first being flushed, its contents are undefined.
 */
 
-AVX afxError        AvxSyncBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferMap const maps[]);
+AVX afxError        AvxSyncBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap const maps[]);
 
 AVX afxError        AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferRemap maps[]);
 

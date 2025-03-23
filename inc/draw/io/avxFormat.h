@@ -39,9 +39,9 @@ typedef enum avxFormat
     avxFormat_R8v, // sRGB
     avxFormat_RG8v, // sRGB
     avxFormat_RGB8v, // sRGB
-    avxFormat_RGB8vA8un, // sRGB
-    avxFormat_A8unBGR8v, // sRGB --- pack 32
-    avxFormat_BGR8vA8un, // sRGB
+    avxFormat_RGBA8v, // sRGB
+    avxFormat_ABGR8v, // sRGB --- pack 32
+    avxFormat_BGRA8v, // sRGB
     avxFormat_BGR8v, // sRGB
 
     // 8-bit precise unsigned normalized integer

@@ -236,7 +236,7 @@ _AVXINL void AfxGetCameraDirectionX(afxCamera cam, afxV3d left, afxV3d right)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_CAM, 1, &cam);
-    AfxAssert2(left || right, left != right);
+    AFX_ASSERT2(left || right, left != right);
 
     if (left)
         AfxV3dNeg(left, cam->iv[0]);
@@ -249,7 +249,7 @@ _AVXINL void AfxGetCameraDirectionY(afxCamera cam, afxV3d down, afxV3d up)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_CAM, 1, &cam);
-    AfxAssert2(down || up, down != up);
+    AFX_ASSERT2(down || up, down != up);
 
     if (down)
         AfxV3dNeg(down, cam->iv[1]);
@@ -262,7 +262,7 @@ _AVXINL void AfxGetCameraDirectionZ(afxCamera cam, afxV3d near, afxV3d far)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_CAM, 1, &cam);
-    AfxAssert2(far || near, far != near);
+    AFX_ASSERT2(far || near, far != near);
 
     if (near)
         AfxV3dCopy(near, cam->iv[2]);
@@ -715,7 +715,7 @@ _AVXINL void AfxGetCameraFrustum(afxCamera cam, afxFrustum* frustum)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_CAM, 1, &cam);
     AFX_ASSERT(frustum);
-    AfxFrustumCopy(frustum, &cam->frustum);
+    AfxCopyFrustum(frustum, &cam->frustum);
 }
 
 #if 0

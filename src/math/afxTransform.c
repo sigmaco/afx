@@ -297,7 +297,7 @@ _AFX void AfxComputeCompositeTransformM4d(afxTransform const* t, afxM4d m)
     }
 }
 
-_AFX void AfxComputeCompositeTransformM4dc(afxTransform const* t, afxAtm3d m)
+_AFX void AfxComputeCompositeTransformM4dc(afxTransform const* t, afxM4r m)
 {
     // Should be compatible with void BuildCompositeTransform4x3
 
@@ -392,7 +392,7 @@ void BuildSingleCompositeFromWorldPose_Generic(afxM4d const InverseWorld4x4, afx
     AfxM4dMultiplyAffine(ResultComposite, InverseWorld4x4, WorldMatrix);
 }
 
-void BuildSingleCompositeFromWorldPoseTranspose_Generic(afxM4d const InverseWorld4x4, afxM4d const WorldMatrix, afxAtm3d ResultComposite3x4)
+void BuildSingleCompositeFromWorldPoseTranspose_Generic(afxM4d const InverseWorld4x4, afxM4d const WorldMatrix, afxM4r ResultComposite3x4)
 {
     //ColumnMatrixMultiply4x3Transpose(ResultComposite3x4, InverseWorld4x4, WorldMatrix);
     // 0 4 8 12

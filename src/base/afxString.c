@@ -22,7 +22,7 @@
 #include "../impl/afxExecImplKit.h"
 
 _AFX afxString strEmptyData = AFX_STRING("");
-_AFX afxString const AFX_STR_EMPTY = AFX_STRING("");
+_AFX afxString const AFX_STRING_EMPTY = AFX_STRING("");
 
 _AFXINL afxChar const* AfxGetStringData(afxString const* s, afxUnit base)
 {
@@ -112,7 +112,7 @@ _AFXINL void AfxResetStrings(afxUnit cnt, afxString strings[])
     }
 }
 
-_AFXINL void AfxMakeString(afxString* s, afxUnit cap, void const *start, afxUnit len)
+_AFXINL afxString* AfxMakeString(afxString* s, afxUnit cap, void const *start, afxUnit len)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(s);
@@ -120,6 +120,7 @@ _AFXINL void AfxMakeString(afxString* s, afxUnit cap, void const *start, afxUnit
     s->len = !len && start && !cap ? AfxStrlen(start) : len;
     s->cap = cap;
     s->start = start;
+    return s;
 }
 
 _AFXINL void AfxReflectString(afxString const* s, afxString* reflection)

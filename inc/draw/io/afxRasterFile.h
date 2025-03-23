@@ -20,7 +20,7 @@
 #ifndef AFX_TARGA_H
 #define AFX_TARGA_H
 
-#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/avxRaster.h"
 
 // provisory as Qwadro formats are inherited from Vulkan.
 
@@ -90,7 +90,7 @@ AFX_STATIC_ASSERT(AFX_IS_ALIGNED(sizeof(afxRasterFile), AFX_SIMD_ALIGNMENT), "")
 AFX_STATIC_ASSERT(sizeof(afxRasterFile) + AFX_TGA_UDD_SIZ == 256, "");
 
 
-AVX afxError AfxWriteRasterFile(afxStream out, afxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, afxRasterFlags flags, afxUnit uddSiz);
+AVX afxError AfxWriteRasterFile(afxStream out, avxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, avxRasterFlags flags, afxUnit uddSiz);
 AVX afxError AfxReadRasterFile(afxRasterFile* info, afxStream in);
 AVX afxError AfxDecodeRasterFile(afxRasterFile const* info, afxStream in, void* dst);
 

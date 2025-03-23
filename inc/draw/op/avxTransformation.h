@@ -19,94 +19,116 @@
 #ifndef AVX_TRANSFORMATION_H
 #define AVX_TRANSFORMATION_H
 
-#include "qwadro/inc/draw/math/afxViewport.h"
+#include "qwadro/inc/draw/math/avxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
-#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/avxRaster.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
 #include "qwadro/inc/draw/op/avxSampler.h"
 #include "qwadro/inc/draw/op/avxQueryPool.h"
-
-AFX_DEFINE_STRUCT(avxBufferedStream)
-/// Structured specifying a avxBuffer-backed stream.
-{
-    avxBuffer   buf; // is an array of buffer handles.
-    afxSize     offset; // the start of buffer.
-    afxUnit     range; // the size in bytes of data bound from buffer.
-    afxUnit     stride; // the byte stride between consecutive elements within the buffer.
-};
 
   //////////////////////////////////////////////////////////////////////////////
  //// COMMANDS                                                             ////
 //////////////////////////////////////////////////////////////////////////////
 
-/// Set the viewport dynamically for a command buffer.
-/// This command sets the viewport transformation parameters state for subsequent drawing commands when the graphics pipeline is created without viewport set.
+// Set the viewport dynamically for a draw context.
+// This command sets the viewport transformation parameters state for subsequent drawing commands when the graphics pipeline is created without viewport set.
 
-/// The viewport parameters taken from element #i of @vp replace the current state for the viewport index @baseIdx + #i, for #i in[0, @cnt).
+// The viewport parameters taken from element #i of @vp replace the current state for the viewport index @baseIdx + #i, for #i in[0, @cnt).
 
-AVX afxCmdId            AvxCmdAdjustViewports
+AVX afxCmdId AvxCmdAdjustViewports
 (
     afxDrawContext      dctx,
-    afxUnit             baseIdx, // is the index of the first viewport whose parameters are updated by the command.
-    afxUnit             cnt, // is the number of viewports whose parameters are updated by the command.
-    afxViewport const   viewports[] // is a pointer to an array of afxViewport structures specifying viewport parameters.
+    // The index of the first viewport whose parameters are updated by the command.
+    afxUnit             baseIdx,
+     // The number of viewports whose parameters are updated by the command.
+    afxUnit             cnt,
+     // An array of avxViewport structures specifying viewport parameters.
+    avxViewport const   viewports[]
 );
 
-/// Bind vertex buffers to a command buffer and dynamically set strides.
-/// The values taken from elements #i of @buf and @offset replace the current state for the vertex input binding @baseIdx + #i, for #i in [0, @cnt].
-/// The vertex input binding is updated to start at the offset indicated by @offset[#i] from the start of the buffer @buf[#i].
-/// If @range is not NIL then @range[#i] specifies the bound size of the vertex buffer starting from the corresponding elements of @buf[#i] plus @offset[#i].
-/// If @range[#i] is WHOLE_SIZE then the bound size is from @buf[#i] plus @offset[#i] to the end of the buffer @buf[#i].
-/// All vertex input attributes that use each of these bindings will use these updated addresses in their address calculations for subsequent drawing commands.
-/// If the null descriptor feature is enabled, elements of @buf can be NIL, and can be used by the vertex shader.
-/// If a vertex input attribute is bound to a vertex input binding that is NIL, the values taken from memory are considered to be zero, and missing G, B, or A components are filled with (0,0,1).
+/*
+    Bind vertex buffers to a draw context and dynamically set strides.
+    The values taken from elements #i of @buf and @offset replace the current state for the vertex input binding @baseIdx + #i, for #i in [0, @cnt].
+    The vertex input binding is updated to start at the offset indicated by @offset[#i] from the start of the buffer @buf[#i].
+    If @range is not NIL then @range[#i] specifies the bound size of the vertex buffer starting from the corresponding elements of @buf[#i] plus @offset[#i].
+    If @range[#i] is WHOLE_SIZE then the bound size is from @buf[#i] plus @offset[#i] to the end of the buffer @buf[#i].
+    All vertex input attributes that use each of these bindings will use these updated addresses in their address calculations for subsequent drawing commands.
+    If the null descriptor feature is enabled, elements of @buf can be NIL, and can be used by the vertex shader.
+    If a vertex input attribute is bound to a vertex input binding that is NIL, the values taken from memory are considered to be zero, and missing G, B, or A components are filled with (0,0,1).
 
-/// This command also dynamically sets the byte strides between consecutive elements within buffer @buf[#i] to the corresponding @stride[#i] value when drawing using shader objects, or when the graphics pipeline is created without vertex input binding stride set.
+    This command also dynamically sets the byte strides between consecutive elements within buffer @buf[#i] to the corresponding @stride[#i] value when drawing using shader objects, or when the graphics pipeline is created without vertex input binding stride set.
+*/
 
-AVX afxCmdId            AvxCmdBindVertexBuffers
+AVX afxCmdId AvxCmdBindVertexBuffers
 (
     afxDrawContext      dctx,
-    afxUnit             baseSlotIdx, // is the index of the first vertex input binding whose state is updated by the command.
-    afxUnit             cnt, // is the number of vertex input bindings whose state is updated by the command.
-    avxBufferedStream const streams[] // an array of info to set up the avxBuffer-backed streams.
+    // The index of the first vertex input binding whose state is updated by the command.
+    afxUnit             baseSlotIdx,
+    // The number of vertex input bindings whose state is updated by the command.
+    afxUnit             cnt,
+    // An array of info to set up the avxBuffer-backed streams.
+    avxBufferedStream const streams[]
 );
 
-/// Bind an index buffer to a command buffer.
+// Bind an index buffer to a draw context.
 
-AVX afxCmdId            AvxCmdBindIndexBuffer
+AVX afxCmdId AvxCmdBindIndexBuffer
 (
     afxDrawContext      dctx,
-    avxBuffer           buf, // is the buffer being bound.
-    afxUnit32           offset, // is the starting offset in bytes within buffer used in index buffer address calculations.
-    afxUnit32           range, // is the size in bytes of index data bound from buffer.
-    afxUnit32           idxSiz // is a value specifying the size of the indices.
+    // The buffer being bound.
+    avxBuffer           buf,
+    // The starting offset in bytes within buffer used in index buffer address calculations.
+    afxUnit32           offset,
+    // The size in bytes of index data bound from buffer.
+    afxUnit32           range,
+    // A value specifying the size of the indices.
+    afxUnit32           idxSiz
 );
 
-/// Set primitive topology state dynamically for a command buffer.
-/// This command sets the primitive topology for subsequent drawing commands when drawing using shader objects, or when the graphics pipeline is created without primitive topology set.
+/*
+    Set primitive topology state dynamically for a draw context.
+    This command sets the primitive topology for subsequent drawing commands when drawing using shader objects, or when the graphics pipeline is created without primitive topology set.
+*/
 
-AVX afxCmdId            AvxCmdSetPrimitiveTopology
+AVX afxCmdId AvxCmdSetPrimitiveTopology
 (
     afxDrawContext      dctx,
-    avxTopology         topology // specifies the primitive topology to use for drawing.
+    // The primitive topology to use for drawing.
+    avxTopology         topology
 );
 
-/// Set front face orientation dynamically for a command buffer.
+// Set front face orientation dynamically for a draw context.
 
-AVX afxCmdId            AvxCmdSwitchFrontFace
+AVX afxCmdId AvxCmdSwitchFrontFace
 (
     afxDrawContext      dctx,
-    afxBool             cw // is a value specifying the front-facing triangle orientation to be used for culling.
+    // Specifying if the front-facing triangle orientation to be used for culling is CW otherwise it is CCW.
+    afxBool             cw
 );
 
-/// Set cull mode dynamically for a command buffer.
+// Set cull mode dynamically for a draw context.
 
-AVX afxCmdId            AvxCmdSetCullMode
+AVX afxCmdId AvxCmdChangeCullMode
 (
     afxDrawContext      dctx,
-    avxCullMode         mode // specifies the cull mode property to use for drawing.
+    // specifies the cull mode property to use for drawing.
+    avxCullMode         mode
 );
 
-AVX afxCmdId            AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexDecl vin);
+// Specify polygon mode dynamically for a draw context.
+
+AVX afxCmdId AvxCmdChangeFillModeEXT
+(
+    afxDrawContext      dctx,
+    avxFillMode         mode
+);
+
+// Specify the vertex input layout for consequent vertex fetching for a draw context.
+
+AVX afxCmdId AvxCmdDeclareVertex
+(
+    afxDrawContext dctx,
+    avxVertexInput vin
+);
 
 #endif//AVX_TRANSFORMATION_H

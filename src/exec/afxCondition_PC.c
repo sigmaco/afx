@@ -36,8 +36,13 @@ _AFX afxError AfxDeployCondition(afxCondition* cond)
 {
     afxError err = AFX_ERR_NONE;
 
-    if (thrd_success != cnd_init((cnd_t*)cond))
-        AfxThrowError();
+    switch (cnd_init((cnd_t*)cond))
+    {
+    case thrd_success: err = afxError_SUCCESS; break;
+    case thrd_error: err = afxError_INVALID_HANDLE; break;
+    case thrd_nomem: err = afxError_OUT_OF_MEMORY; break;
+    default: AfxThrowError(); break;
+    }
 
     return err;
 }
@@ -46,8 +51,12 @@ _AFX afxError AfxSignalCondition(afxCondition* cond)
 {
     afxError err = AFX_ERR_NONE;
     
-    if (thrd_success != cnd_signal((cnd_t*)cond))
-        AfxThrowError();
+    switch (cnd_signal((cnd_t*)cond))
+    {
+    case thrd_success: err = afxError_SUCCESS; break;
+    case thrd_error: err = afxError_INVALID_HANDLE; break;
+    default: AfxThrowError(); break;
+    }
 
     return err;
 }
@@ -56,8 +65,12 @@ _AFX afxError AfxSignalCondition2(afxCondition* cond)
 {
     afxError err = AFX_ERR_NONE;
     
-    if (thrd_success != cnd_broadcast((cnd_t*)cond))
-        AfxThrowError();
+    switch (cnd_broadcast((cnd_t*)cond))
+    {
+    case thrd_success: err = afxError_SUCCESS; break;
+    case thrd_error: err = afxError_INVALID_HANDLE; break;
+    default: AfxThrowError(); break;
+    }
 
     return err;
 }
@@ -66,8 +79,12 @@ _AFX afxError AfxWaitCondition(afxCondition* cond, afxMutex* mtx)
 {
     afxError err = AFX_ERR_NONE;
 
-    if (thrd_success != cnd_wait((cnd_t*)cond, (mtx_t*)mtx))
-        AfxThrowError();
+    switch (cnd_wait((cnd_t*)cond, (mtx_t*)mtx))
+    {
+    case thrd_success: err = afxError_SUCCESS; break;
+    case thrd_error: err = afxError_INVALID_HANDLE; break;
+    default: AfxThrowError(); break;
+    }
 
     return err;
 }
@@ -76,8 +93,15 @@ _AFX afxError AfxWaitTimedCondition(afxCondition* cond, afxMutex* mtx, afxTimeSp
 {
     afxError err = AFX_ERR_NONE;
 
-    err = (thrd_success != cnd_timedwait((cnd_t*)cond, (mtx_t*)mtx, (struct timespec const*)ts));
-        //AfxThrowError();
+    switch (cnd_timedwait((cnd_t*)cond, (mtx_t*)mtx, (struct timespec const*)ts))
+    {
+    case thrd_success: err = afxError_SUCCESS; break;
+    case thrd_timedout: err = afxError_TIMEOUT; break;
+    case thrd_busy: err = afxError_BUSY; break;
+    case thrd_error: err = afxError_INVALID_HANDLE; break;
+    case thrd_nomem: err = afxError_OUT_OF_MEMORY; break;
+    default: AfxThrowError(); break;
+    }
 
     return err;
 }

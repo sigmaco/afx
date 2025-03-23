@@ -118,9 +118,9 @@ AFXINL void     AfxM4dCopyLtm(afxM4d m, afxM4d const in); // copy only the 3x3
 AFXINL void     AfxM4dCopyAtm(afxM4d m, afxM4d const in); // copy only the 4x3
 AFXINL void     AfxM3dCopyM4d(afxM3d m, afxM4d const in);
 
-AFXINL void     AfxAtm3dCopy(afxAtm3d m, afxAtm3d const in);
-AFXINL void     AfxAtm3dCopyM3d(afxAtm3d m, afxM3d const in);
-AFXINL void     AfxAtm3dCopyM4d(afxAtm3d m, afxM4d const in);
+AFXINL void     AfxM4rCopy(afxM4r m, afxM4r const in);
+AFXINL void     AfxM4rCopyM3d(afxM4r m, afxM3d const in);
+AFXINL void     AfxM4rCopyM4d(afxM4r m, afxM4d const in);
 
 AFXINL void     AfxM2dTranspose(afxM2d m, afxM2d const in);
 AFXINL void     AfxM3dTranspose(afxM3d m, afxM3d const in);

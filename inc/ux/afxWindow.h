@@ -34,7 +34,7 @@
 #define AUX_WINDOW_H
 
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/draw/math/afxViewport.h"
+#include "qwadro/inc/draw/math/avxViewport.h"
 
 // our facade
 
@@ -53,6 +53,7 @@ AFX_DEFINE_STRUCT(afxWindowConfig)
     afxDrawOutputConfig frame;
     afxDrawOutputConfig surface;
     afxBool             (*eventCb)(afxWindow, auxEvent*);
+    void*               udd;
 };
 
 AFX_DEFINE_STRUCT(afxStyle)
@@ -138,7 +139,9 @@ AUX afxError        AfxAdjustWindow(afxWindow wnd, afxBool frame, afxRect const*
 */
 
 AUX afxError        AfxLoadWindowIcon(afxWindow wnd, afxUri const* uri);
-AUX afxError        AfxChangeWindowIcon(afxWindow wnd, afxRaster ras);
+AUX afxError        AfxChangeWindowIcon(afxWindow wnd, avxRaster ras);
+
+AUX void*           AfxGetWindowUdd(afxWindow wnd);
 
 ////////////////////////////////////////////////////////////////////////////////
 

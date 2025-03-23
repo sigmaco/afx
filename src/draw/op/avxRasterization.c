@@ -20,7 +20,7 @@
 #define _AVX_DRAW_CONTEXT_C
 #include "../impl/avxImplementation.h"
 
-_AVX afxCmdId AvxCmdEnableDepthBias(afxDrawContext dctx, afxBool enable)
+_AVX afxCmdId AvxCmdSwitchDepthBias(afxDrawContext dctx, afxBool enable)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -76,7 +76,7 @@ _AVX afxCmdId AvxCmdSetLineWidth(afxDrawContext dctx, afxReal lineWidth)
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdDisableRasterization(afxDrawContext dctx, afxBool disable)
+_AVX afxCmdId AvxCmdSwitchRasterization(afxDrawContext dctx, afxBool disable)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -96,7 +96,7 @@ _AVX afxCmdId AvxCmdDisableRasterization(afxDrawContext dctx, afxBool disable)
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdEnableDepthTest(afxDrawContext dctx, afxBool enable)
+_AVX afxCmdId AvxCmdSwitchDepthTesting(afxDrawContext dctx, afxBool enable)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -137,7 +137,7 @@ _AVX afxCmdId AvxCmdSetDepthCompareOp(afxDrawContext dctx, avxCompareOp op)
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdDisableDepthWrite(afxDrawContext dctx, afxBool disable)
+_AVX afxCmdId AvxCmdSwitchDepthWrites(afxDrawContext dctx, afxBool disable)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -157,7 +157,7 @@ _AVX afxCmdId AvxCmdDisableDepthWrite(afxDrawContext dctx, afxBool disable)
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdEnableStencilTest(afxDrawContext dctx, afxBool enable)
+_AVX afxCmdId AvxCmdSwitchStencilTesting(afxDrawContext dctx, afxBool enable)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -174,7 +174,7 @@ _AVX afxCmdId AvxCmdEnableStencilTest(afxDrawContext dctx, afxBool enable)
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdSetStencilCompareMask(afxDrawContext dctx, afxMask faceMask, afxUnit32 compareMask)
+_AVX afxCmdId AvxCmdSetStencilCompareMask(afxDrawContext dctx, avxFaceMask faceMask, afxMask compareMask)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -194,7 +194,7 @@ _AVX afxCmdId AvxCmdSetStencilCompareMask(afxDrawContext dctx, afxMask faceMask,
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdSetStencilWriteMask(afxDrawContext dctx, afxMask faceMask, afxUnit32 writeMask)
+_AVX afxCmdId AvxCmdSetStencilWriteMask(afxDrawContext dctx, avxFaceMask faceMask, afxMask writeMask)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -214,7 +214,7 @@ _AVX afxCmdId AvxCmdSetStencilWriteMask(afxDrawContext dctx, afxMask faceMask, a
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdSetStencilReference(afxDrawContext dctx, afxMask faceMask, afxUnit32 reference)
+_AVX afxCmdId AvxCmdSetStencilReference(afxDrawContext dctx, avxFaceMask faceMask, afxUnit32 reference)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -234,7 +234,28 @@ _AVX afxCmdId AvxCmdSetStencilReference(afxDrawContext dctx, afxMask faceMask, a
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdEnableDepthBoundsTest(afxDrawContext dctx, afxBool enable)
+_AVX afxCmdId AvxCmdSetStencilOp(afxDrawContext dctx, avxFaceMask faceMask, avxStencilOp failOp, avxStencilOp passOp, avxStencilOp depthFailOp, avxCompareOp compareOp)
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SetStencilOp), sizeof(cmd->SetStencilOp), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->SetStencilOp.faceMask = faceMask;
+    cmd->SetStencilOp.failOp = failOp;
+    cmd->SetStencilOp.passOp = passOp;
+    cmd->SetStencilOp.depthFailOp = depthFailOp;
+    cmd->SetStencilOp.compareOp = compareOp;
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdSwitchDepthBoundsTesting(afxDrawContext dctx, afxBool enable)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -328,7 +349,7 @@ _AVX afxCmdId AvxCmdAdjustScissors(afxDrawContext dctx, afxUnit baseIdx, afxUnit
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdAdjustCurtains(afxDrawContext dctx, afxUnit baseIdx, afxUnit cnt, afxRect const rects[])
+_AVX afxCmdId AvxCmdAdjustCurtainsSIGMA(afxDrawContext dctx, afxUnit baseIdx, afxUnit cnt, afxRect const rects[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -346,10 +367,10 @@ _AVX afxCmdId AvxCmdAdjustCurtains(afxDrawContext dctx, afxUnit baseIdx, afxUnit
     AFX_ASSERT_RANGE(8, baseIdx, cnt);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(AdjustCurtains), sizeof(cmd->AdjustCurtains) + (cnt * sizeof(cmd->AdjustCurtains.rects[0])), &cmdId);
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(AdjustCurtainsSIGMA), sizeof(cmd->AdjustCurtainsSIGMA) + (cnt * sizeof(cmd->AdjustCurtainsSIGMA.rects[0])), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->AdjustCurtains.baseIdx = baseIdx;
-    cmd->AdjustCurtains.cnt = cnt;
+    cmd->AdjustCurtainsSIGMA.baseIdx = baseIdx;
+    cmd->AdjustCurtainsSIGMA.cnt = cnt;
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -363,7 +384,7 @@ _AVX afxCmdId AvxCmdAdjustCurtains(afxDrawContext dctx, afxUnit baseIdx, afxUnit
         AFX_ASSERT(rc->x + (afxInt)rc->w > 0);
         AFX_ASSERT(rc->y + (afxInt)rc->h > 0);
 
-        cmd->AdjustCurtains.rects[i] = *rc;
+        cmd->AdjustCurtainsSIGMA.rects[i] = *rc;
     }
     return cmdId;
 }
@@ -375,7 +396,7 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called outside of a render pass instance.
+    // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(!dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -389,7 +410,7 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
     if (canv)
     {
         AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-        avxRange whd = AfxGetCanvasExtent(canv);
+        avxRange whd = AvxGetCanvasExtent(canv);
         AFX_ASSERT_RANGE(whd.w, cfg->area.x, cfg->area.w);
         AFX_ASSERT_RANGE(whd.h, cfg->area.y, cfg->area.h);
         
@@ -418,23 +439,25 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
         cmd->CommenceDrawScope.targets[i] = cfg->targets[i];
     }
 
-    if (!cfg2.depth) cmd->CommenceDrawScope.hasD = FALSE;
-    else
+    //if (!cfg2.depth) cmd->CommenceDrawScope.hasD = FALSE;
+    //else
     {
-        AFX_ASSERT_BOUNDS(cfg2.depth->loadOp, avxLoadOp_LOAD, avxLoadOp_DONT_CARE);
-        AFX_ASSERT_BOUNDS(cfg2.depth->storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
-        cmd->CommenceDrawScope.depth = *cfg2.depth;
+        AFX_ASSERT_BOUNDS(cfg2.depth.loadOp, avxLoadOp_LOAD, avxLoadOp_DONT_CARE);
+        AFX_ASSERT_BOUNDS(cfg2.depth.storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
+        cmd->CommenceDrawScope.depth = cfg2.depth;
         cmd->CommenceDrawScope.hasD = TRUE;
     }
 
-    if (!cfg2.stencil) cmd->CommenceDrawScope.hasS = FALSE;
-    else
+    //if (!cfg2.stencil) cmd->CommenceDrawScope.hasS = FALSE;
+    //else
     {
-        AFX_ASSERT_BOUNDS(cfg2.stencil->loadOp, avxLoadOp_LOAD, avxLoadOp_DONT_CARE);
-        AFX_ASSERT_BOUNDS(cfg2.stencil->storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
-        cmd->CommenceDrawScope.stencil = *cfg2.stencil;
+        AFX_ASSERT_BOUNDS(cfg2.stencil.loadOp, avxLoadOp_LOAD, avxLoadOp_DONT_CARE);
+        AFX_ASSERT_BOUNDS(cfg2.stencil.storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
+        cmd->CommenceDrawScope.stencil = cfg2.stencil;
         cmd->CommenceDrawScope.hasS = TRUE;
     }
+
+    cmd->CommenceDrawScope.dbgTag = cfg2.tag;
 
     return cmdId;
 }
@@ -446,7 +469,7 @@ _AVX afxCmdId AvxCmdConcludeDrawScope(afxDrawContext dctx)
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called outside of a render pass instance.
+    // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -467,7 +490,7 @@ _AVX afxCmdId AvxCmdNextPass(afxDrawContext dctx, afxBool useAuxScripts)
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
-    // This command must only be called outside of a render pass instance.
+    // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inRenderPass);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -476,5 +499,209 @@ _AVX afxCmdId AvxCmdNextPass(afxDrawContext dctx, afxBool useAuxScripts)
     avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(NextPass), sizeof(cmd->NextPass), &cmdId);
     AFX_ASSERT(cmd);
     cmd->NextPass.useAuxContexts = !!useAuxScripts;
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdSetRasterizationSamplesEXT(afxDrawContext dctx, afxUnit sampleLvl)
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inRenderPass);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SetRasterizationSamplesEXT), sizeof(cmd->SetRasterizationSamplesEXT), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->SetRasterizationSamplesEXT.sampleLvl = sampleLvl;
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdSetSampleMaskEXT(afxDrawContext dctx, afxUnit sampleLvl, afxMask const sampleMasks[AVX_MAX_SAMPLE_MASKS])
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inRenderPass);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SetSampleMaskEXT), sizeof(cmd->SetSampleMaskEXT), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->SetSampleMaskEXT.sampleLvl = sampleLvl;
+    AfxCopy(cmd->SetSampleMaskEXT.sampleMasks, sampleMasks, sampleLvl * sizeof(sampleMasks[0]));
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdSwitchAlphaToCoverageEXT(afxDrawContext dctx, afxBool enable)
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inRenderPass);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SwitchAlphaToCoverageEXT), sizeof(cmd->SwitchAlphaToCoverageEXT), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->SwitchAlphaToCoverageEXT.enable = !!enable;
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdSwitchAlphaToOneEXT(afxDrawContext dctx, afxBool enable)
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inRenderPass);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SwitchAlphaToOneEXT), sizeof(cmd->SwitchAlphaToOneEXT), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->SwitchAlphaToOneEXT.enable = !!enable;
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdSwitchColorBlendingEXT(afxDrawContext dctx, afxUnit first, afxUnit cnt, afxBool const enabled[])
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inRenderPass);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SwitchColorBlendingEXT), sizeof(cmd->SwitchColorBlendingEXT) + (cnt * sizeof(cmd->SwitchColorBlendingEXT.enabled[0])), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->SwitchColorBlendingEXT.first = first;
+    cmd->SwitchColorBlendingEXT.cnt = cnt;
+    AfxCopy(cmd->SwitchColorBlendingEXT.enabled, enabled, (cnt * sizeof(cmd->SwitchColorBlendingEXT.enabled[0])));
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdChangeColorBlendEquationEXT(afxDrawContext dctx, afxUnit first, afxUnit cnt, avxColorBlend const equations[])
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inRenderPass);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(ChangeColorBlendEquationEXT), sizeof(cmd->ChangeColorBlendEquationEXT) + (cnt * sizeof(cmd->ChangeColorBlendEquationEXT.equations[0])), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->ChangeColorBlendEquationEXT.first = first;
+    cmd->ChangeColorBlendEquationEXT.cnt = cnt;
+    AfxCopy(cmd->ChangeColorBlendEquationEXT.equations, equations, (cnt * sizeof(cmd->ChangeColorBlendEquationEXT.equations[0])));
+
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdSetColorWriteMaskEXT(afxDrawContext dctx, afxUnit first, afxUnit cnt, avxColorMask const writeMasks[])
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inRenderPass);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SetColorWriteMaskEXT), sizeof(cmd->SetColorWriteMaskEXT) + (cnt * sizeof(cmd->SetColorWriteMaskEXT.masks[0])), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->SetColorWriteMaskEXT.first = first;
+    cmd->SetColorWriteMaskEXT.cnt = cnt;
+    AfxCopy(cmd->SetColorWriteMaskEXT.masks, writeMasks, (cnt * sizeof(cmd->SetColorWriteMaskEXT.masks[0])));
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdSwitchLogicOpEXT(afxDrawContext dctx, afxBool enabled)
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inRenderPass);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SwitchLogicOpEXT), sizeof(cmd->SwitchLogicOpEXT), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->SwitchLogicOpEXT.enabled = !!enabled;
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdSetDepthClampEnableEXT(afxDrawContext dctx, afxBool enabled)
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inRenderPass);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SetDepthClampEnableEXT), sizeof(cmd->SetDepthClampEnableEXT), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->SetDepthClampEnableEXT.enabled = !!enabled;
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdDiscardRectanglesEXT(afxDrawContext dctx, afxUnit first, afxUnit cnt, afxRect const* rects)
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inRenderPass);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+
+    afxCmdId cmdId;
+    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(DiscardRectanglesEXT), sizeof(cmd->DiscardRectanglesEXT) + (cnt * sizeof(cmd->DiscardRectanglesEXT.rects[0])), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->DiscardRectanglesEXT.first = first;
+    cmd->DiscardRectanglesEXT.cnt = cnt;
+
+    for (afxUnit i = 0; i < cnt; i++)
+        cmd->DiscardRectanglesEXT.rects[i] = rects[i];
+
     return cmdId;
 }

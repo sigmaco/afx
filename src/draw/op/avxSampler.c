@@ -37,7 +37,7 @@ _AVX avxSamplerInfo const AVX_SAMPLER_DEFAULT =
     .uvw[2] = avxTexelWrap_REPEAT,
 
     .magnify = avxTexelFilter_LINEAR,
-    .minify = avxTexelFilter_POINT,
+    .minify = avxTexelFilter_NEAREST,
     .mipFlt = avxTexelFilter_LINEAR,
     .reductionMode = avxTexelReduction_AVG,
     .anisotropyEnabled = FALSE,
@@ -71,7 +71,7 @@ _AVX avxSamplerInfo const AVX_SAMPLER_DEFAULT =
     .forceExplicitReconstr = FALSE
 };
 
-_AVX afxBool AfxIsSamplerYuvCapable(avxSampler samp)
+_AVX afxBool AvxIsSamplerYuvCapable(avxSampler samp)
 {
     afxError err = AFX_ERR_NONE;
     // samp must be a valid avxSampler handle.
@@ -79,7 +79,7 @@ _AVX afxBool AfxIsSamplerYuvCapable(avxSampler samp)
     return samp->cfg.isYuv;
 }
 
-_AVX void AfxGetSamplerBorderColor(avxSampler samp, avxClearValue* val)
+_AVX void AvxGetSamplerBorderColor(avxSampler samp, avxClearValue* val)
 {
     afxError err = AFX_ERR_NONE;
     // samp must be a valid avxSampler handle.
@@ -89,7 +89,7 @@ _AVX void AfxGetSamplerBorderColor(avxSampler samp, avxClearValue* val)
     *val = samp->cfg.borderColor;
 }
 
-_AVX void AfxDescribeSampler(avxSampler samp, avxSamplerInfo* desc)
+_AVX void AvxDescribeSampler(avxSampler samp, avxSamplerInfo* desc)
 {
     afxError err = AFX_ERR_NONE;
     // samp must be a valid avxSampler handle.
@@ -117,7 +117,7 @@ _AVX afxError _AvxSampCtorCb(avxSampler samp, void** args, afxUnit invokeNo)
     avxSamplerInfo const *cfg = ((avxSamplerInfo const *)args[1]) + invokeNo;
     
     AFX_ASSERT(cfg);
-    samp->label = cfg->label;
+    samp->tag = cfg->tag;
     samp->cfg = *cfg;
     samp->crc = 0;
     //AfxAccumulateCrc32(&samp->crc, cfg, yuv ? sizeof(avxYuvSamplerInfo) : sizeof(avxSamplerInfo));
@@ -180,7 +180,7 @@ _AVX afxError _AvxSampCtorCb(avxSampler samp, void** args, afxUnit invokeNo)
         // When unnormalizedCoordinates is enabled, minification and magnification filters must be equal.
         AFX_ASSERT(samp->cfg.minify == samp->cfg.magnify);
         // When unnormalizedCoordinates is enabled, mipmap filter must be NEAREST.
-        AFX_ASSERT(samp->cfg.mipFlt == avxTexelFilter_POINT);
+        AFX_ASSERT(samp->cfg.mipFlt == avxTexelFilter_NEAREST);
         // When unnormalizedCoordinates is enabled, minLod and maxLod must be zero.
         AFX_ASSERT(samp->cfg.minLod == 0);
         AFX_ASSERT(samp->cfg.maxLod == 0);
@@ -246,7 +246,7 @@ _AVX afxClassConfig const _AVX_SAMP_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[])
+_AVX afxError AvxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
     // dsys must be a valid afxDrawSystem handle.
@@ -259,7 +259,7 @@ _AVX afxError AfxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo
 
     // dsys must support at least one bridge with one of the GRAPHICS or COMPUTE capabilities.    
     afxDrawBridge dexu;
-    afxBool bridgedFound = AfxChooseDrawBridges(dsys, AFX_INVALID_INDEX, AFX_INVALID_INDEX, afxDrawPortFlag_DRAW | afxDrawPortFlag_COMPUTE, 0, 1, &dexu);
+    afxBool bridgedFound = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, AFX_INVALID_INDEX, afxDrawPortFlag_DRAW | afxDrawPortFlag_COMPUTE, 0, 1, &dexu);
     AFX_ASSERT(bridgedFound);
 
     afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->sampCls(dsys);
@@ -271,7 +271,7 @@ _AVX afxError AfxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo
 
     afxBool rslt = 0;
 
-    if (cnt != (afxUnit)(rslt = AfxFindSamplers(dsys, cnt, cfg, samplers)))
+    if (cnt != (afxUnit)(rslt = AvxFindSamplers(dsys, cnt, cfg, samplers)))
     {
         for (afxUnit i = 0; i < cnt; i++)
         {
@@ -326,7 +326,7 @@ _AVXINL afxBool _AvxFindSampCb(avxSampler samp, struct findSampCb* udd)
     return TRUE; // continue
 };
 
-_AVX afxBool AfxFindSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[])
+_AVX afxBool AvxFindSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);

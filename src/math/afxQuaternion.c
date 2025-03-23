@@ -72,7 +72,7 @@ _AFXINL void AfxQuatRotationFromM3d(afxQuat q, afxM3d const m)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(q);
     AFX_ASSERT(m);
-    AfxAssertDiffSoft(q, m);
+    AFX_ASSERT_DIFF(q, m);
 
     afxReal r22 = m[2][2];
 
@@ -137,7 +137,7 @@ _AFXINL void AfxQuatRotationFromM4d(afxQuat q, afxM4d const m)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(q);
     AFX_ASSERT(m);
-    AfxAssertDiffSoft(q, m);
+    AFX_ASSERT_DIFF(q, m);
 
     afxReal r22 = m[2][2];
 
@@ -267,7 +267,7 @@ _AFXINL void AfxQuatCopy(afxQuat q, afxQuat const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(q);
     AFX_ASSERT(in);
-    AfxAssertDiffSoft(q, in);
+    AFX_ASSERT_DIFF(q, in);
     AfxV4dCopy(q, in);
 }
 

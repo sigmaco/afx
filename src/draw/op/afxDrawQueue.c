@@ -107,7 +107,7 @@ _AVX afxClass const* _AvxGetDrawBatchClass(afxDrawQueue dque)
     return cls;
 }
 
-_AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, afxColor const color)
+_AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, avxColor const color)
 {
     afxError err = AFX_ERR_NONE;
     // dque must be a valid afxDrawQueue handle.
@@ -121,35 +121,106 @@ _AVX void _AvxEndDrawQueueDebugScope(afxDrawQueue dque)
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 }
 
-_AVX void _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, afxColor const color)
+_AVX void _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, avxColor const color)
 {
     afxError err = AFX_ERR_NONE;
     // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 }
 
-_AVX afxError AfxWaitForEmptyDrawQueue(afxDrawQueue dque, afxTime timeout)
+_AVX afxError AvxWaitForEmptyDrawQueue(afxDrawQueue dque, afxUnit64 timeout)
 {
     afxError err = AFX_ERR_NONE;
     // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
-    if (!dque->waitCb)
+    if (dque->waitCb)
     {
-        AfxLockMutex(&dque->idleCndMtx);
-
-        afxTimeSpec ts = { 0 };
-        ts.nsec = AfxMax(1, timeout) * 100000; // 100000 = 0.0001 sec
-
-        while (dque->workChn.cnt)
-        {
-            AfxWaitTimedCondition(&dque->idleCnd, &dque->idleCndMtx, &ts);
-        }
-        AfxUnlockMutex(&dque->idleCndMtx);
+        if (dque->waitCb(dque, timeout))
+            AfxThrowError();
     }
-    else if (dque->waitCb(dque, timeout))
-        AfxThrowError();
+    else
+    {
+#if 0
+        afxBool again = TRUE;
 
+        while (again)
+        {
+            afxTimeSpec ts = { 0 };
+            if (timeout && (timeout != AFX_TIME_INFINITE))
+                AfxMakeTimeSpec(&ts, timeout);
+
+            AfxLockMutex(&dque->idleCndMtx);
+
+            if (dque->workChn.cnt)
+            {
+                if (timeout == AFX_TIME_INFINITE)
+                {
+                    AfxWaitCondition(&dque->idleCnd, &dque->idleCndMtx);
+                    again = FALSE;
+                    break;
+                }
+                else if (afxError_TIMEOUT == AfxWaitTimedCondition(&dque->idleCnd, &dque->idleCndMtx, &ts))
+                    if (timeout != AFX_TIME_INFINITE)
+                        break;
+
+                if (!timeout)
+                {
+                    again = FALSE;
+                    break; // do not stall; return immediately.
+                }
+                else if (timeout == AFX_TIME_INFINITE)
+                    continue; // cycle again
+            }
+            else again = FALSE;
+
+            AfxUnlockMutex(&dque->idleCndMtx);
+        }
+#else
+        if (timeout == AFX_TIME_INFINITE)
+        {
+            AfxLockMutex(&dque->idleCndMtx);
+            
+            while (dque->workChn.cnt)
+            {
+                if (AfxWaitCondition(&dque->idleCnd, &dque->idleCndMtx))
+                {
+                    AfxThrowError();
+                    break;
+                }
+            }
+            AfxUnlockMutex(&dque->idleCndMtx);
+        }
+        else
+        {
+            AfxLockMutex(&dque->idleCndMtx);
+
+            afxTimeSpec ts = { 0 };
+            if (timeout && (timeout != AFX_TIME_INFINITE))
+                AfxMakeTimeSpec(&ts, timeout);
+
+            while (dque->workChn.cnt)
+            {
+                afxError cndErr = AfxWaitTimedCondition(&dque->idleCnd, &dque->idleCndMtx, &ts);
+
+                if (cndErr)
+                {
+                    if (cndErr == afxError_TIMEOUT)
+                    {
+                        err = afxError_TIMEOUT;
+                        break;
+                    }
+                    AfxThrowError();
+                    break;
+                }
+
+                if (!timeout)
+                    break; // if there is not timeout specicied, it can not stall; return imediately.
+            }
+            AfxUnlockMutex(&dque->idleCndMtx);
+        }
+#endif
+    }
     return err;
 }
 
@@ -184,9 +255,9 @@ _AVX afxError _AvxExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ct
     AFX_ASSERT(contexts);
 
     /*
-        If any command buffer submitted to this queue is in the executable state, it is moved to the pending state.
-        Once execution of all submissions of a command buffer complete, it moves from the pending state, back to the executable state.
-        If a command buffer was recorded with the VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT flag, it instead moves back to the invalid state.
+        If any draw context submitted to this queue is in the executable state, it is moved to the pending state.
+        Once execution of all submissions of a draw context complete, it moves from the pending state, back to the executable state.
+        If a draw context was recorded with the VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT flag, it instead moves back to the invalid state.
     */
 
     if (!AfxTryLockMutex(&dque->workChnMtx))
@@ -198,10 +269,10 @@ _AVX afxError _AvxExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ct
 
     if (ctrl)
     {
-        work->Execute.hdr.completionFence = fence;
         work->Execute.signal = ctrl->signalSems;
         work->Execute.wait = ctrl->waitSems;
     }
+    work->Execute.hdr.completionFence = fence;
 
     work->Execute.cmdbCnt = cnt;
 
@@ -311,7 +382,7 @@ _AVX afxError _AvxSubmitTransferences(afxDrawQueue dque, avxTransference const* 
 
     if (ctrl->dstFcc == afxFcc_RAS || ctrl->srcFcc == afxFcc_RAS)
     {
-        afxRasterIo const* riops = ops;
+        avxRasterIo const* riops = ops;
         for (afxUnit i = 0; i < opCnt; i++)
         {
             work->Transfer.rasOps[i] = riops[i];
@@ -392,7 +463,7 @@ _AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, avxBufferRe
     return err;
 }
 
-_AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferMap const flushes[], afxUnit fetchCnt, avxBufferMap const fetches[])
+_AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferedMap const flushes[], afxUnit fetchCnt, avxBufferedMap const fetches[])
 {
     afxError err = AFX_ERR_NONE;
     // dque must be a valid afxDrawQueue handle.
@@ -414,7 +485,7 @@ _AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferM
 
         for (afxUnit i = 0; i < flushCnt; i++)
         {
-            avxBufferMap const* map = &flushes[i];
+            avxBufferedMap const* map = &flushes[i];
 
             work->SyncMaps.ops[i].buf = map->buf;
             work->SyncMaps.ops[i].offset = map->offset;
@@ -437,7 +508,7 @@ _AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferM
 
         for (afxUnit i = 0; i < fetchCnt; i++)
         {
-            avxBufferMap const* map = &fetches[i];
+            avxBufferedMap const* map = &fetches[i];
 
             work->SyncMaps.ops[i].buf = map->buf;
             work->SyncMaps.ops[i].offset = map->offset;
@@ -479,7 +550,7 @@ _AVX afxError _AvxDqueCtorCb(afxDrawQueue dque, void** args, afxUnit invokeNo)
 
     afxDrawBridge dexu = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-    _avxDrawBridgeAcquisition const* cfg = AFX_CAST(_avxDrawBridgeAcquisition const*, args[1]);
+    _avxDexuAcquisition const* cfg = AFX_CAST(_avxDexuAcquisition const*, args[1]);
     AFX_ASSERT(cfg);
     
     AFX_ASSERT(cfg->portId != AFX_INVALID_INDEX);

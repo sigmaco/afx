@@ -58,11 +58,11 @@ AFX_DEFINE_STRUCT(avxDpu)
 
     // transform scope
     afxUnit     vpCnt;
-    afxViewport vps[8];
+    avxViewport vps[8];
     afxRect     scissors[8];
 };
 
-AFX_DEFINE_STRUCT(_avxDrawBridgeAcquisition)
+AFX_DEFINE_STRUCT(_avxDexuAcquisition)
 {
     afxDrawDevice           ddev;
     afxUnit                 portId;
@@ -140,7 +140,7 @@ AFX_OBJECT(afxDrawQueue)
     afxSlock        cmdbReqLock;
     afxBool         cmdbLockedForReq;
 
-    afxError(*waitCb)(afxDrawQueue, afxTime);
+    afxError(*waitCb)(afxDrawQueue, afxUnit64);
 };
 #endif//_AVX_DRAW_QUEUE_C
 
@@ -198,7 +198,7 @@ AFX_DEFINE_UNION(avxWork)
 
         union
         {
-            afxRaster   ras;
+            avxRaster   ras;
             avxBuffer   buf;
             void*       dst;
             void const* src;
@@ -207,7 +207,7 @@ AFX_DEFINE_UNION(avxWork)
         afxFcc          srcFcc;
         union
         {
-            afxRaster   ras;
+            avxRaster   ras;
             avxBuffer   buf;
             void*       dst;
             void const* src;
@@ -219,7 +219,7 @@ AFX_DEFINE_UNION(avxWork)
         afxUnit         opCnt;
         union
         {
-            afxRasterIo AFX_SIMD rasOps[];
+            avxRasterIo AFX_SIMD rasOps[];
             avxBufferIo AFX_SIMD bufOps[];
         };
     } Transfer;
@@ -255,7 +255,7 @@ AFX_DEFINE_UNION(avxWork)
         afxUnit     fetchCnt;
         union
         {
-            avxBufferMap ops[];
+            avxBufferedMap ops[];
         };
     } SyncMaps;
     struct
@@ -292,8 +292,8 @@ AVX afxError _AvxDquePopWork(afxDrawQueue dque, avxWork* work);
 AVX avxWork* _AvxDquePushWork(afxDrawQueue dque, afxUnit id, afxUnit siz, afxCmdId* cmdId);
 
 //AVX afxUnit _AvxCountDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx);
-AVX afxError AfxWaitForEmptyDrawQueue(afxDrawQueue dque, afxTime timeout);
-AVX afxError AfxWaitForIdleDrawBridge(afxDrawBridge dexu, afxTime timeout);
+AVX afxError AvxWaitForEmptyDrawQueue(afxDrawQueue dque, afxUnit64 timeout);
+AVX afxError AvxWaitForIdleDrawBridge(afxDrawBridge dexu, afxUnit64 timeout);
 
 AVX afxClass const* _AvxGetDrawBatchClass(afxDrawQueue dque);
 
@@ -315,11 +315,11 @@ AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx);
 AVX afxError _AvxExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence);
 AVX afxError _AvxSubmitTransferences(afxDrawQueue dque, avxTransference const* ctrl, afxUnit opCnt, void const* ops);
 AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, avxBufferRemap const maps[], afxUnit unmapCnt, avxBuffer const unmaps[]);
-AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferMap const flushes[], afxUnit fetchCnt, avxBufferMap const fetches[]);
+AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferedMap const flushes[], afxUnit fetchCnt, avxBufferedMap const fetches[]);
 AVX afxError _AvxSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), void* udd);
 
-AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, afxColor const color);
-AVX void _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, afxColor const color);
+AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, avxColor const color);
+AVX void _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, avxColor const color);
 AVX void _AvxEndDrawQueueDebugScope(afxDrawQueue dque);
 
 #endif//AVX_IMPL___EXECUTOR_H

@@ -41,7 +41,7 @@ _ASX afxError _AfxLitCtor(akxLight lit, void** args, afxUnit invokeNo)
     lit->distFadeShadow = 50.f;
     lit->angularDist = 0.f;
     lit->bakeMode = 2;
-    AfxColorSet(lit->color, 1, 1, 1, 1);
+    AvxMakeColor(lit->color, 1, 1, 1, 1);
     lit->cullMask = 0xFFFFFFFF;
     lit->energy = 1.f;
     lit->indirectEnergy = 1.f;

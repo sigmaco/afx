@@ -309,7 +309,7 @@ _AFX afxError AfxLoadInitializationFile(afxManifest* ini, afxUri const* uri)
                 if (state == Value)
                 {
                     if (!currPag)
-                        currPag = _AfxIniCreatePage(ini, &AfxString(""));
+                        currPag = _AfxIniCreatePage(ini, &AFX_STRING(""));
 
                     afxString bufStr, valueStr;
                     AfxMakeString(&bufStr, 0, buf, 0);
@@ -321,12 +321,12 @@ _AFX afxError AfxLoadInitializationFile(afxManifest* ini, afxUri const* uri)
                 else if (state == Comment)
                 {
                     if (!currPag)
-                        currPag = _AfxIniCreatePage(ini, &AfxString(""));
+                        currPag = _AfxIniCreatePage(ini, &AFX_STRING(""));
 
                     afxString bufStr;
                     AfxMakeString(&bufStr, 0, buf, 0);
 
-                    _AfxIniCreateRecord(ini, currPag, &bufStr, &AfxString(""));
+                    _AfxIniCreateRecord(ini, currPag, &bufStr, &AFX_STRING(""));
                 }
                 else if (state == Section)
                 {

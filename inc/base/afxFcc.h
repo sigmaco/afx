@@ -188,7 +188,7 @@ typedef enum afxFcc
     afxFcc_DCTX     = AFX_MAKE_FCC('d', 'c', 't', 'x'), // afxDrawContext
     afxFcc_PIP      = AFX_MAKE_FCC('p', 'i', 'p', '\0'), // avxPipeline
     afxFcc_RAZR     = AFX_MAKE_FCC('r', 'a', 's', '\0'), // avxRasterizer
-    afxFcc_VIN      = AFX_MAKE_FCC('v', 'i', 'n', '\0'), // avxVertexDecl
+    afxFcc_VIN      = AFX_MAKE_FCC('v', 'i', 'n', '\0'), // avxVertexInput
     afxFcc_LEGT2    = AFX_MAKE_FCC('l', 'e', 'g', 't'), // avxLigature
     afxFcc_LEGO     = AFX_MAKE_FCC('l', 'e', 'g', 'o'), // avxLigature
     afxFcc_BSCH     = AFX_MAKE_FCC('b', 's', 'c', 'h'), // avxLigature
@@ -276,7 +276,7 @@ typedef enum afxFcc
     afxFcc_IBUF     = AFX_MAKE_FCC('i', 'b', 'u', 'f'), // afxIndexBuffer
     afxFcc_IMGH     = AFX_MAKE_FCC('i', 'm', 'g', 'h'), // AfxImageHub
     afxFcc_IMIO     = AFX_MAKE_FCC('i', 'm', 'i', 'o'), // AfxImageIoAssistent
-    afxFcc_RAS      = AFX_MAKE_FCC('t', 'e', 'x', '\0'), // afxRaster
+    afxFcc_RAS      = AFX_MAKE_FCC('t', 'e', 'x', '\0'), // avxRaster
     afxFcc_SURF     = AFX_MAKE_FCC('s', 'u', 'r', 'f'), // avxDrawSurfaceSlot
     afxFcc_TEXB     = AFX_MAKE_FCC('t', 'e', 'x', 'b'), // afxTextureBlueprint
 

@@ -33,7 +33,7 @@
 #ifndef AVX_TXD_H
 #define AVX_TXD_H
 
-#include "qwadro/inc/draw/io/afxRaster.h"
+#include "qwadro/inc/draw/io/avxRaster.h"
 
 #define AFX_MAX_TEX_ID_LEN 32
 
@@ -43,7 +43,7 @@ AFX_DEFINE_STRUCT(afxTexture)
     avxTexelWrap uvw[3];
     avxTexelFilter  minFlt;
     avxSampler      samp;
-    afxRaster       ras;
+    avxRaster       ras;
 };
 
 AFX_DEFINE_STRUCT(avxTxdInfo)
@@ -51,7 +51,7 @@ AFX_DEFINE_STRUCT(avxTxdInfo)
     afxUri const*           url;
     afxUnit                  texCnt;
     afxString const*        names;
-    afxRasterInfo const*    rasters;
+    avxRasterInfo const*    rasters;
     avxSamplerInfo const*   samplers;
 };
 

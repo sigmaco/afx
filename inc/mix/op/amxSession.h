@@ -19,11 +19,12 @@
 
 #include "qwadro/inc/mix/io/afxAudio.h"
 
-AFX_DEFINE_STRUCT(amxSession)
-// This interface is the primary interface that applications use to control the pipeline.
+AFX_DEFINE_STRUCT(amxSessionConfig)
 {
-
+    afxUnit exuIdx;
 };
+
+AMX afxError AmxAcquireMediaSession(afxMixSystem msys, amxSessionConfig const* cfg, amxSession* session);
 
 // The transport control methods:
 // Pauses the session.

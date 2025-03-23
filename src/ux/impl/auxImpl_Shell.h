@@ -23,7 +23,7 @@
 
 #include "../../impl/afxExecImplKit.h"
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/draw/math/afxViewport.h"
+#include "qwadro/inc/draw/math/avxViewport.h"
 #include "qwadro/inc/ux/afxShell.h"
 #include "qwadro/../../dep_/vgl1/vgl1.h"
 
@@ -160,7 +160,7 @@ AFX_DEFINE_STRUCT(_auxWndDdi)
 {
     afxBool(*moveCb)(afxWindow, afxUnit const[2]);
     afxError(*redrawCb)(afxWindow, afxRect const*);
-    afxError(*chIconCb)(afxWindow, afxRaster);
+    afxError(*chIconCb)(afxWindow, avxRaster);
     afxError(*adjustCb)(afxWindow, afxBool, afxRect const*);
     void(*focus)(afxWindow);
     afxBool(*hasFocus)(afxWindow);
@@ -201,7 +201,7 @@ AFX_OBJECT(afxWindow)
     afxUnit          marginR;
     afxUnit          marginB;
 
-    afxRaster       icon;
+    avxRaster       icon;
     afxString2048   title;
 
     afxBool         active;
@@ -353,30 +353,6 @@ AFX_OBJECT(afxWidget)
     afxM4d iw;
 
     afxResult(*update)(afxWidget wid, afxReal dt);
-
-    struct nk_context nkCtx;
-    struct nk_glfw nkFw;
-    void* svgCtx;
-
-    // dev
-    afxBool shouldRebuildData;
-    struct nk_buffer cmds;
-    struct nk_draw_null_texture tex_null;
-    avxBuffer vbo;
-    avxBuffer ibo;
-    afxUnit vboSiz, iboSiz;
-    avxPipeline pip;
-    afxRaster font_tex;
-    avxSampler font_samp;
-    afxRaster tex_handles[256];
-
-    //
-    struct nk_font_atlas atlas;
-    struct nk_vec2 scroll;
-    double last_button_click;
-    int is_double_click_down;
-    struct nk_vec2 double_click_pos;
-    float delta_time_seconds_last;
 };
 #endif//_AUX_WIDGET_C
 #endif//_AUX_UX_C

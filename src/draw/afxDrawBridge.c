@@ -36,7 +36,7 @@ _AVX afxClass const* _AvxGetDrawQueueClass(afxDrawBridge dexu)
     return cls;
 }
 
-_AVX afxDrawDevice AfxGetDrawBridgeDevice(afxDrawBridge dexu)
+_AVX afxDrawDevice AvxGetDrawBridgeDevice(afxDrawBridge dexu)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
@@ -68,7 +68,7 @@ _AVX afxUnit AfxQueryDrawBridgePort(afxDrawBridge dexu, afxDrawDevice* device)
     return dexu->portId;
 }
 
-_AVX afxUnit AfxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cnt, afxDrawQueue queues[])
+_AVX afxUnit AvxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cnt, afxDrawQueue queues[])
 {
     afxError err = AFX_ERR_NONE;
     // dexu must be a valid afxDrawBridge handle.
@@ -83,7 +83,7 @@ _AVX afxUnit AfxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cn
     return rslt;
 }
 
-_AVX afxError AfxWaitForIdleDrawBridge(afxDrawBridge dexu, afxTime timeout)
+_AVX afxError AvxWaitForIdleDrawBridge(afxDrawBridge dexu, afxUnit64 timeout)
 {
     afxError err = AFX_ERR_NONE;
     // dexu must be a valid afxDrawBridge handle.
@@ -97,11 +97,11 @@ _AVX afxError AfxWaitForIdleDrawBridge(afxDrawBridge dexu, afxTime timeout)
     for (afxUnit i = 0; i < dqueCls->instCnt; i++)
     {
         afxDrawQueue dque;
-        AfxGetDrawQueues(dexu, i, 1, &dque);
+        AvxGetDrawQueues(dexu, i, 1, &dque);
         AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
         
         afxError err2;
-        if ((err2 = AfxWaitForEmptyDrawQueue(dque, timeout) && (err2 != afxError_TIMEOUT)))
+        if ((err2 = AvxWaitForEmptyDrawQueue(dque, timeout)) && (err2 != afxError_TIMEOUT))
         {
             AfxThrowError();
         }
@@ -118,8 +118,8 @@ _AVX afxError _AvxDexuDtorCb(afxDrawBridge dexu)
     afxDrawSystem dsys = AfxGetBridgedDrawSystem(dexu);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    //AfxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
-    //AfxWaitForDrawSystem(dsys, AFX_TIME_INFINITE); // yes, two times.
+    //AvxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
+    //AvxWaitForDrawSystem(dsys, AFX_TIME_INFINITE); // yes, two times.
 
     if (dexu->worker)
     {
@@ -147,7 +147,7 @@ _AVX afxError _AvxDexuCtorCb(afxDrawBridge dexu, void** args, afxUnit invokeNo)
 
     afxDrawSystem dsys = AFX_CAST(afxDrawSystem, args[0]);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    _avxDrawBridgeAcquisition const* cfg = AFX_CAST(_avxDrawBridgeAcquisition const*, args[1]) + invokeNo;
+    _avxDexuAcquisition const* cfg = AFX_CAST(_avxDexuAcquisition const*, args[1]) + invokeNo;
     
     if (!cfg)
     {
