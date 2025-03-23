@@ -531,7 +531,7 @@ _ASX afxError AsxBeginSceneRendering(akxRenderer rnd, afxCamera cam, afxRect con
     }
     else if (canv)
     {
-        avxRange whd = AvxGetCanvasExtent(canv);
+        avxRange whd = AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO);
         rnd->drawArea.w = whd.w;
         rnd->drawArea.h = whd.h;
 

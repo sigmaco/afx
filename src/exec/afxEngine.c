@@ -118,7 +118,7 @@ int main(int argc, char const* argv[])
         avxRange canvWhd;
         AvxGetDrawOutputCanvas(dout, outBufIdx, &canv);
         AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-        canvWhd = AvxGetCanvasExtent(canv);
+        canvWhd = AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO);
 
         {
             avxDrawTarget rdt = { 0 };
