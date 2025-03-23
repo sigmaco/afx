@@ -79,15 +79,16 @@ AVX afxResult AvxTestCanvas
 );
 
 /*
-    The AvxGetCanvasExtent() function retrieves the dimensions (width and height) of a given canvas. 
+    The AvxGetCanvasArea() function retrieves the dimensions (width and height) of a given canvas. 
     This information is essential for rendering, scaling, and layout management in graphical applications, 
     particularly when dealing with dynamic or resizable drawing surfaces.
 */
 
-AVX avxRange AvxGetCanvasExtent
+AVX avxRange AvxGetCanvasArea
 (
     // A canvas object, which represents a framebuffer in the system.
-    avxCanvas canv
+    avxCanvas canv,
+    avxOrigin origin
 );
 
 /*
