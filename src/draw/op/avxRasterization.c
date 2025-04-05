@@ -410,7 +410,7 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
     if (canv)
     {
         AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-        avxRange whd = AvxGetCanvasExtent(canv);
+        avxRange whd = AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO);
         AFX_ASSERT_RANGE(whd.w, cfg->area.x, cfg->area.w);
         AFX_ASSERT_RANGE(whd.h, cfg->area.y, cfg->area.h);
         

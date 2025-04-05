@@ -28,12 +28,26 @@ _AVX afxResult AvxTestCanvas(avxCanvas canv, afxCanvasFlags bitmask)
     return canv->flags & bitmask;
 }
 
-_AVX avxRange AvxGetCanvasExtent(avxCanvas canv)
+_AVX avxRange AvxGetCanvasArea(avxCanvas canv, avxOrigin origin)
 {
     afxError err = AFX_ERR_NONE;
     // @canv must be a valid avxCanvas handle.
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-    return canv->extent;
+    origin = AvxClampOrigin(origin, AVX_RANGE(canv->extent.w - 1, canv->extent.h - 1, canv->extent.d - 1));
+    avxRange whd = AvxSubtractRange(canv->extent, AVX_RANGE(origin.x, origin.y, origin.z));    
+    return whd;
+}
+
+_AVX avxRange AvxGetCanvasExtentNdc(avxCanvas canv, afxV2d const origin, afxV2d const extent)
+{
+    afxError err = AFX_ERR_NONE;
+    // @canv must be a valid avxCanvas handle.
+    AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
+
+    afxV2d at, ran;
+    AfxNdcV2d(at, origin, AFX_V2D(canv->extent.w, canv->extent.h));
+    AfxNdcV2d(ran, extent, AFX_V2D(canv->extent.w, canv->extent.h));
+    return AVX_RANGE(ran[0], ran[1], canv->extent.d);
 }
 
 _AVX afxUnit AvxQueryDrawBufferSlots(avxCanvas canv, afxUnit* colorSlotCnt, afxUnit* dSlotIdx, afxUnit* sSlotIdx)
@@ -280,7 +294,7 @@ _AVX afxError AvxPrintDrawBuffer(avxCanvas canv, afxUnit slotIdx, avxRasterIo co
     else
     {
         avxRasterIo op2 = { 0 };
-        op2.rgn.extent = AvxGetCanvasExtent(canv);
+        op2.rgn.extent = AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO);
 
         if (AvxPrintRaster(ras, &op2, 1, exuIdx, uri))
             AfxThrowError();
@@ -300,7 +314,7 @@ _AVX afxError _AvxRedoDrawBuffers(avxCanvas canv)
 
     avxRasterInfo rasi = { 0 };
     rasi.lodCnt = 1;
-    rasi.extent = AvxGetCanvasExtent(canv);
+    rasi.extent = AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO);
 
     for (afxUnit i = 0; i < canv->slotCnt; i++)
     {
