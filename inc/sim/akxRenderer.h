@@ -98,7 +98,7 @@ AFX_OBJECT(akxRenderer)
     afxDrawSystem      cachedDsys;
     afxDrawInput        din;
     
-    afxCamera           activeCam;
+    avxCamera           activeCam;
     afxRect             drawArea;
     avxCanvas           canv;
     afxUnit              frameCnt;
@@ -192,7 +192,7 @@ ASX afxError    AsxSpawnEntity(afxUnit protoId, afxTransform const* t);
 
 ASX afxError    AsxSpawnAnimatedEntity(afxUnit protoId, afxTransform const* t);
 
-ASX afxError    AsxBeginSceneRendering(akxRenderer rnd, afxCamera cam, afxRect const* drawArea, avxCanvas canv, afxDrawContext dctx);
+ASX afxError    AsxBeginSceneRendering(akxRenderer rnd, avxCamera cam, afxRect const* drawArea, avxCanvas canv, afxDrawContext dctx);
 ASX afxError    AsxEndSceneRendering(akxRenderer rnd, afxDrawContext dctx);
 
 ASX afxError    AfxRendererSetStar(akxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
@@ -201,7 +201,7 @@ ASX afxError    AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal d
 
 ASX afxError    AkxTestDrawIndexed(akxRenderer rnd, afxDrawContext dctx);
 
-ASX afxError    AsxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation sim, afxDrawContext dctx, afxContext sctx);
+ASX afxError    AsxBeginSceneCapture(akxRenderer scn, avxCamera cam, afxSimulation sim, afxDrawContext dctx, afxContext sctx);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //

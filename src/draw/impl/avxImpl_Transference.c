@@ -45,18 +45,18 @@ AFX_DEFINE_STRUCT(avxRasterStorage)
 _AVX void _AvxGetRasterMemoryRequirements(afxDrawSystem dsys, avxRaster ras, avxMemoryReq* req)
 {
     avxMemoryReq req2;
-    req2.align = ras->storage[0].alignment;
-    req2.size = ras->storage[0].size;
-    req2.memType = ras->storage[0].memType;
+    req2.align = ras->alignment;
+    req2.size = ras->size;
+    req2.memType = ras->memType;
     *req = req2;
 }
 
 _AVX void _AvxGetBufferMemoryRequirements(afxDrawSystem dsys, avxBuffer buf, avxMemoryReq* req)
 {
     avxMemoryReq req2 = { 0 };
-    req2.align = buf->storage[0].alignment;
-    req2.size = buf->storage[0].size;
-    req2.memType = buf->storage[0].memType;
+    req2.align = AVX_BUFFER_ALIGNMENT;
+    req2.size = buf->size;
+    req2.memType = buf->memType;
 }
 
 _AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit lodIdx, afxUnit layerIdx, avxRasterLayout* layout)
@@ -77,9 +77,9 @@ _AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit 
             afxUnit imgStride = AFX_ALIGNED_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
             lay2.offset += whd.d * imgStride;
 
-            whd.w = AfxMax(1, whd.w * 2);
-            whd.h = AfxMax(1, whd.h * 2);
-            if (is3d) whd.d = AfxMax(1, whd.d * 2);
+            whd.w = AFX_MAX(1, whd.w * 2);
+            whd.h = AFX_MAX(1, whd.h * 2);
+            if (is3d) whd.d = AFX_MAX(1, whd.d * 2);
         }
 
         afxUnit rowStride = AFX_ALIGNED_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
@@ -96,9 +96,9 @@ _AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit 
             afxUnit imgStride = AFX_ALIGNED_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
             lay2.offset += whd.d * imgStride;
 
-            whd.w = AfxMax(1, whd.w >> 1);
-            whd.h = AfxMax(1, whd.h >> 1);
-            if (is3d) whd.d = AfxMax(1, whd.d >> 1);
+            whd.w = AFX_MAX(1, whd.w >> 1);
+            whd.h = AFX_MAX(1, whd.h >> 1);
+            if (is3d) whd.d = AFX_MAX(1, whd.d >> 1);
         }
 
         afxUnit rowStride = AFX_ALIGNED_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
@@ -115,9 +115,9 @@ _AVX afxError _AvxCommitBuffers(afxDrawSystem dsys, afxUnit exuIdx, afxUnit cnt,
     {
         avxBuffer buf = buffers[i];
 
-        if (!buf->storage[0].hostedData.addr)
+        if (!buf->storage[0].hostedAlloc.addr)
         {
-            AfxAllocate(buf->storage[0].size, buf->storage[0].alignment, AfxHere(), (void**)&buf->storage[0].hostedData.addr);
+            AfxAllocate(buf->size, AVX_BUFFER_ALIGNMENT, AfxHere(), (void**)&buf->storage[0].hostedAlloc.addr);
         }
     }
 }
@@ -128,9 +128,9 @@ _AVX afxError _AvxCommitRasters(afxDrawSystem dsys, afxUnit exuIdx, afxUnit cnt,
     {
         avxRaster ras = rasters[i];
 
-        if (!ras->storage[0].hostedData.addr)
+        if (!ras->storage[0].hostedAlloc.addr)
         {
-            AfxAllocate(ras->storage[0].size, ras->storage[0].alignment, AfxHere(), (void**)&ras->storage[0].hostedData.addr);
+            AfxAllocate(ras->size, ras->alignment, AfxHere(), (void**)&ras->storage[0].hostedAlloc.addr);
         }
     }
 }

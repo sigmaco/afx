@@ -27,34 +27,34 @@
 #include "qwadro/inc/mem/afxInterlockedQueue.h"
 #include "qwadro/inc/mem/afxSlabAllocator.h"
 
-typedef enum avxCmdbState
+typedef enum avxDrawContextState
 /// Each draw context is always in one of the following states
 {
     // When a draw context is allocated, it is in the initial state.
     // Some commands are able to reset a draw context (or a set of command buffers) back to this state from any of the executable, recording or invalid state.
     // Command buffers in the initial state canv only be moved to the recording state, or freed.
-    avxCmdbState_INITIAL,
+    avxDrawContextState_INITIAL,
 
     // BeginCmdBuffer() changes the state of a draw context from the initial state to the recording state.
     // Once a draw context is in the recording state, AvxCmd* commands canv be used to record to the draw context.
-    avxCmdbState_RECORDING,
+    avxDrawContextState_RECORDING,
 
     // AfxCompileCmdBuffer() ends the recording of a draw context, and moves it from the recording state to the executable state.
     // Executable command buffers canv be submitted, reset, or recorded to another draw context.
-    avxCmdbState_EXECUTABLE,
+    avxDrawContextState_EXECUTABLE,
 
     // Queue submission of a draw context changes the state of a draw context from the executable state to the pending state.
     // Whilst in the pending state, applications must not attempt to modify the draw context in any way - as the device may be processing the commands recorded to it.
     // Once execution of a draw context completes, the draw context either reverts back to the executable state, or if it was recorded with ONCE flag, it moves to the invalid state.
     // A synchronization command should be used to detect when this occurs.
-    avxCmdbState_PENDING,
+    avxDrawContextState_PENDING,
 
     // Some operations, such as modifying or deleting a resource that was used in a command recorded to a draw context, will transition the state of that draw context into the invalid state.
     // Command buffers in the invalid state canv only be reset or freed.
-    avxCmdbState_INVALID,
+    avxDrawContextState_INVALID,
 
-    avxCmdbState_INTERNAL_EXECUTING,
-} avxCmdbState;
+    avxDrawContextState_INTERNAL_EXECUTING,
+} avxDrawContextState;
 
 #ifndef _AVX_DRAW_C
 AFX_DECLARE_STRUCT(_avxDctxDdi);
@@ -74,31 +74,47 @@ AFX_OBJECT(afxDrawContext)
 #endif
 {
     _avxDctxDdi const*pimpl;
-    afxArena        cmdArena; // owned by dsys data for specific port
-    afxChain        commands;
-    avxCmdbState    state;
-
+    avxDrawContextState state;
     afxAtom32       submCnt; // number of submissions
     afxMask64       submQueMask; // one for each queue where this dctx was submitted into.
-
     afxUnit         portId;
     afxUnit         poolIdx;
     afxBool         disposable; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
+    afxDrawLimits const* devLimits; // dbg copies
+    afxDrawFeatures const* enabledFeatures; // dbg copies
 
-    afxDrawLimits const* devLimits;
-    afxDrawFeatures const* enabledFeatures;
-
-    afxBool         inRenderPass;
-    afxBool         inVideoCoding;
+    afxArena        cmdArena; // owned by dsys data for specific port
+    afxChain        commands;
 
     struct
     {
+        avxBufferedMap  map;
+        afxBool         alloced;
+        afxByte*        bytemap;
+        afxUnit         remainRoom;
+        afxUnit         nextOffset;
+    } argBufs[4];
+    afxArray            objsToBeDisposed;
+
+    struct
+    {
+        afxBool         inDrawScope;
+        afxBool         inVideoCoding;
+
         avxCanvas           canv;
         afxRect             area;
+
         avxPipeline         pip;
-        avxVertexInput       vtxd;
-        avxBufferedStream   vbos[16];
-        avxBuffer           ibo;
+
+        avxVertexInput      vtxd;
+        avxBufferedStream   vbo[16];
+        avxBufferedStream   ibo;
+
+
+        afxBool             expUseIndDraws;
+        afxArray            indexedDraws; // avxDrawIndexedIndirect
+        afxArray            draws; // avxDrawIndirect
+        // at end of context, these arrays will be used to generate a big indirect buffer object.
     };
 };
 #endif//_AVX_DRAW_CONTEXT_C
@@ -110,7 +126,7 @@ AFX_DEFINE_STRUCT(avxCmdHdr)
     afxUnit siz;
 };
 
-AFX_DEFINE_UNION(avxCmd)
+AFX_DEFINE_UNION(_avxCmd)
 {
     avxCmdHdr hdr;
 
@@ -503,7 +519,7 @@ AFX_DEFINE_UNION(avxCmd)
 
         afxUnit baseIdx;
         afxUnit cnt;
-        afxRect rects[];
+        afxRect AFX_SIMD rects[];
     } AdjustScissors;
     struct
     {
@@ -676,7 +692,7 @@ AFX_DEFINE_UNION(avxCmd)
     } MarkDebugStep;
 };
 
-AFX_DEFINE_UNION(avxCmdList)
+AFX_DEFINE_UNION(_avxCmdLut)
 {
     struct
     {
@@ -762,17 +778,17 @@ AFX_DEFINE_UNION(avxCmdList)
         void* PopDebugScope;
         void* MarkDebugStep;
     };
-    void(*f[])(void*, avxCmd const*);
+    void(*f[])(void*, _avxCmd const*);
 };
 
-#define AVX_GET_STD_CMD_ID(cmdName_) (offsetof(avxCmdList, cmdName_) / sizeof(void*))
+#define _AVX_CMD_ID(cmdName_) (offsetof(_avxCmdLut, cmdName_) / sizeof(void*))
 
-AVX avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxCmdId* cmdId);
+AVX _avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxCmdId* cmdId);
 AVX afxError _AvxDctxImplResetCb(afxDrawContext dctx, afxBool freeMem, afxBool permanent);
 AVX afxError _AvxDctxImplEndCb(afxDrawContext dctx);
 
 
-AVX avxCmdbState    _AvxGetCommandStatus(afxDrawContext dctx);
+AVX avxDrawContextState    _AvxGetCommandStatus(afxDrawContext dctx);
 
 AVX afxClassConfig const _AVX_DCTX_CLASS_CONFIG;
 AVX _avxDctxDdi const _AVX_DCTX_DDI;

@@ -179,9 +179,7 @@ AFX afxError        AfxBufferizeStream(afxStream iob, afxUnit bufCap, void* buf)
 AFX afxBool         AfxResetStream(afxStream iob);
 
 // Make a stream fork from another stream.
-AFX afxStream       AfxForkStream(afxStream iob); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxStream       AfxForkStreamRange(afxStream iob, afxSize offset, afxUnit range); // em caso de erro, retorna o comprimento deixado de fora.
-
+AFX afxStream       AfxForkStream(afxStream iob, afxSize offset, afxUnit range); // em caso de erro, retorna o comprimento deixado de fora.
 AFX afxError        AfxMergeStream(afxStream out, afxStream in, afxSize base, afxUnit range, afxUnit rate);
 
 AFX afxError        AfxRead(afxStream in, afxUnit cnt, afxUnit siz, void* dst, afxUnit dstStride);
@@ -201,24 +199,23 @@ AFX afxError        AfxReadStreamReversedAt2(afxStream in, afxSize offset, afxUn
 AFX afxError        AfxWriteStream2(afxStream out, afxUnit range, afxUnit stride, void const* src, afxUnit srcStride); // em caso de erro, retorna o comprimento deixado de fora.
 AFX afxError        AfxWriteStreamAt2(afxStream out, afxSize offset, afxUnit range, afxUnit stride, void const* src, afxUnit srcStride); // em caso de erro, retorna o comprimento deixado de fora.
 
-AFX afxError        AfxDoStreamInput(afxStream in, afxUnit rowStride, afxUnit rowCnt, void* dst, afxUnit dstStride); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxError        AfxDoStreamInputAt(afxStream in, afxSize offset, afxUnit rowStride, afxUnit rowCnt, void* dst, afxUnit dstStride);
-AFX afxError        AfxDoStreamOutput(afxStream out, afxUnit rowStride, afxUnit rowCnt, void const* src, afxUnit srcStride); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxError        AfxDoStreamOutputAt(afxStream out, afxSize offset, afxUnit rowStride, afxUnit rowCnt, void const* src, afxUnit srcStride);
+AFX afxError        AfxDoStreamInput(afxStream in, afxUnit stride, afxUnit cnt, void* dst, afxUnit dstStride); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxDoStreamInputAt(afxStream in, afxSize offset, afxUnit stride, afxUnit cnt, void* dst, afxUnit dstStride);
+AFX afxError        AfxDoStreamOutput(afxStream out, afxUnit stride, afxUnit cnt, void const* src, afxUnit srcStride); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxDoStreamOutputAt(afxStream out, afxSize offset, afxUnit stride, afxUnit cnt, void const* src, afxUnit srcStride);
 
 AFX afxError        AfxReadStream(afxStream in, afxUnit range, afxUnit rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
 AFX afxError        AfxReadStreamAt(afxStream in, afxSize offset, afxUnit range, afxUnit rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
 AFX afxError        AfxReadStreamReversed(afxStream in, afxUnit range, afxUnit rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
 AFX afxError        AfxReadStreamReversedAt(afxStream in, afxSize offset, afxUnit range, afxUnit rate, void* dst); // em caso de erro, retorna o comprimento deixado de fora.
 
-AFX afxError        AfxDecodeStream(afxStream in, afxSize offset, afxUnit rowStride, afxUnit rowCnt);
+AFX afxError        AfxDecodeStream(afxStream in, afxSize offset, afxUnit stride, afxUnit cnt);
 AFX afxError        AfxDecodeStream2(afxStream in, afxSize offset, afxUnit encSiz, afxFcc codec, afxUnit stop0, afxUnit stop1, afxUnit stop2, void* dst);
 
 AFX afxError        AfxWriteStream(afxStream out, afxUnit range, afxUnit rate, void const* src); // em caso de erro, retorna o comprimento deixado de fora.
 AFX afxError        AfxWriteStreamAt(afxStream out, afxSize offset, afxUnit range, afxUnit rate, void const* src); // em caso de erro, retorna o comprimento deixado de fora.
 
-AFX afxError        AfxCopyStream(afxStream in, afxUnit rate, afxStream out); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxError        AfxCopyStreamRange(afxStream in, afxSize base, afxUnit range, afxUnit rate, afxStream out); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxError        AfxCopyStream(afxStream in, afxSize base, afxUnit range, afxUnit rate, afxStream out); // em caso de erro, retorna o comprimento deixado de fora.
 
 AFX afxError        AfxReopenStream(afxStream iob, afxUnit bufCap, void* start, afxSize len);
 

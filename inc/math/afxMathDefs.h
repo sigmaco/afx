@@ -56,16 +56,33 @@
 #   define AFX_PI 3.14159265358979323846
 #endif
 #ifndef AFX_EPSILON32
-#   define AFX_EPSILON32 FLT_EPSILON
+#   ifdef FLT_EPSILON
+#       define AFX_EPSILON32 FLT_EPSILON
+#   else
+#       define AFX_EPSILON32 (1.192092896e-07f) // smallest such that ((1.0 + AFX_EPSILON32) != 1.0)
+#   endif
 #endif
 #ifndef AFX_EPSILON64
-#   define AFX_EPSILON64 DBL_EPSILON
+#   ifdef DBL_EPSILON
+#       define AFX_EPSILON64 DBL_EPSILON
+#   else
+#       define AFX_EPSILON64 (2.2204460492503131e-016) // smallest such that ((1.0 + AFX_EPSILON64) != 1.0)
+#   endif
 #endif
 #ifndef AFX_EPSILON
 #   define AFX_EPSILON AFX_EPSILON32
 #endif
 
-#define AFX_PI_OVER2    (AFX_PI / 2.0)
+#define AFX_PI_OVER2        (AFX_PI / 2.0) // 0.0174532925
+
+// The value of (PI / 180) is often used in converting degrees to radians, as there are "Pi" radians in 180 degrees.
+#define AFX_PI_OVER_180     (AFX_PI / 180.0)
+#define AFX_PI32_OVER_180   (0.0174532925f)
+#define AFX_PI64_OVER_180   (0.017453292519943295)
+// The value of (180 / PI) is commonly used for converting radians to degrees.
+#define AFX_180_OVER_PI     (180.0 / AFX_PI)
+#define AFX_180_OVER_PI32   (57.29578f)
+#define AFX_180_OVER_PI64   (57.295779513082320)
 
 #ifndef MFX_ALIGN_ALL
 typedef afxReal afxV2d[2];
@@ -105,7 +122,7 @@ AFX_STATIC_ASSERT(__alignof(afxQuat) == AFX_SIMD_ALIGNMENT, "");
 AFX_STATIC_ASSERT(__alignof(afxRotor) == AFX_SIMD_ALIGNMENT, "");
 AFX_STATIC_ASSERT(__alignof(afxMatrix) == AFX_SIMD_ALIGNMENT, "");
 
-AFXINL void         AfxNdcV2d(afxV2d v, afxV2d const b, afxV2d const total);
-AFXINL void         AfxUnndcV2d(afxV2d v, afxV2d const b, afxV2d const total);
+AFXINL void         AfxV2dNdc(afxV2d v, afxV2d const b, afxV2d const total);
+AFXINL void         AfxV2dUnndc(afxV2d v, afxV2d const b, afxV2d const total);
 
 #endif//AFX_MATH_DEFS_H

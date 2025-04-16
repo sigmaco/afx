@@ -83,6 +83,23 @@ ASX afxBool     AfxGetBodyPose(afxBody bod, afxPose* pose);
 
 ////////////////////////////////////////////////////////////////////////////////
 
+AFX_DEFINE_STRUCT(asxBodyInfo)
+{
+    afxReal mass;
+    afxTransform startWorldTransform;
+    //asxShape* collisionShape;
+    afxModel mdl;
+    afxV3d localInertia;
+    afxReal linearDamp;
+    afxReal angularDamp;
+    afxReal friction; // 0.5
+    afxReal rollFriction;
+    afxReal spinFriction; //torsional friction around contact normal
+    afxReal restitution;
+    afxReal linearSleepThreshold; // 0.8
+    afxReal angularSleepThreshold; // 1.0
+};
+
 ASX afxError    AfxSpawnBodies(afxModel proto, afxUnit cnt, afxBody bod[]);
 
 ASX afxError    AfxAcquireBodies(afxSimulation sim, afxModel mdl, afxUnit cnt, afxBody bodies[]);

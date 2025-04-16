@@ -105,7 +105,7 @@ _ASX afxError _AsxImplementSimulation(afxModule icd, afxClassConfig const* sdevC
         {
             AfxThrowError();
         }
-        else if (AfxMountClass(&icd->icd.sdevCls, (afxClass*)AfxGetDeviceClass(), &icd->classes, &clsCfg)) // require base*
+        else if (AfxMountClass(&icd->icd.sdevCls, (afxClass*)_AfxGetDeviceClass(), &icd->classes, &clsCfg)) // require base*
         {
             AfxThrowError();
         }

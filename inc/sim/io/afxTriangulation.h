@@ -81,20 +81,18 @@ ASXINL afxUnit           AfxAddVertexBiases(afxTriangulation* mshb, afxUnit cnt,
 
 ASXINL void             AfxRenameVertexPivots(afxTriangulation* mshb, afxUnit basePivotIdx, afxUnit cnt, afxString const name[]);
 
-ASX afxMesh             AfxBuildParallelepipedMesh(afxSimulation sim, afxV3d whd, afxReal slantX, afxReal slantY);
-ASX afxMesh             AfxBuildDomeMesh(afxSimulation sim, afxReal radius, afxUnit slices);
-
-ASX afxMesh             AfxBuildDomeMesh2(afxSimulation sim, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv);
-ASX afxMesh             AfxBuildSphereMesh(afxSimulation sim, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv);
-ASX afxMesh             AfxBuildCapsuleMesh(afxSimulation sim, afxReal radius, afxReal height, afxUnit stacks, afxUnit slices, afxUnit cylinderSlices, afxBool inv);
-ASX afxMesh             AfxBuildPlaneMesh(afxSimulation sim, afxUnit gridSizeX, afxUnit gridSizeY, afxReal width, afxReal height);
-
-ASX afxError            AfxBuildBoxMesh(afxSimulation sim, afxV3d const whd, afxUnit secCnt, afxMesh* mesh);
-ASX afxMesh             AfxBuildDiscMesh(afxSimulation sim, afxReal radius, afxUnit secCnt);
-ASX afxError            AfxBuildGridMesh(afxSimulation sim, afxUnit rows, afxUnit layers, afxReal width, afxReal depth, afxMesh* mesh);
-
 ASX afxError AfxDestripifyTriangles(afxUnit triCnt, void const* src, afxUnit srcIdxSiz, void* dst, afxUnit dstIdxSiz);
-ASX afxError AfxRecomputeTriangularNormals(afxUnit triCnt, afxUnit const indices[], afxV3d const pos[], afxV3d nrm[]);
-ASX afxError AfxRecomputeTriangularTangents(afxUnit triCnt, afxUnit const indices[], afxV3d const pos[], afxV2d const uv[], afxUnit distro, afxV3d tan[], afxV3d bit[]);
+
+ASX afxError AfxComputeTriangleTangents(afxUnit triCnt, void const* indices, afxUnit idxStride, afxV3d const pos[], afxUnit posStride, afxV2d const uv[], afxUnit uvStride, afxBool perTriOut, afxV3d tan[], afxUnit tanStride, afxV3d bit[], afxUnit bitStride);
+
+ASX afxError AfxComputeTriangleNormals(afxUnit triCnt, void const* indices, afxUnit idxStride, afxV3d const pos[], afxUnit posStride, afxV3d nrm[], afxUnit nrmStride);
+
+ASX afxError AfxComputeTriangleSkins(afxUnit triCnt, void const* indices, afxUnit idxStride, afxV3d const pos[], afxUnit posStride, afxV2d uv[], afxUnit uvStride);
+
+ASX afxError AfxGenerateTriangleSkins(afxUnit triCnt, void const* indices, afxUnit idxStride, afxUnit stride, afxV2d uv[]);
+
+ASX void AsxExtractIndexedLines(afxUnit triCnt, afxUnit triIndices[], afxUnit triIdxStride, afxUnit bufCap, afxUnit edgeIndices[], afxUnit* numLines);
+
+ASX void AsxInvertIndexedTriangles(afxUnit triCnt, afxUnit indices[], afxUnit idxStride);
 
 #endif//ASX_MESH_BUILDER_H

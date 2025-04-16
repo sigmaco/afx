@@ -42,9 +42,7 @@ AFX_OBJECT(afxDrawInput)
 #endif
 {
     afxChain            classes;
-    afxClass            camCls;
     afxClass            dtecCls;
-    afxClass            txdCls;
     afxClass            texCls;
     afxClass            ibuffers;
     afxClass            vbuffers;
@@ -75,8 +73,9 @@ AFX_OBJECT(afxDrawInput)
 
 #ifdef _AVX_CAMERA_C
 
-AFX_OBJECT(afxCamera)
+AFX_OBJECT(avxCamera)
 {
+    afxCameraFlags      flags;
     afxReal             wpOverHp; // physical w/h
     afxReal             wrOverHr; // resolution w/h
     afxReal             wwOverHw; // window w/h
@@ -91,12 +90,11 @@ AFX_OBJECT(afxCamera)
     afxV3d              elevAzimRoll;
     afxV3d              pos;
     afxV3d              displacement;
-    afxM4d              v;
-    afxM4d              iv; // inverse view
-    afxM4d              p;
-    afxM4d              ip; // inverse projection
-    afxBool             vChanged;
-    afxBool             pChanged;
+    afxM4d              v, iv; // inverse view
+    afxM4d              p, ip; // inverse projection
+    afxM4d              pv, ipv; // IP * IV
+    afxBool             shouldSyncV;
+    afxBool             shouldSyncP;
 
 
 
@@ -106,7 +104,7 @@ AFX_OBJECT(afxCamera)
 
 #endif//_AVX_CAMERA_C
 
-//AFX_STATIC_ASSERT(offsetof(afxCamera, focus % AFX_CAM_ALIGN == 0, "");
+//AFX_STATIC_ASSERT(offsetof(avxCamera, focus % AFX_CAM_ALIGN == 0, "");
 
 #ifdef _AVX_GEOMETRY_C
 
@@ -138,12 +136,10 @@ AFX_OBJECT(afxGeometry)
 
 AVX afxClassConfig const _AVX_DIN_CLASS_CONFIG;
 
-AVX afxClass const* AvxGetCameraClass(afxDrawInput din);
 AVX afxClass const* AvxGetDrawTechniqueClass(afxDrawInput din);
 AVX afxClass*       AvxGetIndexBufferClass(afxDrawInput din);
 AVX afxClass*       AvxGetVertexBufferClass(afxDrawInput din);
 AVX afxClass const* AvxGetTextureClass(afxDrawInput din);
-AVX afxClass const* AvxGetTxdClass(afxDrawInput din);
 
 AVX afxClass const* AvxGetGeometryClass(afxDrawInput din);
 AVX afxClass const* AvxGetMeshTopologyClass(afxDrawInput din);

@@ -153,7 +153,7 @@ _AFXINL afxResource AfxAcquireResource(afxResourceSpecification const *spec)
         AfxThrowError();
     else
     {
-        AfxLogEcho("Resource %p[%.4s]^%i acquired.", res, (afxChar const*)&(res->superset), res->obj.refCnt);
+        AfxReportMessage("Resource %p[%.4s]^%i acquired.", res, (afxChar const*)&(res->superset), res->obj.refCnt);
     }
     return res;
 }

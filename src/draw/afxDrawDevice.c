@@ -426,8 +426,8 @@ _AVX afxUnit AvxQueryDrawCapabilities(afxDrawDevice ddev, afxUnit basePortIdx, a
     afxUnit rslt = 0;
 
     // count must be evaluated first to avoid clamp.
-    portCnt = AfxMin(portCnt, ddev->portCnt - basePortIdx);
-    basePortIdx = AfxMin(basePortIdx, ddev->portCnt - 1);
+    portCnt = AFX_MIN(portCnt, ddev->portCnt - basePortIdx);
+    basePortIdx = AFX_MIN(basePortIdx, ddev->portCnt - 1);
 
     if (!caps) rslt = portCnt; 
     else for (afxUnit i = 0; i < portCnt; i++)
@@ -725,61 +725,64 @@ _AVX afxError _AvxDdevCtorCb(afxDrawDevice ddev, void** args, afxUnit invokeNo)
     afxDrawDeviceInfo const* info = AFX_CAST(afxDrawDeviceInfo const*, args[1]) + invokeNo;
     AFX_ASSERT(info);
 
-    if (_AFX_DEV_CLASS_CONFIG.ctor(&ddev->dev, (void*[]){ icd, (void*)&info->dev }, 0)) AfxThrowError();
+    if (_AFX_DEV_CLASS_CONFIG.ctor(&ddev->dev, (void*[]) { icd, (void*)&info->dev }, 0))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    ddev->leftHandedSpace = FALSE;
+    ddev->clipSpaceDepth = avxClipSpaceDepth_ZERO_TO_ONE;
+
+    ddev->idd = NIL;
+
+    ddev->limits = info->limits;
+    ddev->features = info->features;
+    ddev->leftHandedSpace = info->leftHandedSpace;
+    ddev->clipSpaceDepth = info->clipSpaceDepth;
+
+    ddev->portCnt = info->portCnt;
+
+    ddev->pfds = &_AvxStdPfds[0];
+
+    afxObjectStash stashes[] =
+    {
+        {
+            .cnt = ddev->portCnt,
+            .siz = sizeof(ddev->ports[0]),
+            .var = (void**)&ddev->ports
+        }
+    };
+
+    if (AfxAllocateInstanceData(ddev, ARRAY_SIZE(stashes), stashes)) AfxThrowError();
     else
     {
-        ddev->leftHandedSpace = FALSE;
-        ddev->clipSpaceDepth = avxClipSpaceDepth_ZERO_TO_ONE;
-
-        ddev->idd = NIL;
-
-        ddev->limits = info->limits;
-        ddev->features = info->features;
-        ddev->leftHandedSpace = info->leftHandedSpace;
-        ddev->clipSpaceDepth = info->clipSpaceDepth;
-
-        ddev->portCnt = info->portCnt;
-
-        ddev->pfds = &_AvxStdPfds[0];
-
-        afxObjectStash stashes[] =
-        {
-            {
-                .cnt = ddev->portCnt,
-                .siz = sizeof(ddev->ports[0]),
-                .var = (void**)&ddev->ports
-            }
-        };
-
-        if (AfxAllocateInstanceData(ddev, ARRAY_SIZE(stashes), stashes)) AfxThrowError();
+        if (!ddev->portCnt) AfxThrowError();
         else
         {
-            if (!ddev->portCnt) AfxThrowError();
-            else
+            AFX_ASSERT(ddev->ports);
+
+            for (afxUnit i = 0; i < ddev->portCnt; i++)
             {
-                AFX_ASSERT(ddev->ports);
-
-                for (afxUnit i = 0; i < ddev->portCnt; i++)
-                {
-                    ddev->ports[i].caps = (afxDrawCapabilities) { 0 };
-                    AfxMakeString128(&ddev->ports[i].desc, NIL);
-                    AfxMakeString8(&ddev->ports[i].urn, NIL);
-                }
-
-                if (AfxCallDevice(&ddev->dev, afxFcc_DSYS, NIL)) AfxThrowError();
-                else
-                {
-                    if (err)
-                    {
-                        AfxDeregisterChainedClasses(&ddev->dev.classes);
-                    }
-                }
+                ddev->ports[i].caps = (afxDrawCapabilities) { 0 };
+                AfxMakeString128(&ddev->ports[i].desc, NIL);
+                AfxMakeString8(&ddev->ports[i].urn, NIL);
             }
 
-            if (err)
-                AfxDeallocateInstanceData(ddev, ARRAY_SIZE(stashes), stashes);
+            if (AfxCallDevice(&ddev->dev, afxFcc_DSYS, NIL)) AfxThrowError();
+            else
+            {
+                if (err)
+                {
+                    AfxDeregisterChainedClasses(&ddev->dev.classes);
+                }
+            }
         }
+
+        if (err)
+            AfxDeallocateInstanceData(ddev, ARRAY_SIZE(stashes), stashes);
     }
+
     return err;
 }
 

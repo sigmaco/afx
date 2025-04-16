@@ -96,6 +96,23 @@ _AFXINL void CheckTimerInit(void)
 
 #endif
 
+_AFXINL void AfxResetClock(afxClock *clock)
+{
+    afxError err;
+    AFX_ASSERT(clock);
+    *clock = (afxClock) { 0 };
+}
+
+_AFXINL void AfxCopyClock(afxClock* clock, afxClock const* src)
+{
+    afxError err;
+    AFX_ASSERT(clock);
+    AFX_ASSERT(src);
+    *clock = *src;
+}
+
+#if 0
+
 _AFX void AfxGetClock(afxClock* clock)
 {
     afxError err = NIL;
@@ -178,36 +195,22 @@ _AFX void AfxGetClock(afxClock* clock)
 #endif
 }
 
-_AFXINL void AfxResetClock(afxClock *clock)
+_AFXINL afxReal64 AfxGetMicrosecondsElapsed(afxClock const* prev, afxClock const* last)
 {
-    afxError err;
-    AFX_ASSERT(clock);
-    *clock = (afxClock) { 0 };
-}
-
-_AFXINL void AfxCopyClock(afxClock* clock, afxClock const* src)
-{
-    afxError err;
-    AFX_ASSERT(clock);
-    AFX_ASSERT(src);
-    *clock = *src;
-}
-
-_AFXINL afxReal64 AfxGetMicrosecondsElapsed(afxClock const* from, afxClock const* until)
-{
-    // Extract higher and lower 32-bits from 'from' and 'until' clock data
-    afxInt32 fromHigh = from->data[1];
-    afxUnit32 fromLow = from->data[0];
-    afxUnit32 untilLow = until->data[0];
-    afxInt32 untilHigh = until->data[1];
+    // Extract higher and lower 32-bits from 'from' and 'last' clock data
+    afxInt32 fromHigh = prev->data[1];
+    afxUnit32 fromLow = prev->data[0];
+    afxUnit32 untilLow = last->data[0];
+    afxInt32 untilHigh = last->data[1];
     afxReal64 rslt;
 
 #ifdef _WIN32
-    // Check if 'until' time is earlier than 'from' time
-    if (fromHigh > untilHigh || (fromHigh == untilHigh && fromLow >= untilLow)) rslt = 0.0; // No time elapsed if 'until' is earlier or equal
+    // Check if 'last' time is earlier than 'from' time
+    if (fromHigh > untilHigh || (fromHigh == untilHigh && fromLow >= untilLow))
+        rslt = 0.0; // No time elapsed if 'last' is earlier or equal
     else
     {
-        // Combine high and low parts to form 64-bit timestamp values for both 'from' and 'until'
+        // Combine high and low parts to form 64-bit timestamp values for both 'from' and 'last'
         afxInt64 fromTimestamp = ((afxInt64)fromHigh << 32) | fromLow;
         afxInt64 untilTimestamp = ((afxInt64)untilHigh << 32) | untilLow;
 
@@ -215,39 +218,39 @@ _AFXINL afxReal64 AfxGetMicrosecondsElapsed(afxClock const* from, afxClock const
         rslt = (afxReal64)(untilTimestamp - fromTimestamp);
     }
 #else
-    // Combine high and low parts to form 64-bit timestamp values for both 'from' and 'until'
-    int64_t fromTimestamp = ((int64_t)fromHigh << 32) | fromLow;
-    int64_t untilTimestamp = ((int64_t)untilHigh << 32) | untilLow;
+    // Combine high and low parts to form 64-bit timestamp values for both 'from' and 'last'
+    afxInt64 fromTimestamp = ((afxInt64)fromHigh << 32) | fromLow;
+    afxInt64 untilTimestamp = ((afxInt64)untilHigh << 32) | untilLow;
 
-    // Check if 'until' time is earlier than or equal to 'from' time
+    // Check if 'last' time is earlier than or equal to 'from' time
     if (fromTimestamp >= untilTimestamp)
     {
-        result = 0.0;  // No time elapsed if 'until' is earlier or equal
+        rslt = 0.0;  // No time elapsed if 'last' is earlier or equal
     }
     else
     {
         // Calculate elapsed time in seconds
-        result = (double)(untilTimestamp - fromTimestamp);
+        rslt = (afxReal64)(untilTimestamp - fromTimestamp);
     }
 #endif
     return rslt;
 }
 
-_AFXINL afxReal64 AfxGetSecondsElapsed(afxClock const* from, afxClock const* until)
+_AFXINL afxReal64 AfxGetSecondsElapsed(afxClock const* prev, afxClock const* last)
 {
-    // Extract higher and lower 32-bits from 'from' and 'until' clock data
-    afxInt32 fromHigh = from->data[1];
-    afxUnit32 fromLow = from->data[0];
-    afxUnit32 untilLow = until->data[0];
-    afxInt32 untilHigh = until->data[1];
+    // Extract higher and lower 32-bits from 'prev' and 'last' clock data
+    afxInt32 fromHigh = prev->data[1];
+    afxUnit32 fromLow = prev->data[0];
+    afxUnit32 untilLow = last->data[0];
+    afxInt32 untilHigh = last->data[1];
     afxReal64 rslt;
 
 #ifdef _WIN32
-    // Check if 'until' time is earlier than 'from' time
-    if (fromHigh > untilHigh || (fromHigh == untilHigh && fromLow >= untilLow)) rslt = 0.0; // No time elapsed if 'until' is earlier or equal
+    // Check if 'last' time is earlier than 'prev' time
+    if (fromHigh > untilHigh || (fromHigh == untilHigh && fromLow >= untilLow)) rslt = 0.0; // No time elapsed if 'last' is earlier or equal
     else
     {
-        // Combine high and low parts to form 64-bit timestamp values for both 'from' and 'until'
+        // Combine high and low parts to form 64-bit timestamp values for both 'prev' and 'last'
         afxInt64 fromTimestamp = ((afxInt64)fromHigh << 32) | fromLow;
         afxInt64 untilTimestamp = ((afxInt64)untilHigh << 32) | untilLow;
 
@@ -255,14 +258,14 @@ _AFXINL afxReal64 AfxGetSecondsElapsed(afxClock const* from, afxClock const* unt
         rslt = (afxReal64)(untilTimestamp - fromTimestamp) * 0.000001;
     }
 #else
-    // Combine high and low parts to form 64-bit timestamp values for both 'from' and 'until'
+    // Combine high and low parts to form 64-bit timestamp values for both 'prev' and 'last'
     int64_t fromTimestamp = ((int64_t)fromHigh << 32) | fromLow;
     int64_t untilTimestamp = ((int64_t)untilHigh << 32) | untilLow;
 
-    // Check if 'until' time is earlier than or equal to 'from' time
+    // Check if 'last' time is earlier than or equal to 'prev' time
     if (fromTimestamp >= untilTimestamp)
     {
-        result = 0.0;  // No time elapsed if 'until' is earlier or equal
+        result = 0.0;  // No time elapsed if 'last' is earlier or equal
     }
     else
     {
@@ -271,4 +274,128 @@ _AFXINL afxReal64 AfxGetSecondsElapsed(afxClock const* from, afxClock const* unt
     }
 #endif
     return rslt;
+}
+#endif
+
+/*
+    The AfxGetClock() function initializes a clock by getting the start time and frequency.
+*/
+
+_AFXINL void AfxGetClock(afxClock* clock)
+{
+    afxError err = NIL;
+    AFX_ASSERT(clock);
+#ifdef _WIN32
+    // Get the frequency (ticks per second)
+    QueryPerformanceFrequency(&clock->f);
+    // Get the current time (ticks since system start)
+    QueryPerformanceCounter(&clock->c);
+#else // POSIX
+    // Get the current time (seconds and nanoseconds since boot)
+    clock_gettime(CLOCK_MONOTONIC, &clock->t);
+#endif
+}
+
+/*
+    The AfxGetClockTicksElapsed() function calculates the elapsed time in ticks.
+*/
+
+_AFXINL afxInt64 AfxGetClockTicksElapsed(afxClock* prev, afxClock* last)
+{
+    afxError err = NIL;
+    AFX_ASSERT(prev);
+    AFX_ASSERT(last);
+#ifdef _WIN32
+    // Calculate the elapsed time in ticks
+    afxInt64 elapsedTicks = last->c - prev->c;
+#else // POSIX
+    // Calculate the elapsed time in ticks (nanoseconds)
+    afxInt64 elapsedTicks = (last->t.secs - prev->t.secs) * 1000000000LL + (last->t.nsecs - prev->t.nsecs);
+#endif
+    return elapsedTicks;
+}
+
+/*
+    The AfxGetClockNanosecondsElapsed() function calculates the elapsed time in nanoseconds.
+    This function calculates the elapsed time in nanoseconds by converting the difference between 
+    the current time and start time (measured in ticks) to nanoseconds.
+*/
+
+_AFXINL afxInt64 AfxGetClockNanosecondsElapsed(afxClock* prev, afxClock* last)
+{
+    afxError err = NIL;
+    AFX_ASSERT(prev);
+    AFX_ASSERT(last);
+#ifdef _WIN32
+    afxInt64 elapsedTicks = AfxGetClockTicksElapsed(prev, last);
+    // Convert ticks to nanoseconds
+    afxInt64 elapsedNsecs = (elapsedTicks * 1000000000LL) / prev->f;
+#else // POSIX
+    // Calculate the elapsed time in nanoseconds
+    afxInt64 elapsedNsecs = (last->t.secs - prev->t.secs) * 1000000000LL + (last->t.nsecs - prev->t.nsecs);
+#endif
+    return elapsedNsecs;
+}
+
+/*
+    The AfxGetClockMicrosecondsElapsed() function calculates the elapsed time in ultraseconds (microseconds, in Qwadro parlance).
+    This function calculates the elapsed time in microseconds by converting the ticks to microseconds.
+*/
+
+_AFXINL afxInt64 AfxGetClockUltrasecondsElapsed(afxClock* prev, afxClock* last)
+{
+    afxError err = NIL;
+    AFX_ASSERT(prev);
+    AFX_ASSERT(last);
+#ifdef _WIN32
+    afxInt64 elapsedTicks = AfxGetClockTicksElapsed(prev, last);
+    // Convert ticks to ultraseconds (microseconds, in Qwadro parlance)
+    afxInt64 elapsedUsecs = (elapsedTicks * 1000000LL) / prev->f;
+#else
+    // Calculate the elapsed time in microseconds
+    afxInt64 elapsedUsecs = (last->t.secs - prev->t.secs) * 1000000LL + (last->t.nsecs / 1000LL - prev->t.nsecs / 1000LL);
+#endif
+    return elapsedUsecs;
+}
+
+/*
+    The AfxGetClockMillisecondsElapsed() function calculates the elapsed time in milliseconds.
+    This function calculates the elapsed time in milliseconds by converting the ticks to milliseconds.
+*/
+
+_AFXINL afxInt64 AfxGetClockMillisecondsElapsed(afxClock* prev, afxClock* last)
+{
+    afxError err = NIL;
+    AFX_ASSERT(prev);
+    AFX_ASSERT(last);
+#ifdef _WIN32
+    afxInt64 elapsedTicks = AfxGetClockTicksElapsed(prev, last);
+    // Convert ticks to milliseconds
+    afxInt64 elapsedMsecs = (elapsedTicks * 1000LL) / prev->f;
+#else
+    // Calculate the elapsed time in milliseconds
+    afxInt64 elapsedMsecs = (last->t.secs - prev->t.secs) * 1000LL + (last->t.nsecs / 1000000LL - prev->t.nsecs / 1000000LL);
+#endif
+    return elapsedMsecs;
+}
+
+/*
+    The AfxGetClockSecondsElapsed() function calculates the elapsed time in seconds.
+    This function calculates the elapsed time in seconds (as a 64-bit real) by dividing the ticks by the frequency.
+*/
+
+_AFXINL afxReal64 AfxGetClockSecondsElapsed(afxClock* prev, afxClock* last)
+{
+    afxError err = NIL;
+    AFX_ASSERT(prev);
+    AFX_ASSERT(last);
+#ifdef _WIN32
+    afxInt64 elapsedTicks = AfxGetClockTicksElapsed(prev, last);
+    // Convert ticks to seconds
+    afxReal64 elapsedSecs = (afxReal64)elapsedTicks / prev->f;
+#else
+    // Calculate the elapsed time in seconds
+    afxReal64 elapsedSecs = (afxReal64)(last->t.secs - prev->t.secs) + (afxReal64)(last->t.nsecs - prev->t.nsecs) / 1000000000.0;
+#endif
+    return elapsedSecs;
 }

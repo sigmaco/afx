@@ -52,7 +52,7 @@ AFX_OBJECT(avxLigature)
 
 AFX_DEFINE_STRUCT(avxShaderSlot)
 {
-    avxShaderStage      stage;
+    avxShaderType      stage;
     avxShader           shd;
     afxString8          fn;
     //constants;
@@ -71,7 +71,8 @@ AFX_OBJECT(avxPipeline)
     afxUnit             stageCnt;
     avxShaderSlot*      stages;    
     avxLigature         liga;
-    
+    afxUnit             specializedWorkGrpSiz[3];
+
     ///////////////////////////////////
     // TRANSFORMATION PIPELINE BLOCK //
     ///////////////////////////////////
@@ -102,7 +103,7 @@ AFX_OBJECT(avxPipeline)
 #endif
 
     // rasterization
-    avxFillMode         fillMode; // is the triangle rendering mode. // avxFillMode_SOLID
+    avxFillMode         fillMode; // is the triangle rendering mode. // avxFillMode_FACE
     afxReal             lineWidth; // is the width of rasterized line segments. // 1.f    
     // depth bias computation
     afxBool             depthBiasEnabled; // controls whether to bias fragment depth values. // FALSE
@@ -178,7 +179,7 @@ AFX_OBJECT(avxShader)
 {
     afxString               tag;
     afxUri128               uri;
-    avxShaderStage          stage;
+    avxShaderType          stage;
 
     afxUnit                 verMajor;
     afxUnit                 verMinor;

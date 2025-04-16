@@ -117,52 +117,25 @@
 #ifndef ASX_MESH_H
 #define ASX_MESH_H
 
-#include "qwadro/inc/sim/afxSimDefs.h"
-#include "qwadro/inc/draw/afxDrawDefs.h"
-#include "qwadro/inc/mem/afxArray.h"
-#include "qwadro/inc/math/bound/afxBox.h"
-#include "qwadro/inc/base/afxObject.h"
-#include "qwadro/inc/io/afxUrd.h"
-#include "qwadro/inc/math/afxVertex.h"
-#include "qwadro/inc/draw/io/afxVertexStream.h"
-#include "qwadro/inc/base/afxFixedString.h"
-#include "qwadro/inc/sim/io/afxTriangulation.h"
-
-#define ASX_INDICES_PER_TRI 3
-#define AFX_MAX_VERTEX_ATTRIBUTES 32
-
-typedef afxIndex8 afxTriangle8[3];
-typedef afxIndex16 afxTriangle16[3];
-typedef afxIndex32 afxTriangle32[3];
+#include "qwadro/inc/sim/io/afxMeshBlueprint.h"
 
 typedef enum afxMeshFlag
 {
     afxMeshFlag_NAMED_MORPHES   = AFX_BIT(0)
 } afxMeshFlags;
 
-typedef enum afxMeshMorphFlag
-{
-    // Morph geometry contains displacement data (deltas).
-    afxMeshMorphFlag_DELTA = AFX_BIT(0),
-    
-    // Values are obtained by adding the original values to a weighted sum of the target's values.
-    afxMeshMorphFlag_ADDITIVE = AFX_BIT(1),
-} afxMeshMorphFlags;
-
 typedef enum afxMeshBiasFlag
 {
     afxMeshBiasFlag_NONE
 } afxMeshBiasFlags;
 
-typedef enum afxMeshSectionFlag
-{
-    afxMeshSectionFlag_HOLE = AFX_BIT(0)
-} afxMeshSectionFlags;
-
 typedef enum afxVertexFlag
 {
-    afxVertexFlag_DYNAMIC = AFX_BIT(0), // The data store contents will be modified repeatedly and used many times.
-    afxVertexFlag_STREAM = AFX_BIT(1), // The data store contents will be modified once and used at most a few times.
+    // The data store contents will be modified repeatedly and used many times.
+    afxVertexFlag_DYNAMIC = AFX_BIT(0),
+    
+    // The data store contents will be modified once and used at most a few times.
+    afxVertexFlag_STREAM = AFX_BIT(1),
 
     afxVertexFlag_POSITIONAL = AFX_BIT(2),
     afxVertexFlag_SPATIAL = AFX_BIT(3),
@@ -170,19 +143,44 @@ typedef enum afxVertexFlag
     afxVertexFlag_NORMALIZED = AFX_BIT(4),
     afxVertexFlag_RASTERIZATION = AFX_BIT(5),
 
-    afxVertexFlag_ATV = AFX_BIT(10),
     // affected by affine transformations (ex.: position). Non-delta spatial attributes should receive affine transformations.
+    afxVertexFlag_ATV = AFX_BIT(10),
 
-    afxVertexFlag_LTM = AFX_BIT(11),
     // affected by linear transformations (ex.: tangent, binormal). Delta spatial attributes should receive linear transformations (ex.: normal, tangent/binormal cross).
+    afxVertexFlag_LTM = AFX_BIT(11),
 
-    afxVertexFlag_ILTM = AFX_BIT(12),
     // affected by inverse linear transformations. Non-delta spatial attributes should receive inverse linear transformations (ex.: normal, tangent/binormal cross).
+    afxVertexFlag_ILTM = AFX_BIT(12),
+ 
+    // treat as delta
+    afxVertexFlag_DELTA = AFX_BIT(13),
 
-    afxVertexFlag_DELTA = AFX_BIT(13), // treat as delta
-
-    afxVertexFlag_RESIDENT = AFX_BIT(14) // allocation for data is resident
+    // allocation for data is resident
+    afxVertexFlag_RESIDENT = AFX_BIT(14)
 } afxVertexFlags;
+
+typedef enum asxMeshIndexation
+{
+    // indices mapping triangles to vertices
+    asxMeshIndexation_TRI_VTX,
+
+    // indices mapping triangles' edges to vertices
+    asxMeshIndexation_EDGE_VTX,
+
+    // (per-vertex) indices mapping provoking vertices for triangles
+    asxMeshIndexation_PROVOKING_VTX,
+
+    // (per-vertex) indices mapping actual vertices to original vertices
+    asxMeshIndexation_ORIGINAL_VTX,
+
+    // (per-edge, 3 per triangle) indices mapping edges to adjacent triangles
+    asxMeshIndexation_EDGE_TO_ADJ,
+
+    // indices mapping triangles to biases
+    asxMeshIndexation_TRI_TO_BIAS,
+
+    asxMeshIndexation_BIAS_FOR_TRI
+} asxMeshIndexation;
 
 AFX_DEFINE_STRUCT(avxVertexCache)
 {
@@ -197,12 +195,6 @@ AFX_DEFINE_STRUCT(avxVertexCache)
     }                   streams[2];
 };
 
-AFX_DEFINE_STRUCT(afxVertexBias)
-{
-    afxUnit             pivotIdx;
-    afxReal             weight;
-};
-
 AFX_DEFINE_STRUCT(avxIndexCache)
 {
     afxLink          stream;
@@ -213,12 +205,10 @@ AFX_DEFINE_STRUCT(avxIndexCache)
     afxMesh             msh;
 };
 
-AFX_DEFINE_STRUCT(afxMeshSection)
+AFX_DEFINE_STRUCT(afxVertexBias)
 {
-    afxMeshSectionFlags flags;
-    afxUnit             mtlIdx;
-    afxUnit             baseTriIdx;
-    afxUnit             triCnt;
+    afxUnit             pivotIdx;
+    afxReal             weight;
 };
 
 AFX_DEFINE_STRUCT(afxVertexAttribute)
@@ -226,28 +216,6 @@ AFX_DEFINE_STRUCT(afxVertexAttribute)
     avxFormat           fmt;
     afxVertexFlags      flags;
     afxString8          usage;
-};
-
-/**
-    The morph targets are a extension to the afxMesh structure.
-
-    For each morph target attribute, an original attribute MUST be present in the mesh.
-
-    A implementation SHOULD support at least POSITION, NORMAL and TANGENT attributes for morphing.
-
-    All morphed data MUST have the same 'vtxCnt' as the base morph of the mesh.
-*/
-
-AFX_DEFINE_STRUCT(afxMeshMorph)
-// aka morph target, blend shape
-{
-    afxMeshMorphFlags   flags;
-    // For each morph target attribute, an original attribute MUST be present in the mesh.
-    // Implementations SHOULD support at least 8 morphed attributes.
-    afxUnit             morphAttrCnt;
-    afxMask             morphedAttrs;
-    afxUnit             baseVtx;
-    // All morphed data MUST have the same 'vtxCnt' as the base morph of the mesh.
 };
 
 AFX_DEFINE_STRUCT(afxMeshBias)
@@ -274,35 +242,8 @@ AFX_DEFINE_STRUCT(afxMeshInfo)
     void*               udd;
 };
 
-AFX_DEFINE_STRUCT(afxMeshBlueprint)
-/// Data needed for mesh assembly
-{
-    afxUnit             triCnt;
-    afxUnit const*      sideToAdjacentMap; // triCnt * 3
-    afxUnit             mtlCnt;
-    afxString const*    materials;
-    afxUnit             secCnt;
-    afxMeshSection const*sections; // secCnt;
-    afxUnit             biasCnt;
-    afxString const*    biases;
-    afxUnit const*      biasesForTriMap;
-    afxUnit const*      triToBiasMap;
-
-    afxUnit             vtxCnt;
-    afxUnit const*      vtxToVtxMap; // vtxCnt
-    afxUnit const*      vtxToTriMap; // vtxCnt
-    afxUnit             attrCnt;
-    afxString const*    attrs;
-    afxUnit             morphCnt;
-    afxMeshMorph const* morphs;
-    afxString const*    morphTags;
-
-    afxString32         urn;
-    void*               udd;
-};
-
 /**
-    The AfxGetMeshDrawInput() method retrieves the simulation that provides the mesh.
+    The AfxGetMeshContext() method retrieves the simulation that provides the mesh.
 
     @param msh must be a valid afxMesh handle.
     @return Must return an afxSimulation handle of the provider.
@@ -333,15 +274,6 @@ ASX afxUnit         AfxGetMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit
 */
 
 ASX afxError        AfxChangeMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, afxMeshMorph const morphes[]);
-
-/**
-    The AfxGetMeshTopology() method retrieves the shared topology of the mesh.
-
-    @param msh must be a valid afxMesh handle.
-    @return Must return a valid afxMeshTopology handle.
-*/
-
-ASX afxMeshTopology AfxGetMeshTopology(afxMesh msh);
 
 /**
     The AfxIsMeshDeformable() method tests whether a mesh is deformable (aka skinned).
@@ -503,7 +435,7 @@ ASX afxError        AfxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxR
 ASX afxUnit         AfxEnumerateMeshes(afxSimulation sim, afxUnit first, afxUnit cnt, afxMesh meshes[]);
 
 /**
-    The AfxCompileMeshes() function compiles new meshes using specified blueprints.
+    The AfxBuildMeshes() function compiles new meshes using specified blueprints.
 
     @param sim must be a valid afxSimulation handle.
     @param first is the number of the first mesh to be enumerated from.
@@ -512,6 +444,6 @@ ASX afxUnit         AfxEnumerateMeshes(afxSimulation sim, afxUnit first, afxUnit
     @return Must return any error ocurried, if any, or zero.
 */
 
-ASX afxError        AfxCompileMeshes(afxSimulation sim, afxUnit cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
+ASX afxError        AfxBuildMeshes(afxSimulation sim, afxUnit cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
 
 #endif//ASX_MESH_H

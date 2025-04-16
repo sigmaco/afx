@@ -118,7 +118,7 @@ do { \
     { \
         afxSize const trunc = n - 1; \
         (a_)[trunc] = ((afxChar)0); \
-        /*AfxLogAdvertence("String truncated!\n    %s", (a_)); */\
+        /*AfxReportWarn("String truncated!\n    %s", (a_)); */\
     } \
 } while(0)
 

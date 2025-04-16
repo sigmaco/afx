@@ -16,6 +16,11 @@
 
 // This code is part of SIGMA A4D <https://sigmaco.org/a4d>
 
+/*
+    A mix bridge, as well as other bridges and queues in Qwadro, is highly based on Commondore Amiga-way 
+    of handling device connections, here specially AHI connection. Despite the main enginner never having touched on in his life.
+*/
+
 #ifndef AMX_MIX_BRIDGE_H
 #define AMX_MIX_BRIDGE_H
 
@@ -31,29 +36,27 @@ typedef enum afxMixPortFlag
 
 AFX_DEFINE_STRUCT(afxMixCapabilities)
 {
-    afxMixPortFlags     capabilities;
-    afxAcceleration     acceleration;
-    afxUnit             minQueCnt; // usually 3
-    afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
+    afxMixPortFlags capabilities;
+    afxAcceleration acceleration;
+    afxUnit         minQueCnt; // usually 3
+    afxUnit         maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
 };
 
 AFX_DEFINE_STRUCT(afxMixBridgeConfig)
 {
-    afxUnit             mdevId;
-    afxMixPortFlags     capabilities; // specifies capabilities of queues in a port.
-    afxAcceleration     acceleration;
-    afxUnit             minQueCnt;
-    afxReal const*      queuePriority;
+    afxUnit         mdevId;
+    afxMixPortFlags capabilities; // specifies capabilities of queues in a port.
+    afxAcceleration acceleration;
+    afxUnit         minQueCnt;
+    afxReal const*  queuePriority;
 };
 
-AMX afxMixDevice    AfxGetMixBridgeDevice(afxMixBridge mexu);
-AMX afxMixSystem    AfxGetBridgedMixSystem(afxMixBridge mexu);
+AMX afxMixSystem    AmxGetBridgedMixSystem(afxMixBridge mexu);
+AMX afxMixDevice    AmxGetBridgedMixDevice(afxMixBridge mexu, afxUnit* portId);
 
-AMX afxUnit         AfxQueryMixBridgePort(afxMixBridge mexu, afxMixDevice* device);
+AMX afxUnit         AmxGetMixQueues(afxMixBridge mexu, afxUnit first, afxUnit cnt, afxMixQueue queues[]);
 
-AMX afxUnit         AfxGetMixQueues(afxMixBridge mexu, afxUnit first, afxUnit cnt, afxMixQueue queues[]);
-
-AMX afxError        AfxWaitForIdleMixBridge(afxMixBridge mexu, afxTime timeout);
-AMX afxError        AfxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxTime timeout);
+AMX afxError        AmxWaitForIdleMixBridge(afxMixBridge mexu, afxUnit64 timeout);
+AMX afxError        AmxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxUnit64 timeout);
 
 #endif//AMX_MIX_BRIDGE_H

@@ -80,8 +80,27 @@ _AFX void* AfxMemset(void* dst, afxInt val, afxSize siz)
     return memset(dst, val, siz);
 }
 
+#define _AFX_VALIDATE_MEMSEG
+
+_AFX void* AfxMemmove(void* dst, void const* src, afxSize siz)
+{
+#ifdef _AFX_VALIDATE_MEMSEG
+    for (afxUnit i = 0; i < siz; i++)
+        ((afxByte*)dst)[i] = 0;
+    for (afxUnit v = 0, i = 0; i < siz; i++)
+        v = ((afxByte*)src)[i];
+#endif
+    return memmove(dst, src, siz);
+}
+
 _AFX void* AfxMemcpy(void* dst, void const* src, afxSize siz)
 {
+#ifdef _AFX_VALIDATE_MEMSEG
+    for (afxUnit i = 0; i < siz; i++)
+        ((afxByte*)dst)[i] = 0;
+    for (afxUnit v = 0, i = 0; i < siz; i++)
+        v = ((afxByte*)src)[i];
+#endif
     return memcpy(dst, src, siz);
 }
 
@@ -173,7 +192,7 @@ _AFX void AfxFreeAlignedCb(void* block)
 
 _AFX void* AfxMallocAlignedCb(afxSize siz, afxSize align, afxHere const hint)
 {
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
     void* p;
 #ifndef RPMALLOC_ALLOC
@@ -190,7 +209,7 @@ _AFX void* AfxMallocAlignedCb(afxSize siz, afxSize align, afxHere const hint)
 
 _AFX void* AfxReallocAlignedCb(void* block, afxSize siz, afxSize align, afxHere const hint)
 {
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
     void* p = block;
     void* p2;
@@ -208,7 +227,7 @@ _AFX void* AfxReallocAlignedCb(void* block, afxSize siz, afxSize align, afxHere 
 
 _AFX void* AfxRecallocAlignedCb(void* block, afxSize cnt, afxSize siz, afxSize align, afxHere const hint)
 {
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
     void* p = block;
     void* p2;
@@ -268,21 +287,21 @@ _AFX void AfxFreeAligned(void** pp)
 
 _AFX void* AfxMallocAligned(afxSize siz, afxSize align)
 {
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
     return AfxMallocAlignedCb(siz, align, AfxHere());
 }
 
 _AFX void* AfxReallocAligned(void* block, afxSize siz, afxSize align)
 {
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
     return AfxReallocAlignedCb(block, siz, align, AfxHere());
 }
 
 _AFX void* AfxRecallocAligned(void* block, afxSize cnt, afxSize siz, afxSize align)
 {
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
     return AfxRecallocAlignedCb(block, cnt, siz, align, AfxHere());
 }
@@ -331,7 +350,7 @@ _AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxS
     AFX_ASSERT(siz);
     void *neo = NIL;
 
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
     if (!(neo = AfxReallocAligned(p, cnt * siz, align)))
         AfxThrowError();
@@ -348,7 +367,7 @@ _AFX void* _AfxMemAllocStd(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, 
     AFX_ASSERT(hint);
     void *p = NIL;
 
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
     if (!(p = AfxMallocAligned(cnt * siz, align)))
         AfxThrowError();
@@ -413,7 +432,7 @@ _AFX afxError _AfxMmuCtor(afxMmu mmu, void** args, afxUnit invokeNo)
             mmu->defAlign = as->align;
     }
 
-    AfxDeploySlock(&mmu->memSlock);
+    AfxDeployFutex(&mmu->memSlock);
     AfxDeployChain(&mmu->memChain, mmu);
     // Choose which memocation mechanism to be used. Actumemy there's just two: standard (arbitrary) and arena.
 
@@ -441,9 +460,9 @@ _AFX afxError _AfxMmuDtor(afxMmu mmu)
     //afxResult rslt = AfxMemoryExhaust(ctx);
 
     //if (rslt)
-//        AfxLogAdvertence("Recovered. %i bytes orphaned @ (ctx)%p", rslt, ctx);
+//        AfxReportWarn("Recovered. %i bytes orphaned @ (ctx)%p", rslt, ctx);
 
-    AfxDismantleSlock(&mmu->memSlock);
+    AfxDismantleFutex(&mmu->memSlock);
 
     return err;
 }
@@ -463,7 +482,7 @@ _AFX afxError AfxAcquireMemory(afxMemoryFlags flags, afxSize siz, afxUri const* 
 {
     afxError err = AFX_ERR_NONE;
 
-    afxClass* cls = AfxGetMmuClass();
+    afxClass* cls = _AfxGetMmuClass();
     AFX_ASSERT_CLASS(cls, afxFcc_MMU);
     afxMemory mem = NIL;
 
@@ -516,11 +535,11 @@ _AFX void AfxStream2(afxUnit cnt, void const* src, afxSize srcStride, void* dst,
     {
         afxByte* dst2 = dst;
         afxByte const *src2 = src;
-        afxUnit unitSiz = AfxMax(1, AfxMin(dstStride, srcStride)); // minor non-zero
+        afxUnit unitSiz = AFX_MAX(1, AFX_MIN(dstStride, srcStride)); // minor non-zero
         AFX_ASSERT(unitSiz);
         //afxUnit cnt = len / dstStride;
         //afxUnit cnt2 = len % dstStride;
-        afxUnit majStride = AfxMax(1, AfxMax(dstStride, srcStride));
+        afxUnit majStride = AFX_MAX(1, AFX_MAX(dstStride, srcStride));
         //cnt = len / majStride;
         //AFX_ASSERT(!(len % majStride));
         //AFX_ASSERT(!cnt2);
@@ -563,11 +582,11 @@ _AFX void AfxStream3(afxUnit cnt, void const* src, afxUnit srcOffset, afxSize sr
     {
         afxByte* dst2 = dst;
         afxByte const *src2 = src;
-        afxUnit unitSiz = AfxMax(1, AfxMin(dstStride, srcStride)); // minor non-zero
+        afxUnit unitSiz = AFX_MAX(1, AFX_MIN(dstStride, srcStride)); // minor non-zero
         AFX_ASSERT(unitSiz);
         //afxUnit cnt = len / dstStride;
         //afxUnit cnt2 = len % dstStride;
-        afxUnit majStride = AfxMax(1, AfxMax(dstStride, srcStride));
+        afxUnit majStride = AFX_MAX(1, AFX_MAX(dstStride, srcStride));
         //cnt = len / unitSiz;
         //AFX_ASSERT(!(len % majStride));
         //AFX_ASSERT(!cnt2);
@@ -704,6 +723,9 @@ _AFX afxError AfxDeallocate(void** pp, afxHere const hint)
     if (p)
     {
         AFX_ASSERT(p);
+        // Every and any allocation in Qwadro is 16-byte aligned.
+        AFX_ASSERT_ALIGNMENT(p, AFX_SIMD_ALIGNMENT);
+
         afxSize freedSiz = 0;
 
         afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
@@ -731,13 +753,17 @@ _AFX afxError AfxReallocate(afxSize siz, afxUnit align, afxHere const hint, void
     //AfxEntry("p=%p,siz=%u,hint=\"%s:%i!%s\"", p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     void *out = NIL;
 
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    // Every and any allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align);
 
     afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
     void* p = *pp;
 
     if (p)
     {
+        // Every and any allocation in Qwadro is 16-byte aligned.
+        AFX_ASSERT_ALIGNMENT(p, AFX_SIMD_ALIGNMENT);
+
         if (!mmu)
         {
             if (!(out = AfxReallocAlignedCb(p, siz, align, hint)))
@@ -758,15 +784,20 @@ _AFX afxError AfxReallocate(afxSize siz, afxUnit align, afxHere const hint, void
             AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
             if (!(out = mmu->reallocCb(mmu, p, 1, siz, align, hint)))
+            {
                 AfxThrowError();
+            }
         }
         else
         {
             if (!(out = AfxReallocAlignedCb(NIL, siz, align, hint)))
+            {
                 AfxThrowError();
+            }
         }
     }
-
+    // Every and any allocation in Qwadro is 16-byte aligned.
+    AFX_ASSERT_ALIGNMENT(out, AFX_SIMD_ALIGNMENT);
     *pp = out;
     return err;
 }
@@ -780,7 +811,8 @@ _AFX afxError AfxCoallocate(afxSize cnt, afxSize siz, afxUnit align, afxHere con
     AFX_ASSERT(hint);
     void *p = NIL;
 
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    // Every and any allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align);
 
     afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
 
@@ -789,13 +821,19 @@ _AFX afxError AfxCoallocate(afxSize cnt, afxSize siz, afxUnit align, afxHere con
         AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
         if (!(p = mmu->allocCb(mmu, cnt, siz, align, hint)))
+        {
             AfxThrowError();
+        }
     }
     else
     {
         if (!(p = AfxRecallocAlignedCb(NIL, cnt, siz, align, hint)))
+        {
             AfxThrowError();
+        }
     }
+    // Every and any allocation in Qwadro is 16-byte aligned.
+    AFX_ASSERT_ALIGNMENT(p, AFX_SIMD_ALIGNMENT);
     *pp = p;
     return err;
 }
@@ -808,7 +846,8 @@ _AFX afxError AfxAllocate(afxSize siz, afxUnit align, afxHere const hint, void**
     AFX_ASSERT(siz);
     void *p = NIL;
 
-    align = AfxMax(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
+    // Every and any allocation in Qwadro is 16-byte aligned.
+    align = AFX_MAX(AFX_SIMD_ALIGNMENT, align);
 
     if (siz)
     {
@@ -819,14 +858,20 @@ _AFX afxError AfxAllocate(afxSize siz, afxUnit align, afxHere const hint, void**
             AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
             if (!(p = mmu->allocCb(mmu, 1, siz, align, hint)))
+            {
                 AfxThrowError();
+            }
         }
         else
         {
             if (!(p = AfxMallocAlignedCb(siz, align, hint)))
+            {
                 AfxThrowError();
+            }
         }
     }
+    // Every and any allocation in Qwadro is 16-byte aligned.
+    AFX_ASSERT_ALIGNMENT(p, AFX_SIMD_ALIGNMENT);
     *pp = p;
     return err;
 }

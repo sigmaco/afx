@@ -28,6 +28,7 @@
     Common window controls include minimize, maximize, and close buttons. You can adjust the size of a window to your preference.
 
     The surface is the client area within the window frame where the content or functionality is displayed.
+    The frame is the decoration of a window, usually including borders, title bar and control buttons on it.
 */
 
 #ifndef AUX_WINDOW_H
@@ -81,7 +82,7 @@ AFX_DEFINE_STRUCT(afxLayout)
     Because surface coordinates are relative to the upper-left corner of a window's surface, the coordinates of the upper-left corner are (0,0).
 */
 
-AUX void AfxGetWindowRect(afxWindow wnd, afxBool frame, afxRect* rc);
+AUX void AfxGetWindowRect(afxWindow wnd, afxRect* frame, afxRect* surface);
 
 /*
     The AfxGetWindowDrawOutput() function retrieves the afxDrawOutput for the entire afxWindow, including title bar, menus, and scroll bars. 
@@ -92,7 +93,7 @@ AUX void AfxGetWindowRect(afxWindow wnd, afxBool frame, afxRect* rc);
     The afxDrawOutput is an opaque data structure, whose values are used internally by Qwadro Draw I/O System.
 */
 
-AUX afxBool AfxGetWindowDrawOutput(afxWindow wnd, afxBool frame, afxDrawOutput* output);
+AUX afxMask AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, afxDrawOutput* surface);
 
 /*
     The AfxTraceScreenToSurface() function converts the screen coordinates of a specified point on the screen to surface coordinates.
@@ -106,7 +107,13 @@ AUX afxBool AfxTraceScreenToSurface(afxWindow wnd, afxUnit const screenPos[2], a
 
 AUX afxBool AfxTraceSurfaceToScreen(afxWindow wnd, afxUnit const surfPos[2], afxUnit screenPos[2]);
 
-AUX afxBool AfxSetCursorConfinement(afxWindow wnd, afxBool confine);
+/*
+    The AfxMakeWindowCursory() method makes a window cursory, that is, superficial, lacking in depth.
+    At this mode, which is the default one, the cursor is enabled to work with widgets and other interactive elements.
+    Disabling cursory may be used to grab and/or center the mouse to be used in window surface as, for example, a interactive aim.
+*/
+
+AUX afxError AfxMakeWindowCursory(afxWindow wnd, afxBool cursory, afxRect const* confinement);
 
 /*
     Changes the text of the specified afxWindow's title bar (if it has one). 
@@ -120,17 +127,11 @@ AUX afxUnit AfxFormatWindowTitle(afxWindow wnd, afxChar const* fmt, ...);
     The AfxRedrawWindow() function updates the specified rectangle or region in a window's surface (aka client area).
 */
 
-AUX afxError AfxRedrawWindow(afxWindow wnd, afxRect const* rc);
+AUX afxError AfxRedrawWindow(afxWindow wnd, afxRect const* area);
 
 AUX afxError AfxRedrawWidgets(afxWindow wnd, afxDrawContext dctx);
 
 //AUX void AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt);
-
-/*
-    Sets the upper left position of the afxWindow (point) including its window frame.
-*/
-
-AUX afxBool AfxMoveWindow(afxWindow wnd, afxUnit const pos[2]);
 
 AUX afxError        AfxAdjustWindow(afxWindow wnd, afxBool frame, afxRect const* rc);
 

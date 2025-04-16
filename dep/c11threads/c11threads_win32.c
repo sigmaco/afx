@@ -1,17 +1,26 @@
 /*
-Win32 implementation for c11threads.
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *
+ *                                   Public Test Build
+ *                               (c) 2017 SIGMA FEDERATION
+ *                             <https://sigmaco.org/qwadro/>
+ */
 
-Authors:
-John Tsiombikas <nuclear@member.fsf.org>
-Oliver Old <oliver.old@outlook.com>
-
-I place this piece of code in the public domain. Feel free to use as you see
-fit. I'd appreciate it if you keep my name at the top of the code somewhere, but
-whatever.
-
-Main project site: https://github.com/jtsiomb/c11threads
+/*
+    AUTHORS:
+    John Tsiombikas <nuclear@member.fsf.org> - original POSIX threads wrapper
+    Oliver Old <oliver.old@outlook.com> - win32 implementation
+    G. Veryzon <veryzon@sigmaco.org> - code maintenance
 */
-
+ 
 #if defined(_WIN32) && !defined(C11THREADS_PTHREAD_WIN32)
 
 #ifdef _MSC_VER
@@ -35,7 +44,7 @@ Main project site: https://github.com/jtsiomb/c11threads
 #endif
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
+#include <sysinfoapi.h>
 #define _WIN32_WINNT_VISTA 0x0600
 #define THREAD_QUERY_LIMITED_INFORMATION (0x0800)
 
@@ -655,16 +664,65 @@ int _c11threads_win32_thrd_sleep32(const struct _c11threads_win32_timespec32_t *
 	(void)rem_out;
 
 	if (!_c11threads_win32_util_is_timespec32_valid(ts_in)) {
+        if (rem_out)
+        {
+            *rem_out = (struct _c11threads_win32_timespec32_t) { 0 };
+        }
 		return -ERROR_INVALID_PARAMETER;
 	}
 
 	file_time = _c11threads_win32_util_timespec32_to_file_time(ts_in);
 	if (file_time < 0) {
+        if (rem_out)
+        {
+            *rem_out = (struct _c11threads_win32_timespec32_t) { 0 };
+        }
 		return -ERROR_INVALID_PARAMETER;
 	}
 
+#if 0 // GetSystemTimePreciseAsFileTime() may not be available in Win7
+    // Get the start time to calculate elapsed time
+    FILETIME startTime;
+    GetSystemTimePreciseAsFileTime(&startTime);
+#else
+    // Get the start time using QueryPerformanceCounter
+    LARGE_INTEGER startTime;
+    QueryPerformanceCounter(&startTime);
+#endif
+
 	res = _c11threads_win32_sleep_common(file_time);
 
+    if (rem_out)
+    {
+#if 0 // GetSystemTimePreciseAsFileTime() may not be available in Win7
+        // Calculate elapsed time
+        FILETIME endTime;
+        GetSystemTimePreciseAsFileTime(&endTime);
+        ULARGE_INTEGER start, end;
+        start.LowPart = startTime.dwLowDateTime;
+        start.HighPart = startTime.dwHighDateTime;
+        end.LowPart = endTime.dwLowDateTime;
+        end.HighPart = endTime.dwHighDateTime;
+        // Calculate elapsed time in 100-nanosecond intervals
+        long long elapsed = end.QuadPart - start.QuadPart;
+        elapsed *= 100;  // Convert to nanoseconds
+#else
+        // Get the end time using QueryPerformanceCounter
+        LARGE_INTEGER endTime;
+        QueryPerformanceCounter(&endTime);
+        // Calculate the elapsed time in nanoseconds
+        LARGE_INTEGER frequency;
+        QueryPerformanceFrequency(&frequency);
+        // Convert elapsed time to nanoseconds
+        long long elapsed = (endTime.QuadPart - startTime.QuadPart) * 1000000000 / frequency.QuadPart;
+#endif
+        long long durNs = -(long long)(ts_in->tv_sec * 1000000000ll + ts_in->tv_nsec);
+        long long remNs = (durNs - elapsed);
+        struct _c11threads_win32_timespec32_t tsw;
+        tsw.tv_sec = remNs / 1000000000ll;
+        tsw.tv_nsec = remNs % 1000000000ll;
+        *rem_out = tsw;
+    }
 	return res;
 }
 
@@ -677,13 +735,32 @@ int _c11threads_win32_thrd_sleep64(const struct _c11threads_win32_timespec64_t *
 	(void)rem_out;
 
 	if (!_c11threads_win32_util_is_timespec64_valid(ts_in)) {
+
+        if (rem_out)
+        {
+            *rem_out = (struct _c11threads_win32_timespec64_t) { 0 };
+        }
 		return -ERROR_INVALID_PARAMETER;
 	}
 
 	file_time = _c11threads_win32_util_timespec64_to_file_time(ts_in, &periods);
 	if (file_time < 0) {
+        if (rem_out)
+        {
+            *rem_out = (struct _c11threads_win32_timespec64_t) { 0 };
+        }
 		return -ERROR_INVALID_PARAMETER;
 	}
+
+#if 0 // GetSystemTimePreciseAsFileTime() may not be available in Win7
+    // Get the start time to calculate elapsed time
+    FILETIME startTime;
+    GetSystemTimePreciseAsFileTime(&startTime);
+#else
+    // Get the start time using QueryPerformanceCounter
+    LARGE_INTEGER startTime;
+    QueryPerformanceCounter(&startTime);
+#endif
 
 restart_sleep:
 	res = _c11threads_win32_sleep_common(file_time);
@@ -694,6 +771,37 @@ restart_sleep:
 		goto restart_sleep;
 	}
 
+    if (rem_out)
+    {
+#if 0 // GetSystemTimePreciseAsFileTime() may not be available in Win7
+        // Calculate elapsed time
+        FILETIME endTime;
+        GetSystemTimePreciseAsFileTime(&endTime);
+        ULARGE_INTEGER start, end;
+        start.LowPart = startTime.dwLowDateTime;
+        start.HighPart = startTime.dwHighDateTime;
+        end.LowPart = endTime.dwLowDateTime;
+        end.HighPart = endTime.dwHighDateTime;
+        // Calculate elapsed time in 100-nanosecond intervals
+        long long elapsed = end.QuadPart - start.QuadPart;
+        elapsed *= 100;  // Convert to nanoseconds
+#else
+        // Get the end time using QueryPerformanceCounter
+        LARGE_INTEGER endTime;
+        QueryPerformanceCounter(&endTime);
+        // Calculate the elapsed time in nanoseconds
+        LARGE_INTEGER frequency;
+        QueryPerformanceFrequency(&frequency);
+        // Convert elapsed time to nanoseconds
+        long long elapsed = (endTime.QuadPart - startTime.QuadPart) * 1000000000 / frequency.QuadPart;
+#endif
+        long long durNs = -(long long)(ts_in->tv_sec * 1000000000ll + ts_in->tv_nsec);
+        long long remNs = (durNs - elapsed);
+        struct _c11threads_win32_timespec64_t tsw;
+        tsw.tv_sec = remNs / 1000000000ll;
+        tsw.tv_nsec = remNs % 1000000000ll;
+        *rem_out = tsw;
+    }
 	return res;
 }
 

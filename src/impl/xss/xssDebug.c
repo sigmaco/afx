@@ -7,15 +7,15 @@ void VM_error(xssVm env, LunaErrorType type, const char* module,
 
     if (type == LUNA_ERROR_COMPILE)
     {
-        AfxLogError("ERR/CP: %s,%u --- %s", module, line, message);
+        AfxReportError("ERR/CP: %s,%u --- %s", module, line, message);
     }
     else if (type == LUNA_ERROR_RUNTIME)
     {
-        AfxLogError("ERR/RT: %s,%u --- %s", module, line, message);
+        AfxReportError("ERR/RT: %s,%u --- %s", module, line, message);
     }
     else if (type == LUNA_ERROR_STACK_TRACE)
     {
-        AfxLogError("ERR/ST: %s,%u --- %s", module, line, message);
+        AfxReportError("ERR/ST: %s,%u --- %s", module, line, message);
     }
 }
 

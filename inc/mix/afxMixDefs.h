@@ -56,13 +56,13 @@ AFX_DEFINE_HANDLE(afxSubmix);
 AFX_DEFINE_HANDLE(afxBroker);
 AFX_DEFINE_HANDLE(afxMixContext);
 AFX_DEFINE_HANDLE(afxWaveform);
-AFX_DEFINE_HANDLE(afxAudio);
-AFX_DEFINE_HANDLE(afxSound);
-AFX_DEFINE_HANDLE(afxAudient);
+AFX_DEFINE_HANDLE(amxAudio);
+AFX_DEFINE_HANDLE(amxSound);
+AFX_DEFINE_HANDLE(amxSoundscape);
 
 AFX_DEFINE_HANDLE(amxBuffer);
 
-AFX_DEFINE_HANDLE(afxVideoDecoder);
+AFX_DEFINE_HANDLE(amxVideoDecoder);
 AFX_DEFINE_HANDLE(afxVideoEncoder);
 AFX_DEFINE_HANDLE(amxSession);
 AFX_DEFINE_HANDLE(amxSource);
@@ -73,15 +73,15 @@ AFX_DEFINE_HANDLE(amxDecoder);
 typedef enum amxFormat
 // Sound sample formats.
 {
-    amxFormat_A32f = 1, // 32-bit float amplitude sample [-1.f, 1.f]
+    amxFormat_M32f = 1, // 32-bit float amplitude sample [-1.f, 1.f]
     amxFormat_S32f, // 32-bit float interleaved amplutide block [-1.f, 1.f]
-    amxFormat_A32i, // 32-bit signed int amplitude sample [-2147483648, 2147483647]
+    amxFormat_M32i, // 32-bit signed int amplitude sample [-2147483648, 2147483647]
     amxFormat_S32i, // 32-bit signed int interleaved amplutide block [-2147483648, 2147483647]
-    amxFormat_A24i, // 24-bit signed int amplitude sample [-8388608, 8388607]
+    amxFormat_M24i, // 24-bit signed int amplitude sample [-8388608, 8388607]
     amxFormat_S24i, // 24-bit signed int interleaved amplutide block [-8388608, 8388607]
-    amxFormat_A16i, // 16-bit signed int amplitude sample [-32768, 32767]
+    amxFormat_M16i, // 16-bit signed int amplitude sample [-32768, 32767]
     amxFormat_S16i, // 16-bit signed int interleaved amplutide block [-32768, 32767]
-    amxFormat_A8i,  // 8-bit amplitude sample [0, 255]
+    amxFormat_M8i,  // 8-bit amplitude sample [0, 255]
     amxFormat_S8i  // 8-bit interleaved amplutide block [0, 255]
 } amxFormat;
 

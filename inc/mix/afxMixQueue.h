@@ -53,8 +53,8 @@ AFX_DEFINE_STRUCT(amxTransference)
 
     union
     {
-        afxAudio    wav;
-        avxBuffer   buf;
+        amxAudio    aud;
+        amxBuffer   buf;
         void*       dst;
         void const* src;
         afxStream   iob;
@@ -62,8 +62,8 @@ AFX_DEFINE_STRUCT(amxTransference)
     afxFcc          srcFcc;
     union
     {
-        afxAudio    wav;
-        avxBuffer   buf;
+        amxAudio    aud;
+        amxBuffer   buf;
         void*       dst;
         void const* src;
         afxStream   iob;

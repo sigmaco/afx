@@ -19,6 +19,7 @@
 #include "qwadro/inc/math/bound/afxFrustum.h"
 #include "qwadro/inc/math/afxMatrix.h"
 #include "qwadro/inc/math/bound/afxPlane.h"
+#include "qwadro/inc/mem/afxMemory.h"
 
 _AFX afxV4d const AFX_V4D_LBN = { -1, -1, -1, 1 };
 _AFX afxV4d const AFX_V4D_RBN = { 1, -1, -1, 1 };
@@ -29,6 +30,37 @@ _AFX afxV4d const AFX_V4D_LBF = { -1, -1, 1, 1 };
 _AFX afxV4d const AFX_V4D_RBF = { 1, -1, 1, 1 };
 _AFX afxV4d const AFX_V4D_RTF = { 1, 1, 1, 1 };
 _AFX afxV4d const AFX_V4D_LTF = { -1, 1, 1, 1 };
+
+_AFXINL void AfxGetFrustumCorners(afxFrustum* f, afxV3d vertices[AFX_NUM_BOX_CORNERS])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(vertices);
+    AFX_ASSERT(f);
+    AfxCopy(vertices, f->corners, sizeof(f->corners));
+}
+
+_AFXINL void AfxGetFrustumEdges(afxFrustum* f, afxV3d vertices[AFX_NUM_BOX_CORNERS], afxUnit indices[AFX_NUM_BOX_EDGE_VERTICES])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(vertices);
+    AFX_ASSERT(f);
+
+    if (vertices)
+        AfxGetFrustumCorners(f, vertices);
+
+    if (indices)
+    {
+        // Indices for the frustum, connecting the corners to form the frustum's 12 edges.
+        afxUnit const frustumIndices[] =
+        {
+            0, 1, 1, 2, 2, 3, 3, 0, // Near plane edges
+            4, 5, 5, 6, 6, 7, 7, 4, // Far plane edges
+            0, 4, 1, 5, 2, 6, 3, 7  // Connecting edges between near and far planes
+        };
+        AfxCopy(indices, frustumIndices, sizeof(frustumIndices));
+    }
+    // 24 indices (12 edges * 2 vertices per edge).
+}
 
 _AFXINL void AfxCopyFrustum(afxFrustum* f, afxFrustum const* in)
 {
@@ -74,45 +106,45 @@ _AFXINL afxResult AfxAabbTestPlanes(afxBox const* aabb, afxUnit cnt, afxPlane co
 
         afxPlane const* p = &planes[i];
 
-        if (p->normal[0] > 0.0f)
+        if (p->uvwd[0] > 0.0f)
         {
-            minD = p->normal[0] * aabb->min[0];
-            maxD = p->normal[0] * aabb->max[0];
+            minD = p->uvwd[0] * aabb->min[0];
+            maxD = p->uvwd[0] * aabb->max[0];
         }
         else
         {
-            minD = p->normal[0] * aabb->max[0];
-            maxD = p->normal[0] * aabb->min[0];
+            minD = p->uvwd[0] * aabb->max[0];
+            maxD = p->uvwd[0] * aabb->min[0];
         }
 
-        if (p->normal[1] > 0.0f)
+        if (p->uvwd[1] > 0.0f)
         {
-            minD += p->normal[1] * aabb->min[1];
-            maxD += p->normal[1] * aabb->max[1];
+            minD += p->uvwd[1] * aabb->min[1];
+            maxD += p->uvwd[1] * aabb->max[1];
         }
         else
         {
-            minD += p->normal[1] * aabb->max[1];;
-            maxD += p->normal[1] * aabb->min[1];
+            minD += p->uvwd[1] * aabb->max[1];;
+            maxD += p->uvwd[1] * aabb->min[1];
         }
 
-        if (planes[i].normal[2] > 0.0f)
+        if (p->uvwd[2] > 0.0f)
         {
-            minD += p->normal[2] * aabb->min[2];
-            maxD += p->normal[2] * aabb->max[2];
+            minD += p->uvwd[2] * aabb->min[2];
+            maxD += p->uvwd[2] * aabb->max[2];
         }
         else
         {
-            minD += p->normal[2] * aabb->max[2];
-            maxD += p->normal[2] * aabb->min[2];
+            minD += p->uvwd[2] * aabb->max[2];
+            maxD += p->uvwd[2] * aabb->min[2];
         }
 
         // What side of the plane
 
-        if (minD >= -p->offset)
+        if (minD >= -p->uvwd[AFX_PLANE_DIST])
             return +1;
 
-        if (maxD <= -p->offset)
+        if (maxD <= -p->uvwd[AFX_PLANE_DIST])
             return -1;
     }
     //Intersection
@@ -230,111 +262,66 @@ _AFXINL void AfxEmboxFrustum(afxBox* aabb, afxFrustum const* f)
     AfxEmboxPoints(aabb, afxCubeCorner_TOTAL, f->corners);
 }
 
-_AFXINL void AfxRecomputeFrustumPlanes(afxFrustum* f, afxM4d const pv)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(f);
-    AFX_ASSERT(pv);
-    afxV3d x, y, z, w;
-    AfxV3dSet(x, pv[0][0], pv[1][0], pv[2][0]);
-    AfxV3dSet(y, pv[0][1], pv[1][1], pv[2][1]);
-    AfxV3dSet(z, pv[0][2], pv[1][2], pv[2][2]);
-    AfxV3dSet(w, pv[0][3], pv[1][3], pv[2][3]);
-
-    afxV3d wMx, wPx, wMy, wPy, wMz, wPz;
-    AfxV3dSub(wMx, w, x);
-    AfxV3dAdd(wPx, w, x);
-    AfxV3dSub(wMy, w, y);
-    AfxV3dAdd(wPy, w, y);
-    AfxV3dSub(wMz, w, z);
-    AfxV3dAdd(wPz, w, z);
-
-    afxReal ww = pv[3][3];
-
-    AfxMakePlane(&f->planes[afxCubeFace_R], wMx, ww - pv[3][0]); // Right
-    AfxMakePlane(&f->planes[afxCubeFace_L], wPx, ww + pv[3][0]); // Left
-
-    AfxMakePlane(&f->planes[afxCubeFace_B], wPy, ww + pv[3][1]); // Bottom
-    AfxMakePlane(&f->planes[afxCubeFace_T], wMy, ww - pv[3][1]); // Top 
-
-    AfxMakePlane(&f->planes[afxCubeFace_F], wMz, ww - pv[3][2]); // Near (LH Coords)
-    AfxMakePlane(&f->planes[afxCubeFace_B], wPz, ww + pv[3][2]); // Far
-}
-
-_AFXINL void AfxRecomputeFrustumCorners(afxFrustum* f, afxM4d const pv)
+_AFXINL void AfxMakeFrustum(afxFrustum* f, afxM4d const pv, afxM4d const ipv)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(f);
     AFX_ASSERT(pv);
 
-    afxV4d v;
-    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_LBN);
-    v[0] /= v[3];
-    v[1] /= v[3];
-    v[2] /= v[3];
-    AfxV4dCopy(f->corners[afxCubeCorner_LBN], v);
+    /*
+        Planes in camera space (using PV matrix)
+        The frustum planes are defined in camera space, which is why we calculate them directly from the projection-view matrix (PV). 
+        The projection-view matrix is a transformation matrix that combines both the view matrix (camera's position and orientation) and 
+        the projection matrix (the camera's frustum properties).
 
-    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_RBN);
-    v[0] /= v[3];
-    v[1] /= v[3];
-    v[2] /= v[3];
-    AfxV4dCopy(f->corners[afxCubeCorner_RBN], v);
+        The frustum planes are typically extracted from the combined PV matrix because the matrix transforms geometry from world space 
+        into clip space (and ultimately into camera space after the perspective divide). The camera-space frustum planes are easy to 
+        compute by directly accessing the components of the projection-view matrix.
+    */
 
-    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_RTN);
-    v[0] /= v[3];
-    v[1] /= v[3];
-    v[2] /= v[3];
-    AfxV4dCopy(f->corners[afxCubeCorner_RTN], v);
+    // Calculate frustum planes from the view-projection matrix.
 
-    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_LTN);
-    v[0] /= v[3];
-    v[1] /= v[3];
-    v[2] /= v[3];
-    AfxV4dCopy(f->corners[afxCubeCorner_LTN], v);
+    // Left plane
+    AfxMakePlane(&f->planes[afxCubeFace_L], AFX_V3D(pv[0][3] + pv[0][0], pv[1][3] + pv[1][0], pv[2][3] + pv[2][0]), pv[3][3] + pv[3][0]);
+    // Right plane
+    AfxMakePlane(&f->planes[afxCubeFace_R], AFX_V3D(pv[0][3] - pv[0][0], pv[1][3] - pv[1][0], pv[2][3] - pv[2][0]), pv[3][3] - pv[3][0]);
+    // Bottom plane
+    AfxMakePlane(&f->planes[afxCubeFace_B], AFX_V3D(pv[0][3] + pv[0][1], pv[1][3] + pv[1][1], pv[2][3] + pv[2][1]), pv[3][3] + pv[3][1]);
+    // Top plane
+    AfxMakePlane(&f->planes[afxCubeFace_T], AFX_V3D(pv[0][3] - pv[0][1], pv[1][3] - pv[1][1], pv[2][3] - pv[2][1]), pv[3][3] - pv[3][1]);
+    // Near plane
+    AfxMakePlane(&f->planes[afxCubeFace_N], AFX_V3D(pv[0][3] + pv[0][2], pv[1][3] + pv[1][2], pv[2][3] + pv[2][2]), pv[3][3] + pv[3][2]);
+    // Far plane
+    AfxMakePlane(&f->planes[afxCubeFace_F], AFX_V3D(pv[0][3] - pv[0][2], pv[1][3] - pv[1][2], pv[2][3] - pv[2][2]), pv[3][3] - pv[3][2]);
 
-    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_LBF);
-    v[0] /= v[3];
-    v[1] /= v[3];
-    v[2] /= v[3];
-    AfxV4dCopy(f->corners[afxCubeCorner_LBF], v);
+    /*
+        Corners in world space (using inverse of projection-view matrix)
+        When extracting the frustum corners, we are interested in the coordinates of the corners in world space (not camera space), 
+        so we need to transform the corners from normalized device coordinates (NDC) to world space. The inverse of the projection-view 
+        matrix is used to map the corners from NDC (which lies between [-1, 1] in all three axes) to world space, where the camera's 
+        position and orientation are respected.
+    */
 
-    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_RBF);
-    v[0] /= v[3];
-    v[1] /= v[3];
-    v[2] /= v[3];
-    AfxV4dCopy(f->corners[afxCubeCorner_RBF], v);
+    // Define the 8 corners in normalized device coordinates (NDC)
+    afxV4d const ndcCorners[8] =
+    {
+        { -1, -1, -1, 1 },  // Near-Left-Bottom
+        {  1, -1, -1, 1 },  // Near-Right-Bottom
+        {  1,  1, -1, 1 },  // Near-Right-Top
+        { -1,  1, -1, 1 },  // Near-Left-Top
+        { -1, -1,  1, 1 },  // Far-Left-Bottom
+        {  1, -1,  1, 1 },  // Far-Right-Bottom
+        {  1,  1,  1, 1 },  // Far-Right-Top
+        { -1,  1,  1, 1 }   // Far-Left-Top
+    };
 
-    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_RTF);
-    v[0] /= v[3];
-    v[1] /= v[3];
-    v[2] /= v[3];
-    AfxV4dCopy(f->corners[afxCubeCorner_RTF], v);
-
-    AfxV4dPostMultiplyM4d(v, pv, AFX_V4D_LTF);
-    v[0] /= v[3];
-    v[1] /= v[3];
-    v[2] /= v[3];
-    AfxV4dCopy(f->corners[afxCubeCorner_LTF], v);
-}
-
-_AFXINL void AfxRecomputeFrustum3(afxFrustum* f, afxM4d const pv)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(f);
-    AFX_ASSERT(pv);
-    AfxRecomputeFrustumPlanes(f, pv);
-    AfxRecomputeFrustumCorners(f, pv);
-}
-
-_AFXINL void AfxRecomputeFrustum(afxFrustum* f, afxM4d const v, afxM4d const p)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(f);
-    AFX_ASSERT(v);
-    AFX_ASSERT(p);
-
-    afxM4d pv;
-    AfxM4dMultiplyTransposed(pv, v, p);
-    AfxV4dPostMultiplyM4d(f->origin, pv, AFX_V4D_ZERO);
-    AfxRecomputeFrustum3(f, pv);
+    // Transform the corners from NDC to world space by multiplying with the inverse projection-view matrix.
+    AfxM4dPostMultiplyV4d(ipv, ARRAY_SIZE(ndcCorners), ndcCorners, f->corners);
+    for (afxUnit i = 0; i < ARRAY_SIZE(ndcCorners); i++)
+    {
+        // Perform the perspective divide to normalize (divide by w)
+        AfxV3dDiv(f->corners[i], f->corners[i], AFX_V3D(f->corners[i][3], f->corners[i][3], f->corners[i][3]));
+        // Homogeneous coordinate after perspective divide
+        f->corners[i][3] = 1.f;
+    }
 }

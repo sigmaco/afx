@@ -36,6 +36,30 @@ AFX_OBJECT(_asxMaterial)
 AFX_OBJECT(afxMaterial)
 #endif
 {
+    // Physical
+    // The coefficient of friction is a measure of the frictional force between two surfaces in contact, represented by the ratio of 
+    // the frictional force to the normal force pressing the surfaces together. It varies depending on the materials involved and 
+    // can be classified into static (when surfaces are at rest) and kinetic (when surfaces are moving) coefficients.
+    afxReal     friction; // [ 0, 1 ]
+    // The coefficient of restitution, is the ratio of the relative velocity of separation after collision to the relative velocity 
+    // of approach before collision. It can aIso be defined as the square root of the ratio of the final kinetic energy to the initial 
+    // kinetic energy. It normally ranges from 0 to 1 where 1 would be a perfectly elastic collision. A perfectly inelastic collision 
+    // has a coefficient of 0, but a 0 value does not have to be perfectly inelastic. It is measured in the Leeb rebound hardness test.
+    afxReal     restitution; // [ 0, 1 ]
+    afxReal     density; // kg/m³ or unitless
+
+    // Visual
+    afxV3d      albedo; // base color --- (1.0, 0.5, 0.3)
+    afxReal     roughness; // [ 0, 1 ] --- 0.4
+    afxReal     metallic; // [ 0, 1 ] --- 0.1
+    avxRaster   texture; // optional
+    avxRaster   normal; // optional
+
+    // Metadata (could help for batching)
+    afxUnit32   hash; // hashed signature of the entire material
+
+    afxAabb     usageField;
+
     afxString       urn; // 128
     avxRaster       tex;
     avxSampler      smp;
@@ -99,6 +123,8 @@ AFX_DEFINE_STRUCT(avxVertexBuffer)
 
 };
 
+// Meshes just reference a material ID. This avoids material DAGs attached directly to geometry.
+
 AFX_OBJECT(afxMesh)
 {
     // TOPOLOGY DATA
@@ -106,6 +132,12 @@ AFX_OBJECT(afxMesh)
     avxTopology         topology; // actually only TRILIST
     afxUnit             triCnt; // count of primitives.
     afxUnit*            sideToAdjacentMap; // [edgeCnt]
+    union
+    {
+        // for collision
+        afxV3d*         edgeNrm; // [edgeCnt]
+        afxV4d*         edgeNrmw; // [edgeCnt]
+    };
     afxUnit             mtlCnt; // used by sections
     afxString*          materials; // [mtlCnt]
     afxUnit             secCnt;

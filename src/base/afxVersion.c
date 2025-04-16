@@ -56,7 +56,7 @@ _AFX afxBool AfxTestSystemCompatibility(afxUnit verMajor, afxUnit verMinor, afxU
 
     if (!rslt)
     {
-        AfxLogAdvertence("ABI version (%d.%d.%d) doesn't match API version (%d.%d.%d).", AFX_QWADRO_VER_MAJOR, AFX_QWADRO_VER_MINOR, AFX_QWADRO_VER_PATCH, verMajor, verMinor, verPatch);
+        AfxReportWarn("ABI version (%d.%d.%d) doesn't match API version (%d.%d.%d).", AFX_QWADRO_VER_MAJOR, AFX_QWADRO_VER_MINOR, AFX_QWADRO_VER_PATCH, verMajor, verMinor, verPatch);
     }
     return 0;
 }

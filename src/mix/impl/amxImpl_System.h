@@ -22,7 +22,7 @@
 #include "qwadro/inc/mix/afxMixSystem.h"
 
 
-AFX_DEFINE_STRUCT(_amxMixSystemAcquisition)
+AFX_DEFINE_STRUCT(_amxMsysAcquisition)
 {
     afxUnit             bridgeCnt;
     afxMixFeatures      reqFeatures;
@@ -36,6 +36,7 @@ AFX_DEFINE_STRUCT(_amxMixSystemAcquisition)
     afxClassConfig const* sndClsCfg;
     afxClassConfig const* audiClsCfg;
 
+    afxClassConfig const* msesClsCfg;
     afxClassConfig const* sinkClsCfg;
 
     afxClassConfig const* mexuClsCfg;
@@ -64,8 +65,12 @@ AFX_OBJECT(afxMixSystem)
     afxClass            audiCls;
     afxClass            brokCls;
     afxClass            mixCls;
+    afxClass            msesCls;
+    afxClass            mcdcCls;
+    afxClass            msrcCls;
+    afxClass            msnkCls;
 
-    afxAudient         heads[AFX_MAX_AUDITION_HEADS];
+    amxSoundscape         heads[AFX_MAX_AUDITION_HEADS];
 
     afxDrawSystem       dsys;
 
@@ -86,7 +91,7 @@ AFX_OBJECT(afxMixSystem)
 
 AFX_DEFINE_STRUCT(afxTrackedNote)
 {
-    afxAudio    aud;
+    amxAudio    aud;
     afxUnit     srcId;
     afxUnit     iterCnt;
     afxUnit     sampleOffset;
@@ -104,7 +109,7 @@ AFX_DEFINE_STRUCT(afxTrackedNote)
 #ifdef _AMX_AUDIENT_IMPL
 AFX_OBJECT(_amxAudient)
 #else
-AFX_OBJECT(afxAudient)
+AFX_OBJECT(amxSoundscape)
 #endif
 {
     afxTransform    placement;
@@ -120,7 +125,7 @@ AFX_OBJECT(afxAudient)
 #ifdef _AMX_SOUND_IMPL
 AFX_OBJECT(_amxSound)
 #else
-AFX_OBJECT(afxSound)
+AFX_OBJECT(amxSound)
 #endif
 {
     afxReal gain; // A value of 0.0 is meaningless with respect to a logarithmic scale; it is silent.
@@ -153,7 +158,7 @@ AFX_OBJECT(afxSound)
         afxUnit32       easeOutValues;
         void*           userData[4];
     } ctrl;
-    afxAudio    audio;
+    amxAudio    audio;
     afxUnit     chanCnt;
     afxUnit     offset;
     afxFlags    flags;
@@ -161,11 +166,11 @@ AFX_OBJECT(afxSound)
 };
 #endif
 
-#ifdef _AMX_WAVEFORM_C
+#ifdef _AMX_AUDIO_C
 #ifdef _AMX_WAVEFORM_IMPL
 AFX_OBJECT(_amxAudio)
 #else
-AFX_OBJECT(afxAudio)
+AFX_OBJECT(amxAudio)
 #endif
 {
     amxFormat       fmt; // type and bits per sample
@@ -177,6 +182,8 @@ AFX_OBJECT(afxAudio)
 
     afxUnit         fmtBps;
     afxUnit         fmtStride;
+    
+    afxString       tag;
     void*           udd;
     
     avxBufferFlags  bufFlags;
@@ -193,7 +200,7 @@ AFX_OBJECT(afxAudio)
     afxFlags        mappedFlags;
     afxBool         sysmemBuffered;
     afxAtom32       pendingRemap;
-    afxError        (*bufRemap)(afxAudio, afxUnit, afxUnit, afxFlags, void**);
+    afxError        (*bufRemap)(amxAudio, afxUnit, afxUnit, afxFlags, void**);
 };
 #endif
 
@@ -204,6 +211,8 @@ AFX_OBJECT(_amxBuffer)
 AFX_OBJECT(amxBuffer)
 #endif
 {
+    amxBufferUsage  usage;
+    amxBufferFlags  flags;
     amxFormat       fmt; // type and bits per sample
     afxUnit         sampCnt; // Number of samples (e.g., time slots)
     // its length, meaning the number of sample frames inside the buffer.
@@ -215,8 +224,7 @@ AFX_OBJECT(amxBuffer)
     afxUnit         fmtStride;
     void*           udd;
 
-    avxBufferFlags  bufFlags;
-    afxUnit         bufCap; // with any alignment
+    afxUnit         size; // with any alignment
     union
     {
         void*       data;
@@ -229,19 +237,21 @@ AFX_OBJECT(amxBuffer)
     afxFlags        mappedFlags;
     afxBool         sysmemBuffered;
     afxAtom32       pendingRemap;
-    afxError(*bufRemap)(afxAudio, afxUnit, afxUnit, afxFlags, void**);
+    afxError(*bufRemap)(amxAudio, afxUnit, afxUnit, afxFlags, void**);
 };
 #endif
 
 AMX afxClass const* _AmxGetMixBridgeClass(afxMixSystem msys);
 AMX afxClass const* _AmxGetAudioSinkClass(afxMixSystem msys);
+AMX afxClass const* _AmxGetSessionClass(afxMixSystem msys);
 
 AMX afxClassConfig const _AMX_ASIO_CLASS_CONFIG;
+AMX afxClassConfig const _AMX_MSES_CLASS_CONFIG;
 
 AMX afxClassConfig const _AMX_MBUF_CLASS_CONFIG;
 AMX afxClassConfig const _AMX_SND_CLASS_CONFIG;
-AMX afxClassConfig const _AMX_WAV_CLASS_CONFIG;
-AMX afxClassConfig const _AMX_AUDI_CLASS_CONFIG;
+AMX afxClassConfig const _AMX_AUD_CLASS_CONFIG;
+AMX afxClassConfig const _AMX_SNDS_CLASS_CONFIG;
 
 AMX afxClassConfig const _AMX_MSYS_CLASS_CONFIG;
 

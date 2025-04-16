@@ -47,7 +47,7 @@ WORD ch[] =
 _AFX afxResult AfxPrompt(afxString const* cur, afxString* buf)
 {
     afxError err = NIL;
-    AfxDbgLog(0, cur->start, cur->len);
+    AfxReport(0, cur->start, cur->len);
     int bufsize = AfxGetStringCapacity(buf, 0);
     int position = 0;
     char *buffer = AfxGetStringStorage(buf, 0);
@@ -201,6 +201,7 @@ _AFX afxResult AfxReacquireConsole(void)
                     for (afxUnit i = 0; i < 1120; i++)
                         AfxPrintf(0xFFFF0000, "%.*s", 1, &qwadroSignature.start[i * 1]);
 
+                    AfxPrintf(0x00000000, "\a");
                     Sleep(250);
 
                     SetConsoleTextAttribute(ttyOut, (WORD)(~(MAXUINT16) | FOREGROUND_INTENSITY));

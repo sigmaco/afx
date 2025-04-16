@@ -19,21 +19,17 @@
 #ifndef AFX_SPHERE_H
 #define AFX_SPHERE_H
 
-#include "qwadro/inc/math/afxVector.h"
+#include "qwadro/inc/math/bound/afxVolume.h"
 
-#pragma pack(push, 1)
-AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxSphere)
-{
-    afxV3d  centre;
-    afxReal radius;
-};
-#pragma pack(pop)
+#define AFX_SPHERE_RADIUS (3)
 
-AFX_STATIC_ASSERT(sizeof(afxSphere) == 16, "");
-AFX_STATIC_ASSERT(offsetof(afxSphere, radius) == 12, "");
+#define AFX_SPHERE(x_, y_, z_, radius_) \
+    (afxSphere){ .xyzr = { (x_), (y_), (z_), (radius_) }
 
-#define AFX_SPHERE(x_, y_, z_, radius_) (afxSphere){ .centre = { (x_), (y_), (z_) }, .radius = (radius_)}
+AFXINL afxSphere*   AfxMakeSphere(afxSphere* sph, afxV3d const centre, afxReal radius);
 
-AFXINL afxSphere* AfxMakeSphere(afxSphere* sph, afxV3d const centre, afxReal radius);
+AFXINL void         AfxGetSphereOrigin(afxSphere const sph, afxV4d centre);
+
+AFXINL afxBox       AfxGetSphereAabb(afxSphere const sph);
 
 #endif//AFX_SPHERE_H

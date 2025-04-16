@@ -102,11 +102,11 @@ _AMX afxError AfxRequestSinkBuffer(afxSink sink, afxTime timeout, afxUnit *bufId
 
             if (AfxPopInterlockedQueue(&sink->freeBuffers, &lockedBufIdx))
             {
-                afxAudio wav = sink->buffers[lockedBufIdx];
+                amxAudio wav = sink->buffers[lockedBufIdx];
 
                 if (wav)
                 {
-                    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+                    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &wav);
                 }
                 bufIdx2 = lockedBufIdx;
                 success = TRUE;
@@ -213,7 +213,7 @@ _AMX afxError _AmxAsioCtorCb(afxSink sink, void** args, afxUnit invokeNo)
         AfxDeployInterlockedQueue(&sink->freeBuffers, sizeof(afxUnit), sink->latency);
         AfxDeployInterlockedQueue(&sink->readyBuffers, sizeof(afxUnit), sink->latency);
 
-        afxAudioInfo audi = { 0 };
+        amxAudioInfo audi = { 0 };
         audi.chanCnt = sink->chanCnt;
         audi.fmt = sink->fmt;
         audi.freq = sink->freq;
@@ -222,7 +222,7 @@ _AMX afxError _AmxAsioCtorCb(afxSink sink, void** args, afxUnit invokeNo)
 
         for (afxUnit i = 0; i < sink->latency; i++)
         {
-            if (AfxAcquireAudios(msys, 1, &audi, &sink->buffers[i]))
+            if (AmxAcquireAudios(msys, 1, &audi, &sink->buffers[i]))
             {
                 AfxThrowError();
                 // Dispose all objects acquire up to this iteration.

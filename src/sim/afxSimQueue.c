@@ -64,7 +64,7 @@ _ASX void* _AsxSquePushBlob(afxSimQueue sque, afxUnit siz)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    void* blob = AfxRequestArenaUnit(&sque->workArena, siz);
+    void* blob = AfxRequestArenaUnit(&sque->workArena, siz, 1, NIL, 0);
     AFX_ASSERT(blob);
     return blob;
 }
@@ -83,7 +83,7 @@ _ASX asxWork* _AsxSquePushWork(afxSimQueue sque, afxUnit id, afxUnit siz, afxCmd
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    asxWork* work = AfxRequestArenaUnit(&sque->workArena, siz);
+    asxWork* work = AfxRequestArenaUnit(&sque->workArena, siz, 1, NIL, 0);
     AFX_ASSERT(work);
     work->hdr.id = id;
     work->hdr.siz = siz;
@@ -143,7 +143,7 @@ _ASX afxError _AsxExecuteSampleCommands(afxSimQueue sque, asxSubmission const* c
         return afxError_TIMEOUT;
 
     afxCmdId cmdId;
-    asxWork* work = _AsxSquePushWork(sque, AVX_GET_STD_WORK_ID(Execute), sizeof(work->Execute) + (cnt * sizeof(work->Execute.cmdbs[0])), &cmdId);
+    asxWork* work = _AsxSquePushWork(sque, ASX_GET_STD_WORK_ID(Execute), sizeof(work->Execute) + (cnt * sizeof(work->Execute.cmdbs[0])), &cmdId);
     AFX_ASSERT(work);
 
     if (ctrl)
@@ -179,12 +179,12 @@ _ASX afxError _AsxSqueDtorCb(afxSimQueue sque)
     AfxDeregisterChainedClasses(&sque->classes);
 
     AfxDismountClass(&sque->cmdbCls);
-    AfxDismantleSlock(&sque->cmdbReqLock);
+    AfxDismantleFutex(&sque->cmdbReqLock);
     AfxDismantleQueue(&sque->cmdbRecycQue);
 
     AfxDismantleMutex(&sque->workChnMtx);
     AfxDismantleArena(&sque->workArena);
-    AfxDismantleSlock(&sque->workArenaSlock);
+    AfxDismantleFutex(&sque->workArenaSlock);
     AfxDismantleCondition(&sque->idleCnd);
     AfxDismantleMutex(&sque->idleCndMtx);
 
@@ -209,8 +209,8 @@ _ASX afxError _AsxSqueCtorCb(afxSimQueue sque, void** args, afxUnit invokeNo)
 
     sque->immediate = 0;// !!spec->immedate;
 
-    AfxDeploySlock(&sque->workArenaSlock);
-    AfxDeployArena(&sque->workArena, NIL, AfxHere());
+    AfxDeployFutex(&sque->workArenaSlock);
+    AfxMakeArena(&sque->workArena, NIL, AfxHere());
 
     AfxDeployMutex(&sque->workChnMtx, AFX_MTX_PLAIN);
     AfxDeployChain(&sque->workChn, sexu);
@@ -222,7 +222,7 @@ _ASX afxError _AsxSqueCtorCb(afxSimQueue sque, void** args, afxUnit invokeNo)
     AfxDeployChain(&sque->classes, (void*)sque);
 
     sque->cmdbLockedForReq = FALSE;
-    AfxDeploySlock(&sque->cmdbReqLock);
+    AfxDeployFutex(&sque->cmdbReqLock);
     AfxMakeQueue(&sque->cmdbRecycQue, sizeof(afxDrawContext), 3, NIL, 0);
 
     afxClassConfig tmpClsCfg = { 0 };

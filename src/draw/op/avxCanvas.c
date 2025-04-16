@@ -20,12 +20,12 @@
 #define _AVX_CANVAS_C
 #include "../impl/avxImplementation.h"
 
-_AVX afxResult AvxTestCanvas(avxCanvas canv, afxCanvasFlags bitmask)
+_AVX afxCanvasFlags AvxGetCanvasFlags(avxCanvas canv, afxCanvasFlags bitmask)
 {
     afxError err = AFX_ERR_NONE;
     // @canv must be a valid avxCanvas handle.
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-    return canv->flags & bitmask;
+    return bitmask ? (canv->flags & bitmask) : canv->flags;
 }
 
 _AVX avxRange AvxGetCanvasArea(avxCanvas canv, avxOrigin origin)
@@ -45,8 +45,8 @@ _AVX avxRange AvxGetCanvasExtentNdc(avxCanvas canv, afxV2d const origin, afxV2d 
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
 
     afxV2d at, ran;
-    AfxNdcV2d(at, origin, AFX_V2D(canv->extent.w, canv->extent.h));
-    AfxNdcV2d(ran, extent, AFX_V2D(canv->extent.w, canv->extent.h));
+    AfxV2dNdc(at, origin, AFX_V2D(canv->extent.w, canv->extent.h));
+    AfxV2dNdc(ran, extent, AFX_V2D(canv->extent.w, canv->extent.h));
     return AVX_RANGE(ran[0], ran[1], canv->extent.d);
 }
 
@@ -77,8 +77,8 @@ _AVX afxUnit AvxGetDrawBuffers(avxCanvas canv, afxUnit baseSlotIdx, afxUnit cnt,
     AFX_ASSERT(rasters);
     afxUnit rslt = 0;
     
-    baseSlotIdx = AfxMin(baseSlotIdx, canv->slotCnt - 1);
-    cnt = AfxMax(cnt, canv->slotCnt - baseSlotIdx);
+    baseSlotIdx = AFX_MIN(baseSlotIdx, canv->slotCnt - 1);
+    cnt = AFX_MAX(cnt, canv->slotCnt - baseSlotIdx);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -102,8 +102,8 @@ _AVX afxBool AvxGetColorBuffers(avxCanvas canv, afxUnit baseSlotIdx, afxUnit cnt
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
     AFX_ASSERT_RANGE(canv->colorCnt, baseSlotIdx, cnt);
 
-    baseSlotIdx = AfxMin(baseSlotIdx, canv->colorCnt - 1);
-    cnt = AfxMax(cnt, canv->colorCnt - baseSlotIdx);
+    baseSlotIdx = AFX_MIN(baseSlotIdx, canv->colorCnt - 1);
+    cnt = AFX_MAX(cnt, canv->colorCnt - baseSlotIdx);
 
     afxBool rslt = AvxGetDrawBuffers(canv, baseSlotIdx, cnt, rasters);
     AFX_ASSERT_OBJECTS(afxFcc_RAS, rslt, rasters);
@@ -288,7 +288,7 @@ _AVX afxError AvxPrintDrawBuffer(avxCanvas canv, afxUnit slotIdx, avxRasterIo co
         AFX_ASSERT2(canv->extent.h >= op->rgn.extent.h, op->rgn.extent.h);
         AFX_ASSERT2(canv->extent.d >= op->rgn.extent.d, op->rgn.extent.d);
             
-        if (AvxPrintRaster(ras, op, 1, exuIdx, uri))
+        if (AvxPrintRaster(ras, 1, op, uri, exuIdx))
             AfxThrowError();
     }
     else
@@ -296,7 +296,7 @@ _AVX afxError AvxPrintDrawBuffer(avxCanvas canv, afxUnit slotIdx, avxRasterIo co
         avxRasterIo op2 = { 0 };
         op2.rgn.extent = AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO);
 
-        if (AvxPrintRaster(ras, &op2, 1, exuIdx, uri))
+        if (AvxPrintRaster(ras, 1, &op2, uri, exuIdx))
             AfxThrowError();
     }
     return err;
@@ -408,9 +408,9 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
     AFX_ASSERT_CAPACITY(limits->maxCanvasWhd.h, cfg->whd.h);
     AFX_ASSERT_CAPACITY(limits->maxCanvasWhd.d, cfg->whd.d);
 
-    canv->extent.w = AfxMax(1, cfg->whd.w);
-    canv->extent.h = AfxMax(1, cfg->whd.h);
-    canv->extent.d = AfxMax(1, cfg->whd.d);
+    canv->extent.w = AFX_MAX(1, cfg->whd.w);
+    canv->extent.h = AFX_MAX(1, cfg->whd.h);
+    canv->extent.d = AFX_MAX(1, cfg->whd.d);
 
     
     canv->readjust = NIL;// _SglReadjustCanvasCb;
@@ -465,7 +465,7 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
         canv->dsSlotIdx[1] = AFX_INVALID_INDEX;
     else
     {
-        canv->flags |= afxCanvasFlag_HAS_STENCIL;
+        canv->flags |= afxCanvasFlag_STENCIL;
         canv->dsSlotIdx[1] = (slotCnt - 1);
     }
 
@@ -473,7 +473,7 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
         canv->dsSlotIdx[0] = AFX_INVALID_INDEX;
     else
     {
-        canv->flags |= afxCanvasFlag_HAS_DEPTH;
+        canv->flags |= afxCanvasFlag_DEPTH;
         if (combinedDs)
         {
             canv->dsSlotIdx[0] = canv->dsSlotIdx[1];

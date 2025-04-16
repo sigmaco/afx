@@ -20,6 +20,10 @@
 #define AFX_VECTOR_H
 
 #include "qwadro/inc/math/afxScalar.h"
+#include "qwadro/inc/math/afxArithmetic.h"
+#include "qwadro/inc/math/afxLogarithmic.h"
+#include "qwadro/inc/math/afxExponential.h"
+#include "qwadro/inc/math/afxTrigonometry.h"
 
 AFX afxV2d const AFX_V2D_X;
 AFX afxV3d const AFX_V3D_X;
@@ -164,13 +168,23 @@ AFXINL void     AfxSwapV4d(afxV4d v, afxV4d other);
 // Clamping                                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 
+// Truncation removes the fractional part of a number, effectively rounding it towards zero.
+// Converting floating-point values to integers or simplifying floating-point precision.
+
 AFXINL void     AfxTruncateV2d(afxV2d v, afxV2d const in);
 AFXINL void     AfxTruncateV3d(afxV3d v, afxV3d const in);
 AFXINL void     AfxTruncateV4d(afxV4d v, afxV4d const in);
 
+// This operation clamps a value between 0 and 1. If the value is below 0, it is set to 0; if above 1, it is set to 1. 
+// Otherwise, it remains unchanged.
+// Often used in graphics for color values, blending factors, or ensuring values stay within a specific range.
+
 AFXINL void     AfxSaturateV2d(afxV2d v, afxV2d const in);
 AFXINL void     AfxSaturateV3d(afxV3d v, afxV3d const in);
 AFXINL void     AfxSaturateV4d(afxV4d v, afxV4d const in);
+
+// Normalizing a vector scales it so that its length becomes 1 (unit vector), preserving its direction.
+// Ensuring a vector has a unit length for operations like lighting calculations, physics simulations, etc.
 
 AFXINL afxReal  AfxV2dNormalize(afxV2d v, afxV2d const in);
 AFXINL afxReal  AfxV3dNormalize(afxV3d v, afxV3d const in);
@@ -223,87 +237,11 @@ AFXINL void     AfxZeroOrNormalizeArrayedV2d(afxUnit cnt, afxV2d const in[], afx
 AFXINL void     AfxZeroOrNormalizeArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[]);
 AFXINL void     AfxZeroOrNormalizeArrayedV4d(afxUnit cnt, afxV4d const in[], afxV4d out[]);
 
-////////////////////////////////////////////////////////////////////////////////
-// Arithmetica                                                                //
-////////////////////////////////////////////////////////////////////////////////
-
-// v = a + b
-
-AFXINL void     AfxV2dAdd(afxV2d v, afxV2d const a, afxV2d const b);
-AFXINL void     AfxV3dAdd(afxV3d v, afxV3d const a, afxV3d const b);
-AFXINL void     AfxV4dAdd(afxV4d v, afxV4d const a, afxV4d const b);
-
-// v = a - b
-
-AFXINL void     AfxV2dSub(afxV2d v, afxV2d const a, afxV2d const b); // v = a - b
-AFXINL void     AfxV3dSub(afxV3d v, afxV3d const a, afxV3d const b); // v = a - b
-AFXINL void     AfxV4dSub(afxV4d v, afxV4d const a, afxV4d const b); // v = a - b
-
-// v = a / b
-
-AFXINL void     AfxDivV2d(afxV2d v, afxV2d const a, afxV2d const b); // v = a / b
-AFXINL void     AfxV3dDiv(afxV3d v, afxV3d const a, afxV3d const b); // v = a / b
-AFXINL void     AfxDivV4d(afxV4d v, afxV4d const a, afxV4d const b); // v = a / b
-
-// v = a % b
-
-AFXINL void     AfxModV2d(afxV2d v, afxV2d const a, afxV2d const b); // v = a % b
-AFXINL void     AfxModV3d(afxV3d v, afxV3d const a, afxV3d const b); // v = a % b
-AFXINL void     AfxModV4d(afxV4d v, afxV4d const a, afxV4d const b); // v = a % b
-
-// v = a * lambda
-
-AFXINL void     AfxV2dScale(afxV2d v, afxV2d const a, afxReal lambda); // v = a * lambda
-AFXINL void     AfxV3dScale(afxV3d v, afxV3d const a, afxReal lambda); // v = a * lambda
-AFXINL void     AfxV4dScale(afxV4d v, afxV4d const a, afxReal lambda); // v = a * lambda
-
-// v = a * b
-
-AFXINL void     AfxV2dMultiply(afxV2d v, afxV2d const a, afxV2d const b); // v = a * b
-AFXINL void     AfxV3dMultiply(afxV3d v, afxV3d const a, afxV3d const b); // v = a * b
-AFXINL void     AfxV4dMultiply(afxV4d v, afxV4d const a, afxV4d const b); // v = a * b
-
-// vector-multiply-add (accumulate)
-// v = a * b + c
-
-AFXINL void     AfxV2dMad(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c); // v = a * b + c
-AFXINL void     AfxV3dMad(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c); // v = a * b + c
-AFXINL void     AfxV4dMad(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c); // v = a * b + c
-
-// scalar-multiply-add (accumulate)
-// v = a + b * lambda
-
-AFXINL void     AfxV2dMads(afxV2d v, afxReal lambda, afxV2d const b, afxV2d const c); // v = lambda * b + c
-AFXINL void     AfxV3dMads(afxV3d v, afxReal lambda, afxV3d const b, afxV3d const c); // v = lambda * b + c
-AFXINL void     AfxV4dMads(afxV4d v, afxReal lambda, afxV4d const b, afxV4d const c); // v = lambda * b + c
-
-// reverse subtract
-// v = c - (a * b)
-
-AFXINL void     AfxResubV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c); // v = c - (a * b)
-AFXINL void     AfxResubV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c); // v = c - (a * b)
-AFXINL void     AfxResubV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c); // v = c - (a * b)
-
-// Mix
-// The MIX function is conceptually similar to LERP but may involve additional functionality, such as more complex blending modes or different blending parameters. 
-// It is often used in shader programming and graphics.
-// v = x * (1 - t) + y * t
-
-AFXINL void     AfxV2dMix(afxV2d v, afxV2d const x, afxV2d const y, afxReal t);
-AFXINL void     AfxV3dMix(afxV3d v, afxV3d const x, afxV3d const y, afxReal t);
-AFXINL void     AfxV4dMix(afxV4d v, afxV4d const x, afxV4d const y, afxReal t);
-
-// Lerp
-// LERP is a method to interpolate linearly between two values. 
-// In the context of 4D vectors, it calculates the intermediate vector between a start and end vector based on a factor t ranging from 0.0 to 1.0.
-// x + t * (y - x)
-
-AFXINL void     AfxV2dLerp(afxV2d v, afxV2d const x, afxV2d const y, afxReal t);
-AFXINL void     AfxV3dLerp(afxV3d v, afxV3d const x, afxV3d const y, afxReal t);
-AFXINL void     AfxV4dLerp(afxV4d v, afxV4d const x, afxV4d const y, afxReal t);
-
 // SLERP
 // Function to perform Spherical Linear Interpolation (SLERP) between two quaternions
+// Slerp is a type of interpolation that smoothly interpolates between two vectors along the shortest path (on a sphere). 
+// Unlike linear interpolation, it handles rotations and vectors that lie on the surface of a sphere.
+// Rotating objects in 3D space, interpolating between two orientations (used in quaternions and rotation matrices).
 // v(t) = ((sin((1 - t) * theta)) / sin(theta)) * x + ((sin(t) * theta) / (sin(theta))) * y
 
 AFXINL void     AfxV2dSlerp(afxV2d v, afxV2d x, afxV2d y, afxReal t);
@@ -322,53 +260,8 @@ AFXINL void     AfxRsqrtV2d(afxV2d v, afxV2d const in); // v = 1 / sqrt(in)
 AFXINL void     AfxRsqrtV3d(afxV3d v, afxV3d const in); // v = 1 / sqrt(in)
 AFXINL void     AfxRsqrtV4d(afxV4d v, afxV4d const in); // v = 1 / sqrt(in)
 
-AFXINL void     AfxSinV2d(afxV2d v, afxV2d const in); // v = sin(in)
-AFXINL void     AfxSinV3d(afxV3d v, afxV3d const in); // v = sin(in)
-AFXINL void     AfxSinV4d(afxV4d v, afxV4d const in); // v = sin(in)
-
-AFXINL void     AfxCosV2d(afxV2d v, afxV2d const in); // v = cos(in)
-AFXINL void     AfxCosV3d(afxV3d v, afxV3d const in); // v = cos(in)
-AFXINL void     AfxCosV4d(afxV4d v, afxV4d const in); // v = cos(in)
-
-AFXINL void     AfxAcosV2d(afxV2d v, afxV2d const in); // v = acos(in)
-AFXINL void     AfxAcosV3d(afxV3d v, afxV3d const in); // v = acos(in)
-AFXINL void     AfxAcosV4d(afxV4d v, afxV4d const in); // v = acos(in)
-
-AFXINL void     AfxTanV2d(afxV2d v, afxV2d const in); // v = tan(in)
-AFXINL void     AfxTanV3d(afxV3d v, afxV3d const in); // v = tan(in)
-AFXINL void     AfxTanV4d(afxV4d v, afxV4d const in); // v = tan(in)
-
-AFXINL void     AfxAtanV2d(afxV2d v, afxV2d const in); // v = atan(in)
-AFXINL void     AfxAtanV3d(afxV3d v, afxV3d const in); // v = atan(in)
-AFXINL void     AfxAtanV4d(afxV4d v, afxV4d const in); // v = atan(in)
-
-AFXINL void     AfxLogV2d(afxV2d v, afxV2d const in);
-AFXINL void     AfxLogV3d(afxV3d v, afxV3d const in);
-AFXINL void     AfxLogV4d(afxV4d v, afxV4d const in);
-
-AFXINL void     AfxV2dLog2(afxV2d v, afxV2d const in);
-AFXINL void     AfxV3dLog2(afxV3d v, afxV3d const in);
-AFXINL void     AfxV4dLog2(afxV4d v, afxV4d const in);
-
-AFXINL void     AfxV2dLog10(afxV2d v, afxV2d const in);
-AFXINL void     AfxV3dLog10(afxV3d v, afxV3d const in);
-AFXINL void     AfxV4dLog10(afxV4d v, afxV4d const in);
-
-AFXINL void     AfxV2dPow(afxV2d v, afxV2d const in);
-AFXINL void     AfxV3dPow(afxV3d v, afxV3d const in);
-AFXINL void     AfxV4dPow(afxV4d v, afxV4d const in);
-
-AFXINL void     AfxV2dExp(afxV2d v, afxV2d const in);
-AFXINL void     AfxV3dExp(afxV3d v, afxV3d const in);
-AFXINL void     AfxV4dExp(afxV4d v, afxV4d const in);
-
-AFXINL void     AfxV2dExp2(afxV2d v, afxV2d const in);
-AFXINL void     AfxV3dExp2(afxV3d v, afxV3d const in);
-AFXINL void     AfxV4dExp2(afxV4d v, afxV4d const in);
-
-AFXINL void     AfxV2dExp10(afxV2d v, afxV2d const in);
-AFXINL void     AfxV3dExp10(afxV3d v, afxV3d const in);
-AFXINL void     AfxV4dExp10(afxV4d v, afxV4d const in);
+// Negates a vector or scalar, flipping its sign. For a vector, it inverts the direction of the vector.
+// Used in physics simulations, reversing directions, negating forces, etc.
 
 AFXINL void     AfxV2dNeg(afxV2d v, afxV2d const in);
 AFXINL void     AfxV3dNeg(afxV3d v, afxV3d const in);
@@ -389,12 +282,16 @@ AFXINL afxReal  AfxV3dDot(afxV3d const v, afxV3d const other);
 AFXINL afxReal  AfxV4dDot(afxV4d const v, afxV4d const other);
 
 // The AfxV*dDist function calculates the distance between two vectors.
+// Computes the Euclidean distance between two points or vectors in space. It is used to measure the straight-line distance between two points.
+// Measuring distances between two points (e.g., in collision detection, pathfinding).
 
 AFXINL afxReal  AfxV2dDist(afxV2d const v, afxV2d const other);
 AFXINL afxReal  AfxV3dDist(afxV3d const v, afxV3d const other);
 AFXINL afxReal  AfxV4dDist(afxV4d const v, afxV4d const other);
 
 // Computes the squared magnitude
+// This is a simple operation that squares a scalar value (multiplies it by itself). It's used to compute the square of a number or a component.
+// Used in distance calculations, computing the squared length of a vector, etc.
 
 AFXINL afxReal  AfxV2dSq(afxV2d const v);
 AFXINL afxReal  AfxV3dSq(afxV3d const v);

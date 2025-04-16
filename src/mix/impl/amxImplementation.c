@@ -25,7 +25,7 @@
 //#define _AMX_MIX_SYSTEM_C
 //#define _AMX_MIX_QUEUE_C
 //#define _AMX_BUFFER_C
-//#define _AMX_WAVEFORM_C
+//#define _AMX_AUDIO_C
 //#define _AMX_VOICE_C
 //#define _AMX_MIX_CONTEXT_C
 //#define _AMX_SINK_C
@@ -138,7 +138,7 @@ _AMX afxError _AmxRegisterAudioStreamInterface(afxModule icd, afxClassConfig con
     // AfxOpenAudioSink(vaioId, "//./in2"); // headmic
     // AfxOpenAudioSink(vaioId, "//./in3"); // mix
 
-    if (AfxMountClass(&icd->icd.asiCls, (afxClass*)AfxGetDeviceClass(), &icd->classes, &clsCfg)) // require base*
+    if (AfxMountClass(&icd->icd.asiCls, (afxClass*)_AfxGetDeviceClass(), &icd->classes, &clsCfg)) // require base*
     {
         AfxThrowError();
     }
@@ -187,7 +187,7 @@ _AMX afxError _AmxImplementMixSystem(afxModule icd, afxClassConfig const* mdevCl
         {
             AfxThrowError();
         }
-        else if (AfxMountClass(&icd->icd.mdevCls, (afxClass*)AfxGetDeviceClass(), &icd->classes, &clsCfg)) // require base*
+        else if (AfxMountClass(&icd->icd.mdevCls, (afxClass*)_AfxGetDeviceClass(), &icd->classes, &clsCfg)) // require base*
         {
             AfxThrowError();
         }
@@ -262,7 +262,7 @@ _AMX afxError amxScmHook(afxModule mdle, afxManifest const* ini)
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
-    //AfxMountClass(&sys->amx.sdevCls, (afxClass*)AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AMX_MDEV_CLASS_CONFIG); // require base*
+    //AfxMountClass(&sys->amx.sdevCls, (afxClass*)_AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AMX_MDEV_CLASS_CONFIG); // require base*
 
     if (!err)
     {
@@ -313,7 +313,7 @@ _AMX afxError amxIcdHook(afxModule icd, afxUri const* manifest)
         _amxMixDeviceRegistration mdevInfos[] =
         {
             {
-                .dev.urn = AfxString("vaio"),
+                .dev.urn = AFX_STRING("vaio"),
                 .dev.type = afxDeviceType_SOUND,
 
                 .features = features,

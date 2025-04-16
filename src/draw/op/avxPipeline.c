@@ -69,7 +69,7 @@ _AVX avxPipelineBlueprint const AVX_PIPELINE_BLUEPRINT_DEFAULT =
     .depthClampEnabled = FALSE,
 
     .rasterizationDisabled = FALSE,
-    .fillMode = avxFillMode_SOLID,
+    .fillMode = avxFillMode_FACE,
     .lineWidth = 1.f,
 
     .depthBiasEnabled = FALSE,
@@ -77,9 +77,9 @@ _AVX avxPipelineBlueprint const AVX_PIPELINE_BLUEPRINT_DEFAULT =
     .depthBiasConstFactor = 0.f,
     .depthBiasClamp = 0.f,
 
-    .msEnabled = FALSE,
-    .sampleLvl = 0,
-    .sampleMasks =
+    .ms.msEnabled = FALSE,
+    .ms.sampleLvl = 0,
+    .ms.sampleMasks =
     {
         1, 1, 1, 1, 1, 1, 1, 1,
         1, 1, 1, 1, 1, 1, 1, 1,
@@ -87,10 +87,10 @@ _AVX avxPipelineBlueprint const AVX_PIPELINE_BLUEPRINT_DEFAULT =
         1, 1, 1, 1, 1, 1, 1, 1
     },
     
-    .alphaToOneEnabled = FALSE,
-    .alphaToCoverageEnabled = FALSE,
-    .sampleShadingEnabled = FALSE,
-    .minSampleShadingValue = 0.f,
+    .ms.alphaToOneEnabled = FALSE,
+    .ms.alphaToCoverageEnabled = FALSE,
+    .ms.sampleShadingEnabled = FALSE,
+    .ms.minSampleShadingValue = 0.f,
 
     .stencilTestEnabled = FALSE,
     .stencilFront = AVX_STENCIL_INFO_DEFAULT,
@@ -122,7 +122,7 @@ _AVX avxPipelineBlueprint const AVX_PIPELINE_BLUEPRINT_DEFAULT =
     .pixelLogicOp = avxLogicOp_COPY
 };
 
-_AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, afxUnit specId, avxPipelineBlueprint* pipb, avxShaderStage shaderStages[], afxUri shaderUris[], afxString shaderFns[])
+_AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, afxUnit specId, avxPipelineBlueprint* pipb, avxShaderType shaderStages[], afxUri shaderUris[], afxString shaderFns[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pipb);
@@ -155,12 +155,16 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
 
     afxString name, content, acontent;
     afxUnit tagCnt = AfxCountXmlTags(xml, elemIdx);
+    afxUnit sIdx;
 
     for (afxUnit i = 0; i < tagCnt; i++)
     {
         AfxQueryXmlTag(xml, elemIdx, i, &name, &acontent);
-
-        switch (AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(pipAttrNames), pipAttrNames))
+        
+        if (!AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(pipAttrNames), pipAttrNames, &sIdx))
+            continue;
+        
+        switch (sIdx)
         {
         case 0: // topology
         {
@@ -318,7 +322,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
         }
         default:
         {
-            AfxLogY("Tag '%.*s' not handled.", AfxPushString(&name));
+            AfxReportY("Tag '%.*s' not handled.", AfxPushString(&name));
             break;
         }
         }
@@ -343,9 +347,9 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
         AfxQueryXmlElement(xml, childElemIdx, &name, &content);
         afxUnit childTagCnt = AfxCountXmlTags(xml, childElemIdx);
 
-        if (0 == AfxCompareStrings(&name, 0, TRUE, 1, &AFX_STRING("Shader")))
+        if (AfxCompareStrings(&name, 0, TRUE, 1, &AFX_STRING("Shader"), NIL))
         {
-            avxShaderStage shdStage = NIL;
+            avxShaderType shdStage = NIL;
             afxString shdFn = { 0 };
             afxUri shdUri = { 0 };
 
@@ -359,22 +363,29 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
             for (afxUnit j = 0; j < childTagCnt; j++)
             {
                 AfxQueryXmlTag(xml, childElemIdx, j, &name, &acontent);
-
-                switch (AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(shdAttrNames), shdAttrNames))
+                
+                afxUnit sIdx;
+                if (!AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(shdAttrNames), shdAttrNames, &sIdx))
+                    continue;
+                
+                switch (sIdx)
                 {
                 case 0: // stage
                 {
-                    switch (AfxCompareStrings(&acontent, 0, TRUE, ARRAY_SIZE(stageNames), stageNames))
+                    if (!AfxCompareStrings(&acontent, 0, TRUE, ARRAY_SIZE(stageNames), stageNames, &sIdx))
+                        continue;
+
+                    switch (sIdx)
                     {
-                    case avxShaderStage_VERTEX: shdStage = avxShaderStage_VERTEX; break;
-                    case avxShaderStage_FRAGMENT: shdStage = avxShaderStage_FRAGMENT; break;
-                    case avxShaderStage_PRIMITIVE: shdStage = avxShaderStage_PRIMITIVE; break;
-                    case avxShaderStage_TESS_CTRL: shdStage = avxShaderStage_TESS_CTRL; break;
-                    case avxShaderStage_TESS_EVAL: shdStage = avxShaderStage_TESS_EVAL; break;
-                    case avxShaderStage_COMPUTE: shdStage = avxShaderStage_COMPUTE; break;
+                    case avxShaderType_VERTEX: shdStage = avxShaderType_VERTEX; break;
+                    case avxShaderType_FRAGMENT: shdStage = avxShaderType_FRAGMENT; break;
+                    case avxShaderType_PRIMITIVE: shdStage = avxShaderType_PRIMITIVE; break;
+                    case avxShaderType_TESS_CTRL: shdStage = avxShaderType_TESS_CTRL; break;
+                    case avxShaderType_TESS_EVAL: shdStage = avxShaderType_TESS_EVAL; break;
+                    case avxShaderType_COMPUTE: shdStage = avxShaderType_COMPUTE; break;
                     default:
                     {
-                        AfxLogY("Shader stage '%.*s' not handled.", AfxPushString(&acontent));
+                        AfxReportY("Shader stage '%.*s' not handled.", AfxPushString(&acontent));
                         break;
                     }
                     }
@@ -386,7 +397,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
                     {
                         afxUri tempUri;
                         AfxWrapUriString(&tempUri, &acontent);
-                        AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
+                        AfxReportMessage("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                         AfxReplicateUri(&shdUri, &tempUri);
                     }
@@ -402,7 +413,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
                 }
                 default:
                 {
-                    AfxLogY("Tag '%.*s' not handled.", AfxPushString(&name));
+                    AfxReportY("Tag '%.*s' not handled.", AfxPushString(&name));
                     break;
                 }
                 }
@@ -424,7 +435,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
 
             ++config.stageCnt;
         }
-        else if (0 == AfxCompareStrings(&name, 0, TRUE, 1, &AFX_STRING("Stencil")))
+        else if (AfxCompareStrings(&name, 0, TRUE, 1, &AFX_STRING("Stencil"), NIL))
         {
             avxStencilInfo si = { 0 };
 
@@ -448,7 +459,11 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
             {
                 AfxQueryXmlTag(xml, childElemIdx, j, &name, &acontent);
 
-                switch (AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(shdAttrNames), shdAttrNames))
+                afxUnit sIdx;
+                if (!AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(shdAttrNames), shdAttrNames, &sIdx))
+                    continue;
+
+                switch (sIdx)
                 {
                 case 0: // compareOp
                 {
@@ -512,7 +527,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
                 }
                 default:
                 {
-                    AfxLogY("Tag '%.*s' not handled.", AfxPushString(&name));
+                    AfxReportY("Tag '%.*s' not handled.", AfxPushString(&name));
                     break;
                 }
                 }
@@ -526,7 +541,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, 
         }
         else
         {
-            AfxLogY("Node '%.*s' not handled.", AfxPushString(&name));
+            AfxReportY("Node '%.*s' not handled.", AfxPushString(&name));
         }
     }
 
@@ -592,20 +607,39 @@ _AVX void AvxDescribePipeline(avxPipeline pip, avxPipelineInfo* info)
     info->tag = pip->tag;
 
     info->stageCnt = pip->stageCnt;
-    info->primTopology = pip->primTop;
+    info->liga = pip->liga;
+}
+
+_AVX void AvxDescribePipelineTransformation(avxPipeline pip, avxTransformation* info)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
+
+    info->transformationDisabled = pip->transformationDisabled;
+    // Vertex shading
+    info->vin = pip->vin;
+    // Primitive assembling
+    info->primTop = pip->primTop;
     info->primRestartEnabled = pip->primRestartEnabled;
+    // Tesselation
+    info->tesselationEnabled = pip->tesselationEnabled;
+    info->patchCtrlPoints = pip->patchControlPoints;
+    // Primitive shading
+    info->primShaderSupported = FALSE;
+
+    // Clipping
     info->depthClampEnabled = pip->depthClampEnabled;
+    // Culling
     info->cullMode = pip->cullMode;
     info->frontFacingInverted = pip->frontFacingInverted;
-    info->liga = pip->liga;
-    info->vin = pip->vin;
-    
-    // rasterization
+    // Viewport transform
+    info->vpCnt = pip->vpCnt;
+}
 
-    //info->dsFlags = pip->dsFlags;
-    //info->msFlags = pip->msFlags;
-    //info->rasFlags = pip->rasFlags;
-    //info->pixelFlags = pip->pixelFlags;
+_AVX void AvxDescribePipelineRasterization(avxPipeline pip, avxRasterization* info)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
 
     info->fillMode = pip->fillMode;
     info->lineWidth = pip->lineWidth;
@@ -615,15 +649,19 @@ _AVX void AvxDescribePipeline(avxPipeline pip, avxPipelineInfo* info)
     info->depthBiasConstFactor = pip->depthBiasConstFactor;
     info->depthBiasClamp = pip->depthBiasClamp;
 
-    info->msEnabled = pip->msEnabled;
+    {
+        // Multisampling
 
-    if ((info->sampleLvl = pip->sampleLvl))
-        AfxCopy2(info->sampleMasks, pip->sampleMasks, sizeof(pip->sampleMasks[0]), pip->sampleLvl);
+        info->ms.msEnabled = pip->msEnabled;
 
-    info->alphaToOneEnabled = pip->alphaToOneEnabled;
-    info->alphaToCoverageEnabled = pip->alphaToCoverageEnabled;
-    info->sampleShadingEnabled = pip->sampleShadingEnabled;
-    info->minSampleShadingValue = pip->minSampleShadingValue;
+        if ((info->ms.sampleLvl = pip->sampleLvl))
+            AfxCopy2(info->ms.sampleMasks, pip->sampleMasks, sizeof(pip->sampleMasks[0]), pip->sampleLvl);
+
+        info->ms.alphaToOneEnabled = pip->alphaToOneEnabled;
+        info->ms.alphaToCoverageEnabled = pip->alphaToCoverageEnabled;
+        info->ms.sampleShadingEnabled = pip->sampleShadingEnabled;
+        info->ms.minSampleShadingValue = pip->minSampleShadingValue;
+    }
 
     if ((info->stencilTestEnabled = pip->stencilTestEnabled))
     {
@@ -675,11 +713,11 @@ _AVX afxUnit AvxGetMultisamplingMasks(avxPipeline pip, afxUnit first, afxUnit cn
     return i;
 }
 
-_AVX afxBool AvxGetPipelineShader(avxPipeline pip, avxShaderStage stage, avxShader* shader)
+_AVX afxBool AvxGetPipelineShader(avxPipeline pip, avxShaderType stage, avxShader* shader)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
-    AFX_ASSERT_RANGE(avxShaderStage_TOTAL, stage, 1);
+    AFX_ASSERT_RANGE(avxShaderType_TOTAL, stage, 1);
     afxBool found = FALSE;
 
     for (afxUnit slotIdx = 0; slotIdx < pip->stageCnt; slotIdx++)
@@ -704,7 +742,7 @@ _AVX afxUnit AvxGetPipelineShaders(avxPipeline pip, afxIndex first, afxUnit cnt,
     AFX_ASSERT(cnt);
     AFX_ASSERT(shaders);
     afxUnit hitCnt = 0;
-    cnt = AfxMin(pip->stageCnt, cnt);
+    cnt = AFX_MIN(pip->stageCnt, cnt);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -714,11 +752,11 @@ _AVX afxUnit AvxGetPipelineShaders(avxPipeline pip, afxIndex first, afxUnit cnt,
     return hitCnt;
 }
 
-_AVX afxError AvxRelinkPipelineFunction(avxPipeline pip, avxShaderStage stage, avxShader shd, afxString const* fn, afxUnit const specIds[], void const* specValues[])
+_AVX afxError AvxRelinkPipelineFunction(avxPipeline pip, avxShaderType stage, avxShader shd, afxString const* fn, afxUnit const specIds[], void const* specValues[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
-    AFX_ASSERT_RANGE(avxShaderStage_TOTAL, stage, 1);
+    AFX_ASSERT_RANGE(avxShaderType_TOTAL, stage, 1);
     (void)specIds;
     (void)specValues;
 
@@ -801,11 +839,11 @@ _AVX afxError AvxRelinkPipelineFunction(avxPipeline pip, avxShaderStage stage, a
     return err;
 }
 
-_AVX afxError AvxUplinkPipelineFunction(avxPipeline pip, avxShaderStage stage, afxUri const* uri, afxString const* fn, afxUnit const specIds[], void const* specValues[])
+_AVX afxError AvxUplinkPipelineFunction(avxPipeline pip, avxShaderType stage, afxUri const* uri, afxString const* fn, afxUnit const specIds[], void const* specValues[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
-    AFX_ASSERT_RANGE(avxShaderStage_TOTAL, stage, 1);
+    AFX_ASSERT_RANGE(avxShaderType_TOTAL, stage, 1);
 
     if (AfxIsUriBlank(uri))
     {
@@ -832,11 +870,11 @@ _AVX afxError AvxUplinkPipelineFunction(avxPipeline pip, avxShaderStage stage, a
     return err;
 }
 
-_AVX afxError AfxRecompilePipelineFunction(avxPipeline pip, avxShaderStage stage, afxString const* code, afxString const* fn, afxUnit const specIds[], void const* specValues[])
+_AVX afxError AfxRecompilePipelineFunction(avxPipeline pip, avxShaderType stage, afxString const* code, afxString const* fn, afxUnit const specIds[], void const* specValues[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
-    AFX_ASSERT_RANGE(avxShaderStage_TOTAL, stage, 1);
+    AFX_ASSERT_RANGE(avxShaderType_TOTAL, stage, 1);
     AFX_ASSERT(code);
 
     if (AfxIsStringEmpty(code))
@@ -925,12 +963,16 @@ _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
     
     // GRAPHICS STATE SETTING
 
-    afxUnit sampleMaskCnt = AfxMin(razb->sampleLvl, AVX_MAX_SAMPLE_MASKS);
-    afxUnit colorOutCnt = AfxMin(AfxMax(1, razb->colorOutCnt), AVX_MAX_COLOR_OUTPUTS);
+    afxUnit sampleMaskCnt = AFX_MIN(razb->ms.sampleLvl, AVX_MAX_SAMPLE_MASKS);
+    afxUnit colorOutCnt = AFX_MIN(AFX_MAX(1, razb->colorOutCnt), AVX_MAX_COLOR_OUTPUTS);
 
     pip->tag = pipb->tag;
 
     pip->liga = NIL;
+
+    pip->specializedWorkGrpSiz[0] = pipb->specializedWorkGrpSiz[0];
+    pip->specializedWorkGrpSiz[1] = pipb->specializedWorkGrpSiz[1];
+    pip->specializedWorkGrpSiz[2] = pipb->specializedWorkGrpSiz[2];
 
     pip->transformationDisabled = !!pipb->transformationDisabled;
     pip->tesselationEnabled = !pip->transformationDisabled && !!pipb->tesselationEnabled;
@@ -939,7 +981,7 @@ _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
     pip->primTop = pipb->primTop;
     pip->patchControlPoints = pipb->patchCtrlPoints;
     pip->cullMode = pipb->cullMode;
-    pip->vpCnt = AfxClamp(pipb->vpCnt, 1, 8);
+    pip->vpCnt = AFX_CLAMP(pipb->vpCnt, 1, 8);
 
     //avxRasterizationFlags rasFlags = razb->rasFlags;
     //avxMultisamplingFlags msFlags = razb->msFlags;
@@ -958,8 +1000,8 @@ _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
     pip->depthBiasConstFactor = razb->depthBiasConstFactor;
     pip->depthBiasClamp = razb->depthBiasClamp;
 
-    pip->msEnabled = !!razb->msEnabled;
-    pip->minSampleShadingValue = razb->minSampleShadingValue;
+    pip->msEnabled = !!razb->ms.msEnabled;
+    pip->minSampleShadingValue = razb->ms.minSampleShadingValue;
 
     pip->depthTestEnabled = !!razb->depthTestEnabled;
     pip->depthCompareOp = razb->depthCompareOp;
@@ -1018,58 +1060,62 @@ _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
         }
     };
 
-    if (AfxAllocateInstanceData(pip, ARRAY_SIZE(stashes), stashes)) AfxThrowError();
+    if (AfxAllocateInstanceData(pip, ARRAY_SIZE(stashes), stashes))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    pip->outCnt = colorOutCnt;
+    for (afxUnit i = 0; i < colorOutCnt; i++)
+        pip->outs[i] = i < razb->colorOutCnt ? razb->colorOuts[i] : (avxColorOutput) { 0 };
+
+    pip->sampleLvl = sampleMaskCnt;
+    for (afxUnit i = 0; i < sampleMaskCnt; i++)
+        pip->sampleMasks[i] = i < razb->ms.sampleLvl ? razb->ms.sampleMasks[i] : (afxMask) { 0 };
+
+    pip->stageCnt = stageCnt;
+    for (afxUnit i = 0; i < pip->stageCnt; i++)
+    {
+        avxShaderSlot* slot = &pip->stages[i];
+        AfxZero(slot, sizeof(*slot));
+    }
+
+    if (pip->transformationDisabled) pip->stages[0].stage = avxShaderType_COMPUTE;
     else
     {
-        pip->outCnt = colorOutCnt;
-        for (afxUnit i = 0; i < colorOutCnt; i++)
-            pip->outs[i] = i < razb->colorOutCnt ? razb->colorOuts[i] : (avxColorOutput) { 0 };
+        afxUnit nextStageIdx = 0;
+        pip->stages[nextStageIdx++].stage = avxShaderType_VERTEX;
 
-        pip->sampleLvl = sampleMaskCnt;
-        for (afxUnit i = 0; i < sampleMaskCnt; i++)
-            pip->sampleMasks[i] = i < razb->sampleLvl ? razb->sampleMasks[i] : (afxMask) { 0 };
-
-        pip->stageCnt = stageCnt;
-        for (afxUnit i = 0; i < pip->stageCnt; i++)
+        if (pip->tesselationEnabled)
         {
-            avxShaderSlot* slot = &pip->stages[i];
-            AfxZero(slot, sizeof(*slot));
+            pip->stages[nextStageIdx++].stage = avxShaderType_TESS_CTRL;
+            pip->stages[nextStageIdx++].stage = avxShaderType_TESS_EVAL;
         }
 
-        if (pip->transformationDisabled) pip->stages[0].stage = avxShaderStage_COMPUTE;
-        else
+        if (pipb->primShaderSupported)
         {
-            afxUnit nextStageIdx = 0;
-            pip->stages[nextStageIdx++].stage = avxShaderStage_VERTEX;
-
-            if (pip->tesselationEnabled)
-            {
-                pip->stages[nextStageIdx++].stage = avxShaderStage_TESS_CTRL;
-                pip->stages[nextStageIdx++].stage = avxShaderStage_TESS_EVAL;
-            }
-
-            if (pipb->primShaderSupported)
-            {
-                pip->stages[nextStageIdx++].stage = avxShaderStage_PRIMITIVE;
-            }
-
-            if (!pip->rasterizationDisabled)
-            {
-                pip->stages[nextStageIdx++].stage = avxShaderStage_FRAGMENT;
-            }
+            pip->stages[nextStageIdx++].stage = avxShaderType_PRIMITIVE;
         }
 
-        if ((pip->vin = pipb->vin))
+        if (!pip->rasterizationDisabled)
         {
-            pip->vin = pipb->vin;
-            AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &pip->vin);
-            AfxReacquireObjects(1, &pip->vin);
+            pip->stages[nextStageIdx++].stage = avxShaderType_FRAGMENT;
         }
-
-        if (err && AfxDeallocateInstanceData(pip, ARRAY_SIZE(stashes), stashes))
-            AfxThrowError();
     }
+
+    if ((pip->vin = pipb->vin))
+    {
+        pip->vin = pipb->vin;
+        AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &pip->vin);
+        AfxReacquireObjects(1, &pip->vin);
+    }
+
+    if (err && AfxDeallocateInstanceData(pip, ARRAY_SIZE(stashes), stashes))
+        AfxThrowError();
+
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
+
     return err;
 }
 
@@ -1077,7 +1123,7 @@ _AVX afxClassConfig const _AVX_PIP_CLASS_CONFIG =
 {
     .fcc = afxFcc_PIP,
     .name = "Pipeline",
-    .desc = "Draw Pipeline State",
+    .desc = "Drawing Device Execution Pipeline",
     .fixedSiz = sizeof(AFX_OBJECT(avxPipeline)),
     .ctor = (void*)_AvxPipCtorCb,
     .dtor = (void*)_AvxPipDtorCb
@@ -1135,77 +1181,100 @@ _AVX afxError AvxAssemblePipelines(afxDrawSystem dsys, afxUnit cnt, avxPipelineB
         avxPipelineBlueprint const* c = &cfg[i];
         avxPipeline pip = pipelines[i];
 
-        AFX_ASSERT(c->vin == pip->vin);
-        AFX_ASSERT(c->alphaToCoverageEnabled == pip->alphaToCoverageEnabled);
-        AFX_ASSERT(c->alphaToOneEnabled == pip->alphaToOneEnabled);
-        AFX_ASSERT(pip->blendConstants[0] == c->blendConstants[0]);
-        AFX_ASSERT(pip->blendConstants[1] == c->blendConstants[1]);
-        AFX_ASSERT(pip->blendConstants[2] == c->blendConstants[2]);
-        AFX_ASSERT(pip->blendConstants[3] == c->blendConstants[3]);
-        AFX_ASSERT((pip->outCnt == c->colorOutCnt) || ((c->colorOutCnt == 0) && (pip->outCnt == 1)));
-        
-        for (afxUnit j = 0; j < c->sampleLvl; j++)
-        {
-            AFX_ASSERT(pip->outs[j].blendEnabled == c->colorOuts[j].blendEnabled);
-            AFX_ASSERT(pip->outs[j].blendConfig.aBlendOp == c->colorOuts[j].blendConfig.aBlendOp);
-            AFX_ASSERT(pip->outs[j].blendConfig.aDstFactor == c->colorOuts[j].blendConfig.aDstFactor);
-            AFX_ASSERT(pip->outs[j].blendConfig.aSrcFactor == c->colorOuts[j].blendConfig.aSrcFactor);
-            AFX_ASSERT(pip->outs[j].blendConfig.rgbBlendOp == c->colorOuts[j].blendConfig.rgbBlendOp);
-            AFX_ASSERT(pip->outs[j].blendConfig.rgbDstFactor == c->colorOuts[j].blendConfig.rgbDstFactor);
-            AFX_ASSERT(pip->outs[j].blendConfig.rgbSrcFactor == c->colorOuts[j].blendConfig.rgbSrcFactor);
-            AFX_ASSERT(pip->outs[j].discardMask == c->colorOuts[j].discardMask);
-        }
-        AFX_ASSERT(pip->cullMode == c->cullMode);
-        AFX_ASSERT(pip->depthBiasClamp == c->depthBiasClamp);
-        AFX_ASSERT(pip->depthBiasConstFactor == c->depthBiasConstFactor);
-        AFX_ASSERT(pip->depthBiasEnabled == c->depthBiasEnabled);
-        AFX_ASSERT(pip->depthBiasSlopeScale == c->depthBiasSlopeScale);
-        AFX_ASSERT(pip->depthBounds[0] == c->depthBounds[0]);
-        AFX_ASSERT(pip->depthBounds[1] == c->depthBounds[1]);
-        AFX_ASSERT(pip->depthBoundsTestEnabled == c->depthBoundsTestEnabled);
-        AFX_ASSERT(pip->depthClampEnabled == c->depthClampEnabled);
-        AFX_ASSERT(pip->depthCompareOp == c->depthCompareOp);
-        AFX_ASSERT(pip->depthTestEnabled == c->depthTestEnabled);
-        AFX_ASSERT(pip->depthWriteDisabled == c->depthWriteDisabled);
-        AFX_ASSERT(pip->dsFmt == c->dsFmt);
-        AFX_ASSERT(pip->fillMode == c->fillMode);
-        AFX_ASSERT(pip->frontFacingInverted == c->frontFacingInverted);
         AFX_ASSERT(pip->tag.start == c->tag.start);
-        AFX_ASSERT(pip->lineWidth == c->lineWidth);
-        AFX_ASSERT(pip->minSampleShadingValue == c->minSampleShadingValue);
-        AFX_ASSERT(pip->msEnabled == c->msEnabled);
-        AFX_ASSERT(pip->patchControlPoints == c->patchCtrlPoints);
-        AFX_ASSERT(pip->logicOp == c->pixelLogicOp);
-        AFX_ASSERT(pip->logicOpEnabled == c->pixelLogicOpEnabled);
-        AFX_ASSERT(pip->primRestartEnabled == c->primRestartEnabled);
-        //AFX_ASSERT(pip->primShaderSupported == c->primShaderSupported);
-        AFX_ASSERT(pip->primTop == c->primTop);
-        AFX_ASSERT(pip->rasterizationDisabled == c->rasterizationDisabled);
-        AFX_ASSERT(pip->sampleLvl == c->sampleLvl);
-        for (afxUnit j = 0; j < c->sampleLvl; j++)
-        {
-            AFX_ASSERT(pip->sampleMasks[j] == c->sampleMasks[j]);
-        }
-        AFX_ASSERT(pip->sampleShadingEnabled == c->sampleShadingEnabled);
+
         AFX_ASSERT(pip->stageCnt >= c->stageCnt);
-        AFX_ASSERT(c->stencilBack.compareMask == pip->stencilBack.compareMask);
-        AFX_ASSERT(c->stencilBack.compareOp == pip->stencilBack.compareOp);
-        AFX_ASSERT(c->stencilBack.depthFailOp == pip->stencilBack.depthFailOp);
-        AFX_ASSERT(c->stencilBack.failOp == pip->stencilBack.failOp);
-        AFX_ASSERT(c->stencilBack.passOp == pip->stencilBack.passOp);
-        AFX_ASSERT(c->stencilBack.reference == pip->stencilBack.reference);
-        AFX_ASSERT(c->stencilBack.writeMask == pip->stencilBack.writeMask);
-        AFX_ASSERT(c->stencilFront.compareMask == pip->stencilFront.compareMask);
-        AFX_ASSERT(c->stencilFront.compareOp == pip->stencilFront.compareOp);
-        AFX_ASSERT(c->stencilFront.depthFailOp == pip->stencilFront.depthFailOp);
-        AFX_ASSERT(c->stencilFront.failOp == pip->stencilFront.failOp);
-        AFX_ASSERT(c->stencilFront.passOp == pip->stencilFront.passOp);
-        AFX_ASSERT(c->stencilFront.reference == pip->stencilFront.reference);
-        AFX_ASSERT(c->stencilFront.writeMask == pip->stencilFront.writeMask);
-        AFX_ASSERT(c->stencilTestEnabled == pip->stencilTestEnabled);
-        AFX_ASSERT(c->tesselationEnabled == pip->tesselationEnabled);
+
         AFX_ASSERT(c->transformationDisabled == pip->transformationDisabled);
+        AFX_ASSERT(c->vin == pip->vin);
+        AFX_ASSERT(pip->primTop == c->primTop);
+        AFX_ASSERT(pip->primRestartEnabled == c->primRestartEnabled);
+        AFX_ASSERT(pip->patchControlPoints == c->patchCtrlPoints);
+        AFX_ASSERT(pip->cullMode == c->cullMode);
+        AFX_ASSERT(pip->frontFacingInverted == c->frontFacingInverted);
+        AFX_ASSERT(pip->depthClampEnabled == c->depthClampEnabled);
+        AFX_ASSERT(c->tesselationEnabled == pip->tesselationEnabled);
         AFX_ASSERT((c->vpCnt == pip->vpCnt) || ((c->vpCnt == 0) && (pip->vpCnt == 1)));
+
+        {
+            AFX_ASSERT(pip->rasterizationDisabled == c->rasterizationDisabled);
+            AFX_ASSERT(pip->fillMode == c->fillMode);
+            AFX_ASSERT(pip->lineWidth == c->lineWidth);
+
+            AFX_ASSERT(pip->depthBiasClamp == c->depthBiasClamp);
+            AFX_ASSERT(pip->depthBiasConstFactor == c->depthBiasConstFactor);
+            AFX_ASSERT(pip->depthBiasEnabled == c->depthBiasEnabled);
+            AFX_ASSERT(pip->depthBiasSlopeScale == c->depthBiasSlopeScale);
+
+            {
+                // Test multisampling
+
+                AFX_ASSERT(pip->msEnabled == c->ms.msEnabled);
+                AFX_ASSERT(pip->sampleLvl == c->ms.sampleLvl);
+                for (afxUnit j = 0; j < c->ms.sampleLvl; j++)
+                {
+                    AFX_ASSERT(pip->sampleMasks[j] == c->ms.sampleMasks[j]);
+                }
+                AFX_ASSERT(pip->sampleShadingEnabled == c->ms.sampleShadingEnabled);
+                AFX_ASSERT(pip->minSampleShadingValue == c->ms.minSampleShadingValue);
+                AFX_ASSERT(c->ms.alphaToCoverageEnabled == pip->alphaToCoverageEnabled);
+                AFX_ASSERT(c->ms.alphaToOneEnabled == pip->alphaToOneEnabled);
+            }
+
+            {
+                // fragment tests
+
+                AFX_ASSERT(c->stencilBack.compareMask == pip->stencilBack.compareMask);
+                AFX_ASSERT(c->stencilBack.compareOp == pip->stencilBack.compareOp);
+                AFX_ASSERT(c->stencilBack.depthFailOp == pip->stencilBack.depthFailOp);
+                AFX_ASSERT(c->stencilBack.failOp == pip->stencilBack.failOp);
+                AFX_ASSERT(c->stencilBack.passOp == pip->stencilBack.passOp);
+                AFX_ASSERT(c->stencilBack.reference == pip->stencilBack.reference);
+                AFX_ASSERT(c->stencilBack.writeMask == pip->stencilBack.writeMask);
+                AFX_ASSERT(c->stencilFront.compareMask == pip->stencilFront.compareMask);
+                AFX_ASSERT(c->stencilFront.compareOp == pip->stencilFront.compareOp);
+                AFX_ASSERT(c->stencilFront.depthFailOp == pip->stencilFront.depthFailOp);
+                AFX_ASSERT(c->stencilFront.failOp == pip->stencilFront.failOp);
+                AFX_ASSERT(c->stencilFront.passOp == pip->stencilFront.passOp);
+                AFX_ASSERT(c->stencilFront.reference == pip->stencilFront.reference);
+                AFX_ASSERT(c->stencilFront.writeMask == pip->stencilFront.writeMask);
+                AFX_ASSERT(c->stencilTestEnabled == pip->stencilTestEnabled);
+
+                AFX_ASSERT(pip->depthBounds[0] == c->depthBounds[0]);
+                AFX_ASSERT(pip->depthBounds[1] == c->depthBounds[1]);
+                AFX_ASSERT(pip->depthBoundsTestEnabled == c->depthBoundsTestEnabled);
+                AFX_ASSERT(pip->depthCompareOp == c->depthCompareOp);
+                AFX_ASSERT(pip->depthTestEnabled == c->depthTestEnabled);
+                AFX_ASSERT(pip->depthWriteDisabled == c->depthWriteDisabled);
+                AFX_ASSERT(pip->dsFmt == c->dsFmt);
+            }
+
+            {
+                AFX_ASSERT(pip->blendConstants[0] == c->blendConstants[0]);
+                AFX_ASSERT(pip->blendConstants[1] == c->blendConstants[1]);
+                AFX_ASSERT(pip->blendConstants[2] == c->blendConstants[2]);
+                AFX_ASSERT(pip->blendConstants[3] == c->blendConstants[3]);
+                AFX_ASSERT((pip->outCnt == c->colorOutCnt) || ((c->colorOutCnt == 0) && (pip->outCnt == 1)));
+
+                for (afxUnit j = 0; j < c->colorOutCnt; j++)
+                {
+                    AFX_ASSERT(pip->outs[j].blendEnabled == c->colorOuts[j].blendEnabled);
+                    AFX_ASSERT(pip->outs[j].blendConfig.aBlendOp == c->colorOuts[j].blendConfig.aBlendOp);
+                    AFX_ASSERT(pip->outs[j].blendConfig.aDstFactor == c->colorOuts[j].blendConfig.aDstFactor);
+                    AFX_ASSERT(pip->outs[j].blendConfig.aSrcFactor == c->colorOuts[j].blendConfig.aSrcFactor);
+                    AFX_ASSERT(pip->outs[j].blendConfig.rgbBlendOp == c->colorOuts[j].blendConfig.rgbBlendOp);
+                    AFX_ASSERT(pip->outs[j].blendConfig.rgbDstFactor == c->colorOuts[j].blendConfig.rgbDstFactor);
+                    AFX_ASSERT(pip->outs[j].blendConfig.rgbSrcFactor == c->colorOuts[j].blendConfig.rgbSrcFactor);
+                    AFX_ASSERT(pip->outs[j].discardMask == c->colorOuts[j].discardMask);
+                }
+
+                AFX_ASSERT(pip->logicOp == c->pixelLogicOp);
+                AFX_ASSERT(pip->logicOpEnabled == c->pixelLogicOpEnabled);
+            }
+        }
+        
+        //AFX_ASSERT(pip->primShaderSupported == c->primShaderSupported);
+
     }
 #endif
 
@@ -1219,7 +1288,7 @@ _AVX afxError AvxLoadPipeline(afxDrawSystem dsys, avxVertexInput vin, afxUri con
     AFX_TRY_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
     AFX_ASSERT(uri && !AfxIsUriBlank(uri));
 
-    AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str));
+    AfxReportMessage("Uploading pipeline '%.*s'", AfxPushString(&uri->s));
 
     afxXml xml;
     afxString query;
@@ -1231,7 +1300,7 @@ _AVX afxError AvxLoadPipeline(afxDrawSystem dsys, avxVertexInput vin, afxUri con
     if (AfxIsUriBlank(&fext)) AfxThrowError();
     else if (0 != AfxCompareString(AfxGetUriString(&fext), 0, ".xml", 4, TRUE))
     {
-        AfxLogError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
+        AfxReportError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
         AfxThrowError();
     }
     else if (AfxLoadXml(&xml, &fpath)) AfxThrowError();
@@ -1244,10 +1313,10 @@ _AVX afxError AvxLoadPipeline(afxDrawSystem dsys, avxVertexInput vin, afxUri con
 
             avxPipelineBlueprint defConfig = { 0 };
             defConfig.depthCompareOp = avxCompareOp_LESS;
-            defConfig.fillMode = avxFillMode_SOLID;
+            defConfig.fillMode = avxFillMode_FACE;
             avxPipelineBlueprint info = defConfig;
             afxUri shdUris[16];
-            avxShaderStage shdStages[16];
+            avxShaderType shdStages[16];
             afxString shdFns[16];
             
             if (_AvxParseXmlPipelineBlueprint(&xml, xmlElemIdx, 0, &info, shdStages, shdUris, shdFns)) AfxThrowError();

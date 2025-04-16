@@ -35,29 +35,29 @@ typedef struct afxLink afxLink;
 typedef struct afxLink2 afxLink2;
 
 struct afxLink
+// Structure specifying a node in a intrusive list, which embeds an afxLink.
 {
-    union
-    {
-        afxLink* next;
-        afxAtomPtr nextA;
-    };
-    union
-    {
-        afxLink* prev;
-        afxAtomPtr prevA;
-    };
-    union
-    {
-        afxChain*   chain;
-        afxAtomPtr  chainA;
-    };
-    void*           held;
+    // next and prev point to neighboring afxLink nodes.
+    union { afxLink* next; afxAtomPtr nextA; };
+    union { afxLink* prev; afxAtomPtr prevA; };
+    // Back-references to the parent afxChain, useful for validation or bookkeeping.
+    // The anchor in afxChain is an afxLink, acting as a sentinel.
+    union { afxChain* chain; afxAtomPtr chainA; };
+    // Arbitrary per-node payload pointer, maybe for additional metadata or ownership tracking.
+    void* held;
 };
 
 struct afxChain 
+// Structure specifying a "intrusive" doubly-linked list.
+// It is intrusive, meaning each node embeds an afxLink somewhere inside it.
 {
+    // The sentinel node, part of a circular doubly-linked list.
+    // anchor.next and anchor.prev always point to the actual first and last nodes 
+    // (or to &anchor itself if the list is empty), making it always circular.
     afxLink     anchor;
+    // A back-reference or context.
     void*       holder;
+    // Count of nodes in the list.
     afxUnit     cnt;
 };
 
@@ -102,39 +102,75 @@ AFXINL afxLink*         AfxGetNextLink(afxLink const *lnk);
 
 AFXINL afxLink*         AfxGetPrevLink(afxLink const *lnk);
 
-#define AFX_ITERATE_CHAIN2(ch_, type_, offset_, lnk_) \
-    for (afxLink const*_next##lnk2_ = (afxLink*)&(ch_)->anchor, *_curr##lnk2_ = (ch_)->anchor.next; \
-        _next##lnk2_ = (_curr##lnk2_)->next, \
-        lnk_ = (type_*)AFX_REBASE(_curr##lnk2_, type_, offset_), \
-        (_curr##lnk2_) != &(ch_)->anchor; \
-        _curr##lnk2_ = _next##lnk2_)
+/*
+    AFX_ITERATE_CHAIN is a powerful macro for iterating over intrusive linked lists (where links are embedded within larger structures). 
+    It's efficient and avoids allocating wrapper nodes. It's similar in spirit to Linux kernel macros like list_for_each_entry.
+    It iterates through a circular linked list that is anchored by ch_. It allows access to each element of type type_ through the pointer lnk_.
+    It's built for a custom data structure defined with an afxLink struct for linking nodes.
+*/
 
-#define AFX_ITERATE_CHAIN(ch_, type_, offset_, lnk_) \
-    for (afxLink const*_next##lnk_ = (afxLink*)&(ch_)->anchor, *_curr##lnk_ = (ch_)->anchor.next; \
-        _next##lnk_ = (_curr##lnk_)->next, \
-        lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
-        (_curr##lnk_) != &(ch_)->anchor; \
-        _curr##lnk_ = _next##lnk_)
+#define AFX_ITERATE_CHAIN(type_, lnk_, offset_, ch_) \
+    for (afxLink const* _next##lnk_ = (ch_)->anchor.next, \
+                      * _curr##lnk_ = _next##lnk_; \
+         (_curr##lnk_ != &(ch_)->anchor) && \
+         ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
+          _next##lnk_ = _curr##lnk_->next, 1); \
+         _curr##lnk_ = _next##lnk_)
 
-#define AFX_ITERATE_CHAIN_B2F(ch_, type_, offset_, lnk_) \
-    for (afxLink const*_last##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; \
-        (_last##lnk_ = (_curr##lnk_)->prev), \
-        (lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_)), \
-        ((_curr##lnk_) != &(ch_)->anchor); \
-        (_curr##lnk_ = _last##lnk_))
+#define AFX_ITERATE_CHAIN2(type_, lnk_, offset_, ch_) \
+    for (afxLink const* _next##lnk_2 = (ch_)->anchor.next, \
+                      * _curr##lnk_2 = _next##lnk_2; \
+         (_curr##lnk_2 != &(ch_)->anchor) && \
+         ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_2, type_, offset_), \
+          _next##lnk_2 = _curr##lnk_2->next, 1); \
+         _curr##lnk_2 = _next##lnk_2)
 
-#define AfxIterateLinkage(type_, lnk_, ch_, offset_) \
-    for (afxLink const*_next##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.next; \
-        _next##lnk_ = (_curr##lnk_)->next, \
-        lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
-        (_curr##lnk_) != &(ch_)->anchor; \
-        _curr##lnk_ = _next##lnk_)
+/*
+    AFX_ITERATE_CHAIN_B2F is the reverse counterpart of AFX_ITERATE_CHAIN.
+    This will iterate backwards through the list.
+    This works by following the prev pointer instead of next.
+    Like the forward iteration, the prev pointer is saved before anything else happens, 
+    ensuring that the loop will continue safely even if nodes are removed.
+    This version stays compact, keeping all logic inside the for condition.
+*/
 
-#define AfxIterateLinkageB2F(type_, lnk_, ch_, offset_) \
-    for (afxLink const*_prev##lnk_ = (afxLink*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; \
-        _prev##lnk_ = (_curr##lnk_)->prev, \
-        lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
-        (_curr##lnk_) != &(ch_)->anchor; \
-        _curr##lnk_ = _prev##lnk_)
+#define AFX_ITERATE_CHAIN_B2F(type_, lnk_, offset_, ch_) \
+    for (afxLink const* _prev##lnk_ = (ch_)->anchor.prev, \
+                      * _curr##lnk_ = _prev##lnk_; \
+         (_curr##lnk_ != &(ch_)->anchor) && \
+         ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
+          _prev##lnk_ = _curr##lnk_->prev, 1); \
+         _curr##lnk_ = _prev##lnk_)
+
+/*
+    Important Notes on Atomic Iteration.
+    These macros only ensure that pointer reads are atomic - they don't protect against the structure being mutated 
+    concurrently unless the entire structure is designed for lock-free access.
+    If you're going to be modifying links concurrently (e.g., popping, inserting), you’ll need compare-and-swap (CAS) 
+    logic or hazard pointers to be truly safe.
+    For lock-free consumption, e.g., one writer and one reader (SPSC), this is usually okay.
+    For full MPMC lock-free structures, iteration macros may be unsafe unless they're combined with safe 
+    traversal techniques (version counters, epoch-based GC, etc.).
+*/
+
+#define AFX_ITERATE_CHAIN_ATOMIC(type_, lnk_, offset_, ch_, mem_order_) \
+    for (afxLink const* _curr##lnk_ = atomic_load_explicit(&(ch_)->anchor.nextA, mem_order_), \
+                      * _next##lnk_; \
+         (_curr##lnk_ != &(ch_)->anchor) && \
+         ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
+          _next##lnk_ = atomic_load_explicit(&_curr##lnk_->nextA, mem_order_), 1); \
+         _curr##lnk_ = _next##lnk_)
+
+#define AFX_ITERATE_CHAIN_ATOMIC_RELAXED(type_, lnk_, offset_, ch_) \
+    AFX_ITERATE_CHAIN_ATOMIC(type_, lnk_, offset_, ch_, memory_order_relaxed)
+
+#define AFX_ITERATE_CHAIN_ATOMIC_B2F(type_, lnk_, offset_, ch_, mem_order_) \
+    for (afxLink const* _curr##lnk_ = atomic_load_explicit(&(ch_)->anchor.prevA, mem_order_), \
+                      * _prev##lnk_; \
+         (_curr##lnk_ != &(ch_)->anchor) && \
+         ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
+          _prev##lnk_ = atomic_load_explicit(&_curr##lnk_->prevA, mem_order_), 1); \
+         _curr##lnk_ = _prev##lnk_)
+
 
 #endif//AFX_CHAIN_H

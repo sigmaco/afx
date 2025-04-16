@@ -68,4 +68,21 @@ AUX afxError        AfxEmulateMouseWheelAction(afxUnit seat, afxReal delta, afxW
 AUX afxError        AfxEmulateMouseButtonActions(afxUnit seat, afxUnit cnt, afxMouseButton const butt[], afxBool const pressed[], afxWindow wnd);
 AUX afxError        AfxReleaseMouseButtons(afxUnit seat, afxWindow wnd);
 
+
+AUX afxMask AfxIsLmbPressed2(afxMask seats);
+AUX afxMask AfxIsRmbPressed2(afxMask seats);
+AUX afxMask AfxIsMmbPressed2(afxMask seats);
+AUX afxMask AfxIsXmb1Pressed2(afxMask seats);
+AUX afxMask AfxIsXmb2Pressed2(afxMask seats);
+AUX afxMask AfxWasLmbPressed2(afxMask seats);
+AUX afxMask AfxWasRmbPressed2(afxMask seats);
+AUX afxMask AfxWasMmbPressed2(afxMask seats);
+AUX afxMask AfxWasXmb1Pressed2(afxMask seats);
+AUX afxMask AfxWasXmb2Pressed2(afxMask seats);
+AUX afxMask AfxWasLmbReleased2(afxMask seats);
+AUX afxMask AfxWasRmbReleased2(afxMask seats);
+AUX afxBool AfxWasMmbReleased2(afxMask seats);
+AUX afxMask AfxWasXmb1Released2(afxMask seats);
+AUX afxMask AfxWasXmb2Released2(afxMask seats);
+
 #endif//AUX_MOUSE_H

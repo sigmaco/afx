@@ -64,9 +64,9 @@ _AFXINL void AfxWhdMin(afxWhd* whd, afxWhd const a, afxWhd const b)
     AFX_ASSERT(whd);
     //AFX_ASSERT(a);
     //AFX_ASSERT(b);
-    whd->x = AfxMin(a.w, b.w);
-    whd->h = AfxMin(a.h, b.h);
-    whd->d = AfxMin(a.d, b.d);
+    whd->x = AFX_MIN(a.w, b.w);
+    whd->h = AFX_MIN(a.h, b.h);
+    whd->d = AFX_MIN(a.d, b.d);
 }
 
 _AFXINL void AfxWhdMax(afxWhd* whd, afxWhd const a, afxWhd const b)
@@ -75,9 +75,9 @@ _AFXINL void AfxWhdMax(afxWhd* whd, afxWhd const a, afxWhd const b)
     AFX_ASSERT(whd);
     //AFX_ASSERT(a);
     //AFX_ASSERT(b);
-    whd->x = AfxMax(a.w, b.w);
-    whd->h = AfxMax(a.h, b.h);
-    whd->d = AfxMax(a.d, b.d);
+    whd->x = AFX_MAX(a.w, b.w);
+    whd->h = AFX_MAX(a.h, b.h);
+    whd->d = AFX_MAX(a.d, b.d);
 }
 
 _AFXINL void AfxWhdClamp(afxWhd* whd, afxWhd const in, afxWhd const min, afxWhd const max)
@@ -85,9 +85,9 @@ _AFXINL void AfxWhdClamp(afxWhd* whd, afxWhd const in, afxWhd const min, afxWhd 
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(whd);
     //AFX_ASSERT(in);
-    whd->w = AfxClamp(in.w, min.w, max.w);
-    whd->h = AfxClamp(in.h, min.h, max.h);
-    whd->d = AfxClamp(in.d, min.d, max.d);
+    whd->w = AFX_CLAMP(in.w, min.w, max.w);
+    whd->h = AFX_CLAMP(in.h, min.h, max.h);
+    whd->d = AFX_CLAMP(in.d, min.d, max.d);
 }
 
 _AFXINL void AfxWhdClampOffset(afxWhd* whd, afxWhd const origin, afxWhd const extent)
@@ -95,9 +95,9 @@ _AFXINL void AfxWhdClampOffset(afxWhd* whd, afxWhd const origin, afxWhd const ex
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(whd);
     //AFX_ASSERT(origin);
-    whd->w = AfxMin(origin.x, extent.w - 1);
-    whd->h = AfxMin(origin.y, extent.h - 1);
-    whd->d = AfxMin(origin.z, extent.d - 1);
+    whd->w = AFX_MIN(origin.x, extent.w - 1);
+    whd->h = AFX_MIN(origin.y, extent.h - 1);
+    whd->d = AFX_MIN(origin.z, extent.d - 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -191,9 +191,9 @@ _AFXINL void AfxWhdHalf(afxWhd* whd, afxWhd const in)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(whd);
     //AFX_ASSERT(in);
-    whd->w = AfxMax(in.w ? 1 : 0, in.w >> 1);
-    whd->h = AfxMax(in.h ? 1 : 0, in.h >> 1);
-    whd->d = AfxMax(in.d ? 1 : 0, in.d >> 1);
+    whd->w = AFX_MAX(in.w ? 1 : 0, in.w >> 1);
+    whd->h = AFX_MAX(in.h ? 1 : 0, in.h >> 1);
+    whd->d = AFX_MAX(in.d ? 1 : 0, in.d >> 1);
 }
 
 _AFXINL afxUnit AfxWhdSum(afxWhd const whd)
@@ -227,7 +227,7 @@ _AFXINL afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHe
 
     if ((err |= (!(total_.x > base_.x + range_.x))) || (err |= (!(total_.h > base_.h + range_.h))) || (err |= (!(total_.d > base_.d + range_.d))))
     {
-        AfxLogError("[%i] %s(%f) + %s(%f) is out of range [0, %f]", AFX_STRINGIFY((base_)), (base_), AFX_STRINGIFY((range_)), (range_), AFX_STRINGIFY((total_)), (total_));
+        AfxReportError("[%i] %s(%f) + %s(%f) is out of range [0, %f]", AFX_STRINGIFY((base_)), (base_), AFX_STRINGIFY((range_)), (range_), AFX_STRINGIFY((total_)), (total_));
     }
     return err;
 }

@@ -29,7 +29,7 @@ AVX afxCmdId AvxCmdBeginQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit qu
     AFX_ASSERT_RANGE(pool->cap, queryIdx, 1);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BeginQuery), sizeof(cmd->BeginQuery), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BeginQuery), sizeof(cmd->BeginQuery), &cmdId);
     AFX_ASSERT(cmd);
     cmd->BeginQuery.pool = pool;
     cmd->BeginQuery.queryIdx = queryIdx;
@@ -45,7 +45,7 @@ AVX afxCmdId AvxCmdEndQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit quer
     AFX_ASSERT_RANGE(pool->cap, queryIdx, 1);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(EndQuery), sizeof(cmd->EndQuery), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(EndQuery), sizeof(cmd->EndQuery), &cmdId);
     AFX_ASSERT(cmd);
     cmd->EndQuery.pool = pool;
     cmd->EndQuery.queryIdx = queryIdx;
@@ -62,7 +62,7 @@ AVX afxCmdId AvxCmdCopyQueryResults(afxDrawContext dctx, avxQueryPool pool, afxU
     AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), offset, stride);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(CopyQueryResults), sizeof(cmd->CopyQueryResults), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(CopyQueryResults), sizeof(cmd->CopyQueryResults), &cmdId);
     AFX_ASSERT(cmd);
     cmd->CopyQueryResults.pool = pool;
     cmd->CopyQueryResults.baseQuery = baseQuery;
@@ -82,7 +82,7 @@ AVX afxCmdId AvxCmdResetQueries(afxDrawContext dctx, avxQueryPool pool, afxUnit 
     AFX_ASSERT_RANGE(pool->cap, baseQuery, queryCnt);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(ResetQueries), sizeof(cmd->ResetQueries), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(ResetQueries), sizeof(cmd->ResetQueries), &cmdId);
     AFX_ASSERT(cmd);
     cmd->ResetQueries.pool = pool;
     cmd->ResetQueries.baseQuery = baseQuery;
@@ -98,7 +98,7 @@ AVX afxCmdId AvxCmdWriteTimestamp(afxDrawContext dctx, avxQueryPool pool, afxUni
     AFX_ASSERT_RANGE(pool->cap, queryIdx, 1);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(WriteTimestamp), sizeof(cmd->WriteTimestamp), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(WriteTimestamp), sizeof(cmd->WriteTimestamp), &cmdId);
     AFX_ASSERT(cmd);
     cmd->WriteTimestamp.pool = pool;
     cmd->WriteTimestamp.queryIdx = queryIdx;

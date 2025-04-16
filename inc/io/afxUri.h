@@ -50,15 +50,19 @@ typedef enum afxUriPart
 AFX_DEFINE_STRUCT(afxUri)
 /// An object representing a uniform resource identifier (URI).
 {
-    afxString   str;
-    afxUnit8    schem, user, host, port, root, fname, fext, frag; // max AFX_U8_MAX long
-    afxUnit16   dir, query; // max AFX_U16_MAX long
+    afxString   s;
+    afxUnit8    sch, user, h, p, root, fname, fext, frag; // max AFX_U8_MAX long
+    afxUnit16   dir, qry; // max AFX_U16_MAX long
 };
 
 AFX_DEFINE_STRUCT(afxUri8) { afxUri uri; afxByte buf[8]; };
 AFX_DEFINE_STRUCT(afxUri32) { afxUri uri; afxByte buf[32]; };
 AFX_DEFINE_STRUCT(afxUri128) { afxUri uri; afxByte buf[128]; };
 AFX_DEFINE_STRUCT(afxUri2048) { afxUri uri; afxByte buf[2048]; };
+
+#define afxFixedUri(varName_,capacity_) \
+    afxChar varName_##Buf[capacity_]; afxUri varName_ = { .s.len = 0, .s.cap = sizeof(varName_##Buf), .s.start = varName_##Buf }; \
+
 
 // Properties
 

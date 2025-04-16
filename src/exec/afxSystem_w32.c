@@ -123,19 +123,19 @@ _AFX afxTime AfxDoSystemThreading(afxTime timeout)
 
                     if (GetKeyState(VK_F1))
                     {
-                        AfxLogAssistence("User input requested support.");
-                        AfxLogAssistence("Get help at https://sigmaco.org/");
+                        AfxReportHint("User input requested support.");
+                        AfxReportHint("Get help at https://sigmaco.org/");
                         system("start https://sigmaco.org");
                     }
                     else if (GetKeyState(VK_F4))
                     {
                         //AfxRequestThreadInterruption(thr);
-                        AfxLogAdvertence("User input requested application break.");
+                        AfxReportWarn("User input requested application break.");
                         AfxRequestShutdown(0);
                     }
                     else if (GetKeyState(VK_F5))
                     {
-                        AfxLogAdvertence("User input requested application reboot.");
+                        AfxReportWarn("User input requested application reboot.");
                         //_AfxInterruptionAllApplications();
                         //opcode = AFX_OPCODE_REBOOT;
                     }
@@ -147,7 +147,7 @@ _AFX afxTime AfxDoSystemThreading(afxTime timeout)
                             AfxMakeString(&cur, 0, "\n$ ", 0);
                             afxString2048 buf;
                             AfxMakeString2048(&buf, NIL);
-                            AfxPrompt(&cur, &buf.str);
+                            AfxPrompt(&cur, &buf.s);
                             AfxPrint(0, buf.buf);
                             AfxPrint(0, "\n");
                         }
@@ -170,7 +170,7 @@ _AFX void AfxStdAssertHookCallback(char const* exp, char const* file, int line)
     assert(exp);
     assert(file);
     assert(line);
-    AfxDbgLogf(8, NIL, "\n %s:%i\n\t     %s", file, line, exp);
+    AfxReportf(8, NIL, "\n %s:%i\n\t     %s", file, line, exp);
 }
 
 _AFX afxError MountHostVolumes()
@@ -393,7 +393,9 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 
     clsCfg = _AFX_THR_CLASS_CONFIG;
     clsCfg.unitsPerPage = sys->hwThreadingCap;
-    AfxMountClass(&sys->thrCls, NIL, classes, &clsCfg); // require txu
+    AfxMountClass(&sys->thrCls, NIL, classes, &clsCfg);
+    clsCfg = _AFX_THRP_CLASS_CONFIG;
+    AfxMountClass(&sys->thrpCls, NIL, classes, &clsCfg); // require thr
 
     AfxMountClass(&sys->mmuCls, NIL, classes, &_AFX_MMU_CLASS_CONFIG);
 
@@ -492,9 +494,9 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
     {
         afxString2048 tbs;
         AfxMakeString2048(&tbs, TheSystem ? AfxGetUriString(&TheSystem->pwd.uri) : NIL);
-        AfxCatenateString(&tbs.str, "system.ini", 0);
+        AfxCatenateString(&tbs.s, "system.ini", 0);
         
-        AfxWrapUriString(&uri, &tbs.str);
+        AfxWrapUriString(&uri, &tbs.s);
         AfxLoadInitializationFile(&ini, &uri);
     }
 

@@ -228,9 +228,9 @@ _AFX void AfxGetScriptTime(afxScript xss, afxReal64* ct, afxReal64* dt)
     afxClock currClock;
     AfxGetClock(&currClock);
     AFX_ASSERT(ct);
-    *ct = AfxGetSecondsElapsed(&xss->startClock, &currClock);
+    *ct = AfxGetClockSecondsElapsed(&xss->startClock, &currClock);
     AFX_ASSERT(dt);
-    *dt = AfxGetSecondsElapsed(&xss->lastClock, &currClock);
+    *dt = AfxGetClockSecondsElapsed(&xss->lastClock, &currClock);
     xss->lastClock = currClock;
 }
 
@@ -506,7 +506,7 @@ _AFX afxResult AfxInjectScript(afxString const* scope, afxString const* code)
 
     void* vm = NIL;
 
-    AfxDbgLogf(0, NIL, code->start);
+    AfxReportf(0, NIL, code->start);
     afxResult xRslt = xssInterpret(vm, scope2.buf, code->start);
 
     return xRslt;

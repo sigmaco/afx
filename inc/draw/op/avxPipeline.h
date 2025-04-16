@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // QWADRO DRAWING DEVICE EXECUTION PIPELINE                                 //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /**
@@ -21,16 +25,6 @@
     Assim sendo, a SIGMA decideu quebrar o objeto de estado da pipeline em módulos, e assembleá-los, para evitar lidar com alocação de espaço para coisas pouco utilizadas.
     Esta abordagem é, de longe, a mais arbitrária, nadando contra o recúo de maré do Vulkan, Direct3D 12 e Metal.
 */
-
-#ifndef AVX_PIPELINE_H
-#define AVX_PIPELINE_H
-
-#include "qwadro/inc/draw/afxDrawDefs.h"
-#include "qwadro/inc/io/afxUri.h"
-#include "qwadro/inc/base/afxFixedString.h"
-#include "qwadro/inc/draw/io/avxFormat.h"
-#include "qwadro/inc/draw/math/avxColor.h"
-#include "qwadro/inc/base/afxFixedString.h"
 
 /*
     The first stage of the graphics pipeline (Input Assembler) assembles vertices to form geometric primitives such as points, lines, and triangles, based on a requested primitive topology.
@@ -45,6 +39,19 @@
 */
 
 // Front facing and cull mode should not have effect no point and lines.
+
+#ifndef AVX_PIPELINE_H
+#define AVX_PIPELINE_H
+
+#include "qwadro/inc/draw/afxDrawDefs.h"
+#include "qwadro/inc/io/afxUri.h"
+#include "qwadro/inc/base/afxFixedString.h"
+#include "qwadro/inc/draw/io/avxFormat.h"
+#include "qwadro/inc/draw/math/avxColor.h"
+#include "qwadro/inc/base/afxFixedString.h"
+
+#define AVX_MAX_SHADER_SPECIALIZATIONS (16)
+#define AVX_MAX_PROGRAMMABLE_PIPELINE_STAGES (8)
 
 #define AVX_MAX_SAMPLE_MASKS (32)
 #define AVX_MAX_COLOR_OUTPUTS (8)
@@ -200,6 +207,21 @@ typedef enum avxColorMask
     avxColorMask_RGBA = avxColorMask_RGB | avxColorMask_A
 } avxColorMask;
 
+AFX_DEFINE_STRUCT(avxShaderSpecialization)
+// Structure specifying specialized shader linking into a pipeline.
+{
+    avxShader       shd;
+    avxShaderType   stage;
+    afxString       entryPoint;
+    afxString       constNames[AVX_MAX_SHADER_SPECIALIZATIONS];
+    union
+    {
+        afxUnit     datau;
+        afxInt      datai;
+        afxReal     dataf;
+    }               constValues[AVX_MAX_SHADER_SPECIALIZATIONS];
+};
+
 AFX_DEFINE_STRUCT(avxStencilInfo)
 // Structure specifying stencil operation state.
 {
@@ -263,29 +285,177 @@ AFX_DEFINE_STRUCT(avxColorOutput)
     avxColorMask        discardMask; // NIL = write all
 };
 
-AFX_DEFINE_STRUCT(avxPipelineInfo)
-{
-    afxString           tag;
-    afxUnit             stageCnt;
-    avxLigature         liga;
+/*
+    Multisampling.
+    he simplified pipeline placement with multisampling:
 
-    avxVertexInput       vin;
-    avxTopology         primTopology;
-    afxBool             primRestartEnabled;
-    avxCullMode         cullMode;
-    afxBool             frontFacingInverted;
-    afxBool             depthClampEnabled;
+    Vertex Processing
+
+    Clipping
+
+    Rasterization
+        This is where multisampling kicks in.
+        Instead of generating a single fragment per pixel, the rasterizer produces 
+        multiple coverage samples per pixel (e.g. 2x, 4x, 8x, etc.).
+
+    Early Fragment Tests (Stencil, Depth)
+        These are often done per-sample (e.g. each MSAA sample gets its own depth/stencil check).
+
+    Fragment Shader
+        By default, it's run once per pixel, not per sample - unless you use per-sample shading.
+
+    Multisample Resolve.
+        After shading, the final color for the pixel is resolved from its samples and written to the framebuffer (or kept in MSAA buffers for later).
+*/
+
+AFX_DEFINE_STRUCT(avxMultisampling)
+{
+    // multisampling rasterization
+    afxBool             msEnabled;
+    // is a value specifying the number of samples used in rasterization. 
+    afxUnit             sampleLvl; // 0
+    // an array of sample mask values used in the sample mask test. 
+    afxMask             sampleMasks[AVX_MAX_SAMPLE_MASKS]; // [ 1, ]
+
+    // post fragment shader
+
+    // controls whether the alpha component of the fragment's first color output is replaced with one.
+    afxBool             alphaToOneEnabled; // FALSE
+    // controls whether a temporary coverage value is generated based on the alpha component of the fragment's first color output. 
+    afxBool             alphaToCoverageEnabled; // FALSE
+     // used to enable Sample Shading.
+    afxBool             sampleShadingEnabled; // FALSE
+    // specifies a minimum fraction of sample shading if sampleShadingEnable is set to TRUE.
+    afxReal             minSampleShadingValue; // 0.f
+};
+
+/*
+    Clipping
+
+    Clipping happens after vertex processing but before rasterization. Its job is to cut away parts of primitives 
+    (triangles, lines, etc.) that lie outside the view frustum - the region visible to the camera.
+    Imagine trying to draw a triangle that sticks halfway outside the camera's view - clipping will 
+    slice it neatly at the edge and only send the visible portion onward.
+*/
+
+/*
+    Depth clamping occurs during the rasterization stage of the graphics pipeline, specifically after vertex processing 
+    but before the depth test. It's a feature used in graphics APIs to handle geometry that would normally be clipped by 
+    the near and far planes of the view frustum.
+
+    How it fits in the pipeline:
+        Vertex Shader - Transforms vertex positions into clip space.
+        Clipping (normally) - Geometry outside the near/far clip planes is removed.
+        Depth Clamping (if enabled) – Instead of clipping geometry that goes beyond the near/far planes, 
+        the depth values are clamped to the [near, far] range.
+        Rasterization - The geometry is converted into fragments (potential pixels).
+        Fragment Shading - Color, lighting, etc.
+        ...
+
+    Depth clamping is used to avoid clipping artifacts, when it prevents visual popping when geometry crosses the near/far plane.
+    It is useful for shadow maps or skyboxes, where you can have geometry extending infinitely (like a skybox or light volume) without getting clipped.
+    It also avoids expensive clipping logic in the hardware pipeline.
+*/
+
+AFX_DEFINE_STRUCT(avxTransformation)
+{
+    // NOTE: the following members are ignored if transformationDisabled is TRUE.
+    afxBool             transformationDisabled;
+
+    // VERTEX SHADING. Positions go to clip space (x, y, z, w).
+
+    avxVertexInput      vin;
+
+    // PRIMITIVE ASSEMBLING. Triangles/lines formed from vertices.
+
+    // The primitive topology.
+    avxTopology         primTop; // avxTopology_TRI_LIST
+    // Treat a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) as restarting the assembly of primitives.
+    afxBool             primRestartEnabled; // FALSE
+
+    // Enable the programmable primitive tesselation stages in pipeline.
+    afxBool             tesselationEnabled; // FALSE
+    // The number of control points per patch.
+    afxUnit             patchCtrlPoints;
+
+    // Enable the programmable primitive processing stage in pipeline.
+    afxBool             primShaderSupported; // FALSE
+
+    /*
+        Clipping (Stage 3)
+        Operates on clip space coordinates.
+        Ensures primitives fit within the frustum.
+        Cut primitives outside view frustum (in clip space).
+        If a triangle crosses a boundary (e.g. near plane), it's split into new triangle(s) entirely inside the clip volume.
+        This is before the perspective divide or viewport transformation.
+    */
+
+    // When depth clamp is enabled, the fragment's depth values will be clamped.
+    afxBool             depthClampEnabled; // FALSE
+
+    /*
+        Face Culling (Stage 4)
+        Happens after clipping but still before perspective divide.
+        Uses winding order(clockwise / counter - clockwise) to decide what’s a "front" or "back" face.
+        Culling removes primitives before rasterization, improving performance.
+    */
+    // The triangle facing direction used for primitive culling.
+    avxCullMode         cullMode; // avxCullMode_BACK
+    // When front facing is inverted, a triangle will be considered front-facing if its vertices are clockwise.
+    afxBool             frontFacingInverted; // FALSE (CCW)
+
+    /*
+        Perspective divide then viewport Transform
+        Converts from clip space to normalized device coords (NDC) then to window (screen) coords.
+        If a primitive didn't survive clipping or culling, it never reaches this stage.
+    */
+
+    // The number of viewports used by the pipeline.
+    afxUnit             vpCnt; // At least 1.
+};
+
+/*
+    Rasterization disabling. When rasterization is disabled:
+
+    The vertex processing still happens. Vertex shaders (and maybe geometry/tessellation shaders) run as usual.
+    Primitive assembly and clipping still happens. The GPU assembles vertices into triangles or lines and applies view frustum clipping.
+    Depth clamping still applies if clipping is enabled. But this becomes more of a formality if you're not rasterizing anything.
+    Rasterization: Skipped. No fragments are generated. That means no fragment shading, depth test, color blending, or writing to the framebuffer.
+
+    There are legit use cases for disabling rasterization.
+    In transform feedback if you want to capture vertex data after it's been processed (e.g. post-vertex shader), without drawing anything.
+    In mesh processing, doing compute-style work using the vertex pipeline (e.g. preparing LODs or doing physics on the GPU).
+    In culling/visibility work, doing some advanced visibility algorithms use this to run through the vertex pipeline and discard geometry before rasterization - or simulate occlusion queries.
+    In conditional rendering, sometimes used to simulate rendering for queries or counting primitives.
+*/
+
+/*
+    Fragment Testing Order
+    Stencil Test
+
+    Checks the fragment against the current value in the stencil buffer using the stencil function and reference value.
+    If the stencil test fails, the fragment is discarded immediately - no depth test or fragment shader runs.
+    If it passes, move to the next step.
+
+    Depth Test
+
+    Compares the fragment's depth value to what's stored in the depth buffer (based on glDepthFunc() or equivalent).
+    If it fails, the fragment can be discarded or update the stencil buffer (depending on how you've set stencil ops).
+
+    Stencil and Depth Buffer Updates
+
+    Depending on whether the stencil and/or depth test passed or failed, you can choose how to update the stencil buffer.
+    Depth buffer is usually updated only if the depth test passes and depth writing is enabled.
+*/
+
+AFX_DEFINE_STRUCT(avxRasterization)
+{
     // controls whether primitives are discarded immediately before the rasterization stage. 
+    // If FALSE, all following fields in this structure are ignored.
     afxBool             rasterizationDisabled; // FALSE
-#if 0
-    avxDepthStencilFlags    dsFlags;
-    avxMultisamplingFlags   msFlags;
-    avxRasterizationFlags   rasFlags;
-    avxColorOutputFlags     pixelFlags;
-#endif
-    // rasterization
+
     // is the triangle rendering mode. 
-    avxFillMode         fillMode; // avxFillMode_SOLID
+    avxFillMode         fillMode; // avxFillMode_FACE
     // is the width of rasterized line segments. 
     afxReal             lineWidth; // 1.f
     // depth bias computation
@@ -297,25 +467,10 @@ AFX_DEFINE_STRUCT(avxPipelineInfo)
     afxReal             depthBiasConstFactor; // 0.f
     // is the maximum (or minimum) depth bias of a fragment. 
     afxReal             depthBiasClamp; // 0.f
-    // multisampling rasterization
-    afxBool             msEnabled;
-    // is a value specifying the number of samples used in rasterization. 
-    afxUnit             sampleLvl; // 0
-    // an array of sample mask values used in the sample mask test. 
-    afxMask             sampleMasks[AVX_MAX_SAMPLE_MASKS]; // [ 1, ]
 
-    // fragment & pixel output operations
+    avxMultisampling    ms;
 
-    // scissor test
-
-    // controls whether the alpha component of the fragment's first color output is replaced with one.
-    afxBool             alphaToOneEnabled; // FALSE
-    // controls whether a temporary coverage value is generated based on the alpha component of the fragment's first color output. 
-    afxBool             alphaToCoverageEnabled; // FALSE
-     // used to enable Sample Shading.
-    afxBool             sampleShadingEnabled; // FALSE
-    // specifies a minimum fraction of sample shading if sampleShadingEnable is set to TRUE.
-    afxReal             minSampleShadingValue; // 0.f
+    // Fragment testing
 
     // stencil test
     afxBool             stencilTestEnabled;
@@ -340,6 +495,7 @@ AFX_DEFINE_STRUCT(avxPipelineInfo)
     // is the minimum depth bound used in the depth bounds test.
     afxV2d              depthBounds; // [ min, max ]
 
+    // Fragment & pixel output operations
     // color bending, logical op and color writing
     afxUnit             colorOutCnt;
     avxColorOutput      colorOuts[AVX_MAX_COLOR_OUTPUTS];
@@ -348,10 +504,47 @@ AFX_DEFINE_STRUCT(avxPipelineInfo)
     avxLogicOp          pixelLogicOp;
 };
 
+AFX_DEFINE_STRUCT(avxPipelineInfo)
+{
+    afxString           tag;
+    afxUnit             stageCnt;
+    avxLigature         liga;
+};
+
+
+AFX_DEFINE_STRUCT(avxPipelineBlueprint2)
+{
+    afxString           tag;
+    afxUnit             stageCnt;
+    afxUnit             specializedWorkGrpSiz[3];
+};
+
+#if 0
+AFX_DECLARE_STRUCT(avxRasterizer)
+{
+    avxVertexInput      vin;
+    // The primitive topology.
+    avxTopology         primTop; // avxTopology_TRI_LIST
+    // Treat a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) as restarting the assembly of primitives.
+    afxBool             primRestartEnabled; // FALSE
+
+    // Enable the programmable primitive tesselation stages in pipeline.
+    afxBool             tesselationEnabled; // FALSE
+    // The number of control points per patch.
+    afxUnit             patchCtrlPoints;
+
+    // Enable the programmable primitive processing stage in pipeline.
+    afxBool             primShaderSupported; // FALSE
+    avxClipping         clipping;
+    avxRasterization    rasterization;
+};
+#endif
+
 AFX_DEFINE_STRUCT(avxPipelineBlueprint)
 {
     afxString           tag;
     afxUnit             stageCnt;
+    afxUnit             specializedWorkGrpSiz[3];
     
     afxBool             transformationDisabled;
     // NOTE: the following members are ignored if transformationDisabled is TRUE.
@@ -390,7 +583,7 @@ AFX_DEFINE_STRUCT(avxPipelineBlueprint)
 #endif
     // rasterization
     // The triangle rendering mode.
-    avxFillMode         fillMode; // avxFillMode_SOLID
+    avxFillMode         fillMode; // avxFillMode_FACE
     // The width of rasterized line segments.
     afxReal             lineWidth; // 1.f
     
@@ -404,26 +597,8 @@ AFX_DEFINE_STRUCT(avxPipelineBlueprint)
     // The maximum (or minimum) depth bias of a fragment.
     afxReal             depthBiasClamp; // 0.f
 
-    // multisampling rasterization
-    afxBool             msEnabled;
-    // is a value specifying the number of samples used in rasterization. 
-    afxUnit             sampleLvl; // 0
-    // an array of sample mask values used in the sample mask test. 
-    afxMask             sampleMasks[AVX_MAX_SAMPLE_MASKS]; // [ 1, ]
-
     // fragment & pixel output operations
-
-    // scissor test
-
-    // The alpha component of the fragment's first color output is replaced with one.
-    afxBool             alphaToOneEnabled; // FALSE
-    // A temporary coverage value is generated based on the alpha component of the fragment's first color output.
-    afxBool             alphaToCoverageEnabled; // FALSE
-    
-    // Enable Sample Shading.
-    afxBool             sampleShadingEnabled; // FALSE
-    // A minimum fraction of sample shading if sampleShadingEnable is set to TRUE.
-    afxReal             minSampleShadingValue; // 0.f
+    avxMultisampling    ms;
 
     // stencil test
     afxBool             stencilTestEnabled;
@@ -467,14 +642,14 @@ AVX void                AvxDescribePipeline(avxPipeline pip, avxPipelineInfo* in
 AVX afxUnit             AvxGetColorOutputs(avxPipeline pip, afxUnit first, afxUnit cnt, avxColorOutput ch[]);
 AVX afxUnit             AvxGetMultisamplingMasks(avxPipeline pip, afxUnit first, afxUnit cnt, afxMask sampleMask[]);
 
-AVX afxBool             AvxGetPipelineShader(avxPipeline pip, avxShaderStage stage, avxShader* shader);
+AVX afxBool             AvxGetPipelineShader(avxPipeline pip, avxShaderType stage, avxShader* shader);
 AVX afxUnit             AvxGetPipelineShaders(avxPipeline pip, afxIndex first, afxUnit cnt, avxShader shaders[]);
 
 AVX afxBool             AvxGetPipelineLigature(avxPipeline pip, avxLigature* ligature);
 AVX afxBool             AvxGetPipelineVertexInput(avxPipeline pip, avxVertexInput* input);
 
-AVX afxError            AvxRelinkPipelineFunction(avxPipeline pip, avxShaderStage stage, avxShader shd, afxString const* fn, afxUnit const specIds[], void const* specValues[]);
-AVX afxError            AvxUplinkPipelineFunction(avxPipeline pip, avxShaderStage stage, afxUri const* uri, afxString const* fn, afxUnit const specIds[], void const* specValues[]);
+AVX afxError            AvxRelinkPipelineFunction(avxPipeline pip, avxShaderType stage, avxShader shd, afxString const* fn, afxUnit const specIds[], void const* specValues[]);
+AVX afxError            AvxUplinkPipelineFunction(avxPipeline pip, avxShaderType stage, afxUri const* uri, afxString const* fn, afxUnit const specIds[], void const* specValues[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 

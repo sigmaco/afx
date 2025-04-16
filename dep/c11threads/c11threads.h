@@ -1,16 +1,26 @@
 /*
-c11threads
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *
+ *                                   Public Test Build
+ *                               (c) 2017 SIGMA FEDERATION
+ *                             <https://sigmaco.org/qwadro/>
+ */
 
-Authors:
-  John Tsiombikas <nuclear@member.fsf.org> - original POSIX threads wrapper
-  Oliver Old <oliver.old@outlook.com> - win32 implementation
-
-I place this piece of code in the public domain. Feel free to use as you see
-fit. I'd appreciate it if you keep my name at the top of the code somewhere, but
-whatever.
-
-Main project site: https://github.com/jtsiomb/c11threads
+/*
+    AUTHORS:
+    John Tsiombikas <nuclear@member.fsf.org> - original POSIX threads wrapper
+    Oliver Old <oliver.old@outlook.com> - win32 implementation
+    G. Veryzon <veryzon@sigmaco.org> - code maintenance
 */
+
 #ifndef C11THREADS_H_
 #define C11THREADS_H_
 

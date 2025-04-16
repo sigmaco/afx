@@ -74,7 +74,7 @@ AFX_OBJECT(afxSink)
     afxUnit             chanCnt;
     afxUnit             samplesPerFrame; // in samples
     afxUnit             latency; // frames ready
-    afxAudio*           buffers;
+    amxAudio*           buffers;
     afxInterlockedQueue freeBuffers;
     afxInterlockedQueue readyBuffers;
     afxAtom32           sinkingBufIdx;
@@ -85,7 +85,7 @@ AFX_OBJECT(afxSink)
     afxBool     (*getIddCb)(afxSink, afxUnit, void*);
 
     void        (*flushCb)(afxSink asi);
-    afxError    (*pushCb)(afxSink asio, afxAudio buf, afxWaveInterval const* seg);
+    afxError    (*pushCb)(afxSink asio, amxAudio buf, amxAudioPeriod const* seg);
     afxError    (*pullCb)(afxSink asio, afxUnit, void*, afxUnit*);
     afxUnit     (*getAvailFramesCb)(afxSink asi);
 

@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // VIDEO MEMORY TRANSFERENCE OPERATIONS                                     //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AVX_TRANSFERENCE_H
@@ -82,9 +86,9 @@ AFX_DEFINE_STRUCT(avxRasterIo)
     afxUnit         encSiz;
 };
 
-  //////////////////////////////////////////////////////////////////////////////
- //// COMMANDOS                                                            ////
-//////////////////////////////////////////////////////////////////////////////
+
+// COMMANDOS
+
 
 AVX afxCmdId                AvxCmdClearBuffer
 // Fill a region of a avxBuffer with zeroes.

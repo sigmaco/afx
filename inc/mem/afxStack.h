@@ -28,6 +28,10 @@
 #include "qwadro/inc/base/afxFcc.h"
 #include "qwadro/inc/mem/afxMemory.h"
 
+#if (defined _AFX_DEBUG) && !(defined(_AFX_STACK_VALIDATION_ENABLED))
+#   define _AFX_STACK_VALIDATION_ENABLED TRUE
+#endif
+
 AFX_DEFINE_STRUCT(afxStackPage)
 {
     afxUnit         usedUnitCnt;
@@ -38,15 +42,18 @@ AFX_DEFINE_STRUCT(afxStackPage)
 
 AFX_DEFINE_STRUCT(afxStack)
 {
-    afxUnit             unitSiz;
-    afxUnit             unitsPerBlock;
-    afxUnit             totalUsedUnitCnt;
-    afxStackPage*       lastBlock;
-    afxUnit             maxUnits;
-    afxUnit             activeBlocks;
-    afxUnit             maxActiveBlocks;
-    afxStackPage**      blockDir;
-    afxMmu              ctx;
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    afxFcc          fcc; // afxFcc_STAK;
+#endif
+    afxUnit         unitSiz;
+    afxUnit         unitsPerBlock;
+    afxUnit         totalUsedUnitCnt;
+    afxStackPage*   lastBlock;
+    afxUnit         maxUnits;
+    afxUnit         activeBlocks;
+    afxUnit         maxActiveBlocks;
+    afxStackPage**  blockDir;
+    afxMmu          ctx;
 };
 
 AFX void        AfxAllocateStack(afxStack* stak, afxUnit unitSiz, afxUnit unitsPerBlock);

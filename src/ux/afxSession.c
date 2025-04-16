@@ -48,18 +48,17 @@ _AUX afxTime AfxPollInput(afxFlags flags, afxTime timeout)
     afxError err = AFX_ERR_NONE;
 
     afxSession ses;
-    if (AfxGetSession(&ses))
-    {
-        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
-        afxTime first, last, dt;
-        AfxGetTime(&first);
+    if (!AfxGetSession(&ses)) return 0;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
-        ses->pimpl->pump(ses, 0, timeout);
+    afxTime first, last, dt;
+    AfxGetTime(&first);
 
-        dt = (AfxGetTime(&last) - first);
-        return dt;
-    }
-    return 0;
+    ses->pimpl->pump(ses, 0, timeout);
+
+    dt = (AfxGetTime(&last) - first);
+
+    return dt;
 }
 
 _AUX afxBool AfxHasClipboardContent(afxFlags flags)
@@ -67,12 +66,9 @@ _AUX afxBool AfxHasClipboardContent(afxFlags flags)
     afxError err = AFX_ERR_NONE;
 
     afxSession ses;
-    if (AfxGetSession(&ses))
-    {
-        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
-        return ses->pimpl->hasClipContent(ses, flags);
-    }
-    return FALSE;
+    if (!AfxGetSession(&ses)) return FALSE;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    return ses->pimpl->hasClipContent(ses, flags);
 }
 
 _AUX afxUnit AfxGetClipboardContent(afxString* buf)
@@ -80,12 +76,9 @@ _AUX afxUnit AfxGetClipboardContent(afxString* buf)
     afxError err = AFX_ERR_NONE;
 
     afxSession ses;
-    if (AfxGetSession(&ses))
-    {
-        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
-        return ses->pimpl->getClipContent(ses, buf);
-    }
-    return 0;
+    if (!AfxGetSession(&ses)) return 0;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    return ses->pimpl->getClipContent(ses, buf);
 }
 
 _AUX afxError AfxSetClipboardContent(afxString const* text)
@@ -93,49 +86,54 @@ _AUX afxError AfxSetClipboardContent(afxString const* text)
     afxError err = AFX_ERR_NONE;
 
     afxSession ses;
-    if (AfxGetSession(&ses))
-    {
-        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    if (!AfxGetSession(&ses)) return err;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
         
-        if (ses->pimpl->setClipContent(ses, text))
-            AfxThrowError();
-    }
+    if (ses->pimpl->setClipContent(ses, text))
+        AfxThrowError();
+
     return err;
 }
 
-_AUX afxBool AfxGetCursorPosition(afxWindow wnd, afxInt position[2])
+_AUX afxBool AfxGetCursorPlacement(afxRect* rc, afxWindow wnd, afxRect* onFrame, afxRect* onSurface)
 {
     afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(!wnd || (onFrame || onSurface));
+    AFX_ASSERT(rc || onFrame || onSurface);
+    afxBool rslt = TRUE;
 
     afxSession ses;
-    if (AfxGetSession(&ses))
+    if (!AfxGetSession(&ses)) return FALSE;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    if (ses->pimpl->getCurs)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+        return ses->pimpl->getCurs(ses, rc, wnd, onFrame, onSurface);
+    }
+    else
+    {
+        afxRect cursRect = ses->cursRect;
 
-        afxBool(*getCurPos)(afxSession, afxWindow, afxInt[]) = ses->pimpl->getCurPos;
+        if (rc)
+            *rc = cursRect;
 
-        if (getCurPos)
+        if (wnd)
         {
-            return getCurPos(ses, wnd, position);
-        }
-        else
-        {
-            if (wnd)
+            afxRect frameRc, surfaceRc;
+            AfxGetWindowRect(wnd, &frameRc, &surfaceRc);
+
+            if (onFrame)
             {
-                afxRect frame;
-                AfxGetWindowRect(wnd, TRUE, &frame);
-                position[0] = ses->curPos[0] - frame.x;
-                position[1] = ses->curPos[1] - frame.y;
-                return position[0] >= 0 && position[1] >= 0 && position[0] < frame.w && position[1] < frame.h;
+                rslt = AfxClipRectIntersection(onFrame, &cursRect, &frameRc);
             }
-            else
+
+            if (onSurface)
             {
-                position[0] = ses->curPos[0];
-                position[1] = ses->curPos[1];
+                rslt = AfxClipRectIntersection(onSurface, &cursRect, &surfaceRc);
             }
         }
     }
-    return FALSE;
+    return rslt;
 }
 
 _AUX afxError AfxImmergeWindow(afxWindow wnd, afxBool fullscreen)
@@ -189,9 +187,11 @@ _AUX afxClass const* _AuxSesGetXssClass(afxSession ses)
     return cls;
 }
 
-_AUX afxBool AfxGetSessionVideo(afxSession ses, afxDrawSystem* system)
+_AUX afxBool AfxGetSessionVideo(afxDrawSystem* system)
 {
     afxError err = AFX_ERR_NONE;
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxDrawSystem dsys = ses->dsys;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -200,10 +200,14 @@ _AUX afxBool AfxGetSessionVideo(afxSession ses, afxDrawSystem* system)
     return !!dsys;
 }
 
-_AUX afxBool AfxGetSessionAudio(afxSession ses, afxMixSystem* system, afxSink* sink)
+_AUX afxBool AfxGetSessionAudio(afxMixSystem* system, afxSink* sink)
 {
     afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
     afxMixSystem msys = ses->msys;
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(system || sink);
@@ -303,7 +307,7 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
     }
 
     ses->focusedWnd = NIL;
-    ses->curCapturedOn = NIL;
+    ses->cursCapturedOn = NIL;
 
     ses->idd = NIL;
 
@@ -397,7 +401,7 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
                 for (afxUnit i = 0; i < 48000; i++)
                     data[i] = AfxRandom2(8000, 490956520);
 
-                //AfxUploadAudioStream(ses->aso, file, 0);
+                //AmxUploadAudioStream(ses->aso, file, 0);
                 afxUnit fc = (siz / 2) / 44100 / 2;
                 afxUnit fc2 = fc / 2;
 

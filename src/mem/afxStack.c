@@ -315,6 +315,9 @@ _AFX void AfxDeallocateStack(afxStack *stak)
 
 _AFX void AfxAllocateStack(afxStack *stak, afxUnit unitSiz, afxUnit unitsPerBlock)
 {
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    stak->fcc = afxFcc_STAK;
+#endif
     stak->ctx = NIL;
 
     stak->unitSiz = unitSiz;
@@ -329,6 +332,9 @@ _AFX void AfxAllocateStack(afxStack *stak, afxUnit unitSiz, afxUnit unitsPerBloc
 
 _AFX void AfxAllocatePagedStack(afxStack *stak, afxUnit unitSiz, afxUnit unitsPerBlock, afxUnit maxUnits)
 {
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    stak->fcc = afxFcc_STAK;
+#endif
     stak->ctx = NIL;
 
     stak->unitSiz = unitSiz;

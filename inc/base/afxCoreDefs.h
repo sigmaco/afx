@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // ACCELERATION FRAMEWORK EXPERIMENTS FROM QWADRO                           //
+//////////////////////////////////////////////////////////////////////////////
+
 #ifndef AFX_CORE_DEFS_H
 #define AFX_CORE_DEFS_H
 
@@ -76,6 +80,7 @@
 #define AFX_CAST(_type_, _var_) ((_type_)(_var_))
 
 #define AFX_REBASE(link_, type_, entry_) ((type_ *)((void const*)(((afxByte const*)(link_)) - offsetof(type_, entry_))))
+#define AFX_REBASE2(type_, p_, entry_) ((type_ *)((void const*)(((afxByte const*)(p_)) - offsetof(type_, entry_))))
 #define AfxRebase(p_,s_,m_) ((s_)(void*)(((afxByte*)p_) - offsetof(s_, m_)))
 
 #ifndef container_of
@@ -226,6 +231,7 @@ typedef enum afxProfileFlag
 AFX_DEFINE_HANDLE(afxSystem);
 AFX_DEFINE_HANDLE(afxIoSystem);
 AFX_DEFINE_HANDLE(afxThread);
+AFX_DEFINE_HANDLE(afxThreadPool);
 AFX_DEFINE_HANDLE(afxTxu);
 AFX_DEFINE_HANDLE(afxMmu);
 AFX_DEFINE_HANDLE(afxMemory);
@@ -330,24 +336,24 @@ AFX afxUnit AfxFlagsFindMsb(afxFlags mask);
 
 #define AfxAbs(x_) ((0 > (x_)) ? -(x_) : (x_))
 #define AfxAbsf(x_) ((0 > (afxReal)(x_)) ? -(afxReal)(x_) : (afxReal)(x_))
-#define AfxMin(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
-#define AfxMax(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
+#define AFX_MIN(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
+#define AFX_MAX(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
 #define AfxMinorNonZero(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)) // minor non-zero
 #define AfxElse(a_,b_) ((a_) ? (a_) : (b_))
 
 
-#define AfxClamp(_value_, _min_, _max_) ((_value_) < (_min_) ? (_min_) : ((_value_) > (_max_) ? (_max_) : (_value_)))
+#define AFX_CLAMP(_value_, _min_, _max_) ((_value_) < (_min_) ? (_min_) : ((_value_) > (_max_) ? (_max_) : (_value_)))
 
 
-#define AfxMinf(a_,b_) AfxMin((afxReal)(a_),(afxReal)(b_))
-#define AfxMinf64(a_,b_) AfxMin((afxReal64)(a_),(afxReal64)(b_))
-#define AfxMini(a_,b_) AfxMin((afxInt)(a_),(afxInt)(b_))
-#define AfxMinu(a_,b_) AfxMin((afxUnit)(a_),(afxUnit)(b_))
+#define AfxMinf(a_,b_) AFX_MIN((afxReal)(a_),(afxReal)(b_))
+#define AfxMinf64(a_,b_) AFX_MIN((afxReal64)(a_),(afxReal64)(b_))
+#define AfxMini(a_,b_) AFX_MIN((afxInt)(a_),(afxInt)(b_))
+#define AfxMinu(a_,b_) AFX_MIN((afxUnit)(a_),(afxUnit)(b_))
 
-#define AfxMaxf(a_,b_) AfxMax((afxReal)(a_),(afxReal)(b_))
-#define AfxMaxf64(a_,b_) AfxMax((afxReal64)(a_),(afxReal64)(b_))
-#define AfxMaxi(a_,b_) AfxMax((afxInt)(a_),(afxInt)(b_))
-#define AfxMaxu(a_,b_) AfxMax((afxUnit)(a_),(afxUnit)(b_))
+#define AfxMaxf(a_,b_) AFX_MAX((afxReal)(a_),(afxReal)(b_))
+#define AfxMaxf64(a_,b_) AFX_MAX((afxReal64)(a_),(afxReal64)(b_))
+#define AfxMaxi(a_,b_) AFX_MAX((afxInt)(a_),(afxInt)(b_))
+#define AfxMaxu(a_,b_) AFX_MAX((afxUnit)(a_),(afxUnit)(b_))
 
 #define AfxAtLeast(var_,min_) 
 

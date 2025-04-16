@@ -45,9 +45,30 @@ AFX_DECLARE_STRUCT(afxSinkInterface);
 typedef enum amxUsage { amxUsage_CAPTURE, amxUsage_MIX, amxUsage_RESAMPLE, amxUsage_STORAGE, amxUsage_SOUND } amxUsage;
 typedef enum amxFlag { amxFlag_X } amxFlags;
 
+typedef enum amxSinkUsage
+{
+    amxSinkUsage_AUDIO_OUT,
+    amxSinkUsage_AUDIO_IN,
+    amxSinkUsage_VIDEO_OUT,
+    amxSinkUsage_VIDEO_IN,
+    
+    amxSinkUsage_PHONE,
+    amxSinkUsage_MICROPHONE,
+    amxSinkUsage_CAMERA,
+} amxSinkUsage;
+
+typedef enum amxSinkFlag
+{
+    amxSinkFlag_DEFAULT, // marked as default in host system.
+    amxSinkFlag_HEADSET, // ex.: head-mounted speakers and/or microphone
+    amxSinkFlag_HANDSET, // ex.: combined speaker and/or microphone handheld.
+} amxSinkFlags;
+
+afxError AmxOpenSink(afxMixSystem msys, amxSinkUsage usage);
+
 AFX_DEFINE_STRUCT(amxSinkPin)
 {
-    amxFormat   fmt; // amxFormat_A32f
+    amxFormat   fmt; // amxFormat_M32f
     amxUsage    bufUsage;
     amxFlags    bufFlags;
     afxUnit     chanCnt; // 2 --- stereo
@@ -66,7 +87,7 @@ AFX_DEFINE_STRUCT(afxSinkConfig)
 {
     afxUnit     vaioId;
     afxUri      endpoint;
-    amxFormat   fmt; // amxFormat_A32f
+    amxFormat   fmt; // amxFormat_M32f
     afxUnit     chanCnt; // 2 --- stereo
     afxUnit     freq; // 48000 --- 48kHz
     afxUnit     samplesPerFrame; // (freq / 60)
@@ -146,5 +167,20 @@ AMX afxError        AfxDiscardSinkBuffer(afxSink sink, afxUnit bufIdx);
 AMX afxError        AfxConfigureAudioSink(afxMixSystem msys, afxSinkConfig* cfg);
 
 AMX afxError        AfxOpenAudioSink(afxMixSystem msys, afxSinkConfig const* cfg, afxSink* sink);
+
+AFX_DEFINE_STRUCT(amxSink)
+// Media sinks. Stream sinks handle the actual processing of data on each stream.
+{
+    int a;
+};
+
+// Sets the presentation clock on the media sink.
+// During streaming, the media sink attempts to match rates with the presentation clock. Ideally, the media sink presents samples at the correct time according to the presentation clock and does not fall behind. Rateless media sinks are an exception to this rule, as they consume samples as quickly as possible and ignore the clock.
+afxError AmxSetSinkClock(amxSink msnk, afxClock* clock);
+// Shuts down the media sink and releases the resources it is using.
+// AfxDisposeObjects(1, &msnk)
+
+// Requests a sample from the media source.
+afxError AmxRequestStreamSample(amxSink msnk);
 
 #endif//AMX_SINK_H

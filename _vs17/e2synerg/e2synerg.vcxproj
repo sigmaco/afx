@@ -31,11 +31,13 @@
     <ClInclude Include="..\..\inc\sim\akxLighting.h" />
     <ClInclude Include="..\..\inc\sim\akxRenderer.h" />
     <ClInclude Include="..\..\inc\sim\body\afxBody.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxCollision.h" />
     <ClInclude Include="..\..\inc\sim\body\afxMaterial.h" />
     <ClInclude Include="..\..\inc\sim\body\afxPlacement.h" />
     <ClInclude Include="..\..\inc\sim\body\afxPose.h" />
     <ClInclude Include="..\..\inc\sim\io\afxAnimation.h" />
     <ClInclude Include="..\..\inc\sim\io\afxMesh.h" />
+    <ClInclude Include="..\..\inc\sim\io\afxMeshBlueprint.h" />
     <ClInclude Include="..\..\inc\sim\io\afxModel.h" />
     <ClInclude Include="..\..\inc\sim\io\afxMotion.h" />
     <ClInclude Include="..\..\inc\sim\io\afxScene.h" />
@@ -87,6 +89,7 @@
     <ClCompile Include="..\..\src\sim\io\afxAnimationIo.c" />
     <ClCompile Include="..\..\src\sim\io\afxCurve.c" />
     <ClCompile Include="..\..\src\sim\io\afxMesh.c" />
+    <ClCompile Include="..\..\src\sim\io\afxMeshBlueprint.c" />
     <ClCompile Include="..\..\src\sim\io\afxModel.c" />
     <ClCompile Include="..\..\src\sim\io\afxModelIo.c" />
     <ClCompile Include="..\..\src\sim\io\afxMotion.c" />

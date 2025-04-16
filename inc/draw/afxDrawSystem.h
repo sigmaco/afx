@@ -23,7 +23,7 @@
 #define AVX_DRAW_SYSTEM_H
 
 #include "qwadro/inc/draw/afxDrawDevice.h"
-#include "qwadro/inc/draw/op/afxDrawContext.h"
+#include "qwadro/inc/draw/afxDrawContext.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
 #include "qwadro/inc/draw/io/avxRaster.h"
 #include "qwadro/inc/draw/op/avxCanvas.h"
@@ -65,10 +65,10 @@ AFX_DEFINE_STRUCT(afxDrawSystemConfig)
     further actions with the corresponding driver or module.
 */
 
-AVX afxModule AvxGetDrawSystemIcd
+AVX afxModule       AvxGetDrawSystemIcd
 (
     // The drawing system for which the ICD is being queried.
-    afxDrawSystem dsys
+    afxDrawSystem   dsys
 );
 
 /*
@@ -79,20 +79,20 @@ AVX afxModule AvxGetDrawSystemIcd
     Returns the number of procedures found and retrieved.
 */
 
-AVX afxUnit AvxGetDrawSystemProcedures
+AVX afxUnit         AvxGetDrawSystemProcedures
 (
     // The established drawing system.
-    afxDrawSystem dsys, 
+    afxDrawSystem   dsys, 
 
     // The number of requested procedures.
-    afxUnit cnt, 
+    afxUnit         cnt, 
 
     // An array of strings representing procedure names or identifiers. 
     // The function looks up procedures based on these names.
     afxString const names[], 
 
     // An array of function pointers to store the procedure addresses.
-    void* addresses[]
+    void*           addresses[]
 );
 
 /*
@@ -104,19 +104,19 @@ AVX afxUnit AvxGetDrawSystemProcedures
     Returns the number of arranged bridges.
 */
 
-AVX afxUnit AvxGetDrawBridges
+AVX afxUnit         AvxGetDrawBridges
 (
     // The established drawing system.
-    afxDrawSystem dsys, 
+    afxDrawSystem   dsys, 
 
     // The base index to begin the enumeration of the bridges.
-    afxUnit baseExuIdx, 
+    afxUnit         baseIdx, 
 
     // The number of bridges to be retrieved.
-    afxUnit cnt, 
+    afxUnit         cnt, 
 
     // An array where the function will store the retrieved drawing bridges.
-    afxDrawBridge bridges[]
+    afxDrawBridge   bridges[]
 );
 
 /*
@@ -129,28 +129,28 @@ AVX afxUnit AvxGetDrawBridges
     Returns the number of arranged draw bridges.
 */
 
-AVX afxUnit AvxChooseDrawBridges
+AVX afxUnit         AvxChooseDrawBridges
 (
     // The established drawing system.
-    afxDrawSystem dsys, 
+    afxDrawSystem   dsys, 
 
     // An optional device ID for which the bridges must be linked against.
-    afxUnit ddevId, 
+    afxUnit         ddevId, 
 
     // An optional device port ID associated with the drawing device for which bridges must be linked against.
-    afxUnit portId, 
+    afxUnit         portId, 
     
     // An optional bitmask describing the drawing device's port capabilities for which bridges must be linked against. 
     afxDrawPortFlags portFlags,
 
     // The first index of the bridges to begin selection from.
-    afxUnit first, 
+    afxUnit         first, 
     
     // The maximum number of bridges to be selected and returned.
-    afxUnit maxCnt, 
+    afxUnit         maxCnt, 
 
     // An array that will hold the selected drawing bridges.
-    afxDrawBridge bridges[]
+    afxDrawBridge   bridges[]
 );
 
 /*
@@ -162,19 +162,19 @@ AVX afxUnit AvxChooseDrawBridges
     If the system is not ready within the given @timeout, the function may return an error or a timeout code.
 */
 
-AVX afxError AvxWaitForDrawSystem
+AVX afxError        AvxWaitForDrawSystem
 (
     // The drawing system that you want to wait for.
-    afxDrawSystem dsys, 
+    afxDrawSystem   dsys, 
     
     // The timeout value that defines how long the function should wait before returning. 
     // It is expressed in microseconds and defines how long to wait for the drawing system 
     // to be ready or for the drawing operation to complete.
-    afxUnit64 timeout
+    afxUnit64       timeout
 );
 
 /*
-    The AvxWaitForDrawBridge() function waits for a specific bridge in a drawing system to become ready or finish its operation. 
+    The AvxWaitForDrawBridges() function waits for a specific bridge in a drawing system to become ready or finish its operation. 
     It is useful for synchronizing tasks in graphics pipelines or handling communication between multiple devices. 
     By providing a timeout, it ensures that the function does not block indefinitely and allows you to proceed with other 
     operations if the bridge does not become ready in time. This function is useful in contexts where bridges or execution 
@@ -183,19 +183,19 @@ AVX afxError AvxWaitForDrawSystem
     If the bridge does not reach the ready state within the timeout, the function might return an error.
 */
 
-AVX afxError AvxWaitForDrawBridge
+AVX afxError        AvxWaitForDrawBridges
 (
     // The drawing system to which the specific bridge belongs.
-    afxDrawSystem dsys, 
+    afxDrawSystem   dsys, 
 
     // The index of the execution unit (bridge) that needs to be waited on. 
     // If the drawing system has multiple bridges or execution units (e.g., for communication between different components or devices), 
     // this index identifies the particular bridge you're concerned with.
-    afxUnit exuIdx, 
+    afxMask         exuMask, 
 
     // The timeout period that the function should wait for the bridge to become ready or to complete its operation. 
     // The time is expressed in microseconds, and the function will stop waiting once this period has elapsed.
-    afxUnit64 timeout
+    afxUnit64       timeout
 );
 
 /*
@@ -207,23 +207,23 @@ AVX afxError AvxWaitForDrawBridge
     If the queue does not become ready within this time frame, the function will return an error.
 */
 
-AVX afxError AvxWaitForDrawQueue
+AVX afxError        AvxWaitForDrawQueue
 (
     // The drawing system that contains the queue.
-    afxDrawSystem dsys, 
+    afxDrawSystem   dsys, 
 
     // The execution unit index, which likely refers to a specific queue or processing unit within the drawing system.
     // This helps to identify which execution unit's queue you are waiting for, especially if there are multiple queues in the system.
-    afxUnit exuIdx, 
+    afxUnit         exuIdx, 
 
     // The queue you want to wait for. 
     // Drawing systems often have multiple command queues for various tasks like graphics, compute, or transfer operations. 
     // The queId specifies which queue's state should be checked.
-    afxUnit queId, 
+    afxUnit         queId, 
 
     // The timeout period defines how long the function will wait for the queue to become ready. 
     // The time is specified in microseconds.
-    afxUnit64 timeout
+    afxUnit64       timeout
 );
 
 ////////////////////////////////////////////////////////////////////////////////

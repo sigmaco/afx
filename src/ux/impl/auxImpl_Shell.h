@@ -78,7 +78,7 @@ AFX_DEFINE_STRUCT(_auxSesImpl)
     afxBool(*hasClipContent)(afxSession, afxFlags);
     afxUnit(*getClipContent)(afxSession, afxString*);
     afxError(*setClipContent)(afxSession, afxString const*);
-    afxBool(*getCurPos)(afxSession,afxWindow,afxInt[]);
+    afxBool(*getCurs)(afxSession, afxRect*,afxWindow,afxRect*,afxRect*);
     afxError(*immerge)(afxSession,afxWindow,afxBool);
     afxError(*promote)(afxSession, afxWindow);
     afxError(*grabCursor)(afxSession, afxWindow, afxBool);
@@ -101,8 +101,8 @@ AFX_OBJECT(afxSession)
     afxClass            xssCls;
 
     afxWindow           focusedWnd;
-    afxWindow           curCapturedOn;
-    afxInt              curPos[2];
+    afxWindow           cursCapturedOn;
+    afxRect             cursRect;
 
     struct
     {
@@ -119,6 +119,7 @@ AFX_OBJECT(afxSession)
         afxBool         mbState[2][AFX_MB_TOTAL]; // [ last, prev ][i]
         afxReal         wheelDelta[2]; // [ last, prev ]
         afxV2d          motion[2]; // [ last, prev ]
+        afxV2d          motionAcc[2]; // motion acceleration
 
         // gamepad
         afxBool         fn[2][4]; // function keys
@@ -158,7 +159,6 @@ AFX_DECLARE_STRUCT(_auxWndDdi);
 #else
 AFX_DEFINE_STRUCT(_auxWndDdi)
 {
-    afxBool(*moveCb)(afxWindow, afxUnit const[2]);
     afxError(*redrawCb)(afxWindow, afxRect const*);
     afxError(*chIconCb)(afxWindow, avxRaster);
     afxError(*adjustCb)(afxWindow, afxBool, afxRect const*);
@@ -214,14 +214,14 @@ AFX_OBJECT(afxWindow)
     afxClock        startClock;
     afxClock        lastClock;
 
-    afxV2d          cursorPos;
-    afxV2d          cursorMove;
-    afxV2d          cursorPosNdc;
-    afxV2d          cursorMoveNdc;
-
-    afxBool         cursorDisabled; // disabled on surface
-    afxBool         cursorConfined; // confined on surface
-
+    afxV2d          cursPos;
+    afxV2d          cursMove;
+    afxV2d          cursPosNdc;
+    afxV2d          cursMoveNdc;
+    afxBool         cursConfined; // confined in window
+    afxRect         cursConfinRect;
+    afxBool         cursHidden; // visually disabled in window surface
+    
     afxBool         redrawFrameRequested;
     afxBool         redrawSurfaceRequested;
 

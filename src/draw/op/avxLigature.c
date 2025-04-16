@@ -127,10 +127,10 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
             continue;
 
         AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
-        avxShaderStage stage = AvxGetShaderStage(shd);
+        avxShaderType stage = AvxGetShaderStage(shd);
         afxUnit resCnt = AvxQueryShaderInterfaces(shd, 0, 0, NIL);
 
-        if (shd->pushConstName.str.len)
+        if (shd->pushConstName.s.len)
             liga->pushables = TRUE;
 
         for (afxUnit j = 0; j < resCnt; j++)
@@ -156,7 +156,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
             {
                 avxLigatureSet* set;
 
-                if (!(set = AfxPushArrayUnit(&sets, &setIdx))) AfxThrowError();
+                if (!(set = AfxPushArrayUnits(&sets, 1, &setIdx, NIL, 0))) AfxThrowError();
                 else
                 {
                     set->set = rsrc.set;
@@ -206,7 +206,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
 #endif
                     avxLigatureEntry* ent;
 
-                    if (!(ent = AfxPushArrayUnit(&entries, NIL))) AfxThrowError();
+                    if (!(ent = AfxPushArrayUnits(&entries, 1, NIL, NIL, 0))) AfxThrowError();
                     else
                     {
                         ent->binding = rsrc.binding;
@@ -215,7 +215,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
                         ent->cnt = rsrc.cnt;
                         ent->set = rsrc.set;
 
-                        AfxMakeString16(&ent->name, &rsrc.name.str);
+                        AfxMakeString16(&ent->name, &rsrc.name.s);
                         ++set->entryCnt;
                     }
                 }
@@ -274,7 +274,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
                     ent->cnt = ent2->cnt;
                     ent->set = ent2->set;
 
-                    AfxMakeString16(&ent->name, &ent2->name.str);
+                    AfxMakeString16(&ent->name, &ent2->name.s);
                     ++entryCnt;
 
                     ++liga->totalEntryCnt;
@@ -291,8 +291,8 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
         }
     }
 
-    AfxCleanUpArray(&sets);
-    AfxCleanUpArray(&entries);
+    AfxEmptyArray(&sets, FALSE, FALSE);
+    AfxEmptyArray(&entries, FALSE, FALSE);
 
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
     return err;

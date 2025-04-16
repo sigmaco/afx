@@ -42,7 +42,11 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
     {
         AfxQueryXmlTag(xml, elemIdx, i, &name, &acontent);
 
-        switch (AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(mdlAttrNames), mdlAttrNames))
+        afxUnit sIdx;
+        if (!AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(mdlAttrNames), mdlAttrNames, &sIdx))
+            continue;
+
+        switch (sIdx)
         {
         case 0: // id
         {
@@ -75,7 +79,7 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
         }
         default:
         {
-            AfxLogY("Tag '%.*s' not handled.", AfxPushString(&name));
+            AfxReportY("Tag '%.*s' not handled.", AfxPushString(&name));
             break;
         }
         }
@@ -121,7 +125,11 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
         AfxQueryXmlElement(xml, childElemIdx, &name, &content);
         afxUnit childTagCnt = AfxCountXmlTags(xml, childElemIdx);
 
-        switch (AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(mdlChildNames), mdlChildNames))
+        afxUnit sIdx;
+        if (!AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(mdlChildNames), mdlChildNames, &sIdx))
+            continue;
+
+        switch (sIdx)
         {
         case 0: // Joint
         {
@@ -138,7 +146,11 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
             {
                 AfxQueryXmlTag(xml, elemIdx, j, &name, &acontent);
 
-                switch (AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(jntAttrNames), jntAttrNames))
+                afxUnit sIdx;
+                if (!AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(jntAttrNames), jntAttrNames, &sIdx))
+                    continue;
+
+                switch (sIdx)
                 {
                 case 0: // id
                 {
@@ -198,7 +210,11 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
             {
                 AfxQueryXmlTag(xml, elemIdx, j, &name, &acontent);
 
-                switch (AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(rigAttrNames), rigAttrNames))
+                afxUnit sIdx;
+                if (!AfxCompareStrings(&name, 0, TRUE, ARRAY_SIZE(rigAttrNames), rigAttrNames, &sIdx))
+                    continue;
+
+                switch (sIdx)
                 {
                 case 0: // uri
                 {
@@ -217,7 +233,7 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
         {
             break;
         }
-        default: AfxLogY("Node '%.*s' not handled.", AfxPushString(&name));
+        default: AfxReportY("Node '%.*s' not handled.", AfxPushString(&name));
             break;
         }
     }

@@ -461,8 +461,8 @@ _ASX afxError AfxExecuteSampleCommands(afxSimulation sim, asxSubmission* ctrl, a
 
     // sanitize arguments
     afxUnit totalQueCnt = dqueCls->instCnt;
-    afxUnit baseQueIdx = AfxMin(ctrl->baseQueIdx, totalQueCnt - 1);
-    afxUnit queCnt = AfxClamp(ctrl->queCnt, 1, totalQueCnt - baseQueIdx);
+    afxUnit baseQueIdx = AFX_MIN(ctrl->baseQueIdx, totalQueCnt - 1);
+    afxUnit queCnt = AFX_CLAMP(ctrl->queCnt, 1, totalQueCnt - baseQueIdx);
     AFX_ASSERT(queCnt);
     afxBool queued = FALSE;
 
@@ -514,7 +514,7 @@ _ASX afxBool _AsxCaptureBodCb(afxBody bod, void** udd)
     {
         afxUnit arrel;
 
-        if (!AfxPushArrayUnits(pvs, 1, &arrel, &bod)) AfxThrowError();
+        if (!AfxPushArrayUnits(pvs, 1, &arrel, &bod, sizeof(bod))) AfxThrowError();
         else
         {
 
@@ -599,7 +599,7 @@ _ASX afxError _AsxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
 #endif
     AfxM3dSet(sim->basis, sim->right, sim->up, sim->back);
 
-    AfxCopyBoxes(1, &cfg->extent, &sim->extent);
+    AfxCopyBoxes(1, &cfg->extent, 0, &sim->extent, 0);
     AfxV3dCopy(sim->origin, cfg->origin);
 
     if (!cfg->unitsPerMeter)
@@ -821,7 +821,7 @@ _ASX afxError AfxConfigureSimulation(afxUnit icd, afxSimulationConfig* cfg)
     AfxV3dSet(cfg->up, 0, 1, 0);
     AfxV3dSet(cfg->back, 0, 0, 1);
     AfxV3dZero(cfg->origin);
-    AfxMakeAabbFromVertices(&cfg->extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
+    AfxMakeAabb(&cfg->extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
     cfg->unitsPerMeter = 1.f;
     cfg->allowedLodErrFadingFactor = 0.80000001;
 
@@ -888,7 +888,7 @@ _ASX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg
     AFX_ASSERT(portId != AFX_INVALID_INDEX);
     bridgeCfg[bridgeCnt].portId = portId;
     bridgeCfg[bridgeCnt].exuIdx = 0;
-    bridgeCfg[bridgeCnt].minQueCnt = AfxClamp(cfg->prime.minQueCnt, 1, ASX_MAX_SIM_QUEUE_PER_BRIDGE);
+    bridgeCfg[bridgeCnt].minQueCnt = AFX_CLAMP(cfg->prime.minQueCnt, 1, ASX_MAX_SIM_QUEUE_PER_BRIDGE);
     ++bridgeCnt;
 
     if (cfg->auxCnt && cfg->auxs)
@@ -930,7 +930,7 @@ _ASX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg
                 AFX_ASSERT(portId != AFX_INVALID_INDEX);
                 bridgeCfg[bridgeCnt].portId = portId;
                 bridgeCfg[bridgeCnt].exuIdx = bridgeCnt;
-                bridgeCfg[bridgeCnt].minQueCnt = AfxClamp(cfg->auxs[i].minQueCnt, 1, ASX_MAX_SIM_QUEUE_PER_BRIDGE);
+                bridgeCfg[bridgeCnt].minQueCnt = AFX_CLAMP(cfg->auxs[i].minQueCnt, 1, ASX_MAX_SIM_QUEUE_PER_BRIDGE);
                 ++bridgeCnt;
             }
         }
@@ -953,7 +953,7 @@ _ASX afxError AfxEstablishSimulation(afxUnit icd, afxSimulationConfig const* cfg
     AfxV3dCopy(cfg2.up, cfg->up);
     AfxV3dCopy(cfg2.back, cfg->back);
     AfxV3dCopy(cfg2.origin, cfg->origin);
-    AfxCopyBoxes(1, &cfg->extent, &cfg2.extent);
+    AfxCopyBoxes(1, &cfg->extent, 0, &cfg2.extent, 0);
 
     afxClass* cls = (afxClass*)_AsxGetSimulationClass(driver);
     AFX_ASSERT_CLASS(cls, afxFcc_SIM);

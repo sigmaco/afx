@@ -178,26 +178,26 @@ _AUX afxError auxScmHook(afxModule mdle, afxManifest const* ini)
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     // HIDs must be installed here. It is not implementation-dependent. It does not store state.
-    AfxMountClass(&sys->aux.hidCls, (afxClass*)AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AUX_HID_CLASS_CONFIG);
+    AfxMountClass(&sys->aux.hidCls, (afxClass*)_AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AUX_HID_CLASS_CONFIG);
 
-    //AfxMountClass(&sys->aux.sshCls, (afxClass*)AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AUX_SSH_CLASS_CONFIG); // require base*
+    //AfxMountClass(&sys->aux.sshCls, (afxClass*)_AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AUX_SSH_CLASS_CONFIG); // require base*
 
     if (!err)
     {
         afxHidInfo hidInfos[] =
         {
             {
-                .dev.urn = AfxString("kbd"),
+                .dev.urn = AFX_STRING("kbd"),
                 .dev.type = afxDeviceType_HID,
                 .type = afxHidType_KEYBOARD
             },
             {
-                .dev.urn = AfxString("mse"),
+                .dev.urn = AFX_STRING("mse"),
                 .dev.type = afxDeviceType_HID,
                 .type = afxHidType_MOUSE
             },
             {
-                .dev.urn = AfxString("gpad"),
+                .dev.urn = AFX_STRING("gpad"),
                 .dev.type = afxDeviceType_HID,
                 .type = afxHidType_GAMEPAD
             }

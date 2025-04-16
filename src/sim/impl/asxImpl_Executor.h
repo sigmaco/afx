@@ -118,7 +118,7 @@ AFX_OBJECT(afxSimQueue)
 
     afxCondition idleCnd;
     afxMutex idleCndMtx;
-    afxSlock workArenaSlock;
+    afxFutex workArenaSlock;
     afxArena workArena; // used by submission of queue operations, not stream commands.        
     afxChain workChn;
     afxMutex workChnMtx;
@@ -129,7 +129,7 @@ AFX_OBJECT(afxSimQueue)
     afxClass        cmdbCls;
     // one stream manager per queue to avoid thread interaction
     afxQueue        cmdbRecycQue;
-    afxSlock        cmdbReqLock;
+    afxFutex        cmdbReqLock;
     afxBool         cmdbLockedForReq;
 
     afxError(*waitCb)(afxSimQueue, afxTime);

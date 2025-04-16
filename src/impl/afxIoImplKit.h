@@ -57,7 +57,7 @@ AFX_OBJECT(afxIoQueue)
     afxBool         immediate; // 0 = deferred, 1 = immediate
     afxBool         closed; // can't enqueue
 
-    afxSlock        workArenaSlock;
+    afxFutex        workArenaSlock;
     afxArena        workArena; // used by submission of queue operations, not stream commands.        
     afxChain        workChn;
     afxMutex        workChnMtx;

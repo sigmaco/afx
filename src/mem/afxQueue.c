@@ -23,6 +23,9 @@ _AFXINL afxError AfxMakeQueue(afxQueue* que, afxUnit unitSiz, afxUnit cap, void*
     AFX_ASSERT(unitSiz);
     AFX_ASSERT(cap);
     AFX_ASSERT(pop <= cap);
+#ifdef _AFX_QUEUE_VALIDATION_ENABLED
+    que->fcc = afxFcc_QUE;
+#endif
     que->unitSiz = unitSiz;
     que->cap = cap;
     que->head = (que->tail = 0);

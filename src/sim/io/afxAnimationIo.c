@@ -392,21 +392,21 @@ _ASX afxError AfxSerializeAnimation(afxAnimation ani, afxStream out)
         if (mot)
         {
             motions[uniqueMotCnt++] = mot;
-            AfxWriteMappedStrings(out, &sdb.str, 1, &mot->id);
+            AfxWriteMappedStrings(out, &sdb.s, 1, &mot->id);
         }
     }
 
     aniHdr.motInfoBase = AfxAskStreamPosn(out);
 
-    if (AfxSerializeMotions(out, &sdb.str, uniqueMotCnt, motions))
+    if (AfxSerializeMotions(out, &sdb.s, uniqueMotCnt, motions))
         AfxThrowError();
 
     {
         // write string database
         aniHdr.sdbStart = AfxAskStreamPosn(out);
-        aniHdr.sdbSiz = sdb.str.len;
+        aniHdr.sdbSiz = sdb.s.len;
 
-        if (AfxWriteStream(out, aniHdr.sdbSiz, 0, sdb.str.start))
+        if (AfxWriteStream(out, aniHdr.sdbSiz, 0, sdb.s.start))
         {
             AfxThrowError();
             return err;
@@ -449,7 +449,7 @@ _ASX afxError AfxUploadAnimation(afxSimulation sim, afxString const* urn, afxStr
     // Qwadro doesn't use afxChunkID_STRUCT
 
     afxArena arena;
-    AfxDeployArena(&arena, NIL, AfxHere());
+    AfxMakeArena(&arena, NIL, AfxHere());
 
 #pragma push(pack, 1)
     K4D_ANI_HDR aniHdr;
@@ -467,7 +467,7 @@ _ASX afxError AfxUploadAnimation(afxSimulation sim, afxString const* urn, afxStr
 
     afxSize posBkp = AfxAskStreamPosn(in);
     AfxSeekStream(in, aniHdr.sdbStart, afxSeekOrigin_BEGIN);
-    AfxReadString(&sdb.str, in, aniHdr.sdbSiz);
+    AfxReadString(&sdb.s, in, aniHdr.sdbSiz);
 
     afxAnimation ani;
     afxAnimationBlueprint anib = { 0 };
@@ -480,25 +480,25 @@ _ASX afxError AfxUploadAnimation(afxSimulation sim, afxString const* urn, afxStr
 
     AfxSeekStream(in, aniHdr.motIdBase, afxSeekOrigin_BEGIN);
 
-    if (AfxReadMappedStrings(in, &sdb.str, aniHdr.motCnt, strings))
+    if (AfxReadMappedStrings(in, &sdb.s, aniHdr.motCnt, strings))
         AfxThrowError();
 
     AfxSeekStream(in, aniHdr.motInfoBase, afxSeekOrigin_BEGIN);
 
-    K4D_MOT_HDR* motHdrs = AfxRequestArenaUnit(&arena, aniHdr.motCnt * sizeof(motHdrs[0]));
+    K4D_MOT_HDR* motHdrs = AfxRequestArenaUnit(&arena, sizeof(motHdrs[0]), aniHdr.motCnt, NIL, 0);
 
     if (AfxReadStream(in, aniHdr.motCnt * sizeof(motHdrs[0]), 0, motHdrs))
         AfxThrowError();
 
-    afxMotionBlueprint* motbs = AfxRequestArenaZeroedUnit(&arena, aniHdr.motCnt * sizeof(motbs[0]));
+    afxMotionBlueprint* motbs = AfxRequestArenaUnit(&arena, sizeof(motbs[0]), aniHdr.motCnt, NIL, 1);
 
     for (afxUnit i = 0; i < aniHdr.motCnt; i++)
     {
         K4D_MOT_HDR* motHdr = &motHdrs[i];
         afxMotionBlueprint* motb = &motbs[i];
 
-        afxString* pivots = AfxRequestArenaUnit(&arena, motHdr->pvtCnt * sizeof(pivots[0]));;
-        afxString* vectors = motHdr->vecCnt ? AfxRequestArenaUnit(&arena, motHdr->vecCnt * sizeof(vectors[0])) : NIL;
+        afxString* pivots = AfxRequestArenaUnit(&arena, sizeof(pivots[0]), motHdr->pvtCnt, NIL, 0);;
+        afxString* vectors = motHdr->vecCnt ? AfxRequestArenaUnit(&arena, sizeof(vectors[0]), motHdr->vecCnt, NIL, 0) : NIL;
 
         motb->displacement = motHdr->displacement;
         motb->incPivotLodError = !!motHdr->pvtLodErrDir;
@@ -511,13 +511,13 @@ _ASX afxError AfxUploadAnimation(afxSimulation sim, afxString const* urn, afxStr
         if (motb->pivotCnt)
         {
             AfxSeekStream(in, motHdr->pvtDir, afxSeekOrigin_BEGIN);
-            AfxReadMappedStrings(in, &sdb.str, motHdr->pvtCnt, pivots);
+            AfxReadMappedStrings(in, &sdb.s, motHdr->pvtCnt, pivots);
         }
 
         if (motb->vecCnt)
         {
             AfxSeekStream(in, motHdr->vecDir, afxSeekOrigin_BEGIN);
-            AfxReadMappedStrings(in, &sdb.str, motHdr->vecCnt, vectors);
+            AfxReadMappedStrings(in, &sdb.s, motHdr->vecCnt, vectors);
         }
     }
 
@@ -529,8 +529,8 @@ _ASX afxError AfxUploadAnimation(afxSimulation sim, afxString const* urn, afxStr
 
         AfxV3dCopy(motions[i]->loopTranslation, motHdr->loopTranslation);
 
-        K4D_CUR_HDR* curHdrs = AfxRequestArenaUnit(&arena, motHdr->totalCurCnt * sizeof(curHdrs[0]));
-        afxCurveInfo* curis = AfxRequestArenaZeroedUnit(&arena, motHdr->totalCurCnt * sizeof(curis[0]));
+        K4D_CUR_HDR* curHdrs = AfxRequestArenaUnit(&arena, sizeof(curHdrs[0]), motHdr->totalCurCnt, NIL, 0);
+        afxCurveInfo* curis = AfxRequestArenaUnit(&arena, sizeof(curis[0]), motHdr->totalCurCnt, NIL, 0);
         afxCurve curvesStatic[256];
         afxCurve* curves = curvesStatic;// AfxRequestArenaUnit(&arena, motHdr->totalCurCnt * sizeof(curves[0]));
         AfxReadStreamAt(in, motHdr->curDir, motHdr->totalCurCnt * sizeof(curHdrs[0]), 0, curHdrs);
@@ -547,14 +547,14 @@ _ASX afxError AfxUploadAnimation(afxSimulation sim, afxString const* urn, afxStr
 
             if (curHdr->ctrlCnt)
             {
-                afxReal* ctrls = AfxRequestArenaUnit(&arena, curHdr->ctrlCnt * sizeof(ctrls[0]));
+                afxReal* ctrls = AfxRequestArenaUnit(&arena, sizeof(ctrls[0]), curHdr->ctrlCnt, NIL, 0);
                 AfxReadStreamAt(in, curHdr->ctrlDirOffset, curHdr->ctrlCnt * sizeof(ctrls[0]), 0, ctrls);
                 curi->ctrls = ctrls;
             }
 
             if (curHdr->knotCnt)
             {
-                afxReal* knots = AfxRequestArenaUnit(&arena, curHdr->knotCnt * sizeof(knots[0]));
+                afxReal* knots = AfxRequestArenaUnit(&arena, sizeof(knots[0]), curHdr->knotCnt, NIL, 0);
                 AfxReadStreamAt(in, curHdr->knotDirOffset, curHdr->knotCnt * sizeof(knots[0]), 0, knots);
                 curi->knots = knots;
             }
@@ -581,7 +581,7 @@ _ASX afxError AfxUploadAnimation(afxSimulation sim, afxString const* urn, afxStr
             }
         }
 #endif
-        K4D_MOT_PVT_HDR* pvtHdrs = AfxRequestArenaUnit(&arena, motHdr->pvtCnt * sizeof(pvtHdrs[0]));
+        K4D_MOT_PVT_HDR* pvtHdrs = AfxRequestArenaUnit(&arena, sizeof(pvtHdrs[0]), motHdr->pvtCnt, NIL, 0);
         AfxReadStreamAt(in, motHdr->pvtInfoDir, motHdr->pvtCnt * sizeof(pvtHdrs[0]), 0, pvtHdrs);
 
         for (afxUnit j = 0; j < motHdr->pvtCnt; j++)
@@ -603,7 +603,7 @@ _ASX afxError AfxUploadAnimation(afxSimulation sim, afxString const* urn, afxStr
 
         if (motHdr->vecCnt)
         {
-            K4D_MOT_VEC_HDR* vecHdrs = AfxRequestArenaUnit(&arena, motHdr->vecCnt * sizeof(vecHdrs[0]));
+            K4D_MOT_VEC_HDR* vecHdrs = AfxRequestArenaUnit(&arena, sizeof(vecHdrs[0]), motHdr->vecCnt, NIL, 0);
             AfxReadStreamAt(in, motHdr->vecInfoDir, motHdr->vecCnt * sizeof(vecHdrs[0]), 0, vecHdrs);
 
             for (afxUnit j = 0; j < motHdr->vecCnt; j++)

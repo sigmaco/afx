@@ -125,10 +125,10 @@ _AFX afxTimeSpec* AfxMakeTimeSpec(afxTimeSpec* ts, afxUnit64 nsec)
         afxTimeSpec ts2;
         
         // Divides the nanoseconds by 1 billion to get the full seconds (sec).
-        ts2.sec = nsec / 1000000000; // Get full seconds
+        ts2.secs = nsec / 1000000000; // Get full seconds
 
         // Uses the remainder to get the nanoseconds (nsec), which is the part that doesn't complete a full second.
-        ts2.nsec = nsec % 1000000000; // Get the remainder nanoseconds
+        ts2.nsecs = nsec % 1000000000; // Get the remainder nanoseconds
         *ts = ts2;
     }
     return ts;
@@ -147,16 +147,16 @@ _AFX afxTimeSpec* AfxMakeTimeSpecInterval(afxTimeSpec* ts, afxTimeSpec const* st
     // but it can be adapted to handle both directions by checking for negative differences and taking absolute values if necessary.
 
     // Subtract the seconds
-    ts->sec = end->sec - start->sec;
+    ts->secs = end->secs - start->secs;
 
     // Subtract the nanoseconds
-    ts->nsec = end->nsec - start->nsec;
+    ts->nsecs = end->nsecs - start->nsecs;
 
     // If nanoseconds are negative, adjust by borrowing 1 second (1e9 nanoseconds)
-    if (ts->nsec < 0)
+    if (ts->nsecs < 0)
     {
-        ts->nsec += 1000000000; // 1 second in nanoseconds
-        ts->sec -= 1;           // Borrow 1 second
+        ts->nsecs += 1000000000; // 1 second in nanoseconds
+        ts->secs -= 1;           // Borrow 1 second
     }
 
     return ts;
@@ -178,9 +178,59 @@ _AFX afxInt64 AfxGetTimeSpecDelta(afxTimeSpec const* start, afxTimeSpec const* e
     // For example, if start time is later than end time, the result would show a negative number of nanoseconds.
 
     // Convert both start and end times to nanoseconds
-    afxInt64 startNs = (afxInt64)start->sec * 1000000000 + start->nsec;
-    afxInt64 endNs = (afxInt64)end->sec * 1000000000 + end->nsec;
+    afxInt64 startNs = (afxInt64)start->secs * 1000000000 + start->nsecs;
+    afxInt64 endNs = (afxInt64)end->secs * 1000000000 + end->nsecs;
 
     // Return the difference in nanoseconds
     return (endNs - startNs);
+}
+
+
+AFX_DEFINE_STRUCT(afxTimer)
+{
+    afxClock prevClock;
+    afxUnit stepsPerSec;
+    afxUnit stepCnt;
+    afxBool running;
+};
+
+
+_AFX afxError AfxMakeTimer(afxTimer* timer)
+{
+    afxError err = NIL;
+    AFX_ASSERT(timer);
+    return err;
+}
+
+_AFX afxError AfxFixTimerStep(afxTimer* timer, afxUnit stepsPerSec)
+{
+    afxError err = NIL;
+    AFX_ASSERT(timer);
+    timer->stepsPerSec = (stepsPerSec > 0 && stepsPerSec < 5) ? 5 : stepsPerSec < 0 ? 0 : stepsPerSec;
+    return err;
+}
+
+_AFX afxError AfxStepTimer(afxTimer* timer)
+{
+    afxError err = NIL;
+    AFX_ASSERT(timer);
+    
+    if (!timer->running)
+    {
+        AfxGetClock(&timer->prevClock);
+        timer->running = TRUE;
+    }
+
+    afxClock clock;
+    AfxGetClock(&clock);
+    afxReal64 dt = AfxGetClockSecondsElapsed(&timer->prevClock, &clock);
+
+    if (timer->stepsPerSec)
+    {
+
+    }
+
+    ++timer->stepCnt;
+
+    return err;
 }

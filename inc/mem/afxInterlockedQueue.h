@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // INTERLOCKED FIFO QUEUE                                                   //
+//////////////////////////////////////////////////////////////////////////////
+
 /**
     afxInterlockedQueue is a lock-less, thread-safe, multi-producer-multi-consumer queue data structure. 
     It is designed to hold copyable values.
@@ -26,8 +30,15 @@
 #include "qwadro/inc/base/afxDebug.h"
 #include "qwadro/inc/exec/afxAtomic.h"
 
+#if (defined _AFX_DEBUG) && !(defined(_AFX_INTERLOCKED_QUEUE_VALIDATION_ENABLED))
+#   define _AFX_INTERLOCKED_QUEUE_VALIDATION_ENABLED TRUE
+#endif
+
 AFX_DEFINE_STRUCT(afxInterlockedQueue)
 {
+#ifdef _AFX_INTERLOCKED_QUEUE_VALIDATION_ENABLED
+    afxFcc          fcc; // afxFcc_FIFO;
+#endif
     afxAtom32*      entrySeqIdx;
     afxByte*        entryValue;
 #if 0

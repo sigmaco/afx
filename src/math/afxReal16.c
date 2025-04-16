@@ -126,7 +126,7 @@ _AFXINL afxReal32 AfxUnpackReal16(afxReal16 hf)
 _AFXINL afxReal AfxSnorm16ToReal32(afxInt16 v)
 {
     // -32768 & -32767 both map to -1 according to D3D10 rules.
-    return AfxMax(v / 32767.0f, -1.0f);
+    return AFX_MAX(v / 32767.0f, -1.0f);
 }
 
 _AFXINL void AfxRealToUnorm16(afxUnit cnt, afxReal const in[], afxUnit16 out[])
@@ -135,6 +135,6 @@ _AFXINL void AfxRealToUnorm16(afxUnit cnt, afxReal const in[], afxUnit16 out[])
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        out[i] = AfxClamp(in[i] * (2^BITS - 1), 0, 2^BITS - 1);
+        out[i] = AFX_CLAMP(in[i] * (2^BITS - 1), 0, 2^BITS - 1);
     }
 }

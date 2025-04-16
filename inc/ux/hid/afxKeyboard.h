@@ -214,4 +214,12 @@ AUX afxBool         AfxWereKeysReleased(afxUnit seat, afxUnit cnt, afxKey const 
 AUX afxError        AfxEmulatePressedKeys(afxUnit seat, afxUnit cnt, afxKey const key[], afxUnit8 const pressure[], afxWindow wnd);
 AUX afxError        AfxReleaseAllKeys(afxUnit seat, afxWindow wnd);
 
+
+AUX afxError    AfxReleaseAllKeys2(afxMask seats, afxWindow wnd);
+AUX afxMask     AfxWereKeysReleased2(afxMask seats, afxUnit cnt, afxKey const codes[]);
+AUX afxMask     AfxWasKeyReleased2(afxMask seats, afxKey code);
+AUX afxMask     AfxWereKeysPressed2(afxMask seats, afxUnit cnt, afxKey const codes[]);
+AUX afxMask     AfxWasKeyPressed2(afxMask seats, afxKey code);
+AUX afxMask     AfxIsKeyPressed2(afxMask seats, afxKey code);
+
 #endif//AUX_KEYBOARD_H

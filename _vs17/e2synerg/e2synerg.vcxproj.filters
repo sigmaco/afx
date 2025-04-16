@@ -10,9 +10,6 @@
     <Filter Include="qwadro\sim">
       <UniqueIdentifier>{2f407ed3-dab5-4277-8ec5-33e7c7e1b64f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\sim\dev">
-      <UniqueIdentifier>{4d73ebc4-01bb-4411-92f1-e29a276c5429}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro\sim\impl">
       <UniqueIdentifier>{c8f4cd25-0377-4432-9a36-8e1833d41109}</UniqueIdentifier>
     </Filter>
@@ -24,6 +21,15 @@
     </Filter>
     <Filter Include="qwadro\sim\op">
       <UniqueIdentifier>{83f1d15f-f865-49a0-93b8-07709c273b45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\sim\dev">
+      <UniqueIdentifier>{4d73ebc4-01bb-4411-92f1-e29a276c5429}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\cine">
+      <UniqueIdentifier>{75fcb7a8-9c57-4828-bc87-296b28af7d6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\scene">
+      <UniqueIdentifier>{81b525e1-9bad-48bc-bc67-0bacd2ff1c5c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -47,12 +53,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\sim\afxSimDefs.h">
       <Filter>qwadro\sim</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\akxLighting.h">
-      <Filter>qwadro\sim\dev</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\akxRenderer.h">
-      <Filter>qwadro\sim\dev</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Animation.h">
       <Filter>qwadro\sim\impl</Filter>
@@ -78,13 +78,7 @@
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Simulation.h">
       <Filter>qwadro\sim\impl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\qwadro\inc\sim\io\afxCurve.h">
-      <Filter>qwadro\sim\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\qwadro\inc\sim\io\asxBuffer.h">
-      <Filter>qwadro\sim\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\io\afxAnimation.h">
       <Filter>qwadro\sim\io</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\sim\io\afxMesh.h">
@@ -93,22 +87,10 @@
     <ClInclude Include="..\..\inc\sim\io\afxModel.h">
       <Filter>qwadro\sim\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\io\afxMotion.h">
-      <Filter>qwadro\sim\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\io\afxScene.h">
-      <Filter>qwadro\sim\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\sim\io\afxTriangulation.h">
       <Filter>qwadro\sim\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\afxCapstan.h">
-      <Filter>qwadro\sim\body</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\sim\body\afxBody.h">
-      <Filter>qwadro\sim\body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\body\afxMaterial.h">
       <Filter>qwadro\sim\body</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\sim\body\afxPlacement.h">
@@ -125,6 +107,36 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\sim\op\afxSampleContext.h">
       <Filter>qwadro\sim\op</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\io\afxMeshBlueprint.h">
+      <Filter>qwadro\sim\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\afxCapstan.h">
+      <Filter>qwadro\cine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\io\afxAnimation.h">
+      <Filter>qwadro\cine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\qwadro\inc\sim\io\afxCurve.h">
+      <Filter>qwadro\cine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\io\afxMotion.h">
+      <Filter>qwadro\cine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\io\afxScene.h">
+      <Filter>qwadro\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\akxRenderer.h">
+      <Filter>qwadro\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\akxLighting.h">
+      <Filter>qwadro\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\body\afxCollision.h">
+      <Filter>qwadro\sim\body</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\body\afxMaterial.h">
+      <Filter>qwadro\sim\body</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -151,12 +163,6 @@
     <ClCompile Include="..\..\src\sim\afxTerrain.c">
       <Filter>qwadro\sim</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\akxLighting.c">
-      <Filter>qwadro\sim\dev</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\akxRenderer.c">
-      <Filter>qwadro\sim\dev</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\sim\impl\asxImplementation.c">
       <Filter>qwadro\sim\impl</Filter>
     </ClCompile>
@@ -165,15 +171,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Executor.c">
       <Filter>qwadro\sim\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxAnimation.c">
-      <Filter>qwadro\sim\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxAnimationIo.c">
-      <Filter>qwadro\sim\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxCurve.c">
-      <Filter>qwadro\sim\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sim\io\afxMesh.c">
       <Filter>qwadro\sim\io</Filter>
@@ -184,26 +181,11 @@
     <ClCompile Include="..\..\src\sim\io\afxModelIo.c">
       <Filter>qwadro\sim\io</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxMotion.c">
-      <Filter>qwadro\sim\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxScene.c">
-      <Filter>qwadro\sim\io</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\sim\io\afxTriangulation.c">
       <Filter>qwadro\sim\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sim\io\asxBuffer.c">
       <Filter>qwadro\sim\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\afxCapstan.c">
-      <Filter>qwadro\sim\body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\asxInstancedAnimation.c">
-      <Filter>qwadro\sim\body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\asxMotive.c">
-      <Filter>qwadro\sim\body</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sim\body\afxBody.c">
       <Filter>qwadro\sim\body</Filter>
@@ -234,6 +216,39 @@
     </ClCompile>
     <ClCompile Include="..\..\src\sim\op\afxPoseOps.c">
       <Filter>qwadro\sim\op</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\io\afxMeshBlueprint.c">
+      <Filter>qwadro\sim\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\afxCapstan.c">
+      <Filter>qwadro\cine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\asxInstancedAnimation.c">
+      <Filter>qwadro\cine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\asxMotive.c">
+      <Filter>qwadro\cine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\io\afxAnimationIo.c">
+      <Filter>qwadro\cine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\io\afxAnimation.c">
+      <Filter>qwadro\cine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\io\afxCurve.c">
+      <Filter>qwadro\cine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\io\afxMotion.c">
+      <Filter>qwadro\cine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\io\afxScene.c">
+      <Filter>qwadro\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\akxLighting.c">
+      <Filter>qwadro\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\akxRenderer.c">
+      <Filter>qwadro\scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

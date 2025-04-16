@@ -130,7 +130,7 @@ _AFX afxUnit AfxGetThreadingCapacity(void)
     return sys->hwThreadingCap;
 }
 
-_AFX afxClass const* AfxGetIoBridgeClass(void)
+_AFX afxClass const* _AfxGetIoBridgeClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -141,7 +141,7 @@ _AFX afxClass const* AfxGetIoBridgeClass(void)
     return cls;
 }
 
-_AFX afxClass const* AfxGetStreamClass(void)
+_AFX afxClass const* _AfxGetStreamClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -152,7 +152,7 @@ _AFX afxClass const* AfxGetStreamClass(void)
     return cls;
 }
 
-_AFX afxClass* AfxGetStorageClass(void)
+_AFX afxClass* _AfxGetStorageClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -163,7 +163,7 @@ _AFX afxClass* AfxGetStorageClass(void)
     return cls;
 }
 
-_AFX afxClass* AfxGetServiceClass(void)
+_AFX afxClass* _AfxGetServiceClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -174,7 +174,7 @@ _AFX afxClass* AfxGetServiceClass(void)
     return cls;
 }
 
-_AFX afxClass* AfxGetThreadClass(void)
+_AFX afxClass* _AfxGetThreadClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -185,7 +185,18 @@ _AFX afxClass* AfxGetThreadClass(void)
     return cls;
 }
 
-_AFX afxClass* AfxGetStringBaseClass(void)
+_AFX afxClass* _AfxGetThreadPoolClass(void)
+{
+    afxError err = AFX_ERR_NONE;
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass *cls = &sys->thrpCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_THRP);
+    return cls;
+}
+
+_AFX afxClass* _AfxGetStringBaseClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -196,7 +207,7 @@ _AFX afxClass* AfxGetStringBaseClass(void)
     return cls;
 }
 
-_AFX afxClass* AfxGetMmuClass(void)
+_AFX afxClass* _AfxGetMmuClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -207,7 +218,7 @@ _AFX afxClass* AfxGetMmuClass(void)
     return cls;
 }
 
-_AFX afxClass* AfxGetModuleClass(void)
+_AFX afxClass* _AfxGetModuleClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -218,7 +229,7 @@ _AFX afxClass* AfxGetModuleClass(void)
     return cls;
 }
 
-_AFX afxClass const* AfxGetDeviceClass(void)
+_AFX afxClass const* _AfxGetDeviceClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -462,7 +473,7 @@ _AFX afxBool _AfxLoadAndAttachIcd(void* udd, afxUnit diskId, afxUnit endpointIdx
 
     afxUri2048 dllFile;
     AfxMakeUri2048(&dllFile, NIL);
-    AfxFormatUri(&dllFile.uri, "%.*s/%.*s.dll", AfxPushString(&basePath.str), AfxPushString(&fname.str));
+    AfxFormatUri(&dllFile.uri, "%.*s/%.*s.dll", AfxPushString(&basePath.s), AfxPushString(&fname.s));
 
     afxModule icd;
     if (AfxLoadModule(&dllFile.uri, NIL, &icd))
@@ -505,7 +516,7 @@ _AFX afxError _AfxScanIcdManifests(afxSystem sys, afxManifest const* sysIni)
             
             afxUri2048 dllFile;
             AfxMakeUri2048(&dllFile, NIL);
-            AfxFormatUri(&dllFile.uri, "%.*s/%.*s.dll", AfxPushString(&fpath.uri.str), AfxPushString(&fnameOnly.str));
+            AfxFormatUri(&dllFile.uri, "%.*s/%.*s.dll", AfxPushString(&fpath.uri.s), AfxPushString(&fnameOnly.s));
 
             afxModule icd;
 
@@ -564,7 +575,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
 #ifndef _AFX_DISABLE_DEBUGGER
     _AfxDbgAttach(NIL);
 #endif
-    AfxDbgLogf(6, NIL, "Booting...");
+    AfxReportf(6, NIL, "Booting...");
 
     afxManifest ini;
     AfxDeployManifest(&ini);
@@ -583,8 +594,8 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         sys = TheSystem;
         AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
-        AfxLogY("Memory page Size: %d", sys->memPageSiz);
-        AfxLogY("HW threading: %d", sys->hwThreadingCap);
+        AfxReportY("Memory page Size: %d", sys->memPageSiz);
+        AfxReportY("HW threading: %d", sys->hwThreadingCap);
     }
 
     // Loading modulations
@@ -743,7 +754,7 @@ _AFX void AfxDoSystemShutdown(afxInt exitCode)
     afxSystem sys;
     if (AfxGetSystem(&sys))
     {
-        AfxDbgLogf(6, NIL, "Shutting down...\n");
+        AfxReportf(6, NIL, "Shutting down...\n");
 #if 0
         do
         {

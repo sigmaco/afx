@@ -35,26 +35,41 @@
 
 #include "qwadro/inc/mem/afxMemory.h"
 
-AFX_DEFINE_STRUCT(afxMemorySlabSlot)
+#if (defined _AFX_DEBUG) && !(defined(_AFX_SLAB_ALLOC_VALIDATION_ENABLED))
+#   define _AFX_SLAB_ALLOC_VALIDATION_ENABLED TRUE
+#endif
+
+AFX_DEFINE_STRUCT(afxSlabLink)
 {
-    afxMemorySlabSlot*  next;
+#ifdef _AFX_SLAB_ALLOC_VALIDATION_ENABLED
+    afxFcc              fcc; // afxFcc_SLAB;
+#endif
+    afxSlabLink*        next;
     afxByte AFX_ADDR    data[];
 };
 
-AFX_DEFINE_STRUCT(afxMemorySlab)
+AFX_DEFINE_STRUCT(afxSlab)
 {
-    afxMemorySlab*      next;
-    afxMemorySlab*      prev;
-    afxMemorySlabSlot*  firstFree;
+#ifdef _AFX_SLAB_ALLOC_VALIDATION_ENABLED
+    afxFcc              fcc; // afxFcc_SLAB;
+#endif
+    afxSlab*            next;
+    afxSlab*            prev;
+    afxSlabLink*        firstFree;
     afxUnit             unitCnt;
     afxByte AFX_ADDR    units[1];
 };
 
 AFX_DEFINE_STRUCT(afxSlabAllocator)
 {
+#ifdef _AFX_SLAB_ALLOC_VALIDATION_ENABLED
+    afxFcc              fcc; // afxFcc_SLAB;
+#endif
     afxUnit             unitSiz;
+    afxUnit             unitAlign;
     afxUnit             unitsPerSlab;
-    afxMemorySlab       anchor;
+    afxUnit             cachedSlabSiz; // to avoid recalc it every call and to ease footer-based linking.
+    afxSlab             anchor;
 };
 
 AFX afxError    AfxDeploySlabAllocator(afxSlabAllocator* mgr, afxUnit unitSiz, afxUnit unitsPerSlab);

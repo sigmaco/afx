@@ -23,7 +23,7 @@
 
 afxError AfxReadBuffer(avxBuffer buf, afxSize offset, afxUnit range, afxUnit stride, void* data)
 {
-    AfxCopy(data, &(AFX_CAST(afxByte*, buf->data)[offset]), stride);
+    AfxCopy(data, &(AFX_CAST(afxByte*, buf->storage[0].hostedAlloc.addr)[offset]), stride);
 }
 
 void DoVertex(afxUnit vtxId, void* data)
@@ -47,7 +47,7 @@ void _AvxFetchVertices(avxVertexInput vtxd, afxUnit vtxCnt, afxUnit instCnt, avx
         AfxReadBuffer(vtxs->buf, vtxs->offset, vtxs->range, vtxs->stride, data);
 
         srcBuf[vtxf->srcIdx] = vtxs->buf;
-        srcPtr[vtxf->srcIdx] = &(AFX_CAST(afxByte*, vtxs->buf->data)[vtxs->offset]);
+        srcPtr[vtxf->srcIdx] = &(AFX_CAST(afxByte*, vtxs->buf->storage[0].hostedAlloc.addr)[vtxs->offset]);
         srcStride[vtxf->srcIdx] = vtxs->stride;
     }
 

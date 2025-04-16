@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // QWADRO PIPELINED RESOURCING LIGATURE                                     //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /**
@@ -42,7 +46,7 @@ AFX_DEFINE_STRUCT(avxLigatureEntry) // A avxLigatureEntry describes a single sha
     // A avxLigatureEntry describes a single shader resource binding to be included in a avxLigature.
     afxUnit         set;
     afxUnit32       binding; // A unique identifier for a resource binding within the avxLigature, corresponding to a avxLigatureEntry.binding and a @binding attribute in the avxShader.
-    afxMask         visibility; // A bitset of the members of avxShaderStage. Each set bit indicates that a avxLigatureEntry's resource will be accessible from the associated shader stage.
+    afxMask         visibility; // A bitset of the members of avxShaderType. Each set bit indicates that a avxLigatureEntry's resource will be accessible from the associated shader stage.
     avxShaderParam  type;
     afxUnit         cnt;
     afxString16     name;

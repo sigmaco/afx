@@ -374,7 +374,7 @@ _ASX afxError _AsxPoseCtorCb(afxPose pose, void** args, afxUnit invokeNo)
         return err;
     }
 
-    pose->artCnt = AfxMax(1, artCnt);
+    pose->artCnt = AFX_MAX(1, artCnt);
     pose->fillThreshold = 0.2;
     pose->traversalId = 0;
     AFX_ASSERT(pose->arts);

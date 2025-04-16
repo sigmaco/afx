@@ -39,10 +39,10 @@ _ASX afxCmdId AsxCmdCopyPose(afxContext ctx, afxPose src, afxUnit from, afxPose 
     AFX_ASSERT_RANGE(src->artCnt, from, cnt);
     AFX_ASSERT_RANGE(dst->artCnt, base, cnt);
 
-    from = AfxMin(from, src->artCnt - 1);
-    base = AfxMin(from, dst->artCnt - 1);
-    cnt = AfxMin(cnt, src->artCnt - from);
-    cnt = AfxMin(cnt, dst->artCnt - base);
+    from = AFX_MIN(from, src->artCnt - 1);
+    base = AFX_MIN(from, dst->artCnt - 1);
+    cnt = AFX_MIN(cnt, src->artCnt - from);
+    cnt = AFX_MIN(cnt, dst->artCnt - base);
 
     afxCmdId cmdId;
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(CopyPose), sizeof(cmd->CopyPose), &cmdId);

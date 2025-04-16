@@ -20,6 +20,8 @@
 #define _AVX_DRAW_CONTEXT_C
 #include "../impl/avxImplementation.h"
 
+// These are the common transfer operations. That is why they forbids inDrawScope and inVideoCoding.
+
 // buffer ops
 
 _AVX afxCmdId AvxCmdCopyBuffer(afxDrawContext dctx, avxBuffer src, avxBuffer dst, afxUnit opCnt, avxBufferCopy const ops[])
@@ -28,9 +30,9 @@ _AVX afxCmdId AvxCmdCopyBuffer(afxDrawContext dctx, avxBuffer src, avxBuffer dst
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -43,12 +45,12 @@ _AVX afxCmdId AvxCmdCopyBuffer(afxDrawContext dctx, avxBuffer src, avxBuffer dst
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &dst);
 
     // src must have been created with avxBufferUsage_UPLOAD usage flag.
-    AFX_ASSERT(AvxTestBufferAccess(src, avxBufferFlag_R));
+    AFX_ASSERT(AvxGetBufferAccess(src, avxBufferFlag_R));
     // dst must have been created with avxBufferUsage_DOWNLOAD usage flag.
-    AFX_ASSERT(AvxTestBufferAccess(dst, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferAccess(dst, avxBufferFlag_W));
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(CopyBuffer), sizeof(cmd->CopyBuffer) + (opCnt * sizeof(cmd->CopyBuffer.ops[0])), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(CopyBuffer), sizeof(cmd->CopyBuffer) + (opCnt * sizeof(cmd->CopyBuffer.ops[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->CopyBuffer.src = src;
     cmd->CopyBuffer.dst = dst;
@@ -66,16 +68,16 @@ _AVX afxCmdId AvxCmdFillBuffer(afxDrawContext dctx, avxBuffer buf, afxUnit offse
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
     // @buf must be a valid avxBuffer handle.
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     // buf must have been created with avxBufferUsage_DOWNLOAD usage flag.
-    AFX_ASSERT(AvxTestBufferAccess(buf, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_W));
 
     afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
     // offset must be less than the size of buf.
@@ -89,11 +91,11 @@ _AVX afxCmdId AvxCmdFillBuffer(afxDrawContext dctx, avxBuffer buf, afxUnit offse
     AFX_ASSERT(range);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(FillBuffer), sizeof(cmd->FillBuffer), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(FillBuffer), sizeof(cmd->FillBuffer), &cmdId);
     AFX_ASSERT(cmd);
     cmd->FillBuffer.buf = buf;
-    cmd->FillBuffer.offset = AfxMin(offset, bufCap - 1);
-    cmd->FillBuffer.range = AfxMin(range, bufCap - cmd->FillBuffer.offset);
+    cmd->FillBuffer.offset = AFX_MIN(offset, bufCap - 1);
+    cmd->FillBuffer.range = AFX_MIN(range, bufCap - cmd->FillBuffer.offset);
     cmd->FillBuffer.value = value;
     return cmdId;
 }
@@ -104,16 +106,16 @@ _AVX afxCmdId AvxCmdClearBuffer(afxDrawContext dctx, avxBuffer buf, afxUnit offs
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
     // @buf must be a valid avxBuffer handle.
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     // buf must have been created with avxBufferUsage_DOWNLOAD usage flag.
-    AFX_ASSERT(AvxTestBufferAccess(buf, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_W));
 
     afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
     // offset must be less than the size of buf.
@@ -137,16 +139,16 @@ _AVX afxCmdId AvxCmdUpdateBuffer(afxDrawContext dctx, avxBuffer buf, afxUnit off
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    //AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
     // @buf must be a valid avxBuffer handle.
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     // buf must have been created with avxBufferUsage_DOWNLOAD usage flag.
-    AFX_ASSERT(AvxTestBufferAccess(buf, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_W));
 
     afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
     // offset must be less than the size of buf.
@@ -165,11 +167,11 @@ _AVX afxCmdId AvxCmdUpdateBuffer(afxDrawContext dctx, avxBuffer buf, afxUnit off
     AFX_ASSERT(AVX_BUFFER_UPDATE_CAPACITY >= range);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(UpdateBuffer), sizeof(cmd->UpdateBuffer) + range, &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(UpdateBuffer), sizeof(cmd->UpdateBuffer) + range, &cmdId);
     AFX_ASSERT(cmd);
     cmd->UpdateBuffer.buf = buf;
-    cmd->UpdateBuffer.offset = AfxMin(offset, bufCap - 1);
-    cmd->UpdateBuffer.range = AfxMin(range, bufCap - cmd->UpdateBuffer.offset);
+    cmd->UpdateBuffer.offset = AFX_MIN(offset, bufCap - 1);
+    cmd->UpdateBuffer.range = AFX_MIN(range, bufCap - cmd->UpdateBuffer.offset);
     AfxCopy(cmd->UpdateBuffer.data, src, cmd->UpdateBuffer.range);
 
     return cmdId;
@@ -181,9 +183,9 @@ _AVX afxCmdId AvxCmdPackRaster(afxDrawContext dctx, avxRaster ras, avxBuffer buf
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -200,7 +202,7 @@ _AVX afxCmdId AvxCmdPackRaster(afxDrawContext dctx, avxRaster ras, avxBuffer buf
     AvxDescribeRaster(ras, &rasi);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(PackRaster), sizeof(cmd->PackRaster) + (opCnt * sizeof(cmd->PackRaster.ops[0])), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(PackRaster), sizeof(cmd->PackRaster) + (opCnt * sizeof(cmd->PackRaster.ops[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->PackRaster.buf = buf;
     cmd->PackRaster.ras = ras;
@@ -225,9 +227,9 @@ _AVX afxCmdId AvxCmdUnpackRaster(afxDrawContext dctx, avxRaster ras, avxBuffer b
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -244,7 +246,7 @@ _AVX afxCmdId AvxCmdUnpackRaster(afxDrawContext dctx, avxRaster ras, avxBuffer b
     AvxDescribeRaster(ras, &rasi);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(UnpackRaster), sizeof(cmd->UnpackRaster) + (opCnt * sizeof(cmd->UnpackRaster.ops[0])), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(UnpackRaster), sizeof(cmd->UnpackRaster) + (opCnt * sizeof(cmd->UnpackRaster.ops[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->UnpackRaster.buf = buf;
     cmd->UnpackRaster.ras = ras;
@@ -270,9 +272,9 @@ _AVX afxCmdId AvxCmdCopyRaster(afxDrawContext dctx, avxRaster src, avxRaster dst
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -290,7 +292,7 @@ _AVX afxCmdId AvxCmdCopyRaster(afxDrawContext dctx, avxRaster src, avxRaster dst
     AvxDescribeRaster(dst, &rasi2);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(CopyRaster), sizeof(cmd->CopyRaster) + (opCnt * sizeof(cmd->CopyRaster.ops[0])), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(CopyRaster), sizeof(cmd->CopyRaster) + (opCnt * sizeof(cmd->CopyRaster.ops[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->CopyRaster.src = src;
     cmd->CopyRaster.dst = dst;
@@ -317,9 +319,9 @@ _AVX afxCmdId AvxCmdResolveRaster(afxDrawContext dctx, avxRaster src, avxRaster 
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -337,7 +339,7 @@ _AVX afxCmdId AvxCmdResolveRaster(afxDrawContext dctx, avxRaster src, avxRaster 
     AvxDescribeRaster(dst, &rasi2);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(ResolveRaster), sizeof(cmd->ResolveRaster) + (opCnt * sizeof(cmd->ResolveRaster.ops[0])), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(ResolveRaster), sizeof(cmd->ResolveRaster) + (opCnt * sizeof(cmd->ResolveRaster.ops[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->ResolveRaster.src = src;
     cmd->ResolveRaster.dst = dst;
@@ -364,9 +366,9 @@ _AVX afxCmdId AvxCmdBlitRaster(afxDrawContext dctx, avxRaster src, avxRaster dst
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -384,7 +386,7 @@ _AVX afxCmdId AvxCmdBlitRaster(afxDrawContext dctx, avxRaster src, avxRaster dst
     AvxDescribeRaster(dst, &rasi2);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BlitRaster), sizeof(cmd->BlitRaster) + (opCnt * sizeof(cmd->BlitRaster.ops[0])), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BlitRaster), sizeof(cmd->BlitRaster) + (opCnt * sizeof(cmd->BlitRaster.ops[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->BlitRaster.src = src;
     cmd->BlitRaster.dst = dst;
@@ -413,9 +415,9 @@ _AVX afxCmdId AvxCmdClearRaster(afxDrawContext dctx, avxRaster ras, avxClearValu
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -430,7 +432,7 @@ _AVX afxCmdId AvxCmdClearRaster(afxDrawContext dctx, avxRaster ras, avxClearValu
     AvxDescribeRaster(ras, &rasi);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(ClearRaster), sizeof(cmd->ClearRaster) + (opCnt * sizeof(cmd->ClearRaster.ops[0])), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(ClearRaster), sizeof(cmd->ClearRaster) + (opCnt * sizeof(cmd->ClearRaster.ops[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->ClearRaster.ras = ras;
     cmd->ClearRaster.opCnt = opCnt;
@@ -443,10 +445,10 @@ _AVX afxCmdId AvxCmdClearRaster(afxDrawContext dctx, avxRaster ras, avxClearValu
         AFX_ASSERT_RANGE(rasi.extent.d, op->baseLayer, op->layerCnt);
 
         avxRasterBlock op2 = { 0 };
-        op2.baseLayer = AfxMin(op->baseLayer, rasi.extent.d - 1);
-        op2.layerCnt = AfxMin(op->layerCnt, op2.baseLayer);
-        op2.baseLod = AfxMin(op->baseLod, rasi.lodCnt - 1);
-        op2.lodCnt = AfxMin(op->lodCnt, rasi.lodCnt - op2.baseLod);
+        op2.baseLayer = AFX_MIN(op->baseLayer, rasi.extent.d - 1);
+        op2.layerCnt = AFX_MIN(op->layerCnt, op2.baseLayer);
+        op2.baseLod = AFX_MIN(op->baseLod, rasi.lodCnt - 1);
+        op2.lodCnt = AFX_MIN(op->lodCnt, rasi.lodCnt - op2.baseLod);
 
         cmd->ClearRaster.ops[i] = *op;
     }
@@ -459,9 +461,9 @@ _AVX afxCmdId AvxCmdSubsampleRaster(afxDrawContext dctx, avxRaster ras, afxUnit 
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
-    AFX_ASSERT(!dctx->inRenderPass);
+    AFX_ASSERT(!dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -474,7 +476,7 @@ _AVX afxCmdId AvxCmdSubsampleRaster(afxDrawContext dctx, avxRaster ras, afxUnit 
     AFX_ASSERT_RANGE(rasi.lodCnt, baseLod, lodCnt);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SubsampleRaster), sizeof(cmd->SubsampleRaster), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(SubsampleRaster), sizeof(cmd->SubsampleRaster), &cmdId);
     AFX_ASSERT(cmd);
     cmd->SubsampleRaster.baseLod = baseLod;
     cmd->SubsampleRaster.lodCnt = lodCnt;

@@ -15,7 +15,7 @@
  */
 
   //////////////////////////////////////////////////////////////////////////////
- // Memory Management Unit                                                   //
+ // MEMORY MANAGEMENT UNIT                                                   //
 //////////////////////////////////////////////////////////////////////////////
 
 /// MEMORY LAYOUT
@@ -30,7 +30,7 @@
 #include "qwadro/inc/base/afxObject.h"
 #include "qwadro/inc/base/afxChain.h"
 #include "qwadro/inc/base/afxFcc.h"
-#include "qwadro/inc/exec/afxSlock.h"
+#include "qwadro/inc/exec/afxFutex.h"
 #include "qwadro/inc/io/afxUri.h"
 
 typedef enum afxAllocationFlags
@@ -115,7 +115,7 @@ AFX_OBJECT(afxMmu)
     afxNotifyAllocCallback2     allocNotCb2;
     afxNotifyDeallocCallback2   deallocNotCb2;
 
-    afxSlock                    memSlock;
+    afxFutex                    memSlock;
     afxChain                    memChain;
     afxSize                     defAlign;
 
@@ -163,6 +163,7 @@ AFX void const*     AfxMemchr(void const* buf, afxInt val, afxUnit cap);
 AFX void            AfxCopy(void* dst, void const* src, afxSize siz);
 AFX void            AfxCopy2(void* dst, void const* src, afxSize siz, afxSize cnt);
 AFX void*           AfxMemcpy(void* dst, void const* src, afxSize siz);
+AFX void*           AfxMemmove(void* dst, void const* src, afxSize siz);
 
 AFX void            AfxFill(void* p, void const* value, afxSize siz);
 AFX void            AfxFill2(void* p, void const* value, afxSize siz, afxSize cnt);

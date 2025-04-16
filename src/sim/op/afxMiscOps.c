@@ -69,8 +69,8 @@ _ASX afxCmdId AsxCmdBindBuffers(afxContext ctx, afxUnit baseSlot, afxUnit cnt, a
             afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
             AFX_ASSERT_RANGE(bufCap, offset, range);
 
-            offset = AfxMin(offset, bufCap - 1);
-            range = AfxMin(range ? range : bufCap - offset, bufCap - offset);
+            offset = AFX_MIN(offset, bufCap - 1);
+            range = AFX_MIN(range ? range : bufCap - offset, bufCap - offset);
 
         }
         else

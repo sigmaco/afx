@@ -57,10 +57,12 @@ AFX_DEFINE_STRUCT(afxMixDeviceInfo)
     afxDeviceType   type;
     afxAcceleration accel;
     afxDeviceStatus status;
-    afxUnit         vndId;
-    afxUnit         devId;
-    afxUnit         apiVer;
+    afxUnit         ihvId;
+    afxUnit         ihvDevId;
+    afxUnit32       isvId;
+    afxUnit32       isvDrvId;
     afxUnit         drvVer;
+    afxUnit         apiVer;
 };
 
   //////////////////////////////////////////////////////////////////////////////

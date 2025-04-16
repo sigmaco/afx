@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // VARIABLE-SIZE MEMORY PREALLOCATION ARENA                                 //
+//////////////////////////////////////////////////////////////////////////////
+
 /*
     In computer science, region-based memory management is a type of memory management in which 
     each allocated object is assigned to a region.
@@ -32,7 +36,11 @@
 #include "qwadro/inc/mem/afxMemory.h"
 #include "qwadro/inc/io/afxStream.h"
 
-AFX_DEFINE_STRUCT(afxArenaSpecification)
+#if (defined _AFX_DEBUG) && !(defined(_AFX_ARENA_VALIDATION_ENABLED))
+#   define _AFX_ARENA_VALIDATION_ENABLED TRUE
+#endif
+
+AFX_DEFINE_STRUCT(afxArenaInfo)
 {
     afxUnit     chunkSiz;
     afxUnit     largeItemSiz;
@@ -41,7 +49,12 @@ AFX_DEFINE_STRUCT(afxArenaSpecification)
 };
 
 AFX_DEFINE_STRUCT(afxArena)
+// A chunk-based, allocator-backed memory arena
+// It may track memory for diagnostics, recycle previously freed objects and delay freeing via cleanup routines.
 {
+#ifdef _AFX_ARENA_VALIDATION_ENABLED
+    afxFcc      fcc; // afxFcc_AREN;
+#endif
     afxMmu      mmu;
     afxHere     hint;
     afxUnit     totalAllocated;
@@ -66,24 +79,33 @@ AFX_DEFINE_STRUCT(afxArena)
     afxUnit     recycleSiz;
 };
 
-AFX afxError    AfxDeployArena(afxArena* aren, afxArenaSpecification const *spec, afxHere const hint);
+AFX afxError    AfxMakeArena(afxArena* aren, afxArenaInfo const *spec, afxHere const hint);
 AFX void        AfxDismantleArena(afxArena* aren);
 
 AFX void        AfxExhaustArena(afxArena* aren);
+
+/*
+    The AfxRequestArenaUnit() function allocates and optionally initializes portions of a given size, from the arena.
+*/
+
+AFX void*       AfxRequestArenaUnit
+(
+    // Arena to allocate from.
+    afxArena*   aren, 
+    // Size of each unit.
+    afxSize     size, 
+    // Number of units.
+    afxUnit     cnt, 
+    // Optional data to copy into the new allocation.
+    void const* src, 
+    // Stride between source units (0 = tightly packed).
+    afxUnit     stride
+);
 
 AFX void        AfxRecycleArenaUnit(afxArena* aren, void* p, afxSize size);
 
 AFX afxSize     AfxPushArenaCleanup(afxArena* aren, void(*action)(void *data, void*extra), void *data, void*extra);
 AFX afxBool     AfxPopArenaCleanup(afxArena* aren, void(*action)(void *, void*), void *data);
-
-AFX void*       AfxRequestArenaUnit(afxArena* aren, afxSize size);
-AFX void*       AfxRequestArenaUnits(afxArena* aren, afxSize num, afxSize size);
-
-AFX void*       AfxRequestArenaCopy(afxArena* aren, afxSize size, const void* init);
-AFX void*       AfxRequestArenaCopies(afxArena* aren, afxSize num, afxSize size, const void* init);
-
-AFX void*       AfxRequestArenaZeroedUnit(afxArena* aren, afxSize size);
-AFX void*       AfxRequestArenaZeroedUnits(afxArena* aren, afxSize num, afxSize size);
 
 AFX char*       AfxArenaDuplicateString(afxArena* aren, const char *string);
 

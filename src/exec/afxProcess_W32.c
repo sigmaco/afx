@@ -37,7 +37,7 @@ void CreateIsolatedProcess(const char *application)
     // Create a Job Object to manage process resources
     hJob = CreateJobObject(&sa, NULL);
     if (hJob == NULL) {
-        AfxDbgLog(0, "CreateJobObject failed: %d\n", GetLastError());
+        AfxReport(0, "CreateJobObject failed: %d\n", GetLastError());
         return;
     }
 
@@ -48,7 +48,7 @@ void CreateIsolatedProcess(const char *application)
 
     if (!SetInformationJobObject(hJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli)))
     {
-        AfxDbgLog(0, "SetInformationJobObject failed: %d\n", GetLastError());
+        AfxReport(0, "SetInformationJobObject failed: %d\n", GetLastError());
         return;
     }
 
@@ -62,13 +62,13 @@ void CreateIsolatedProcess(const char *application)
 
     // Create the isolated process
     if (!CreateProcess(NULL, (LPSTR)application, NULL, NULL, FALSE, CREATE_SUSPENDED | CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi)) {
-        AfxDbgLog(0, "CreateProcess failed: %d\n", GetLastError());
+        AfxReport(0, "CreateProcess failed: %d\n", GetLastError());
         return;
     }
 
     // Assign the process to the job object
     if (!AssignProcessToJobObject(hJob, pi.hProcess)) {
-        AfxDbgLog(0, "AssignProcessToJobObject failed: %d\n", GetLastError());
+        AfxReport(0, "AssignProcessToJobObject failed: %d\n", GetLastError());
         return;
     }
 

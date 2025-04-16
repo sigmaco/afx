@@ -21,13 +21,13 @@
 //#define _AMX_MIX_SYSTEM_C
 //#define _AMX_MIX_QUEUE_C
 #define _AMX_BUFFER_C
-#define _AMX_WAVEFORM_C
+#define _AMX_AUDIO_C
 #define _AMX_VOICE_C
 #define _AMX_MIX_CONTEXT_C
 #define _AMX_SINK_C
 #include "amxImplementation.h"
 
-_AMX afxError _AmxSpu_ResampleI16I16(amxMpu* mpu, afxAudio src, afxAudio dst, afxWaveResample const* op)
+_AMX afxError _AmxSpu_ResampleI16I16(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
 {
     afxError err = NIL;
 
@@ -35,7 +35,7 @@ _AMX afxError _AmxSpu_ResampleI16I16(amxMpu* mpu, afxAudio src, afxAudio dst, af
     afxReal rateRatio = (afxReal)op->dstFreq / op->srcFreq;
     // Calculate the number of samples in the output buffer
     afxInt outputLen = (afxInt)(src->sampCnt * rateRatio);
-    outputLen = AfxMin(outputLen, dst->sampCnt - op->src.baseSamp);
+    outputLen = AFX_MIN(outputLen, dst->sampCnt - op->src.baseSamp);
 
     // Loop over the channels for the destination data
     for (afxUnit ch = 0; ch < op->dst.chanCnt; ch++)
@@ -88,7 +88,7 @@ _AMX afxError _AmxSpu_ResampleI16I16(amxMpu* mpu, afxAudio src, afxAudio dst, af
     return err;
 }
 
-_AMX afxError _AmxSpu_ResampleF32F32(amxMpu* mpu, afxAudio src, afxAudio dst, afxWaveResample const* op)
+_AMX afxError _AmxSpu_ResampleF32F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
 {
     afxError err = NIL;
 
@@ -96,7 +96,7 @@ _AMX afxError _AmxSpu_ResampleF32F32(amxMpu* mpu, afxAudio src, afxAudio dst, af
     afxReal rateRatio = (afxReal)op->dstFreq / op->srcFreq;
     // Calculate the number of samples in the output buffer
     afxInt outputLen = (afxInt)(src->sampCnt * rateRatio);
-    outputLen = AfxMin(outputLen, dst->sampCnt - op->src.baseSamp);
+    outputLen = AFX_MIN(outputLen, dst->sampCnt - op->src.baseSamp);
 
     // Loop over the channels for the destination data
     for (afxUnit ch = 0; ch < op->dst.chanCnt; ch++)
@@ -149,7 +149,7 @@ _AMX afxError _AmxSpu_ResampleF32F32(amxMpu* mpu, afxAudio src, afxAudio dst, af
     return err;
 }
 
-_AMX afxError _AmxSpu_ResampleF32I16(amxMpu* mpu, afxAudio src, afxAudio dst, afxWaveResample const* op)
+_AMX afxError _AmxSpu_ResampleF32I16(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
 {
     // Float-to-Short Resampling
 
@@ -159,7 +159,7 @@ _AMX afxError _AmxSpu_ResampleF32I16(amxMpu* mpu, afxAudio src, afxAudio dst, af
     afxReal rateRatio = (afxReal)op->dstFreq / op->srcFreq;
     // Calculate the number of samples in the output buffer
     afxInt outputLen = (afxInt)(src->sampCnt * rateRatio);
-    outputLen = AfxMin(outputLen, dst->sampCnt - op->dst.baseSamp);
+    outputLen = AFX_MIN(outputLen, dst->sampCnt - op->dst.baseSamp);
 
     // Loop over the channels for the destination data
     for (afxUnit ch = 0; ch < op->dst.chanCnt; ch++)
@@ -213,7 +213,7 @@ _AMX afxError _AmxSpu_ResampleF32I16(amxMpu* mpu, afxAudio src, afxAudio dst, af
     return err;
 }
 
-_AMX afxError _AmxSpu_ResampleI16F32(amxMpu* mpu, afxAudio src, afxAudio dst, afxWaveResample const* op)
+_AMX afxError _AmxSpu_ResampleI16F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
 {
     // Short-to-Float Resampling
 
@@ -223,7 +223,7 @@ _AMX afxError _AmxSpu_ResampleI16F32(amxMpu* mpu, afxAudio src, afxAudio dst, af
     afxReal rateRatio = (afxReal)op->dstFreq / op->srcFreq;
     // Calculate the number of samples in the output buffer
     afxInt outputLen = (afxInt)(src->sampCnt * rateRatio);
-    outputLen = AfxMin(outputLen, dst->sampCnt - op->src.baseSamp);
+    outputLen = AFX_MIN(outputLen, dst->sampCnt - op->src.baseSamp);
 
     // Loop over the channels for the destination data
     for (afxUnit ch = 0; ch < op->dst.chanCnt; ch++)
@@ -276,7 +276,7 @@ _AMX afxError _AmxSpu_ResampleI16F32(amxMpu* mpu, afxAudio src, afxAudio dst, af
     return err;
 }
 
-_AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, afxAudio src, afxAudio dst, afxWaveResample const* op)
+_AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -284,11 +284,11 @@ _AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, afxAudio src, afxAudio dst, afxW
     {
         // Just copy it.
 
-        afxWaveCopy cop;
-        _AmxSanitizeWaveInterval(src, &op->src, &cop.src);
+        amxAudioCopy cop;
+        _AmxSanitizeAudioPeriod(src, &op->src, &cop.src);
         cop.dstBaseChan = op->dst.baseChan;
         cop.dstBaseSamp = op->dst.baseSamp;
-        _AmxSanitizeWaveCopy(src, dst, &cop, &cop);
+        _AmxSanitizeAudioCopy(src, dst, &cop, &cop);
 
         if (_AmxCopyAudio(src, dst, &cop))
             AfxThrowError();
@@ -321,12 +321,12 @@ _AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, afxAudio src, afxAudio dst, afxW
 
     switch (src->fmt)
     {
-    case amxFormat_A32f:
+    case amxFormat_M32f:
     case amxFormat_S32f:
     {
         switch (dst->fmt)
         {
-        case amxFormat_A32f:
+        case amxFormat_M32f:
         case amxFormat_S32f:
         {
             if (_AmxSpu_ResampleF32F32(mpu, src, dst, op))
@@ -334,7 +334,7 @@ _AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, afxAudio src, afxAudio dst, afxW
             break;
         }
         case amxFormat_S16i:
-        case amxFormat_A16i:
+        case amxFormat_M16i:
         {
             if (_AmxSpu_ResampleF32I16(mpu, src, dst, op))
                 AfxThrowError();
@@ -345,11 +345,11 @@ _AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, afxAudio src, afxAudio dst, afxW
         break;
     }
     case amxFormat_S16i:
-    case amxFormat_A16i:
+    case amxFormat_M16i:
     {
         switch (dst->fmt)
         {
-        case amxFormat_A32f:
+        case amxFormat_M32f:
         case amxFormat_S32f:
         {
             if (_AmxSpu_ResampleI16F32(mpu, src, dst, op))
@@ -357,7 +357,7 @@ _AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, afxAudio src, afxAudio dst, afxW
             break;
         }
         case amxFormat_S16i:
-        case amxFormat_A16i:
+        case amxFormat_M16i:
         {
             if (_AmxSpu_ResampleI16I16(mpu, src, dst, op))
                 AfxThrowError();
@@ -386,23 +386,23 @@ typedef enum amxWaveType
     amxWaveType_SAWTOOTH
 } amxWaveType;
 
-_AMX void _AmxGenerateSineWave(afxAudio wav, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateSineWave(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate a sine wave PCM signal
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     /*
         The sine wave is generated using the standard sine function. This creates a smooth oscillating waveform.
     */
 
-    afxUnit sampleRate = wav->freq;
+    afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
     afxReal sample;
 
-    afxReal32* out = &wav->samples32f[chIdx * wav->sampCnt];
+    afxReal32* out = &aud->samples32f[chIdx * aud->sampCnt];
 
     for (int i = 0; i < num_samples; ++i)
     {
@@ -412,11 +412,11 @@ _AMX void _AmxGenerateSineWave(afxAudio wav, afxUnit chIdx, afxReal amplitude, a
     }
 }
 
-_AMX void _AmxGenerateSquareWave(afxAudio wav, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateSquareWave(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate a square wave PCM signal
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     /*
         The square wave alternates between two levels: +AMPLITUDE and -AMPLITUDE. 
@@ -424,13 +424,13 @@ _AMX void _AmxGenerateSquareWave(afxAudio wav, afxUnit chIdx, afxReal amplitude,
         i < (SAMPLE_RATE / (2 * FREQUENCY)) decides whether the output should be positive or negative.
     */
 
-    afxInt sampleRate = wav->freq;
+    afxInt sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
     afxReal sample;
 
-    afxReal32* out = &wav->samples32f[chIdx * wav->sampCnt];
+    afxReal32* out = &aud->samples32f[chIdx * aud->sampCnt];
 
     for (int i = 0; i < num_samples; ++i)
     {
@@ -448,11 +448,11 @@ _AMX void _AmxGenerateSquareWave(afxAudio wav, afxUnit chIdx, afxReal amplitude,
     }
 }
 
-_AMX void _AmxGenerateTriangleWave(afxAudio wav, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateTriangleWave(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate a triangle wave PCM signal
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     /*
         The triangle wave is constructed using an absolute value of a linear ramp. 
@@ -460,13 +460,13 @@ _AMX void _AmxGenerateTriangleWave(afxAudio wav, afxUnit chIdx, afxReal amplitud
         The equation generates values that increase and decrease symmetrically.
     */
 
-    afxUnit sampleRate = wav->freq;
+    afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
     afxReal sample;
 
-    afxReal32* out = &wav->samples32f[chIdx * wav->sampCnt];
+    afxReal32* out = &aud->samples32f[chIdx * aud->sampCnt];
     
     for (int i = 0; i < num_samples; ++i)
     {
@@ -487,24 +487,24 @@ _AMX void _AmxGenerateTriangleWave(afxAudio wav, afxUnit chIdx, afxReal amplitud
     }
 }
 
-_AMX void _AmxGenerateSawtoothWave(afxAudio wav, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateSawtoothWave(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate a sawtooth wave PCM signal
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     /*
         The sawtooth wave rises linearly from -AMPLITUDE to +AMPLITUDE and then resets. 
         The ramp equation is adjusted to fit between -1 and +1 and then scaled by AMPLITUDE.
     */
 
-    afxUnit sampleRate = wav->freq;
+    afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
     afxReal sample;
 
-    afxReal32* out = &wav->samples32f[chIdx * wav->sampCnt];
+    afxReal32* out = &aud->samples32f[chIdx * aud->sampCnt];
 
     for (int i = 0; i < num_samples; ++i)
     {
@@ -516,11 +516,11 @@ _AMX void _AmxGenerateSawtoothWave(afxAudio wav, afxUnit chIdx, afxReal amplitud
     }
 }
 
-_AMX void _AmxGenerateWhiteNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateWhiteNoise(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate a static (white noise) wave PCM signal
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     /*
         Generating static noise (also known as white noise) in C involves creating random values over time 
@@ -531,13 +531,13 @@ _AMX void _AmxGenerateWhiteNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude,
         Here's how you can generate a basic static noise or white noise signal with constant amplitude.
     */
 
-    afxUnit sampleRate = wav->freq;
+    afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
     afxReal sample;
 
-    afxReal32* out = &wav->samples32f[chIdx * wav->sampCnt];
+    afxReal32* out = &aud->samples32f[chIdx * aud->sampCnt];
 
     for (int i = 0; i < num_samples; ++i)
     {
@@ -546,11 +546,11 @@ _AMX void _AmxGenerateWhiteNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude,
     }
 }
 
-_AMX void _AmxGeneratePinkNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGeneratePinkNoise(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate pink noise (Voss-McCartney algorithm)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     /*
         Pink noise has equal power per octave, meaning it has more low-frequency content. 
@@ -562,13 +562,13 @@ _AMX void _AmxGeneratePinkNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, 
         Here's a basic approach using a Voss-McCartney algorithm for generating pink noise.
     */
 
-    afxUnit sampleRate = wav->freq;
+    afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
     afxReal sample;
 
-    afxReal32* out = &wav->samples32f[chIdx * wav->sampCnt];
+    afxReal32* out = &aud->samples32f[chIdx * aud->sampCnt];
 
     afxReal b[16] =
     {
@@ -596,24 +596,24 @@ _AMX void _AmxGeneratePinkNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, 
     }
 }
 
-_AMX void _AmxGenerateBrownianNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateBrownianNoise(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate brownian noise (integrated white noise)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     /*
         Brownian noise (or red noise) has even more energy at lower frequencies compared to pink noise. 
         This type of noise can be generated by accumulating white noise (integrating white noise).
     */
 
-    afxUnit sampleRate = wav->freq;
+    afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
     afxReal sample;
 
-    afxReal32* out = &wav->samples32f[chIdx * wav->sampCnt];
+    afxReal32* out = &aud->samples32f[chIdx * aud->sampCnt];
 
     afxReal x = 0; // Brownian noise (integrated white noise)
 
@@ -623,18 +623,18 @@ _AMX void _AmxGenerateBrownianNoise(afxAudio wav, afxUnit chIdx, afxReal amplitu
         x += ((rand() % (afxInt)(2 * amplitude + 1)) - amplitude);
         
         // Clamp the values to within the amplitude
-        x = AfxClamp(x, -amplitude, amplitude);
+        x = AFX_CLAMP(x, -amplitude, amplitude);
 
         // Assign to waveform
         out[i] = (afxReal)x;
     }
 }
 
-_AMX void _AmxGenerateBlueNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateBlueNoise(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate blue noise (Blue Noise Generation (High-Pass Filtered White Noise))
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     /*
         Blue noise has a power spectral density that increases with frequency (it's the opposite of pink noise). 
@@ -643,13 +643,13 @@ _AMX void _AmxGenerateBlueNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, 
         Here's an approximation for generating blue noise.
     */
 
-    afxUnit sampleRate = wav->freq;
+    afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
     afxReal sample;
 
-    afxReal32* out = &wav->samples32f[chIdx * wav->sampCnt];
+    afxReal32* out = &aud->samples32f[chIdx * aud->sampCnt];
 
     afxReal white_noise, blue_noise;
     afxReal prev_white_noise = 0;
@@ -670,11 +670,11 @@ _AMX void _AmxGenerateBlueNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, 
     }
 }
 
-_AMX void _AmxGenerateVioletNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateVioletNoise(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate violet noise (Violet Noise Generation (Aggressive High-Pass Filtered White Noise))
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     /*
         Violet noise has even more emphasis on high frequencies compared to blue noise, 
@@ -685,13 +685,13 @@ _AMX void _AmxGenerateVioletNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude
         or we can simulate it by generating white noise and applying stronger filtering.
     */
 
-    afxUnit sampleRate = wav->freq;
+    afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
     afxReal sample;
 
-    afxReal32* out = &wav->samples32f[chIdx * wav->sampCnt];
+    afxReal32* out = &aud->samples32f[chIdx * aud->sampCnt];
 
     afxReal white_noise, violet_noise;
     afxReal prev_white_noise1 = 0, prev_white_noise2 = 0;
@@ -728,11 +728,11 @@ afxReal a_weighting_filter(afxReal freq)
     return numerator / denominator;
 }
 
-_AMX void _AmxGenerateGrayNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateGrayNoise(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate gray noise with true A-weighting filter
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     /*
         Gray noise is a perceptually uniform noise, which compensates for the sensitivity of the human ear to different frequencies. 
@@ -747,13 +747,13 @@ _AMX void _AmxGenerateGrayNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, 
         This is more complex, so for simplicity, here's a basic approach where we simulate a perceptually weighted noise.
     */
 
-    afxUnit sampleRate = wav->freq;
+    afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
     afxReal sample;
 
-    afxReal32* out = &wav->samples32f[chIdx * wav->sampCnt];
+    afxReal32* out = &aud->samples32f[chIdx * aud->sampCnt];
     
     afxReal white_noise, gray_noise;
     afxReal frequency, weight;
@@ -777,22 +777,22 @@ _AMX void _AmxGenerateGrayNoise(afxAudio wav, afxUnit chIdx, afxReal amplitude, 
     }
 }
 
-_AMX afxError _AmxFillWave(afxAudio wav, afxWaveInterval const* op, afxReal amplitude, afxReal freq, afxReal period)
+_AMX afxError _AmxFillAudio(amxAudio aud, amxAudioPeriod const* op, afxReal amplitude, afxReal freq, afxReal period)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
-    afxUnit sampleRate = wav->freq;
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
+    afxUnit sampleRate = aud->freq;
     // period is the duration
     afxInt num_samples = (afxInt)(sampleRate * period);  // Total number of samples --- wavelength
     // num_samples is the wavelength (in samples)
-    num_samples = AfxMin(num_samples, wav->sampCnt);
+    num_samples = AFX_MIN(num_samples, aud->sampCnt);
 
-    switch (wav->fmt)
+    switch (aud->fmt)
     {
-    case amxFormat_A32f:
+    case amxFormat_M32f:
     case amxFormat_S32f:
     {
-        afxReal32* out = &wav->samples32f[op->baseChan * wav->sampCnt + op->baseSamp];
+        afxReal32* out = &aud->samples32f[op->baseChan * aud->sampCnt + op->baseSamp];
 
         for (afxInt i = 0; i < num_samples; ++i)
         {
@@ -802,9 +802,9 @@ _AMX afxError _AmxFillWave(afxAudio wav, afxWaveInterval const* op, afxReal ampl
         break;
     }
     case amxFormat_S16i:
-    case amxFormat_A16i:
+    case amxFormat_M16i:
     {
-        afxInt16* out = &wav->samples16i[op->baseChan * wav->sampCnt + op->baseSamp];
+        afxInt16* out = &aud->samples16i[op->baseChan * aud->sampCnt + op->baseSamp];
 
         for (afxInt i = 0; i < num_samples; ++i)
         {
@@ -818,16 +818,16 @@ _AMX afxError _AmxFillWave(afxAudio wav, afxWaveInterval const* op, afxReal ampl
     return err;
 }
 
-_AMX afxError _AmxCopyAudio(afxAudio src, afxAudio dst, afxWaveCopy const* op)
+_AMX afxError _AmxCopyAudio(amxAudio src, amxAudio dst, amxAudioCopy const* op)
 {
     afxError err = AFX_ERR_NONE;
 
-    afxWaveCopy op2;
-    _AmxSanitizeWaveCopy(src, dst, op, &op2);
+    amxAudioCopy op2;
+    _AmxSanitizeAudioCopy(src, dst, op, &op2);
 
     switch (src->fmt)
     {
-    case amxFormat_A32f:
+    case amxFormat_M32f:
     case amxFormat_S32f:
     {
         afxReal32* out = &dst->samples32f[dst->sampCnt * op2.dstBaseChan + op2.dstBaseSamp];
@@ -842,7 +842,7 @@ _AMX afxError _AmxCopyAudio(afxAudio src, afxAudio dst, afxWaveCopy const* op)
         break;
     }
     case amxFormat_S16i:
-    case amxFormat_A16i:
+    case amxFormat_M16i:
     {
         afxInt16* out = &dst->samples32f[dst->sampCnt * op2.dstBaseChan + op2.dstBaseSamp];
         afxInt16 const* in = &src->samples32f[src->sampCnt * op2.src.baseChan + op2.src.baseSamp];
@@ -860,7 +860,7 @@ _AMX afxError _AmxCopyAudio(afxAudio src, afxAudio dst, afxWaveCopy const* op)
     return err;
 }
 
-_AMX afxError _AmxTransposeAudio(afxAudio src, afxAudio dst, afxWaveCopy const* op)
+_AMX afxError _AmxTransposeAudio(amxAudio src, amxAudio dst, amxAudioCopy const* op)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -870,14 +870,14 @@ _AMX afxError _AmxTransposeAudio(afxAudio src, afxAudio dst, afxWaveCopy const* 
         The transposition function calculates the correct offsets and copies data accordingly.
     */
 
-    afxWaveCopy op2;
-    _AmxSanitizeWaveCopy(src, dst, op, &op2);
+    amxAudioCopy op2;
+    _AmxSanitizeAudioCopy(src, dst, op, &op2);
 
     // srcAudio is [chanCnt][sampCnt] and dstAudio is [sampCnt][chanCnt]
 
     switch (src->fmt)
     {
-    case amxFormat_A32f:
+    case amxFormat_M32f:
     case amxFormat_S32f:
     {
         afxReal32* out = &dst->samples32f[dst->sampCnt * op2.dstBaseChan + op2.dstBaseSamp];
@@ -892,7 +892,7 @@ _AMX afxError _AmxTransposeAudio(afxAudio src, afxAudio dst, afxWaveCopy const* 
         break;
     }
     case amxFormat_S16i:
-    case amxFormat_A16i:
+    case amxFormat_M16i:
     {
         afxInt16* out = &dst->samples32f[dst->sampCnt * op2.dstBaseChan + op2.dstBaseSamp];
         afxInt16 const* in = &src->samples32f[src->sampCnt * op2.src.baseChan + op2.src.baseSamp];
@@ -910,48 +910,48 @@ _AMX afxError _AmxTransposeAudio(afxAudio src, afxAudio dst, afxWaveCopy const* 
     return err;
 }
 
-_AMX afxError _AmxDumpAudio(afxAudio wav, afxWaveIo const* op, void* dst)
+_AMX afxError _AmxDumpAudio(amxAudio aud, amxAudioIo const* op, void* dst)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
     AFX_ASSERT(dst);
     AFX_ASSERT(op);
 
-    afxWaveIo op2;
-    _AmxSanitizeWaveInterval(wav, &op->seg, &op2.seg);
+    amxAudioIo op2;
+    _AmxSanitizeAudioPeriod(aud, &op->period, &op2.period);
     op2.offset = op->offset;
     op2.samplesPerChan = op->samplesPerChan;
     op2.chansPerFrame = op->chansPerFrame;
 
-    switch (wav->fmt)
+    switch (aud->fmt)
     {
-    case amxFormat_A32f:
+    case amxFormat_M32f:
     case amxFormat_S32f:
     {
         afxReal32* out = ((afxByte*)(dst)+op2.offset);
-        afxReal32 const* in = &wav->samples32f[wav->sampCnt * op2.seg.baseChan + op2.seg.baseSamp];
+        afxReal32 const* in = &aud->samples32f[aud->sampCnt * op2.period.baseChan + op2.period.baseSamp];
 
-        afxUnit chanCnt = op2.seg.chanCnt;
-        afxUnit sampCnt = op2.seg.sampCnt;
+        afxUnit chanCnt = op2.period.chanCnt;
+        afxUnit sampCnt = op2.period.sampCnt;
 
         for (int i = 0; i < chanCnt; i++)
             for (int j = 0; j < sampCnt; j++)
-                out[i * op2.samplesPerChan + j] = in[i * wav->sampCnt + j];
+                out[i * op2.samplesPerChan + j] = in[i * aud->sampCnt + j];
 
         break;
     }
     case amxFormat_S16i:
-    case amxFormat_A16i:
+    case amxFormat_M16i:
     {
         afxInt16* out = (void*)dst;
-        afxInt16 const* in = (void*)wav->bytemap;
+        afxInt16 const* in = (void*)aud->bytemap;
 
-        afxUnit chanCnt = op2.seg.chanCnt;
-        afxUnit sampCnt = op2.seg.sampCnt;
+        afxUnit chanCnt = op2.period.chanCnt;
+        afxUnit sampCnt = op2.period.sampCnt;
 
         for (int i = 0; i < chanCnt; i++)
             for (int j = 0; j < sampCnt; j++)
-                out[i * op2.samplesPerChan + j] = in[i * wav->sampCnt + j];
+                out[i * op2.samplesPerChan + j] = in[i * aud->sampCnt + j];
 
         break;
     }
@@ -960,48 +960,48 @@ _AMX afxError _AmxDumpAudio(afxAudio wav, afxWaveIo const* op, void* dst)
     return err;
 }
 
-_AMX afxError _AmxUpdateAudio(afxAudio wav, afxWaveIo const* op, void const* src)
+_AMX afxError _AmxUpdateAudio(amxAudio aud, amxAudioIo const* op, void const* src)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
     AFX_ASSERT(src);
     AFX_ASSERT(op);
 
-    afxWaveIo op2;
-    _AmxSanitizeWaveInterval(wav, &op->seg, &op2.seg);
+    amxAudioIo op2;
+    _AmxSanitizeAudioPeriod(aud, &op->period, &op2.period);
     op2.offset = op->offset;
     op2.samplesPerChan = op->samplesPerChan;
     op2.chansPerFrame = op->chansPerFrame;
 
-    switch (wav->fmt)
+    switch (aud->fmt)
     {
-    case amxFormat_A32f:
+    case amxFormat_M32f:
     case amxFormat_S32f:
     {
-        afxReal32* out = &wav->samples32f[wav->sampCnt * op2.seg.baseChan + op2.seg.baseSamp];
+        afxReal32* out = &aud->samples32f[aud->sampCnt * op2.period.baseChan + op2.period.baseSamp];
         afxReal32 const* in = ((afxByte*)(src)+op2.offset);
 
-        afxUnit chanCnt = op2.seg.chanCnt;
-        afxUnit sampCnt = op2.seg.sampCnt;
+        afxUnit chanCnt = op2.period.chanCnt;
+        afxUnit sampCnt = op2.period.sampCnt;
 
         for (int i = 0; i < chanCnt; i++)
             for (int j = 0; j < sampCnt; j++)
-                out[i * wav->sampCnt + j] = in[i * op2.samplesPerChan + j];
+                out[i * aud->sampCnt + j] = in[i * op2.samplesPerChan + j];
 
         break;
     }
     case amxFormat_S16i:
-    case amxFormat_A16i:
+    case amxFormat_M16i:
     {
-        afxInt16* out = &wav->samples32f[wav->sampCnt * op2.seg.baseChan + op2.seg.baseSamp];
+        afxInt16* out = &aud->samples32f[aud->sampCnt * op2.period.baseChan + op2.period.baseSamp];
         afxInt16 const* in = ((afxByte*)(src)+op2.offset);
 
-        afxUnit chanCnt = op2.seg.chanCnt;
-        afxUnit sampCnt = op2.seg.sampCnt;
+        afxUnit chanCnt = op2.period.chanCnt;
+        afxUnit sampCnt = op2.period.sampCnt;
 
         for (int i = 0; i < chanCnt; i++)
             for (int j = 0; j < sampCnt; j++)
-                out[i * wav->sampCnt + j] = in[i * op2.samplesPerChan + j];
+                out[i * aud->sampCnt + j] = in[i * op2.samplesPerChan + j];
 
         break;
     }
@@ -1010,30 +1010,30 @@ _AMX afxError _AmxUpdateAudio(afxAudio wav, afxWaveIo const* op, void const* src
     return err;
 }
 
-_AMX afxError _AmxDownloadAudio(afxAudio wav, afxWaveIo const* op, afxStream iob)
+_AMX afxError _AmxDownloadAudio(amxAudio aud, amxAudioIo const* op, afxStream iob)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
     AFX_ASSERT(iob);
     AFX_ASSERT(op);
 
-    afxWaveIo op2;
-    _AmxSanitizeWaveInterval(wav, &op->seg, &op2.seg);
+    amxAudioIo op2;
+    _AmxSanitizeAudioPeriod(aud, &op->period, &op2.period);
     op2.offset = op->offset;
     op2.samplesPerChan = op->samplesPerChan;
     op2.chansPerFrame = op->chansPerFrame;
 
     AfxSeekStream(iob, op2.offset, afxSeekOrigin_BEGIN);
 
-    switch (wav->fmt)
+    switch (aud->fmt)
     {
-    case amxFormat_A32f:
+    case amxFormat_M32f:
     case amxFormat_S32f:
     {
-        afxReal32 const* in = &wav->samples32f[wav->sampCnt * op2.seg.baseChan + op2.seg.baseSamp];
+        afxReal32 const* in = &aud->samples32f[aud->sampCnt * op2.period.baseChan + op2.period.baseSamp];
 
-        afxUnit chanCnt = op2.seg.chanCnt;
-        afxUnit sampCnt = op2.seg.sampCnt;
+        afxUnit chanCnt = op2.period.chanCnt;
+        afxUnit sampCnt = op2.period.sampCnt;
 
         for (int i = 0; i < chanCnt; i++)
             for (int j = 0; j < sampCnt; j++)
@@ -1042,12 +1042,12 @@ _AMX afxError _AmxDownloadAudio(afxAudio wav, afxWaveIo const* op, afxStream iob
         break;
     }
     case amxFormat_S16i:
-    case amxFormat_A16i:
+    case amxFormat_M16i:
     {
-        afxInt16 const* in = (void*)wav->bytemap;
+        afxInt16 const* in = (void*)aud->bytemap;
 
-        afxUnit chanCnt = op2.seg.chanCnt;
-        afxUnit sampCnt = op2.seg.sampCnt;
+        afxUnit chanCnt = op2.period.chanCnt;
+        afxUnit sampCnt = op2.period.sampCnt;
 
         for (int i = 0; i < chanCnt; i++)
             for (int j = 0; j < sampCnt; j++)
@@ -1060,50 +1060,50 @@ _AMX afxError _AmxDownloadAudio(afxAudio wav, afxWaveIo const* op, afxStream iob
     return err;
 }
 
-_AMX afxError _AmxUploadAudio(afxAudio wav, afxWaveIo const* op, afxStream iob)
+_AMX afxError _AmxUploadAudio(amxAudio aud, amxAudioIo const* op, afxStream iob)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_WAV, 1, &wav);
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
     AFX_ASSERT(iob);
     AFX_ASSERT(op);
 
-    afxWaveIo op2;
-    _AmxSanitizeWaveInterval(wav, &op->seg, &op2.seg);
+    amxAudioIo op2;
+    _AmxSanitizeAudioPeriod(aud, &op->period, &op2.period);
     op2.offset = op->offset;
     op2.samplesPerChan = op->samplesPerChan;
     op2.chansPerFrame = op->chansPerFrame;
 
     AfxSeekStream(iob, op2.offset, afxSeekOrigin_BEGIN);
 
-    switch (wav->fmt)
+    switch (aud->fmt)
     {
     case amxFormat_S32f:
-    case amxFormat_A32f:
+    case amxFormat_M32f:
     {
-        afxReal32* out = &wav->samples32f[wav->sampCnt * op2.seg.baseChan + op2.seg.baseSamp];
+        afxReal32* out = &aud->samples32f[aud->sampCnt * op2.period.baseChan + op2.period.baseSamp];
 
-        afxUnit chanCnt = op2.seg.chanCnt;
-        afxUnit sampCnt = op2.seg.sampCnt;
+        afxUnit chanCnt = op2.period.chanCnt;
+        afxUnit sampCnt = op2.period.sampCnt;
 
         for (int i = 0; i < chanCnt; i++)
             for (int j = 0; j < sampCnt; j++)
                 AfxSeekStream(iob, op2.offset + ((i * op2.samplesPerChan + j) * sizeof(out[0])), afxSeekOrigin_BEGIN),
-                AfxReadStream(iob, sizeof(out[0]), 0, &out[i * wav->sampCnt + j]);
+                AfxReadStream(iob, sizeof(out[0]), 0, &out[i * aud->sampCnt + j]);
 
         break;
     }
     case amxFormat_S16i:
-    case amxFormat_A16i:
+    case amxFormat_M16i:
     {
-        afxInt16* out = &wav->samples32f[wav->sampCnt * op2.seg.baseChan + op2.seg.baseSamp];
+        afxInt16* out = &aud->samples32f[aud->sampCnt * op2.period.baseChan + op2.period.baseSamp];
 
-        afxUnit chanCnt = op2.seg.chanCnt;
-        afxUnit sampCnt = op2.seg.sampCnt;
+        afxUnit chanCnt = op2.period.chanCnt;
+        afxUnit sampCnt = op2.period.sampCnt;
 
         for (int i = 0; i < chanCnt; i++)
             for (int j = 0; j < sampCnt; j++)
                 AfxSeekStream(iob, op2.offset + ((i * op2.samplesPerChan + j) * sizeof(out[0])), afxSeekOrigin_BEGIN),
-                AfxReadStream(iob, sizeof(out[0]), 0, &out[i * wav->sampCnt + j]);
+                AfxReadStream(iob, sizeof(out[0]), 0, &out[i * aud->sampCnt + j]);
 
         break;
     }

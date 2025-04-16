@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // DRAWING PIPELINE EXECUTION SYNCHRONIZATION OPERATIONS                    //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AVX_SYNCHRONIZATION_H

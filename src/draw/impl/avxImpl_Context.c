@@ -27,14 +27,14 @@
 #define _AVX_BUFFER_C
 #include "avxImplementation.h"
 
-_AVX afxError _AvxDpuCmd_CopyBufferCb(avxDpu* dpu, avxCmd* cmd)
+_AVX afxError _AvxDpuCmd_CopyBufferCb(avxDpu* dpu, _avxCmd* cmd)
 {
     afxError err = AFX_ERR_NONE;
     //cmd->CopyBuffer.
     return err;
 }
 
-_AVX avxCmdList const _AVX_DPU_CMD_VMT =
+_AVX _avxCmdLut const _AVX_DPU_CMD_VMT =
 {
     .CopyBuffer = _AvxDpuCmd_CopyBufferCb
 };
@@ -43,20 +43,20 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    AFX_ASSERT(dctx->state == avxCmdbState_PENDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_PENDING);
 
-    if (dctx->state != avxCmdbState_PENDING)
+    if (dctx->state != avxDrawContextState_PENDING)
     {
         AfxThrowError();
         return err;
     }
 
     afxDrawBridge dexu = dpu->dexu;
-    avxCmdList const*cmdVmt = dexu->cmdVmt;
+    _avxCmdLut const*cmdVmt = dexu->cmdVmt;
     afxCmdId lastId = 0; // DBG
 
-    avxCmd *cmdHdr;
-    AFX_ITERATE_CHAIN_B2F(&dctx->commands, avxCmd, hdr.script, cmdHdr)
+    _avxCmd *cmdHdr;
+    AFX_ITERATE_CHAIN_B2F(_avxCmd, cmdHdr, hdr.script, &dctx->commands)
     {
         lastId = cmdHdr->hdr.id;
 
@@ -65,7 +65,7 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
             break;
         }
 
-        if (dctx->state != avxCmdbState_PENDING)
+        if (dctx->state != avxDrawContextState_PENDING)
         {
             AfxThrowError();
             break;
@@ -77,27 +77,27 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
 
     if (!err)
     {
-        dctx->state = avxCmdbState_EXECUTABLE;
+        dctx->state = avxDrawContextState_EXECUTABLE;
     }
 
     if (err || dctx->disposable)
     {
         //AFX_ASSERT(dctx->portId == dpu->portId);
-        dctx->state = avxCmdbState_INVALID;
+        dctx->state = avxDrawContextState_INVALID;
 
         afxDrawQueue dque = AfxGetProvider(dctx);
         AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 #if 0
         //afxUnit poolIdx = dctx->poolIdx;
 
-        AfxEnterSlockExclusive(&dque->cmdbReqLock);
+        AfxLockFutex(&dque->cmdbReqLock);
 
         if (AfxPushQueue(&dque->cmdbRecycQue, &dctx))
         {
             AfxDisposeObjects(1, (void**)&dctx);
         }
 
-        AfxExitSlockExclusive(&dque->cmdbReqLock);
+        AfxUnlockFutex(&dque->cmdbReqLock);
 #endif
     }
     AfxDecAtom32(&dctx->submCnt);
@@ -105,28 +105,8 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
     return err;
 }
 
-_AVX afxError _AvxDctxImplResetCb(afxDrawContext dctx, afxBool freeMem, afxBool permanent)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(dctx->state != avxCmdbState_PENDING);
-
-    dctx->disposable = !permanent;
-    AfxDeployChain(&dctx->commands, dctx);
-    AfxExhaustArena(&dctx->cmdArena);
-    dctx->state = avxCmdbState_RECORDING;
-
-    return err;
-}
-
-_AVX afxError _AvxDctxImplEndCb(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    return err;
-}
-
 _AVX _avxDctxDdi const _AVX_DCTX_DDI =
 {
-    .end = _AvxDctxImplEndCb,
-    .reset = _AvxDctxImplResetCb,
+    .end = NIL,
+    .reset = NIL,
 };

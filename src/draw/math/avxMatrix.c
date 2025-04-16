@@ -65,44 +65,44 @@ _AVXINL void AfxComputeShadowM4d(afxM4d m, afxPlane const p, afxReal const light
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);
-    AFX_ASSERT(!AfxV3dIsZero(p.normal));
-    AFX_ASSERT(!AfxV3dIsInfinite(p.normal));
+    AFX_ASSERT(!AfxV3dIsZero(p.uvwd));
+    AFX_ASSERT(!AfxV3dIsInfinite(p.uvwd));
 
     // plane must be normalized
     afxReal d = AfxFindPlaneDistance(&p, lightPos);
 #if !0
-    m[0][0] = d - lightPos[0] * p.normal[0];
-    m[1][0] = -lightPos[0] * p.normal[1];
-    m[2][0] = -lightPos[0] * p.normal[2];
-    m[3][0] = -lightPos[0] * p.offset;
+    m[0][0] = d - lightPos[0] * p.uvwd[0];
+    m[1][0] = -lightPos[0] * p.uvwd[1];
+    m[2][0] = -lightPos[0] * p.uvwd[2];
+    m[3][0] = -lightPos[0] * p.uvwd[AFX_PLANE_DIST];
 
-    m[0][1] = -lightPos[1] * p.normal[0];
-    m[1][1] = d - lightPos[1] * p.normal[1];
-    m[2][1] = -lightPos[1] * p.normal[2];
-    m[3][1] = -lightPos[1] * p.offset;
+    m[0][1] = -lightPos[1] * p.uvwd[0];
+    m[1][1] = d - lightPos[1] * p.uvwd[1];
+    m[2][1] = -lightPos[1] * p.uvwd[2];
+    m[3][1] = -lightPos[1] * p.uvwd[AFX_PLANE_DIST];
 
-    m[0][2] = -lightPos[2] * p.normal[0];
-    m[1][2] = -lightPos[2] * p.normal[1];
-    m[2][2] = d - lightPos[2] * p.normal[2];
-    m[3][2] = -lightPos[2] * p.offset;
+    m[0][2] = -lightPos[2] * p.uvwd[0];
+    m[1][2] = -lightPos[2] * p.uvwd[1];
+    m[2][2] = d - lightPos[2] * p.uvwd[2];
+    m[3][2] = -lightPos[2] * p.uvwd[AFX_PLANE_DIST];
 
-    m[0][3] = -p.normal[0];
-    m[1][3] = -p.normal[1];
-    m[2][3] = -p.normal[2];
-    m[3][3] = d - p.offset;
+    m[0][3] = -p.uvwd[0];
+    m[1][3] = -p.uvwd[1];
+    m[2][3] = -p.uvwd[2];
+    m[3][3] = d - p.uvwd[AFX_PLANE_DIST];
 #else
-    m[0][0] = d - lightPos[0] * p->normal[0];
-    m[0][1] =    -lightPos[1] * p->normal[0];
-    m[0][2] =    -lightPos[2] * p->normal[0];
-    m[0][3] =    -p->normal[0];
-    m[1][0] =    -lightPos[0] * p->normal[1];
-    m[1][1] = d - lightPos[1] * p->normal[1];
-    m[1][2] =    -lightPos[2] * p->normal[1];
-    m[1][3] =    -p->normal[1];
-    m[2][0] =    -lightPos[0] * p->normal[2];
-    m[2][1] =    -lightPos[1] * p->normal[2];
-    m[2][2] = d - lightPos[2] * p->normal[2];
-    m[2][3] =    -p->normal[2];
+    m[0][0] = d - lightPos[0] * p->v[0];
+    m[0][1] =    -lightPos[1] * p->v[0];
+    m[0][2] =    -lightPos[2] * p->v[0];
+    m[0][3] =    -p->v[0];
+    m[1][0] =    -lightPos[0] * p->v[1];
+    m[1][1] = d - lightPos[1] * p->v[1];
+    m[1][2] =    -lightPos[2] * p->v[1];
+    m[1][3] =    -p->v[1];
+    m[2][0] =    -lightPos[0] * p->v[2];
+    m[2][1] =    -lightPos[1] * p->v[2];
+    m[2][2] = d - lightPos[2] * p->v[2];
+    m[2][3] =    -p->v[2];
     m[3][0] =    -lightPos[0] * p->offset;
     m[3][1] =    -lightPos[1] * p->offset;
     m[3][2] =    -lightPos[2] * p->offset;

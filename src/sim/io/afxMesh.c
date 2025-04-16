@@ -75,7 +75,7 @@ _ASXINL afxUnit* AfxGetMeshIndices(afxMesh msh, afxUnit baseTriIdx)
     AFX_ASSERT_RANGE(msh->triCnt, baseTriIdx, 1);
 
     // sanitize arguments
-    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
+    baseTriIdx = AFX_MIN(baseTriIdx, msh->triCnt - 1);
 
     if (!msh->indices)
     {
@@ -114,8 +114,8 @@ _ASX afxUnit AfxGetMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, a
     AFX_ASSERT_RANGE(msh->morphCnt, baseMorphIdx, cnt);
     
     // sanitize arguments
-    cnt = AfxMin(cnt, msh->morphCnt - baseMorphIdx);
-    baseMorphIdx = AfxMin(baseMorphIdx, msh->morphCnt - 1);
+    cnt = AFX_MIN(cnt, msh->morphCnt - baseMorphIdx);
+    baseMorphIdx = AFX_MIN(baseMorphIdx, msh->morphCnt - 1);
 
     for (afxUnit i = 0; i < cnt; i++)
         morphes[i] = msh->morphs[baseMorphIdx + i];
@@ -131,8 +131,8 @@ _ASX afxError AfxChangeMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit cn
     AFX_ASSERT(morphes);
 
     // sanitize arguments
-    cnt = AfxMin(cnt, msh->morphCnt - baseMorphIdx);
-    baseMorphIdx = AfxMin(baseMorphIdx, msh->morphCnt - 1);
+    cnt = AFX_MIN(cnt, msh->morphCnt - baseMorphIdx);
+    baseMorphIdx = AFX_MIN(baseMorphIdx, msh->morphCnt - 1);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -159,8 +159,8 @@ _ASX afxUnit AfxGetMeshBiases(afxMesh msh, afxUnit baseBiasIdx, afxUnit cnt, afx
     AFX_ASSERT(biases);
     
     // sanitize arguments
-    cnt = AfxMin(cnt, msh->biasCnt - baseBiasIdx);
-    baseBiasIdx = AfxMin(baseBiasIdx, msh->biasCnt - 1);
+    cnt = AFX_MIN(cnt, msh->biasCnt - baseBiasIdx);
+    baseBiasIdx = AFX_MIN(baseBiasIdx, msh->biasCnt - 1);
 
     for (afxUnit i = 0; i < cnt; i++)
         biases[i] = msh->biases[baseBiasIdx + i];
@@ -175,7 +175,7 @@ _ASX afxString* AfxGetMeshBiasTags(afxMesh msh, afxUnit baseBiasIdx)
     AFX_ASSERT_RANGE(msh->biasCnt, baseBiasIdx, 1);
 
     // sanitize arguments
-    baseBiasIdx = AfxMin(baseBiasIdx, msh->biasCnt - 1);
+    baseBiasIdx = AFX_MIN(baseBiasIdx, msh->biasCnt - 1);
 
     return &msh->biasId[baseBiasIdx];
 }
@@ -187,7 +187,7 @@ _ASX afxString* AfxGetMeshMaterials(afxMesh msh, afxUnit baseMtlIdx)
     AFX_ASSERT_RANGE(msh->mtlCnt, baseMtlIdx, 1);
 
     // sanitize arguments
-    baseMtlIdx = AfxMin(baseMtlIdx, msh->mtlCnt - 1);
+    baseMtlIdx = AFX_MIN(baseMtlIdx, msh->mtlCnt - 1);
 
     return &msh->materials[baseMtlIdx];
 }
@@ -200,8 +200,8 @@ _ASX afxUnit AfxGetMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit cnt, af
     AFX_ASSERT(sections);
 
     // sanitize arguments
-    cnt = AfxMin(cnt, msh->secCnt - baseSecIdx);
-    baseSecIdx = AfxMin(baseSecIdx, msh->secCnt - 1);
+    cnt = AFX_MIN(cnt, msh->secCnt - baseSecIdx);
+    baseSecIdx = AFX_MIN(baseSecIdx, msh->secCnt - 1);
 
     for (afxUnit i = 0; i < cnt; i++)
         sections[i] = msh->sections[baseSecIdx + i];
@@ -217,8 +217,8 @@ _ASX afxError AfxResetMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit cnt,
     AFX_ASSERT(sections);
 
     // sanitize arguments
-    cnt = AfxMin(cnt, msh->secCnt - baseSecIdx);
-    baseSecIdx = AfxMin(baseSecIdx, msh->secCnt - 1);
+    cnt = AFX_MIN(cnt, msh->secCnt - baseSecIdx);
+    baseSecIdx = AFX_MIN(baseSecIdx, msh->secCnt - 1);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -230,9 +230,9 @@ _ASX afxError AfxResetMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit cnt,
         AFX_ASSERT_RANGE(msh->mtlCnt, src->mtlIdx, 1);
 
         // sanitize arguments
-        dst->baseTriIdx = AfxMin(src->baseTriIdx, msh->triCnt - 1);
-        dst->triCnt = AfxMin(src->triCnt, msh->triCnt - dst->baseTriIdx);
-        dst->mtlIdx = AfxMin(src->mtlIdx, msh->mtlCnt - 1);
+        dst->baseTriIdx = AFX_MIN(src->baseTriIdx, msh->triCnt - 1);
+        dst->triCnt = AFX_MIN(src->triCnt, msh->triCnt - dst->baseTriIdx);
+        dst->mtlIdx = AFX_MIN(src->mtlIdx, msh->mtlCnt - 1);
     }
     return err;
 }
@@ -313,9 +313,9 @@ _ASX afxUnit AfxFindVertexAttributes(afxMesh msh, afxUnit cnt, afxString const u
 
     for (afxUnit i = 0; i < msh->attrCnt; i++)
     {
-        afxString str = msh->attrInfo[i].usage.str;
+        afxString str = msh->attrInfo[i].usage.s;
 
-        if (0 == AfxCompareStrings(&usages[rslt], 0, TRUE, 1, &str))
+        if (AfxCompareStrings(&usages[rslt], 0, TRUE, 1, &str, NIL))
             indices[rslt++] = i;
 
         if (cnt == rslt)
@@ -332,11 +332,11 @@ _ASX afxError AfxDescribeVertexAttribute(afxMesh msh, afxUnit attrIdx, afxVertex
     AFX_ASSERT(info);
 
     // sanitize arguments
-    attrIdx = AfxMin(attrIdx, msh->attrCnt - 1);
+    attrIdx = AFX_MIN(attrIdx, msh->attrCnt - 1);
 
     info->fmt = msh->attrInfo[attrIdx].fmt;
     info->flags = msh->attrInfo[attrIdx].flags;
-    AfxMakeString8(&info->usage, &msh->attrInfo[attrIdx].usage.str);
+    AfxMakeString8(&info->usage, &msh->attrInfo[attrIdx].usage.s);
     return err;
 }
 
@@ -347,13 +347,13 @@ _ASX afxError AfxFormatVertexAttribute(afxMesh msh, afxUnit attrIdx, avxFormat f
     AFX_ASSERT_RANGE(msh->attrCnt, attrIdx, 1);
 
     // sanitize arguments
-    attrIdx = AfxMin(attrIdx, msh->attrCnt - 1);
+    attrIdx = AFX_MIN(attrIdx, msh->attrCnt - 1);
 
     asxMeshAttr* attr = &msh->attrInfo[attrIdx];
     attr->fmt = fmt;
     attr->flags = flags;
-    AfxCopyString(&attr->usage.str, usage);
-    AfxResetBoxes(1, &attr->aabb);
+    AfxCopyString(&attr->usage.s, usage);
+    AfxResetBoxes(1, &attr->aabb, 0);
     attr->aabbUpdReq = TRUE;
 
     if (msh->vtxAttrData[attrIdx])
@@ -371,9 +371,9 @@ _ASX void* AfxAccessVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphIdx, a
     AFX_ASSERT_RANGE(msh->vtxCnt, baseVtx, 1);
 
     // sanitize arguments
-    attrIdx = AfxMin(attrIdx, msh->attrCnt - 1);
-    morphIdx = AfxMin(morphIdx, msh->morphCnt - 1);
-    baseVtx = AfxMin(baseVtx, msh->vtxCnt - 1);
+    attrIdx = AFX_MIN(attrIdx, msh->attrCnt - 1);
+    morphIdx = AFX_MIN(morphIdx, msh->morphCnt - 1);
+    baseVtx = AFX_MIN(baseVtx, msh->vtxCnt - 1);
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
@@ -420,10 +420,10 @@ _ASX afxError AfxInvertVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphIdx
     AFX_ASSERT_RANGE(msh->vtxCnt, baseVtx, vtxCnt);
 
     // sanitize arguments
-    morphIdx = AfxMin(morphIdx, msh->morphCnt - 1);
-    attrIdx = AfxMin(attrIdx, msh->attrCnt - 1);
-    baseVtx = AfxMin(baseVtx, msh->vtxCnt - 1);
-    vtxCnt = AfxMin(vtxCnt, msh->vtxCnt - baseVtx);
+    morphIdx = AFX_MIN(morphIdx, msh->morphCnt - 1);
+    attrIdx = AFX_MIN(attrIdx, msh->attrCnt - 1);
+    baseVtx = AFX_MIN(baseVtx, msh->vtxCnt - 1);
+    vtxCnt = AFX_MIN(vtxCnt, msh->vtxCnt - baseVtx);
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
@@ -464,10 +464,10 @@ _ASX afxError AfxNormalizeVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morph
     AFX_ASSERT_RANGE(msh->vtxCnt, baseVtx, vtxCnt);
 
     // sanitize arguments
-    morphIdx = AfxMin(morphIdx, msh->morphCnt - 1);
-    attrIdx = AfxMin(attrIdx, msh->attrCnt - 1);
-    baseVtx = AfxMin(baseVtx, msh->vtxCnt - 1);
-    vtxCnt = AfxMin(vtxCnt, msh->vtxCnt - baseVtx);
+    morphIdx = AFX_MIN(morphIdx, msh->morphCnt - 1);
+    attrIdx = AFX_MIN(attrIdx, msh->attrCnt - 1);
+    baseVtx = AFX_MIN(baseVtx, msh->vtxCnt - 1);
+    vtxCnt = AFX_MIN(vtxCnt, msh->vtxCnt - baseVtx);
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
@@ -513,10 +513,10 @@ _ASX afxError AfxUpdateVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphIdx
     AFX_ASSERT(src);
 
     // sanitize arguments
-    morphIdx = AfxMin(morphIdx, msh->morphCnt - 1);
-    attrIdx = AfxMin(attrIdx, msh->attrCnt - 1);
-    baseVtx = AfxMin(baseVtx, msh->vtxCnt - 1);
-    vtxCnt = AfxMin(vtxCnt, msh->vtxCnt - baseVtx);
+    morphIdx = AFX_MIN(morphIdx, msh->morphCnt - 1);
+    attrIdx = AFX_MIN(attrIdx, msh->attrCnt - 1);
+    baseVtx = AFX_MIN(baseVtx, msh->vtxCnt - 1);
+    vtxCnt = AFX_MIN(vtxCnt, msh->vtxCnt - baseVtx);
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
@@ -546,10 +546,10 @@ _ASX afxError AfxUploadVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphIdx
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
 
     // sanitize arguments
-    morphIdx = AfxMin(morphIdx, msh->morphCnt - 1);
-    attrIdx = AfxMin(attrIdx, msh->attrCnt - 1);
-    baseVtx = AfxMin(baseVtx, msh->vtxCnt - 1);
-    vtxCnt = AfxMin(vtxCnt, msh->vtxCnt - baseVtx);
+    morphIdx = AFX_MIN(morphIdx, msh->morphCnt - 1);
+    attrIdx = AFX_MIN(attrIdx, msh->attrCnt - 1);
+    baseVtx = AFX_MIN(baseVtx, msh->vtxCnt - 1);
+    vtxCnt = AFX_MIN(vtxCnt, msh->vtxCnt - baseVtx);
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
@@ -580,10 +580,10 @@ _ASX afxError AfxDownloadVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphI
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
 
     // sanitize arguments
-    morphIdx = AfxMin(morphIdx, msh->morphCnt - 1);
-    attrIdx = AfxMin(attrIdx, msh->attrCnt - 1);
-    baseVtx = AfxMin(baseVtx, msh->vtxCnt - 1);
-    vtxCnt = AfxMin(vtxCnt, msh->vtxCnt - baseVtx);
+    morphIdx = AFX_MIN(morphIdx, msh->morphCnt - 1);
+    attrIdx = AFX_MIN(attrIdx, msh->attrCnt - 1);
+    baseVtx = AFX_MIN(baseVtx, msh->vtxCnt - 1);
+    vtxCnt = AFX_MIN(vtxCnt, msh->vtxCnt - baseVtx);
 
     avxFormat fmt = msh->attrInfo[attrIdx].fmt;
     avxFormatDescription pfd;
@@ -610,9 +610,9 @@ _ASX afxError AfxRecomputeMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit base
     AFX_ASSERT_RANGE(msh->secCnt, baseSecIdx, cnt);
 
     // sanitize arguments
-    morphIdx = AfxMin(morphIdx, msh->morphCnt - 1);
-    baseSecIdx = AfxMin(baseSecIdx, msh->secCnt - 1);
-    cnt = AfxMin(cnt, msh->secCnt - baseSecIdx);
+    morphIdx = AFX_MIN(morphIdx, msh->morphCnt - 1);
+    baseSecIdx = AFX_MIN(baseSecIdx, msh->secCnt - 1);
+    cnt = AFX_MIN(cnt, msh->secCnt - baseSecIdx);
 
     afxMeshMorph mshm;
     if (!AfxGetMeshMorphes(msh, morphIdx, 1, &mshm))
@@ -621,8 +621,8 @@ _ASX afxError AfxRecomputeMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit base
         return err;
     }
 
-    afxBox* morphSecAabbs = &msh->secAabb[morphIdx * msh->secCnt + baseSecIdx];
-    AfxResetBoxes(cnt, morphSecAabbs);
+    afxBox* morphSecAabbs = &msh->secAabb[morphIdx * msh->secCnt];
+    AfxResetBoxes(cnt, morphSecAabbs, 0);
 
     void* data = AfxAccessVertexData(msh, posAttrIdx, morphIdx, mshm.baseVtx);
 
@@ -649,7 +649,7 @@ _ASX afxError AfxRecomputeMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit base
             afxUnit idxCnt = mshs.triCnt * ASX_INDICES_PER_TRI;
 
             for (afxUnit i = 0; i < idxCnt; i++)
-                AfxEmboxVectors(&morphSecAabbs[j], 1, &data3[i]);
+                AfxEmboxVectors(&morphSecAabbs[secIdx], 1, &data3[i]);
         }
     }
     else if (attrFmt == avxFormat_RGBA32f)
@@ -666,7 +666,7 @@ _ASX afxError AfxRecomputeMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit base
             afxUnit idxCnt = mshs.triCnt * ASX_INDICES_PER_TRI;
 
             for (afxUnit i = 0; i < idxCnt; i++)
-                AfxEmboxPoints(&morphSecAabbs[j], 1, &data4[i]);
+                AfxEmboxPoints(&morphSecAabbs[secIdx], 1, &data4[i]);
         }
     }
     else AfxThrowError();
@@ -683,9 +683,9 @@ _ASX afxError AfxUpdateMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit baseSec
     AFX_ASSERT(aabbs);
 
     // sanitize arguments
-    morphIdx = AfxMin(morphIdx, msh->morphCnt - 1);
-    cnt = AfxMin(cnt, msh->secCnt - baseSecIdx);
-    baseSecIdx = AfxMin(baseSecIdx, msh->secCnt - 1);
+    morphIdx = AFX_MIN(morphIdx, msh->morphCnt - 1);
+    cnt = AFX_MIN(cnt, msh->secCnt - baseSecIdx);
+    baseSecIdx = AFX_MIN(baseSecIdx, msh->secCnt - 1);
 
     afxMeshMorph mshm;
     if (!AfxGetMeshMorphes(msh, morphIdx, 1, &mshm))
@@ -697,7 +697,7 @@ _ASX afxError AfxUpdateMeshBounds(afxMesh msh, afxUnit morphIdx, afxUnit baseSec
     // Recompute it if <aabbs> is not specified.
 
     afxBox* morphSecAabbs = &msh->secAabb[morphIdx * msh->secCnt + baseSecIdx];
-    AfxCopyBoxes(cnt, aabbs, morphSecAabbs);
+    AfxCopyBoxes(cnt, aabbs, 0, morphSecAabbs, 0);
 
     return err;
 }
@@ -711,8 +711,8 @@ _ASX afxError AfxUpdateMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit triC
     AFX_ASSERT_RANGE(msh->triCnt, baseTriIdx, triCnt);
 
     // sanitize arguments
-    triCnt = AfxMin(triCnt, msh->triCnt - baseTriIdx);
-    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
+    triCnt = AFX_MIN(triCnt, msh->triCnt - baseTriIdx);
+    baseTriIdx = AFX_MIN(baseTriIdx, msh->triCnt - 1);
 
     afxUnit idxCnt = triCnt * ASX_INDICES_PER_TRI;
     afxUnit* indices = AfxGetMeshIndices(msh, baseTriIdx);
@@ -761,8 +761,8 @@ _ASX afxError AfxDumpMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt
     AFX_ASSERT_RANGE(msh->triCnt, baseTriIdx, triCnt);
 
     // sanitize arguments
-    triCnt = AfxMin(triCnt, msh->triCnt - baseTriIdx);
-    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
+    triCnt = AFX_MIN(triCnt, msh->triCnt - baseTriIdx);
+    baseTriIdx = AFX_MIN(baseTriIdx, msh->triCnt - 1);
 
     afxUnit const* indices = AfxGetMeshIndices(msh, baseTriIdx);
 
@@ -782,8 +782,8 @@ _ASX afxError AfxUploadMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit triC
     AFX_ASSERT_RANGE(msh->triCnt, baseTriIdx, triCnt);
 
     // sanitize arguments
-    triCnt = AfxMin(triCnt, msh->triCnt - baseTriIdx);
-    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
+    triCnt = AFX_MIN(triCnt, msh->triCnt - baseTriIdx);
+    baseTriIdx = AFX_MIN(baseTriIdx, msh->triCnt - 1);
 
     afxUnit idxCnt = triCnt * ASX_INDICES_PER_TRI;
     afxUnit* indices = AfxGetMeshIndices(msh, baseTriIdx);
@@ -827,8 +827,8 @@ _ASX afxError AfxDownloadMeshIndices(afxMesh msh, afxUnit baseTriIdx, afxUnit tr
     AFX_ASSERT_RANGE(msh->triCnt, baseTriIdx, triCnt);
 
     // sanitize arguments
-    triCnt = AfxMin(triCnt, msh->triCnt - baseTriIdx);
-    baseTriIdx = AfxMin(baseTriIdx, msh->triCnt - 1);
+    triCnt = AFX_MIN(triCnt, msh->triCnt - baseTriIdx);
+    baseTriIdx = AFX_MIN(baseTriIdx, msh->triCnt - 1);
 
     afxUnit idxCnt = triCnt * ASX_INDICES_PER_TRI;
     afxUnit* indices = AfxGetMeshIndices(msh, baseTriIdx);
@@ -864,7 +864,7 @@ _ASX afxError AfxRecomputeMeshNormals(afxMesh msh, afxUnit morphIdx, afxUnit pos
 
     AfxUpdateVertexData(msh, nrmAttrIdx, morphIdx, mshm.baseVtx, msh->vtxCnt, AFX_V3D_ZERO, 0); // zero it
 
-    AfxRecomputeTriangularNormals(mshi.triCnt, indices, pos, nrm);
+    AfxComputeTriangleNormals(mshi.triCnt, indices, sizeof(indices[0]), pos, sizeof(pos[0]), nrm, sizeof(nrm[0]));
     
     return err;
 }
@@ -888,7 +888,7 @@ _ASX afxError AfxRecomputeMeshTangents(afxMesh msh, afxUnit morphIdx, afxUnit po
     afxV3d* tan = AfxAccessVertexData(msh, tanAttrIdx, morphIdx, mshm.baseVtx);
     afxV3d* bit = AfxAccessVertexData(msh, bitAttrIdx, morphIdx, mshm.baseVtx);
 
-    AfxRecomputeTriangularTangents(mshi.triCnt, indices, pos, uv, 3, tan, bit);
+    AfxComputeTriangleTangents(mshi.triCnt, indices, sizeof(indices[0]), pos, sizeof(pos[0]), uv, sizeof(uv), FALSE, tan, sizeof(tan), bit, sizeof(bit));
     
     return err;
 }
@@ -919,7 +919,7 @@ _ASX afxError _AsxMshDtorCb(afxMesh msh)
             AfxThrowError();
 #endif
     }
-    AfxDismantlePool(&msh->rigs);
+    AfxExhaustPool(&msh->rigs, FALSE);
 
     if (msh->morphs)
     {
@@ -1059,13 +1059,13 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     afxMeshBlueprint const* blueprint = AFX_CAST(afxMeshBlueprint const*, args[1]) + invokeNo;
 
-    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &blueprint->urn.str, &msh->urn))
+    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &blueprint->urn.s, &msh->urn))
         AfxThrowError();
 
-    afxUnit secCnt = AfxMax(1, blueprint->secCnt);
+    afxUnit secCnt = AFX_MAX(1, blueprint->secCnt);
     AFX_ASSERT(secCnt);
 
-    afxUnit mtlCnt = AfxMax(1, blueprint->mtlCnt);
+    afxUnit mtlCnt = AFX_MAX(1, blueprint->mtlCnt);
     
     afxUnit triCnt = blueprint->triCnt;
     AFX_ASSERT(triCnt);
@@ -1077,8 +1077,8 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
     afxUnit edgeCnt = triCnt * ASX_INDICES_PER_TRI;
     afxUnit idxCnt = triCnt * ASX_INDICES_PER_TRI;
 
-    afxUnit morphCnt = AfxMax(1, blueprint->morphCnt);
-    afxUnit biasCnt = AfxMax(1, blueprint->biasCnt);
+    afxUnit morphCnt = AFX_MAX(1, blueprint->morphCnt);
+    afxUnit biasCnt = AFX_MAX(1, blueprint->biasCnt);
 
     msh->morphs = NIL;
     msh->morphTags = NIL;
@@ -1224,9 +1224,9 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
             afxMeshSection const* in = &blueprint->sections[i];
             AFX_ASSERT_RANGE(msh->triCnt, in->baseTriIdx, in->triCnt);
             AFX_ASSERT_RANGE(msh->mtlCnt, in->mtlIdx, 1);
-            mshs->baseTriIdx = AfxMin(in->baseTriIdx, msh->triCnt - 1);
-            mshs->triCnt = AfxMin(in->triCnt, msh->triCnt - mshs->baseTriIdx);
-            mshs->mtlIdx = AfxMin(in->mtlIdx, msh->mtlCnt - 1);
+            mshs->baseTriIdx = AFX_MIN(in->baseTriIdx, msh->triCnt - 1);
+            mshs->triCnt = AFX_MIN(in->triCnt, msh->triCnt - mshs->baseTriIdx);
+            mshs->mtlIdx = AFX_MIN(in->mtlIdx, msh->mtlCnt - 1);
             mshs->flags = in->flags;
         }
     }
@@ -1250,7 +1250,7 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
         bias->tris = NIL;
     }
 
-    AfxResetBoxes(morphCnt * biasCnt, msh->biasObb);
+    AfxResetBoxes(morphCnt * biasCnt, msh->biasObb, 0);
 
     msh->jointsForTriCnt = 0;
     msh->jointsForTriMap = NIL; // jointsForTriMap[triIdx] = num of joints influencing this triangle?
@@ -1317,7 +1317,7 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
     else if (morphCnt != (afxUnit)AfxCatalogStrings(_AsxGetMorphTagStringBase(sim), morphCnt, blueprint->morphTags, msh->morphTags))
         AfxThrowError();
 
-    AfxResetBoxes(morphCnt * secCnt, msh->secAabb);
+    AfxResetBoxes(morphCnt * secCnt, msh->secAabb, 0);
 
     msh->vtxCache.buf = NIL;
     msh->ibo = NIL;
@@ -1337,7 +1337,7 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
         afxString s;
         AfxGetMeshUrn(msh, &s);
 
-        AfxLogEcho("%.*s Mesh <%.*s> assembled at %p.\n    %u vertices with %u attributes.\n    %u triangles (%u bytes per index) arranged in %u sections.\n    Listing %u biases..:",
+        AfxReportMessage("%.*s Mesh <%.*s> assembled at %p.\n    %u vertices with %u attributes.\n    %u triangles (%u bytes per index) arranged in %u sections.\n    Listing %u biases..:",
             AfxPushString(msh->biasCnt > 1 ? &AfxStaticString("Skinned") : &AfxStaticString("Rigid")),
             AfxPushString(&s), msh, msh->vtxCnt, msh->attrCnt, msh->triCnt, msh->minIdxSiz, msh->secCnt, msh->biasCnt
         );
@@ -1345,7 +1345,7 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
         for (afxUnit i = 0; i < msh->biasCnt; i++)
         {
             s = msh->biasId[i];
-            AfxLogEcho("    %3u <%.*s> %3u", i, AfxPushString(&s), msh->biases ? msh->biases[i].triCnt : 0);
+            AfxReportMessage("    %3u <%.*s> %3u", i, AfxPushString(&s), msh->biases ? msh->biases[i].triCnt : 0);
         }
 #endif
     }
@@ -1442,9 +1442,13 @@ _ASX afxError AfxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxReal lt
                     normalized = FALSE;
                 }
 #endif
-                afxString const attrs[] = { AfxString("pos"), AfxString("tan"), AfxString("bit"), AfxString("tbc"), AfxString("nrm") };
+                afxString const attrs[] = { AFX_STRING("pos"), AFX_STRING("tan"), AFX_STRING("bit"), AFX_STRING("tbc"), AFX_STRING("nrm") };
 
-                switch (AfxCompareStrings(&va->usage.str, 0, FALSE, ARRAY_SIZE(attrs), attrs))
+                afxUnit sIdx;
+                if (!AfxCompareStrings(&va->usage.s, 0, FALSE, ARRAY_SIZE(attrs), attrs, &sIdx))
+                    continue;
+
+                switch (sIdx)
                 {
                 case 0: // pos
                 {
@@ -1606,7 +1610,7 @@ _ASX afxUnit AfxEnumerateMeshes(afxSimulation sim, afxUnit first, afxUnit cnt, a
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)meshes);
 }
 
-_ASX afxError AfxCompileMeshes(afxSimulation sim, afxUnit cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[])
+_ASX afxError AfxBuildMeshes(afxSimulation sim, afxUnit cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -1642,45 +1646,45 @@ _ASX afxError AfxCompileMeshes(afxSimulation sim, afxUnit cnt, afxMeshBlueprint 
             |       +-- <morph0>
             |
         */
-        AfxLogEcho("\nmeshes[%u]", cnt);
+        AfxReportMessage("\nmeshes[%u]", cnt);
         
         for (afxUnit mshIdx = 0; mshIdx < cnt; mshIdx++)
         {
             afxMesh msh = meshes[mshIdx];
 
-            AfxLogEcho("+-- msh <%.*s> %p", AfxPushString(&msh->urn), msh);
-            AfxLogEcho("|   +-- topology : %u", msh->topology);
-            AfxLogEcho("|   +-- triCnt : %u", msh->triCnt);
-            AfxLogEcho("|   +-- vtxCnt : %u", msh->vtxCnt);
+            AfxReportMessage("+-- msh <%.*s> %p", AfxPushString(&msh->urn), msh);
+            AfxReportMessage("|   +-- topology : %u", msh->topology);
+            AfxReportMessage("|   +-- triCnt : %u", msh->triCnt);
+            AfxReportMessage("|   +-- vtxCnt : %u", msh->vtxCnt);
 
-            AfxLogEcho("|   +-- attributes[%u]", msh->attrCnt);
+            AfxReportMessage("|   +-- attributes[%u]", msh->attrCnt);
             for (afxUnit i = 0; i < msh->attrCnt; i++)
             {
-                AfxLogEcho("|   |   +-- <%.*s>", AfxPushString(&msh->attrIds[i]));
+                AfxReportMessage("|   |   +-- <%.*s>", AfxPushString(&msh->attrIds[i]));
             }
 
-            AfxLogEcho("|   +-- materials[%u]", msh->mtlCnt);
+            AfxReportMessage("|   +-- materials[%u]", msh->mtlCnt);
             for (afxUnit i = 0; i < msh->mtlCnt; i++)
             {
-                AfxLogEcho("|   |   +-- <%.*s>", AfxPushString(&msh->materials[i]));
+                AfxReportMessage("|   |   +-- <%.*s>", AfxPushString(&msh->materials[i]));
             }
 
-            AfxLogEcho("|   +-- sections[%u]", msh->secCnt);
+            AfxReportMessage("|   +-- sections[%u]", msh->secCnt);
             for (afxUnit i = 0; i < msh->secCnt; i++)
             {
-                AfxLogEcho("|   |   +-- [%u, %u] #%u", msh->sections[i].baseTriIdx, msh->sections[i].triCnt, msh->sections[i].mtlIdx);
+                AfxReportMessage("|   |   +-- [%u, %u] #%u", msh->sections[i].baseTriIdx, msh->sections[i].triCnt, msh->sections[i].mtlIdx);
             }
 
-            AfxLogEcho("|   +-- biases[%u]", msh->biasCnt);
+            AfxReportMessage("|   +-- biases[%u]", msh->biasCnt);
             for (afxUnit i = 0; i < msh->biasCnt; i++)
             {
-                AfxLogEcho("|   |   +-- <%.*s>", AfxPushString(&msh->biasId[i]));
+                AfxReportMessage("|   |   +-- <%.*s>", AfxPushString(&msh->biasId[i]));
             }
 
-            AfxLogEcho("|   +-- morphes[%u]", msh->morphCnt);
+            AfxReportMessage("|   +-- morphes[%u]", msh->morphCnt);
             for (afxUnit i = 0; i < msh->morphCnt; i++)
             {
-                AfxLogEcho("|   |   +-- <%.*s>", AfxPushString(&msh->morphTags[i]));
+                AfxReportMessage("|   |   +-- <%.*s>", AfxPushString(&msh->morphTags[i]));
             }
         }
 #endif//_ASX_DGB_ECHO_MESH

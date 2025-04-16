@@ -25,6 +25,16 @@
 
 #include "qwadro/inc/draw/afxDrawSystem.h"
 
+AFX_DEFINE_STRUCT(_avxBufferRemapping)
+{
+    avxBuffer       buf;
+    afxSize         offset;
+    afxUnit         range;
+    avxBufferMapFlags flags;
+    afxBool         unmap;
+    void**          placeholder;
+};
+
 #ifndef _AVX_DRAW_C
 AFX_DECLARE_STRUCT(_avxDsysImpl);
 #else
@@ -35,8 +45,7 @@ AFX_DEFINE_STRUCT(_avxDsysImpl)
     afxError(*resetFenc)(afxDrawSystem, afxUnit, avxFence const[]);
     afxError(*flushMaps)(afxDrawSystem, afxUnit, avxBufferedMap const[]);
     afxError(*syncMaps)(afxDrawSystem, afxUnit, avxBufferedMap const[]);
-    afxError(*mapBufs)(afxDrawSystem, afxUnit, avxBufferedMap const[]);
-    afxError(*unmapBufs)(afxDrawSystem, afxUnit, avxBufferedMap const[]);
+    afxError(*remapBufs)(afxDrawSystem, afxUnit, _avxBufferRemapping const[]);
     afxUnit(*getProcs)(afxDrawSystem, afxUnit, afxString const[], void*[]);
 
     afxClass const*(*dexuCls)(afxDrawSystem);
@@ -52,6 +61,9 @@ AFX_DEFINE_STRUCT(_avxDsysImpl)
     afxClass const*(*canvCls)(afxDrawSystem);
     afxClass const*(*shadCls)(afxDrawSystem);
     afxClass const*(*ligaCls)(afxDrawSystem);
+
+    afxClass const*(*camCls)(afxDrawSystem);
+    afxClass const*(*txdCls)(afxDrawSystem);
 };
 #endif
 
@@ -78,6 +90,9 @@ AFX_DEFINE_STRUCT(_avxDsysAcquisition)
     afxClassConfig const* doutClsCfg; // req RAS, CANV
 
     afxClassConfig const* dinClsCfg; // req BUF
+
+    afxClassConfig const* camClsCfg;
+    afxClassConfig const* txdClsCfg; // req RAS
 
     afxClassConfig const* dexuClsCfg;
     afxClassConfig const* dqueClsCfg;
@@ -120,6 +135,9 @@ AFX_OBJECT(afxDrawSystem)
 
     afxClass        doutCls; // req RAS, CANV
     afxClass        dinCls; // req BUF
+
+    afxClass        camCls;
+    afxClass        txdCls; // req RAS
 
     afxClass        dexuCls;
     afxClass        fencCls;
@@ -167,5 +185,8 @@ AVX afxError _AvxTransferVideoMemory(afxDrawSystem dsys, avxTransference* ctrl, 
 
 AVX afxDrawFeatures const* _AvxDsysAccessReqFeatures(afxDrawSystem dsys);
 AVX afxDrawLimits const* _AvxDsysAccessLimits(afxDrawSystem dsys);
+
+AVX afxClassConfig const _AVX_TXD_CLASS_CONFIG;
+AVX afxClassConfig const _AVX_CAM_CLASS_CONFIG;
 
 #endif//AVX_IMPL___SYSTEM_H

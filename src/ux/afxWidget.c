@@ -94,7 +94,7 @@ _AUX afxClassConfig const _AUX_WID_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AUX afxError AfxAcquireWidgets(afxWindow wnd, afxUnit cnt, afxWidgetConfig cfg[], afxWidget widgets[])
+_AUX afxError AfxAcquireWidgets(afxWindow wnd, afxUnit cnt, afxWidgetConfig const cfg[], afxWidget widgets[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);

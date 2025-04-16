@@ -388,7 +388,7 @@ _AFXINL afxResult AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxUn
 
     if (reverse)  // from front (last in) to back (first in) of chain
     {
-        AFX_ITERATE_CHAIN(ch, afxLink, next, lnk2)
+        AFX_ITERATE_CHAIN(afxLink, lnk2, next, ch)
         {
             if (posn >= base)
             {
@@ -404,7 +404,7 @@ _AFXINL afxResult AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxUn
     }
     else  // from back (first in) to front (last in) of chain
     {
-        AFX_ITERATE_CHAIN_B2F(ch, afxLink, next, lnk2)
+        AFX_ITERATE_CHAIN_B2F(afxLink, lnk2, next, ch)
         {
             if (posn >= base)
             {

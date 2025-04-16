@@ -97,6 +97,46 @@ _AUX afxError AfxReleaseAllKeys(afxUnit seat, afxWindow wnd)
     return err;
 }
 
+_AUX afxError AfxReleaseAllKeys2(afxMask seats, afxWindow wnd)
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses))
+    {
+        AfxThrowError();
+        return err;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        afxUnit cnt = ses->seats[seatIdx].keyCnt;
+        AFX_ASSERT(cnt);
+
+        for (afxUnit i = 0; i < cnt; i++)
+        {
+            if (ses->seats[seatIdx].keyState[0][i])
+            {
+                ses->seats[seatIdx].keyState[1][i] = ses->seats[seatIdx].keyState[0][i];
+                ses->seats[seatIdx].keyState[0][i] = 0x00;
+
+                auxEvent ev = { 0 };
+                ev.ev.id = afxEvent_UX;
+                ev.ev.siz = sizeof(ev);
+                ev.id = auxEventId_KEY;
+                ev.seat = seatIdx;
+                ev.wnd = wnd;
+                AfxEmitEvent(wnd, (void*)&ev.ev);
+            }
+        }
+    }
+    return err;
+}
+
 _AUX afxBool AfxWereKeysReleased(afxUnit seat, afxUnit cnt, afxKey const codes[])
 {
     afxError err = AFX_ERR_NONE;
@@ -119,6 +159,35 @@ _AUX afxBool AfxWereKeysReleased(afxUnit seat, afxUnit cnt, afxKey const codes[]
     return rslt;
 }
 
+_AUX afxMask AfxWereKeysReleased2(afxMask seats, afxUnit cnt, afxKey const codes[])
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        afxBool cnt2 = 0;
+
+        for (afxUnit i = 0; i < cnt; i++)
+            if (ses->seats[seatIdx].keyState[1][codes[i]] &&
+                !(ses->seats[seatIdx].keyState[0][codes[i]]))
+                cnt2++;
+
+        if (cnt2 == cnt)
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
 _AUX afxBool AfxWasKeyReleased(afxUnit seat, afxKey code)
 {
     afxError err = AFX_ERR_NONE;
@@ -131,6 +200,29 @@ _AUX afxBool AfxWasKeyReleased(afxUnit seat, afxKey code)
     if (seat < ses->seatCnt)
     {
         rslt = (ses->seats[seat].keyState[1][code] && !(ses->seats[seat].keyState[0][code]));
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxWasKeyReleased2(afxMask seats, afxKey code)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].keyState[1][code] &&
+            !(ses->seats[seatIdx].keyState[0][code]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
     }
     return rslt;
 }
@@ -157,6 +249,35 @@ _AUX afxBool AfxWereKeysPressed(afxUnit seat, afxUnit cnt, afxKey const codes[])
     return rslt;
 }
 
+_AUX afxMask AfxWereKeysPressed2(afxMask seats, afxUnit cnt, afxKey const codes[])
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        afxBool cnt2 = 0;
+
+        for (afxUnit i = 0; i < cnt; i++)
+            if (ses->seats[seatIdx].keyState[0][codes[i]] &&
+                (!(ses->seats[seatIdx].keyState[1][codes[i]])))
+                cnt2++;
+
+        if (cnt2 == cnt)
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
 _AUX afxBool AfxWasKeyPressed(afxUnit seat, afxKey code)
 {
     afxError err = AFX_ERR_NONE;
@@ -173,6 +294,29 @@ _AUX afxBool AfxWasKeyPressed(afxUnit seat, afxKey code)
     return rslt;
 }
 
+_AUX afxMask AfxWasKeyPressed2(afxMask seats, afxKey code)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].keyState[0][code] &&
+            !(ses->seats[seatIdx].keyState[1][code]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
 _AUX afxBool AfxIsKeyPressed(afxUnit seat, afxKey code)
 {
     afxError err = AFX_ERR_NONE;
@@ -185,6 +329,28 @@ _AUX afxBool AfxIsKeyPressed(afxUnit seat, afxKey code)
     if (seat < ses->seatCnt)
     {
         rslt = !!ses->seats[seat].keyState[0][code];
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxIsKeyPressed2(afxMask seats, afxKey code)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (!!ses->seats[seatIdx].keyState[0][code])
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
     }
     return rslt;
 }

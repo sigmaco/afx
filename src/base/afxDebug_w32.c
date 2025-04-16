@@ -23,6 +23,7 @@
 #include <string.h>
 #include <time.h>
 #include <signal.h>
+#include <float.h>
 #include <Windows.h>
 #include <Shlwapi.h>
 //#include <Mmsystem.h>
@@ -51,7 +52,7 @@ AFX_DEFINE_STRUCT(afxDebugger)
     HWND            conWnd;
     HANDLE          conOutHnd;
 }
- debugger =
+debugger =
 {
     .mtx = { 0 },
     .cond = { 0 },
@@ -66,6 +67,117 @@ AFX_DEFINE_STRUCT(afxDebugger)
     .conOutHnd = INVALID_HANDLE_VALUE
 };
 
+AFX_DEFINE_STRUCT(_afxDbgChan)
+{
+    afxUnit32 fgCol;
+    afxUnit32 bgCol;
+    afxUnit16 beepFreq;
+    afxUnit16 beepDur;
+    afxBool8 echo;
+    afxBool8 dump;
+};
+
+static _afxDbgChan dbgChannels[32] =
+{
+    {
+        .fgCol = 0x000000FF, // grey : comment
+        .echo = TRUE,
+        .dump = TRUE
+    },
+    {
+        .fgCol = 0xFFFFFFFF, // white : highlight
+        .echo = TRUE,
+        .dump = TRUE
+    },
+    {
+        .fgCol = 0x00ff0000, // green : regular
+        .echo = TRUE,
+        .dump = TRUE
+    },
+    {
+        .fgCol = 0xFF00FF00, // blue : assistence
+        .echo = TRUE,
+        .dump = TRUE
+    },
+    {
+        .fgCol = 0x00FFFF00, // turquish
+        .echo = TRUE,
+        .dump = TRUE
+    },
+    {
+        .fgCol = 0xFF00FF00, // purple
+        .beepFreq = 440,
+        .beepDur = 300,
+        .echo = TRUE,
+        .dump = TRUE
+    },
+    {
+        .fgCol = 0xFFFF0000, // yellow
+        .beepFreq = 440,
+        .beepDur = 300,
+        .echo = TRUE,
+        .dump = TRUE
+    },
+    {
+        .fgCol = 0xFFFF00FF, // yellow : advertence (aka warning)
+        .beepFreq = 440,
+        .beepDur = 300,
+        .echo = TRUE,
+        .dump = TRUE
+    },
+    {
+        .fgCol = 0xFF000000, // red dark : assertion
+        .beepFreq = 440,
+        .beepDur = 300,
+        .echo = TRUE,
+        .dump = TRUE
+    },
+    {
+        .fgCol = 0xFF0000FF, // red : critical error
+        .beepFreq = 440,
+        .beepDur = 300,
+        .echo = TRUE,
+        .dump = TRUE
+    },
+};
+
+_AFX void AfxResetDebugOutputChannel(afxUnit ch, afxBool echo, afxBool dump)
+{
+    dbgChannels[ch].echo = echo;
+    dbgChannels[ch].dump = dump;
+}
+
+_AFX void AfxBeep(afxUnit freq, afxUnit dur)
+{
+    // Ah, the good old motherboard speaker beep.
+#if 0
+    // Using ASCII Bell.
+    printf("\a"); // ASCII Bell character
+    fflush(stdout); // Make sure it's sent immediately
+#else
+#ifndef _WIN32
+    // A true hardware-level beep from the PC speaker.
+    // Direct access via '/dev/console' (requires Root).
+    int con_fd = open("/dev/console", O_WRONLY);
+    if (con_fd == -1)
+    {
+        perror("open");
+        return 1;
+    }
+    int duration = 1000; // in milliseconds
+    int freq = 1000;     // frequency in Hz
+    int tone = (1193180 / freq);
+    ioctl(con_fd, KIOCSOUND, tone);
+    usleep(duration * 1000);
+    ioctl(con_fd, KIOCSOUND, 0); // Stop sound
+    close(con_fd);
+#else
+    Beep(440, 300); // frequency in Hz, duration in ms
+#endif
+#endif
+    return;
+}
+
  _AFXINL afxChar const* _AfxDbgTrimFilename(afxChar const* path)
 {
     afxChar const* start = (afxChar const*)path, *p = (afxChar const*)path;
@@ -74,7 +186,7 @@ AFX_DEFINE_STRUCT(afxDebugger)
     return((*(p) == (afxChar)'/' || *(p) == (afxChar)'\\' || *(p) == (afxChar)':') ? (afxChar const*)++p : NIL);
 }
 
-_AFXINL afxResult _AfxDbgLogFn(afxUnit ch, afxChar const* msg, afxUnit len)
+_AFXINL afxResult _AfxReportFn(afxUnit ch, afxChar const* msg, afxUnit len)
 {
     WORD tattr = 0;
     afxUnit color = 0;
@@ -118,7 +230,7 @@ _AFXINL afxResult _AfxDbgLogFn(afxUnit ch, afxChar const* msg, afxUnit len)
     return 1;
 }
 
-_AFXINL afxResult AfxDbgLogf(afxUnit ch, afxHere const hint, afxChar const* msg, ...)
+_AFXINL afxResult AfxReportf(afxUnit ch, afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -127,11 +239,13 @@ _AFXINL afxResult AfxDbgLogf(afxUnit ch, afxHere const hint, afxChar const* msg,
 
         if ((ch % 10) >= 7)
         {
+            // \a = BELL control code
 #ifdef AFX_ISA_X86_64
-            len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const * const)hint[0]), hint[1]);
+            len = stbsp_sprintf(msg2, "%s:%lli?%s\n", _AfxDbgTrimFilename((char const * const)hint[0]), hint[1], (char const * const)hint[2]);
 #else
-            len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const * const)hint[0]), (int)hint[1]);
+            len = stbsp_sprintf(msg2, "%s:%i?%s\n", _AfxDbgTrimFilename((char const * const)hint[0]), (int)hint[1], (char const * const)hint[2]);
 #endif
+            //AfxBeep(1, 1);
         }
 
         int len2;
@@ -148,17 +262,17 @@ _AFXINL afxResult AfxDbgLogf(afxUnit ch, afxHere const hint, afxChar const* msg,
         msg2[len + len2] = '\n';
         msg2[len + len2 + 1] = '\0';
 
-        _AfxDbgLogFn(ch, msg2, len + len2);
+        _AfxReportFn(ch, msg2, len + len2);
         _AfxDbgUnlock();
     }
     return 0;
 }
 
-_AFXINL afxResult AfxDbgLog(afxUnit ch, afxChar const* msg, afxUnit len)
+_AFXINL afxResult AfxReport(afxUnit ch, afxChar const* msg, afxUnit len)
 {
     if (_AfxDbgLock())
     {
-        _AfxDbgLogFn(ch, msg, len);
+        _AfxReportFn(ch, msg, len);
         _AfxDbgUnlock();
     }
     return 0;
@@ -191,7 +305,7 @@ void AfxLogCall_(afxHere const hint, afxChar const* args, ...)
     }
 }
 
-void AfxLogComment_(afxHere const hint, afxChar const* msg, ...)
+void AfxReportComment_(afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -230,7 +344,7 @@ void AfxLogComment_(afxHere const hint, afxChar const* msg, ...)
     }
 }
 
-void AfxLogEcho_(afxHere const hint, afxChar const* msg, ...)
+void AfxReportMessage_(afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -269,7 +383,7 @@ void AfxLogEcho_(afxHere const hint, afxChar const* msg, ...)
     }
 }
 
-void AfxLogAssistence_(afxHere const hint, afxChar const* msg, ...)
+void AfxReportHint_(afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -301,7 +415,7 @@ void AfxLogAssistence_(afxHere const hint, afxChar const* msg, ...)
     }
 }
 
-void AfxLogAdvertence_(afxHere const hint, afxChar const* msg, ...)
+void AfxReportWarn_(afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -333,7 +447,7 @@ void AfxLogAdvertence_(afxHere const hint, afxChar const* msg, ...)
     }
 }
 
-void AfxLogError_(afxHere const hint, afxChar const* msg, ...)
+void AfxReportError_(afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -413,7 +527,7 @@ _AFXINL afxResult _AfxDbgLock(void)
                 {
                     afxChar msg2[512];
                     stbsp_sprintf(msg2, "Entering the Thread Execution Environment %2u\n", debugger.unitLockerIdx);
-                    //AfxDbgLogf(6, NIL, msg2);
+                    //AfxReportf(6, NIL, msg2);
                 }
             }
 
@@ -454,32 +568,32 @@ void sigHandler(int s)
     {
     case SIGTERM:
     {
-        _AfxDbgLogFn(0, "termination request, sent to the program.", 0);
+        _AfxReportFn(0, "\aEXCEPTION: termination request, sent to the program.", 0);
         break;
     }
     case SIGSEGV:
     {
-        _AfxDbgLogFn(0, "invalid memory access (segmentation fault).", 0);
+        _AfxReportFn(0, "\aEXCEPTION: Invalid memory access (segmentation fault).", 0);
         break;
     }
     case SIGINT:
     {
-        _AfxDbgLogFn(0, "external interrupt, usually initiated by the user.", 0);
+        _AfxReportFn(0, "\aEXCEPTION: External interrupt, usually initiated by the user.", 0);
         break;
     }
     case SIGILL:
     {
-        _AfxDbgLogFn(0, "invalid program image, such as invalid instruction.", 0);
+        _AfxReportFn(0, "\aEXCEPTION: Invalid program image, such as invalid instruction.", 0);
         break;
     }
     case SIGABRT:
     {
-        _AfxDbgLogFn(0, "abnormal termination condition, as is e.g. initiated by abort().", 0);
+        _AfxReportFn(0, "\aEXCEPTION: Abnormal termination condition, as is e.g. initiated by abort().", 0);
         break;
     }
     case SIGFPE:
     {
-        _AfxDbgLogFn(0, "erroneous arithmetic operation such as divide by zero.", 0);
+        _AfxReportFn(0, "\aEXCEPTION: Erroneous arithmetic operation such as divide by zero.", 0);
         break;
     }
     default: break;
@@ -490,7 +604,13 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
 {
     (void)file;
     afxError err = AFX_ERR_NONE;
-    if (debugger.running) AfxThrowError();
+    
+    AfxBeep(0, 0);
+
+    if (debugger.running)
+    {
+        AfxThrowError();
+    }
     else
     {
         AfxDeployMutex(&(debugger.mtx), AFX_MTX_RECURSIVE);
@@ -503,6 +623,13 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
         signal(SIGILL, sigHandler);
         signal(SIGABRT, sigHandler);
         signal(SIGFPE, sigHandler);
+
+#ifdef AVX_FLOATING_POINT_VALIDATION_ENABLED
+        unsigned int u;
+        u = _controlfp(0, 0);
+        u = u & ~(_EM_INVALID | /*_EM_DENORMAL |*/ _EM_ZERODIVIDE | _EM_OVERFLOW /*| _EM_UNDERFLOW  | _EM_INEXACT*/);
+        _controlfp(u, _MCW_EM);
+#endif
 
         afxChar path[1024];
 
@@ -568,7 +695,7 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
                 SetConsoleTextAttribute(debugger.conOutHnd, (WORD)(~(MAXUINT16) | FOREGROUND_RED | FOREGROUND_GREEN));
 
                 for (afxUnit i = 0; i < 1120; i++)
-                    AfxDbgLogf(0xFFFF0000, "%.*s", 1, &qwadroSignature.start[i * 1]);
+                    AfxReportf(0xFFFF0000, "%.*s", 1, &qwadroSignature.start[i * 1]);
 
                 Sleep(1000);
 
@@ -607,7 +734,7 @@ _AFXINL void AfxCatchError_(afxError err_, afxHere const hint)
 
     if (err_)
     {
-        AfxLogError("");
+        AfxReportError("");
         afxInt a = 0;
     }
 }

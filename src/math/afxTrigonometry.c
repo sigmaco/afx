@@ -18,6 +18,314 @@
 
 #include "qwadro/inc/math/afxTrigonometry.h"
 
+/*********************************************************************************
+ * ANGLE AND TRIGONOMETRY FUNCTIONS                                              *
+ *                                                                               *
+ * Function parameters specified as angle are assumed to be in units of radians. *
+ * In no case will any of these functions result in a divide by zero error.      *
+ * If the divisor of a ratio is 0, then results will be undefined.               *
+ *                                                                               *
+ * These all operate component-wise. The description is per component.           *
+ *********************************************************************************/
+
+ // Converts degrees to radians.
+ // The value returned by this function is (pi / 180) * degrees.
+
+_AFXINL afxReal64 AfxRad(afxReal64 degrees)
+{
+    return degrees * (AFX_PI / 180.0);
+}
+
+_AFXINL afxReal AfxRadf(afxReal degrees)
+{
+    return degrees * (AFX_PI / 180.f);
+}
+
+// Converts radians to degrees.
+// The value returned by this function is (180 / pi) * radians.
+
+_AFXINL afxReal64 AfxDeg(afxReal64 radians)
+{
+    return radians * (180.0 / AFX_PI);
+}
+
+_AFXINL afxReal AfxDegf(afxReal radians)
+{
+    return radians * (180.f / AFX_PI);
+}
+
+// The standard trigonometric sine function.
+
+_AFXINL afxReal64 AfxSin(afxReal64 radians)
+{
+    return sin(radians);
+}
+
+_AFXINL afxReal AfxSinf(afxReal radians)
+{
+    return sinf(radians);
+}
+
+// Sine
+
+_AFXINL void AfxSinV2d(afxV2d v, afxV2d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxSinf(in[0]);
+    v[1] = AfxSinf(in[1]);
+}
+
+_AFXINL void AfxSinV3d(afxV3d v, afxV3d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxSinf(in[0]);
+    v[1] = AfxSinf(in[1]);
+    v[2] = AfxSinf(in[2]);
+}
+
+_AFXINL void AfxSinV4d(afxV4d v, afxV4d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxSinf(in[0]);
+    v[1] = AfxSinf(in[1]);
+    v[2] = AfxSinf(in[2]);
+    v[3] = AfxSinf(in[3]);
+}
+
+// The standard trigonometric cosine function.
+
+_AFXINL afxReal64 AfxCos(afxReal64 radians)
+{
+    return cos(radians);
+}
+
+_AFXINL afxReal AfxCosf(afxReal radians)
+{
+    return cosf(radians);
+}
+
+// Cosine
+
+_AFXINL void AfxCosV2d(afxV2d v, afxV2d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxCosf(in[0]);
+    v[1] = AfxCosf(in[1]);
+}
+
+_AFXINL void AfxCosV3d(afxV3d v, afxV3d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxCosf(in[0]);
+    v[1] = AfxCosf(in[1]);
+    v[2] = AfxCosf(in[2]);
+}
+
+_AFXINL void AfxCosV4d(afxV4d v, afxV4d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxCosf(in[0]);
+    v[1] = AfxCosf(in[1]);
+    v[2] = AfxCosf(in[2]);
+    v[3] = AfxCosf(in[3]);
+}
+
+// A combined cosine and sine function
+
+_AFXINL void AfxCosSin(afxReal64 radians, afxReal64* cos, afxReal64* sin)
+{
+    *cos = AfxCos(radians);
+    *sin = AfxSin(radians);
+}
+
+_AFXINL void AfxCosSinf(afxReal radians, afxReal* cos, afxReal* sin)
+{
+    *cos = AfxCosf(radians);
+    *sin = AfxSinf(radians);
+}
+
+// The standard trigonometric tangent function.
+
+_AFXINL afxReal64 AfxTan(afxReal64 radians)
+{
+    return tan(radians);
+}
+
+_AFXINL afxReal AfxTanf(afxReal radians)
+{
+    return tanf(radians);
+}
+
+// Tangent
+
+_AFXINL void AfxTanV2d(afxV2d v, afxV2d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxTanf(in[0]);
+    v[1] = AfxTanf(in[1]);
+}
+
+_AFXINL void AfxTanV3d(afxV3d v, afxV3d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxTanf(in[0]);
+    v[1] = AfxTanf(in[1]);
+    v[2] = AfxTanf(in[2]);
+}
+
+_AFXINL void AfxTanV4d(afxV4d v, afxV4d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxTanf(in[0]);
+    v[1] = AfxTanf(in[1]);
+    v[2] = AfxTanf(in[2]);
+    v[3] = AfxTanf(in[3]);
+}
+
+// Arc sine. Returns an angle whose sine is x.
+// The range of values returned by this function is [-pi / 2, pi / 2].
+// Results are undefined if |x| > 1.
+
+_AFXINL afxReal64 AfxAsin(afxReal64 x)
+{
+    return asin(x);
+}
+
+_AFXINL afxReal AfxAsinf(afxReal x)
+{
+    return asinf(x);
+}
+
+// Arc cosine. Returns an angle whose cosine is x.
+// The range of values returned by this function is [0, pi].
+// Results are undefined if |x| > 1.
+
+_AFXINL afxReal64 AfxAcos(afxReal64 x)
+{
+    return acos(x);
+}
+
+_AFXINL afxReal AfxAcosf(afxReal x)
+{
+    return acosf(x);
+}
+
+// Arc cosine
+
+_AFXINL void AfxAcosV2d(afxV2d v, afxV2d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxAcosf(in[0]);
+    v[1] = AfxAcosf(in[1]);
+}
+
+_AFXINL void AfxAcosV3d(afxV3d v, afxV3d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxAcosf(in[0]);
+    v[1] = AfxAcosf(in[1]);
+    v[2] = AfxAcosf(in[2]);
+}
+
+_AFXINL void AfxAcosV4d(afxV4d v, afxV4d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxAcosf(in[0]);
+    v[1] = AfxAcosf(in[1]);
+    v[2] = AfxAcosf(in[2]);
+    v[3] = AfxAcosf(in[3]);
+}
+
+// Arc tangent. Returns an angle whose tangent is y_over_x.
+// The range of values returned by this function is [-pi / 2, pi / 2].
+
+_AFXINL afxReal64 AfxAtan(afxReal64 y_over_x)
+{
+    return atan(y_over_x);
+}
+
+_AFXINL afxReal AfxAtanf(afxReal y_over_x)
+{
+    return atanf(y_over_x);
+}
+
+// Arc tangent
+
+_AFXINL void AfxAtanV2d(afxV2d v, afxV2d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxAtanf(in[0]);
+    v[1] = AfxAtanf(in[1]);
+}
+
+_AFXINL void AfxAtanV3d(afxV3d v, afxV3d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxAtanf(in[0]);
+    v[1] = AfxAtanf(in[1]);
+    v[2] = AfxAtanf(in[2]);
+}
+
+_AFXINL void AfxAtanV4d(afxV4d v, afxV4d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = AfxAtanf(in[0]);
+    v[1] = AfxAtanf(in[1]);
+    v[2] = AfxAtanf(in[2]);
+    v[3] = AfxAtanf(in[3]);
+}
+
+// Arc tangent. Returns an angle whose tangent is y / x.
+// The signs of x and y are used to determine what quadrant the angle is in.
+// The range of values returned by this function is [-pi, pi].
+// Results are undefined if xand y are both 0.
+
+_AFXINL afxReal64 AfxAtan2(afxReal64 y, afxReal64 x)
+{
+    return atan2(y, x);
+}
+
+_AFXINL afxReal AfxAtan2f(afxReal y, afxReal x)
+{
+    return atan2f(y, x);
+}
+
+
+
+
+
+
+
 _AFXINL void AfxComputeTriangleNormal(afxV3d const a, afxV3d const b, afxV3d const c, afxV3d n)
 {
     afxV3d t, t2;

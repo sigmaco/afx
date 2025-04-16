@@ -347,6 +347,346 @@ _AUX afxBool AfxWasXmb2Released(afxUnit seat)
     return rslt;
 }
 
+_AUX afxMask AfxIsLmbPressed2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[0][AFX_LMB])
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxIsRmbPressed2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[0][AFX_RMB])
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxIsMmbPressed2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[0][AFX_MMB])
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxIsXmb1Pressed2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[0][AFX_XMB1])
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxIsXmb2Pressed2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[0][AFX_XMB2])
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxWasLmbPressed2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[0][AFX_LMB] &&
+            !(ses->seats[seatIdx].mbState[1][AFX_LMB]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxWasRmbPressed2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[0][AFX_RMB] &&
+            !(ses->seats[seatIdx].mbState[1][AFX_RMB]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxWasMmbPressed2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[0][AFX_MMB] &&
+            !(ses->seats[seatIdx].mbState[1][AFX_MMB]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxWasXmb1Pressed2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[0][AFX_XMB1] &&
+            !(ses->seats[seatIdx].mbState[1][AFX_XMB1]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxWasXmb2Pressed2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[0][AFX_XMB2] &&
+            !(ses->seats[seatIdx].mbState[1][AFX_XMB2]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxWasLmbReleased2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[1][AFX_LMB] &&
+            !(ses->seats[seatIdx].mbState[0][AFX_LMB]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxWasRmbReleased2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[1][AFX_RMB] &&
+            !(ses->seats[seatIdx].mbState[0][AFX_RMB]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxBool AfxWasMmbReleased2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[1][AFX_MMB] &&
+            !(ses->seats[seatIdx].mbState[0][AFX_MMB]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxWasXmb1Released2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[1][AFX_XMB1] &&
+            !(ses->seats[seatIdx].mbState[0][AFX_XMB1]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
+_AUX afxMask AfxWasXmb2Released2(afxMask seats)
+{
+    afxError err = AFX_ERR_NONE;
+    afxMask rslt = NIL;
+
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return rslt;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
+    {
+        if (seats && !(seats & AFX_BIT(seatIdx)))
+            continue; // skip if a mask is specified but it is not covered on such mask.
+
+        if (ses->seats[seatIdx].mbState[1][AFX_XMB2] &&
+            !(ses->seats[seatIdx].mbState[0][AFX_XMB2]))
+        {
+            rslt |= AFX_BIT(seatIdx);
+        }
+    }
+    return rslt;
+}
+
 _AUX afxBool AfxMouseHasHorizontalChanged(afxUnit seat, afxInt tolerance)
 {
     afxError err = AFX_ERR_NONE;

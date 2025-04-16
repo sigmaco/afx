@@ -69,7 +69,7 @@ _AFX afxBool _AfxExuStdIoProcCb(afxIoBridge exu, afxThread thr)
         if (AfxTryLockMutex(&xque->workChnMtx))
         {
             afxStdWork* work;
-            AFX_ITERATE_CHAIN_B2F(&xque->workChn, afxStdWork, hdr.chain, work)
+            AFX_ITERATE_CHAIN_B2F(afxStdWork, work, hdr.chain, &xque->workChn)
             {
                 AFX_ASSERT(xque->workChn.cnt);
                 AfxGetTime(&work->hdr.pullTime);

@@ -39,7 +39,7 @@
 #ifndef AMX_MIX_CONTEXT_H
 #define AMX_MIX_CONTEXT_H
 
-#include "qwadro/inc/mix/io/afxAudio.h"
+#include "qwadro/inc/mix/io/amxAudio.h"
 
 typedef enum amxLoadOp
 // An enumerated value indicating the store operation to perform on sink channel after executing the mix scope.
@@ -74,7 +74,7 @@ typedef enum amxStoreOp
     amxStoreOp_DONT_CARE,
 } amxStoreOp;
 
-typedef enum
+typedef enum amxMixFactor
 // Sample output mixing factors.
 // As0 represent the first source sample, for the sample output location corresponding to the voice being mixed.
 // As1 represent the second source sample, used in dual source mixing modes, 
@@ -118,7 +118,7 @@ typedef enum
     amxMixFactor_TOTAL
 } amxMixFactor;
 
-typedef enum
+typedef enum amxMixOp
 // Sample output mixing operations.
 // Once the source and destination mix factors have been selected, 
 // they along with the source and destination samples are passed to the mixing operations.
@@ -137,7 +137,9 @@ typedef enum
     amxMixOp_MIN,
 
     // A = max(As0, Ad)
-    amxMixOp_MAX
+    amxMixOp_MAX,
+
+    amxMixOp_TOTAL
 } amxMixOp;
 
 /*
@@ -160,9 +162,9 @@ typedef enum
 
 AFX_DEFINE_STRUCT(amxMixSink)
 {
+    amxStoreOp      storeOp;
     amxLoadOp       loadOp;
     afxReal         clearAmpl;
-    amxStoreOp      storeOp;
     afxReal         mergeConstant;
     amxMixFactor    srcFactor;
     amxMixFactor    dstFactor;
@@ -181,7 +183,7 @@ AFX_DEFINE_STRUCT(amxMixSink)
 AFX_DEFINE_STRUCT(amxMixScope)
 {
     afxFlags            flags;
-    //afxAudio            sink;
+    //amxAudio            sink;
     afxSink             sink;
     afxUnit             freq;
     afxUnit             baseFrame;
@@ -202,28 +204,160 @@ typedef enum amxMixState
     amxMixState_INVALID
 } amxMixState;
 
-AMX afxUnit         AfxGetMixerPort(afxMixContext mix);
-AMX afxUnit         AfxGetMixerPool(afxMixContext mix);
-AMX amxMixState     AfxGetMixerState(afxMixContext mix);
+AMX afxUnit     AfxGetMixerPort(afxMixContext mix);
+AMX afxUnit     AfxGetMixerPool(afxMixContext mix);
+AMX amxMixState AfxGetMixerState(afxMixContext mix);
 
-AMX afxCmdId        AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope);
-AMX afxCmdId        AmxCmdConcludeMixScope(afxMixContext mix);
+AMX afxCmdId AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope);
+AMX afxCmdId AmxCmdConcludeMixScope(afxMixContext mix);
 
-AMX afxCmdId        AmxCmdReverb(afxMixContext mix, afxReal wetMix, afxReal roomSiz, afxReal width, afxReal damp, afxReal dryMix);
-AMX afxCmdId        AmxCmdPhaser(afxMixContext mix, afxReal floor, afxReal ceil, afxReal rate, afxReal feedback, afxReal depth, afxReal phase, afxUnit stageCnt);
-AMX afxCmdId        AmxCmdGainer(afxMixContext mix, afxReal gain, afxReal pan, afxMask invChan);
-AMX afxCmdId        AmxCmdFlanger(afxMixContext mix, afxReal amount, afxReal rate, afxReal amplitude, afxReal feedback, afxReal delay, afxReal phase, afxUnit flt);
-AMX afxCmdId        AmxCmdAnalog(afxMixContext mix, afxUnit type, afxUnit flt, afxReal cutoff, afxReal resonance, afxReal inertia, afxReal drive, afxUnit oversamp, afxReal start, afxReal end);
-AMX afxCmdId        AmxCmdCompressor(afxMixContext mix, afxReal threshold, afxReal ratio, afxReal attack, afxReal release, afxReal makeup);
+AMX afxCmdId AmxCmdReverb
+(
+    afxMixContext mix, 
+    afxUnit voice, 
+    afxReal wetMix, 
+    afxReal roomSiz, 
+    afxReal width, 
+    afxReal damp, 
+    afxReal dryMix
+);
 
-AMX afxCmdId        AmxCmdLineIn(afxMixContext mix, afxUnit line, afxMask chanMask, afxUnit latency, afxReal pan, afxReal vol);
-AMX afxCmdId        AmxCmdRemoteIn(afxMixContext mix, afxUnit src, afxMask chanMask, afxReal pan, afxReal vol);
+AMX afxCmdId AmxCmdPhaser
+(
+    afxMixContext mix, 
+    afxUnit voice, 
+    afxReal floor, 
+    afxReal ceil, 
+    afxReal rate, 
+    afxReal feedback, 
+    afxReal depth, 
+    afxReal phase, 
+    afxUnit stageCnt
+);
 
-AMX afxCmdId        AmxCmdSend(afxMixContext mix, afxBool muteSrc, afxReal amount, afxReal pan, afxUnit receiverSubmix);
+AMX afxCmdId AmxCmdGainer
+(
+    afxMixContext mix, 
+    afxUnit voice, 
+    afxReal gain, 
+    afxReal pan, 
+    afxMask invChan
+);
 
-AMX afxCmdId        AmxCmdResampleAudio(afxMixContext mix, afxAudio src, afxAudio dst, afxWaveInterval const* srci, afxWaveInterval const* dsti);
+AMX afxCmdId AmxCmdAnalog
+(
+    afxMixContext mix, 
+    afxUnit voice, 
+    afxUnit type, 
+    afxUnit flt, 
+    afxReal cutoff, 
+    afxReal resonance, 
+    afxReal inertia, 
+    afxReal drive, 
+    afxUnit oversamp, 
+    afxReal start, 
+    afxReal end
+);
 
-AMX afxCmdId        AmxCmdFetchAudition(afxMixContext mix, afxUnit headIdx);
+AMX afxCmdId AmxCmdFlanger
+(
+    afxMixContext mix, 
+    afxUnit voice, 
+    afxReal amount, 
+    afxReal rate, 
+    afxReal amplitude, 
+    afxReal feedback, 
+    afxReal delay, 
+    afxReal phase, 
+    afxUnit flt
+);
+
+AMX afxCmdId AmxCmdCompressor
+(
+    afxMixContext mix, 
+    afxUnit voice, 
+    afxReal threshold, 
+    afxReal ratio, 
+    afxReal attack, 
+    afxReal release, 
+    afxReal makeup
+);
+
+AMX afxCmdId AmxCmdLineIn
+(
+    afxMixContext mix, 
+    afxUnit voice, 
+    afxUnit line, 
+    afxMask chanMask, 
+    afxUnit latency, 
+    afxReal pan, 
+    afxReal vol
+);
+
+AMX afxCmdId AmxCmdRemoteIn
+(
+    afxMixContext mix, 
+    afxUnit voice, 
+    afxUnit src, 
+    afxMask chanMask, 
+    afxReal pan, 
+    afxReal vol
+);
+
+AMX afxCmdId AmxCmdSend
+(
+    afxMixContext mix, 
+    afxUnit voice, 
+    afxBool muteSrc, 
+    afxReal amount, 
+    afxReal pan, 
+    afxUnit receiverSubmix
+);
+
+AMX afxCmdId AmxCmdFetchAudition
+(
+    afxMixContext mix, 
+    afxUnit voice, 
+    afxUnit headIdx
+);
+
+AMX afxCmdId AmxCmdResampleAudio
+(
+    afxMixContext mix, 
+    amxAudio src, 
+    amxAudio dst, 
+    amxAudioPeriod const* srci, 
+    amxAudioPeriod const* dsti
+);
+
+AMX afxCmdId AmxCmdBindBuffers
+(
+    afxMixContext mix,
+    afxUnit bank,
+    amxBuffer buf,
+    afxUnit offset,
+    afxUnit range,
+    afxUnit freq
+);
+
+AMX afxCmdId AmxCmdBindAudio
+(
+    afxMixContext mix,
+    afxUnit bank,
+    amxAudio aud
+);
+
+AMX afxCmdId AmxCmdPlayAudioClip
+(
+    afxMixContext mix,
+    afxUnit voice,
+    afxUnit bank,
+    afxUnit clip,
+    afxUnit baseSamp,
+    afxUnit baseCh,
+    afxUnit sampCnt,
+    afxUnit chCnt
+);
 
 AFX_DEFINE_STRUCT(amxVideoPicture)
 {
@@ -249,8 +383,18 @@ AFX_DEFINE_STRUCT(amxVideoDecode)
 
 AMX afxCmdId        AmxCmdDecodeVideo(afxMixContext mix, amxVideoDecode const* param);
 
+AMX afxError        AmxRollMixContext(afxMixContext mix);
+
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxError        AfxAcquireMixContext(afxMixSystem msys, afxUnit exuIdx, afxUnit poolIdx, afxMixContext* mixer);
+AFX_DEFINE_STRUCT(afxMixConfig)
+{
+    afxUnit exuIdx;
+    afxUnit freq;
+    afxUnit clipCnt;
+    afxUnit voiceCnt;
+};
+
+AMX afxError        AmxAcquireMixContext(afxMixSystem msys, afxMixConfig const* cfg, afxMixContext* mixer);
 
 #endif//AMX_MIX_CONTEXT_H

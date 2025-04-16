@@ -89,14 +89,15 @@ ASX afxError AfxSubdivideOctree(afxOctree* tree, afxUnit octantIdx)
     {
         afxSize childIdx;
         afxOctant* child = NIL;
-        if (!(child = AfxPushPoolUnit(&tree->octants, &childIdx)))
+        if (!(AfxRequestPoolUnits(&tree->octants, 1, &childIdx, &child)))
         {
             AfxThrowError();
 
             for (afxUnit j = i; j-- > 0;)
             {
                 childIdx = j;
-                AfxPopPoolUnit(&tree->octants, &childIdx);
+                // TODO: Fix this shit
+                AfxReclaimPoolUnits(&tree->octants, 1, &child);
                 node->childIdx[j] = AFX_INVALID_INDEX;
             }
             break;
@@ -298,7 +299,7 @@ _ASX afxError AfxDrawSky(afxDrawContext dctx, afxScene scn)
 
     if (scn->skyType == avxSkyType_BOX)
     {
-        AvxCmdApplyDrawTechnique(dctx, scn->sky.skyDtec, 0, scn->sky.skyVin, NIL);
+        AvxCmdUseDrawTechniqueSIGMA(dctx, scn->sky.skyDtec, 0, scn->sky.skyVin, NIL);
 
         AvxCmdBindSamplers(dctx, 0, 1, 1, &scn->sky.smp);
         AvxCmdBindRasters(dctx, 0, 1, 1, &scn->sky.cubemap);
@@ -322,7 +323,7 @@ _ASX afxError AfxReloadSkyVisual(afxScene scn, afxUri const* uri)
     
     afxDrawInput din = scn->din;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
-    afxDrawSystem dsys = AfxGetDrawInputContext(din); // temp workaround to get a context.
+    afxDrawSystem dsys = AvxGetDrawInputContext(din); // temp workaround to get a context.
 
     if (scn->skyType)
     {
@@ -353,7 +354,7 @@ _ASX afxError AfxReloadSkyVisual(afxScene scn, afxUri const* uri)
 
         for (afxUnit i = 0; i < rasi.extent.d; i++)
         {
-            AfxFormatUri(&urib.uri, "%.*s/%.*s", AfxPushString(&uri->str), AfxPushString(&faces[i].str));
+            AfxFormatUri(&urib.uri, "%.*s/%.*s", AfxPushString(&uri->s), AfxPushString(&faces[i].s));
 
             if (i == 0)
             {
@@ -367,10 +368,10 @@ _ASX afxError AfxReloadSkyVisual(afxScene scn, afxUri const* uri)
             {
                 avxRasterIo iop = { 0 };
 
-                if (AvxFetchRaster(cubemap, 1, &iop, 0, portId, &urib.uri)) AfxThrowError();
+                if (AvxFetchRaster(cubemap, &urib.uri, 1, &iop, 0, portId)) AfxThrowError();
                 else
                 {
-                    AvxWaitForDrawBridge(dsys, portId, AFX_TIME_INFINITE);
+                    AvxWaitForDrawBridges(dsys, portId, AFX_TIME_INFINITE);
                 }
             }
         }
@@ -414,7 +415,7 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
     AFX_ASSERT(info);
 
     afxDrawInput din = info->din;
-    afxDrawSystem dsys = AfxGetDrawInputContext(din); // temp workaround to get a context.
+    afxDrawSystem dsys = AvxGetDrawInputContext(din); // temp workaround to get a context.
 
     scn->din = din;
 
@@ -433,7 +434,7 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
         mshb.attrCnt = 1;
         mshb.vtxCnt = ARRAY_SIZE(skyboxVertices) / 3;
         mshb.triCnt = mshb.vtxCnt / 3;
-        AfxCompileMeshes(sim, 1, &mshb, &scn->skyMsh);
+        AfxBuildMeshes(sim, 1, &mshb, &scn->skyMsh);
         AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &scn->skyMsh);
 
         AfxFormatVertexAttribute(scn->skyMsh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
@@ -542,9 +543,9 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
         
         afxUri uri;
         AfxMakeUri(&uri, 0, "../src/skydome/skydomeVs.glsl", 0);
-        AvxUplinkPipelineFunction(pip, avxShaderStage_VERTEX, &uri, NIL, NIL, NIL);
+        AvxUplinkPipelineFunction(pip, avxShaderType_VERTEX, &uri, NIL, NIL, NIL);
         AfxMakeUri(&uri, 0, "../src/skydome/skydomeFs.glsl", 0);
-        AvxUplinkPipelineFunction(pip, avxShaderStage_FRAGMENT, AfxUri("../src/skydome/skydomeFs.glsl"), NIL, NIL, NIL);
+        AvxUplinkPipelineFunction(pip, avxShaderType_FRAGMENT, AfxUri("../src/skydome/skydomeFs.glsl"), NIL, NIL, NIL);
 
         struct
         {
@@ -553,7 +554,7 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
         } data;
         avxBuffer buf;
         avxBufferInfo bufi = { 0 };
-        bufi.cap = sizeof(data);
+        bufi.size = sizeof(data);
         bufi.usage = avxBufferUsage_UNIFORM;
         bufi.flags = avxBufferFlag_W;
         AvxAcquireBuffers(dsys, 1, &bufi, &buf);

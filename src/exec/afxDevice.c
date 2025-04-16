@@ -53,7 +53,7 @@ _AFX afxModule AfxGetDeviceDriver(afxDevice dev)
     return icd;
 }
 
-_AFX afxClass* AfxGetSemaphoreClass(afxDevLink ctx)
+_AFX afxClass* _AfxGetSemaphoreClass(afxDevLink ctx)
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssertObjects(1, &ddev, afxFcc_DEV);
@@ -142,6 +142,13 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxUnit invokeNo)
     dev->type = info->type;
     dev->status = afxDeviceStatus_DISABLED;
     dev->acceleration = info->acceleration;
+    dev->ihvId = info->ihvId;
+    dev->ihvDevId = info->ihvDevId;
+    dev->isvId = info->isvId;
+    dev->isvDrvId = info->isvDrvId;
+    dev->driverVer = info->driverVer;
+    dev->apiVer = info->apiVer;
+    dev->acceleration = info->acceleration;
 
     AfxPushLink(&dev->icd, &icd->devices);
 
@@ -162,12 +169,12 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxUnit invokeNo)
 
             afxString s;
 
-            //if (!AfxFindInitializationSection(ini, &AfxString("Qwadro.Icd"), &pagIdx)) AfxThrowError();
+            //if (!AfxFindInitializationSection(ini, &AFX_STRING("Qwadro.Icd"), &pagIdx)) AfxThrowError();
             //else
             {
                 afxString128 s128;
                 AfxMakeString128(&s128, NIL);
-                AfxFormatString(&s128.str, "Device.%.*s", AfxPushString(&dev->urn.uri.str));
+                AfxFormatString(&s128.s, "Device.%.*s", AfxPushString(&dev->urn.uri.s));
 
                 //if (!AfxFindInitializationSection(ini, &s128.str, &pagIdx))
                 //    AfxThrowError();
@@ -180,7 +187,7 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxUnit invokeNo)
                 {
                     afxString devDesc = { 0 };
 #if !0
-                    //if (!AfxFindInitializationRecord(ini, dev->manifestPagNo, &AfxString("Description"), &recIdx) ||
+                    //if (!AfxFindInitializationRecord(ini, dev->manifestPagNo, &AFX_STRING("Description"), &recIdx) ||
                     //    !AfxGetManifestString(ini, dev->manifestPagNo, recIdx, &devDesc))
                     {
                     //    AfxThrowError();
@@ -236,7 +243,7 @@ _AFX afxUnit AfxInvokeDevices(afxDeviceType type, afxUnit first, afxUnit cnt, af
 
     if (!type)
     {
-        afxClass const* cls = AfxGetDeviceClass();
+        afxClass const* cls = _AfxGetDeviceClass();
         AFX_ASSERT_CLASS(cls, afxFcc_DEV);
         rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
     }
@@ -265,7 +272,7 @@ _AFX afxUnit AfxEnumerateDevices(afxDeviceType type, afxUnit first, afxUnit cnt,
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     afxResult rslt = 0;
-    afxClass const* cls = AfxGetDeviceClass();
+    afxClass const* cls = _AfxGetDeviceClass();
     AFX_ASSERT_CLASS(cls, afxFcc_DEV);
 
     if (!type)
@@ -305,7 +312,7 @@ _AFX afxUnit AfxCountDevices(afxDeviceType type)
 
     if (!type)
     {
-        afxClass const* cls = AfxGetDeviceClass();
+        afxClass const* cls = _AfxGetDeviceClass();
         AFX_ASSERT_CLASS(cls, afxFcc_DEV);
         rslt = AfxEnumerateObjects(cls, 0, 0, NIL);
     }

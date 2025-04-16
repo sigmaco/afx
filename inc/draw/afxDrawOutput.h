@@ -273,12 +273,12 @@ AVX void AvxQueryDrawOutputResolution
 );
 
 /*
-    The AvxResetDrawOutputResolution() function is used to change or reset the drawing resolution for a specific output device, 
+    The AvxModifyDrawOutputSettings() function is used to change or reset the drawing resolution for a specific output device, 
     adjusting both the display resolution and potentially the refresh rate, while considering the aspect ratio and whether the 
     change is in an exclusive fullscreen mode.
 */
 
-AVX afxError AvxResetDrawOutputResolution
+AVX afxError AvxModifyDrawOutputSettings
 (
     // The drawing output to be reset or configured.
     afxDrawOutput dout,

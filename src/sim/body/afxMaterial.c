@@ -87,7 +87,7 @@ _ASX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
         afxDrawInput din = AfxGetProvider(mtl);
         AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
 
-        afxDrawSystem dsys = AfxGetDrawInputContext(din);
+        afxDrawSystem dsys = AvxGetDrawInputContext(din);
 
         avxRasterInfo rasi = { 0 };
         rasi.usage = avxRasterUsage_RESAMPLE;
@@ -115,7 +115,7 @@ _ASX afxMaterial AfxFindSubmaterial(afxMaterial mtl, afxString const *usage)
 
     for (afxUnit i = 0; i < mtl->mapCnt; i++)
     {
-        if (0 == AfxCompareStrings(usage, 0, TRUE, 1, &mtl->maps[i].usage))
+        if (AfxCompareStrings(usage, 0, TRUE, 1, &mtl->maps[i].usage, NIL))
         {
             afxMaterial subMtl = mtl->maps[i].sub;
             AFX_TRY_ASSERT_OBJECTS(afxFcc_MTL, 1, &subMtl);
@@ -230,9 +230,7 @@ _ASX afxError _AsxMtlCtorCb(afxMaterial mtl, void** args, afxUnit invokeNo)
 
     afxSimulation sim = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxString const* id = args[1];
-    avxRaster tex = args[2];
-    afxUnit mapCnt = *((afxUnit const *)args[2]);
+    afxString const* id = AFX_CAST(afxString const*, args[1]) + invokeNo;
     
     AfxCloneString(&mtl->urn, id);
     
@@ -240,6 +238,8 @@ _ASX afxError _AsxMtlCtorCb(afxMaterial mtl, void** args, afxUnit invokeNo)
     mtl->shininess = 0.5f;
 
     //afxUnit mapCnt = AfxGetArrayPop(&blueprint->maps);
+
+    afxUnit mapCnt = 0;
 
     if (!mapCnt)
     {
@@ -285,9 +285,9 @@ _ASX afxError _AsxMtlCtorCb(afxMaterial mtl, void** args, afxUnit invokeNo)
             }
         }
 #endif
-        if ((mtl->tex = tex))
+        if ((mtl->tex = NIL))
         {
-            AfxReacquireObjects(1, (void*[]) { tex });
+            AfxReacquireObjects(1, (void*[]) { mtl->tex });
         }
     }
 
@@ -328,7 +328,7 @@ _ASX afxBool _AsxFindNamedMtlCb(afxMaterial mtl, void* udd)
     } *udd2 = udd;
 
     afxUnit idx;
-    if (AFX_INVALID_INDEX != (idx = AfxCompareStrings(&mtl->urn, 0, TRUE, udd2->cnt, &udd2->materials[udd2->rslt])))
+    if (AfxCompareStrings(&mtl->urn, 0, TRUE, udd2->cnt, &udd2->materials[udd2->rslt], &idx))
     {
         udd2->indices[idx] = AfxGetObjectId(mtl);
         ++udd2->rslt;
@@ -365,19 +365,22 @@ _ASX afxUnit AfxFindMaterialIndices(afxSimulation sim, afxUnit cnt, afxString co
     return rslt;
 }
 
-_ASX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, avxRaster tex, afxUnit subCnt, afxMaterial *mtl)
+_ASX afxError AfxDeclareMaterials(afxSimulation sim, afxUnit cnt, afxString const ids[], afxMaterial materials[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    AFX_ASSERT(subCnt);
-    AFX_ASSERT(mtl);
-    AFX_ASSERT(id);
+    AFX_ASSERT(materials);
+    AFX_ASSERT(ids);
+    AFX_ASSERT(cnt);
 
     afxClass* cls = (afxClass*)_AsxGetMaterialClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_MTL);
 
-    if (AfxAcquireObjects(cls, 1, (afxObject*)mtl, (void const*[]) { sim, id, tex, &subCnt }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)materials, (void const*[]) { sim, ids }))
+    {
         AfxThrowError();
+        return err;
+    }
 
     return err;
 }
