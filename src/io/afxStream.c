@@ -883,7 +883,7 @@ _AFX afxError AfxReadStream2(afxStream in, afxUnit range, afxUnit stride, void* 
                 }
 
                 clampedOffRange -= stride;
-                AfxCopy(dst2, tmpBuf, AfxMin(unitSiz, stride));
+                AfxCopy(dst2, tmpBuf, AFX_MIN(unitSiz, stride));
                 dst2 += dstStride;
 
                 if (in->pimpl->readFeedback)
@@ -902,7 +902,7 @@ _AFX afxError AfxReadStream2(afxStream in, afxUnit range, afxUnit stride, void* 
                 }
 
                 clampedOffRange -= stride;
-                AfxCopy(dst2, tmpBuf, AfxMin(unitSiz, stride));
+                AfxCopy(dst2, tmpBuf, AFX_MIN(unitSiz, stride));
 
                 if (in->pimpl->readFeedback)
                     in->pimpl->readFeedback(in, stride, &in->idd);
@@ -1104,28 +1104,28 @@ _AFX afxError AfxReadStreamReversedAt(afxStream in, afxSize offset, afxUnit rang
     return clampedOffRange;
 }
 
-_AFX afxError AfxDoStreamOutput(afxStream out, afxUnit rowStride, afxUnit rowCnt, void const* src, afxUnit srcStride)
+_AFX afxError AfxDoStreamOutput(afxStream out, afxUnit stride, afxUnit cnt, void const* src, afxUnit srcStride)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(AfxIsStreamWriteable(out));
     //AFX_ASSERT(range);
     AFX_ASSERT(src);
-    afxUnit clampedOffRange = rowStride * rowCnt;
+    afxUnit clampedOffRange = stride * cnt;
 
-    afxUnit unitSiz = AfxMinorNonZero(rowStride, srcStride); // minor non-zero
+    afxUnit unitSiz = AfxMinorNonZero(stride, srcStride); // minor non-zero
 
     afxByte const*src2 = src;
-    afxUnit batchSiz = (rowStride == srcStride) ? AfxGetIoBufferSize() : unitSiz;
+    afxUnit batchSiz = (stride == srcStride) ? AfxGetIoBufferSize() : unitSiz;
     afxUnit nextSiz = 0;
     afxUnit errSiz = 0;
 
-    afxUnit outPadding = rowStride > srcStride ? rowStride - srcStride : 0;
+    afxUnit outPadding = stride > srcStride ? stride - srcStride : 0;
     afxByte zero[AFX_U16_MAX] = { 0 };
 
-    for (afxUnit i = 0; i < rowCnt; i++)
+    for (afxUnit i = 0; i < cnt; i++)
     {
-        nextSiz = rowStride;
+        nextSiz = stride;
 
         if ((errSiz = out->pimpl->write(out, src2, unitSiz)))
         {
@@ -1152,43 +1152,43 @@ _AFX afxError AfxDoStreamOutput(afxStream out, afxUnit rowStride, afxUnit rowCnt
     return clampedOffRange;
 }
 
-_AFX afxError AfxDoStreamOutputAt(afxStream out, afxSize offset, afxUnit rowStride, afxUnit rowCnt, void const* src, afxUnit srcStride)
+_AFX afxError AfxDoStreamOutputAt(afxStream out, afxSize offset, afxUnit stride, afxUnit cnt, void const* src, afxUnit srcStride)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(AfxIsStreamWriteable(out));
-    AFX_ASSERT(rowStride);
-    AFX_ASSERT(rowCnt);
+    AFX_ASSERT(stride);
+    AFX_ASSERT(cnt);
     AFX_ASSERT(src);
-    afxUnit clampedOffRange = rowStride * rowCnt;
+    afxUnit clampedOffRange = stride * cnt;
 
     if (AfxSeekStream(out, offset, afxSeekOrigin_BEGIN)) AfxThrowError();
-    else if ((clampedOffRange = AfxDoStreamOutput(out, rowStride, rowCnt, src, srcStride)))
+    else if ((clampedOffRange = AfxDoStreamOutput(out, stride, cnt, src, srcStride)))
         AfxThrowError();
 
     return clampedOffRange;
 }
 
-_AFX afxError AfxDoStreamInput(afxStream in, afxUnit rowStride, afxUnit rowCnt, void* dst, afxUnit dstStride)
+_AFX afxError AfxDoStreamInput(afxStream in, afxUnit stride, afxUnit cnt, void* dst, afxUnit dstStride)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     //AFX_ASSERT(range);
     AFX_ASSERT(dst);
-    afxUnit clampedOffRange = rowStride * rowCnt;
+    afxUnit clampedOffRange = stride * cnt;
 
-    afxUnit unitSiz = AfxMinorNonZero(rowStride, dstStride); // minor non-zero
+    afxUnit unitSiz = AfxMinorNonZero(stride, dstStride); // minor non-zero
 
     afxByte*dst2 = dst;
-    afxUnit batchSiz = (rowStride == dstStride) ? AfxGetIoBufferSize() : unitSiz;
+    afxUnit batchSiz = (stride == dstStride) ? AfxGetIoBufferSize() : unitSiz;
     afxUnit nextSiz = batchSiz;
     afxUnit errSiz = 0;
 
-    afxUnit outPadding = rowStride > dstStride ? rowStride - dstStride : 0;
+    afxUnit outPadding = stride > dstStride ? stride - dstStride : 0;
     afxByte zero[AFX_U16_MAX] = { 0 };
 
-    for (afxUnit i = 0; i < rowCnt; i++)
+    for (afxUnit i = 0; i < cnt; i++)
     {
         if ((errSiz = in->pimpl->write(in, dst2, unitSiz)))
         {
@@ -1215,18 +1215,18 @@ _AFX afxError AfxDoStreamInput(afxStream in, afxUnit rowStride, afxUnit rowCnt, 
     return clampedOffRange;
 }
 
-_AFX afxError AfxDoStreamInputAt(afxStream in, afxSize offset, afxUnit rowStride, afxUnit rowCnt, void* dst, afxUnit dstStride)
+_AFX afxError AfxDoStreamInputAt(afxStream in, afxSize offset, afxUnit stride, afxUnit cnt, void* dst, afxUnit dstStride)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
-    AFX_ASSERT(rowStride);
-    AFX_ASSERT(rowCnt);
+    AFX_ASSERT(stride);
+    AFX_ASSERT(cnt);
     AFX_ASSERT(dst);
-    afxUnit clampedOffRange = rowStride * rowCnt;
+    afxUnit clampedOffRange = stride * cnt;
 
     if (AfxSeekStream(in, offset, afxSeekOrigin_BEGIN)) AfxThrowError();
-    else if ((clampedOffRange = AfxDoStreamInput(in, rowStride, rowCnt, dst, dstStride)))
+    else if ((clampedOffRange = AfxDoStreamInput(in, stride, cnt, dst, dstStride)))
         AfxThrowError();
 
     return clampedOffRange;
@@ -1311,7 +1311,7 @@ _AFX afxError AfxMergeStream(afxStream out, afxStream in, afxSize base, afxUnit 
 
 #if 0 // MERGE/FORK
 
-_AFX afxError AfxCopyStreamRange(afxStream in, afxSize base, afxUnit range, afxUnit rate, afxStream out)
+_AFX afxError AfxCopyStream(afxStream in, afxSize base, afxUnit range, afxUnit rate, afxStream out)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
@@ -1387,22 +1387,7 @@ _AFX afxError AfxCopyStreamRange(afxStream in, afxSize base, afxUnit range, afxU
     return clampedOffRange;
 }
 
-_AFX afxError AfxCopyStream(afxStream in, afxUnit rate, afxStream out)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
-    AFX_ASSERT(AfxIsStreamWriteable(out));
-    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
-    AFX_ASSERT(AfxIsStreamReadable(in));
-    afxUnit clampedOffRange = AfxMeasureStream(in);
-
-    if ((clampedOffRange = AfxCopyStreamRange(in, 0, clampedOffRange, rate, out)))
-        AfxThrowError();
-
-    return clampedOffRange;
-}
-
-_AFX afxStream AfxForkStreamRange(afxStream parent, afxSize offset, afxUnit range)
+_AFX afxStream AfxForkStream(afxStream parent, afxSize offset, afxUnit range)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &parent, afxFcc_IOB);
@@ -1421,18 +1406,6 @@ _AFX afxStream AfxForkStreamRange(afxStream parent, afxSize offset, afxUnit rang
     return iob;// range - effectiveRange;
 }
 
-_AFX afxStream AfxForkStream(afxStream parent)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &parent, afxFcc_IOB);
-    //afxError clampedOffLen = 0;
-    afxStream sub;
-
-    if ((sub = AfxForkStreamRange(parent, 0, parent->idd.m.bufCap)))
-        AfxThrowError();
-
-    return sub;
-}
 #endif
 
 _AFX afxBool AfxResetStream(afxStream iob)
@@ -1576,7 +1549,7 @@ _AFX afxError AfxAcquireImplementedStream(afxIobImpl const* pimpl, afxUnit cnt, 
         return err;
     }
     
-    afxClass* cls = (afxClass*)AfxGetStreamClass();
+    afxClass* cls = (afxClass*)_AfxGetStreamClass();
     AFX_ASSERT_CLASS(cls, afxFcc_IOB);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)streams, (void const*[]) { NIL, infos, pimpl }))

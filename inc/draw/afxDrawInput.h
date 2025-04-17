@@ -36,14 +36,14 @@
 #ifndef AVX_DRAW_INPUT_H
 #define AVX_DRAW_INPUT_H
 
-#include "qwadro/inc/draw/op/afxDrawContext.h"
+#include "qwadro/inc/draw/afxDrawContext.h"
 
-#include "qwadro/inc/draw/kit/afxCamera.h"
+#include "qwadro/inc/draw/op/avxCamera.h"
 //#include "qwadro/inc/cad/afxGeometry.h"
-#include "qwadro/inc/draw/kit/afxTxd.h"
+#include "qwadro/inc/draw/io/avxTxd.h"
 #include "qwadro/inc/draw/io/afxVertexStream.h"
 #include "qwadro/inc/draw/kit/afxDrawTechnique.h"
-#include "qwadro/inc/draw/io/afxRasterFile.h"
+#include "qwadro/inc/draw/io/avxTargaFile.h"
 
 typedef enum avxEventId
 {
@@ -83,33 +83,33 @@ AFX_DEFINE_STRUCT(afxDrawInputConfig)
     void*               udd;
 };
 
-AVX afxDrawDevice   AfxGetDrawInputDevice(afxDrawInput din);
-AVX afxDrawSystem   AfxGetDrawInputContext(afxDrawInput din);
+AVX afxDrawDevice   AvxGetDrawInputDevice(afxDrawInput din);
+AVX afxDrawSystem   AvxGetDrawInputContext(afxDrawInput din);
 
-AVX void*           AfxGetDrawInputUdd(afxDrawInput din);
+AVX void*           AvxGetDrawInputUdd(afxDrawInput din);
 
 // OPTICAL MATRIX UTILITY
 
-AVX void            AfxGetClipSpaceInfo(afxDrawInput din, avxClipSpaceDepth* depth, afxBool* leftHanded);
+AVX void            AvxGetClipSpaceInfo(afxDrawInput din, avxClipSpaceDepth* depth, afxBool* leftHanded);
 
-AVX void            AfxComputeLookToMatrices(afxDrawInput din, afxV3d const eye, afxV3d const dir, afxM4d v, afxM4d iv);
-AVX void            AfxComputeLookAtMatrices(afxDrawInput din, afxV3d const eye, afxV3d const target, afxM4d v, afxM4d iv);
+AVX void            AvxComputeLookToMatrices(afxDrawInput din, afxV3d const eye, afxV3d const dir, afxM4d v, afxM4d iv);
+AVX void            AvxComputeLookAtMatrices(afxDrawInput din, afxV3d const eye, afxV3d const target, afxM4d v, afxM4d iv);
 
-AVX void            AfxComputeBasicOrthographicMatrices(afxDrawInput din, afxReal aspectRatio, afxReal scale, afxReal range, afxM4d p, afxM4d ip);
-AVX void            AfxComputeOrthographicMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
-AVX void            AfxComputeOffcenterOrthographicMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
-AVX void            AfxComputeBoundingOrthographicMatrices(afxDrawInput din, afxBox const aabb, afxM4d p, afxM4d ip);
+AVX void            AvxComputeBasicOrthographicMatrices(afxDrawInput din, afxReal aspectRatio, afxReal scale, afxReal range, afxM4d p, afxM4d ip);
+AVX void            AvxComputeOrthographicMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+AVX void            AvxComputeOffcenterOrthographicMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+AVX void            AvxComputeBoundingOrthographicMatrices(afxDrawInput din, afxBox const aabb, afxM4d p, afxM4d ip);
 
-AVX void            AfxComputeFovMatrices(afxDrawInput din, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxM4d p, afxM4d ip);
-AVX void            AfxComputeFrustrumMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
-AVX void            AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRatio, afxReal range, afxM4d p, afxM4d ip);
-AVX void            AfxComputePerspectiveMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+AVX void            AvxComputeFovMatrices(afxDrawInput din, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+AVX void            AvxComputeFrustrumMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+AVX void            AvxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRatio, afxReal range, afxM4d p, afxM4d ip);
+AVX void            AvxComputePerspectiveMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
 
-AVX afxError        AfxUplinkTxds(afxDrawInput din, afxUnit baseSlot, afxUnit slotCnt, afxUri const uris[]);
+AVX afxError        AvxUplinkTxds(afxDrawInput din, afxUnit baseSlot, afxUnit slotCnt, afxUri const uris[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxUnit AfxEnumerateDrawInputs
+AVX afxUnit AvxEnumerateDrawInputs
 (
     afxDrawSystem dsys, 
     afxUnit first, 
@@ -117,7 +117,7 @@ AVX afxUnit AfxEnumerateDrawInputs
     afxDrawInput inputs[]
 );
 
-AVX afxUnit AfxInvokeDrawInputs
+AVX afxUnit AvxInvokeDrawInputs
 (
     afxDrawSystem dsys, 
     afxUnit first, 
@@ -126,7 +126,7 @@ AVX afxUnit AfxInvokeDrawInputs
     void *udd
 );
 
-AVX afxUnit AfxEvokeDrawInputs
+AVX afxUnit AvxEvokeDrawInputs
 (
     afxDrawSystem dsys, 
     afxBool(*f)(afxDrawInput, void*), 

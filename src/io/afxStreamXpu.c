@@ -76,7 +76,7 @@ _AFX afxError _XpuRollStreams(afxIoBridge exu, afxUnit cnt, afxStream streams[])
         }
 
         afxStdCmd* cmdHdr;
-        AFX_ITERATE_CHAIN_B2F(&iob->commands, afxStdCmd, hdr.script, cmdHdr)
+        AFX_ITERATE_CHAIN_B2F(afxStdCmd, cmdHdr, hdr.script, &iob->commands)
         {
             if (cmdHdr->hdr.id == NIL/*ZGL_CMD_END*/)
             {
@@ -101,20 +101,20 @@ _AFX afxError _XpuRollStreams(afxIoBridge exu, afxUnit cnt, afxStream streams[])
         if (err || mix->m.disposable)
         {
             AFX_ASSERT(mix->m.portId == spu->portId);
-            mix->m.state = avxCmdbState_INVALID;
+            mix->m.state = avxDrawContextState_INVALID;
             afxMixQueue sque = AfxGetProvider(mix);
             AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &sque);
 
             afxUnit poolIdx = mix->m.poolIdx;
 
-            AfxEnterSlockExclusive(&sque->m.cmdbReqLock);
+            AfxLockFutex(&sque->m.cmdbReqLock);
 
             if (AfxPushQueue(&sque->m.cmdbRecycQue, &mix))
             {
                 AfxDisposeObjects(1, (void**)&mix);
             }
 
-            AfxExitSlockExclusive(&sque->m.cmdbReqLock);
+            AfxUnlockFutex(&sque->m.cmdbReqLock);
         }
 #endif
         AfxDisposeObjects(1, &iob);

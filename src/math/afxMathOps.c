@@ -21,7 +21,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxNdcV2d(afxV2d v, afxV2d const from, afxV2d const total)
+_AFXINL void AfxV2dNdc(afxV2d v, afxV2d const from, afxV2d const total)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
@@ -31,7 +31,7 @@ _AFXINL void AfxNdcV2d(afxV2d v, afxV2d const from, afxV2d const total)
     v[1] = AfxNdcf(from[1], total[1]);
 }
 
-_AFXINL void AfxUnndcV2d(afxV2d v, afxV2d const from, afxV2d const total)
+_AFXINL void AfxV2dUnndc(afxV2d v, afxV2d const from, afxV2d const total)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);

@@ -71,7 +71,7 @@ _ASX afxBool _AsxSpu_ProcCb(asxSpu* spu)
         if (AfxTryLockMutex(&sque->workChnMtx))
         {
             asxWork* work;
-            AFX_ITERATE_CHAIN_B2F(&sque->workChn, asxWork, hdr.chain, work)
+            AFX_ITERATE_CHAIN_B2F(asxWork, work, hdr.chain, &sque->workChn)
             {
                 AFX_ASSERT(sque->workChn.cnt);
                 AfxGetTime(&work->hdr.pullTime);
@@ -111,7 +111,7 @@ _ASX afxInt _ASX_SPU_THREAD_PROC(afxSimBridge sexu)
     spu->running = TRUE;
     spu->thr = thr;
 
-    AfxDbgLogf(6, NIL, "Sim Execution Unit %.03.", portId);
+    AfxReportf(6, NIL, "Sim Execution Unit %.03.", portId);
 
     do
     {

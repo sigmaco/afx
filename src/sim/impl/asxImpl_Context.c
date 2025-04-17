@@ -89,7 +89,7 @@ _ASX afxError _AsxSpuRollContext(asxSpu* spu, afxContext ctx)
     afxCmdId lastId = 0; // DBG
 
     asxCmd *cmdHdr;
-    AFX_ITERATE_CHAIN_B2F(&ctx->commands, asxCmd, hdr.script, cmdHdr)
+    AFX_ITERATE_CHAIN_B2F(asxCmd, cmdHdr, hdr.script, &ctx->commands)
     {
         lastId = cmdHdr->hdr.id;
 
@@ -128,14 +128,14 @@ _ASX afxError _AsxSpuRollContext(asxSpu* spu, afxContext ctx)
 
         //afxUnit poolIdx = ctx->poolIdx;
 
-        AfxEnterSlockExclusive(&sque->cmdbReqLock);
+        AfxLockFutex(&sque->cmdbReqLock);
 
         if (AfxPushQueue(&sque->cmdbRecycQue, &ctx))
         {
             AfxDisposeObjects(1, &ctx);
         }
 
-        AfxExitSlockExclusive(&sque->cmdbReqLock);
+        AfxUnlockFutex(&sque->cmdbReqLock);
 #endif
         AfxRecycleCatalyst(ctx, TRUE);
     }

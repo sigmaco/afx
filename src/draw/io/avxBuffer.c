@@ -20,6 +20,8 @@
 #define _AVX_BUFFER_C
 #include "../impl/avxImplementation.h"
 
+#define _AVX_BUFFER_HOSTSIDE_ALWAYS_FULLY_MAPPED TRUE
+
 _AVX afxDrawSystem AvxGetBufferContext(avxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
@@ -40,35 +42,21 @@ _AVX afxUnit AvxGetBufferCapacity(avxBuffer buf, afxUnit from)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    return AfxMin(buf->cap, buf->cap - from);
+    return AFX_MIN(buf->size, buf->size - from);
 }
 
-_AVX avxBufferUsage AvxGetBufferUsage(avxBuffer buf)
+_AVX avxBufferUsage AvxGetBufferUsage(avxBuffer buf, avxBufferUsage usage)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    return buf->usage;
+    return usage ? (buf->usage & usage) : buf->usage;
 }
 
-_AVX avxBufferUsage AvxTestBufferUsage(avxBuffer buf, avxBufferUsage usage)
+_AVX avxBufferFlags AvxGetBufferAccess(avxBuffer buf, avxBufferFlags access)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    return buf->usage & usage;
-}
-
-_AVX avxBufferFlags AvxGetBufferAccess(avxBuffer buf)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    return buf->flags & avxBufferFlag_ACCESS;
-}
-
-_AVX avxBufferFlags AvxTestBufferAccess(avxBuffer buf, avxBufferFlags access)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    return (buf->flags & avxBufferFlag_ACCESS) & access;
+    return access ? ((buf->flags & avxBufferFlag_ACCESS) & access) : access;
 }
 
 _AVXINL void _AvxSanitizeBufferCopy(avxBuffer src, avxBuffer dst, avxBufferCopy const* raw, avxBufferCopy* san)
@@ -77,9 +65,9 @@ _AVXINL void _AvxSanitizeBufferCopy(avxBuffer src, avxBuffer dst, avxBufferCopy 
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &src);
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &dst);
 
-    san->srcOffset = AfxMin(raw->srcOffset, src->cap - 1);
-    san->dstOffset = AfxMin(raw->dstOffset, dst->cap - 1);
-    san->range = AfxClamp(raw->range, 1, AfxMin(src->cap - san->srcOffset, dst->cap - san->dstOffset));
+    san->srcOffset = AFX_MIN(raw->srcOffset, src->size - 1);
+    san->dstOffset = AFX_MIN(raw->dstOffset, dst->size - 1);
+    san->range = AFX_CLAMP(raw->range, 1, AFX_MIN(src->size - san->srcOffset, dst->size - san->dstOffset));
 }
 
 _AVXINL void _AvxSanitizeBufferIo(avxBuffer src, avxBuffer dst, avxBufferIo const* raw, avxBufferIo* san)
@@ -88,11 +76,11 @@ _AVXINL void _AvxSanitizeBufferIo(avxBuffer src, avxBuffer dst, avxBufferIo cons
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &src);
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &dst);
 
-    san->srcOffset = AfxMin(raw->srcOffset, src->cap - 1);
-    san->dstOffset = AfxMin(raw->dstOffset, dst->cap - 1);
-    san->srcStride = AfxMin(raw->srcStride, src->cap - san->srcOffset);
-    san->dstStride = AfxMin(raw->dstStride, dst->cap - san->dstOffset);
-    san->rowCnt = AfxClamp(raw->rowCnt, 1, AfxMin(raw->rowCnt - src->cap / san->srcStride, raw->rowCnt - dst->cap / san->dstStride));
+    san->srcOffset = AFX_MIN(raw->srcOffset, src->size - 1);
+    san->dstOffset = AFX_MIN(raw->dstOffset, dst->size - 1);
+    san->srcStride = AFX_MIN(raw->srcStride, src->size - san->srcOffset);
+    san->dstStride = AFX_MIN(raw->dstStride, dst->size - san->dstOffset);
+    san->rowCnt = AFX_CLAMP(raw->rowCnt, 1, AFX_MIN(raw->rowCnt - src->size / san->srcStride, raw->rowCnt - dst->size / san->dstStride));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,19 +89,26 @@ _AVX afxBool AvxIsBufferMapped(avxBuffer buf, afxSize offset, afxUnit range)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    return ((offset >= buf->mappedOffset) &&
-            (buf->mappedOffset + buf->mappedRange) >= (offset + range));
+    return ((offset >= buf->storage[0].mapOffset) &&
+            (offset + range) <= (buf->storage[0].mapOffset + buf->storage[0].mapRange));
 }
 
 _AVX afxError AvxUnmapBuffer(avxBuffer buf, afxBool wait)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
+    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_RW));
 
     afxDrawSystem dsys = AvxGetBufferContext(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (AvxUnmapBuffers(dsys, 1, &buf))
+    avxBufferedMap map = { 0 };
+    map.buf = buf;
+    map.offset = buf->storage[0].mapOffset;
+    map.range = buf->storage[0].mapRange;
+    map.flags = buf->storage[0].mapFlags;
+
+    if (AvxUnmapBuffers(dsys, 1, &map))
         AfxThrowError();
 
     return err;
@@ -123,30 +118,36 @@ _AVX afxError AvxMapBuffer(avxBuffer buf, afxSize offset, afxUnit range, afxFlag
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT_RANGE(buf->cap, offset, range);
+    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_RW));
+    AFX_ASSERT_RANGE(buf->size, offset, range);
     AFX_ASSERT(AFX_IS_ALIGNED(offset, AVX_BUFFER_ALIGNMENT));
 
-    avxBufferRemap map = { 0 };
+    avxBufferedMap map = { 0 };
     map.buf = buf;
     map.offset = offset;
     map.range = range;
     map.flags = flags;
-    map.placeholder = placeholder;
 
     afxDrawSystem dsys = AvxGetBufferContext(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (AvxMapBuffers(dsys, 1, &map))
+    void* holder;
+    if (AvxMapBuffers(dsys, 1, &map, (void**[]) { &holder }))
         AfxThrowError();
+
+    // TODO(?): If no placeholder is specified, do not wait for completion.
+
+    AFX_ASSERT(placeholder);
+    *placeholder = holder;
 
     return err;
 }
 
-_AVX afxError AvxFlushBuffer(avxBuffer buf, afxSize offset, afxUnit range)
+_AVX afxError AvxFlushMappedBuffer(avxBuffer buf, afxSize offset, afxUnit range)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT_RANGE(buf->cap, offset, range);
+    AFX_ASSERT_RANGE(buf->size, offset, range);
     AFX_ASSERT(AFX_IS_ALIGNED(offset, AVX_BUFFER_ALIGNMENT));
 
     avxBufferedMap map = { 0 };
@@ -157,17 +158,17 @@ _AVX afxError AvxFlushBuffer(avxBuffer buf, afxSize offset, afxUnit range)
     afxDrawSystem dsys = AvxGetBufferContext(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (AvxFlushBufferMaps(dsys, 1, &map))
+    if (AvxFlushBufferedMaps(dsys, 1, &map))
         AfxThrowError();
 
     return err;
 }
 
-_AVX afxError AvxSyncBuffer(avxBuffer buf, afxSize offset, afxUnit range)
+_AVX afxError AvxSyncMappedBuffer(avxBuffer buf, afxSize offset, afxUnit range)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT_RANGE(buf->cap, offset, range);
+    AFX_ASSERT_RANGE(buf->size, offset, range);
     AFX_ASSERT(AFX_IS_ALIGNED(offset, AVX_BUFFER_ALIGNMENT));
 
     avxBufferedMap map = { 0 };
@@ -178,7 +179,7 @@ _AVX afxError AvxSyncBuffer(avxBuffer buf, afxSize offset, afxUnit range)
     afxDrawSystem dsys = AvxGetBufferContext(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (AvxSyncBufferMaps(dsys, 1, &map))
+    if (AvxSyncBufferedMaps(dsys, 1, &map))
         AfxThrowError();
 
     return err;
@@ -186,165 +187,194 @@ _AVX afxError AvxSyncBuffer(avxBuffer buf, afxSize offset, afxUnit range)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AvxDumpBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxUnit exuIdx, void* dst)
+_AVX afxError AvxDumpBuffer(avxBuffer buf, void* dst, afxUnit opCnt, avxBufferIo const ops[], afxMask exuMask)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT(AvxTestBufferAccess(buf, avxBufferFlag_R));
+    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_R));
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
     AFX_ASSERT(dst);
 
 #if AVX_VALIDATION_ENABLED
+    // Validate the buffer operations (only happens when validation is enabled)
     for (afxUnit i = 0; i < opCnt; i++)
     {
         avxBufferIo const* op = &ops[i];
         AFX_ASSERT_ALIGNMENT(op->srcOffset, AVX_BUFFER_ALIGNMENT);
-        AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->srcOffset, AfxMax(1, op->rowCnt) * AfxMax(1, op->dstStride));
+        AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->srcOffset, AFX_MAX(1, op->rowCnt) * AFX_MAX(1, op->dstStride));
     }
 #endif//AVX_VALIDATION_ENABLED
 
+    // Prepare the transfer structure for the dump operation
     avxTransference transfer = { 0 };
-    transfer.exuIdx = exuIdx;
+    transfer.exuMask = exuMask;
     transfer.srcFcc = afxFcc_BUF;
     transfer.src.buf = buf;
     transfer.dst.dst = dst;
 
+    // Get the draw system context associated with the buffer
     afxDrawSystem dsys = AvxGetBufferContext(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
+    // Perform the transfer (dump) of data
     if (_AvxTransferVideoMemory(dsys, &transfer, opCnt, ops))
     {
+        // If the transfer fails, throw an error
         AfxThrowError();
         return err;
     }
 
+    // Ensure that the base queue index is valid
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
+    // Wait for the draw queue to finish processing the dump
     if (AvxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
+    // Return the error code (still AFX_ERR_NONE if no error occurred)
     return err;
 }
 
-_AVX afxError AvxUpdateBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxUnit exuIdx, void const* src)
+_AVX afxError AvxUpdateBuffer(avxBuffer buf, void const* src, afxUnit opCnt, avxBufferIo const ops[], afxMask exuMask)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT(AvxTestBufferAccess(buf, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_W));
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
     AFX_ASSERT(src);
 
 #if AVX_VALIDATION_ENABLED
+    // Verify that all operations are valid (this block only runs if validation is enabled)
     for (afxUnit i = 0; i < opCnt; i++)
     {
         avxBufferIo const* op = &ops[i];
         AFX_ASSERT_ALIGNMENT(op->dstOffset, AVX_BUFFER_ALIGNMENT);
-        AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->dstOffset, AfxMax(1, op->rowCnt) * AfxMax(1, op->dstStride));
+        AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->dstOffset, AFX_MAX(1, op->rowCnt) * AFX_MAX(1, op->dstStride));
     }
 #endif//AVX_VALIDATION_ENABLED
 
+    // Prepare the transfer structure
     avxTransference transfer = { 0 };
-    transfer.exuIdx = exuIdx;
+    transfer.exuMask = exuMask;
     transfer.dstFcc = afxFcc_BUF;
     transfer.dst.buf = buf;
     transfer.src.src = src;
 
+    // Get the draw system associated with the buffer
     afxDrawSystem dsys = AvxGetBufferContext(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
+    // Perform the data transfer (buffer update)
     if (_AvxTransferVideoMemory(dsys, &transfer, opCnt, ops))
     {
+        // If transfer fails, throw an error
         AfxThrowError();
         return err;
     }
 
+    // Ensure the base queue index is valid
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
+    // Wait for the draw queue to finish processing (commented out)
     if (AvxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
+    // Return the error code (still AFX_ERR_NONE if no error occurred)
     return err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AvxUploadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxUnit exuIdx, afxStream in)
+_AVX afxError AvxUploadBuffer(avxBuffer buf, afxStream in, afxUnit opCnt, avxBufferIo const ops[], afxMask exuMask)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT(AvxTestBufferAccess(buf, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_W));
 
 #if AVX_VALIDATION_ENABLED
+    // Validation of the buffer operations (only happens when validation is enabled)
     for (afxUnit i = 0; i < opCnt; i++)
     {
         avxBufferIo const* op = &ops[i];
         AFX_ASSERT_ALIGNMENT(op->dstOffset, AVX_BUFFER_ALIGNMENT);
-        AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->dstOffset, AfxMax(1, op->rowCnt) * AfxMax(1, op->dstStride));
+        AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->dstOffset, AFX_MAX(1, op->rowCnt) * AFX_MAX(1, op->dstStride));
     }
 #endif//AVX_VALIDATION_ENABLED
 
+    // Prepare a transfer structure for the operation
     avxTransference transfer = { 0 };
-    transfer.exuIdx = exuIdx;
+    transfer.exuMask = exuMask;
     transfer.dstFcc = afxFcc_BUF;
     transfer.srcFcc = afxFcc_IOB;
     transfer.dst.buf = buf;
     transfer.src.iob = in;
 
+    // Get the draw system (context) associated with the buffer
     afxDrawSystem dsys = AvxGetBufferContext(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
+    // Perform the actual transfer of data
     if (_AvxTransferVideoMemory(dsys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
     }
 
+    // Assert that the base queue index is valid
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
+    // Wait for the draw queue to finish processing
     if (AvxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
+    // Return the error code (still AFX_ERR_NONE if no error occurred)
     return err;
 }
 
-_AVX afxError AvxDownloadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxUnit exuIdx, afxStream out)
+_AVX afxError AvxDownloadBuffer(avxBuffer buf, afxStream out, afxUnit opCnt, avxBufferIo const ops[], afxMask exuMask)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT(AvxTestBufferAccess(buf, avxBufferFlag_R));
+    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_R));
 
 #if AVX_VALIDATION_ENABLED
+    // Validate the buffer operations (only happens when validation is enabled)
     for (afxUnit i = 0; i < opCnt; i++)
     {
         avxBufferIo const* op = &ops[i];
         AFX_ASSERT_ALIGNMENT(op->srcOffset, AVX_BUFFER_ALIGNMENT);
-        AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->srcOffset, AfxMax(1, op->rowCnt) * AfxMax(1, op->dstStride));
+        AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), op->srcOffset, AFX_MAX(1, op->rowCnt) * AFX_MAX(1, op->dstStride));
     }
 #endif//AVX_VALIDATION_ENABLED
 
+    // Prepare the transfer structure for the download operation
     avxTransference transfer = { 0 };
-    transfer.exuIdx = exuIdx;
+    transfer.exuMask = exuMask;
     transfer.srcFcc = afxFcc_BUF;
     transfer.dstFcc = afxFcc_IOB;
     transfer.src.buf = buf;
     transfer.dst.iob = out;
 
+    // Get the draw system context associated with the buffer
     afxDrawSystem dsys = AvxGetBufferContext(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
+    // Perform the transfer (download) of data
     if (_AvxTransferVideoMemory(dsys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
     }
 
+    // Ensure that the base queue index is valid
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
     if (AvxWaitForDrawQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
+    // Return the error code (still AFX_ERR_NONE if no error occurred)
     return err;
 }
 
@@ -358,17 +388,17 @@ _AVX afxError _AvxBufDtorCb(avxBuffer buf)
     afxDrawSystem dsys = AvxGetBufferContext(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    while (buf->bytemap)
+    while (buf->storage[0].mapPtr)
     {
         AvxUnmapBuffer(buf, TRUE);
         AfxYield();
         //AFX_ASSERT(!buf->bytemap);
     }
 
-    if (buf->src)
+    if (buf->base)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf->src);
-        AfxDisposeObjects(1, &buf->src);
+        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf->base);
+        AfxDisposeObjects(1, &buf->base);
     }
     return err;
 }
@@ -382,105 +412,115 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     avxBufferInfo const *bufi = ((avxBufferInfo const *)args[1]) + invokeNo;
-    AFX_ASSERT(bufi && bufi->cap && bufi->usage);
+    AFX_ASSERT(bufi && bufi->size && bufi->usage);
 
     if (!bufi) AfxThrowError();
     else if (!bufi->usage)
         AfxThrowError();
 
     buf->tag = bufi->tag;
-    buf->data = NIL;
-    avxBuffer src = buf->src;
+    buf->udd = bufi->udd;
 
-    if (src)
+    avxBuffer base = bufi->base;
+    afxSize from = bufi->from;
+    afxUnit size = bufi->size;
+
+    if (!AFX_IS_ALIGNED(from, AVX_BUFFER_ALIGNMENT))
     {
-        if (!AfxTestObjectFcc(src, afxFcc_BUF))
+        AFX_ASSERT_ALIGNMENT(from, AVX_BUFFER_ALIGNMENT);
+        AfxThrowError();
+        err = afxError_OUT_OF_RANGE;
+        return err;
+    }
+
+    if (!base)
+    {
+        if (!size)
         {
+            // If there is not a @base buffer, we need a size here.
             AfxThrowError();
             return err;
         }
-
-        afxUnit srcCap = AvxGetBufferCapacity(src, 0);
-        AFX_ASSERT_RANGE(srcCap, bufi->from, bufi->cap);
-
-        if (bufi->from >= srcCap)
-        {
-            AfxThrowError();
-            return err;
-        }
-
-        AFX_ASSERT(bufi->from == AFX_ALIGNED_SIZE(bufi->from, AVX_BUFFER_ALIGNMENT));
-
-        if (!AFX_IS_ALIGNED(bufi->from, AVX_BUFFER_ALIGNMENT))
-        {
-            AfxThrowError();
-            return err;
-        }
-
-        // capacity must be a multiply of pointer size.
-        afxUnit bufCap = AFX_ALIGNED_SIZE(bufi->cap ? bufi->cap : srcCap - bufi->from, sizeof(void*));
-        
-        if ((bufi->cap > srcCap - bufi->from))
-        {
-            AfxThrowError();
-            return err;
-        }
-
-        AfxReacquireObjects(1, &src);
-        buf->src = src;
-        buf->start = bufi->from;
-        buf->cap = bufCap;
+        // If there is not a @base buffer, @from is useless and should be zero.
+        AFX_ASSERT(from == 0);
+        from = 0;
+        // Buffer capacity must be always aligned to AFX_SIMD_ALIGNMENT for a correct mapping behavior.
+        // All buffer mapping requires ranges aligned to AFX_SIMD_ALIGNMENT. This alignment is ensured at AFX level.
+        size = AFX_ALIGNED_SIZE(size, AFX_SIMD_ALIGNMENT);
     }
     else
     {
-        if (!bufi->cap)
+        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &base);
+        afxUnit srcCap = AvxGetBufferCapacity(base, 0);
+
+        // If a capacity is not specified, the new buffer inherits the full capacity of the base buffer, 
+        // excluding the portion displaced by @from.
+        if (size == 0)
+            size = srcCap - from;
+        else
+            size = AFX_ALIGNED_SIZE(size, AFX_SIMD_ALIGNMENT);
+
+        // As every buffer capacity is a power of AFX_SIMD_ALIGNMENT, it should already be aligned here.
+        AFX_ASSERT_ALIGNMENT(size, AFX_SIMD_ALIGNMENT);
+
+        AFX_ASSERT_RANGE(srcCap, from, size);
+
+        if ((from >= srcCap) ||
+            (size > srcCap) ||
+            (size > srcCap - from))
         {
             AfxThrowError();
+            err = afxError_OUT_OF_RANGE;
             return err;
         }
-
-        buf->src = NIL;
-        buf->start = 0;
-        buf->cap = AFX_ALIGNED_SIZE(bufi->cap, sizeof(void*));
+        AfxReacquireObjects(1, &base);
     }
 
-    if (err)
-        return err;
+    // Buffer capacity must be always aligned to AFX_SIMD_ALIGNMENT for a correct mapping behavior.
+    AFX_ASSERT_ALIGNMENT(size, AFX_SIMD_ALIGNMENT);
+    buf->size = size;
+    buf->from = from;
+    buf->base = base;
+
+    if (err) return err;
+#ifdef AVX_VALIDATION_ENABLED
+    if (!buf->base)
+    {
+        AFX_ASSERT(buf->from == 0);
+    }
+    else
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &base);
+        AFX_ASSERT_ALIGNMENT(buf->from, AVX_BUFFER_ALIGNMENT);
+    }
+#endif
 
     buf->usage = bufi->usage;
-    buf->flags = bufi->flags ? bufi->flags : avxBufferFlag_W;
+    buf->flags = bufi->flags;
     buf->fmt = bufi->fmt;
 
     afxUnit exuCnt = 16; // TODO Get it from DSYS
     buf->sharingMask = NIL;
-
     for (afxUnit i = 0; i < exuCnt; i++)
     {
         buf->sharingMask |= bufi->sharingMask & AFX_BIT(i);
     }
 
-    buf->udd = bufi->udd;
-
-    buf->data = NIL;
-    buf->bytemap = NIL;
-    buf->mappedOffset = 0;
-    buf->mappedRange = 0;
-    buf->mappedFlags = NIL;
-
-    buf->pendingRemap = 0;
-
     // STORAGE
-    {
-        buf->storage[0].size = AFX_ALIGNED_SIZE(buf->cap, buf->storage[0].alignment);
-        buf->storage[0].alignment = AVX_BUFFER_ALIGNMENT;
-        buf->storage[0].memType = NIL;
+    buf->memType = NIL;
 
-        // binding
-        buf->storage[0].mmu = 0;
-        buf->storage[0].offset = 0;
-        buf->storage[0].hostedData.addr = NIL;
-    }
+    // binding
+    buf->storage[0].mmu = 0;
+    buf->storage[0].offset = 0;
+    buf->storage[0].hostedAlloc.addr = NIL;
 
+    buf->storage[0].mapPtr = NIL;
+    buf->storage[0].mapOffset = 0;
+    buf->storage[0].mapRange = 0;
+    buf->storage[0].mapFlags = NIL;
+
+    buf->storage[0].pendingRemap = 0;
+    buf->storage[0].mapPermanent = !!bufi->mapped;
     return err;
 }
 
@@ -488,7 +528,7 @@ _AVX afxClassConfig const _AVX_BUF_CLASS_CONFIG =
 {
     .fcc = afxFcc_BUF,
     .name = "Buffer",
-    .desc = "Raw Video Buffer",
+    .desc = "Video Memory Buffer",
     .fixedSiz = sizeof(AFX_OBJECT(avxBuffer)),
     .ctor = (void*)_AvxBufCtorCb,
     .dtor = (void*)_AvxBufDtorCb
@@ -500,294 +540,394 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    AFX_ASSERT(buffers);
-    AFX_ASSERT(infos);
+
     AFX_ASSERT(cnt);
-
-    if (!cnt || !infos || !buffers) AfxThrowError();
-    else
+    AFX_ASSERT(infos);
+    AFX_ASSERT(buffers);
+    if (!cnt || !infos || !buffers)
     {
-        for (afxUnit i = 0; i < cnt; i++)
+        AfxThrowError();
+        return err;
+    }
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxBufferInfo const* info = &infos[i];
+        
+        if (((!info->size) && !(info->base)) || !info->usage)
         {
-            avxBufferInfo const* info = &infos[i];
-            
-            if (!info->cap) AfxThrowError();
-            else if (!info->usage)
-                AfxThrowError();
+            AfxThrowError();
         }
+    }
 
-        if (!err)
-        {
-            afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->bufCls(dsys);
-            AFX_ASSERT_CLASS(cls, afxFcc_BUF);
+    if (err) return err;
 
-            if (AfxAcquireObjects(cls, cnt, (afxObject*)buffers, (void const*[]) { dsys, (void*)infos }))
-            {
-                AfxThrowError();
-                return err;
-            }
+    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->bufCls(dsys);
+    AFX_ASSERT_CLASS(cls, afxFcc_BUF);
 
-            AFX_ASSERT_OBJECTS(afxFcc_BUF, cnt, buffers);
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)buffers, (void const*[]) { dsys, (void*)infos }))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    AFX_ASSERT_OBJECTS(afxFcc_BUF, cnt, buffers);
 
 #ifdef AVX_VALIDATION_ENABLED
-            for (afxUnit i = 0; i < cnt; i++)
-            {
-                avxBuffer buf = buffers[i];
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxBuffer buf = buffers[i];
+        avxBufferInfo const* bufi = &infos[i];
 
-                AFX_ASSERT(buf->src == infos[i].base);
-                AFX_ASSERT(buf->cap >= infos[i].cap);
-                AFX_ASSERT((buf->flags & infos[i].flags) == infos[i].flags);
-                AFX_ASSERT(buf->fmt == infos[i].fmt);
-                AFX_ASSERT(buf->start == infos[i].from);
-                AFX_ASSERT(buf->sharingMask == infos[i].sharingMask);
-                AFX_ASSERT(buf->udd == infos[i].udd);
-                AFX_ASSERT((buf->usage & infos[i].usage) == infos[i].usage);
-                AFX_ASSERT(buf->tag.start == infos[i].tag.start);
-            }
+        AFX_ASSERT(buf->base == bufi->base);
+        AFX_ASSERT(buf->size >= bufi->size);
+        AFX_ASSERT((buf->flags & bufi->flags) == bufi->flags);
+        AFX_ASSERT(buf->fmt == bufi->fmt);
+        AFX_ASSERT(buf->from == bufi->from);
+        AFX_ASSERT(buf->sharingMask == bufi->sharingMask);
+        AFX_ASSERT(buf->udd == bufi->udd);
+        AFX_ASSERT((buf->usage & bufi->usage) == bufi->usage);
+        AFX_ASSERT(buf->tag.start == bufi->tag.start);
+    }
 #endif
-        }
-    }
-    return err;
-}
 
-/*
-    AvxFlushBufferMaps guarantees that host writes to the memory ranges described by maps are made available to the host memory domain,
-    such that they can be made available to the device memory domain via memory domain operations using the WRITE access type.
-*/
-
-_AVX afxError AvxFlushBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap const maps[])
-{
-    afxError err = AFX_ERR_NONE;
-    // @dsys must be a valid afxDrawSystem handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-
-#if AVX_VALIDATION_ENABLED
-    for (afxUnit i = 0; i < cnt; i++)
-    {
-        avxBufferedMap const* map = &maps[i];
-        avxBuffer buf = map->buf;
-
-        if (!buf) continue;
-        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-
-        afxSize bufCap = AvxGetBufferCapacity(buf, 0);
-        if (bufCap < map->offset + map->range)
-        {
-            AFX_ASSERT_RANGE(bufCap, map->offset, map->range);
-            AfxThrowError();
-            break;
-        }
-
-        afxDrawSystem dsys2 = AvxGetBufferContext(buf);
-        if (dsys2 != dsys)
-        {
-            AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys2);
-            AFX_ASSERT(dsys2 == dsys);
-            AfxThrowError();
-            break;
-        }
-    }
-
-    if (err)
-        return err;
-#endif//AVX_VALIDATION_ENABLED
-
-    afxError(*flushMapsCb)(afxDrawSystem, afxUnit, avxBufferedMap const[]) = _AvxDsysGetImpl(dsys)->flushMaps;
-
-    if (!flushMapsCb)
-    {
-        afxDrawQueue dque;
-        afxDrawBridge dexu;
-        afxUnit portId = 0;
-        AvxGetDrawBridges(dsys, portId, 1, &dexu);
-        AvxGetDrawQueues(dexu, 0, 1, &dque);
-        AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
-
-        if (_AvxSubmitSyncMaps(dque, cnt, maps, 0, NIL))
-        {
-            AfxThrowError();
-        }
-    }
-    else if (flushMapsCb(dsys, cnt, maps))
-        AfxThrowError();
-
-    return err;
-}
-
-/*
-    AvxSyncBufferMaps guarantees that device writes to the memory ranges described by maps,
-    which have been made available to the host memory domain using the WRITE and READ access types,
-    are made visible to the host. If a range of non-coherent memory is written by the host and then
-    invalidated without first being flushed, its contents are undefined.
-*/
-
-_AVX afxError AvxSyncBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap const maps[])
-{
-    afxError err = AFX_ERR_NONE;
-    // @dsys must be a valid afxDrawSystem handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-
-#if AVX_VALIDATION_ENABLED
-    for (afxUnit i = 0; i < cnt; i++)
-    {
-        avxBufferedMap const* map = &maps[i];
-        avxBuffer buf = map->buf;
-
-        if (!buf) continue;
-        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-
-        afxSize bufCap = AvxGetBufferCapacity(buf, 0);
-        if (bufCap < map->offset + map->range)
-        {
-            AFX_ASSERT_RANGE(bufCap, map->offset, map->range);
-            AfxThrowError();
-            break;
-        }
-
-        afxDrawSystem dsys2 = AvxGetBufferContext(buf);
-        if (dsys2 != dsys)
-        {
-            AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys2);
-            AFX_ASSERT(dsys2 == dsys);
-            AfxThrowError();
-            break;
-        }
-    }
-
-    if (err)
-        return err;
-#endif//AVX_VALIDATION_ENABLED
-
-    afxError(*syncMapsCb)(afxDrawSystem, afxUnit, avxBufferedMap const[]) = _AvxDsysGetImpl(dsys)->syncMaps;
-
-    if (!syncMapsCb)
-    {
-        afxDrawQueue dque;
-        afxDrawBridge dexu;
-        afxUnit portId = 0;
-        AvxGetDrawBridges(dsys, portId, 1, &dexu);
-        AvxGetDrawQueues(dexu, 0, 1, &dque);
-        AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
-
-        if (_AvxSubmitSyncMaps(dque, 0, NIL, cnt, maps))
-        {
-            AfxThrowError();
-        }
-    }
-    else if (syncMapsCb(dsys, cnt, maps))
-        AfxThrowError();
-
-    return err;
-}
-
-_AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferRemap maps[])
-{
-    afxError err = AFX_ERR_NONE;
-    // @dsys must be a valid afxDrawSystem handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-
-    AFX_ASSERT(cnt <= 32);
-    avxBufferRemap maps2[32];
-    afxUnit opCnt = 0;
+    // Proceed to permanently map and/or upload initial data.
+    // We can't do it in constructor callback because ICD callbacks are called after the AVX one,
+    // so it would be never ready to be mapped at device side.
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        avxBufferRemap const* map = &maps[i];
-        avxBuffer buf = map->buf;
+        avxBuffer buf = buffers[i];
+        avxBufferInfo const* bufi = &infos[i];
 
-        if (!buf) continue;
-        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-
-        afxUnit range = map->range;
-        afxSize offset = map->offset;
-        afxSize bufCap = AvxGetBufferCapacity(buf, 0);
-#if AVX_VALIDATION_ENABLED
-        if (bufCap < map->offset + map->range)
+        if (bufi->mapped)
         {
-            AFX_ASSERT_RANGE(bufCap, map->offset, map->range);
-            AfxThrowError();
-            break;
-        }
+            buf->storage[0].mapPermanent = TRUE;
 
-        afxDrawSystem dsys2 = AvxGetBufferContext(buf);
-        if (dsys2 != dsys)
-        {
-            AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys2);
-            AFX_ASSERT(dsys2 == dsys);
-            AfxThrowError();
-            break;
-        }
-
-        AFX_ASSERT_RANGE(bufCap, offset, range);
-        AFX_ASSERT(AFX_IS_ALIGNED(offset, AVX_BUFFER_ALIGNMENT));
-
-        offset = AFX_ALIGNED_SIZE(offset, AVX_BUFFER_ALIGNMENT);
-        offset = AfxClamp(offset, 0, ((bufCap / AVX_BUFFER_ALIGNMENT) - 1) * AVX_BUFFER_ALIGNMENT);
-        AFX_ASSERT(offset % AVX_BUFFER_ALIGNMENT == 0);
-#endif//AVX_VALIDATION_ENABLED
-
-        if (!range)
-            range = AfxMin(bufCap, bufCap - offset);
-
-        // wait for any submitted mapping operation.
-        while (AfxLoadAtom32(&buf->pendingRemap)) AfxYield();
-        // signal a ongoing mapping operation.
-        AfxIncAtom32(&buf->pendingRemap);
-
-        // try to avoid a operation submission if we have already mapped the request buffer region.
-        if (buf->bytemap)
-        {
-            AFX_ASSERT_RANGE(buf->cap, buf->mappedOffset, buf->mappedRange);
-
-            if ((offset < buf->mappedOffset) || (offset + range > buf->mappedOffset + buf->mappedRange))
+            void* ptr;
+            if (AvxMapBuffer(buf, 0, buf->size, NIL, &ptr))
             {
                 AfxThrowError();
                 break;
             }
-            else
+            AFX_ASSERT(ptr == buf->storage[0].mapPtr);
+
+            if (bufi->dataSiz)
             {
-                AFX_ASSERT(buf->mappedOffset + buf->mappedRange >= offset + range);
-                AFX_ASSERT(buf->mappedOffset >= offset);
-                AFX_ASSERT(map->placeholder);
-                *map->placeholder = &buf->bytemap[offset - buf->mappedOffset];
+                AFX_ASSERT(bufi->data);
+                AFX_ASSERT(ptr == buf->storage[0].mapPtr);
+                AfxCopy(ptr, bufi->data, bufi->dataSiz);
+
+                // Unmapping should do nothing in a persistently mapped buffer.
+                // But we will keep it here for good didactic reasons.
+                AvxUnmapBuffer(buf, 0);
             }
-
-            // remove pendency as we don't inc opCnt
-            AfxDecAtom32(&buf->pendingRemap);
-        }
-        else if (buf->data) // if buffer is host-side allocated, just do it here.
-        {
-            buf->mappedOffset = offset;
-            buf->mappedRange = range;
-            buf->mappedFlags = map->flags;
-            buf->bytemap = ((afxByte*)buf->data) + offset;
-
-            AFX_ASSERT(map->placeholder);
-            *map->placeholder = buf->bytemap;
-
-            // remove pendency as we don't inc opCnt
-            AfxDecAtom32(&buf->pendingRemap);
         }
         else
         {
-            maps2[opCnt].buf = buf;
-            maps2[opCnt].offset = offset;
-            maps2[opCnt].range = range;
-            maps2[opCnt].flags = map->flags;
-            maps2[opCnt].placeholder = map->placeholder;
-            AFX_ASSERT(maps2[opCnt].placeholder);
+            if (bufi->dataSiz)
+            {
+                AFX_ASSERT(bufi->data);
+                avxBufferIo iop = { 0 };
+                iop.srcStride = bufi->dataSiz;
+                iop.rowCnt = 1;
+                if (AvxUpdateBuffer(buf, bufi->data, 1, &iop, 0))
+                {
+                    AfxThrowError();
+                    break;
+                }
+            }
+        }
+    }
+
+    if (err)
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_BUF, cnt, buffers);
+        AfxDisposeObjects(cnt, buffers);
+    }
+
+    return err;
+}
+
+_AVX afxError AvxFlushBufferedMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap const maps[])
+{
+    afxError err = AFX_ERR_NONE;
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+#if AVX_VALIDATION_ENABLED
+    // Perform validation for each buffer in the maps
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxBufferedMap const* map = &maps[i];
+        avxBuffer buf = map->buf;
+
+        // Skip if the buffer is invalid
+        if (!buf) continue; 
+        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
+
+        // Ensure the map's range is within the buffer's capacity
+        afxSize bufCap = AvxGetBufferCapacity(buf, 0);
+        if (bufCap < map->offset + map->range)
+        {
+            // If the range is out of bounds, throw an error
+            AFX_ASSERT_RANGE(bufCap, map->offset, map->range);
+            AfxThrowError();
+            break;
+        }
+
+        // Ensure the buffer belongs to the same draw system as the provided one
+        afxDrawSystem dsys2 = AvxGetBufferContext(buf);
+        if (dsys2 != dsys)
+        {
+            // If the buffer belongs to a different system, throw an error
+            AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys2);
+            AFX_ASSERT(dsys2 == dsys);
+            AfxThrowError();
+            break;
+        }
+    }
+
+    // If any error has occurred during validation, return the error code
+    if (err) return err;
+#endif//AVX_VALIDATION_ENABLED
+
+    // If no ICD callback is provided, use a draw queue to perform the flush operation.
+    if (!_AvxDsysGetImpl(dsys)->flushMaps)
+    {
+        afxDrawQueue dque;
+        afxDrawBridge dexu;
+        afxUnit portId = 0;
+        // Retrieve the draw bridge for the draw system
+        AvxGetDrawBridges(dsys, portId, 1, &dexu);
+        AvxGetDrawQueues(dexu, 0, 1, &dque);
+        AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
+
+        // Flush the buffered maps using the draw queue.
+        if (_AvxDqueSyncBufferedMaps(dque, cnt, maps, 0, NIL))
+        {
+            // If flushing fails, throw an error
+            AfxThrowError();
+        }
+    }
+    // If a callback is available, use it to flush the maps.
+    else if (_AvxDsysGetImpl(dsys)->flushMaps(dsys, cnt, maps))
+    {
+        // If the callback fails, throw an error.
+        AfxThrowError();
+    }
+    // Return the error code (AFX_ERR_NONE if successful)
+    return err;
+}
+
+_AVX afxError AvxSyncBufferedMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap const maps[])
+{
+    afxError err = AFX_ERR_NONE;
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+#if AVX_VALIDATION_ENABLED
+    // Perform validation for each buffer in the maps
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxBufferedMap const* map = &maps[i];
+        avxBuffer buf = map->buf;
+
+        if (!buf) continue; // Skip if the buffer is invalid
+        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
+
+        // Ensure the map's range is within the buffer's capacity
+        afxSize bufCap = AvxGetBufferCapacity(buf, 0);
+        if (bufCap < map->offset + map->range)
+        {
+            // If the range is out of bounds, throw an error
+            AFX_ASSERT_RANGE(bufCap, map->offset, map->range);
+            AfxThrowError();
+            break;
+        }
+
+        // Ensure the buffer belongs to the same draw system as the provided one.
+        afxDrawSystem dsys2 = AvxGetBufferContext(buf);
+        if (dsys2 != dsys)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys2);
+            AFX_ASSERT(dsys2 == dsys);
+            AfxThrowError();
+            break;
+        }
+    }
+
+    // If any error has occurred during validation, return the error code.
+    if (err) return err;
+#endif//AVX_VALIDATION_ENABLED
+
+    // If no ICD callback is provided, use a draw queue to perform the synchronization operation.
+    if (!_AvxDsysGetImpl(dsys)->syncMaps)
+    {
+        afxDrawQueue dque;
+        afxDrawBridge dexu;
+        afxUnit portId = 0;
+        // Retrieve the draw bridge for the draw system.
+        AvxGetDrawBridges(dsys, portId, 1, &dexu);
+        AvxGetDrawQueues(dexu, 0, 1, &dque);
+        AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
+
+        // Synchronize the buffered maps using the draw queue.
+        if (_AvxDqueSyncBufferedMaps(dque, 0, NIL, cnt, maps))
+        {
+            // If synchronization fails, throw an error.
+            AfxThrowError();
+        }
+    }
+    // If a callback is available, use it to synchronize the maps.
+    else if (_AvxDsysGetImpl(dsys)->syncMaps(dsys, cnt, maps))
+    {
+        // If the callback fails, throw an error
+        AfxThrowError();
+    }
+    // Return the error code (AFX_ERR_NONE if successful).
+    return err;
+}
+
+_AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps[], void** placeholders[])
+{
+    afxError err = AFX_ERR_NONE;
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+    // Ensure that the operation count doesn't exceed 32
+    AFX_ASSERT(cnt <= 32);
+    // Temporary array for mapping operations
+    _avxBufferRemapping remaps2[32];
+    // Count of operations to be processed
+    afxUnit opCnt = 0;
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxBufferedMap const* map = &maps[i];
+        avxBuffer buf = map->buf;
+        
+        // Skip if the buffer is NULL
+        if (!buf) continue;
+        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
+
+        // Get the buffer's capacity
+        afxSize bufCap = AvxGetBufferCapacity(buf, 0);
+
+        afxUnit range = map->range;
+        // range always is SIMD aligned.
+        range = AFX_ALIGNED_SIZE(range, AFX_SIMD_ALIGNMENT);
+        AFX_ASSERT_ALIGNMENT(range, AFX_SIMD_ALIGNMENT);
+        
+        afxSize offset = map->offset;
+        AFX_ASSERT_ALIGNMENT(offset, AVX_BUFFER_ALIGNMENT);
+        // offset must be aligned to AVX_BUFFER_ALIGNMENT.
+
+        // Perform validation if enabled
+#ifdef AVX_VALIDATION_ENABLED
+        AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_RW));
+
+        if (bufCap < map->offset + map->range)
+        {
+            AFX_ASSERT_RANGE(bufCap, map->offset, map->range);
+            AfxThrowError();
+            break;
+        }
+        
+        // Check that the buffer context matches the draw system.
+        afxDrawSystem dsys2 = AvxGetBufferContext(buf);
+        if (dsys2 != dsys)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys2);
+            AFX_ASSERT(dsys2 == dsys);
+            AfxThrowError();
+            break;
+        }
+
+        // Validate offset and range
+        AFX_ASSERT_RANGE(bufCap, offset, range);
+
+#endif//AVX_VALIDATION_ENABLED
+
+        // If range is 0, calculate it based on the buffer's capacity
+        if (!range) range = AFX_MIN(bufCap, bufCap - offset);
+
+        // Wait for any pending mapping operation on the buffer
+        while (AfxLoadAtom32(&buf->storage[0].pendingRemap)) AfxYield();
+        // Signal an ongoing mapping operation
+        AfxIncAtom32(&buf->storage[0].pendingRemap);
+
+        // If the buffer has already been mapped, check if the region is valid
+        if (buf->storage[0].mapPtr)
+        {
+            AFX_ASSERT_RANGE(buf->size, buf->storage[0].mapOffset, buf->storage[0].mapRange);
+
+            // Validate if the requested region is within the currently mapped region
+            if ((offset < buf->storage[0].mapOffset) || ((offset + range) > (buf->storage[0].mapOffset + buf->storage[0].mapRange)))
+            {
+                AfxThrowError();
+                AfxDecAtom32(&buf->storage[0].pendingRemap);
+                break;
+            }
+            else
+            {
+                // If the region is valid, set the placeholder to the corresponding address
+                AFX_ASSERT(buf->storage[0].mapOffset + buf->storage[0].mapRange >= offset + range);
+                AFX_ASSERT(buf->storage[0].mapOffset <= offset);
+                afxUnit offDiff = offset - buf->storage[0].mapOffset;
+                AFX_ASSERT(placeholders);
+                *placeholders[i] = &buf->storage[0].mapPtr[offDiff];
+            }
+
+            // Decrement the pending remap count as no new operation was added
+            AfxDecAtom32(&buf->storage[0].pendingRemap);
+        }
+        // If buffer is host-side allocated, map directly (just do it here)
+        else if (buf->storage[0].hostedAlloc.addr)
+        {
+#ifndef _AVX_BUFFER_HOSTSIDE_ALWAYS_FULLY_MAPPED
+            buf->storage[0].mapOffset = offset;
+            buf->storage[0].mapRange = range;
+            buf->storage[0].mapFlags = map->flags;
+            buf->storage[0].mapPtr = &buf->storage[0].hostedAlloc.bytemap[offset];
+
+            AFX_ASSERT(placeholders);
+            *placeholders[i] = buf->storage[0].mapPtr;
+#else
+            // Always map the whole buffer when host-side allocated.
+            buf->storage[0].mapOffset = 0;
+            buf->storage[0].mapRange = buf->size;
+            buf->storage[0].mapFlags = map->flags;
+            buf->storage[0].mapPtr = buf->storage[0].hostedAlloc.bytemap;
+
+            AFX_ASSERT(placeholders);
+            *placeholders[i] = &buf->storage[0].mapPtr[map->offset];
+#endif
+            // Decrement the pending remap count as no new operation was added
+            AfxDecAtom32(&buf->storage[0].pendingRemap);
+        }
+        else
+        {
+            // Buffer needs to be mapped through a draw system operation
+            remaps2[opCnt].buf = buf;
+            remaps2[opCnt].offset = offset;
+            remaps2[opCnt].range = range;
+            remaps2[opCnt].flags = map->flags;
+            remaps2[opCnt].unmap = FALSE;
+            remaps2[opCnt].placeholder = placeholders[i];
+            AFX_ASSERT(remaps2[opCnt].placeholder);
             opCnt++;
 
             //AfxDecAtom32(&buf->pendingRemap);
         }
     }
 
+    // If an error occurred or no operations are left to process, return the error
     if (err || !opCnt)
         return err;
 
-    afxError(*mapBufsCb)(afxDrawSystem, afxUnit, avxBufferRemap const[]) = (void*)_AvxDsysGetImpl(dsys)->mapBufs;
-
-    if (!mapBufsCb)
+    // If no ICD callback for remapping buffers is provided by the driver, use draw queues to remap the buffers
+    if (!_AvxDsysGetImpl(dsys)->remapBufs)
     {
         afxDrawQueue dque;
         afxDrawBridge dexu;
@@ -796,39 +936,46 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferRemap maps
         AvxGetDrawQueues(dexu, 0, 1, &dque);
         AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
-        if (_AvxSubmitRemapping(dque, opCnt, maps2, 0, NIL))
+        // Perform remap operation via the draw queue
+        if (_AvxDqueRemapBuffers(dque, opCnt, remaps2, 0, NIL))
         {
             AfxThrowError();
         }
         else
         {
+            // Wait for the draw queue to finish the operation
             if (AvxWaitForEmptyDrawQueue(dque, AFX_TIME_INFINITE))
                 AfxThrowError();
         }
     }
-    else if (mapBufsCb(dsys, opCnt, maps2))
+    // Use the ICD-provided callback for remapping buffers if available.
+    else if (_AvxDsysGetImpl(dsys)->remapBufs(dsys, opCnt, remaps2))
         AfxThrowError();
 
+    // Final validation and cleaning up pending remaps for each buffer.
     for (afxUnit i = 0; i < opCnt; i++)
     {
-        avxBuffer buf = maps2[i].buf;
+        avxBuffer buf = remaps2[i].buf;
         AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
+
 #if AVX_VALIDATION_ENABLED
-        // some assertions
-        AFX_ASSERT(buf->bytemap);
-        AFX_ASSERT(buf->mappedRange);
-        AFX_ASSERT(buf->mappedOffset + buf->mappedRange >= maps2[i].offset + maps2[i].range);
-        AFX_ASSERT(buf->mappedOffset >= maps2[i].offset);
-        AFX_ASSERT_RANGE(buf->cap, buf->mappedOffset, buf->mappedRange);
+        // Perform final validation on the buffer after remapping.
+        AFX_ASSERT(buf->storage[0].mapPtr);
+        AFX_ASSERT(buf->storage[0].mapRange >= remaps2[i].range);
+        AFX_ASSERT(buf->storage[0].mapOffset >= remaps2[i].offset);
+        AFX_ASSERT((buf->storage[0].mapOffset + buf->storage[0].mapRange) >= (remaps2[i].offset + remaps2[i].range));
+        AFX_ASSERT_RANGE(buf->size, buf->storage[0].mapOffset, buf->storage[0].mapRange);
 #endif//AVX_VALIDATION_ENABLED
-        // remove pendency
-        AfxDecAtom32(&buf->pendingRemap);
+        
+        // Decrement the pending remap counter for each buffer.
+        AfxDecAtom32(&buf->storage[0].pendingRemap);
     }
 
+    // Return the error code (still AFX_ERR_NONE if no error occurred).
     return err;
 }
 
-_AVX afxError AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBuffer buffers[])
+_AVX afxError AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -838,86 +985,121 @@ _AVX afxError AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBuffer buffers
         This function does not accept flags. Instead, any behavior wanted in unmapping must be specified in mapping operation.
     */
 
-    avxBuffer unmaps2[32];
+    // Ensure that the operation count doesn't exceed 32
+    AFX_ASSERT(cnt <= 32);
+    _avxBufferRemapping unmaps2[32];
+    // Count of buffers to unmap.
     afxUnit opCnt = 0;
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        avxBuffer buf = buffers[i];
+        avxBufferedMap const* map = &maps[i];
+        avxBuffer buf = map->buf;
+
+        // Skip if the buffer is NULL
+        if (!buf) continue;
         AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
 
+        // Can not be unmapped.
+        if (buf->storage[0].mapPermanent) continue;
+
 #if AVX_VALIDATION_ENABLED
+        AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_RW));
+
+        // Validate the draw system context of the buffer
+        // Ensure the buffer is associated with the current draw system
         afxDrawSystem dsys2 = AvxGetBufferContext(buf);
+        AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys2);
+
         if (dsys2 != dsys)
         {
-            AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys2);
             AFX_ASSERT(dsys2 == dsys);
+            // If the buffer is not associated with the correct draw system, throw an error
             AfxThrowError();
             break;
         }
 #endif//AVX_VALIDATION_ENABLED
 
-        // wait for any submitted mapping operation.
-        while (AfxLoadAtom32(&buf->pendingRemap)) AfxYield();
-        // signal a ongoing mapping operation.
-        AfxIncAtom32(&buf->pendingRemap);
+        // Wait for any ongoing mapping operation to complete before unmapping.
+        // Yield if there are pending remaps.
+        while (AfxLoadAtom32(&buf->storage[0].pendingRemap)) AfxYield();
+        // Indicate that an unmap operation is ongoing.
+        AfxIncAtom32(&buf->storage[0].pendingRemap);
 
-        if (buf->bytemap)
+        if (buf->storage[0].mapPtr)
         {
-            // if buffer is host-side allocated, do it here.
-            if (buf->data)
+            // If the buffer is host-side allocated (i.e., directly accessible in CPU memory)
+            if (buf->storage[0].hostedAlloc.addr)
             {
-                buf->mappedOffset = 0;
-                buf->mappedRange = 0;
-                buf->mappedFlags = NIL;
-                buf->bytemap = NIL;
-
-                AfxDecAtom32(&buf->pendingRemap);
+                // Clear the mapped state for host-side buffers
+                buf->storage[0].mapOffset = 0;
+                buf->storage[0].mapRange = 0;
+                buf->storage[0].mapFlags = NIL;
+                buf->storage[0].mapPtr = NIL;
+                // Decrement the pending remap counter
+                AfxDecAtom32(&buf->storage[0].pendingRemap);
             }
             else
             {
-                unmaps2[opCnt] = buf;
+                // If the buffer is not host-side allocated, prepare it for an unmap operation
+                unmaps2[opCnt].buf = buf;
+                unmaps2[opCnt].offset = 0;
+                unmaps2[opCnt].range = 0;
+                unmaps2[opCnt].flags = NIL;
+                unmaps2[opCnt].unmap = TRUE;
+                unmaps2[opCnt].placeholder = NIL;
                 opCnt++;
             }
         }
     }
 
+    // If no buffers need to be unmapped or if an error occurred, return the error code
     if (err || !opCnt)
         return err;
 
-    afxError(*unmapBufsCb)(afxDrawSystem,afxUnit,avxBuffer const[]) = (void*)_AvxDsysGetImpl(dsys)->unmapBufs;
-
-    if (!unmapBufsCb)
+    // If no ICD callback is available, use a draw queue to unmap buffers.
+    if (!_AvxDsysGetImpl(dsys)->remapBufs)
     {
         afxDrawQueue dque;
         afxDrawBridge dexu;
         afxUnit portId = 0;
+        // Retrieve the draw bridge for the draw system
         AvxGetDrawBridges(dsys, portId, 1, &dexu);
         AvxGetDrawQueues(dexu, 0, 1, &dque);
         AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
-        if (_AvxSubmitRemapping(dque, 0, NIL, cnt, unmaps2))
+        // Perform the unmap operation via the draw queue.
+        if (_AvxDqueRemapBuffers(dque, 0, NIL, cnt, unmaps2))
         {
             AfxThrowError();
         }
     }
-    else if (unmapBufsCb(dsys, cnt, unmaps2))
+    // If the ICD callback is available, use it to unmap buffers.
+    else if (_AvxDsysGetImpl(dsys)->remapBufs(dsys, cnt, unmaps2))
         AfxThrowError();
 
+    // Final cleanup for unmapped buffers
     for (afxUnit i = 0; i < opCnt; i++)
     {
-        avxBuffer buf = unmaps2[i];
+        avxBuffer buf = unmaps2[i].buf;
         AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
+
 #if AVX_VALIDATION_ENABLED
+        // Some final validation checks (if validation is enabled)
+
 #if 0 // if no waited, these assertions will always fail.
         // some assertions
         AFX_ASSERT(!buf->bytemap);
         AFX_ASSERT(!buf->mappedRange);
         AFX_ASSERT(!buf->mappedOffset);
 #endif
+
 #endif//AVX_VALIDATION_ENABLED
-        // remove pendency
-        AfxDecAtom32(&buf->pendingRemap);
+
+        // Remove the pending remap state for the unmapped buffer
+        AfxDecAtom32(&buf->storage[0].pendingRemap);
     }
+
+    // Return the error code (AFX_ERR_NONE if successful)
     return err;
 }

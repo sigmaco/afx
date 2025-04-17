@@ -256,7 +256,7 @@ _ASX void AfxRebuildPose(afxPlacement plce, afxModel skl, afxUnit baseJntIdx, af
             afxM3d Q, Scale;
 
             if (!AfxPolarDecomposeM3d(Linear, 0.0000099999997, Q, Scale))
-                AfxLogError("Can't accurately decompose MAX transform Q");
+                AfxReportError("Can't accurately decompose MAX transform Q");
 
             afxV3d Position;
             AfxV3dCopy(Position, Local[3]);

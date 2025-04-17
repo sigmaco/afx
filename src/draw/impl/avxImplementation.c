@@ -217,7 +217,7 @@ _AVX afxError avxScmHook(afxModule mdle, afxManifest const* ini)
     afxClassConfig ddevClsCfg = _AVX_DDEV_CLASS_CONFIG;
     ddevClsCfg.ctor = NIL;
     ddevClsCfg.dtor = NIL;
-    AfxMountClass(&sys->avx.ddevCls, (afxClass*)AfxGetDeviceClass(), &sys->classes, &ddevClsCfg);
+    AfxMountClass(&sys->avx.ddevCls, (afxClass*)_AfxGetDeviceClass(), &sys->classes, &ddevClsCfg);
     
     afxClassConfig dsysClsCfg = _AVX_DSYS_CLASS_CONFIG;
     dsysClsCfg.ctor = NIL;
@@ -227,7 +227,7 @@ _AVX afxError avxScmHook(afxModule mdle, afxManifest const* ini)
     afxClassConfig viddClsCfg = _AVX_VDU_CLASS_CONFIG;
     viddClsCfg.ctor = NIL;
     viddClsCfg.dtor = NIL;
-    AfxMountClass(&sys->avx.viddCls, (afxClass*)AfxGetDeviceClass(), &sys->classes, &viddClsCfg);
+    AfxMountClass(&sys->avx.viddCls, (afxClass*)_AfxGetDeviceClass(), &sys->classes, &viddClsCfg);
 
     if (!err)
     {

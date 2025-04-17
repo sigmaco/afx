@@ -26,9 +26,7 @@
 #define _AVX_DRAW_INPUT_C
 #include "impl/avxImplementation.h"
 
-extern afxClassConfig const _AVX_TXD_CLASS_CONFIG;
 extern afxClassConfig const _AVX_TEX_CLASS_CONFIG;
-extern afxClassConfig const _AVX_CAM_CLASS_CONFIG;
 extern afxClassConfig const _AVX_DTEC_CLASS_CONFIG;
 extern afxClassConfig const _AVX_VBUF_CLASS_CONFIG;
 //AFX afxClassConfig const _AvxIbufClsCfg;
@@ -36,7 +34,7 @@ extern afxClassConfig const _AVX_VBUF_CLASS_CONFIG;
 extern afxClassConfig const _AvxMshtClsCfg;
 extern afxClassConfig const _AvxGeomClsCfg;
 
-_AVX afxDrawSystem AfxGetDrawInputContext(afxDrawInput din)
+_AVX afxDrawSystem AvxGetDrawInputContext(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -45,32 +43,22 @@ _AVX afxDrawSystem AfxGetDrawInputContext(afxDrawInput din)
     return dsys;
 }
 
-_AVX afxDrawDevice AfxGetDrawInputDevice(afxDrawInput din)
+_AVX afxDrawDevice AvxGetDrawInputDevice(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
-    afxDrawSystem dsys = AfxGetDrawInputContext(din);
+    afxDrawSystem dsys = AvxGetDrawInputContext(din);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxDrawDevice ddev = AfxGetProvider(din);
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     return ddev;
 }
 
-_AVX void* AfxGetDrawInputUdd(afxDrawInput din)
+_AVX void* AvxGetDrawInputUdd(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
     return din->udd;
-}
-
-_AVX afxClass const* AvxGetTxdClass(afxDrawInput din)
-{
-    afxError err = AFX_ERR_NONE;
-    // din must be a valid afxDrawInput handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
-    afxClass const* cls = &din->txdCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_TXD);
-    return cls;
 }
 
 _AVX afxClass const* AvxGetTextureClass(afxDrawInput din)
@@ -80,15 +68,6 @@ _AVX afxClass const* AvxGetTextureClass(afxDrawInput din)
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
     afxClass const* cls = &din->texCls;
     AFX_ASSERT_CLASS(cls, afxFcc_TEX);
-    return cls;
-}
-
-_AVX afxClass const* AvxGetCameraClass(afxDrawInput din)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
-    afxClass const* cls = &din->camCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_CAM);
     return cls;
 }
 
@@ -137,7 +116,7 @@ _AVX afxClass* AvxGetIndexBufferClass(afxDrawInput din)
     return cls;
 }
 
-_AVX void AfxGetClipSpaceInfo(afxDrawInput din, avxClipSpaceDepth* depth, afxBool* leftHanded)
+_AVX void AvxGetClipSpaceInfo(afxDrawInput din, avxClipSpaceDepth* depth, afxBool* leftHanded)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -149,7 +128,7 @@ _AVX void AfxGetClipSpaceInfo(afxDrawInput din, avxClipSpaceDepth* depth, afxBoo
         *leftHanded = din->leftHandedSpace;
 }
 
-_AVX void AfxComputeLookToMatrices(afxDrawInput din, afxV3d const eye, afxV3d const dir, afxM4d v, afxM4d iv)
+_AVX void AvxComputeLookToMatrices(afxDrawInput din, afxV3d const eye, afxV3d const dir, afxM4d v, afxM4d iv)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -163,7 +142,7 @@ _AVX void AfxComputeLookToMatrices(afxDrawInput din, afxV3d const eye, afxV3d co
         AfxM4dInvert(iv, v);
 }
 
-_AVX void AfxComputeLookAtMatrices(afxDrawInput din, afxV3d const eye, afxV3d const target, afxM4d v, afxM4d iv)
+_AVX void AvxComputeLookAtMatrices(afxDrawInput din, afxV3d const eye, afxV3d const target, afxM4d v, afxM4d iv)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -176,7 +155,7 @@ _AVX void AfxComputeLookAtMatrices(afxDrawInput din, afxV3d const eye, afxV3d co
         AfxM4dInvert(iv, v);
 }
 
-_AVX void AfxComputeOrthographicMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip)
+_AVX void AvxComputeOrthographicMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -191,7 +170,7 @@ _AVX void AfxComputeOrthographicMatrices(afxDrawInput din, afxV2d const extent, 
         AfxM4dInvert(ip, p);
 }
 
-_AVX void AfxComputeOffcenterOrthographicMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip)
+_AVX void AvxComputeOffcenterOrthographicMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -205,7 +184,7 @@ _AVX void AfxComputeOffcenterOrthographicMatrices(afxDrawInput din, afxReal left
         AfxM4dInvert(ip, p);
 }
 
-_AVX void AfxComputeBoundingOrthographicMatrices(afxDrawInput din, afxBox const aabb, afxM4d p, afxM4d ip)
+_AVX void AvxComputeBoundingOrthographicMatrices(afxDrawInput din, afxBox const aabb, afxM4d p, afxM4d ip)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -217,7 +196,7 @@ _AVX void AfxComputeBoundingOrthographicMatrices(afxDrawInput din, afxBox const 
         AfxM4dInvert(ip, p);
 }
 
-_AVX void AfxComputeBasicOrthographicMatrices(afxDrawInput din, afxReal aspectRatio, afxReal scale, afxReal range, afxM4d p, afxM4d ip)
+_AVX void AvxComputeBasicOrthographicMatrices(afxDrawInput din, afxReal aspectRatio, afxReal scale, afxReal range, afxM4d p, afxM4d ip)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -229,7 +208,7 @@ _AVX void AfxComputeBasicOrthographicMatrices(afxDrawInput din, afxReal aspectRa
         AfxM4dInvert(ip, p);
 }
 
-_AVX void AfxComputePerspectiveMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip)
+_AVX void AvxComputePerspectiveMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -245,7 +224,7 @@ _AVX void AfxComputePerspectiveMatrices(afxDrawInput din, afxV2d const extent, a
         AfxM4dInvert(ip, p);
 }
 
-_AVX void AfxComputeFovMatrices(afxDrawInput din, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxM4d p, afxM4d ip)
+_AVX void AvxComputeFovMatrices(afxDrawInput din, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxM4d p, afxM4d ip)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -260,7 +239,7 @@ _AVX void AfxComputeFovMatrices(afxDrawInput din, afxReal fovY, afxReal aspectRa
         AfxM4dInvert(ip, p);
 }
 
-_AVX void AfxComputeFrustrumMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip)
+_AVX void AvxComputeFrustrumMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -275,7 +254,7 @@ _AVX void AfxComputeFrustrumMatrices(afxDrawInput din, afxReal left, afxReal rig
         AfxM4dInvert(ip, p);
 }
 
-_AVX void AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRatio, afxReal range, afxM4d p, afxM4d ip)
+_AVX void AvxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRatio, afxReal range, afxM4d p, afxM4d ip)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -287,7 +266,7 @@ _AVX void AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRat
         AfxM4dInvert(ip, p);
 }
 
-_AVX afxError AfxUplinkTxds(afxDrawInput din, afxUnit baseSlot, afxUnit slotCnt, afxUri const uris[])
+_AVX afxError AvxUplinkTxds(afxDrawInput din, afxUnit baseSlot, afxUnit slotCnt, afxUri const uris[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
@@ -315,7 +294,7 @@ _AVX afxError _AvxDinDtorCb(afxDrawInput din)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
 
-    afxDrawDevice ddev = AfxGetDrawInputDevice(din);
+    afxDrawDevice ddev = AvxGetDrawInputDevice(din);
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
 
     AfxExhaustChainedClasses(&din->classes);
@@ -370,14 +349,8 @@ _AVX afxError _AvxDinCtorCb(afxDrawInput din, void** args, afxUnit invokeNo)
     //tmpClsConf = _AvxMshtClsCfg;
     //AfxMountClass(&din->mshtCls, NIL, classes, &tmpClsConf);
 
-    tmpClsConf = _AVX_TEX_CLASS_CONFIG;
-    AfxMountClass(&din->texCls, NIL, classes, &tmpClsConf);
-
-    tmpClsConf = _AVX_TXD_CLASS_CONFIG;
-    AfxMountClass(&din->txdCls, NIL, classes, &tmpClsConf);
-
-    tmpClsConf = _AVX_CAM_CLASS_CONFIG;
-    AfxMountClass(&din->camCls, NIL, classes, &tmpClsConf);
+    //tmpClsConf = _AVX_TEX_CLASS_CONFIG;
+    //AfxMountClass(&din->texCls, NIL, classes, &tmpClsConf);
 
     tmpClsConf = _AVX_DTEC_CLASS_CONFIG;
     AfxMountClass(&din->dtecCls, NIL, classes, &tmpClsConf);
@@ -439,7 +412,7 @@ _AVX afxError AvxOpenDrawInput(afxDrawSystem dsys, afxDrawInputConfig const* cfg
     return err;
 }
 
-_AVX afxUnit AfxEnumerateDrawInputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxDrawInput inputs[])
+_AVX afxUnit AvxEnumerateDrawInputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxDrawInput inputs[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -449,7 +422,7 @@ _AVX afxUnit AfxEnumerateDrawInputs(afxDrawSystem dsys, afxUnit first, afxUnit c
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)inputs);
 }
 
-_AVX afxUnit AfxEvokeDrawInputs(afxDrawSystem dsys, afxBool(*f)(afxDrawInput, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawInput inputs[])
+_AVX afxUnit AvxEvokeDrawInputs(afxDrawSystem dsys, afxBool(*f)(afxDrawInput, void*), void* udd, afxUnit first, afxUnit cnt, afxDrawInput inputs[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -460,7 +433,7 @@ _AVX afxUnit AfxEvokeDrawInputs(afxDrawSystem dsys, afxBool(*f)(afxDrawInput, vo
     return AfxEvokeObjects(cls, (void*)f, udd, first, cnt, (afxObject*)inputs);
 }
 
-_AVX afxUnit AfxInvokeDrawInputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxBool(*f)(afxDrawInput, void*), void *udd)
+_AVX afxUnit AvxInvokeDrawInputs(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxBool(*f)(afxDrawInput, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);

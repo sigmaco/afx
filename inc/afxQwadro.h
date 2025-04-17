@@ -21,6 +21,21 @@
 
 // Qwadro; experience what is inside.
 
+/*
+    CODING APPROACHES
+
+    This system is designed for high-performance situations.
+
+    This system must provide manual, batch-based control over memory and data.
+
+    This system must avoid hidden reallocations or copying - everything is explicit.
+
+    Several things in this framework seems to be batch- and range-aware, so acting in a specific subrange of units is totally in line with its philosophy.
+
+    Qwadro does exhaustive use of the "commit only on full success" behavior, similar to a transactional allocation model.
+    It implies that batch operations, usually memory allocations, must undo previous successfull operations if any of them has failed.
+*/
+
 #ifndef AFX_QWADRO_H
 #define AFX_QWADRO_H
 

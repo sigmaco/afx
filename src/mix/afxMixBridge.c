@@ -22,16 +22,7 @@
 #define _AMX_MIX_CONTEXT_C
 #include "impl/amxImplementation.h"
 
-_AMX afxMixDevice AfxGetMixBridgeDevice(afxMixBridge mexu)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    afxMixDevice mdev = mexu->mdev;
-    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
-    return mdev;
-}
-
-_AMX afxMixSystem AfxGetBridgedMixSystem(afxMixBridge mexu)
+_AMX afxMixSystem AmxGetBridgedMixSystem(afxMixBridge mexu)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
@@ -40,18 +31,18 @@ _AMX afxMixSystem AfxGetBridgedMixSystem(afxMixBridge mexu)
     return msys;
 }
 
-_AMX afxUnit AfxQueryMixBridgePort(afxMixBridge mexu, afxMixDevice* device)
+_AMX afxMixDevice AmxGetBridgedMixDevice(afxMixBridge mexu, afxUnit* portId)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    afxMixDevice mdev = mexu->mdev;
+    AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
 
-    if (device)
+    if (portId)
     {
-        afxMixDevice mdev = mexu->mdev;
-        AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
-        *device = mdev;
+        *portId = mexu->portId;
     }
-    return mexu->portId;
+    return mdev;
 }
 
 _AMX afxClass const* _AmxGetMixQueueClass(afxMixBridge mexu)
@@ -59,12 +50,12 @@ _AMX afxClass const* _AmxGetMixQueueClass(afxMixBridge mexu)
     afxError err = AFX_ERR_NONE;
     // mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    afxClass const* cls = &mexu->squeCls;
+    afxClass const* cls = &mexu->mqueCls;
     AFX_ASSERT_CLASS(cls, afxFcc_MQUE);
     return cls;
 }
 
-_AMX afxUnit AfxGetMixQueues(afxMixBridge mexu, afxUnit first, afxUnit cnt, afxMixQueue queues[])
+_AMX afxUnit AmxGetMixQueues(afxMixBridge mexu, afxUnit first, afxUnit cnt, afxMixQueue queues[])
 {
     afxError err = AFX_ERR_NONE;
     // mexu must be a valid afxMixBridge handle.
@@ -72,21 +63,21 @@ _AMX afxUnit AfxGetMixQueues(afxMixBridge mexu, afxUnit first, afxUnit cnt, afxM
     // queues must be a valid pointer to the afxMixQueue handles.
     AFX_ASSERT(queues);
 
-    afxClass const* squeCls = _AmxGetMixQueueClass(mexu);
-    AFX_ASSERT_CLASS(squeCls, afxFcc_MQUE);
-    afxUnit rslt = _AfxEnumerateObjectsUnlocked(squeCls, FALSE, first, cnt, (afxObject*)queues);
+    afxClass const* mqueCls = _AmxGetMixQueueClass(mexu);
+    AFX_ASSERT_CLASS(mqueCls, afxFcc_MQUE);
+    afxUnit rslt = _AfxEnumerateObjectsUnlocked(mqueCls, FALSE, first, cnt, (afxObject*)queues);
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, rslt, queues);
     return rslt;
 }
 
-_AMX afxError AfxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxTime timeout)
+_AMX afxError AmxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxUnit64 timeout)
 {
     afxError err = AFX_ERR_NONE;
     // mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
     afxMixQueue mque;
-    if (!AfxGetMixQueues(mexu, queIdx, 1, &mque))
+    if (!AmxGetMixQueues(mexu, queIdx, 1, &mque))
     {
         AfxThrowError();
         return err;
@@ -98,9 +89,9 @@ _AMX afxError AfxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxTime
         AfxLockMutex(&mque->idleCndMtx);
 
         afxTimeSpec ts = { 0 };
-        ts.nsec = AfxMax(1, timeout) * 100000; // 100000 = 0.0001 sec
+        ts.nsecs = AFX_MAX(1, timeout) * 100000; // 100000 = 0.0001 sec
 
-        while (mque->workChn.cnt)
+        while (mque->iorpChn.cnt)
         {
             mexu->pingCb(mexu, 0);
             AfxWaitTimedCondition(&mque->idleCnd, &mque->idleCndMtx, &ts);
@@ -113,7 +104,7 @@ _AMX afxError AfxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxTime
     return err;
 }
 
-_AMX afxError AfxWaitForIdleMixBridge(afxMixBridge mexu, afxTime timeout)
+_AMX afxError AmxWaitForIdleMixBridge(afxMixBridge mexu, afxUnit64 timeout)
 {
     afxError err = AFX_ERR_NONE;
     // mexu must be a valid afxMixBridge handle.
@@ -122,50 +113,51 @@ _AMX afxError AfxWaitForIdleMixBridge(afxMixBridge mexu, afxTime timeout)
     if (mexu->pingCb)
         mexu->pingCb(mexu, 0);
 
-    afxClass const* squeCls = _AmxGetMixQueueClass(mexu);
-    AFX_ASSERT_CLASS(squeCls, afxFcc_MQUE);
-    afxUnit queCnt = squeCls->instCnt;
+    afxClass const* mqueCls = _AmxGetMixQueueClass(mexu);
+    AFX_ASSERT_CLASS(mqueCls, afxFcc_MQUE);
+    afxUnit queCnt = mqueCls->instCnt;
 
     for (afxUnit i = 0; i < queCnt; i++)
-        AfxWaitForEmptyMixQueue(mexu, i, timeout);
+        AmxWaitForEmptyMixQueue(mexu, i, timeout);
 
     return err;
 }
 
-_AMX afxError _AmxSubmitCallback(afxMixBridge mexu, void(*f)(void*, void*), void* udd)
+_AMX afxError _AmxMexuSubmitCallback(afxMixBridge mexu, void(*f)(void*, void*), void* udd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     AFX_ASSERT(f);
 
-    afxClass const* squeCls = _AmxGetMixQueueClass(mexu);
+    afxClass const* mqueCls = _AmxGetMixQueueClass(mexu);
 
     // sanitize arguments
-    afxUnit totalQueCnt = squeCls->instCnt;
-    afxUnit baseQueIdx = AfxMin(0, totalQueCnt - 1);
-    afxUnit queCnt = AfxClamp(1, 1, totalQueCnt - baseQueIdx);
+    afxUnit totalQueCnt = mqueCls->instCnt;
+    afxUnit baseQueIdx = AFX_MIN(0, totalQueCnt - 1);
+    afxUnit queCnt = AFX_CLAMP(1, 1, totalQueCnt - baseQueIdx);
     AFX_ASSERT(queCnt);
     afxBool queued = FALSE;
 
     for (afxUnit queIdx = 0; queIdx < queCnt; queIdx++)
     {
         afxMixQueue mque;
-        if (!AfxGetMixQueues(mexu, baseQueIdx + queIdx, 1, &mque)) continue;
+        if (!AmxGetMixQueues(mexu, baseQueIdx + queIdx, 1, &mque)) continue;
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-            if (!AfxTryLockMutex(&mque->workChnMtx))
+            if (!AfxTryLockMutex(&mque->iorpChnMtx))
                 continue;
         }
 
         afxCmdId cmdId;
-        amxWork* work = _AmxSquePushWork(mque, AMX_GET_STD_WORK_ID(Callback), sizeof(work->Callback), &cmdId);
+        _amxIoReqPacket* work;
+        _AmxMquePushIoReqPacket(mque, _AMX_GET_STD_IORP_ID(Callback), sizeof(work->Callback), &cmdId, &work);
         AFX_ASSERT(work);
 
         work->Callback.f = f;
         work->Callback.udd = udd;
 
-        AfxUnlockMutex(&mque->workChnMtx);
+        AfxUnlockMutex(&mque->iorpChnMtx);
 
         mexu->pingCb(mexu, 0);
         break;
@@ -173,35 +165,36 @@ _AMX afxError _AmxSubmitCallback(afxMixBridge mexu, void(*f)(void*, void*), void
     return err;
 }
 
-_AMX afxError _AmxSubmitTransferences(afxMixBridge mexu, amxTransference const* ctrl, afxUnit opCnt, void const* ops)
+_AMX afxError _AmxMexuTransferBuffers(afxMixBridge mexu, amxTransference const* ctrl, afxUnit opCnt, void const* ops)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
 
-    afxClass const* squeCls = _AmxGetMixQueueClass(mexu);
+    afxClass const* mqueCls = _AmxGetMixQueueClass(mexu);
 
     // sanitize arguments
-    afxUnit totalQueCnt = squeCls->instCnt;
-    afxUnit baseQueIdx = AfxMin(ctrl->baseQueIdx, totalQueCnt - 1);
-    afxUnit queCnt = AfxClamp(ctrl->queCnt, 1, totalQueCnt - baseQueIdx);
+    afxUnit totalQueCnt = mqueCls->instCnt;
+    afxUnit baseQueIdx = AFX_MIN(ctrl->baseQueIdx, totalQueCnt - 1);
+    afxUnit queCnt = AFX_CLAMP(ctrl->queCnt, 1, totalQueCnt - baseQueIdx);
     AFX_ASSERT(queCnt);
     afxBool queued = FALSE;
 
     for (afxUnit queIdx = 0; queIdx < queCnt; queIdx++)
     {
         afxMixQueue mque;
-        if (!AfxGetMixQueues(mexu, baseQueIdx + queIdx, 1, &mque)) continue;
+        if (!AmxGetMixQueues(mexu, baseQueIdx + queIdx, 1, &mque)) continue;
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-            if (!AfxTryLockMutex(&mque->workChnMtx))
+            if (!AfxTryLockMutex(&mque->iorpChnMtx))
                 continue;
         }
 
         afxCmdId cmdId;
-        amxWork* work = _AmxSquePushWork(mque, AMX_GET_STD_WORK_ID(Transfer), sizeof(work->Transfer) + (opCnt * sizeof(work->Transfer.wavOps[0])), &cmdId);
+        _amxIoReqPacket* work;
+        _AmxMquePushIoReqPacket(mque, _AMX_GET_STD_IORP_ID(Transfer), sizeof(work->Transfer) + (opCnt * sizeof(work->Transfer.wavOps[0])), &cmdId, &work);
         AFX_ASSERT(work);
 
         work->Transfer.srcFcc = ctrl->srcFcc;
@@ -213,10 +206,10 @@ _AMX afxError _AmxSubmitTransferences(afxMixBridge mexu, amxTransference const* 
 
         switch (ctrl->srcFcc)
         {
-        case afxFcc_WAV:
+        case afxFcc_AUD:
         {
-            work->Transfer.src.wav = ctrl->src.wav;
-            AfxReacquireObjects(1, &work->Transfer.src.wav);
+            work->Transfer.src.aud = ctrl->src.aud;
+            AfxReacquireObjects(1, &work->Transfer.src.aud);
             break;
         }
         case afxFcc_IOB:
@@ -235,10 +228,10 @@ _AMX afxError _AmxSubmitTransferences(afxMixBridge mexu, amxTransference const* 
 
         switch (ctrl->dstFcc)
         {
-        case afxFcc_WAV:
+        case afxFcc_AUD:
         {
-            work->Transfer.dst.wav = ctrl->dst.wav;
-            AfxReacquireObjects(1, &work->Transfer.dst.wav);
+            work->Transfer.dst.aud = ctrl->dst.aud;
+            AfxReacquireObjects(1, &work->Transfer.dst.aud);
             break;
         }
         case afxFcc_IOB:
@@ -255,14 +248,14 @@ _AMX afxError _AmxSubmitTransferences(afxMixBridge mexu, amxTransference const* 
         default: AfxThrowError(); break;
         }
 
-        afxWaveIo const* riops = ops;
+        amxAudioIo const* riops = ops;
         for (afxUnit i = 0; i < opCnt; i++)
         {
             work->Transfer.wavOps[i] = riops[i];
         }
         int a = 1;
 
-        AfxUnlockMutex(&mque->workChnMtx);
+        AfxUnlockMutex(&mque->iorpChnMtx);
 
         mexu->pingCb(mexu, 0);
         break;
@@ -270,7 +263,7 @@ _AMX afxError _AmxSubmitTransferences(afxMixBridge mexu, amxTransference const* 
     return err;
 }
 
-_AMX afxError _AmxSubmitSink(afxMixBridge mexu, void* ctrl, afxSink sink, afxAudio aud, afxWaveInterval const* seg)
+_AMX afxError _AmxMexuSubmitSink(afxMixBridge mexu, void* ctrl, afxSink sink, amxAudio aud, amxAudioPeriod const* seg)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
@@ -278,33 +271,34 @@ _AMX afxError _AmxSubmitSink(afxMixBridge mexu, void* ctrl, afxSink sink, afxAud
     AFX_ASSERT(seg);
     AFX_ASSERT(aud);
 
-    afxClass const* squeCls = _AmxGetMixQueueClass(mexu);
+    afxClass const* mqueCls = _AmxGetMixQueueClass(mexu);
 
     // sanitize arguments
     afxUnit baseQueIdx = 0;
-    afxUnit queCnt = squeCls->instCnt;
+    afxUnit queCnt = mqueCls->instCnt;
     AFX_ASSERT(queCnt);
 
     for (afxUnit queIdx = 0; queIdx < queCnt; queIdx++)
     {
         afxMixQueue mque;
-        if (!AfxGetMixQueues(mexu, baseQueIdx + queIdx, 1, &mque)) continue;
+        if (!AmxGetMixQueues(mexu, baseQueIdx + queIdx, 1, &mque)) continue;
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-            if (!AfxTryLockMutex(&mque->workChnMtx))
+            if (!AfxTryLockMutex(&mque->iorpChnMtx))
                 continue;
         }
 
         afxCmdId cmdId;
-        amxWork* work = _AmxSquePushWork(mque, AMX_GET_STD_WORK_ID(Sink), sizeof(work->Sink), &cmdId);
+        _amxIoReqPacket* work;
+        _AmxMquePushIoReqPacket(mque, _AMX_GET_STD_IORP_ID(Sink), sizeof(work->Sink), &cmdId, &work);
         AFX_ASSERT(work);
 
         work->Sink.buf = aud;
         work->Sink.sink = sink;
         work->Sink.seg = *seg;
 
-        AfxUnlockMutex(&mque->workChnMtx);
+        AfxUnlockMutex(&mque->iorpChnMtx);
 
         mexu->pingCb(mexu, 0);
         break;
@@ -312,7 +306,7 @@ _AMX afxError _AmxSubmitSink(afxMixBridge mexu, void* ctrl, afxSink sink, afxAud
     return err;
 }
 
-_AMX afxError _AmxRollMixers(afxMixBridge mexu, afxReal startTime, afxReal dur, afxUnit iterCnt, afxUnit cnt, afxMixContext mixers[])
+_AMX afxError _AmxMexuRollMixers(afxMixBridge mexu, afxReal startTime, afxReal dur, afxUnit iterCnt, afxUnit cnt, afxMixContext mixers[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
@@ -336,12 +330,12 @@ _AMX afxError _AmxRollMixers(afxMixBridge mexu, afxReal startTime, afxReal dur, 
     return err;
 }
 
-_AMX afxError _AmxSexuDtorCb(afxMixBridge mexu)
+_AMX afxError _AmxMexuDtorCb(afxMixBridge mexu)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
-    afxMixSystem msys = AfxGetBridgedMixSystem(mexu);
+    afxMixSystem msys = AmxGetBridgedMixSystem(mexu);
 
     AfxWaitForMixSystem(msys, AFX_TIME_INFINITE);
     AfxWaitForMixSystem(msys, AFX_TIME_INFINITE); // yes, two times.
@@ -361,14 +355,14 @@ _AMX afxError _AmxSexuDtorCb(afxMixBridge mexu)
     return err;
 }
 
-_AMX afxError _AmxSexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
+_AMX afxError _AmxMexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
     afxMixSystem msys = AFX_CAST(afxMixSystem, args[0]);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    _amxMixBridgeAcquisition const* cfg = AFX_CAST(_amxMixBridgeAcquisition const*, args[1]) + invokeNo;
+    _amxMexuAcquisition const* cfg = AFX_CAST(_amxMexuAcquisition const*, args[1]) + invokeNo;
 
     if (!cfg)
     {
@@ -384,7 +378,7 @@ _AMX afxError _AmxSexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
 
     mexu->procCb = _AmxMpu_ProcCb;
     mexu->workerProc = _AMX_MPU_THREAD_PROC;
-    mexu->workVmt = &_AMX_MPU_WORK_VMT;
+    mexu->iorpVmt = &_AMX_MPU_IORP_VMT;
     mexu->pingCb = _AmxMexu_PingCb;
 
     AfxDeployMutex(&mexu->schedCndMtx, AFX_MTX_PLAIN);
@@ -394,7 +388,7 @@ _AMX afxError _AmxSexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
     AfxDeployChain(&mexu->classes, mexu);
     afxClassConfig clsCfg;
     clsCfg = cfg->squeClsCfg ? *cfg->squeClsCfg : _AMX_MQUE_CLASS_CONFIG;
-    AfxMountClass(&mexu->squeCls, NIL, &mexu->classes, &clsCfg);
+    AfxMountClass(&mexu->mqueCls, NIL, &mexu->classes, &clsCfg);
 
     afxClass* squeCls = (afxClass*)_AmxGetMixQueueClass(mexu);
     AFX_ASSERT_CLASS(squeCls, afxFcc_MQUE);
@@ -412,7 +406,7 @@ _AMX afxError _AmxSexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
 
         afxThreadConfig thrCfg = { 0 };
         //thrCfg.procCb = SoundThreadProc;
-        thrCfg.purpose = afxThreadPurpose_SOUND;
+        thrCfg.usage = afxThreadUsage_MIX;
         thrCfg.udd[0] = mexu;
 
         if (AfxAcquireThreads(AfxHere(), &thrCfg, 1, &mexu->worker))
@@ -436,8 +430,8 @@ _AMX afxClassConfig const _AMX_MEXU_CLASS_CONFIG =
 {
     .fcc = afxFcc_MEXU,
     .name = "MixBridge",
-    .desc = "Sound Device Execution Bridge",
+    .desc = "Mix Device Execution Bridge",
     .fixedSiz = sizeof(AFX_OBJECT(afxMixBridge)),
-    .ctor = (void*)_AmxSexuCtorCb,
-    .dtor = (void*)_AmxSexuDtorCb
+    .ctor = (void*)_AmxMexuCtorCb,
+    .dtor = (void*)_AmxMexuDtorCb
 };

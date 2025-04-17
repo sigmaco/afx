@@ -27,7 +27,7 @@
 #define _AMX_MIX_CONTEXT_C
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
-#define _AMX_WAVEFORM_C
+#define _AMX_AUDIO_C
 #include "../impl/amxImplementation.h"
 #include "qwadro/inc/mix/op/amxSession.h"
 
@@ -80,7 +80,7 @@ _AMX afxError AmxAcquireMediaSession(afxMixSystem msys, amxSessionConfig const* 
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(session);
 
-    afxClass* cls = (afxClass*)NIL;// _AmxGetMediaSessionClass(msys);
+    afxClass* cls = (afxClass*)_AmxGetSessionClass(msys);
     AFX_ASSERT_CLASS(cls, afxFcc_MSES);
     
     amxSession mses;

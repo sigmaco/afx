@@ -176,7 +176,7 @@ _AFX afxClassConfig const _AFX_SVC_CLASS_CONFIG =
 _AFX afxError AfxAcquireServices(afxUnit cnt, afxServiceConfig const config[], afxService services[])
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetServiceClass();
+    afxClass* cls = _AfxGetServiceClass();
     AFX_ASSERT_CLASS(cls, afxFcc_SVC);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)services, (void const*[]) { NIL, (void*)config }))

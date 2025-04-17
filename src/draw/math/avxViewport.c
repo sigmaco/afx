@@ -18,10 +18,6 @@
 
 #include "../impl/avxImplementation.h"
 
-afxRect const AVX_RECT_ZERO = { 0, 0, 0, 0 };
-afxRect const AVX_RECT_MIN = { AFX_I32_MIN, AFX_I32_MIN, 1, 1 };
-afxRect const AVX_RECT_MAX = { AFX_I32_MAX, AFX_I32_MAX, AFX_U32_MAX, AFX_U32_MAX };
-
 avxViewport const AVX_VIEWPORT_MIN = { .origin = { AFX_R32_MIN, AFX_R32_MIN }, .extent = { 1, 1 } };
 avxViewport const AVX_VIEWPORT_MAX = { .origin = { AFX_R32_MAX, AFX_R32_MAX }, .extent = { AFX_R32_MAX, AFX_R32_MAX } };
 
@@ -33,51 +29,6 @@ avxRange const AVX_RANGE_ZERO = { 0, 0, 0 };
 avxRange const AVX_RANGE_MIN = { 1, 1, 1 };
 avxRange const AVX_RANGE_MAX = { AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX };
 
-_AVXINL afxBool AvxDoesRectOverlaps(afxRect const* a, afxRect const* b)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(a);
-    AFX_ASSERT(b);
-
-    // is B completely right of A?
-    if (AfxMax(a->x, (afxInt)a->w) < AfxMin(b->x, (afxInt)b->w))
-        return FALSE;
-
-    // is B completely left of A?
-    if (AfxMax(b->x, (afxInt)b->w) < AfxMin(a->x, (afxInt)a->w))
-        return FALSE;
-
-    // is B completely above A?
-    if (AfxMax(a->y, (afxInt)a->h) < AfxMin(b->y, (afxInt)b->h))
-        return FALSE;
-
-    // is B completely below A?
-    if (AfxMax(b->y, (afxInt)b->h) < AfxMin(a->y, (afxInt)a->h))
-        return FALSE;
-
-    return TRUE; // overlapping
-}
-
-_AVXINL afxBool AvxContainsRectBiased(afxRect const* a, afxRect const* b, afxInt tolX, afxInt tolY)
-// Compare if rectangle \a a contains rectangle \a b in coordinate, with specified tolerance allowed.
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(a);
-    AFX_ASSERT(b);
-    return ((a->x <= (b->x + tolX)) && (a->y <= (b->y + tolY)) &&
-            ((a->w + tolX) >= b->w) && ((a->h + tolY) >= b->h));
-}
-
-_AVXINL afxBool AvxContainsRect(afxRect const* a, afxRect const* b)
-// Compare if rectangle \a a contains rectangle \a b in coordinate.
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(a);
-    AFX_ASSERT(b);    
-    return ((a->x <= b->x) && (a->y <= b->y) &&
-            (a->w >= b->w) && (a->h >= b->h));
-}
-
 // EXTENT
 
 _AVXINL avxRange AvxMinRange(avxRange const a, avxRange const b)
@@ -85,9 +36,9 @@ _AVXINL avxRange AvxMinRange(avxRange const a, avxRange const b)
     afxError err = AFX_ERR_NONE;
     return (avxRange const)
     { 
-        .w = AfxMin(a.w, b.w), 
-        .h = AfxMin(a.h, b.h), 
-        .d = AfxMin(a.d, b.d) 
+        .w = AFX_MIN(a.w, b.w), 
+        .h = AFX_MIN(a.h, b.h), 
+        .d = AFX_MIN(a.d, b.d) 
     };
 }
 
@@ -96,9 +47,9 @@ _AVXINL avxRange AvxMaxRange(avxRange const a, avxRange const b)
     afxError err = AFX_ERR_NONE;
     return (avxRange const)
     {
-        .w = AfxMax(a.w, b.w), 
-        .h = AfxMax(a.h, b.h), 
-        .d = AfxMax(a.d, b.d) 
+        .w = AFX_MAX(a.w, b.w), 
+        .h = AFX_MAX(a.h, b.h), 
+        .d = AFX_MAX(a.d, b.d) 
     };
 }
 
@@ -107,9 +58,9 @@ _AVXINL avxRange AvxClampRange(avxRange const in, avxRange const min, avxRange c
     afxError err = AFX_ERR_NONE;
     return (avxRange const)
     {
-        .w = AfxClamp(in.w, min.w, max.w), 
-        .h = AfxClamp(in.h, min.h, max.h), 
-        .d = AfxClamp(in.d, min.d, max.d) 
+        .w = AFX_CLAMP(in.w, min.w, max.w), 
+        .h = AFX_CLAMP(in.h, min.h, max.h), 
+        .d = AFX_CLAMP(in.d, min.d, max.d) 
     };
 }
 
@@ -118,9 +69,9 @@ _AVXINL avxRange AvxLimitRange(avxOrigin const origin, avxRange const extent)
     afxError err = AFX_ERR_NONE;
     return (avxRange const)
     {
-        .w = AfxMin(origin.x, (afxInt)(extent.w - 1)), 
-        .h = AfxMin(origin.y, (afxInt)(extent.h - 1)), 
-        .d = AfxMin(origin.z, (afxInt)(extent.d - 1)) 
+        .w = AFX_MIN(origin.x, (afxInt)(extent.w - 1)), 
+        .h = AFX_MIN(origin.y, (afxInt)(extent.h - 1)), 
+        .d = AFX_MIN(origin.z, (afxInt)(extent.d - 1)) 
     };
 }
 
@@ -213,9 +164,9 @@ _AVXINL avxRange AvxHalfRange(avxRange const in)
 {
     afxError err = AFX_ERR_NONE;
     return (avxRange const) {
-        .w = AfxMax(in.w ? 1 : 0, in.w >> 1),
-        .h = AfxMax(in.h ? 1 : 0, in.h >> 1),
-        .d = AfxMax(in.d ? 1 : 0, in.d >> 1)
+        .w = AFX_MAX(in.w ? 1 : 0, in.w >> 1),
+        .h = AFX_MAX(in.h ? 1 : 0, in.h >> 1),
+        .d = AFX_MAX(in.d ? 1 : 0, in.d >> 1)
     };
 }
 
@@ -245,9 +196,9 @@ _AVXINL avxOrigin AvxClampOrigin(avxOrigin const origin, avxRange const max)
 {
     afxError err = AFX_ERR_NONE;
     return (avxOrigin) {
-        .x = AfxMin(origin.x, max.w - 1),
-        .y = AfxMin(origin.y, max.h - 1),
-        .z = AfxMin(origin.z, max.d - 1)
+        .x = AFX_MIN(origin.x, max.w - 1),
+        .y = AFX_MIN(origin.y, max.h - 1),
+        .z = AFX_MIN(origin.z, max.d - 1)
     };
 }
 

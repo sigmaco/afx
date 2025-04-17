@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // QWADRO DRAWING DEVICE SYNCHRONIZATION FENCE                              //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /// Fences are a synchronization primitive that can be used to insert a dependency from a queue to the host.

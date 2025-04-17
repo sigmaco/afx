@@ -67,7 +67,7 @@ _ASX void AfxUpdateBodyMotives(afxBody bod, afxReal newClock)
     // it will automatically set all the motive's to the given clock, saving you the trouble of doing so.
 
     asxMotive intk;
-    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
+    AFX_ITERATE_CHAIN(AFX_OBJ(asxMotive), intk, bod, &bod->motives)
     {
         afxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
@@ -81,7 +81,7 @@ _ASX void AfxPurgeTerminatedMotives(afxBody bod)
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
 
     asxMotive intk;
-    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
+    AFX_ITERATE_CHAIN(AFX_OBJ(asxMotive), intk, bod, &bod->motives)
     {
         afxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
@@ -100,7 +100,7 @@ _ASX void AfxRecenterBodyMotiveClocks(afxBody bod, afxReal currClock)
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
 
     asxMotive intk;
-    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
+    AFX_ITERATE_CHAIN(AFX_OBJ(asxMotive), intk, bod, &bod->motives)
     {
         afxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
@@ -119,7 +119,7 @@ _ASX void AfxQueryBodyRootMotionVectors(afxBody bod, afxReal secsElapsed, afxBoo
     afxV4d t = { 0, 0, 0, 1 }, r = { 0, 0, 0, 0 };
 
     asxMotive intk;
-    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
+    AFX_ITERATE_CHAIN(AFX_OBJ(asxMotive), intk, bod, &bod->motives)
     {
         afxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
@@ -162,7 +162,7 @@ _ASX void AfxAccumulateBodyAnimations(afxBody bod, afxUnit basePivotIdx, afxUnit
     // if sparseBoneArray == NIL, won't use sparse.
 
     asxMotive intk;
-    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
+    AFX_ITERATE_CHAIN(AFX_OBJ(asxMotive), intk, bod, &bod->motives)
     {
         afxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
@@ -363,7 +363,7 @@ _ASX afxError _AsxBodDtorCb(afxBody bod)
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
 
     asxMotive intk;
-    AFX_ITERATE_CHAIN(&bod->motives, AFX_OBJ(asxMotive), bod, intk)
+    AFX_ITERATE_CHAIN(AFX_OBJ(asxMotive), intk, bod, &bod->motives)
     {
         //_AsxDestroyMotive(intk);
         AfxDisposeObjects(1, &intk);

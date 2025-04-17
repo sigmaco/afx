@@ -20,11 +20,11 @@
 #include "../impl/avxImplementation.h"
 #include "qwadro/inc/draw/kit/afxDrawTechnique.h"
 
-AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, afxUnit specId, avxPipelineBlueprint* pipb, avxShaderStage shaderStages[], afxUri shaderUris[], afxString shaderFns[]);
+AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, afxUnit specId, avxPipelineBlueprint* pipb, avxShaderType shaderStages[], afxUri shaderUris[], afxString shaderFns[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxCmdId AvxCmdApplyDrawTechnique(afxDrawContext dctx, afxDrawTechnique dtec, afxUnit passIdx, avxVertexInput vin, afxFlags dynamics)
+_AVX afxCmdId AvxCmdUseDrawTechniqueSIGMA(afxDrawContext dctx, afxDrawTechnique dtec, afxUnit passIdx, avxVertexInput vin, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DTEC, 1, &dtec);
@@ -39,7 +39,7 @@ _AVX afxError AfxUpdateRasterizationPass(afxDrawTechnique dtec, afxUnit passIdx,
     AFX_ASSERT_OBJECTS(afxFcc_DTEC, 1, &dtec);
 
     afxDrawInput din = AfxGetProvider(dtec);
-    afxDrawSystem dsys = AfxGetDrawInputContext(din);
+    afxDrawSystem dsys = AvxGetDrawInputContext(din);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     avxPipeline pip;
     AvxAssemblePipelines(dsys, 1, cfg, &pip);
@@ -136,7 +136,7 @@ _AVX afxError AfxLoadDrawTechnique(afxDrawInput din, afxUri const* uri, afxDrawT
         afxString name, ncontent, acontent;
         afxInt passIdx = 0;
 
-        avxShaderStage shaderStages[6] = { 0 };
+        avxShaderType shaderStages[6] = { 0 };
         afxUri shaderUris[6] = { 0 };
         afxString shaderFns[6] = { 0 };
 
@@ -146,7 +146,7 @@ _AVX afxError AfxLoadDrawTechnique(afxDrawInput din, afxUri const* uri, afxDrawT
             AfxQueryXmlElement(&xml, nodeIdx, &name, &ncontent);
             afxUnit nodeChildTagCnt = AfxCountXmlTags(&xml, nodeIdx);
 
-            if (0 == AfxCompareStrings(&name, 0, TRUE, 1, &AFX_STRING("Pass")))
+            if (AfxCompareStrings(&name, 0, TRUE, 1, &AFX_STRING("Pass"), NIL))
             {
                 afxUnit arrelIdx;
                 avxPipelineBlueprint config = { 0 };

@@ -18,6 +18,43 @@
 #define _AMX_BUFFER_C
 #include "../impl/amxImplementation.h"
 
+_AMX afxMixSystem AmxGetBufferContext(amxBuffer buf)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
+    afxMixSystem msys = AfxGetProvider(buf);
+    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+    return msys;
+}
+
+_AMX void* AmxGetBufferUdd(amxBuffer buf)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
+    return buf->udd;
+}
+
+_AMX afxUnit AmxGetBufferCapacity(amxBuffer buf, afxUnit from)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
+    return AFX_MIN(buf->size, buf->size - from);
+}
+
+_AMX amxBufferUsage AmxGetBufferUsage(amxBuffer buf, amxBufferUsage usage)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
+    return usage ? (buf->usage & usage) : buf->usage;
+}
+
+_AMX amxBufferFlags AmxGetBufferAccess(amxBuffer buf, amxBufferFlags access)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
+    return access ? ((buf->flags & amxBufferFlag_ACCESS) & access) : (buf->flags & amxBufferFlag_ACCESS);
+}
+
 _AMX afxError _AmxMbufDtorCb(amxBuffer mbuf)
 {
     afxError err = AFX_ERR_NONE;

@@ -25,6 +25,70 @@
 
 #include "qwadro/inc/draw/afxDrawSystem.h"
 
+typedef enum _avxMemFlag
+{
+    _avxMemFlag_MAPPEABLE = AFX_BIT(0), // visible to CPU
+    _avxMemFlag_CACHED = AFX_BIT(1), // cached by CPU
+    _avxMemFlag_ENCLAVED = AFX_BIT(2), // virtually separated portion
+    _avxMemFlag_EMBEDDED = AFX_BIT(3) // on-chip memory
+} _avxMemFlags;
+
+AFX_DEFINE_STRUCT(_avxRasStorage)
+{
+    afxLink iommu;
+
+    // binding
+    afxUnit mmu; // memory holder
+    afxSize offset; // offset into memory holder bound to this storage block.
+    union
+    {
+        afxSize     addr;
+        afxByte*    bytemap;
+        afxUnit8*   u8;
+        afxUnit16*  u16;
+        afxUnit32*  u32;
+        afxInt8*    i8;
+        afxInt16*   i16;
+        afxInt32*   i32;
+        afxReal32*  f32;
+        afxReal64*  f64;
+        afxV2d*     f32v2;
+        afxV3d*     f32v3;
+        afxV4d*     f32v4;
+    } hostedAlloc;
+};
+
+AFX_DEFINE_STRUCT(_avxBufStorage)
+{
+    afxLink iommu;
+    // binding
+    afxUnit mmu; // memory holder
+    afxSize offset; // offset into memory holder bound to this storage block.
+    union
+    {
+        afxSize     addr;
+        afxByte*    bytemap;
+        afxUnit8*   u8;
+        afxUnit16*  u16;
+        afxUnit32*  u32;
+        afxInt8*    i8;
+        afxInt16*   i16;
+        afxInt32*   i32;
+        afxReal32*  f32;
+        afxReal64*  f64;
+        afxV2d*     f32v2;
+        afxV3d*     f32v3;
+        afxV4d*     f32v4;
+    } hostedAlloc;
+    // Persistent mapping required at acquisition. Do not allow unmapping.
+    afxBool     mapPermanent;
+    afxSize     mapOffset;
+    afxUnit     mapRange;
+    afxFlags    mapFlags;
+    afxByte*    mapPtr; // used by mapping
+    afxAtom32   pendingRemap;
+};
+
 #ifdef _AVX_BUFFER_C
 #ifdef _AVX_BUFFER_IMPL
 AFX_OBJECT(_avxBuffer)
@@ -33,49 +97,22 @@ AFX_OBJECT(avxBuffer)
 #endif
 {
     afxString       tag;
-    avxBufferFlags  flags;
-    avxBufferUsage  usage;
-    afxUnit         cap; // capacity
-    avxFormat       fmt; // for tensor buffer
     void*           udd;
-
-
-
-    void*           data; // used by host-side allocation
-    avxBuffer       src; // handled used by subacquision of another buffer
-    afxSize         start; // offset used by subacquision of another buffer
+    avxBuffer       base; // handle used by subacquision of another buffer
+    afxSize         from; // offset used by subacquision of another buffer
+    //afxUnit         size; // capacity
+    avxBufferUsage  usage;
+    avxBufferFlags  flags;
+    avxFormat       fmt; // for tensor buffer
 
     afxMask         sharingMask;
 
-    afxByte*        bytemap; // used by mapping
-    afxSize         mappedOffset;
-    afxUnit         mappedRange;
-    afxFlags        mappedFlags;
-    afxAtom32       pendingRemap;
-
-    struct
-    {
-        // required size of this storage block.
-        afxUnit size;
-        // required alignment of this storage block.
-        afxUnit alignment;
-        // required memory conditions for this storage block.
-        afxFlags memType;
-
-        // binding
-        afxUnit mmu; // memory holder
-        afxSize offset; // offset into memory holder bound to this storage block.
-        union
-        {
-            afxSize addr;
-            afxByte*s8;
-            afxUnit32* rgba8;
-            afxReal* r32f;
-            afxV2d* rg32f;
-            afxV3d* rgb32f;
-            afxV4d* rgba32f;
-        } hostedData;
-    } storage[1]; // non-sparse
+    // STORAGE
+    // required size of this storage block.
+    afxUnit         size;
+    // required memory conditions for this storage block.
+    afxFlags        memType;
+    _avxBufStorage  storage[1]; // non-sparse
 };
 #endif//_AVX_BUFFER_C
 
@@ -87,42 +124,28 @@ AFX_OBJECT(avxRaster)
 #endif
 {
     afxString       tag;
-    avxRaster       base; // sub
-    avxRasterFlags  flags;
-    avxRasterUsage  usage;
     void*           udd;
-    avxFormat       fmt;
-    afxUnit         baseLayer; // sub
-    avxRange       extent; // extent of image
+    avxRaster       base; // sub
     afxUnit         baseLod; // sub
     afxUnit         lodCnt; // mip level cnt
+    afxUnit         baseLayer; // sub
+    avxRange        extent; // extent of image
     afxUnit         sampleCnt; // 1, 2, 4, 8, 16, 32, or 64.
     avxSwizzling    swizzling; // sub
+    avxRasterUsage  usage;
+    avxRasterFlags  flags;
+    avxFormat       fmt;
     
-    struct
-    {
-        // required size of this storage block.
-        afxUnit size;
-        // required alignment of this storage block.
-        afxUnit alignment;
-        // required memory conditions for this storage block.
-        afxFlags memType;
+    // STORAGE
+    // required size of this storage block.
+    afxUnit         size;
+    // required alignment of this storage block.
+    afxUnit         alignment;
+    // required memory conditions for this storage block.
+    afxFlags        memType;
+    _avxRasStorage  storage[1]; // non-sparse
 
-        // binding
-        afxUnit mmu; // memory holder
-        afxSize offset; // offset into memory holder bound to this storage block.
-        union
-        {
-            afxSize addr;
-            afxByte*s8;
-            afxUnit32* rgba8;
-            afxReal* r32f;
-            afxV2d* rg32f;
-            afxV3d* rgb32f;
-            afxV4d* rgba32f;
-        }hostedData;
-    } storage[1]; // non-sparse
-
+    // GAMBIARRA
     afxBool _dout; // DOUT buffer
     afxBool _doutBlitSrc; // it will never be scanout directly to display but will be copied to a dma-buf that can be scanout.
 };

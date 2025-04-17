@@ -165,12 +165,12 @@ _AVX afxError _AvxSampCtorCb(avxSampler samp, void** args, afxUnit invokeNo)
         AFX_ASSERT(features->samplerAnisotropy);
         // When anisotropy is enabled, maxAnisotropy must be between 1.0 and maxSamplerAnisotropy, inclusive.
         AFX_ASSERT(limits->maxSamplerAnisotropy >= samp->cfg.anisotropyMaxDegree);
-        samp->cfg.anisotropyMaxDegree = AfxClamp(samp->cfg.anisotropyMaxDegree, 1.0, limits->maxSamplerAnisotropy);
+        samp->cfg.anisotropyMaxDegree = AFX_CLAMP(samp->cfg.anisotropyMaxDegree, 1.0, limits->maxSamplerAnisotropy);
     }
 
     // The absolute value of lodBias must be less than or equal to maxSamplerLodBias.
     AFX_ASSERT(limits->maxSamplerLodBias >= samp->cfg.lodBias);
-    samp->cfg.lodBias = AfxMin(samp->cfg.lodBias, limits->maxSamplerLodBias);
+    samp->cfg.lodBias = AFX_MIN(samp->cfg.lodBias, limits->maxSamplerLodBias);
 
     // maxLod must be greater than or equal to minLod.
     AFX_ASSERT(samp->cfg.maxLod >= samp->cfg.minLod);
@@ -238,7 +238,7 @@ _AVX afxClassConfig const _AVX_SAMP_CLASS_CONFIG =
 {
     .fcc = afxFcc_SAMP,
     .name = "Sampler",
-    .desc = "Rasterization Sampler",
+    .desc = "Fixed Function Texture Sampler",
     .fixedSiz = sizeof(AFX_OBJECT(avxSampler)),
     .ctor = (void*)_AvxSampCtorCb,
     .dtor = (void*)_AvxSampDtorCb

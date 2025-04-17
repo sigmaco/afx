@@ -38,7 +38,7 @@ _AFX afxStdWork* _AfxXquePushWork(afxIoQueue xque, afxUnit id, afxUnit siz, afxC
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
 
-    afxStdWork* work = AfxRequestArenaUnit(&xque->workArena, siz);
+    afxStdWork* work = AfxRequestArenaUnit(&xque->workArena, siz, 1, NIL, 0);
     AFX_ASSERT(work);
     work->hdr.id = id;
     work->hdr.siz = siz;
@@ -75,7 +75,7 @@ _AFX afxError _AfxXqueDtorCb(afxIoQueue xque)
 
     AfxDismantleMutex(&xque->workChnMtx);
     AfxDismantleArena(&xque->workArena);
-    AfxDismantleSlock(&xque->workArenaSlock);
+    AfxDismantleFutex(&xque->workArenaSlock);
     AfxDismantleCondition(&xque->idleCnd);
     AfxDismantleMutex(&xque->idleCndMtx);
 
@@ -98,8 +98,8 @@ _AFX afxError _AfxXqueCtorCb(afxIoQueue xque, void** args, afxUnit invokeNo)
 
     xque->immediate = 0;// !!spec->immedate;
 
-    AfxDeploySlock(&xque->workArenaSlock);
-    AfxDeployArena(&xque->workArena, NIL, AfxHere());
+    AfxDeployFutex(&xque->workArenaSlock);
+    AfxMakeArena(&xque->workArena, NIL, AfxHere());
 
     AfxDeployMutex(&xque->workChnMtx, AFX_MTX_PLAIN);
     AfxDeployChain(&xque->workChn, exu);

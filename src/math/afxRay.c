@@ -26,11 +26,11 @@ _AFXINL afxReal AfxRayIntersectsPlaneAt(afxRay const* ray, afxPlane plane, afxRe
 {
     afxError err = NIL;
     AFX_ASSERT2(ray, T);
-    afxReal dot = AfxV3dDot(ray->normal, plane.normal);
+    afxReal dot = AfxV3dDot(ray->normal, plane.uvwd);
 
     if (dot != 0.0)
     {
-        afxReal diff = -((AfxV3dDot(ray->origin, plane.normal) + plane.dist) / dot);
+        afxReal diff = -((AfxV3dDot(ray->origin, plane.uvwd) + plane.uvwd[AFX_PLANE_DIST]) / dot);
         *T = diff;
         dot = diff;
     }
@@ -42,7 +42,7 @@ _AFXINL afxReal AfxRayIntersectsSphere(afxRay const* ray, afxSphere const* sph)
     afxError err = NIL;
     AFX_ASSERT2(ray, sph);
     afxV3d o;
-    AfxV3dSub(o, sph->centre, ray->origin);
+    AfxV3dSub(o, sph->xyzr, ray->origin);
     afxReal dot = AfxV3dDot(o, ray->normal);
     return dot;
 }
@@ -54,10 +54,10 @@ _AFXINL afxInt AfxRayIntersectsSphereAt(afxRay const* ray, afxSphere const* sph,
     afxInt rslt = 0;
     
     afxV3d o;
-    AfxV3dSub(o, sph->centre, ray->origin);
+    AfxV3dSub(o, sph->xyzr, ray->origin);
     afxReal dot = AfxV3dDot(o, ray->normal);
 
-    afxReal diff = dot * dot - AfxV3dSq(o) + sph->radius * sph->radius;
+    afxReal diff = dot * dot - AfxV3dSq(o) + sph->xyzr[AFX_SPHERE_RADIUS] * sph->xyzr[AFX_SPHERE_RADIUS];
 
     if (diff < 0.0)
     {

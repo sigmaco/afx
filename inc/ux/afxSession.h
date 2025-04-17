@@ -94,9 +94,9 @@ AUX afxError        AfxOpenSession(afxSession ses, afxUri const* host, afxAuthMe
 
 AUX afxError        AfxStepSession(afxSession ses, void const*, void*);
 
-AUX afxBool         AfxGetSessionVideo(afxSession ses, afxDrawSystem* system);
+AUX afxBool         AfxGetSessionVideo(afxDrawSystem* system);
 
-AUX afxBool         AfxGetSessionAudio(afxSession ses, afxMixSystem* system, afxSink* sink);
+AUX afxBool         AfxGetSessionAudio(afxMixSystem* system, afxSink* sink);
 
 AUX afxError        AfxBeginFrame(afxSession ses);
 AUX afxError        AfxWaitFrame(afxSession ses);
@@ -108,7 +108,7 @@ AUX afxTime         AfxPollInput(afxFlags flags, afxTime timeout);
 
 AUX afxError        AfxImmergeWindow(afxWindow wnd, afxBool fullscreen);
 
-AUX afxBool         AfxGetCursorPosition(afxWindow wnd, afxInt position[2]);
+AUX afxBool         AfxGetCursorPlacement(afxRect* rc, afxWindow wnd, afxRect* onFrame, afxRect* onSurface);
 
 AUX afxBool         AfxHasClipboardContent(afxFlags flags);
 AUX afxUnit         AfxGetClipboardContent(afxString* buf);

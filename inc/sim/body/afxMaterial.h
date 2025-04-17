@@ -45,13 +45,11 @@ ASX void            AfxColorizeMaterial(afxMaterial mtl, afxV4d const color);
 ASX void            AfxShineMaterial(afxMaterial mtl, afxReal shininess);
 
 ////////////////////////////////////////////////////////////////////////////////
-// MASSIVE OPERATIONS                                                         //
-////////////////////////////////////////////////////////////////////////////////
 
 ASX afxUnit         AfxFindMaterialIndices(afxSimulation sim, afxUnit cnt, afxString const materials[], afxUnit indices[]);
 
 ASX afxUnit         AfxEnumerateMaterials(afxSimulation sim, afxUnit first, afxUnit cnt, afxMaterial materials[]);
 
-ASX afxError        AfxAcquireMaterial(afxSimulation sim, afxString const* id, avxRaster tex, afxUnit subCnt, afxMaterial *mtl);
+ASX afxError        AfxDeclareMaterials(afxSimulation sim, afxUnit cnt, afxString const ids[], afxMaterial materials[]);
 
 #endif//ASX_MATERIAL_H

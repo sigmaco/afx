@@ -123,7 +123,7 @@ _ASX void AfxDescribeMeshRig(afxModel mdl, afxUnit rigIdx, afxMeshRigInfo* info)
     AFX_ASSERT(info);
 
     // sanitize arguments
-    rigIdx = AfxMin(rigIdx, mdl->rigCnt - 1);
+    rigIdx = AFX_MIN(rigIdx, mdl->rigCnt - 1);
 
     asxMeshRig* rig = mdl->rigs[rigIdx];
     if (!rig) *info = (afxMeshRigInfo) { 0 };
@@ -145,7 +145,7 @@ _ASXINL afxBool AfxIsRiggedMeshTransplanted(afxModel mdl, afxUnit rigIdx)
     AFX_ASSERT_RANGE(mdl->rigCnt, rigIdx, 1);
     
     // sanitize arguments
-    rigIdx = AfxMin(rigIdx, mdl->rigCnt - 1);
+    rigIdx = AFX_MIN(rigIdx, mdl->rigCnt - 1);
 
     asxMeshRig* rig = mdl->rigs[rigIdx];
     return (rig && (rig->flags & afxMeshRigFlag_TRANSPLANTED));
@@ -158,8 +158,8 @@ _ASXINL afxUnit AfxGetRiggedMeshes(afxModel mdl, afxUnit baseRigIdx, afxUnit rig
     AFX_ASSERT_RANGE(mdl->rigCnt, baseRigIdx, rigCnt);
     
     // sanitize arguments
-    baseRigIdx = AfxMin(baseRigIdx, mdl->rigCnt - 1);
-    rigCnt = AfxMin(rigCnt, mdl->rigCnt - baseRigIdx);
+    baseRigIdx = AFX_MIN(baseRigIdx, mdl->rigCnt - 1);
+    rigCnt = AFX_MIN(rigCnt, mdl->rigCnt - baseRigIdx);
 
     afxUnit rslt = 0;
     for (afxUnit i = 0; i < rigCnt; i++)
@@ -207,7 +207,7 @@ _ASX afxError _AsxPopMeshRig(asxMeshRig **pRig)
     if (rig->mtlToTxdMap)
         AfxDeallocate((void**)&rig->mtlToTxdMap, AfxHere());
 
-    AfxPopPoolUnit(_AsxGetMeshRigPool(rig->msh), rig);
+    AfxReclaimPoolUnits(_AsxGetMeshRigPool(rig->msh), 1, &rig);
     AfxDisposeObjects(1, &msh);
     *pRig = NIL;
 
@@ -319,7 +319,8 @@ _ASX afxError AfxRigMeshes(afxModel mdl, afxModel skl, afxUnit baseRigIdx, afxUn
             else
             {
                 afxUnit idx;
-                asxMeshRig* rig = AfxPushPoolUnit(_AsxGetMeshRigPool(msh), &idx);
+                asxMeshRig* rig = NIL;
+                AfxRequestPoolUnits(_AsxGetMeshRigPool(msh), 1, &idx, &rig);
                 if (!rig) AfxThrowError();
                 else
                 {
@@ -347,17 +348,17 @@ _ASX afxError AfxRigMeshes(afxModel mdl, afxModel skl, afxUnit baseRigIdx, afxUn
 
                     afxString s;
                     AfxGetMeshUrn(msh, &s);
-                    AfxLogEcho("+-- rig #%u", rigIdx);
-                    AfxLogEcho("|   +-- msh <%.*s> %p", AfxPushString(&s), msh);
-                    AfxLogEcho("|   +-- biases-from/to-joints");
+                    AfxReportMessage("+-- rig #%u", rigIdx);
+                    AfxReportMessage("|   +-- msh <%.*s> %p", AfxPushString(&s), msh);
+                    AfxReportMessage("|   +-- biases-from/to-joints");
                     for (afxUnit i = 0; i < mshi.biasCnt; i++)
                     {
                         s = *AfxGetMeshBiasTags(msh, i);
 
                         if (transplanted)
-                            AfxLogEcho("|   |   +-- <%.*s> @ <%u#%.*s>(%u#'%.*s')", AfxPushString(&s), rig->biasFromJntMap[i], AfxPushString(&skl->jntId[rig->biasFromJntMap[i]]), rig->biasToJntMap[i], AfxPushString(&mdl->jntId[rig->biasToJntMap[i]]));
+                            AfxReportMessage("|   |   +-- <%.*s> @ <%u#%.*s>(%u#'%.*s')", AfxPushString(&s), rig->biasFromJntMap[i], AfxPushString(&skl->jntId[rig->biasFromJntMap[i]]), rig->biasToJntMap[i], AfxPushString(&mdl->jntId[rig->biasToJntMap[i]]));
                         else
-                            AfxLogEcho("|   |   +-- <%.*s> @ %u#'%.*s'", AfxPushString(&s), rig->biasToJntMap[i], AfxPushString(&mdl->jntId[rig->biasToJntMap[i]]));
+                            AfxReportMessage("|   |   +-- <%.*s> @ %u#'%.*s'", AfxPushString(&s), rig->biasToJntMap[i], AfxPushString(&mdl->jntId[rig->biasToJntMap[i]]));
                     }
                 }
             }
@@ -391,7 +392,7 @@ _ASXINL void AfxComputeRiggedMeshMatrices(afxModel mdl, afxUnit rigIdx, afxPlace
     AFX_ASSERT_RANGE(mdl->rigCnt, rigIdx, 1);
 
     // sanitize arguments
-    rigIdx = AfxMin(rigIdx, mdl->rigCnt - 1);
+    rigIdx = AFX_MIN(rigIdx, mdl->rigCnt - 1);
 
     asxMeshRig* rig = mdl->rigs[rigIdx];
     if (!rig) return;
@@ -406,8 +407,8 @@ _ASXINL void AfxComputeRiggedMeshMatrices(afxModel mdl, afxUnit rigIdx, afxPlace
 
     AFX_ASSERT_RANGE(mshi.biasCnt, baseBiasIdx, biasCnt);
     // sanitize arguments
-    baseBiasIdx = AfxMin(baseBiasIdx, mshi.biasCnt - 1);
-    biasCnt = AfxMin(biasCnt, mshi.biasCnt - baseBiasIdx);
+    baseBiasIdx = AFX_MIN(baseBiasIdx, mshi.biasCnt - 1);
+    biasCnt = AFX_MIN(biasCnt, mshi.biasCnt - baseBiasIdx);
 
     afxM4d* w = _AsxPlceGetWorldArray(plce, 0);
     afxM4d* iw = rig->skl->jntIw;
@@ -428,7 +429,7 @@ _ASXINL void AfxSetMeshRigTxd(afxModel mdl, afxUnit rigIdx, afxMaterial mtl)
     AFX_ASSERT_RANGE(mdl->rigCnt, rigIdx, 1);
 
     // sanitize arguments
-    rigIdx = AfxMin(rigIdx, mdl->rigCnt - 1);
+    rigIdx = AFX_MIN(rigIdx, mdl->rigCnt - 1);
 
     asxMeshRig* rig = mdl->rigs[rigIdx];
     if (!rig) return;
@@ -465,7 +466,7 @@ _ASXINL afxBool AfxFindMeshRigMaterial(afxModel mdl, afxUnit rigIdx, afxString c
     AFX_ASSERT_RANGE(mdl->rigCnt, rigIdx, 1);
 
     // sanitize arguments
-    rigIdx = AfxMin(rigIdx, mdl->rigCnt - 1);
+    rigIdx = AFX_MIN(rigIdx, mdl->rigCnt - 1);
 
     asxMeshRig* rig = mdl->rigs[rigIdx];
     if (!rig) return FALSE;
@@ -502,7 +503,7 @@ _ASX afxUnit AsxGetJointParents(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, v
     AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
     AFX_ASSERT(indices);
 
-    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+    cnt = AFX_MIN(cnt, mdl->jntCnt - baseJntIdx);
 
     switch (stride)
     {
@@ -536,7 +537,7 @@ _ASX afxError AsxReparentJoints(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt, v
     AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
     //AFX_ASSERT(indices);
 
-    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+    cnt = AFX_MIN(cnt, mdl->jntCnt - baseJntIdx);
 
     if (!indices) for (afxUnit i = 0; i < cnt; i++) mdl->jntPi[baseJntIdx + i] = AFX_INVALID_INDEX;
     else switch (stride)
@@ -589,7 +590,7 @@ _ASX afxUnit AsxGetJointInversors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt,
     AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
     AFX_ASSERT(matrices);
 
-    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+    cnt = AFX_MIN(cnt, mdl->jntCnt - baseJntIdx);
 
     switch (stride)
     {
@@ -641,7 +642,7 @@ _ASX afxError AsxResetJointInversors(afxModel mdl, afxUnit baseJntIdx, afxUnit c
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
     AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
 
-    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+    cnt = AFX_MIN(cnt, mdl->jntCnt - baseJntIdx);
 
     if (!matrices) for (afxUnit i = 0; i < cnt; i++) AfxM4dReset(mdl->jntIw[baseJntIdx + i]);
     else switch (stride)
@@ -695,7 +696,7 @@ _ASX afxUnit AsxGetJointTransforms(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt
     AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
     AFX_ASSERT(transforms);
 
-    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+    cnt = AFX_MIN(cnt, mdl->jntCnt - baseJntIdx);
 
     for (afxUnit i = 0; i < cnt; i++)
         AfxCopyTransform(&transforms[i], &mdl->jntLt[baseJntIdx + i]);
@@ -709,7 +710,7 @@ _ASX afxError AsxResetJointTransforms(afxModel mdl, afxUnit baseJntIdx, afxUnit 
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
     AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
 
-    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+    cnt = AFX_MIN(cnt, mdl->jntCnt - baseJntIdx);
 
     if (!transforms) for (afxUnit i = 0; i < cnt; i++) AfxResetTransform(&mdl->jntLt[baseJntIdx + i]);
     else for (afxUnit i = 0; i < cnt; i++)
@@ -725,7 +726,7 @@ _ASX afxUnit AsxGetJointLodErrors(afxModel mdl, afxUnit baseJntIdx, afxUnit cnt,
     AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
     AFX_ASSERT(lodErrors);
 
-    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+    cnt = AFX_MIN(cnt, mdl->jntCnt - baseJntIdx);
 
     for (afxUnit i = 0; i < cnt; i++)
         lodErrors[i] = mdl->jntLe[baseJntIdx + i];
@@ -739,7 +740,7 @@ _ASX afxError AsxResetJointLodErrors(afxModel mdl, afxUnit baseJntIdx, afxUnit c
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
     AFX_ASSERT_RANGE(mdl->jntCnt, baseJntIdx, cnt);
 
-    cnt = AfxMin(cnt, mdl->jntCnt - baseJntIdx);
+    cnt = AFX_MIN(cnt, mdl->jntCnt - baseJntIdx);
 
     if (!lodErrors) for (afxUnit i = 0; i < cnt; i++) mdl->jntLe[baseJntIdx + i] = -1.0;
     else for (afxUnit i = 0; i < cnt; i++)
@@ -835,7 +836,8 @@ _ASX afxUnit AsxFindJoints(afxModel mdl, afxUnit cnt, afxString const ids[], afx
         {
             afxString jointTag = mdl->jntId[i];
 
-            if ((!jointTag.len && !ids[j].len) || (jointTag.len && (0 == AfxCompareStrings(&ids[j], 0, TRUE, 1, &jointTag))))
+            if ((!jointTag.len && !ids[j].len) || 
+                (jointTag.len && (AfxCompareStrings(&ids[j], 0, TRUE, 1, &jointTag, NIL))))
             {
                 jointIdx = i;
                 ++rslt;
@@ -958,7 +960,7 @@ _ASX afxError _AsxMdlCtorCb(afxModel mdl, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     afxModelBlueprint const* mdlb = AFX_CAST(afxModelBlueprint const*, args[1]) + invokeNo;
 
-    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &mdlb->urn.str, &mdl->urn))
+    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &mdlb->urn.s, &mdl->urn))
     {
         AfxThrowError();
         return err;
@@ -971,15 +973,15 @@ _ASX afxError _AsxMdlCtorCb(afxModel mdl, void** args, afxUnit invokeNo)
     else
         AfxCopyTransform(&mdl->displacement, displacement);
 
-    AfxResetBoxes(1, &mdl->aabb);
+    AfxResetBoxes(1, &mdl->aabb, 0);
 
-    afxUnit rigCnt = AfxMax(1, mdlb->rigCnt);
+    afxUnit rigCnt = AFX_MAX(1, mdlb->rigCnt);
     afxUnit baseMshIdx = 0;
 
     mdl->rigCnt = 0;
     mdl->rigs = NIL;
 
-    afxUnit jntCnt = AfxMax(1, mdlb->jointCnt);
+    afxUnit jntCnt = AFX_MAX(1, mdlb->jointCnt);
     afxUnit lodType = mdlb->lodType;
     mdl->jntCnt = jntCnt;
     mdl->lodType = lodType;
@@ -1069,13 +1071,13 @@ _ASX afxError _AsxMdlCtorCb(afxModel mdl, void** args, afxUnit invokeNo)
         afxString s;
         AfxGetModelUrn(mdl, &s);
         afxUnit jntCnt = AsxCountJoints(mdl, 0);
-        AfxLogEcho("Skeletal Animable model <%.*s> assembled at %p. %u mesh rigs for %u joints.", AfxPushString(&s), mdl, mdl->rigCnt, jntCnt);
-        AfxLogEcho("Listing %u joints..:", jntCnt);
+        AfxReportMessage("Skeletal Animable model <%.*s> assembled at %p. %u mesh rigs for %u joints.", AfxPushString(&s), mdl, mdl->rigCnt, jntCnt);
+        AfxReportMessage("Listing %u joints..:", jntCnt);
 
         for (afxUnit i = 0; i < jntCnt; i++)
         {
             s = mdl->jntId[i];
-            AfxLogEcho("    %3u <%.*s> %3u", i, AfxPushString(&s), mdl->jntPi[i]);
+            AfxReportMessage("    %3u <%.*s> %3u", i, AfxPushString(&s), mdl->jntPi[i]);
         }
     }
     return err;

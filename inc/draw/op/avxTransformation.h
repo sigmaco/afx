@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // GEOMETRIC PRIMITIVE TRANSFORMATION PIPELINE OPERATIONS                   //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AVX_TRANSFORMATION_H
@@ -26,24 +30,12 @@
 #include "qwadro/inc/draw/op/avxSampler.h"
 #include "qwadro/inc/draw/op/avxQueryPool.h"
 
-  //////////////////////////////////////////////////////////////////////////////
- //// COMMANDS                                                             ////
-//////////////////////////////////////////////////////////////////////////////
+// Specify the vertex input layout for consequent vertex fetching for a draw context.
 
-// Set the viewport dynamically for a draw context.
-// This command sets the viewport transformation parameters state for subsequent drawing commands when the graphics pipeline is created without viewport set.
-
-// The viewport parameters taken from element #i of @vp replace the current state for the viewport index @baseIdx + #i, for #i in[0, @cnt).
-
-AVX afxCmdId AvxCmdAdjustViewports
+AVX afxCmdId            AvxCmdDeclareVertex
 (
     afxDrawContext      dctx,
-    // The index of the first viewport whose parameters are updated by the command.
-    afxUnit             baseIdx,
-     // The number of viewports whose parameters are updated by the command.
-    afxUnit             cnt,
-     // An array of avxViewport structures specifying viewport parameters.
-    avxViewport const   viewports[]
+    avxVertexInput      vin
 );
 
 /*
@@ -59,7 +51,7 @@ AVX afxCmdId AvxCmdAdjustViewports
     This command also dynamically sets the byte strides between consecutive elements within buffer @buf[#i] to the corresponding @stride[#i] value when drawing using shader objects, or when the graphics pipeline is created without vertex input binding stride set.
 */
 
-AVX afxCmdId AvxCmdBindVertexBuffers
+AVX afxCmdId            AvxCmdBindVertexBuffers
 (
     afxDrawContext      dctx,
     // The index of the first vertex input binding whose state is updated by the command.
@@ -72,7 +64,7 @@ AVX afxCmdId AvxCmdBindVertexBuffers
 
 // Bind an index buffer to a draw context.
 
-AVX afxCmdId AvxCmdBindIndexBuffer
+AVX afxCmdId            AvxCmdBindIndexBuffer
 (
     afxDrawContext      dctx,
     // The buffer being bound.
@@ -85,50 +77,50 @@ AVX afxCmdId AvxCmdBindIndexBuffer
     afxUnit32           idxSiz
 );
 
+// Set the viewport dynamically for a draw context.
+// This command sets the viewport transformation parameters state for subsequent drawing commands when the graphics pipeline is created without viewport set.
+
+// The viewport parameters taken from element #i of @vp replace the current state for the viewport index @baseIdx + #i, for #i in[0, @cnt).
+
+AVX afxCmdId            AvxCmdAdjustViewports
+(
+    afxDrawContext      dctx,
+    // The index of the first viewport whose parameters are updated by the command.
+    afxUnit             baseIdx,
+     // The number of viewports whose parameters are updated by the command.
+    afxUnit             cnt,
+     // An array of avxViewport structures specifying viewport parameters.
+    avxViewport const   viewports[]
+);
+
 /*
     Set primitive topology state dynamically for a draw context.
     This command sets the primitive topology for subsequent drawing commands when drawing using shader objects, or when the graphics pipeline is created without primitive topology set.
 */
 
-AVX afxCmdId AvxCmdSetPrimitiveTopology
+AVX afxCmdId            AvxCmdSetPrimitiveTopology
 (
     afxDrawContext      dctx,
     // The primitive topology to use for drawing.
     avxTopology         topology
 );
 
-// Set front face orientation dynamically for a draw context.
-
-AVX afxCmdId AvxCmdSwitchFrontFace
-(
-    afxDrawContext      dctx,
-    // Specifying if the front-facing triangle orientation to be used for culling is CW otherwise it is CCW.
-    afxBool             cw
-);
-
 // Set cull mode dynamically for a draw context.
 
-AVX afxCmdId AvxCmdChangeCullMode
+AVX afxCmdId            AvxCmdChangeCullMode
 (
     afxDrawContext      dctx,
     // specifies the cull mode property to use for drawing.
     avxCullMode         mode
 );
 
-// Specify polygon mode dynamically for a draw context.
+// Set front face orientation dynamically for a draw context.
 
-AVX afxCmdId AvxCmdChangeFillModeEXT
+AVX afxCmdId            AvxCmdSwitchFrontFace
 (
     afxDrawContext      dctx,
-    avxFillMode         mode
-);
-
-// Specify the vertex input layout for consequent vertex fetching for a draw context.
-
-AVX afxCmdId AvxCmdDeclareVertex
-(
-    afxDrawContext dctx,
-    avxVertexInput vin
+    // Specifying if the front-facing triangle orientation to be used for culling is CW otherwise it is CCW.
+    afxBool             cw
 );
 
 #endif//AVX_TRANSFORMATION_H

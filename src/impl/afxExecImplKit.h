@@ -38,17 +38,19 @@ AFX_OBJECT(afxDevice)
     afxAcceleration     acceleration;
     afxBool             serving;
 
-    afxUnit32            vendorId;
-    afxUnit32            vendorDevId;
-    afxUnit32            driverVer;
-    afxUnit32            apiVer;
+    afxUnit32           ihvId;
+    afxUnit32           ihvDevId;
+    afxUnit32           isvId;
+    afxUnit32           isvDrvId;
+    afxUnit32           driverVer;
+    afxUnit32           apiVer;
 
-    afxLink          icd;
+    afxLink             icd;
     afxString128        devName;
 
     afxChain            classes;
 
-    afxUnit              manifestPagNo;
+    afxUnit             manifestPagNo;
 
     afxError            (*procCb)(afxDevice,afxThread,void*);
     afxResult           (*ioctlCb)(afxDevice,afxUnit,va_list);
@@ -191,7 +193,7 @@ AFX_OBJECT(afxThread)
     afxCondition        statusCnd;
     afxMutex            statusCndMtx;
 
-    afxSlock            evSlock;
+    afxFutex            evSlock;
     afxArena            evArena;
     afxQueue            events;
     afxInterlockedQueue events2;
@@ -201,6 +203,24 @@ AFX_OBJECT(afxThread)
     afxChar const*      _func_;
 };
 #endif//_AFX_THREAD_C
+
+#ifdef _AFX_THREAD_POOL_C
+AFX_OBJECT(afxThreadPool)
+{
+    afxMutex lock;
+    afxCondition notify;
+    afxThread* threads;
+    afxThreadedTask* workQue;
+    afxInt thrCnt;
+    afxInt workQueCap;
+    afxInt head;
+    afxInt tail;
+    afxInt cnt;
+    afxBool shutdown;
+    afxInt started;
+};
+
+#endif//_AFX_THREAD_POOL_C
 
 #ifdef _AFX_SYSTEM_C
 AFX_OBJECT(afxSystem)
@@ -216,6 +236,7 @@ AFX_OBJECT(afxSystem)
     afxClass                strbCls;
     afxClass                mdleCls;
     afxClass                thrCls;
+    afxClass                thrpCls;
     afxClass                svcCls;
     afxClass                devCls;
     afxClass                cdcCls;
@@ -307,6 +328,7 @@ AFX_OBJECT(afxSystem)
 AFX afxClassConfig const _AFX_DEV_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_STRB_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_THR_CLASS_CONFIG;
+AFX afxClassConfig const _AFX_THRP_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_MMU_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_SVC_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_CDC_CLASS_CONFIG;
@@ -315,19 +337,20 @@ AFX afxClassConfig const _AFX_FSYS_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_MDLE_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_EXU_CLASS_CONFIG;
 
-AFX afxClass*           AfxGetSemaphoreClass(afxDevLink ctx);
+AFX afxClass*           _AfxGetSemaphoreClass(afxDevLink ctx);
 
 AFX afxClassConfig const _AfxSemStdImplementation;
 
-AFX afxClass const*     AfxGetStreamClass(void);
-AFX afxClass*           AfxGetStorageClass(void);
-AFX afxClass*           AfxGetMmuClass(void);
-AFX afxClass*           AfxGetModuleClass(void);
-AFX afxClass*           AfxGetServiceClass(void);
-AFX afxClass*           AfxGetStringBaseClass(void);
-AFX afxClass*           AfxGetThreadClass(void);
-AFX afxClass const*     AfxGetDeviceClass(void);
-AFX afxClass const*     AfxGetIoBridgeClass(void);
+AFX afxClass const*     _AfxGetStreamClass(void);
+AFX afxClass*           _AfxGetStorageClass(void);
+AFX afxClass*           _AfxGetMmuClass(void);
+AFX afxClass*           _AfxGetModuleClass(void);
+AFX afxClass*           _AfxGetServiceClass(void);
+AFX afxClass*           _AfxGetStringBaseClass(void);
+AFX afxClass*           _AfxGetThreadClass(void);
+AFX afxClass*           _AfxGetThreadPoolClass(void);
+AFX afxClass const*     _AfxGetDeviceClass(void);
+AFX afxClass const*     _AfxGetIoBridgeClass(void);
 
 AFX afxError _AfxAttachCoreModule(afxModule* e2coree);
 AFX afxError _AfxAttachTargaModule(afxModule* e2targa);

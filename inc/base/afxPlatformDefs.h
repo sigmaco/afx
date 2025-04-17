@@ -226,29 +226,111 @@ typedef afxChar32   afxC32;
 #define AFX_BYTE_SIZE 8
 #define AFX_CHAR_SIZE 8
 
-#define AFX_I8_MIN  ((afxInt8)INT8_MIN)
-#define AFX_I8_MAX  ((afxInt8)INT8_MAX)
-#define AFX_U8_MAX  ((afxUnit8)UINT8_MAX)
+#ifdef INT8_MIN
+#   define AFX_I8_MIN  ((afxInt8)INT8_MIN)
+#else
+#   define AFX_I8_MIN  ((afxInt8)(-127i8 - 1))
+#endif
 
-#define AFX_I16_MIN ((afxInt16)INT16_MIN)
-#define AFX_I16_MAX ((afxInt16)INT16_MAX)
-#define AFX_U16_MAX ((afxUnit16)UINT16_MAX)
+#ifdef INT8_MAX
+#   define AFX_I8_MAX  ((afxInt8)INT8_MAX)
+#else
+#   define AFX_I8_MAX  ((afxInt8)127i8)
+#endif
 
-#define AFX_I32_MIN ((afxInt32)INT32_MIN)
-#define AFX_I32_MAX ((afxInt32)INT32_MAX)
-#define AFX_U32_MAX ((afxUnit32)UINT32_MAX)
+#ifdef UINT8_MAX
+#   define AFX_U8_MAX  ((afxUnit8)UINT8_MAX)
+#else
+#   define AFX_U8_MAX  ((afxUnit8)0xffui8)
+#endif
 
-#define AFX_I64_MIN ((afxInt64)INT64_MIN)
-#define AFX_I64_MAX ((afxInt64)INT64_MAX)
-#define AFX_N64_MAX ((afxUnit64)UINT64_MAX)
+#ifdef INT16_MIN
+#   define AFX_I16_MIN ((afxInt16)INT16_MIN)
+#else
+#   define AFX_I16_MIN ((afxInt16)(-32767i16 - 1))
+#endif
 
-#define AFX_R32_MIN ((afxReal32)FLT_MIN)
-#define AFX_R32_MAX ((afxReal32)FLT_MAX)
-#define AFX_R64_MIN ((afxReal64)DBL_MIN)
-#define AFX_R64_MAX ((afxReal64)DBL_MAX)
+#ifdef INT16_MAX
+#   define AFX_I16_MAX ((afxInt16)INT16_MAX)
+#else
+#   define AFX_I16_MAX ((afxInt16)32767i16)
+#endif
+
+#ifdef UINT16_MAX
+#   define AFX_U16_MAX ((afxUnit16)UINT16_MAX)
+#else
+#   define AFX_U16_MAX ((afxUnit16)0xffffui16)
+#endif
+
+#ifdef INT32_MIN
+#   define AFX_I32_MIN ((afxInt32)INT32_MIN)
+#else
+#   define AFX_I32_MIN ((afxInt32)(-2147483647i32 - 1))
+#endif
+
+#ifdef INT32_MAX
+#   define AFX_I32_MAX ((afxInt32)INT32_MAX)
+#else
+#   define AFX_I32_MAX ((afxInt32)2147483647i32)
+#endif
+
+#ifdef UINT32_MAX
+#   define AFX_U32_MAX ((afxUnit32)UINT32_MAX)
+#else
+#   define AFX_U32_MAX ((afxUnit32)0xffffffffui32)
+#endif
+
+#ifdef INT64_MIN
+#   define AFX_I64_MIN ((afxInt64)INT64_MIN)
+#else
+#   define AFX_I64_MIN ((afxInt64)(-9223372036854775807i64 - 1))
+#endif
+
+#ifdef INT64_MAX
+#   define AFX_I64_MAX ((afxInt64)INT64_MAX)
+#else
+#   define AFX_I64_MAX ((afxInt64)9223372036854775807i64)
+#endif
+
+#ifdef UINT64_MAX
+#   define AFX_N64_MAX ((afxUnit64)UINT64_MAX)
+#else
+#   define AFX_N64_MAX ((afxUnit64)0xffffffffffffffffui64)
+#endif
 
 
-#define AFX_ATOMIC_MIN SIG_ATOMIC_MIN
-#define AFX_ATOMIC_MAX SIG_ATOMIC_MAX
+#ifdef FLT_MIN
+#   define AFX_R32_MIN ((afxReal32)FLT_MIN)
+#else
+#   define AFX_R32_MIN ((afxReal32)1.175494351e-38F)
+#endif
+#ifdef FLT_MAX
+#   define AFX_R32_MAX ((afxReal32)FLT_MAX)
+#else
+#   define AFX_R32_MAX ((afxReal32)3.402823466e+38F)
+#endif
+
+#ifdef DBL_MIN
+#   define AFX_R64_MIN ((afxReal64)DBL_MIN)
+#else
+#   define AFX_R64_MIN ((afxReal64)2.2250738585072014e-308)
+#endif
+#ifdef DBL_MAX
+#   define AFX_R64_MAX ((afxReal64)DBL_MAX)
+#else
+#   define AFX_R64_MAX ((afxReal64)1.7976931348623158e+308)
+#endif
+
+
+#ifdef SIG_ATOMIC_MIN
+#   define AFX_ATOMIC_MIN SIG_ATOMIC_MIN
+#else
+#   define AFX_ATOMIC_MIN AFX_I32_MIN
+#endif
+#ifdef SIG_ATOMIC_MAX
+#   define AFX_ATOMIC_MAX SIG_ATOMIC_MAX
+#else
+#   define AFX_ATOMIC_MAX AFX_I32_MAX
+#endif
 
 #endif//AFX_PLATFORM_DEFS_H

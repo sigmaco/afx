@@ -99,7 +99,7 @@ _ASX afxError AfxWaitForEmptySimQueue(afxSimBridge sexu, afxUnit queIdx, afxTime
         AfxLockMutex(&sque->idleCndMtx);
 
         afxTimeSpec ts = { 0 };
-        ts.nsec = AfxMax(1, timeout) * 100000; // 100000 = 0.0001 sec
+        ts.nsecs = AFX_MAX(1, timeout) * 100000; // 100000 = 0.0001 sec
 
         while (sque->workChn.cnt)
         {
@@ -211,7 +211,7 @@ _ASX afxError _AsxMexuCtorCb(afxSimBridge sexu, void** args, afxUnit invokeNo)
 
         afxThreadConfig thrCfg = { 0 };
         //thrCfg.procCb = DrawThreadProc;
-        thrCfg.purpose = afxThreadPurpose_SIM;
+        thrCfg.usage = afxThreadUsage_SIM;
         thrCfg.udd[0] = sexu;
 
         if (AfxAcquireThreads(AfxHere(), &thrCfg, 1, &sexu->worker))

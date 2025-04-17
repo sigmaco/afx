@@ -26,12 +26,12 @@
 #define AMX_MIX_SYSTEM_H
 
 #include "qwadro/inc/mix/afxMixDevice.h"
-#include "qwadro/inc/mix/io/afxAudio.h"
-#include "qwadro/inc/mix/io/afxSound.h"
-#include "qwadro/inc/mix/io/afxVideo.h"
+#include "qwadro/inc/mix/io/amxAudio.h"
+#include "qwadro/inc/mix/io/amxSound.h"
+#include "qwadro/inc/mix/io/amxVideo.h"
 #include "qwadro/inc/mix/op/afxSink.h"
 #include "qwadro/inc/mix/op/afxMixContext.h"
-#include "qwadro/inc/mix/io/afxAudient.h"
+#include "qwadro/inc/mix/io/amxSoundscape.h"
 #include "qwadro/inc/mix/io/amxBuffer.h"
 
 #define AMX_MAX_BRIDGES_PER_SYSTEM (32)
@@ -68,7 +68,7 @@ AMX afxModule AfxGetMixSystemIcd
 );
 
 /*
-    The AfxGetMixBridges() function retrieves mixing bridges for a established mixing system.
+    The AmxGetMixBridges() function retrieves mixing bridges for a established mixing system.
     Mixing bridges are components that link and provide communication between an established system and its working devices.
     This function allows applications to query and retrieve information about the established bridges,
     which can be useful when dealing with systems that involve multiple hardware/software interfaces.
@@ -76,7 +76,7 @@ AMX afxModule AfxGetMixSystemIcd
     Returns the number of arranged bridges.
 */
 
-AMX afxUnit AfxGetMixBridges
+AMX afxUnit AmxGetMixBridges
 (
     // The established mixing system.
     afxMixSystem msys, 
@@ -141,7 +141,7 @@ AMX afxError AfxWaitForMixSystem
 );
 
 /*
-    The AfxWaitForMixBridge() function waits for a specific bridge in a mixing system to become ready or finish its operation.
+    The AmxWaitForMixBridge() function waits for a specific bridge in a mixing system to become ready or finish its operation.
     It is useful for synchronizing tasks in synthesis pipelines or handling communication between multiple devices.
     By providing a timeout, it ensures that the function does not block indefinitely and allows you to proceed with other
     operations if the bridge does not become ready in time. This function is useful in contexts where bridges or execution
@@ -150,7 +150,7 @@ AMX afxError AfxWaitForMixSystem
     If the bridge does not reach the ready state within the timeout, the function might return an error.
 */
 
-AMX afxError AfxWaitForMixBridge
+AMX afxError AmxWaitForMixBridge
 (
     // The mixing system to which the specific bridge belongs.
     afxMixSystem msys, 
@@ -193,9 +193,7 @@ AMX afxError AfxWaitForMixQueue
     afxTime timeout
 );
 
-AMX afxError        AfxRollMixers(afxMixSystem msys, afxReal clock, afxReal dur, afxUnit iterCnt, afxUnit cnt, afxMixContext mixers[]);
-
-AMX afxError        AfxSinkAudioSignal(afxMixSystem msys, void* ctrl, afxSink sink, afxAudio aud, afxWaveInterval const* seg);
+AMX afxError        AfxSinkAudioSignal(afxMixSystem msys, void* ctrl, afxSink sink, amxAudio aud, amxAudioPeriod const* seg);
 
 ////////////////////////////////////////////////////////////////////////////////
 

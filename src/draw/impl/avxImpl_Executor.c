@@ -28,14 +28,14 @@
 #define _AVX_BUFFER_C
 #include "avxImplementation.h"
 
-_AVX afxError _AvxDpuWork_CallbackCb(avxDpu* dpu, avxWork* work)
+_AVX afxError _AvxDpuWork_CallbackCb(avxDpu* dpu, _avxIoReqPacket* work)
 {
     afxError err = AFX_ERR_NONE;
     work->Callback.f(dpu, work->Callback.udd);
     return err;
 }
 
-_AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, avxWork* work)
+_AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, _avxIoReqPacket* work)
 {
     afxError err = AFX_ERR_NONE;
     afxUnit cnt = work->Execute.cmdbCnt;
@@ -44,13 +44,13 @@ _AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, avxWork* work)
     {
         afxDrawContext dctx = work->Execute.cmdbs[i];
         AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-        AFX_ASSERT(dctx->state == avxCmdbState_PENDING);
+        AFX_ASSERT(dctx->state == avxDrawContextState_PENDING);
         _AvxDpuRollContext(dpu, dctx);
     }
     return err;
 }
 
-_AVX avxWorkList const _AVX_DPU_WORK_VMT =
+_AVX _avxIoReqLut const _AVX_DPU_IORP_VMT =
 {
     .Callback = _AvxDpuWork_CallbackCb,
     .Execute = _AvxDpuWork_ExecuteCb,
@@ -62,7 +62,7 @@ _AVX afxBool _AvxDpu_ProcCb(avxDpu* dpu)
     AFX_ASSERT(dpu);
 
     afxDrawBridge dexu = dpu->dexu;
-    avxWorkList const* workVmt = dexu->workVmt;
+    _avxIoReqLut const* iorpVmt = dexu->iorpVmt;
 
     afxClass const* dqueCls = _AvxGetDrawQueueClass(dexu);
     afxUnit totalQueCnt = dqueCls->instCnt;
@@ -80,22 +80,23 @@ _AVX afxBool _AvxDpu_ProcCb(avxDpu* dpu)
         if (dque->portId != dexu->portId)
             continue;
 
-        if (AfxTryLockMutex(&dque->workChnMtx))
+        if (AfxTryLockMutex(&dque->iorpChnMtx))
         {
-            avxWork* work;
-            AFX_ITERATE_CHAIN_B2F(&dque->workChn, avxWork, hdr.chain, work)
+            _avxIoReqPacket* iorp;
+            AFX_ITERATE_CHAIN_B2F(_avxIoReqPacket, iorp, hdr.chain, &dque->iorpChn)
             {
-                AFX_ASSERT(dque->workChn.cnt);
-                AfxGetTime(&work->hdr.pullTime);
+                AFX_ASSERT(dque->iorpChn.cnt);
+                AfxGetTime(&iorp->hdr.pullTime);
 
-                AFX_ASSERT(workVmt->f[work->hdr.id]);
-                workVmt->f[work->hdr.id](dpu, work);
+                AFX_ASSERT(iorpVmt->f[iorp->hdr.id]);
+                iorpVmt->f[iorp->hdr.id](dpu, iorp);
 
-                AfxGetTime(&work->hdr.complTime);
-                _AvxDquePopWork(dque, work);
+                AfxGetTime(&iorp->hdr.complTime);
+                _AvxDquePopIoReqPacket(dque, iorp);
             }
-            AfxUnlockMutex(&dque->workChnMtx);
+            AfxUnlockMutex(&dque->iorpChnMtx);
             AfxSignalCondition(&dque->idleCnd);
+            AfxYield();
         }
     }
     return TRUE;
@@ -110,8 +111,8 @@ _AVX afxInt _AVX_DPU_THREAD_PROC(afxDrawBridge dexu)
     AfxGetThread(&thr);
     AFX_ASSERT(thr == dexu->worker);
 
-    afxDrawDevice ddev = AvxGetDrawBridgeDevice(dexu);
-    afxDrawSystem dsys = AfxGetBridgedDrawSystem(dexu);
+    afxDrawDevice ddev = AvxGetBridgedDrawDevice(dexu, NIL);
+    afxDrawSystem dsys = AvxGetBridgedDrawSystem(dexu);
     afxUnit portId = dexu->portId;
 
     avxDpu* dpu;

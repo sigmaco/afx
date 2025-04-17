@@ -56,7 +56,7 @@ _ASX afxBool AfxFindMotion(afxAnimation ani, afxString const* id, afxUnit *motId
         if (!AfxGetMotionId(mot, &s))
             continue;
         
-        if (0 == AfxCompareStrings(&s, 0, TRUE, 1, id))
+        if (AfxCompareStrings(&s, 0, TRUE, 1, id, NIL))
         {
             *motIdx = i;
             found = TRUE;
@@ -72,8 +72,8 @@ _ASX afxError AfxGetMotions(afxAnimation ani, afxUnit first, afxUnit cnt, afxMot
     AFX_ASSERT_OBJECTS(afxFcc_ANI, 1, &ani);
     AFX_ASSERT_RANGE(ani->motSlotCnt, first, cnt);
 
-    first = AfxMin(first, ani->motSlotCnt);
-    cnt = AfxMin(cnt, ani->motSlotCnt - first);
+    first = AFX_MIN(first, ani->motSlotCnt);
+    cnt = AFX_MIN(cnt, ani->motSlotCnt - first);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -94,8 +94,8 @@ _ASX afxError AfxRelinkMotions(afxAnimation ani, afxUnit baseSlot, afxUnit slotC
     AFX_ASSERT_OBJECTS(afxFcc_ANI, 1, &ani);
     AFX_ASSERT_RANGE(ani->motSlotCnt, baseSlot, slotCnt);
 
-    baseSlot = AfxMin(baseSlot, ani->motSlotCnt);
-    slotCnt = AfxMin(slotCnt, ani->motSlotCnt - baseSlot);
+    baseSlot = AFX_MIN(baseSlot, ani->motSlotCnt);
+    slotCnt = AFX_MIN(slotCnt, ani->motSlotCnt - baseSlot);
 
     afxSimulation sim = AfxGetProvider(ani);
 
@@ -353,7 +353,7 @@ _ASX afxError _AsxAniCtorCb(afxAnimation ani, void** args, afxUnit invokeNo)
     afxAnimationBlueprint const* anib = args[1];
     anib += invokeNo;
 
-    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &anib->id.str, &ani->urn))
+    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &anib->id.s, &ani->urn))
         AfxThrowError();
 
     ani->dur = anib->dur;

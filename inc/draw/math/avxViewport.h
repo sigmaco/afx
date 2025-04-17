@@ -21,6 +21,7 @@
 
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
+#include "qwadro/inc/draw/math/afxRect.h"
 
 AFX_DEFINE_STRUCT(avxOrigin2)
 // Structure specifying the origin of an area.
@@ -50,21 +51,7 @@ AFX_DEFINE_STRUCT(avxRange)
     afxUnit w, h, d;
 };
 
-AFX_DEFINE_STRUCT(afxRect)
-// Rectangles are used to describe a specified rectangular region within an bidimensional area.
-{
-    // the rectangle origin.
-    //avxOrigin2 origin;
-    // the X and Y origins, respectively.
-    afxInt x, y;
-    
-    // the rectangle extent.
-    //avxRange2 extent;
-    // The width and height of the represented area, respectively.
-    afxUnit w, h;
-};
-
-AFX_DEFINE_STRUCT(avxViewport)
+AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, avxViewport)
 /// Structure specifying a viewport
 {
     afxV2d origin; // [x, y] are the viewport's bottom left corner (x,y).
@@ -94,10 +81,6 @@ AFX_DEFINE_STRUCT(avxViewport)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxRect const AVX_RECT_ZERO;
-AVX afxRect const AVX_RECT_MIN;
-AVX afxRect const AVX_RECT_MAX;
-
 AVX avxViewport const AVX_VIEWPORT_MIN;
 AVX avxViewport const AVX_VIEWPORT_MAX;
 
@@ -119,31 +102,13 @@ AVX avxRange const AVX_RANGE_MAX;
     .y = (afxInt)(y_), \
     .z = (afxInt)(z_) }
 
-#define AVX_RECT(x_, y_, w_, h_) (afxRect){ \
-    .x = (afxInt)(x_), \
-    .y = (afxInt)(y_), \
-    .w = (afxUnit)(w_), \
-    .h = (afxUnit)(h_) }
-
 #define AVX_VIEWPORT(x_, y_, w_, h_, minDepth_, maxDepth_) (avxViewport){ \
     .origin = { (afxReal)(x_), (afxReal)(y_) }, \
     .extent = { (afxReal)(w_), (afxReal)(h_) }, \
     .minDepth = (afxReal)(minDepth_), \
     .maxDepth = (afxReal)(maxDepth_) }
 
-AVXINL void         AfxZeroRect(afxRect* rc);
 
-AVXINL void         AfxCopyRect(afxRect* rc, afxRect const* src);
-
-AVXINL void         AfxMakeRect(afxRect* rc, afxInt x, afxInt y, afxUnit w, afxUnit h);
-
-AVXINL afxBool      AvxDoesRectOverlaps(afxRect const* a, afxRect const* b);
-
-// Compare if rectangle \a a contains rectangle \a b in coordinate, with specified tolerance allowed.
-AVXINL afxBool AvxContainsRectBiased(afxRect const* a, afxRect const* b, afxInt tolX, afxInt tolY);
-
-// Compare if rectangle \a a contains rectangle \a b in coordinate.
-AVXINL afxBool AvxContainsRect(afxRect const* a, afxRect const* b);
 
 AVXINL avxRange AvxMinRange(avxRange const a, avxRange const b);
 AVXINL avxRange AvxMaxRange(avxRange const a, avxRange const b);

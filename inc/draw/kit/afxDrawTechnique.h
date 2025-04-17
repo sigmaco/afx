@@ -68,7 +68,7 @@ AVX avxPipeline         AfxGetDrawPipeline(afxDrawTechnique dtec, afxUnit passId
 
 AVX afxError            AfxUpdateRasterizationPass(afxDrawTechnique dtec, afxUnit passIdx, avxPipelineBlueprint const* cfg);
 
-AVX afxCmdId            AvxCmdApplyDrawTechnique(afxDrawContext dctx, afxDrawTechnique dtec, afxUnit passIdx, avxVertexInput vin, afxFlags dynamics);
+AVX afxCmdId            AvxCmdUseDrawTechniqueSIGMA(afxDrawContext dctx, afxDrawTechnique dtec, afxUnit passIdx, avxVertexInput vin, afxFlags dynamics);
 
 ////////////////////////////////////////////////////////////////////////////////
 

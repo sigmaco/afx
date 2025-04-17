@@ -122,7 +122,7 @@ AFX_OBJECT(afxDrawOutput)
     afxBool             doNotClip; // usually false to don't do off-screen draw on compositor-based endpoints (aka window).
 
     afxUnit             suspendCnt;
-    afxSlock            suspendSlock;
+    afxFutex            suspendSlock;
     afxAtom32           submCnt;
     afxCondition        idleCnd;
     afxMutex            idleCndMtx;
@@ -132,6 +132,9 @@ AFX_OBJECT(afxDrawOutput)
     afxUnit             outNo;
     afxUnit             outRate; // outputs per second
     afxClock            outCntResetClock;
+
+    afxClock            prevBufReqTime;
+    afxInt              bufReqPerSec;
 };
 #endif//_AVX_DRAW_OUTPUT_C
 

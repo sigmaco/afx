@@ -16,8 +16,8 @@
 
 ```
 
-# Qwadro Acceleration Frameworks
-The **Qwadro Acceleartion Frameworks** (**AFX**) is the standard implementation of the Qwadro API specification, ISO C17 open standard, low-level data-oriented, federated execution ecosystem that offers a set of acceleration building blocks to edify system softwares targeting computer simulations and multimedia user experiences. It is essentially a set of software infrastructures whose middlewares, libraries, drivers and engines developed on the Qwadro relies on. AFX is released as open source under the Qwadro License.
+# Acceleration Framework Experiments from Qwadro
+The **Acceleartion Framework Experiments from Qwadro** (**AFX**) is a free and open-source software (FOSS), the standard implementation of the Qwadro API specification, ISO C17 open standard, low-level data-oriented, federated execution ecosystem that offers a set of acceleration building blocks to edify system softwares targeting computer simulations and multimedia user experiences. It is essentially a set of software infrastructures whose middlewares, libraries, drivers and engines developed on the Qwadro relies on. AFX is released as open source under the Qwadro License.
 
 The **SIGMA FEDERATION** and all members shall not be held liable to any person or entity for any reason related to the adoption or implementation of, nor adherence to the recommendations in, nor any other use of this project nor any accompanying software.
 
@@ -63,3 +63,55 @@ Qwadro is, and its portions are, (c) 2017 SIGMA FEDERATION. All rights reserved;
 [license]: https://github.com/sigmaco/afx/blob/master/LICENSE.txt
 [contributors]: https://github.com/sigmaco/afx/graphs/contributors
 [contribute-guide]: https://github.com/sigmaco/afx/blob/master/docs/CONTRIBUTING.md
+
+## Techdemo Media
+
+![Image 1](doc/img/ScreenShot_20200401222851.png)
+![Image 1](doc/img/ScreenShot_20200322030852.png)
+![Image 1](doc/img/ScreenShot_20200314032422.png)
+![Image 1](doc/img/ScreenShot_20200314032338.png)
+![Image 1](doc/img/ScreenShot_20200314032134.png)
+![Image 1](doc/img/ScreenShot_20200314032048.png)
+![Image 1](doc/img/ScreenShot_20200228000223.png)
+![Image 1](doc/img/ScreenShot_20191117124129.png)
+![Image 1](doc/img/ScreenShot_20191014011409.png)
+![Image 1](doc/img/ScreenShot_20191005214808.png)
+![Image 1](doc/img/ScreenShot_20191003014004.png)
+![Image 1](doc/img/ScreenShot_20191003013922.png)
+![Image 1](doc/img/ScreenShot_20191003013841.png)
+![Image 1](doc/img/ScreenShot_20191003013830.png)
+![Image 1](doc/img/ScreenShot_20190912204603.png)
+![Image 1](doc/img/ScreenShot_20190912204537.png)
+![Image 1](doc/img/ScreenShot_20190912204452.png)
+![Image 1](doc/img/ScreenShot_20190912204331.png)
+![Image 1](doc/img/ScreenShot_20190912204311.png)
+![Image 1](doc/img/unknown (32).png)
+![Image 1](doc/img/unknown (31).png)
+![Image 1](doc/img/unknown (29).png)
+![Image 1](doc/img/unknown (28).png)
+![Image 1](doc/img/unknown (27).png)
+![Image 1](doc/img/unknown (26).png)
+![Image 1](doc/img/unknown (25).png)
+![Image 1](doc/img/unknown (24).png)
+![Image 1](doc/img/unknown (23).png)
+![Image 1](doc/img/unknown (22).png)
+![Image 1](doc/img/unknown (21).png)
+![Image 1](doc/img/unknown (20).png)
+![Image 1](doc/img/unknown (19).png)
+![Image 1](doc/img/unknown (18).png)
+![Image 1](doc/img/unknown (17).png)
+![Image 1](doc/img/unknown (16).png)
+![Image 1](doc/img/unknown (15).png)
+![Image 1](doc/img/unknown (14).png)
+![Image 1](doc/img/unknown (13).png)
+![Image 1](doc/img/unknown (12).png)
+![Image 1](doc/img/unknown (11).png)
+![Image 1](doc/img/unknown (10).png)
+![Image 1](doc/img/unknown (9).png)
+![Image 1](doc/img/unknown (8).png)
+![Image 1](doc/img/unknown (7).png)
+![Image 1](doc/img/unknown (6).png)
+![Image 1](doc/img/unknown (5).png)
+![Image 1](doc/img/unknown (4).png)
+![Image 1](doc/img/unknown (3).png)
+![Image 1](doc/img/unknown (2).png)

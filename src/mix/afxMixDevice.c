@@ -79,13 +79,13 @@ _AMX afxError AfxDescribeMixDevice(afxMixDevice mdev, afxMixDeviceInfo* desc)
     desc->accel = mdev->dev.acceleration;
     desc->apiVer = mdev->dev.apiVer;
     desc->drvVer = mdev->dev.driverVer;
-    desc->devId = mdev->dev.vendorDevId;
-    desc->vndId = mdev->dev.vendorId;
+    desc->ihvDevId = mdev->dev.ihvDevId;
+    desc->ihvId = mdev->dev.ihvId;
     desc->status = mdev->dev.status;
     desc->type = mdev->dev.type;
     
-    AfxMakeString128(&desc->name, &mdev->dev.devName.str);
-    AfxMakeString32(&desc->urn, &mdev->dev.urn.uri.str);
+    AfxMakeString128(&desc->name, &mdev->dev.devName.s);
+    AfxMakeString32(&desc->urn, &mdev->dev.urn.uri.s);
 
     return err;
 }
@@ -136,8 +136,8 @@ _AMX afxUnit AfxQueryMixCapabilities(afxMixDevice mdev, afxUnit basePortIdx, afx
     afxUnit rslt = 0;
 
     // count must be evaluated first to avoid clamp.
-    portCnt = AfxMin(portCnt, mdev->portCnt - basePortIdx);
-    basePortIdx = AfxMin(basePortIdx, mdev->portCnt - 1);
+    portCnt = AFX_MIN(portCnt, mdev->portCnt - basePortIdx);
+    basePortIdx = AFX_MIN(basePortIdx, mdev->portCnt - 1);
 
     if (!caps) rslt = portCnt;
     else for (afxUnit i = 0; i < portCnt; i++)

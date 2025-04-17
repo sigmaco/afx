@@ -134,18 +134,18 @@ afxChar const *fmtNames[] =
 _AVX afxString const shaderStageString[] =
 {
     [0] = AFX_STRING(""),
-    [avxShaderStage_VERTEX] = AFX_STRING("VERTEX"),
-    [avxShaderStage_FRAGMENT] = AFX_STRING("FRAGMENT"),
-    [avxShaderStage_PRIMITIVE] = AFX_STRING("GEOMETRY"),
-    [avxShaderStage_TESS_CTRL] = AFX_STRING("TESS_CTRL"),
-    [avxShaderStage_TESS_EVAL] = AFX_STRING("TESS_EVAL"),
-    [avxShaderStage_COMPUTE] = AFX_STRING("COMPUTE"),
+    [avxShaderType_VERTEX] = AFX_STRING("VERTEX"),
+    [avxShaderType_FRAGMENT] = AFX_STRING("FRAGMENT"),
+    [avxShaderType_PRIMITIVE] = AFX_STRING("GEOMETRY"),
+    [avxShaderType_TESS_CTRL] = AFX_STRING("TESS_CTRL"),
+    [avxShaderType_TESS_EVAL] = AFX_STRING("TESS_EVAL"),
+    [avxShaderType_COMPUTE] = AFX_STRING("COMPUTE"),
 };
 
 _AVX afxString const fillModeString[] =
 {
-    [avxFillMode_SOLID] = AFX_STRING("SOLID"),
-    [avxFillMode_EDGE] = AFX_STRING("EDGE"),
+    [avxFillMode_FACE] = AFX_STRING("SOLID"),
+    [avxFillMode_LINE] = AFX_STRING("EDGE"),
     [avxFillMode_POINT] = AFX_STRING("POINT")
 };
 
@@ -351,7 +351,7 @@ _AVX avxTopology AfxFindPrimitiveTopology(afxString const *str)
 
     for (afxUnit i = 0; i < avxTopology_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &primTopologyString[i]))
+        if (AfxCompareStrings(str, 0, TRUE, 1, &primTopologyString[i], NIL))
             return (avxTopology)i;
     }
 
@@ -365,7 +365,7 @@ _AVX avxLogicOp AfxFindLogicOp(afxString const *str)
 
     for (afxUnit i = 0; i < avxLogicOp_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &logicOpString[i]))
+        if (AfxCompareStrings(str, 0, TRUE, 1, &logicOpString[i], NIL))
             return (avxLogicOp)i;
     }
 
@@ -379,7 +379,7 @@ _AVX avxStencilOp AfxFindStencilOp(afxString const *str)
 
     for (afxUnit i = 0; i < avxStencilOp_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &stencilOpString[i]))
+        if (AfxCompareStrings(str, 0, TRUE, 1, &stencilOpString[i], NIL))
             return (avxStencilOp)i;
     }
 
@@ -393,7 +393,7 @@ _AVX avxCompareOp AfxFindCompareOp(afxString const *str)
 
     for (afxUnit i = 0; i < avxCompareOp_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &compareOpString[i]))
+        if (AfxCompareStrings(str, 0, TRUE, 1, &compareOpString[i], NIL))
             return (avxCompareOp)i;
     }
 
@@ -407,7 +407,7 @@ _AVX avxCullMode AfxFindCullMode(afxString const *str)
 
     for (afxUnit i = 0; i < avxCullMode_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &cullModeString[i]))
+        if (AfxCompareStrings(str, 0, TRUE, 1, &cullModeString[i], NIL))
             return (avxCullMode)i;
     }
 
@@ -421,7 +421,7 @@ _AVX avxFrontFace AfxFindFrontFace(afxString const *str)
 
     for (afxUnit i = 0; i < avxFrontFace_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &frontFaceString[i]))
+        if (AfxCompareStrings(str, 0, TRUE, 1, &frontFaceString[i], NIL))
             return (avxFrontFace)i;
     }
 
@@ -435,31 +435,31 @@ _AVX avxFillMode AfxFindFillMode(afxString const *str)
 
     for (afxUnit i = 0; i < avxFillMode_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &fillModeString[i]))
+        if (AfxCompareStrings(str, 0, TRUE, 1, &fillModeString[i], NIL))
             return (avxFillMode)i;
     }
 
     return (avxFillMode)-1;
 }
 
-_AVX avxShaderStage AfxFindShaderStage(afxString const *str)
+_AVX avxShaderType AfxFindShaderStage(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(str);
 
-    for (afxUnit i = 0; i < avxShaderStage_TOTAL; i++)
+    for (afxUnit i = 0; i < avxShaderType_TOTAL; i++)
     {
-        if (0 == AfxCompareStrings(str, 0, TRUE, 1, &shaderStageString[i]))
-            return (avxShaderStage)i;
+        if (AfxCompareStrings(str, 0, TRUE, 1, &shaderStageString[i], NIL))
+            return (avxShaderType)i;
     }
 
-    return (avxShaderStage)0;
+    return (avxShaderType)0;
 }
 
-_AVX afxString const* AfxStringifyShaderStage(avxShaderStage ss, afxString *out)
+_AVX afxString const* AfxStringifyShaderStage(avxShaderType ss, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(ss < avxShaderStage_TOTAL);
+    AFX_ASSERT(ss < avxShaderType_TOTAL);
     AfxCopyString(out, &shaderStageString[ss]);
     return out;
 }

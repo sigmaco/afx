@@ -961,7 +961,7 @@ _AVXINL void AvxDescribeFormats(afxUnit cnt, avxFormat const formats[], avxForma
     {
         avxFormat fmt = formats[i];
         AFX_ASSERT(avxFormat_TOTAL > fmt);
-        fmt = AfxMin(fmt, avxFormat_TOTAL - 1);
+        fmt = AFX_MIN(fmt, avxFormat_TOTAL - 1);
         pfd[i] = _AvxStdPfds[fmt];
     }
 }

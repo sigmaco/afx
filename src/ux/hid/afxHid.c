@@ -169,7 +169,7 @@ _AUX afxError _AuxRegisterHids(afxModule icd, afxUnit cnt, afxHidInfo const info
     afxClass* cls = (afxClass*)AfxGetHidClass();
     AFX_ASSERT_CLASS(cls, afxFcc_HID);
 
-    AfxEnterSlockExclusive(&cls->poolLock);
+    AfxLockFutex(&cls->poolLock);
 
     if (cls->pool.totalUsedCnt >= cls->maxInstCnt) AfxThrowError();
     else
@@ -193,7 +193,7 @@ _AUX afxError _AuxRegisterHids(afxModule icd, afxUnit cnt, afxHidInfo const info
         }
     }
 
-    AfxExitSlockExclusive(&cls->poolLock);
+    AfxUnlockFutex(&cls->poolLock);
 
     return err;
 }

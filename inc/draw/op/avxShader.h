@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // DRAWING PIPELINE PROGRAMMABLE FUNCTION LIBRARY                           //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AVX_SHADER_H
@@ -68,7 +72,7 @@ AFX_DEFINE_STRUCT(avxShaderConfig)
     afxString       tag;
 };
 
-AVX avxShaderStage  AvxGetShaderStage(avxShader shd);
+AVX avxShaderType  AvxGetShaderStage(avxShader shd);
 
 AVX afxUnit         AvxQueryShaderIoChannels(avxShader shd, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[]);
 

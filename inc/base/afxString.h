@@ -78,15 +78,13 @@ AFX_DEFINE_STRUCT(afxString)
     .start = (afxChar const*)(text_) \
     }
 
-#define AfxString(text_) (afxString const)AFX_STRING((text_))
-
 AFX afxString const     AFX_STRING_EMPTY;
 
 // NOTE: When 'cap' is zero, a string can't be modified.
 //#define AfxAssertString(str_) AFX_ASSERT3(((afxChar*)&((str_)->fcc))[0] == 's', ((afxChar*)&((str_)->fcc))[1] == 't', ((afxChar*)&((str_)->fcc))[2] == 'r')
 
 // used for formatted string input with %.*s specifier. // %.*s
-#define AfxPushString(str_) ((str_) ? AfxGetStringLength((str_)) : 0), ((str_) ? AfxGetStringData((str_), 0) : "")
+#define AfxPushString(str_) ((str_) ? ((str_)->len) : 0), ((str_) ? ((str_)->start) : "")
 
 AFXINL void             AfxResetStrings(afxUnit cnt, afxString strings[]);
 
@@ -122,22 +120,22 @@ AFX afxUnit             AfxFormatStringArg(afxString* s, afxChar const* fmt, va_
     The result indicate whether the raw string is equal to, less than, or greater than the Qwadro string to compare against.
 */
 
-AFXINL afxResult AfxCompareString
+AFXINL afxResult    AfxCompareString
 (
     // The Qwadro string.
-    afxString const* s, 
+    afxString const*s, 
 
     // The offset where to start comparing within the Qwadro string.
-    afxUnit base, 
+    afxUnit         base, 
 
     // The pointer to the raw string to be compared against.
-    afxChar const* start, 
+    afxChar const*  start, 
     
     // The length of the raw string to compare (the number of characters).
-    afxUnit len, 
+    afxUnit         len, 
 
     // A flag that specifies whether the comparison should be case-insensitive or not.
-    afxBool ci
+    afxBool         ci
 );
 
 /*
@@ -146,25 +144,29 @@ AFXINL afxResult AfxCompareString
     of the first matched string from the array. Otherwise, return AFX_INVALID_INDEX.
 
     This function can be used in scenarios like switch/case statements where you want to check if a string matches one of several possible options.
+    Return the index of the first matched other string or AFX_INVALID_INDEX. Can be used in switch/case statements.
 */
 
-// return the index of the first matched other string or AFX_INVALID_INDEX. Can be used in switch/case statements.
-AFX afxUnit AfxCompareStrings
+AFX afxBool         AfxCompareStrings
 (
     // The source string.
-    afxString const* s, 
+    afxString const*s, 
     
     // The position in the string from which comparison should start.
-    afxUnit base, 
+    afxUnit         base, 
     
     // Case-insensitive flag.
-    afxBool ci, 
+    afxBool         ci, 
     
     // The number of strings in the @others array.
-    afxUnit cnt, 
+    afxUnit         cnt, 
     
     // The array of strings to compare against.
-    afxString const others[]
+    afxString const others[],
+    
+    // A pointer to store the index of the matched string.
+    // Can be NIL if you only want the boolean result.
+    afxUnit*        matchedIdx
 );
 
 /*
@@ -178,14 +180,29 @@ AFX afxUnit AfxCompareStrings
     This function can be used in scenarios like switch/case statements where you want to check if a substring matches one of several possible options.
 */
 
-AFXINL afxUnit AfxCompareSubstrings
+AFXINL afxBool      AfxCompareSubstrings
 (
-    afxString const* s, 
-    afxUnit base, 
-    afxUnit len, 
-    afxBool ci, 
-    afxUnit cnt, 
-    afxString const others[]
+    // The source string.
+    afxString const*s, 
+
+    // The position in the string from which comparison should start.
+    afxUnit         base, 
+
+    // The length in the string up to where comparison should end.
+    afxUnit         len, 
+
+    // Case-insensitive flag.
+    afxBool         ci, 
+
+    // The number of strings in the @others array.
+    afxUnit         cnt, 
+
+    // The array of strings to compare against.
+    afxString const others[],
+
+    // A pointer to store the index of the matched string.
+    // Can be NIL if you only want the boolean result.
+    afxUnit*        matchedIdx
 );
 
 AFX afxUnit             AfxCatenateStrings(afxString* s, afxUnit cnt, afxString const src[]); // Return clamped off (non-copied) length if any.
@@ -229,7 +246,12 @@ AFXINL afxError         AfxReadString(afxString* s, afxStream in, afxUnit len);
     Returns the length of the exported string as wide-character (UTF-16) string.
 */
 
-AFXINL afxUnit AfxExportString16SIGMA(afxString const* s, afxUnit bufCap, wchar_t* wideBuf);
+AFXINL afxUnit AfxExportString16SIGMA
+(
+    afxString const*s, 
+    afxUnit         bufCap, 
+    wchar_t*        wideBuf
+);
 
 /*
     The AfxImportString16SIGMA() function provides a platform-independent way to convert 
@@ -239,6 +261,11 @@ AFXINL afxUnit AfxExportString16SIGMA(afxString const* s, afxUnit bufCap, wchar_
     Returns the length of the imported string as Qwadro native (UTF-8) string.
 */
 
-AFXINL afxUnit AfxImportString16SIGMA(afxString* s, wchar_t const* wideStr, afxUnit wideStrLen);
+AFXINL afxUnit AfxImportString16SIGMA
+(
+    afxString*      s, 
+    wchar_t const*  wideStr, 
+    afxUnit         wideStrLen
+);
 
 #endif//AFX_STRING_H

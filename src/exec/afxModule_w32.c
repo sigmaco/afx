@@ -124,7 +124,7 @@ _AFX afxUnit AfxFindSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const
         afxString128 fs;
         AfxMakeString128(&fs, &names[j]); // needed due to zero-terminate string-based shit M$ APIs
 
-        if ((p = (void*)GetProcAddress((HMODULE)peImgBase, AfxGetStringData(&fs.str, 0))))
+        if ((p = (void*)GetProcAddress((HMODULE)peImgBase, AfxGetStringData(&fs.s, 0))))
         {
             hitCnt++;
         }
@@ -143,7 +143,7 @@ _AFX afxUnit AfxFindSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const
                 {
                     AfxExcerptString(&symNameStr, prefixPosn + 1, suffixPosn - 1, &symNameStr);
 
-                    if (0 == AfxCompareStrings(&symNameStr, 0, FALSE, 1, &names[j]))
+                    if (AfxCompareStrings(&symNameStr, 0, FALSE, 1, &names[j], NIL))
                     {
                         if ((p = (void*)GetProcAddress((HMODULE)peImgBase, rawName)))
                         {
@@ -185,7 +185,7 @@ _AFX afxResult AfxFindModuleSymbols(afxModule mdle, afxUnit cnt, afxChar const *
         else
         {
             syms[i] = NIL;
-            //AfxLogError("Symbol %s not found.", name[i]);
+            //AfxReportError("Symbol %s not found.", name[i]);
         }
     }
     return hitCnt;
@@ -229,7 +229,7 @@ _AFX afxUnit AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxUnit cn
             afxString128 fs;
             AfxMakeString128(&fs, &names[j]); // needed due to zero-terminate string-based shit M$ APIs
 
-            if ((p = (void*)GetProcAddress(osHandle, AfxGetStringData(&fs.str, 0))))
+            if ((p = (void*)GetProcAddress(osHandle, AfxGetStringData(&fs.s, 0))))
             {
                 hitCnt++;
             }
@@ -248,7 +248,7 @@ _AFX afxUnit AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxUnit cn
                     {
                         AfxExcerptString(&symNameStr, prefixPosn + 1, suffixPosn - 1, &symNameStr);
 
-                        if (0 == AfxCompareStrings(&symNameStr, 0, FALSE, 1, &names[j]))
+                        if (AfxCompareStrings(&symNameStr, 0, FALSE, 1, &names[j], NIL))
                         {
                             if ((p = (void*)GetProcAddress(osHandle, rawName)))
                             {
@@ -286,7 +286,7 @@ _AFX afxUnit AfxGetSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const 
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        AfxCopyString(&s.str, &names[i]);
+        AfxCopyString(&s.s, &names[i]);
 
 #ifdef AFX_OS_WIN
         addresses[i] = (void*)GetProcAddress((void*)osHandle, s.buf);
@@ -331,7 +331,7 @@ _AFX afxError _AfxMdleDtorCb(afxModule mdle)
     // objects will be released at class drop.
 
     afxDevice dev;
-    AFX_ITERATE_CHAIN(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
+    AFX_ITERATE_CHAIN(AFX_OBJ(afxDevice), dev, icd, &mdle->devices)
     {
         AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
         while (AfxDisposeObjects(1, &dev));
@@ -429,7 +429,7 @@ _AFX afxUnit AfxInvokeModules(afxUnit first, afxUnit cnt, afxBool(*f)(afxModule,
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
-    afxClass* cls = AfxGetModuleClass();
+    afxClass* cls = _AfxGetModuleClass();
     AFX_ASSERT_CLASS(cls, afxFcc_MDLE);
     return cnt ? AfxInvokeObjects(cls, first, cnt, (void*)f, udd) : 0;
 }
@@ -439,7 +439,7 @@ _AFX afxUnit AfxEnumerateModules(afxUnit first, afxUnit cnt, afxModule executabl
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     AFX_ASSERT(executables);
-    afxClass* cls = AfxGetModuleClass();
+    afxClass* cls = _AfxGetModuleClass();
     AFX_ASSERT_CLASS(cls, afxFcc_MDLE);
     return cnt ? AfxEnumerateObjects(cls, first, cnt, (afxObject*)executables) : 0;
 }
@@ -477,7 +477,7 @@ _AFX afxBool AfxFindModule(afxUri const* uri, afxModule* module)
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
 
-        if (AfxCompareStrings(&uri->str, FALSE, 1, &mdle->path.uri.str))
+        if (AfxCompareStrings(&uri->s, FALSE, 1, &mdle->path.uri.s, NIL))
         {
             found = TRUE;
             break;
@@ -535,9 +535,9 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
     if (uri->fext)
         AfxCopyUri(&urib.uri, uri);
     else
-        AfxFormatUri(&urib.uri, "%.*s.dll", AfxPushString(&uri->str));
+        AfxFormatUri(&urib.uri, "%.*s.dll", AfxPushString(&uri->s));
 
-    AfxLogEcho("Loading... <%.*s>", AfxPushString(uri ? AfxGetUriString(&urib.uri) : &AFX_STRING_EMPTY));
+    AfxReportMessage("Loading... <%.*s>", AfxPushString(uri ? AfxGetUriString(&urib.uri) : &AFX_STRING_EMPTY));
 
     // find for the module file.
 
@@ -577,7 +577,7 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
 
     // acquire a module object.
 
-    afxClass* cls = AfxGetModuleClass();
+    afxClass* cls = _AfxGetModuleClass();
     AFX_ASSERT_CLASS(cls, afxFcc_MDLE);
 
     if (AfxAcquireObjects(cls, 1, (afxObject*)&mdle, (void const*[]) { NIL, &path.uri, &flags, &hMod }))
@@ -600,7 +600,7 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
         afxUri dev;
         AfxExcerptPathSegments(&mdle->path.uri, NIL, NIL, &dev, NIL);
 
-        AfxLogEcho("Installing... <%.*s>", AfxPushString(&dev.str));
+        AfxReportMessage("Installing... <%.*s>", AfxPushString(&dev.s));
 
         if (mdle->icd.icdHookFn(mdle, NIL))
         {
@@ -618,7 +618,7 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
             afxUnit verMajor, verMinor, verPatch;
 
             AfxGetModuleVersion(mdle, &verMajor, &verMinor, &verPatch);
-            AfxGetModuleInfo(mdle, &s.str, &providerName.str, &devDesc.str);
+            AfxGetModuleInfo(mdle, &s.s, &providerName.s, &devDesc.s);
 
 #define AFX_ITERATE_CHAIN_(ch_, type_, offset_, lnk_) \
     for (afxLink const* _curr##lnk_ = (ch_)->anchor.next, *_next##lnk_ = (afxLink*)NIL; \
@@ -638,8 +638,8 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
             {
                 AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 
-                AfxLogY("\t<//./%.*s/>(\"%.*s\") %.*s %u.%u.%u %.*s",
-                    AfxPushString(&dev->urn.uri.str), AfxPushString(&s.str), AfxPushString(&devDesc.str), verMajor, verMinor, verPatch, AfxPushString(&providerName.str));
+                AfxReportY("\t<//./%.*s/>(\"%.*s\") %.*s %u.%u.%u %.*s",
+                    AfxPushString(&dev->urn.uri.s), AfxPushString(&s.s), AfxPushString(&devDesc.s), verMajor, verMinor, verPatch, AfxPushString(&providerName.s));
                 break;
             };
 
@@ -665,7 +665,7 @@ _AFX afxError _AfxAttachDriver(afxModule mdle, afxUri const* manifest, void* udd
 
     if (!mdle->attached)
     {
-        AfxLogEcho("Installing... <%.*s>", AfxPushString(&mdle->path.uri.str));
+        AfxReportMessage("Installing... <%.*s>", AfxPushString(&mdle->path.uri.s));
 
         if (!mdle->icd.icdHookFn) AfxThrowError();
         else
@@ -684,15 +684,15 @@ _AFX afxError _AfxAttachDriver(afxModule mdle, afxUri const* manifest, void* udd
                 afxUnit verMajor, verMinor, verPatch;
 
                 AfxGetModuleVersion(mdle, &verMajor, &verMinor, &verPatch);
-                AfxGetModuleInfo(mdle, &s.str, &providerName.str, &devDesc.str);
+                AfxGetModuleInfo(mdle, &s.s, &providerName.s, &devDesc.s);
 
                 afxDevice dev;
-                AFX_ITERATE_CHAIN_B2F(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
+                AFX_ITERATE_CHAIN_B2F(AFX_OBJ(afxDevice), dev, icd, &mdle->devices)
                 {
                     AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 
-                    AfxLogY("\t<//./%.*s/>(\"%.*s\") %.*s %u.%u.%u %.*s",
-                        AfxPushString(&dev->urn.uri.str), AfxPushString(&s.str), AfxPushString(&devDesc.str), verMajor, verMinor, verPatch, AfxPushString(&providerName.str));
+                    AfxReportY("\t<//./%.*s/>(\"%.*s\") %.*s %u.%u.%u %.*s",
+                        AfxPushString(&dev->urn.uri.s), AfxPushString(&s.s), AfxPushString(&devDesc.s), verMajor, verMinor, verPatch, AfxPushString(&providerName.s));
                 };
 
                 mdle->attached = TRUE;

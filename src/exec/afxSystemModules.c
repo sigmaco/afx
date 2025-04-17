@@ -62,7 +62,7 @@ _AFX afxError _AfxAttachCoreModule(afxModule* e2coree)
     afxUri* name;
     name = AfxUri("e2coree.dll");
 
-    afxClass* cls = AfxGetModuleClass();
+    afxClass* cls = _AfxGetModuleClass();
 
     TheAfxMdl = (void*)_afxMdleData;
     if (_AfxConstructObjects(cls, 1, (afxObject*)&TheAfxMdl, (void*[]) { sys, name, name })) AfxThrowError();
@@ -101,7 +101,7 @@ _AFX afxError _AfxAttachTargaModule(afxModule* e2targa)
     afxUri* name;
     name = AfxUri("e2targa.dll");
 
-    afxClass* cls = AfxGetModuleClass();
+    afxClass* cls = _AfxGetModuleClass();
 
     TheAvxMdl = (void*)_avxMdleData;
     if (_AfxConstructObjects(cls, 1, (afxObject*)&TheAvxMdl, (void*[]) { sys, name, name })) AfxThrowError();
@@ -143,7 +143,7 @@ _AFX afxError _AfxAttachMixModule(afxModule* e2mixva)
     afxUri* name;
     name = AfxUri("e2mixva.dll");
 
-    afxClass* cls = AfxGetModuleClass();
+    afxClass* cls = _AfxGetModuleClass();
 
     TheAmxMdl = (void*)_amxMdleData;
     if (_AfxConstructObjects(cls, 1, (afxObject*)&TheAmxMdl, (void*[]) { sys, name, name })) AfxThrowError();
@@ -185,7 +185,7 @@ _AFX afxError _AfxAttachUxModule(afxModule* e2mmux)
     afxUri* name;
     name = AfxUri("e2mmux.dll");
 
-    afxClass* cls = AfxGetModuleClass();
+    afxClass* cls = _AfxGetModuleClass();
 
     TheAuxMdl = (void*)_auxMdleData;
     if (_AfxConstructObjects(cls, 1, (afxObject*)&TheAuxMdl, (void*[]) { sys, name, name })) AfxThrowError();
@@ -224,7 +224,7 @@ _AFX afxError _AfxAttachSimModule(afxModule* e2synerg)
     afxUri* name;
     name = AfxUri("e2synerg.dll");
 
-    afxClass* cls = AfxGetModuleClass();
+    afxClass* cls = _AfxGetModuleClass();
 
     TheAsxMdl = (void*)_asxMdleData;
     if (_AfxConstructObjects(cls, 1, (afxObject*)&TheAsxMdl, (void*[]) { sys, name, name })) AfxThrowError();

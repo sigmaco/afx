@@ -161,19 +161,19 @@ _AFX afxError _AfxZipFindAndReadCdHdr(afxStream file, _afxZipSerializedCdHdr *en
                         AfxCopy(endRecord, er, sizeof(*er));
 
                         _afxZipSerializedCdHdr *e = endRecord;
-                        AfxLogComment("signature: 0x%X", e->signature); // 0x06054b50
-                        AfxLogComment("diskNum: %d", e->diskNum); // unsupported
-                        AfxLogComment("centralDirDiskNum: %d", e->centralDirDiskNum); // unsupported
-                        AfxLogComment("numEntriesThisDisk: %d", e->numEntriesThisDisk); // unsupported
-                        AfxLogComment("numEntries: %d", e->numEntries);
-                        AfxLogComment("centralDirSiz: %u %#x", e->centralDirSiz, e->centralDirSiz);
-                        AfxLogComment("centralDirOffset: %u %#x", e->centralDirOffset, e->centralDirOffset);
-                        AfxLogComment("zipCommentLength: %d", e->zipCommentLen);
+                        AfxReportComment("signature: 0x%X", e->signature); // 0x06054b50
+                        AfxReportComment("diskNum: %d", e->diskNum); // unsupported
+                        AfxReportComment("centralDirDiskNum: %d", e->centralDirDiskNum); // unsupported
+                        AfxReportComment("numEntriesThisDisk: %d", e->numEntriesThisDisk); // unsupported
+                        AfxReportComment("numEntries: %d", e->numEntries);
+                        AfxReportComment("centralDirSiz: %u %#x", e->centralDirSiz, e->centralDirSiz);
+                        AfxReportComment("centralDirOffset: %u %#x", e->centralDirOffset, e->centralDirOffset);
+                        AfxReportComment("zipCommentLength: %d", e->zipCommentLen);
 
                         if (endRecord->diskNum || endRecord->centralDirDiskNum || endRecord->numEntries != endRecord->numEntriesThisDisk)
                         {
                             AfxThrowError();
-                            AfxLogError("Qwadro doesn't support splitted Zips.");
+                            AfxReportError("Qwadro doesn't support splitted Zips.");
                         }
                     }
                 }
@@ -197,29 +197,29 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
         for (afxInt i = 0; i < endRecord->numEntries; i++)
         {
             long offset = AfxAskStreamPosn(ios); // store current position
-            AfxLogComment("Archived item %u -> %lu %#lx", i, (unsigned long)offset, (unsigned long)offset);
+            AfxReportComment("Archived item %u -> %lu %#lx", i, (unsigned long)offset, (unsigned long)offset);
             
             if (AfxReadStream(ios, sizeof(fileHdr), 0, &fileHdr)) AfxThrowError();
             else
             {
                 _afxZipSerializedCdEntryHdr *g = &fileHdr;
-                AfxLogComment("signature: %u %#x", g->signature, g->signature); // 0x02014B50
-                AfxLogComment("verMadeBy: %u %#x", g->verMadeBy, g->verMadeBy); // unsupported
-                AfxLogComment("verNeededToExtract: %u %#x", g->verNeededToExtract, g->verNeededToExtract); // unsupported
-                AfxLogComment("genrlPurposeBitFlag: %u %#x", g->genrlPurposeBitFlag, g->genrlPurposeBitFlag); // unsupported
-                AfxLogComment("codec: %u %#x", g->codec, g->codec); // 0-store,8-deflate
-                AfxLogComment("lastModFileTime: %u %#x", g->lastModFileTime, g->lastModFileTime);
-                AfxLogComment("lastModFileDate: %u %#x", g->lastModFileDate, g->lastModFileDate);
-                AfxLogComment("crc32: %#x", g->crc32);
-                AfxLogComment("encSiz: %u", g->encSiz);
-                AfxLogComment("decSiz: %u", g->decSiz);
-                AfxLogComment("fileNameLen: %u", g->fileNameLen);
-                AfxLogComment("textraFieldLen: %u", g->extraFieldLen); // unsupported
-                AfxLogComment("fileCommentLen: %u", g->fileCommentLen); // unsupported
-                AfxLogComment("diskNumStart: %u", g->diskNumStart); // unsupported
-                AfxLogComment("internalFileAttributes: %#x", g->internalFileAttrs); // unsupported
-                AfxLogComment("externalFileAttributes: %#x", g->externalFileAttrs); // unsupported
-                AfxLogComment("relativeOffsetOfLocalHdr: %u %#x", g->relativeOffsetOfLocalHdr, g->relativeOffsetOfLocalHdr);
+                AfxReportComment("signature: %u %#x", g->signature, g->signature); // 0x02014B50
+                AfxReportComment("verMadeBy: %u %#x", g->verMadeBy, g->verMadeBy); // unsupported
+                AfxReportComment("verNeededToExtract: %u %#x", g->verNeededToExtract, g->verNeededToExtract); // unsupported
+                AfxReportComment("genrlPurposeBitFlag: %u %#x", g->genrlPurposeBitFlag, g->genrlPurposeBitFlag); // unsupported
+                AfxReportComment("codec: %u %#x", g->codec, g->codec); // 0-store,8-deflate
+                AfxReportComment("lastModFileTime: %u %#x", g->lastModFileTime, g->lastModFileTime);
+                AfxReportComment("lastModFileDate: %u %#x", g->lastModFileDate, g->lastModFileDate);
+                AfxReportComment("crc32: %#x", g->crc32);
+                AfxReportComment("encSiz: %u", g->encSiz);
+                AfxReportComment("decSiz: %u", g->decSiz);
+                AfxReportComment("fileNameLen: %u", g->fileNameLen);
+                AfxReportComment("textraFieldLen: %u", g->extraFieldLen); // unsupported
+                AfxReportComment("fileCommentLen: %u", g->fileCommentLen); // unsupported
+                AfxReportComment("diskNumStart: %u", g->diskNumStart); // unsupported
+                AfxReportComment("internalFileAttributes: %#x", g->internalFileAttrs); // unsupported
+                AfxReportComment("externalFileAttributes: %#x", g->externalFileAttrs); // unsupported
+                AfxReportComment("relativeOffsetOfLocalHdr: %u %#x", g->relativeOffsetOfLocalHdr, g->relativeOffsetOfLocalHdr);
 
                 if (fileHdr.signature != 0x02014B50) AfxThrowError();
                 else
@@ -281,7 +281,7 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
                                                 if (AfxSeekStream(ios, fileHdr.relativeOffsetOfLocalHdr + sizeof(_afxZipSerializedLocalEntryHdr) + localFileNameLength + localExtraFieldLength, afxSeekOrigin_BEGIN)) AfxThrowError();
                                                 else
                                                 {
-                                                    AfxLogComment("Archived item %u, %lu %#lx", i, (unsigned long)AfxAskStreamPosn(ios), (unsigned long)AfxAskStreamPosn(ios));
+                                                    AfxReportComment("Archived item %u, %lu %#lx", i, (unsigned long)AfxAskStreamPosn(ios), (unsigned long)AfxAskStreamPosn(ios));
 
                                                     if (callback(arc, i, &fileHdr, &path, extra, comment, user_data))
                                                         break; // keep going while callback returns ok
@@ -319,7 +319,7 @@ _AFX afxError _AfxZipReadEntryData(afxStream file, _afxZipSerializedCdEntryHdr *
     else
     {
         AfxThrowError();
-        AfxLogError("Qwadro doesn't support compression.");
+        AfxReportError("Qwadro doesn't support compression.");
     }
     return err;
 }
@@ -354,7 +354,7 @@ _AFX afxError _AfxZipReadCdEntryCallback(afxArchive arc, afxUnit idx, _afxZipSer
     e->compressedSize = header->encSiz;
     e->codec = header->codec;
     e->crc32 = header->crc32;
-    AfxLogEcho("%04d/%02d/%02d %02d:%02d:%02d #%04u %.*s", ZYEAR(header->lastModFileDate), ZMONTH(header->lastModFileDate), ZDAY(header->lastModFileDate), ZHOUR(header->lastModFileTime), ZMINUTE(header->lastModFileTime), ZSECOND(header->lastModFileTime), idx, AfxPushString(&path->str));
+    AfxReportMessage("%04d/%02d/%02d %02d:%02d:%02d #%04u %.*s", ZYEAR(header->lastModFileDate), ZMONTH(header->lastModFileDate), ZDAY(header->lastModFileDate), ZHOUR(header->lastModFileTime), ZMINUTE(header->lastModFileTime), ZSECOND(header->lastModFileTime), idx, AfxPushString(&path->s));
     return err;
 }
 
@@ -625,7 +625,7 @@ _AFX afxError _AfxArcDtor(afxArchive arc)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
-    AfxCleanUpArray(&arc->entries);
+    AfxEmptyArray(&arc->entries, FALSE, FALSE);
 
     return err;
 }

@@ -14,25 +14,26 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // GEOMETRIC PRIMITIVE TRANSFORMATION PIPELINE EXTENDED OPERATIONS          //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AVX_TRANSFORMATION_EXT_H
 #define AVX_TRANSFORMATION_EXT_H
 
-#include "qwadro/inc/draw/math/avxViewport.h"
-#include "qwadro/inc/draw/afxDrawDefs.h"
-#include "qwadro/inc/draw/io/avxRaster.h"
-#include "qwadro/inc/draw/io/avxBuffer.h"
-#include "qwadro/inc/draw/op/avxSampler.h"
-#include "qwadro/inc/draw/op/avxQueryPool.h"
+#include "qwadro/inc/draw/op/avxTransformation.h"
 
-  //////////////////////////////////////////////////////////////////////////////
- //// COMMANDS                                                             ////
-//////////////////////////////////////////////////////////////////////////////
+// Specify polygon mode dynamically for a draw context.
 
-AVX afxCmdId AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexInput vin);
+AVX afxCmdId            AvxCmdChangeFillModeEXT
+(
+    afxDrawContext      dctx,
+    avxFillMode         mode
+);
 
-AFX void AvxCmdBeginTransformFeedbackEXT
+AFX afxCmdId AvxCmdBeginTransformFeedbackEXT
 (
     afxDrawContext dctx,
     afxUnit firstCounterBuffer,
@@ -41,7 +42,7 @@ AFX void AvxCmdBeginTransformFeedbackEXT
     afxSize const cnterBufferOffsets[]
 );
 
-AFX void AvxCmdEndTransformFeedbackEXT
+AFX afxCmdId AvxCmdEndTransformFeedbackEXT
 (
     afxDrawContext dctx,
     afxUnit firstCntBuf,
@@ -50,7 +51,7 @@ AFX void AvxCmdEndTransformFeedbackEXT
     afxSize const cnterBufOffsets[]
 );
 
-AFX void AvxCmdBeginQueryIndexedEXT
+AFX afxCmdId AvxCmdBeginQueryIndexedEXT
 (
     afxDrawContext dctx,
     avxQueryPool qryp,
@@ -59,7 +60,7 @@ AFX void AvxCmdBeginQueryIndexedEXT
     afxUnit index
 );
 
-AFX void AvxCmdEndQueryIndexedEXT
+AFX afxCmdId AvxCmdEndQueryIndexedEXT
 (
     afxDrawContext dctx,
     avxQueryPool qryp,
@@ -67,7 +68,7 @@ AFX void AvxCmdEndQueryIndexedEXT
     afxUnit index
 );
 
-AFX void AvxCmdBindTransformFeedbackBuffersEXT
+AFX afxCmdId AvxCmdBindTransformFeedbackBuffersEXT
 (
     afxDrawContext dctx,
     afxUnit firstBinding,
@@ -77,7 +78,7 @@ AFX void AvxCmdBindTransformFeedbackBuffersEXT
     afxSize const ranges[]
 );
 
-AFX void AvxCmdDrawIndirectByteCountEXT
+AFX afxCmdId AvxCmdDrawIndirectByteCountEXT
 (
     afxDrawContext dctx,
     afxUnit instCnt,

@@ -45,7 +45,7 @@
 
 AFX_DEFINE_STRUCT(avxSubmission)
 {
-    afxUnit             exuIdx;
+    afxMask             exuMask;
     afxUnit             baseQueIdx;
     afxUnit             queCnt;
 
@@ -62,7 +62,7 @@ AFX_DEFINE_STRUCT(avxSubmission)
 
 AFX_DEFINE_STRUCT(avxPresentation)
 {
-    afxUnit         exuIdx;
+    afxMask         exuMask;
     afxUnit         baseQueIdx;
     afxUnit         queCnt;
     afxSemaphore    wait;
@@ -70,7 +70,7 @@ AFX_DEFINE_STRUCT(avxPresentation)
 
 AFX_DEFINE_STRUCT(avxTransference)
 {
-    afxUnit         exuIdx;
+    afxMask         exuMask;
     afxUnit         baseQueIdx;
     afxUnit         queCnt;
 
@@ -102,8 +102,10 @@ AFX_DEFINE_STRUCT(avxTransference)
     afxUnit         decSiz;
 };
 
-AVX afxDrawSystem   AfxGetDrawQueueContext(afxDrawQueue dque);
-AVX afxUnit         AfxGetDrawQueuePort(afxDrawQueue dque);
+AVX afxDrawSystem   AvxGetDrawQueueDock(afxDrawQueue dque);
+AVX afxUnit         AvxGetDrawQueuePort(afxDrawQueue dque);
+
+AVX afxError        AvxWaitForEmptyDrawQueue(afxDrawQueue dque, afxUnit64 timeout);
 
 /// Open a queue debug label region.
 /// Close a queue debug label region.

@@ -21,7 +21,7 @@
 
 #include "qwadro/inc/mix/afxMixSystem.h"
 
-AFX_DECLARE_UNION(amxCmd);
+AFX_DECLARE_UNION(_amxCmd);
 
 #ifdef _AMX_MIX_CONTEXT_C
 #ifdef _AMX_MIX_CONTEXT_IMPL
@@ -80,14 +80,14 @@ AFX_OBJECT(afxMixContext)
 };
 #endif
 
-AFX_DEFINE_STRUCT(amxCmdHdr)
+AFX_DEFINE_STRUCT(_amxCmdHdr)
 {
     afxLink script;
     afxUnit id;
     afxUnit siz;
 };
 
-AFX_DEFINE_UNION(asxCmdList)
+AFX_DEFINE_UNION(_amxCmdLut)
 {
     struct
     {
@@ -107,31 +107,31 @@ AFX_DEFINE_UNION(asxCmdList)
         void* CommenceMixScope;
         void* ConcludeMixScope;
     };
-    void(*f[])(void*, amxCmd const*);
+    void(*f[])(void*, _amxCmd const*);
 };
 
-#define AMX_GET_STD_CMD_ID(cmdName_) (offsetof(asxCmdList, cmdName_) / sizeof(void*))
+#define _AMX_CMD_ID(cmdName_) (offsetof(_amxCmdLut, cmdName_) / sizeof(void*))
 
-AFX_DEFINE_UNION(amxCmd)
+AFX_DEFINE_UNION(_amxCmd)
 {
-    amxCmdHdr hdr;
+    _amxCmdHdr hdr;
 
     struct
     {
-        amxCmdHdr hdr;
+        _amxCmdHdr hdr;
 
         amxMixScope scope;
         amxMixSink AFX_SIMD chans[];
     } CommenceMixScope;
     struct
     {
-        amxCmdHdr hdr;
+        _amxCmdHdr hdr;
 
     } ConcludeMixScope;
     struct
     {
-        amxCmdHdr hdr;
-
+        _amxCmdHdr hdr;
+        afxUnit voice;
         afxReal wetMix;
         afxReal roomSiz;
         afxReal width;
@@ -140,8 +140,8 @@ AFX_DEFINE_UNION(amxCmd)
     } Reverb;
     struct
     {
-        amxCmdHdr hdr;
-
+        _amxCmdHdr hdr;
+        afxUnit voice;
         afxReal floor;
         afxReal ceil;
         afxReal rate;
@@ -152,16 +152,16 @@ AFX_DEFINE_UNION(amxCmd)
     } Phaser;
     struct
     {
-        amxCmdHdr hdr;
-
+        _amxCmdHdr hdr;
+        afxUnit voice;
         afxReal gain;
         afxReal pan;
         afxMask invChan;
     } Gainer;
     struct
     {
-        amxCmdHdr hdr;
-
+        _amxCmdHdr hdr;
+        afxUnit voice;
         afxReal amount;
         afxReal rate;
         afxReal amplitude;
@@ -172,8 +172,8 @@ AFX_DEFINE_UNION(amxCmd)
     } Flanger;
     struct
     {
-        amxCmdHdr hdr;
-
+        _amxCmdHdr hdr;
+        afxUnit voice;
         afxUnit type;
         afxUnit flt;
         afxReal cutoff;
@@ -186,8 +186,8 @@ AFX_DEFINE_UNION(amxCmd)
     } Analog;
     struct
     {
-        amxCmdHdr hdr;
-
+        _amxCmdHdr hdr;
+        afxUnit voice;
         afxReal threshold;
         afxReal ratio;
         afxReal attack;
@@ -196,8 +196,8 @@ AFX_DEFINE_UNION(amxCmd)
     } Compressor;
     struct
     {
-        amxCmdHdr hdr;
-
+        _amxCmdHdr hdr;
+        afxUnit voice;
         afxUnit line;
         afxMask chanMask;
         afxUnit latency;
@@ -206,8 +206,8 @@ AFX_DEFINE_UNION(amxCmd)
     } LineIn;
     struct
     {
-        amxCmdHdr hdr;
-
+        _amxCmdHdr hdr;
+        afxUnit voice;
         afxUnit src;
         afxMask chanMask;
         afxReal pan;
@@ -215,8 +215,8 @@ AFX_DEFINE_UNION(amxCmd)
     } RemoteIn;
     struct
     {
-        amxCmdHdr hdr;
-
+        _amxCmdHdr hdr;
+        afxUnit voice;
         afxBool muteSrc;
         afxReal amount;
         afxReal pan;
@@ -224,39 +224,38 @@ AFX_DEFINE_UNION(amxCmd)
     } Send;
     struct
     {
-        amxCmdHdr hdr;
-
+        _amxCmdHdr hdr;
+        afxUnit voice;
         afxUnit headIdx;
     } FetchAudition;
     struct
     {
-        amxCmdHdr hdr;
+        _amxCmdHdr hdr;
 
-        afxAudio        src;
-        afxAudio        dst;
-        afxWaveCopy     op;
+        amxAudio        src;
+        amxAudio        dst;
+        amxAudioCopy     op;
     } TransposeAudio;
     struct
     {
-        amxCmdHdr hdr;
+        _amxCmdHdr hdr;
 
-        afxAudio        src;
-        afxAudio        dst;
-        afxWaveInterval srci;
-        afxWaveInterval dsti;
+        amxAudio        src;
+        amxAudio        dst;
+        amxAudioPeriod srcp;
+        amxAudioPeriod dstp;
     } ResampleAudio;
     struct
     {
-        amxCmdHdr hdr;
+        _amxCmdHdr hdr;
 
-        afxAudio buf;
+        amxAudio buf;
         void const* src;
-        afxWaveIo op;
+        amxAudioIo op;
     } UpdateAudio;
 };
 
-AMX amxCmd* _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdId* cmdId);
-
+AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdId* cmdId, _amxCmd** ppCmd);
 
 AMX afxError _AmxMixResetCb(afxMixContext mix, afxBool freeMem, afxBool permanent);
 AMX afxError _AmxMixEndCb(afxMixContext mix);

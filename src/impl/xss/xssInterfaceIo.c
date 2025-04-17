@@ -410,7 +410,7 @@ void* const hidVmtPtrs[] =
 void _XsCamReset(xssVm vm)
 {
     avxCamera cam = XssPullInstance(vm, 0);
-    AfxResetCamera(cam);
+    AvxResetCamera(cam);
 }
 
 void _XsCamApplyMotion(xssVm vm)
@@ -418,7 +418,7 @@ void _XsCamApplyMotion(xssVm vm)
     avxCamera cam = XssPullInstance(vm, 0);
     afxV3d v;
     XssPullReal3(vm, 1, v);
-    AfxTranslateCamera(cam, v);
+    AvxTranslateCamera(cam, v);
 }
 
 void _XsCamApplyOrientation(xssVm vm)
@@ -426,7 +426,7 @@ void _XsCamApplyOrientation(xssVm vm)
     avxCamera cam = XssPullInstance(vm, 0);
     afxV3d v;
     XssPullReal3(vm, 1, v);
-    AfxApplyCameraOrientation(cam, v);
+    AfxOrientCamera(cam, v);
 }
 
 void _XsCamApplyOffset(xssVm vm)
@@ -440,7 +440,7 @@ void _XsCamApplyOffset(xssVm vm)
 void _XsCamApplyDistance(xssVm vm)
 {
     avxCamera cam = XssPullInstance(vm, 0);
-    AfxApplyCameraDistance(cam, XssPullReal(vm, 1));
+    AvxApplyCameraDistance(cam, XssPullReal(vm, 1));
 }
 
 void _XsCamGet(xssVm vm)
@@ -457,8 +457,8 @@ void _XsCamAcquire(xssVm vm)
     afxV3d v;
     XssPullReal3(vm, 2, v);
     avxCamera cam;
-    AfxAcquireCameras(din, 1, &cam);
-    AfxTranslateCamera(cam, v);
+    AvxAcquireCameras(din, 1, &cam);
+    AvxTranslateCamera(cam, v);
     XssPushInstance(vm, 0, cam);
 }
 

@@ -17,7 +17,7 @@
 #ifndef AMX_CODEC_H
 #define AMX_CODEC_H
 
-#include "qwadro/inc/mix/io/afxAudio.h"
+#include "qwadro/inc/mix/io/amxAudio.h"
 
 
 

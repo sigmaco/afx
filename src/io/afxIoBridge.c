@@ -90,7 +90,7 @@ _AFX afxError _AfxWaitForEmptyIoQueue(afxIoBridge exu, afxUnit queIdx, afxTime t
         AfxLockMutex(&xque->idleCndMtx);
 
         afxTimeSpec ts = { 0 };
-        ts.nsec = AfxMax(1, timeout) * 100000; // 100000 = 0.0001 sec
+        ts.nsecs = AFX_MAX(1, timeout) * 100000; // 100000 = 0.0001 sec
 
         while (xque->workChn.cnt)
         {
@@ -137,8 +137,8 @@ _AFX afxError _AfxSubmitIoOperation(afxIoBridge exu, afxSubmission const* ctrl, 
     AFX_ASSERT(cmdbs);
 
     // sanitize arguments
-    afxUnit baseQueIdx = AfxMin(ctrl->baseQueIdx, exu->queCnt - 1);
-    afxUnit queCnt = AfxMin(exu->queCnt - baseQueIdx, AfxMax(1, ctrl->queCnt));
+    afxUnit baseQueIdx = AFX_MIN(ctrl->baseQueIdx, exu->queCnt - 1);
+    afxUnit queCnt = AFX_MIN(exu->queCnt - baseQueIdx, AFX_MAX(1, ctrl->queCnt));
     AFX_ASSERT(queCnt);
 
     for (afxUnit queIdx = 0; queIdx < queCnt; queIdx++)
@@ -245,7 +245,7 @@ _AFX afxError _AfxExuCtorCb(afxIoBridge exu, void** args, afxUnit invokeNo)
 
     afxThreadConfig thrCfg = { 0 };
     //thrCfg.procCb = DrawThreadProc;
-    thrCfg.purpose = afxThreadPurpose_DRAW;
+    thrCfg.usage = afxThreadUsage_IO;
     thrCfg.udd[0] = exu;
     if (AfxAcquireThreads(AfxHere(), &thrCfg, 1, &exu->worker))
         AfxThrowError();
@@ -303,17 +303,17 @@ _AFX afxError AfxAcquireIoBridge(afxIoBridgeConfig const* cfg, afxIoBridge* brid
     if (cfg)
     {
         bridgeCfg = *cfg;
-        bridgeCfg.minQueCnt = bridgeCfg.minQueCnt ? bridgeCfg.minQueCnt : AfxMax(1, _AfxXqueStdImplementation.unitsPerPage);            
+        bridgeCfg.minQueCnt = bridgeCfg.minQueCnt ? bridgeCfg.minQueCnt : AFX_MAX(1, _AfxXqueStdImplementation.unitsPerPage);            
     }
     else
     {
-        bridgeCfg.minQueCnt = AfxMax(1, _AfxXqueStdImplementation.unitsPerPage);
+        bridgeCfg.minQueCnt = AFX_MAX(1, _AfxXqueStdImplementation.unitsPerPage);
         bridgeCfg.queuePriority = NIL;
         //bridgeCfg[i].flags = NIL;
         totalDqueCnt += bridgeCfg.minQueCnt;
     }
 
-    afxClass* cls = (afxClass*)AfxGetIoBridgeClass();
+    afxClass* cls = (afxClass*)_AfxGetIoBridgeClass();
     AFX_ASSERT_CLASS(cls, afxFcc_EXU);
 
     if (AfxAcquireObjects(cls, 1, (afxObject*)bridge, (void const*[]) { NIL, NIL, &bridgeCfg, &_AfxXqueStdImplementation })) AfxThrowError();

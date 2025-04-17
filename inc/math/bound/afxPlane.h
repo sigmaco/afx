@@ -19,8 +19,9 @@
 #ifndef AFX_PLANE_H
 #define AFX_PLANE_H
 
-#include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/math/bound/afxBox.h"
+
+#define AFX_PLANE_DIST (3)
 
 typedef enum afxFloorPlane
 // The orientation of the the floor plane with respect to the X,Y,Z axes, and which axes represent the side, front and up vectors as a basis for rotations.
@@ -38,17 +39,23 @@ typedef enum afxFloorPlane
     afxFloorPlane_YZ
 } afxFloorPlane;
 
-AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxPlane)
-{
-    afxV3d      normal;
-    union
-    {
-        afxReal dist; // aka dist/offset
-        afxReal offset;
-    };
-};
+#define AFX_PLANE(u_, v_, w_, d_) (afxPlane){ .uvwd = { (u_), (v_), (w_), (d_) } }
 
-#define AFX_PLANE(x_, y_, z_, dist_) (afxPlane){ .normal = { (x_), (y_), (z_) }, .dist = (dist_) }
+AFXINL afxBool      AfxPlaneIsEqual(afxPlane a, afxPlane b);
+AFXINL afxBool      AfxPlaneIsNearEqual(afxPlane a, afxPlane b, afxV4d epsilon);
+AFXINL afxBool      AfxPlaneIsNotEqual(afxPlane a, afxPlane b);
+AFXINL afxBool      AfxPlaneIsNaN(afxPlane p);
+AFXINL afxBool      AfxPlaneIsInfinite(afxPlane p);
+AFXINL afxReal      AfxPlaneDot(afxPlane a, afxPlane b);
+AFXINL afxReal      AfxPlaneDotCoord(afxPlane p, afxV3d v);
+AFXINL afxReal      AfxPlaneDotNormal(afxPlane p, afxV3d v);
+AFXINL afxPlane     AfxPlaneNormalizeEst(afxPlane p);
+AFXINL afxPlane     AfxPlaneNormalize(afxPlane p);
+AFXINL afxPlane     AfxPlaneIntersectLine(afxPlane p, afxV4d start, afxV4d end);
+AFXINL void         AfxPlaneIntersectPlane(afxPlane a, afxPlane b, afxV4d start, afxV4d end);
+AFXINL afxPlane     AfxPlaneTransform(afxPlane p, afxM4d const m);
+AFXINL afxPlane     AfxPlaneFromPointNormal(afxV4d point, afxV4d normal);
+AFXINL afxPlane     AfxPlaneFromPoints(afxV4d a, afxV4d b, afxV4d c);
 
 AFXINL void         AfxMakePlane(afxPlane* p, afxV3d const normal, afxReal dist);
 

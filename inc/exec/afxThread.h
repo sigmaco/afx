@@ -32,28 +32,41 @@
 #include "qwadro/inc/base/afxEvent.h"
 #include "qwadro/inc/exec/afxAtomic.h"
 
-#define AFX_THR_MIN_EVENT_CAP 32
+#define AFX_MIN_THREAD_EVENT_CAPACITY (32)
 
-typedef enum afxThreadPurpose
+typedef enum afxThreadUsage
 {
-    afxThreadPurpose_SYSTEM = 1,
-    afxThreadPurpose_SOUND,
-    afxThreadPurpose_DRAW,
-    afxThreadPurpose_ASIO,
-    afxThreadPurpose_COMM,
-    afxThreadPurpose_SIM,
-    afxThreadPurpose_HID
-} afxThreadPurpose;
+    afxThreadUsage_IO       = AFX_BIT(0),
+    afxThreadUsage_CODEC    = AFX_BIT(1),
+    afxThreadUsage_COMPRESS = AFX_BIT(2),
+    afxThreadUsage_COMPUTE  = AFX_BIT(3),
+    afxThreadUsage_PRESENT  = AFX_BIT(4),
+    afxThreadUsage_DRAW     = AFX_BIT(5),
+    afxThreadUsage_MIX      = AFX_BIT(7),
+    afxThreadUsage_ASIO     = AFX_BIT(8),
+    afxThreadUsage_SOUND    = AFX_BIT(9),
+    afxThreadUsage_COMM     = AFX_BIT(10),
+    afxThreadUsage_SIM      = AFX_BIT(11),
+    afxThreadUsage_UX       = AFX_BIT(12),
+    afxThreadUsage_SYSTEM   = AFX_BIT(31),
+} afxThreadUsage;
+
+typedef enum afxThreadFlag
+{
+    afxThreadFlag_NONE
+} afxThreadFlags;
 
 typedef afxResult(*afxThreadProc)(afxThread thr, afxEvent* ev);
 
 AFX_DEFINE_STRUCT(afxThreadConfig)
 {
-    afxUnit             minEventCap;
-    afxThreadPurpose    purpose;
-    //afxThreadProc       procCb;
-    afxUnit             tid;
-    void*               udd[4];
+    afxUnit         minEventCap;
+    afxThreadUsage  usage;
+    afxThreadFlags  flags;
+    //afxThreadProc procCb;
+    afxUnit         tid;
+    afxString       tag;
+    void*           udd[4];
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +142,8 @@ AFX void        AfxQuitThread(void);
 AFX void        AfxYield(void);
 
 AFX void        AfxSleep(afxUnit ms);
+AFX void        AfxSleepUltraseconds(afxUnit usecs);
+AFX afxBool     AfxSleepNanoseconds(afxUnit64 nsecs, afxUnit64* remaining);
 
 ////////////////////////////////////////////////////////////////////////////////
 

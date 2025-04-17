@@ -15,7 +15,7 @@
  */
 
 #define _AMX_AUDIO_C
-#define _AMX_WAVEFORM_C
+#define _AMX_AUDIO_C
 #define _AMX_MIX_C
 //#define _AMX_MIX_SYSTEM_C
 #include "impl/amxImplementation.h"

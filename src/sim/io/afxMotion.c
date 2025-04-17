@@ -54,7 +54,7 @@ _ASXINL afxBool AfxFindMotionTransform(afxMotion mot, afxString const* seqId, af
     {
         afxString s = mot->pivots[i];
 
-        if (0 == AfxCompareStrings(seqId, 0, TRUE, 1, &s))
+        if (AfxCompareStrings(seqId, 0, TRUE, 1, &s, NIL))
         {
             *seqIdx = i;
             found = TRUE;
@@ -83,7 +83,7 @@ _ASXINL afxBool AfxFindMotionVector(afxMotion mot, afxString const* seqId, afxUn
     {
         afxString s = mot->vectors[i];
 
-        if (s.len && (0 == AfxCompareStrings(seqId, 0, TRUE, 1, &s)))
+        if (s.len && (AfxCompareStrings(seqId, 0, TRUE, 1, &s, NIL)))
         {
             *seqIdx = i;
             rslt = TRUE;
@@ -142,7 +142,7 @@ _ASX afxError _AsxMotCtorCb(afxMotion mot, void** args, afxUnit invokeNo)
     afxMotionBlueprint const* motb = args[1];
     motb += invokeNo;
 
-    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &motb->id.str, &mot->id))
+    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &motb->id.s, &mot->id))
         AfxThrowError();
 
     afxUnit vecCnt = motb->vecCnt;
@@ -230,12 +230,12 @@ _ASX afxError _AsxMotCtorCb(afxMotion mot, void** args, afxUnit invokeNo)
     // echo
 
     AfxGetMotionId(mot, &s);
-    AfxLogEcho("Motion <%.*s> assembled. %p\n    Listing %u transform circuits:", AfxPushString(&s), mot, mot->pivotCnt);
+    AfxReportMessage("Motion <%.*s> assembled. %p\n    Listing %u transform circuits:", AfxPushString(&s), mot, mot->pivotCnt);
 
     for (afxUnit i = 0; i < mot->pivotCnt; i++)
     {
         s = mot->pivots[i];
-        AfxLogEcho("\t%u <%.*s> %x", i, AfxPushString(&s), mot->pivotCurve[i].flags);
+        AfxReportMessage("\t%u <%.*s> %x", i, AfxPushString(&s), mot->pivotCurve[i].flags);
     }
 #endif
 

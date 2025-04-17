@@ -70,14 +70,14 @@
 
 typedef enum avxTopology
 {
-    avxTopology_POINT_LIST, // Mesh is made from points.
+    avxTopology_TRI_LIST, // Mesh is made from triangles.
+    avxTopology_TRI_STRIP,
+    avxTopology_TRI_FAN,
 
     avxTopology_LINE_LIST, // Mesh is made from lines.
     avxTopology_LINE_STRIP, // Mesh is a line strip.
 
-    avxTopology_TRI_LIST, // Mesh is made from triangles.
-    avxTopology_TRI_STRIP,
-    avxTopology_TRI_FAN,
+    avxTopology_POINT_LIST, // Mesh is made from points.
 
     avxTopology_LINE_LIST_ADJACENT,
     avxTopology_LINE_STRIP_ADJACENT,
@@ -89,26 +89,6 @@ typedef enum avxTopology
 
     avxTopology_TOTAL
 } avxTopology;
-
-#if 0
-typedef enum afxFormat
-{
-    afxFormat_REAL,
-    afxFormat_NAT,
-    afxFormat_INT,
-    afxFormat_V2D,
-    afxFormat_V2DN,
-    afxFormat_V2DI,
-    afxFormat_V3D,
-    afxFormat_V3DN,
-    afxFormat_V3DI,
-    afxFormat_V4D,
-    afxFormat_V4DN,
-    afxFormat_V4DI,
-
-    afxFormat_TOTAL
-} afxFormat;
-#endif
 
 typedef enum avxStencilOp
 {
@@ -182,8 +162,8 @@ typedef enum avxFrontFace
 
 typedef enum avxFillMode
 {
-    avxFillMode_SOLID,
-    avxFillMode_EDGE,
+    avxFillMode_FACE,
+    avxFillMode_LINE,
     avxFillMode_POINT,
 
     avxFillMode_TOTAL
@@ -304,11 +284,13 @@ typedef enum avxBlendOp
     // B = min(Bs0, Bd)
     // A = min(As0, Ad)
 
-    avxBlendOp_MAX
+    avxBlendOp_MAX,
     // R = max(Rs0, Rd)
     // G = max(Gs0, Gd)
     // B = max(Bs0, Bd)
     // A = max(As0, Ad)
+
+    avxBlendOp_TOTAL
 } avxBlendOp;
 
 typedef enum avxCompareOp
@@ -325,68 +307,18 @@ typedef enum avxCompareOp
     avxCompareOp_TOTAL
 } avxCompareOp;
 
-#if 0
-typedef enum afxVertexFormat
-{
-    //NIL,
-    afxVertexFormat_R32 = 1,
-    afxVertexFormat_REAL = afxVertexFormat_R32,
-    afxVertexFormat_R32x2,
-    afxVertexFormat_V2D = afxVertexFormat_R32x2,
-    afxVertexFormat_R32x3,
-    afxVertexFormat_V3D = afxVertexFormat_R32x3,
-    afxVertexFormat_R32x4,
-    afxVertexFormat_V4D = afxVertexFormat_R32x4,
-    afxVertexFormat_R16,
-    afxVertexFormat_R16x2,
-    afxVertexFormat_R16x4,
-
-    afxVertexFormat_U32,
-    afxVertexFormat_U32x2,
-    afxVertexFormat_U32x4,
-    afxVertexFormat_U16,
-    afxVertexFormat_U16x2,
-    afxVertexFormat_U16x4,
-    afxVertexFormat_U8,
-    afxVertexFormat_U8x2,
-    afxVertexFormat_U8x4,
-    
-    afxVertexFormat_I32,
-    afxVertexFormat_I32x2,
-    afxVertexFormat_I32x4,
-    afxVertexFormat_I16,
-    afxVertexFormat_I16x2,
-    afxVertexFormat_I16x4,
-    afxVertexFormat_I8,
-    afxVertexFormat_I8x2,
-    afxVertexFormat_I8x4,
-
-    afxVertexFormat_LTV3, // [ r, u, f ]
-    afxVertexFormat_ATV3, // [ x, y, z ]
-    afxVertexFormat_LTV4, // [ r, u, f, 0 ]
-    afxVertexFormat_ATV4, // [ x, y, z, 1 ]
-    afxVertexFormat_LTM2, // [ r, u, r, u ]
-    afxVertexFormat_LTM3, // [ r, u, f, r, u, f, r, u, f ]
-    afxVertexFormat_ATM3, // [ r, u, 0, r, u, 0, x, y, 1 ]
-    afxVertexFormat_LTM4, // [ r, u, f, 0, r, u, f, 0, r, u, f, 0, 0, 0, 0, 0 ]
-    afxVertexFormat_ATM4, // [ r, u, f, 0, r, u, f, 0, r, u, f, 0, x, y, z, 1 ]
-
-    afxVertexFormat_TOTAL
-} afxVertexFormat;
-#endif
-
-typedef enum avxShaderStage
+typedef enum avxShaderType
 {
     // NIL = reserved for composing purposes.
-    avxShaderStage_VERTEX = 1,
-    avxShaderStage_FRAGMENT,
-    avxShaderStage_PRIMITIVE,
-    avxShaderStage_TESS_CTRL,
-    avxShaderStage_TESS_EVAL,
-    avxShaderStage_COMPUTE,
+    avxShaderType_VERTEX = 1,
+    avxShaderType_FRAGMENT,
+    avxShaderType_PRIMITIVE,
+    avxShaderType_TESS_CTRL,
+    avxShaderType_TESS_EVAL,
+    avxShaderType_COMPUTE,
 
-    avxShaderStage_TOTAL
-} avxShaderStage;
+    avxShaderType_TOTAL
+} avxShaderType;
 
 // Object handles defined by SIGMA Draw System
 
@@ -414,8 +346,8 @@ AFX_DEFINE_HANDLE(avxCanvas);
 AFX_DEFINE_HANDLE(afxDrawOperation);
 AFX_DEFINE_HANDLE(afxDrawTechnique);
 AFX_DEFINE_HANDLE(afxTypography);
-AFX_DEFINE_HANDLE(afxCamera);
-AFX_DEFINE_HANDLE(afxTxd);
+AFX_DEFINE_HANDLE(avxCamera);
+AFX_DEFINE_HANDLE(avxTxd);
 AFX_DEFINE_HANDLE(afxVertexStream);
 AFX_DEFINE_HANDLE(afxVertexBuffer);
 AFX_DEFINE_HANDLE(afxIndexBuffer);
@@ -500,14 +432,14 @@ AVX afxString const g_str_slope;
 AVX afxString const g_str_clamp;
 
 
-AVX avxTopology         AfxFindPrimitiveTopology(afxString const *str);
+AVX avxTopology             AfxFindPrimitiveTopology(afxString const *str);
 AVX avxLogicOp              AfxFindLogicOp(afxString const *str);
 AVX avxStencilOp            AfxFindStencilOp(afxString const *str);
 AVX avxCompareOp            AfxFindCompareOp(afxString const *str);
 AVX avxCullMode             AfxFindCullMode(afxString const *str);
 AVX avxFrontFace            AfxFindFrontFace(afxString const *str);
 AVX avxFillMode             AfxFindFillMode(afxString const *str);
-AVX avxShaderStage          AfxFindShaderStage(afxString const *str);
+AVX avxShaderType           AfxFindShaderStage(afxString const *str);
 #if 0
 AVX avxFormat               AfxFindVertexFormat(afxString const *str);
 #endif
@@ -519,7 +451,7 @@ AVX afxString const*        AfxStringifyCompareOp(avxCompareOp f, afxString *out
 AVX afxString const*        AfxStringifyCullMode(avxCullMode cm, afxString *out);
 AVX afxString const*        AfxStringifyFrontFace(avxFrontFace ff, afxString *out);
 AVX afxString const*        AfxStringifyFillMode(avxFillMode fm, afxString *out);
-AVX afxString const*        AfxStringifyShaderStage(avxShaderStage ss, afxString *out);
+AVX afxString const*        AfxStringifyShaderStage(avxShaderType ss, afxString *out);
 #if 0
 AVX afxString const*        AfxStringifyVertexFormat(afxVertexFormat fmt, afxString *out);
 

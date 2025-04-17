@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // QWADRO VIDEO MEMORY BUFFER                                               //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AVX_BUFFER_H
@@ -37,7 +41,8 @@ typedef enum avxBufferUsage
     avxBufferUsage_QUERY = AFX_BIT(7), // Can be used to capture query results; aka QBO.    
     avxBufferUsage_FETCH = AFX_BIT(8), // Can be used to fetch tensor (usually texels) data; aka TFBO.
     avxBufferUsage_TENSOR = AFX_BIT(9), // Can be used to read/write tensor data; aka storable TBO.
-    avxBufferUsage_FEEDBACK = AFX_BIT(10) // Can be used to store primitive transformation output/feedback.
+    avxBufferUsage_FEEDBACK = AFX_BIT(10), // Can be used to store primitive transformation output/feedback.
+    avxBufferUsage_ARGUMENT = AFX_BIT(11) // Can be used as a argumentation buffer; ABO
 } avxBufferUsage;
 
 typedef enum avxBufferFlags
@@ -77,8 +82,6 @@ typedef enum avxBufferMapFlag
 
 AFX_DEFINE_STRUCT(avxBufferInfo)
 {
-    // The size in bytes of the buffer to be created.
-    afxUnit         cap;
     // A bitmask specifying allowed usages of the buffer.
     avxBufferUsage  usage;
     // A bitmask specifying additional parameters of the buffer.
@@ -88,6 +91,8 @@ AFX_DEFINE_STRUCT(avxBufferInfo)
     avxBuffer       base;
     // An offset in bytes from the base address of the buffer.
     afxSize         from;
+    // The size in bytes of the buffer to be created.
+    afxUnit         size;
     // A avxFormat describing the format of the data elements in the buffer.
     avxFormat       fmt; // used for TENSOR buffers.
 
@@ -96,6 +101,12 @@ AFX_DEFINE_STRUCT(avxBufferInfo)
     // A user-defined data.
     void*           udd;
     afxString       tag;
+
+    // Possibly initial data, to avoid boilerplate with unconvenient mappings.
+    void*           data;
+    afxUnit         dataSiz;
+    // Should this buffer be mapped at creation?
+    afxBool         mapped;
 };
 
 AFX_DEFINE_STRUCT(avxBufferCopy)
@@ -115,7 +126,7 @@ AFX_DEFINE_STRUCT(avxBufferIo)
 };
 
 AFX_DEFINE_STRUCT(avxBufferedStream)
-// Structured specifying a avxBuffer-backed stream.
+// Structure specifying a avxBuffer-backed stream.
 {
     // A buffer handle.
     avxBuffer       buf;
@@ -128,7 +139,7 @@ AFX_DEFINE_STRUCT(avxBufferedStream)
 };
 
 AFX_DEFINE_STRUCT(avxBufferedMap)
-// Structured specifying a avxBuffer-backed memory map.
+// Structure specifying a avxBuffer-backed memory map.
 {
     // A buffer handle.
     avxBuffer       buf;
@@ -153,49 +164,301 @@ AVX afxDrawSystem   AvxGetBufferContext(avxBuffer buf);
 
 AVX void*           AvxGetBufferUdd(avxBuffer buf);
 
-AVX afxUnit         AvxGetBufferCapacity(avxBuffer buf, afxUnit from);
+/*
+    The AvxGetBufferCapacity() function returns the available capacity of a buffer, starting from a specified position. 
+    It ensures that the requested capacity doesn't exceed the buffer's total capacity. This function is useful when 
+    working with dynamic memory allocation or when you need to determine how much space is left in a buffer from a specific point, 
+    helping you manage memory effectively when writing or updating buffer data.
+    
+    The function returns the available capacity of the buffer starting from the specified position by @from.
+    If the @from value is greater than or equal to the buffer's total capacity, the function would return 0, 
+    indicating there is no available space starting from that position.
+*/
 
-AVX avxBufferUsage  AvxGetBufferUsage(avxBuffer buf);
-AVX avxBufferUsage  AvxTestBufferUsage(avxBuffer buf, avxBufferUsage usage);
+AVX afxUnit         AvxGetBufferCapacity
+(
+    // The buffer to be queried.
+    avxBuffer       buf, 
+    // The starting point in the buffer from which capacity is being measured.
+    afxUnit         from
+);
 
-AVX avxBufferFlags  AvxGetBufferAccess(avxBuffer buf);
-AVX avxBufferFlags  AvxTestBufferAccess(avxBuffer buf, avxBufferFlags access);
+/*
+    The AvxGetBufferUsage() function retrieves or queries specific usage flags associated with a buffer object. 
+    It ensures that the buffer is valid before proceeding, and it allows filtering the buffer’s usage flags using a bitmask if needed. 
+    If no bitmask is provided, it simply returns the entire usage flags of the buffer. This function is useful for checking or 
+    validating how a buffer is intended to be used in a graphics pipeline.
 
-AVX afxError        AvxSyncBuffer(avxBuffer buf, afxSize offset, afxUnit range);
-AVX afxError        AvxFlushBuffer(avxBuffer buf, afxSize offset, afxUnit range);
+    If a @usage pattern is specified, it returns the bitwise AND between buffer's usage and the specified usage. 
+    This would allow checking if a specific usage flag is set in the buffer's usage flags.
+    If usage is NIL, it simply returns the entire buffer's usage value.
 
-AVX afxError        AvxMapBuffer(avxBuffer buf, afxSize offset, afxUnit range, afxFlags flags, void** placeholder);
-AVX afxError        AvxUnmapBuffer(avxBuffer buf, afxBool wait);
+    The function returns either the filtered usage flags (if a specific usage bitmask is specified),
+    or, it returns the entire usage flag of the buffer (if no specific usage flag is specified).
+*/
+
+AVX avxBufferUsage  AvxGetBufferUsage
+(
+    // The buffer to be queried.
+    avxBuffer       buf, 
+    // A bitmask or a specific usage flag for the buffer.
+    avxBufferUsage  usage
+);
+
+/*
+    The AvxGetBufferAccess() function retrieves the access flags of a buffer. By performing a bitwise operation, 
+    it checks whether the buffer has certain access permissions (such as read or write access). If the access flag is provided, 
+    it returns whether the requested access type is set in the buffer’s flags. If no specific flag is requested, it returns the 
+    buffer’s entire set of access flags. This function is useful for querying buffer access and ensuring the buffer is being used 
+    correctly in the graphics pipeline.
+*/
+
+AVX avxBufferFlags  AvxGetBufferAccess
+(
+    // The buffer to be queried.
+    avxBuffer       buf, 
+    // A bitmask representing a specific access flag or a query for specific access flags.
+    avxBufferFlags  access
+);
+
+/*
+    The AvxSyncMappedBuffer() method synchronizes a buffer's state to ensure that it is ready for further operations (such as reading or writing).
+    If synchronization fails, the function raises an error.
+
+    This function is just a convenient way of calling AvxSyncBufferedMaps(), which actually performs the synchronization, for a single buffer.
+    Otherwise, AvxSyncBufferedMaps() should be used to avoid contention.
+*/
+
+AVX afxError        AvxSyncMappedBuffer
+(
+    // A buffer object that needs to be synchronized.
+    avxBuffer       buf, 
+    // The starting point in the buffer (in terms of byte offset) where the synchronization should begin.
+    afxSize         offset, 
+    // The size or range (in bytes or units) to be synchronized, relative to the @offset.
+    afxUnit         range
+);
+
+/*
+    The AvxFlushMappedBuffer() method ensures any changes to a buffer's data are committed or flushed to memory. 
+    And if any errors occur during this process, they are raised and returned.
+
+    This function is just a convenient way of calling AvxFlushBufferedMaps(), which carries out the synchronization, for a single buffer.
+    Otherwise, AvxFlushBufferedMaps() should be used to avoid contention.
+*/
+
+AVX afxError        AvxFlushMappedBuffer
+(
+    // The buffer that needs to be flushed.
+    avxBuffer       buf, 
+    // The starting point (in bytes) of the portion of the buffer that should be flushed.
+    afxSize         offset, 
+    // The size (in bytes or units) of the portion of the buffer to flush, starting from the @offset.
+    afxUnit         range
+);
+
+/*
+    The AvxMapBuffer() method maps a buffer to memory, making it accessible for CPU operations. It validates inputs (buffer validity, 
+    alignment, range), prepares the mapping structure, and calls the system's mapping function to map the buffer. The function also 
+    includes error handling and validation to ensure that the mapping process is carried out safely and efficiently.
+    
+    This function is just a convenient way of calling AvxMapBuffers(), which is called to perform the actual mapping of the buffer,
+    for a single buffer. Otherwise, AvxMapBuffers() should be used to avoid contention.
+*/
+
+AVX afxError        AvxMapBuffer
+(
+    // The buffer that needs to be mapped.
+    avxBuffer       buf, 
+    // The starting byte offset where the buffer mapping should begin.
+    afxSize         offset, 
+    // The size (in bytes or units) of the portion of the buffer to map, starting from the @offset.
+    afxUnit         range, 
+    // Flags that define the special behaviors for the mapping.
+    afxFlags        flags, 
+    // A pointer to a pointer (void**), which will be used to store the address of the mapped memory.
+    // After the mapping, this pointer will point to the memory region that has been mapped.
+    void**          placeholder
+);
+
+/*
+    The AvxUnmapBuffer() method unmaps a buffer from memory. It ensures that any changes to the buffer are synchronized before releasing 
+    the memory access. The function validates the buffer and drawing system, calls the unmapping process, and handles errors if the unmap 
+    operation fails. The wait flag is not used in this function's implementation, but it could be useful for managing synchronization in 
+    a more complex implementation.
+
+    This function is just a convenient way of calling AvxUnmapBuffers(), which is called to perform the actual unmapping of the buffer,
+    for a single buffer. Otherwise, AvxUnmapBuffers() should be used to avoid contention.
+*/
+
+AVX afxError        AvxUnmapBuffer
+(
+    // The buffer to unmap.
+    avxBuffer       buf, 
+    // A flag indicating whether the operation should wait for synchronization.
+    afxBool         wait
+);
+
 AVX afxBool         AvxIsBufferMapped(avxBuffer buf, afxSize offset, afxUnit range);
 
-AVX afxError        AvxUploadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxUnit exuIdx, afxStream in);
-AVX afxError        AvxDownloadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxUnit exuIdx, afxStream out);
+/*
+    The AvxUploadBuffer() method uploads data to a buffer. It validates the operations, prepares a transfer structure, and then 
+    performs the actual data upload. The function handles synchronization and ensures that errors are caught and thrown appropriately. 
+    The use of execution units allows for parallel or distributed uploads, such as using a GPU to handle the operations.
+*/
 
-AVX afxError        AvxDumpBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxUnit exuIdx, void* dst);
-AVX afxError        AvxUpdateBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxUnit exuIdx, void const* src);
+AVX afxError        AvxUploadBuffer
+(
+    // The destination buffer to which data will be uploaded.
+    avxBuffer       buf, 
+    // The source stream from which the data will be transferred into the buffer.
+    afxStream       in, 
+    // The number of operations to be performed on the buffer.
+    afxUnit         opCnt, 
+    // An array of operations (@opCnt number of operations) to be performed on the buffer.
+    // Each operation specifies where the data will be uploaded within the buffer and how the data should be handled.
+    avxBufferIo const ops[], 
+    // The execution unit index. This typically refers to the specific GPU or compute unit that will handle the operation.
+    afxMask         exuMask
+);
+
+/*
+    The AvxDownloadBuffer() method downloads data from a buffer. It validates the operations, prepares a transfer structure, and then 
+    performs the actual data transfer. It also handles synchronization and error handling, ensuring that the data is downloaded to the 
+    specified output stream. The function is optimized for use in parallel computing systems, with the ability to specify the execution 
+    unit responsible for the operation.
+*/
+
+AVX afxError        AvxDownloadBuffer
+(
+    // The source buffer from which data will be downloaded.
+    avxBuffer       buf, 
+    // The destination stream where the data from the buffer will be transferred.
+    afxStream       out, 
+    // The number of operations to be performed on the buffer.
+    afxUnit         opCnt, 
+    // An array of operations to be performed on the buffer. 
+    // Each operation specifies how data should be extracted from the buffer.
+    avxBufferIo const ops[], 
+    // The execution unit index. This refers to the specific GPU or compute unit responsible for the operation.
+    afxMask         exuMask
+);
+
+/*
+    The AvxDumpBuffer() method dumps data from a buffer to a specified destination. It validates the operations, prepares a transfer 
+    structure, and then performs the actual data transfer. It also handles synchronization and error handling, ensuring that the data 
+    is dumped to the specified destination. The function is optimized for use in parallel computing systems, with the ability to specify 
+    the execution unit responsible for the operation.
+*/
+
+AVX afxError        AvxDumpBuffer
+(
+    // The source buffer from which data will be dumped.
+    avxBuffer       buf, 
+    // A pointer to the destination where the buffer data will be dumped.
+    void*           dst, 
+    // The number of operations to be performed on the buffer.
+    afxUnit         opCnt, 
+    // An array of operations to be performed on the buffer. 
+    // Each operation specifies how data should be dumped from the buffer.
+    avxBufferIo const ops[], 
+    // The execution unit index (e.g., GPU or compute unit) responsible for the operation.
+    afxMask         exuMask
+);
+
+AVX afxError        AvxUpdateBuffer
+(
+    // The target buffer that will be updated with new data.
+    avxBuffer       buf, 
+    // A pointer to the source data from which the buffer will be updated.
+    void const*     src, 
+    // The number of operations to be performed on the buffer.
+    afxUnit         opCnt, 
+    // An array of operations to be performed on the buffer. 
+    // Each operation specifies how the buffer should be updated.
+    avxBufferIo const ops[], 
+    // The execution unit index (e.g., GPU or compute unit) that will perform the transfer.
+    afxMask         exuMask
+);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 AVX afxError        AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo const infos[], avxBuffer buffers[]);
 
 /*
-    AvxFlushBufferMaps guarantees that host writes to the memory ranges described by maps are made available to the host memory domain,
-    such that they can be made available to the device memory domain via memory domain operations using the WRITE access type.
+    The AvxFlushBufferedMaps() function ensures that any pending operations involving mapped buffers are completed, typically flushing any 
+    modifications made to these buffers and synchronizing them with the GPU or draw system. The function validates the input, checks 
+    buffer states, and either uses a ICD callback or a draw queue to execute the flush operation.
+
+    The function validates the provided buffers and ensures they are part of the correct draw system.
+
+    If no ICD callback is available for flushing the maps, it uses a draw queue and bridge to synchronize the flush operation.
+
+    Error handling and synchronization are key components of this function, ensuring that buffer operations are completed before continuing with other tasks.
 */
 
-AVX afxError        AvxFlushBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap const maps[]);
+AVX afxError        AvxFlushBufferedMaps
+(
+    // The draw system providing the buffers.
+    afxDrawSystem   dsys, 
+    // The number of buffered maps.
+    afxUnit         cnt, 
+    // An array of buffered map operations.
+    avxBufferedMap const maps[]
+);
 
 /*
-    AvxSyncBufferMaps guarantees that device writes to the memory ranges described by maps,
-    which have been made available to the host memory domain using the WRITE and READ access types,
-    are made visible to the host. If a range of non-coherent memory is written by the host and then
-    invalidated without first being flushed, its contents are undefined.
+    The AvxSyncBufferedMaps() function synchronizes buffer maps between the host (CPU) and the GPU or another compute system. 
+    It ensures that the mapped buffers are correctly handled, and any changes are synchronized, either through a ICD callback function or 
+    a default mechanism.
 */
 
-AVX afxError        AvxSyncBufferMaps(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap const maps[]);
+AVX afxError        AvxSyncBufferedMaps
+(
+    // The draw system providing the buffers.
+    afxDrawSystem   dsys, 
+    // The number of buffered maps.
+    afxUnit         cnt, 
+    // An array of buffered map operations.
+    avxBufferedMap const maps[]
+);
 
-AVX afxError        AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferRemap maps[]);
+/*
+    The AvxMapBuffers() function maps buffer regions to make them accessible for read/write operations in a graphics or compute system. 
+    It allows for mapping multiple buffer regions in parallel, managing synchronization, validation, and performing the actual mapping of memory.
 
-AVX afxError        AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBuffer buffers[]);
+    Each buffer mapping is validated, and if it's already mapped, the function ensures the new mapping is within the current mapped region.
+    If the buffer has been allocated in host memory (buf->data), the function directly maps the buffer region.
+    If the buffer is a GPU-side or managed buffer, the function defers the actual mapping to a later stage using a draw system operation.
+
+    The function uses atomic operations to manage the pending mapping state of each buffer.
+    The function waits for any ongoing mapping operations to complete before proceeding.
+
+    The function first checks for a ICD callback function associated with the draw system.
+    If the callback is available, it uses it to perform the mapping; otherwise, it falls back to using draw queues and bridges.
+    If no callback is available, the function uses a draw queue and draw bridge to handle the buffer remapping.
+
+    The function waits for the draw queue to complete the remapping operation before proceeding.
+    After the mapping operations are completed, the function ensures that all buffers have their pendingRemap counters decremented.
+
+    It also performs additional validation (if enabled) to ensure the buffer's mapped state is consistent.
+*/
+
+AVX afxError        AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps[], void** placeholders[]);
+
+/*
+    The AvxUnmapBuffers() function unmaps buffers previously mapped in the graphics or compute system. It handles synchronization, 
+    error checking, and supports both host-side buffers and buffers that are managed by the draw system.
+
+    The function iterates through the list of buffers and waits for any ongoing mapping operations to complete before unmapping the buffers.
+    The function uses atomic operations to manage the pending remap state of each buffer and ensure synchronization during unmapping.
+
+    If the draw system provides a ICD callback function, it is used to unmap the buffers.
+    If no ICD callback is available, the function uses a draw queue to perform the unmap operation.
+
+    After unmapping the buffers, the function performs final checks (if validation is enabled) and clears the pendingRemap state for each buffer.
+*/
+
+AVX afxError        AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps[]);
 
 #endif//AVX_BUFFER_H

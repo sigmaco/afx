@@ -71,7 +71,7 @@ _AFX afxError AfxAcquireSemaphores(void* ctx, afxUnit cnt, afxSemaphore semaphor
     AFX_ASSERT(cnt);
     AFX_ASSERT(semaphores);
 
-    afxClass* cls = AfxGetSemaphoreClass(ctx);
+    afxClass* cls = _AfxGetSemaphoreClass(ctx);
     AFX_ASSERT_CLASS(cls, afxFcc_SEM);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)semaphores, (void const*[]) { ctx }))

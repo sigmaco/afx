@@ -17,7 +17,7 @@
 #ifndef AMX_SOURCE_H
 #define AMX_SOURCE_H
 
-#include "qwadro/inc/mix/io/afxAudio.h"
+#include "qwadro/inc/mix/io/amxAudio.h"
 
 AFX_DEFINE_STRUCT(amxStream)
 // Represents one stream in a media source.

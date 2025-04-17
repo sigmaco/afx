@@ -28,7 +28,7 @@ _ASX asxCmd* _AsxCtxPushCmd(afxContext ctx, afxUnit id, afxUnit siz, afxCmdId* c
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
     AFX_ASSERT(siz >= sizeof(asxCmdHdr));
 
-    asxCmd* cmd = AfxRequestArenaUnit(&ctx->cmdArena, siz);
+    asxCmd* cmd = AfxRequestArenaUnit(&ctx->cmdArena, siz, 1, NIL, 0);
     AFX_ASSERT(cmd);
     cmd->hdr.id = id;
     cmd->hdr.siz = siz;
@@ -100,7 +100,7 @@ _ASX afxError AfxRecycleCatalyst(afxContext ctx, afxBool freeRes)
 
     //afxUnit poolIdx = ctx->poolIdx;
 
-    if (AfxTryEnterSlockExclusive(&sque->cmdbReqLock))
+    if (AfxTryLockFutex(&sque->cmdbReqLock))
     {
         if (AfxPushQueue(&sque->cmdbRecycQue, &ctx))
         {
@@ -110,7 +110,7 @@ _ASX afxError AfxRecycleCatalyst(afxContext ctx, afxBool freeRes)
         {
             ctx->state = asxContextState_INVALID;
         }
-        AfxExitSlockExclusive(&sque->cmdbReqLock);
+        AfxUnlockFutex(&sque->cmdbReqLock);
     }
     else
     {
@@ -163,7 +163,7 @@ _ASX afxError _AsxCtxCtorCb(afxContext ctx, void** args, afxUnit invokeNo)
     ctx->state = asxContextState_INITIAL;
 
     AfxDeployChain(&ctx->commands, ctx);
-    AfxDeployArena(&ctx->cmdArena, NIL, AfxHere());
+    AfxMakeArena(&ctx->cmdArena, NIL, AfxHere());
 
     ctx->endCb = _AsxCtxEndCb;
     ctx->resetCb = _AsxCtxResetCb;
@@ -206,7 +206,7 @@ _ASX afxError AfxAcquireSampleContexts(afxSimulation dsys, afxUnit exuIdx, afxUn
     }
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    if (!AfxTryEnterSlockExclusive(&sque->cmdbReqLock))
+    if (!AfxTryLockFutex(&sque->cmdbReqLock))
     {
         AfxThrowError();
         return afxError_TIMEOUT;
@@ -239,7 +239,7 @@ _ASX afxError AfxAcquireSampleContexts(afxSimulation dsys, afxUnit exuIdx, afxUn
 
     AFX_ASSERT_OBJECTS(afxFcc_CTX, cnt2, batches);
 
-    AfxExitSlockExclusive(&sque->cmdbReqLock);
+    AfxUnlockFutex(&sque->cmdbReqLock);
 
     if (cnt2 < cnt)
     {

@@ -157,7 +157,7 @@ _AFXINL afxError AfxObjectAssert(afxObject obj, afxFcc fcc, afxHere const hint, 
     
     if (!AfxTestObjectFcc(obj, fcc))
     {
-        ((err) = (-((afxError)__LINE__)), AfxLogError(exp));
+        ((err) = (-((afxError)__LINE__)), AfxReportError(exp));
     }
     return err;
 }
@@ -168,7 +168,7 @@ _AFXINL afxError AfxObjectTryAssert(afxObject obj, afxFcc fcc, afxHere const hin
     AFX_ASSERT(hint);
     AFX_ASSERT(exp);
 
-    if (!obj) ((err) = (-((afxError)__LINE__)), AfxLogError(exp));
+    if (!obj) ((err) = (-((afxError)__LINE__)), AfxReportError(exp));
     else
     {
         afxObjectBase const* hdr = GET_OBJ_HDR(obj);
@@ -176,7 +176,7 @@ _AFXINL afxError AfxObjectTryAssert(afxObject obj, afxFcc fcc, afxHere const hin
         AFX_ASSERT(fcc);
 
         if (!AfxTestObjectFcc(obj, fcc))
-            ((err) = (-((afxError)__LINE__)), AfxLogError(exp));
+            ((err) = (-((afxError)__LINE__)), AfxReportError(exp));
     }
     return err;
 }
@@ -206,8 +206,8 @@ _AFXINL afxError AfxAllocateInstanceData(afxObject obj, afxUnit cnt, afxObjectSt
     for (afxUnit i = 0; i < cnt; i++)
     {
         afxObjectStash const* stash = &stashes[i];
-        afxUnit alignedSiz = AFX_ALIGNED_SIZE(stash->siz, AfxMax(AFX_SIMD_ALIGNMENT, stash->align));
-        void* p = stash->cnt ? AfxRequestArenaUnit(aren, AfxMax(1, stash->cnt) * alignedSiz) : NIL;
+        afxUnit alignedSiz = AFX_ALIGNED_SIZE(stash->siz, AFX_MAX(AFX_SIMD_ALIGNMENT, stash->align));
+        void* p = stash->cnt ? AfxRequestArenaUnit(aren, alignedSiz, AFX_MAX(1, stash->cnt), NIL, 0) : NIL;
 
         if (stash->cnt && !p)
         {
@@ -216,8 +216,8 @@ _AFXINL afxError AfxAllocateInstanceData(afxObject obj, afxUnit cnt, afxObjectSt
             for (afxUnit j = i; j-- > 0;)
             {
                 afxObjectStash const* stash2 = &stashes[j];
-                afxUnit alignedSiz = AFX_ALIGNED_SIZE(stash2->siz, AfxMax(sizeof(void*), stash2->align));
-                AfxRecycleArenaUnit(aren, *stash2->var, AfxMax(1, stash2->cnt) * alignedSiz);
+                afxUnit alignedSiz = AFX_ALIGNED_SIZE(stash2->siz, AFX_MAX(sizeof(void*), stash2->align));
+                AfxRecycleArenaUnit(aren, *stash2->var, AFX_MAX(1, stash2->cnt) * alignedSiz);
             }
         }
         *stash->var = p;
@@ -242,8 +242,8 @@ _AFXINL afxError AfxDeallocateInstanceData(afxObject obj, afxUnit cnt, afxObject
 
             if (p)
             {
-                afxUnit alignedSiz = AFX_ALIGNED_SIZE(stash->siz, AfxMax(AFX_SIMD_ALIGNMENT, stash->align));
-                AfxRecycleArenaUnit(aren, p, AfxMax(1, stash->cnt) * alignedSiz);
+                afxUnit alignedSiz = AFX_ALIGNED_SIZE(stash->siz, AFX_MAX(AFX_SIMD_ALIGNMENT, stash->align));
+                AfxRecycleArenaUnit(aren, p, AFX_MAX(1, stash->cnt) * alignedSiz);
             }
             *stash->var = NIL;
         }
@@ -280,12 +280,12 @@ _AFX afxError AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watched
         afxObjectBase* hdr = GET_OBJ_HDR(watched);
         AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
         afxObjectBase* filterInst = GET_OBJ_HDR(obj);
-        AfxLogEcho("Deinstalling watcher <%p> for %p", obj, watched);
+        AfxReportMessage("Deinstalling watcher <%p> for %p", obj, watched);
         
         while (hdr->watchers)
         {
             afxEventFilter *flt;
-            AFX_ITERATE_CHAIN(hdr->watchers, afxEventFilter, watched, flt)
+            AFX_ITERATE_CHAIN(afxEventFilter, flt, watched, hdr->watchers)
             {
                 AFX_ASSERT(AfxGetLinker(&flt->watched) == watched);
 
@@ -348,7 +348,7 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
         AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
         afxObjectBase* filterInst = GET_OBJ_HDR(obj);
         AFX_ASSERT(filterInst->fcc == afxFcc_OBJ);
-        AfxLogEcho("Installing watcher <%p> for %p...", obj, watched);
+        AfxReportMessage("Installing watcher <%p> for %p...", obj, watched);
         //AFX_ASSERT(fn);
 
         while (fn)
@@ -357,7 +357,7 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
 
             if (hdr->watchers)
             {
-                AFX_ITERATE_CHAIN(hdr->watchers, afxEventFilter, watched, flt)
+                AFX_ITERATE_CHAIN(afxEventFilter, flt, watched, hdr->watchers)
                 {
                     AFX_ASSERT(AfxGetLinker(&flt->watched) == watched);
 
@@ -451,7 +451,7 @@ _AFX afxBool AfxNotifyObject(afxObject obj, afxEvent* ev)
     if (hdr->watchers)
     {
         afxEventFilter *flt;
-        AFX_ITERATE_CHAIN(hdr->watchers, afxEventFilter, watched, flt)
+        AFX_ITERATE_CHAIN(afxEventFilter, flt, watched, hdr->watchers)
         {
             AFX_ASSERT(AfxGetLinker(&flt->watched) == obj);
             afxObjectBase* watcherHdr = GET_OBJ_HDR(AfxGetLinker(&flt->holder));

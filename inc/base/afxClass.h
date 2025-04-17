@@ -14,20 +14,42 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+/*
+    The afxClass is a rich and powerful type meta-system, forming the core of a reflective object system 
+    and component-based architecture across the whole Qwadro ecosystem.
+    
+    It's a runtime type info (RTTI), memory management mechanism and plugin IO glue.
+    It supports a flexible single inheritance model with tracking of subtypes and RTTI depth filtering.
+
+    afxClass describes a runtime type, essentially a class descriptor or type object that:
+        Defines how to construct/destroy objects;
+        Supports object pooling;
+        Manages inheritance and composition;
+        Handles plugin extension data;
+        Provides memory management via arenas and pools;
+        Encodes object-level behavior (like events and IO serialization);
+
+    This is a very complete runtime class system with:
+        Inheritance support
+        Memory pooling
+        Plugin extension points
+        RTTI & serialization
+        Custom construction logic
+        Instance count limits
+
+    It has beeen designed for both performance (custom allocators, pools, alignment) and flexibility (plugin IO, VMT, events, extensions).
+*/
+
 #ifndef AFX_CLASS_H
 #define AFX_CLASS_H
 
 #include "qwadro/inc/base/afxDebug.h"
 #include "qwadro/inc/base/afxFcc.h"
 #include "qwadro/inc/base/afxChain.h"
-#include "qwadro/inc/exec/afxSlock.h"
+#include "qwadro/inc/exec/afxFutex.h"
 #include "qwadro/inc/base/afxObject.h"
 #include "qwadro/inc/mem/afxPool.h"
 #include "qwadro/inc/mem/afxArena.h"
-
-// The Qt Meta-Object System in Qt is responsible for the signals and slots inter-object communication mechanism, runtime class information, and the Qt property system.
-// A single QMetaObject instance is created for each QObject subclass that is used in an application, and this instance stores all the class-information for the QObject subclass.
-// This object is available as QObject::typeObject().
 
 //AFX_DECLARE_STRUCT(afxHandle);
 AFX_DECLARE_STRUCT(afxClass);
@@ -36,7 +58,7 @@ AFX_DECLARE_STRUCT(afxEvent);
 #define _AFX_CLASS_LEVEL_MASK 0xF
 #define _AFX_CLASS_BASE_LEVEL 1 // 0 is reserved for afxHandle only stuff
 
-// A afxClass is a model for something which explains it or shows how it canv be produced.
+// A afxClass is a model for something which explains it or shows how it can be produced.
 
 AFX_DEFINE_STRUCT(afxIterator)
 {
@@ -127,44 +149,74 @@ AFX_DEFINE_STRUCT(afxClassVmt)
 
 AFX_DEFINE_STRUCT(afxClass)
 {
+    // Should be afxFcc_CLS (for class validation).
     afxFcc          fcc; // afxFcc_CLS
+    // The FourCC of the objects it instantiates.
     afxFcc          objFcc;
+    // Human-readable name.
     afxChar         name[32];
+    // The owner or host of this class definition.
     afxLink         host; // provided by this object.
+    // Parent/superclass (inherits from).
     afxLink         subset; // inherit this object.
+    // Children/subclasses.
     afxChain        supersets; // inherited by these objects.
+    // Depth in hierarchy.
     afxUnit         level;
+    // Bitmask for level filtering (e.g., permissions or RTTI filtering).
     afxUnit         levelMask;
 
+    // MEMORY MANAGEMENT
+    // Memory allocator for fixed allocations.
     afxMmu          mmu;
+    // Static size of the object.
     afxUnit         fixedSiz;
+    // Active instance count (constructed).
+    // Object count is tracked separately from pooled memory. 
+    // This is important for static or embedded instances that don't come from the pool.
     afxUnit         instCnt; // constructed, not allocated as from pool. We can't rely on pool due to it not being used for static instances.
+    // Limit (singleton = 1).
     afxUnit         maxInstCnt; // 1 == singleton
+    // Memory pool for dynamic allocations.
     afxPool         pool;
-    afxSlock        poolLock;
-    afxUnit         unitsPerPage; // when pool gets empty, the class will try to resizes storage pages to this value. If zero, the new page will be set to the size of the first batch allocation when pool was zero.
+    // Thread-safe lock around pool usage.
+    afxFutex        poolLock;
+    // Controls pool page growth strategy.
+    // When pool gets empty, the class will try to resizes storage pages to this value. 
+    // If zero, the new page will be set to the size of the first batch allocation when pool was zero.
+    afxUnit         unitsPerPage;
+    // Counter for unique IDs, etc.
     afxUnit         uniqueInc;
 
     afxArena        arena; // used to allocate class/struct suballocations for members.
 
+    // Custom constructor/destructor logic.
     afxError        (*ctor)(afxObject obj, void** args, afxUnit invokeNo); // void to avoid warnings
     afxError        (*dtor)(afxObject obj);
+    // Security/permission checks with ioRights.
     afxError        (*ioAlways)(afxStream iob, afxObject obj); // called after the reading of plugin stream data is finished(useful to set up plugin data for plugins that found no data in the stream, but that cannot set up the data during the ctor callback)
     afxError        (*ioRights)(afxStream iob, afxObject obj, void* data); // called after the reading of plugin stream data is finished, and the object finalised, if and only if the object's rights id was equal to that of the plugin registering the call.
+    // Binary stream support with optional plugin-specific data.
     afxError        (*ioWrite)(afxStream iob, afxObject obj); // writes extension data to a binary stream.
     afxError        (*ioRead)(afxStream iob, afxObject obj); // reads extension data from a binary stream.
     afxSize         (*ioSiz)(afxStream iob, afxObject obj); // determines the binary size of the extension data.
     
+    // Plugin System and Extensions.
     afxChain        extensions;
     afxUnit         extraSiz; // extra size contributed by each plugin.
     afxArena        extraAlloc; // plugin space allocation.
 
+    // Event Handling.
+    // This lets classes hook into an event system, e.g., Qt-style event filtering and overrides.
     afxBool         (*defEvent)(afxObject obj, afxEvent *ev);
     afxBool         (*defEventFilter)(afxObject obj, afxObject watched, afxEvent *ev);
     
+
     afxUnit         instBaseSiz;
+    // A virtual method table (manual polymorphism).
     void const**    vmt;
     afxString const*vmtNames;
+    // A extra per-class storage - useful for internal hooks, user metadata, or binding to scripting systems.
     void*           userData[4];
 };
 
@@ -210,7 +262,7 @@ AFX afxResult       AfxExhaustChainedClasses(afxChain* ch);
 AFX afxChain*       _AfxGetOrphanClasses(void);
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
-#   define AFX_ASSERT_CLASS(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError("%s\n    %s", AFX_STRINGIFY((var_)), errorMsg[afxError_INVALID]), 0))
+#   define AFX_ASSERT_CLASS(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxReportError("%s\n    %s", AFX_STRINGIFY((var_)), errorMsg[afxError_INVALID]), 0))
 #else
 #   define AFX_ASSERT_CLASS(cls_, fcc_) ((void)(err))
 #endif

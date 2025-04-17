@@ -1042,11 +1042,11 @@ afxBool CreateVertexBuffer(avxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size
         if (size >= freelist->size)
             freelist->size = size;
         
-        afxDrawSystem dsys = AfxGetDrawInputContext(vbMgr->din);
+        afxDrawSystem dsys = AvxGetDrawInputContext(vbMgr->din);
 
         avxBuffer vbo;
         avxBufferInfo spec = { 0 };
-        spec.cap = freelist->size;
+        spec.size = freelist->size;
         spec.flags = avxBufferFlag_W;
         spec.usage = avxBufferUsage_VERTEX;
 
@@ -1309,10 +1309,10 @@ afxBool DynamicVertexBufferCreate(avxBufferizer vbMgr, afxUnit size, avxBuffer *
             vbMgr->DynamicVertexBufferList = currentVertexBuffer;
         }
 
-        afxDrawSystem dsys = AfxGetDrawInputContext(vbMgr->din);
+        afxDrawSystem dsys = AvxGetDrawInputContext(vbMgr->din);
 
         avxBufferInfo spec = { 0 };
-        spec.cap = size;
+        spec.size = size;
         spec.usage = avxBufferUsage_VERTEX;
         spec.flags = avxBufferFlag_W;
         

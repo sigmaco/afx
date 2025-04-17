@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  ////////////////////////////////////////////////////////////////////////////////
+ // QWADRO BUFFERED DRAWING CANVAS                                             //
+////////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /**
@@ -32,8 +36,8 @@
 
 typedef enum afxCanvasFlag
 {
-    afxCanvasFlag_HAS_DEPTH     = AFX_BIT(0),
-    afxCanvasFlag_HAS_STENCIL   = AFX_BIT(1),
+    afxCanvasFlag_DEPTH         = AFX_BIT(0),
+    afxCanvasFlag_STENCIL       = AFX_BIT(1),
     afxCanvasFlag_COMBINED_DS   = AFX_BIT(2)
 } afxCanvasFlags;
 
@@ -64,18 +68,18 @@ AFX_DEFINE_STRUCT(avxCanvasConfig)
 };
 
 /*
-    The AvxTestCanvas() function testS specific flags of a specified avxCanvas. 
+    The AvxGetCanvasFlags() function testS specific flags of a specified avxCanvas. 
     It uses a bitmask to check whether certain flags are set for the canvas.
 */
 
-AVX afxResult AvxTestCanvas
+AVX afxCanvasFlags  AvxGetCanvasFlags
 (
     // The canvas object that you want to test.
-    avxCanvas canv, 
+    avxCanvas       canv, 
 
     // A bitmask that specifies which flags to test for. 
     // Each bit represents a specific condition of the canvas (e.g., whether a specific feature is enabled).
-    afxCanvasFlags bitmask
+    afxCanvasFlags  bitmask
 );
 
 /*
@@ -84,11 +88,11 @@ AVX afxResult AvxTestCanvas
     particularly when dealing with dynamic or resizable drawing surfaces.
 */
 
-AVX avxRange AvxGetCanvasArea
+AVX avxRange        AvxGetCanvasArea
 (
     // A canvas object, which represents a framebuffer in the system.
-    avxCanvas canv,
-    avxOrigin origin
+    avxCanvas       canv,
+    avxOrigin       origin
 );
 
 /*
@@ -96,20 +100,20 @@ AVX avxRange AvxGetCanvasArea
     with relevant data and returns the total number of attachment slots that can be used.
 */
 
-AVX afxUnit AvxQueryDrawBufferSlots
+AVX afxUnit         AvxQueryDrawBufferSlots
 // Returns the total of buffer slots in canvas.
 (
     // The canvas in which the slots are being managed.
-    avxCanvas canv, 
+    avxCanvas       canv, 
 
     // A recipient to hold how many slots are dedicated to color storage or processing.
-    afxUnit* colorSlotCnt, 
+    afxUnit*        colorSlotCnt, 
 
     // A recipient to hold the index of the slot where a depth buffer is attached.
-    afxUnit* dSlotIdx, 
+    afxUnit*        dSlotIdx, 
 
     // A recipient to hold the index of the slot where a stencil buffer is attached.
-    afxUnit* sSlotIdx
+    afxUnit*        sSlotIdx
 );
 
 /*
@@ -120,25 +124,25 @@ AVX afxUnit AvxQueryDrawBufferSlots
     Returns the number of valid slots inserted in the recipient array.
 */
 
-AVX afxUnit AvxGetDrawBuffers
+AVX afxUnit         AvxGetDrawBuffers
 (
     // The canvas for which the draw buffers are requested.
-    avxCanvas canv, 
+    avxCanvas       canv, 
 
     // The base index for the buffer slots to retrieve. 
     // If there are multiple drawing buffers, the baseSlotIdx indicates where to start the query for buffers. 
     // This is useful when you need a subset of available buffers, not just the first one.
-    afxUnit baseSlotIdx, 
+    afxUnit         baseSlotIdx, 
 
     // The number of buffers to retrieve. 
     // This specifies how many buffers you wish to get starting from the @baseSlotIdx. 
     // The function will return this number of buffers into the @rasters array.
-    afxUnit cnt, 
+    afxUnit         cnt, 
 
     // An array of rasters that will be populated with the retrieved buffers. 
     // Each element in the array corresponds to a drawing buffer associated with the canvas.
     // Each item in this array represents a buffer that holds rendered data for further processing or display.
-    avxRaster rasters[]
+    avxRaster       rasters[]
 );
 
 /*
@@ -149,22 +153,22 @@ AVX afxUnit AvxGetDrawBuffers
     It returns a boolean value indicating whether the retrieval was successful or not.
 */
 
-AVX afxBool AvxGetColorBuffers
+AVX afxBool         AvxGetColorBuffers
 (
     // The canvas object from which the color buffers are being retrieved.
-    avxCanvas canv, 
+    avxCanvas       canv, 
 
     // The base index of the first color buffer to start retrieving. 
     // This is useful when you want a subset of the available color buffers, not necessarily starting from the first.
-    afxUnit baseSlotIdx, 
+    afxUnit         baseSlotIdx, 
 
     // The number of color buffers to retrieve. 
     // This specifies how many color buffers you want to get starting from the @baseSlotIdx.
-    afxUnit cnt, 
+    afxUnit         cnt, 
 
     // An recipient array that will be populated with the retrieved color buffers. 
     // Each element in this array will hold one of the color buffers.
-    avxRaster rasters[]
+    avxRaster       rasters[]
 );
 
 /*
@@ -174,15 +178,15 @@ AVX afxBool AvxGetColorBuffers
     It returns a boolean value indicating whether the retrieval was successful or not.
 */
 
-AVX afxBool AvxGetDepthBuffers
+AVX afxBool         AvxGetDepthBuffers
 (
     // The canvas from which the depth and stencil buffers are being retrieved.
-    avxCanvas canv, 
+    avxCanvas       canv, 
     // A recipient to store the depth buffer associated with the canvas.
-    avxRaster* depth, 
+    avxRaster*      depth, 
 
     // A recipient to store the stencil buffer associated with the canvas.
-    avxRaster* stencil
+    avxRaster*      stencil
 );
 
 /*
@@ -192,27 +196,27 @@ AVX afxBool AvxGetDepthBuffers
     rendered frames, or exporting buffers to remote destinations.
 */
 
-AVX afxError AvxPrintDrawBuffer
+AVX afxError        AvxPrintDrawBuffer
 (
     // The canvas from which the draw buffer is to be printed.
-    avxCanvas canv, 
+    avxCanvas       canv, 
 
     // The surface index. 
     // This parameter specifies which surface or buffer on the canvas to print. 
     // If the canvas has multiple surfaces or buffers (e.g., for double or triple buffering), 
     // this parameter determines which one to print.
-    afxUnit surIdx, 
+    afxUnit         surIdx, 
 
     // A structure specifying the I/O operation on the raster attached to the canvas.
-    avxRasterIo const* op, 
+    avxRasterIo const*op, 
 
     // The execution unit index. 
     // The specific unit that will be used to handle the printing process.
-    afxUnit exuIdx, 
+    afxUnit         exuIdx, 
 
     // The URI where the buffer should be printed or exported to. 
     // This could be a file path or a network location.
-    afxUri const* uri
+    afxUri const*   uri
 );
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -221,13 +225,13 @@ AVX afxError        AvxCoacquireCanvas
 // Acquire a new buffered drawing canvas object.
 (
     // the draw system that provides the canvas.
-    afxDrawSystem dsys,
+    afxDrawSystem   dsys,
     // the specification of a newly created canvas
-    avxCanvasConfig const* cfg,
+    avxCanvasConfig const*cfg,
     // the number of canvas to be created.
-    afxUnit cnt,
+    afxUnit         cnt,
     // an array of avxCanvas handles in which the resulting objects are returned.
-    avxCanvas canvases[]
+    avxCanvas       canvases[]
 );
 
 #endif//AVX_CANVAS_H

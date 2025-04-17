@@ -54,9 +54,9 @@ _AVX afxUnit _AvxDoutIsSuspended(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    AfxEnterSlockShared(&dout->suspendSlock);
+    AfxLockFutexShared(&dout->suspendSlock);
     afxUnit suspendCnt = dout->suspendCnt;
-    AfxExitSlockShared(&dout->suspendSlock);
+    AfxUnlockFutexShared(&dout->suspendSlock);
     return suspendCnt;
 }
 
@@ -64,9 +64,9 @@ _AVX afxUnit _AvxDoutSuspendFunction(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    AfxEnterSlockExclusive(&dout->suspendSlock);
+    AfxLockFutex(&dout->suspendSlock);
     afxUnit suspendCnt = ++dout->suspendCnt;
-    AfxExitSlockExclusive(&dout->suspendSlock);
+    AfxUnlockFutex(&dout->suspendSlock);
     return suspendCnt;
 }
 
@@ -74,9 +74,9 @@ _AVX afxUnit _AvxDoutResumeFunction(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    AfxEnterSlockExclusive(&dout->suspendSlock);
+    AfxLockFutex(&dout->suspendSlock);
     afxUnit suspendCnt = --dout->suspendCnt;
-    AfxExitSlockExclusive(&dout->suspendSlock);
+    AfxUnlockFutex(&dout->suspendSlock);
     return suspendCnt;
 }
 
@@ -229,9 +229,9 @@ _AVX afxError AvxAdjustDrawOutput(afxDrawOutput dout, avxRange whd)
 
     avxRange whd2;
     //AFX_ASSERT4(whd, whd.w, whd.h, whd.d);
-    whd2.w = AfxMax(whd.w, 1);
-    whd2.h = AfxMax(whd.h, 1);
-    whd2.d = AfxMax(whd.d, 1);
+    whd2.w = AFX_MAX(whd.w, 1);
+    whd2.h = AFX_MAX(whd.h, 1);
+    whd2.d = AFX_MAX(whd.d, 1);
     AFX_ASSERT_EXTENT(dout->resolution.w, whd.w);
     AFX_ASSERT_EXTENT(dout->resolution.h, whd.h);
     AFX_ASSERT_EXTENT(dout->resolution.d, whd.d);
@@ -250,9 +250,9 @@ _AVX afxError AvxAdjustDrawOutput(afxDrawOutput dout, avxRange whd)
             afxV2d ndc;
             whd2;
             AvxQueryDrawOutputExtent(dout, &whd2, NIL);
-            AfxNdcV2d(ndc, AFX_V2D(whd2.w, whd2.h), AFX_V2D(dout->resolution.w, dout->resolution.h));
+            AfxV2dNdc(ndc, AFX_V2D(whd2.w, whd2.h), AFX_V2D(dout->resolution.w, dout->resolution.h));
 #ifdef _AFX_DOUT_LOGS
-            AfxLogEcho("Draw output %03u adjusted. %ux%u %ux%u %.3fx%.3f %f", AfxGetObjectId(dout), whd2.w, whd2.h, dout->resolution.w, dout->resolution.h, ndc[0], ndc[1], dout->wwOverHw);
+            AfxReportMessage("Draw output %03u adjusted. %ux%u %ux%u %.3fx%.3f %f", AfxGetObjectId(dout), whd2.w, whd2.h, dout->resolution.w, dout->resolution.h, ndc[0], ndc[1], dout->wwOverHw);
 #endif
         }
 
@@ -271,14 +271,14 @@ _AVX afxError _AvxDoutAdjustNormalized(afxDrawOutput dout, afxV3d const whd)
 
     avxRange const whd2 =
     {
-        (afxUnit)AfxUnndcf(AfxMax(1, whd[0]), dout->resolution.w),
-        (afxUnit)AfxUnndcf(AfxMax(1, whd[1]), dout->resolution.h),
-        AfxMax(1, whd[2])
+        (afxUnit)AfxUnndcf(AFX_MAX(1, whd[0]), dout->resolution.w),
+        (afxUnit)AfxUnndcf(AFX_MAX(1, whd[1]), dout->resolution.h),
+        AFX_MAX(1, whd[2])
     };
     return AvxAdjustDrawOutput(dout, whd2);
 }
 
-_AVX afxError AvxResetDrawOutputResolution(afxDrawOutput dout, afxReal64 physAspectRatio, afxReal refreshRate, avxRange resolution, afxBool exclusive)
+_AVX afxError AvxModifyDrawOutputSettings(afxDrawOutput dout, afxReal64 physAspectRatio, afxReal refreshRate, avxRange resolution, afxBool exclusive)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxDrawOutput handle.
@@ -302,7 +302,7 @@ _AVX afxError AvxResetDrawOutputResolution(afxDrawOutput dout, afxReal64 physAsp
         dout->wpOverHp = physAspectRatio;
 
 #ifdef _AVX_DOUT_LOGS
-    AfxLogEcho("afxDrawOutput %03u readapted. %ux%u @ %fHz <%fr, %fp>", AfxGetObjectId(dout), dout->resolution.w, dout->resolution.h, dout->refreshRate, dout->wrOverHr, dout->wpOverHp);
+    AfxReportMessage("afxDrawOutput %03u readapted. %ux%u @ %fHz <%fr, %fp>", AfxGetObjectId(dout), dout->resolution.w, dout->resolution.h, dout->refreshRate, dout->wrOverHr, dout->wpOverHp);
 #endif
 
     // readjust draw output extent if it overflows the new resolution.
@@ -354,17 +354,15 @@ _AVX afxError AvxWaitForDrawOutput(afxDrawOutput dout, afxTime timeout)
     // @dout must be a valid afxDrawOutput handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
-    AfxLockMutex(&dout->idleCndMtx);
-    
     afxTimeSpec ts =
     {
-        .sec = timeout / 1000000000, // Convert nanoseconds to seconds
-        .nsec = timeout % 1000000000 // Get the remainder in nanoseconds
+        .secs = timeout / 1000000000, // Convert nanoseconds to seconds
+        .nsecs = timeout % 1000000000 // Get the remainder in nanoseconds
     };
 
+    AfxLockMutex(&dout->idleCndMtx);    
     while (dout->submCnt)
         AfxWaitTimedCondition(&dout->idleCnd, &dout->idleCndMtx, &ts);
-
     AfxUnlockMutex(&dout->idleCndMtx);
 
     return err;
@@ -386,14 +384,60 @@ _AVX afxError AvxRequestDrawOutputBuffer(afxDrawOutput dout, afxUnit64 timeout, 
     else
     {
         afxBool success = FALSE;
-        afxClock start, last;
+        afxClock timeoutStart, last;
         afxBool wait = (timeout != 0);
         afxBool finite = (timeout != AFX_TIME_INFINITE);
 
         if (wait && finite)
         {
-            AfxGetClock(&start);
-            last = start;
+            AfxGetClock(&timeoutStart);
+            last = timeoutStart;
+        }
+
+        if (dout->bufReqPerSec)
+        {
+            // Target frames per second (FPS)
+
+            // Duration per frame in nanoseconds
+            afxInt64 bufGenPeriod = AFX_NSECS_PER_SEC / dout->bufReqPerSec;
+
+            while (1)
+            {
+                AfxGetClock(&last);
+                afxInt64 elapsedTime = AfxGetClockNanosecondsElapsed(&dout->prevBufReqTime, &last);
+
+                if (elapsedTime >= bufGenPeriod) break;
+                else
+                {
+                    if (!wait)
+                    {
+                        err = afxError_TIMEOUT;
+                        *bufIdx = AFX_INVALID_INDEX;
+                        return err;
+                    }
+                    else
+                    {
+                        if (!finite) continue;
+                        else
+                        {
+                            AfxGetClock(&last);
+                            afxInt64 elapsed = AfxGetClockNanosecondsElapsed(&timeoutStart, &last);
+
+                            if (elapsed > 0)
+                                timeout -= elapsed;
+                            else if (0 > elapsed)
+                                timeout = 0;
+
+                            if (timeout == 0)
+                            {
+                                err = afxError_TIMEOUT;
+                                *bufIdx = AFX_INVALID_INDEX;
+                                return err;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         while (1)
@@ -415,6 +459,7 @@ _AVX afxError AvxRequestDrawOutputBuffer(afxDrawOutput dout, afxUnit64 timeout, 
                 AFX_ASSERT_RANGE(dout->bufCnt, bufIdx2, 1);
                 *bufIdx = bufIdx2;
                 success = TRUE;
+                AfxGetClock(&dout->prevBufReqTime);
                 break;
             }
 
@@ -430,9 +475,14 @@ _AVX afxError AvxRequestDrawOutputBuffer(afxDrawOutput dout, afxUnit64 timeout, 
                 else
                 {
                     AfxGetClock(&last);
-                    afxReal64 elapsed = AfxGetMicrosecondsElapsed(&start, &last);
+                    afxInt64 elapsed = AfxGetClockNanosecondsElapsed(&timeoutStart, &last);
 
-                    if (elapsed >= timeout)
+                    if (elapsed > 0)
+                        timeout -= elapsed;
+                    else if (0 > elapsed)
+                        timeout = 0;
+
+                    if (timeout == 0)
                     {
                         err = afxError_TIMEOUT;
                         *bufIdx = AFX_INVALID_INDEX;
@@ -683,7 +733,7 @@ _AVX afxError _AvxDoutDtorCb(afxDrawOutput dout)
 
     AfxDismantleInterlockedQueue(&dout->freeBuffers);
 
-    AfxDismantleSlock(&dout->suspendSlock);
+    AfxDismantleFutex(&dout->suspendSlock);
 
     AfxDismantleCondition(&dout->idleCnd);
     AfxDismantleMutex(&dout->idleCndMtx);
@@ -714,7 +764,7 @@ _AVX afxError _AvxDoutCtorCb(afxDrawOutput dout, void** args, afxUnit invokeNo)
     //AFX_ASSERT(AFX_IS_ALIGNED(&dout->resolution, 16));
     dout->resolution = AVX_RANGE(AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX);
     dout->wrOverHr = dout->resolution.w / dout->resolution.h;
-    dout->wpOverHp = AfxFindPhysicalAspectRatio(dout->resolution.w, dout->resolution.h);
+    dout->wpOverHp = AvxFindPhysicalAspectRatio(dout->resolution.w, dout->resolution.h);
     dout->presentAlpha = cfg->presentAlpha ? cfg->presentAlpha : def.presentAlpha; // consider transparency for window composing.
     dout->presentTransform = cfg->presentTransform ? cfg->presentTransform : def.presentTransform; // The default is to leave it as it is.
     dout->presentMode = cfg->presentMode ? cfg->presentMode : def.presentMode; // The default avxPresentMode_LIFO is already zero.
@@ -743,12 +793,12 @@ _AVX afxError _AvxDoutCtorCb(afxDrawOutput dout, void** args, afxUnit invokeNo)
     dout->bufFlags[2] = cfg->bufFlags[2] ? cfg->bufFlags[2] : def.bufFlags[2];
     
     // swapchain
-    dout->bufCnt = AfxMax(1, cfg->minBufCnt ? cfg->minBufCnt : def.minBufCnt); // 2 or 3; double or triple buffered for via-memory presentation.
+    dout->bufCnt = AFX_MAX(1, cfg->minBufCnt ? cfg->minBufCnt : def.minBufCnt); // 2 or 3; double or triple buffered for via-memory presentation.
 
     dout->submCnt = 0;
     dout->presentingBufIdx = AFX_INVALID_INDEX;
     dout->suspendCnt = 1;
-    AfxDeploySlock(&dout->suspendSlock);
+    AfxDeployFutex(&dout->suspendSlock);
 
     AfxDeployMutex(&dout->idleCndMtx, AFX_MTX_PLAIN);
     AfxDeployCondition(&dout->idleCnd);
@@ -774,6 +824,11 @@ _AVX afxError _AvxDoutCtorCb(afxDrawOutput dout, void** args, afxUnit invokeNo)
 
         for (afxUnit i = 0; i < dout->bufCnt; i++)
             AfxPushInterlockedQueue(&dout->freeBuffers, (afxUnit[]) { i });
+
+        AfxGetClock(&dout->prevBufReqTime);
+        dout->outCntResetClock = dout->prevBufReqTime;
+        dout->startClock = dout->prevBufReqTime;
+        dout->lastClock = dout->prevBufReqTime;
 
         AFX_ASSERT(dout->resolution.w);
         AFX_ASSERT(dout->resolution.h);
@@ -932,56 +987,65 @@ _AVX afxError AvxPresentDrawOutputs(afxDrawSystem dsys, avxPresentation* ctrl, a
         However, the scope of this set of queue operations does not include the actual processing of the image by the presentation engine.
     */
 
-    afxDrawBridge dexu;
-    if (!AvxGetDrawBridges(dsys, ctrl->exuIdx, 1, &dexu))
+    afxMask exuMask = ctrl->exuMask;
+    afxUnit exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, AFX_INVALID_INDEX, NIL, 0, 0, NIL);
+    for (afxUnit exuIdx = 0; exuIdx < exuCnt; exuIdx++)
     {
-        AfxThrowError();
-        return err;
-    }
+        if (exuMask && !(exuMask & AFX_BIT(exuIdx)))
+            continue;
 
-    afxClass const* dqueCls = _AvxGetDrawQueueClass(dexu);
-
-    // sanitize arguments
-    afxUnit totalQueCnt = dqueCls->instCnt;
-    afxUnit baseQueIdx = AfxMin(ctrl->baseQueIdx, totalQueCnt - 1);
-    afxUnit queCnt = AfxClamp(ctrl->queCnt, 1, totalQueCnt - baseQueIdx);
-    AFX_ASSERT(queCnt);
-    afxBool queued = FALSE;
-
-    do
-    {
-        for (afxUnit i = 0; i < queCnt; i++)
+        afxDrawBridge dexu;
+        if (!AvxGetDrawBridges(dsys, exuIdx, 1, &dexu))
         {
-            afxUnit queIdx = baseQueIdx + i;
+            AfxThrowError();
+            return err;
+        }
 
-            afxDrawQueue dque;
-            if (!AvxGetDrawQueues(dexu, queIdx, 1, &dque))
+        afxClass const* dqueCls = _AvxGetDrawQueueClass(dexu);
+
+        // sanitize arguments
+        afxUnit totalQueCnt = dqueCls->instCnt;
+        afxUnit baseQueIdx = AFX_MIN(ctrl->baseQueIdx, totalQueCnt - 1);
+        afxUnit queCnt = AFX_CLAMP(ctrl->queCnt, 1, totalQueCnt - baseQueIdx);
+        AFX_ASSERT(queCnt);
+        afxBool queued = FALSE;
+
+        do
+        {
+            for (afxUnit i = 0; i < queCnt; i++)
             {
-                AfxThrowError();
-                break;
-            }
+                afxUnit queIdx = baseQueIdx + i;
 
-            for (afxUnit j = 0; j < cnt; j++)
-            {
-                afxDrawOutput dout = outputs[j];
-                AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-
-                afxError err2;
-                if ((err2 = _AvxDoutImplPresentCb(dque, ctrl, wait, dout, bufIdx[i], signal ? signal[i] : NIL)))
+                afxDrawQueue dque;
+                if (!AvxGetDrawQueues(dexu, queIdx, 1, &dque))
                 {
-                    if (err2 == afxError_TIMEOUT)
-                        continue;
-
                     AfxThrowError();
                     break;
                 }
-            }
-            queued = TRUE;
-            break;
-        }
 
-        if (err || queued)
-            break; // reiterate if not queue for timeout?
-    } while (0);
+                for (afxUnit j = 0; j < cnt; j++)
+                {
+                    afxDrawOutput dout = outputs[j];
+                    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
+
+                    afxError err2;
+                    if ((err2 = _AvxDoutImplPresentCb(dque, ctrl, wait, dout, bufIdx[i], signal ? signal[i] : NIL)))
+                    {
+                        if (err2 == afxError_TIMEOUT)
+                            continue;
+
+                        AfxThrowError();
+                        break;
+                    }
+                }
+                queued = TRUE;
+                break;
+            }
+
+            if (err || queued)
+                break; // reiterate if not queue for timeout?
+        } while (0);
+        break;
+    }
     return err;
 }

@@ -27,22 +27,25 @@
 #define _AMX_MIX_CONTEXT_C
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
-#define _AMX_WAVEFORM_C
+#define _AMX_AUDIO_C
 #include "../impl/amxImplementation.h"
 
-_AMX amxCmd* _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdId* cmdId)
+_AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdId* cmdId, _amxCmd** ppCmd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    AFX_ASSERT(siz >= sizeof(amxCmdHdr));
+    AFX_ASSERT(siz >= sizeof(_amxCmdHdr));
 
-    amxCmd* cmd = AfxRequestArenaUnit(&mix->cmdArena, siz);
+    _amxCmd* cmd = AfxRequestArenaUnit(&mix->cmdArena, siz, 1, NIL, 0);
     AFX_ASSERT(cmd);
     cmd->hdr.id = id;
     cmd->hdr.siz = siz;
     AFX_ASSERT(cmdId);
     *cmdId = AfxPushLink(&cmd->hdr.script, &mix->commands);
-    return cmd;
+    AFX_ASSERT(ppCmd);
+    *ppCmd = cmd;
+
+    return err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +59,8 @@ _AMX afxCmdId AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(CommenceMixScope), sizeof(cmd->CommenceMixScope) + (scope->chanCnt * sizeof(cmd->CommenceMixScope.chans[0])), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(CommenceMixScope), sizeof(cmd->CommenceMixScope) + (scope->chanCnt * sizeof(cmd->CommenceMixScope.chans[0])), &cmdId, &cmd);
     AFX_ASSERT(cmd);
     
     AFX_ASSERT(scope);
@@ -88,12 +92,13 @@ _AMX afxCmdId AmxCmdConcludeMixScope(afxMixContext mix)
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(ConcludeMixScope), sizeof(cmd->ConcludeMixScope), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(ConcludeMixScope), sizeof(cmd->ConcludeMixScope), &cmdId, &cmd);
     AFX_ASSERT(cmd);
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdReverb(afxMixContext mix, afxReal wetMix, afxReal roomSiz, afxReal width, afxReal damp, afxReal dryMix)
+_AMX afxCmdId AmxCmdReverb(afxMixContext mix, afxUnit voice, afxReal wetMix, afxReal roomSiz, afxReal width, afxReal damp, afxReal dryMix)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -102,8 +107,10 @@ _AMX afxCmdId AmxCmdReverb(afxMixContext mix, afxReal wetMix, afxReal roomSiz, a
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(Reverb), sizeof(cmd->Reverb), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(Reverb), sizeof(cmd->Reverb), &cmdId, &cmd);
     AFX_ASSERT(cmd);
+    cmd->Reverb.voice = voice;
     cmd->Reverb.wetMix = wetMix;
     cmd->Reverb.roomSiz = roomSiz;
     cmd->Reverb.width = width;
@@ -112,7 +119,7 @@ _AMX afxCmdId AmxCmdReverb(afxMixContext mix, afxReal wetMix, afxReal roomSiz, a
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdPhaser(afxMixContext mix, afxReal floor, afxReal ceil, afxReal rate, afxReal feedback, afxReal depth, afxReal phase, afxUnit stageCnt)
+_AMX afxCmdId AmxCmdPhaser(afxMixContext mix, afxUnit voice, afxReal floor, afxReal ceil, afxReal rate, afxReal feedback, afxReal depth, afxReal phase, afxUnit stageCnt)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -121,8 +128,10 @@ _AMX afxCmdId AmxCmdPhaser(afxMixContext mix, afxReal floor, afxReal ceil, afxRe
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(Phaser), sizeof(cmd->Phaser), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(Phaser), sizeof(cmd->Phaser), &cmdId, &cmd);
     AFX_ASSERT(cmd);
+    cmd->Phaser.voice = voice;
     cmd->Phaser.floor = floor;
     cmd->Phaser.ceil = ceil;
     cmd->Phaser.rate = rate;
@@ -133,7 +142,7 @@ _AMX afxCmdId AmxCmdPhaser(afxMixContext mix, afxReal floor, afxReal ceil, afxRe
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdGainer(afxMixContext mix, afxReal gain, afxReal pan, afxMask invChan)
+_AMX afxCmdId AmxCmdGainer(afxMixContext mix, afxUnit voice, afxReal gain, afxReal pan, afxMask invChan)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -142,15 +151,17 @@ _AMX afxCmdId AmxCmdGainer(afxMixContext mix, afxReal gain, afxReal pan, afxMask
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(Gainer), sizeof(cmd->Gainer), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(Gainer), sizeof(cmd->Gainer), &cmdId, &cmd);
     AFX_ASSERT(cmd);
+    cmd->Gainer.voice = voice;
     cmd->Gainer.gain = gain;
     cmd->Gainer.pan = pan;
     cmd->Gainer.invChan = invChan;
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdFlanger(afxMixContext mix, afxReal amount, afxReal rate, afxReal amplitude, afxReal feedback, afxReal delay, afxReal phase, afxUnit flt)
+_AMX afxCmdId AmxCmdFlanger(afxMixContext mix, afxUnit voice, afxReal amount, afxReal rate, afxReal amplitude, afxReal feedback, afxReal delay, afxReal phase, afxUnit flt)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -159,8 +170,10 @@ _AMX afxCmdId AmxCmdFlanger(afxMixContext mix, afxReal amount, afxReal rate, afx
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(Flanger), sizeof(cmd->Flanger), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(Flanger), sizeof(cmd->Flanger), &cmdId, &cmd);
     AFX_ASSERT(cmd);
+    cmd->Flanger.voice = voice;
     cmd->Flanger.amount = amount;
     cmd->Flanger.rate = rate;
     cmd->Flanger.amplitude = amplitude;
@@ -171,7 +184,7 @@ _AMX afxCmdId AmxCmdFlanger(afxMixContext mix, afxReal amount, afxReal rate, afx
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdAnalog(afxMixContext mix, afxUnit type, afxUnit flt, afxReal cutoff, afxReal resonance, afxReal inertia, afxReal drive, afxUnit oversamp, afxReal start, afxReal end)
+_AMX afxCmdId AmxCmdAnalog(afxMixContext mix, afxUnit voice, afxUnit type, afxUnit flt, afxReal cutoff, afxReal resonance, afxReal inertia, afxReal drive, afxUnit oversamp, afxReal start, afxReal end)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -180,8 +193,10 @@ _AMX afxCmdId AmxCmdAnalog(afxMixContext mix, afxUnit type, afxUnit flt, afxReal
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(Analog), sizeof(cmd->Analog), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(Analog), sizeof(cmd->Analog), &cmdId, &cmd);
     AFX_ASSERT(cmd);
+    cmd->Analog.voice = voice;
     cmd->Analog.type = type;
     cmd->Analog.flt = flt;
     cmd->Analog.cutoff = cutoff;
@@ -194,7 +209,7 @@ _AMX afxCmdId AmxCmdAnalog(afxMixContext mix, afxUnit type, afxUnit flt, afxReal
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdCompressor(afxMixContext mix, afxReal threshold, afxReal ratio, afxReal attack, afxReal release, afxReal makeup)
+_AMX afxCmdId AmxCmdCompressor(afxMixContext mix, afxUnit voice, afxReal threshold, afxReal ratio, afxReal attack, afxReal release, afxReal makeup)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -203,8 +218,10 @@ _AMX afxCmdId AmxCmdCompressor(afxMixContext mix, afxReal threshold, afxReal rat
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(Compressor), sizeof(cmd->Compressor), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(Compressor), sizeof(cmd->Compressor), &cmdId, &cmd);
     AFX_ASSERT(cmd);
+    cmd->Compressor.voice = voice;
     cmd->Compressor.threshold = threshold;
     cmd->Compressor.ratio = ratio;
     cmd->Compressor.attack = attack;
@@ -213,7 +230,7 @@ _AMX afxCmdId AmxCmdCompressor(afxMixContext mix, afxReal threshold, afxReal rat
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdLineIn(afxMixContext mix, afxUnit line, afxMask chanMask, afxUnit latency, afxReal pan, afxReal vol)
+_AMX afxCmdId AmxCmdLineIn(afxMixContext mix, afxUnit voice, afxUnit line, afxMask chanMask, afxUnit latency, afxReal pan, afxReal vol)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -222,8 +239,10 @@ _AMX afxCmdId AmxCmdLineIn(afxMixContext mix, afxUnit line, afxMask chanMask, af
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(LineIn), sizeof(cmd->LineIn), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(LineIn), sizeof(cmd->LineIn), &cmdId, &cmd);
     AFX_ASSERT(cmd);
+    cmd->LineIn.voice = voice;
     cmd->LineIn.line = line;
     cmd->LineIn.chanMask = chanMask;
     cmd->LineIn.latency = latency;
@@ -232,7 +251,7 @@ _AMX afxCmdId AmxCmdLineIn(afxMixContext mix, afxUnit line, afxMask chanMask, af
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdRemoteIn(afxMixContext mix, afxUnit src, afxMask chanMask, afxReal pan, afxReal vol)
+_AMX afxCmdId AmxCmdRemoteIn(afxMixContext mix, afxUnit voice, afxUnit src, afxMask chanMask, afxReal pan, afxReal vol)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -241,8 +260,10 @@ _AMX afxCmdId AmxCmdRemoteIn(afxMixContext mix, afxUnit src, afxMask chanMask, a
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(RemoteIn), sizeof(cmd->RemoteIn), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(RemoteIn), sizeof(cmd->RemoteIn), &cmdId, &cmd);
     AFX_ASSERT(cmd);
+    cmd->RemoteIn.voice = voice;
     cmd->RemoteIn.src = src;
     cmd->RemoteIn.chanMask = chanMask;
     cmd->RemoteIn.pan = pan;
@@ -250,7 +271,7 @@ _AMX afxCmdId AmxCmdRemoteIn(afxMixContext mix, afxUnit src, afxMask chanMask, a
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdSend(afxMixContext mix, afxBool muteSrc, afxReal amount, afxReal pan, afxUnit receiverSubmix)
+_AMX afxCmdId AmxCmdSend(afxMixContext mix, afxUnit voice, afxBool muteSrc, afxReal amount, afxReal pan, afxUnit receiverSubmix)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -259,8 +280,10 @@ _AMX afxCmdId AmxCmdSend(afxMixContext mix, afxBool muteSrc, afxReal amount, afx
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(Send), sizeof(cmd->Send), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(Send), sizeof(cmd->Send), &cmdId, &cmd);
     AFX_ASSERT(cmd);
+    cmd->Send.voice = voice;
     cmd->Send.muteSrc = muteSrc;
     cmd->Send.amount = amount;
     cmd->Send.pan = pan;
@@ -268,7 +291,7 @@ _AMX afxCmdId AmxCmdSend(afxMixContext mix, afxBool muteSrc, afxReal amount, afx
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdResampleAudio(afxMixContext mix, afxAudio src, afxAudio dst, afxWaveInterval const* srci, afxWaveInterval const* dsti)
+_AMX afxCmdId AmxCmdResampleAudio(afxMixContext mix, amxAudio src, amxAudio dst, amxAudioPeriod const* srcp, amxAudioPeriod const* dstp)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -276,9 +299,9 @@ _AMX afxCmdId AmxCmdResampleAudio(afxMixContext mix, afxAudio src, afxAudio dst,
     // mix must be in the recording state.
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
-    afxAudioInfo srcd, dstd;
-    AfxDescribeAudio(src, &srcd);
-    AfxDescribeAudio(src, &dstd);
+    amxAudioInfo srcd, dstd;
+    AmxDescribeAudio(src, &srcd);
+    AmxDescribeAudio(src, &dstd);
 
     // Calculate the ratio between the output and input sample rates
     afxReal rateRatio = (afxReal)(dst->freq / src->freq);
@@ -288,18 +311,19 @@ _AMX afxCmdId AmxCmdResampleAudio(afxMixContext mix, afxAudio src, afxAudio dst,
     AFX_ASSERT(dstd.sampCnt >= outputLen);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(ResampleAudio), sizeof(cmd->ResampleAudio), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(ResampleAudio), sizeof(cmd->ResampleAudio), &cmdId, &cmd);
     AFX_ASSERT(cmd);
     cmd->ResampleAudio.src = src;
     cmd->ResampleAudio.dst = dst;
 
-    _AmxSanitizeWaveInterval(src, srci, &cmd->ResampleAudio.srci);
-    _AmxSanitizeWaveInterval(dst, dsti, &cmd->ResampleAudio.dsti);
+    _AmxSanitizeAudioPeriod(src, srcp, &cmd->ResampleAudio.srcp);
+    _AmxSanitizeAudioPeriod(dst, dstp, &cmd->ResampleAudio.dstp);
 
     return cmdId;
 }
 
-_AMX afxCmdId AmxCmdFetchAudition(afxMixContext mix, afxUnit headIdx)
+_AMX afxCmdId AmxCmdFetchAudition(afxMixContext mix, afxUnit voice, afxUnit headIdx)
 {
     afxError err = AFX_ERR_NONE;
     // mix must be a valid afxMixContext handle.
@@ -308,8 +332,10 @@ _AMX afxCmdId AmxCmdFetchAudition(afxMixContext mix, afxUnit headIdx)
     AFX_ASSERT(mix->state == amxMixState_RECORDING);
 
     afxCmdId cmdId;
-    amxCmd* cmd = _AmxMixPushCmd(mix, AMX_GET_STD_CMD_ID(FetchAudition), sizeof(cmd->FetchAudition), &cmdId);
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(FetchAudition), sizeof(cmd->FetchAudition), &cmdId, &cmd);
     AFX_ASSERT(cmd);
+    cmd->FetchAudition.voice = voice;
     cmd->FetchAudition.headIdx = headIdx;
     return cmdId;
 }
@@ -337,6 +363,29 @@ _AMX afxUnit AfxGetMixerPool(afxMixContext mix)
     return mix->poolIdx;
 }
 
+_AMX afxError AmxRollMixContext(afxMixContext mix)
+{
+    afxError err = AFX_ERR_NONE;
+    // mctx must be a valid afxMixSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    afxMixSystem msys = AfxGetProvider(mix);
+
+    afxMixBridge mexu;
+    AFX_ASSERT_RANGE(msys->bridgeCnt, /*ctrl->exuIdx*/0, 1);
+    if (!AmxGetMixBridges(msys, /*ctrl->exuIdx*/0, 1, &mexu))
+    {
+        AfxThrowError();
+        return err;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+
+    if (_AmxMexuRollMixers(mexu, 0, 1, 1, 1, &mix))
+        AfxThrowError();
+
+    return err;
+}
+
 _AMX afxError _AmxMixDtorCb(afxMixContext mix)
 {
     afxError err = AFX_ERR_NONE;
@@ -359,13 +408,13 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
 
     afxMixSystem msys = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    //afxMixConfig const* cfg = ((afxMixConfig const *)args[1]) + invokeNo;
-    //AFX_ASSERT(cfg);
+    afxMixConfig const* cfg = AFX_CAST(afxMixConfig const*, args[1]) + invokeNo;
+    AFX_ASSERT(cfg);
 
-    //afxUnit chanCnt = AfxMax(1, cfg->chanCnt);
-    //afxUnit freq = AfxMax(1, cfg->freq);
+    //afxUnit chanCnt = AFX_MAX(1, cfg->chanCnt);
+    //afxUnit freq = AFX_MAX(1, cfg->freq);
     //mix->bps = cfg->bps ? cfg->bps : 32;
-    //mix->latency = AfxMax(cfg->latency, 4096);
+    //mix->latency = AFX_MAX(cfg->latency, 4096);
     //mix->freq = freq;
     //mix->chanCnt = chanCnt;
 
@@ -379,7 +428,7 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
 
     mix->routing = NIL;
 
-    AfxDeployArena(&mix->cmdArena, NIL, AfxHere());
+    AfxMakeArena(&mix->cmdArena, NIL, AfxHere());
     AfxDeployChain(&mix->commands, mix);
 
     mix->resetCb = _AmxMixResetCb;
@@ -411,8 +460,8 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
 _AMX afxClassConfig const _AMX_MIX_CLASS_CONFIG =
 {
     .fcc = afxFcc_MIX,
-    .name = "Mixer",
-    .desc = "Tracked Audio Mixer",
+    .name = "MixContext",
+    .desc = "Tracked Mixing Context",
     .fixedSiz = sizeof(AFX_OBJECT(afxMixContext)),
     .ctor = (void*)_AmxMixCtorCb,
     .dtor = (void*)_AmxMixDtorCb
@@ -420,17 +469,18 @@ _AMX afxClassConfig const _AMX_MIX_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AfxAcquireMixContext(afxMixSystem msys, afxUnit exuIdx, afxUnit poolIdx, afxMixContext* mixer)
+_AMX afxError AmxAcquireMixContext(afxMixSystem msys, afxMixConfig const* cfg, afxMixContext* mixer)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(mixer);
+    AFX_ASSERT(cfg);
 
     afxClass* cls = (afxClass*)_AmxGetMixContextClass(msys);
     AFX_ASSERT_CLASS(cls, afxFcc_MIX);
     
     afxMixContext mix;
-    if (AfxAcquireObjects(cls, 1, (afxObject*)&mix, (void const*[]) { msys, &exuIdx, &poolIdx }))
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&mix, (void const*[]) { msys, cfg }))
     {
         AfxThrowError();
         return err;

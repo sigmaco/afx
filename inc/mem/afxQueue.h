@@ -14,12 +14,6 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_QUEUE_H
-#define AFX_QUEUE_H
-
-#include "qwadro/inc/base/afxCoreDefs.h"
-#include "qwadro/inc/base/afxDebug.h"
-
 /**
     A queue is a linear structure that follows a particular order in which the operations are performed. 
     The order is First In First Out (FIFO). 
@@ -30,8 +24,21 @@
     Thread safe se apenas um thread insere e apenas um outro remove.
 */
 
+#ifndef AFX_QUEUE_H
+#define AFX_QUEUE_H
+
+#include "qwadro/inc/base/afxCoreDefs.h"
+#include "qwadro/inc/base/afxDebug.h"
+
+#if (defined _AFX_DEBUG) && !(defined(_AFX_QUEUE_VALIDATION_ENABLED))
+#   define _AFX_QUEUE_VALIDATION_ENABLED TRUE
+#endif
+
 AFX_DEFINE_STRUCT(afxQueue)
 {
+#ifdef _AFX_QUEUE_VALIDATION_ENABLED
+    afxFcc      fcc; // afxFcc_QUE;
+#endif
     afxUnit     head;
     afxUnit     tail;
     afxUnit     cap;

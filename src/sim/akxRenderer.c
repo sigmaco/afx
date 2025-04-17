@@ -49,14 +49,14 @@ _ASX afxBool _AsxCaptureBodCb(afxBody bod, void** udd)
     return TRUE;
 }
 
-_ASX afxError AsxCaptureBodyPvs(afxSimulation sim, afxCamera cam, afxReal lodErr, afxArray* pvs)
+_ASX afxError AsxCaptureBodyPvs(afxSimulation sim, avxCamera cam, afxReal lodErr, afxArray* pvs)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_CAM, 1, &cam);
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
     afxFrustum frustum;
-    AfxGetCameraFrustum(cam, &frustum);
+    AvxGetCameraFrustum(cam, &frustum);
 
     AfxInvokeBodies(sim, 0, AFX_U32_MAX, (void*)_AsxCaptureBodCb, (void*[]) { &frustum, &lodErr, pvs });
 
@@ -138,23 +138,23 @@ _ASX afxError AsxDrawBodies(akxRenderer scn, afxContext sctx, afxDrawContext dct
             };
             AvxCmdBindVertexBuffers(dctx, 0, ARRAY_SIZE(vtxSrcs), vtxSrcs);
                     
-            AvxCmdApplyDrawTechnique(dctx, scn->lightingDtec, 0, scn->rigidVin, NIL);
-            //AvxCmdApplyDrawTechnique(dctx, scn->tutCamUtilDtec, 0, scn->rigidVin, NIL);
-            //AvxCmdApplyDrawTechnique(dctx, scn->blinnTestRazrDtec, 0, scn->rigidVin, NIL);
-            //AvxCmdApplyDrawTechnique(dctx, scn->bodyDtec, 0, scn->rigidVin, NIL);
-            //AvxCmdApplyDrawTechnique(dctx, scn->testDtec, 0, scn->testVin, NIL);
+            AvxCmdUseDrawTechniqueSIGMA(dctx, scn->lightingDtec, 0, scn->rigidVin, NIL);
+            //AvxCmdUseDrawTechniqueSIGMA(dctx, scn->tutCamUtilDtec, 0, scn->rigidVin, NIL);
+            //AvxCmdUseDrawTechniqueSIGMA(dctx, scn->blinnTestRazrDtec, 0, scn->rigidVin, NIL);
+            //AvxCmdUseDrawTechniqueSIGMA(dctx, scn->bodyDtec, 0, scn->rigidVin, NIL);
+            //AvxCmdUseDrawTechniqueSIGMA(dctx, scn->testDtec, 0, scn->testVin, NIL);
 
 #if 0
 #if 0
             if (AfxIsMeshDeformable(msh))
-                AvxCmdApplyDrawTechnique(dctx, scn->bodyDtec, 1, scn->skinnedVin, NIL);
+                AvxCmdUseDrawTechniqueSIGMA(dctx, scn->bodyDtec, 1, scn->skinnedVin, NIL);
             else
-                AvxCmdApplyDrawTechnique(dctx, scn->bodyDtec, 0, scn->rigidVin, NIL);
+                AvxCmdUseDrawTechniqueSIGMA(dctx, scn->bodyDtec, 0, scn->rigidVin, NIL);
 #else
             if (AfxIsMeshDeformable(msh))
-                AvxCmdApplyDrawTechnique(dctx, scn->tutCamUtilDtec, 1, scn->skinnedVin, NIL);
+                AvxCmdUseDrawTechniqueSIGMA(dctx, scn->tutCamUtilDtec, 1, scn->skinnedVin, NIL);
             else
-                AvxCmdApplyDrawTechnique(dctx, scn->tutCamUtilDtec, 0, scn->rigidVin, NIL);
+                AvxCmdUseDrawTechniqueSIGMA(dctx, scn->tutCamUtilDtec, 0, scn->rigidVin, NIL);
 #endif
 #endif
 
@@ -202,7 +202,7 @@ _ASX afxError AsxDrawBodies(akxRenderer scn, afxContext sctx, afxDrawContext dct
 }
 
 #if 0
-_ASX afxError AsxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation sim, afxDrawContext dctx, afxContext sctx)
+_ASX afxError AsxBeginSceneCapture(akxRenderer scn, avxCamera cam, afxSimulation sim, afxDrawContext dctx, afxContext sctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RND, 1, &scn);
@@ -273,23 +273,23 @@ _ASX afxError AsxBeginSceneCapture(akxRenderer scn, afxCamera cam, afxSimulation
                         (afxUnit32[]) { vtxCache.streams[0].stride, vtxCache.streams[1].stride });
                     
 
-                    AvxCmdApplyDrawTechnique(dctx, scn->lightingDtec, 0, scn->rigidVin, NIL);
-                    //AvxCmdApplyDrawTechnique(dctx, scn->tutCamUtilDtec, 0, scn->rigidVin, NIL);
-                    //AvxCmdApplyDrawTechnique(dctx, scn->blinnTestRazrDtec, 0, scn->rigidVin, NIL);
-                    //AvxCmdApplyDrawTechnique(dctx, scn->bodyDtec, 0, scn->rigidVin, NIL);
-                    //AvxCmdApplyDrawTechnique(dctx, scn->testDtec, 0, scn->testVin, NIL);
+                    AvxCmdUseDrawTechniqueSIGMA(dctx, scn->lightingDtec, 0, scn->rigidVin, NIL);
+                    //AvxCmdUseDrawTechniqueSIGMA(dctx, scn->tutCamUtilDtec, 0, scn->rigidVin, NIL);
+                    //AvxCmdUseDrawTechniqueSIGMA(dctx, scn->blinnTestRazrDtec, 0, scn->rigidVin, NIL);
+                    //AvxCmdUseDrawTechniqueSIGMA(dctx, scn->bodyDtec, 0, scn->rigidVin, NIL);
+                    //AvxCmdUseDrawTechniqueSIGMA(dctx, scn->testDtec, 0, scn->testVin, NIL);
 
 #if 0
 #if 0
                     if (AfxIsMeshDeformable(msh))
-                        AvxCmdApplyDrawTechnique(dctx, scn->bodyDtec, 1, scn->skinnedVin, NIL);
+                        AvxCmdUseDrawTechniqueSIGMA(dctx, scn->bodyDtec, 1, scn->skinnedVin, NIL);
                     else
-                        AvxCmdApplyDrawTechnique(dctx, scn->bodyDtec, 0, scn->rigidVin, NIL);
+                        AvxCmdUseDrawTechniqueSIGMA(dctx, scn->bodyDtec, 0, scn->rigidVin, NIL);
 #else
                     if (AfxIsMeshDeformable(msh))
-                        AvxCmdApplyDrawTechnique(dctx, scn->tutCamUtilDtec, 1, scn->skinnedVin, NIL);
+                        AvxCmdUseDrawTechniqueSIGMA(dctx, scn->tutCamUtilDtec, 1, scn->skinnedVin, NIL);
                     else
-                        AvxCmdApplyDrawTechnique(dctx, scn->tutCamUtilDtec, 0, scn->rigidVin, NIL);
+                        AvxCmdUseDrawTechniqueSIGMA(dctx, scn->tutCamUtilDtec, 0, scn->rigidVin, NIL);
 #endif
 #endif
                     AvxCmdBindIndexBuffer(dctx, idxCache.buf, idxCache.base, idxCache.range, idxCache.stride);
@@ -390,11 +390,11 @@ _ASX afxError AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt,
                 avxIndexCache idxCache;
                 AfxBufferizeMesh(msh, 0, &vtxCache, &idxCache);
 
-                //AvxCmdApplyDrawTechnique(dctx, rnd->lightingDtec, 0, rnd->rigidVin, NIL);
-                //AvxCmdApplyDrawTechnique(dctx, rnd->tutCamUtilDtec, 0, rnd->rigidVin, NIL);
-                //AvxCmdApplyDrawTechnique(dctx, rnd->blinnTestRazrDtec, 0, rnd->rigidVin, NIL);
-                //AvxCmdApplyDrawTechnique(dctx, rnd->bodyDtec, 0, rnd->rigidVin, NIL);
-                AvxCmdApplyDrawTechnique(dctx, rnd->testDtec, 0, rnd->testVin, NIL);
+                //AvxCmdUseDrawTechniqueSIGMA(dctx, rnd->lightingDtec, 0, rnd->rigidVin, NIL);
+                //AvxCmdUseDrawTechniqueSIGMA(dctx, rnd->tutCamUtilDtec, 0, rnd->rigidVin, NIL);
+                //AvxCmdUseDrawTechniqueSIGMA(dctx, rnd->blinnTestRazrDtec, 0, rnd->rigidVin, NIL);
+                //AvxCmdUseDrawTechniqueSIGMA(dctx, rnd->bodyDtec, 0, rnd->rigidVin, NIL);
+                AvxCmdUseDrawTechniqueSIGMA(dctx, rnd->testDtec, 0, rnd->testVin, NIL);
 
                 AvxCmdBindIndexBuffer(dctx, idxCache.buf, idxCache.base, idxCache.range, idxCache.stride);
                 
@@ -475,7 +475,7 @@ _ASX afxError AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt,
 
 _ASX afxError AkxTestDrawIndexed(akxRenderer rnd, afxDrawContext dctx)
 {
-    AvxCmdApplyDrawTechnique(dctx, rnd->testDtec, 0, rnd->testVin, NIL);
+    AvxCmdUseDrawTechniqueSIGMA(dctx, rnd->testDtec, 0, rnd->testVin, NIL);
 
     avxBufferedStream vtxSrc;
     vtxSrc.buf = rnd->testVbo;
@@ -513,7 +513,7 @@ _ASX afxError AsxEndSceneRendering(akxRenderer rnd, afxDrawContext dctx)
     return err;
 }
 
-_ASX afxError AsxBeginSceneRendering(akxRenderer rnd, afxCamera cam, afxRect const* drawArea, avxCanvas canv, afxDrawContext dctx)
+_ASX afxError AsxBeginSceneRendering(akxRenderer rnd, avxCamera cam, afxRect const* drawArea, avxCanvas canv, afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RND, 1, &rnd);
@@ -548,27 +548,27 @@ _ASX afxError AsxBeginSceneRendering(akxRenderer rnd, afxCamera cam, afxRect con
         //cam = rnd->activeCamera;
 
         afxV2d extent = { rnd->drawArea.w, rnd->drawArea.h };
-        AfxSetCameraAspectRatios(cam, AfxFindPhysicalAspectRatio(rnd->drawArea.w, rnd->drawArea.h), extent, extent);
+        AvxSetCameraAspectRatios(cam, AvxFindPhysicalAspectRatio(rnd->drawArea.w, rnd->drawArea.h), extent, extent);
 
         viewConstants->viewExtent[0] = rnd->drawArea.w;
         viewConstants->viewExtent[1] = rnd->drawArea.h;
 
         afxV4d viewPos;
-        AfxGetCameraPosition(cam, viewPos);
+        AvxGetCameraPosition(cam, viewPos);
         AfxV4dCopyAtv3d(viewConstants->viewPos, viewPos);
 
-        afxM4d v, iv, p, ip;
-        AfxRecomputeCameraMatrices(cam);
-        AfxGetCameraMatrices(cam, v, iv);
-        AfxGetCameraProjectiveMatrices(cam, p, ip);
-
+        afxM4d v, iv, p, ip, pv, ipv;
+        AvxRecomputeCameraMatrices(cam);
+        AvxGetCameraMatrices(cam, p, pv, v, ip, ipv, iv);
+        
         AfxM4dCopy(viewConstants->p, p);
         AfxM4dCopy(viewConstants->ip, ip);
         AfxM4dCopyAtm(viewConstants->v, v);
         AfxM4dCopy(viewConstants->iv, iv);
-        AfxM4dMultiply(viewConstants->pv, p, v);
-        AfxM4dInvert(viewConstants->ipv, viewConstants->pv);
-
+        //AfxM4dMultiply(viewConstants->pv, p, v);
+        AfxM4dCopy(viewConstants->pv, pv);
+        //AfxM4dInvert(viewConstants->ipv, viewConstants->pv);
+        AfxM4dCopy(viewConstants->ipv, ipv);
     }
 
     AvxCmdUpdateBuffer(dctx, rnd->framesets[frameIdx].viewUbo, 0, sizeof(*viewConstants), viewConstants);
@@ -611,7 +611,7 @@ _ASX afxError _AfxRndDtor(akxRenderer rnd)
     }
 #endif
 
-    AfxCleanUpArray(&rnd->capturedNodes);
+    AfxEmptyArray(&rnd->capturedNodes, FALSE, FALSE);
 
     return err;
 }
@@ -677,7 +677,7 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         };
 
         avxBufferInfo vboSpec = { 0 };
-        vboSpec.cap = sizeof(testVertices);
+        vboSpec.size = sizeof(testVertices);
         vboSpec.flags = avxBufferFlag_W;
         vboSpec.usage = avxBufferUsage_VERTEX;
         AvxAcquireBuffers(dsys, 1, &vboSpec, &rnd->testVbo);
@@ -685,11 +685,11 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         avxBufferIo vboIop = { 0 };
         vboIop.dstStride = 1;
         vboIop.srcStride = 1;
-        vboIop.rowCnt = vboSpec.cap;
-        AvxUpdateBuffer(rnd->testVbo, 1, &vboIop, 0, testVertices);
+        vboIop.rowCnt = vboSpec.size;
+        AvxUpdateBuffer(rnd->testVbo, testVertices, 1, &vboIop, 0);
 
         avxBufferInfo iboSpec = { 0 };
-        iboSpec.cap = sizeof(testIndices);
+        iboSpec.size = sizeof(testIndices);
         iboSpec.flags = avxBufferFlag_W;
         iboSpec.usage = avxBufferUsage_INDEX;
         AvxAcquireBuffers(dsys, 1, &iboSpec, &rnd->testIbo);
@@ -697,8 +697,8 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         avxBufferIo iboIop = { 0 };
         iboIop.dstStride = 1;
         iboIop.srcStride = 1;
-        iboIop.rowCnt = iboSpec.cap;
-        AvxUpdateBuffer(rnd->testIbo, 1, &iboIop, 0, testIndices);
+        iboIop.rowCnt = iboSpec.size;
+        AvxUpdateBuffer(rnd->testIbo, testIndices, 1, &iboIop, 0);
 
         avxVertexLayout vtxl = 
         { 
@@ -1237,10 +1237,10 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
     {
         avxBufferInfo bufSpec[] =
         {
-            { .cap = sizeof(akxViewConstants), .flags = avxBufferFlag_WX | avxBufferFlag_C, .usage = avxBufferUsage_UNIFORM },
-            { .cap = sizeof(akxShaderConstants), .flags = avxBufferFlag_WX | avxBufferFlag_C, .usage = avxBufferUsage_UNIFORM },
-            { .cap = sizeof(akxMaterialConstants), .flags = avxBufferFlag_WX | avxBufferFlag_C, .usage = avxBufferUsage_UNIFORM },
-            { .cap = sizeof(akxInstanceConstants), .flags = avxBufferFlag_WX/* | avxBufferFlag_COHERENT*/, .usage = avxBufferUsage_UNIFORM }
+            { .size = sizeof(akxViewConstants), .flags = avxBufferFlag_WX | avxBufferFlag_C, .usage = avxBufferUsage_UNIFORM },
+            { .size = sizeof(akxShaderConstants), .flags = avxBufferFlag_WX | avxBufferFlag_C, .usage = avxBufferUsage_UNIFORM },
+            { .size = sizeof(akxMaterialConstants), .flags = avxBufferFlag_WX | avxBufferFlag_C, .usage = avxBufferUsage_UNIFORM },
+            { .size = sizeof(akxInstanceConstants), .flags = avxBufferFlag_WX/* | avxBufferFlag_COHERENT*/, .usage = avxBufferUsage_UNIFORM }
         };
 #if 0
         avxRasterInfo texiDepthSurfB = { 0 };
@@ -1260,12 +1260,12 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             AvxAcquireBuffers(dsys, 1, &bufSpec[3], &rnd->framesets[i].objUbo);
 
             avxBufferInfo bufi = { 0 };
-            bufi.cap = AVX_BUFFER_UPDATE_CAPACITY;
+            bufi.size = AVX_BUFFER_UPDATE_CAPACITY;
             bufi.usage = avxBufferUsage_INDIRECT | avxBufferUsage_VERTEX;
             bufi.flags = avxBufferFlag_W | avxBufferFlag_X/* | avxBufferFlag_COHERENT*/;
             AvxAcquireBuffers(dsys, 1, &bufi, &rnd->framesets[i].icbo);
 
-            bufi.cap = AVX_BUFFER_UPDATE_CAPACITY;
+            bufi.size = AVX_BUFFER_UPDATE_CAPACITY;
             bufi.usage = avxBufferUsage_FETCH;
             bufi.flags = avxBufferFlag_W | avxBufferFlag_X/* | avxBufferFlag_COHERENT*/;
             bufi.fmt = avxFormat_R32u;
@@ -1276,35 +1276,31 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             afxByte* mtboPtr = NIL;
             afxByte* bmboPtr = NIL;
             afxByte* mtlboPtr = NIL;
-            avxBufferRemap maps[] =
+            avxBufferedMap maps[] =
             {
                 {
                     .buf = rnd->framesets[i].objUbo,
                     .offset = 0,
-                    .range = AvxGetBufferCapacity(rnd->framesets[i].objUbo, 0),
-                    .placeholder = (void**)&mtboPtr
+                    .range = AvxGetBufferCapacity(rnd->framesets[i].objUbo, 0)
                 },
                 {
                     .buf = rnd->framesets[i].biasMapUbo,
                     .offset = 0,
-                    .range = AvxGetBufferCapacity(rnd->framesets[i].biasMapUbo, 0),
-                    .placeholder = (void**)&bmboPtr
+                    .range = AvxGetBufferCapacity(rnd->framesets[i].biasMapUbo, 0)
                 },
                 {
                     .buf = rnd->framesets[i].mtlUbo,
                     .offset = 0,
-                    .range = AvxGetBufferCapacity(rnd->framesets[i].mtlUbo, 0),
-                    .placeholder = (void**)&mtlboPtr
+                    .range = AvxGetBufferCapacity(rnd->framesets[i].mtlUbo, 0)
                 },
                 {
                     .buf = rnd->framesets[i].icbo,
                     .offset = 0,
-                    .range = AvxGetBufferCapacity(rnd->framesets[i].icbo, 0),
-                    .placeholder = (void**)&icboPtr
+                    .range = AvxGetBufferCapacity(rnd->framesets[i].icbo, 0)
                 }
             };
 
-            if (AvxMapBuffers(dsys, ARRAY_SIZE(maps), maps))
+            if (AvxMapBuffers(dsys, ARRAY_SIZE(maps), maps, (void**[]) {&mtboPtr, &bmboPtr, &mtlboPtr, &icboPtr }))
                 AfxThrowError();
 
             rnd->framesets[i].mtboPtr = mtboPtr;

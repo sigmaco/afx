@@ -387,7 +387,7 @@ _AFX afxError AfxReopenFile(afxStream iob, afxUri const* uri, afxFileFlags flags
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(uri);
 #ifdef _AFX_DBG_FILE
-    AfxLogEcho("Reopening... <%.*s>", AfxPushString(AfxGetUriString(uri)));
+    AfxReportMessage("Reopening... <%.*s>", AfxPushString(AfxGetUriString(uri)));
 #endif
 
     if (iob->usage != afxIoUsage_FILE)
@@ -413,7 +413,7 @@ _AFX afxError AfxReopenFile(afxStream iob, afxUri const* uri, afxFileFlags flags
     if (!AfxFindFiles(uri, flags, _AfxOpenFileCb, (void*[]) { &diskId, &endpointIdx, &iob->idd.f.url.uri, &iob->idd.f.resolvedUrl.uri }))
     {
         AfxThrowError();
-        AfxLogError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STRING_EMPTY));
+        AfxReportError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->s : &AFX_STRING_EMPTY));
         return err;
     }
     
@@ -446,7 +446,7 @@ _AFX afxError AfxReopenFile(afxStream iob, afxUri const* uri, afxFileFlags flags
     if (!(iob->idd.f.fd = fopen((char const*)(iob->idd.f.resolvedUrl.buf), mode)))
     {
         AfxThrowError();
-        AfxLogError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STRING_EMPTY));
+        AfxReportError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->s : &AFX_STRING_EMPTY));
         return err;
     }
 
@@ -522,7 +522,7 @@ _AFX afxError AfxWrapFile(afxStream iob, void* fd, afxIoFlags flags)
     AFX_ASSERT(fd);
     afxStream file = NIL;
 
-    AfxLogEcho("Wrapping file... <%p>,%x", fd, flags);
+    AfxReportMessage("Wrapping file... <%p>,%x", fd, flags);
 
     _afxIobIdd idd = { 0 };
     idd.f.fd = fd;
@@ -544,7 +544,7 @@ _AFX afxError AfxOpenFile(afxUri const* uri, afxFileFlags flags, afxStream* file
 {
     afxError err = AFX_ERR_NONE;
 #ifdef _AFX_DBG_FILE
-    AfxLogEcho("Opening... <%.*s>", AfxPushString(AfxGetUriString(uri)));
+    AfxReportMessage("Opening... <%.*s>", AfxPushString(AfxGetUriString(uri)));
 #endif
     AFX_ASSERT(uri);
 
@@ -567,7 +567,7 @@ _AFX afxError AfxOpenFile(afxUri const* uri, afxFileFlags flags, afxStream* file
     if (AfxReopenFile(iob, uri, flags))
     {
         AfxThrowError();
-        AfxLogError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STRING_EMPTY));
+        AfxReportError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->s : &AFX_STRING_EMPTY));
     }
     else if (!iob->idd.f.fd)
         AfxThrowError();
@@ -585,7 +585,7 @@ _AFX afxError AfxLoadFile(afxUri const* uri, afxStream* file)
 {
     afxError err = AFX_ERR_NONE;
 #ifdef _AFX_DBG_FILE
-    AfxLogEcho("Loading... <%.*s>", AfxPushString(AfxGetUriString(uri)));
+    AfxReportMessage("Loading... <%.*s>", AfxPushString(AfxGetUriString(uri)));
 #endif
     AFX_ASSERT(uri);
 
@@ -608,7 +608,7 @@ _AFX afxError AfxLoadFile(afxUri const* uri, afxStream* file)
     if (AfxReloadFile(iob, uri))
     {
         AfxThrowError();
-        AfxLogError("Couldn't load <%.*s>", AfxPushString(uri ? &uri->str : &AFX_STRING_EMPTY));
+        AfxReportError("Couldn't load <%.*s>", AfxPushString(uri ? &uri->s : &AFX_STRING_EMPTY));
     }
 
     if (err)

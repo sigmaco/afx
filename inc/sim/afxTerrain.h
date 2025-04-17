@@ -20,17 +20,15 @@
 #include "qwadro/inc/sim/io/afxModel.h"
 #include "qwadro/inc/sim/akxLighting.h"
 
-#ifdef _ASX_TERRAIN_C
-AFX_OBJECT(afxTerrain)
+AFX_DEFINE_STRUCT(afxTerrainConfig)
 {
-    afxUnit      secCnt;
-    struct
-    {
-        afxUnit  width, depth;
-        afxMesh msh;
-    }           *sectors;
+    afxUnit width;
+    afxUnit depth;
+    afxUnit secWidth;
+    afxUnit secHeight;
+    afxUri  heightmap;
+    afxReal heightScale;
 };
-#endif//_ASX_TERRAIN_C
 
 ASX afxError    AsxDrawTerrain(afxTerrain ter, akxRenderer scn, afxDrawContext dctx);
 ASX afxError    AsxDrawTerrainSector(afxTerrain ter, afxUnit secIdx, akxRenderer scn, afxDrawContext dctx);
@@ -39,12 +37,17 @@ ASX afxError    AfxResetTerrainSector(afxTerrain ter, afxUnit secIdx, afxMesh ms
 
 ASX afxUnit     AfxGetTerrainMeshes(afxTerrain ter, afxUnit secIdx, afxUnit cnt, afxMesh meshes[]);
 
+ASX afxBool     AsxGetTerrainHeightAt(afxTerrain ter, afxReal x, afxReal z, afxReal* y);
+
 ////////////////////////////////////////////////////////////////////////////////
 
-ASX afxError    AfxAcquireTerrain(afxSimulation sim, afxUnit secCnt, afxTerrain* terrain);
+ASX afxError    AfxAcquireTerrain(afxSimulation sim, afxTerrainConfig const* cfg, afxTerrain* terrain);
 
 ASX afxError    AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain* terrain);
 
 ASX afxError    AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* uri, afxTerrain* terrain);
+
+
+ASX afxBool     RenderCells(afxTerrain ter, afxFrustum* frustum, afxBool showFaces, afxBool showDbgLines, afxDrawContext dctx);
 
 #endif//ASX_TERRAIN_H

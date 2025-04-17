@@ -63,7 +63,7 @@ _AVX afxClassConfig const _AVX_FENC_CLASS_CONFIG =
 {
     .fcc = afxFcc_FENC,
     .name = "Fence",
-    .desc = "Device Synchronization Fence",
+    .desc = "Drawing Device Synchronization Fence",
     .fixedSiz = sizeof(AFX_OBJECT(avxFence)),
     .ctor = (void*)_AvxFencCtorCb,
     .dtor = (void*)_AvxFencDtorCb
@@ -123,7 +123,7 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
 
                 afxClock curr;
                 AfxGetClock(&curr);
-                afxReal64 dt = AfxGetMicrosecondsElapsed(&last, &curr);
+                afxReal64 dt = AfxGetClockUltrasecondsElapsed(&last, &curr);
                 last = curr;
 
                 if (timeout < dt)
@@ -153,7 +153,7 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
 
                     afxClock curr;
                     AfxGetClock(&curr);
-                    afxReal64 dt = AfxGetMicrosecondsElapsed(&last, &curr);
+                    afxReal64 dt = AfxGetClockUltrasecondsElapsed(&last, &curr);
                     last = curr;
 
                     if (timeout < dt)

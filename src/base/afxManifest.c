@@ -93,7 +93,7 @@ _AFX afxBool AfxFindInitializationSection(afxManifest const* ini, afxString cons
 
     for (afxUnit i = 0; i < ini->pageCnt; i++)
     {
-        if (0 == AfxCompareStrings(&ini->pages[i].name, 0, TRUE, 1, name))
+        if (AfxCompareStrings(&ini->pages[i].name, 0, TRUE, 1, name, NIL))
         {
             AFX_ASSERT(secIdx);
             *secIdx = i;
@@ -115,7 +115,7 @@ _AFX afxBool AfxFindInitializationRecord(afxManifest const* ini, afxUnit secIdx,
     
     for (afxUnit i = 0; i < ini->pages[secIdx].keyCnt; i++)
     {
-        if (0 == AfxCompareStrings(&ini->pages[secIdx].keys[i].key, 0, TRUE, 1, name))
+        if (AfxCompareStrings(&ini->pages[secIdx].keys[i].key, 0, TRUE, 1, name, NIL))
         {
             AFX_ASSERT(recIdx);
             *recIdx = i;
@@ -173,7 +173,7 @@ _AFX afxBool AfxGetManifestNat(afxManifest const* ini, afxUnit secIdx, afxUnit r
     {
         afxString2048 bstr;
         AfxMakeString2048(&bstr, &s);
-        *value = (afxUnit)atoi(bstr.str.start);
+        *value = (afxUnit)atoi(bstr.s.start);
     }
     else *value = 0;
 
@@ -186,7 +186,7 @@ _AFXINL _afxIniPage* _AfxIniFindPage(afxManifest const* ini, afxString const* na
     
     if (name)
         for (afxUnit i = 0; i < ini->pageCnt; i++)
-            if (0 == AfxCompareStrings(&ini->pages[i].name, 0, TRUE, 1, name))
+            if (AfxCompareStrings(&ini->pages[i].name, 0, TRUE, 1, name, NIL))
                 return &ini->pages[i];
 
     return NIL;
@@ -198,7 +198,7 @@ _AFXINL _afxIniRecord* _AfxIniFindRecord(afxManifest const* ini, _afxIniPage con
 
     if (page && key)
         for (afxUnit i = 0; i < page->keyCnt; i++)
-            if (0 == AfxCompareStrings(&page->keys[i].key, 0, TRUE, 1, key))
+            if (AfxCompareStrings(&page->keys[i].key, 0, TRUE, 1, key, NIL))
                 return &page->keys[i];
     
     return NIL;
@@ -330,11 +330,11 @@ _AFX afxError AfxLoadInitializationFile(afxManifest* ini, afxUri const* uri)
                 }
                 else if (state == Section)
                 {
-                    AfxLogError("%u: Section '%s' missing ']' operator.", line, buf);
+                    AfxReportError("%u: Section '%s' missing ']' operator.", line, buf);
                 }
                 else if (state == Key && posn)
                 {
-                    AfxLogError("%u: Key '%s' missing '=' operator.", line, buf);
+                    AfxReportError("%u: Key '%s' missing '=' operator.", line, buf);
                 }
                 memset(buf, '\0', bufSiz);
                 state = Key;
@@ -491,7 +491,7 @@ _AFX afxBool AfxGetInitializationNat(afxManifest const* ini, afxString const* pa
     {
         afxString2048 bstr;
         AfxMakeString2048(&bstr, &val);
-        *value = (afxUnit)atoi(bstr.str.start);
+        *value = (afxUnit)atoi(bstr.s.start);
     }
 
     return rslt;
@@ -506,7 +506,7 @@ _AFX afxBool AfxGetInitializationNatAt(afxManifest const* ini, afxUnit secIdx, a
     {
         afxString2048 bstr;
         AfxMakeString2048(&bstr, &val);
-        *value = (afxUnit)atoi(bstr.str.start);
+        *value = (afxUnit)atoi(bstr.s.start);
     }
     return rslt;
 }

@@ -17,8 +17,9 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #include "../impl/asxImplementation.h"
+#include "qwadro/inc/sim/body/afxCollision.h"
 
-AFX_DEFINE_STRUCT(afxTriangle)
+AFX_DEFINE_STRUCT(asxTriangle)
 {
     afxV3d  v0; // Reference vertex of the triangle
     afxV3d  e1; // First edge of the triangle (v1 - v0)
@@ -26,14 +27,55 @@ AFX_DEFINE_STRUCT(afxTriangle)
     afxV3d  nrm; // Normal of the triangle (cross(edge1, edge2))
 };
 
-AFX_DEFINE_STRUCT(afxShape)
+typedef enum asxCollisionType
 {
-    afxTriangle*    tris;
+    asxCollisionType_LOGICAL, // capsules for fast discard
+    asxCollisionType_FIRST_COLLISION
+} asxCollisionType;
+
+typedef enum asxShapeFlag
+{
+    asxShapeFlag_LOGICAL,
+    asxShapeFlag_PHYSICAL
+} asxShapeFlags;
+
+AFX_DEFINE_STRUCT(asxShapeLod)
+{
+    asxShapeFlags   flags;
+    afxUnit         baseSph;
+    afxUnit         sphCnt;
+    afxUnit         baseBox;
+    afxUnit         boxCnt;
+    afxUnit         baseTri;
     afxUnit         triCnt;
 };
 
+AFX_OBJECT(asxShape)
+{
+    asxShapeInfo    info;
+    afxUnit         sphCnt;
+    afxSphere*      spheres;
+    /*
+        The first sphere must be a sphere encapsulating all other spheres, 
+        for quick discard, once it is known to be the greater one, so having not chance to having any other collision.
+    */
+    afxUnit         boxCnt;
+    afxBox*         boxes;
+    /*
+        The first box must be a box encapsulating all other boxes,
+        for quick discard, once it is known to be the greater one, so having not chance to having any other collision.
+    */
+    afxUnit         triCnt;
+    asxTriangle*    tris;
+    afxUnit         triGrpCnt;
+    struct
+    {
+        afxUnit     mtlId;
+    }*              triGrps;
+};
+
 // Precompute the edges, normal, and cross product for the triangle
-_ASX void precompute_triangle_edges(afxUnit triCnt, afxUnit const indices[], afxV3d const vertices[], afxTriangle tris[])
+_ASX void precompute_triangle_edges(afxUnit triCnt, afxUnit const indices[], afxV3d const vertices[], asxTriangle tris[])
 {
     for (afxUnit i = 0; i < triCnt; i++)
     {
@@ -47,7 +89,7 @@ _ASX void precompute_triangle_edges(afxUnit triCnt, afxUnit const indices[], afx
 // Apply the transformation matrix to the edges and normal of a triangle
 // Once this struct store differential values,
 // it will just work it if all triangle vertices are rigidly transformed.
-_ASX void transform_triangle_edges_and_normal(afxM4d const m, afxTriangle const* in, afxTriangle* out)
+_ASX void transform_triangle_edges_and_normal(afxM4d const m, asxTriangle const* in, asxTriangle* out)
 {
     // Transform the reference vertex v0
     
@@ -62,17 +104,17 @@ _ASX void transform_triangle_edges_and_normal(afxM4d const m, afxTriangle const*
 }
 
 // The Moller–Trumbore ray-triangle intersection algorithm (optimized with precomputed edges)
-_ASX afxBool intersect_triangle(afxTriangle const* triA, afxTriangle const* triB)
+_ASX afxBool intersect_triangle(asxTriangle const* triA, asxTriangle const* triB)
 {
-    // Compute the vector s (v0 - u0) from the reference vertices of the two triangles
-    afxV3d s;
-    AfxV3dSub(s, triA->v0, triB->v0);
-
     // Calculate the dot product for the intersection test (using precomputed 'h' values)
     afxReal a = AfxV3dDot(triB->nrm, triA->e1);
     
     if (a > -AFX_EPSILON && a < AFX_EPSILON)
         return FALSE;  // The triangles are parallel or coplanar
+
+    // Compute the vector s (v0 - u0) from the reference vertices of the two triangles
+    afxV3d s;
+    AfxV3dSub(s, triA->v0, triB->v0);
 
     afxReal f = 1.0f / a;
     afxReal u = f * AfxV3dDot(s, triB->nrm);
@@ -91,13 +133,13 @@ _ASX afxBool intersect_triangle(afxTriangle const* triA, afxTriangle const* triB
     return t > AFX_EPSILON;  // If t is positive, intersection is valid
 }
 
-_ASX afxBool AfxTestShapeCollision2(afxShape const* s1, afxM4d const m1, afxShape const* s2, afxM4d const m2)
+_ASX afxBool AfxTestShapeCollision2(asxShape const s1, afxM4d const m1, asxShape const s2, afxM4d const m2)
 {
     // Edge-to-edge intersection test using Moller–Trumbore algorithm
-    afxTriangle s1t_cache;
-    afxTriangle* s1t = &s1t_cache;
-    afxTriangle s2t_cache;
-    afxTriangle* s2t = &s2t_cache;
+    asxTriangle s1t_cache;
+    asxTriangle* s1t = &s1t_cache;
+    asxTriangle s2t_cache;
+    asxTriangle* s2t = &s2t_cache;
 
     for (afxUnit i = 0; i < s1->triCnt; i++)
     {
@@ -118,7 +160,7 @@ _ASX afxBool AfxTestShapeCollision2(afxShape const* s1, afxM4d const m1, afxShap
     return 0;
 }
 
-_ASX afxBool AfxTestShapeCollision(afxShape const* s1, afxShape const* s2)
+_ASX afxBool AfxTestShapeCollision(asxShape const s1, asxShape const s2)
 {
     // Edge-to-edge intersection test using Moller–Trumbore algorithm
 
@@ -132,24 +174,99 @@ _ASX afxBool AfxTestShapeCollision(afxShape const* s1, afxShape const* s2)
                 return TRUE;
         }
     }
+    return 0;
 }
 
-_ASX afxError AfxBuildMeshShape(afxMesh msh, afxShape* shape)
+_ASX afxError _AsxShapDtorCb(asxShape shap)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SHAP, 1, &shap);
+
+    switch (shap->info.type)
+    {
+    case asxShapeType_MESH:
+    {
+
+        break;
+    }
+    default: break;
+    }
+
+    return err;
+}
+
+_ASX afxError _AsxShapCtorCb(asxShape shap, void** args, afxUnit invokeNo)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SHAP, 1, &shap);
+
+    afxSimulation sim = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    asxShapeInfo const* info = AFX_CAST(asxShapeInfo const*, args[1]) + invokeNo;
+    
+    shap->info = *info;
+
+    // Validate zeroed transforms.
+    if (!shap->info.t.flags)
+        AfxResetTransform(&shap->info.t);
+
+    if (info->type == asxShapeType_MESH)
+    {
+        afxMesh msh = info->msh;
+        afxMeshInfo mshi;
+        AfxDescribeMesh(msh, &mshi);
+
+        afxUnit* indices = AfxGetMeshIndices(msh, 0);
+        afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
+        
+        shap->triCnt = mshi.triCnt;
+
+        AfxAllocate(mshi.triCnt * sizeof(shap->tris[0]), 0, AfxHere(), (void**)&shap->tris);
+        precompute_triangle_edges(mshi.triCnt, indices, pos, shap->tris);
+    }
+    return err;
+}
+
+_ASX afxClassConfig const _ASX_SHAP_CLASS_CONFIG =
+{
+    .fcc = afxFcc_SHAP,
+    .name = "Shape",
+    .desc = "Collision Shape",
+    .fixedSiz = sizeof(AFX_OBJECT(asxShape)),
+    .ctor = (void*)_AsxShapCtorCb,
+    .dtor = (void*)_AsxShapDtorCb
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+_ASX afxError AsxAcquireShapes(afxSimulation sim, afxUnit cnt, asxShapeInfo const info[], asxShape shapes[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+
+    afxClass* cls = (afxClass*)_AsxGetPoseClass(sim);
+    AFX_ASSERT_CLASS(cls, afxFcc_SHAP);
+
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)shapes, (void const*[]) { sim }))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    return err;
+}
+
+_ASX afxError AfxBuildMeshShape(afxMesh msh, asxShape* shape)
 {
     afxError err = NIL;
 
     afxMeshInfo mshi;
     AfxDescribeMesh(msh, &mshi);
 
-    AfxAllocate(mshi.triCnt, 0, AfxHere(), (void**)&shape);
-    AfxAllocate(mshi.triCnt * sizeof(shape->tris[0]), 0, AfxHere(), (void**)&shape->tris);
+    asxShape shap;
+    asxShapeInfo shapi = { 0 };
+    shapi.msh = msh;
+    AsxAcquireShapes(AfxGetMeshContext(msh), 1, &shapi, &shap);
 
-    // Function to compute the edges and cross product of a triangle
-    {
-        afxUnit* indices = AfxGetMeshIndices(msh, 0);
-        afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
-        shape->triCnt = mshi.triCnt;
-        precompute_triangle_edges(mshi.triCnt, indices, pos, shape->tris);
-    }
     return err;
 }

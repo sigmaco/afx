@@ -33,6 +33,7 @@
 #include "qwadro/inc/exec/afxService.h"
 #include "qwadro/inc/exec/afxTerminal.h"
 #include "qwadro/inc/exec/afxThread.h"
+#include "qwadro/inc/exec/afxThreadPool.h"
 #include "qwadro/inc/base/afxVersion.h"
 // io
 #include "qwadro/inc/io/afxData.h"

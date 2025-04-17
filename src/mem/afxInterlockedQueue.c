@@ -20,6 +20,10 @@ _AFXINL afxError AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxUnit un
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ique);
+
+#ifdef _AFX_INTERLOCKED_QUEUE_VALIDATION_ENABLED
+    ique->fcc = afxFcc_FIFO;
+#endif
     AFX_ASSERT(unitSiz);
     AFX_ASSERT(cap); // The number of entries. Must be a power of two.
 

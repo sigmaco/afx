@@ -19,6 +19,75 @@
 #define _AVX_DRAW_C
 #include "avxImplementation.h"
 
+#define AFX_FOR_EACH(_type_, _var_, _array_)
+
+void _AvxDraw(avxDpu* dpu, afxUnit vtxCnt, afxUnit instCnt, afxUnit baseVtx, afxUnit baseInst)
+{
+
+    for (afxUnit i = 0; i < vtxCnt; ++i)
+    {
+        afxUnit gl_VertexID = baseVtx + i;
+
+        // Dispatch
+    }
+}
+
+void _AvxDrawIndirect(avxDpu* dpu, avxBuffer buf, afxUnit32 offset, afxUnit32 drawCnt, afxUnit32 stride)
+{
+    // When using avxDrawIndirect.
+    
+    afxByte const* cmds = NIL;
+    cmds += offset;
+
+    for (afxUnit j = 0; j < drawCnt; j++)
+    {
+        avxDrawIndirect const* cmd = (avxDrawIndirect const*)&cmds[j * sizeof(avxDrawIndirect) + stride];
+        
+        for (afxUnit i = 0; i < cmd->vtxCnt; ++i)
+        {
+            afxUnit gl_VertexID = cmd->baseVtx + i;
+
+            // Dispatch
+        }
+    }
+}
+
+void _AvxDrawIndexed(avxDpu* dpu, afxUnit idxCnt, afxUnit instCnt, afxUnit baseIdx, afxUnit vtxOffset, afxUnit baseInst)
+{
+
+    afxUnit32 const* indices = (afxUnit32 const*)dpu->iboPtr;
+
+    for (afxUnit i = 0; i < idxCnt; ++i)
+    {
+        afxUnit gl_VertexID = indices[baseIdx + i] + vtxOffset;
+
+        // Dispatch
+    }
+}
+
+void _AvxDrawIndexedIndirect(avxDpu* dpu, avxBuffer buf, afxUnit32 offset, afxUnit32 drawCnt, afxUnit32 stride)
+{
+    // When using avxDrawIndexedIndirect when element array buffer is
+    // using unsigned ints
+
+    afxByte* cmds = NIL;
+    cmds += offset;
+
+    afxUnit32 const* indices = (afxUnit32 const*)dpu->iboPtr;
+
+    for (afxUnit j = 0; j < drawCnt; j++)
+    {
+        avxDrawIndexedIndirect const* cmd = (avxDrawIndirect const*)&cmds[j * sizeof(avxDrawIndirect) + stride];
+
+        for (afxUnit i = 0; i < cmd->idxCnt; ++i)
+        {
+            afxUnit gl_VertexID = indices[cmd->baseIdx + i] + cmd->vtxOffset;
+            
+            // Dispatch
+        }
+    }
+}
+
 void FillRectangle(afxByte* p, afxUnit pitch, afxUnit sx, afxUnit sy, afxUnit ex, afxUnit ey, afxUnit32 color)
 {
     p += pitch * sy;
@@ -77,8 +146,8 @@ afxReal calcBlendFunc(afxReal src, afxReal dst, avxBlendOp op)
     case avxBlendOp_ADD: return src + dst;
     case avxBlendOp_SUB: return src - dst;
     case avxBlendOp_REV_SUB:  return dst - src;
-    case avxBlendOp_MIN: return AfxMin(src, dst);
-    case avxBlendOp_MAX: return AfxMax(src, dst);
+    case avxBlendOp_MIN: return AFX_MIN(src, dst);
+    case avxBlendOp_MAX: return AFX_MAX(src, dst);
     }
     return src + dst;
 }
@@ -92,8 +161,8 @@ void calcBlendFuncV4d(afxV4d src, afxV4d dst, avxBlendOp op, afxV4d ret)
         case avxBlendOp_ADD: ret[i] = src[i] + dst[i];
         case avxBlendOp_SUB: ret[i] = src[i] - dst[i];
         case avxBlendOp_REV_SUB: ret[i] = dst[i] - src[i];
-        case avxBlendOp_MIN: ret[i] = AfxMin(src[i], dst[i]);
-        case avxBlendOp_MAX: ret[i] = AfxMax(src[i], dst[i]);
+        case avxBlendOp_MIN: ret[i] = AFX_MIN(src[i], dst[i]);
+        case avxBlendOp_MAX: ret[i] = AFX_MAX(src[i], dst[i]);
         }
     }
 }
@@ -363,12 +432,12 @@ void WrapTexel2(avxTexelWrap mode, afxV2d uv)
     switch (mode)
     {
     case avxTexelWrap_BORDER:
-        uv[0] = AfxClamp(uv[0], 0.0f, 1.0f);
-        uv[1] = AfxClamp(uv[1], 0.0f, 1.0f);
+        uv[0] = AFX_CLAMP(uv[0], 0.0f, 1.0f);
+        uv[1] = AFX_CLAMP(uv[1], 0.0f, 1.0f);
         break;
     case avxTexelWrap_EDGE:
-        uv[0] = AfxClamp(uv[0], 0.0f, 1.0f);
-        uv[1] = AfxClamp(uv[1], 0.0f, 1.0f);
+        uv[0] = AFX_CLAMP(uv[0], 0.0f, 1.0f);
+        uv[1] = AFX_CLAMP(uv[1], 0.0f, 1.0f);
         break;
     case avxTexelWrap_REPEAT:
         if (uv[0] < 0.0f) uv[0] += 1.0f;
@@ -384,14 +453,14 @@ void WrapTexel3(avxTexelWrap mode, afxV3d uvw)
     switch (mode)
     {
     case avxTexelWrap_BORDER:
-        uvw[0] = AfxClamp(uvw[0], 0.0f, 1.0f);
-        uvw[1] = AfxClamp(uvw[1], 0.0f, 1.0f);
-        uvw[2] = AfxClamp(uvw[2], 0.0f, 1.0f);
+        uvw[0] = AFX_CLAMP(uvw[0], 0.0f, 1.0f);
+        uvw[1] = AFX_CLAMP(uvw[1], 0.0f, 1.0f);
+        uvw[2] = AFX_CLAMP(uvw[2], 0.0f, 1.0f);
         break;
     case avxTexelWrap_EDGE:
-        uvw[0] = AfxClamp(uvw[0], 0.0f, 1.0f);
-        uvw[1] = AfxClamp(uvw[1], 0.0f, 1.0f);
-        uvw[2] = AfxClamp(uvw[2], 0.0f, 1.0f);
+        uvw[0] = AFX_CLAMP(uvw[0], 0.0f, 1.0f);
+        uvw[1] = AFX_CLAMP(uvw[1], 0.0f, 1.0f);
+        uvw[2] = AFX_CLAMP(uvw[2], 0.0f, 1.0f);
         break;
     case avxTexelWrap_REPEAT:
         if (uvw[0] < 0.0f) uvw[0] += 1.0f;

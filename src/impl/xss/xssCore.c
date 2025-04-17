@@ -1244,7 +1244,7 @@ DEF_PRIMITIVE(system_writeString)
     vm->config.writeFn(vm, AS_CSTRING(args[1]));
   }
 #else
-    AfxDbgLogf(1, NIL, AS_CSTRING(args[1]));
+    AfxReportf(1, NIL, AS_CSTRING(args[1]));
 #endif
 
   RETURN_VAL(args[1]);

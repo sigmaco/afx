@@ -27,8 +27,8 @@
 #include "qwadro/inc/mem/afxInterlockedQueue.h"
 #include "qwadro/inc/mem/afxSlabAllocator.h"
 
-AFX_DECLARE_UNION(avxWork);
-AFX_DECLARE_UNION(avxWorkList);
+AFX_DECLARE_UNION(_avxIoReqPacket);
+AFX_DECLARE_UNION(_avxIoReqLut);
 
 AFX_DEFINE_STRUCT(avxDpu)
 {
@@ -60,6 +60,12 @@ AFX_DEFINE_STRUCT(avxDpu)
     afxUnit     vpCnt;
     avxViewport vps[8];
     afxRect     scissors[8];
+
+    avxBuffer   ibo;
+    afxSize     iboBase;
+    afxUnit     iboRange;
+    afxUnit     iboStride; // size/type of vertex index.
+    void*       iboPtr;
 };
 
 AFX_DEFINE_STRUCT(_avxDexuAcquisition)
@@ -93,8 +99,8 @@ AFX_OBJECT(afxDrawBridge)
     afxBool         schedCnt;
     afxThread       worker;
     afxInt          (*workerProc)(afxDrawBridge);
-    avxWorkList const*workVmt;
-    avxCmdList const*cmdVmt;
+    _avxIoReqLut const*iorpVmt;
+    _avxCmdLut const*cmdVmt;
     afxBool         (*procCb)(avxDpu*);
     avxDpu*         dpu;
 };
@@ -127,24 +133,24 @@ AFX_OBJECT(afxDrawQueue)
 
     afxCondition    idleCnd;
     afxMutex        idleCndMtx;
-    afxSlock        workArenaSlock;
-    afxArena        workArena; // used by submission of queue operations, not stream commands.        
-    afxChain        workChn;
-    afxMutex        workChnMtx;
+    afxFutex        iorpArenaSlock;
+    afxArena        iorpArena; // used by submission of queue operations, not stream commands.        
+    afxChain        iorpChn;
+    afxMutex        iorpChnMtx;
 
     afxChain        classes;
     // one command pool per queue to avoid thread interation.
     afxClass        cmdbCls;
     // one stream manager per queue to avoid thread interaction
     afxQueue        cmdbRecycQue;
-    afxSlock        cmdbReqLock;
+    afxFutex        cmdbReqLock;
     afxBool         cmdbLockedForReq;
 
     afxError(*waitCb)(afxDrawQueue, afxUnit64);
 };
 #endif//_AVX_DRAW_QUEUE_C
 
-AFX_DEFINE_UNION(avxWorkList)
+AFX_DEFINE_UNION(_avxIoReqLut)
 {
     struct
     {
@@ -155,12 +161,12 @@ AFX_DEFINE_UNION(avxWorkList)
         void* Remap;
         void* SyncMaps;
     };
-    void(*f[])(void*, avxWork*);
+    void(*f[])(void*, _avxIoReqPacket*);
 };
 
-#define AVX_GET_STD_WORK_ID(cmdName_) (offsetof(avxWorkList, cmdName_) / sizeof(void*))
+#define _AVX_GET_STD_IORP_ID(cmdName_) (offsetof(_avxIoReqLut, cmdName_) / sizeof(void*))
 
-AFX_DEFINE_STRUCT(avxWorkHdr)
+AFX_DEFINE_STRUCT(_avxIoReqPacketHdr)
 {
     afxLink chain;
     afxUnit id;
@@ -170,17 +176,17 @@ AFX_DEFINE_STRUCT(avxWorkHdr)
     afxTime pushTime; // submission (into input) time
     afxTime pullTime; // fecth (by queue) time
     afxTime complTime; // completation time
-    afxError(*exec)(void*, afxDrawBridge, afxUnit queIdx, avxWork*);
+    afxError(*exec)(void*, afxDrawBridge, afxUnit queIdx, _avxIoReqPacket*);
     avxFence completionFence;
     afxSize idd[4];
 };
 
-AFX_DEFINE_UNION(avxWork)
+AFX_DEFINE_UNION(_avxIoReqPacket)
 {
-    avxWorkHdr hdr;
+    _avxIoReqPacketHdr hdr;
     struct
     {
-        avxWorkHdr hdr;
+        _avxIoReqPacketHdr hdr;
 
         afxSemaphore    wait;
         afxSemaphore    signal;
@@ -190,7 +196,7 @@ AFX_DEFINE_UNION(avxWork)
     } Execute;
     struct
     {
-        avxWorkHdr hdr;
+        _avxIoReqPacketHdr hdr;
 
         afxSemaphore    wait;
         afxSemaphore    signal;
@@ -225,7 +231,7 @@ AFX_DEFINE_UNION(avxWork)
     } Transfer;
     struct
     {
-        avxWorkHdr hdr;
+        _avxIoReqPacketHdr hdr;
 
         afxSemaphore    wait;
         afxUnit         opCnt;
@@ -237,18 +243,20 @@ AFX_DEFINE_UNION(avxWork)
     } Present;
     struct
     {
-        avxWorkHdr hdr;
+        _avxIoReqPacketHdr hdr;
+        afxUnit     firstMapIdx;
         afxUnit     mapCnt;
+        afxUnit     firstUnmapIdx;
         afxUnit     unmapCnt;
         union
         {
-            avxBufferRemap mapOps[];
-            avxBuffer unmapOps[];
+            _avxBufferRemapping mapOps[];
+            _avxBufferRemapping unmapOps[];
         };
     } Remap;
     struct
     {
-        avxWorkHdr  hdr;
+        _avxIoReqPacketHdr  hdr;
         afxUnit     baseFlushIdx;
         afxUnit     flushCnt;
         afxUnit     baseFetchIdx;
@@ -260,7 +268,7 @@ AFX_DEFINE_UNION(avxWork)
     } SyncMaps;
     struct
     {
-        avxWorkHdr hdr;
+        _avxIoReqPacketHdr hdr;
 
         afxUnit         submType;
         void            (*f)(void*, void*);
@@ -270,7 +278,7 @@ AFX_DEFINE_UNION(avxWork)
     } Callback;
     struct
     {
-        avxWorkHdr hdr;
+        _avxIoReqPacketHdr hdr;
 
         afxBool waitAll;
         afxUnit64 timeout;
@@ -286,24 +294,21 @@ AVX afxClassConfig const _AVX_DEXU_CLASS_CONFIG;
 AVX afxClassConfig const _AVX_DTHR_CLASS_CONFIG;
 AVX afxClassConfig const _AVX_FENC_CLASS_CONFIG;
 
-AVX afxError _AvxUnlockDrawQueue(afxDrawQueue dque);
-AVX afxError _AvxLockDrawQueue(afxDrawQueue dque, afxBool wait, afxTimeSpec const* ts);
-AVX afxError _AvxDquePopWork(afxDrawQueue dque, avxWork* work);
-AVX avxWork* _AvxDquePushWork(afxDrawQueue dque, afxUnit id, afxUnit siz, afxCmdId* cmdId);
+AVX afxError _AvxDqueUnlockIoReqChain(afxDrawQueue dque);
+AVX afxError _AvxDqueLockIoReqChain(afxDrawQueue dque, afxUnit64 timeout);
+AVX afxError _AvxDquePopIoReqPacket(afxDrawQueue dque, _avxIoReqPacket* work);
+AVX afxError _AvxDquePushIoReqPacket(afxDrawQueue dque, afxUnit id, afxUnit siz, afxCmdId* cmdId, _avxIoReqPacket** pIorp);
 
 //AVX afxUnit _AvxCountDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx);
-AVX afxError AvxWaitForEmptyDrawQueue(afxDrawQueue dque, afxUnit64 timeout);
-AVX afxError AvxWaitForIdleDrawBridge(afxDrawBridge dexu, afxUnit64 timeout);
-
-AVX afxClass const* _AvxGetDrawBatchClass(afxDrawQueue dque);
+AVX afxClass const* _AvxGetDrawContextClass(afxDrawQueue dque);
 
 // standard sound port methods
 
-AVX avxWorkList const _AVX_DPU_WORK_VMT;
-AVX avxCmdList const _AVX_DPU_CMD_VMT;
+AVX _avxIoReqLut const _AVX_DPU_IORP_VMT;
+AVX _avxCmdLut const _AVX_DPU_CMD_VMT;
 
-AVX afxError _AvxDpuWork_CallbackCb(avxDpu* dpu, avxWork* work);
-AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, avxWork* work);
+AVX afxError _AvxDpuWork_CallbackCb(avxDpu* dpu, _avxIoReqPacket* work);
+AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, _avxIoReqPacket* work);
 
 AVX afxInt   _AVX_DPU_THREAD_PROC(afxDrawBridge dexu);
 AVX afxBool  _AvxDpu_ProcCb(avxDpu* dpu);
@@ -312,11 +317,11 @@ AVX afxError _AvxDexu_PingCb(afxDrawBridge dexu, afxUnit queIdx);
 AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx);
 
 // Common queued operations
-AVX afxError _AvxExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence);
-AVX afxError _AvxSubmitTransferences(afxDrawQueue dque, avxTransference const* ctrl, afxUnit opCnt, void const* ops);
-AVX afxError _AvxSubmitRemapping(afxDrawQueue dque, afxUnit mapCnt, avxBufferRemap const maps[], afxUnit unmapCnt, avxBuffer const unmaps[]);
-AVX afxError _AvxSubmitSyncMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferedMap const flushes[], afxUnit fetchCnt, avxBufferedMap const fetches[]);
-AVX afxError _AvxSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), void* udd);
+AVX afxError _AvxDqueExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence);
+AVX afxError _AvxDqueTransferResources(afxDrawQueue dque, avxTransference const* ctrl, afxUnit opCnt, void const* ops);
+AVX afxError _AvxDqueRemapBuffers(afxDrawQueue dque, afxUnit mapCnt, _avxBufferRemapping const maps[], afxUnit unmapCnt, _avxBufferRemapping const unmaps[]);
+AVX afxError _AvxDqueSyncBufferedMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferedMap const flushes[], afxUnit fetchCnt, avxBufferedMap const fetches[]);
+AVX afxError _AvxDqueSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), void* udd);
 
 AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, avxColor const color);
 AVX void _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, avxColor const color);

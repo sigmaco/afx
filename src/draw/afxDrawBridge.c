@@ -26,26 +26,7 @@
 //#define _AVX_BUFFER_C
 #include "impl/avxImplementation.h"
 
-_AVX afxClass const* _AvxGetDrawQueueClass(afxDrawBridge dexu)
-{
-    afxError err = AFX_ERR_NONE;
-    // dexu must be a valid afxDrawBridge handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-    afxClass const* cls = &dexu->dqueCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_DQUE);
-    return cls;
-}
-
-_AVX afxDrawDevice AvxGetDrawBridgeDevice(afxDrawBridge dexu)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-    afxDrawDevice ddev = dexu->ddev;
-    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
-    return ddev;
-}
-
-_AVX afxDrawSystem AfxGetBridgedDrawSystem(afxDrawBridge dexu)
+_AVX afxDrawSystem AvxGetBridgedDrawSystem(afxDrawBridge dexu)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
@@ -54,18 +35,28 @@ _AVX afxDrawSystem AfxGetBridgedDrawSystem(afxDrawBridge dexu)
     return dsys;
 }
 
-_AVX afxUnit AfxQueryDrawBridgePort(afxDrawBridge dexu, afxDrawDevice* device)
+_AVX afxDrawDevice AvxGetBridgedDrawDevice(afxDrawBridge dexu, afxUnit* portId)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
+    afxDrawDevice ddev = dexu->ddev;
+    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
 
-    if (device)
+    if (portId)
     {
-        afxDrawDevice ddev = dexu->ddev;
-        AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
-        *device = ddev;
+        *portId = dexu->portId;
     }
-    return dexu->portId;
+    return ddev;
+}
+
+_AVX afxClass const* _AvxGetDrawQueueClass(afxDrawBridge dexu)
+{
+    afxError err = AFX_ERR_NONE;
+    // dexu must be a valid afxDrawBridge handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
+    afxClass const* cls = &dexu->dqueCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_DQUE);
+    return cls;
 }
 
 _AVX afxUnit AvxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cnt, afxDrawQueue queues[])
@@ -115,7 +106,7 @@ _AVX afxError _AvxDexuDtorCb(afxDrawBridge dexu)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 
-    afxDrawSystem dsys = AfxGetBridgedDrawSystem(dexu);
+    afxDrawSystem dsys = AvxGetBridgedDrawSystem(dexu);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     //AvxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
@@ -165,7 +156,7 @@ _AVX afxError _AvxDexuCtorCb(afxDrawBridge dexu, void** args, afxUnit invokeNo)
     dexu->workerProc = _AVX_DPU_THREAD_PROC;
     dexu->procCb = _AvxDpu_ProcCb;
 
-    dexu->workVmt = &_AVX_DPU_WORK_VMT;
+    dexu->iorpVmt = &_AVX_DPU_IORP_VMT;
     dexu->cmdVmt = &_AVX_DPU_CMD_VMT;
 
     AfxDeployMutex(&dexu->schedCndMtx, AFX_MTX_PLAIN);
@@ -193,7 +184,7 @@ _AVX afxError _AvxDexuCtorCb(afxDrawBridge dexu, void** args, afxUnit invokeNo)
 
         afxThreadConfig thrCfg = { 0 };
         //thrCfg.procCb = DrawThreadProc;
-        thrCfg.purpose = afxThreadPurpose_DRAW;
+        thrCfg.usage = afxThreadUsage_DRAW;
         thrCfg.udd[0] = dexu;
 
         if (AfxAcquireThreads(AfxHere(), &thrCfg, 1, &dexu->worker))

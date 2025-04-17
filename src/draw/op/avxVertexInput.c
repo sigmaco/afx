@@ -197,7 +197,7 @@ _AVX afxClassConfig const _AVX_VIN_CLASS_CONFIG =
 {
     .fcc = afxFcc_VIN,
     .name = "VertexInput",
-    .desc = "Vertex Input Declaration",
+    .desc = "Pipelined Vertex Input Declaration",
     .fixedSiz = sizeof(AFX_OBJECT(avxVertexInput)),
     .ctor = (void*)_AvxVtxdCtorCb,
     .dtor = (void*)_AvxVtxdDtorCb

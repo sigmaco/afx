@@ -80,12 +80,11 @@ AFX_DEFINE_STRUCT(afxDrawBridgeConfig)
     afxReal const*      queuePriority;
 };
 
-AVX afxDrawDevice   AvxGetDrawBridgeDevice(afxDrawBridge dexu);
-
-AVX afxDrawSystem   AfxGetBridgedDrawSystem(afxDrawBridge dexu);
-
-AVX afxUnit         AfxQueryDrawBridgePort(afxDrawBridge dexu, afxDrawDevice* device);
+AVX afxDrawSystem   AvxGetBridgedDrawSystem(afxDrawBridge dexu);
+AVX afxDrawDevice   AvxGetBridgedDrawDevice(afxDrawBridge dexu, afxUnit* portId);
 
 AVX afxUnit         AvxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cnt, afxDrawQueue queues[]);
+
+AVX afxError        AvxWaitForIdleDrawBridge(afxDrawBridge dexu, afxUnit64 timeout);
 
 #endif//AVX_DRAW_BRIDGE_H

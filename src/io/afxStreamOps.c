@@ -26,7 +26,7 @@ _AFX afxStdCmd* _AfxIobPushCmd(afxStream iob, afxUnit id, afxUnit siz, afxCmdId*
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
 
-    afxStdCmd* cmd = AfxRequestArenaUnit(&iob->cmdArena, siz);
+    afxStdCmd* cmd = AfxRequestArenaUnit(&iob->cmdArena, siz, 1, NIL, 0);
     AFX_ASSERT(cmd);
     cmd->hdr.id = id;
     cmd->hdr.siz = siz;

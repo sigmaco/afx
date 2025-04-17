@@ -242,7 +242,7 @@ _ASX afxError AfxReadNestedStrings(afxStream in, afxUnit cnt, afxString strings[
     AFX_ASSERT(4096 >= hdr2.siz);
     afxString4096 sdb;
     AfxMakeString4096(&sdb, NIL);
-    AfxReadString(&sdb.str, in, hdr2.siz);
+    AfxReadString(&sdb.s, in, hdr2.siz);
 
     struct
     {
@@ -259,7 +259,7 @@ _ASX afxError AfxReadNestedStrings(afxStream in, afxUnit cnt, afxString strings[
             AfxThrowError();
             break;
         }
-        AfxExcerptString(&sdb.str, d.start, d.len, s);
+        AfxExcerptString(&sdb.s, d.start, d.len, s);
     }
     return err;
 }
@@ -332,8 +332,8 @@ _ASX afxError AfxArchiveMeshes(afxStream out, afxString* sdb, afxUnit cnt, afxMe
     afxUnit mshIdx = 0;
 
     afxArena arena;
-    AfxDeployArena(&arena, NIL, AfxHere());
-    M4D_MSH_HDR* mshHdrs = AfxRequestArenaUnit(&arena, cnt * sizeof(mshHdrs[0]));
+    AfxMakeArena(&arena, NIL, AfxHere());
+    M4D_MSH_HDR* mshHdrs = AfxRequestArenaUnit(&arena, sizeof(mshHdrs[0]), cnt, NIL, 0);
 
     afxSize mshHdrOffBkp = AfxAskStreamPosn(out);
     // skip the room to the headers
@@ -351,7 +351,7 @@ _ASX afxError AfxArchiveMeshes(afxStream out, afxString* sdb, afxUnit cnt, afxMe
         mshHdr.fcc[2] = 'h';
         mshHdr.fcc[3] = '\0';
         mshHdr.hdrSiz = sizeof(mshHdr) - sizeof(urdMark);
-        AfxDumpString(&msh->urn, 0, AfxMin(32, msh->urn.len), mshHdr.urn);
+        AfxDumpString(&msh->urn, 0, AFX_MIN(32, msh->urn.len), mshHdr.urn);
 #endif
         mshHdr.flags = msh->flags;
         mshHdr.topology = msh->topology;
@@ -587,7 +587,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
         // write joints' identifier strings (to string database)
         mdlHdr.jntIdBase = AfxAskStreamPosn(out);
 
-        if (AfxWriteMappedStrings(out, &sdb.str, mdlHdr.jntCnt, mdl->jntId))
+        if (AfxWriteMappedStrings(out, &sdb.s, mdlHdr.jntCnt, mdl->jntId))
             AfxThrowError();
     }
 
@@ -619,7 +619,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
             else
             {
                 meshes[uniqueMeshCnt++] = msh;
-                AfxWriteMappedStrings(out, &sdb.str, 1, &msh->urn);
+                AfxWriteMappedStrings(out, &sdb.s, 1, &msh->urn);
             }
         }
     }
@@ -661,7 +661,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
 
     mdlHdr.mshInfoBase = AfxAskStreamPosn(out);
 
-    if (AfxArchiveMeshes(out, &sdb.str, uniqueMeshCnt, meshes))
+    if (AfxArchiveMeshes(out, &sdb.s, uniqueMeshCnt, meshes))
         AfxThrowError();
 
     {
@@ -674,9 +674,9 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
     {
         // write string database
         mdlHdr.sdbStart = AfxAskStreamPosn(out);
-        mdlHdr.sdbSiz = sdb.str.len;
+        mdlHdr.sdbSiz = sdb.s.len;
 
-        if (AfxWriteStream(out, mdlHdr.sdbSiz, 0, sdb.str.start))
+        if (AfxWriteStream(out, mdlHdr.sdbSiz, 0, sdb.s.start))
         {
             AfxThrowError();
             return err;
@@ -720,7 +720,7 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
     // Qwadro doesn't use afxChunkID_STRUCT
 
     afxArena arena;
-    AfxDeployArena(&arena, NIL, AfxHere());
+    AfxMakeArena(&arena, NIL, AfxHere());
 
 #pragma push(pack, 1)
     M4D_MDL_HDR mdlHdr;
@@ -738,10 +738,10 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
 
     afxSize posBkp = AfxAskStreamPosn(in);
     AfxSeekStream(in, mdlHdr.sdbStart, afxSeekOrigin_BEGIN);
-    AfxReadString(&sdb.str, in, mdlHdr.sdbSiz);
+    AfxReadString(&sdb.s, in, mdlHdr.sdbSiz);
 
     AfxSeekStream(in, mdlHdr.jntIdBase, afxSeekOrigin_BEGIN);
-    AfxReadMappedStrings(in, &sdb.str, mdlHdr.jntCnt, strings);
+    AfxReadMappedStrings(in, &sdb.s, mdlHdr.jntCnt, strings);
 
     afxModel mdl;
     afxModelBlueprint mdlb = { 0 };
@@ -754,26 +754,26 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
     AfxAssembleModels(sim, 1, &mdlb, &mdl);
 
     {
-        afxUnit32* parentIdx = AfxRequestArenaUnit(&arena, mdlHdr.jntCnt * sizeof(afxUnit32));
+        afxUnit32* parentIdx = AfxRequestArenaUnit(&arena, sizeof(afxUnit32), mdlHdr.jntCnt, NIL, 0);
         if (AfxReadStreamAt(in, mdlHdr.jntPiBase, mdlHdr.jntCnt * sizeof(parentIdx[0]), 0, parentIdx))
             AfxThrowError();
 
         AsxReparentJoints(mdl, 0, mdlb.jointCnt, parentIdx, sizeof(parentIdx[0]));
 
-        afxTransform* local = AfxRequestArenaUnit(&arena, mdlHdr.jntCnt * sizeof(afxTransform));
+        afxTransform* local = AfxRequestArenaUnit(&arena, sizeof(afxTransform), mdlHdr.jntCnt, NIL, 0);
         if (AfxReadStreamAt(in, mdlHdr.jntLtBase, mdlHdr.jntCnt * sizeof(local[0]), 0, local))
             AfxThrowError();
 
         AsxResetJointTransforms(mdl, 0, mdlb.jointCnt, local);
 
-        afxM4d* iw = AfxRequestArenaUnit(&arena, mdlHdr.jntCnt * sizeof(afxM4d));
+        afxM4d* iw = AfxRequestArenaUnit(&arena, sizeof(afxM4d), mdlHdr.jntCnt, NIL, 0);
         AfxSeekStream(in, mdlHdr.jntIwBase, afxSeekOrigin_BEGIN);
         if (AfxReadStreamAt(in, mdlHdr.jntIwBase, mdlHdr.jntCnt * sizeof(iw[0]), 0, iw))
             AfxThrowError();
 
         AsxResetJointInversors(mdl, 0, mdlb.jointCnt, iw, sizeof(iw[0]));
 
-        afxReal* lodErr = AfxRequestArenaUnit(&arena, mdlHdr.jntCnt * sizeof(afxReal32));
+        afxReal* lodErr = AfxRequestArenaUnit(&arena, sizeof(afxReal32), mdlHdr.jntCnt, NIL, 0);
         if (AfxReadStreamAt(in, mdlHdr.jntLeBase, mdlHdr.jntCnt * sizeof(lodErr[0]), 0, lodErr))
             AfxThrowError();
 
@@ -782,19 +782,19 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
 
     AfxSeekStream(in, mdlHdr.mshIdBase, afxSeekOrigin_BEGIN);
 
-    if (AfxReadMappedStrings(in, &sdb.str, mdlHdr.mshCnt, strings))
+    if (AfxReadMappedStrings(in, &sdb.s, mdlHdr.mshCnt, strings))
         AfxThrowError();
 
     AfxSeekStream(in, mdlHdr.mshInfoBase, afxSeekOrigin_BEGIN);
 
     afxMeshBlueprint mshb = { 0 };
     
-    M4D_MSH_HDR* mshHdrs = AfxRequestArenaUnit(&arena, mdlHdr.mshCnt * sizeof(mshHdrs[0]));
+    M4D_MSH_HDR* mshHdrs = AfxRequestArenaUnit(&arena, sizeof(mshHdrs[0]), mdlHdr.mshCnt, NIL, 0);
 
     if (AfxReadStream(in, mdlHdr.mshCnt * sizeof(M4D_MSH_HDR), 0, mshHdrs))
         AfxThrowError();
 
-    afxMeshBlueprint* mshbs = AfxRequestArenaUnit(&arena, mdlHdr.mshCnt * sizeof(mshbs[0]));
+    afxMeshBlueprint* mshbs = AfxRequestArenaUnit(&arena, sizeof(mshbs[0]), mdlHdr.mshCnt, NIL, 0);
 
     for (afxUnit i = 0; i < mdlHdr.mshCnt; i++)
     {
@@ -802,27 +802,27 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
         afxMeshBlueprint* mshb = &mshbs[i];
         AfxZero(mshb, sizeof(mshb[0]));
 
-        afxString* attrs = AfxRequestArenaUnit(&arena, mshHdr->attrCnt * sizeof(attrs[0]));
+        afxString* attrs = AfxRequestArenaUnit(&arena, sizeof(attrs[0]), mshHdr->attrCnt, NIL, 0);
         AfxSeekStream(in, mshHdr->vtxAttrIdsBaseOff, afxSeekOrigin_BEGIN);
-        AfxReadMappedStrings(in, &sdb.str, mshHdr->attrCnt, attrs);
+        AfxReadMappedStrings(in, &sdb.s, mshHdr->attrCnt, attrs);
         mshb->attrCnt = mshHdr->attrCnt;
         mshb->attrs = attrs;
 
-        afxString* biases = AfxRequestArenaUnit(&arena, mshHdr->biasCnt * sizeof(biases[0]));
+        afxString* biases = AfxRequestArenaUnit(&arena, sizeof(biases[0]), mshHdr->biasCnt, NIL, 0);
         AfxSeekStream(in, mshHdr->biasIdsBaseOff, afxSeekOrigin_BEGIN);
-        AfxReadMappedStrings(in, &sdb.str, mshHdr->biasCnt, biases);
+        AfxReadMappedStrings(in, &sdb.s, mshHdr->biasCnt, biases);
         mshb->biasCnt = mshHdr->biasCnt;
         mshb->biases = biases;
 
-        afxString* morphTags = AfxRequestArenaUnit(&arena, mshHdr->morphCnt * sizeof(morphTags[0]));
+        afxString* morphTags = AfxRequestArenaUnit(&arena, sizeof(morphTags[0]), mshHdr->morphCnt, NIL, 0);
         AfxSeekStream(in, mshHdr->morphTagsBaseOff, afxSeekOrigin_BEGIN);
-        AfxReadMappedStrings(in, &sdb.str, mshHdr->morphCnt, morphTags);
+        AfxReadMappedStrings(in, &sdb.s, mshHdr->morphCnt, morphTags);
         mshb->morphCnt = mshHdr->morphCnt;
         mshb->morphTags = morphTags;
 
-        afxString* materials = AfxRequestArenaUnit(&arena, mshHdr->mtlCnt * sizeof(materials[0]));
+        afxString* materials = AfxRequestArenaUnit(&arena, sizeof(materials[0]), mshHdr->mtlCnt, NIL, 0);
         AfxSeekStream(in, mshHdr->mtlIdsBaseOff, afxSeekOrigin_BEGIN);
-        AfxReadMappedStrings(in, &sdb.str, mshHdr->mtlCnt, materials);
+        AfxReadMappedStrings(in, &sdb.s, mshHdr->mtlCnt, materials);
         mshb->materials = materials;
 
         mshb->mtlCnt = mshHdr->mtlCnt;
@@ -833,7 +833,7 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
 
     }
 
-    AfxCompileMeshes(sim, mdlHdr.mshCnt, mshbs, meshes);
+    AfxBuildMeshes(sim, mdlHdr.mshCnt, mshbs, meshes);
 
     for (afxUnit i = 0; i < mdlHdr.mshCnt; i++)
     {

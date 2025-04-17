@@ -89,11 +89,11 @@ afxBool AfxBufferizeIndices(avxBufferizer vbMgr, afxUnit32 stride, afxUnit32 siz
         if (size >= freelist->size)
             freelist->size = size;
         
-        afxDrawSystem dsys = AfxGetDrawInputContext(vbMgr->din);
+        afxDrawSystem dsys = AvxGetDrawInputContext(vbMgr->din);
 
         avxBuffer vbo;
         avxBufferInfo spec = { 0 };
-        spec.cap = freelist->size;
+        spec.size = freelist->size;
         spec.flags = avxBufferFlag_W;
         spec.usage = avxBufferUsage_INDEX;
 
@@ -352,7 +352,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
     }
     else
     {
-        afxString const positionals[] = { AfxString("pos"), AfxString("pvt"), AfxString("wgt") };
+        afxString const positionals[] = { AFX_STRING("pos"), AFX_STRING("pvt"), AFX_STRING("wgt") };
 
         afxUnit cacheStride[2] = { 0 };
         afxUnit cacheIdx[AFX_MAX_VERTEX_ATTRIBUTES];
@@ -365,7 +365,10 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
             avxFormat fmt = attr->fmt;
             AFX_ASSERT(fmt < avxFormat_TOTAL);
 
-            switch (AfxCompareStrings(&msh->attrIds[i], 0, FALSE, ARRAY_SIZE(positionals), positionals))
+            afxUnit sIdx;
+            AfxCompareStrings(&msh->attrIds[i], 0, FALSE, ARRAY_SIZE(positionals), positionals, &sIdx);
+
+            switch (sIdx)
             {
             case 0: // pos
             {
@@ -434,7 +437,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
         avxBufferInfo vboSpec = { 0 };
         vboSpec.flags = avxBufferFlag_W;
         vboSpec.usage = avxBufferUsage_VERTEX;
-        vboSpec.cap = 0;
+        vboSpec.size = 0;
 
         for (afxUnit i = 0; i < 2; i++)
         {
@@ -442,7 +445,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
             cache->streams[i].range = AFX_ALIGNED_SIZE(cacheStride[i] * msh->vtxCnt, AVX_BUFFER_ALIGNMENT);
             cache->streams[i].stride = cacheStride[i];
 
-            vboSpec.cap += cache->streams[i].range;
+            vboSpec.size += cache->streams[i].range;
         }
 
         avxBuffer buf;
@@ -500,7 +503,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
         afxUnit idxSiz = msh->minIdxSiz;
 
         avxBufferInfo bufi = { 0 };
-        bufi.cap = msh->idxCnt * idxSiz;
+        bufi.size = msh->idxCnt * idxSiz;
         bufi.flags = avxBufferFlag_W;
         bufi.usage = avxBufferUsage_INDEX;
         if (AvxAcquireBuffers(dsys, 1, &bufi, &msh->ibo)) AfxThrowError();
@@ -509,7 +512,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
             AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &msh->ibo);
 
             msh->iboBase = 0;
-            msh->iboRange = bufi.cap;
+            msh->iboRange = bufi.size;
             msh->iboStride = msh->iboRange / msh->idxCnt;
             AFX_ASSERT(msh->iboStride == idxSiz);
             //cache->idxSiz = idxSiz;
@@ -532,7 +535,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
             iop.dstStride = msh->iboStride;
             iop.srcStride = sizeof(indices[0]);
             iop.rowCnt = msh->idxCnt;
-            AvxUpdateBuffer(msh->ibo, 1, &iop, 0, indices);
+            AvxUpdateBuffer(msh->ibo, indices, 1, &iop, 0);
 
 #if 0//_AFX_DEBUG
             void* p;

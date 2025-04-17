@@ -45,18 +45,47 @@
 */
 
 AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxPolarCoord)
-// polar coordinates
+// This structure holds a polar coordinate, which is typically a 2D coordinate system where the 
+// position of a point is determined by its distance from the origin and an angle.
 {
+    // Radial distance from the origin (magnitude).
+    // This is the radial distance from the origin (in 2D polar coordinates).
+    // It is typically positive and represents how far away the point is from the origin.
     afxReal32       r; // norm/distance
+
+    // Azimuthal angle (longitude).
+    // This is the angle of the point relative to a reference axis, typically the x-axis (in a 2D plane).
+    // The angle theta can range from 0 to 2Pi or -Pi to Pi, depending on the convention.
+    // It describes the direction of the point from the origin in the 2D plane.
     afxReal32       theta; // azimuth
 };
 
 AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxSphericalCoord)
-// spherical coordinates
+// The spherical coordinates system is an extension of the polar coordinate system to 3D space, 
+// and the position of a point is described by three values: radial distance, azimuthal angle, and elevation angle.
 {
+    // The polar coordinates (r, Theta) describe the radial distance (r) and azimuthal angle (Theta), 
+    // which are the 2D components of the spherical coordinate system.
     afxPolarCoord   polar;
+
+    // Elevation or polar angle (latitude).
+    // This represents the elevation angle (sometimes called the colatitude), which is the angle between the point and the z-axis in 3D space.
+    // Typically, phi ranges from 0 to Pi (from the north pole to the south pole in spherical coordinates).
+    // It describes how "high" or "low" the point is relative to the horizontal plane, usually the xy-plane.
     afxReal32       phi; // elevation
 };
+
+AFXINL void AfxGetCartesionFromSphericalCoord(afxSphericalCoord const* sc, afxV3d cartesian)
+{
+    afxReal phiS = AfxSin(sc->phi);
+    afxReal x = sc->polar.r * phiS * AfxCos(sc->polar.theta);
+    afxReal y = sc->polar.r * phiS * AfxSin(sc->polar.theta);
+    afxReal z = sc->polar.r * AfxCos(sc->phi);
+    // Now, (x, y, z) would be the Cartesian coordinates of the point in 3D space.
+    cartesian[0] = x;
+    cartesian[1] = y;
+    cartesian[2] = z;
+}
 
 AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxSpace)
 /// A 3D coordinate system, expressed relative to a canonical coordinate system.

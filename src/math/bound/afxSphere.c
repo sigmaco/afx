@@ -24,9 +24,24 @@ _AFXINL afxSphere* AfxMakeSphere(afxSphere* sph, afxV3d const centre, afxReal ra
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(sph);
     AFX_ASSERT(centre);
-    AfxV3dCopy(sph->centre, centre);
-    sph->radius = radius;
+    AfxV4dSet(sph->xyzr, centre[0], centre[1], centre[2], radius);
     return sph;
+}
+
+_AFXINL void AfxGetSphereOrigin(afxSphere const sph, afxV4d centre)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(centre);
+    AfxV4dSet(centre, sph.xyzr[0], sph.xyzr[1], sph.xyzr[2], 1);
+}
+
+_AFXINL afxBox AfxGetSphereAabb(afxSphere const sph)
+{
+    afxError err = AFX_ERR_NONE;
+    // Calculate the AABB for this sphere
+    afxReal r = sph.xyzr[AFX_SPHERE_RADIUS];
+    return AFX_AABB(sph.xyzr[0] - r, sph.xyzr[1] - r, sph.xyzr[2] - r,
+                    sph.xyzr[0] + r, sph.xyzr[1] + r, sph.xyzr[2] + r);
 }
 
 /*
@@ -46,8 +61,8 @@ _AFXINL afxUnit AfxDoesSphereIntersects(afxSphere* sph, afxUnit cnt, afxSphere c
     {
         afxSphere const* b = &others[i];
 
-        afxReal distSquared = AfxV3dDist(sph->centre, b->centre);
-        afxReal radiusSum = sph->radius + b->radius;
+        afxReal distSquared = AfxV3dDist(sph->xyzr, b->xyzr);
+        afxReal radiusSum = sph->xyzr[AFX_SPHERE_RADIUS] + b->xyzr[AFX_SPHERE_RADIUS];
 
         // Compare the squared distance with the squared sum of the radii to avoid square root
         if (distSquared <= radiusSum * radiusSum)
@@ -74,7 +89,7 @@ _AFXINL afxUnit AfxDoesSphereIntersectsAabbs(afxSphere* sph, afxUnit cnt, afxBox
     AFX_ASSERT(sph);
     AFX_ASSERT(!cnt || boxes);
 
-    afxReal r2 = sph->radius * sph->radius;
+    afxReal r2 = sph->xyzr[AFX_SPHERE_RADIUS] * sph->xyzr[AFX_SPHERE_RADIUS];
 
     for (afxUnit i = 0; i < cnt; ++i)
     {
@@ -82,10 +97,10 @@ _AFXINL afxUnit AfxDoesSphereIntersectsAabbs(afxSphere* sph, afxUnit cnt, afxBox
 
         // Find the closest point on the box to the sphere's center
         afxV3d closest;
-        AfxV3dMin(closest, sph->centre, box->max);
+        AfxV3dMin(closest, sph->xyzr, box->max);
         AfxV3dMax(closest, box->min, closest);
         // Calculate the squared distance from the sphere's center to the closest point
-        afxReal distSquared = AfxV3dDist(sph->centre, closest);
+        afxReal distSquared = AfxV3dDist(sph->xyzr, closest);
 
         // Check if the distance is less than or equal to the squared radius
         if (distSquared <= r2)

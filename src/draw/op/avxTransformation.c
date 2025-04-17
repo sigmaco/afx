@@ -26,14 +26,14 @@ _AVX afxCmdId AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexInput vin)
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
     AFX_TRY_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
     
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(DeclareVertex), sizeof(cmd->DeclareVertex), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(DeclareVertex), sizeof(cmd->DeclareVertex), &cmdId);
     AFX_ASSERT(cmd);
     cmd->DeclareVertex.vin = vin;
     return cmdId;
@@ -45,15 +45,15 @@ _AVX afxCmdId AvxCmdSwitchFrontFace(afxDrawContext dctx, afxBool cw)
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
     
     AFX_ASSERT_RANGE(cw, FALSE, TRUE);
-    cw = AfxClamp(cw, FALSE, TRUE);
+    cw = AFX_CLAMP(cw, FALSE, TRUE);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SwitchFrontFace), sizeof(cmd->SwitchFrontFace), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(SwitchFrontFace), sizeof(cmd->SwitchFrontFace), &cmdId);
     AFX_ASSERT(cmd);
     cmd->SwitchFrontFace.cw = cw;
     return cmdId;
@@ -65,16 +65,16 @@ _AVX afxCmdId AvxCmdChangeCullMode(afxDrawContext dctx, avxCullMode mode)
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
     // mode must be a valid combination of avxCullMode values.
     AFX_ASSERT_BOUNDS(mode, avxCullMode_NONE, avxCullMode_BOTH);
-    mode = AfxClamp(mode, avxCullMode_NONE, avxCullMode_BOTH);
+    mode = AFX_CLAMP(mode, avxCullMode_NONE, avxCullMode_BOTH);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SetCullMode), sizeof(cmd->SetCullMode), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(SetCullMode), sizeof(cmd->SetCullMode), &cmdId);
     AFX_ASSERT(cmd);
     cmd->SetCullMode.mode = mode;
     return cmdId;
@@ -83,24 +83,23 @@ _AVX afxCmdId AvxCmdChangeCullMode(afxDrawContext dctx, avxCullMode mode)
 _AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUnit cnt, avxViewport const viewports[])
 {
     afxError err = AFX_ERR_NONE;
-
-#if AVX_VALIDATION_ENABLED
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
     // cnt must be greater than 0.
     AFX_ASSERT(cnt);
-
     // viewports must be a valid pointer to an array of cnt valid avxViewport structures.
     AFX_ASSERT(viewports);
 
+#if AVX_VALIDATION_ENABLED
 #if AVX_LIMIT_VALIDATION_ENABLED
     // The sum of @baseIdx and @cnt must be between 1 and the device limit 'maxVpCnt", inclusive.
     AFX_ASSERT_RANGE(dctx->devLimits->maxVpCnt, baseIdx, cnt);
+    AFX_ASSERT_RANGE(AVX_MAX_VIEWPORTS, baseIdx, cnt);
 #endif
 
 #if AVX_FEATURE_VALIDATION_ENABLED
@@ -119,7 +118,7 @@ _AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUni
 #endif
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(AdjustViewports), sizeof(cmd->AdjustViewports) + (cnt * sizeof(cmd->AdjustViewports.viewports[0])), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(AdjustViewports), sizeof(cmd->AdjustViewports) + (cnt * sizeof(cmd->AdjustViewports.viewports[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->AdjustViewports.baseIdx = baseIdx;
     cmd->AdjustViewports.cnt = cnt;
@@ -148,7 +147,7 @@ _AVX afxCmdId AvxCmdBindVertexBuffers(afxDrawContext dctx, afxUnit baseSlotIdx, 
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -165,7 +164,7 @@ _AVX afxCmdId AvxCmdBindVertexBuffers(afxDrawContext dctx, afxUnit baseSlotIdx, 
 #endif
     
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindVertexBuffers), sizeof(cmd->BindVertexBuffers) + (cnt * sizeof(cmd->BindVertexBuffers.src[0])), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindVertexBuffers), sizeof(cmd->BindVertexBuffers) + (cnt * sizeof(cmd->BindVertexBuffers.src[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->BindVertexBuffers.baseSlotIdx = baseSlotIdx;
     cmd->BindVertexBuffers.cnt = cnt;
@@ -185,14 +184,14 @@ _AVX afxCmdId AvxCmdBindVertexBuffers(afxDrawContext dctx, afxUnit baseSlotIdx, 
             // If @buffers is not NIL, @buf must be a valid avxBuffer handle.
             AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
             // All elements of @buffers must have been created with the avxBufferUsage_VERTEX flag.
-            AFX_ASSERT(AvxTestBufferUsage(buf, avxBufferUsage_VERTEX));
+            AFX_ASSERT(AvxGetBufferUsage(buf, avxBufferUsage_VERTEX));
 
             // If @ranges is not NIL, all elements of @offsets must be less than the size of the corresponding element in @buffers.
             // If @ranges is not NIL, all elements of @offsets plus @ranges, where sizes is not zero, must be less than or equal to the size of the corresponding element in @buffers.
             afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
             AFX_ASSERT_RANGE(bufCap, offset, range);
-            offset = AfxMin(offset, bufCap - 1);
-            range = AfxMin(range ? range : bufCap, bufCap - offset);
+            offset = AFX_MIN(offset, bufCap - 1);
+            range = AFX_MIN(range ? range : bufCap, bufCap - offset);
             AFX_ASSERT(range);
         }
         else
@@ -223,7 +222,7 @@ _AVX afxCmdId AvxCmdBindIndexBuffer(afxDrawContext dctx, avxBuffer buf, afxUnit3
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
     
@@ -250,7 +249,7 @@ _AVX afxCmdId AvxCmdBindIndexBuffer(afxDrawContext dctx, avxBuffer buf, afxUnit3
         // If @buf is not NIL, buffer must be a valid avxBuffer handle.
         AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
         // @buf must have been created with the avxBufferUsage_INDEX flag.
-        AFX_ASSERT(AvxTestBufferUsage(buf, avxBufferUsage_INDEX));
+        AFX_ASSERT(AvxGetBufferUsage(buf, avxBufferUsage_INDEX));
 
         // @offset must be less than the size of buffer.
         afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
@@ -263,12 +262,12 @@ _AVX afxCmdId AvxCmdBindIndexBuffer(afxDrawContext dctx, avxBuffer buf, afxUnit3
         AFX_ASSERT_RANGE(bufCap, offset, range);
         AFX_ASSERT(range);
 
-        offset = AfxMin(offset, bufCap - 1);
-        range = AfxMin(range ? range : bufCap, bufCap - offset);
+        offset = AFX_MIN(offset, bufCap - 1);
+        range = AFX_MIN(range ? range : bufCap, bufCap - offset);
     }
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(BindIndexBuffer), sizeof(cmd->BindIndexBuffer), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindIndexBuffer), sizeof(cmd->BindIndexBuffer), &cmdId);
     AFX_ASSERT(cmd);
     cmd->BindIndexBuffer.buf = buf;
     cmd->BindIndexBuffer.offset = offset;
@@ -283,7 +282,7 @@ _AVX afxCmdId AvxCmdSetPrimitiveTopology(afxDrawContext dctx, avxTopology topolo
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -291,7 +290,7 @@ _AVX afxCmdId AvxCmdSetPrimitiveTopology(afxDrawContext dctx, avxTopology topolo
     AFX_ASSERT(topology < avxTopology_TOTAL);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SetPrimitiveTopology), sizeof(cmd->SetPrimitiveTopology), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(SetPrimitiveTopology), sizeof(cmd->SetPrimitiveTopology), &cmdId);
     AFX_ASSERT(cmd);
     cmd->SetPrimitiveTopology.topology = topology;
     return cmdId;
@@ -303,14 +302,14 @@ _AVX afxCmdId AvxCmdChangeFillModeEXT(afxDrawContext dctx, avxFillMode mode)
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxCmdbState_RECORDING);
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
     AFX_ASSERT(mode < avxFillMode_TOTAL);
 
     afxCmdId cmdId;
-    avxCmd* cmd = _AvxDctxPushCmd(dctx, AVX_GET_STD_CMD_ID(SetFillModeEXT), sizeof(cmd->SetFillModeEXT), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(SetFillModeEXT), sizeof(cmd->SetFillModeEXT), &cmdId);
     AFX_ASSERT(cmd);
     cmd->SetFillModeEXT.mode = mode;
     return cmdId;

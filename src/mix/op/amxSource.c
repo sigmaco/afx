@@ -27,7 +27,7 @@
 #define _AMX_MIX_CONTEXT_C
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
-#define _AMX_WAVEFORM_C
+#define _AMX_AUDIO_C
 #include "../impl/amxImplementation.h"
 
 

@@ -21,75 +21,83 @@
 #define _AMX_MIX_QUEUE_C
 #include "../impl/amxImplementation.h"
 
-_AMX afxError _AmxUnlockMixQueue(afxMixQueue mque)
+_AMX afxError _AmxMqueUnlockIoReqChain(afxMixQueue mque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    AfxUnlockMutex(&mque->workChnMtx);
+    AfxUnlockMutex(&mque->iorpChnMtx);
     return err;
 }
 
-_AMX afxError _AmxLockMixQueue(afxMixQueue mque, afxBool wait, afxTimeSpec const* ts)
+_AMX afxError _AmxMqueLockIoReqChain(afxMixQueue mque, afxUnit64 timeout)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
-    if (wait)
+    if (timeout == 0)
     {
-        if (!AfxTryLockMutex(&mque->workChnMtx))
-            return 1;
+        if (!AfxTryLockMutex(&mque->iorpChnMtx))
+            return afxError_TIMEOUT;
     }
     else
     {
-        if (ts)
-            err = AfxLockMutexTimed(&mque->workChnMtx, ts);
+        afxTimeSpec ts;
+        AfxMakeTimeSpec(&ts, timeout);
+
+        if (afxError_TIMEOUT == AfxLockMutexTimed(&mque->iorpChnMtx, &ts))
+            return afxError_TIMEOUT;
         else
-            if (AfxLockMutex(&mque->workChnMtx))
-                AfxThrowError();
+            AfxThrowError();
     }
     return err;
 }
 
-_AMX afxError _AmxSquePopBlob(afxMixQueue mque, void* blob, afxUnit siz)
+_AMX afxError _AmxMquePopBlob(afxMixQueue mque, void* blob, afxUnit siz)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    AfxRecycleArenaUnit(&mque->workArena, blob, siz);
+    AfxRecycleArenaUnit(&mque->iorpArena, blob, siz);
     return err;
 }
 
-_AMX void* _AmxSquePushBlob(afxMixQueue mque, afxUnit siz)
+_AMX void* _AmxMquePushBlob(afxMixQueue mque, afxUnit siz)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
-    void* blob = AfxRequestArenaUnit(&mque->workArena, siz);
+    void* blob = AfxRequestArenaUnit(&mque->iorpArena, siz, 1, NIL, 0);
     AFX_ASSERT(blob);
     return blob;
 }
 
-_AMX afxError _AmxSquePopWork(afxMixQueue mque, amxWork* work)
+_AMX afxError _AmxMquePopIoReqPacket(afxMixQueue mque, _amxIoReqPacket* iorp)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    AfxPopLink(&work->hdr.chain);
-    AfxRecycleArenaUnit(&mque->workArena, work, work->hdr.siz);
+    AFX_ASSERT(iorp);
+    AfxPopLink(&iorp->hdr.chain);
+    AfxRecycleArenaUnit(&mque->iorpArena, iorp, iorp->hdr.siz);
     return err;
 }
 
-_AMX amxWork* _AmxSquePushWork(afxMixQueue mque, afxUnit id, afxUnit siz, afxCmdId* cmdId)
+_AMX afxError _AmxMquePushIoReqPacket(afxMixQueue mque, afxUnit id, afxUnit siz, afxCmdId* cmdId, _amxIoReqPacket** pIorp)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
-    amxWork* work = AfxRequestArenaUnit(&mque->workArena, siz);
-    AFX_ASSERT(work);
-    work->hdr.id = id;
-    work->hdr.siz = siz;
-    AfxGetTime(&work->hdr.pushTime);
+    _amxIoReqPacket* iorp = AfxRequestArenaUnit(&mque->iorpArena, siz, 1, NIL, 0);
+    AFX_ASSERT(iorp);
+    iorp->hdr.id = id;
+    iorp->hdr.siz = siz;
+    AfxGetTime(&iorp->hdr.pushTime);
+
     AFX_ASSERT(cmdId);
-    *cmdId = AfxPushLink(&work->hdr.chain, &mque->workChn);
-    return work;
+    *cmdId = AfxPushLink(&iorp->hdr.chain, &mque->iorpChn);
+    
+    AFX_ASSERT(pIorp);
+    *pIorp = iorp;
+
+    return err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +108,7 @@ _AMX afxMixDevice AfxGetMixQueueDevice(afxMixQueue mque)
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     afxMixBridge mexu = AfxGetProvider(mque);
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    afxMixDevice mdev = AfxGetMixBridgeDevice(mexu);
+    afxMixDevice mdev = AmxGetBridgedMixDevice(mexu, NIL);
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
     return mdev;
 }
@@ -121,42 +129,42 @@ _AMX afxUnit AfxGetMixQueuePort(afxMixQueue mque)
     return mque->portId;
 }
 
-_AMX afxError _AmxSqueDtorCb(afxMixQueue mque)
+_AMX afxError _AmxMqueDtorCb(afxMixQueue mque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
-    AfxDismantleMutex(&mque->workChnMtx);
-    AfxDismantleArena(&mque->workArena);
-    AfxDismantleSlock(&mque->workArenaSlock);
+    AfxDismantleMutex(&mque->iorpChnMtx);
+    AfxDismantleArena(&mque->iorpArena);
+    AfxDismantleFutex(&mque->iorpArenaSlock);
     AfxDismantleCondition(&mque->idleCnd);
     AfxDismantleMutex(&mque->idleCndMtx);
 
     return err;
 }
 
-_AMX afxError _AmxSqueCtorCb(afxMixQueue mque, void** args, afxUnit invokeNo)
+_AMX afxError _AmxMqueCtorCb(afxMixQueue mque, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
     afxMixBridge mexu = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    _amxMixBridgeAcquisition const* cfg = AFX_CAST(_amxMixBridgeAcquisition const*, args[1]);
+    _amxMexuAcquisition const* cfg = AFX_CAST(_amxMexuAcquisition const*, args[1]);
     AFX_ASSERT(cfg);
 
     mque->mdev = cfg->mdev;
     mque->portId = cfg->portId;
     mque->exuIdx = cfg->exuIdx;
-    mque->msys = AfxGetBridgedMixSystem(mexu);
+    mque->msys = AmxGetBridgedMixSystem(mexu);
 
     mque->immediate = 0;// !!spec->immedate;
 
-    AfxDeploySlock(&mque->workArenaSlock);
-    AfxDeployArena(&mque->workArena, NIL, AfxHere());
+    AfxDeployFutex(&mque->iorpArenaSlock);
+    AfxMakeArena(&mque->iorpArena, NIL, AfxHere());
 
-    AfxDeployMutex(&mque->workChnMtx, AFX_MTX_PLAIN);
-    AfxDeployChain(&mque->workChn, mexu);
+    AfxDeployMutex(&mque->iorpChnMtx, AFX_MTX_PLAIN);
+    AfxDeployChain(&mque->iorpChn, mexu);
     AfxDeployMutex(&mque->idleCndMtx, AFX_MTX_PLAIN);
     AfxDeployCondition(&mque->idleCnd);
 
@@ -169,8 +177,8 @@ _AMX afxClassConfig const _AMX_MQUE_CLASS_CONFIG =
 {
     .fcc = afxFcc_MQUE,
     .name = "MixQueue",
-    .desc = "Sound Device Submission Queue",
+    .desc = "Mix Device Submission Queue",
     .fixedSiz = sizeof(AFX_OBJECT(afxMixQueue)),
-    .ctor = (void*)_AmxSqueCtorCb,
-    .dtor = (void*)_AmxSqueDtorCb
+    .ctor = (void*)_AmxMqueCtorCb,
+    .dtor = (void*)_AmxMqueDtorCb
 };

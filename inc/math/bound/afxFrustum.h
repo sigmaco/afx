@@ -19,9 +19,9 @@
 #ifndef AFX_FRUSTUM_H
 #define AFX_FRUSTUM_H
 
+#include "qwadro/inc/math/afxMatrix.h"
 #include "qwadro/inc/math/bound/afxBox.h"
 #include "qwadro/inc/math/bound/afxSphere.h"
-#include "qwadro/inc/math/afxMatrix.h"
 #include "qwadro/inc/math/bound/afxPlane.h"
 
 typedef enum afxCubeFace
@@ -52,6 +52,13 @@ typedef enum afxCubeCorner
     afxCubeCorner_TOTAL,
 } afxCubeCorner;
 
+AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxFrustum)
+{
+    afxPlane    planes[afxCubeFace_TOTAL];
+    afxV4d      corners[afxCubeCorner_TOTAL];
+    afxV4d      origin;
+};
+
 AFX afxV4d const AFX_V4D_LBN;
 AFX afxV4d const AFX_V4D_RBN;
 AFX afxV4d const AFX_V4D_RTN;
@@ -62,22 +69,14 @@ AFX afxV4d const AFX_V4D_RBF;
 AFX afxV4d const AFX_V4D_RTF;
 AFX afxV4d const AFX_V4D_LTF;
 
-AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxFrustum)
-{
-    afxPlane    planes[afxCubeFace_TOTAL];
-    afxV4d      corners[afxCubeCorner_TOTAL];
-    afxV4d      origin;
-};
+// frustrum and matrix must be in same space
+AFXINL void     AfxMakeFrustum(afxFrustum* f, afxM4d const pv, afxM4d const ipv);
 
 AFXINL void     AfxCopyFrustum(afxFrustum* f, afxFrustum const* in);
 
 AFXINL afxBool  AfxDoesFrustumCullAabbs(afxFrustum const* f, afxUnit cnt, afxBox const aabb[]);
 AFXINL afxBool  AfxDoesFrustumCullSpheres(afxFrustum const* f, afxUnit cnt, afxSphere const spheres[]);
 AFXINL afxBool  AfxDoesFrustumCullFrustums(afxFrustum const* f, afxUnit cnt, afxFrustum const others[]);
-
-// frustrum and matrix must be in same space
-AFXINL void     AfxRecomputeFrustum3(afxFrustum* f, afxM4d const pv);
-AFXINL void     AfxRecomputeFrustum(afxFrustum* f, afxM4d const v, afxM4d const p);
 
 AFXINL void     AfxEmboxFrustum(afxBox* aabb, afxFrustum const* f);
 
