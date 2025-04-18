@@ -340,7 +340,7 @@ _AFX afxError AfxTakePoolUnit(afxPool* pool, afxSize idx, void *val)
             {
 #ifdef _AFX_ENFORCE_CLEAN_POOL_ALLOCATION
                 // TODO: Do not zero memory.
-                AfxZero2(pag->data, pool->unitSiz, pool->unitsPerPage);
+                AfxZero(pag->data, pool->unitSiz * pool->unitsPerPage);
 #endif
             }
         }

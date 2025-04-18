@@ -365,7 +365,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
             avxFormat fmt = attr->fmt;
             AFX_ASSERT(fmt < avxFormat_TOTAL);
 
-            afxUnit sIdx;
+            afxUnit sIdx = AFX_INVALID_INDEX;
             AfxCompareStrings(&msh->attrIds[i], 0, FALSE, ARRAY_SIZE(positionals), positionals, &sIdx);
 
             switch (sIdx)

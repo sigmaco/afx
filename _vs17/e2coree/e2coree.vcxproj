@@ -131,6 +131,7 @@
     <ClInclude Include="..\..\inc\mem\afxInterlockedQueue.h" />
     <ClInclude Include="..\..\inc\mem\afxMappedString.h" />
     <ClInclude Include="..\..\inc\mem\afxMemory.h" />
+    <ClInclude Include="..\..\inc\mem\afxMemoryUtil.h" />
     <ClInclude Include="..\..\inc\mem\afxPool.h" />
     <ClInclude Include="..\..\inc\mem\afxQueue.h" />
     <ClInclude Include="..\..\inc\mem\afxSlabAllocator.h" />
@@ -352,6 +353,7 @@
     <ClCompile Include="..\..\src\mem\afxInterlockedQueue.c" />
     <ClCompile Include="..\..\src\mem\afxMappedString.c" />
     <ClCompile Include="..\..\src\mem\afxMemory.c" />
+    <ClCompile Include="..\..\src\mem\afxMemoryUtil.c" />
     <ClCompile Include="..\..\src\mem\afxPool.c" />
     <ClCompile Include="..\..\src\mem\afxQueue.c" />
     <ClCompile Include="..\..\src\mem\afxSlabAllocator.c" />

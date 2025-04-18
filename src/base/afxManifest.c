@@ -136,7 +136,7 @@ _AFX afxBool AfxGetManifestString(afxManifest const* ini, afxUnit secIdx, afxUni
     afxString const* val = &ini->pages[secIdx].keys[recIdx].value;
 
     if (!AfxIsStringEmpty(val))
-        AfxReflectString(val, value), rslt = TRUE;
+        *value = *val, rslt = TRUE;
 
     return rslt;
 }
@@ -249,7 +249,11 @@ _AFX afxError AfxLoadInitializationFile(afxManifest* ini, afxUri const* uri)
     afxError err = NIL;
     FILE* f;
 
-    if (!(f = fopen(AfxGetUriData(uri, 0), "r"))) AfxThrowError();
+    if (!(f = fopen(AfxGetUriData(uri, 0), "r")))
+    {
+        err = afxError_FILE_NOT_FOUND;
+        return err;
+    }
     else
     {
         enum { Section, Key, Value, Comment } state = Section;
@@ -436,7 +440,7 @@ _AFX afxBool AfxGetInitializationString(afxManifest const* ini, afxString const*
     _afxIniRecord* entry;
 
     if ((rslt = ((rslt = !!(entry = _AfxIniGetRecord(ini, sec, key))) && (!(AfxIsStringEmpty(&entry->value))))))
-        AfxReflectString(&entry->value, value);
+        *value = entry->value;
 
     return rslt;
 }
@@ -447,7 +451,7 @@ _AFXINL afxBool AfxGetInitializationStringAt(afxManifest const* ini, afxUnit sec
     _afxIniRecord* entry;
 
     if ((rslt = ((rslt = !!(entry = _AfxIniFindRecord(ini, &ini->pages[secIdx], key))) && (!(AfxIsStringEmpty(&entry->value))))))
-        AfxReflectString(&entry->value, value);
+        *value = entry->value;
 
     return rslt;
 }

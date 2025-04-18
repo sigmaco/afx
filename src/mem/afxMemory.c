@@ -31,6 +31,9 @@
 #define _AFX_MMU_C
 #include "../impl/afxExecImplKit.h"
 
+#define _AFX_VALIDATE_MEMSEG
+#define _AFX_VALIDATE_MEMSEG_EXTREMES TRUE
+
 typedef struct _afxArbitraryChunk
 {
 #ifndef _AFX_DONT_DEBUG_MEM_LEAK
@@ -73,45 +76,6 @@ _AFX afxError _AfxDeinitMmu(afxThread thr)
     }
 #endif
     return err;
-}
-
-_AFX void* AfxMemset(void* dst, afxInt val, afxSize siz)
-{
-    return memset(dst, val, siz);
-}
-
-#define _AFX_VALIDATE_MEMSEG
-
-_AFX void* AfxMemmove(void* dst, void const* src, afxSize siz)
-{
-#ifdef _AFX_VALIDATE_MEMSEG
-    for (afxUnit i = 0; i < siz; i++)
-        ((afxByte*)dst)[i] = 0;
-    for (afxUnit v = 0, i = 0; i < siz; i++)
-        v = ((afxByte*)src)[i];
-#endif
-    return memmove(dst, src, siz);
-}
-
-_AFX void* AfxMemcpy(void* dst, void const* src, afxSize siz)
-{
-#ifdef _AFX_VALIDATE_MEMSEG
-    for (afxUnit i = 0; i < siz; i++)
-        ((afxByte*)dst)[i] = 0;
-    for (afxUnit v = 0, i = 0; i < siz; i++)
-        v = ((afxByte*)src)[i];
-#endif
-    return memcpy(dst, src, siz);
-}
-
-_AFX afxInt AfxMemcmp(void const* buf1, void const* buf2, afxSize siz)
-{
-    return memcmp(buf1, buf2, siz);
-}
-
-_AFX void const* AfxMemchr(void const* buf, afxInt val, afxUnit cap)
-{
-    return memchr(buf, val, cap);
 }
 
 _AFX void* AfxMallocCb(afxSize siz, afxHere const hint)
@@ -529,7 +493,7 @@ _AFX void AfxStream2(afxUnit cnt, void const* src, afxSize srcStride, void* dst,
 
     if ((srcStride == dstStride) && dstStride)
     {
-        AfxCopy2(dst, src, dstStride, cnt);
+        AfxCopy(dst, src, dstStride * cnt);
     }
     else
     {
@@ -576,7 +540,7 @@ _AFX void AfxStream3(afxUnit cnt, void const* src, afxUnit srcOffset, afxSize sr
         if ((srcOffset == dstOffset) && dstOffset)
             AfxStream2(cnt, src, srcStride, dst, dstStride);
         else
-            AfxCopy2(dst, src, dstStride, cnt);
+            AfxCopy(dst, src, dstStride * cnt);
     }
     else
     {
@@ -596,123 +560,6 @@ _AFX void AfxStream3(afxUnit cnt, void const* src, afxUnit srcOffset, afxSize sr
             AfxCopy(&(dst2[(i * dstStride) + dstOffset]), &(src2[(i * srcStride) + srcOffset]), unitSiz);
         }
     }
-}
-
-_AFX void AfxCopy2(void* dst, void const* src, afxSize siz, afxSize cnt)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(src);
-    AFX_ASSERT(dst);
-    AFX_ASSERT(src != dst);
-    AFX_ASSERT(cnt);
-    AFX_ASSERT(siz);
-    AfxCatchError(err);
-#if !0
-    if (cnt * siz)
-        AfxMemcpy(dst, src, cnt * siz);
-#else
-    register afxChar* dst2 = dst;
-    register afxChar const* src2 = src;
-    register afxSize t = (afxOffset)src2;
-
-    if ((afxSize)dst2 < (afxSize)src2)
-    {
-        if ((t | (afxOffset)dst2) & (sizeof(afxSize) - 1))
-        {
-            t = ((t ^ (afxOffset)dst2) & (sizeof(afxSize) - 1) || range < sizeof(afxSize)) ? range : (sizeof(afxSize) - (t & (sizeof(afxSize) - 1)));
-            range -= t;
-            do { (*(dst2)++ = *(src2)++); } while (--(t));
-        }
-
-        if ((t = range / sizeof(afxSize)))
-            do { *(afxSize*)dst2 = *(afxSize*)src2; src2 += sizeof(afxSize); dst2 += sizeof(afxSize); } while (--(t));
-
-        if ((t = range & (sizeof(afxSize) - 1)))
-            do { *(dst2)++ = *(src2)++; } while (--(t));
-    }
-    else
-    {
-        src2 += range;
-        dst2 += range;
-
-        if ((t | (afxOffset)dst2) & (sizeof(afxSize) - 1))
-        {
-            if ((t ^ (afxOffset)dst2) & (sizeof(afxSize) - 1) || range <= sizeof(afxSize)) t = range;
-            else t &= (sizeof(afxSize) - 1);
-
-            range -= t;
-            do { *(--(dst2)) = *(--(src2)); } while (--(t));
-        }
-
-        if ((t = range / sizeof(afxSize)))
-            do { src2 -= sizeof(afxSize); dst2 -= sizeof(afxSize); *(afxSize*)dst2 = *(afxSize*)src2; } while (--(t));
-
-        if ((t = range & (sizeof(afxSize) - 1)))
-            do { *(--(dst2)) = *(--(src2)); } while (--(t));
-    }
-#endif
-}
-
-_AFX void AfxCopy(void* dst, void const* src, afxSize siz)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(src);
-    AFX_ASSERT(dst);
-    AFX_ASSERT(src != dst);
-    
-    if (siz)
-        AfxCopy2(dst, src, siz, 1);
-}
-
-_AFX void AfxFill2(void* p, void const* value, afxSize siz, afxSize cnt)
-{
-    // This function fills the first 'cnt' sets of 'unitSiz' bytes of memory area pointed by 'p' with the constant 'value'.
-
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(p);
-    AFX_ASSERT(cnt);
-    //AFX_ASSERT(value);
-    AFX_ASSERT(siz);
-
-    if (value)
-    {
-        for (afxUnit i = 0; i < cnt; i++)
-        {
-            afxByte* ptr = (afxByte*)p;
-            AfxCopy(&ptr[i * siz], value, siz);
-        }
-    }
-    else
-    {
-        if (cnt)
-            AfxMemset(p, 0, cnt * siz);
-    }
-}
-
-_AFX void AfxFill(void* p, void const* value, afxSize siz)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(p);
-    //AFX_ASSERT(value);
-    AFX_ASSERT(siz);
-    AfxFill2(p, value, siz, 1);
-}
-
-_AFX void AfxZero2(void* p, afxSize siz, afxSize cnt)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(p);
-    AFX_ASSERT(cnt);
-    AFX_ASSERT(siz);
-    AfxMemset(p, 0, cnt * siz);
-}
-
-_AFX void AfxZero(void *p, afxSize siz)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(p);
-    AFX_ASSERT(siz);
-    AfxZero2(p, siz, 1);
 }
 
 _AFX afxError AfxDeallocate(void** pp, afxHere const hint)

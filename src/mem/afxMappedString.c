@@ -82,7 +82,7 @@ _AFX afxUnit AfxCatalogStrings(afxStringBase strc, afxUnit cnt, afxString const 
                 {
                     AfxPushLink(&ref->strb, &strc->strings);
                     AfxMakeString(&ref->str, in[i].len, ref->data, in[i].len);
-                    AfxCopyString(&ref->str, &in[i]);
+                    AfxCopyString(&ref->str, 0, &in[i], 0);
                     ref->refCnt = 1;
                     out[i] = ref->str;
                     out[i].cap = 0;

@@ -319,7 +319,7 @@ _AFX afxSize AfxPushArenaCleanup(afxArena* aren, void(*action)(void *data, void*
         {
             if (aren->cleanups)
             {
-                AfxCopy2(cleanups, aren->cleanups, sizeof(afxArenaCleanup), aren->cleanupCnt);
+                AfxCopy(cleanups, aren->cleanups, sizeof(afxArenaCleanup) * aren->cleanupCnt);
                 AfxDeallocate((void**)&aren->cleanups, AfxHere());
             }
             aren->cleanups = cleanups;
@@ -528,7 +528,7 @@ _AFX void AfxExhaustArena(afxArena* aren)
 
     if (aren->recycleBin)
     {
-        AfxZero2(aren->recycleBin, sizeof(afxArenaRecycleItem*), aren->largeItemSiz);
+        AfxZero(aren->recycleBin, sizeof(afxArenaRecycleItem*) * aren->largeItemSiz);
         aren->recycleSiz = 0;
     }
 
@@ -578,7 +578,7 @@ _AFX void AfxRecycleArenaUnit(afxArena* aren, void *block, afxSize size)
             AfxThrowError();
             return;
         }
-        AfxZero2(aren->recycleBin, sizeof(afxArenaRecycleItem*), aren->largeItemSiz);
+        AfxZero(aren->recycleBin, sizeof(afxArenaRecycleItem*) * aren->largeItemSiz);
     }
 
     if (!block || !aren->recycleBin)

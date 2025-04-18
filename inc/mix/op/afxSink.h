@@ -125,7 +125,7 @@ AFX_DEFINE_STRUCT(afxSinkConfig)
     void*           udd;
     union
     {
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
         struct
         {
             void*   hInstance; // HINSTANCE

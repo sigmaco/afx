@@ -43,7 +43,7 @@ typedef enum afxMemoryOrder
     afxMemoryOrder_ACQ_REL
 } afxMemoryOrder;
 
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
 typedef volatile long       afxAtom32;
 typedef volatile long long  afxAtom64;
 typedef volatile void*      afxAtomPtr;

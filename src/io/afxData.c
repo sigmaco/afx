@@ -81,7 +81,7 @@ _AFX void _AfxDecodeRle(afxStream stream, afxUnit len, afxUnit byteCnt, afxByte 
 
             for (i = 0; i < runLen; i++)
             {
-                AfxCopy2(&dst[currByte], buf, sizeof(afxByte), byteCnt);
+                AfxCopy(&dst[currByte], buf,  byteCnt);
                 currByte += byteCnt;
             }
         }

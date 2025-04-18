@@ -113,9 +113,11 @@ AFX afxChar const* _AfxDbgTrimFilename(afxChar const* path);
 
 #endif
 
+AFX void AfxRaiseException(afxError errCode, afxHere const hint);
+
 //#define afxError_SUCCESS ((afxResult)NIL)
 #define AFX_TEST(_exp_) if(_exp_) ((err) = (afxError)(-((afxUnit16)__LINE__)), AfxReportError(AFX_STRINGIFY((_exp_))))
-#define AfxThrowError() ((err) = (afxError)(-((afxUnit16)__LINE__)), AfxReportError(""))
+#define AfxThrowError() ((err) = (afxError)(-((afxUnit16)__LINE__)), AfxReportError(""), AfxRaiseException(err, AfxHere()))
 #define AfxThrowSoftError() ((err) = (afxError)(-((afxUnit16)__LINE__))) // does not echo
 #define AfxResetResult(rslt) (rslt = afxError_SUCCESS)
 

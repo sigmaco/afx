@@ -136,7 +136,7 @@ _AFX afxError _AfxSvcCtor(afxService svc, void** args, afxUnit invokeNo)
         if (AfxAllocate(workerThrCnt * sizeof(svc->workers[0]), 0, AfxHere(), (void**)&svc->workers)) AfxThrowError();
         else
         {
-            AfxZero2(svc->workers, sizeof(svc->workers[0]), workerThrCnt);
+            AfxZero(svc->workers, sizeof(svc->workers[0]) * workerThrCnt);
             
             svc->execTimeUsec = execTimeUsec;
             svc->workerThrCnt = workerThrCnt;

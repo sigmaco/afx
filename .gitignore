@@ -2,6 +2,11 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/_vs17/.vs
+/_vs17/**/.vs
+/_vs17/**/Debug
+/_vs17/**/Release
+
 /art/actor
 /art/scenario
 /art/skybox/red3
@@ -16,11 +21,6 @@
 /art/fmv/ubi.bik
 /art/fmv/disco.bik
 /art/object/backpack
-
-/_vs17/.vs
-/_vs17/**/.vs
-/_vs17/**/Debug
-/_vs17/**/Release
 
 /afx/sim/afxAnimation.c
 /afx/sim/afxMotor.c

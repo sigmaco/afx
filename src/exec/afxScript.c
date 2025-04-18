@@ -397,7 +397,7 @@ _AFX afxError AfxLoadScript(afxString const* scope, afxUri const* uri)
     if (AfxIsStringEmpty(scope))
         AfxGetUriTargetString(uri, &scope2);
     else
-        AfxReflectString(scope, &scope2);
+        scope2 = *scope;
 
     afxStream file;
     afxStreamInfo iobi = { 0 };

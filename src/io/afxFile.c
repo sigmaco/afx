@@ -199,7 +199,7 @@ _AFX afxBool AfxGetResolvedFileUri(afxStream file, afxUri* location)
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
     AFX_ASSERT(location);
     AfxCopyUri(location, &file->idd.f.resolvedUrl.uri);
-    AfxCanonicalizePath(location, AFX_OS_WIN);
+    AfxCanonicalizePath(location, AFX_ON_WINDOWS);
     return !err;
 }
 

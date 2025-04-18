@@ -34,6 +34,8 @@
 
     Qwadro does exhaustive use of the "commit only on full success" behavior, similar to a transactional allocation model.
     It implies that batch operations, usually memory allocations, must undo previous successfull operations if any of them has failed.
+
+    Behave as a low-level API should behave. Explicit when needed, implicit when allowed.
 */
 
 #ifndef AFX_QWADRO_H

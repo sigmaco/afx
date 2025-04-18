@@ -369,9 +369,6 @@ AFXINL afxReal  AfxRandomReal(void);
 AFXINL afxReal  AfxRandomReal2(afxReal mini, afxReal maxi);
 
 
-#define AfxFind(first_,last_,val_) _AfxFind(first_, last_, sizeof(val_), &val_)
-AFX void const* _AfxFind(void const* first, void const* last, afxSize unitSiz, void const* val);
-
 AFX void AfxAccumulateCrc32(afxUnit32 *crc, void const* data, afxSize len);
 
 #define AfxAlignDown(val, align) (typeof(val))((val) & (~((typeof(val))((align) - 1))))

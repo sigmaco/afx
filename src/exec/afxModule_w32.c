@@ -89,13 +89,13 @@ _AFX void AfxGetModuleInfo(afxModule icd, afxString* product, afxString* vendor,
     AFX_ASSERT(product || vendor || description);
 
     if (product)
-        AfxCopyString(product, &icd->product);
+        AfxCopyString(product, 0, &icd->product, 0);
 
     if (vendor)
-        AfxCopyString(vendor, &icd->vendor);
+        AfxCopyString(vendor, 0, &icd->vendor, 0);
 
     if (description)
-        AfxCopyString(description, &icd->description);
+        AfxCopyString(description, 0, &icd->description, 0);
 }
 
 _AFX afxUnit AfxFindSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const names[], void* addresses[])
@@ -109,7 +109,7 @@ _AFX afxUnit AfxFindSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const
     BYTE* peImgBase = mdle->osHandle;
     afxBool demangle = mdle->demangle;
 
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
     PIMAGE_NT_HEADERS header = (PIMAGE_NT_HEADERS)(peImgBase + ((PIMAGE_DOS_HEADER)peImgBase)->e_lfanew);
     AFX_ASSERT(header->Signature == IMAGE_NT_SIGNATURE);
     AFX_ASSERT(header->OptionalHeader.NumberOfRvaAndSizes > 0);
@@ -138,10 +138,10 @@ _AFX afxUnit AfxFindSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const
 
                 afxUnit prefixPosn, suffixPosn;
 
-                if (AfxFindFirstChar(&symNameStr, 0, '_', &prefixPosn) &&
-                    AfxFindLastChar(&symNameStr, 0, '@', &suffixPosn))
+                if (AfxFindChar(&symNameStr, 0, '_', FALSE, FALSE, &prefixPosn) &&
+                    AfxFindChar(&symNameStr, 0, '@', FALSE, TRUE, &suffixPosn))
                 {
-                    AfxExcerptString(&symNameStr, prefixPosn + 1, suffixPosn - 1, &symNameStr);
+                    symNameStr = AfxExcerptString(&symNameStr, prefixPosn + 1, suffixPosn - 1);
 
                     if (AfxCompareStrings(&symNameStr, 0, FALSE, 1, &names[j], NIL))
                     {
@@ -175,7 +175,7 @@ _AFX afxResult AfxFindModuleSymbols(afxModule mdle, afxUnit cnt, afxChar const *
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
         syms[i] = (void*)GetProcAddress(mdle->osHandle, name[i]);
 #else
         syms[i] = dlsym(mdle->osHandle, name[i]);
@@ -214,7 +214,7 @@ _AFX afxUnit AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxUnit cn
     {
         void* osHandle = mdle->osHandle;
 
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
         PIMAGE_NT_HEADERS header = (PIMAGE_NT_HEADERS)((BYTE *)osHandle + ((PIMAGE_DOS_HEADER)osHandle)->e_lfanew);
         AFX_ASSERT(header->Signature == IMAGE_NT_SIGNATURE);
         AFX_ASSERT(header->OptionalHeader.NumberOfRvaAndSizes > 0);
@@ -243,10 +243,10 @@ _AFX afxUnit AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxUnit cn
 
                     afxUnit prefixPosn, suffixPosn;
 
-                    if (AfxFindFirstChar(&symNameStr, 0, '_', &prefixPosn) &&
-                        AfxFindLastChar(&symNameStr, 0, '@', &suffixPosn))
+                    if (AfxFindChar(&symNameStr, 0, '_', FALSE, FALSE, &prefixPosn) &&
+                        AfxFindChar(&symNameStr, 0, '@', FALSE, TRUE, &suffixPosn))
                     {
-                        AfxExcerptString(&symNameStr, prefixPosn + 1, suffixPosn - 1, &symNameStr);
+                        symNameStr = AfxExcerptString(&symNameStr, prefixPosn + 1, suffixPosn - 1);
 
                         if (AfxCompareStrings(&symNameStr, 0, FALSE, 1, &names[j], NIL))
                         {
@@ -286,9 +286,9 @@ _AFX afxUnit AfxGetSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const 
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        AfxCopyString(&s.s, &names[i]);
+        AfxCopyString(&s.s, 0, &names[i], 0);
 
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
         addresses[i] = (void*)GetProcAddress((void*)osHandle, s.buf);
 #else
         addresses[i] = dlsym((void*)osHandle, s.buf);
@@ -342,7 +342,7 @@ _AFX afxError _AfxMdleDtorCb(afxModule mdle)
 
     AfxDismantleManifest(&mdle->etc);
 
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
     FreeLibrary(mdle->osHandle);
 #else
     dlclose(mdle->osHandle);
@@ -450,7 +450,7 @@ _AFX afxBool AfxFindModule(afxUri const* uri, afxModule* module)
     afxBool found = FALSE;
     AFX_ASSERT(uri);
     
-#if AFX_OS_WIN
+#if AFX_ON_WINDOWS
     afxUri fname;
     AfxClipUriFile(&fname, uri);
     afxUri2048 uriz;
@@ -495,7 +495,7 @@ _AFX afxBool _AfxFindAndLoadDllCb(void* udd, afxUnit diskId, afxUnit endpointIdx
 {
     afxError err = AFX_ERR_NONE;
     afxBool next = TRUE;
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
     HMODULE hMod = LoadLibraryExA(AfxGetUriData(osPath, 0), NIL, NIL);
 #else
     void* hMod = dlopen(AfxGetUriData(&libpath.uri, 0), RTLD_NOW);
@@ -541,7 +541,7 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
 
     // find for the module file.
 
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
     HMODULE hMod = NIL;
 #else
     void* hMod = NIL;
@@ -553,7 +553,7 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
 
     if (!AfxFindFiles(&urib.uri, afxFileFlag_R, _AfxFindAndLoadDllCb, (void*[]) { &hMod, &path.uri, &osPath.uri }))
     {
-        AfxThrowError();
+        err = afxError_FILE_NOT_FOUND;
         return err;
     }
     

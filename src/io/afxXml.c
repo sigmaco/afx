@@ -700,8 +700,8 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxUnit length)
                         afxXmlElement* elem2 = AfxPushArrayUnits(&sorted, 1, &idx, NIL, 0);
                         indicesMap[i] = idx;
                         //AFX_ASSERT(idx == i);
-                        AfxReflectString(&elem->name, &elem2->name);
-                        AfxReflectString(&elem->content, &elem2->content);
+                        elem2->name = elem->name;
+                        elem2->content = elem->content;
                         elem2->childCnt = elem->childCnt;
                         elem2->tagCnt = elem->tagCnt;
                         elem2->baseChildIdx = 0;
@@ -1074,10 +1074,10 @@ _AFX void AfxQueryXmlElement(afxXml const* xml, afxUnit elemIdx, afxString* name
     afxXmlElement const* elem = &xml->elems[elemIdx];
 
     if (name)
-        AfxReflectString(&elem->name, name);
+        *name = elem->name;
 
     if (content)
-        AfxReflectString(&elem->content, content);
+        *content = elem->content;
 }
 
 _AFX void AfxQueryXmlTag(afxXml const* xml, afxUnit elemIdx, afxUnit tagIdx, afxString* name, afxString* content)
@@ -1090,10 +1090,10 @@ _AFX void AfxQueryXmlTag(afxXml const* xml, afxUnit elemIdx, afxUnit tagIdx, afx
     afxXmlTag const* tag = &xml->tags[elem->baseTagIdx + tagIdx];
 
     if (name)
-        AfxReflectString(&tag->name, name);
+        *name = tag->name;
 
     if (content)
-        AfxReflectString(&tag->content, content);
+        *content = tag->content;
 }
 
 _AFX afxUnit AfxEnumerateXmlElements(afxXml const* xml, afxUnit parentIdx, afxUnit first, afxUnit cnt, afxUnit childIdx[])

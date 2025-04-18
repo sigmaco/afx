@@ -14,10 +14,27 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // COMPACT, SEGMENT-BASED UNIFORM RESOURCE IDENTIFICATION DESCRIPTOR        //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA Future Storage.
 
-// In QWADRO, URI is a type of string specialized in dealing with file paths.
-// It provides an object representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
+/*
+    In QWADRO, URI is a type of string specialized in dealing with file paths.
+    It provides an object representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
+    afxUri is a compact, segment-based URI descriptor.
+
+    SIGMA architecture notes:
+      All segments (schema, user, host, port, root, dir, etc.) are encoded as consecutive lengths from s.start
+      No slicing, allocating, or copying; just offset + range math.
+      Consumers reconstruct strings on demand using base + offset + length math.
+      Perfect for low-overhead environments (e.g., game engines, networking stacks, real-time systems).
+      Store only lengths in the actual object. Tiny memory footprint.
+      Allow zero-copy reconstruction. No performance cost.
+      Can easily cache hot segments like sch, qry, etc.
+      Can support slices from any layer of the framework (e.g., virtual filesystems, protocols, resources, etc.)
+*/
 
 #ifndef AFX_URI_H
 #define AFX_URI_H
@@ -48,7 +65,11 @@ typedef enum afxUriPart
 } afxUriPart;
 
 AFX_DEFINE_STRUCT(afxUri)
-/// An object representing a uniform resource identifier (URI).
+// An object representing a compact, segment-based URI descriptor.
+// All segments (schema, user, host, port, root, dir, etc.) are encoded as lengths from s.start
+// No slicing, allocating, or copying; just offset + length math.
+// Consumers reconstruct strings on demand using base + offset + length math.
+// Perfect for low-overhead environments (e.g., game engines, networking stacks, real-time systems).
 {
     afxString   s;
     afxUnit8    sch, user, h, p, root, fname, fext, frag; // max AFX_U8_MAX long

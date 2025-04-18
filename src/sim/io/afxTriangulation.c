@@ -1024,7 +1024,7 @@ _ASXINL afxError AfxBeginMeshBuilding(afxTriangulation* mshb, afxString const* i
     if (secCnt && AfxAllocate(triCnt * sizeof(mshb->faces[0]), 0, AfxHere(), (void**)&mshb->faces)) AfxThrowError();
     else
     {
-        AfxZero2(mshb->faces, sizeof(mshb->faces[0]), triCnt);
+        AfxZero(mshb->faces, sizeof(mshb->faces[0]) * triCnt);
     }
 
     AfxMakeString32(&mshb->id, id);
@@ -1032,7 +1032,7 @@ _ASXINL afxError AfxBeginMeshBuilding(afxTriangulation* mshb, afxString const* i
     AfxMakeArray(&mshb->biases, sizeof(afxVertexBias), artCnt, (afxVertexBias[]) { 0 }, 0);
 
     AfxAllocate(vtxCnt * sizeof(mshb->vtx[0]), NIL, AfxHere(), (void**)&mshb->vtx);
-    AfxZero2(mshb->vtx, sizeof(mshb->vtx[0]), vtxCnt);
+    AfxZero(mshb->vtx, sizeof(mshb->vtx[0]) * vtxCnt);
 
     AfxAllocate(artCnt * sizeof(mshb->pivots[0]), NIL, AfxHere(), (void**)&mshb->pivots);
 
@@ -1206,6 +1206,6 @@ _ASXINL void AfxRenameVertexPivots(afxTriangulation* mshb, afxUnit basePivotIdx,
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        AfxReflectString(&name[i], &mshb->pivots[basePivotIdx + i]);
+        mshb->pivots[basePivotIdx + i] = name[i];
     }
 }

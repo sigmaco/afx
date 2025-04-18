@@ -24,7 +24,7 @@ _AFX afxString* AfxMakeString4(afxString4 *s, afxString const* src)
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
 
     if (src)
-        AfxCopyString(&s->s, src);
+        AfxCopyString(&s->s, 0, src, 0);
 
     return &s->s;
 }
@@ -36,7 +36,7 @@ _AFX afxString* AfxMakeString8(afxString8 *s, afxString const* src)
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
 
     if (src)
-        AfxCopyString(&s->s, src);
+        AfxCopyString(&s->s, 0, src, 0);
 
     return &s->s;
 }
@@ -49,7 +49,7 @@ _AFX afxString* AfxMakeString16(afxString16 *s, afxString const* src)
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
 
     if (src)
-        AfxCopyString(&s->s, src);
+        AfxCopyString(&s->s, 0, src, 0);
 
     return &s->s;
 }
@@ -62,7 +62,7 @@ _AFX afxString* AfxMakeString32(afxString32 *s, afxString const* src)
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
 
     if (src)
-        AfxCopyString(&s->s, src);
+        AfxCopyString(&s->s, 0, src, 0);
 
     return &s->s;
 }
@@ -75,7 +75,7 @@ _AFX afxString* AfxMakeString128(afxString128 *s, afxString const* src)
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
 
     if (src)
-        AfxCopyString(&s->s, src);
+        AfxCopyString(&s->s, 0, src, 0);
 
     return &s->s;
 }
@@ -88,7 +88,7 @@ _AFX afxString* AfxMakeString2048(afxString2048 *s, afxString const* src)
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
 
     if (src)
-        AfxCopyString(&s->s, src);
+        AfxCopyString(&s->s, 0, src, 0);
 
     return &s->s;
 }
@@ -101,7 +101,7 @@ _AFX afxString* AfxMakeString4096(afxString4096 *s, afxString const* src)
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
 
     if (src)
-        AfxCopyString(&s->s, src);
+        AfxCopyString(&s->s, 0, src, 0);
 
     return &s->s;
 }

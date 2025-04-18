@@ -240,7 +240,7 @@ _AFXINL afxResult AfxReportf(afxUnit ch, afxHere const hint, afxChar const* msg,
         if ((ch % 10) >= 7)
         {
             // \a = BELL control code
-#ifdef AFX_ISA_X86_64
+#ifdef AFX_ON_X86_64
             len = stbsp_sprintf(msg2, "%s:%lli?%s\n", _AfxDbgTrimFilename((char const * const)hint[0]), hint[1], (char const * const)hint[2]);
 #else
             len = stbsp_sprintf(msg2, "%s:%i?%s\n", _AfxDbgTrimFilename((char const * const)hint[0]), (int)hint[1], (char const * const)hint[2]);
@@ -286,7 +286,7 @@ void AfxLogCall_(afxHere const hint, afxChar const* args, ...)
         afxChar msg[8192];
         int len;
 
-#ifdef AFX_ISA_X86_64
+#ifdef AFX_ON_X86_64
         len = stbsp_sprintf(msg, "%s(", (char const *const)hint[2]);
 #else
         len = stbsp_sprintf(msg, "%s(", (char const *const)hint[2]);
@@ -318,7 +318,7 @@ void AfxReportComment_(afxHere const hint, afxChar const* msg, ...)
     }
         else
         {
-#ifdef AFX_ISA_X86_64
+#ifdef AFX_ON_X86_64
             len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const *const)hint[0]), hint[1]);
 #else
             len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
@@ -357,7 +357,7 @@ void AfxReportMessage_(afxHere const hint, afxChar const* msg, ...)
         }
         else
         {
-#ifdef AFX_ISA_X86_64
+#ifdef AFX_ON_X86_64
             len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const *const)hint[0]), hint[1]);
 #else
             len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
@@ -390,7 +390,7 @@ void AfxReportHint_(afxHere const hint, afxChar const* msg, ...)
         afxChar msg2[8192];
         int len;
 
-#ifdef AFX_ISA_X86_64
+#ifdef AFX_ON_X86_64
         len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const *const)hint[0]), hint[1]);
 #else
         len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
@@ -422,7 +422,7 @@ void AfxReportWarn_(afxHere const hint, afxChar const* msg, ...)
         afxChar msg2[8192];
         int len;
 
-#ifdef AFX_ISA_X86_64
+#ifdef AFX_ON_X86_64
         len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const *const)hint[0]), hint[1]);
 #else
         len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1]);
@@ -454,7 +454,7 @@ void AfxReportError_(afxHere const hint, afxChar const* msg, ...)
         afxChar msg2[8192];
         int len;
 
-#ifdef AFX_ISA_X86_64
+#ifdef AFX_ON_X86_64
         len = stbsp_sprintf(msg2, "%s:%lli\n", _AfxDbgTrimFilename((char const * const)hint[0]), hint[1]);
 #else
         len = stbsp_sprintf(msg2, "%s:%i\n", _AfxDbgTrimFilename((char const * const)hint[0]), (int)hint[1]);
@@ -735,6 +735,19 @@ _AFXINL void AfxCatchError_(afxError err_, afxHere const hint)
     if (err_)
     {
         AfxReportError("");
+        afxInt a = 0;
+    }
+}
+
+_AFX void AfxRaiseException(afxError errCode, afxHere const hint)
+{
+    afxError err = NIL;
+    AFX_ASSERT(errCode);
+    AFX_ASSERT(hint);
+
+    if (errCode)
+    {
+        //AfxReportError("");
         afxInt a = 0;
     }
 }

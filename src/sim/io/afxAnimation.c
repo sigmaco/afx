@@ -381,7 +381,7 @@ _ASX afxError _AsxAniCtorCb(afxAnimation ani, void** args, afxUnit invokeNo)
 
     if (motCnt)
     {
-        AfxZero2(ani->motSlots, sizeof(ani->motSlots[0]), motCnt);
+        AfxZero(ani->motSlots, sizeof(ani->motSlots[0]) * motCnt);
         
         if (anib->motions && AfxRelinkMotions(ani, 0, motCnt, anib->motions))
             AfxThrowError();
