@@ -460,7 +460,7 @@ _AVX afxString const* AfxStringifyShaderStage(avxShaderType ss, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ss < avxShaderType_TOTAL);
-    AfxCopyString(out, &shaderStageString[ss]);
+    AfxCopyString(out, 0, &shaderStageString[ss], 0);
     return out;
 }
 
@@ -468,7 +468,7 @@ _AVX afxString const* AfxStringifyFillMode(avxFillMode fm, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(fm < avxFillMode_TOTAL);
-    AfxCopyString(out, &fillModeString[fm]);
+    AfxCopyString(out, 0, &fillModeString[fm], 0);
     return out;
 }
 
@@ -476,7 +476,7 @@ _AVX afxString const* AfxStringifyFrontFace(avxFrontFace ff, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ff < avxFrontFace_TOTAL);
-    AfxCopyString(out, &frontFaceString[ff]);
+    AfxCopyString(out, 0, &frontFaceString[ff], 0);
     return out;
 }
 
@@ -484,7 +484,7 @@ _AVX afxString const* AfxStringifyCullMode(avxCullMode cm, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cm < avxCullMode_TOTAL);
-    AfxCopyString(out, &cullModeString[cm]);
+    AfxCopyString(out, 0, &cullModeString[cm], 0);
     return out;
 }
 
@@ -492,7 +492,7 @@ _AVX afxString const* AfxStringifyCompareOp(avxCompareOp co, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(co < avxCompareOp_TOTAL);
-    AfxCopyString(out, &compareOpString[co]);
+    AfxCopyString(out, 0, &compareOpString[co], 0);
     return out;
 }
 
@@ -500,7 +500,7 @@ _AVX afxString const* AfxStringifyStencilOp(avxStencilOp so, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(so < avxStencilOp_TOTAL);
-    AfxCopyString(out, &stencilOpString[so]);
+    AfxCopyString(out, 0, &stencilOpString[so], 0);
     return out;
 }
 
@@ -508,7 +508,7 @@ _AVX afxString const* AfxStringifyLogicOp(avxLogicOp lo, afxString *out)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(lo < avxLogicOp_TOTAL);
-    AfxCopyString(out, &logicOpString[lo]);
+    AfxCopyString(out, 0, &logicOpString[lo], 0);
     return out;
 }
 
@@ -516,7 +516,7 @@ _AVX afxString const* AfxStringifyPrimitiveTopology(avxTopology pt, afxString *o
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pt < avxTopology_TOTAL);
-    AfxCopyString(out, &primTopologyString[pt]);
+    AfxCopyString(out, 0, &primTopologyString[pt], 0);
     return out;
 }
 

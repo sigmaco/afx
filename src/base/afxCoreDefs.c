@@ -141,20 +141,6 @@ _AFX void AfxAccumulateCrc32(afxUnit32 *crc, void const* data, afxSize len)
         *crc = table[(uint8_t)*crc ^ ((uint8_t*)data)[i]] ^ *crc >> 8;
 }
 
-_AFX void const* _AfxFind(void const* first, void const* last, afxSize unitSiz, void const* val)
-{
-    afxByte const* f = first;
-
-    while (f != last)
-    {
-        if (0 == memcmp(f, val, unitSiz))
-            return f;
-
-        f += unitSiz;
-    }
-    return last;
-}
-
 _AFXINL afxFixed AfxFixedFromFloat(afxReal f)
 {
 #if !0 // RW way

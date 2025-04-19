@@ -26,12 +26,7 @@
 #ifndef AFX_MEMORY_H
 #define AFX_MEMORY_H
 
-#include "qwadro/inc/base/afxDebug.h"
-#include "qwadro/inc/base/afxObject.h"
-#include "qwadro/inc/base/afxChain.h"
-#include "qwadro/inc/base/afxFcc.h"
-#include "qwadro/inc/exec/afxFutex.h"
-#include "qwadro/inc/io/afxUri.h"
+#include "qwadro/inc/mem/afxMemoryUtil.h"
 
 typedef enum afxAllocationFlags
 {
@@ -155,22 +150,6 @@ AFX void                    AfxStream2(afxUnit cnt, void const* src, afxSize src
 AFX void                    AfxStream3(afxUnit cnt, void const* src, afxUnit srcOffset, afxSize srcStride, void* dst, afxUnit dstOffset, afxUnit dstStride);
 
 #define AFX_ALIGNED_SIZE(operand_,alignment_) (((operand_) + ((alignment_) - 1)) & ~((alignment_) - 1))
-
-
-AFX afxInt          AfxMemcmp(void const* buf1, void const* buf2, afxSize siz);
-AFX void const*     AfxMemchr(void const* buf, afxInt val, afxUnit cap);
-
-AFX void            AfxCopy(void* dst, void const* src, afxSize siz);
-AFX void            AfxCopy2(void* dst, void const* src, afxSize siz, afxSize cnt);
-AFX void*           AfxMemcpy(void* dst, void const* src, afxSize siz);
-AFX void*           AfxMemmove(void* dst, void const* src, afxSize siz);
-
-AFX void            AfxFill(void* p, void const* value, afxSize siz);
-AFX void            AfxFill2(void* p, void const* value, afxSize siz, afxSize cnt);
-AFX void*           AfxMemset(void* dst, afxInt val, afxSize siz);
-
-AFX void            AfxZero(void* p, afxSize siz);
-AFX void            AfxZero2(void* p, afxSize siz, afxSize cnt);
 
 #if 0
 AFX void            AfxFree(void** pp);

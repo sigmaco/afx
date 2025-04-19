@@ -281,7 +281,7 @@ _AFXINL afxError AfxAppendArray(afxArray* arr, afxArray const* src)
 
         if (arr->unitSiz == src->unitSiz)
         {
-            AfxCopy2(map, src->data, src->unitSiz, src->pop);
+            AfxCopy(map, src->data, src->unitSiz * src->pop);
         }
         else
         {

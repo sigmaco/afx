@@ -259,7 +259,7 @@ _ASX afxError AfxReadNestedStrings(afxStream in, afxUnit cnt, afxString strings[
             AfxThrowError();
             break;
         }
-        AfxExcerptString(&sdb.s, d.start, d.len, s);
+        *s = AfxExcerptString(&sdb.s, d.start, d.len);
     }
     return err;
 }
@@ -318,7 +318,7 @@ _ASX afxError AfxReadMappedStrings(afxStream in, afxString const* sdb, afxUnit c
         }
         else
         {
-            AfxExcerptString(sdb, hdr.start, hdr.len, s);
+            *s = AfxExcerptString(sdb, hdr.start, hdr.len);
         }
     }
     return err;

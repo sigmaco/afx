@@ -226,8 +226,8 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
         if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RX)) AfxThrowError();
         else
         {
-#ifdef AFX_ISA_X86_64
-#   ifdef AFX_OS_WIN
+#ifdef AFX_ON_X86_64
+#   ifdef AFX_ON_WINDOWS
             AfxMakeUri(&location.uri, 0, "w64", 0);
 
             if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX)) AfxThrowError();
@@ -244,7 +244,7 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
 
             if (AfxMountStorageUnit('c', &location.uri, afxFileFlag_RX))
                 AfxThrowError();
-#   elif defined(AFX_OS_LNX)
+#   elif defined(AFX_ON_LINUX)
             AfxMakeUri(&location.uri, 0, "x64", 0);
 
             if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX)) AfxThrowError();
@@ -258,8 +258,8 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
             }
 #       endif
 #   endif
-#elif defined(AFX_ISA_X86_32)
-#   ifdef AFX_OS_WIN
+#elif defined(AFX_ON_X86_32)
+#   ifdef AFX_ON_WINDOWS
             AfxMakeUri(&location.uri, 0, "w32", 0);
 
             if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX)) AfxThrowError();
@@ -277,7 +277,7 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
 
             if (AfxMountStorageUnit('c', &location.uri, afxFileFlag_RX))
                 AfxThrowError();
-#   elif defined(AFX_OS_LNX)
+#   elif defined(AFX_ON_LINUX)
             AfxMakeUri(&location.uri, 0, "x32", 0);
 
             if (AfxMountStorageUnit('z', &location.uri, afxFileFlag_RWX)) AfxThrowError();
@@ -488,7 +488,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
     afxUri uri;
     afxManifest ini;
     AfxDeployManifest(&ini);
-    AfxMakeUri(&uri, 0, "system.ini", 0);
+    AfxMakeUri(&uri, 0, "../system.ini", 0);
 
     if (AfxLoadInitializationFile(&ini, &uri))
     {
@@ -500,7 +500,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
         AfxLoadInitializationFile(&ini, &uri);
     }
 
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
     SYSTEM_INFO si;
     GetSystemInfo(&si);
 #endif
@@ -520,7 +520,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
     if (!AfxGetInitializationNat(&ini, &sSystem, &AFX_STRING("nHwThreadingCapacity"), &cfg.hwThreadingCap) || !cfg.hwThreadingCap)
     {
         cfg.hwThreadingCap =
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
             si.dwNumberOfProcessors;
 #else
             1;
@@ -530,7 +530,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
     if (!AfxGetInitializationNat(&ini, &sSystem, &AFX_STRING("nMemoryPageSize"), &cfg.memPageSiz) || !cfg.memPageSiz)
     {
         cfg.memPageSiz =
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
             si.dwPageSize;
 #else
             4096;
@@ -540,7 +540,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
     if (!AfxGetInitializationNat(&ini, &sSystem, &AFX_STRING("nAllocationGranularity"), &cfg.allocGranularity) || !cfg.allocGranularity)
     {
         cfg.allocGranularity =
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
             si.dwAllocationGranularity;
 #else
             4096;
@@ -556,7 +556,7 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
 
     //if (platform)
     {
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
         AfxZero(&cfg.w32, sizeof(cfg.w32));
         cfg.w32.hInst = GetModuleHandle(NULL);
         cfg.w32.hWnd = GetActiveWindow();

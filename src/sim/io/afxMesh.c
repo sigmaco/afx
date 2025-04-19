@@ -57,7 +57,7 @@ _ASX afxBool AfxGetMeshUrn(afxMesh msh, afxString* id)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &msh);
     AFX_ASSERT(id);
-    AfxReflectString(&msh->urn, id);
+    *id = msh->urn;
     return msh->urn.len;
 }
 
@@ -352,7 +352,7 @@ _ASX afxError AfxFormatVertexAttribute(afxMesh msh, afxUnit attrIdx, avxFormat f
     asxMeshAttr* attr = &msh->attrInfo[attrIdx];
     attr->fmt = fmt;
     attr->flags = flags;
-    AfxCopyString(&attr->usage.s, usage);
+    AfxCopyString(&attr->usage.s, 0, usage, 0);
     AfxResetBoxes(1, &attr->aabb, 0);
     attr->aabbUpdReq = TRUE;
 

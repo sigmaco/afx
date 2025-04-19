@@ -222,7 +222,7 @@ void DecompressRleChunk(afxStream stream, afxUnit width, afxUnit height, afxUnit
 
             for (afxUnit i = 0; i < runLen; i++)
             {
-                AfxCopy2(&dst[currByte], buf, sizeof(afxByte), byteCnt);
+                AfxCopy(&dst[currByte], buf, byteCnt);
                 currByte += byteCnt;
             }
         }

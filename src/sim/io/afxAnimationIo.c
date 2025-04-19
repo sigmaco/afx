@@ -538,6 +538,7 @@ _ASX afxError AfxUploadAnimation(afxSimulation sim, afxString const* urn, afxStr
         for (afxUnit j = 0; j < motHdr->totalCurCnt; j++)
         {
             afxCurveInfo* curi = &curis[j];
+            *curi = (afxCurveInfo) { 0 };
             K4D_CUR_HDR* curHdr = &curHdrs[j];
 
             curi->knotCnt = curHdr->knotCnt;

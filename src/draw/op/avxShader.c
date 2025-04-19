@@ -55,51 +55,46 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
     //afxUnit baseChar;
     afxString4096 src;
     AfxMakeString4096(&src, NIL);
-    afxString2048 line;
-    AfxMakeString2048(&line, NIL);
-    
-    afxUnit base = 0, strStep = 0;
-    while ((strStep = AfxExcerptStringLine(code, base, &line.s)))
+
+    static afxString const keywords[] =
     {
+        AFX_STRING("IN"),
+        AFX_STRING("OUT"),
+        AFX_STRING("UNIFORM"),
+        AFX_STRING("TEXTURE"),
+        AFX_STRING("BUFFER"),
+        AFX_STRING("FETCH"),
+        AFX_STRING("PUSH"),
+    };
+
+    // Shared among cases.
+    afxUnit location = 0;
+    afxUnit set = 0, binding = 0, resCnt = 1;
+
+    afxUnit base = 0, strStep = 0;
+    afxString line;
+    while (1)
+    {
+        line = AfxExcerptStringLine(code, base);
+
+        if (!line.len) break;
+
+        strStep = line.len;
         base += strStep;
-        //afxString excerpt;
 
-        if (AFX_INVALID_INDEX != AfxFindSubstring(&line.s, &AFX_STRING("OUT")))
+        afxUnit keywIdx;
+        afxString excerpt = AfxFindSubstrings(&line, 0, FALSE, ARRAY_SIZE(keywords), keywords, &keywIdx);
+
+        if (!excerpt.len)
+            continue;
+
+        switch (keywIdx)
         {
-            afxUnit location = 0;
+        case 0: // IN
+        {
             afxString32 fmtName = { 0 };
             afxString32 varName = { 0 };
-            afxUnit fnd = AfxScanString(&line.s, "OUT(%u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &location, fmtName.buf, varName.buf);
-
-            if (fnd == 3)
-            {
-                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-
-                AfxMakeString(&fmtName.s, 0, fmtName.buf, 0);
-                AfxMakeString(&varName.s, 0, varName.buf, 0);
-                avxFormat fmt = AfxFindVertexFormat(&fmtName.s);
-
-                afxUnit idx;
-                avxShaderIoChannel* decl;
-
-                if (!(decl = AfxPushArrayUnits(fInOuts, 1, &idx, NIL, 0))) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(location < 16); // hardcoded limitation
-                    decl->location = location;
-                    AFX_ASSERT(fmt < avxFormat_TOTAL);
-                    decl->fmt = fmt;
-                    AfxMakeString16(&decl->semantic, &varName.s);
-                }
-            }
-        }
-
-        if (AFX_INVALID_INDEX != AfxFindSubstring(&line.s, &AFX_STRING("IN")))
-        {
-            afxUnit location = 0;
-            afxString32 fmtName = { 0 };
-            afxString32 varName = { 0 };
-            afxUnit fnd = AfxScanString(&line.s, "IN(%u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &location, fmtName.buf, varName.buf);
+            afxUnit fnd = AfxScanString(&line, "IN(%u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &location, fmtName.buf, varName.buf);
 
             if (fnd == 3)
             {
@@ -123,173 +118,198 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                     AfxMakeString16(&decl->semantic, &varName.s);
                 }
             }
+            break;
         }
-
+        case 1: // OUT
         {
-            if (AFX_INVALID_INDEX != AfxFindSubstring(&line.s, &AFX_STRING("TEXTURE")))
+            afxString32 fmtName = { 0 };
+            afxString32 varName = { 0 };
+            afxUnit fnd = AfxScanString(&line, "OUT(%u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &location, fmtName.buf, varName.buf);
+
+            if (fnd == 3)
             {
-                afxUnit set = 0, binding = 0, resCnt = 1;
-                afxString32 typeName = { 0 };
-                afxString32 varName = { 0 };
-                afxUnit fnd = AfxScanString(&line.s, "TEXTURE(%u, %u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &set, &binding, typeName.buf, varName.buf);
+                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
 
-                if (fnd == 4)
+                AfxMakeString(&fmtName.s, 0, fmtName.buf, 0);
+                AfxMakeString(&varName.s, 0, varName.buf, 0);
+                avxFormat fmt = AfxFindVertexFormat(&fmtName.s);
+
+                afxUnit idx;
+                avxShaderIoChannel* decl;
+
+                if (!(decl = AfxPushArrayUnits(fInOuts, 1, &idx, NIL, 0))) AfxThrowError();
+                else
                 {
-                    AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-
-                    AfxMakeString(&typeName.s, 0, typeName.buf, 0);
-                    AfxMakeString(&varName.s, 0, varName.buf, 0);
-
-                    avxShaderParam resType = 0;
-
-                    if ((AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("sampler1D"), NIL)) ||
-                        (AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("sampler2D"), NIL)) ||
-                        (AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("sampler3D"), NIL)) ||
-                        (AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("samplerCube"), NIL))
-                        )
-                    {
-                        resType = avxShaderParam_TEXTURE;
-                    }
-
-                    afxUnit idx;
-                    avxShaderResource *decl;
-
-                    if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
-                    else
-                    {
-                        AFX_ASSERT(set < 4);
-                        decl->set = set;
-                        AFX_ASSERT(binding < 10);
-                        decl->binding = binding;
-                        AFX_ASSERT(resType < avxShaderParam_TOTAL);
-                        decl->type = resType;
-                        AFX_ASSERT(decl->type != avxShaderParam_OUT);
-                        AFX_ASSERT(resCnt);
-                        decl->cnt = AFX_MAX(resCnt, 1);
-                        AfxMakeString16(&decl->name, &varName.s);
-                    }
+                    AFX_ASSERT(location < 16); // hardcoded limitation
+                    decl->location = location;
+                    AFX_ASSERT(fmt < avxFormat_TOTAL);
+                    decl->fmt = fmt;
+                    AfxMakeString16(&decl->semantic, &varName.s);
                 }
             }
+            break;
+        }
+        case 2: // UNIFORM
+        {
+            afxString32 varName = { 0 };
+            afxString32 layoutName = { 0 };
+            afxUnit fnd = AfxScanString(&line, "UNIFORM(%u, %u, %32[A-Za-z0-9_], %32[A-Za-z0-9_] )", &set, &binding, layoutName.buf, varName.buf);
 
-            if (AFX_INVALID_INDEX != AfxFindSubstring(&line.s, &AFX_STRING("UNIFORM")))
+            if (fnd == 4)
             {
-                afxUnit set = 0, binding = 0, resCnt = 1;
-                afxString32 layoutName = { 0 };
-                afxString32 varName = { 0 };
-                afxUnit fnd = AfxScanString(&line.s, "UNIFORM(%u, %u, %32[A-Za-z0-9_], %32[A-Za-z0-9_] )", &set, &binding, layoutName.buf, varName.buf);
+                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
 
-                if (fnd == 4)
+                AfxMakeString(&varName.s, 0, varName.buf, 0);
+
+                avxShaderParam resType = avxShaderParam_UNIFORM;
+
+                afxUnit idx;
+                avxShaderResource *decl;
+
+                if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
+                else
                 {
-                    AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-
-                    AfxMakeString(&varName.s, 0, varName.buf, 0);
-
-                    avxShaderParam resType = avxShaderParam_UNIFORM;
-
-                    afxUnit idx;
-                    avxShaderResource *decl;
-
-                    if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
-                    else
-                    {
-                        AFX_ASSERT(set < 4);
-                        decl->set = set;
-                        AFX_ASSERT(binding < 10);
-                        decl->binding = binding;
-                        AFX_ASSERT(resType < avxShaderParam_TOTAL);
-                        decl->type = resType;
-                        AFX_ASSERT(decl->type != avxShaderParam_OUT);
-                        AFX_ASSERT(resCnt);
-                        decl->cnt = AFX_MAX(resCnt, 1);
-                        AfxMakeString16(&decl->name, &varName.s);
-                    }
+                    AFX_ASSERT(set < 4);
+                    decl->set = set;
+                    AFX_ASSERT(binding < 10);
+                    decl->binding = binding;
+                    AFX_ASSERT(resType < avxShaderParam_TOTAL);
+                    decl->type = resType;
+                    AFX_ASSERT(decl->type != avxShaderParam_OUT);
+                    AFX_ASSERT(resCnt);
+                    decl->cnt = AFX_MAX(resCnt, 1);
+                    AfxMakeString16(&decl->name, &varName.s);
                 }
             }
+            break;
+        }
+        case 3: // TEXTURE
+        {
+            afxString32 varName = { 0 };
+            afxString32 typeName = { 0 };
+            afxUnit fnd = AfxScanString(&line, "TEXTURE(%u, %u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &set, &binding, typeName.buf, varName.buf);
 
-            if (AFX_INVALID_INDEX != AfxFindSubstring(&line.s, &AFX_STRING("BUFFER")))
+            if (fnd == 4)
             {
-                afxUnit set = 0, binding = 0, resCnt = 1;
-                afxString32 layoutName = { 0 };
-                afxString32 accessName = { 0 };
-                afxString32 varName = { 0 };
-                afxUnit fnd = AfxScanString(&line.s, "BUFFER(%u, %u, %32[A-Za-z0-9], %32[A-Za-z0-9], %32[A-Za-z0-9_] )", &set, &binding, layoutName.buf, accessName.buf, varName.buf);
+                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
 
-                if (fnd == 5)
+                AfxMakeString(&typeName.s, 0, typeName.buf, 0);
+                AfxMakeString(&varName.s, 0, varName.buf, 0);
+
+                avxShaderParam resType = 0;
+
+                if ((AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("sampler1D"), NIL)) ||
+                    (AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("sampler2D"), NIL)) ||
+                    (AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("sampler3D"), NIL)) ||
+                    (AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("samplerCube"), NIL))
+                    )
                 {
-                    AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
+                    resType = avxShaderParam_TEXTURE;
+                }
 
-                    AfxMakeString(&accessName.s, 0, accessName.buf, 0);
-                    AfxMakeString(&varName.s, 0, varName.buf, 0);
+                afxUnit idx;
+                avxShaderResource *decl;
 
-                    avxShaderParam resType = avxShaderParam_BUFFER;
-
-                    afxUnit idx;
-                    avxShaderResource *decl;
-
-                    if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
-                    else
-                    {
-                        AFX_ASSERT(set < 4);
-                        decl->set = set;
-                        AFX_ASSERT(binding < 10);
-                        decl->binding = binding;
-                        AFX_ASSERT(resType < avxShaderParam_TOTAL);
-                        decl->type = resType;
-                        AFX_ASSERT(decl->type != avxShaderParam_OUT);
-                        AFX_ASSERT(resCnt);
-                        decl->cnt = AFX_MAX(resCnt, 1);
-                        AfxMakeString16(&decl->name, &varName.s);
-                    }
+                if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
+                else
+                {
+                    AFX_ASSERT(set < 4);
+                    decl->set = set;
+                    AFX_ASSERT(binding < 10);
+                    decl->binding = binding;
+                    AFX_ASSERT(resType < avxShaderParam_TOTAL);
+                    decl->type = resType;
+                    AFX_ASSERT(decl->type != avxShaderParam_OUT);
+                    AFX_ASSERT(resCnt);
+                    decl->cnt = AFX_MAX(resCnt, 1);
+                    AfxMakeString16(&decl->name, &varName.s);
                 }
             }
+            break;
+        }
+        case 4: // BUFFER
+        {
+            afxString32 varName = { 0 };
+            afxString32 layoutName = { 0 };
+            afxString32 accessName = { 0 };
+            afxUnit fnd = AfxScanString(&line, "BUFFER(%u, %u, %32[A-Za-z0-9], %32[A-Za-z0-9], %32[A-Za-z0-9_] )", &set, &binding, layoutName.buf, accessName.buf, varName.buf);
 
-            if (AFX_INVALID_INDEX != AfxFindSubstring(&line.s, &AFX_STRING("FETCH")))
+            if (fnd == 5)
             {
-                afxUnit set = 0, binding = 0, resCnt = 1;
-                afxString32 varName = { 0 };
-                afxUnit fnd = AfxScanString(&line.s, "FETCH(%u, %u, %32[A-Za-z0-9_] )", &set, &binding, varName.buf);
+                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
 
-                if (fnd == 3)
+                AfxMakeString(&accessName.s, 0, accessName.buf, 0);
+                AfxMakeString(&varName.s, 0, varName.buf, 0);
+
+                avxShaderParam resType = avxShaderParam_BUFFER;
+
+                afxUnit idx;
+                avxShaderResource *decl;
+
+                if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
+                else
                 {
-                    AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-
-                    AfxMakeString(&varName.s, 0, varName.buf, 0);
-
-                    avxShaderParam resType = avxShaderParam_FETCH;
-
-                    afxUnit idx;
-                    avxShaderResource *decl;
-
-                    if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
-                    else
-                    {
-                        AFX_ASSERT(set < 4);
-                        decl->set = set;
-                        AFX_ASSERT(binding < 10);
-                        decl->binding = binding;
-                        AFX_ASSERT(resType < avxShaderParam_TOTAL);
-                        decl->type = resType;
-                        AFX_ASSERT(decl->type != avxShaderParam_OUT);
-                        AFX_ASSERT(resCnt);
-                        decl->cnt = AFX_MAX(resCnt, 1);
-                        AfxMakeString16(&decl->name, &varName.s);
-                    }
+                    AFX_ASSERT(set < 4);
+                    decl->set = set;
+                    AFX_ASSERT(binding < 10);
+                    decl->binding = binding;
+                    AFX_ASSERT(resType < avxShaderParam_TOTAL);
+                    decl->type = resType;
+                    AFX_ASSERT(decl->type != avxShaderParam_OUT);
+                    AFX_ASSERT(resCnt);
+                    decl->cnt = AFX_MAX(resCnt, 1);
+                    AfxMakeString16(&decl->name, &varName.s);
                 }
             }
+            break;
+        }
+        case 5: // FETCH
+        {
+            afxString32 varName = { 0 };
+            afxUnit fnd = AfxScanString(&line, "FETCH(%u, %u, %32[A-Za-z0-9_] )", &set, &binding, varName.buf);
 
-            afxUnit idx = 0;
-            if (AFX_INVALID_INDEX != (idx = AfxFindSubstring(&line.s, &AFX_STRING("PUSH"))))
+            if (fnd == 3)
             {
-                afxString32 varName = { 0 };
-                afxUnit fnd = AfxScanString(&line.s, "PUSH(%32[A-Za-z0-9_] )", varName.buf);
+                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
 
-                if (fnd == 1)
+                AfxMakeString(&varName.s, 0, varName.buf, 0);
+
+                avxShaderParam resType = avxShaderParam_FETCH;
+
+                afxUnit idx;
+                avxShaderResource *decl;
+
+                if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
+                else
                 {
-                    AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-                    AfxMakeString(&varName.s, 0, varName.buf, 0);
-                    AfxCopyString(pushConstsName, &varName.s);
+                    AFX_ASSERT(set < 4);
+                    decl->set = set;
+                    AFX_ASSERT(binding < 10);
+                    decl->binding = binding;
+                    AFX_ASSERT(resType < avxShaderParam_TOTAL);
+                    decl->type = resType;
+                    AFX_ASSERT(decl->type != avxShaderParam_OUT);
+                    AFX_ASSERT(resCnt);
+                    decl->cnt = AFX_MAX(resCnt, 1);
+                    AfxMakeString16(&decl->name, &varName.s);
                 }
             }
+            break;
+        }
+        case 6: // PUSH
+        {
+            afxString32 varName = { 0 };
+            afxUnit fnd = AfxScanString(&line, "PUSH(%32[A-Za-z0-9_] )", varName.buf);
+
+            if (fnd == 1)
+            {
+                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
+                AfxMakeString(&varName.s, 0, varName.buf, 0);
+                AfxCopyString(pushConstsName, 0, &varName.s, 0);
+            }
+            break;
+        }
+        default: AfxThrowError(); break;
         }
     }
     return err;
@@ -314,9 +334,9 @@ _AVX afxError _AvxLoadGlScript(afxStream file, afxArray* fCode)
 
     while (!AfxReadFileLine(file, &line.s))
     {
-        //afxString excerpt;
+        afxString excerpt =AfxFindSubstring(&line.s, 0, FALSE, &AFX_STRING("#include "));
 
-        if (AFX_INVALID_INDEX != AfxFindSubstring(&line.s, &AFX_STRING("#include ")))
+        if (excerpt.len)
         {
             afxBool fnd = AfxScanString(&line.s, "#include <%128[^>]>\n", buf);
 

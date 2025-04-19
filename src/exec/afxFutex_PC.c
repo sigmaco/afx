@@ -214,9 +214,9 @@ _AFX void AfxUnlockFutex(afxFutex* ftx)
     //AfxAssertType(ftx, afxFcc_SLCK);
 #ifdef _WIN32
     AFX_ASSERT(AfxGetTid() == ftx2->tidEx);
+    ftx2->tidEx = 0;
     //AfxReportMessage("%p wdunlocked by %u", ftx, AfxGetTid());
     ReleaseSRWLockExclusive((PSRWLOCK)&ftx2->srwl);
-    ftx2->tidEx = 0;
 #else
 #   ifdef PREFER_LINUX_FUTEX
     assert(pthread_equal(pthread_self(), ftx2->tidEx));  // Ensure this thread holds the exclusive lock

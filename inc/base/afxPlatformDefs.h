@@ -22,33 +22,33 @@
  ///////////////////////////////////////////////////////////////////////////////
 
 #ifdef _WIN64
-#   define AFX_ISA_X86_64 1
-#   define AFX_OS_WIN 1
+#   define AFX_ON_X86_64 1
+#   define AFX_ON_WINDOWS 1
 #elif _WIN32
-#   define AFX_ISA_X86_32 1
-#   define AFX_OS_WIN 1
+#   define AFX_ON_X86_32 1
+#   define AFX_ON_WINDOWS 1
 #else
-#   define AFX_ISA_X86_64 1
-#   define AFX_OS_LNX 1
+#   define AFX_ON_X86_64 1
+#   define AFX_ON_LINUX 1
 #endif
 
-#if (defined(AFX_ISA_X86_64)||defined(AFX_ISA_X86_32))
-#   define AFX_ISA_X86 1
+#if (defined(AFX_ON_X86_64)||defined(AFX_ON_X86_32))
+#   define AFX_ON_X86 1
 #endif
 
-#ifdef AFX_OS_WIN
-#   if (defined(AFX_ISA_X86_64))
-#       define AFX_OS_WIN64 1
-#   elif defined(AFX_ISA_X86_32)
-#       define AFX_OS_WIN32 1
+#ifdef AFX_ON_WINDOWS
+#   if (defined(AFX_ON_X86_64))
+#       define AFX_ON_WIN64 1
+#   elif defined(AFX_ON_X86_32)
+#       define AFX_ON_WIN32 1
 #   else
 #       error "Unsupported ISA"
 #   endif
-#elif AFX_OS_LNX
-#   if (defined(AFX_ISA_X86_64))
-#       define AFX_OS_LNX64 1
-#   elif defined(AFX_ISA_X86_32)
-#       define AFX_OS_LNX32 1
+#elif AFX_ON_LINUX
+#   if (defined(AFX_ON_X86_64))
+#       define AFX_ON_LINUX64 1
+#   elif defined(AFX_ON_X86_32)
+#       define AFX_ON_LINUX32 1
 #   else
 #       error "Unsupported ISA"
 #   endif
@@ -56,13 +56,13 @@
 #   error "Unsupported OS"
 #endif
 
-#ifdef AFX_ISA_X86
+#ifdef AFX_ON_X86
 #   define AFX_LE
 #else
 #   error "Unsupported endianess"
 #endif
 
-#ifdef AFX_ISA_X86_64
+#ifdef AFX_ON_X86_64
 #   define AFX_ISA_SSE
 #   define AFX_ISA_SSE2
 #endif
@@ -331,6 +331,13 @@ typedef afxChar32   afxC32;
 #   define AFX_ATOMIC_MAX SIG_ATOMIC_MAX
 #else
 #   define AFX_ATOMIC_MAX AFX_I32_MAX
+#endif
+
+// This sets up how many XMM fill registers we'll use.
+#if defined(__x86_64__) || defined(_M_X64)
+#define MAX_SIMD_REGISTERS (16)
+#else
+#define MAX_SIMD_REGISTERS (8)
 #endif
 
 #endif//AFX_PLATFORM_DEFS_H

@@ -98,7 +98,7 @@ AFX_DEFINE_STRUCT(afxSystemConfig)
     afxChar const*          appId; // a 32-byte long unique identifier for the application.
     union
     {
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
         struct
         {
             /*HINSTANCE*/void* hInst;

@@ -56,19 +56,19 @@ void _XsFsysMount(xssVm vm)
     afxFileFlags ioFlags = NIL;
 
     afxUnit chPos;
-    if (AfxFindFirstChar(&mode, 0, 'r', &chPos))
+    if (AfxFindChar(&mode, 0, 'r', &chPos))
     {
         ioFlags |= afxFileFlag_R;
         //*modePtr++ = 'r';
     }
 
-    if (AfxFindFirstChar(&mode, 0, 'w', &chPos))
+    if (AfxFindChar(&mode, 0, 'w', &chPos))
     {
         ioFlags |= afxFileFlag_W;
         //*modePtr++ = 'w';
     }
     
-    if (AfxFindFirstChar(&mode, 0, 'x', &chPos))
+    if (AfxFindChar(&mode, 0, 'x', &chPos))
     {
         ioFlags |= afxFileFlag_X;
         //*modePtr++ = 'x';
@@ -92,19 +92,19 @@ void _XsFsysDismount(xssVm vm)
     afxFileFlags ioFlags = NIL;
 
     afxUnit chPos;
-    if (AfxFindFirstChar(&mode, 0, 'r', &chPos))
+    if (AfxFindChar(&mode, 0, 'r', &chPos))
     {
         ioFlags |= afxFileFlag_R;
         //*modePtr++ = 'r';
     }
 
-    if (AfxFindFirstChar(&mode, 0, 'w', &chPos))
+    if (AfxFindChar(&mode, 0, 'w', &chPos))
     {
         ioFlags |= afxFileFlag_W;
         //*modePtr++ = 'w';
     }
 
-    if (AfxFindFirstChar(&mode, 0, 'x', &chPos))
+    if (AfxFindChar(&mode, 0, 'x', &chPos))
     {
         ioFlags |= afxFileFlag_X;
         //*modePtr++ = 'x';
@@ -192,19 +192,19 @@ void _XsIobOpenFile(xssVm vm)
     afxIoFlags ioFlags = NIL;
 
     afxUnit chPos;
-    if (AfxFindFirstChar(&mode, 0, 'r', &chPos))
+    if (AfxFindChar(&mode, 0, 'r', &chPos))
     {
         ioFlags |= afxFileFlag_R;
         //*modePtr++ = 'r';
     }
 
-    if (AfxFindFirstChar(&mode, 0, 'w', &chPos))
+    if (AfxFindChar(&mode, 0, 'w', &chPos))
     {
         ioFlags |= afxFileFlag_W;
         //*modePtr++ = 'w';
     }
 
-    if (AfxFindFirstChar(&mode, 0, 'x', &chPos))
+    if (AfxFindChar(&mode, 0, 'x', &chPos))
     {
         ioFlags |= afxFileFlag_X;
         //*modePtr++ = 'x';
@@ -227,20 +227,20 @@ void _XsIobOpen(xssVm vm)
     afxIoFlags ioFlags = NIL;
 
     afxUnit chPos;
-    if (AfxFindFirstChar(&mode, 0, 'r', &chPos))
+    if (AfxFindChar(&mode, 0, 'r', &chPos))
     {
         ioFlags |= afxIoFlag_R;
         //*modePtr++ = 'r';
     }
 
-    if (AfxFindFirstChar(&mode, 0, 'w', &chPos))
+    if (AfxFindChar(&mode, 0, 'w', &chPos))
     {
         ioFlags |= afxIoFlag_W;
         //*modePtr++ = 'w';
     }
     
     
-    if (AfxFindFirstChar(&mode, 0, 'x', &chPos))
+    if (AfxFindChar(&mode, 0, 'x', &chPos))
     {
         ioFlags |= afxIoFlag_X;
         //*modePtr++ = 'x';

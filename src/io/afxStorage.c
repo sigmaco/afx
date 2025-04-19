@@ -145,7 +145,7 @@ _AFX afxError AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags,
 
         srcData = AfxGetStringData(pathStr, 0);
 
-        afxBool hasWildcard = AfxFindFirstChar(pathStr, 0, '*', NIL);
+        afxBool hasWildcard = AfxFindChar(pathStr, 0, '*', FALSE, FALSE, NIL);
 
         if (hasWildcard)
         {
@@ -164,7 +164,7 @@ _AFX afxError AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags,
                         WIN32_FIND_DATAA wfd;
 
                         AfxFormatUri(&out.uri, "%.*s/%.*s\0", AfxPushString(AfxGetUriString(&fsto->rootPath)), AfxPushString(pathStr));
-                        AfxCanonicalizePath(&out.uri, AFX_OS_WIN);
+                        AfxCanonicalizePath(&out.uri, AFX_ON_WINDOWS);
 
                         if (INVALID_HANDLE_VALUE != (fh = FindFirstFileA(AfxGetUriData(&out.uri, 0), &(wfd))))
                         {
@@ -197,7 +197,7 @@ _AFX afxError AfxForEachUriResolution(afxUri const* pattern, afxFileFlags flags,
                     if ((fsto->flags & ioPerms) == ioPerms)
                     {
                         AfxFormatUri(&out.uri, "%.*s/%.*s\0", AfxPushString(AfxGetUriString(&fsto->rootPath)), AfxPushString(pathStr));
-                        AfxCanonicalizePath(&out.uri, AFX_OS_WIN);
+                        AfxCanonicalizePath(&out.uri, AFX_ON_WINDOWS);
                         //AfxReportMessage(dstData);
 
                         if (!stat(dstData, &(st)) || (ioPerms & afxFileFlag_W) || hasWildcard)
@@ -294,7 +294,7 @@ _AFX afxError AfxResolveUris2(afxFileFlags const permissions, afxUnit cnt, afxUr
 
             srcData = AfxGetStringData(pathStr, 0);
 
-            afxBool hasWildcard = AfxFindFirstChar(pathStr, 0, '*', NIL);
+            afxBool hasWildcard = AfxFindChar(pathStr, 0, '*', FALSE, FALSE, NIL);
 
             afxStorage fsys;
                 
@@ -308,7 +308,7 @@ _AFX afxError AfxResolveUris2(afxFileFlags const permissions, afxUnit cnt, afxUr
                     if ((fsto->flags & ioPerms) == ioPerms)
                     {
                         AfxFormatUri(&out[i], "%.*s/%.*s\0", AfxPushString(AfxGetUriString(&fsto->rootPath)), AfxPushString(pathStr));
-                        AfxCanonicalizePath(&out[i], AFX_OS_WIN);
+                        AfxCanonicalizePath(&out[i], AFX_ON_WINDOWS);
                         //AfxReportMessage(dstData);
 
                         if (!stat(dstData, &(st)) || (ioPerms & afxFileFlag_W) || hasWildcard)
@@ -401,7 +401,7 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
     if (AfxIsUriBlank(&dev) || !(AfxFindStorage(&dev, &disk)))
         disk = NIL;
 
-    afxBool hasWildcard = AfxFindFirstChar(&path.s, 0, '*', NIL);
+    afxBool hasWildcard = AfxFindChar(&path.s, 0, '*', FALSE, FALSE, NIL);
 
     afxUri2048 resolvedUrl, baseUrl;
     AfxMakeUri2048(&resolvedUrl, NIL);
@@ -423,7 +423,7 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
             if ((fsto->flags & ioPerms) == ioPerms)
             {
                 AfxFormatUri(&resolvedUrl.uri, "%.*s/%.*s", AfxPushString(AfxGetUriString(&fsto->rootPath)), AfxPushString(&path.s));
-                AfxCanonicalizePath(&resolvedUrl.uri, AFX_OS_WIN);
+                AfxCanonicalizePath(&resolvedUrl.uri, AFX_ON_WINDOWS);
 
                 if (hasWildcard)
                 {
@@ -447,7 +447,7 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
                                 AfxFormatUri(&baseUrl.uri, "%.*s", AfxPushString(&found.s));
 
                             AfxFormatUri(&resolvedUrl.uri, "%.*s/%.*s/%.*s", AfxPushString(AfxGetUriString(&fsto->rootPath)), AfxPushString(&dir.s), AfxPushString(&found.s));
-                            AfxCanonicalizePath(&resolvedUrl.uri, AFX_OS_WIN);
+                            AfxCanonicalizePath(&resolvedUrl.uri, AFX_ON_WINDOWS);
 
                             resolved = TRUE;
                             rslt++;
@@ -492,7 +492,7 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
     {
         afxUri2048 szPattern;
         AfxMakeUri2048(&szPattern, pattern);
-        AfxCanonicalizePath(&szPattern.uri, AFX_OS_WIN);
+        AfxCanonicalizePath(&szPattern.uri, AFX_ON_WINDOWS);
 
         if (hasWildcard)
         {
@@ -524,7 +524,7 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
                     else
                         AfxFormatUri(&resolvedUrl.uri, "%.*s", AfxPushString(&found.s));
 
-                    AfxCanonicalizePath(&resolvedUrl.uri, AFX_OS_WIN);
+                    AfxCanonicalizePath(&resolvedUrl.uri, AFX_ON_WINDOWS);
 
                     rslt++;
 
@@ -638,13 +638,13 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
                 //AfxFormatString(&location2.uri.s, "%.*s"
 #if 0
                 AfxFormatUri(&endpoint2.uri, "%.*s"
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
                     "\\"
 #else
                     "/"
 #endif
                     "%.*s"
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
                     "\\"
 #else
                     "/"
@@ -654,14 +654,14 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
 #endif
                     , AfxPushString(rootUriString), AfxPushString(AfxGetUriString(endpoint)));
                 AfxReparseUri(&endpoint2.uri);
-                AfxCanonicalizePath(&endpoint2.uri, AFX_OS_WIN);
+                AfxCanonicalizePath(&endpoint2.uri, AFX_ON_WINDOWS);
             }
         }
     }
     else
     {
         AfxMakeUri2048(&endpoint2, endpoint);
-        AfxTransformPathString(&endpoint2.uri.s, AFX_OS_WIN);
+        AfxTransformPathString(&endpoint2.uri.s, AFX_ON_WINDOWS);
         AfxReparseUri(&endpoint2.uri);
 
         afxChar const *pathRaw = AfxGetUriData(&endpoint2.uri, 0);
@@ -913,7 +913,7 @@ _AFX afxBool AfxFindStorage(afxUri const* uri, afxStorage* disk)
         {
             AFX_ASSERT_OBJECTS(afxFcc_FSYS, 1, &fsys);
 
-            if (AfxCompareSubstrings(&dev.s, 0, 5, TRUE, 1, &fsys->baseUrl.uri.s, NIL))
+            if (AfxCompareSubstrings(&fsys->baseUrl.uri.s, 0, 5, TRUE, 1, &dev.s, NIL))
             {
                 AFX_ASSERT(disk);
                 *disk = fsys;

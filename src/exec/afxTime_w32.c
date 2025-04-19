@@ -36,13 +36,13 @@ afxUnit AfxGetTimer(void)
 afxUnit64 AfxGetTickCounter(void)
 {
     afxUnit64 ticks;
-#ifdef AFX_ISA_X86_64
+#ifdef AFX_ON_X86_64
     // Using intrinsics for AMD64 until the compiler supports __asm
     ticks = __rdtsc();
 #else // Win32 or Xbox
     // note: using cpuid as a serializing makes timings more accurate, 
     // at the expense of more overhead. (1.5% without versus 5% with cpuid)
-#   ifdef AFX_ISA_X86_32
+#   ifdef AFX_ON_X86_32
     __asm
     {
         pushad

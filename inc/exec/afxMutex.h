@@ -38,8 +38,8 @@
 
 AFX_DEFINE_STRUCT(afxMutex)
 {
-#ifdef AFX_OS_WIN
-#   ifdef AFX_ISA_X86_64
+#ifdef AFX_ON_WINDOWS
+#   ifdef AFX_ON_X86_64
     // must at least 56 bytes
     afxAtom32   data[16]; // 64 bytes
 #else

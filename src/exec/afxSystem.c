@@ -257,7 +257,7 @@ _AFX afxString const* AfxGetSystemDirectoryString(afxString *dst)
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxString const* qwd = AfxGetUriString(&sys->qwd.uri);
-    return dst ? AfxCopyString(dst, qwd), dst : qwd;
+    return dst ? AfxCopyString(dst, 0, qwd, 0), dst : qwd;
 }
 
 _AFX afxUri const* AfxGetPwd(afxUri *dst)
@@ -277,7 +277,7 @@ _AFX afxString const* AfxGetPwdString(afxString *dst)
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxString const* pwd = AfxGetUriString(&sys->pwd.uri);
-    return dst ? AfxCopyString(dst, pwd), dst : pwd;
+    return dst ? AfxCopyString(dst, 0, pwd, 0), dst : pwd;
 }
 
 _AFX void AfxRequestShutdown(afxInt exitCode)

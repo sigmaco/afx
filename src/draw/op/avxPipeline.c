@@ -655,7 +655,7 @@ _AVX void AvxDescribePipelineRasterization(avxPipeline pip, avxRasterization* in
         info->ms.msEnabled = pip->msEnabled;
 
         if ((info->ms.sampleLvl = pip->sampleLvl))
-            AfxCopy2(info->ms.sampleMasks, pip->sampleMasks, sizeof(pip->sampleMasks[0]), pip->sampleLvl);
+            AfxCopy(info->ms.sampleMasks, pip->sampleMasks, sizeof(pip->sampleMasks[0]) * pip->sampleLvl);
 
         info->ms.alphaToOneEnabled = pip->alphaToOneEnabled;
         info->ms.alphaToCoverageEnabled = pip->alphaToCoverageEnabled;
@@ -678,7 +678,7 @@ _AVX void AvxDescribePipelineRasterization(avxPipeline pip, avxRasterization* in
         AfxV2dCopy(info->depthBounds, pip->depthBounds);
 
     if ((info->colorOutCnt = pip->outCnt))
-        AfxCopy2(info->colorOuts, pip->outs, sizeof(pip->outs[0]), pip->outCnt);
+        AfxCopy(info->colorOuts, pip->outs, sizeof(pip->outs[0]) * pip->outCnt);
 
     AvxCopyColor(info->blendConstants, pip->blendConstants);
     info->pixelLogicOpEnabled = pip->logicOpEnabled;

@@ -380,7 +380,7 @@ _ASX afxError _AsxPoseCtorCb(afxPose pose, void** args, afxUnit invokeNo)
     AFX_ASSERT(pose->arts);
     
     // need to be zeroed because of demilitarized traversalId comparisons.
-    AfxZero2(pose->arts, sizeof(pose->arts[0]), pose->artCnt);
+    AfxZero(pose->arts, sizeof(pose->arts[0]) * pose->artCnt);
 
     return err;
 }

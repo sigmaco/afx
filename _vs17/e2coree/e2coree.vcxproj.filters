@@ -597,6 +597,9 @@
     <ClInclude Include="..\..\inc\draw\math\afxRect.h">
       <Filter>qwadro\draw\math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\mem\afxMemoryUtil.h">
+      <Filter>qwadro\mem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md">
@@ -1130,6 +1133,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\draw\math\afxRect.c">
       <Filter>qwadro\draw\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mem\afxMemoryUtil.c">
+      <Filter>qwadro\mem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

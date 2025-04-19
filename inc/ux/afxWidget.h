@@ -59,6 +59,7 @@ typedef enum afxWidgetFlag
     afxWidgetFlag_UNTITLED      = AFX_BIT(6),
     afxWidgetFlag_SECONDARY     = AFX_BIT(7),
     afxWidgetFlag_INTANGIBLE    = AFX_BIT(8),
+    afxWidgetFlag_FRAMED        = AFX_BIT(9), // title bar, system menu (close, minimize, maximize), dragging, resizing...
 } afxWidgetFlags;
 
 typedef enum afxWidgetType
@@ -133,6 +134,18 @@ AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx)
 AUX afxError AuxGuiAddCombo(afxWidget wid);
 AUX afxError AuxGuiAddToggle(afxWidget wid);
 AUX afxError AuxGuiAddSlider(afxWidget wid);
+
+AFX_DEFINE_STRUCT(auxButton)
+{
+    afxUnit id;
+    afxString caption;
+    afxRect area;
+    afxBool porportional; // auto-resizable
+    afxBool disabled;
+    afxBool hidden;
+};
+
+AUX afxError AuxGuiAddButtons(afxWidget wid, afxUnit cnt, auxButton buttons[]);
 
 AUX afxError AuxGuiPushGroup(afxWidget wid);
 AUX afxError AuxGuiPopGroup(afxWidget wid);

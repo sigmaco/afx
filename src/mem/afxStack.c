@@ -187,7 +187,7 @@ _AFX void AfxDumpStackElements(afxStack *stak, afxUnit first, afxUnit cnt, void 
     if (v2)
     {
         v3 = v2[first / stak->unitsPerBlock];
-        AfxCopy2(dst, &v3->units[stak->unitSiz * (first - v3->firstIdx)], stak->unitSiz, cnt);
+        AfxCopy(dst, &v3->units[stak->unitSiz * (first - v3->firstIdx)], stak->unitSiz * cnt);
         return;
     }
 
@@ -195,7 +195,7 @@ _AFX void AfxDumpStackElements(afxStack *stak, afxUnit first, afxUnit cnt, void 
 
     if (v3->firstIdx <= first)
     {
-        AfxCopy2(dst, &v3->units[stak->unitSiz * (first - v3->firstIdx)], stak->unitSiz, cnt);
+        AfxCopy(dst, &v3->units[stak->unitSiz * (first - v3->firstIdx)], stak->unitSiz * cnt);
         return;
     }
 
@@ -203,7 +203,7 @@ _AFX void AfxDumpStackElements(afxStack *stak, afxUnit first, afxUnit cnt, void 
         v3 = v3->prev;
     while (v3->firstIdx > first);
 
-    AfxCopy2(dst, &v3->units[stak->unitSiz * (first - v3->firstIdx)], stak->unitSiz, cnt);
+    AfxCopy(dst, &v3->units[stak->unitSiz * (first - v3->firstIdx)], stak->unitSiz * cnt);
 }
 
 _AFX void AfxUpdateStackElement(afxStack *stak, afxUnit idx, void const* src)
@@ -241,7 +241,7 @@ _AFX void AfxUpdateStackElements(afxStack *stak, afxUnit first, afxUnit cnt, voi
     if (v2)
     {
         v3 = v2[first / stak->unitsPerBlock];
-        AfxCopy2(&v3->units[stak->unitSiz * (first - v3->firstIdx)], src, stak->unitSiz, cnt);
+        AfxCopy(&v3->units[stak->unitSiz * (first - v3->firstIdx)], src, stak->unitSiz * cnt);
         return;
     }
 
@@ -249,7 +249,7 @@ _AFX void AfxUpdateStackElements(afxStack *stak, afxUnit first, afxUnit cnt, voi
 
     if (v3->firstIdx <= first)
     {
-        AfxCopy2(&v3->units[stak->unitSiz * (first - v3->firstIdx)], src, stak->unitSiz, cnt);
+        AfxCopy(&v3->units[stak->unitSiz * (first - v3->firstIdx)], src, stak->unitSiz * cnt);
         return;
     }
 
@@ -257,7 +257,7 @@ _AFX void AfxUpdateStackElements(afxStack *stak, afxUnit first, afxUnit cnt, voi
         v3 = v3->prev;
     while (v3->firstIdx > first);
 
-    AfxCopy2(&v3->units[stak->unitSiz * (first - v3->firstIdx)], src, stak->unitSiz, cnt);
+    AfxCopy(&v3->units[stak->unitSiz * (first - v3->firstIdx)], src, stak->unitSiz * cnt);
 }
 
 _AFX void AfxPopStackUnits(afxStack *stak, afxUnit cnt)

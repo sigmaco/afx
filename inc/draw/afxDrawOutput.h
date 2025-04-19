@@ -192,7 +192,7 @@ AFX_DEFINE_STRUCT(afxDrawOutputConfig)
         {
             afxWindow   wnd;
         } wsi;
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
         struct
         {
             void*       hInst; // HINSTANCE

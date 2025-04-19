@@ -27,7 +27,7 @@
 
 #include "../impl/afxExecImplKit.h"
 
-#ifdef AFX_OS_WIN
+#ifdef AFX_ON_WINDOWS
 
 _AFXINL void AfxStoreAtom32(afxAtom32* dst, afxInt32 value) { InterlockedExchange(dst, value); }
 _AFXINL afxInt32 AfxLoadAtom32(afxAtom32* src) { return *src; }
@@ -40,7 +40,7 @@ _AFXINL afxInt32 AfxAndAtom32(afxAtom32* dst, afxInt32 value) { return _Interloc
 _AFXINL afxInt32 AfxOrAtom32(afxAtom32* dst, afxInt32 value) { return _InterlockedOr(dst, value) | value; }
 _AFXINL afxBool AfxCasAtom32(afxAtom32* dst, afxInt32* expected, afxInt32 proposed) { return InterlockedCompareExchange(dst, proposed, *expected) == *expected ? 1 : 0; }
 
-#ifdef AFX_OS_WIN64
+#ifdef AFX_ON_WIN64
 _AFXINL afxInt64 AfxLoadAtom64(afxAtom64* src) { return *src; }
 #else
 _AFXINL afxInt64 AfxLoadAtom64(afxAtom64* src) { return InterlockedCompareExchange64(src, 0, 0); }
@@ -58,7 +58,7 @@ _AFXINL afxBool AfxCasAtom64(afxAtom64* dst, afxInt64* expected, afxInt64 propos
 
 _AFXINL void* AfxLoadAtomPtr(afxAtomPtr* src) { return (void*)*src; }
 
-#ifdef AFX_OS_WIN64
+#ifdef AFX_ON_WIN64
 _AFXINL void AfxStoreAtomPtr(afxAtomPtr* dst, void* value) { InterlockedExchangePointer((volatile PVOID*)dst, value); }
 _AFXINL void* AfxExchangeAtomPtr(afxAtomPtr* dst, void* value) { return InterlockedExchangePointer((volatile PVOID*)dst, value); }
 _AFXINL afxBool AfxCasAtomPtr(afxAtomPtr* dst, void** expected, void* proposed) { return InterlockedCompareExchangePointer((volatile PVOID*)dst, proposed, *expected) == *expected ? 1 : 0; }
@@ -81,7 +81,7 @@ _AFXINL afxInt32 AfxAndAtom32(afxAtom32* pDest, afxInt32 value) { return __sync_
 _AFXINL afxInt32 AfxOrAtom32(afxAtom32* pDest, afxInt32 value) { return __sync_or_and_fetch((int32_t*)pDest, value); }
 _AFXINL afxBool AfxCasAtom32(afxAtom32* pDest, afxInt32* expected, afxInt32 proposed) { return __sync_bool_compare_and_swap((int32_t*)pDest, *expected, proposed); }
 
-#if defined( AFX_ISA_X86 ) || ( defined( AFX_ISA_ARM ) && ( AFX_ISA_ARM <= 7 ) )
+#if defined( AFX_ON_X86 ) || ( defined( AFX_ISA_ARM ) && ( AFX_ISA_ARM <= 7 ) )
 _AFXINL afxInt64 AfxLoadAtom64(afxAtom64* pSrc) { return __sync_val_compare_and_swap(pSrc, 0, 0); }
 _AFXINL void AfxStoreAtom64(afxAtom64* pDest, afxInt64 value) { int64_t tmp; do { tmp = *pDest; } while (__sync_val_compare_and_swap(pDest, tmp, value) != tmp); }
 #else
