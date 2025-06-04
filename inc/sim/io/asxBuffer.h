@@ -22,17 +22,17 @@
 
 typedef enum asxBufferUsage
 {
-    asxBufferUsage_VERTEX = AFX_BIT(0), // used to hold mesh triangulation vertices
-    asxBufferUsage_INDEX = AFX_BIT(1), // used to hold mesh triangulation indices
-    asxBufferUsage_DRAW = AFX_BIT(2), // used to be drawn by draw system
-    asxBufferUsage_CURVE = AFX_BIT(3), // used to hold geometric curves
+    asxBufferUsage_VERTEX = AFX_BITMASK(0), // used to hold mesh triangulation vertices
+    asxBufferUsage_INDEX = AFX_BITMASK(1), // used to hold mesh triangulation indices
+    asxBufferUsage_DRAW = AFX_BITMASK(2), // used to be drawn by draw system
+    asxBufferUsage_CURVE = AFX_BITMASK(3), // used to hold geometric curves
 } asxBufferUsage;
 
 typedef enum asxBufferFlag
 {
-    asxBufferFlag_R = AFX_BIT(0),
-    asxBufferFlag_W = AFX_BIT(1),
-    asxBufferFlag_X = AFX_BIT(2),
+    asxBufferFlag_R = AFX_BITMASK(0),
+    asxBufferFlag_W = AFX_BITMASK(1),
+    asxBufferFlag_X = AFX_BITMASK(2),
 } asxBufferFlags;
 
 typedef enum asxFormat

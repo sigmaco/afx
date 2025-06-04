@@ -37,16 +37,16 @@ typedef afxIndex32 afxTriangle32[3];
 
 typedef enum afxMeshSectionFlag
 {
-    afxMeshSectionFlag_HOLE = AFX_BIT(0)
+    afxMeshSectionFlag_HOLE = AFX_BITMASK(0)
 } afxMeshSectionFlags;
 
 typedef enum afxMeshMorphFlag
 {
     // Morph geometry contains displacement data (deltas).
-    afxMeshMorphFlag_DELTA = AFX_BIT(0),
+    afxMeshMorphFlag_DELTA = AFX_BITMASK(0),
 
     // Values are obtained by adding the original values to a weighted sum of the target's values.
-    afxMeshMorphFlag_ADDITIVE = AFX_BIT(1),
+    afxMeshMorphFlag_ADDITIVE = AFX_BITMASK(1),
 } afxMeshMorphFlags;
 
 /**

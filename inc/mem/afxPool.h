@@ -59,9 +59,9 @@ AFX_DEFINE_STRUCT(afxPoolPage)
     afxUnit         usedCnt;
     // Bitfield tracking unit allocation status (e.g., 1 = used, 0 = free).
     // This assumes up to 32 units per page, also enforcing this limitation.
-    afxUnit32       usage;
+    afxMask         usage;
     // Pointer to the actual memory block for this page.
-    afxByte*        data;
+    afxByte*        base;
 };
 
 AFX_DEFINE_STRUCT(afxPool)
@@ -73,17 +73,20 @@ AFX_DEFINE_STRUCT(afxPool)
     // Size (in bytes) of each unit being pooled.
     afxUnit         unitSiz;
     // Memory alignment required for each unit.
-    // Qwadro allocation policy enforce it to be at least AFX_SIMD_ALIGNMENT.
+    // Qwadro allocation policy require it to be at least AFX_SIMD_ALIGNMENT.
     afxUnit         memAlign;
     // Number of units each page holds.
-    // The usage bitmask per page enforce it to be at most 32.
+    // The 32-bit usage bitmask per page enforce it to be at most 32.
     afxUnit         unitsPerPage;
+    afxMask         freeMaskPattern;
     // Total allocated units across all pages.
     afxUnit         totalUsedCnt;
+    // The maximum number of pages allowed.
+    afxUnit         maxPagCnt;
     // Number of allocated pages.
     afxUnit         pageCnt;
     // Pointer to array of pages.
-    afxPoolPage*    pages;
+    afxPoolPage**   pages;
     afxChain        freePags;
     // Memory manager or allocator context.
     afxMmu          mem;
@@ -166,6 +169,8 @@ AFX afxError    AfxReclaimPoolUnits
     afxUnit     cnt, 
     void*       units[]
 );
+
+AFX afxBool     AfxIsAnValidPoolUnit(afxPool* pool, afxSize idx);
 
 AFX afxBool     AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr);
 AFX afxBool     AfxGetPoolUnits(afxPool const* pool, afxUnit cnt, afxSize const idx[], void *ptr[]);

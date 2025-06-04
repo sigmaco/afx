@@ -35,15 +35,40 @@
 #include "qwadro/inc/draw/io/avxRaster.h"
 
 /*
+    The AvxCopyRaster() function copies raster data into another raster, like does AvxCmdCopyRaster but in AVX.
+*/
+
+AVX afxError            AvxCopyRaster
+(
+    // The destination avxRaster.
+    avxRaster           ras,
+    // The source avxRaster.
+    avxRaster           src,
+    // The number of regions to copy.
+    afxUnit             opCnt,
+    // An array of structures specifying the regions to copy.
+    avxRasterCopy const rgns[],
+    // A bitmask specifying which bridges can assume this operation.
+    afxMask             exuMask,
+    // Special flags.
+    afxFlags            flags
+);
+
+/*
     The AvxPackRaster() function packs raster data into a buffer for efficient memory transfer to device-local memory.
 */
 
 AVX afxError            AvxPackRaster
 (
-    avxRaster           ras, 
-    avxBuffer           buf, 
-    afxUnit             opCnt, 
-    avxRasterIo const   ops[], 
+    // The destination buffer.
+    avxRaster           ras,
+    // The source avxRaster.
+    avxBuffer           buf,
+    // The number of regions to copy.
+    afxUnit             opCnt,
+    // An array of structures specifying the regions to copy.
+    avxRasterIo const   ops[],
+    // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
 
@@ -53,10 +78,15 @@ AVX afxError            AvxPackRaster
 
 AVX afxError            AvxUnpackRaster
 (
-    avxRaster           ras, 
-    avxBuffer           buf, 
-    afxUnit             opCnt, 
+    // The destination avxRaster.
+    avxRaster           ras,
+    // The source buffer.
+    avxBuffer           buf,
+    // The number of regions to copy.
+    afxUnit             opCnt,
+    // An array of structures specifying the regions to copy.
     avxRasterIo const   ops[], 
+    // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
 
@@ -66,10 +96,15 @@ AVX afxError            AvxUnpackRaster
 
 AVX afxError            AvxDumpRaster
 (
-    avxRaster           ras, 
-    void*               dst, 
-    afxUnit             opCnt, 
-    avxRasterIo const   ops[], 
+    // The source avxRaster.
+    avxRaster           ras,
+    // The destination memory.
+    void*               dst,
+    // The number of regions to copy.
+    afxUnit             opCnt,
+    // An array of structures specifying the regions to copy.
+    avxRasterIo const   ops[],
+    // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
 
@@ -79,10 +114,15 @@ AVX afxError            AvxDumpRaster
 
 AVX afxError            AvxUpdateRaster
 (
-    avxRaster           ras, 
-    void const*         src, 
-    afxUnit             opCnt, 
-    avxRasterIo const   ops[], 
+    // The destination avxRaster.
+    avxRaster           ras,
+    // The source memory.
+    void const*         src,
+    // The number of regions to copy.
+    afxUnit             opCnt,
+    // An array of structures specifying the regions to copy.
+    avxRasterIo const   ops[],
+    // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
 
@@ -92,10 +132,15 @@ AVX afxError            AvxUpdateRaster
 
 AVX afxError            AvxUploadRaster
 (
-    avxRaster           ras, 
-    afxStream           in, 
-    afxUnit             opCnt, 
-    avxRasterIo const   ops[], 
+    // The destination avxRaster.
+    avxRaster           ras,
+    // The source stream.
+    afxStream           in,
+    // The number of regions to copy.
+    afxUnit             opCnt,
+    // An array of structures specifying the regions to upload.
+    avxRasterIo const   ops[],
+    // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
 
@@ -105,10 +150,15 @@ AVX afxError            AvxUploadRaster
 
 AVX afxError            AvxDownloadRaster
 (
-    avxRaster           ras, 
-    afxStream           out, 
-    afxUnit             opCnt, 
-    avxRasterIo const   ops[], 
+    // The source avxRaster.
+    avxRaster           ras,
+    // The destination stream.
+    afxStream           out,
+    // The number of regions to copy.
+    afxUnit             opCnt,
+    // An array of structures specifying the regions to download.
+    avxRasterIo const   ops[],
+    // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
 
@@ -118,10 +168,15 @@ AVX afxError            AvxDownloadRaster
 
 AVX afxError            AvxPrintRaster
 (
+    // The source avxRaster.
     avxRaster           ras,
+    // The number of LODs to print.
     afxUnit             lodCnt,
+    // The structure specifying the region to be printed.
     avxRasterIo const*  iop,
+    // The location to where the file will be stored.
     afxUri const*       uri,
+    // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
 
@@ -131,11 +186,17 @@ AVX afxError            AvxPrintRaster
 
 AVX afxError            AvxFetchRaster
 (
+    // The destination avxRaster.
     avxRaster           ras,
+    // The location for the resource to be uploaded.
     afxUri const*       uri,
+    // The number of uploads.
     afxUnit             opCnt, 
+    // An array of structure specifying the regions to be updated.
     avxRasterIo const   ops[],
+    // The number of LOD to be updated.
     afxUnit             lodCnt,
+    // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
 
@@ -147,10 +208,15 @@ AVX afxError            AvxFetchRaster
 
 AVX afxError            AvxLoadRasters
 (
+    // The system which will host the new acquired rasters.
     afxDrawSystem       dsys, 
+    // The number of rasters to be acquired and loaded.
     afxUnit             cnt, 
+    // An array of structures prescribing the rasters to be acquired.
     avxRasterInfo const info[], 
+    // An array of URIs locating the source files.
     afxUri const        uri[], 
+    // An array of handles for each acquired raster.
     avxRaster           rasters[]
 );
 
@@ -160,9 +226,13 @@ AVX afxError            AvxLoadRasters
 
 AVX avxRaster           AvxLoadCubemapRaster
 (
+    // The system which will host the new acquired raster.
     afxDrawSystem       dsys, 
+    // The structure prescribing the new raster.
     avxRasterInfo const*info, 
+    // The directory containing the files for each faces.
     afxUri const*       dir, 
+    // An array of URIs locating each face in the specified directory.
     afxUri const        faces[6]
 );
 

@@ -1137,6 +1137,9 @@
     <ClCompile Include="..\..\src\mem\afxMemoryUtil.c">
       <Filter>qwadro\mem</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\dep\tinycthread\tinycthread.c">
+      <Filter>qwadro\dep</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="e2coree.rc">

@@ -588,7 +588,7 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
     }
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
 
-    if (flags & AFX_BIT(8))
+    if (flags & AFX_BITMASK(8))
     {
         mdle->flags |= afxModuleFlag_SYS;
     }
@@ -620,21 +620,8 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
             AfxGetModuleVersion(mdle, &verMajor, &verMinor, &verPatch);
             AfxGetModuleInfo(mdle, &s.s, &providerName.s, &devDesc.s);
 
-#define AFX_ITERATE_CHAIN_(ch_, type_, offset_, lnk_) \
-    for (afxLink const* _curr##lnk_ = (ch_)->anchor.next, *_next##lnk_ = (afxLink*)NIL; \
-    (lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_)), (_next##lnk_ = (_curr##lnk_)->next), ((_curr##lnk_) != &(ch_)->anchor); \
-    (_curr##lnk_ = _next##lnk_))
-
-#define AFX_ITERATE_CHAIN_B2F_(ch_, type_, offset_, lnk_) \
-    for (afxLink const *_last##lnk_ = (afxLink *)NIL, *_curr##lnk_ = (ch_)->anchor.prev; \
-         (_curr##lnk_) != &(ch_)->anchor; \
-         (_last##lnk_ = (_curr##lnk_)->prev), \
-         (lnk_ = (type_ *)AFX_REBASE(_curr##lnk_, type_, offset_)), \
-         (_curr##lnk_ = _last##lnk_))
-
-
             afxDevice dev;
-            AFX_ITERATE_CHAIN_(&mdle->devices, AFX_OBJ(afxDevice), icd, dev)
+            AFX_ITERATE_CHAIN(AFX_OBJ(afxDevice), dev, icd, &mdle->devices)
             {
                 AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 

@@ -17,6 +17,37 @@
 #include "../impl/afxExecImplKit.h"
 
 #define _AFX_ENFORCE_CLEAN_POOL_ALLOCATION (FALSE)
+#define _AFX_POOL_ZERO_ON_REQUISITION (FALSE)
+#define _AFX_POOL_ZERO_ON_RECLAMATION (FALSE)
+#define _AFX_POOL_ZERO_ON_PAGINATION (FALSE)
+
+_AFXINL afxBool AfxIsAnValidPoolUnit(afxPool* pool, afxSize idx)
+{
+    afxError err = NIL;
+    AFX_ASSERT(pool);
+#ifdef _AFX_POOL_VALIDATION_ENABLED
+    AFX_ASSERT(pool->fcc == afxFcc_POOL);
+#endif
+
+    afxSize pageIdx = idx / pool->unitsPerPage;
+
+    if (0 == pool->pageCnt || (pageIdx >= pool->pageCnt))
+        return err; // not paged/found
+
+    AFX_ASSERT(pool->pages);
+    afxPoolPage* pag = pool->pages[pageIdx];
+#ifdef _AFX_POOL_VALIDATION_ENABLED
+    AFX_ASSERT(pag->fcc == afxFcc_POOL);
+#endif
+
+    AFX_ASSERT(pag->base);
+
+    afxSize localIdx = idx % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
+    //afxUnit32 mask = AFX_BITMASK(localIdx);
+    void* unit = &pag->base[pool->unitSiz * localIdx];
+    afxBool booked = AFX_TEST_BIT_SET(pag->usage, localIdx); //pag->usage & mask;
+    return booked;
+}
 
 _AFX afxUnit AfxEnumeratePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, void *items[])
 {
@@ -41,7 +72,7 @@ _AFX afxUnit AfxEnumeratePoolItems(afxPool const* pool, afxUnit first, afxUnit c
             if (pag->usage)
             {
                 afxUnit localIdx = i % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
-                afxUnit32 mask = AFX_BIT(localIdx);
+                afxUnit32 mask = AFX_BITMASK(localIdx);
                 void* unit = &pag->bytes[pool->unitSiz * localIdx];
                 afxBool booked = pag->usage & mask;
 
@@ -57,32 +88,31 @@ _AFX afxUnit AfxEnumeratePoolItems(afxPool const* pool, afxUnit first, afxUnit c
 
     for (afxUnit pageIdx = 0; pageIdx < pool->pageCnt; pageIdx++)
     {
-        afxPoolPage *pag = &pool->pages[pageIdx];
+        afxPoolPage* pag = pool->pages[pageIdx];
+        if (!pag) continue;
 
-        if (pag->usedCnt)
+        if (!pag->usedCnt) continue;
+        
+        for (afxUnit unitIdx = 0; unitIdx < /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage; unitIdx++)
         {
-            for (afxUnit unitIdx = 0; unitIdx < /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage; unitIdx++)
+            //afxUnit32 mask = AFX_BITMASK(k);
+            afxBool alloced = AFX_TEST_BIT_SET(pag->usage, unitIdx); //pag->usage & mask;
+
+            //AfxReportWarn("pool %p, upp %u, pageIdx %u, usedCnt %u, %u, alloced %u", pool, pool->unitsPerPage, pageIdx, pag->usedCnt, unitIdx, alloced);
+
+            if (!alloced) continue;
+            
+            if (posn >= first)
             {
-                //afxUnit32 mask = AFX_BIT(k);
-                afxBool alloced = AfxTestBitEnabled(pag->usage, unitIdx); //pag->usage & mask;
-
-                //AfxReportWarn("pool %p, upp %u, pageIdx %u, usedCnt %u, %u, alloced %u", pool, pool->unitsPerPage, pageIdx, pag->usedCnt, unitIdx, alloced);
-                
-                if (alloced)
-                {
-                    if (posn >= first)
-                    {
-                        void* unit = &pag->data[pool->unitSiz * unitIdx];
-                        AFX_ASSERT(items);
-                        items[rslt] = unit;
-                        ++rslt;
-                    }
-                    ++posn;
-                }
-
-                if (rslt == cnt)
-                    break;
+                void* unit = &pag->base[pool->unitSiz * unitIdx];
+                AFX_ASSERT(items);
+                items[rslt] = unit;
+                ++rslt;
             }
+            ++posn;
+
+            if (rslt == cnt)
+                break;
         }
 
         if (rslt == cnt)
@@ -114,7 +144,7 @@ _AFX afxUnit AfxInvokePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt,
             if (pag->bytes)
             {
                 afxUnit localIdx = i % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
-                afxUnit32 mask = AFX_BIT(localIdx);
+                afxUnit32 mask = AFX_BITMASK(localIdx);
                 void* unit = &pag->bytes[pool->unitSiz * localIdx];
                 afxBool booked = pag->usage & mask;
 
@@ -130,32 +160,30 @@ _AFX afxUnit AfxInvokePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt,
 
     for (afxUnit pageIdx = 0; pageIdx < pool->pageCnt; pageIdx++)
     {
-        afxPoolPage *pag = &pool->pages[pageIdx];
+        afxPoolPage *pag = pool->pages[pageIdx];
+        if (!pag) continue;
 
-        if (pag->usedCnt)
+        if (!pag->usedCnt) continue;
+
+        for (afxUnit unitIdx = 0; unitIdx < /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage; unitIdx++)
         {
-            for (afxUnit unitIdx = 0; unitIdx < /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage; unitIdx++)
+            //afxUnit32 mask = AFX_BITMASK(k);
+            afxBool alloced = AFX_TEST_BIT_SET(pag->usage, unitIdx); //pag->usage & mask;
+            if (!alloced) continue;
+            
+            if (posn >= first)
             {
-                //afxUnit32 mask = AFX_BIT(k);
-                afxBool alloced = AfxTestBitEnabled(pag->usage, unitIdx); //pag->usage & mask;
+                void* unit = &pag->base[pool->unitSiz * unitIdx];
 
-                if (alloced)
-                {
-                    if (posn >= first)
-                    {
-                        void* unit = &pag->data[pool->unitSiz * unitIdx];
+                ++rslt;
 
-                        ++rslt;
-
-                        if (f(unit, udd)) // return non-zero to abort curation
-                            break;
-                    }
-                    ++posn;
-                }
-
-                if (rslt == cnt)
+                if (f(unit, udd)) // return non-zero to abort curation
                     break;
             }
+            ++posn;
+
+            if (rslt == cnt)
+                break;
         }
 
         if (rslt == cnt)
@@ -218,17 +246,22 @@ _AFX afxBool AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr)
     if (pool->pageCnt > pageIdx)
     {
         AFX_ASSERT(pool->pages);
-        afxPoolPage *pag = &pool->pages[pageIdx];
+        afxPoolPage* pag = pool->pages[pageIdx];
+        
+        if (!pag)
+        {
+            return FALSE;
+        }
 
-        if (pag->data)
+        if (pag->base)
         {
             afxSize localIdx = idx % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
-            //afxUnit32 mask = AFX_BIT(localIdx);
-            alloced = AfxTestBitEnabled(pag->usage, localIdx); //pag->usage & mask;
+            //afxUnit32 mask = AFX_BITMASK(localIdx);
+            alloced = AFX_TEST_BIT_SET(pag->usage, localIdx); //pag->usage & mask;
 
             if (/*alloced && */ptr)
-                *ptr = &pag->data[pool->unitSiz * localIdx];
-            
+                *ptr = &pag->base[pool->unitSiz * localIdx];
+
         }
     }
     return alloced;
@@ -251,7 +284,7 @@ _AFX afxBool AfxGetPoolItem(afxPool const* pool, afxSize idx, void **ptr)
         if (0 != pag->usage)
         {
             afxSize localIdx = idx % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
-            afxUnit32 mask = AFX_BIT(localIdx);
+            afxUnit32 mask = AFX_BITMASK(localIdx);
             alloced = pag->usage & mask;
 
             if (alloced && ptr)
@@ -262,7 +295,7 @@ _AFX afxBool AfxGetPoolItem(afxPool const* pool, afxSize idx, void **ptr)
 }
 #endif
 
-_AFX afxError AfxInflatePool(afxPool* pool, afxUnit pagCnt)
+_AFX afxError _AfxInflatePoolDir(afxPool* pool, afxUnit pagCnt)
 {
     afxError err = NIL;
     AFX_ASSERT(pool);
@@ -273,6 +306,7 @@ _AFX afxError AfxInflatePool(afxPool* pool, afxUnit pagCnt)
     if (0 == pool->pageCnt || (pagCnt >= pool->pageCnt))
     {
         afxSize diff = pagCnt - pool->pageCnt;
+        AFX_ASSERT(diff);
 
         if (AfxReallocate(sizeof(pool->pages[0]) * (pool->pageCnt + diff), pool->memAlign, AfxHere(), (void**)&pool->pages))
         {
@@ -283,15 +317,7 @@ _AFX afxError AfxInflatePool(afxPool* pool, afxUnit pagCnt)
         {
             for (afxSize i = 0; i < diff; i++)
             {
-                afxPoolPage *pag = &pool->pages[pool->pageCnt + i];
-
-#ifdef _AFX_POOL_VALIDATION_ENABLED
-                AFX_ASSERT(pag->fcc = afxFcc_POOL);
-#endif
-                AfxPushLink(&pag->link, &pool->freePags);
-                pag->data = NIL;
-                pag->usage = NIL;
-                pag->usedCnt = 0;
+                pool->pages[pool->pageCnt + i] = NIL;
             }
             pool->pageCnt += diff;
         }
@@ -312,66 +338,69 @@ _AFX afxError AfxTakePoolUnit(afxPool* pool, afxSize idx, void *val)
 
     if (0 == pool->pageCnt || (pageIdx >= pool->pageCnt))
     {
-        if (AfxInflatePool(pool, (pageIdx + 1)))
+        if (_AfxInflatePoolDir(pool, (pageIdx + 1)))
         {
             AfxThrowError();
+            return err;
         }
     }
 
-    if (!err)
+    AFX_ASSERT(pool->pages);
+    pag = pool->pages[pageIdx];
+
+    if (!pag)
     {
-        AFX_ASSERT(pool->pages);
-        pag = &pool->pages[pageIdx];
+        afxUnit pagSiz = pool->unitsPerPage * pool->unitSiz;
+        pagSiz = AFX_ALIGN_SIZE(pagSiz, pool->memAlign);
 
-#ifdef _AFX_POOL_VALIDATION_ENABLED
-        AFX_ASSERT(pag->fcc == afxFcc_POOL);
-#endif
-
-        if (!pag->data)
+        afxByte* pagHeap;
+        if (AfxAllocate(pagSiz + sizeof(*pag), pool->memAlign, AfxHere(), (void**)&pagHeap))
         {
-            AFX_ASSERT(pag->usage == 0);
-            AFX_ASSERT(pag->usedCnt == 0);
-
-            if (AfxAllocate(pool->unitsPerPage * pool->unitSiz, pool->memAlign, AfxHere(), (void**)&pag->data))
-            {
-                AfxThrowError();
-            }
-            else
-            {
-#ifdef _AFX_ENFORCE_CLEAN_POOL_ALLOCATION
-                // TODO: Do not zero memory.
-                AfxZero(pag->data, pool->unitSiz * pool->unitsPerPage);
-#endif
-            }
+            AfxThrowError();
+            return err;
         }
 
-        if (!err)
+        pag = AFX_CAST(afxPoolPage*, pagHeap + pagSiz);
+        AFX_ASSERT_ALIGNMENT(pag, AFX_PTR_ALIGNMENT);
+#ifdef _AFX_POOL_VALIDATION_ENABLED
+        AFX_ASSERT(pag->fcc = afxFcc_POOL);
+#endif//_AFX_POOL_VALIDATION_ENABLED
+        AfxPushLink(&pag->link, &pool->freePags);
+        pag->usedCnt = 0;
+        pag->usage = NIL;
+        pag->base = pagHeap;
+#ifdef _AFX_ENFORCE_CLEAN_POOL_ALLOCATION
+        // TODO: Do not zero memory.
+        AfxZero(pag->base, pool->unitSiz * pool->unitsPerPage);
+#endif
+        pool->pages[pageIdx] = pag;
+    }
+
+#ifdef _AFX_POOL_VALIDATION_ENABLED
+    AFX_ASSERT(pag->fcc == afxFcc_POOL);
+#endif
+
+    afxSize localIdx = idx % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
+    //afxUnit32 mask = AFX_BITMASK(localIdx);
+    void* unit = &pag->base[pool->unitSiz * localIdx];
+    afxBool alloced = AFX_TEST_BIT_SET(pag->usage, localIdx); //pag->usage & mask;
+
+    if (alloced)
+        AfxThrowError();
+
+    if (val)
+        AfxCopy(unit, val, pool->unitSiz);
+
+    //if (!alloced)
+    {
+        pag->usage |= AFX_BITMASK(localIdx);
+        ++pag->usedCnt;
+        ++pool->totalUsedCnt;
+
+        if (pag->usedCnt == pool->unitsPerPage)
         {
-            afxSize localIdx = idx % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
-            //afxUnit32 mask = AFX_BIT(localIdx);
-            void* unit = &pag->data[pool->unitSiz * localIdx];
-            afxBool alloced = AfxTestBitEnabled(pag->usage, localIdx); //pag->usage & mask;
-
-            if (alloced)
-                AfxThrowError();
-
-            if (val)
-                AfxCopy(unit, val, pool->unitSiz);
-
-            //if (!alloced)
-            {
-                pag->usage |= AFX_BIT(localIdx);
-                ++pag->usedCnt;
-                ++pool->totalUsedCnt;
-
-                if (pag->usedCnt == pool->unitsPerPage)
-                {
-                    // removed from free pages if full.
-                    AfxPopLink(&pag->link);
-                }
-            }
-
-            AFX_ASSERT(AfxGetPoolUnit(pool, idx, NIL));
+            // removed from free pages if full.
+            AfxPopLink(&pag->link);
         }
     }
 
@@ -394,18 +423,15 @@ _AFX afxError AfxFreePoolUnit(afxPool* pool, afxSize idx)
         return err; // not paged/found
 
     AFX_ASSERT(pool->pages);
-    pag = &pool->pages[pageIdx];
+    pag = pool->pages[pageIdx];
 
-    if (!pag->data)
-    {
-        AFX_ASSERT(pag->usage == 0);
-        AFX_ASSERT(pag->usedCnt == 0);
-        return err; // not allocated
-    }
+    if (!pag)
+        return err;
+
     afxSize localIdx = idx % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
-    //afxUnit32 mask = AFX_BIT(localIdx);
-    void* unit = &pag->data[pool->unitSiz * localIdx];
-    afxBool alloced = AfxTestBitEnabled(pag->usage, localIdx); //pag->usage & mask;
+    //afxUnit32 mask = AFX_BITMASK(localIdx);
+    void* unit = &pag->base[pool->unitSiz * localIdx];
+    afxBool alloced = AFX_TEST_BIT_SET(pag->usage, localIdx); //pag->usage & mask;
 
     if (alloced)
     {
@@ -414,7 +440,7 @@ _AFX afxError AfxFreePoolUnit(afxPool* pool, afxSize idx)
             // insert in free pages if not full again.
             AfxPushLink(&pag->link, &pool->freePags);
         }
-        pag->usage |= ~AFX_BIT(localIdx);
+        pag->usage &= ~AFX_BITMASK(localIdx);
         --pag->usedCnt;
         --pool->totalUsedCnt;
     }
@@ -444,7 +470,10 @@ _AFX afxBool AfxFindPoolUnit(afxPool* pool, void* unit2, afxUnit* idx, afxUnit* 
 
     for (afxUnit j = 0; j < pool->pageCnt; j++)
     {
-        afxSize base = (afxSize)pool->pages[j].data;
+        afxPoolPage* pag = pool->pages[j];
+        if (!pag) continue;
+
+        afxSize base = (afxSize)pag->base;
 
         if (base && (pagSiz > (afxSize)(unit - base)))
         {
@@ -457,7 +486,7 @@ _AFX afxBool AfxFindPoolUnit(afxPool* pool, void* unit2, afxUnit* idx, afxUnit* 
             break;
         }
     }
-    
+
     if (idx)
         *idx = found ? idx2 : AFX_INVALID_INDEX;
 
@@ -482,7 +511,13 @@ _AFX afxError DeletePoolPage(afxPool* pool, afxUnit pagIdx)
         return err;
     }
 
-    afxPoolPage* pag = &pool->pages[pagIdx];
+    afxPoolPage* pag = pool->pages[pagIdx];
+
+    if (!pag)
+    {
+        AfxThrowError();
+        return err;
+    }
 
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pag->fcc == afxFcc_POOL);
@@ -492,10 +527,12 @@ _AFX afxError DeletePoolPage(afxPool* pool, afxUnit pagIdx)
     {
         AFX_ASSERT(pag->usage == 0);
         //AfxReportWarn("Deallocate page %p, data %p, usage %p", pag, pag->data, pag->usage);
-        AfxDeallocate((void**)&pag->data, AfxHere());
         pag->usage = NIL;
-        pag->data = NIL;
+        //pag->base = NIL;
         AfxPopLink(&pag->link);
+        void*pagHeap = pag->base;
+        AfxDeallocate((void**)&pagHeap, AfxHere());
+        pool->pages[pagIdx] = NIL;
 
         if (pagIdx == pool->pageCnt - 1) // if is the last page
         {
@@ -517,6 +554,10 @@ _AFX afxError DeletePoolPage(afxPool* pool, afxUnit pagIdx)
             }
         }
     }
+    else
+    {
+        AfxThrowError();
+    }
     return err;
 }
 
@@ -532,60 +573,75 @@ _AFX afxError AfxReclaimPoolUnits(afxPool* pool, afxUnit cnt, void* units[])
     // 4 (x32) set  --- 128 bits per page
     // 2 // page
 
+    afxUnit unitSiz = pool->unitSiz;
+    afxUnit unitsPerPage = pool->unitsPerPage;
+
     for (afxUnit objIdx = 0; objIdx < cnt; objIdx++)
     {
         afxByte* unit = units[objIdx];
-        afxUnit unitSiz = pool->unitSiz;
-        afxUnit unitsPerPage = pool->unitsPerPage;
         //afxSize pagSiz = unitsPerPage * unitSiz;
         afxUnit localIdx, idx;
         afxBool found = AfxFindPoolUnit(pool, unit, &idx, &localIdx);
 
-        if (!found) AfxThrowError();
-        else
+        if (!found)
         {
-            afxSize pageIdx = idx / unitsPerPage;
-            AFX_ASSERT(pageIdx < pool->pageCnt);
-
-            AFX_ASSERT(pool->pages);
-            afxPoolPage *pag = &pool->pages[pageIdx];
-#ifdef _AFX_POOL_VALIDATION_ENABLED
-            AFX_ASSERT(pag->fcc == afxFcc_POOL);
-#endif
-
-            if (pag->usedCnt)
-            {
-                AFX_ASSERT(pag->data);
-                AFX_ASSERT(pag->usage);
-                //afxSize localIdx = idx % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
-                //afxUnit32 mask = AFX_BIT(localIdx);
-                //void* unit = &pag->data[pool->unitSiz * localIdx];
-                afxBool alloced = AfxTestBitEnabled(pag->usage, localIdx);// pag->usage & mask;
-
-                if (alloced)
-                {
-                    if (pag->usedCnt == pool->unitsPerPage)
-                    {
-                        // insert in free pages if not full again.
-                        AfxPushLink(&pag->link, &pool->freePags);
-                    }
-                    pag->usage &= ~AFX_BIT(localIdx);
-#ifdef _AFX_ENFORCE_CLEAN_POOL_ALLOCATION
-                    AfxZero(unit, unitSiz);
-#endif
-                    --pag->usedCnt;
-                    --pool->totalUsedCnt;
-                }
-
-                AFX_ASSERT(!AfxGetPoolUnit(pool, idx, NIL));
-
-                if (0 == pag->usedCnt)
-                {
-                    DeletePoolPage(pool, pageIdx);
-                }
-            }
-            AFX_ASSERT(!AfxGetPoolUnit(pool, idx, NIL));
+            AfxThrowError();
+            continue;
         }
+
+        afxSize pageIdx = idx / unitsPerPage;
+        AFX_ASSERT(pageIdx < pool->pageCnt);
+
+        AFX_ASSERT(pool->pages);
+        afxPoolPage* pag = pool->pages[pageIdx];
+        if (!pag)
+        {
+            AfxThrowError();
+            return err;
+        }
+
+#ifdef _AFX_POOL_VALIDATION_ENABLED
+        AFX_ASSERT(pag->fcc == afxFcc_POOL);
+#endif
+
+        if (pag->usedCnt == 0)
+        {
+            AfxThrowError();
+            continue;
+        }
+
+        AFX_ASSERT(pag->base);
+        AFX_ASSERT(pag->usage);
+        //afxSize localIdx = idx % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
+        //afxUnit32 mask = AFX_BITMASK(localIdx);
+        //void* unit = &pag->data[pool->unitSiz * localIdx];
+        afxBool alloced = AFX_TEST_BIT_SET(pag->usage, localIdx);// pag->usage & mask;
+
+        if (!alloced)
+        {
+            AfxThrowError();
+            continue;
+        }
+
+        if (pag->usedCnt == pool->unitsPerPage)
+        {
+            // insert in free pages if not full again.
+            AfxPushLink(&pag->link, &pool->freePags);
+        }
+#ifdef _AFX_ENFORCE_CLEAN_POOL_ALLOCATION
+        AfxZero(unit, unitSiz);
+#endif
+        pag->usage &= ~AFX_BITMASK(localIdx);
+        --pag->usedCnt;
+        --pool->totalUsedCnt;
+
+        AFX_ASSERT(!AfxGetPoolUnit(pool, idx, NIL));
+
+        if (0 == pag->usedCnt)
+        {
+            DeletePoolPage(pool, pageIdx);
+        }
+        AFX_ASSERT(!AfxGetPoolUnit(pool, idx, NIL));
     }
     return err;
 }
@@ -599,19 +655,21 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], voi
 #endif
     AFX_ASSERT(units);
 
+    afxUnit unitSiz = pool->unitSiz;
+    afxUnit unitsPerPage = pool->unitsPerPage;
+    afxUnit pagSiz = unitsPerPage * unitSiz;
+
     for (afxUnit reqIdx = 0; reqIdx < cnt; reqIdx++)
     {
-        afxUnit unitSiz = pool->unitSiz;
-        afxUnit unitsPerPage = pool->unitsPerPage;
-        afxUnit pagSiz = unitsPerPage * unitSiz;
         afxUnit localIdx, idx2;
         afxBool found = FALSE;
 
         afxSize pageIdx = 0;
         afxPoolPage *pag;
 
+#if 0
         AFX_ITERATE_CHAIN(afxPoolPage, pag, link, &pool->freePags)
-        //for (pageIdx = 0; pageIdx < pool->pageCnt; pageIdx++)
+            //for (pageIdx = 0; pageIdx < pool->pageCnt; pageIdx++)
         {
             //pag = &pool->pages[pageIdx];
 
@@ -639,8 +697,8 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], voi
                 {
                     for (afxUnit unitIdx = 0; unitIdx < unitsPerPage; unitIdx++)
                     {
-                        //afxUnit32 mask = AFX_BIT(k);
-                        afxBool alloced = AfxTestBitEnabled(pag->usage, unitIdx); // pag->usage & mask;
+                        //afxUnit32 mask = AFX_BITMASK(k);
+                        afxBool alloced = AFX_TEST_BIT_SET(pag->usage, unitIdx); // pag->usage & mask;
 
                         if (!(alloced))
                         {
@@ -655,14 +713,50 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], voi
             if (found)
                 break;
         }
+#else
+        if (!found)
+        {
+            for (pageIdx = 0; pageIdx < pool->pageCnt; pageIdx++)
+            {
+                pag = pool->pages[pageIdx];
+                if (!pag) continue;
+#ifdef _AFX_POOL_VALIDATION_ENABLED
+                AFX_ASSERT(pag->fcc == afxFcc_POOL);
+#endif
+                AFX_ASSERT(AFX_MAX_UNITS_PER_POOL_PAGE >= pag->usedCnt);
+                if (pag->usedCnt == unitsPerPage) continue;
+
+                // TODO: Instead of using usage mask per page, start using free mask to ease discard.
+
+                for (localIdx = 0; localIdx < unitsPerPage; localIdx++)
+                {
+                    //afxUnit32 mask = AFX_BITMASK(k);
+                    afxBool booked = AFX_TEST_BIT_SET(pag->usage, localIdx); // pag->usage & mask;
+
+                    if (!booked)
+                    {
+                        found = TRUE;
+                        break;
+                    }
+                }
+
+                if (found)
+                    break;
+                else
+                    AfxThrowError();
+            }
+        }
+#endif
 
         if (!found)
         {
             // if no room, generate a new page.
             pageIdx = pool->pageCnt;
-            idx2 = (pageIdx * unitsPerPage);
+            localIdx = 0;
             found = TRUE;
         }
+
+        idx2 = (pageIdx * unitsPerPage) + localIdx;
 
         if (found)
         {
@@ -706,7 +800,7 @@ _AFX afxError AfxDeployPool(afxPool* pool, afxUnit unitSiz, afxUnit unitsPerPage
     pool->fcc = afxFcc_POOL;
 #endif
     pool->unitsPerPage = AFX_CLAMP(unitsPerPage, 1, AFX_MAX_UNITS_PER_POOL_PAGE);
-    pool->memAlign = AFX_MAX(AFX_POOL_ALIGNMENT, AFX_ALIGNED_SIZE(memAlign, AFX_PTR_ALIGNMENT));
+    pool->memAlign = AFX_MAX(AFX_POOL_ALIGNMENT, AFX_ALIGN_SIZE(memAlign, AFX_PTR_ALIGNMENT));
     AFX_ASSERT(AFX_IS_ALIGNED(pool->memAlign, AFX_POOL_ALIGNMENT));
     pool->unitSiz = unitSiz;
     pool->totalUsedCnt = 0;
@@ -724,14 +818,15 @@ _AFX afxError AfxExhaustPool(afxPool* pool, afxBool keepPages)
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
 #endif
-    
+
     if (keepPages)
     {
         // Keep the pages, just reset usage tracking.
 
         for (afxUnit i = 0; i < pool->pageCnt; i++)
         {
-            afxPoolPage* pag = &pool->pages[i];
+            afxPoolPage* pag = pool->pages[i];
+            if (!pag) continue;
 #ifdef _AFX_POOL_VALIDATION_ENABLED
             AFX_ASSERT(pag->fcc == afxFcc_POOL);
 #endif
@@ -745,18 +840,20 @@ _AFX afxError AfxExhaustPool(afxPool* pool, afxBool keepPages)
 
         for (afxUnit i = 0; i < pool->pageCnt; i++)
         {
-            afxPoolPage* pag = &pool->pages[i];
+            afxPoolPage* pag = pool->pages[i];
+            if (!pag) continue;
 #ifdef _AFX_POOL_VALIDATION_ENABLED
             AFX_ASSERT(pag->fcc == afxFcc_POOL);
 #endif
             pag->usedCnt = 0;
             pag->usage = 0;
 
-            if (pag->data)
+            if (pag->base)
             {
-                AfxDeallocate((void**)&pag->data, AfxHere());
-                pag->data = NIL;
+                AfxDeallocate((void**)&pag->base, AfxHere());
+                pag->base = NIL;
             }
+            pool->pages[i] = NIL;
         }
 
         if (pool->pageCnt)

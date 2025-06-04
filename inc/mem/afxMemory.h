@@ -28,6 +28,12 @@
 
 #include "qwadro/inc/mem/afxMemoryUtil.h"
 
+#define AFX_BYTES_PER_KYLO (1024)
+#define AFX_BYTES_PER_MEGA (AFX_BYTES_PER_KYLO * 1024)
+#define AFX_BYTES_PER_GIGA (AFX_BYTES_PER_MEGA * 1024)
+#define AFX_BYTES_PER_TERA (AFX_BYTES_PER_GIGA * 1024)
+#define AFX_BYTES_PER_PETA (AFX_BYTES_PER_TERA * 1024)
+
 typedef enum afxAllocationFlags
 {
     AFX_ALL_FLAG_RESIZABLE  = (1 << 8),
@@ -57,12 +63,12 @@ AFX_DEFINE_STRUCT(afxAllocationStrategy)
 
 typedef enum afxMemFlags
 {
-    afxMemFlag_ZEROED       = AFX_BIT(0),
-    afxMemFlag_RESIZABLE    = AFX_BIT(1),
+    afxMemFlag_ZEROED       = AFX_BITMASK(0),
+    afxMemFlag_RESIZABLE    = AFX_BITMASK(1),
 
-    afxMemFlag_TEMPORARY    = AFX_BIT(8), // to be used just inside "this" function.
-    afxMemFlag_TRANSIENT    = AFX_BIT(9), // to be used across functions, as example signaling objects about an event occurance.
-    afxMemFlag_PERMANENT    = AFX_BIT(10), // to be used across the entire system and or subsystem, 
+    afxMemFlag_TEMPORARY    = AFX_BITMASK(8), // to be used just inside "this" function.
+    afxMemFlag_TRANSIENT    = AFX_BITMASK(9), // to be used across functions, as example signaling objects about an event occurance.
+    afxMemFlag_PERMANENT    = AFX_BITMASK(10), // to be used across the entire system and or subsystem, 
     afxMemFlag_DURATION_MASK= afxMemFlag_TEMPORARY | afxMemFlag_TRANSIENT | afxMemFlag_PERMANENT,
 
     AFX_MEM_PROP_DEVICE_LOCAL, // specifies that memory allocated with this type is the most efficient for device access. This property will be set if and only if the memory type belongs to a heap with the VK_MEMORY_HEAP_DEVICE_LOCAL_BIT set.
@@ -72,14 +78,14 @@ typedef enum afxMemFlags
     AFX_MEM_PROP_LAZILY_ALLOCATED // specifies that the memory type only allows device access to the memory.
 } afxMemFlags;
 
-typedef void*(*afxAllocCallback)(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, afxHere const hint);
-typedef void*(*afxReallocCallback)(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxSize align, afxHere const hint);
+typedef void*(*afxAllocCallback)(afxMmu mmu, afxSize siz, afxSize align, afxHere const hint);
+typedef void*(*afxReallocCallback)(afxMmu mmu, void* p, afxSize siz, afxSize align, afxHere const hint);
 typedef void(*afxDeallocCallback)(afxMmu mmu, void* p);
-typedef void(*afxNotifyAllocCallback)(afxMmu mmu, afxSize cnt, afxSize siz, afxHere const hint);
-typedef void(*afxNotifyDeallocCallback)(afxMmu mmu, afxSize cnt, afxSize siz, afxHere const hint);
+typedef void(*afxNotifyAllocCallback)(afxMmu mmu, afxSize siz, afxHere const hint);
+typedef void(*afxNotifyDeallocCallback)(afxMmu mmu, afxSize siz, afxHere const hint);
 
-typedef afxMemory(*afxAllocCallback2)(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, afxMemFlags flags, afxHere const hint);
-typedef afxError(*afxResizeCallback2)(afxMemory mem, afxSize cnt, afxSize siz, afxHere const hint);
+typedef afxMemory(*afxAllocCallback2)(afxMmu mmu, afxSize siz, afxSize align, afxMemFlags flags, afxHere const hint);
+typedef afxError(*afxResizeCallback2)(afxMemory mem, afxSize siz, afxHere const hint);
 typedef afxError(*afxDeallocCallback2)(afxMemory mem, afxHere const hint);
 typedef void(*afxNotifyAllocCallback2)(afxMmu mmu, afxMemory mem, afxSize cnt, afxSize siz, afxHere const hint);
 typedef void(*afxNotifyDeallocCallback2)(afxMmu mmu, afxMemory mem, afxSize cnt, afxSize siz, afxHere const hint);
@@ -124,9 +130,9 @@ AFX_OBJECT(afxMmu)
 
 typedef enum afxMemoryFlag
 {
-    afxMemoryFlag_R = AFX_BIT(0),
-    afxMemoryFlag_W = AFX_BIT(1),
-    afxMemoryFlag_X = AFX_BIT(2),
+    afxMemoryFlag_R = AFX_BITMASK(0),
+    afxMemoryFlag_W = AFX_BITMASK(1),
+    afxMemoryFlag_X = AFX_BITMASK(2),
 
 
 } afxMemoryFlags;
@@ -148,8 +154,6 @@ AFX afxError                AfxDeallocate(void** pp, afxHere const hint);
 #define                     AfxStream(cnt_,srcStride_,dstStride_,src_,dst_) AfxStream2(cnt_,src_,srcStride_,dst_,dstStride_)
 AFX void                    AfxStream2(afxUnit cnt, void const* src, afxSize srcStride, void* dst, afxUnit dstStride);
 AFX void                    AfxStream3(afxUnit cnt, void const* src, afxUnit srcOffset, afxSize srcStride, void* dst, afxUnit dstOffset, afxUnit dstStride);
-
-#define AFX_ALIGNED_SIZE(operand_,alignment_) (((operand_) + ((alignment_) - 1)) & ~((alignment_) - 1))
 
 #if 0
 AFX void            AfxFree(void** pp);

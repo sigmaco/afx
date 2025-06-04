@@ -17,7 +17,7 @@
 //#define _AFX_SYSTEM_C
 #include "../impl/afxExecImplKit.h"
 
-#define OBJ_HDR_SIZ     AFX_ALIGNED_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT)
+#define OBJ_HDR_SIZ     AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT)
 #define GET_OBJ_HDR(obj_) ((void*)(((afxByte*)obj_) - OBJ_HDR_SIZ))
 #define GET_OBJ_ADDR(hdr_) ((void*)(((afxByte*)hdr_) + OBJ_HDR_SIZ))
 
@@ -206,8 +206,8 @@ _AFXINL afxError AfxAllocateInstanceData(afxObject obj, afxUnit cnt, afxObjectSt
     for (afxUnit i = 0; i < cnt; i++)
     {
         afxObjectStash const* stash = &stashes[i];
-        afxUnit alignedSiz = AFX_ALIGNED_SIZE(stash->siz, AFX_MAX(AFX_SIMD_ALIGNMENT, stash->align));
-        void* p = stash->cnt ? AfxRequestArenaUnit(aren, alignedSiz, AFX_MAX(1, stash->cnt), NIL, 0) : NIL;
+        afxUnit alignedSiz = AFX_ALIGN_SIZE(stash->siz, AFX_MAX(AFX_SIMD_ALIGNMENT, stash->align));
+        void* p = stash->cnt ? AfxRequestFromArena(aren, alignedSiz, AFX_MAX(1, stash->cnt), NIL, 0) : NIL;
 
         if (stash->cnt && !p)
         {
@@ -216,8 +216,8 @@ _AFXINL afxError AfxAllocateInstanceData(afxObject obj, afxUnit cnt, afxObjectSt
             for (afxUnit j = i; j-- > 0;)
             {
                 afxObjectStash const* stash2 = &stashes[j];
-                afxUnit alignedSiz = AFX_ALIGNED_SIZE(stash2->siz, AFX_MAX(sizeof(void*), stash2->align));
-                AfxRecycleArenaUnit(aren, *stash2->var, AFX_MAX(1, stash2->cnt) * alignedSiz);
+                afxUnit alignedSiz = AFX_ALIGN_SIZE(stash2->siz, AFX_MAX(sizeof(void*), stash2->align));
+                AfxReclaimToArena(aren, *stash2->var, AFX_MAX(1, stash2->cnt) * alignedSiz);
             }
         }
         *stash->var = p;
@@ -242,8 +242,8 @@ _AFXINL afxError AfxDeallocateInstanceData(afxObject obj, afxUnit cnt, afxObject
 
             if (p)
             {
-                afxUnit alignedSiz = AFX_ALIGNED_SIZE(stash->siz, AFX_MAX(AFX_SIMD_ALIGNMENT, stash->align));
-                AfxRecycleArenaUnit(aren, p, AFX_MAX(1, stash->cnt) * alignedSiz);
+                afxUnit alignedSiz = AFX_ALIGN_SIZE(stash->siz, AFX_MAX(AFX_SIMD_ALIGNMENT, stash->align));
+                AfxReclaimToArena(aren, p, AFX_MAX(1, stash->cnt) * alignedSiz);
             }
             *stash->var = NIL;
         }

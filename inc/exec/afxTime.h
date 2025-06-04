@@ -19,13 +19,10 @@
 
 #include "qwadro/inc/base/afxCoreDefs.h"
 
-typedef afxUnit16    afxCompactTime; // DOS time
-
 typedef afxInt64 afxTime;
 
-typedef afxInt32 afxMillisecond; // Time in ms
-
 #define AFX_TIME_INFINITE (afxTime)AFX_I64_MAX
+#define AFX_TIMEOUT_INFINITE (afxUnit64)AFX_U64_MAX
 
 AFX_DEFINE_STRUCT(afxTimeSpec)
 // Structure holding an interval broken down into seconds and nanoseconds.
@@ -38,18 +35,18 @@ AFX_STATIC_ASSERT(sizeof(afxInt32) == sizeof(long), "");
 AFX_STATIC_ASSERT(sizeof(afxTime) == sizeof(time_t), "");
 
 // nanoseconds per millisecond
-#define AFX_NSECS_PER_MSEC (1000000) // 1 ms = 1'000'000 ns
+#define AFX_NSECS_PER_MSEC(ms_) ((1000000) * (ms_)) // 1 ms = 1'000'000 ns
 // nanoseconds per seconds
-#define AFX_NSECS_PER_SEC (1000000000) // 1 s = 1'000'000'000 ns
+#define AFX_NSECS_PER_SEC(secs_) ((1000000000) * (secs_)) // 1 s = 1'000'000'000 ns
 
 // Get nanoseconds from seconds
-#define AFX_NSECS_FROM_SECS(secs_) ((afxUnit64)((secs_) * AFX_NSECS_PER_SEC))
+#define AFX_NSECS_PER_SECS(secs_) ((afxUnit64)(AFX_NSECS_PER_SEC(secs_)))
 // Get seconds from nanoseconds
-#define AFX_SECS_FROM_NSECS(nsecs_) ((afxUnit32)((nsecs_) / AFX_NSECS_PER_SEC))
+#define AFX_SECS_PER_NSECS(nsecs_) ((afxUnit32)((nsecs_) / AFX_NSECS_PER_SEC(1)))
 // Get nanoseconds from milliseconds
-#define AFX_NSECS_FROM_MSECS(msecs_) ((afxUnit64)((msecs_) * AFX_NSECS_PER_MSEC))
+#define AFX_NSECS_PER_MSECS(msecs_) ((afxUnit64)(AFX_NSECS_PER_MSEC(msecs_)))
 // Get millisecond from nanoseconds
-#define AFX_MSECS_FROM_NSECS(nsecs_) ((afxUnit32)((nsecs_) / AFX_NSECS_PER_MSEC))
+#define AFX_MSECS_PER_NSECS(nsecs_) ((afxUnit32)((nsecs_) / AFX_NSECS_PER_MSEC(1)))
 
 
 AFX afxTime AfxGetTime(afxTime *t);
@@ -98,14 +95,15 @@ AFX afxTimeSpec* AfxMakeTimeSpecInterval(afxTimeSpec* ts, afxTimeSpec const* sta
 AFX afxInt64 AfxGetTimeSpecDelta(afxTimeSpec const* start, afxTimeSpec const* end);
 
 
-#define AfxCompactTimeGetHour(t) ((t)>>11)
-#define AfxCompactTimeGetMin(t) (((t)>>5) & 63)
-#define AfxCompactTimeGetSec(t) (((t) & 31) * 2)
-#define AfxCompactTimeGetTime(h,m,s) (((h)<<11) + ((m)<<5) + (s)/2)
+typedef afxUnit16    afxCompactTime; // DOS time
+#define AfxCompactTimeGetHour(t) ((afxUnit16)((t)>>11))
+#define AfxCompactTimeGetMin(t) ((afxUnit16)(((t)>>5) & 63))
+#define AfxCompactTimeGetSec(t) ((afxUnit16)(((t) & 31) * 2))
+#define AfxCompactTimeGetTime(h,m,s) ((afxUnit16)(((h)<<11) + ((m)<<5) + (s)/2))
 
-#define AfxCompactTimeGetYear(t) (((t)>>9) + 1980)
-#define AfxCompactTimeGetMonth(t) (((t)>>5) & 15)
-#define AfxCompactTimeGetDay(t) ((t) & 31)
-#define AfxCompactTimeGetDate(y,m,d) ((((y)-1980)<<9) + ((m)<<5) + (d))
+#define AfxCompactTimeGetYear(t) ((afxUnit16)(((t)>>9) + 1980)
+#define AfxCompactTimeGetMonth(t) ((afxUnit16)(((t)>>5) & 15)
+#define AfxCompactTimeGetDay(t) ((afxUnit16)((t) & 31)
+#define AfxCompactTimeGetDate(y,m,d) ((afxUnit16)((((y)-1980)<<9) + ((m)<<5) + (d))
 
 #endif//AFX_TIME_H

@@ -75,7 +75,7 @@ AFX_DEFINE_STRUCT(afxIterator)
 
 typedef enum afxBlueprintFlags
 {
-    AFX_OBJB_FLAG_DONT_DELETE   = AFX_BIT(0)
+    AFX_OBJB_FLAG_DONT_DELETE   = AFX_BITMASK(0)
 } afxBlueprintFlags;
 
 AFX_DEFINE_STRUCT(afxBlueprint)

@@ -27,10 +27,10 @@
 
 typedef enum _avxMemFlag
 {
-    _avxMemFlag_MAPPEABLE = AFX_BIT(0), // visible to CPU
-    _avxMemFlag_CACHED = AFX_BIT(1), // cached by CPU
-    _avxMemFlag_ENCLAVED = AFX_BIT(2), // virtually separated portion
-    _avxMemFlag_EMBEDDED = AFX_BIT(3) // on-chip memory
+    _avxMemFlag_MAPPEABLE = AFX_BITMASK(0), // visible to CPU
+    _avxMemFlag_CACHED = AFX_BITMASK(1), // cached by CPU
+    _avxMemFlag_ENCLAVED = AFX_BITMASK(2), // virtually separated portion
+    _avxMemFlag_EMBEDDED = AFX_BITMASK(3) // on-chip memory
 } _avxMemFlags;
 
 AFX_DEFINE_STRUCT(_avxRasStorage)

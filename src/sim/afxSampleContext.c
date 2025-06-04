@@ -28,7 +28,7 @@ _ASX asxCmd* _AsxCtxPushCmd(afxContext ctx, afxUnit id, afxUnit siz, afxCmdId* c
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
     AFX_ASSERT(siz >= sizeof(asxCmdHdr));
 
-    asxCmd* cmd = AfxRequestArenaUnit(&ctx->cmdArena, siz, 1, NIL, 0);
+    asxCmd* cmd = AfxRequestFromArena(&ctx->cmdArena, siz, 1, NIL, 0);
     AFX_ASSERT(cmd);
     cmd->hdr.id = id;
     cmd->hdr.siz = siz;
@@ -100,7 +100,7 @@ _ASX afxError AfxRecycleCatalyst(afxContext ctx, afxBool freeRes)
 
     //afxUnit poolIdx = ctx->poolIdx;
 
-    if (AfxTryLockFutex(&sque->cmdbReqLock))
+    if (AfxTryLockFutex(&sque->cmdbReqLock, FALSE))
     {
         if (AfxPushQueue(&sque->cmdbRecycQue, &ctx))
         {
@@ -110,7 +110,7 @@ _ASX afxError AfxRecycleCatalyst(afxContext ctx, afxBool freeRes)
         {
             ctx->state = asxContextState_INVALID;
         }
-        AfxUnlockFutex(&sque->cmdbReqLock);
+        AfxUnlockFutex(&sque->cmdbReqLock, FALSE);
     }
     else
     {
@@ -206,7 +206,7 @@ _ASX afxError AfxAcquireSampleContexts(afxSimulation dsys, afxUnit exuIdx, afxUn
     }
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    if (!AfxTryLockFutex(&sque->cmdbReqLock))
+    if (!AfxTryLockFutex(&sque->cmdbReqLock, FALSE))
     {
         AfxThrowError();
         return afxError_TIMEOUT;
@@ -239,7 +239,7 @@ _ASX afxError AfxAcquireSampleContexts(afxSimulation dsys, afxUnit exuIdx, afxUn
 
     AFX_ASSERT_OBJECTS(afxFcc_CTX, cnt2, batches);
 
-    AfxUnlockFutex(&sque->cmdbReqLock);
+    AfxUnlockFutex(&sque->cmdbReqLock, FALSE);
 
     if (cnt2 < cnt)
     {

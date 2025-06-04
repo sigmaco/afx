@@ -29,7 +29,7 @@ _AFX afxError _AfxXquePopWork(afxIoQueue xque, afxStdWork* work)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
     AfxPopLink(&work->hdr.chain);
-    AfxRecycleArenaUnit(&xque->workArena, work, work->hdr.siz);
+    AfxReclaimToArena(&xque->workArena, work, work->hdr.siz);
     return err;
 }
 
@@ -38,7 +38,7 @@ _AFX afxStdWork* _AfxXquePushWork(afxIoQueue xque, afxUnit id, afxUnit siz, afxC
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
 
-    afxStdWork* work = AfxRequestArenaUnit(&xque->workArena, siz, 1, NIL, 0);
+    afxStdWork* work = AfxRequestFromArena(&xque->workArena, siz, 1, NIL, 0);
     AFX_ASSERT(work);
     work->hdr.id = id;
     work->hdr.siz = siz;

@@ -81,8 +81,8 @@ _ASX afxBool _AsxSpu_ProcCb(asxSpu* spu)
                 AfxGetTime(&work->hdr.complTime);
                 _AsxSquePopWork(sque, work);
             }
-            AfxUnlockMutex(&sque->workChnMtx);
             AfxSignalCondition(&sque->idleCnd);
+            AfxUnlockMutex(&sque->workChnMtx);
         }
     }
     return TRUE;

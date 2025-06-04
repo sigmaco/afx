@@ -20,7 +20,7 @@
 #define _AVX_DRAW_CONTEXT_C
 #include "../impl/avxImplementation.h"
 
-_AVX afxCmdId AvxCmdExecuteCommands(afxDrawContext dctx, afxUnit cnt, afxDrawContext aux[])
+_AVX afxCmdId AvxCmdExecuteCommands(afxDrawContext dctx, afxUnit cnt, afxDrawContext aux[], afxUnit const batches[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -38,8 +38,10 @@ _AVX afxCmdId AvxCmdExecuteCommands(afxDrawContext dctx, afxUnit cnt, afxDrawCon
     cmd->ExecuteCommands.cnt = cnt;
 
     for (afxUnit i = 0; i < cnt; i++)
-        cmd->ExecuteCommands.contexts[i] = aux[i];
-
+    {
+        cmd->ExecuteCommands.contexts[i].dctx = aux[i];
+        cmd->ExecuteCommands.contexts[i].batchId = batches[i];
+    }
     return cmdId;
 }
 
@@ -186,7 +188,7 @@ _AVX afxCmdId AvxCmdBindArgumentBuffersSIGMA(afxDrawContext dctx, afxUnit bufIdx
         {
             if (buffers[i].range)
             {
-                bufis[bufGenCnt].size = AFX_ALIGNED_SIZE(buffers[i].range, AVX_BUFFER_ALIGNMENT);
+                bufis[bufGenCnt].size = AFX_ALIGN_SIZE(buffers[i].range, AVX_BUFFER_ALIGNMENT);
                 bufis[bufGenCnt].usage = avxBufferUsage_ARGUMENT | avxBufferUsage_UNIFORM;
                 bufis[bufGenCnt].flags = avxBufferFlag_WX;
                 mapSlotToBufGen[bufGenCnt] = i;
@@ -300,7 +302,7 @@ _AVX afxCmdId AvxCmdPushUniformsSIGMA(afxDrawContext dctx, afxUnit set, afxUnit 
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
-    afxUnit siz = AFX_ALIGNED_SIZE(dataSiz, AFX_SIMD_ALIGNMENT);
+    afxUnit siz = AFX_ALIGN_SIZE(dataSiz, AFX_SIMD_ALIGNMENT);
 
     if (siz > dctx->argBufs[set].remainRoom)
     {

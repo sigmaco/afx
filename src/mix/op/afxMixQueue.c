@@ -56,7 +56,7 @@ _AMX afxError _AmxMquePopBlob(afxMixQueue mque, void* blob, afxUnit siz)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    AfxRecycleArenaUnit(&mque->iorpArena, blob, siz);
+    AfxReclaimToArena(&mque->iorpArena, blob, siz);
     return err;
 }
 
@@ -65,7 +65,7 @@ _AMX void* _AmxMquePushBlob(afxMixQueue mque, afxUnit siz)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
-    void* blob = AfxRequestArenaUnit(&mque->iorpArena, siz, 1, NIL, 0);
+    void* blob = AfxRequestFromArena(&mque->iorpArena, siz, 1, NIL, 0);
     AFX_ASSERT(blob);
     return blob;
 }
@@ -76,7 +76,7 @@ _AMX afxError _AmxMquePopIoReqPacket(afxMixQueue mque, _amxIoReqPacket* iorp)
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     AFX_ASSERT(iorp);
     AfxPopLink(&iorp->hdr.chain);
-    AfxRecycleArenaUnit(&mque->iorpArena, iorp, iorp->hdr.siz);
+    AfxReclaimToArena(&mque->iorpArena, iorp, iorp->hdr.siz);
     return err;
 }
 
@@ -85,7 +85,7 @@ _AMX afxError _AmxMquePushIoReqPacket(afxMixQueue mque, afxUnit id, afxUnit siz,
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
-    _amxIoReqPacket* iorp = AfxRequestArenaUnit(&mque->iorpArena, siz, 1, NIL, 0);
+    _amxIoReqPacket* iorp = AfxRequestFromArena(&mque->iorpArena, siz, 1, NIL, 0);
     AFX_ASSERT(iorp);
     iorp->hdr.id = id;
     iorp->hdr.siz = siz;

@@ -14,9 +14,13 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-//#include "../../dep/tinycthread.h"
-//#include "../../dep/cthreads.h"
+#define USE_TINYCTHREAD
+
+#ifdef USE_TINYCTHREAD
+#include "../../dep/tinycthread/tinycthread.h"
+#else
 #include "../../dep/c11threads/c11threads.h"
+#endif
 #include "../impl/afxExecImplKit.h"
 
 #if defined(_TTHREAD_WIN32_)
@@ -39,8 +43,8 @@ _AFX afxError AfxDeployCondition(afxCondition* cond)
     switch (cnd_init((cnd_t*)cond))
     {
     case thrd_success: err = afxError_SUCCESS; break;
-    case thrd_error: err = afxError_INVALID_HANDLE; break;
-    case thrd_nomem: err = afxError_OUT_OF_MEMORY; break;
+    case thrd_error: AfxThrowError(); err = afxError_INVALID_HANDLE; break;
+    case thrd_nomem: AfxThrowError(); err = afxError_OUT_OF_MEMORY; break;
     default: AfxThrowError(); break;
     }
 
@@ -54,7 +58,7 @@ _AFX afxError AfxSignalCondition(afxCondition* cond)
     switch (cnd_signal((cnd_t*)cond))
     {
     case thrd_success: err = afxError_SUCCESS; break;
-    case thrd_error: err = afxError_INVALID_HANDLE; break;
+    case thrd_error: AfxThrowError(); err = afxError_INVALID_HANDLE; break;
     default: AfxThrowError(); break;
     }
 
@@ -68,7 +72,7 @@ _AFX afxError AfxSignalCondition2(afxCondition* cond)
     switch (cnd_broadcast((cnd_t*)cond))
     {
     case thrd_success: err = afxError_SUCCESS; break;
-    case thrd_error: err = afxError_INVALID_HANDLE; break;
+    case thrd_error: AfxThrowError(); err = afxError_INVALID_HANDLE; break;
     default: AfxThrowError(); break;
     }
 
@@ -82,7 +86,7 @@ _AFX afxError AfxWaitCondition(afxCondition* cond, afxMutex* mtx)
     switch (cnd_wait((cnd_t*)cond, (mtx_t*)mtx))
     {
     case thrd_success: err = afxError_SUCCESS; break;
-    case thrd_error: err = afxError_INVALID_HANDLE; break;
+    case thrd_error: AfxThrowError(); err = afxError_INVALID_HANDLE; break;
     default: AfxThrowError(); break;
     }
 
@@ -98,8 +102,8 @@ _AFX afxError AfxWaitTimedCondition(afxCondition* cond, afxMutex* mtx, afxTimeSp
     case thrd_success: err = afxError_SUCCESS; break;
     case thrd_timedout: err = afxError_TIMEOUT; break;
     case thrd_busy: err = afxError_BUSY; break;
-    case thrd_error: err = afxError_INVALID_HANDLE; break;
-    case thrd_nomem: err = afxError_OUT_OF_MEMORY; break;
+    case thrd_error: AfxThrowError(); err = afxError_INVALID_HANDLE; break;
+    case thrd_nomem: AfxThrowError(); err = afxError_OUT_OF_MEMORY; break;
     default: AfxThrowError(); break;
     }
 

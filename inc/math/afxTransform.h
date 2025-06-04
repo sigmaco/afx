@@ -41,12 +41,12 @@
 
 typedef enum afxTransformFlag
 {
-    afxTransformFlag_TRANSLATED = AFX_BIT(0), // has non-identity position
-    afxTransformFlag_ROTATED    = AFX_BIT(1), // has non-identity orientation
+    afxTransformFlag_TRANSLATED = AFX_BITMASK(0), // has non-identity position
+    afxTransformFlag_ROTATED    = AFX_BITMASK(1), // has non-identity orientation
     afxTransformFlag_RIGID      = afxTransformFlag_TRANSLATED | afxTransformFlag_ROTATED,
-    afxTransformFlag_DEFORMED   = AFX_BIT(2), // has non-identity scale/shear
-    afxTransformFlag_UNISCALED  = AFX_BIT(3), // has scalar scaling [ 1, ... ]
-    afxTransformFlag_SCALED     = AFX_BIT(4), // has vector scaling [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ]
+    afxTransformFlag_DEFORMED   = AFX_BITMASK(2), // has non-identity scale/shear
+    afxTransformFlag_UNISCALED  = AFX_BITMASK(3), // has scalar scaling [ 1, ... ]
+    afxTransformFlag_SCALED     = AFX_BITMASK(4), // has vector scaling [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ]
     afxTransformFlag_ALL =      (afxTransformFlag_TRANSLATED | afxTransformFlag_ROTATED | afxTransformFlag_DEFORMED)
 } afxTransformFlags;
 

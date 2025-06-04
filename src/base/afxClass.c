@@ -17,7 +17,7 @@
 #define _AFX_MANAGER_C
 #include "../impl/afxExecImplKit.h"
 
-#define OBJ_HDR_SIZ     AFX_ALIGNED_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT)
+#define OBJ_HDR_SIZ     AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT)
 #define GET_OBJ_HDR(obj_) ((void*)(((afxByte*)obj_) - OBJ_HDR_SIZ))
 #define GET_OBJ_ADDR(hdr_) ((void*)(((afxByte*)hdr_) + OBJ_HDR_SIZ))
 
@@ -313,9 +313,9 @@ _AFX afxUnit AfxEnumerateObjects(afxClass const* cls, afxUnit first, afxUnit cnt
     }
     else if (cls->instCnt)
     {
-        AfxLockFutexShared((void*)&cls->poolLock);
+        AfxLockFutex((void*)&cls->poolLock, TRUE);
         instCnt = _AfxEnumerateObjectsUnlocked(cls, FALSE, first, cnt ? cnt : cls->instCnt, objects);
-        AfxUnlockFutexShared((void*)&cls->poolLock);
+        AfxUnlockFutex((void*)&cls->poolLock, TRUE);
     }
     return instCnt;
 }
@@ -329,9 +329,9 @@ _AFX afxUnit AfxEvokeObjects(afxClass const* cls, afxBool(*f)(afxObject, void*),
 
     if (cls->instCnt)
     {
-        AfxLockFutexShared((void*)&cls->poolLock);
+        AfxLockFutex((void*)&cls->poolLock, TRUE);
         rslt = _AfxEvokeObjectsUnlocked(cls, FALSE, f, udd, first, cnt ? cnt : cls->instCnt, objects);
-        AfxUnlockFutexShared((void*)&cls->poolLock);
+        AfxUnlockFutex((void*)&cls->poolLock, TRUE);
     }
     return rslt;
 }
@@ -391,9 +391,9 @@ _AFX afxUnit AfxInvokeClassInstances2(afxClass const* cls, afxUnit first, afxUni
 
     if (cls->instCnt)
     {
-        AfxLockFutexShared((void*)&cls->poolLock);
+        AfxLockFutex((void*)&cls->poolLock, TRUE);
         rslt = _AfxInvokeObjectsUnlocked(cls, FALSE, first, cnt ? cnt : cls->instCnt, f, udd, f2, udd2);
-        AfxUnlockFutexShared((void*)&cls->poolLock);
+        AfxUnlockFutex((void*)&cls->poolLock, TRUE);
     }
     return rslt;
 }
@@ -408,9 +408,9 @@ _AFX afxUnit AfxInvokeObjects(afxClass const* cls, afxUnit first, afxUnit cnt, a
     
     if (cls->instCnt)
     {
-        AfxLockFutexShared((void*)&cls->poolLock);
+        AfxLockFutex((void*)&cls->poolLock, TRUE);
         rslt = _AfxInvokeObjectsUnlocked(cls, FALSE, first, cnt ? cnt : cls->instCnt, NIL, NIL, f, udd);
-        AfxUnlockFutexShared((void*)&cls->poolLock);
+        AfxUnlockFutex((void*)&cls->poolLock, TRUE);
     }
     return rslt;
 }
@@ -687,7 +687,7 @@ _AFX afxError _AfxDestructObjects(afxClass *cls, afxUnit cnt, afxObject objects[
         if (_AfxClsObjDtor(cls, obj))
             AfxThrowError();
 
-        AfxZero(hdr, AFX_ALIGNED_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT));
+        AfxZero(hdr, AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT));
         objects[i] = hdr;
 
         //AfxDeallocate(cls->all, item);
@@ -746,7 +746,7 @@ _AFX afxError _AfxConstructObjects(afxClass *cls, afxUnit cnt, afxObject objects
         hdr->extra = NIL;
 
         if (cls->extraSiz)
-            if (!(hdr->extra = AfxRequestArenaUnit(&cls->extraAlloc, cls->extraSiz, 1, NIL, 0)))
+            if (!(hdr->extra = AfxRequestFromArena(&cls->extraAlloc, cls->extraSiz, 1, NIL, 0)))
                 AfxThrowError();
 
         if (_AfxClsObjCtor(cls, objects[i], udd, i))
@@ -767,7 +767,7 @@ _AFX afxError _AfxConstructObjects(afxClass *cls, afxUnit cnt, afxObject objects
         }
 
         if (err && hdr->extra)
-            AfxRecycleArenaUnit(&cls->extraAlloc, hdr->extra, cls->extraSiz);
+            AfxReclaimToArena(&cls->extraAlloc, hdr->extra, cls->extraSiz);
 
         if (err)
         {
@@ -842,9 +842,9 @@ _AFX afxError AfxDismountClass(afxClass *cls)
     if (cls->fixedSiz) // only if dynamically allocated
     {
         AFX_ASSERT(0 == cls->pool.totalUsedCnt);        
-        AfxLockFutex(&cls->poolLock);
+        AfxLockFutex(&cls->poolLock, FALSE);
         AfxExhaustPool(&cls->pool, FALSE);
-        AfxUnlockFutex(&cls->poolLock);
+        AfxUnlockFutex(&cls->poolLock, FALSE);
         AfxDismantleFutex(&cls->poolLock);
 
         if (cls->mmu)
@@ -972,12 +972,12 @@ _AFX afxError AfxMountClass(afxClass* cls, afxClass* subset, afxChain* host, afx
     {
         AFX_ASSERT(cls->fixedSiz > sizeof(afxObject)); // just to avoid non-open structure being passed in.
 
-        afxUnit unitSizAligned = AFX_ALIGNED_SIZE(cls->fixedSiz + OBJ_HDR_SIZ, AFX_POOL_ALIGNMENT);
+        afxUnit unitSizAligned = AFX_ALIGN_SIZE(cls->fixedSiz + OBJ_HDR_SIZ, AFX_POOL_ALIGNMENT);
 
         AfxDeployFutex(&cls->poolLock);
-        AfxLockFutex(&cls->poolLock);
+        AfxLockFutex(&cls->poolLock, FALSE);
         AfxDeployPool(&cls->pool, cls->fixedSiz ? unitSizAligned : 0, AFX_MAX(1, cls->unitsPerPage), AFX_POOL_ALIGNMENT);
-        AfxUnlockFutex(&cls->poolLock);
+        AfxUnlockFutex(&cls->poolLock, FALSE);
 
         AFX_ASSERT(cls->pool.unitSiz >= unitSizAligned);
 
@@ -1024,7 +1024,7 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxUnit cnt, afxObject objects[],
     AFX_ASSERT(cnt);
     AFX_ASSERT(objects);
 
-    AfxLockFutex(&cls->poolLock);
+    AfxLockFutex(&cls->poolLock, FALSE);
 
     afxPool* pool = &cls->pool;
 
@@ -1066,7 +1066,7 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxUnit cnt, afxObject objects[],
         }
     }
     
-    AfxUnlockFutex(&cls->poolLock);
+    AfxUnlockFutex(&cls->poolLock, FALSE);
 
     return err;
 }
@@ -1119,7 +1119,7 @@ _AFX afxBool AfxDisposeObjects(afxUnit cnt, afxObject objects[])
 
             // se der erro aqui, é porque você provavelmente está passando uma array como elemento aninhado (ex.: AfxDisposeObjects(n, (void*[]){ array })) ao invés de passar a array diretamente (ex.: AfxDisposeObjects(n, array));
 
-            AfxLockFutex(&cls->poolLock);
+            AfxLockFutex(&cls->poolLock, FALSE);
 
             _AfxDestructObjects(cls, 1, &obj);
             AFX_ASSERT(obj == hdr);
@@ -1128,7 +1128,7 @@ _AFX afxBool AfxDisposeObjects(afxUnit cnt, afxObject objects[])
             if (cls->pool.unitSiz != 0)
                 _AfxDeallocateObjects(cls, 1, &obj);
 
-            AfxUnlockFutex(&cls->poolLock);
+            AfxUnlockFutex(&cls->poolLock, FALSE);
 
             ++rslt;
         }

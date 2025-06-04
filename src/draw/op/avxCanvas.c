@@ -553,8 +553,8 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
             rasi.usage = surf->usage | avxRasterUsage_DRAW;
             rasi.flags = surf->flags;
             rasi.fmt = surf->fmt;
-            rasi.extent.w = AFX_ALIGNED_SIZE(canv->extent.w, 16); // aligned to tile
-            rasi.extent.h = AFX_ALIGNED_SIZE(canv->extent.h, 16); // aligned to tile
+            rasi.extent.w = AFX_ALIGN_SIZE(canv->extent.w, 16); // aligned to tile
+            rasi.extent.h = AFX_ALIGN_SIZE(canv->extent.h, 16); // aligned to tile
             rasi.extent.d = canv->extent.d;
             
             if (1 < (rasi.lodCnt = surf->sampleCnt))

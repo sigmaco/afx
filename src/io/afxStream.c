@@ -403,7 +403,7 @@ _AFX afxError AfxBufferizeStream(afxStream iob, afxUnit bufCap, void* buf)
         }
         else
         {
-            alignedSiz = AFX_ALIGNED_SIZE(bufCap, AfxGetIoBufferSize());
+            alignedSiz = AFX_ALIGN_SIZE(bufCap, AfxGetIoBufferSize());
             //void *start;
 
             if (AfxAllocate(alignedSiz, 0, AfxHere(), (void**)&start)) AfxThrowError();

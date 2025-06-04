@@ -37,10 +37,10 @@ typedef enum afxTargaCodec
 
 typedef enum afxTargaFlag
 {
-    afxTargaFlag_X_FLIPPED  = AFX_BIT(0), // vertical origin is right to left.
-    afxTargaFlag_Y_FLIPPED  = AFX_BIT(1), // horizontal origin is top to bottom.
-    afxTargaFlag_CUBEMAP    = AFX_BIT(2), // layered image is treated as cubemap.
-    afxTargaFlag_3D         = AFX_BIT(3), // depth is treated as 3D depth instead of layers.
+    afxTargaFlag_X_FLIPPED  = AFX_BITMASK(0), // vertical origin is right to left.
+    afxTargaFlag_Y_FLIPPED  = AFX_BITMASK(1), // horizontal origin is top to bottom.
+    afxTargaFlag_CUBEMAP    = AFX_BITMASK(2), // layered image is treated as cubemap.
+    afxTargaFlag_3D         = AFX_BITMASK(3), // depth is treated as 3D depth instead of layers.
 } afxTargaFlags;
 
 #pragma pack(push, 1)

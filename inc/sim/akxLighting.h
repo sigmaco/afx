@@ -42,10 +42,10 @@ typedef enum
 
 typedef enum akxLightFlag
 {
-    akxLightFlag_FADE_ENABLED   = AFX_BIT(0), // false
-    akxLightFlag_NEGATIVE       = AFX_BIT(1), // false
-    akxLightFlag_SHADOW_ENABLED = AFX_BIT(2), // false
-    akxLightFlag_REV_CULL_FACE  = AFX_BIT(3), // false
+    akxLightFlag_FADE_ENABLED   = AFX_BITMASK(0), // false
+    akxLightFlag_NEGATIVE       = AFX_BITMASK(1), // false
+    akxLightFlag_SHADOW_ENABLED = AFX_BITMASK(2), // false
+    akxLightFlag_REV_CULL_FACE  = AFX_BITMASK(3), // false
 } akxLightFlags;
 
 #ifdef _ASX_LIGHT_C

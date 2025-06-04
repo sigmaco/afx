@@ -33,6 +33,13 @@
 
 #define _AFX_VALIDATE_MEMSEG
 #define _AFX_VALIDATE_MEMSEG_EXTREMES TRUE
+#define _AFX_REPORT_ALLOC (TRUE)
+#define _AFX_REPORT_COALLOC (TRUE)
+#define _AFX_REPORT_REALLOC (TRUE)
+#define _AFX_REPORT_DEALLOC (TRUE)
+
+static afxSize gMemoryBudget = 1024 * 1024 * 1024; // 1024³ = 1 GB
+static afxSize gTotalAllocatedInSystem = 0; // Track total memory allocated
 
 typedef struct _afxArbitraryChunk
 {
@@ -45,6 +52,11 @@ typedef struct _afxArbitraryChunk
     afxByte AFX_SIMD gap[16];
     afxByte AFX_SIMD data[];
 } _afxArbitraryChunk;
+
+// A helper to align memory to the specified alignment
+#define AFX_ALIGNED_PTR(ptr_, alignment_) \
+    (void*)((((uintptr_t)ptr_) + alignment_ - 1) & ~(alignment_ - 1));
+
 
 _AFX afxError _AfxInitMmu(afxThread thr)
 {
@@ -270,18 +282,17 @@ _AFX void* AfxRecallocAligned(void* block, afxSize cnt, afxSize siz, afxSize ali
     return AfxRecallocAlignedCb(block, cnt, siz, align, AfxHere());
 }
 
-_AFX void _AfxMemAllocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHere const hint)
+_AFX void _AfxMemAllocNotStd(afxMmu mmu, afxSize siz, afxHere const hint)
 {
     //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
     //AFX_ASSERT(p);
     AFX_ASSERT(siz);
-    AFX_ASSERT(cnt);
     AFX_ASSERT(hint);
 }
 
-_AFX void _AfxMemDeallocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHere const hint)
+_AFX void _AfxMemDeallocNotStd(afxMmu mmu, afxSize siz, afxHere const hint)
 {
     //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -302,10 +313,10 @@ _AFX void _AfxMemDeallocStd(afxMmu mmu, void *p)
     AfxFreeAligned(p);
 
     if (mmu->deallocNotCb)
-        mmu->deallocNotCb(mmu, 0, 0, AfxHere());
+        mmu->deallocNotCb(mmu, 0, AfxHere());
 }
 
-_AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxSize align, afxHere const hint)
+_AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize siz, afxSize align, afxHere const hint)
 {
     //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -316,13 +327,13 @@ _AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxS
 
     align = AFX_MAX(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
-    if (!(neo = AfxReallocAligned(p, cnt * siz, align)))
+    if (!(neo = AfxReallocAligned(p, siz, align)))
         AfxThrowError();
 
     return neo;
 }
 
-_AFX void* _AfxMemAllocStd(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, afxHere const hint)
+_AFX void* _AfxMemAllocStd(afxMmu mmu, afxSize siz, afxSize align, afxHere const hint)
 {
     //AfxEntry("ctx=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -333,7 +344,7 @@ _AFX void* _AfxMemAllocStd(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, 
 
     align = AFX_MAX(AFX_SIMD_ALIGNMENT, align); // every allocation in Qwadro is 16-byte aligned.
 
-    if (!(p = AfxMallocAligned(cnt * siz, align)))
+    if (!(p = AfxMallocAligned(siz, align)))
         AfxThrowError();
 
     return p;
@@ -576,7 +587,9 @@ _AFX afxError AfxDeallocate(void** pp, afxHere const hint)
         afxSize freedSiz = 0;
 
         afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
-
+#ifdef _AFX_REPORT_DEALLOC
+        AfxReportf(0, AfxHere(), "dealloc(%p)   %s:%i!%s", p, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+#endif
         if (mmu)
         {
             AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
@@ -597,11 +610,15 @@ _AFX afxError AfxReallocate(afxSize siz, afxUnit align, afxHere const hint, void
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(siz);
     AFX_ASSERT(hint);
-    //AfxEntry("p=%p,siz=%u,hint=\"%s:%i!%s\"", p, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     void *out = NIL;
 
     // Every and any allocation in Qwadro is 16-byte aligned.
     align = AFX_MAX(AFX_SIMD_ALIGNMENT, align);
+
+    if (gMemoryBudget < gTotalAllocatedInSystem + AFX_ALIGN_SIZE(siz, align))
+    {
+        AfxThrowError();
+    }
 
     afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
     void* p = *pp;
@@ -620,7 +637,7 @@ _AFX afxError AfxReallocate(afxSize siz, afxUnit align, afxHere const hint, void
         {
             AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
-            if (!(out = mmu->reallocCb(mmu, p, 1, siz, align, hint)))
+            if (!(out = mmu->reallocCb(mmu, p, siz, align, hint)))
                 AfxThrowError();
         }
     }
@@ -630,7 +647,7 @@ _AFX afxError AfxReallocate(afxSize siz, afxUnit align, afxHere const hint, void
         {
             AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
-            if (!(out = mmu->reallocCb(mmu, p, 1, siz, align, hint)))
+            if (!(out = mmu->reallocCb(mmu, p, siz, align, hint)))
             {
                 AfxThrowError();
             }
@@ -643,6 +660,11 @@ _AFX afxError AfxReallocate(afxSize siz, afxUnit align, afxHere const hint, void
             }
         }
     }
+
+#ifdef _AFX_REPORT_REALLOC
+    AfxReportf(0, AfxHere(), "realloc(%u, %u, %p) => %p   %s:%i!%s", siz, align, p, out, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+#endif
+
     // Every and any allocation in Qwadro is 16-byte aligned.
     AFX_ASSERT_ALIGNMENT(out, AFX_SIMD_ALIGNMENT);
     *pp = out;
@@ -651,7 +673,6 @@ _AFX afxError AfxReallocate(afxSize siz, afxUnit align, afxHere const hint, void
 
 _AFX afxError AfxCoallocate(afxSize cnt, afxSize siz, afxUnit align, afxHere const hint, void** pp)
 {
-    //AfxEntry("ctx=%p,cnt=%u,siz=%u,hint=\"%s:%i!%s\"", ctx, cnt, siz, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     AFX_ASSERT(siz);
@@ -661,13 +682,18 @@ _AFX afxError AfxCoallocate(afxSize cnt, afxSize siz, afxUnit align, afxHere con
     // Every and any allocation in Qwadro is 16-byte aligned.
     align = AFX_MAX(AFX_SIMD_ALIGNMENT, align);
 
+    if (gMemoryBudget < gTotalAllocatedInSystem + AFX_ALIGN_SIZE(siz, align))
+    {
+        AfxThrowError();
+    }
+
     afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
 
     if (mmu)
     {
         AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
-        if (!(p = mmu->allocCb(mmu, cnt, siz, align, hint)))
+        if (!(p = mmu->allocCb(mmu, cnt * siz, align, hint)))
         {
             AfxThrowError();
         }
@@ -679,6 +705,10 @@ _AFX afxError AfxCoallocate(afxSize cnt, afxSize siz, afxUnit align, afxHere con
             AfxThrowError();
         }
     }
+
+#ifdef _AFX_REPORT_COALLOC
+    AfxReportf(0, AfxHere(), "coalloc(%u, %u, %u) => %p   %s:%i!%s", cnt, siz, align, p, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+#endif
     // Every and any allocation in Qwadro is 16-byte aligned.
     AFX_ASSERT_ALIGNMENT(p, AFX_SIMD_ALIGNMENT);
     *pp = p;
@@ -687,7 +717,6 @@ _AFX afxError AfxCoallocate(afxSize cnt, afxSize siz, afxUnit align, afxHere con
 
 _AFX afxError AfxAllocate(afxSize siz, afxUnit align, afxHere const hint, void** pp)
 {
-    //AfxEntry("ctx=%p,siz=%u,cnt=%u,hint=\"%s:%i!%s\"", ctx, siz, cnt, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(hint);
     AFX_ASSERT(siz);
@@ -698,13 +727,18 @@ _AFX afxError AfxAllocate(afxSize siz, afxUnit align, afxHere const hint, void**
 
     if (siz)
     {
+        if (gMemoryBudget < gTotalAllocatedInSystem + AFX_ALIGN_SIZE(siz, align))
+        {
+            AfxThrowError();
+        }
+
         afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
 
         if (mmu)
         {
             AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &mmu);
 
-            if (!(p = mmu->allocCb(mmu, 1, siz, align, hint)))
+            if (!(p = mmu->allocCb(mmu, siz, align, hint)))
             {
                 AfxThrowError();
             }
@@ -717,6 +751,9 @@ _AFX afxError AfxAllocate(afxSize siz, afxUnit align, afxHere const hint, void**
             }
         }
     }
+#ifdef _AFX_REPORT_ALLOC
+    AfxReportf(0, AfxHere(), "alloc(%u, %u) => %p   %s:%i!%s", siz, align, p, _AfxDbgTrimFilename((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+#endif
     // Every and any allocation in Qwadro is 16-byte aligned.
     AFX_ASSERT_ALIGNMENT(p, AFX_SIMD_ALIGNMENT);
     *pp = p;

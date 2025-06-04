@@ -124,12 +124,12 @@ _AUX afxBool AfxGetCursorPlacement(afxRect* rc, afxWindow wnd, afxRect* onFrame,
 
             if (onFrame)
             {
-                rslt = AfxClipRectIntersection(onFrame, &cursRect, &frameRc);
+                rslt = AfxIntersectRects(onFrame, &cursRect, &frameRc);
             }
 
             if (onSurface)
             {
-                rslt = AfxClipRectIntersection(onSurface, &cursRect, &surfaceRc);
+                rslt = AfxIntersectRects(onSurface, &cursRect, &surfaceRc);
             }
         }
     }

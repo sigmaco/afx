@@ -161,7 +161,7 @@ AFX_DEFINE_STRUCT(_auxWndDdi)
 {
     afxError(*redrawCb)(afxWindow, afxRect const*);
     afxError(*chIconCb)(afxWindow, avxRaster);
-    afxError(*adjustCb)(afxWindow, afxBool, afxRect const*);
+    afxError(*adjustCb)(afxWindow, afxRect const*, afxRect const*);
     void(*focus)(afxWindow);
     afxBool(*hasFocus)(afxWindow);
 

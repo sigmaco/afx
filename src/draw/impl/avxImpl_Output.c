@@ -49,14 +49,14 @@ _AVX afxError _AvxDoutImplPresentCb(afxDrawQueue dque, avxPresentation* ctrl, av
     AfxGetClock(&currClock);
     ++dout->outNo;
 
-    if ((1.0 <= AfxGetClockSecondsElapsed(&dout->outCntResetClock, &currClock)))
+    if ((1.0 <= AfxGetSecondsElapsed(&dout->outCntResetClock, &currClock)))
     {
         dout->outCntResetClock = currClock;
         dout->outRate = dout->outNo; // 681 no showing (presenting from overlay thread (acquirer)), 818 frozen (present from draw thread (worker))
         dout->outNo = 0;
 
-        afxReal64 ct = AfxGetClockSecondsElapsed(&dout->startClock, &currClock);
-        afxReal64 dt = AfxGetClockSecondsElapsed(&dout->lastClock, &currClock);
+        afxReal64 ct = AfxGetSecondsElapsed(&dout->startClock, &currClock);
+        afxReal64 dt = AfxGetSecondsElapsed(&dout->lastClock, &currClock);
         dout->lastClock = currClock;
 
         if (AfxTestObjectFcc(dout->endpointNotifyObj, afxFcc_WND))

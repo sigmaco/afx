@@ -96,17 +96,33 @@ _ASX afxError AfxWaitForEmptySimQueue(afxSimBridge sexu, afxUnit queIdx, afxTime
 
     if (!sque->waitCb)
     {
-        AfxLockMutex(&sque->idleCndMtx);
+        AfxLockMutex(&sque->workChnMtx);
 
-        afxTimeSpec ts = { 0 };
-        ts.nsecs = AFX_MAX(1, timeout) * 100000; // 100000 = 0.0001 sec
+        afxTimeSpec ts;
+        AfxMakeTimeSpec(&ts, timeout);
 
-        while (sque->workChn.cnt)
+        sexu->pingCb(sexu, 0);
+
+        while (!AfxIsChainEmpty(&sque->workChn))
         {
-            sexu->pingCb(sexu, 0);
-            AfxWaitTimedCondition(&sque->idleCnd, &sque->idleCndMtx, &ts);
+            afxError cndErr = AfxWaitTimedCondition(&sque->idleCnd, &sque->workChnMtx, &ts);
+
+            if (cndErr)
+            {
+                if (cndErr == afxError_TIMEOUT)
+                    err = afxError_TIMEOUT;
+                else AfxThrowError();
+
+                break;
+            }
         }
-        AfxUnlockMutex(&sque->idleCndMtx);
+
+        if (!err)
+        {
+            AFX_ASSERT(AfxIsChainEmpty(&sque->workChn));
+        }
+
+        AfxUnlockMutex(&sque->workChnMtx);
     }
     else if (sque->waitCb(sque, timeout))
         AfxThrowError();

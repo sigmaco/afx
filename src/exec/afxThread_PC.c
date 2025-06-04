@@ -31,20 +31,24 @@
 #   define W32_INIT_COM
 #endif
 
-//#include "../../dep/tinycthread.h"
-//#include "../../dep/cthreads.h"
+#define USE_TINYCTHREAD
+
+#ifdef USE_TINYCTHREAD
+#include "../../dep/tinycthread/tinycthread.h"
+#else
 #include "../../dep/c11threads/c11threads.h"
+#endif
 
 AFX_THREAD_LOCAL afxUnit32 _currTid = 0;
 AFX_THREAD_LOCAL afxUnit32 _currThrObjId = 0;
 AFX_THREAD_LOCAL afxThread _currThr = { NIL };
 
 afxUnit const sizeOfThr = sizeof(AFX_OBJ(afxThread));
-afxUnit const sizeOfThrAligned = AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT);
-AFX_STATIC_ASSERT(AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT) >= sizeof(AFX_OBJ(afxThread)), "");
+afxUnit const sizeOfThrAligned = AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT);
+AFX_STATIC_ASSERT(AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT) >= sizeof(AFX_OBJ(afxThread)), "");
 AFX_STATIC_ASSERT(sizeof(AFX_OBJECT(afxThread)) > sizeof(afxThread), "");
-_AFX AFX_ALIGN(16) afxByte thePrimeThrData[AFX_ALIGNED_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) +
-AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT)] = { 0 };
+_AFX AFX_ALIGN(16) afxByte thePrimeThrData[AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) +
+AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT)] = { 0 };
 _AFX afxThread ThePrimeThread = (void*)&thePrimeThrData;
 AFX_STATIC_ASSERT(sizeof(ThePrimeThread[0]) > sizeof(void*), "");
 AFX_STATIC_ASSERT(sizeof(thePrimeThrData) >= (sizeof(afxObjectBase) + sizeof(ThePrimeThread[0])), "");
@@ -63,21 +67,21 @@ _AFX afxUnit32 AfxGetTid(void)
 #error "";
 #endif
     //return _currTid;
-    //return GetCurrentThreadId();
+    return GetCurrentThreadId();
     //return (_currTid = GetCurrentThreadId());// _currTid ? _currTid : (_currTid = GetCurrentThreadId());
-    return thrd_current();
+    return (afxUnit32)thrd_current();
 }
 
 _AFX afxBool AfxSleepNanoseconds(afxUnit64 nsecs, afxUnit64* remaining)
 {
     struct timespec tsi = { 0 }, tsr = { 0 };
-    tsi.tv_sec = nsecs / AFX_NSECS_PER_SEC;
-    tsi.tv_nsec = nsecs % AFX_NSECS_PER_SEC;
+    tsi.tv_sec = nsecs / AFX_NSECS_PER_SEC(1);
+    tsi.tv_nsec = nsecs % AFX_NSECS_PER_SEC(1);
     afxBool rslt = !(thrd_sleep(&tsi, &tsr));
 
     if (remaining)
     {
-        *remaining = tsr.tv_sec * AFX_NSECS_PER_SEC + tsr.tv_nsec;
+        *remaining = tsr.tv_sec * AFX_NSECS_PER_SEC(1) + tsr.tv_nsec;
     }
     return rslt;
 }
@@ -232,8 +236,8 @@ _AFXINL void _AfxGetThreadTime(afxThread thr, afxReal64* ct, afxReal64* dt)
     AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
     afxClock currClock;
     AfxGetClock(&currClock);
-    afxReal64 ct2 = AfxGetClockSecondsElapsed(&thr->startClock, &currClock);
-    afxReal64 dt2 = AfxGetClockSecondsElapsed(&thr->lastClock, &currClock);
+    afxReal64 ct2 = AfxGetSecondsElapsed(&thr->startClock, &currClock);
+    afxReal64 dt2 = AfxGetSecondsElapsed(&thr->lastClock, &currClock);
     thr->lastClock = currClock;
     AFX_ASSERT(ct);
     *ct = ct2;
@@ -495,7 +499,7 @@ _AFX int _AfxExecTxuCb(void** v)
             afxClock currClock, lastClock;
             AfxGetThreadClock(&currClock, &lastClock);
 
-            if (1.0 > AfxGetClockSecondsElapsed(&thr->execCntSwapClock, &currClock)) ++thr->execNo;
+            if (1.0 > AfxGetSecondsElapsed(&thr->execCntSwapClock, &currClock)) ++thr->execNo;
             else
             {
                 thr->execCntSwapClock = currClock;
@@ -750,7 +754,8 @@ _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
             {
                 void*osHandle2;
 
-                if (!(osHandle2 = (void*)OpenThread(THREAD_QUERY_INFORMATION, NIL, cfg->tid))) AfxThrowError();
+                if (!(osHandle2 = (void*)OpenThread(THREAD_QUERY_INFORMATION, NIL, cfg->tid)))
+                    AfxThrowError();
                 else
                 {
                     thr->osHandle = osHandle2;

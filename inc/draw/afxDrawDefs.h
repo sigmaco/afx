@@ -134,8 +134,8 @@ typedef enum avxLogicOp
 typedef enum avxFaceMask
 {
     avxFaceMask_NONE,
-    avxFaceMask_FRONT   = AFX_BIT(0),
-    avxFaceMask_BACK    = AFX_BIT(1),
+    avxFaceMask_FRONT   = AFX_BITMASK(0),
+    avxFaceMask_BACK    = AFX_BITMASK(1),
     avxFaceMask_BOTH    = (avxFaceMask_FRONT | avxFaceMask_BACK),
 } avxFaceMask;
 
@@ -145,8 +145,8 @@ typedef enum avxCullMode
 /// Following culling, fragments are produced for any triangles which have not been discarded.
 {
     avxCullMode_NONE, // specifies that no triangles are discarded.
-    avxCullMode_FRONT   = AFX_BIT(0), // specifies that front-facing triangles are discarded.
-    avxCullMode_BACK    = AFX_BIT(1), // specifies that back-facing triangles are discarded.
+    avxCullMode_FRONT   = AFX_BITMASK(0), // specifies that front-facing triangles are discarded.
+    avxCullMode_BACK    = AFX_BITMASK(1), // specifies that back-facing triangles are discarded.
     avxCullMode_BOTH    = avxCullMode_FRONT | avxCullMode_BACK, // specifies that all triangles are discarded.
     
     avxCullMode_TOTAL

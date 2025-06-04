@@ -53,7 +53,7 @@
 #define AFX_R(x_)   (x_)
 
 #ifndef AFX_PI
-#   define AFX_PI 3.14159265358979323846
+#   define AFX_PI (3.14159265358979323846)
 #endif
 #ifndef AFX_EPSILON32
 #   ifdef FLT_EPSILON
@@ -83,6 +83,14 @@
 #define AFX_180_OVER_PI     (180.0 / AFX_PI)
 #define AFX_180_OVER_PI32   (57.29578f)
 #define AFX_180_OVER_PI64   (57.295779513082320)
+
+// Converts degrees to radians.
+ // The value returned by this function is (pi / 180) * degrees.
+#define AFX_RADIANS(degrees_) ((degrees_) * AFX_PI_OVER_180)
+
+// Converts radians to degrees.
+// The value returned by this function is (180 / pi) * radians.
+#define AFX_DEGREES(radians_) ((radians_) * AFX_180_OVER_PI)
 
 #ifndef MFX_ALIGN_ALL
 typedef afxReal afxV2d[2];

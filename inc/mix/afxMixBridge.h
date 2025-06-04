@@ -30,8 +30,8 @@
 
 typedef enum afxMixPortFlag
 {
-    afxMixPortFlag_MIX = AFX_BIT(0), // supports mixing
-    afxMixPortFlag_SIM = AFX_BIT(1)
+    afxMixPortFlag_MIX = AFX_BITMASK(0), // supports mixing
+    afxMixPortFlag_SIM = AFX_BITMASK(1)
 } afxMixPortFlags;
 
 AFX_DEFINE_STRUCT(afxMixCapabilities)

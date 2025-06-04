@@ -22,7 +22,7 @@
 
 typedef enum afxIoPortFlag
 {
-    afxIoPortFlag_      = AFX_BIT(0),
+    afxIoPortFlag_      = AFX_BITMASK(0),
 } afxIoPortFlags;
 
 AFX_DEFINE_STRUCT(afxIoPortCaps)

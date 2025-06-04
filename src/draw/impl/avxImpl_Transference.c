@@ -73,8 +73,8 @@ _AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit 
     {
         while (lodIdx--)
         {
-            afxUnit rowStride = AFX_ALIGNED_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
-            afxUnit imgStride = AFX_ALIGNED_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
+            afxUnit rowStride = AFX_ALIGN_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
+            afxUnit imgStride = AFX_ALIGN_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
             lay2.offset += whd.d * imgStride;
 
             whd.w = AFX_MAX(1, whd.w * 2);
@@ -82,8 +82,8 @@ _AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit 
             if (is3d) whd.d = AFX_MAX(1, whd.d * 2);
         }
 
-        afxUnit rowStride = AFX_ALIGNED_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
-        afxUnit imgStride = AFX_ALIGNED_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
+        afxUnit rowStride = AFX_ALIGN_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
+        afxUnit imgStride = AFX_ALIGN_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
         
         lay2.rowStride = rowStride;
         lay2.imgStride = imgStride;
@@ -92,8 +92,8 @@ _AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit 
     {
         while (lodIdx--)
         {
-            afxUnit rowStride = AFX_ALIGNED_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
-            afxUnit imgStride = AFX_ALIGNED_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
+            afxUnit rowStride = AFX_ALIGN_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
+            afxUnit imgStride = AFX_ALIGN_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
             lay2.offset += whd.d * imgStride;
 
             whd.w = AFX_MAX(1, whd.w >> 1);
@@ -101,8 +101,8 @@ _AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit 
             if (is3d) whd.d = AFX_MAX(1, whd.d >> 1);
         }
 
-        afxUnit rowStride = AFX_ALIGNED_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
-        afxUnit imgStride = AFX_ALIGNED_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
+        afxUnit rowStride = AFX_ALIGN_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
+        afxUnit imgStride = AFX_ALIGN_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
         
         lay2.rowStride = rowStride;
         lay2.imgStride = imgStride;

@@ -57,14 +57,62 @@ AVX afxUnit     AvxGetCommandPort(afxDrawContext dctx);
 
 AVX afxUnit     AvxGetCommandPool(afxDrawContext dctx);
 
-/// Finish recording a draw context.
+AVX afxError        AvxExhaustDrawContext
+(
+    afxDrawContext  dctx,
+    afxBool         freeMem
+);
 
-AVX afxError    AvxCompileDrawCommands(afxDrawContext dctx);
+AVX afxError        AvxRecordDrawCommands
+(
+    // The draw context which the batch will be allocated from.
+    afxDrawContext  dctx, 
+    // A flag specifying a one-time submission batch.
+    afxBool         once, 
+    // A flag specifying a inlineable batch.
+    afxBool         deferred, 
+    // A variable to hold the unique identifier for the batch.
+    afxUnit*        batchId
+);
 
 /// Reset a draw context to the initial state.
 /// Any primary draw context that is in the recording or executable state and has @dctx recorded into it, becomes invalid.
 
-AVX afxError    AfxExhaustDrawContext(afxDrawContext dctx, afxBool freeMem);
+AVX afxError        AvxDiscardDrawCommands
+(
+    afxDrawContext  dctx,
+    afxBool         freeRes
+);
+
+/// Finish recording a draw context.
+
+AVX afxError        AvxCompileDrawCommands
+(
+    // The draw context recording commands.
+    afxDrawContext  dctx,
+    // The batch which commands will be compiled into.
+    afxUnit         batchId
+);
+
+/*
+    The AvxRecycleDrawCommands() function recycles draw batches, releasing resources or allowing for reuse.
+    This function is used to opportunistically try to recycle draw batches (potentially preserving allocations) or destroy it.
+
+    A flag can be used to indicate whether all or most of the resources owned by the batch should be reclaimed by the system.
+    If this flag is not set, then the draw batch may hold onto memory resources and reuse them when recording commands.
+*/
+
+AVX afxError        AvxRecycleDrawCommands
+(
+    // The draw context that holds the commands.
+    afxDrawContext  dctx, 
+    // The unique identifier for the draw batch.
+    afxUnit         batchId, 
+    // A flag that indicates whether all or most of the resources owned by the batch should be reclaimed by the system.
+    afxBool         freeRes
+);
+
+AVX afxBool AvxDoesDrawCommandsExist(afxDrawContext dctx, afxUnit batchId);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -87,31 +135,9 @@ AVX afxError        AvxAcquireDrawContexts
     // The execution unit index (in Mantle, this refers to a specific GPU hardware unit or execution engine).
     // NOTE 1 mentions that, in Mantle, unlike Vulkan, you specify queue capabilities rather than the execution unit index.
     afxUnit         exuIdx, 
-    // The queue index in the graphics API (e.g., rendering or compute queue), indicating the command queue to use for these draw contexts.
-    afxUnit         queIdx, 
     // The count of the draw contexts wanted to be allocated.
     afxUnit         cnt, 
     // An array of draw contexts to be allocated.
-    afxDrawContext  contexts[]
-);
-
-/*
-    The AvxRecycleDrawContexts() function recycles draw contexts, releasing resources or allowing for reuse.
-    This function is used to opportunistically try to recycle draw contexts (potentially preserving allocations) or dispose it.
-    
-    A flag can be used to indicate whether all or most of the resources owned by the context should be reclaimed by the system.
-    If this flag is not set, then the draw context may hold onto memory resources and reuse them when recording commands.
-*/
-
-AVX afxError        AvxRecycleDrawContexts
-(
-    // The draw system providing the draw contexts.
-    afxDrawSystem   dsys,
-    // A flag that indicates whether all or most of the resources owned by the context should be reclaimed by the system.
-    afxBool         exhaust,
-    // The count of draw contexts to be recycled.
-    afxUnit         cnt,
-    // An array of draw contexts that need to be recycled.
     afxDrawContext  contexts[]
 );
 
@@ -142,8 +168,7 @@ AVX afxError        AvxExecuteDrawCommands
     // for rendering objects, setting up shaders, and managing resources.
     afxDrawContext  contexts[],
 
-    // A fence object to be signaled, used for synchronization.
-    avxFence        fence
+    afxUnit const   batches[]
 );
 
 #endif//AVX_DRAW_CONTEXT_H

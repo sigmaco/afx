@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  ////////////////////////////////////////////////////////////////////////////////
+ // FIXED-SIZE PAGED MEMORY STACK                                              //
+////////////////////////////////////////////////////////////////////////////////
+
 /**
     A Stack is a linear data structure in which elements can be inserted and deleted only from one side of the list, called the top. 
     A stack follows the LIFO (Last In First Out) principle. Example: the element inserted at the last is the first element to come out. 
@@ -30,6 +34,7 @@
 
 #if (defined _AFX_DEBUG) && !(defined(_AFX_STACK_VALIDATION_ENABLED))
 #   define _AFX_STACK_VALIDATION_ENABLED TRUE
+#   define _AFX_STACK_METRICS_ENABLED TRUE
 #endif
 
 AFX_DEFINE_STRUCT(afxStackPage)
@@ -41,38 +46,125 @@ AFX_DEFINE_STRUCT(afxStackPage)
 };
 
 AFX_DEFINE_STRUCT(afxStack)
+// Structure establishing a arena-style memory stack for efficient and reusable memory allocations in fixed-size units.
 {
 #ifdef _AFX_STACK_VALIDATION_ENABLED
+    // (Optional) FourCC to validate the struct at runtime. Helps catch corruption or miscasts.
     afxFcc          fcc; // afxFcc_STAK;
 #endif
+    // Size in bytes of a single allocation unit in this stack.
     afxUnit         unitSiz;
+    // Number of allocation units per block (aka a page).
     afxUnit         unitsPerBlock;
+    // Total number of units currently in use across all blocks.
     afxUnit         totalUsedUnitCnt;
+    // Pointer to the most recently used (and probably still active) block/page.
     afxStackPage*   lastBlock;
+    // Optional cap on how many units the whole stack can hold.
     afxUnit         maxUnits;
+    // How many memory blocks are currently allocated and in use.
     afxUnit         activeBlocks;
+    // Optional cap on the number of blocks the stack is allowed to grow to.
     afxUnit         maxActiveBlocks;
+    // Directory/array of pointers to all blocks used by this stack.
     afxStackPage**  blockDir;
+    // Memory context or allocator from which memory is acquired (like malloc replacement).
     afxMmu          ctx;
+#ifdef _AFX_STACK_METRICS_ENABLED
+    afxUnit         peakUsedUnitCnt;
+    afxUnit         peakActiveBlocks;
+    afxUnit         totalAllocatedBlocks;  // Cumulative over time
+    afxUnit         totalAllocatedBytes;   // Cumulative bytes ever allocated
+#endif
 };
 
-AFX void        AfxAllocateStack(afxStack* stak, afxUnit unitSiz, afxUnit unitsPerBlock);
-AFX void        AfxAllocatePagedStack(afxStack* stak, afxUnit unitSiz, afxUnit unitsPerBlock, afxUnit maxUnits);
-AFX void        AfxDeallocateStack(afxStack* stak);
+AFX_DEFINE_STRUCT(afxStackStats)
+{
+    afxUnit         unitSiz;
+    afxUnit         unitsPerBlock;
 
-AFX void        AfxEmptyStack(afxStack* stak);
+    afxUnit         totalUsedUnitCnt;
+    afxUnit         totalAllocatedUnitCnt;
 
-AFX void*       AfxGetStackUnit(afxStack* stak, afxUnit idx);
-AFX void        AfxPopStackUnits(afxStack* stak, afxUnit cnt);
-AFX void*       AfxPushStackUnit(afxStack* stak, afxUnit *idx);
-AFX char        AfxPushStackUnits(afxStack* stak, afxUnit cnt, afxUnit *firstIdx, void const *initialVal);
+    afxUnit         activeBlocks;
+    afxUnit         maxActiveBlocks;
 
-AFX void        AfxDumpStackElement(afxStack* stak, afxUnit idx, void *dst);
-AFX void        AfxDumpStackElements(afxStack* stak, afxUnit first, afxUnit cnt, void *dst);
+    afxUnit         usedBytes;
+    afxUnit         allocatedBytes;
+    afxUnit         slackBytes;
 
-AFX void        AfxUpdateStackElement(afxStack* stak, afxUnit idx, void const* src);
-AFX void        AfxUpdateStackElements(afxStack* stak, afxUnit first, afxUnit cnt, void const* src);
+#ifdef _AFX_STACK_METRICS_ENABLED
+    afxUnit         peakUsedUnitCnt;
+    afxUnit         peakActiveBlocks;
+    afxUnit         totalAllocatedBlocks;  // Cumulative over time
+    afxUnit         totalAllocatedBytes;   // Cumulative bytes ever allocated
+#endif
+};
 
-AFX void        AfxDumpStack(afxStack* stak, void *dst);
+
+
+AFX void            AfxInitStack
+(
+    afxStack*       stak, 
+    afxUnit         unitSiz, 
+    afxUnit         unitsPerBlock, 
+    afxUnit         maxUnits
+);
+
+AFX void            AfxExhaustStack
+(
+    afxStack*       stak, 
+    afxBool         fully
+);
+
+AFX void*           AfxPushStack
+(
+    afxStack*       stak, 
+    afxUnit         cnt, 
+    afxUnit*        first, 
+    void const*     src, 
+    afxUnit         stride
+);
+
+AFX void            AfxPopStack
+(
+    afxStack*       stak, 
+    afxUnit         cnt
+);
+
+AFX void*           AfxPeekStack
+(
+    afxStack*       stak, 
+    afxUnit         idx
+);
+
+AFX void            AfxDumpStack
+(
+    afxStack*       stak, 
+    afxUnit         first, 
+    afxUnit         cnt, 
+    void*           dst, 
+    afxUnit         stride
+);
+
+AFX void            AfxUpdateStack
+(
+    afxStack*       stak, 
+    afxUnit         first, 
+    afxUnit         cnt, 
+    void const*     src, 
+    afxUnit         srcStride
+);
+
+AFX void            AfxQueryStackStatistics
+(
+    afxStack const* stak, 
+    afxStackStats*  stats
+);
+
+AFX void            AfxPrintStackStats
+(
+    afxStack const* stak
+);
 
 #endif//AFX_STACK_H

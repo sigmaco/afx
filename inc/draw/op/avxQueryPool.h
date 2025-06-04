@@ -23,10 +23,10 @@
 
 typedef enum avxQueryResultFlag
 {
-    avxQueryResultFlag_64 = AFX_BIT(0), // the results will be written as an array of 64-bit unsigned integer values. If this bit is not set, the results will be written as an array of 32-bit unsigned integer values.
-    avxQueryResultFlag_WAIT = AFX_BIT(1), // will wait for each query’s status to become available before retrieving its results.
-    avxQueryResultFlag_WITH_AVAIL = AFX_BIT(2), // the availability status accompanies the results.
-    avxQueryResultFlag_PARTIAL = AFX_BIT(3) // returning partial results is acceptable.
+    avxQueryResultFlag_64 = AFX_BITMASK(0), // the results will be written as an array of 64-bit unsigned integer values. If this bit is not set, the results will be written as an array of 32-bit unsigned integer values.
+    avxQueryResultFlag_WAIT = AFX_BITMASK(1), // will wait for each query’s status to become available before retrieving its results.
+    avxQueryResultFlag_WITH_AVAIL = AFX_BITMASK(2), // the availability status accompanies the results.
+    avxQueryResultFlag_PARTIAL = AFX_BITMASK(3) // returning partial results is acceptable.
 } avxQueryResultFlags;
 
 typedef enum avxQueryType

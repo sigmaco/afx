@@ -79,8 +79,8 @@ _AFX afxBool _AfxExuStdIoProcCb(afxIoBridge exu, afxThread thr)
                 AfxGetTime(&work->hdr.complTime);
                 _AfxXquePopWork(xque, work);
             }
-            AfxUnlockMutex(&xque->workChnMtx);
             AfxSignalCondition(&xque->idleCnd);
+            AfxUnlockMutex(&xque->workChnMtx);
         }
     }
     return TRUE;

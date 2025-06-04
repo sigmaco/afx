@@ -51,17 +51,17 @@
 
 typedef enum afxUriPart
 {
-    afxUriPart_SCHEME   = AFX_BIT(0),
-    afxUriPart_HOST     = AFX_BIT(1),
-    afxUriPart_PORT     = AFX_BIT(2),
+    afxUriPart_SCHEME   = AFX_BITMASK(0),
+    afxUriPart_HOST     = AFX_BITMASK(1),
+    afxUriPart_PORT     = AFX_BITMASK(2),
     afxUriPart_AUTHORITY= (afxUriPart_HOST | afxUriPart_PORT),
-    afxUriPart_DIR      = AFX_BIT(3),
-    afxUriPart_TARGET   = AFX_BIT(4),
-    afxUriPart_FILEXT   = AFX_BIT(5),
+    afxUriPart_DIR      = AFX_BITMASK(3),
+    afxUriPart_TARGET   = AFX_BITMASK(4),
+    afxUriPart_FILEXT   = AFX_BITMASK(5),
     afxUriPart_FILE     = (afxUriPart_TARGET | afxUriPart_FILEXT),
     afxUriPart_PATH     = (afxUriPart_DIR | afxUriPart_FILE | afxUriPart_FILEXT),
-    afxUriPart_QUERY    = AFX_BIT(6),
-    afxUriPart_FRAGMENT = AFX_BIT(7)
+    afxUriPart_QUERY    = AFX_BITMASK(6),
+    afxUriPart_FRAGMENT = AFX_BITMASK(7)
 } afxUriPart;
 
 AFX_DEFINE_STRUCT(afxUri)

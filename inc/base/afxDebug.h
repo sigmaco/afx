@@ -154,7 +154,7 @@ AFX void AfxRaiseException(afxError errCode, afxHere const hint);
 #   define AFX_ASSERT8(a_, b_, c_, d_, e_, f_, g_, h_) AFX_ASSERT7((a_),(b_),(c_),(d_),(e_),(f_),(g_)), AFX_ASSERT((h_))
 #   define AFX_ASSERT9(a_, b_, c_, d_, e_, f_, g_, h_, i_) AFX_ASSERT8((a_),(b_),(c_),(d_),(e_),(f_),(g_),(h_)), AFX_ASSERT((i_))
 
-#   define AFX_ASSERT_S(cond_,_msg_)  /*assert(cond_)*/           ((!!((cond_)))||(AfxThrowError(),AfxReportAssert("%s\n    %s",AFX_STRINGIFY((cond_)),((_msg_,0))),0))
+#   define AFX_ASSERT_S(cond_,_msg_)  /*assert(cond_)*/           ((!!((cond_)))||(AfxThrowError(),AfxReportAssert("%s\n    %s",AFX_STRINGIFY((cond_))),0))
 
 #   define AFX_ASSERT_AND(condA_,condB_) ((!!((condA_) && (condB_)))||(AfxThrowError(),AfxReportAssert("%s\n    %s",AFX_STRINGIFY((condA_) && (condB_)),errorMsg[0]),0))
 #   define AFX_ASSERT_XOR(condA_,condB_) ((!!((condA_) || (condB_)))||(AfxThrowError(),AfxReportAssert("%s\n    %s",AFX_STRINGIFY((condA_) || (condB_)),errorMsg[0]),0))

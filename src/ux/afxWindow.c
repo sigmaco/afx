@@ -159,7 +159,7 @@ _AUX afxMask AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, afxDraw
         if (dout)
         {
             AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-            found |= AFX_BIT(0);
+            found |= AFX_BITMASK(0);
         }
     }
     
@@ -170,7 +170,7 @@ _AUX afxMask AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, afxDraw
         if (dout)
         {
             AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-            found |= AFX_BIT(1);
+            found |= AFX_BITMASK(1);
         }
     }
 
@@ -187,9 +187,9 @@ _AUX void _AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt)
     afxClock currClock;
     AfxGetClock(&currClock);
     AFX_ASSERT(ct);
-    *ct = AfxGetClockSecondsElapsed(&wnd->startClock, &currClock);
+    *ct = AfxGetSecondsElapsed(&wnd->startClock, &currClock);
     AFX_ASSERT(dt);
-    *dt = AfxGetClockSecondsElapsed(&wnd->lastClock, &currClock);
+    *dt = AfxGetSecondsElapsed(&wnd->lastClock, &currClock);
     wnd->lastClock = currClock;
 }
 
@@ -212,9 +212,17 @@ _AUX afxError AfxMakeWindowCursory(afxWindow wnd, afxBool cursory, afxRect const
     }
     else
     {
-        if (AvxDoesRectContain(&wnd->frameRect, confinement))
-            if (AfxClipRectUnion(&wnd->cursConfinRect, &wnd->frameRect, confinement))
-                wnd->cursConfined = TRUE;
+        // Possibly replace Union with Intersection if that's more appropriate.
+        if (AfxIntersectRects(&wnd->cursConfinRect, &wnd->frameRect, confinement))
+        {
+            wnd->cursConfined = TRUE;
+        }
+        else
+        {
+            // Optionally handle error here.
+            wnd->cursConfined = FALSE;
+            err = afxError_INSUFFICIENT; // confinement is outside frame.
+        }
     }
     return err;
 }
@@ -281,32 +289,30 @@ _AUX void AfxGetWindowRect(afxWindow wnd, afxRect* frame, afxRect* surface)
         *surface = wnd->surfaceRect;
 }
 
-_AUX afxError AfxAdjustWindow(afxWindow wnd, afxBool frame, afxRect const* rc)
+_AUX afxError AfxAdjustWindow(afxWindow wnd, afxRect const* frame, afxRect const* surface)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
-    afxDesktop* dwm = wnd->dwm;
+    AFX_ASSERT(frame || surface);
 
     if (wnd->pimpl->adjustCb)
     {
-        if (wnd->pimpl->adjustCb(wnd, frame, rc))
+        if (wnd->pimpl->adjustCb(wnd, frame, surface))
             AfxThrowError();
 
         return err;
     }
 
+    afxDesktop* dwm = wnd->dwm;
+
     if (frame)
     {
-        afxRect rc2 = *rc;
+        afxRect rc2 = *frame;
         rc2.w = AFX_MAX(1, rc2.w);
         rc2.h = AFX_MAX(1, rc2.h);
 
-        if ((wnd->frameRect.w != rc2.w) ||
-            (wnd->frameRect.h != rc2.h) ||
-            (wnd->frameRect.x != rc2.x) ||
-            (wnd->frameRect.y != rc2.y))
+        if (!AfxAreRectsEqual(&wnd->frameRect, &rc2))
         {
-
             AFX_ASSERT2(rc2.w, rc2.h);
             wnd->frameRect = rc2;
             wnd->surfaceRect.x = wnd->marginL;
@@ -317,7 +323,7 @@ _AUX afxError AfxAdjustWindow(afxWindow wnd, afxBool frame, afxRect const* rc)
     }
     else
     {
-        afxRect rc2 = *rc;
+        afxRect rc2 = *surface;
         rc2.x += wnd->frameRect.x;
         rc2.y += wnd->frameRect.y;
         rc2.w = AFX_MAX(1, rc2.w);

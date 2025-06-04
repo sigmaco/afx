@@ -313,36 +313,36 @@ typedef enum avxFormatType
 typedef enum avxFormatFlag
 // Flags specifying features supported by a format.
 {
-    avxFormatFlag_COLOR         = AFX_BIT(0),
-    avxFormatFlag_DEPTH         = AFX_BIT(1),
-    avxFormatFlag_STENCIL       = AFX_BIT(2),
-    avxFormatFlag_LUMINANCE     = AFX_BIT(3),
-    avxFormatFlag_CHROMINANCE   = AFX_BIT(4),
+    avxFormatFlag_COLOR         = AFX_BITMASK(0),
+    avxFormatFlag_DEPTH         = AFX_BITMASK(1),
+    avxFormatFlag_STENCIL       = AFX_BITMASK(2),
+    avxFormatFlag_LUMINANCE     = AFX_BITMASK(3),
+    avxFormatFlag_CHROMINANCE   = AFX_BITMASK(4),
 
-    avxFormatFlag_sRGB          = AFX_BIT(5),
-    avxFormatFlag_COMPRESSED    = AFX_BIT(6),
-    avxFormatFlag_SUBSAMPLED    = AFX_BIT(7),
-    avxFormatFlag_NORMALIZED    = AFX_BIT(8),
+    avxFormatFlag_sRGB          = AFX_BITMASK(5),
+    avxFormatFlag_COMPRESSED    = AFX_BITMASK(6),
+    avxFormatFlag_SUBSAMPLED    = AFX_BITMASK(7),
+    avxFormatFlag_NORMALIZED    = AFX_BITMASK(8),
 } avxFormatFlags;
 
 typedef enum avxFormatCap
 // Flags specifying usages/features supported by a format.
 {
-    avxFormatCap_COPY_SRC   = AFX_BIT(0),
-    avxFormatCap_COPY_DST   = AFX_BIT(1),
+    avxFormatCap_COPY_SRC   = AFX_BITMASK(0),
+    avxFormatCap_COPY_DST   = AFX_BITMASK(1),
     avxFormatCap_COPY       = (avxFormatCap_COPY_SRC | avxFormatCap_COPY_DST),
-    avxFormatCap_BLIT_SRC   = AFX_BIT(2),
-    avxFormatCap_BLIT_DST   = AFX_BIT(3),
+    avxFormatCap_BLIT_SRC   = AFX_BITMASK(2),
+    avxFormatCap_BLIT_DST   = AFX_BITMASK(3),
     avxFormatCap_BLIT       = (avxFormatCap_BLIT_SRC | avxFormatCap_BLIT_DST),
-    avxFormatCap_DRAW       = AFX_BIT(4),
-    avxFormatCap_BLEND      = AFX_BIT(5),
+    avxFormatCap_DRAW       = AFX_BITMASK(4),
+    avxFormatCap_BLEND      = AFX_BITMASK(5),
     avxFormatCap_COMPOSE    = (avxFormatCap_DRAW | avxFormatCap_BLEND),
 
-    avxFormatCap_RASTER     = AFX_BIT(6),
-    avxFormatCap_IMAGE      = AFX_BIT(7),
-    avxFormatCap_TBO        = AFX_BIT(8),
-    avxFormatCap_STBO       = AFX_BIT(9),
-    avxFormatCap_VERTEX     = AFX_BIT(10),
+    avxFormatCap_RASTER     = AFX_BITMASK(6),
+    avxFormatCap_IMAGE      = AFX_BITMASK(7),
+    avxFormatCap_TBO        = AFX_BITMASK(8),
+    avxFormatCap_STBO       = AFX_BITMASK(9),
+    avxFormatCap_VERTEX     = AFX_BITMASK(10),
 } avxFormatCaps;
 
 AFX_DEFINE_STRUCT(avxFormatDescription)

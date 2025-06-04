@@ -109,21 +109,18 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
                 avxFence dfen = fences[i];
                 AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &dfen);
 
-                if (dfen->signaled)
-                    return err;
-
                 if (AfxLoadAtom32(&dfen->signaled))
                     return err;
             }
 
             if (timeout)
             {
-                if (timeout == AFX_TIME_INFINITE)
+                if ((timeout == AFX_TIMEOUT_INFINITE) || (timeout == AFX_TIME_INFINITE))
                     continue;
 
                 afxClock curr;
                 AfxGetClock(&curr);
-                afxReal64 dt = AfxGetClockUltrasecondsElapsed(&last, &curr);
+                afxInt64 dt = AfxGetUltrasecondsElapsed(&last, &curr);
                 last = curr;
 
                 if (timeout < dt)
@@ -143,17 +140,17 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
 
             while (1)
             {
-                if (dfen->signaled)
+                if (AfxLoadAtom32(&dfen->signaled))
                     break;
 
                 if (timeout)
                 {
-                    if (timeout == AFX_TIME_INFINITE)
+                    if ((timeout == AFX_TIMEOUT_INFINITE) || (timeout == AFX_TIME_INFINITE))
                         continue;
 
                     afxClock curr;
                     AfxGetClock(&curr);
-                    afxReal64 dt = AfxGetClockUltrasecondsElapsed(&last, &curr);
+                    afxInt64 dt = AfxGetUltrasecondsElapsed(&last, &curr);
                     last = curr;
 
                     if (timeout < dt)

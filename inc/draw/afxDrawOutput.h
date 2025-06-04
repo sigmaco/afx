@@ -70,15 +70,15 @@ typedef enum avxVideoScaling
 {
     // Do not scale.
     // Pixels are mapped to one and only one pixel in the surface.
-    avxVideoScaling_ONE_TO_ONE    = AFX_BIT(0),
+    avxVideoScaling_ONE_TO_ONE    = AFX_BITMASK(0),
 
     // Minify or magnify such that at least one of the resulting width or height is equal to the corresponding surface dimension, 
     // and the other resulting dimension is less than or equal to the corresponding surface dimension, 
     // with the aspect ratio of the resulting image being identical to that of the original swapchain image.
-    avxVideoScaling_ASPECT_RATIO  = AFX_BIT(1),
+    avxVideoScaling_ASPECT_RATIO  = AFX_BITMASK(1),
 
     // minify or magnify such that the resulting dimensions are equal to those of the surface.
-    avxVideoScaling_STRETCH       = AFX_BIT(2)
+    avxVideoScaling_STRETCH       = AFX_BITMASK(2)
 } avxVideoScaling;
 
 typedef enum avxVideoTransform
@@ -88,19 +88,19 @@ typedef enum avxVideoTransform
     avxVideoTransform_IDENTITY,
 
     // 90 degrees rotated
-    avxVideoTransform_90 = AFX_BIT(0),
+    avxVideoTransform_90 = AFX_BITMASK(0),
     
     // 180 degrees rotated
-    avxVideoTransform_180 = AFX_BIT(1),
+    avxVideoTransform_180 = AFX_BITMASK(1),
     
     // 270 degrees rotated
-    avxVideoTransform_270 = AFX_BIT(2),
+    avxVideoTransform_270 = AFX_BITMASK(2),
 
     // Invert pixel grid horizontally.
-    avxVideoTransform_FLIP_H = AFX_BIT(3),
+    avxVideoTransform_FLIP_H = AFX_BITMASK(3),
 
     // Invert pixel grid vertically.
-    avxVideoTransform_FLIP_V  = AFX_BIT(4),
+    avxVideoTransform_FLIP_V  = AFX_BITMASK(4),
 
     // 90 degress rotated + V mirror
     avxVideoTransform_90FV = (avxVideoTransform_90 | avxVideoTransform_FLIP_V),
@@ -113,13 +113,13 @@ typedef enum avxVideoAlpha
 {
     // Ignore alpha component in the compositing process. 
     // The raster is treated as if it has a constant alpha of 1.0.
-    avxVideoAlpha_OPAQUE      = AFX_BIT(0),
+    avxVideoAlpha_OPAQUE      = AFX_BITMASK(0),
 
     // The compositor will respect the alpha component.
-    avxVideoAlpha_PREMUL      = AFX_BIT(1),
+    avxVideoAlpha_PREMUL      = AFX_BITMASK(1),
 
     // The compositor will multiply the color components of the raster by the alpha component during compositing.
-    avxVideoAlpha_POSTMUL     = AFX_BIT(2)
+    avxVideoAlpha_POSTMUL     = AFX_BITMASK(2)
 
     // If no option is chosen, the way in which the presentation engine treats the alpha component in the images is unknown to the SIGMA GL/2 API. 
     // Instead, the application is responsible for setting the composite alpha blending mode using native window system commands. 
@@ -130,10 +130,10 @@ typedef enum avxPresentFlag
 // Flags specifying the presentation rules.
 {
     // Frame rate limited.
-    avxPresentFlag_RATE_LIMITED = AFX_BIT(0),
+    avxPresentFlag_RATE_LIMITED = AFX_BITMASK(0),
 
     // Screen tearing explicitly forbidden
-    avxPresentFlag_NO_TEARING   = AFX_BIT(1),
+    avxPresentFlag_NO_TEARING   = AFX_BITMASK(1),
 
     // Frame rate limited, screen tearing forbidden. ('vsync on')
     avxPresentFlag_VSYNC        = (avxPresentFlag_RATE_LIMITED | avxPresentFlag_NO_TEARING),
@@ -254,22 +254,22 @@ AVX afxError AvxCallDrawOutput(afxDrawOutput dout, afxUnit code, ...);
     particular screen or rendering target.
 */
 
-AVX void AvxQueryDrawOutputResolution
+AVX void            AvxQueryDrawOutputResolution
 (
     // The drawing output for which resolution details are queried.
-    afxDrawOutput dout,
+    afxDrawOutput   dout,
     
     // The width-to-physical aspect ratio (possibly the horizontal scaling factor).
-    afxReal64* wpOverHp,
+    afxReal64*      wpOverHp,
     
     // Pointer to store the current refresh rate (e.g., 60Hz, 120Hz).
-    afxReal* refreshRate,
+    afxReal*        refreshRate,
     
     // Pointer to store the current resolution (width x height).
-    avxRange* resolution,
+    avxRange*       resolution,
     
     // The width-to-physical aspect ratio (possibly the vertical scaling factor).
-    afxReal64* wrOverHr
+    afxReal64*      wrOverHr
 );
 
 /*
@@ -278,35 +278,35 @@ AVX void AvxQueryDrawOutputResolution
     change is in an exclusive fullscreen mode.
 */
 
-AVX afxError AvxModifyDrawOutputSettings
+AVX afxError    AvxModifyDrawOutputSettings
 (
     // The drawing output to be reset or configured.
-    afxDrawOutput dout,
+    afxDrawOutput   dout,
 
     // The physical aspect ratio of the display.
-    afxReal64 physAspectRatio,
+    afxReal64       physAspectRatio,
 
     // The refresh rate to be set (e.g., 60Hz, 120Hz).
-    afxReal refreshRate,
+    afxReal         refreshRate,
 
     // The desired screen resolution (Width x Height).
-    avxRange resolution,
+    avxRange        resolution,
 
     // A flag indicating if the resolution change is exclusive (possibly fullscreen).
-    afxBool exclusive
+    afxBool         exclusive
 );
 
 /*
     The primary purpose of AvxAdjustDrawOutput() is to adjust the properties (such as resolution, size, or other dimensions) 
     of the specified drawing output (dout) according to the provided width, height, and depth values (whd).
 */
-AVX afxError AvxAdjustDrawOutput
+AVX afxError        AvxAdjustDrawOutput
 (
     // The drawing output whose properties are to be adjusted.
-    afxDrawOutput dout, 
+    afxDrawOutput   dout, 
 
     // The new width, height, and depth to which the drawing output should be adjusted.
-    avxRange whd
+    avxRange        whd
 );
 
 AVX afxError _AvxDoutAdjustNormalized(afxDrawOutput dout, afxV3d const whd);
@@ -321,16 +321,16 @@ AVX void AvxGetDrawOutputRate(afxDrawOutput dout, afxUnit* rate);
     resolution and other relevant properties.
 */
 
-AVX void AvxQueryDrawOutputExtent
+AVX void            AvxQueryDrawOutputExtent
 (
     // The drawing output whose extent (size) is being queried.
-    afxDrawOutput dout, 
+    afxDrawOutput   dout, 
 
     // A pointer to a structure or variable that will hold the extent (size) of the drawing output, typically including the width, height, and potentially the depth.
-    avxRange* extent,
+    avxRange*       extent,
 
     // A pointer to a afxReal64 value that will store a ratio or value representing width over height.
-    afxReal64* wwOverHw
+    afxReal64*      wwOverHw
 );
 
 /*
@@ -340,16 +340,16 @@ AVX void AvxQueryDrawOutputExtent
     buffering) or an on-screen rendering target.
 */
 
-AVX afxBool AvxGetDrawOutputCanvas
+AVX afxBool         AvxGetDrawOutputCanvas
 (
     // Drawing output for which the canvas is being queried.
-    afxDrawOutput dout,
+    afxDrawOutput   dout,
 
     // Index of the buffer or canvas that is being queried.
-    afxUnit bufIdx,
+    afxUnit         bufIdx,
 
     // Pointer to the canvas that will hold the queried information.
-    avxCanvas* canvas
+    avxCanvas*      canvas
 );
 
 /*
@@ -359,16 +359,16 @@ AVX afxBool AvxGetDrawOutputCanvas
     used for rendering.
 */
 
-AVX afxBool AvxGetDrawOutputBuffer
+AVX afxBool         AvxGetDrawOutputBuffer
 (
     // The drawing output for which you want to retrieve the buffer.
-    afxDrawOutput dout,
+    afxDrawOutput   dout,
 
     // The buffer index that specifies which buffer to retrieve.
-    afxUnit bufIdx, 
+    afxUnit         bufIdx, 
 
     // A pointer to where the function will store the reference to the retrieved buffer.
-    avxRaster* buffer
+    avxRaster*      buffer
 );
 
 AVX afxError AvxRevalidateDrawOutputBuffers(afxDrawOutput dout);
@@ -392,16 +392,25 @@ AVX afxError AvxRevalidateDrawOutputBuffers(afxDrawOutput dout);
     You must present or discard it at some time to avoid starvation.
 */
 
-AVX afxError AvxRequestDrawOutputBuffer
+AVX afxError        AvxRequestDrawOutputBuffer
 (
     // The drawing output for which to request a buffer.
-    afxDrawOutput dout,
+    afxDrawOutput   dout,
 
     // The timeout duration to wait for the buffer to be available.
-    afxUnit64 timeout,
+    afxUnit64       timeout,
+
+    // A semaphore to signal.
+    afxSemaphore    sem,
+
+    // A fence to signal.
+    avxFence        fenc,
+
+    // A bitmask specifying which bridges can used the buffer when ready and signaled so.
+    afxMask         exuMask,
 
     // A pointer to store the index of the reserved buffer.
-    afxUnit *bufIdx
+    afxUnit*        bufIdx
 );
 
 /*
@@ -414,13 +423,13 @@ AVX afxError AvxRequestDrawOutputBuffer
     but the system still needs to manage resources efficiently.
 */
 
-AVX afxError AvxRecycleDrawOutputBuffer
+AVX afxError        AvxRecycleDrawOutputBuffer
 (
     // The drawing output associated with the buffer.
-    afxDrawOutput dout,
+    afxDrawOutput   dout,
 
     // The index of the buffer to discard.
-    afxUnit bufIdx
+    afxUnit         bufIdx
 );
 
 /*
@@ -434,13 +443,13 @@ AVX afxError AvxRecycleDrawOutputBuffer
     proceeding with additional steps.
 */
 
-AVX afxError AvxWaitForDrawOutput
+AVX afxError        AvxWaitForDrawOutput
 (
     // The drawing output to wait for.
-    afxDrawOutput dout,
+    afxDrawOutput   dout,
 
     // The timeout duration to wait for the drawing output to be ready.
-    afxTime timeout
+    afxTime         timeout
 );
 
 /*
@@ -452,21 +461,21 @@ AVX afxError AvxWaitForDrawOutput
     exporting frames in a video sequence, or saving images for further processing).
 */
 
-AVX afxError AvxPrintDrawOutput
+AVX afxError        AvxPrintDrawOutput
 (
     // The drawing output for which the content is to be printed or saved.
-    afxDrawOutput dout, 
+    afxDrawOutput   dout, 
 
     // The index of the buffer or canvas (e.g., front buffer, back buffer).
-    afxUnit bufIdx,
+    afxUnit         bufIdx,
 
-    avxRasterIo const* op,
+    avxRasterIo const*op,
 
     // The index of the execution unit to handle the I/O.
-    afxUnit exuIdx, 
+    afxUnit         exuIdx, 
 
     // The URI (Uniform Resource Identifier) specifying the destination or file path.
-    afxUri const* uri
+    afxUri const*   uri
 );
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -479,37 +488,37 @@ AVX afxError AvxPrintDrawOutput
     used at the end of a rendering cycle to display the final results to the user.
 */
 
-AVX afxError AvxPresentDrawOutputs
+AVX afxError        AvxPresentDrawOutputs
 (
     // The drawing system where the outputs will be presented.
-    afxDrawSystem dsys,
+    afxDrawSystem   dsys,
 
     // A control structure for the presentation settings. 
     // This structure would contain configuration options that manage how the output is presented, such as swap chains, 
     // synchronization details, or specific rendering modes(e.g., vsync settings or buffer flipping).
-    avxPresentation* ctrl,
+    avxPresentation*ctrl,
 
     // A fence that the function will wait on before proceeding with the presentation. 
     // Fences are used to ensure synchronization, especially when working with GPUs. 
     // The function will wait for this fence to be signaled before beginning the presentation. 
     // This ensures that drawing commands are completed before the output is presented.
-    avxFence wait,
+    avxFence        wait,
 
     // The number of outputs to be presented. This indicates how many items in the @outputs array should be processed.
-    afxUnit cnt,
+    afxUnit         cnt,
 
     // An array of draw outputs to be presented. Each output could be an image that has been rendered and is now ready for display.
-    afxDrawOutput outputs[],
+    afxDrawOutput   outputs[],
 
     // An array of buffer indices specifying which buffers to present. 
     // This indicate which buffer is to be shown as the result of rendering.
-    afxUnit const bufIdx[],
+    afxUnit const   bufIdx[],
 
     // An array of fences to signal after the presentation is completed. 
     // Once the presentation is done, these fences are signaled, allowing the system to continue processing other tasks 
     // that depend on the completion of the presentation. This is useful for synchronization with other parts of the 
     // rendering pipeline or application logic.
-    avxFence signal[]
+    avxFence        signal[]
 );
 
 /*
@@ -519,23 +528,23 @@ AVX afxError AvxPresentDrawOutputs
     a specific range of outputs and retrieve information about each one for further processing.
 */
 
-AVX afxUnit AvxEnumerateDrawOutputs
+AVX afxUnit         AvxEnumerateDrawOutputs
 (
     // The established draw system associated with the enumeration process.
     // The function will query available drawing outputs for the given drawing system (dsys).
-    afxDrawSystem dsys, 
+    afxDrawSystem   dsys, 
 
     // The starting index for the enumeration of drawing outputs.
     // If there are many outputs available, @first allows you to specify where to start enumerating 
     // (e.g., you might skip some outputs if you want to continue from a specific position in the list).
-    afxUnit first, 
+    afxUnit         first, 
 
     // The number of outputs to retrieve.
     // The function will retrieve up to @cnt drawing outputs, starting from the index specified by @first.
-    afxUnit cnt, 
+    afxUnit         cnt, 
 
     // An array where the enumerated drawing outputs will be stored.
-    afxDrawOutput outputs[]
+    afxDrawOutput   outputs[]
 );
 
 /*
@@ -545,27 +554,27 @@ AVX afxUnit AvxEnumerateDrawOutputs
     updating output settings, or interacting with different display or render target devices.
 */
 
-AVX afxUnit AvxInvokeDrawOutputs
+AVX afxUnit         AvxInvokeDrawOutputs
 (
     // The drawing system whose outputs are to be processed.
-    afxDrawSystem dsys, 
+    afxDrawSystem   dsys, 
 
     // The starting index for the outputs to be processed.
     // It specifies the position of the first drawing output to be processed. 
     // If you want to skip some outputs, you can adjust this index accordingly.
-    afxUnit first, 
+    afxUnit         first, 
 
     // The number of outputs to process.
     // It defines how many outputs should be processed, starting from the @first index. 
     // The function will process up to @cnt drawing outputs.
-    afxUnit cnt, 
+    afxUnit         cnt, 
 
     // A pointer to a user-defined function that is called for each drawing output.
     // Its return type is afxBool, which indicates whether the process should be aborted.
-    afxBool(*f)(afxDrawOutput, void*), 
+    afxBool         (*f)(afxDrawOutput, void*), 
 
     // This is user-defined data that is passed to the function f for each drawing output.
-    void *udd
+    void*           udd
 );
 
 /*
@@ -576,35 +585,35 @@ AVX afxUnit AvxInvokeDrawOutputs
     process or configure multiple outputs based on a drawing system.
 */
 
-AVX afxUnit AvxEvokeDrawOutputs
+AVX afxUnit         AvxEvokeDrawOutputs
 (
     // The drawing system from which the drawing outputs will be retrieved.
-    afxDrawSystem dsys, 
+    afxDrawSystem   dsys, 
 
     // A user-defined function pointer that is invoked on each retrieved drawing output.
     // The return type is afxBool, which indicates if an draw output should be inserted in @output array.
-    afxBool(*f)(afxDrawOutput, void*), 
+    afxBool         (*f)(afxDrawOutput, void*), 
 
     // This is user-defined data that is passed to the user-defined function when processing each drawing output.
-    void* udd, 
+    void*           udd, 
 
     // The starting index of the drawing outputs to retrieve.
-    afxUnit first, 
+    afxUnit         first, 
 
     // The number of drawing outputs to retrieve and process.
-    afxUnit cnt, 
+    afxUnit         cnt, 
 
     // An array that will store the retrieved drawing outputs.
-    afxDrawOutput outputs[]
+    afxDrawOutput   outputs[]
 );
 
-AVX afxError AvxConfigureDrawOutput
+AVX afxError        AvxConfigureDrawOutput
 (
     // The drawing system to which the drawing output belongs.
-    afxDrawSystem dsys,
+    afxDrawSystem   dsys,
     
     // A pointer to the configuration settings to be applied to the drawing output.
-    afxDrawOutputConfig* cfg
+    afxDrawOutputConfig*cfg
 );
 
 /*
@@ -617,16 +626,16 @@ AVX afxError AvxConfigureDrawOutput
     which can be used to perform further rendering or interaction.
 */
 
-AVX afxError AvxOpenDrawOutput
+AVX afxError        AvxOpenDrawOutput
 (
     // The drawing system where the drawing output will be created or opened.
-    afxDrawSystem dsys, 
+    afxDrawSystem   dsys, 
 
     // A pointer to the configuration settings to initialize the drawing output.
-    afxDrawOutputConfig const* cfg, 
+    afxDrawOutputConfig const*cfg, 
     
     // A pointer to store the created or opened drawing output.
-    afxDrawOutput* output
+    afxDrawOutput*  output
 );
 
 #endif//AVX_DRAW_OUTPUT_H

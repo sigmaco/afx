@@ -228,9 +228,9 @@ _AFX void AfxGetScriptTime(afxScript xss, afxReal64* ct, afxReal64* dt)
     afxClock currClock;
     AfxGetClock(&currClock);
     AFX_ASSERT(ct);
-    *ct = AfxGetClockSecondsElapsed(&xss->startClock, &currClock);
+    *ct = AfxGetSecondsElapsed(&xss->startClock, &currClock);
     AFX_ASSERT(dt);
-    *dt = AfxGetClockSecondsElapsed(&xss->lastClock, &currClock);
+    *dt = AfxGetSecondsElapsed(&xss->lastClock, &currClock);
     xss->lastClock = currClock;
 }
 

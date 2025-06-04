@@ -55,7 +55,7 @@ _ASX afxError _AsxSquePopBlob(afxSimQueue sque, void* blob, afxUnit siz)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
-    AfxRecycleArenaUnit(&sque->workArena, blob, siz);
+    AfxReclaimToArena(&sque->workArena, blob, siz);
     return err;
 }
 
@@ -64,7 +64,7 @@ _ASX void* _AsxSquePushBlob(afxSimQueue sque, afxUnit siz)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    void* blob = AfxRequestArenaUnit(&sque->workArena, siz, 1, NIL, 0);
+    void* blob = AfxRequestFromArena(&sque->workArena, siz, 1, NIL, 0);
     AFX_ASSERT(blob);
     return blob;
 }
@@ -74,7 +74,7 @@ _ASX afxError _AsxSquePopWork(afxSimQueue sque, asxWork* work)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
     AfxPopLink(&work->hdr.chain);
-    AfxRecycleArenaUnit(&sque->workArena, work, work->hdr.siz);
+    AfxReclaimToArena(&sque->workArena, work, work->hdr.siz);
     return err;
 }
 
@@ -83,7 +83,7 @@ _ASX asxWork* _AsxSquePushWork(afxSimQueue sque, afxUnit id, afxUnit siz, afxCmd
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
-    asxWork* work = AfxRequestArenaUnit(&sque->workArena, siz, 1, NIL, 0);
+    asxWork* work = AfxRequestFromArena(&sque->workArena, siz, 1, NIL, 0);
     AFX_ASSERT(work);
     work->hdr.id = id;
     work->hdr.siz = siz;
@@ -186,7 +186,7 @@ _ASX afxError _AsxSqueDtorCb(afxSimQueue sque)
     AfxDismantleArena(&sque->workArena);
     AfxDismantleFutex(&sque->workArenaSlock);
     AfxDismantleCondition(&sque->idleCnd);
-    AfxDismantleMutex(&sque->idleCndMtx);
+    //AfxDismantleMutex(&sque->idleCndMtx);
 
     return err;
 }
@@ -214,7 +214,7 @@ _ASX afxError _AsxSqueCtorCb(afxSimQueue sque, void** args, afxUnit invokeNo)
 
     AfxDeployMutex(&sque->workChnMtx, AFX_MTX_PLAIN);
     AfxDeployChain(&sque->workChn, sexu);
-    AfxDeployMutex(&sque->idleCndMtx, AFX_MTX_PLAIN);
+    //AfxDeployMutex(&sque->idleCndMtx, AFX_MTX_PLAIN);
     AfxDeployCondition(&sque->idleCnd);
 
     sque->closed = FALSE;

@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // DRAW DEVICE COMMAND, OPERATION AND COMMUNICATION BRIDGE                  //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /*
@@ -53,14 +57,14 @@
 
 typedef enum afxDrawPortFlag
 {
-    afxDrawPortFlag_DRAW      = AFX_BIT(0), // supports draw ops
-    afxDrawPortFlag_COMPUTE   = AFX_BIT(1), // supports compute ops
-    afxDrawPortFlag_TRANSFER  = AFX_BIT(2), // supports transfer ops
-    afxDrawPortFlag_BLIT      = AFX_BIT(3), // can blit (and resolve?) rasters
-    afxDrawPortFlag_VIDEO     = AFX_BIT(4), // supports YUV enc/dec
-    afxDrawPortFlag_TRANSFORM = AFX_BIT(5), // can process vertices
-    afxDrawPortFlag_TESSELATE = AFX_BIT(6), // can tesselate primitives
-    afxDrawPortFlag_SAMPLE    = AFX_BIT(7), // has TMU
+    afxDrawPortFlag_DRAW      = AFX_BITMASK(0), // supports draw ops
+    afxDrawPortFlag_COMPUTE   = AFX_BITMASK(1), // supports compute ops
+    afxDrawPortFlag_TRANSFER  = AFX_BITMASK(2), // supports transfer ops
+    afxDrawPortFlag_BLIT      = AFX_BITMASK(3), // can blit (and resolve?) rasters
+    afxDrawPortFlag_VIDEO     = AFX_BITMASK(4), // supports YUV enc/dec
+    afxDrawPortFlag_TRANSFORM = AFX_BITMASK(5), // can process vertices
+    afxDrawPortFlag_TESSELATE = AFX_BITMASK(6), // can tesselate primitives
+    afxDrawPortFlag_SAMPLE    = AFX_BITMASK(7), // has TMU
 } afxDrawPortFlags;
 
 AFX_DEFINE_STRUCT(afxDrawCapabilities)

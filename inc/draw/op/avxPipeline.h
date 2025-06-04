@@ -66,32 +66,32 @@ typedef enum avxPipelineType
 typedef enum avxPipelineStage
 {
     // NIL,
-    avxPipelineStage_TOP            = AFX_BIT(0),
-    avxPipelineStage_DRAW_INDIRECT  = AFX_BIT(1), // where DrawIndirect*/DispatchIndirect*/TraceRaysIndirect* data structures are consumed.
-    avxPipelineStage_VERTEX_INPUT   = AFX_BIT(2), // where vertex and index buffers are consumed.
-    avxPipelineStage_VERTEX         = AFX_BIT(3), // the vertex shader stage.
-    avxPipelineStage_DOMAIN         = AFX_BIT(4), // the tessellation control shader stage.
-    avxPipelineStage_HULL           = AFX_BIT(5), // the tessellation evaluation shader stage.
-    avxPipelineStage_PRIM           = AFX_BIT(6), // the primitive (aka geometry) shader stage.
-    avxPipelineStage_FRAGMENT       = AFX_BIT(7), // the fragment shader stage.
-    avxPipelineStage_EARLY_TESTS    = AFX_BIT(8), // where early fragment tests (depth and stencil tests before fragment shading) are performed. This stage also includes draw scope load operations for framebuffer attachments with a depth/stencil format.
-    avxPipelineStage_LATE_TESTS     = AFX_BIT(9), // where late fragment tests (depth and stencil tests after fragment shading) are performed. This stage also includes draw scope store operations for framebuffer attachments with a depth/stencil format.
-    avxPipelineStage_COLOR_OUTPUT   = AFX_BIT(10), // where the final color values are output from the pipeline. This stage includes blending, logic operations, draw scope load and store operations for color attachments, draw scope multisample resolve operations, and AvxCmdClearAttachments.
-    avxPipelineStage_COMPUTE        = AFX_BIT(11), // the execution of a compute shader.
-    avxPipelineStage_TRANSFER       = AFX_BIT(12), // the following commands: copies, blits, resolves, clears.
-    avxPipelineStage_BOTTOM         = AFX_BIT(13), 
-    avxPipelineStage_HOST           = AFX_BIT(14), // pseudo-stage indicating execution on the host of reads/writes of device memory. This stage is not invoked by any commands recorded in a draw context.
-    avxPipelineStage_GRAPHICS       = AFX_BIT(15), // the execution of all graphics pipeline stages.
-    avxPipelineStage_COMMANDS       = AFX_BIT(16), // all operations performed by all commands supported on the queue it is used with.
-    avxPipelineStage_COPY           = AFX_BIT(17),
-    avxPipelineStage_RESOLVE        = AFX_BIT(18),
-    avxPipelineStage_BLIT           = AFX_BIT(19),
-    avxPipelineStage_CLEAR          = AFX_BIT(20),
-    avxPipelineStage_VERTEX_INDEX   = AFX_BIT(21),
-    avxPipelineStage_VERTEX_ATTR    = AFX_BIT(22),
-    avxPipelineStage_PRERASTER      = AFX_BIT(23),
-    avxPipelineStage_VIDDEC         = AFX_BIT(24),
-    avxPipelineStage_VIDENC         = AFX_BIT(25),
+    avxPipelineStage_TOP            = AFX_BITMASK(0),
+    avxPipelineStage_DRAW_INDIRECT  = AFX_BITMASK(1), // where DrawIndirect*/DispatchIndirect*/TraceRaysIndirect* data structures are consumed.
+    avxPipelineStage_VERTEX_INPUT   = AFX_BITMASK(2), // where vertex and index buffers are consumed.
+    avxPipelineStage_VERTEX         = AFX_BITMASK(3), // the vertex shader stage.
+    avxPipelineStage_DOMAIN         = AFX_BITMASK(4), // the tessellation control shader stage.
+    avxPipelineStage_HULL           = AFX_BITMASK(5), // the tessellation evaluation shader stage.
+    avxPipelineStage_PRIM           = AFX_BITMASK(6), // the primitive (aka geometry) shader stage.
+    avxPipelineStage_FRAGMENT       = AFX_BITMASK(7), // the fragment shader stage.
+    avxPipelineStage_EARLY_TESTS    = AFX_BITMASK(8), // where early fragment tests (depth and stencil tests before fragment shading) are performed. This stage also includes draw scope load operations for framebuffer attachments with a depth/stencil format.
+    avxPipelineStage_LATE_TESTS     = AFX_BITMASK(9), // where late fragment tests (depth and stencil tests after fragment shading) are performed. This stage also includes draw scope store operations for framebuffer attachments with a depth/stencil format.
+    avxPipelineStage_COLOR_OUTPUT   = AFX_BITMASK(10), // where the final color values are output from the pipeline. This stage includes blending, logic operations, draw scope load and store operations for color attachments, draw scope multisample resolve operations, and AvxCmdClearAttachments.
+    avxPipelineStage_COMPUTE        = AFX_BITMASK(11), // the execution of a compute shader.
+    avxPipelineStage_TRANSFER       = AFX_BITMASK(12), // the following commands: copies, blits, resolves, clears.
+    avxPipelineStage_BOTTOM         = AFX_BITMASK(13), 
+    avxPipelineStage_HOST           = AFX_BITMASK(14), // pseudo-stage indicating execution on the host of reads/writes of device memory. This stage is not invoked by any commands recorded in a draw context.
+    avxPipelineStage_GRAPHICS       = AFX_BITMASK(15), // the execution of all graphics pipeline stages.
+    avxPipelineStage_COMMANDS       = AFX_BITMASK(16), // all operations performed by all commands supported on the queue it is used with.
+    avxPipelineStage_COPY           = AFX_BITMASK(17),
+    avxPipelineStage_RESOLVE        = AFX_BITMASK(18),
+    avxPipelineStage_BLIT           = AFX_BITMASK(19),
+    avxPipelineStage_CLEAR          = AFX_BITMASK(20),
+    avxPipelineStage_VERTEX_INDEX   = AFX_BITMASK(21),
+    avxPipelineStage_VERTEX_ATTR    = AFX_BITMASK(22),
+    avxPipelineStage_PRERASTER      = AFX_BITMASK(23),
+    avxPipelineStage_VIDDEC         = AFX_BITMASK(24),
+    avxPipelineStage_VIDENC         = AFX_BITMASK(25),
 } avxPipelineStage;
 
 typedef enum avxPipelineDep
@@ -127,61 +127,61 @@ typedef enum avxPipelineDep
 #if 0
 typedef enum avxPipelineFlag
 {
-    avxPipelineFlag_TOPOLOGY = AFX_BIT(0),
-    avxPipelineFlag_RESTART = AFX_BIT(1),
-    avxPipelineFlag_VIEWPORT = AFX_BIT(2),
-    avxPipelineFlag_DEPTH_CLAMP = AFX_BIT(3),
-    avxPipelineFlag_CULL_MODE = AFX_BIT(4),
-    avxPipelineFlag_FRONT_FACE_INV = AFX_BIT(5),
-    avxPipelineFlag_CTRL_POINTS = AFX_BIT(6)
+    avxPipelineFlag_TOPOLOGY = AFX_BITMASK(0),
+    avxPipelineFlag_RESTART = AFX_BITMASK(1),
+    avxPipelineFlag_VIEWPORT = AFX_BITMASK(2),
+    avxPipelineFlag_DEPTH_CLAMP = AFX_BITMASK(3),
+    avxPipelineFlag_CULL_MODE = AFX_BITMASK(4),
+    avxPipelineFlag_FRONT_FACE_INV = AFX_BITMASK(5),
+    avxPipelineFlag_CTRL_POINTS = AFX_BITMASK(6)
 } avxPipelineFlags;
 
 typedef enum avxDepthStencilFlag
 {
-    avxDepthStencilFlag_TEST = AFX_BIT(0),
-    avxDepthStencilFlag_COMPARE = AFX_BIT(1),
-    avxDepthStencilFlag_DONT_WRITE = AFX_BIT(2),
+    avxDepthStencilFlag_TEST = AFX_BITMASK(0),
+    avxDepthStencilFlag_COMPARE = AFX_BITMASK(1),
+    avxDepthStencilFlag_DONT_WRITE = AFX_BITMASK(2),
 
-    avxDepthStencilFlag_STENCIL_OP_F = AFX_BIT(4),
-    avxDepthStencilFlag_STENCIL_TEST_F = AFX_BIT(5),
-    avxDepthStencilFlag_STENCIL_WRITE_F = AFX_BIT(6),
-    avxDepthStencilFlag_STENCIL_REF_F = AFX_BIT(7),
-    avxDepthStencilFlag_STENCIL_FAIL_F = AFX_BIT(8),
-    avxDepthStencilFlag_STENCIL_DFAIL_F = AFX_BIT(9),
-    avxDepthStencilFlag_STENCIL_PASS_F = AFX_BIT(10),
+    avxDepthStencilFlag_STENCIL_OP_F = AFX_BITMASK(4),
+    avxDepthStencilFlag_STENCIL_TEST_F = AFX_BITMASK(5),
+    avxDepthStencilFlag_STENCIL_WRITE_F = AFX_BITMASK(6),
+    avxDepthStencilFlag_STENCIL_REF_F = AFX_BITMASK(7),
+    avxDepthStencilFlag_STENCIL_FAIL_F = AFX_BITMASK(8),
+    avxDepthStencilFlag_STENCIL_DFAIL_F = AFX_BITMASK(9),
+    avxDepthStencilFlag_STENCIL_PASS_F = AFX_BITMASK(10),
 
-    avxDepthStencilFlag_STENCIL_OP_B = AFX_BIT(11),
-    avxDepthStencilFlag_STENCIL_TEST_B = AFX_BIT(12),
-    avxDepthStencilFlag_STENCIL_WRITE_B = AFX_BIT(13),
-    avxDepthStencilFlag_STENCIL_REF_B = AFX_BIT(14),
-    avxDepthStencilFlag_STENCIL_FAIL_B = AFX_BIT(15),
-    avxDepthStencilFlag_STENCIL_DFAIL_B = AFX_BIT(16),
-    avxDepthStencilFlag_STENCIL_PASS_B = AFX_BIT(17),
+    avxDepthStencilFlag_STENCIL_OP_B = AFX_BITMASK(11),
+    avxDepthStencilFlag_STENCIL_TEST_B = AFX_BITMASK(12),
+    avxDepthStencilFlag_STENCIL_WRITE_B = AFX_BITMASK(13),
+    avxDepthStencilFlag_STENCIL_REF_B = AFX_BITMASK(14),
+    avxDepthStencilFlag_STENCIL_FAIL_B = AFX_BITMASK(15),
+    avxDepthStencilFlag_STENCIL_DFAIL_B = AFX_BITMASK(16),
+    avxDepthStencilFlag_STENCIL_PASS_B = AFX_BITMASK(17),
 
     avxDepthStencilFlag_STENCIL_TEST = avxDepthStencilFlag_STENCIL_TEST_F | avxDepthStencilFlag_STENCIL_TEST_B,
 
-    avxDepthStencilFlag_BOUNDS_TEST = AFX_BIT(31) // it is here because it only works with a depth buffer
+    avxDepthStencilFlag_BOUNDS_TEST = AFX_BITMASK(31) // it is here because it only works with a depth buffer
 } avxDepthStencilFlags;
 
 typedef enum avxMultisamplingFlag
 {
-    avxMultisamplingFlag_SHADING = AFX_BIT(0),
-    avxMultisamplingFlag_ALPHA_TO_COVERAGE = AFX_BIT(1),
-    avxMultisamplingFlag_ALPHA_TO_ONE = AFX_BIT(2),
+    avxMultisamplingFlag_SHADING = AFX_BITMASK(0),
+    avxMultisamplingFlag_ALPHA_TO_COVERAGE = AFX_BITMASK(1),
+    avxMultisamplingFlag_ALPHA_TO_ONE = AFX_BITMASK(2),
 } avxMultisamplingFlags;
 
 typedef enum avxRasterizationFlag
 {
-    avxRasterizationFlag_FILL_MODE = AFX_BIT(0),
-    avxRasterizationFlag_LINE_WIDTH = AFX_BIT(1),
-    avxRasterizationFlag_DEPTH_BIAS = AFX_BIT(2)
+    avxRasterizationFlag_FILL_MODE = AFX_BITMASK(0),
+    avxRasterizationFlag_LINE_WIDTH = AFX_BITMASK(1),
+    avxRasterizationFlag_DEPTH_BIAS = AFX_BITMASK(2)
 } avxRasterizationFlags;
 
 typedef enum avxColorOutputFlag
 {
-    avxColorOutputFlag_SCISSOR = AFX_BIT(0),
-    avxColorOutputFlag_BLEND_CONSTANTS = AFX_BIT(1),
-    avxColorOutputFlag_LOGIC_OP = AFX_BIT(2)
+    avxColorOutputFlag_SCISSOR = AFX_BITMASK(0),
+    avxColorOutputFlag_BLEND_CONSTANTS = AFX_BITMASK(1),
+    avxColorOutputFlag_LOGIC_OP = AFX_BITMASK(2)
 } avxColorOutputFlags;
 #endif
 
@@ -191,16 +191,16 @@ typedef enum avxColorMask
 // The color write mask operation is applied only if Color Write Enable is enabled for the respective attachment. Otherwise the color write mask is ignored and writes to all components of the attachment are disabled.
 {
     // The R value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    avxColorMask_R = AFX_BIT(0),
+    avxColorMask_R = AFX_BITMASK(0),
     
     // The G value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    avxColorMask_G = AFX_BIT(1),
+    avxColorMask_G = AFX_BITMASK(1),
     
     // The B value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    avxColorMask_B = AFX_BIT(2),
+    avxColorMask_B = AFX_BITMASK(2),
     
     // The A value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    avxColorMask_A = AFX_BIT(3),
+    avxColorMask_A = AFX_BITMASK(3),
 
     avxColorMask_RG = avxColorMask_R | avxColorMask_G,
     avxColorMask_RGB = avxColorMask_RG | avxColorMask_B,
