@@ -39,12 +39,12 @@ typedef enum asxTrackSampler
 #ifdef _ASX_MOTOR_C
 typedef enum afxCapstanFlag
 {
-    afxCapstanFlag_ACTIVE = AFX_BIT(0),
-    afxCapstanFlag_KILL_ONCE_COMPLETE = AFX_BIT(1),
-    afxCapstanFlag_KILL_ONCE_UNUSED = AFX_BIT(2),
-    afxCapstanFlag_EASE_IN = AFX_BIT(3),
-    afxCapstanFlag_EASE_OUT = AFX_BIT(4),
-    afxCapstanFlag_FORCE_CLAMPLED_LOOPS = AFX_BIT(5)
+    afxCapstanFlag_ACTIVE = AFX_BITMASK(0),
+    afxCapstanFlag_KILL_ONCE_COMPLETE = AFX_BITMASK(1),
+    afxCapstanFlag_KILL_ONCE_UNUSED = AFX_BITMASK(2),
+    afxCapstanFlag_EASE_IN = AFX_BITMASK(3),
+    afxCapstanFlag_EASE_OUT = AFX_BITMASK(4),
+    afxCapstanFlag_FORCE_CLAMPLED_LOOPS = AFX_BITMASK(5)
 } afxCapstanFlags;
 
 #ifdef _ASX_MOTOR_IMPL

@@ -31,21 +31,21 @@
 
 typedef enum afxIoUsage
 {
-    afxIoUsage_MEM      = AFX_BIT(0), // will be used as I/O memory buffer.
-    afxIoUsage_FILE     = AFX_BIT(1), // will be used as file I/O stream/buffer.
-    afxIoUsage_PIPE     = AFX_BIT(2),
-    afxIoUsage_TCP      = AFX_BIT(3), // will be used as TCP communication stream/buffer.
-    afxIoUsage_TTY      = AFX_BIT(4) // will be used as console I/O stream/buffer.
+    afxIoUsage_MEM      = AFX_BITMASK(0), // will be used as I/O memory buffer.
+    afxIoUsage_FILE     = AFX_BITMASK(1), // will be used as file I/O stream/buffer.
+    afxIoUsage_PIPE     = AFX_BITMASK(2),
+    afxIoUsage_TCP      = AFX_BITMASK(3), // will be used as TCP communication stream/buffer.
+    afxIoUsage_TTY      = AFX_BITMASK(4) // will be used as console I/O stream/buffer.
 } afxIoUsage;
 
 typedef enum afxIoFlag
 {
     // permissions
-    afxIoFlag_R         = AFX_BIT(0), // Readable (read-only)
+    afxIoFlag_R         = AFX_BITMASK(0), // Readable (read-only)
     afxIoFlag_READABLE  = afxIoFlag_R,
-    afxIoFlag_W         = AFX_BIT(1), // Writeable
+    afxIoFlag_W         = AFX_BITMASK(1), // Writeable
     afxIoFlag_WRITEABLE = afxIoFlag_W,
-    afxIoFlag_X         = AFX_BIT(2), // Executable (seekable)
+    afxIoFlag_X         = AFX_BITMASK(2), // Executable (seekable)
     afxIoFlag_SEEKABLE  = afxIoFlag_X,
 
     afxIoFlag_RW        = (afxIoFlag_R | afxIoFlag_W), // (read/write, create if not exists)
@@ -54,8 +54,8 @@ typedef enum afxIoFlag
     afxIoFlag_RWX       = (afxIoFlag_R | afxIoFlag_W | afxIoFlag_X), // 
     afxIoModeMask       = afxIoFlag_RWX,
 
-    afxIoFlag_RESIZABLE = AFX_BIT(3),
-    afxIoFlag_RING      = AFX_BIT(4)
+    afxIoFlag_RESIZABLE = AFX_BITMASK(3),
+    afxIoFlag_RING      = AFX_BITMASK(4)
 } afxIoFlags;
 
 typedef enum afxSeekOrigin

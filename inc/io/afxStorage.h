@@ -62,12 +62,12 @@
 
 typedef enum afxStorageUsage
 {
-    afxStorageUsage_SYSTEM  = AFX_BIT(0),
-    afxStorageUsage_SOUND   = AFX_BIT(1),
-    afxStorageUsage_CODE    = AFX_BIT(2),
-    afxStorageUsage_DATA    = AFX_BIT(3),
-    afxStorageUsage_TEMP    = AFX_BIT(4),
-    afxStorageUsage_ART     = AFX_BIT(5),
+    afxStorageUsage_SYSTEM  = AFX_BITMASK(0),
+    afxStorageUsage_SOUND   = AFX_BITMASK(1),
+    afxStorageUsage_CODE    = AFX_BITMASK(2),
+    afxStorageUsage_DATA    = AFX_BITMASK(3),
+    afxStorageUsage_TEMP    = AFX_BITMASK(4),
+    afxStorageUsage_ART     = AFX_BITMASK(5),
 }
 afxStorageUsage;
 

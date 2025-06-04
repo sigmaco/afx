@@ -342,7 +342,7 @@ _AVX afxError AvxCmdStampDebug(afxDrawContext dctx, afxM4d const v, afxV2d const
     AFX_ASSERT(caption);
 
     afxCmdId cmdId;
-    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(StampDebug), sizeof(cmd->StampDebug) + AFX_ALIGNED_SIZE(caption->len, 16), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(StampDebug), sizeof(cmd->StampDebug) + AFX_ALIGN_SIZE(caption->len, 16), &cmdId);
     AFX_ASSERT(cmd);
     AfxM4dCopyAtm(cmd->StampDebug.v, v);
     AfxV2dCopy(cmd->StampDebug.at, at);

@@ -36,7 +36,7 @@ _AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdI
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     AFX_ASSERT(siz >= sizeof(_amxCmdHdr));
 
-    _amxCmd* cmd = AfxRequestArenaUnit(&mix->cmdArena, siz, 1, NIL, 0);
+    _amxCmd* cmd = AfxRequestFromArena(&mix->cmdArena, siz, 1, NIL, 0);
     AFX_ASSERT(cmd);
     cmd->hdr.id = id;
     cmd->hdr.siz = siz;

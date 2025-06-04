@@ -387,7 +387,7 @@ _AVX afxError AvxWaitForDrawBridges(afxDrawSystem dsys, afxMask exuMask, afxUnit
     afxUnit exuCnt = dsys->bridgeCnt;
     for (afxUnit exuIdx = 0; exuIdx < exuCnt; exuIdx++)
     {
-        if (exuMask && !(exuMask & AFX_BIT(exuIdx)))
+        if (exuMask && !(AFX_TEST_BIT_SET(exuMask, exuIdx)))
             continue;
 
         afxDrawBridge dexu;
@@ -411,10 +411,10 @@ _AVX afxError AvxWaitForDrawSystem(afxDrawSystem dsys, afxUnit64 timeout)
 
     if (!dsys->pimpl->waitCb)
     {
-        afxUnit bridgeCnt = dsys->bridgeCnt;
+        afxUnit exuCnt = dsys->bridgeCnt;
 
-        for (afxUnit i = 0; i < bridgeCnt; i++)
-            AvxWaitForDrawBridges(dsys, i, timeout);
+        for (afxUnit i = 0; i < exuCnt; i++)
+            AvxWaitForDrawBridges(dsys, AFX_BITMASK(i), timeout);
     }
     else if (dsys->pimpl->waitCb(dsys, timeout))
         AfxThrowError();
@@ -435,7 +435,7 @@ _AVX afxError _AvxTransferVideoMemory(afxDrawSystem dsys, avxTransference* ctrl,
     afxUnit exuCnt = dsys->bridgeCnt;
     for (afxUnit exuIdx = 0; exuIdx < exuCnt; exuIdx++)
     {
-        if (exuMask && !(exuMask & AFX_BIT(exuIdx)))
+        if (exuMask && !(exuMask & AFX_BITMASK(exuIdx)))
             continue;
 
         afxDrawBridge dexu;
@@ -494,8 +494,8 @@ _AVX afxError _AvxDsysDtorCb(afxDrawSystem dsys)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    //AvxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
-    //AvxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
+    //AvxWaitForDrawSystem(dsys, AFX_TIMEOUT_INFINITE);
+    //AvxWaitForDrawSystem(dsys, AFX_TIMEOUT_INFINITE);
 
     afxUnit bridgeCnt = dsys->bridgeCnt;
 

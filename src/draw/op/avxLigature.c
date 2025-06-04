@@ -189,7 +189,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
                             }
                             else
                             {
-                                binding->visibility |= /*entry->visibility |*/ AFX_BIT(stage);
+                                binding->visibility |= /*entry->visibility |*/ AFX_BITMASK(stage);
                             }
                             break;
                         }
@@ -210,7 +210,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
                     else
                     {
                         ent->binding = rsrc.binding;
-                        ent->visibility = AFX_BIT(stage);
+                        ent->visibility = AFX_BITMASK(stage);
                         ent->type = rsrc.type;
                         ent->cnt = rsrc.cnt;
                         ent->set = rsrc.set;

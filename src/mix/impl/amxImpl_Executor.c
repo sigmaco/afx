@@ -212,9 +212,8 @@ _AMX afxBool _AmxMpu_ProcCb(amxMpu* mpu)
                 AfxGetTime(&iorp->hdr.complTime);
                 _AmxMquePopIoReqPacket(mque, iorp);
             }
-            AfxUnlockMutex(&mque->iorpChnMtx);
             AfxSignalCondition(&mque->idleCnd);
-            AfxYield();
+            AfxUnlockMutex(&mque->iorpChnMtx);
         }
     }
     return TRUE;

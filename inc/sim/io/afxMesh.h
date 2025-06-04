@@ -121,7 +121,7 @@
 
 typedef enum afxMeshFlag
 {
-    afxMeshFlag_NAMED_MORPHES   = AFX_BIT(0)
+    afxMeshFlag_NAMED_MORPHES   = AFX_BITMASK(0)
 } afxMeshFlags;
 
 typedef enum afxMeshBiasFlag
@@ -132,31 +132,31 @@ typedef enum afxMeshBiasFlag
 typedef enum afxVertexFlag
 {
     // The data store contents will be modified repeatedly and used many times.
-    afxVertexFlag_DYNAMIC = AFX_BIT(0),
+    afxVertexFlag_DYNAMIC = AFX_BITMASK(0),
     
     // The data store contents will be modified once and used at most a few times.
-    afxVertexFlag_STREAM = AFX_BIT(1),
+    afxVertexFlag_STREAM = AFX_BITMASK(1),
 
-    afxVertexFlag_POSITIONAL = AFX_BIT(2),
-    afxVertexFlag_SPATIAL = AFX_BIT(3),
+    afxVertexFlag_POSITIONAL = AFX_BITMASK(2),
+    afxVertexFlag_SPATIAL = AFX_BITMASK(3),
 
-    afxVertexFlag_NORMALIZED = AFX_BIT(4),
-    afxVertexFlag_RASTERIZATION = AFX_BIT(5),
+    afxVertexFlag_NORMALIZED = AFX_BITMASK(4),
+    afxVertexFlag_RASTERIZATION = AFX_BITMASK(5),
 
     // affected by affine transformations (ex.: position). Non-delta spatial attributes should receive affine transformations.
-    afxVertexFlag_ATV = AFX_BIT(10),
+    afxVertexFlag_ATV = AFX_BITMASK(10),
 
     // affected by linear transformations (ex.: tangent, binormal). Delta spatial attributes should receive linear transformations (ex.: normal, tangent/binormal cross).
-    afxVertexFlag_LTM = AFX_BIT(11),
+    afxVertexFlag_LTM = AFX_BITMASK(11),
 
     // affected by inverse linear transformations. Non-delta spatial attributes should receive inverse linear transformations (ex.: normal, tangent/binormal cross).
-    afxVertexFlag_ILTM = AFX_BIT(12),
+    afxVertexFlag_ILTM = AFX_BITMASK(12),
  
     // treat as delta
-    afxVertexFlag_DELTA = AFX_BIT(13),
+    afxVertexFlag_DELTA = AFX_BITMASK(13),
 
     // allocation for data is resident
-    afxVertexFlag_RESIDENT = AFX_BIT(14)
+    afxVertexFlag_RESIDENT = AFX_BITMASK(14)
 } afxVertexFlags;
 
 typedef enum asxMeshIndexation

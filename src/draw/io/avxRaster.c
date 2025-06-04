@@ -230,7 +230,7 @@ _AVX afxBool AvxQueryRasterLayout(avxRaster ras, afxUnit lodIdx, afxUnit layerId
     avxFormatDescription pfd;
     AvxDescribeFormats(1, &ras->fmt, &pfd);
     
-    afxUnit rowStride = AFX_ALIGNED_SIZE(pfd.stride * whd.w, AFX_SIMD_ALIGNMENT);
+    afxUnit rowStride = AFX_ALIGN_SIZE(pfd.stride * whd.w, AFX_SIMD_ALIGNMENT);
     afxUnit imgStride = whd.h * rowStride;
     AFX_ASSERT(layout);
     layout->imgStride = imgStride;
@@ -262,6 +262,16 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
     afxDrawSystem dsys = AfxGetProvider(ras);
     avxRasterInfo const* rasi = ((avxRasterInfo const *)args[1]) + invokeNo;
 
+    if (rasi->base)
+    {
+        if (rasi->base->base)
+        {
+            // Base raster must be a storage raster, not a raster view.
+            AFX_ASSERT(!rasi->base->base);
+            AfxThrowError();
+            return err;
+        }
+    }
     ras->tag = rasi->tag;
     ras->base = NIL;
 
@@ -378,8 +388,8 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
         {
             for (afxUnit i = 0; i < ras->lodCnt; i++)
             {
-                afxUnit rowStride = AFX_ALIGNED_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
-                afxUnit imgStride = AFX_ALIGNED_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
+                afxUnit rowStride = AFX_ALIGN_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
+                afxUnit imgStride = AFX_ALIGN_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
                 size += whd.d * imgStride;
 
                 whd.w = AFX_MAX(1, whd.w * 2);
@@ -391,8 +401,8 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
         {
             for (afxUnit i = 0; i < ras->lodCnt; i++)
             {
-                afxUnit rowStride = AFX_ALIGNED_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
-                afxUnit imgStride = AFX_ALIGNED_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
+                afxUnit rowStride = AFX_ALIGN_SIZE(whd.w * pfd.stride, AFX_SIMD_ALIGNMENT);
+                afxUnit imgStride = AFX_ALIGN_SIZE(whd.h * rowStride, AFX_SIMD_ALIGNMENT);
                 size += whd.d * imgStride;
 
                 whd.w = AFX_MAX(1, whd.w >> 1);
@@ -401,7 +411,7 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
             }
         }
 
-        size = AFX_ALIGNED_SIZE(size, align);
+        size = AFX_ALIGN_SIZE(size, align);
 
         ras->size = size;
         ras->alignment = align;

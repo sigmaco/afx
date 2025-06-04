@@ -47,11 +47,25 @@ AVX afxRect const AVX_RECT_MAX;
     .h = (afxUnit)(h_) }
 
 /*
-    The AfxClipRectUnion() function calculates the union of two rectangles, meaning it finds the smallest
-    rectangle that can contain both input rectangles.
+    The AfxGetRectArea() function calculates the square units for a rectangle.
+    The resulting value can be used to determine whether a rectangle is or not empty.
 */
 
-AVXINL afxBool      AfxClipRectUnion
+AVXINL afxUnit      AfxGetRectArea
+// Returns the square units of the rectangle.
+(
+    afxRect const*  rc
+);
+
+/*
+    The AfxMergeRects() function calculates the union of two rectangles, meaning it finds the smallest
+    rectangle that can contain both input rectangles.
+    This function does the inverse of AfxIntersectRects(), it expands the rect.
+    Returns the square units of the united rectangle.
+*/
+
+AVXINL afxUnit      AfxMergeRects
+// Returns the square units of the united rectangle.
 (
     afxRect*        rc, 
     afxRect const*  a, 
@@ -59,19 +73,27 @@ AVXINL afxBool      AfxClipRectUnion
 );
 
 /*
-    The AfxClipRectIntersection() function computes the overlapping region (intersection) of rectangles a and b, 
-    and stores the result in rc.
-    It returns TRUE if the rectangles intersect, or FALSE if there's no overlap (and probably leaves rc undefined or zeroed).
+    The AfxIntersectRects() function computes the overlapping region (intersection) of rectangles a and b, 
+    and stores the result in rc. This function does the inverse of AfxMergeRects(), it shrinks the rect.
+    Returns the square units of the intersection if the rectangles intersect, 
+    or zero if there's no overlap (and probably leaves rc undefined or zeroed).
 */
 
-AVXINL afxBool      AfxClipRectIntersection
+AVXINL afxUnit      AfxIntersectRects
+// Returns the square units of the united rectangle.
 (
     afxRect*        rc, 
     afxRect const*  a, 
     afxRect const*  b
 );
 
-AVXINL afxBool      AvxDoesRectOverlaps
+AFXINL afxBool      AfxAreRectsEqual
+(
+    afxRect const*  a, 
+    afxRect const*  b
+);
+
+AVXINL afxBool      AvxAreRectsOverlapping
 (
     afxRect const*  a,
     afxRect const*  b
@@ -81,7 +103,7 @@ AVXINL afxBool      AvxDoesRectOverlaps
     The function checks whether rectangle @a contains rectangle @b, with a bias or tolerance applied
     meaning @b is allowed to "poke out" by up to @tolX and @tolY on the respective axes.
 
-    It's like a "soft containment" check - super useful for layout fuzziness, hit testing, or floating-point rounding tolerances.
+    It's like a "soft containment" check, useful for layout fuzziness, hit testing, or floating-point rounding tolerances.
 */
 
 AVXINL afxBool      AvxDoesRectContainBiased
@@ -134,7 +156,7 @@ AFXINL void         AfxFlipRectVertically
 );
 
 /*
-    The AfxClipRectExclusion() function takes a rectangle and a maximum area, and calculates the areas outside/excluded from the given rectangle.
+    The AfxScissorRect() function takes a rectangle and a maximum area, and calculates the areas outside/excluded from the given rectangle.
     These areas are returned as exclusive rectangles. The function stores the results in the inverseRects array and returns the count.
     This function divides the space outside a given rectangle into four exclusive regions (left, top, right, bottom),
     which can be useful when you want to identify areas outside a defined rectangle within a screen.
@@ -147,7 +169,7 @@ AFXINL void         AfxFlipRectVertically
       Calculating drop shadows or effects that leak out of bounds.
 */
 
-AVXINL afxUnit      AfxClipRectExclusion
+AVXINL afxUnit      AfxScissorRect
 (
     afxRect const*  rc, 
     afxUnit         maxW, 
@@ -156,17 +178,35 @@ AVXINL afxUnit      AfxClipRectExclusion
 );
 
 /*
-    The AfxMergeRects() function calculates the inclusive bounding rectangle for a number of "outside" rectangles
+    The AfxMakeRect() function calculates the inclusive bounding rectangle for a number of "outside" rectangles
     (rectangles outside a given rectangle), the goal is to take a list of rectangles and return the smallest rectangle that
     encompasses all those given rectangles.
 */
 
-AVXINL void         AfxMergeRects
+AVXINL void         AfxMakeRect
 (
     afxRect*        rc, 
     afxUnit         cnt, 
     afxRect*        in
 );
 
+/*
+    The AfxClampRect() function makes sure each individual field (x, y, w, h) stays within bounds,
+    not concerned with ensuring the rectangle stays spatially inside some container.
+    Returns the area of the rectangle in square units. If zero, the rectangle has not area.
+*/
+
+AVXINL afxUnit      AfxClampRect
+// Returns the area of the rectangle in square units. If zero, the rectangle has not area.
+(
+    // The rectangle where clamped area will be stored.
+    afxRect*        rc, 
+    // The source rectangle to be clamped.
+    afxRect const*  src, 
+    // The rectangle defining the minimum allowed coordinates. (Lower bounds)
+    afxRect const*  min, 
+    // The rectangle defining the maximum allowed coordinates. (Upper bounds)
+    afxRect const*  max
+);
 
 #endif//AVX_RECT_H

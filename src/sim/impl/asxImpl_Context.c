@@ -116,7 +116,7 @@ _ASX afxError _AsxSpuRollContext(asxSpu* spu, afxContext ctx)
     }
 
     AfxDecAtom32(&ctx->submCnt);
-
+#if 0
     if (err || ctx->disposable)
     {
 #if 0
@@ -140,6 +140,7 @@ _ASX afxError _AsxSpuRollContext(asxSpu* spu, afxContext ctx)
         AfxRecycleCatalyst(ctx, TRUE);
     }
     else
+#endif
     {
         AfxDisposeObjects(1, &ctx);
     }

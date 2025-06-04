@@ -130,6 +130,54 @@ _AVX afxError AvxDumpRaster(avxRaster ras, void* dst, afxUnit opCnt, avxRasterIo
 
 ////////////////////////////////////////////////////////////////////////////////
 
+_AVX afxError AvxCopyRaster(avxRaster ras, avxRaster src, afxUnit opCnt, avxRasterCopy const ops[], afxMask exuMask, afxFlags flags)
+{
+    afxError err = AFX_ERR_NONE;
+    // @ras must be a valid avxRaster handle.
+    AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+    // @src must be a valid avxRaster handle.
+    AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &src);
+    AFX_ASSERT(opCnt);
+    AFX_ASSERT(ops);
+
+    avxRasterInfo rasi, rasi2;
+    AvxDescribeRaster(src, &rasi);
+    AvxDescribeRaster(ras, &rasi2);
+
+#if AVX_VALIDATION_ENABLED
+
+    for (afxUnit i = 0; i < opCnt; i++)
+    {
+        avxRasterCopy const* op = &ops[i];
+
+        AFX_ASSERT_RANGE(rasi.lodCnt, op->src.lodIdx, 1);
+        AFX_ASSERT_RANGE_WHD(rasi.extent, op->src.origin, op->src.extent);
+
+        AFX_ASSERT_RANGE(rasi2.lodCnt, op->dstLodIdx, 1);
+        AFX_ASSERT_RANGE_WHD(rasi2.extent, op->dstOrigin, op->src.extent);
+    }
+#endif//AVX_VALIDATION_ENABLED
+
+    avxTransference transfer = { 0 };
+    transfer.exuMask = exuMask;
+    transfer.srcFcc = afxFcc_RAS;
+    transfer.dstFcc = afxFcc_RAS;
+    transfer.src.ras = src;
+    transfer.dst.ras = ras;
+
+    afxDrawSystem dsys = AfxGetProvider(ras);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+    if (_AvxTransferVideoMemory(dsys, &transfer, opCnt, ops))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
+    return err;
+}
+
 _AVX afxError AvxPackRaster(avxRaster ras, avxBuffer buf, afxUnit opCnt, avxRasterIo const ops[], afxMask exuMask)
 {
     afxError err = AFX_ERR_NONE;
@@ -347,7 +395,7 @@ _AVX afxError AvxPrintRaster(avxRaster ras, afxUnit lodCnt, avxRasterIo const* i
         if (AvxTestRasterFlags(ras, avxRasterFlag_3D))
             flags |= afxTargaFlag_3D;
 
-        iopClamped.rowStride = AFX_ALIGNED_SIZE(iopClamped.rgn.extent.w * pfd.stride, AFX_SIMD_ALIGNMENT);
+        iopClamped.rowStride = AFX_ALIGN_SIZE(iopClamped.rgn.extent.w * pfd.stride, AFX_SIMD_ALIGNMENT);
         iopClamped.rowsPerImg = iopClamped.rgn.extent.h;
 
         if (AfxWriteTargaFile(file, &iopClamped, lodCnt, fmt, (avxRasterFlags) flags, 0)) AfxThrowError();
@@ -563,7 +611,7 @@ _AVX afxError AvxLoadRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo cons
                     op.rowsPerImg = tgai.rowsPerImg;
                     //op.decSiz = tgai.decSiz;
 
-                    void* data = AfxRequestArenaUnit(&arena, tgai.decSiz, 1, NIL, 0);
+                    void* data = AfxRequestFromArena(&arena, tgai.decSiz, 1, NIL, 0);
 
                     AfxDecodeTargaFile(&tgai, file, data);
                     AvxUpdateRaster(rasters[i], data, 1, &op, portId);

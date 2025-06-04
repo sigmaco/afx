@@ -466,7 +466,7 @@ _ASX afxError AfxExecuteSampleCommands(afxSimulation sim, asxSubmission* ctrl, a
     AFX_ASSERT(queCnt);
     afxBool queued = FALSE;
 
-    do
+    while (1)
     {
         for (afxUnit i = 0; i < queCnt; i++)
         {
@@ -479,23 +479,24 @@ _ASX afxError AfxExecuteSampleCommands(afxSimulation sim, asxSubmission* ctrl, a
                 break;
             }
 
-            afxError err2;
-            if ((err2 = _AsxExecuteSampleCommands(sque, ctrl, 1, contexts)))
-            {
-                if (err2 == afxError_TIMEOUT)
-                    continue;
+            afxError err2 = _AsxExecuteSampleCommands(sque, ctrl, 1, contexts);
 
-                AfxThrowError();
+            if (!err2)
+            {
+                queued = TRUE;
                 break;
             }
-            queued = TRUE;
+
+            if (err2 == afxError_TIMEOUT)
+                continue;
+
+            AfxThrowError();
             break;
         }
 
         if (err || queued)
             break; // reiterate if not queue for timeout?
-
-    } while (0);
+    }
     return err;
 }
 

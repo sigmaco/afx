@@ -36,9 +36,9 @@
 
 typedef enum afxCanvasFlag
 {
-    afxCanvasFlag_DEPTH         = AFX_BIT(0),
-    afxCanvasFlag_STENCIL       = AFX_BIT(1),
-    afxCanvasFlag_COMBINED_DS   = AFX_BIT(2)
+    afxCanvasFlag_DEPTH         = AFX_BITMASK(0),
+    afxCanvasFlag_STENCIL       = AFX_BITMASK(1),
+    afxCanvasFlag_COMBINED_DS   = AFX_BITMASK(2)
 } afxCanvasFlags;
 
 AFX_DEFINE_STRUCT(avxDrawSurface)

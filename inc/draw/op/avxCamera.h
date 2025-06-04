@@ -77,8 +77,8 @@
 
 typedef enum afxCameraFlag
 {
-    afxCameraFlag_P     = AFX_BIT(0),
-    afxCameraFlag_V     = AFX_BIT(1),
+    afxCameraFlag_P     = AFX_BITMASK(0),
+    afxCameraFlag_V     = AFX_BITMASK(1),
     afxCameraFlag_PV    = (afxCameraFlag_P | afxCameraFlag_V)
 } afxCameraFlags;
 

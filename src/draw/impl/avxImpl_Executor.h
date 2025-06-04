@@ -90,6 +90,8 @@ AFX_OBJECT(afxDrawBridge)
     afxUnit         exuIdx;    
     afxChain        classes;
     afxClass        dqueCls;
+    // one command pool per bridge to avoid thread interation.
+    afxClass        cmdbCls;
 
     afxError(*pingCb)(afxDrawBridge, afxUnit);
 
@@ -132,20 +134,14 @@ AFX_OBJECT(afxDrawQueue)
     afxBool         closed; // can't enqueue
 
     afxCondition    idleCnd;
-    afxMutex        idleCndMtx;
+    //afxMutex        idleCndMtx;
     afxFutex        iorpArenaSlock;
     afxArena        iorpArena; // used by submission of queue operations, not stream commands.        
     afxChain        iorpChn;
     afxMutex        iorpChnMtx;
 
     afxChain        classes;
-    // one command pool per queue to avoid thread interation.
-    afxClass        cmdbCls;
     // one stream manager per queue to avoid thread interaction
-    afxQueue        cmdbRecycQue;
-    afxFutex        cmdbReqLock;
-    afxBool         cmdbLockedForReq;
-
     afxError(*waitCb)(afxDrawQueue, afxUnit64);
 };
 #endif//_AVX_DRAW_QUEUE_C
@@ -192,7 +188,11 @@ AFX_DEFINE_UNION(_avxIoReqPacket)
         afxSemaphore    signal;
         //avxFence        fence;
         afxUnit         cmdbCnt;
-        afxDrawContext AFX_SIMD cmdbs[];
+        struct
+        {
+            afxDrawContext dctx;
+            afxUnit batchId;
+        } AFX_SIMD cmdbs[];
     } Execute;
     struct
     {
@@ -225,6 +225,7 @@ AFX_DEFINE_UNION(_avxIoReqPacket)
         afxUnit         opCnt;
         union
         {
+            avxRasterCopy AFX_SIMD rasCpyOps[];
             avxRasterIo AFX_SIMD rasOps[];
             avxBufferIo AFX_SIMD bufOps[];
         };
@@ -300,7 +301,7 @@ AVX afxError _AvxDquePopIoReqPacket(afxDrawQueue dque, _avxIoReqPacket* work);
 AVX afxError _AvxDquePushIoReqPacket(afxDrawQueue dque, afxUnit id, afxUnit siz, afxCmdId* cmdId, _avxIoReqPacket** pIorp);
 
 //AVX afxUnit _AvxCountDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx);
-AVX afxClass const* _AvxGetDrawContextClass(afxDrawQueue dque);
+AVX afxClass const* _AvxGetDrawContextClass(afxDrawBridge dexu);
 
 // standard sound port methods
 
@@ -314,10 +315,10 @@ AVX afxInt   _AVX_DPU_THREAD_PROC(afxDrawBridge dexu);
 AVX afxBool  _AvxDpu_ProcCb(avxDpu* dpu);
 AVX afxError _AvxDexu_PingCb(afxDrawBridge dexu, afxUnit queIdx);
 
-AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx);
+AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx, afxUnit batchId);
 
 // Common queued operations
-AVX afxError _AvxDqueExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence);
+AVX afxError _AvxDqueExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], afxUnit const batches[]);
 AVX afxError _AvxDqueTransferResources(afxDrawQueue dque, avxTransference const* ctrl, afxUnit opCnt, void const* ops);
 AVX afxError _AvxDqueRemapBuffers(afxDrawQueue dque, afxUnit mapCnt, _avxBufferRemapping const maps[], afxUnit unmapCnt, _avxBufferRemapping const unmaps[]);
 AVX afxError _AvxDqueSyncBufferedMaps(afxDrawQueue dque, afxUnit flushCnt, avxBufferedMap const flushes[], afxUnit fetchCnt, avxBufferedMap const fetches[]);

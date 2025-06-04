@@ -293,9 +293,9 @@ typedef afxChar32   afxC32;
 #endif
 
 #ifdef UINT64_MAX
-#   define AFX_N64_MAX ((afxUnit64)UINT64_MAX)
+#   define AFX_U64_MAX ((afxUnit64)UINT64_MAX)
 #else
-#   define AFX_N64_MAX ((afxUnit64)0xffffffffffffffffui64)
+#   define AFX_U64_MAX ((afxUnit64)0xffffffffffffffffui64)
 #endif
 
 
@@ -335,9 +335,15 @@ typedef afxChar32   afxC32;
 
 // This sets up how many XMM fill registers we'll use.
 #if defined(__x86_64__) || defined(_M_X64)
-#define MAX_SIMD_REGISTERS (16)
+#define AFX_MAX_SIMD_REGISTERS (16)
 #else
-#define MAX_SIMD_REGISTERS (8)
+#define AFX_MAX_SIMD_REGISTERS (8)
 #endif
+
+#define AFX_MASK64_NONE (0x0000000000000000)
+#define AFX_MASK64_ALL (0xffffffffffffffff)
+#define AFX_MASK32_NONE (0x00000000)
+#define AFX_MASK32_ALL (0xffffffff)
+
 
 #endif//AFX_PLATFORM_DEFS_H

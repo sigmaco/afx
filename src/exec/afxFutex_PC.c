@@ -65,36 +65,34 @@ AFX_DEFINE_STRUCT_ALIGNED(AFX_PTR_ALIGNMENT, _afxFutex)
 
 AFX_STATIC_ASSERT(sizeof(afxFutex) >= sizeof(_afxFutex), "");
 
-_AFX afxBool AfxTryLockFutexShared(afxFutex* ftx)
+_AFX afxBool AfxTryLockFutex(afxFutex* ftx, afxBool shared)
 {
     afxError err = AFX_ERR_NONE;
     _afxFutex* ftx2 = (_afxFutex*)ftx;
     //AfxAssertType(ftx, afxFcc_SLCK);
+
+    if (shared)
+    {
 #ifdef _WIN32
-    afxUnit tid = AfxGetTid();
-    //AfxReportMessage("%p try rdlocked by %u", ftx, tid);
-    return TryAcquireSRWLockShared((PSRWLOCK)&ftx2->srwl);
+        afxUnit tid = AfxGetTid();
+        //AfxReportMessage("%p try rdlocked by %u", ftx, tid);
+        return TryAcquireSRWLockShared((PSRWLOCK)&ftx2->srwl);
 #else
 #   ifdef PREFER_LINUX_FUTEX
-    // Check if the lock is available for a shared lock (i.e., no exclusive lock is held)
-    int expected = 0;  // Looking for an unlocked state
-    if (atomic_compare_exchange_strong(&ftx2->lock, &expected, 1)) {
-        // If lock was available, it is now locked for shared access
-        return 1;
-}
-    return 0;  // Failed to acquire the shared lock
+        // Check if the lock is available for a shared lock (i.e., no exclusive lock is held)
+        int expected = 0;  // Looking for an unlocked state
+        if (atomic_compare_exchange_strong(&ftx2->lock, &expected, 1)) {
+            // If lock was available, it is now locked for shared access
+            return 1;
+        }
+        return 0;  // Failed to acquire the shared lock
 #   else
-    // Try to acquire the read lock (shared lock)
-    return pthread_rwlock_tryrdlock(&ftx2->rwlock) == 0;
+        // Try to acquire the read lock (shared lock)
+        return pthread_rwlock_tryrdlock(&ftx2->rwlock) == 0;
 #   endif
 #endif
-}
-
-_AFX afxBool AfxTryLockFutex(afxFutex* ftx)
-{
-    afxError err = AFX_ERR_NONE;
-    _afxFutex* ftx2 = (_afxFutex*)ftx;
-    //AfxAssertType(ftx, afxFcc_SLCK);
+        return FALSE;
+    }
 
 #ifdef _WIN32
     afxBool rslt = TryAcquireSRWLockExclusive((PSRWLOCK)&ftx2->srwl);
@@ -125,40 +123,39 @@ _AFX afxBool AfxTryLockFutex(afxFutex* ftx)
 #endif
 }
 
-_AFX void AfxLockFutexShared(afxFutex* ftx)
+_AFX void AfxLockFutex(afxFutex* ftx, afxBool shared)
 {
     afxError err = AFX_ERR_NONE;
     _afxFutex* ftx2 = (_afxFutex*)ftx;
     //AfxAssertType(ftx, afxFcc_SLCK);
+
+    if (shared)
+    {
 #ifdef _WIN32
-    AFX_ASSERT(AfxGetTid() != ftx2->tidEx);
-    //AfxReportMessage("%p rdlocked by %u", ftx, AfxGetTid());
-    AcquireSRWLockShared((PSRWLOCK)&ftx2->srwl);
+        AFX_ASSERT(AfxGetTid() != ftx2->tidEx);
+        //AfxReportMessage("%p rdlocked by %u", ftx, AfxGetTid());
+        AcquireSRWLockShared((PSRWLOCK)&ftx2->srwl);
 #else
 #   ifdef PREFER_LINUX_FUTEX
-    while (1)
-    {
-        int expected = 0;
-        if (atomic_compare_exchange_strong(&ftx2->lock, &expected, 1))
+        while (1)
         {
-            // Lock acquired for shared access
-            return;
+            int expected = 0;
+            if (atomic_compare_exchange_strong(&ftx2->lock, &expected, 1))
+            {
+                // Lock acquired for shared access
+                return;
+            }
+            // If the lock is not available, wait on the futex to be notified
+            futex(&ftx2->lock, FUTEX_WAIT, 1, NULL, NULL, 0);
         }
-        // If the lock is not available, wait on the futex to be notified
-        futex(&ftx2->lock, FUTEX_WAIT, 1, NULL, NULL, 0);
-    }
 #   else
-    // Acquire the read lock (shared lock)
-    pthread_rwlock_rdlock(&ftx2->rwlock);
+        // Acquire the read lock (shared lock)
+        pthread_rwlock_rdlock(&ftx2->rwlock);
 #   endif
 #endif
-}
+        return;
+    }
 
-_AFX void AfxLockFutex(afxFutex* ftx)
-{
-    afxError err = AFX_ERR_NONE;
-    _afxFutex* ftx2 = (_afxFutex*)ftx;
-    //AfxAssertType(ftx, afxFcc_SLCK);
 #ifdef _WIN32
     //AfxReportMessage("%p wdlocked by %u", ftx, AfxGetTid());
     AcquireSRWLockExclusive((PSRWLOCK)&ftx2->srwl);
@@ -185,33 +182,32 @@ _AFX void AfxLockFutex(afxFutex* ftx)
 #endif
 }
 
-_AFX void AfxUnlockFutexShared(afxFutex* ftx)
+_AFX void AfxUnlockFutex(afxFutex* ftx, afxBool shared)
 {
     afxError err = AFX_ERR_NONE;
     _afxFutex* ftx2 = (_afxFutex*)ftx;
     //AfxAssertType(ftx, afxFcc_SLCK);
+
+    if (shared)
+    {
 #ifdef _WIN32
-    AFX_ASSERT(AfxGetTid() != ftx2->tidEx);
-    //AfxReportMessage("%p rdunlocked by %u", ftx, AfxGetTid());
-    ReleaseSRWLockShared((PSRWLOCK)&ftx2->srwl);
+        AFX_ASSERT(AfxGetTid() != ftx2->tidEx);
+        //AfxReportMessage("%p rdunlocked by %u", ftx, AfxGetTid());
+        ReleaseSRWLockShared((PSRWLOCK)&ftx2->srwl);
 #else
 #   ifdef PREFER_LINUX_FUTEX
-    atomic_store(&ftx2->lock, 0);  // Unlock the shared lock
+        atomic_store(&ftx2->lock, 0);  // Unlock the shared lock
 
-    // Wake up threads waiting for the lock
-    futex(&ftx2->lock, FUTEX_WAKE, 1, NULL, NULL, 0);
+        // Wake up threads waiting for the lock
+        futex(&ftx2->lock, FUTEX_WAKE, 1, NULL, NULL, 0);
 #   else
-    // Release the read lock (shared lock)
-    pthread_rwlock_unlock(&ftx2->rwlock);
+        // Release the read lock (shared lock)
+        pthread_rwlock_unlock(&ftx2->rwlock);
 #   endif
 #endif
-}
-
-_AFX void AfxUnlockFutex(afxFutex* ftx)
-{
-    afxError err = AFX_ERR_NONE;
-    _afxFutex* ftx2 = (_afxFutex*)ftx;
-    //AfxAssertType(ftx, afxFcc_SLCK);
+        return;
+    }
+    
 #ifdef _WIN32
     AFX_ASSERT(AfxGetTid() == ftx2->tidEx);
     ftx2->tidEx = 0;
@@ -269,8 +265,8 @@ _AFX afxError AfxDeployFutex(afxFutex* ftx)
     //AfxAssignTypeFcc(ftx, afxFcc_SLCK);
     InitializeSRWLock((PSRWLOCK)&ftx2->srwl);
     ftx2->tidEx = 0;
-    AfxLockFutexShared(ftx);
-    AfxUnlockFutexShared(ftx);
+    AfxLockFutex(ftx, TRUE);
+    AfxUnlockFutex(ftx, TRUE);
 #else
 #   ifdef PREFER_LINUX_FUTEX
     atomic_store(&ftx2->lock, 0);  // Initialize the lock to unlocked state

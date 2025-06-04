@@ -164,7 +164,7 @@ typedef enum amxAudioUsage
 
 typedef enum amxAudioFlag
 {
-    amxAudioFlag_RESERVED = AFX_BIT(31)
+    amxAudioFlag_RESERVED = AFX_BITMASK(31)
 } amxAudioFlags;
 
 AFX_DEFINE_STRUCT(amxAudioInfo)

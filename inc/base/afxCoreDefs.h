@@ -49,9 +49,11 @@
 #define AFX_OBJECT(handle_) struct handle_##_T
 #define AFX_OBJ(handle_) struct handle_##_T
 
-#define AFX_SIMD_ALIGNMENT 16u
-#define AFX_PTR_ALIGNMENT sizeof(void*)
-#define AFX_DEFAULT_ALIGNMENT AFX_PTR_ALIGNMENT
+#define AFX_SIMD_ALIGNMENT 16u 
+#define AFX_PTR_ALIGNMENT sizeof(void*) 
+#define AFX_DEFAULT_ALIGNMENT AFX_SIMD_ALIGNMENT 
+
+#define AFX_ALIGN_SIZE(operand_,alignment_) (((operand_) + ((alignment_) - 1)) & ~((alignment_) - 1))
 
 #define AFX_DEFINE_HANDLE(object) typedef struct object##_T* object
 #define AFX_DEFINE_STRUCT(struct_) typedef struct struct_ struct_; struct struct_ 
@@ -79,8 +81,8 @@
 
 #define AFX_CAST(_type_, _var_) ((_type_)(_var_))
 
-#define AFX_REBASE(link_, type_, entry_) ((type_ *)((void const*)(((afxByte const*)(link_)) - offsetof(type_, entry_))))
-#define AFX_REBASE2(type_, p_, entry_) ((type_ *)((void const*)(((afxByte const*)(p_)) - offsetof(type_, entry_))))
+#define AFX_REBASE(p_, type_, field_) ((type_*)((void const*)(((afxByte const*)(p_)) - offsetof(type_, field_))))
+#define AFX_REBASE2(type_, p_, field_) ((type_*)((void const*)(((afxByte const*)(p_)) - offsetof(type_, field_))))
 #define AfxRebase(p_,s_,m_) ((s_)(void*)(((afxByte*)p_) - offsetof(s_, m_)))
 
 #ifndef container_of
@@ -95,11 +97,12 @@
 #   undef TRUE
 #   undef FALSE
 #endif
-#define FALSE 0
+#define FALSE (0)
 #define TRUE (!FALSE)
 
-#define NIL 0
+#define NIL (0)
 
+// Bitwise NOT of 0 = all bits set (e.g. 0xFFFF or 0xFFFFFFFF).
 #define AFX_INVALID_INDEX ((afxUnit)(~((afxUnit)0)))
 #define AFX_INVALID_INDEX8 ((afxUnit8)(~((afxUnit8)0)))
 #define AFX_INVALID_INDEX16 ((afxUnit16)(~((afxUnit16)0)))
@@ -111,14 +114,30 @@ AFX_STATIC_ASSERT(AFX_INVALID_INDEX8 == AFX_U8_MAX, "");
 AFX_STATIC_ASSERT(AFX_INVALID_INDEX16 == AFX_U16_MAX, "");
 AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_U32_MAX, "");
 
-#define AFX_BIT_OFFSET(bit_) ((afxUnit32)1 << (afxUnit32)(bit_)) // get bit offset
-#define AFX_BIT AFX_BIT_OFFSET  // get bit offset
+#define AFX_IS_INDEX_INVALID(_var_) (((typeof(_var_))~(typeof(_var_))0) == (_var_))
+#define AFX_IS_INDEX_VALID(_var_) (((typeof(_var_))~(typeof(_var_))0) != (_var_))
 
-#define AFX_MASK_MIN AFX_BIT(0)
-#define AFX_MASK_MAX AFX_BIT(31)
-#define AFX_MASK_ALL 0xFFFFFFFF
-#define AFX_MASK_NONE 0xFFFFFFFF
-#define AFX_FORCE_ENUM_N32 0x7fffffff
+// Computes the bitmask for a given bit index.
+// Returns a non-zero bitmask value (the actual bit value, e.g., 8 for bit 3) for the bit.
+#define AFX_BITMASK(bit_) \
+    (1 << (bit_)) // get bit offset
+
+// Computes 1 << bit_ (i.e., a mask with only that bit set), and bitwise-ANDs it with mask_.
+// Returns a non-zero value (the actual bit value, e.g., 8 for bit 3) if the bit is set; otherwise returns 0.
+#define AFX_BITMASK_IF_SET(mask_,bit_) \
+    ((mask_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
+
+// Shifts mask_ right by bit_ places and isolates the least significant bit using & 1.
+// Returns 1 if the bit is set, 0 if it's not.
+#define AFX_TEST_BIT_SET(mask_,bit_) \
+    (((mask_) >> (bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
+
+
+#define AFX_MASK_MIN AFX_BITMASK(0)
+#define AFX_MASK_MAX AFX_BITMASK(31)
+#define AFX_MASK_ALL AFX_MASK32_ALL
+#define AFX_MASK_NONE AFX_MASK32_NONE
+#define AFX_FORCE_ENUM_N32 (0x7fffffff)
 
 // 4 bytes interpreted as 16:16 fixed.
 typedef afxInt32 afxFixed;
@@ -221,9 +240,9 @@ afxCriterion;
 
 typedef enum afxProfileFlag
 {
-    afxProfileFlag_ROBUSTNESS   = AFX_BIT(0),
-    afxProfileFlag_PERFORMANCE  = AFX_BIT(1),
-    afxProfileFlag_QUALITY      = AFX_BIT(2),
+    afxProfileFlag_ROBUSTNESS   = AFX_BITMASK(0),
+    afxProfileFlag_PERFORMANCE  = AFX_BITMASK(1),
+    afxProfileFlag_QUALITY      = AFX_BITMASK(2),
 } afxProfileFlag;
 
 // Object handles defined by Core Execution System
@@ -321,18 +340,12 @@ typedef afxUnit aaxUniqueId;
 AFX afxUnit AfxFlagsFindLsb(afxFlags mask);
 AFX afxUnit AfxFlagsFindMsb(afxFlags mask);
 
-#define AfxTestBitPosition(mask_,bit_) ((mask_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
-#define AfxTestBitEnabled(mask_,bit_) (((mask_)>>(bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
-
 #define AfxTestFlags(_var_,_mask_) ((((afxFlags)(_var_)) & ((afxFlags)(_mask_))) == (afxFlags)(_mask_))
 #define AfxFlagsSet(_var_,_mask_) (((afxFlags)(_var_)) = ((afxFlags)(_mask_)))
 #define AfxFlagsMark(_var_,_mask_) (((afxFlags)(_var_)) |= ((afxFlags)(_mask_)))
 #define AfxFlagsClear(_var_,_mask_) (((afxFlags)(_var_)) &= ~((afxFlags)(_mask_)))
 
 #define AFX_IS_ALIGNED(ptr_, alignment_) (((uintptr_t)(ptr_) % (alignment_)) == 0)
-
-#define AfxIsIndexInvalid(_var_) (((afxIndex)(_value_)) == AFX_INVALID_INDEX) 
-#define AfxIsAnValidIndex(_value_) (((afxIndex)(_value_)) != AFX_INVALID_INDEX) 
 
 #define AfxAbs(x_) ((0 > (x_)) ? -(x_) : (x_))
 #define AfxAbsf(x_) ((0 > (afxReal)(x_)) ? -(afxReal)(x_) : (afxReal)(x_))

@@ -61,30 +61,74 @@ AFX_DECLARE_STRUCT(_avxDctxDdi);
 #else
 AFX_DEFINE_STRUCT(_avxDctxDdi)
 {
-    afxError(*end)(afxDrawContext);
-    afxError(*reset)(afxDrawContext, afxBool freeMem, afxBool permanent);
+    afxError(*compose)(afxDrawContext, afxBool once, afxBool deferred, afxUnit* bid);
+    afxError(*compile)(afxDrawContext, afxUnit bid);
+    afxError(*recycle)(afxDrawContext, afxUnit bid, afxBool freeMem);
+    afxError(*discard)(afxDrawContext, afxBool freeMem);
+    afxError(*exhaust)(afxDrawContext, afxBool freeMem);
 };
 #endif
 
+AFX_DEFINE_STRUCT(_avxCmdBatch)
+{
+    afxFcc          fcc;
+    afxUnit         uniqId;
+    afxLink         recyc;
+    afxBool         once; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
+    afxBool         deferred;
+    afxAtom32       submCnt; // number of submissions
+    afxMask64       submQueMask; // one for each queue where this dctx was submitted into.
+    afxChain        commands;
+    afxArena        cmdArenaCompiled;
+
+    struct
+    {
+        afxBool         inDrawScope;
+        afxBool         inVideoCoding;
+
+        avxCanvas           canv;
+        afxRect             area;
+
+        avxPipeline         pip;
+
+        avxVertexInput      vtxd;
+        avxBufferedStream   vbo[16];
+        avxBufferedStream   ibo;
+
+
+        afxBool             expUseIndDraws;
+        afxArray            indexedDraws; // avxDrawIndexedIndirect
+        afxArray            draws; // avxDrawIndirect
+        // at end of context, these arrays will be used to generate a big indirect buffer object.
+    };
+};
+
 #ifdef _AVX_DRAW_CONTEXT_C
-#ifdef _AVX_CMD_BUFFER_IMPL
+#ifdef _AVX_DRAW_CONTEXT_IMPL
 AFX_OBJECT(_avxDrawContext)
 #else
 AFX_OBJECT(afxDrawContext)
 #endif
 {
-    _avxDctxDdi const*pimpl;
+    _avxDctxDdi const*  pimpl;
     avxDrawContextState state;
-    afxAtom32       submCnt; // number of submissions
-    afxMask64       submQueMask; // one for each queue where this dctx was submitted into.
+    afxBool             once; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
+    afxBool             deferred;
+    afxPool             batches;
+
     afxUnit         portId;
     afxUnit         poolIdx;
-    afxBool         disposable; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
+    // Is short-lived? That is, does not recycle batches, etc.
+    afxBool         transient;
+    afxChain        cmdbRecycChain;
+    afxFutex        cmdbReqLock;
+    afxBool         cmdbLockedForReq;
+
     afxDrawLimits const* devLimits; // dbg copies
     afxDrawFeatures const* enabledFeatures; // dbg copies
 
-    afxArena        cmdArena; // owned by dsys data for specific port
     afxChain        commands;
+    afxArena        cmdArena; // owned by dsys data for specific port
 
     struct
     {
@@ -269,7 +313,11 @@ AFX_DEFINE_UNION(_avxCmd)
         avxCmdHdr hdr;
 
         afxUnit cnt;
-        afxDrawContext AFX_SIMD contexts[];
+        struct
+        {
+            afxDrawContext dctx;
+            afxUnit batchId;
+        } AFX_SIMD contexts[];
     } ExecuteCommands;
     struct
     {
@@ -783,6 +831,7 @@ AFX_DEFINE_UNION(_avxCmdLut)
 
 #define _AVX_CMD_ID(cmdName_) (offsetof(_avxCmdLut, cmdName_) / sizeof(void*))
 
+AFX _avxCmdBatch* _AvxGetCmdBatch(afxDrawContext dctx, afxUnit idx);
 AVX _avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxCmdId* cmdId);
 AVX afxError _AvxDctxImplResetCb(afxDrawContext dctx, afxBool freeMem, afxBool permanent);
 AVX afxError _AvxDctxImplEndCb(afxDrawContext dctx);

@@ -117,7 +117,7 @@ AFX_OBJECT(afxSimQueue)
     afxBool         closed; // can't enqueue
 
     afxCondition idleCnd;
-    afxMutex idleCndMtx;
+    //afxMutex idleCndMtx;
     afxFutex workArenaSlock;
     afxArena workArena; // used by submission of queue operations, not stream commands.        
     afxChain workChn;

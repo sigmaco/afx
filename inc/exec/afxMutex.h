@@ -41,13 +41,13 @@ AFX_DEFINE_STRUCT(afxMutex)
 #ifdef AFX_ON_WINDOWS
 #   ifdef AFX_ON_X86_64
     // must at least 56 bytes
-    afxAtom32   data[16]; // 64 bytes
+    afxByte     data[AFX_ALIGN_SIZE(64, AFX_ATOMIC_ALIGNMENT)]; // 64 bytes
 #else
     // must at least 36 bytes
-    afxAtom32   data[12]; // 48 bytes
+    afxByte     data[AFX_ALIGN_SIZE(48, AFX_ATOMIC_ALIGNMENT)]; // 48 bytes
 #   endif
 #else
-    afxAtom32   data[12]; // 48 bytes
+    afxByte     data[AFX_ALIGN_SIZE(48, AFX_ATOMIC_ALIGNMENT)]; // 48 bytes
 #endif
 };
 

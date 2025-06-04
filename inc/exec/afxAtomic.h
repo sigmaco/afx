@@ -14,14 +14,31 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// Because MSVC doesn't implement C11 atomic library, 
+// we have to roll down the whole thing in here; at least for 32-bit and 64-bit words.
+// Nothing new and/or untrivial to a C software engineer. We are hardcore!
+
 #ifndef AFX_ATOMIC_H
 #define AFX_ATOMIC_H
 
 #include "qwadro/inc/base/afxDebug.h"
 
-// Because MSVC doesn't implement C11 atomic library, 
-// we have to roll down the whole thing in here; at least for 32-bit and 64-bit words.
-// Nothing new and/or untrivial to a C software engineer. We are hardcore!
+#ifndef AFX_ATOMIC_ALIGNMENT
+#   define AFX_ATOMIC_ALIGNMENT sizeof(afxUnit64) 
+#endif
+
+#ifdef AFX_ON_WINDOWS
+typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile long       afxAtom32;
+typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile long long  afxAtom64;
+typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile void*      afxAtomPtr;
+#else // LINUX
+typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile    int32_t	afxAtom32;
+typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile    int64_t	afxAtom64;
+typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile    void*   afxAtomPtr;
+#endif
+
+AFX_STATIC_ASSERT(sizeof(afxAtom32) == sizeof(afxByte[4]), "");
+AFX_STATIC_ASSERT(sizeof(afxAtom64) == sizeof(afxByte[8]), "");
 
 typedef enum afxMemoryOrder
 {
@@ -42,21 +59,6 @@ typedef enum afxMemoryOrder
 
     afxMemoryOrder_ACQ_REL
 } afxMemoryOrder;
-
-#ifdef AFX_ON_WINDOWS
-typedef volatile long       afxAtom32;
-typedef volatile long long  afxAtom64;
-typedef volatile void*      afxAtomPtr;
-#else // LINUX
-typedef volatile    int32_t	afxAtom32;
-typedef volatile    int64_t	afxAtom64;
-typedef volatile    void*   afxAtomPtr;
-#endif
-
-AFX_STATIC_ASSERT(sizeof(afxAtom32) == 4, "");
-AFX_STATIC_ASSERT(sizeof(afxAtom64) == 8, "");
-
-// 32-bit wide
 
 // reads a value from an atomic object.
 AFXINL afxInt32     AfxLoadAtom32(afxAtom32* src);

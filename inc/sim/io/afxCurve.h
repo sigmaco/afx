@@ -42,10 +42,10 @@
 
 typedef enum afxCurveFlag
 {
-    afxCurveFlag_IDENTITY   = AFX_BIT(0),
-    afxCurveFlag_CONSTANT   = AFX_BIT(1),
-    afxCurveFlag_KEYFRAMED  = AFX_BIT(2),
-    afxCurveFlag_NORMALIZED = AFX_BIT(3),
+    afxCurveFlag_IDENTITY   = AFX_BITMASK(0),
+    afxCurveFlag_CONSTANT   = AFX_BITMASK(1),
+    afxCurveFlag_KEYFRAMED  = AFX_BITMASK(2),
+    afxCurveFlag_NORMALIZED = AFX_BITMASK(3),
 } afxCurveFlags;
 
 typedef enum afxCurveFormat

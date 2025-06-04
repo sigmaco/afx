@@ -42,10 +42,28 @@ _AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, _avxIoReqPacket* work)
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        afxDrawContext dctx = work->Execute.cmdbs[i];
+        afxDrawContext dctx = work->Execute.cmdbs[i].dctx;
         AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-        AFX_ASSERT(dctx->state == avxDrawContextState_PENDING);
-        _AvxDpuRollContext(dpu, dctx);
+        afxUnit batchId = work->Execute.cmdbs[i].batchId;
+        _avxCmdBatch* cmdb = _AvxGetCmdBatch(dctx, batchId);
+
+        if (!cmdb)
+        {
+            AfxThrowError();
+            return err;
+        }
+
+        //AFX_ASSERT(cmdb->state == avxDrawContextState_PENDING);
+        _AvxDpuRollContext(dpu, dctx, batchId);
+        
+        // Must be disposed because _AvxDqueExecuteDrawCommands() reacquires it.
+        AfxDecAtom32(&cmdb->submCnt);
+        AvxRecycleDrawCommands(dctx, batchId, FALSE);
+#if 0
+        AFX_ASSERT(!AvxDoesDrawCommandsExist(dctx, batchId));
+        AfxReportf(0, AfxHere(),"%d dpu %d", batchId, dpu->exuIdx);
+#endif
+        AfxDisposeObjects(1, &dctx);
     }
     return err;
 }
@@ -94,9 +112,9 @@ _AVX afxBool _AvxDpu_ProcCb(avxDpu* dpu)
                 AfxGetTime(&iorp->hdr.complTime);
                 _AvxDquePopIoReqPacket(dque, iorp);
             }
-            AfxUnlockMutex(&dque->iorpChnMtx);
             AfxSignalCondition(&dque->idleCnd);
-            AfxYield();
+            AfxUnlockMutex(&dque->iorpChnMtx);
+            //AfxYield();
         }
     }
     return TRUE;
@@ -127,7 +145,7 @@ _AVX afxInt _AVX_DPU_THREAD_PROC(afxDrawBridge dexu)
     dpu->thr = thr;
     dexu->dpu = dpu;
 
-    do
+    while (1)
     {
         AfxLockMutex(&dexu->schedCndMtx);
 
@@ -142,7 +160,7 @@ _AVX afxInt _AVX_DPU_THREAD_PROC(afxDrawBridge dexu)
         if (AfxShouldThreadBeInterrupted())
             break;
 
-    } while (1);
+    }
 
     AFX_ASSERT(dpu == dexu->dpu);
     AfxDeallocate((void**)&dpu, AfxHere());

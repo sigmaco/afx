@@ -22,52 +22,56 @@ afxRect const AVX_RECT_ZERO = { 0, 0, 0, 0 };
 afxRect const AVX_RECT_MIN = { AFX_I32_MIN, AFX_I32_MIN, 1, 1 };
 afxRect const AVX_RECT_MAX = { AFX_I32_MAX, AFX_I32_MAX, AFX_U32_MAX, AFX_U32_MAX };
 
-_AVXINL afxBool AfxClipRectUnion(afxRect* rc, afxRect const* a, afxRect const* b)
+_AVXINL afxUnit AfxGetRectArea(afxRect const* rc)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(rc);
+    return (rc->w * rc->h);
+}
+
+_AVXINL afxUnit AfxMergeRects(afxRect* rc, afxRect const* a, afxRect const* b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(rc);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
     
+    // Essentially the inverse of AfxIntersectRects().
     afxInt x = AFX_MIN(a->x, b->x);
     afxInt y = AFX_MIN(a->y, b->y);
-    afxUnit w = AFX_MAX(a->x + a->w, b->x + b->w);
-    afxUnit h = AFX_MAX(a->y + a->h, b->y + b->h);
     rc->x = x;
     rc->y = y;
-    rc->w = w - x;
-    rc->h = h - y;
-    return (rc->w > 0 && rc->h > 0);
+    rc->w = AFX_MAX(a->x + a->w, b->x + b->w) - x;
+    rc->h = AFX_MAX(a->y + a->h, b->y + b->h) - y;
+    return (rc->w * rc->h);
 }
 
-_AVXINL afxBool AfxClipRectIntersection(afxRect* rc, afxRect const* a, afxRect const* b)
+_AVXINL afxUnit AfxIntersectRects(afxRect* rc, afxRect const* a, afxRect const* b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(rc);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
 
+    // Essentially the inverse of AfxMergeRects().
     afxInt x = AFX_MAX(a->x, b->x);
     afxInt y = AFX_MAX(a->y, b->y);
-    afxUnit w = AFX_MIN(a->x + a->w, b->x + b->w);
-    afxUnit h = AFX_MIN(a->y + a->h, b->y + b->h);
-
-    if (w > x && h > y)
-    {
-        rc->x = x;
-        rc->y = y;
-        rc->w = w - x;
-        rc->h = h - y;
-        return TRUE;
-    }
-    else
-    {
-        rc->x = rc->y = rc->w = rc->h = 0; // Optional: clear out
-        return FALSE;
-    }
+    rc->x = x;
+    rc->y = y;
+    rc->w = AFX_MIN(a->x + a->w, b->x + b->w) - x;
+    rc->h = AFX_MIN(a->y + a->h, b->y + b->h) - y;
+    return (rc->w * rc->h);
 }
 
-_AVXINL afxBool AvxDoesRectOverlaps(afxRect const* a, afxRect const* b)
+_AFXINL afxBool AfxAreRectsEqual(afxRect const* a, afxRect const* b)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(a);
+    AFX_ASSERT(b);
+    return ((a->x == b->x) && (a->y == b->y) && (a->w == b->w) && (a->h == b->h));
+}
+
+_AVXINL afxBool AvxAreRectsOverlapping(afxRect const* a, afxRect const* b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(a);
@@ -143,7 +147,7 @@ _AFXINL void AfxFlipRectVertically(afxRect const* rc, afxUnit height, afxRect* f
     *flipped = AVX_RECT(rc->x, (height - (rc->y + rc->h)), rc->w, rc->h);
 }
 
-_AVXINL afxUnit AfxClipRectExclusion(afxRect const* rc, afxUnit maxW, afxUnit maxH, afxRect outsides[4])
+_AVXINL afxUnit AfxScissorRect(afxRect const* rc, afxUnit maxW, afxUnit maxH, afxRect outsides[4])
 {
     afxError err = NIL;
     AFX_ASSERT(outsides);
@@ -151,6 +155,10 @@ _AVXINL afxUnit AfxClipRectExclusion(afxRect const* rc, afxUnit maxW, afxUnit ma
     afxUnit invRcCnt = 0;
 
     // If the given rectangle is completely inside the screen, we calculate the outside areas.
+
+    // These rects may overlap, especially at corners - e.g. if a rect spills out top-left, both the left and top exclusions will cover that corner area.
+    // This is different from a region subtraction, where we would remove the intersection and return only non-overlapping leftovers.
+    // Useful in GUI layout engines, clipping rejection, or debugging overlays.
 
     // Left exclusion
     if (rc->x < 0)
@@ -171,7 +179,22 @@ _AVXINL afxUnit AfxClipRectExclusion(afxRect const* rc, afxUnit maxW, afxUnit ma
     return invRcCnt;
 }
 
-_AVXINL void AfxMergeRects(afxRect* rc, afxUnit cnt, afxRect* in)
+_AVXINL afxUnit AfxClampRect(afxRect* rc, afxRect const* src, afxRect const* min, afxRect const* max)
+{
+    afxError err = NIL;
+    AFX_ASSERT(src);
+    AFX_ASSERT(min);
+    AFX_ASSERT(max);
+    AFX_ASSERT(rc);
+    *rc = AVX_RECT( AFX_CLAMP(src->x, min->x, max->x),
+                    AFX_CLAMP(src->y, min->y, max->y),
+                    AFX_CLAMP(src->w, min->w, max->w),
+                    AFX_CLAMP(src->h, min->h, max->h));
+    // Returns the area = w * h; (like 4 x 2 = 8 square units)
+    return (rc->w * rc->h);
+}
+
+_AVXINL void AfxMakeRect(afxRect* rc, afxUnit cnt, afxRect* in)
 {
     afxError err = NIL;
     AFX_ASSERT(in);

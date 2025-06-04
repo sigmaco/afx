@@ -14,6 +14,38 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // INTRUSIVE DOUBLY-LINKED CIRCULAR LIST                                    //
+//////////////////////////////////////////////////////////////////////////////
+
+/*
+    afxChain is a powerful example of an intrusive doubly-linked list implementation that makes use of manual memory management, 
+    type punning via unions, and circular list design. Intrusive design means the node is embedded in a larger object (e.g., a user-defined struct), 
+    not allocated separately. This is super efficient and great for real-time systems.
+    
+    This is a goldmine of low-level software architecture and engineering. You will work with a robust, high-performance, 
+    custom intrusive list system with both conventional and atomic-safe variants, forward and backward traversal, 
+    and rich tooling for embedded container access and flexible manipulation.
+
+    DESIGN:
+    Iteration. Walk through from chain->anchor.next until you loop back to &anchor.
+    Insertions. Use pointer manipulations to splice afxLinks into the chain before/after others.
+    Removals. Remove a node by re-linking its neighbors.
+    Intrusive List. Node metadata (afxLink) is embedded in the user structure. Zero-allocation, fast, cache-local, low overhead.
+    Circular Anchor. Avoids null checks; simplifies iteration and boundary cases. Sentinel pattern removes null checks, which is very CPU branch-friendly.
+    Unions. Support for generic pointer types or abstraction (afxAtomPtr).
+    Back-Reference. Links know their chain (chain field). Enables metadata tracking, reverse lookups, O(1) removals or validation from links to the list.
+    Held Pointer. Can store additional node-specific payloads or metadata.
+    Flexible macros. Iteration macros handle most access. Mimics Linux kernel macros like list_for_each_entry.
+    Customizability. Macros for both forward, reverse, and atomic. Control over traversal, even under concurrent modification.
+    Atomic pointer variants. afxAtomPtr, *_A fields and macros. Optional lock-free traversal for SPSC or MPMC patterns.
+
+    RISKS:
+    Memory Safety: You must ensure nodes aren’t freed while in use.
+    Thread Safety: Only atomic traversal is safe in concurrent access scenarios; insertion/removal is not lock-free unless extended.
+    Error-Prone: Like list_entry() in Linux kernel, this is "raw power" and requires careful use.
+*/
+
 #ifndef AFX_CHAIN_H
 #define AFX_CHAIN_H
 
@@ -61,38 +93,155 @@ struct afxChain
     afxUnit     cnt;
 };
 
-AFXINL void             AfxDeployChain(afxChain *ch, void *holder);
+
+// INITIALIZATION AND METADATA
+
+/*
+    The AfxDeplyChain() function initializes a chain. Basically a constructor; makes the list safe for use.
+*/
+
+AFXINL void             AfxDeployChain
+(
+    afxChain*           ch,
+    void*               holder
+);
+
+AFXINL void             AfxSwapChains
+(
+    afxChain*           ch, 
+    afxChain*           other
+);
+
+/*
+    The AfxAppendChain() function appends all links from @other to the end of @ch.
+    It is an efficient list splicer. Efficient because it's intrusive (no copying).
+    The @other is emptied in the process (like a "move").
+    The 'chain' pointer in each link is updated for ownership tracking.
+*/
+
+AFXINL void AfxAppendChain(afxChain* ch, afxChain* other);
+
+/*
+    The AfxPrependChain() function prepends all links from @other to the start of @ch.
+    It is an efficient list splicer. Efficient because it's intrusive (no copying).
+    The @other is emptied in the process (like a "move").
+    The 'chain' pointer in each link is updated for ownership tracking.
+*/
+
+AFXINL void AfxPrependChain(afxChain* ch, afxChain* other);
+
+/*
+    The AfxGetChainLength() function retrieves the length (the number of links) of a chain.
+    Optimized for fast O(1) access without iterating.
+*/
 
 AFXINL afxUnit          AfxGetChainLength(afxChain const *ch);
+
+/*
+    The AfxGetChainHolder() function retrieves the holder specified in chain deployment.
+    Optimized for fast O(1) access without iterating.
+*/
+
 AFXINL void*            AfxGetChainHolder(afxChain const *ch);
 
-AFXINL void             AfxSwapChains(afxChain *ch, afxChain *other);
-AFXINL afxLink*         AfxGetLastLink(afxChain const *ch); // last in (B2F)
-AFXINL afxLink*         AfxGetFirstLink(afxChain const *ch); // first in (B2F)
-AFXINL afxLink*         AfxGetAnchor(afxChain *ch);
-AFXINL afxLink const*   AfxGetAnchorConst(afxChain const *ch);
+// ACCESS AND NAVIGATION
+
+/*
+    The AfxIsChainEmpty() function checks if does not have any link in chain.
+*/
+
 AFXINL afxBool          AfxIsChainEmpty(afxChain const *ch);
 
-AFXINL afxBool          AfxFindLinkIndex(afxChain const *ch, afxLink *lnk, afxUnit *idx);
-AFXINL afxBool          AfxFindLinkIndexB2F(afxChain const *ch, afxLink *lnk, afxUnit *idx);
-AFXINL afxLink*         AfxFindLastLink(afxChain const *ch, afxUnit idx);
-AFXINL afxLink*         AfxFindFirstLink(afxChain const *ch, afxUnit idx);
-AFXINL afxError         AfxPushLinkAfter(afxChain *ch, afxUnit idx);
-AFXINL afxError         AfxChainPopLinkage(afxChain *ch, afxUnit idx);
+/*
+    The AfxGetLastLink() function
+*/
 
+AFXINL afxLink*         AfxGetLastLink(afxChain const *ch); // last in (B2F)
+AFXINL afxLink*         AfxGetFirstLink(afxChain const *ch); // first in (B2F)
 
-AFXINL afxResult        AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxUnit base, afxUnit cnt, afxLink *lnk[]);
+/*
+    The AfxGetAnchor() function retrieves the chain sentinel.
+*/
 
-AFXINL afxUnit          AfxInvokeLinkages(afxChain *ch, afxBool fromLast, afxUnit first, afxUnit cnt, afxBool(*f)(afxLink *lnk, void *udd), void *udd);
+AFXINL afxLink*         AfxGetAnchor(afxChain *ch);
+
+/*
+    The AfxGetAnchorConst() function retrieves the chain sentinel as constant.
+*/
+
+AFXINL afxLink const*   AfxGetAnchorConst(afxChain const *ch);
+
+// INSERTION AND REMOVAL
 
 AFXINL void             AfxResetLink(afxLink *lnk);
+
+/*
+    The AfxPushLink() relinks it in front of the chain.
+    This do O(1) pointer rewiring to insert nodes at either front.
+*/
+
 AFXINL afxUnit          AfxPushLink(afxLink *lnk, afxChain *ch);
+
+/*
+    The AfxPushBackLink() relinks it in back of the chain.
+    This do O(1) pointer rewiring to insert nodes at either back.
+*/
+
 AFXINL afxUnit          AfxPushBackLink(afxLink *lnk, afxChain *ch);
+
+/*
+    The AfxPopLink() function detaches a node. Resets lnk's internal fields to avoid dangling pointers.
+*/
+
 AFXINL void             AfxPopLink(afxLink *lnk);
 
+/*
+    The AfxLinkBehind() function insert lnk after a target node.
+    This gives full control (not just ends) supports sorting, reordering.
+*/
 
 AFXINL afxUnit          AfxLinkBehind(afxLink* lnk, afxLink* next);
+
+/*
+    The AfxLinkAhead() function insert lnk before a target node.
+    This gives full control (not just ends) supports sorting, reordering.
+*/
+
 AFXINL afxUnit          AfxLinkAhead(afxLink* lnk, afxLink* prev);
+
+// FINDING AND INDEXING
+
+/*
+    The AfxFindLinkIndex() function iterates through the list until it finds lnk, returns its index.
+    Used for debugging, sorting, consistency checking.
+*/
+
+AFXINL afxBool          AfxFindLinkIndex(afxChain const *ch, afxLink *lnk, afxUnit *idx);
+
+/*
+    The AfxFindLinkIndexB2F() function iterates through the list until it finds lnk, returns its index.
+    Used for debugging, sorting, consistency checking.
+*/
+
+AFXINL afxBool          AfxFindLinkIndexB2F(afxChain const *ch, afxLink *lnk, afxUnit *idx);
+
+/*
+    The AfxFindLastLink() function does indexed access into list nodes. 
+    This is O(n), not O(1), but helps traverse specific elements.
+*/
+
+AFXINL afxLink*         AfxFindLastLink(afxChain const *ch, afxUnit idx);
+
+/*
+    The AfxFindFirstLink() function does indexed access into list nodes. 
+    This is O(n), not O(1), but helps traverse specific elements.
+*/
+
+AFXINL afxLink*         AfxFindFirstLink(afxChain const *ch, afxUnit idx);
+
+/*
+    The () function .
+*/
 
 AFXINL void*            AfxGetLinker(afxLink const *lnk); // linker is the chain holder
 
@@ -102,28 +251,37 @@ AFXINL afxLink*         AfxGetNextLink(afxLink const *lnk);
 
 AFXINL afxLink*         AfxGetPrevLink(afxLink const *lnk);
 
+// ITERATION MACROS --- KERNEL-STYLE POWER
+
+/*
+    AFX_GET_LINKED_OBJECT is a macro for safe container lookup (container_of pattern).
+*/
+
+#define AFX_GET_LINKED_OBJECT(type_, lnk_, offset_) \
+    ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_))
+
 /*
     AFX_ITERATE_CHAIN is a powerful macro for iterating over intrusive linked lists (where links are embedded within larger structures). 
-    It's efficient and avoids allocating wrapper nodes. It's similar in spirit to Linux kernel macros like list_for_each_entry.
+    It's efficient and similar in spirit to Linux kernel macros like list_for_each_entry.
     It iterates through a circular linked list that is anchored by ch_. It allows access to each element of type type_ through the pointer lnk_.
     It's built for a custom data structure defined with an afxLink struct for linking nodes.
 */
 
-#define AFX_ITERATE_CHAIN(type_, lnk_, offset_, ch_) \
-    for (afxLink const* _next##lnk_ = (ch_)->anchor.next, \
-                      * _curr##lnk_ = _next##lnk_; \
-         (_curr##lnk_ != &(ch_)->anchor) && \
-         ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
-          _next##lnk_ = _curr##lnk_->next, 1); \
-         _curr##lnk_ = _next##lnk_)
+#define AFX_ITERATE_CHAIN(type_, iter_, link_, ch_) \
+    for (afxLink const* _next##iter_ = (ch_)->anchor.next, \
+                      * _curr##iter_ = _next##iter_; \
+         (_curr##iter_ != &(ch_)->anchor) && \
+         ((iter_) = (type_*)AFX_REBASE(_curr##iter_, type_, link_), \
+          _next##iter_ = _curr##iter_->next, 1); \
+         _curr##iter_ = _next##iter_)
 
-#define AFX_ITERATE_CHAIN2(type_, lnk_, offset_, ch_) \
-    for (afxLink const* _next##lnk_2 = (ch_)->anchor.next, \
-                      * _curr##lnk_2 = _next##lnk_2; \
-         (_curr##lnk_2 != &(ch_)->anchor) && \
-         ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_2, type_, offset_), \
-          _next##lnk_2 = _curr##lnk_2->next, 1); \
-         _curr##lnk_2 = _next##lnk_2)
+#define AFX_ITERATE_CHAIN2(type_, iter2_, link_, ch_) \
+    for (afxLink const* _next##iter2_ = (ch_)->anchor.next, \
+                      * _curr##iter2_ = _next##iter2_; \
+         (_curr##iter2_ != &(ch_)->anchor) && \
+         ((iter_) = (type_*)AFX_REBASE(_curr##iter2_, type_, link_), \
+          _next##iter2_ = _curr##iter2_->next, 1); \
+         _curr##iter2_ = _next##iter2_)
 
 /*
     AFX_ITERATE_CHAIN_B2F is the reverse counterpart of AFX_ITERATE_CHAIN.
@@ -134,13 +292,13 @@ AFXINL afxLink*         AfxGetPrevLink(afxLink const *lnk);
     This version stays compact, keeping all logic inside the for condition.
 */
 
-#define AFX_ITERATE_CHAIN_B2F(type_, lnk_, offset_, ch_) \
-    for (afxLink const* _prev##lnk_ = (ch_)->anchor.prev, \
-                      * _curr##lnk_ = _prev##lnk_; \
-         (_curr##lnk_ != &(ch_)->anchor) && \
-         ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
-          _prev##lnk_ = _curr##lnk_->prev, 1); \
-         _curr##lnk_ = _prev##lnk_)
+#define AFX_ITERATE_CHAIN_B2F(type_, iter_, link_, ch_) \
+    for (afxLink const* _prev##iter_ = (ch_)->anchor.prev, \
+                      * _curr##iter_ = _prev##iter_; \
+         (_curr##iter_ != &(ch_)->anchor) && \
+         ((iter_) = (type_*)AFX_REBASE(_curr##iter_, type_, link_), \
+          _prev##iter_ = _curr##iter_->prev, 1); \
+         _curr##iter_ = _prev##iter_)
 
 /*
     Important Notes on Atomic Iteration.
@@ -153,24 +311,24 @@ AFXINL afxLink*         AfxGetPrevLink(afxLink const *lnk);
     traversal techniques (version counters, epoch-based GC, etc.).
 */
 
-#define AFX_ITERATE_CHAIN_ATOMIC(type_, lnk_, offset_, ch_, mem_order_) \
-    for (afxLink const* _curr##lnk_ = atomic_load_explicit(&(ch_)->anchor.nextA, mem_order_), \
-                      * _next##lnk_; \
-         (_curr##lnk_ != &(ch_)->anchor) && \
-         ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
-          _next##lnk_ = atomic_load_explicit(&_curr##lnk_->nextA, mem_order_), 1); \
-         _curr##lnk_ = _next##lnk_)
+#define AFX_ITERATE_CHAIN_ATOMIC(type_, iter_, link_, ch_, mem_order_) \
+    for (afxLink const* _curr##iter_ = atomic_load_explicit(&(ch_)->anchor.nextA, mem_order_), \
+                      * _next##iter_; \
+         (_curr##iter_ != &(ch_)->anchor) && \
+         ((iter_) = (type_*)AFX_REBASE(_curr##iter_, type_, link_), \
+          _next##iter_ = atomic_load_explicit(&_curr##iter_->nextA, mem_order_), 1); \
+         _curr##iter_ = _next##iter_)
 
-#define AFX_ITERATE_CHAIN_ATOMIC_RELAXED(type_, lnk_, offset_, ch_) \
-    AFX_ITERATE_CHAIN_ATOMIC(type_, lnk_, offset_, ch_, memory_order_relaxed)
+#define AFX_ITERATE_CHAIN_ATOMIC_RELAXED(type_, iter_, link_, ch_) \
+    AFX_ITERATE_CHAIN_ATOMIC(type_, iter_, link_, ch_, memory_order_relaxed)
 
-#define AFX_ITERATE_CHAIN_ATOMIC_B2F(type_, lnk_, offset_, ch_, mem_order_) \
-    for (afxLink const* _curr##lnk_ = atomic_load_explicit(&(ch_)->anchor.prevA, mem_order_), \
-                      * _prev##lnk_; \
-         (_curr##lnk_ != &(ch_)->anchor) && \
-         ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), \
-          _prev##lnk_ = atomic_load_explicit(&_curr##lnk_->prevA, mem_order_), 1); \
-         _curr##lnk_ = _prev##lnk_)
+#define AFX_ITERATE_CHAIN_ATOMIC_B2F(type_, iter_, link_, ch_, mem_order_) \
+    for (afxLink const* _curr##iter_ = atomic_load_explicit(&(ch_)->anchor.prevA, mem_order_), \
+                      * _prev##iter_; \
+         (_curr##iter_ != &(ch_)->anchor) && \
+         ((iter_) = (type_*)AFX_REBASE(_curr##iter_, type_, link_), \
+          _prev##iter_ = atomic_load_explicit(&_curr##iter_->prevA, mem_order_), 1); \
+         _curr##iter_ = _prev##iter_)
 
 
 #endif//AFX_CHAIN_H

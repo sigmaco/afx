@@ -617,7 +617,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         AfxMakeUri(&uri, 0, "e2targa", 0);
         afxModule e2drawDll = NIL;
 
-        if (AfxLoadModule(&uri, AFX_BIT(8), &e2drawDll)) AfxThrowError();
+        if (AfxLoadModule(&uri, AFX_BITMASK(8), &e2drawDll)) AfxThrowError();
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2drawDll);
@@ -633,7 +633,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         AfxMakeUri(&uri, 0, "e2mixva", 0);
         afxModule e2mixDll = NIL;
 
-        if (AfxLoadModule(&uri, AFX_BIT(8), &e2mixDll)) AfxThrowError();
+        if (AfxLoadModule(&uri, AFX_BITMASK(8), &e2mixDll)) AfxThrowError();
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2mixDll);
@@ -649,7 +649,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         AfxMakeUri(&uri, 0, "e2mmux", 0);
         afxModule e2mmuxDll = NIL;
 
-        if (AfxLoadModule(&uri, AFX_BIT(8), &e2mmuxDll)) AfxThrowError();
+        if (AfxLoadModule(&uri, AFX_BITMASK(8), &e2mmuxDll)) AfxThrowError();
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2mmuxDll);
@@ -672,7 +672,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         AfxMakeUri(&uri, 0, "e2synerg", 0);
         afxModule e2simDll = NIL;
 
-        if (AfxLoadModule(&uri, AFX_BIT(8), &e2simDll))
+        if (AfxLoadModule(&uri, AFX_BITMASK(8), &e2simDll))
         {
             AfxThrowError();
             err = 0;

@@ -30,7 +30,8 @@ AVX afxCmdId        AvxCmdExecuteCommands
 (
     afxDrawContext  dctx,
     afxUnit         cnt, // is the length of the @aux array.
-    afxDrawContext  aux[] // is a pointer to an array of @cnt secondary draw context handles, which are recorded to execute in the primary draw context in the order they are listed in the array.
+    afxDrawContext  aux[], // is a pointer to an array of @cnt secondary draw context handles, which are recorded to execute in the primary draw context in the order they are listed in the array.
+    afxUnit const   batches[]
 );
 
 /// Bind a pipeline object to a draw context.

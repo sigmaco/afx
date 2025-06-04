@@ -77,7 +77,7 @@ void _AvxDrawIndexedIndirect(avxDpu* dpu, avxBuffer buf, afxUnit32 offset, afxUn
 
     for (afxUnit j = 0; j < drawCnt; j++)
     {
-        avxDrawIndexedIndirect const* cmd = (avxDrawIndirect const*)&cmds[j * sizeof(avxDrawIndirect) + stride];
+        avxDrawIndexedIndirect const* cmd = (avxDrawIndexedIndirect const*)&cmds[j * sizeof(avxDrawIndexedIndirect) + stride];
 
         for (afxUnit i = 0; i < cmd->idxCnt; ++i)
         {

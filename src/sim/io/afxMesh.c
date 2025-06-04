@@ -380,7 +380,7 @@ _ASX void* AfxAccessVertexData(afxMesh msh, afxUnit attrIdx, afxUnit morphIdx, a
     AvxDescribeFormats(1, &fmt, &pfd);
     afxUnit32 unitSiz = pfd.stride;// AfxVertexFormatGetSize(fmt);
     
-    afxUnit32 attrBit = AFX_BIT(attrIdx);
+    afxUnit32 attrBit = AFX_BITMASK(attrIdx);
 
     if (!(msh->morphs[morphIdx].morphedAttrs & attrBit))
         return NIL;
@@ -1275,7 +1275,7 @@ _ASX afxError _AsxMshCtorCb(afxMesh msh, void** args, afxUnit invokeNo)
     {
         asxMeshAttr* attr = &msh->attrInfo[i];
 
-        allAttrEnabledMask |= AFX_BIT(i);
+        allAttrEnabledMask |= AFX_BITMASK(i);
 
         AfxMakeString8(&attr->usage, NIL);
         attr->flags = NIL;
@@ -1403,7 +1403,7 @@ _ASX afxError AfxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxReal lt
 
             for (afxUnit attrIdx = 0; attrIdx < mshi.attrCnt; attrIdx++)
             {
-                afxUnit32 attrBit = AFX_BIT(attrIdx);
+                afxUnit32 attrBit = AFX_BITMASK(attrIdx);
 
                 if (!(msh->morphs[morphIdx].morphedAttrs & attrBit))
                     continue;

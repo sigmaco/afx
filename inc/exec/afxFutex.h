@@ -62,42 +62,28 @@ AFX afxError    AfxDeployFutex(afxFutex* ftx);
 AFX afxError    AfxDismantleFutex(afxFutex* ftx);
 
 /*
-    The AfxTryLockFutexShared() attempts to acquire a shared lock (read lock) on the futex.
-    It returns TRUE if it successfully acquires the lock, otherwise it returns FALSE.
-*/
-
-AFX afxBool     AfxTryLockFutexShared(afxFutex* ftx);
-
-/*
-    The AfxTryLockFutex() function attempts to acquire an exclusive (write) lock on the futex. 
+    The AfxTryLockFutex() function attempts to acquire an lock on the futex. 
     If successful, it returns TRUE; otherwise, it returns FALSE.
+    If @shared is TRUE, the lock is shared lock (read lock), else it is exclusive (write).
 */
 
-AFX afxBool     AfxTryLockFutex(afxFutex* ftx);
+AFX afxBool     AfxTryLockFutex(afxFutex* ftx, afxBool shared);
 
 /*
-    The AfxLockFutexShared() function waits until it successfully acquires a shared (read) lock on the futex.
+    The AfxLockFutex() function waits until it successfully acquires an lock on the futex.
+    If @shared is TRUE, it acquires an shared lock intended for read, 
+    else case, it performs an exclusive lock intended for write.
 */
 
-AFX void        AfxLockFutexShared(afxFutex* ftx);
+AFX void        AfxLockFutex(afxFutex* ftx, afxBool shared);
 
 /*
-    The AfxLockFutex() function waits until it successfully acquires an exclusive (write) lock on the futex.
+    The AfxUnlockFutex() function releases an lock on the futex held by the current thread.
+    If @shared is TRUE, it releases the shared (read) lock.
+    If @shared is FALSE, release an exclusive (write) lock.
 */
 
-AFX void        AfxLockFutex(afxFutex* ftx);
-
-/*
-    The AfxUnlockFutexShared() function releases the shared (read) lock held by the current thread.
-*/
-
-AFX void        AfxUnlockFutexShared(afxFutex* ftx);
-
-/*
-    The AfxUnlockFutex() function releases an exclusive (write) lock on the futex.
-*/
-
-AFX void        AfxUnlockFutex(afxFutex* ftx);
+AFX void        AfxUnlockFutex(afxFutex* ftx, afxBool shared);
 
 
 

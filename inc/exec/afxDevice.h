@@ -42,20 +42,20 @@ typedef enum afxDeviceType
 
 typedef enum afxAcceleration
 {
-    afxAcceleration_CPU     = AFX_BIT(0), // CPU --- software-based implementation
-    afxAcceleration_GPU     = AFX_BIT(1), // abstract GPU --- hardware-based (rasterizer) implementation
-    afxAcceleration_IGPU    = AFX_BIT(2), // integrated GPU --- ex.: Intel HD Graphics
-    afxAcceleration_DGPU    = AFX_BIT(3), // dedicated GPU --- ex.: AMD/NVidia PCIE adapter
-    afxAcceleration_VGPU    = AFX_BIT(4), // virtual GPU --- ex.: VM/sandboxed instantiation.
+    afxAcceleration_CPU     = AFX_BITMASK(0), // CPU --- software-based implementation
+    afxAcceleration_GPU     = AFX_BITMASK(1), // abstract GPU --- hardware-based (rasterizer) implementation
+    afxAcceleration_IGPU    = AFX_BITMASK(2), // integrated GPU --- ex.: Intel HD Graphics
+    afxAcceleration_DGPU    = AFX_BITMASK(3), // dedicated GPU --- ex.: AMD/NVidia PCIE adapter
+    afxAcceleration_VGPU    = AFX_BITMASK(4), // virtual GPU --- ex.: VM/sandboxed instantiation.
     afxAcceleration_APU     = afxAcceleration_CPU | afxAcceleration_IGPU, // accelerated processing unit; combined CPU-IGPU --- ex.: AMD A-series
-    afxAcceleration_PPU     = AFX_BIT(5), // physics processing unit --- ex.: Ageia PhysX card
-    afxAcceleration_SPU     = AFX_BIT(6), // synergistic processing unit --- ex.: coprocessors
-    afxAcceleration_TPU     = AFX_BIT(7), // tensor processing unit
-    afxAcceleration_NPU     = AFX_BIT(8), // neural processing unit
-    afxAcceleration_DSP     = AFX_BIT(9), // digital signal processor --- ex.: waveform processors
-    afxAcceleration_ASIC    = AFX_BIT(10), // application-specific integrated circuit
-    afxAcceleration_FPGA    = AFX_BIT(11), // field-programmable gate arrays
-    afxAcceleration_DPU     = AFX_BIT(12), // Targa-based drawing processing unit
+    afxAcceleration_PPU     = AFX_BITMASK(5), // physics processing unit --- ex.: Ageia PhysX card
+    afxAcceleration_SPU     = AFX_BITMASK(6), // synergistic processing unit --- ex.: coprocessors
+    afxAcceleration_TPU     = AFX_BITMASK(7), // tensor processing unit
+    afxAcceleration_NPU     = AFX_BITMASK(8), // neural processing unit
+    afxAcceleration_DSP     = AFX_BITMASK(9), // digital signal processor --- ex.: waveform processors
+    afxAcceleration_ASIC    = AFX_BITMASK(10), // application-specific integrated circuit
+    afxAcceleration_FPGA    = AFX_BITMASK(11), // field-programmable gate arrays
+    afxAcceleration_DPU     = AFX_BITMASK(12), // Targa-based drawing processing unit
 
     afxAcceleration_TOTAL   = 12
 } afxAcceleration;
@@ -63,10 +63,10 @@ typedef enum afxAcceleration
 typedef enum afxDeviceStatus
 {
     // NIL // The device state is unknown or invalid.
-    afxDeviceStatus_ACTIVE      = AFX_BIT(0), // The device is active. That is, the adapter that connects to the endpoint device is present and enabled.
-    afxDeviceStatus_DISABLED    = AFX_BIT(1), // The device is disabled.
-    afxDeviceStatus_AUSENT      = AFX_BIT(2), // The device is not present because the adapter that connects to the endpoint device has been removed from the system.
-    afxDeviceStatus_UNPLUGGED   = AFX_BIT(3), // The device is unplugged.
+    afxDeviceStatus_ACTIVE      = AFX_BITMASK(0), // The device is active. That is, the adapter that connects to the endpoint device is present and enabled.
+    afxDeviceStatus_DISABLED    = AFX_BITMASK(1), // The device is disabled.
+    afxDeviceStatus_AUSENT      = AFX_BITMASK(2), // The device is not present because the adapter that connects to the endpoint device has been removed from the system.
+    afxDeviceStatus_UNPLUGGED   = AFX_BITMASK(3), // The device is unplugged.
     
     afxDeviceStatus_ALL         = afxDeviceStatus_ACTIVE | afxDeviceStatus_DISABLED | afxDeviceStatus_AUSENT | afxDeviceStatus_UNPLUGGED, // Includes devices in all states.
 } afxDeviceStatus;

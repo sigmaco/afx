@@ -14,9 +14,13 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-//#include "../../dep/tinycthread.h"
-//#include "../../dep/cthreads.h"
+#define USE_TINYCTHREAD
+
+#ifdef USE_TINYCTHREAD
+#include "../../dep/tinycthread/tinycthread.h"
+#else
 #include "../../dep/c11threads/c11threads.h"
+#endif
 #include "../impl/afxExecImplKit.h"
 
 AFX_STATIC_ASSERT(sizeof(mtx_t) <= sizeof(afxMutex), "");

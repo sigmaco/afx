@@ -188,6 +188,7 @@ typedef enum afxFcc
     afxFcc_FENC     = AFX_MAKE_FCC('f', 'e', 'n', 'c'), // avxFence
     afxFcc_SEM      = AFX_MAKE_FCC('s', 'e', 'm', '\0'), // afxSemaphore
     afxFcc_DCTX     = AFX_MAKE_FCC('d', 'c', 't', 'x'), // afxDrawContext
+    afxFcc_DCMD     = AFX_MAKE_FCC('d', 'c', 'm', 'd'), // afxDrawCmd
     afxFcc_PIP      = AFX_MAKE_FCC('p', 'i', 'p', '\0'), // avxPipeline
     afxFcc_RAZR     = AFX_MAKE_FCC('r', 'a', 's', '\0'), // avxRasterizer
     afxFcc_VIN      = AFX_MAKE_FCC('v', 'i', 'n', '\0'), // avxVertexInput

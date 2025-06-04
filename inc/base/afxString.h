@@ -63,11 +63,11 @@
 typedef enum afxStringFlag
 {
     // Treat as case-insensitive.
-    afxStringFlag_CI    = AFX_BIT(0),
+    afxStringFlag_CI    = AFX_BITMASK(0),
     // Go reversely/B2F.
-    afxStringFlag_REV   = AFX_BIT(1),
+    afxStringFlag_REV   = AFX_BITMASK(1),
     // Expects as UTF16
-    afxStringFlag_UTF16 = AFX_BIT(2),
+    afxStringFlag_UTF16 = AFX_BITMASK(2),
 } afxStringFlags;
 
 AFX_DEFINE_STRUCT(afxString)

@@ -14,37 +14,39 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+/*
+    O objeto afxModel descreve uma coleção de afxMesh'es que são todas ligadas ao mesmo afxSkeleton.
+    Isso é essencialmente qualquer grupo conectado de malhas que são animadas em conjuntura.
+    Um ator seria um modelo, assim seria um veículo, ou mesmo uma edificação inteira se essa fossa modelada como uma hierarquia singular.
+    Um afxModel completo é feito de um afxSkeleton e um conjunto de afxMesh'es, ambos dos quais podem ser acessados diretamente da estrutura do afxModel.
+
+    Rigging is the process of connecting a mesh with an internal poseable skeleton rig and bone structure. 
+    Rigged meshes allow mesh surfaces to rotate and move where internal bones are placed within the model during the modeling process.
+
+    O objeto afxSkeleton é uma coleção hierárquica de articulações que descrevem a estrutura articular interna de um afxModel, e auxilia no manejo e na animação do mesmo. 
+
+    Cada articulação no arranjo do afxSkeleton aloja o transforme para aquela articulação em dois meios diferentes. 
+    Primeiro, afxTransform "local" é o transforme decomposto da articulação relativa a seu parente imediato (dado pelo índice do parente).
+    Se esta não houver parente (isto é, o índex do parente é igual a AFX_INVALID_INDEX), então esta é relativa a origem do afxSkeleton.
+
+    Segundo, "iw" é uma afxM4d que é o transforme invertido no world-space para a articulação na postura padrão do afxSkeleton (isto é, a postura na qual o afxSkeleton foi originalmente modelado).
+
+    O afxTransform "local" é usado primariamente na composição de animações, e a afxM4d "iw" é usada primariamente para deformação de malha, razão pela qual esta informação é alojada em dois diferentes formatos.
+
+    Cada articulação também opcionalmente contém dados definidos pelo usuário "UDD".
+    Este campo aponta para algum dado, estranho à lógica do Qwadro, associado com a articulação, se houver qualquer.
+
+    Skinning is a technique for deforming geometry by linearly weighting vertices to a set of transformations, represented by nodes.
+    Nodes that affect a particular geometry are usually organized into a single hierarchy called a 'skeleton', although the influencing nodes may come from unrelated parts of the hierarchy.
+    The nodes of such a hierarchy represents the 'joints' of the skeleton, which should not be confused with the 'bones', which are the imaginary line segments connecting two joints.
+*/
+
 #ifndef ASX_MODEL_H
 #define ASX_MODEL_H
 
 #include "qwadro/inc/sim/io/afxMesh.h"
 #include "qwadro/inc/sim/body/afxPose.h"
 #include "qwadro/inc/sim/body/afxPlacement.h"
-
-/// O objeto afxModel descreve uma coleção de afxMesh'es que são todas ligadas ao mesmo afxSkeleton.
-/// Isso é essencialmente qualquer grupo conectado de malhas que são animadas em conjuntura.
-/// Um ator seria um modelo, assim seria um veículo, ou mesmo uma edificação inteira se essa fossa modelada como uma hierarquia singular.
-/// Um afxModel completo é feito de um afxSkeleton e um conjunto de afxMesh'es, ambos dos quais podem ser acessados diretamente da estrutura do afxModel.
-
-/// Rigging is the process of connecting a mesh with an internal poseable skeleton rig and bone structure. 
-/// Rigged meshes allow mesh surfaces to rotate and move where internal bones are placed within the model during the modeling process.
-
-/// O objeto afxSkeleton é uma coleção hierárquica de articulações que descrevem a estrutura articular interna de um afxModel, e auxilia no manejo e na animação do mesmo. 
-
-/// Cada articulação no arranjo do afxSkeleton aloja o transforme para aquela articulação em dois meios diferentes. 
-/// Primeiro, afxTransform "local" é o transforme decomposto da articulação relativa a seu parente imediato (dado pelo índice do parente).
-/// Se esta não houver parente (isto é, o índex do parente é igual a AFX_INVALID_INDEX), então esta é relativa a origem do afxSkeleton.
-
-/// Segundo, "iw" é uma afxM4d que é o transforme invertido no world-space para a articulação na postura padrão do afxSkeleton (isto é, a postura na qual o afxSkeleton foi originalmente modelado).
-
-/// O afxTransform "local" é usado primariamente na composição de animações, e a afxM4d "iw" é usada primariamente para deformação de malha, razão pela qual esta informação é alojada em dois diferentes formatos.
-
-/// Cada articulação também opcionalmente contém dados definidos pelo usuário "UDD".
-/// Este campo aponta para algum dado, estranho à lógica do Qwadro, associado com a articulação, se houver qualquer.
-
-/// Skinning is a technique for deforming geometry by linearly weighting vertices to a set of transformations, represented by nodes.
-/// Nodes that affect a particular geometry are usually organized into a single hierarchy called a 'skeleton', although the influencing nodes may come from unrelated parts of the hierarchy.
-/// The nodes of such a hierarchy represents the 'joints' of the skeleton, which should not be confused with the 'bones', which are the imaginary line segments connecting two joints.
 
 typedef enum afxModelFlag
 {
@@ -53,7 +55,7 @@ typedef enum afxModelFlag
 
 typedef enum afxMeshRigFlag
 {
-    afxMeshRigFlag_TRANSPLANTED = AFX_BIT(0)
+    afxMeshRigFlag_TRANSPLANTED = AFX_BITMASK(0)
 } afxMeshRigFlags;
 
 AFX_DEFINE_STRUCT(afxModelInfo)

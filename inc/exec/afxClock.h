@@ -72,32 +72,32 @@ AFXINL void AfxGetClock(afxClock* clock);
 AFXINL afxInt64 AfxGetClockTicksElapsed(afxClock* prev, afxClock* last);
 
 /*
-    The AfxGetClockNanosecondsElapsed() function calculates the elapsed time in nanoseconds.
+    The AfxGetNanosecondsElapsed() function calculates the elapsed time in nanoseconds.
     This function calculates the elapsed time in nanoseconds by converting the difference between
     the current time and start time (measured in ticks) to nanoseconds.
 */
 
-AFXINL afxInt64 AfxGetClockNanosecondsElapsed(afxClock* prev, afxClock* last);
+AFXINL afxInt64 AfxGetNanosecondsElapsed(afxClock* prev, afxClock* last);
 
 /*
     The AfxGetClockMicrosecondsElapsed() function calculates the elapsed time in ultraseconds (microseconds, in Qwadro parlance).
     This function calculates the elapsed time in microseconds by converting the ticks to microseconds.
 */
 
-AFXINL afxInt64 AfxGetClockUltrasecondsElapsed(afxClock* prev, afxClock* last);
+AFXINL afxInt64 AfxGetUltrasecondsElapsed(afxClock* prev, afxClock* last);
 
 /*
-    The AfxGetClockMillisecondsElapsed() function calculates the elapsed time in milliseconds.
+    The AfxGetMillisecondsElapsed() function calculates the elapsed time in milliseconds.
     This function calculates the elapsed time in milliseconds by converting the ticks to milliseconds.
 */
 
-AFXINL afxInt64 AfxGetClockMillisecondsElapsed(afxClock* prev, afxClock* last);
+AFXINL afxInt64 AfxGetMillisecondsElapsed(afxClock* prev, afxClock* last);
 
 /*
-    The AfxGetClockSecondsElapsed() function calculates the elapsed time in seconds.
+    The AfxGetSecondsElapsed() function calculates the elapsed time in seconds.
     This function calculates the elapsed time in seconds (as a 64-bit real) by dividing the ticks by the frequency.
 */
 
-AFXINL afxReal64 AfxGetClockSecondsElapsed(afxClock* prev, afxClock* last);
+AFXINL afxReal64 AfxGetSecondsElapsed(afxClock* prev, afxClock* last);
 
 #endif//AFX_CLOCK_H

@@ -442,7 +442,7 @@ _ASX afxError AfxBufferizeMesh(afxMesh msh, afxUnit morphIdx, avxVertexCache* vt
         for (afxUnit i = 0; i < 2; i++)
         {
             cache->streams[i].base = i ? msh->vtxCache.streams[i - 1].range : 0;
-            cache->streams[i].range = AFX_ALIGNED_SIZE(cacheStride[i] * msh->vtxCnt, AVX_BUFFER_ALIGNMENT);
+            cache->streams[i].range = AFX_ALIGN_SIZE(cacheStride[i] * msh->vtxCnt, AVX_BUFFER_ALIGNMENT);
             cache->streams[i].stride = cacheStride[i];
 
             vboSpec.size += cache->streams[i].range;

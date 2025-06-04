@@ -40,16 +40,16 @@ typedef enum avxResolveOp
     avxResolveOp_NONE = 0,
 
     // result of the resolve operation is equal to the value of sample 0.
-    avxResolveOp_SAMPLE_ZERO = AFX_BIT(0),
+    avxResolveOp_SAMPLE_ZERO = AFX_BITMASK(0),
 
     // result of the resolve operation is the average of the sample values.
-    avxResolveOp_AVERAGE = AFX_BIT(1),
+    avxResolveOp_AVERAGE = AFX_BITMASK(1),
 
     // result of the resolve operation is the minimum of the sample values.
-    avxResolveOp_MIN = AFX_BIT(2),
+    avxResolveOp_MIN = AFX_BITMASK(2),
 
     // result of the resolve operation is the maximum of the sample values.
-    avxResolveOp_MAX = AFX_BIT(3),
+    avxResolveOp_MAX = AFX_BITMASK(3),
 } avxResolveOp;
 
 typedef enum avxStoreOp

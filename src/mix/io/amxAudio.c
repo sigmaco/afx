@@ -527,8 +527,8 @@ _AMX afxError _AmxAudCtorCb(amxAudio aud, void** args, afxUnit invokeNo)
     //aud->frameCnt = frameCnt;
     aud->freq = freq;
 
-    afxUnit siz = AFX_ALIGNED_SIZE((aud->fmtStride * sampCnt * chanCnt), AFX_SIMD_ALIGNMENT) * chanCnt;
-    aud->bufCap = AFX_ALIGNED_SIZE(siz, AFX_SIMD_ALIGNMENT);
+    afxUnit siz = AFX_ALIGN_SIZE((aud->fmtStride * sampCnt * chanCnt), AFX_SIMD_ALIGNMENT) * chanCnt;
+    aud->bufCap = AFX_ALIGN_SIZE(siz, AFX_SIMD_ALIGNMENT);
     
     aud->bytemap = NIL;
     aud->mappedOffset = 0;

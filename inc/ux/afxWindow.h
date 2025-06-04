@@ -82,7 +82,19 @@ AFX_DEFINE_STRUCT(afxLayout)
     Because surface coordinates are relative to the upper-left corner of a window's surface, the coordinates of the upper-left corner are (0,0).
 */
 
-AUX void AfxGetWindowRect(afxWindow wnd, afxRect* frame, afxRect* surface);
+AUX void            AfxGetWindowRect
+(
+    afxWindow       wnd, 
+    afxRect*        frame, 
+    afxRect*        surface
+);
+
+AUX afxError        AfxAdjustWindow
+(
+    afxWindow       wnd, 
+    afxRect const*  frame,
+    afxRect const*  surface
+);
 
 /*
     The AfxGetWindowDrawOutput() function retrieves the afxDrawOutput for the entire afxWindow, including title bar, menus, and scroll bars. 
@@ -132,8 +144,6 @@ AUX afxError AfxRedrawWindow(afxWindow wnd, afxRect const* area);
 AUX afxError AfxRedrawWidgets(afxWindow wnd, afxDrawContext dctx);
 
 //AUX void AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt);
-
-AUX afxError        AfxAdjustWindow(afxWindow wnd, afxBool frame, afxRect const* rc);
 
 /*
     Sets the afxWindow's icon in the Shell.

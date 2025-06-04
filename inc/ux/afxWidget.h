@@ -50,16 +50,16 @@
 
 typedef enum afxWidgetFlag
 {
-    afxWidgetFlag_STATIONARY    = AFX_BIT(0),
-    afxWidgetFlag_BORDERLESS    = AFX_BIT(1),
-    afxWidgetFlag_MINIMIZABLE   = AFX_BIT(2),
-    afxWidgetFlag_RESIZABLE     = AFX_BIT(3),
-    afxWidgetFlag_UNSCROLLABLE  = AFX_BIT(4),
-    afxWidgetFlag_SCALABLE      = AFX_BIT(5),
-    afxWidgetFlag_UNTITLED      = AFX_BIT(6),
-    afxWidgetFlag_SECONDARY     = AFX_BIT(7),
-    afxWidgetFlag_INTANGIBLE    = AFX_BIT(8),
-    afxWidgetFlag_FRAMED        = AFX_BIT(9), // title bar, system menu (close, minimize, maximize), dragging, resizing...
+    afxWidgetFlag_STATIONARY    = AFX_BITMASK(0),
+    afxWidgetFlag_BORDERLESS    = AFX_BITMASK(1),
+    afxWidgetFlag_MINIMIZABLE   = AFX_BITMASK(2),
+    afxWidgetFlag_RESIZABLE     = AFX_BITMASK(3),
+    afxWidgetFlag_UNSCROLLABLE  = AFX_BITMASK(4),
+    afxWidgetFlag_SCALABLE      = AFX_BITMASK(5),
+    afxWidgetFlag_UNTITLED      = AFX_BITMASK(6),
+    afxWidgetFlag_SECONDARY     = AFX_BITMASK(7),
+    afxWidgetFlag_INTANGIBLE    = AFX_BITMASK(8),
+    afxWidgetFlag_FRAMED        = AFX_BITMASK(9), // title bar, system menu (close, minimize, maximize), dragging, resizing...
 } afxWidgetFlags;
 
 typedef enum afxWidgetType

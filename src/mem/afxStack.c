@@ -16,338 +16,390 @@
 
 #include "../impl/afxExecImplKit.h"
 
-_AFX afxStackPage* _AfxStackAllocateBlock(afxStack *stak)
+_AFX afxBool _AfxStackEnsureRoom(afxStack* stak, afxUnit requiredUnits)
 {
-    afxUnit v1 = stak->unitSiz * stak->unitsPerBlock;
-    afxStackPage *block;
-    AfxAllocate(sizeof(*block), 0, AfxHere(), (void**)&block);
-    block->units;
-    AfxAllocate(v1, 0, AfxHere(), (void**)&block->units);
+    afxError err;
+    AFX_ASSERT(stak);
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    AFX_ASSERT(stak->fcc == afxFcc_STAK);
+#endif
+    AFX_ASSERT(requiredUnits);
+    afxStackPage* blk = stak->lastBlock;
 
+    while (requiredUnits > 0)
     {
-        block->usedUnitCnt = 0;
-        block->firstIdx = 0;
-        block->prev = 0;
-    }
+        afxBool needNewBlock = (!blk || blk->usedUnitCnt == stak->unitsPerBlock);
 
-    return block;
-}
-
-_AFX void *AfxPushStackUnit(afxStack *stak, afxUnit *idx)
-{
-    afxStackPage *v2 = stak->lastBlock;
-
-    if (!v2 || v2->usedUnitCnt == stak->unitsPerBlock)
-    {
-        if (!stak->blockDir || stak->activeBlocks < stak->maxActiveBlocks)
-            v2 = _AfxStackAllocateBlock(stak);
-
-        if (v2)
+        if (needNewBlock)
         {
-            v2->firstIdx = stak->totalUsedUnitCnt;
-            v2->prev = stak->lastBlock;
-            afxStackPage **v3 = stak->blockDir;
-            stak->lastBlock = v2;
+            if (stak->blockDir && stak->activeBlocks >= stak->maxActiveBlocks)
+                return FALSE; // Hit limit
 
-            if (v3)
-                v3[stak->activeBlocks++] = v2;
-        }
-    }
+            afxStackPage* newBlk;
+            if (!AfxAllocate(sizeof(*newBlk), 0, AfxHere(), (void**)&newBlk))
+                return FALSE;
 
-    afxByte *area = 0;
-    *idx = -1;
+            afxUnit blockSize = stak->unitSiz * stak->unitsPerBlock;
+            if (!AfxAllocate(blockSize, 0, AfxHere(), (void**)&newBlk->units))
+                return FALSE;
 
-    if (v2)
-    {
-        area = &v2->units[v2->usedUnitCnt++ * stak->unitSiz];
-        *idx = stak->totalUsedUnitCnt++;
-    }
-    return area;
-}
+            newBlk->usedUnitCnt = 0;
+            newBlk->firstIdx = stak->totalUsedUnitCnt;
+            newBlk->prev = stak->lastBlock;
 
-_AFX char AfxPushStackUnits(afxStack *stak, afxUnit cnt, afxUnit *firstIdx, void const *initialVal)
-{
-    afxUnit v4 = cnt;
+            stak->lastBlock = newBlk;
+            blk = newBlk;
 
-    if (cnt <= 0)
-        return 0;
-
-    if (!AfxPushStackUnit(stak, &cnt))
-        return 0;
-
-    afxUnit v6 = cnt;
-    void const *v7 = initialVal;
-
-    if (initialVal)
-    {
-        void *v8 = AfxGetStackUnit(stak, cnt);
-        AfxCopy(v8, v7, stak->unitSiz);
-    }
-
-    afxUnit v9 = v4 - 1;
-
-    *firstIdx = v6;
-
-    if (!v9)
-        return 1;
-
-    while (1)
-    {
-        --v9;
-        afxByte *v10 = AfxPushStackUnit(stak, &cnt);
-
-        if (!v10)
-            break;
-
-        AfxCopy(v10, v7, stak->unitSiz);
-
-        if (!v9)
-            return 1;
-    }
-    return 0;
-}
-
-_AFX void AfxDumpStack(afxStack *stak, void *dst)
-{
-    afxByte *v2 = (afxByte*)dst + stak->unitSiz * stak->unitsPerBlock;
-
-    for (afxStackPage *i = stak->lastBlock; i; i = i->prev)
-    {
-        afxUnit v4 = stak->unitSiz * i->usedUnitCnt;
-        afxByte *v5 = i->units;
-        v2 -= v4;
-        afxByte *v6 = v2;
-
-        if (v4)
-        {
-            afxUnit v7 = stak->unitSiz * i->usedUnitCnt;
-            do
+            if (!stak->blockDir && stak->maxActiveBlocks != (afxUnit)-1)
             {
-                *v6++ = *v5++;
-                --v7;
-            } while (v7);
+                afxStackPage** dir;
+                AfxAllocate(stak->maxActiveBlocks * sizeof(afxStackPage*), 0, AfxHere(), (void**)&dir);
+                stak->blockDir = dir;
+                AfxZero(dir, stak->maxActiveBlocks * sizeof(afxStackPage*));
+            }
+
+            if (stak->blockDir)
+                stak->blockDir[stak->activeBlocks++] = newBlk;
+        }
+
+        afxUnit unitsAvailable = stak->unitsPerBlock - blk->usedUnitCnt;
+        afxUnit unitsToConsume = (requiredUnits < unitsAvailable) ? requiredUnits : unitsAvailable;
+
+        blk->usedUnitCnt += unitsToConsume;
+        stak->totalUsedUnitCnt += unitsToConsume;
+        requiredUnits -= unitsToConsume;
+
+#ifdef _AFX_STACK_METRICS_ENABLED
+        stak->totalAllocatedBlocks += 1;
+        stak->totalAllocatedBytes += (stak->unitsPerBlock * stak->unitSiz);
+#endif
+    }
+    return TRUE;
+}
+
+_AFX void* AfxPushStack(afxStack* stak, afxUnit cnt, afxUnit* first, void const* src, afxUnit stride)
+{
+    afxError err;
+    AFX_ASSERT(stak);
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    AFX_ASSERT(stak->fcc == afxFcc_STAK);
+#endif
+    AFX_ASSERT(cnt);
+
+    if (!cnt || !_AfxStackEnsureRoom(stak, cnt))
+    {
+        if (first) *first = -1;
+        return NULL;
+    }
+
+    afxStackPage* blk = stak->lastBlock;
+    afxUnit startIdx = stak->totalUsedUnitCnt - cnt;
+
+    if (first) *first = startIdx;
+
+    afxUnit offset = (blk->usedUnitCnt - cnt) * stak->unitSiz;
+    afxByte* dst = &blk->units[offset];
+
+    if (src)
+        AfxStream2(cnt, src, stride, &dst[offset], stak->unitSiz);
+
+#ifdef _AFX_STACK_METRICS_ENABLED
+    if (stak->totalUsedUnitCnt > stak->peakUsedUnitCnt)
+        stak->peakUsedUnitCnt = stak->totalUsedUnitCnt;
+
+    if (stak->activeBlocks > stak->peakActiveBlocks)
+        stak->peakActiveBlocks = stak->activeBlocks;
+#endif
+
+    return dst;
+}
+
+_AFX void AfxPopStack(afxStack* stak, afxUnit cnt)
+{
+    afxError err;
+    AFX_ASSERT(stak);
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    AFX_ASSERT(stak->fcc == afxFcc_STAK);
+#endif
+    AFX_ASSERT(cnt);
+
+    while (cnt > 0 && stak->lastBlock)
+    {
+        afxStackPage* blk = stak->lastBlock;
+
+        if (blk->usedUnitCnt > cnt)
+        {
+            blk->usedUnitCnt -= cnt;
+            stak->totalUsedUnitCnt -= cnt;
+            break;
+        }
+        else
+        {
+            cnt -= blk->usedUnitCnt;
+            stak->totalUsedUnitCnt -= blk->usedUnitCnt;
+            stak->lastBlock = blk->prev;
+
+            if (stak->blockDir)
+                stak->blockDir[--stak->activeBlocks] = NIL;
+
+            AfxDeallocate((void**)&blk, AfxHere());
         }
     }
 }
 
-_AFX void* AfxGetStackUnit(afxStack *stak, afxUnit idx)
+_AFX void* AfxPeekStack(afxStack* stak, afxUnit idx)
 {
-    afxStackPage** v2 = stak->blockDir;
-    afxStackPage* v3;
+    afxError err;
+    AFX_ASSERT(stak);
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    AFX_ASSERT(stak->fcc == afxFcc_STAK);
+#endif
 
-    if (v2)
-    {
-        v3 = v2[idx / stak->unitsPerBlock];
-        return &v3->units[stak->unitSiz * (idx - v3->firstIdx)];
-    }
+    if (idx >= stak->totalUsedUnitCnt)
+        return NULL;
 
-    v3 = stak->lastBlock;
-
-    if (v3->firstIdx <= idx)
-        return &v3->units[stak->unitSiz * (idx - v3->firstIdx)];
-
-    do
-        v3 = v3->prev;
-    while (v3->firstIdx > idx);
-
-    return &v3->units[stak->unitSiz * (idx - v3->firstIdx)];
-}
-
-_AFX void AfxDumpStackElement(afxStack *stak, afxUnit idx, void *dst)
-{
-    afxStackPage** v2 = stak->blockDir;
-    afxStackPage* v3;
-
-    if (v2)
-    {
-        v3 = v2[idx / stak->unitsPerBlock];
-        AfxCopy(dst, &v3->units[stak->unitSiz * (idx - v3->firstIdx)], stak->unitSiz);
-        return;
-    }
-
-    v3 = stak->lastBlock;
-
-    if (v3->firstIdx <= idx)
-    {
-        AfxCopy(dst, &v3->units[stak->unitSiz * (idx - v3->firstIdx)], stak->unitSiz);
-        return;
-    }
-
-    do v3 = v3->prev;
-    while (v3->firstIdx > idx);
-
-    AfxCopy(dst, &v3->units[stak->unitSiz * (idx - v3->firstIdx)], stak->unitSiz);
-}
-
-_AFX void AfxDumpStackElements(afxStack *stak, afxUnit first, afxUnit cnt, void *dst)
-{
-    afxStackPage** v2 = stak->blockDir;
-    afxStackPage* v3;
-
-    if (v2)
-    {
-        v3 = v2[first / stak->unitsPerBlock];
-        AfxCopy(dst, &v3->units[stak->unitSiz * (first - v3->firstIdx)], stak->unitSiz * cnt);
-        return;
-    }
-
-    v3 = stak->lastBlock;
-
-    if (v3->firstIdx <= first)
-    {
-        AfxCopy(dst, &v3->units[stak->unitSiz * (first - v3->firstIdx)], stak->unitSiz * cnt);
-        return;
-    }
-
-    do
-        v3 = v3->prev;
-    while (v3->firstIdx > first);
-
-    AfxCopy(dst, &v3->units[stak->unitSiz * (first - v3->firstIdx)], stak->unitSiz * cnt);
-}
-
-_AFX void AfxUpdateStackElement(afxStack *stak, afxUnit idx, void const* src)
-{
-    afxStackPage** v2 = stak->blockDir;
-    afxStackPage* v3;
-
-    if (v2)
-    {
-        v3 = v2[idx / stak->unitsPerBlock];
-        AfxCopy(&v3->units[stak->unitSiz * (idx - v3->firstIdx)], src, stak->unitSiz);
-        return;
-    }
-
-    v3 = stak->lastBlock;
-
-    if (v3->firstIdx <= idx)
-    {
-        AfxCopy(&v3->units[stak->unitSiz * (idx - v3->firstIdx)], src, stak->unitSiz);
-        return;
-    }
-
-    do
-        v3 = v3->prev;
-    while (v3->firstIdx > idx);
-
-    AfxCopy(&v3->units[stak->unitSiz * (idx - v3->firstIdx)], src, stak->unitSiz);
-}
-
-_AFX void AfxUpdateStackElements(afxStack *stak, afxUnit first, afxUnit cnt, void const* src)
-{
-    afxStackPage** v2 = stak->blockDir;
-    afxStackPage* v3;
-
-    if (v2)
-    {
-        v3 = v2[first / stak->unitsPerBlock];
-        AfxCopy(&v3->units[stak->unitSiz * (first - v3->firstIdx)], src, stak->unitSiz * cnt);
-        return;
-    }
-
-    v3 = stak->lastBlock;
-
-    if (v3->firstIdx <= first)
-    {
-        AfxCopy(&v3->units[stak->unitSiz * (first - v3->firstIdx)], src, stak->unitSiz * cnt);
-        return;
-    }
-
-    do
-        v3 = v3->prev;
-    while (v3->firstIdx > first);
-
-    AfxCopy(&v3->units[stak->unitSiz * (first - v3->firstIdx)], src, stak->unitSiz * cnt);
-}
-
-_AFX void AfxPopStackUnits(afxStack *stak, afxUnit cnt)
-{
-    afxUnit v2 = cnt;
-
-    while (stak->lastBlock)
-    {
-        afxStackPage *v3 = stak->lastBlock;
-
-        if (v3->usedUnitCnt > v2)
-            break;
-
-        afxStackPage *v4 = stak->lastBlock;
-        stak->totalUsedUnitCnt -= v3->usedUnitCnt;
-        v2 -= v3->usedUnitCnt;
-        stak->lastBlock = v3->prev;
-        AfxDeallocate((void**)&v4, AfxHere());
-        afxStackPage **v5 = stak->blockDir;
-
-        if (v5)
-            v5[stak->activeBlocks-- - 1] = NIL;
-    }
-
-    afxStackPage *v6 = stak->lastBlock;
-
-    if (v6)
-    {
-        stak->totalUsedUnitCnt -= v2;
-        v6->usedUnitCnt -= v2;
-    }
-}
-
-_AFX void AfxEmptyStack(afxStack *stak)
-{
-    AfxPopStackUnits(stak, stak->totalUsedUnitCnt);
+    afxStackPage* page;
 
     if (stak->blockDir)
     {
-        AfxDeallocate((void**)&stak->blockDir, AfxHere());
-        stak->blockDir = NIL;
+        page = stak->blockDir[idx / stak->unitsPerBlock];
+    }
+    else
+    {
+        page = stak->lastBlock;
+        while (page && page->firstIdx > idx)
+            page = page->prev;
+    }
+
+    AFX_ASSERT(page);
+    return &page->units[stak->unitSiz * (idx - page->firstIdx)];
+}
+
+_AFX void AfxDumpStack(afxStack* stak, afxUnit first, afxUnit cnt, void* dst, afxUnit stride)
+{
+    afxError err;
+    AFX_ASSERT(stak);
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    AFX_ASSERT(stak->fcc == afxFcc_STAK);
+#endif
+    AFX_ASSERT(cnt);
+
+    afxUnit remaining = cnt;
+    afxUnit offset = 0;
+
+    while (remaining > 0)
+    {
+        afxStackPage* page = stak->blockDir
+            ? stak->blockDir[first / stak->unitsPerBlock]
+            : stak->lastBlock;
+
+        while (!stak->blockDir && page && page->firstIdx > first)
+            page = page->prev;
+
+        afxUnit localIdx = first - page->firstIdx;
+        afxUnit available = page->usedUnitCnt - localIdx;
+        afxUnit toCopy = (available > remaining) ? remaining : available;
+
+        void* src = &page->units[localIdx * stak->unitSiz];
+        AfxStream2(toCopy, src, stak->unitSiz, (afxByte*)dst + offset * stride, stride);
+
+        first += toCopy;
+        remaining -= toCopy;
+        offset += toCopy;
     }
 }
 
-_AFX void AfxDeallocateStack(afxStack *stak)
+_AFX void AfxUpdateStack(afxStack *stak, afxUnit first, afxUnit cnt, void const* src, afxUnit srcStride)
 {
-    AfxPopStackUnits(stak, stak->totalUsedUnitCnt);
+    afxError err;
+    AFX_ASSERT(stak);
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    AFX_ASSERT(stak->fcc == afxFcc_STAK);
+#endif
+    AFX_ASSERT(cnt);
 
+    afxUnit remaining = cnt;
+    afxUnit offset = 0;
+
+    while (remaining > 0)
+    {
+        afxStackPage* page = stak->blockDir
+            ? stak->blockDir[first / stak->unitsPerBlock]
+            : stak->lastBlock;
+
+        while (!stak->blockDir && page && page->firstIdx > first)
+            page = page->prev;
+
+        afxUnit localIdx = first - page->firstIdx;
+        afxUnit available = page->usedUnitCnt - localIdx;
+        afxUnit toCopy = (available > remaining) ? remaining : available;
+
+        void* dst = &page->units[localIdx * stak->unitSiz];
+        AfxStream2(toCopy, src, srcStride, (afxByte*)dst + offset, stak->unitSiz);
+
+        first += toCopy;
+        remaining -= toCopy;
+        offset += toCopy;
+    }
+}
+
+_AFX void AfxQueryStackStatistics(afxStack const* stak, afxStackStats* stats)
+{
+    afxError err;
+    AFX_ASSERT(stak);
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    AFX_ASSERT(stak->fcc == afxFcc_STAK);
+#endif
+    AFX_ASSERT(stats);
+
+    stats->unitSiz = stak->unitSiz;
+    stats->unitsPerBlock = stak->unitsPerBlock;
+
+    stats->totalUsedUnitCnt = stak->totalUsedUnitCnt;
+    stats->activeBlocks = stak->activeBlocks;
+    stats->maxActiveBlocks = stak->maxActiveBlocks;
+
+    stats->totalAllocatedUnitCnt = stak->unitsPerBlock * stak->activeBlocks;
+    stats->usedBytes = stats->totalUsedUnitCnt * stak->unitSiz;
+    stats->allocatedBytes = stats->totalAllocatedUnitCnt * stak->unitSiz;
+    stats->slackBytes = stats->allocatedBytes - stats->usedBytes;
+
+#ifdef _AFX_STACK_METRICS_ENABLED
+    stats->peakUsedUnitCnt = stak->peakUsedUnitCnt;
+    stats->peakActiveBlocks = stak->peakActiveBlocks;
+    stats->totalAllocatedBlocks = stak->totalAllocatedBlocks;
+    stats->totalAllocatedBytes = stak->totalAllocatedBytes;
+#endif
+}
+
+_AFX void AfxPrintStackStats(afxStack const* stak)
+{
+    afxError err;
+    AFX_ASSERT(stak);
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    AFX_ASSERT(stak->fcc == afxFcc_STAK);
+#endif
+    afxStackStats stats;
+    AfxQueryStackStatistics(stak, &stats);
+
+#if _AFX_STACK_METRICS_ENABLED
+    AfxReportf(0, AfxHere(), "Stack Stats <%p>:\n"
+        " - Unit size:         %u bytes\n"
+        " - Units per block:   %u\n"
+        " - Total used units:  %u\n"
+        " - Allocated units:   %u\n"
+        " - Active blocks:     %u / %u\n"
+        " - Used bytes:        %u\n"
+        " - Allocated bytes:   %u\n"
+        " - Slack bytes:       %u\n"
+        " - Peak used units : %u\n"
+        " - Peak active blocks: %u\n"
+        " - Total allocated blocks (cumulative): %u\n"
+        " - Total allocated bytes (cumulative): %u\n",
+        stak,
+        stats.unitSiz,
+        stats.unitsPerBlock,
+        stats.totalUsedUnitCnt,
+        stats.totalAllocatedUnitCnt,
+        stats.activeBlocks,
+        stats.maxActiveBlocks,
+        stats.usedBytes,
+        stats.allocatedBytes,
+        stats.slackBytes,
+        stats.peakUsedUnitCnt,
+        stats.peakActiveBlocks,
+        stats.totalAllocatedBlocks,
+        stats.totalAllocatedBytes);
+#else
+    AfxReportf(0, AfxHere(), "Stack Stats <%p>:\n"
+        " - Unit size:         %u bytes\n"
+        " - Units per block:   %u\n"
+        " - Total used units:  %u\n"
+        " - Allocated units:   %u\n"
+        " - Active blocks:     %u / %u\n"
+        " - Used bytes:        %u\n"
+        " - Allocated bytes:   %u\n"
+        " - Slack bytes:       %u",
+        stak,
+        stats.unitSiz,
+        stats.unitsPerBlock,
+        stats.totalUsedUnitCnt,
+        stats.totalAllocatedUnitCnt,
+        stats.activeBlocks,
+        stats.maxActiveBlocks,
+        stats.usedBytes,
+        stats.allocatedBytes,
+        stats.slackBytes);
+#endif
+}
+
+_AFX void AfxExhaustStack(afxStack* stak, afxBool fully)
+{
+    afxError err;
+    AFX_ASSERT(stak);
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    AFX_ASSERT(stak->fcc == afxFcc_STAK);
+#endif
+
+    // Pop all units (frees all stack pages)
+    AfxPopStack(stak, stak->totalUsedUnitCnt);
+
+    // Optionally clear block directory
     if (stak->blockDir)
     {
-        AfxDeallocate((void**)&stak->blockDir, AfxHere());
-        stak->blockDir = NIL;
+        if (fully)
+        {
+            AfxDeallocate((void**)&stak->blockDir, AfxHere());
+            stak->blockDir = NIL;
+            stak->maxActiveBlocks = (afxUnit)-1;
+        }
+        else // PRESERVE
+        {
+            // Zero out but preserve the allocated memory
+            AfxZero(stak->blockDir, sizeof(afxStackPage*) * stak->maxActiveBlocks);
+        }
     }
-}
 
-_AFX void AfxAllocateStack(afxStack *stak, afxUnit unitSiz, afxUnit unitsPerBlock)
-{
-#ifdef _AFX_STACK_VALIDATION_ENABLED
-    stak->fcc = afxFcc_STAK;
-#endif
-    stak->ctx = NIL;
-
-    stak->unitSiz = unitSiz;
-    stak->unitsPerBlock = unitsPerBlock ? unitsPerBlock : AfxGetMemoryPageSize() / unitSiz;
-    stak->totalUsedUnitCnt = 0;
-    stak->lastBlock = NIL;
-    stak->maxUnits = (afxUnit)-1;
-    stak->activeBlocks = (afxUnit)-1;
-    stak->maxActiveBlocks = (afxUnit)-1;
-    stak->blockDir = NIL;
-}
-
-_AFX void AfxAllocatePagedStack(afxStack *stak, afxUnit unitSiz, afxUnit unitsPerBlock, afxUnit maxUnits)
-{
-#ifdef _AFX_STACK_VALIDATION_ENABLED
-    stak->fcc = afxFcc_STAK;
-#endif
-    stak->ctx = NIL;
-
-    stak->unitSiz = unitSiz;
-    stak->maxUnits = maxUnits;
-    afxUnit v4 = unitsPerBlock ? (unitsPerBlock + maxUnits - 1) / unitsPerBlock : AfxGetMemoryPageSize() / unitSiz;
-    stak->unitsPerBlock = unitsPerBlock;
+    // Reset internal tracking
     stak->totalUsedUnitCnt = 0;
     stak->lastBlock = NIL;
     stak->activeBlocks = 0;
-    stak->maxActiveBlocks = v4;
-    afxStackPage**v5;
-    AfxAllocate(v4 * sizeof(afxStackPage*), 0, AfxHere(), (void**)&v5);
-    afxUnit v6 = sizeof(afxStackPage*) * stak->maxActiveBlocks;
-    stak->blockDir = v5;
-    AfxZero(v5, v6);
+}
+
+_AFX void AfxInitStack(afxStack* stak, afxUnit unitSiz, afxUnit unitsPerBlock, afxUnit maxUnits)
+{
+    afxError err;
+    AFX_ASSERT(stak);
+    AFX_ASSERT(unitSiz);
+
+#ifdef _AFX_STACK_VALIDATION_ENABLED
+    stak->fcc = afxFcc_STAK;
+#endif
+
+    stak->ctx = NIL;
+    stak->unitSiz = unitSiz;
+
+    if (!unitsPerBlock)
+        unitsPerBlock = AfxGetMemoryPageSize() / unitSiz;
+
+    stak->unitsPerBlock = unitsPerBlock;
+    stak->maxUnits = maxUnits ? maxUnits : (afxUnit)-1;
+
+    stak->totalUsedUnitCnt = 0;
+    stak->lastBlock = NIL;
+    stak->activeBlocks = 0;
+
+    if (stak->maxUnits != (afxUnit)-1)
+        stak->maxActiveBlocks = (stak->maxUnits + unitsPerBlock - 1) / unitsPerBlock;
+    else
+        stak->maxActiveBlocks = (afxUnit)-1;
+
+    stak->blockDir = NIL; // <- Deferred allocation
+
+#ifdef _AFX_STACK_METRICS_ENABLED
+    stak->peakUsedUnitCnt = 0;
+    stak->peakActiveBlocks = 0;
+    stak->totalAllocatedBlocks = 0;
+    stak->totalAllocatedBytes = 0;
+#endif
 }

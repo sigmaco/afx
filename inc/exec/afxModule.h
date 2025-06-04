@@ -26,15 +26,15 @@
 
 typedef enum afxModuleFlags
 {
-    afxModuleFlag_DLL   = AFX_BIT(0), // has DllMain
-    afxModuleFlag_ASI   = AFX_BIT(1), // has 
-    afxModuleFlag_ICD   = AFX_BIT(2), // has DriverEntry
-    afxModuleFlag_SYS   = AFX_BIT(3), // has
+    afxModuleFlag_DLL   = AFX_BITMASK(0), // has DllMain
+    afxModuleFlag_ASI   = AFX_BITMASK(1), // has 
+    afxModuleFlag_ICD   = AFX_BITMASK(2), // has DriverEntry
+    afxModuleFlag_SYS   = AFX_BITMASK(3), // has
     
-    afxModuleFlag_AVX   = AFX_BIT(8),
-    afxModuleFlag_AMX   = AFX_BIT(9),
-    afxModuleFlag_ASX   = AFX_BIT(10),
-    afxModuleFlag_AUX   = AFX_BIT(11),
+    afxModuleFlag_AVX   = AFX_BITMASK(8),
+    afxModuleFlag_AMX   = AFX_BITMASK(9),
+    afxModuleFlag_ASX   = AFX_BITMASK(10),
+    afxModuleFlag_AUX   = AFX_BITMASK(11),
 } afxModuleFlags;
 
 AFX afxModuleFlags      AfxTestModule(afxModule mdle, afxModuleFlags bitmask);

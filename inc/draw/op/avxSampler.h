@@ -32,8 +32,8 @@
 
 typedef enum avxSamplerFlag
 {
-    avxSamplerFlag_SUBSAMPLED = AFX_BIT(0),
-    avxSamplerFlag_NONSEAMLESS= AFX_BIT(1)
+    avxSamplerFlag_SUBSAMPLED = AFX_BITMASK(0),
+    avxSamplerFlag_NONSEAMLESS= AFX_BITMASK(1)
 } avxSamplerFlags;
 
 typedef enum avxTexelWrap

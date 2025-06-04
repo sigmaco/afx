@@ -42,7 +42,7 @@ AFX_DEFINE_STRUCT(_avxDoutDdi)
     afxError(*ioctl)(afxDrawOutput, afxUnit, va_list ap);
     afxError(*adjust)(afxDrawOutput, avxRange);
     afxError(*present)(afxDrawQueue, avxPresentation*, avxFence wait, afxDrawOutput, afxUnit bufIdx, avxFence signal);
-    afxError(*reqBuf)(afxDrawOutput dout, afxUnit64 timeout, afxUnit *bufIdx);
+    afxError(*reqBuf)(afxDrawOutput dout, afxUnit64 timeout, afxSemaphore sem, avxFence fenc, afxMask exuMask, afxUnit *bufIdx);
     afxError(*recycBuf)(afxDrawOutput dout, afxUnit bufIdx);
 };
 #endif

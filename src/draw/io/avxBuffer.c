@@ -446,11 +446,20 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
         from = 0;
         // Buffer capacity must be always aligned to AFX_SIMD_ALIGNMENT for a correct mapping behavior.
         // All buffer mapping requires ranges aligned to AFX_SIMD_ALIGNMENT. This alignment is ensured at AFX level.
-        size = AFX_ALIGNED_SIZE(size, AFX_SIMD_ALIGNMENT);
+        size = AFX_ALIGN_SIZE(size, AFX_SIMD_ALIGNMENT);
     }
     else
     {
         AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &base);
+
+        if (base->base)
+        {
+            // Base buffer must be a storage buffer, not a buffer view.
+            AFX_ASSERT(!base->base);
+            AfxThrowError();
+            return err;
+        }
+
         afxUnit srcCap = AvxGetBufferCapacity(base, 0);
 
         // If a capacity is not specified, the new buffer inherits the full capacity of the base buffer, 
@@ -458,7 +467,7 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
         if (size == 0)
             size = srcCap - from;
         else
-            size = AFX_ALIGNED_SIZE(size, AFX_SIMD_ALIGNMENT);
+            size = AFX_ALIGN_SIZE(size, AFX_SIMD_ALIGNMENT);
 
         // As every buffer capacity is a power of AFX_SIMD_ALIGNMENT, it should already be aligned here.
         AFX_ASSERT_ALIGNMENT(size, AFX_SIMD_ALIGNMENT);
@@ -503,7 +512,7 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
     buf->sharingMask = NIL;
     for (afxUnit i = 0; i < exuCnt; i++)
     {
-        buf->sharingMask |= bufi->sharingMask & AFX_BIT(i);
+        buf->sharingMask |= bufi->sharingMask & AFX_BITMASK(i);
     }
 
     // STORAGE
@@ -816,7 +825,7 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps
 
         afxUnit range = map->range;
         // range always is SIMD aligned.
-        range = AFX_ALIGNED_SIZE(range, AFX_SIMD_ALIGNMENT);
+        range = AFX_ALIGN_SIZE(range, AFX_SIMD_ALIGNMENT);
         AFX_ASSERT_ALIGNMENT(range, AFX_SIMD_ALIGNMENT);
         
         afxSize offset = map->offset;
@@ -944,7 +953,7 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps
         else
         {
             // Wait for the draw queue to finish the operation
-            if (AvxWaitForEmptyDrawQueue(dque, AFX_TIME_INFINITE))
+            if (AvxWaitForEmptyDrawQueue(dque, AFX_TIMEOUT_INFINITE))
                 AfxThrowError();
         }
     }

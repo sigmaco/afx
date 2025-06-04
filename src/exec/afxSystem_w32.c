@@ -35,14 +35,14 @@
 #include "../impl/afxExecImplKit.h"
 
 afxUnit const sizeOfSys = sizeof(AFX_OBJ(afxSystem));
-afxUnit const sizeOfSysAligned = AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT);
-AFX_STATIC_ASSERT(AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT) >= sizeof(AFX_OBJ(afxSystem)), "");
+afxUnit const sizeOfSysAligned = AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT);
+AFX_STATIC_ASSERT(AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT) >= sizeof(AFX_OBJ(afxSystem)), "");
 AFX_STATIC_ASSERT(sizeof(AFX_OBJECT(afxSystem)) > sizeof(afxSystem), "");
 
 _AFX afxBool sysReady = FALSE;
 #if !0
-_AFX AFX_ALIGN(16) afxByte theSysData[  AFX_ALIGNED_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) + 
-                                        AFX_ALIGNED_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT)] = { 0 };
+_AFX AFX_ALIGN(16) afxByte theSysData[  AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) + 
+                                        AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT)] = { 0 };
 _AFX afxSystem TheSystem = (void*)&theSysData;
 AFX_STATIC_ASSERT(sizeof(TheSystem[0]) > sizeof(void*), "");
 AFX_STATIC_ASSERT(sizeof(theSysData) >= (sizeof(afxObjectBase) + sizeof(TheSystem[0])), "");
@@ -434,7 +434,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
             AfxFormatUri(&urib.uri, "e2coree");
             afxModule e2coree;
 
-            if (AfxLoadModule(&urib.uri, AFX_BIT(8), &e2coree)) AfxThrowError();
+            if (AfxLoadModule(&urib.uri, AFX_BITMASK(8), &e2coree)) AfxThrowError();
             else
             {
                 AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2coree);

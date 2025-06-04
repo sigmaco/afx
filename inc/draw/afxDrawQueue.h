@@ -14,6 +14,10 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // DRAW DEVICE COMMAND, OPERATION AND COMMUNICATION QUUEUE                  //
+//////////////////////////////////////////////////////////////////////////////
+
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /*
@@ -45,6 +49,8 @@
 
 AFX_DEFINE_STRUCT(avxSubmission)
 {
+    // A bitmask specifying which bridges can assume this operation.
+    // If NIL, any bridge is allowed to assume this operation.
     afxMask             exuMask;
     afxUnit             baseQueIdx;
     afxUnit             queCnt;
@@ -58,25 +64,37 @@ AFX_DEFINE_STRUCT(avxSubmission)
     afxUnit64           signalValues;
     avxPipelineStage    signalStageMasks;
     afxUnit32           signalReserveds;
+
+    // A fence which will be signaled when the operation have completed execution.
+    avxFence            fence;
 };
 
 AFX_DEFINE_STRUCT(avxPresentation)
 {
-    afxMask         exuMask;
-    afxUnit         baseQueIdx;
-    afxUnit         queCnt;
-    afxSemaphore    wait;
+    // A bitmask specifying which bridges can assume this operation.
+    // If NIL, any bridge is allowed to assume this operation.
+    afxMask             exuMask;
+    afxUnit             baseQueIdx;
+    afxUnit             queCnt;
+
+    // The semaphore to wait for before issuing the present request.
+    afxSemaphore        wait;
 };
 
 AFX_DEFINE_STRUCT(avxTransference)
 {
-    afxMask         exuMask;
-    afxUnit         baseQueIdx;
-    afxUnit         queCnt;
+    // A bitmask specifying which bridges can assume this operation.
+    // If NIL, any bridge is allowed to assume this operation.
+    afxMask             exuMask;
+    afxUnit             baseQueIdx;
+    afxUnit             queCnt;
 
-    afxSemaphore    wait;
-    afxSemaphore    signal;
-    avxFence        fence;
+    // A semaphore upon which to wait on before the operation begin execution.
+    afxSemaphore        wait;
+    // A semaphore which will be signaled when the operation have completed execution.
+    afxSemaphore        signal;
+    // A fence which will be signaled when the operation have completed execution.
+    avxFence            fence;
 
     union
     {

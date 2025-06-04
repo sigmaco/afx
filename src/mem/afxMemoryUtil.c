@@ -100,15 +100,15 @@ _AFXINL void* AfxFillSSE(void* start, afxSize range, void const* pattern, afxSiz
         fill_block[i] = ((afxByte const*)pattern)[i % patternSiz];
     }
 
-    __m128i fill_regs[MAX_SIMD_REGISTERS];
+    __m128i fill_regs[AFX_MAX_SIMD_REGISTERS];
     __m128i fill = _mm_loadu_si128((__m128i *)fill_block);
 
     // Determine how many registers to use.
     // Only load as many SIMD registers as you'll use. Keeps cache clean, no wasted memory traffic.
     // Dynamically adapts to fill size and architecture. Uses full register set for large fills.
     afxSize regs_used = range / AFX_SIMD_ALIGNMENT;
-    if (regs_used > MAX_SIMD_REGISTERS)
-        regs_used = MAX_SIMD_REGISTERS;
+    if (regs_used > AFX_MAX_SIMD_REGISTERS)
+        regs_used = AFX_MAX_SIMD_REGISTERS;
 
     // Load only the number of registers we need
     for (afxSize i = 0; i < regs_used; ++i)
@@ -304,8 +304,8 @@ _AFXINL void AfxCopySSE(void* dst, void const* src, afxSize size)
 
     // SIMD loop with dynamic unroll
     afxSize regs_used = size / AFX_SIMD_ALIGNMENT;
-    if (regs_used > MAX_SIMD_REGISTERS)
-        regs_used = MAX_SIMD_REGISTERS;
+    if (regs_used > AFX_MAX_SIMD_REGISTERS)
+        regs_used = AFX_MAX_SIMD_REGISTERS;
 
     afxSize block_size = regs_used * AFX_SIMD_ALIGNMENT;
     while (size >= block_size)
@@ -444,8 +444,8 @@ _AFXINL void AfxMoveSSE(void* dst, void const* src, afxSize size)
 
     // SIMD loop with dynamic unroll
     afxSize regs_used = size / AFX_SIMD_ALIGNMENT;
-    if (regs_used > MAX_SIMD_REGISTERS)
-        regs_used = MAX_SIMD_REGISTERS;
+    if (regs_used > AFX_MAX_SIMD_REGISTERS)
+        regs_used = AFX_MAX_SIMD_REGISTERS;
 
     afxSize block_size = regs_used * AFX_SIMD_ALIGNMENT;
 
@@ -615,8 +615,8 @@ _AFX afxInt AfxCompareSSE(void const* a, void const* b, afxSize siz)
     while (siz >= block_size)
     {
         afxSize usable_regs = siz / block_size;
-        if (usable_regs > MAX_SIMD_REGISTERS)
-            usable_regs = MAX_SIMD_REGISTERS;
+        if (usable_regs > AFX_MAX_SIMD_REGISTERS)
+            usable_regs = AFX_MAX_SIMD_REGISTERS;
 
         int mismatch_found = 0;
         for (afxSize i = 0; i < usable_regs; ++i)
@@ -718,8 +718,8 @@ _AFX void* AfxFindSSE(void const* start, afxSize range, afxInt c)
     while (range >= AFX_SIMD_ALIGNMENT)
     {
         afxSize usable_regs = range / AFX_SIMD_ALIGNMENT;
-        if (usable_regs > MAX_SIMD_REGISTERS)
-            usable_regs = MAX_SIMD_REGISTERS;
+        if (usable_regs > AFX_MAX_SIMD_REGISTERS)
+            usable_regs = AFX_MAX_SIMD_REGISTERS;
 
         for (afxSize i = 0; i < usable_regs; ++i)
         {
@@ -813,8 +813,8 @@ _AFXINL void AfxStreamSSE(afxSize cnt, void const* src, afxSize srcOffset, afxSi
     __m128i regs[16];  // Maximum of 16 SIMD registers
 
     // Ensure the usable registers do not exceed the number of available registers
-    if (usable_regs > MAX_SIMD_REGISTERS)
-        usable_regs = MAX_SIMD_REGISTERS;
+    if (usable_regs > AFX_MAX_SIMD_REGISTERS)
+        usable_regs = AFX_MAX_SIMD_REGISTERS;
 
     // Process the main data in blocks of the available SIMD registers
     for (afxSize i = 0; i < cnt; ++i)

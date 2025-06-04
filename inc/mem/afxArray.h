@@ -56,8 +56,8 @@
 
 typedef enum afxArrayFlag
 {
-    afxArrayFlag_STATIC = AFX_BIT(0),
-    afxArrayFlag_TRIM   = AFX_BIT(1),
+    afxArrayFlag_STATIC = AFX_BITMASK(0),
+    afxArrayFlag_TRIM   = AFX_BITMASK(1),
 } afxArrayFlags;
 
 AFX_DEFINE_STRUCT(afxArray)
@@ -93,7 +93,7 @@ AFX_DEFINE_STRUCT(afxArray)
     Its design enables buffer ownership flexibility (external or internal).
     It can be useful in embedded, realtime, or GPU-interfacing code.
     It can be useful for temporary or fixed-size workspaces.
-    Its design is Essential when memory layout must be externally controlled.
+    Its design is essential when memory layout must be externally controlled.
 */
 
 AFXINL afxError     AfxMakeArray

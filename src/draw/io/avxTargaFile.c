@@ -287,18 +287,18 @@ _AVX afxError AfxWriteTargaFile(afxStream out, avxRasterIo* iop, afxUnit lodCnt,
         Row count (number of rows) = height / 4 (rounded up if the height isn't a multiple of 4).
     */
 
-    afxUnit uddSiz2 = AFX_ALIGNED_SIZE(uddSiz, AFX_SIMD_ALIGNMENT);
-    afxUnit w = AFX_MAX(pfd.bcWh[0], AFX_ALIGNED_SIZE(iop->rgn.extent.w, pfd.bcWh[0]));
-    afxUnit h = AFX_MAX(pfd.bcWh[1], AFX_ALIGNED_SIZE(iop->rgn.extent.h, pfd.bcWh[1]));
+    afxUnit uddSiz2 = AFX_ALIGN_SIZE(uddSiz, AFX_SIMD_ALIGNMENT);
+    afxUnit w = AFX_MAX(pfd.bcWh[0], AFX_ALIGN_SIZE(iop->rgn.extent.w, pfd.bcWh[0]));
+    afxUnit h = AFX_MAX(pfd.bcWh[1], AFX_ALIGN_SIZE(iop->rgn.extent.h, pfd.bcWh[1]));
     iop->rgn.extent.w = w;
     iop->rgn.extent.h = h;
     iop->rgn.extent.d = AFX_MAX(1, iop->rgn.extent.d);
-    iop->rgn.origin.x = AFX_ALIGNED_SIZE(iop->rgn.origin.x, pfd.bcWh[0]);
-    iop->rgn.origin.y = AFX_ALIGNED_SIZE(iop->rgn.origin.y, pfd.bcWh[1]);
+    iop->rgn.origin.x = AFX_ALIGN_SIZE(iop->rgn.origin.x, pfd.bcWh[0]);
+    iop->rgn.origin.y = AFX_ALIGN_SIZE(iop->rgn.origin.y, pfd.bcWh[1]);
     iop->rgn.origin.z = iop->rgn.origin.z;
 
     // ignored for block compressed types.
-    iop->rowStride = iop->rowStride ? iop->rowStride : AFX_ALIGNED_SIZE((w / pfd.bcWh[0]) * pfd.stride, AFX_SIMD_ALIGNMENT); // align
+    iop->rowStride = iop->rowStride ? iop->rowStride : AFX_ALIGN_SIZE((w / pfd.bcWh[0]) * pfd.stride, AFX_SIMD_ALIGNMENT); // align
     iop->rowsPerImg = iop->rowsPerImg ? iop->rowsPerImg : ((h + (pfd.bcWh[1] - 1)) / pfd.bcWh[1]); // round up
     iop->decSiz = iop->rowStride * iop->rowsPerImg;
     iop->encSiz = iop->rowStride * iop->rowsPerImg;
@@ -431,13 +431,13 @@ _AVX afxError AfxReadTargaFile(avxTargaFile* info, afxStream in)
         {
             // packed raster data
 #if 0
-            afxUnit bppAligned = (AFX_ALIGNED_SIZE(tgai.bpp, AFX_BYTE_SIZE));
-            afxUnit pixStride = (AFX_ALIGNED_SIZE(bppAligned, AFX_BYTE_SIZE) / AFX_BYTE_SIZE);
+            afxUnit bppAligned = (AFX_ALIGN_SIZE(tgai.bpp, AFX_BYTE_SIZE));
+            afxUnit pixStride = (AFX_ALIGN_SIZE(bppAligned, AFX_BYTE_SIZE) / AFX_BYTE_SIZE);
             afxUnit rowStride = info->width * pixStride;
 
             info->rowStride = rowStride;
             info->rowsPerImg = info->height;
-            info->decSiz = info->rowsPerImg * AFX_ALIGNED_SIZE(info->rowStride, AFX_SIMD_ALIGNMENT);
+            info->decSiz = info->rowsPerImg * AFX_ALIGN_SIZE(info->rowStride, AFX_SIMD_ALIGNMENT);
             info->encSiz = info->rowsPerImg * info->rowStride;
 #endif       
             switch (tgai.bpp)
@@ -457,13 +457,13 @@ _AVX afxError AfxReadTargaFile(avxTargaFile* info, afxStream in)
         {
             // packed raster data
 #if 0
-            afxUnit bppAligned = (AFX_ALIGNED_SIZE(tgai.bpp, AFX_BYTE_SIZE));
-            afxUnit pixStride = (AFX_ALIGNED_SIZE(bppAligned, AFX_BYTE_SIZE) / AFX_BYTE_SIZE);
+            afxUnit bppAligned = (AFX_ALIGN_SIZE(tgai.bpp, AFX_BYTE_SIZE));
+            afxUnit pixStride = (AFX_ALIGN_SIZE(bppAligned, AFX_BYTE_SIZE) / AFX_BYTE_SIZE);
             afxUnit rowStride = info->width * pixStride;
 
             info->rowStride = rowStride;
             info->rowsPerImg = info->height;
-            info->decSiz = info->rowsPerImg * AFX_ALIGNED_SIZE(info->rowStride, AFX_SIMD_ALIGNMENT);
+            info->decSiz = info->rowsPerImg * AFX_ALIGN_SIZE(info->rowStride, AFX_SIMD_ALIGNMENT);
             info->encSiz = info->rowsPerImg * info->rowStride;
 #endif       
             switch (tgai.bpp)
@@ -483,8 +483,8 @@ _AVX afxError AfxReadTargaFile(avxTargaFile* info, afxStream in)
         {
             // palletized/indexed raster data
 #if 0
-            afxUnit bppAligned = (AFX_ALIGNED_SIZE(tgai.palBpp, AFX_BYTE_SIZE));
-            afxUnit pixStride = (AFX_ALIGNED_SIZE(bppAligned, AFX_BYTE_SIZE) / AFX_BYTE_SIZE);
+            afxUnit bppAligned = (AFX_ALIGN_SIZE(tgai.palBpp, AFX_BYTE_SIZE));
+            afxUnit pixStride = (AFX_ALIGN_SIZE(bppAligned, AFX_BYTE_SIZE) / AFX_BYTE_SIZE);
             //info->rowStride = info->width * pixStride;
             //info->imgStride = info->height * info->rowStride;
             //info->decSiz = info->height * info->rowStride;
@@ -608,8 +608,8 @@ _AVX afxError AfxDecodeTargaFile(avxTargaFile const* meta, afxStream in, void* d
         afxByte *indices = NIL;
         afxByte *palette = NIL;
         afxUnit palBpp = meta->palBpp;
-        afxUnit palBppAligned = (AFX_ALIGNED_SIZE(meta->palBpp, AFX_BYTE_SIZE));
-        afxUnit palPixStride = (AFX_ALIGNED_SIZE(meta->palBpp, AFX_BYTE_SIZE) / AFX_BYTE_SIZE);
+        afxUnit palBppAligned = (AFX_ALIGN_SIZE(meta->palBpp, AFX_BYTE_SIZE));
+        afxUnit palPixStride = (AFX_ALIGN_SIZE(meta->palBpp, AFX_BYTE_SIZE) / AFX_BYTE_SIZE);
         afxUnit wXh = meta->width * meta->height;
 
         if (AfxAllocate(meta->palSiz * palPixStride, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&palette)) AfxThrowError();

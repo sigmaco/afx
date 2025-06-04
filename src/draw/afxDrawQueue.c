@@ -62,7 +62,7 @@ _AVX afxError _AvxDquePopIoReqPacket(afxDrawQueue dque, _avxIoReqPacket* iorp)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
     AfxPopLink(&iorp->hdr.chain);
-    AfxRecycleArenaUnit(&dque->iorpArena, iorp, iorp->hdr.siz);
+    AfxReclaimToArena(&dque->iorpArena, iorp, iorp->hdr.siz);
     return err;
 }
 
@@ -71,7 +71,7 @@ _AVX afxError _AvxDquePushIoReqPacket(afxDrawQueue dque, afxUnit id, afxUnit siz
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
-    _avxIoReqPacket* iorp = AfxRequestArenaUnit(&dque->iorpArena, siz, 1, NIL, 0);
+    _avxIoReqPacket* iorp = AfxRequestFromArena(&dque->iorpArena, siz, 1, NIL, 0);
     
     if (!iorp) AfxThrowError();
     else
@@ -104,15 +104,6 @@ _AVX afxUnit AvxGetDrawQueuePort(afxDrawQueue dque)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
     return dque->portId;
-}
-
-_AVX afxClass const* _AvxGetDrawContextClass(afxDrawQueue dque)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
-    afxClass const* cls = &dque->cmdbCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
-    return cls;
 }
 
 _AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, avxColor const color)
@@ -185,47 +176,73 @@ _AVX afxError AvxWaitForEmptyDrawQueue(afxDrawQueue dque, afxUnit64 timeout)
             AfxUnlockMutex(&dque->idleCndMtx);
         }
 #else
-        if (timeout == AFX_TIME_INFINITE)
+        if (!timeout)
         {
-            AfxLockMutex(&dque->idleCndMtx);
-            
-            while (dque->iorpChn.cnt)
+            if (!AfxTryLockMutex(&dque->iorpChnMtx)) err = afxError_TIMEOUT;
+            else
             {
-                if (AfxWaitCondition(&dque->idleCnd, &dque->idleCndMtx))
+                while (!AfxIsChainEmpty(&dque->iorpChn))
+                {
+                    err = afxError_TIMEOUT;
+                    break; // while
+                }
+
+                if (!err)
+                {
+                    AFX_ASSERT(AfxIsChainEmpty(&dque->iorpChn));
+                    AFX_ASSERT(dque->iorpChn.cnt == 0);
+                }
+
+                AfxUnlockMutex(&dque->iorpChnMtx);
+            }
+        }
+        else if ((timeout == AFX_TIMEOUT_INFINITE) || (timeout == AFX_TIME_INFINITE))
+        {
+            if (AfxLockMutex(&dque->iorpChnMtx))
+                AfxThrowError();
+
+            while (!AfxIsChainEmpty(&dque->iorpChn))
+            {
+                if (AfxWaitCondition(&dque->idleCnd, &dque->iorpChnMtx))
                 {
                     AfxThrowError();
                     break;
                 }
             }
-            AfxUnlockMutex(&dque->idleCndMtx);
+
+            AFX_ASSERT(AfxIsChainEmpty(&dque->iorpChn));
+            AFX_ASSERT(dque->iorpChn.cnt == 0);
+
+            AfxUnlockMutex(&dque->iorpChnMtx);
         }
         else
         {
-            AfxLockMutex(&dque->idleCndMtx);
+            // TODO: timed?
+            AfxLockMutex(&dque->iorpChnMtx);
 
             afxTimeSpec ts = { 0 };
-            if (timeout && (timeout != AFX_TIME_INFINITE))
-                AfxMakeTimeSpec(&ts, timeout);
+            AfxMakeTimeSpec(&ts, timeout);
 
-            while (dque->iorpChn.cnt)
+            while (!AfxIsChainEmpty(&dque->iorpChn))
             {
-                afxError cndErr = AfxWaitTimedCondition(&dque->idleCnd, &dque->idleCndMtx, &ts);
+                afxError cndErr = AfxWaitTimedCondition(&dque->idleCnd, &dque->iorpChnMtx, &ts);
 
                 if (cndErr)
                 {
                     if (cndErr == afxError_TIMEOUT)
-                    {
                         err = afxError_TIMEOUT;
-                        break;
-                    }
-                    AfxThrowError();
+                    else AfxThrowError();
+
                     break;
                 }
-
-                if (!timeout)
-                    break; // if there is not timeout specicied, it can not stall; return imediately.
             }
-            AfxUnlockMutex(&dque->idleCndMtx);
+
+            if (!err)
+            {
+                AFX_ASSERT(AfxIsChainEmpty(&dque->iorpChn));
+            }
+
+            AfxUnlockMutex(&dque->iorpChnMtx);
         }
 #endif
     }
@@ -262,13 +279,14 @@ _AVX afxError _AvxDqueSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), 
     return err;
 }
 
-_AVX afxError _AvxDqueExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], avxFence fence)
+_AVX afxError _AvxDqueExecuteDrawCommands(afxDrawQueue dque, avxSubmission const* ctrl, afxUnit cnt, afxDrawContext contexts[], afxUnit const batches[])
 {
     afxError err = AFX_ERR_NONE;
     // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
     AFX_ASSERT(cnt);
     AFX_ASSERT(contexts);
+    AFX_ASSERT(ctrl);
 
     /*
         If any draw context submitted to this queue is in the executable state, it is moved to the pending state.
@@ -295,7 +313,7 @@ _AVX afxError _AvxDqueExecuteDrawCommands(afxDrawQueue dque, avxSubmission const
             iorp->Execute.signal = ctrl->signalSems;
             iorp->Execute.wait = ctrl->waitSems;
         }
-        iorp->Execute.hdr.completionFence = fence;
+        iorp->Execute.hdr.completionFence = ctrl->fence;
 
         iorp->Execute.cmdbCnt = cnt;
 
@@ -303,11 +321,14 @@ _AVX afxError _AvxDqueExecuteDrawCommands(afxDrawQueue dque, avxSubmission const
         {
             afxDrawContext dctx = contexts[i];
             AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-
+            _avxCmdBatch* batch = _AvxGetCmdBatch(dctx, batches[i]);
+            
             AfxReacquireObjects(1, &dctx);
-            iorp->Execute.cmdbs[i] = dctx;
-            AfxIncAtom32(&dctx->submCnt);
-            iorp->Execute.cmdbs[i]->state = avxDrawContextState_PENDING;
+            AfxIncAtom32(&batch->submCnt);
+            //batch->state = avxDrawContextState_PENDING;
+
+            iorp->Execute.cmdbs[i].dctx = dctx;
+            iorp->Execute.cmdbs[i].batchId = batches[i];
         }
     }
 
@@ -330,7 +351,12 @@ _AVX afxError _AvxDqueTransferResources(afxDrawQueue dque, avxTransference const
     afxCmdId cmdId;
     _avxIoReqPacket* iorp;
 
-    if (ctrl->dstFcc == afxFcc_RAS || ctrl->srcFcc == afxFcc_RAS)
+    if ((ctrl->dstFcc == afxFcc_RAS) && (ctrl->srcFcc == afxFcc_RAS))
+    {
+        if (_AvxDquePushIoReqPacket(dque, _AVX_GET_STD_IORP_ID(Transfer), sizeof(iorp->Transfer) + (opCnt * sizeof(iorp->Transfer.rasCpyOps[0])), &cmdId, &iorp))
+            AfxThrowError();
+    }
+    else if ((ctrl->dstFcc == afxFcc_RAS) || (ctrl->srcFcc == afxFcc_RAS))
     {
         if (_AvxDquePushIoReqPacket(dque, _AVX_GET_STD_IORP_ID(Transfer), sizeof(iorp->Transfer) + (opCnt * sizeof(iorp->Transfer.rasOps[0])), &cmdId, &iorp))
             AfxThrowError();
@@ -408,7 +434,16 @@ _AVX afxError _AvxDqueTransferResources(afxDrawQueue dque, avxTransference const
         default: AfxThrowError(); break;
         }
 
-        if (ctrl->dstFcc == afxFcc_RAS || ctrl->srcFcc == afxFcc_RAS)
+        if ((ctrl->dstFcc == afxFcc_RAS) && (ctrl->srcFcc == afxFcc_RAS))
+        {
+            avxRasterCopy const* riops = ops;
+            for (afxUnit i = 0; i < opCnt; i++)
+            {
+                iorp->Transfer.rasCpyOps[i] = riops[i];
+            }
+            int a = 1;
+        }
+        else if ((ctrl->dstFcc == afxFcc_RAS) || (ctrl->srcFcc == afxFcc_RAS))
         {
             avxRasterIo const* riops = ops;
             for (afxUnit i = 0; i < opCnt; i++)
@@ -595,15 +630,11 @@ _AVX afxError _AvxDqueDtorCb(afxDrawQueue dque)
 
     AfxDeregisterChainedClasses(&dque->classes);
 
-    AfxDismountClass(&dque->cmdbCls);
-    AfxDismantleFutex(&dque->cmdbReqLock);
-    AfxDismantleQueue(&dque->cmdbRecycQue);
-
     AfxDismantleMutex(&dque->iorpChnMtx);
     AfxDismantleArena(&dque->iorpArena);
     AfxDismantleFutex(&dque->iorpArenaSlock);
     AfxDismantleCondition(&dque->idleCnd);
-    AfxDismantleMutex(&dque->idleCndMtx);
+    //AfxDismantleMutex(&dque->idleCndMtx);
 
     return err;
 }
@@ -631,21 +662,12 @@ _AVX afxError _AvxDqueCtorCb(afxDrawQueue dque, void** args, afxUnit invokeNo)
 
     AfxDeployMutex(&dque->iorpChnMtx, AFX_MTX_PLAIN);
     AfxDeployChain(&dque->iorpChn, dque);
-    AfxDeployMutex(&dque->idleCndMtx, AFX_MTX_PLAIN);
+    //AfxDeployMutex(&dque->idleCndMtx, AFX_MTX_PLAIN);
     AfxDeployCondition(&dque->idleCnd);
 
     dque->closed = FALSE;
 
     AfxDeployChain(&dque->classes, (void*)dque);
-
-    dque->cmdbLockedForReq = FALSE;
-    AfxDeployFutex(&dque->cmdbReqLock);
-    AfxMakeQueue(&dque->cmdbRecycQue, sizeof(afxDrawContext), 3, NIL, 0);
-
-    afxClassConfig tmpClsCfg = { 0 };
-    tmpClsCfg = cfg->dctxClsCfg ? *cfg->dctxClsCfg : _AVX_DCTX_CLASS_CONFIG;
-    AFX_ASSERT(tmpClsCfg.fcc == afxFcc_DCTX);
-    AfxMountClass(&dque->cmdbCls, NIL, &dque->classes, &tmpClsCfg);
 
     return err;
 }

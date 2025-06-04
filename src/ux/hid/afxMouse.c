@@ -358,12 +358,12 @@ _AUX afxMask AfxIsLmbPressed2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[0][AFX_LMB])
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -380,12 +380,12 @@ _AUX afxMask AfxIsRmbPressed2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[0][AFX_RMB])
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -402,12 +402,12 @@ _AUX afxMask AfxIsMmbPressed2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[0][AFX_MMB])
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -424,12 +424,12 @@ _AUX afxMask AfxIsXmb1Pressed2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[0][AFX_XMB1])
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -446,12 +446,12 @@ _AUX afxMask AfxIsXmb2Pressed2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[0][AFX_XMB2])
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -468,13 +468,13 @@ _AUX afxMask AfxWasLmbPressed2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[0][AFX_LMB] &&
             !(ses->seats[seatIdx].mbState[1][AFX_LMB]))
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -491,13 +491,13 @@ _AUX afxMask AfxWasRmbPressed2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[0][AFX_RMB] &&
             !(ses->seats[seatIdx].mbState[1][AFX_RMB]))
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -514,13 +514,13 @@ _AUX afxMask AfxWasMmbPressed2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[0][AFX_MMB] &&
             !(ses->seats[seatIdx].mbState[1][AFX_MMB]))
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -537,13 +537,13 @@ _AUX afxMask AfxWasXmb1Pressed2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[0][AFX_XMB1] &&
             !(ses->seats[seatIdx].mbState[1][AFX_XMB1]))
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -560,13 +560,13 @@ _AUX afxMask AfxWasXmb2Pressed2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[0][AFX_XMB2] &&
             !(ses->seats[seatIdx].mbState[1][AFX_XMB2]))
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -583,13 +583,13 @@ _AUX afxMask AfxWasLmbReleased2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[1][AFX_LMB] &&
             !(ses->seats[seatIdx].mbState[0][AFX_LMB]))
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -606,13 +606,13 @@ _AUX afxMask AfxWasRmbReleased2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[1][AFX_RMB] &&
             !(ses->seats[seatIdx].mbState[0][AFX_RMB]))
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -629,13 +629,13 @@ _AUX afxBool AfxWasMmbReleased2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[1][AFX_MMB] &&
             !(ses->seats[seatIdx].mbState[0][AFX_MMB]))
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -652,13 +652,13 @@ _AUX afxMask AfxWasXmb1Released2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[1][AFX_XMB1] &&
             !(ses->seats[seatIdx].mbState[0][AFX_XMB1]))
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;
@@ -675,13 +675,13 @@ _AUX afxMask AfxWasXmb2Released2(afxMask seats)
 
     for (afxUnit seatIdx = 0, seatCnt = ses->seatCnt; seatIdx < seatCnt; seatIdx++)
     {
-        if (seats && !(seats & AFX_BIT(seatIdx)))
+        if (seats && !(seats & AFX_BITMASK(seatIdx)))
             continue; // skip if a mask is specified but it is not covered on such mask.
 
         if (ses->seats[seatIdx].mbState[1][AFX_XMB2] &&
             !(ses->seats[seatIdx].mbState[0][AFX_XMB2]))
         {
-            rslt |= AFX_BIT(seatIdx);
+            rslt |= AFX_BITMASK(seatIdx);
         }
     }
     return rslt;

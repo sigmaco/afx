@@ -49,6 +49,16 @@ _AVX afxDrawDevice AvxGetBridgedDrawDevice(afxDrawBridge dexu, afxUnit* portId)
     return ddev;
 }
 
+_AVX afxClass const* _AvxGetDrawContextClass(afxDrawBridge dexu)
+{
+    afxError err = AFX_ERR_NONE;
+    // dexu must be a valid afxDrawBridge handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
+    afxClass const* cls = &dexu->cmdbCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
+    return cls;
+}
+
 _AVX afxClass const* _AvxGetDrawQueueClass(afxDrawBridge dexu)
 {
     afxError err = AFX_ERR_NONE;
@@ -109,8 +119,8 @@ _AVX afxError _AvxDexuDtorCb(afxDrawBridge dexu)
     afxDrawSystem dsys = AvxGetBridgedDrawSystem(dexu);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    //AvxWaitForDrawSystem(dsys, AFX_TIME_INFINITE);
-    //AvxWaitForDrawSystem(dsys, AFX_TIME_INFINITE); // yes, two times.
+    //AvxWaitForDrawSystem(dsys, AFX_TIMEOUT_INFINITE);
+    //AvxWaitForDrawSystem(dsys, AFX_TIMEOUT_INFINITE); // yes, two times.
 
     if (dexu->worker)
     {
@@ -164,9 +174,15 @@ _AVX afxError _AvxDexuCtorCb(afxDrawBridge dexu, void** args, afxUnit invokeNo)
     dexu->schedCnt = 0;
 
     AfxDeployChain(&dexu->classes, dexu);
-    afxClassConfig clsCfg = cfg->dqueClsCfg ? *cfg->dqueClsCfg : _AVX_DQUE_CLASS_CONFIG;
-    AFX_ASSERT(clsCfg.fcc == afxFcc_DQUE);
-    AfxMountClass(&dexu->dqueCls, NIL, &dexu->classes, &clsCfg);
+
+    afxClassConfig dctxClsCfg = { 0 };
+    dctxClsCfg = cfg->dctxClsCfg ? *cfg->dctxClsCfg : _AVX_DCTX_CLASS_CONFIG;
+    AFX_ASSERT(dctxClsCfg.fcc == afxFcc_DCTX);
+    AfxMountClass(&dexu->cmdbCls, NIL, &dexu->classes, &dctxClsCfg);
+
+    afxClassConfig dqueClsCfg = cfg->dqueClsCfg ? *cfg->dqueClsCfg : _AVX_DQUE_CLASS_CONFIG;
+    AFX_ASSERT(dqueClsCfg.fcc == afxFcc_DQUE);
+    AfxMountClass(&dexu->dqueCls, NIL, &dexu->classes, &dqueClsCfg);
 
     afxClass* dqueCls = (afxClass*)_AvxGetDrawQueueClass(dexu);
     AFX_ASSERT_CLASS(dqueCls, afxFcc_DQUE);

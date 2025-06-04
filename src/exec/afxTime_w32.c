@@ -223,7 +223,7 @@ _AFX afxError AfxStepTimer(afxTimer* timer)
 
     afxClock clock;
     AfxGetClock(&clock);
-    afxReal64 dt = AfxGetClockSecondsElapsed(&timer->prevClock, &clock);
+    afxReal64 dt = AfxGetSecondsElapsed(&timer->prevClock, &clock);
 
     if (timer->stepsPerSec)
     {

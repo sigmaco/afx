@@ -36,19 +36,19 @@
 
 typedef enum afxThreadUsage
 {
-    afxThreadUsage_IO       = AFX_BIT(0),
-    afxThreadUsage_CODEC    = AFX_BIT(1),
-    afxThreadUsage_COMPRESS = AFX_BIT(2),
-    afxThreadUsage_COMPUTE  = AFX_BIT(3),
-    afxThreadUsage_PRESENT  = AFX_BIT(4),
-    afxThreadUsage_DRAW     = AFX_BIT(5),
-    afxThreadUsage_MIX      = AFX_BIT(7),
-    afxThreadUsage_ASIO     = AFX_BIT(8),
-    afxThreadUsage_SOUND    = AFX_BIT(9),
-    afxThreadUsage_COMM     = AFX_BIT(10),
-    afxThreadUsage_SIM      = AFX_BIT(11),
-    afxThreadUsage_UX       = AFX_BIT(12),
-    afxThreadUsage_SYSTEM   = AFX_BIT(31),
+    afxThreadUsage_IO       = AFX_BITMASK(0),
+    afxThreadUsage_CODEC    = AFX_BITMASK(1),
+    afxThreadUsage_COMPRESS = AFX_BITMASK(2),
+    afxThreadUsage_COMPUTE  = AFX_BITMASK(3),
+    afxThreadUsage_PRESENT  = AFX_BITMASK(4),
+    afxThreadUsage_DRAW     = AFX_BITMASK(5),
+    afxThreadUsage_MIX      = AFX_BITMASK(7),
+    afxThreadUsage_ASIO     = AFX_BITMASK(8),
+    afxThreadUsage_SOUND    = AFX_BITMASK(9),
+    afxThreadUsage_COMM     = AFX_BITMASK(10),
+    afxThreadUsage_SIM      = AFX_BITMASK(11),
+    afxThreadUsage_UX       = AFX_BITMASK(12),
+    afxThreadUsage_SYSTEM   = AFX_BITMASK(31),
 } afxThreadUsage;
 
 typedef enum afxThreadFlag
