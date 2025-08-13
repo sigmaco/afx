@@ -37,6 +37,7 @@
 #define AMX_SINK_H
 
 #include "qwadro/inc/mix/afxMixDefs.h"
+#include "qwadro/inc/mix/io/amxBuffer.h"
 
 AFX_DECLARE_STRUCT(afxSinkInterface);
 
@@ -159,8 +160,30 @@ AMX afxError        AfxGetAudioSinkIdd(afxSink sink, afxUnit code, void* dst);
 
 AMX afxError        AfxMuteAudioSink(afxSink sink, afxBool mute);
 
-AMX afxError        AfxRequestSinkBuffer(afxSink sink, afxTime timeout, afxUnit *bufIdx);
-AMX afxError        AfxDiscardSinkBuffer(afxSink sink, afxUnit bufIdx);
+AFX_DEFINE_STRUCT(amxBufferedTrack)
+{
+    amxBuffer   buf;
+    afxSize     offset;
+    afxUnit     range;
+    //afxUnit     stride;
+    afxUnit     frameCnt;
+    afxUnit     freq;
+};
+
+AFX_DEFINE_STRUCT(amxBufferedAudio)
+{
+    amxBuffer   buf;
+    afxSize     offset;
+    afxUnit     range;
+    afxUnit     chCnt;
+    afxUnit     sampCnt;
+    afxUnit     sampRate;
+    //afxSize     frames; // sampCnt / chCnt
+    afxUnit     loopCnt;
+};
+
+AMX afxError        AmxLockSinkBuffer(afxSink sink, afxUnit64 timeout, afxUnit minFrameCnt, amxBufferedTrack* room);
+AMX afxError        AmxUnlockSinkBuffer(afxSink sink, afxFlags flags);
 
 ////////////////////////////////////////////////////////////////////////////////
 

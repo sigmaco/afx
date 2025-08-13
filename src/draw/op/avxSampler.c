@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_SAMPLER_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 
 _AVX avxClearValue const AVX_CLEAR_VALUE_DEFAULT =
 {
@@ -118,6 +118,7 @@ _AVX afxError _AvxSampCtorCb(avxSampler samp, void** args, afxUnit invokeNo)
     
     AFX_ASSERT(cfg);
     samp->tag = cfg->tag;
+    samp->udd = cfg->udd;
     samp->cfg = *cfg;
     samp->crc = 0;
     //AfxAccumulateCrc32(&samp->crc, cfg, yuv ? sizeof(avxYuvSamplerInfo) : sizeof(avxSamplerInfo));
@@ -259,7 +260,7 @@ _AVX afxError AvxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerInfo
 
     // dsys must support at least one bridge with one of the GRAPHICS or COMPUTE capabilities.    
     afxDrawBridge dexu;
-    afxBool bridgedFound = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, AFX_INVALID_INDEX, afxDrawPortFlag_DRAW | afxDrawPortFlag_COMPUTE, 0, 1, &dexu);
+    afxBool bridgedFound = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawCaps_DRAW | afxDrawCaps_COMPUTE, NIL, 0, 1, &dexu);
     AFX_ASSERT(bridgedFound);
 
     afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->sampCls(dsys);

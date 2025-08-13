@@ -14,6 +14,9 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+#ifndef AVX_LIGATURE_H
+#define AVX_LIGATURE_H
+
   //////////////////////////////////////////////////////////////////////////////
  // QWADRO PIPELINED RESOURCING LIGATURE                                     //
 //////////////////////////////////////////////////////////////////////////////
@@ -36,21 +39,27 @@
     This way, the inner render loops will only be binding descriptor sets 2 and 3, and performance will be high.
 */
 
-#ifndef AVX_LIGATURE_H
-#define AVX_LIGATURE_H
-
 #include "qwadro/inc/draw/op/avxShader.h"
 
-AFX_DEFINE_STRUCT(avxLigatureEntry) // A avxLigatureEntry describes a single shader resource binding to be included in a avxLigature.
+#define AVX_MAX_LIGATURE_SETS (8)
+#define AVX_MAX_LIGAMENTS (80) // 80 / 8 = 10 ligaments per set
+#define AVX_MAX_PUSH_RANGES (16)
+
+AFX_DEFINE_STRUCT(avxPushRange)
 {
-    // A avxLigatureEntry describes a single shader resource binding to be included in a avxLigature.
-    afxUnit         set;
-    afxUnit32       binding; // A unique identifier for a resource binding within the avxLigature, corresponding to a avxLigatureEntry.binding and a @binding attribute in the avxShader.
-    afxMask         visibility; // A bitset of the members of avxShaderType. Each set bit indicates that a avxLigatureEntry's resource will be accessible from the associated shader stage.
+    afxUnit16       size;
+    afxUnit16       offset;
+    afxMask         visibility;
+};
+
+AFX_DEFINE_STRUCT(avxLigament)
+// A avxLigament describes a single shader resource binding to be included in a avxLigature.
+{
+    afxUnit32       binding; // A unique identifier for a resource binding within the avxLigature, corresponding to a avxLigament.binding and a @binding attribute in the avxShader.
+    afxMask         visibility; // A bitset of the members of avxShaderType. Each set bit indicates that a avxLigament's resource will be accessible from the associated shader stage.
     avxShaderParam  type;
     afxUnit         cnt;
     afxString16     name;
-
     union
     {
         struct
@@ -64,21 +73,40 @@ AFX_DEFINE_STRUCT(avxLigatureEntry) // A avxLigatureEntry describes a single sha
             int a;
         }           img;
     };
+    afxFlags        flags;
+};
+
+AFX_DEFINE_STRUCT(avxLigatureSet)
+{
+    afxUnit         set;
+    afxFlags        flags;
+    afxUnit32       crc32;
+    afxUnit         baseEntryIdx;
+    afxUnit         entryCnt;
+    void*           idd;
 };
 
 AFX_DEFINE_STRUCT(avxLigatureConfig)
 {
-    afxUnit         shaderCnt;
-    avxShader*      shaders;
+    afxFlags        flags;
+    afxUnit         pushCnt;
+    avxPushRange    pushes[AVX_MAX_PUSH_RANGES];
+    afxUnit         pointCnt;
+    avxLigament     points[AVX_MAX_LIGAMENTS];
+    afxUnit         setCnt;
+    avxLigatureSet  sets[AVX_MAX_LIGATURE_SETS];
     afxString       tag;
+    void*           udd;
 };
 
 AVX afxUnit32       AvxGetLigatureHash(avxLigature liga, afxUnit set);
 
-AVX afxResult       AvxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex first, afxUnit cnt, avxLigatureEntry decl[]);
+AVX afxResult       AvxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex first, afxUnit cnt, avxLigament decl[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AvxDeclareLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[]);
+AVX afxError        AvxAcquireLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[]);
+
+AVX afxError        AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxShader shaders[], avxLigatureConfig* cfg);
 
 #endif//AVX_LIGATURE_H

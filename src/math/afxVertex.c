@@ -27,7 +27,7 @@ _AFXINL afxReal AfxGetDistanceBetweenV3d(afxV3d const v, afxV3d const other)
     AFX_ASSERT(other);
     afxV3d t;
     AfxV3dSub(t, v, other);
-    AfxSqrtV3d(t, t);
+    AfxV3dSqrt(t, t);
     return AfxSqrtf(AfxV3dSum(t));
 }
 
@@ -225,7 +225,7 @@ _AFXINL void AfxReflectV2d(afxV2d v, afxV2d const incident, afxV2d const normal)
 
     AfxFillV2d(v, AfxV2dDot(incident, normal));
     AfxV2dAdd(v, v, v);
-    AfxResubV2d(v, v, normal, incident);
+    AfxV2dResub(v, v, normal, incident);
 }
 
 _AFXINL void AfxReflectV3d(afxV3d v, afxV3d const incident, afxV3d const normal)
@@ -239,7 +239,7 @@ _AFXINL void AfxReflectV3d(afxV3d v, afxV3d const incident, afxV3d const normal)
 
     AfxFillV3d(v, AfxV3dDot(incident, normal));
     AfxV3dAdd(v, v, v);
-    AfxResubV3d(v, v, normal, incident);
+    AfxV3dResub(v, v, normal, incident);
 }
 
 _AFXINL void AfxReflectV4d(afxV4d v, afxV3d const incident, afxV3d const normal)
@@ -253,7 +253,7 @@ _AFXINL void AfxReflectV4d(afxV4d v, afxV3d const incident, afxV3d const normal)
 
     AfxFillV4d(v, AfxV3dDot(incident, normal));
     AfxV4dAdd(v, v, v);
-    AfxResubV4d(v, v, normal, incident);
+    AfxV4dResub(v, v, normal, incident);
 }
 
 // Refract
@@ -273,10 +273,10 @@ _AFXINL void AfxRefractV2d(afxV2d v, afxV2d const incident, afxV2d const normal,
     // R = 1.0f - refracIdx * refracIdx * (1.0f - IDotN * IDotN)
 
     afxV2d R;
-    AfxResubV2d(R, dot, dot, AFX_V2D_ONE);
+    AfxV2dResub(R, dot, dot, AFX_V2D_ONE);
     afxV2d const riv = { refracIdx, refracIdx };
     AfxV2dMultiply(R, R, riv);
-    AfxResubV2d(R, R, riv, AFX_V2D_ONE);
+    AfxV2dResub(R, R, riv, AFX_V2D_ONE);
 
     if (AfxV2dIsLessOrEqual(R, AFX_V2D_ZERO))
     {
@@ -287,12 +287,12 @@ _AFXINL void AfxRefractV2d(afxV2d v, afxV2d const incident, afxV2d const normal,
     {
         // R = refracIdx * dot + sqrt(R)
 
-        AfxSqrtV2d(R, R);
+        AfxV2dSqrt(R, R);
         AfxV2dMad(R, riv, dot, R);
 
         // v = refracIdx * incident - normal * R
         AfxV2dMultiply(v, riv, incident);
-        AfxResubV2d(v, normal, R, v);
+        AfxV2dResub(v, normal, R, v);
     }
 }
 
@@ -311,10 +311,10 @@ _AFXINL void AfxRefractV3d(afxV3d v, afxV3d const incident, afxV3d const normal,
     // R = 1.0f - refracIdx * refracIdx * (1.0f - IDotN * IDotN)
 
     afxV3d R;
-    AfxResubV3d(R, dot, dot, AFX_V3D_ONE);
+    AfxV3dResub(R, dot, dot, AFX_V3D_ONE);
     afxV3d const riv = { refracIdx, refracIdx, refracIdx };
     AfxV3dMultiply(R, R, riv);
-    AfxResubV3d(R, R, riv, AFX_V3D_ONE);
+    AfxV3dResub(R, R, riv, AFX_V3D_ONE);
 
     if (AfxV3dIsLessOrEqual(R, AFX_V3D_ZERO))
     {
@@ -325,12 +325,12 @@ _AFXINL void AfxRefractV3d(afxV3d v, afxV3d const incident, afxV3d const normal,
     {
         // R = refracIdx * dot + sqrt(R)
 
-        AfxSqrtV3d(R, R);
+        AfxV3dSqrt(R, R);
         AfxV3dMad(R, riv, dot, R);
 
         // v = refracIdx * incident - normal * R
         AfxV3dMultiply(v, riv, incident);
-        AfxResubV3d(v, normal, R, v);
+        AfxV3dResub(v, normal, R, v);
     }
 }
 
@@ -349,10 +349,10 @@ _AFXINL void AfxRefractV4d(afxV4d v, afxV3d const incident, afxV3d const normal,
     // R = 1.0f - refracIdx * refracIdx * (1.0f - IDotN * IDotN)
 
     afxV4d R;
-    AfxResubV4d(R, dot, dot, AFX_V4D_ONE);
+    AfxV4dResub(R, dot, dot, AFX_V4D_ONE);
     afxV4d const riv = { refracIdx, refracIdx, refracIdx, refracIdx };
     AfxV4dMultiply(R, R, riv);
-    AfxResubV4d(R, R, riv, AFX_V4D_ONE);
+    AfxV4dResub(R, R, riv, AFX_V4D_ONE);
 
     if (AfxV4dIsLessOrEqual(R, AFX_V4D_ZERO))
     {
@@ -363,11 +363,11 @@ _AFXINL void AfxRefractV4d(afxV4d v, afxV3d const incident, afxV3d const normal,
     {
         // R = refracIdx * dot + sqrt(R)
 
-        AfxSqrtV4d(R, R);
+        AfxV4dSqrt(R, R);
         AfxV4dMad(R, riv, dot, R);
 
         // v = refracIdx * incident - normal * R
         AfxV4dMultiply(v, riv, incident);
-        AfxResubV4d(v, normal, R, v);
+        AfxV4dResub(v, normal, R, v);
     }
 }

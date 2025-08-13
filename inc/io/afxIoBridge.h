@@ -20,14 +20,14 @@
 #include "qwadro/inc/exec/afxDevice.h"
 #include "qwadro/inc/io/afxFile.h"
 
-typedef enum afxIoPortFlag
+typedef enum afxIoCap
 {
-    afxIoPortFlag_      = AFX_BITMASK(0),
-} afxIoPortFlags;
+    afxIoCap_           = AFX_BITMASK(0),
+} afxIoCaps;
 
 AFX_DEFINE_STRUCT(afxIoPortCaps)
 {
-    afxIoPortFlags      capabilites;
+    afxIoCaps           capabilites;
     afxUnit             minQueCnt; // usually 3
     afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
     afxAcceleration     acceleration;
@@ -40,7 +40,7 @@ AFX_DEFINE_STRUCT(afxIoPortCaps)
 AFX_DEFINE_STRUCT(afxIoBridgeConfig)
 {
     afxUnit             devId;
-    afxIoPortFlags      capabilities;
+    afxIoCaps           capabilities;
     afxUnit             minQueCnt;
     afxReal const*      queuePriority;
 };

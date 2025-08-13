@@ -43,7 +43,7 @@ _AUX afxBool AfxGetSession(afxSession* session)
     return !!ses;
 }
 
-_AUX afxTime AfxPollInput(afxFlags flags, afxTime timeout)
+_AUX afxTime AfxPollInput(afxFlags flags, afxUnit64 timeout)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -54,7 +54,7 @@ _AUX afxTime AfxPollInput(afxFlags flags, afxTime timeout)
     afxTime first, last, dt;
     AfxGetTime(&first);
 
-    ses->pimpl->pump(ses, 0, timeout);
+    ses->pimpl->pumpCb(ses, 0, timeout);
 
     dt = (AfxGetTime(&last) - first);
 
@@ -68,7 +68,7 @@ _AUX afxBool AfxHasClipboardContent(afxFlags flags)
     afxSession ses;
     if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
-    return ses->pimpl->hasClipContent(ses, flags);
+    return ses->pimpl->hasClipboardCb(ses, flags);
 }
 
 _AUX afxUnit AfxGetClipboardContent(afxString* buf)
@@ -78,7 +78,7 @@ _AUX afxUnit AfxGetClipboardContent(afxString* buf)
     afxSession ses;
     if (!AfxGetSession(&ses)) return 0;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
-    return ses->pimpl->getClipContent(ses, buf);
+    return ses->pimpl->getClipboardCb(ses, buf);
 }
 
 _AUX afxError AfxSetClipboardContent(afxString const* text)
@@ -89,7 +89,7 @@ _AUX afxError AfxSetClipboardContent(afxString const* text)
     if (!AfxGetSession(&ses)) return err;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
         
-    if (ses->pimpl->setClipContent(ses, text))
+    if (ses->pimpl->setClipboardCb(ses, text))
         AfxThrowError();
 
     return err;
@@ -136,7 +136,7 @@ _AUX afxBool AfxGetCursorPlacement(afxRect* rc, afxWindow wnd, afxRect* onFrame,
     return rslt;
 }
 
-_AUX afxError AfxImmergeWindow(afxWindow wnd, afxBool fullscreen)
+_AUX afxError AfxMakeWindowExclusive(afxWindow wnd, afxBool fullscreen)
 {
     afxError err = AFX_ERR_NONE;
     afxSession ses;
@@ -153,18 +153,18 @@ _AUX afxError AfxImmergeWindow(afxWindow wnd, afxBool fullscreen)
 
         if (!fullscreen && wnd->fullscreen)
         {
-            ses->pimpl->immerge(ses, wnd, FALSE);
+            ses->pimpl->fseCb(ses, wnd, FALSE);
             wnd->fullscreen = FALSE;
         }
         else
         {
-            ses->pimpl->immerge(ses, wnd, fullscreen);
+            ses->pimpl->fseCb(ses, wnd, fullscreen);
             wnd->fullscreen = TRUE;
         }
     }
     else
     {
-        ses->pimpl->immerge(ses, NIL, FALSE);
+        ses->pimpl->fseCb(ses, NIL, FALSE);
     }
     return err;
 }
@@ -306,6 +306,8 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
         AfxMountClass(&ses->xssCls, NIL, &ses->classes, &clsCfg);
     }
 
+    AfxMakeString4096(&ses->clipb, NIL);
+
     ses->focusedWnd = NIL;
     ses->cursCapturedOn = NIL;
 
@@ -373,9 +375,9 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
             if (sdevId != AFX_INVALID_INDEX)
             {
                 afxMixSystemConfig sccfg;
-                AfxConfigureMixSystem(sdevId, &sccfg);
+                AmxConfigureMixSystem(sdevId, &sccfg);
 
-                if (AfxEstablishMixSystem(sdevId, &sccfg, &ssys))
+                if (AmxEstablishMixSystem(sdevId, &sccfg, &ssys))
                     AfxThrowError();
             }
             ses->ssys = ssys;

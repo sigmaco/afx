@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\qwadro\inc\sim\afxOctree.h" />
+    <ClInclude Include="..\..\..\qwadro\inc\sim\afxQuadtree.h" />
     <ClInclude Include="..\..\..\qwadro\inc\sim\io\afxCurve.h" />
     <ClInclude Include="..\..\..\qwadro\inc\sim\io\asxBuffer.h" />
     <ClInclude Include="..\..\inc\sim\afxCapstan.h" />
@@ -33,6 +35,7 @@
     <ClInclude Include="..\..\inc\sim\body\afxBody.h" />
     <ClInclude Include="..\..\inc\sim\body\afxCollision.h" />
     <ClInclude Include="..\..\inc\sim\body\afxMaterial.h" />
+    <ClInclude Include="..\..\inc\sim\body\afxMorphology.h" />
     <ClInclude Include="..\..\inc\sim\body\afxPlacement.h" />
     <ClInclude Include="..\..\inc\sim\body\afxPose.h" />
     <ClInclude Include="..\..\inc\sim\io\afxAnimation.h" />
@@ -45,6 +48,11 @@
     <ClInclude Include="..\..\inc\sim\op\afxMiscOps.h" />
     <ClInclude Include="..\..\inc\sim\op\afxPoseOps.h" />
     <ClInclude Include="..\..\inc\sim\op\afxSampleContext.h" />
+    <ClInclude Include="..\..\inc\sim\render\arxRenderable.h" />
+    <ClInclude Include="..\..\inc\sim\render\arxRenderableTerrain.h" />
+    <ClInclude Include="..\..\inc\sim\render\arxRenderableModel.h" />
+    <ClInclude Include="..\..\inc\sim\render\arxRenderableBody.h" />
+    <ClInclude Include="..\..\inc\sim\render\arxRenderContext.h" />
     <ClInclude Include="..\..\src\sim\impl\asxImplementation.h" />
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Animation.h" />
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Body.h" />
@@ -53,6 +61,7 @@
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Executor.h" />
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Model.h" />
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Simulation.h" />
+    <ClInclude Include="..\..\src\sim\impl\asxImpl_Memory.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +76,8 @@
     <ClCompile Include="..\..\src\sim\afxCapstan.c" />
     <ClCompile Include="..\..\src\sim\afxEngine.c" />
     <ClCompile Include="..\..\src\sim\afxNode.c" />
+    <ClCompile Include="..\..\src\sim\afxOctree.c" />
+    <ClCompile Include="..\..\src\sim\afxQuadtree.c" />
     <ClCompile Include="..\..\src\sim\afxSampleContext.c" />
     <ClCompile Include="..\..\src\sim\afxSimBridge.c" />
     <ClCompile Include="..\..\src\sim\afxSimQueue.c" />
@@ -79,12 +90,14 @@
     <ClCompile Include="..\..\src\sim\body\afxBody.c" />
     <ClCompile Include="..\..\src\sim\body\afxCollision.c" />
     <ClCompile Include="..\..\src\sim\body\afxMaterial.c" />
+    <ClCompile Include="..\..\src\sim\body\afxMorphology.c" />
     <ClCompile Include="..\..\src\sim\body\afxPlacement.c" />
     <ClCompile Include="..\..\src\sim\body\afxPose.c" />
     <ClCompile Include="..\..\src\sim\body\afxXmd.c" />
     <ClCompile Include="..\..\src\sim\impl\asxImplementation.c" />
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Context.c" />
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Executor.c" />
+    <ClCompile Include="..\..\src\sim\impl\asxImpl_Memory.c" />
     <ClCompile Include="..\..\src\sim\io\afxAnimation.c" />
     <ClCompile Include="..\..\src\sim\io\afxAnimationIo.c" />
     <ClCompile Include="..\..\src\sim\io\afxCurve.c" />
@@ -96,9 +109,13 @@
     <ClCompile Include="..\..\src\sim\io\afxScene.c" />
     <ClCompile Include="..\..\src\sim\io\afxTriangulation.c" />
     <ClCompile Include="..\..\src\sim\io\asxBuffer.c" />
-    <ClCompile Include="..\..\src\sim\op\afxMeshBufferization.c" />
+    <ClCompile Include="..\..\src\sim\op\arxRenderableModel.c" />
     <ClCompile Include="..\..\src\sim\op\afxMiscOps.c" />
     <ClCompile Include="..\..\src\sim\op\afxPoseOps.c" />
+    <ClCompile Include="..\..\src\sim\render\arxRenderableTerrain.c" />
+    <ClCompile Include="..\..\src\sim\render\arxRenderable.c" />
+    <ClCompile Include="..\..\src\sim\render\arxRenderableBody.c" />
+    <ClCompile Include="..\..\src\sim\render\arxRenderContext.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -148,19 +165,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)..\qwd\w$(PlatformArchitecture)d\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)..\qwd\w$(PlatformArchitecture)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)..\qwd\w$(PlatformArchitecture)d\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)..\qwd\w$(PlatformArchitecture)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

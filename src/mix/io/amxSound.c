@@ -18,7 +18,7 @@
 #define _AMX_AUDIO_C
 #define _AMX_MIX_C
 //#define _AMX_MIX_SYSTEM_C
-#include "../impl/amxImplementation.h"
+#include "../ddi/amxImplementation.h"
 
 _AMX void AmxTransformSound(amxSound snd, afxTransform const* t)
 {
@@ -140,7 +140,7 @@ _AMX afxError AmxDoSound(afxMixSystem msys, amxSoundInfo const* info, afxUnit* s
     AFX_ASSERT(info);
 
     amxSound snd;
-    afxClass* cls = (afxClass*)_AmxGetSoundClass(msys);
+    afxClass* cls = (afxClass*)_AmxMsysGetSndClass(msys);
     AFX_ASSERT_CLASS(cls, afxFcc_SND);    
     if (AfxAcquireObjects(cls, 1, (afxObject)&snd, (void const*[]) { msys, info }))
     {

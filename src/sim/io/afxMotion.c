@@ -77,7 +77,7 @@ _ASXINL afxBool AfxFindMotionVector(afxMotion mot, afxString const* seqId, afxUn
     afxBool rslt = FALSE;
     afxUnit vecCnt = mot->vecCnt;
 
-    afxStringBase strb = _AsxGetMorphTagStringBase(AfxGetProvider(mot));
+    afxStringBase strb = _AsxSimGetAnimUrnStringBase(AfxGetProvider(mot));
 
     for (afxUnit i = 0; i < vecCnt; i++)
     {
@@ -142,7 +142,7 @@ _ASX afxError _AsxMotCtorCb(afxMotion mot, void** args, afxUnit invokeNo)
     afxMotionBlueprint const* motb = args[1];
     motb += invokeNo;
 
-    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &motb->id.s, &mot->id))
+    if (!AfxCatalogStrings(_AsxSimGetAnimUrnStringBase(sim), 1, &motb->id.s, &mot->id))
         AfxThrowError();
 
     afxUnit vecCnt = motb->vecCnt;
@@ -172,7 +172,7 @@ _ASX afxError _AsxMotCtorCb(afxMotion mot, void** args, afxUnit invokeNo)
         for (afxUnit i = 0; i < vecCnt; i++)
             AfxResetStrings(1, &mot->vectors[i]);
     }
-    else if (!AfxCatalogStrings(_AsxGetMorphTagStringBase(sim), vecCnt, motb->vectors, mot->vectors)) // AfxRegisterMorphTags is temp
+    else if (!AfxCatalogStrings(_AsxSimGetAnimUrnStringBase(sim), vecCnt, motb->vectors, mot->vectors)) // AfxRegisterMorphTags is temp
         AfxThrowError();
 
     if ((mot->vecCnt = vecCnt))
@@ -194,7 +194,7 @@ _ASX afxError _AsxMotCtorCb(afxMotion mot, void** args, afxUnit invokeNo)
         for (afxUnit i = 0; i < pivotCnt; i++)
             AfxResetStrings(1, &mot->pivots[i]);
     }
-    else if (!AfxCatalogStrings(_AsxGetPivotTagStringBase(sim), pivotCnt, motb->pivots, mot->pivots))
+    else if (!AfxCatalogStrings(_AsxSimGetAnimUrnStringBase(sim), pivotCnt, motb->pivots, mot->pivots))
         AfxThrowError();
 
     if ((mot->pivotCnt = pivotCnt))

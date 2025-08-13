@@ -462,8 +462,9 @@ _AFX afxUnit AfxFindFiles(afxUri const* pattern, afxFileFlags flags, afxBool(*ca
                 else
                 {
                     struct stat st;
+                    int statRslt = stat(resolvedUrl.uri.s.start, &(st));
 
-                    if (!stat(resolvedUrl.uri.s.start, &(st)) || (ioPerms & afxFileFlag_W) || hasWildcard)
+                    if (!statRslt || (ioPerms & afxFileFlag_W) || hasWildcard)
                     {
                         if (((st.st_mode & flagsToTest) == flagsToTest) || ioPerms & afxFileFlag_W || hasWildcard)
                         {

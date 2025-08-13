@@ -17,201 +17,8 @@
 #define _AFX_DRAW_C
 #define _AVX_SCENE_C
 #include "../impl/asxImplementation.h"
-#include "../../draw/impl/avxImplementation.h"
+#include "../../draw/ddi/avxImplementation.h"
 #include "qwadro/inc/sim/io/afxScene.h"
-
-/*
-    An Octree is a tree data structure that is commonly used to partition a three-dimensional space by recursively 
-    subdividing it into eight smaller regions (octants).
-
-    An octant is one of the eight divisions of a three-dimensional coordinate system defined by the signs of the coordinates.
-*/
-
-AFX_DEFINE_STRUCT(afxOctant)
-{
-    afxBox      bounds;
-    afxUnit     childIdx[8]; // child octant's index
-    afxUnit     parentIdx; // parent octant's index
-    afxChain    contents;
-};
-
-AFX_DEFINE_STRUCT(afxOctree)
-{
-    afxOctant   root; // root octant --- always exist
-    afxPool     octants;
-    afxBox      (*calc)(void* content);
-};
-
-ASX void AfxDeployOctree(afxOctree* tree, afxBox* bounds)
-{
-    tree->root.bounds = *bounds;
-    tree->root.parentIdx = AFX_INVALID_INDEX;
-
-    for (afxUnit i = 0; i < /* it is always a octree*/ 8; i++)
-        tree->root.childIdx[i] = AFX_INVALID_INDEX;
-
-    AfxDeployChain(&tree->root.contents, tree);
-    AfxDeployPool(&tree->octants, sizeof(afxOctant), /* it is always a octree*/ 8, AFX_SIMD_ALIGNMENT);
-}
-
-ASX afxError AfxSubdivideOctree(afxOctree* tree, afxUnit octantIdx)
-// Subdivide the node into 8 octants
-{
-    afxError err = NIL;
-
-    afxOctant* node = NIL;
-    AfxGetPoolUnit(&tree->octants, octantIdx, (void**)&node);
-    AFX_ASSERT(node);
-
-    if (node->childIdx[0] != AFX_INVALID_INDEX)
-    {
-        AfxThrowError();
-        return err;
-    }
-
-    afxReal midX = (node->bounds.min[0] + node->bounds.max[0]) / 2;
-    afxReal midY = (node->bounds.min[1] + node->bounds.max[1]) / 2;
-    afxReal midZ = (node->bounds.min[2] + node->bounds.max[2]) / 2;
-
-    afxBox bounds[8];
-    for (afxUnit i = 0; i < 8; i++)
-    {
-        if (i & 1) bounds[i].min[0] = midX;
-        else bounds[i].max[0] = midX;
-        if (i & 2) bounds[i].min[1] = midY;
-        else bounds[i].max[1] = midY;
-        if (i & 4) bounds[i].min[2] = midZ;
-        else bounds[i].max[2] = midZ;
-    }
-
-    // Create the 8 new children with updated bounding boxes
-    for (afxUnit i = 0; i < 8; i++)
-    {
-        afxSize childIdx;
-        afxOctant* child = NIL;
-        if (!(AfxRequestPoolUnits(&tree->octants, 1, &childIdx, &child)))
-        {
-            AfxThrowError();
-
-            for (afxUnit j = i; j-- > 0;)
-            {
-                childIdx = j;
-                // TODO: Fix this shit
-                AfxReclaimPoolUnits(&tree->octants, 1, &child);
-                node->childIdx[j] = AFX_INVALID_INDEX;
-            }
-            break;
-        }
-
-        child->bounds = bounds[i];
-
-        child->parentIdx = octantIdx;
-        for (afxUnit j = 0; j < 8; j++)
-            child->childIdx[j] = AFX_INVALID_INDEX;
-
-        AfxDeployChain(&child->contents, child);
-
-        node->childIdx[i] = childIdx;
-    }
-    return err;
-}
-
-// Function to insert an AABB into the Octree
-void AfxOctreeInsertAabbs(afxOctree* tree, afxUnit octantIdx, afxBox* box)
-{
-    afxError err = NIL;
-
-    // expand the tree if it does not fit.
-    AfxEmboxAabbs(&tree->root.bounds, 1, box);
-
-    afxOctant* node = NIL;
-    if (octantIdx == AFX_INVALID_INDEX) node = &tree->root;
-    else
-    {
-        AfxGetPoolUnit(&tree->octants, octantIdx, (void**)&node);
-        AFX_ASSERT(node);
-    }
-
-    // Check if the AABB intersects with the node's bounding box. No intersection, don't insert.
-    if (!AfxDoesAabbInclude(&node->bounds, 1, box))
-        return;
-
-    // If the node doesn't have children, check if it's time to subdivide
-    if (node->childIdx[0] == AFX_INVALID_INDEX)
-        if (AfxSubdivideOctree(tree, octantIdx))
-            AfxThrowError();
-
-    // Insert the AABB into the children or store it in the node itself
-    afxBool inserted = FALSE;
-    for (afxUnit i = 0; i < 8; i++)
-    {
-        afxOctant* child = NIL;
-        afxSize childIdx = node->childIdx[i];
-        if (!AfxGetPoolUnit(&tree->octants, childIdx, (void**)&child))
-        {
-            AfxThrowError();
-            break;
-        }
-        
-        if (AfxDoesAabbInclude(&child->bounds, 1, box))
-        {
-            AfxOctreeInsertAabbs(tree, childIdx, box);  // Insert into the appropriate child
-            inserted = TRUE;
-        }
-    }
-
-    // If the AABB is completely inside the node (and doesn't span children),
-    // you could store it at the node's level (depending on your use case).
-    // For now, we don't store data at the node level in this example.
-
-    AFX_ASSERT(inserted);
-}
-
-void AfxOctreeInsertAtv3d(afxOctree* tree, afxUnit octantIdx, afxV3d p)
-// Insert a point into the Octree
-{
-    afxError err = NIL;
-
-    afxOctant* node = NIL;
-    if (octantIdx == AFX_INVALID_INDEX) node = &tree->root;
-    else
-    {
-        AfxGetPoolUnit(&tree->octants, octantIdx, (void**)&node);
-        AFX_ASSERT(node);
-    }
-
-    // If the point is outside the bounding box, do not insert
-    if (!AfxDoesAabbIncludeAtv3d(&node->bounds, 1, p)) return;
-
-    // If the node doesn't have children, check if it's time to subdivide
-    if (node->childIdx[0] == AFX_INVALID_INDEX)
-        if (AfxSubdivideOctree(tree, octantIdx))
-            AfxThrowError();
-
-    // Insert the AABB into the children or store it in the node itself
-    afxBool inserted = FALSE;
-    for (afxUnit i = 0; i < 8; i++)
-    {
-        afxOctant* child = NIL;
-        afxSize childIdx = node->childIdx[i];
-        if (!AfxGetPoolUnit(&tree->octants, childIdx, (void**)&child))
-        {
-            AfxThrowError();
-            break;
-        }
-
-        if (AfxDoesAabbIncludeAtv3d(&child->bounds, 1, p))
-        {
-            AfxOctreeInsertAabbs(tree, childIdx, p);  // Insert into the appropriate child
-            inserted = TRUE;
-            break;
-        }
-    }
-
-    AFX_ASSERT(inserted);
-}
-
-
 
 AFX_OBJECT(afxScene)
 {
@@ -337,7 +144,7 @@ _ASX afxError AfxReloadSkyVisual(afxScene scn, afxUri const* uri)
 
         avxRasterInfo rasi = { 0 };
         rasi.flags = avxRasterFlag_CUBEMAP;
-        rasi.usage = avxRasterUsage_RESAMPLE;
+        rasi.usage = avxRasterUsage_TEXTURE;
         rasi.extent.d = 6;
 
         afxStream file = NIL;
@@ -368,10 +175,10 @@ _ASX afxError AfxReloadSkyVisual(afxScene scn, afxUri const* uri)
             {
                 avxRasterIo iop = { 0 };
 
-                if (AvxFetchRaster(cubemap, &urib.uri, 1, &iop, 0, portId)) AfxThrowError();
+                if (AvxFetchRaster(cubemap, 1, &iop, 0, &urib.uri, portId)) AfxThrowError();
                 else
                 {
-                    AvxWaitForDrawBridges(dsys, portId, AFX_TIME_INFINITE);
+                    AvxWaitForDrawBridges(dsys, AFX_TIMEOUT_INFINITE, portId);
                 }
             }
         }
@@ -482,7 +289,7 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
 
         avxRasterInfo rasi = { 0 };
         rasi.flags = avxRasterFlag_CUBEMAP;
-        rasi.usage = avxRasterUsage_RESAMPLE;
+        rasi.usage = avxRasterUsage_TEXTURE;
 
         scn->sky.cubemap = AvxLoadCubemapRaster(dsys, &rasi, &cubeDir, facesUri);
         //AfxFlipRaster(sky->cubemap, FALSE, TRUE);
@@ -497,23 +304,8 @@ _ASX afxError _AsxScnCtorCb(afxScene scn, void** args, afxUnit invokeNo)
         avxVertexLayout skyVtxl =
         {
             .srcCnt = 1,
-            .srcs =
-            {
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 0
-                }
-            },
-            .attrCnt = 1,
-            .attrs =
-            {
-                {
-                    .location = 0,
-                    .srcIdx = 0,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                }
-            }
+            .srcs = { AVX_VERTEX_FETCH(0, 0, 0, 0, 1) },
+            .attrs = { AVX_VERTEX_ATTR(0, 0, avxFormat_RGB32f) }
         };
 
         AvxDeclareVertexInputs(dsys, 1, &skyVtxl, &scn->sky.skyVin);

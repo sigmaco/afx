@@ -299,75 +299,125 @@ typedef enum avxFormat
 typedef enum avxFormatType
 {
     avxFormatType_UNK,
-    avxFormatType_UNUSED, // usually padding
-    avxFormatType_UN, // unsigned normalized
-    avxFormatType_SN, // signed normalized
-    avxFormatType_U, // unsigned int
-    avxFormatType_I, // signed int
-    avxFormatType_F, // (32-bit) single precision floating point
-    avxFormatType_SS, // signed scaled
-    avxFormatType_US, // unsigned scaled
-    avxFormatType_SFIXED, // fixed point
+    // Usually padding.
+    avxFormatType_UNUSED,
+    // Unsigned normalized.
+    avxFormatType_UN,
+    // Signed normalized.
+    avxFormatType_SN,
+    // Unsigned int.
+    avxFormatType_U,
+    // Signed int.
+    avxFormatType_I,
+    // Single precision floating point; (32-bit)
+    avxFormatType_F,
+    // Signed scaled.
+    avxFormatType_SS,
+    // Unsigned scaled.
+    avxFormatType_US,
+    // Fixed point.
+    avxFormatType_SFIXED,
 } avxFormatType;
 
 typedef enum avxFormatFlag
-// Flags specifying features supported by a format.
+// Bitmasl flags specifying characteristics of a data format.
 {
+    // Format supports color channels (e.g., RGBA).
     avxFormatFlag_COLOR         = AFX_BITMASK(0),
+    // Format supports depth data (e.g., for depth buffering).
     avxFormatFlag_DEPTH         = AFX_BITMASK(1),
+    // Format supports stencil data.
     avxFormatFlag_STENCIL       = AFX_BITMASK(2),
+    // Format includes luminance information.
     avxFormatFlag_LUMINANCE     = AFX_BITMASK(3),
+    // Format includes chrominance (color difference) info.
     avxFormatFlag_CHROMINANCE   = AFX_BITMASK(4),
-
+    // Format uses sRGB color space.
     avxFormatFlag_sRGB          = AFX_BITMASK(5),
+    // Format is compressed (e.g., DXT, ASTC).
     avxFormatFlag_COMPRESSED    = AFX_BITMASK(6),
-    avxFormatFlag_SUBSAMPLED    = AFX_BITMASK(7),
+    // Format supports or includes mipmaps.
+    avxFormatFlag_MIPMAPPED     = AFX_BITMASK(7),
+    // Data is normalized (e.g., unsigned/signed normalized).
     avxFormatFlag_NORMALIZED    = AFX_BITMASK(8),
 } avxFormatFlags;
 
 typedef enum avxFormatCap
-// Flags specifying usages/features supported by a format.
+// Bitmask flags specifying capabilities (or possible usages) of a data format,
+// essentially, how a format can be used, in contrast to avxFormatFlags, which describes what a format represents.
 {
+    // Copy operations.
+    // Can be used as a source for copy operations.
     avxFormatCap_COPY_SRC   = AFX_BITMASK(0),
+    // Can be used as a destination for copy operations.
     avxFormatCap_COPY_DST   = AFX_BITMASK(1),
     avxFormatCap_COPY       = (avxFormatCap_COPY_SRC | avxFormatCap_COPY_DST),
+
+    // Blitting (pixel transfer with format conversion or filtering).
     avxFormatCap_BLIT_SRC   = AFX_BITMASK(2),
     avxFormatCap_BLIT_DST   = AFX_BITMASK(3),
     avxFormatCap_BLIT       = (avxFormatCap_BLIT_SRC | avxFormatCap_BLIT_DST),
+
+    // Rendering and composition.
+    // Can be rendered to (as a render target).
     avxFormatCap_DRAW       = AFX_BITMASK(4),
+    // Supports blending.
     avxFormatCap_BLEND      = AFX_BITMASK(5),
     avxFormatCap_COMPOSE    = (avxFormatCap_DRAW | avxFormatCap_BLEND),
 
+    // Usable as a (read-only) sampled image/texture.
     avxFormatCap_RASTER     = AFX_BITMASK(6),
+    // Supports shader image fetch/load/store.
     avxFormatCap_IMAGE      = AFX_BITMASK(7),
-    avxFormatCap_TBO        = AFX_BITMASK(8),
-    avxFormatCap_STBO       = AFX_BITMASK(9),
+    // Usable as a (read-only) tensor fetch buffer, aka texel buffer.
+    avxFormatCap_FETCH      = AFX_BITMASK(8),
+    // Usable as a (RW) tensor buffer, aka storage texel buffer.
+    avxFormatCap_TENSOR     = AFX_BITMASK(9),
+    // Usable as vertex buffer format.
     avxFormatCap_VERTEX     = AFX_BITMASK(10),
 } avxFormatCaps;
 
 AFX_DEFINE_STRUCT(avxFormatDescription)
-/// Pixel format descriptor
+// Structure describing a data format; how data is laid out, interpreted, and how it can be used.
 {
-    afxUnit32       bpp; // bits per pixel
-    afxUnit32       stride; // bytes per pixel
-    afxUnit32       compCnt; // number of components
+    // Total bits per pixel (across all components). For compressed formats, this might be per block.
+    afxUnit32       bpp;
+    // Bytes per pixel (total size per element, including padding).
+    afxUnit32       stride;
+    // Number of actual components (1–4); e.g., 3 for RGB, 4 for RGBA.
+    afxUnit32       compCnt;
+    // Type of each component (e.g., UINT8, FLOAT32, etc.).
     avxFormatType   type[4];
-    afxUnit32       swizzle[4]; // swizzle per component
-    afxUnit32       defaults[4]; // Default values for missing components.
+    // Mapping of RGBA channels (e.g., {0,1,2,3} for identity).
+    afxUnit32       swizzle[4];
+    // Default values for missing components (e.g., Alpha = 1).
+    afxUnit32       defaults[4];
+    // Whether each component is normalized to [0,1] or [-1,1].
     afxBool         isNormalized[4];
-    afxReal         tof[4]; // To float scale factor
-    afxUnit32       bpc[4]; // bits per component
+    // To-float scale factor (e.g., for unnormalized integers).
+    afxReal         tof[4];
+    // Bits per component.
+    afxUnit32       bpc[4];
+    // Block-compression width/height (e.g., {4,4} for BC/DXT formats).
     afxUnit32       bcWh[2];
+    // What the format represents (e.g., COLOR, DEPTH, etc.).
     avxFormatFlags  flags;
+    // Capabilities as a sampled image/texture.
     avxFormatCaps   rasterCaps;
+    // Capabilities as a buffer (e.g., vertex, uniform, etc.).
     avxFormatCaps   bufferCaps;
+    // Human-readable name (e.g., "RGBA8_UNORM").
     afxString       name;
 };
 
 #if !0
-AVXINL void         AvxDescribeFormats(afxUnit cnt, avxFormat const formats[], avxFormatDescription pfd[]);
+AVX void            AvxDescribeFormats(afxUnit cnt, avxFormat const formats[], avxFormatDescription pfd[]);
 
-AVXINL afxUnit      AvxChooseFormats(avxFormatDescription const* pfd, afxUnit maxCnt, avxFormat formats[]);
+AVX afxUnit         AvxChooseFormats(avxFormatDescription const* pfd, afxUnit maxCnt, avxFormat formats[]);
+
+AVX void AvxConvertFormat(afxUnit32 rowSize, afxUnit32 rowCnt,
+    void const* srcBuffer, afxUnit32 rowStrideSrc, avxFormat srcFmt, avxFormat dstFmt,
+    void* dstBuffer, afxUnit32 rowStrideDst);
 
 AVXINL afxUnit      AfxGetBpp(avxFormat fmt);
 

@@ -14,7 +14,6 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-
 #define _ASX_DRAW_C
 #define _ASX_MATERIAL_C
 #include "../impl/asxImplementation.h"
@@ -90,7 +89,7 @@ _ASX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
         afxDrawSystem dsys = AvxGetDrawInputContext(din);
 
         avxRasterInfo rasi = { 0 };
-        rasi.usage = avxRasterUsage_RESAMPLE;
+        rasi.usage = avxRasterUsage_TEXTURE;
 
         if (AvxLoadRasters(dsys, 1, &rasi, &tex[0], &mtl->tex)) AfxThrowError();
         else
@@ -228,8 +227,8 @@ _ASX afxError _AsxMtlCtorCb(afxMaterial mtl, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MTL, 1, &mtl);
 
-    afxSimulation sim = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    afxMorphology morp = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
     afxString const* id = AFX_CAST(afxString const*, args[1]) + invokeNo;
     
     AfxCloneString(&mtl->urn, id);
@@ -312,84 +311,3 @@ _ASX afxClassConfig const _ASX_MTL_CLASS_CONFIG =
     .ctor = (void*)_AsxMtlCtorCb,
     .dtor = (void*)_AsxMtlDtorCb
 };
-
-////////////////////////////////////////////////////////////////////////////////
-// MASSIVE OPERATIONS                                                         //
-////////////////////////////////////////////////////////////////////////////////
-
-_ASX afxBool _AsxFindNamedMtlCb(afxMaterial mtl, void* udd)
-{
-    struct
-    {
-        afxUnit cnt;
-        afxString const* materials;
-        afxUnit* indices;
-        afxUnit rslt;
-    } *udd2 = udd;
-
-    afxUnit idx;
-    if (AfxCompareStrings(&mtl->urn, 0, TRUE, udd2->cnt, &udd2->materials[udd2->rslt], &idx))
-    {
-        udd2->indices[idx] = AfxGetObjectId(mtl);
-        ++udd2->rslt;
-    }
-}
-
-_ASX afxUnit AfxFindMaterialIndices(afxSimulation sim, afxUnit cnt, afxString const materials[], afxUnit indices[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-
-    afxClass* cls = (afxClass*)_AsxGetMaterialClass(sim);
-    AFX_ASSERT_CLASS(cls, afxFcc_MTL);
-
-    afxUnit rslt = 0;
-
-    struct
-    {
-        afxUnit cnt;
-        afxString const* materials;
-        afxUnit* indices;
-        afxUnit rslt;
-    }
-    udd2 =
-    {
-        .cnt = cnt,
-        .materials = materials,
-        .indices = indices,
-        .rslt = 0
-    };
-
-    rslt = AfxInvokeObjects(cls, 0, cnt, (void*)_AsxFindNamedMtlCb, &udd2);
-
-    return rslt;
-}
-
-_ASX afxError AfxDeclareMaterials(afxSimulation sim, afxUnit cnt, afxString const ids[], afxMaterial materials[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    AFX_ASSERT(materials);
-    AFX_ASSERT(ids);
-    AFX_ASSERT(cnt);
-
-    afxClass* cls = (afxClass*)_AsxGetMaterialClass(sim);
-    AFX_ASSERT_CLASS(cls, afxFcc_MTL);
-
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)materials, (void const*[]) { sim, ids }))
-    {
-        AfxThrowError();
-        return err;
-    }
-
-    return err;
-}
-
-_ASX afxUnit AfxEnumerateMaterials(afxSimulation sim, afxUnit first, afxUnit cnt, afxMaterial materials[])
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const* cls = _AsxGetMaterialClass(sim);
-    AFX_ASSERT_CLASS(cls, afxFcc_MTL);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)materials);
-}

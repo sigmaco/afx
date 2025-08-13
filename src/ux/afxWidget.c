@@ -48,11 +48,11 @@ _AUX afxError AfxTestWidget(afxWidget wid)
     return err;
 }
 
-_AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx)
+_AUX afxError AfxDrawWidget(afxWidget wid, afxWarp const whd, afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
-
+    wid->renderCb(wid, dctx);
     return err;
 }
 
@@ -74,10 +74,10 @@ _AUX afxError _AuxWidCtorCb(afxWidget wid, void** args, afxUnit invokeNo)
     afxWidgetConfig const* cfg = AFX_CAST(afxWidgetConfig const*, args[1]) + invokeNo;
     AFX_ASSERT(cfg);
 
-    afxDrawOutput dout;
+    afxSurface dout;
     AfxGetWindowDrawOutput(wnd, NIL, &dout);
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    afxDrawSystem dsys = AvxGetDrawOutputContext(dout);
+    afxDrawSystem dsys = AvxGetSurfaceSystem(dout);
 
     return err;
 }
@@ -99,7 +99,7 @@ _AUX afxError AfxAcquireWidgets(afxWindow wnd, afxUnit cnt, afxWidgetConfig cons
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
 
-    afxClass* cls = (afxClass*)_AuxWndGetWidgetClass(wnd);
+    afxClass* cls = (afxClass*)_AuxWndGetWidClass(wnd);
     AFX_ASSERT_CLASS(cls, afxFcc_WID);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)widgets, (void const*[]) { wnd, cfg }))

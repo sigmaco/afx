@@ -19,8 +19,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /*
-    In Qwadro, a windows is a graphical elements that allow users to interact with software applications. 
-    The concept of windows is fundamental to modern graphical user interfaces (GUIs), such as those used in desktop environments. 
+    In Qwadro, a window is a graphical elements that allow users to interact with software applications. 
+    The concept of window is fundamental to modern graphical user interfaces (GUIs), such as those used in desktop environments. 
     Each window typically represents a different application or document and can be resized, minimized, maximized, or closed. 
     Windows enable multitasking by displaying multiple applications on the screen at once.
     
@@ -35,7 +35,7 @@
 #define AUX_WINDOW_H
 
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/draw/math/avxViewport.h"
+#include "qwadro/inc/math/avxViewport.h"
 
 // our facade
 
@@ -49,12 +49,16 @@ typedef enum afxWindowFlag
 
 AFX_DEFINE_STRUCT(afxWindowConfig)
 {
-    afxRect             rc;
-    afxDrawSystem       dsys;
-    afxDrawOutputConfig frame;
-    afxDrawOutputConfig surface;
+    afxInt              atX;
+    afxInt              atY;
+    afxWindowFlags      flags;
+    afxString           title;
     afxBool             (*eventCb)(afxWindow, auxEvent*);
+    afxDrawSystem       dsys;
+    afxSurfaceConfig frame;
+    afxSurfaceConfig area;
     void*               udd;
+    afxString           tag;
 };
 
 AFX_DEFINE_STRUCT(afxStyle)
@@ -97,15 +101,15 @@ AUX afxError        AfxAdjustWindow
 );
 
 /*
-    The AfxGetWindowDrawOutput() function retrieves the afxDrawOutput for the entire afxWindow, including title bar, menus, and scroll bars. 
-    A afxWindow-owned afxDrawOutput permits painting anywhere in a window, because the origin of the afxDrawOutput is the upper-left corner of the afxWindow instead of the surface (aka client area).
+    The AfxGetWindowDrawOutput() function retrieves the afxSurface for the entire afxWindow, including title bar, menus, and scroll bars. 
+    A afxWindow-owned afxSurface permits painting anywhere in a window, because the origin of the afxSurface is the upper-left corner of the afxWindow instead of the surface (aka client area).
 
-    The AfxGetSurfaceDrawOutput() function retrieves a handle to a afxDrawOutput for the surface (aka client area) of a specified afxWindow or for the entire screen. 
-    You can use the returned handle in subsequent draw system functions to draw in the afxDrawOutput. 
-    The afxDrawOutput is an opaque data structure, whose values are used internally by Qwadro Draw I/O System.
+    The AfxGetSurfaceDrawOutput() function retrieves a handle to a afxSurface for the surface (aka client area) of a specified afxWindow or for the entire screen. 
+    You can use the returned handle in subsequent draw system functions to draw in the afxSurface. 
+    The afxSurface is an opaque data structure, whose values are used internally by Qwadro Draw I/O System.
 */
 
-AUX afxMask AfxGetWindowDrawOutput(afxWindow wnd, afxDrawOutput* frame, afxDrawOutput* surface);
+AUX afxMask AfxGetWindowDrawOutput(afxWindow wnd, afxSurface* frame, afxSurface* surface);
 
 /*
     The AfxTraceScreenToSurface() function converts the screen coordinates of a specified point on the screen to surface coordinates.

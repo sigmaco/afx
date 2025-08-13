@@ -38,6 +38,10 @@
     The attachments can be used as input attachments in the fragment shader in a later subpass of the same draw scope.
 */
 
+// Shaders are "potentially" relinkable to absorb capabilities of using separate shaders in other APIs.
+// At first, it is though that instead of using it in the command buffer, we relink shaders into a pipeline.
+// This is really not defined yet. There is a thinking about avxVertexInput too.
+
 // Front facing and cull mode should not have effect no point and lines.
 
 #ifndef AVX_PIPELINE_H
@@ -47,7 +51,7 @@
 #include "qwadro/inc/io/afxUri.h"
 #include "qwadro/inc/base/afxFixedString.h"
 #include "qwadro/inc/draw/io/avxFormat.h"
-#include "qwadro/inc/draw/math/avxColor.h"
+#include "qwadro/inc/math/avxColor.h"
 #include "qwadro/inc/base/afxFixedString.h"
 
 #define AVX_MAX_SHADER_SPECIALIZATIONS (16)
@@ -206,21 +210,6 @@ typedef enum avxColorMask
     avxColorMask_RGB = avxColorMask_RG | avxColorMask_B,
     avxColorMask_RGBA = avxColorMask_RGB | avxColorMask_A
 } avxColorMask;
-
-AFX_DEFINE_STRUCT(avxShaderSpecialization)
-// Structure specifying specialized shader linking into a pipeline.
-{
-    avxShader       shd;
-    avxShaderType   stage;
-    afxString       entryPoint;
-    afxString       constNames[AVX_MAX_SHADER_SPECIALIZATIONS];
-    union
-    {
-        afxUnit     datau;
-        afxInt      datai;
-        afxReal     dataf;
-    }               constValues[AVX_MAX_SHADER_SPECIALIZATIONS];
-};
 
 AFX_DEFINE_STRUCT(avxStencilInfo)
 // Structure specifying stencil operation state.
@@ -543,6 +532,8 @@ AFX_DECLARE_STRUCT(avxRasterizer)
 AFX_DEFINE_STRUCT(avxPipelineBlueprint)
 {
     afxString           tag;
+    void*               udd;
+
     afxUnit             stageCnt;
     afxUnit             specializedWorkGrpSiz[3];
     
@@ -647,6 +638,21 @@ AVX afxUnit             AvxGetPipelineShaders(avxPipeline pip, afxIndex first, a
 
 AVX afxBool             AvxGetPipelineLigature(avxPipeline pip, avxLigature* ligature);
 AVX afxBool             AvxGetPipelineVertexInput(avxPipeline pip, avxVertexInput* input);
+
+AFX_DEFINE_STRUCT(avxShaderSpecialization)
+// Structure specifying specialized shader linking into a pipeline.
+{
+    avxShader       shd;
+    avxShaderType   stage;
+    afxString       entryPoint;
+    afxString       constNames[AVX_MAX_SHADER_SPECIALIZATIONS];
+    union
+    {
+        afxUnit     datau;
+        afxInt      datai;
+        afxReal     dataf;
+    }               constValues[AVX_MAX_SHADER_SPECIALIZATIONS];
+};
 
 AVX afxError            AvxRelinkPipelineFunction(avxPipeline pip, avxShaderType stage, avxShader shd, afxString const* fn, afxUnit const specIds[], void const* specValues[]);
 AVX afxError            AvxUplinkPipelineFunction(avxPipeline pip, avxShaderType stage, afxUri const* uri, afxString const* fn, afxUnit const specIds[], void const* specValues[]);

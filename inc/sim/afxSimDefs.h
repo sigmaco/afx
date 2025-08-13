@@ -81,14 +81,16 @@ AFX_DEFINE_HANDLE(afxPose);
 AFX_DEFINE_HANDLE(afxSkeleton);
 
 AFX_DEFINE_HANDLE(afxMaterial);
+AFX_DEFINE_HANDLE(afxMorphology);
 AFX_DEFINE_HANDLE(afxModel);
 
 AFX_DEFINE_HANDLE(asxBuffer);
 
+// TODO make akxTrackMask a class object.
 AFX_DEFINE_STRUCT(akxTrackMask)
 {
     afxReal     defWeight;
-    afxUnit      boneCnt;
+    afxUnit     boneCnt;
     afxReal*    boneWeights;
 };
 

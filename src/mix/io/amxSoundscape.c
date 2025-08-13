@@ -15,7 +15,7 @@
  */
 
 #define _AMX_AUDIENT_C
-#include "../impl/amxImplementation.h"
+#include "../ddi/amxImplementation.h"
 
 // É muito difícil inventar uma coisa quando ninguém inventou aquilo ainda.
 
@@ -126,7 +126,7 @@ _AMX afxError AmxAcquireSoundscape(afxMixSystem msys, amxSoundscape* soundscape)
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
-    afxClass* cls = (afxClass*)_AmxGetAudientClass(msys);
+    afxClass* cls = (afxClass*)_AmxMsysGetAudiClass(msys);
     AFX_ASSERT_CLASS(cls, afxFcc_SNDS);
     amxSoundscape snds;
 

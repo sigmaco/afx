@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_QUERY_POOL_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 
 AVX afxResult AvxGetQueryResults(avxQueryPool qryp, afxUnit baseQuery, afxUnit queryCnt, void* dst, afxSize cap, afxSize stride, avxQueryResultFlags flags)
 {
@@ -64,15 +64,29 @@ _AVX afxError _AvxQrypCtorCb(avxQueryPool qryp, void** args, afxUnit invokeNo)
     afxUnit cap = *(afxUnit const*)args[2];
     AFX_ASSERT(cap);
 
-    if (type > avxQueryType_TOTAL) AfxThrowError();
-    else
+    if (type > avxQueryType_TOTAL)
     {
-        qryp->type = type;
-        qryp->cap = cap;
-        qryp->tag = (afxString) { 0 };
+        AfxThrowError();
+        return err;
     }
+
+    qryp->type = type;
+    qryp->cap = cap;
+    qryp->tag = (afxString) { 0 };
+    qryp->udd = NIL;
+
     return err;
 }
+
+_AVX afxClassConfig const _AVX_QRYP_CLASS_CONFIG =
+{
+    .fcc = afxFcc_QRYP,
+    .name = "QueryPool",
+    .desc = "Managed Query Pool",
+    .fixedSiz = sizeof(AFX_OBJECT(avxQueryPool)),
+    .ctor = (void*)_AvxQrypCtorCb,
+    .dtor = (void*)_AvxQrypDtorCb
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -89,13 +103,3 @@ _AVX afxError AfxAcquireQueryPools(afxDrawSystem dsys, avxQueryType type, afxUni
 
     return err;
 }
-
-_AVX afxClassConfig const _AVX_QRYP_CLASS_CONFIG =
-{
-    .fcc = afxFcc_QRYP,
-    .name = "QueryPool",
-    .desc = "Managed Query Pool",
-    .fixedSiz = sizeof(AFX_OBJECT(avxQueryPool)),
-    .ctor = (void*)_AvxQrypCtorCb,
-    .dtor = (void*)_AvxQrypDtorCb
-};

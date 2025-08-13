@@ -30,9 +30,6 @@ AFX_DEFINE_STRUCT(afxTerrainConfig)
     afxReal heightScale;
 };
 
-ASX afxError    AsxDrawTerrain(afxTerrain ter, akxRenderer scn, afxDrawContext dctx);
-ASX afxError    AsxDrawTerrainSector(afxTerrain ter, afxUnit secIdx, akxRenderer scn, afxDrawContext dctx);
-
 ASX afxError    AfxResetTerrainSector(afxTerrain ter, afxUnit secIdx, afxMesh msh);
 
 ASX afxUnit     AfxGetTerrainMeshes(afxTerrain ter, afxUnit secIdx, afxUnit cnt, afxMesh meshes[]);
@@ -41,13 +38,11 @@ ASX afxBool     AsxGetTerrainHeightAt(afxTerrain ter, afxReal x, afxReal z, afxR
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ASX afxError    AfxAcquireTerrain(afxSimulation sim, afxTerrainConfig const* cfg, afxTerrain* terrain);
+ASX afxError    AfxAcquireTerrain(afxMorphology morp, afxTerrainConfig const* cfg, afxTerrain* terrain);
 
-ASX afxError    AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain* terrain);
+ASX afxError    AfxGenerateTerrain(afxMorphology morp, afxWhd const whd, afxTerrain* terrain);
 
-ASX afxError    AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* uri, afxTerrain* terrain);
+ASX afxError    AfxGenerateHeightmappedTerrain(afxMorphology morp, afxUri const* uri, afxTerrain* terrain);
 
-
-ASX afxBool     RenderCells(afxTerrain ter, afxFrustum* frustum, afxBool showFaces, afxBool showDbgLines, afxDrawContext dctx);
 
 #endif//ASX_TERRAIN_H

@@ -17,7 +17,7 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #define _AFX_DRAW_TECHNIQUE_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 #include "qwadro/inc/draw/kit/afxDrawTechnique.h"
 
 AVX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, afxUnit specId, avxPipelineBlueprint* pipb, avxShaderType shaderStages[], afxUri shaderUris[], afxString shaderFns[]);

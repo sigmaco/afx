@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 
 afxUnit32 const sRgb8ToRealLut[256] =
 // lookup table for unorm8 srgb -> float conversion
@@ -1058,4 +1058,87 @@ _AVXINL afxUnit _AvxGetFormatRowStride(avxFormat fmt, afxUnit width)
         return wblocks * pfd->stride;
     }
     return width * pfd->stride;
+}
+
+_AVX void AvxConvertFormat(afxUnit32 rowSize, afxUnit32 rowCnt,
+    void const* srcBuffer, afxUnit32 rowStrideSrc, avxFormat srcFmt, avxFormat dstFmt,
+    void* dstBuffer, afxUnit32 rowStrideDst)
+{
+    afxError err = NIL;
+    avxFormatDescription const* srcDesc = &_AvxStdPfds[srcFmt];
+    avxFormatDescription const* dstDesc = &_AvxStdPfds[dstFmt];
+
+    afxUnit32 srcPixelSize = srcDesc->stride;
+    afxUnit32 dstPixelSize = dstDesc->stride;
+
+    for (afxUnit32 y = 0; y < rowCnt; ++y)
+    {
+        uint8_t const* srcRow = ((uint8_t const*)srcBuffer) + y * rowStrideSrc;
+        uint8_t* dstRow = ((uint8_t*)dstBuffer) + y * rowStrideDst;
+
+        for (afxUnit32 x = 0; x < rowSize; ++x)
+        {
+            uint8_t const* srcPixel = srcRow + x * srcPixelSize;
+            uint8_t* dstPixel = dstRow + x * dstPixelSize;
+
+            float comp[4] = { 0 };
+
+            // Load from source as float
+            for (afxUnit32 i = 0; i < srcDesc->compCnt; ++i)
+            {
+                switch (srcDesc->type[i])
+                {
+                case avxFormatType_UN:
+                {
+                    afxUnit32 maxVal = (1u << srcDesc->bpc[i]) - 1;
+                    comp[i] = ((float)((uint8_t*)srcPixel)[i]) / (float)maxVal;
+                    break;
+                }
+                case avxFormatType_F:
+                    comp[i] = ((float*)srcPixel)[i];
+                    break;
+
+                    // TODO: Handle U, I, SN, US, SS, etc.
+                default:
+                    comp[i] = 0.f;
+                    break;
+                }
+            }
+
+            // Fill missing components
+            for (afxUnit32 i = srcDesc->compCnt; i < 4; ++i)
+            {
+                comp[i] = dstDesc->defaults[i] / 255.0f;
+            }
+
+            // Swizzle to destination order
+            float reordered[4] = { 0 };
+            for (afxUnit32 i = 0; i < dstDesc->compCnt; ++i)
+            {
+                reordered[i] = comp[dstDesc->swizzle[i]];
+            }
+
+            // Write to destination
+            for (afxUnit32 i = 0; i < dstDesc->compCnt; ++i)
+            {
+                switch (dstDesc->type[i])
+                {
+                case avxFormatType_UN:
+                {
+                    afxUnit32 maxVal = (1u << dstDesc->bpc[i]) - 1;
+                    ((uint8_t*)dstPixel)[i] = (uint8_t)(reordered[i] * maxVal + 0.5f);
+                    break;
+                }
+                case avxFormatType_F:
+                    ((float*)dstPixel)[i] = reordered[i];
+                    break;
+
+                    // TODO: Add rest of cases
+                default:
+                    ((uint8_t*)dstPixel)[i] = 0;
+                    break;
+                }
+            }
+        }
+    }
 }

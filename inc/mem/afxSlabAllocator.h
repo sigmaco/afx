@@ -28,6 +28,9 @@
     The next call to create an object of the same type (or allocate memory of the same size) will return that memory slot (or some other free slot) and remove it from the list of free slots. 
     This process eliminates the need to search for suitable memory space and greatly alleviates memory fragmentation.
     In this context, a slab is one or more contiguous pages in the memory containing pre-allocated memory chunks.
+
+    In a slab allocator, the "slab" refers to a contiguous block of memory (often one or more memory pages) 
+    that contains multiple objects (or cells) of the same type and size, along with possible metadata for managing them.
 */
 
 #ifndef AFX_SLAB_ALLOCATOR_H

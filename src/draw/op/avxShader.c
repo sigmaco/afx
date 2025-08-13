@@ -16,7 +16,28 @@
 
 #define _AVX_DRAW_C
 #define _AVX_SHADER_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
+
+#if 0 // VS
+
+struct inVtx
+{
+    vec3 position @0;
+    vec3 normal @1;
+    vec2 uv @2;
+};
+
+struct outRslt
+{
+    vec4 position;
+}
+
+outRslt main(int vtxIdx, int instIdx, inVtx in)
+{
+    outRslt r;
+    return r;
+}
+#endif
 
 _AVX afxString const vtxFmtString[avxFormat_TOTAL] =
 {
@@ -169,9 +190,9 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                 if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
                 else
                 {
-                    AFX_ASSERT(set < 4);
+                    AFX_ASSERT(set < AVX_MAX_LIGATURE_SETS);
                     decl->set = set;
-                    AFX_ASSERT(binding < 10);
+                    AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
                     decl->binding = binding;
                     AFX_ASSERT(resType < avxShaderParam_TOTAL);
                     decl->type = resType;
@@ -213,9 +234,9 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                 if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
                 else
                 {
-                    AFX_ASSERT(set < 4);
+                    AFX_ASSERT(set < AVX_MAX_LIGATURE_SETS);
                     decl->set = set;
-                    AFX_ASSERT(binding < 10);
+                    AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
                     decl->binding = binding;
                     AFX_ASSERT(resType < avxShaderParam_TOTAL);
                     decl->type = resType;
@@ -249,9 +270,9 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                 if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
                 else
                 {
-                    AFX_ASSERT(set < 4);
+                    AFX_ASSERT(set < AVX_MAX_LIGATURE_SETS);
                     decl->set = set;
-                    AFX_ASSERT(binding < 10);
+                    AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
                     decl->binding = binding;
                     AFX_ASSERT(resType < avxShaderParam_TOTAL);
                     decl->type = resType;
@@ -282,9 +303,9 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                 if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
                 else
                 {
-                    AFX_ASSERT(set < 4);
+                    AFX_ASSERT(set < AVX_MAX_LIGATURE_SETS);
                     decl->set = set;
-                    AFX_ASSERT(binding < 10);
+                    AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
                     decl->binding = binding;
                     AFX_ASSERT(resType < avxShaderParam_TOTAL);
                     decl->type = resType;
@@ -555,9 +576,10 @@ _AVX afxError _AvxShdCtorCb(avxShader shd, void** args, afxUnit invokeNo)
     AfxMakeUri128(&shd->uri, uri);
 
     shd->tag = (afxString) { 0 };
+    shd->udd = NIL;
 
-    //shd->verMajor = AfxElse(cfg->verMajor, 4);
-    //shd->verMinor = AfxElse(cfg->verMajor, shd->verMajor == 4 ? 0 : (shd->verMinor == 3 ? 3 : (shd->verMinor == 2 ? 1 : 5)));
+    //shd->verMajor = AFX_OR(cfg->verMajor, 4);
+    //shd->verMinor = AFX_OR(cfg->verMajor, shd->verMajor == 4 ? 0 : (shd->verMinor == 3 ? 3 : (shd->verMinor == 2 ? 1 : 5)));
     //shd->extended = !!cfg->extended;
     shd->stage = 0;
 
@@ -592,7 +614,7 @@ _AVX afxError _AvxShdCtorCb(avxShader shd, void** args, afxUnit invokeNo)
                 afxString fCodeS;
                 AfxMakeArray(&fCode, sizeof(afxByte), 4096, NIL, 0);
                 _AvxLoadGlScript(file, &fCode);
-                AfxMakeString(&fCodeS, fCode.pop, fCode.data, fCode.pop);
+                AfxMakeString(&fCodeS, fCode.pop, fCode.items, fCode.pop);
                 _AvxScanGlScript(&fCodeS, &fInOuts, &fResources, &shd->pushConstName.s);
                 AfxEmptyArray(&fCode, FALSE, FALSE);
             }
@@ -638,9 +660,9 @@ _AVX afxError _AvxShdCtorCb(avxShader shd, void** args, afxUnit invokeNo)
         {
             avxShaderResource const *decl = AfxGetArrayUnit(&fResources, j);
             shd->resDecls[j].set = decl->set;
-            AFX_ASSERT(4/*_SGL_MAX_LEGO_PER_BIND*/ > shd->resDecls[j].set);
+            AFX_ASSERT(AVX_MAX_LIGATURE_SETS > shd->resDecls[j].set);
             shd->resDecls[j].binding = decl->binding;
-            AFX_ASSERT(8/*_SGL_MAX_ENTRY_PER_LEGO*/ > shd->resDecls[j].binding);
+            AFX_ASSERT(AVX_MAX_LIGAMENTS > shd->resDecls[j].binding);
             //shd->resDecls[j].visibility = decl->visibility;
             shd->resDecls[j].type = decl->type;
             shd->resDecls[j].cnt = decl->cnt;

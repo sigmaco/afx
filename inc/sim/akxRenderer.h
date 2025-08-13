@@ -20,6 +20,7 @@
 #define RENDERER_H
 
 #include "qwadro/inc/sim/body/afxBody.h"
+#include "qwadro/inc/sim/render/arxRenderContext.h"
 
 // clustered rendering entity
 AFX_DEFINE_HANDLE(afxRenderable);
@@ -44,23 +45,6 @@ AFX_DEFINE_STRUCT(akxPlacement)
 {
     afxUnit          id;
     afxTransform    t;
-};
-
-AFX_DEFINE_STRUCT(akxViewConstants) // frame
-{
-    afxM4d  v;
-    afxM4d  iv;
-    afxM4d  p;
-    afxM4d  ip;
-    afxM4d  pv;
-    afxM4d  ipv;
-
-    afxV4d  viewPos; // view point
-    afxV2d  viewExtent;
-
-    afxV3d starDir;
-    afxV4d starPos;
-    afxV4d starKd;
 };
 
 AFX_DEFINE_STRUCT(akxShaderConstants) // pass

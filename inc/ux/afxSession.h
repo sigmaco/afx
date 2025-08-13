@@ -22,7 +22,7 @@
 #define AUX_SESSION_H
 
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/draw/math/avxViewport.h"
+#include "qwadro/inc/math/avxViewport.h"
 #include "qwadro/inc/ux/hid/afxKeyboard.h"
 #include "qwadro/inc/ux/hid/afxMouse.h"
 
@@ -104,9 +104,9 @@ AUX afxError        AfxEndFrame(afxSession ses);
 
 AUX afxError        AfxReconnectKeyboard(afxSession ses, afxUnit portIdx, afxUnit hidNo);
 
-AUX afxTime         AfxPollInput(afxFlags flags, afxTime timeout);
+AUX afxTime         AfxPollInput(afxFlags flags, afxUnit64 timeout);
 
-AUX afxError        AfxImmergeWindow(afxWindow wnd, afxBool fullscreen);
+AUX afxError        AfxMakeWindowExclusive(afxWindow wnd, afxBool fullscreen);
 
 AUX afxBool         AfxGetCursorPlacement(afxRect* rc, afxWindow wnd, afxRect* onFrame, afxRect* onSurface);
 

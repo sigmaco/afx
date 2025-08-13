@@ -328,7 +328,7 @@ AFXINL void AfxQuatDiv(afxQuat q, afxQuat const in, afxReal dividend)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(in);
     AFX_ASSERT(q);
-    AfxDivV4d(q, in, (afxV4d) { dividend, dividend, dividend, dividend });
+    AfxV4dDiv(q, in, (afxV4d) { dividend, dividend, dividend, dividend });
 }
 
 _AFXINL void AfxQuatMultiply(afxQuat q, afxQuat const a, afxQuat const b)
@@ -399,7 +399,7 @@ _AFXINL void AfxQuatInv(afxQuat q, afxQuat const in)
     {
         AfxQuatConj(q, in);
         afxV4d const v = { norm, norm, norm, norm };
-        AfxDivV4d(q, q, v);
+        AfxV4dDiv(q, q, v);
     }
 }
 

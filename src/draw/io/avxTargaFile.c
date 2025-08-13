@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 #include "qwadro/inc/draw/io/avxTargaFile.h"
 
 static_assert(sizeof(avxFormat) == sizeof(afxUnit32), "");
@@ -261,11 +261,10 @@ void DecodeRle8(afxUnit w, afxUnit h, afxByte const* in, afxByte* out)
     }
 }
 
-_AVX afxError AfxWriteTargaFile(afxStream out, avxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, avxRasterFlags flags, afxUnit uddSiz)
+_AVX afxError AfxPrepareTargaFile(avxTargaFile* tga, avxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, avxRasterFlags flags, afxUnit uddSiz)
 {
     afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
-    AFX_ASSERT(!uddSiz);
+    AFX_ASSERT(tga);
     AFX_ASSERT(iop);
     AFX_ASSERT(fmt);
 
@@ -277,7 +276,7 @@ _AVX afxError AfxWriteTargaFile(afxStream out, avxRasterIo* iop, afxUnit lodCnt,
 
     /*
         Calculate Stride (Row Size) and Row Count
-        For a compressed texture, the stride (the length of each row in memory) is calculated 
+        For a compressed texture, the stride (the length of each row in memory) is calculated
         based on the width of the texture and the size of the compressed blocks.
 
         Stride (row size) = (width of the texture / 4) * bytes per block
@@ -288,11 +287,11 @@ _AVX afxError AfxWriteTargaFile(afxStream out, avxRasterIo* iop, afxUnit lodCnt,
     */
 
     afxUnit uddSiz2 = AFX_ALIGN_SIZE(uddSiz, AFX_SIMD_ALIGNMENT);
-    afxUnit w = AFX_MAX(pfd.bcWh[0], AFX_ALIGN_SIZE(iop->rgn.extent.w, pfd.bcWh[0]));
-    afxUnit h = AFX_MAX(pfd.bcWh[1], AFX_ALIGN_SIZE(iop->rgn.extent.h, pfd.bcWh[1]));
-    iop->rgn.extent.w = w;
-    iop->rgn.extent.h = h;
-    iop->rgn.extent.d = AFX_MAX(1, iop->rgn.extent.d);
+    afxUnit w = AFX_MAX(pfd.bcWh[0], AFX_ALIGN_SIZE(iop->rgn.whd.w, pfd.bcWh[0]));
+    afxUnit h = AFX_MAX(pfd.bcWh[1], AFX_ALIGN_SIZE(iop->rgn.whd.h, pfd.bcWh[1]));
+    iop->rgn.whd.w = w;
+    iop->rgn.whd.h = h;
+    iop->rgn.whd.d = AFX_MAX(1, iop->rgn.whd.d);
     iop->rgn.origin.x = AFX_ALIGN_SIZE(iop->rgn.origin.x, pfd.bcWh[0]);
     iop->rgn.origin.y = AFX_ALIGN_SIZE(iop->rgn.origin.y, pfd.bcWh[1]);
     iop->rgn.origin.z = iop->rgn.origin.z;
@@ -304,11 +303,11 @@ _AVX afxError AfxWriteTargaFile(afxStream out, avxRasterIo* iop, afxUnit lodCnt,
     iop->encSiz = iop->rowStride * iop->rowsPerImg;
 
     avxTargaFile tgai = { 0 };
-    tgai.fcc[0] = 't';
-    tgai.fcc[1] = 'g';
-    tgai.fcc[2] = 'a';
-    tgai.fcc[3] = '4';
-    tgai.extLen = (AFX_TGA_EXT_SIZ) + uddSiz2;
+    tgai.idd.fcc[0] = 't';
+    tgai.idd.fcc[1] = 'g';
+    tgai.idd.fcc[2] = 'a';
+    tgai.idd.fcc[3] = '4';
+    tgai.extLen = (AFX_TGA_EXT_SIZ)+uddSiz2;
     tgai.palType = 0;
     tgai.imgType = 2;
     tgai.palBase = 0;
@@ -319,7 +318,7 @@ _AVX afxError AfxWriteTargaFile(afxStream out, avxRasterIo* iop, afxUnit lodCnt,
     tgai.originZ = iop->rgn.origin.z;
     tgai.width = w;
     tgai.height = h;
-    tgai.depth = iop->rgn.extent.d;
+    tgai.depth = iop->rgn.whd.d;
     tgai.lodCnt = AFX_MAX(1, lodCnt);
     tgai.baseLod = iop->rgn.lodIdx;
     tgai.fmt = fmt ? fmt : avxFormat_BGRA8un;
@@ -340,18 +339,43 @@ _AVX afxError AfxWriteTargaFile(afxStream out, avxRasterIo* iop, afxUnit lodCnt,
     tgai.codec = 0;// iop->codec; // 0;
 
     tgai.dataOff = iop->offset + sizeof(avxTargaFile) + uddSiz2;
+    
+    *tga = tgai;
 
-    if (AfxWriteStreamAt(out, iop->offset, sizeof(avxTargaFile) + uddSiz2, 0, &tgai))
+    return err;
+}
+
+_AVX afxError AfxWriteTargaFile(avxTargaFile* tgai, void* udd, afxUnit uddSiz, afxStream out)
+{
+    afxError err = NIL;
+    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
+    AFX_ASSERT(!uddSiz || udd);
+    AFX_ASSERT(tgai);
+
+    afxSize posn = AfxAskStreamPosn(out);
+    tgai->dataOff += posn;
+
+    if (AfxWriteStream(out, sizeof(avxTargaFile), 0, tgai))
         AfxThrowError();
 
+    afxUnit uddSiz2 = AFX_ALIGN_SIZE(uddSiz, AFX_SIMD_ALIGNMENT);
     AFX_ASSERT(AfxAskStreamPosn(out) == 64 + uddSiz2);
 
+    if (uddSiz)
+    {
+        AFX_ASSERT(udd);
+
+        if (AfxWriteStream(out, uddSiz, 0, udd))
+            AfxThrowError();
+    }
     return err;
 }
 
 _AVX afxError AfxReadTargaFile(avxTargaFile* info, afxStream in)
 {
     afxError err = NIL;
+    AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
+    AFX_ASSERT(info);
     afxUnit i;
     
     afxBool legacy = TRUE;
@@ -365,13 +389,13 @@ _AVX afxError AfxReadTargaFile(avxTargaFile* info, afxStream in)
 
     if (tgai.extLen >= AFX_TGA_EXT_SIZ)
     {
-        if (AfxReadStream(in, AFX_TGA_EXT_SIZ - AFX_TGA_HDR_SIZ, 0, &tgai.baseLod))
+        if (AfxReadStream(in, AFX_TGA_EXT_SIZ, 0, &(((afxByte*)&tgai)[AFX_TGA_HDR_SIZ])))
         {
             AfxThrowError();
             return err;
         }
 
-        if ((tgai.fcc[0] != 't') || (tgai.fcc[1] != 'g') || (tgai.fcc[2] != 'a') || (tgai.fcc[3] != '4'))
+        if ((tgai.idd.fcc[0] != 't') || (tgai.idd.fcc[1] != 'g') || (tgai.idd.fcc[2] != 'a') || (tgai.idd.fcc[3] != '4'))
         {
             if (AfxAdvanceStream(in, tgai.extLen))
                 AfxThrowError();

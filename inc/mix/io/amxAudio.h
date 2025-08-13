@@ -242,14 +242,14 @@ AMX afxReal     AmxGetAudioDuration(amxAudio aud);
 
 AMX void        AmxDescribeAudio(amxAudio aud, amxAudioInfo* desc);
 
-AMX afxError    AmxPackAudio(amxAudio aud, amxBuffer buf, afxUnit opCnt, amxAudioIo const ops[], avxFence signal);
-AMX afxError    AmxUnpackAudio(amxAudio aud, amxBuffer buf, afxUnit opCnt, amxAudioIo const ops[], avxFence signal);
+AMX afxError    AmxPackAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], amxBuffer buf, avxFence signal);
+AMX afxError    AmxUnpackAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], amxBuffer buf, avxFence signal);
 
-AMX afxError    AmxUploadAudio(amxAudio aud, afxStream in, afxUnit opCnt, amxAudioIo const ops[], avxFence signal);
-AMX afxError    AmxDownloadAudio(amxAudio aud, afxStream out, afxUnit opCnt, amxAudioIo const ops[], avxFence signal);
+AMX afxError    AmxUploadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], afxStream in, avxFence signal);
+AMX afxError    AmxDownloadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], afxStream out, avxFence signal);
 
-AMX afxError    AmxDumpAudio(amxAudio aud, void* dst, afxUnit opCnt, amxAudioIo const ops[], avxFence signal);
-AMX afxError    AmxUpdateAudio(amxAudio aud, void const* src, afxUnit opCnt, amxAudioIo const ops[], avxFence signal);
+AMX afxError    AmxDumpAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], void* dst, avxFence signal);
+AMX afxError    AmxUpdateAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], void const* src, avxFence signal);
 
 AMX afxError    AmxPrintAudio(amxAudio aud, amxAudioPeriod const* op, afxUri const* uri);
 

@@ -49,9 +49,17 @@
 #define AFX_OBJECT(handle_) struct handle_##_T
 #define AFX_OBJ(handle_) struct handle_##_T
 
-#define AFX_SIMD_ALIGNMENT 16u 
-#define AFX_PTR_ALIGNMENT sizeof(void*) 
-#define AFX_DEFAULT_ALIGNMENT AFX_SIMD_ALIGNMENT 
+#ifndef AFX_PTR_ALIGNMENT
+#   define AFX_PTR_ALIGNMENT sizeof(void*) 
+#endif
+
+#ifndef AFX_SIMD_ALIGNMENT
+#   define AFX_SIMD_ALIGNMENT 16u 
+#endif
+
+#ifndef AFX_DEFAULT_ALIGNMENT
+#   define AFX_DEFAULT_ALIGNMENT AFX_SIMD_ALIGNMENT 
+#endif
 
 #define AFX_ALIGN_SIZE(operand_,alignment_) (((operand_) + ((alignment_) - 1)) & ~((alignment_) - 1))
 
@@ -93,6 +101,18 @@
 #define AFX_ADDR  AFX_ALIGN(8) // make machine-dependent pointer alignment
 #define AFX_VLA(type, name, align) type __declspec(align(align)) name
 
+#define NIL (0)
+
+typedef afxInt8     afxBool8;
+typedef afxInt16    afxBool16;
+typedef afxInt32    afxBool32;
+typedef afxInt32    afxBool;
+typedef afxInt32    afxResult;
+
+typedef afxBool8    afxB8;
+typedef afxBool16   afxB16;
+typedef afxBool32   afxB32;
+
 #ifdef TRUE
 #   undef TRUE
 #   undef FALSE
@@ -100,7 +120,10 @@
 #define FALSE (0)
 #define TRUE (!FALSE)
 
-#define NIL (0)
+typedef afxUnit8    afxIndex8;
+typedef afxUnit16   afxIndex16;
+typedef afxUnit32   afxIndex32;
+typedef afxIndex32  afxIndex;
 
 // Bitwise NOT of 0 = all bits set (e.g. 0xFFFF or 0xFFFFFFFF).
 #define AFX_INVALID_INDEX ((afxUnit)(~((afxUnit)0)))
@@ -117,27 +140,53 @@ AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_U32_MAX, "");
 #define AFX_IS_INDEX_INVALID(_var_) (((typeof(_var_))~(typeof(_var_))0) == (_var_))
 #define AFX_IS_INDEX_VALID(_var_) (((typeof(_var_))~(typeof(_var_))0) != (_var_))
 
+typedef afxUnit32   afxFlags;
+typedef afxUnit32   afxMask32;
+typedef afxUnit64   afxMask64;
+typedef afxMask32   afxMask;
+
 // Computes the bitmask for a given bit index.
 // Returns a non-zero bitmask value (the actual bit value, e.g., 8 for bit 3) for the bit.
-#define AFX_BITMASK(bit_) \
-    (1 << (bit_)) // get bit offset
+#define AFX_BITMASK(bit_) (1 << (bit_)) // get bit offset
 
 // Computes 1 << bit_ (i.e., a mask with only that bit set), and bitwise-ANDs it with mask_.
 // Returns a non-zero value (the actual bit value, e.g., 8 for bit 3) if the bit is set; otherwise returns 0.
-#define AFX_BITMASK_IF_SET(mask_,bit_) \
-    ((mask_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
+#define AFX_BITMASK_IF_SET(mask_,bit_) ((mask_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
 
 // Shifts mask_ right by bit_ places and isolates the least significant bit using & 1.
 // Returns 1 if the bit is set, 0 if it's not.
-#define AFX_TEST_BIT_SET(mask_,bit_) \
-    (((mask_) >> (bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
+#define AFX_TEST_BIT_SET(mask_,bit_) (((mask_) >> (bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
 
+// For each used unit in a bitmask
+#define AFX_ITERATE_BITMASK(iter_, usage) for (afxMask _u##__LINE__ = (usage), (iter_) = 0; _u##__LINE__; ++(iter_), _u##__LINE__ >>= 1) if (_u##__LINE__ & 1)
 
-#define AFX_MASK_MIN AFX_BITMASK(0)
-#define AFX_MASK_MAX AFX_BITMASK(31)
+#define AFX_MASK64_NONE (0x0000000000000000)
+#define AFX_MASK64_ALL (0xffffffffffffffff)
+#define AFX_MASK32_NONE (0x00000000)
+#define AFX_MASK32_ALL (0xffffffff)
 #define AFX_MASK_ALL AFX_MASK32_ALL
 #define AFX_MASK_NONE AFX_MASK32_NONE
+#define AFX_MASK_LAST AFX_BITMASK(31)
+#define AFX_MASK_FIRST AFX_BITMASK(0)
 #define AFX_FORCE_ENUM_N32 (0x7fffffff)
+
+typedef afxInt8     afxI8;
+typedef afxInt16    afxI16;
+typedef afxInt32    afxI32;
+typedef afxInt64    afxI64;
+
+typedef afxUnit8    afxN8;
+typedef afxUnit16   afxN16;
+typedef afxUnit32   afxN32;
+typedef afxUnit64   afxN64;
+
+typedef afxReal16   afxR16;
+typedef afxReal32   afxR32;
+typedef afxReal64   afxR64;
+
+typedef afxChar8    afxC8;
+typedef afxChar16   afxC16;
+typedef afxChar32   afxC32;
 
 // 4 bytes interpreted as 16:16 fixed.
 typedef afxInt32 afxFixed;
@@ -261,6 +310,7 @@ AFX_DEFINE_HANDLE(afxUrd);
 AFX_DEFINE_HANDLE(afxArchive);
 AFX_DEFINE_HANDLE(afxCodec);
 AFX_DEFINE_HANDLE(afxStream);
+AFX_DEFINE_HANDLE(afxIoContext);
 AFX_DEFINE_HANDLE(afxFile);
 AFX_DEFINE_HANDLE(afxDevice);
 AFX_DEFINE_HANDLE(afxDevLink);
@@ -347,30 +397,20 @@ AFX afxUnit AfxFlagsFindMsb(afxFlags mask);
 
 #define AFX_IS_ALIGNED(ptr_, alignment_) (((uintptr_t)(ptr_) % (alignment_)) == 0)
 
-#define AfxAbs(x_) ((0 > (x_)) ? -(x_) : (x_))
-#define AfxAbsf(x_) ((0 > (afxReal)(x_)) ? -(afxReal)(x_) : (afxReal)(x_))
+#define AFX_ABS(x_) ((0 > (x_)) ? -(x_) : (x_))
+#define AFX_ABSF(x_) ((0 > (afxReal)(x_)) ? -(afxReal)(x_) : (afxReal)(x_))
 #define AFX_MIN(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
 #define AFX_MAX(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
-#define AfxMinorNonZero(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)) // minor non-zero
-#define AfxElse(a_,b_) ((a_) ? (a_) : (b_))
-
-
+#define AFX_MIN_OR(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)) // minor non-zero
+#define AFX_OR(a_,b_) ((a_) ? (a_) : (b_))
 #define AFX_CLAMP(_value_, _min_, _max_) ((_value_) < (_min_) ? (_min_) : ((_value_) > (_max_) ? (_max_) : (_value_)))
 
-
-#define AfxMinf(a_,b_) AFX_MIN((afxReal)(a_),(afxReal)(b_))
-#define AfxMinf64(a_,b_) AFX_MIN((afxReal64)(a_),(afxReal64)(b_))
-#define AfxMini(a_,b_) AFX_MIN((afxInt)(a_),(afxInt)(b_))
-#define AfxMinu(a_,b_) AFX_MIN((afxUnit)(a_),(afxUnit)(b_))
-
-#define AfxMaxf(a_,b_) AFX_MAX((afxReal)(a_),(afxReal)(b_))
-#define AfxMaxf64(a_,b_) AFX_MAX((afxReal64)(a_),(afxReal64)(b_))
-#define AfxMaxi(a_,b_) AFX_MAX((afxInt)(a_),(afxInt)(b_))
-#define AfxMaxu(a_,b_) AFX_MAX((afxUnit)(a_),(afxUnit)(b_))
+#define AFX_MIN_CASTED(a_, b_, _TYPE_) AFX_MIN((_TYPE_)(a_),(_TYPE_)(b_))
+#define AFX_MAX_CASTED(a_, b_, _TYPE_) AFX_MAX((_TYPE_)(a_),(_TYPE_)(b_))
 
 #define AfxAtLeast(var_,min_) 
 
-#define AfxRealFromByte(by_) (((afxReal)(by_)) * (1.0 / 255.0))
+#define AFX_UN8_TO_R32(by_) (((afxReal)(by_)) * (1.0 / 255.0))
 
 AFX afxChar const* errorMsg[];
 
@@ -384,20 +424,20 @@ AFXINL afxReal  AfxRandomReal2(afxReal mini, afxReal maxi);
 
 AFX void AfxAccumulateCrc32(afxUnit32 *crc, void const* data, afxSize len);
 
-#define AfxAlignDown(val, align) (typeof(val))((val) & (~((typeof(val))((align) - 1))))
-#define AfxAlign(val, align) AfxAlignDown(((val) + ((typeof(val)) (align) - 1)), align)
+#define AFX_ALIGN_DOWN_VALUE(val, align) (typeof(val))((val) & (~((typeof(val))((align) - 1))))
+#define AFX_ALIGN_VALUE(val, align) AFX_ALIGN_DOWN_VALUE(((val) + ((typeof(val)) (align) - 1)), align)
 
-#define AFX_SIZEOF_FIELD(type_, field_) (sizeof(((type_*)0)->field_))
+#define AFX_SIZEOF_FIELD(_TYPE_, field_) (sizeof(((_TYPE_*)0)->field_))
 #define	AFX_DIM(a_) (sizeof(a_) / sizeof((a_)[0]))
 
 // assertion for test power of two condition
 #define AFX_ASSERT_P2(val_) AFX_ASSERT(((uintptr_t)val_ & (val_ - 1)) == 0)
 
-#define AfxPtrAdd(ptr, x) ((void*)((uintptr_t)(ptr) + (x)))
-#define AfxPtrSub(ptr, x) ((void *)((uintptr_t)(ptr) - (x)))
-#define AfxPtrDiff(ptr1, ptr2) ((uintptr_t)(ptr1) - (uintptr_t)(ptr2))
-#define AfxPtrAlignFloor(ptr, align) ((typeof(ptr))AfxAlignDown((uintptr_t)(ptr), align))
-#define AfxPtrAlignCeil(ptr, align) AfxPtrAlignFloor((typeof(ptr))AfxPtrAdd(ptr, (align) - 1), align)
+#define AFX_ADD_PTR(ptr, x) ((void*)((uintptr_t)(ptr) + (x)))
+#define AFX_SUB_PTR(ptr, x) ((void *)((uintptr_t)(ptr) - (x)))
+#define AFX_DIFF_PTR(ptr1, ptr2) ((uintptr_t)(ptr1) - (uintptr_t)(ptr2))
+#define AFX_ALIGN_DOWN_PTR(ptr, align) ((typeof(ptr))AFX_ALIGN_DOWN_VALUE((uintptr_t)(ptr), align))
+#define AFX_ALIGN_UP_PTR(ptr, align) AFX_ALIGN_DOWN_PTR((typeof(ptr))AFX_ADD_PTR(ptr, (align) - 1), align)
 
 AFX afxUnit32 AfxPowerOfTwo32(afxUnit32 v);
 

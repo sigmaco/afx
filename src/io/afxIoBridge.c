@@ -169,12 +169,12 @@ _AFX afxError _AfxExuDtorCb(afxIoBridge exu)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
 
-    _AfxWaitForIdleIoBridge(exu, AFX_TIME_INFINITE);
-    _AfxWaitForIdleIoBridge(exu, AFX_TIME_INFINITE); // yes, two times.
+    _AfxWaitForIdleIoBridge(exu, AFX_TIMEOUT_INFINITE);
+    _AfxWaitForIdleIoBridge(exu, AFX_TIMEOUT_INFINITE); // yes, two times.
 
     AfxDeregisterChainedClasses(&exu->classes);
     
-    _AfxWaitForIdleIoBridge(exu, AFX_TIME_INFINITE);
+    _AfxWaitForIdleIoBridge(exu, AFX_TIMEOUT_INFINITE);
 
     afxObjectStash const stashes[] =
     {

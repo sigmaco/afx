@@ -9,7 +9,7 @@ afxBool readyToRender = FALSE;
 afxMixSystem ssys;
 afxWindow window;
 afxSession ses = NIL;
-afxDrawOutput dout = NIL;
+afxSurface dout = NIL;
 afxDrawSystem dsys = NIL;
 afxDrawInput din = NIL;
 
@@ -100,7 +100,7 @@ int main(int argc, char const* argv[])
 
         afxUnit outBufIdx = 0;
 
-        if (AvxRequestDrawOutputBuffer(dout, 0, &outBufIdx))
+        if (AvxLockSurfaceBuffer(dout, 0, &outBufIdx))
             continue;
 
         afxDrawContext dctx;
@@ -110,13 +110,13 @@ int main(int argc, char const* argv[])
         if (AvxAcquireDrawContexts(dsys, portId, queIdx, 1, &dctx))
         {
             AfxThrowError();
-            AvxRecycleDrawOutputBuffer(dout, outBufIdx);
+            AvxUnlockSurfaceBuffer(dout, outBufIdx);
             continue;
         }
 
         avxCanvas canv;
         avxRange canvWhd;
-        AvxGetDrawOutputCanvas(dout, outBufIdx, &canv);
+        AvxGetSurfaceCanvas(dout, outBufIdx, &canv);
         AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
         canvWhd = AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO);
 
@@ -159,7 +159,7 @@ int main(int argc, char const* argv[])
         if (AvxCompileDrawCommands(dctx))
         {
             AfxThrowError();
-            AvxRecycleDrawOutputBuffer(dout, outBufIdx);
+            AvxUnlockSurfaceBuffer(dout, outBufIdx);
             continue;
         }
 
@@ -168,7 +168,7 @@ int main(int argc, char const* argv[])
         if (AvxExecuteDrawCommands(dsys, &subm, 1, &dctx, NIL))
         {
             AfxThrowError();
-            AvxRecycleDrawOutputBuffer(dout, outBufIdx);
+            AvxUnlockSurfaceBuffer(dout, outBufIdx);
             continue;
         }
 
@@ -178,10 +178,10 @@ int main(int argc, char const* argv[])
 
         avxPresentation pres = { 0 };
 
-        if (AvxPresentDrawOutputs(dsys, &pres, NIL, 1, &dout, &outBufIdx, NIL))
+        if (AvxPresentSurfaces(dsys, &pres, NIL, 1, &dout, &outBufIdx, NIL))
         {
             AfxThrowError();
-            AvxRecycleDrawOutputBuffer(dout, outBufIdx);
+            AvxUnlockSurfaceBuffer(dout, outBufIdx);
             continue;
         }
     }

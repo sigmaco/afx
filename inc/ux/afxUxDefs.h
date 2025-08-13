@@ -71,14 +71,36 @@ typedef enum auxEventId
 
     auxEventId_HOVER, // pointer enter/leave
 
-    auxEventId_MOVE, // widget move
-    auxEventId_SIZE, // widget resized
+    auxEventId_PLACEMENT,
+    auxEventId_MOVE, // Window/widget's position changed.
+    auxEventId_SIZE, // Window/widget's size changed.
     auxEventId_FOCUS, // widget focus changed
+    auxEventId_FOCUS_LOST, // widget focus changed
     auxEventId_SCROLL, // ex.: list scroll
     auxEventId_CHANGED, // ex.: setting applied
     auxEventId_CHECKED, // ex.: combobox (un)checked
+    auxEventId_STYLE, // Window/widget's style has been changed.
+    auxEventId_SHOW, // Window/widget was shown on screen.
 
-    auxEventId_DND, // drag and drop
+    // cursor
+    auxEventId_CURS_IN, // Cursor enters window/widget's boundaries.
+    auxEventId_CURS_ON, // Cursor move.
+    auxEventId_CURS_OUT, // Cursor leaves window/widget's boundaries.
+    auxEventId_HOVER_IN, // The cursor enters a hover window/widget.
+    auxEventId_HOVER_ON, // The cursor moves inside a hover window/widget.
+    auxEventId_HOVER_OUT, // The cursor leaves a hover window/widget.
+    auxEventId_CLICK_ON, // Cursor press
+    auxEventId_CLICK_OFF, // Cursor release
+    auxEventId_CLICK_DOUBLE, // Double-click
+
+    // drag and drop
+    auxEventId_DRAG_IN, // The cursor enters a window/widget during a drag and drop operation.
+    auxEventId_DRAG_ON, // A drag and drop operation is in progress.
+    auxEventId_DRAG_OUT, // The cursor leaves a window/widget during a drag and drop operation.
+    auxEventId_DROP, // A drag and drop operation is completed.
+
+    auxEventId_CLOSE, // Window/widget was closed.
+    auxEventId_ACTIVATE,
 } auxEventId;
 
 AFX_DEFINE_STRUCT(auxEvent)

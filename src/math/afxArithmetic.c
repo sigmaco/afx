@@ -95,7 +95,7 @@ _AFXINL void AfxV4dSub(afxV4d v, afxV4d const a, afxV4d const b)
 
 // Div
 
-_AFXINL void AfxDivV2d(afxV2d v, afxV2d const a, afxV2d const b)
+_AFXINL void AfxV2dDiv(afxV2d v, afxV2d const a, afxV2d const b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
@@ -116,7 +116,7 @@ _AFXINL void AfxV3dDiv(afxV3d v, afxV3d const a, afxV3d const b)
     v[2] = a[2] / b[2];
 }
 
-_AFXINL void AfxDivV4d(afxV4d v, afxV4d const a, afxV4d const b)
+_AFXINL void AfxV4dDiv(afxV4d v, afxV4d const a, afxV4d const b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
@@ -165,19 +165,19 @@ _AFXINL void AfxV4dDivs(afxV4d v, afxV4d const a, afxReal div)
 
 // Mod
 
-_AFXINL void AfxModV2d(afxV2d v, afxV2d const a, afxV2d const b)
+_AFXINL void AfxV2dMod(afxV2d v, afxV2d const a, afxV2d const b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
 
-    AfxDivV2d(v, a, b);
+    AfxV2dDiv(v, a, b);
     AfxTruncateV2d(v, v);
-    AfxResubV2d(v, b, v, a);
+    AfxV2dResub(v, b, v, a);
 }
 
-_AFXINL void AfxModV3d(afxV3d v, afxV3d const a, afxV3d const b)
+_AFXINL void AfxV3dMod(afxV3d v, afxV3d const a, afxV3d const b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
@@ -186,19 +186,19 @@ _AFXINL void AfxModV3d(afxV3d v, afxV3d const a, afxV3d const b)
 
     AfxV3dDiv(v, a, b);
     AfxTruncateV3d(v, v);
-    AfxResubV3d(v, b, v, a);
+    AfxV3dResub(v, b, v, a);
 }
 
-_AFXINL void AfxModV4d(afxV4d v, afxV4d const a, afxV4d const b)
+_AFXINL void AfxV4dMod(afxV4d v, afxV4d const a, afxV4d const b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
 
-    AfxDivV4d(v, a, b);
+    AfxV4dDiv(v, a, b);
     AfxTruncateV4d(v, v);
-    AfxResubV4d(v, b, v, a);
+    AfxV4dResub(v, b, v, a);
 }
 
 // Scale
@@ -235,7 +235,7 @@ _AFXINL void AfxV4dScale(afxV4d v, afxV4d const a, afxReal lambda)
 
 // Half
 
-_AFXINL void AfxHalfV2d(afxV2d v, afxV2d const in)
+_AFXINL void AfxV2dHalf(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
@@ -244,7 +244,7 @@ _AFXINL void AfxHalfV2d(afxV2d v, afxV2d const in)
     v[1] = in[1] * 0.5f;
 }
 
-_AFXINL void AfxHalfV3d(afxV3d v, afxV3d const in)
+_AFXINL void AfxV3dHalf(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
@@ -254,7 +254,7 @@ _AFXINL void AfxHalfV3d(afxV3d v, afxV3d const in)
     v[2] = in[2] * 0.5f;
 }
 
-_AFXINL void AfxHalfV4d(afxV4d v, afxV4d const in)
+_AFXINL void AfxV4dHalf(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(v);
@@ -375,7 +375,7 @@ _AFXINL void AfxV4dMads(afxV4d v, afxReal lambda, afxV4d const b, afxV4d const c
 
 // Resub
 
-_AFXINL void AfxResubV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c)
+_AFXINL void AfxV2dResub(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c)
 {
     // Should be compatible with XMVectorNegativeMultiplySubtract
 
@@ -389,7 +389,7 @@ _AFXINL void AfxResubV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const 
     v[1] = c[1] - (a[1] * b[1]);
 }
 
-_AFXINL void AfxResubV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c)
+_AFXINL void AfxV3dResub(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c)
 {
     // Should be compatible with XMVectorNegativeMultiplySubtract
 
@@ -404,7 +404,7 @@ _AFXINL void AfxResubV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const 
     v[2] = c[2] - (a[2] * b[2]);
 }
 
-_AFXINL void AfxResubV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c)
+_AFXINL void AfxV4dResub(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c)
 {
     // Should be compatible with XMVectorNegativeMultiplySubtract
 
@@ -420,72 +420,79 @@ _AFXINL void AfxResubV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const 
     v[3] = c[3] - (a[3] * b[3]);
 }
 
-// Mix
-// The MIX function is conceptually similar to LERP but may involve additional functionality, such as more complex blending modes or different blending parameters. It is often used in shader programming and graphics.
-// v = x * (1 - t) + y * t
+// Recip
 
-_AFXINL void AfxV2dMix(afxV2d v, afxV2d const x, afxV2d const y, afxReal t)
+_AFXINL void AfxV2dRecip(afxV2d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT3(v, x, y);
+    // Should be compatible with XMVECTOR XMVectorReciprocal(FXMVECTOR V)
 
-    v[0] = x[0] * (1.f - t) + y[0] * t;
-    v[1] = x[1] * (1.f - t) + y[1] * t;
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    AfxV2dDiv(v, AFX_V2D_ONE, in);
 }
 
-_AFXINL void AfxV3dMix(afxV3d v, afxV3d const x, afxV3d const y, afxReal t)
+_AFXINL void AfxV3dRecip(afxV3d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT3(v, x, y);
+    // Should be compatible with XMVECTOR XMVectorReciprocal(FXMVECTOR V)
 
-    v[0] = x[0] * (1.f - t) + y[0] * t;
-    v[1] = x[1] * (1.f - t) + y[1] * t;
-    v[2] = x[2] * (1.f - t) + y[2] * t;
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    AfxV3dDiv(v, AFX_V3D_ONE, in);
 }
 
-_AFXINL void AfxV4dMix(afxV4d v, afxV4d const x, afxV4d const y, afxReal t)
+_AFXINL void AfxV4dRecip(afxV4d v, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT3(v, x, y);
+    // Should be compatible with XMVECTOR XMVectorReciprocal(FXMVECTOR V)
 
-    v[0] = x[0] * (1.f - t) + y[0] * t;
-    v[1] = x[1] * (1.f - t) + y[1] * t;
-    v[2] = x[2] * (1.f - t) + y[2] * t;
-    v[3] = x[3] * (1.f - t) + y[3] * t;
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    AfxV4dDiv(v, AFX_V4D_ONE, in);
 }
 
-// Lerp
-// LERP is a method to interpolate linearly between two values. In the context of 4D vectors, it calculates the intermediate vector between a start and end vector based on a factor t ranging from 0.0 to 1.0.
-// v = x + t * (y - x)
+// Negate
 
-_AFXINL void AfxV2dLerp(afxV2d v, afxV2d const x, afxV2d const y, afxReal t)
+_AFXINL void AfxV2dNeg(afxV2d v, afxV2d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT3(v, x, y);
-
-    v[0] = x[0] + t * (y[0] - x[0]);
-    v[1] = x[1] + t * (y[1] - x[1]);
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = -(in[0]);
+    v[1] = -(in[1]);
 }
 
-_AFXINL void AfxV3dLerp(afxV3d v, afxV3d const x, afxV3d const y, afxReal t)
+_AFXINL void AfxV3dNeg(afxV3d v, afxV3d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT3(v, x, y);
-
-    v[0] = x[0] + t * (y[0] - x[0]);
-    v[1] = x[1] + t * (y[1] - x[1]);
-    v[2] = x[2] + t * (y[2] - x[2]);
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = -(in[0]);
+    v[1] = -(in[1]);
+    v[2] = -(in[2]);
 }
 
-_AFXINL void AfxV4dLerp(afxV4d v, afxV4d const x, afxV4d const y, afxReal t)
+_AFXINL void AfxV4dNeg(afxV4d v, afxV4d const in)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT3(v, x, y);
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = -(in[0]);
+    v[1] = -(in[1]);
+    v[2] = -(in[2]);
+    v[3] = -(in[3]);
+}
 
-    v[0] = x[0] + t * (y[0] - x[0]);
-    v[1] = x[1] + t * (y[1] - x[1]);
-    v[2] = x[2] + t * (y[2] - x[2]);
-    v[3] = x[3] + t * (y[3] - x[3]);
+_AFXINL void AfxV4dNegAffine(afxV4d v, afxV4d const in)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(v);
+    AFX_ASSERT(in);
+    v[0] = -(in[0]);
+    v[1] = -(in[1]);
+    v[2] = -(in[2]);
+    v[3] = (in[3]);
 }
 
 

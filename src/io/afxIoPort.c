@@ -157,7 +157,7 @@ _AFX afxError _AfxExuStdIoCtrlCb(afxIoBridge exu, afxInt code)
         do
         {
             AfxRequestThreadInterruption(exu->worker);
-            _AfxWaitForIdleIoBridge(exu, AFX_TIME_INFINITE);
+            _AfxWaitForIdleIoBridge(exu, AFX_TIMEOUT_INFINITE);
         } while (!AfxWaitForThreadExit(exu->worker, &exitCode));
 
         break;

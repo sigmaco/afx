@@ -19,7 +19,20 @@
 #define _AVX_DRAW_C
 #define _AVX_QUERY_POOL_C
 #define _AVX_DRAW_CONTEXT_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
+
+_AVX afxCmdId AvxCmdPipelineBarrier(afxDrawContext dctx, avxPipelineStage dstStage, avxPipelineAccess dstAcc)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+
+    afxCmdId cmdId;
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(PipelineBarrier), sizeof(cmd->PipelineBarrier), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->PipelineBarrier.dstStage = dstStage;
+    cmd->PipelineBarrier.dstAccess = dstAcc;
+    return cmdId;
+}
 
 AVX afxCmdId AvxCmdBeginQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit queryIdx, afxBool precise)
 {

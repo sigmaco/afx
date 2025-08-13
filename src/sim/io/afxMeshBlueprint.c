@@ -228,10 +228,10 @@ _ASX afxError AsxRebuildTriangleSkins(asxMeshFactory* mfac, afxUnit baseTriIdx, 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_ASX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxV3d whd, afxReal slantX, afxReal slantY)
+_ASX afxMesh AfxBuildParallelepipedMesh(afxMorphology morp, afxV3d whd, afxReal slantX, afxReal slantY)
 {
     afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
     AFX_ASSERT(whd);
 
     if (!slantX)
@@ -279,7 +279,7 @@ _ASX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxV3d whd, afxReal s
     mshb.triCnt = numIndices / 3;
 
     afxMesh msh;
-    AfxBuildMeshes(sim, 1, &mshb, &msh);
+    AfxBuildMeshes(morp, 1, &mshb, &msh);
 
     AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
     AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
@@ -307,10 +307,10 @@ _ASX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxV3d whd, afxReal s
     return msh;
 }
 
-_ASX afxMesh AfxBuildDomeMesh2(afxSimulation sim, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv)
+_ASX afxMesh AfxBuildDomeMesh2(afxMorphology morp, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv)
 {
     afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
 
     if (!radius)
         radius = 1.f;
@@ -334,7 +334,7 @@ _ASX afxMesh AfxBuildDomeMesh2(afxSimulation sim, afxReal radius, afxUnit stacks
     mshb.triCnt = numIndices / 3;
 
     afxMesh msh;
-    AfxBuildMeshes(sim, 1, &mshb, &msh);
+    AfxBuildMeshes(morp, 1, &mshb, &msh);
 
     AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
     AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
@@ -445,10 +445,10 @@ _ASX afxMesh AfxBuildDomeMesh2(afxSimulation sim, afxReal radius, afxUnit stacks
     return msh;
 }
 
-_ASX afxMesh AfxBuildCapsuleMesh(afxSimulation sim, afxReal radius, afxReal height, afxUnit stacks, afxUnit slices, afxUnit cylinderSlices, afxBool inv)
+_ASX afxMesh AfxBuildCapsuleMesh(afxMorphology morp, afxReal radius, afxReal height, afxUnit stacks, afxUnit slices, afxUnit cylinderSlices, afxBool inv)
 {
     afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
 
     if (!radius)
         radius = 1.f; // Radius of the sphere caps
@@ -480,7 +480,7 @@ _ASX afxMesh AfxBuildCapsuleMesh(afxSimulation sim, afxReal radius, afxReal heig
     mshb.triCnt = numIndices / 3;
 
     afxMesh msh;
-    AfxBuildMeshes(sim, 1, &mshb, &msh);
+    AfxBuildMeshes(morp, 1, &mshb, &msh);
 
     AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
     AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
@@ -608,10 +608,10 @@ _ASX afxMesh AfxBuildCapsuleMesh(afxSimulation sim, afxReal radius, afxReal heig
     return msh;
 }
 
-_ASX afxMesh AfxBuildPlaneMesh(afxSimulation sim, afxUnit gridSizeX, afxUnit gridSizeY, afxReal width, afxReal height)
+_ASX afxMesh AfxBuildPlaneMesh(afxMorphology morp, afxUnit gridSizeX, afxUnit gridSizeY, afxReal width, afxReal height)
 {
     afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
 
     if (!gridSizeX)
         gridSizeX = 10;
@@ -638,7 +638,7 @@ _ASX afxMesh AfxBuildPlaneMesh(afxSimulation sim, afxUnit gridSizeX, afxUnit gri
     mshb.triCnt = numIndices / 3;
 
     afxMesh msh;
-    AfxBuildMeshes(sim, 1, &mshb, &msh);
+    AfxBuildMeshes(morp, 1, &mshb, &msh);
 
     AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
     AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
@@ -710,10 +710,10 @@ _ASX afxMesh AfxBuildPlaneMesh(afxSimulation sim, afxUnit gridSizeX, afxUnit gri
     @param mesh Address of a pointer to the output shape, an afxMesh instance.
 */
 
-_ASX afxMesh AfxBuildSphereMesh(afxSimulation sim, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv)
+_ASX afxMesh AfxBuildSphereMesh(afxMorphology morp, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv)
 {
     afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
 
     if (!radius)
         radius = 1.f;
@@ -736,7 +736,7 @@ _ASX afxMesh AfxBuildSphereMesh(afxSimulation sim, afxReal radius, afxUnit stack
     mshb.triCnt = numIndices / 3;
 
     afxMesh msh;
-    AfxBuildMeshes(sim, 1, &mshb, &msh);
+    AfxBuildMeshes(morp, 1, &mshb, &msh);
 
     AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
     AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
@@ -852,10 +852,10 @@ _ASX afxMesh AfxBuildSphereMesh(afxSimulation sim, afxReal radius, afxUnit stack
     @param mesh Address of a pointer to the output shape, an afxMesh instance.
 */
 
-_ASX afxError AfxBuildTorusMesh(afxSimulation sim, afxReal innerRadius, afxReal outerRadius, afxUnit sides, afxUnit rings, afxMesh* mesh)
+_ASX afxError AfxBuildTorusMesh(afxMorphology morp, afxReal innerRadius, afxReal outerRadius, afxUnit sides, afxUnit rings, afxMesh* mesh)
 {
     afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
     AFX_ASSERT(mesh);
 
 
@@ -873,10 +873,10 @@ _ASX afxError AfxBuildTorusMesh(afxSimulation sim, afxReal innerRadius, afxReal 
     @param mesh Address of a pointer to the output shape, an afxMesh instance.
 */
 
-_ASX afxError AfxBuildCylinderMesh(afxSimulation sim, afxReal radius1, afxReal radius2, afxReal len, afxUnit slices, afxUnit stacks, afxMesh* mesh)
+_ASX afxError AfxBuildCylinderMesh(afxMorphology morp, afxReal radius1, afxReal radius2, afxReal len, afxUnit slices, afxUnit stacks, afxMesh* mesh)
 {
     afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
     AFX_ASSERT(mesh);
     AFX_ASSERT(radius1 >= 0.f);
     AFX_ASSERT(radius1 >= 0.f);
@@ -891,10 +891,10 @@ _ASX afxError AfxBuildCylinderMesh(afxSimulation sim, afxReal radius1, afxReal r
     @param mesh Address of a pointer to the output shape, an afxMesh instance.
 */
 
-_ASX afxError AfxBuildBoxMesh(afxSimulation sim, afxV3d const whd, afxUnit secCnt, afxMesh* mesh)
+_ASX afxError AfxBuildBoxMesh(afxMorphology morp, afxV3d const whd, afxUnit secCnt, afxMesh* mesh)
 {
     afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
     AFX_ASSERT(mesh);
     AFX_ASSERT(whd);
 
@@ -967,7 +967,7 @@ _ASX afxError AfxBuildBoxMesh(afxSimulation sim, afxV3d const whd, afxUnit secCn
     mshb.sections = sections;
 
     afxMesh msh;
-    AfxBuildMeshes(sim, 1, &mshb, &msh);
+    AfxBuildMeshes(morp, 1, &mshb, &msh);
 
     AfxFormatVertexAttribute(msh, 0, avxFormat_RGB32f, afxVertexFlag_POSITIONAL | afxVertexFlag_SPATIAL | afxVertexFlag_ATV, &AFX_STRING("pos"));
     AfxFormatVertexAttribute(msh, 1, avxFormat_RGB32f, afxVertexFlag_NORMALIZED | afxVertexFlag_LTM, &AFX_STRING("nrm"));
@@ -994,7 +994,7 @@ _ASX afxError AfxBuildBoxMesh(afxSimulation sim, afxV3d const whd, afxUnit secCn
     return err;
 }
 
-_ASX afxError AfxBuildGridMesh(afxSimulation sim, afxUnit rows, afxUnit layers, afxReal width, afxReal depth, afxMesh* mesh)
+_ASX afxError AfxBuildGridMesh(afxMorphology morp, afxUnit rows, afxUnit layers, afxReal width, afxReal depth, afxMesh* mesh)
 {
     // _ldrShapeCreateRectangularGridPlanef
     afxError err = NIL;
@@ -1014,7 +1014,7 @@ _ASX afxError AfxBuildGridMesh(afxSimulation sim, afxUnit rows, afxUnit layers, 
     mshb.attrCnt = 4;
     mshb.attrs = (afxString[]) { AFX_STRING("pos"), AFX_STRING("nrm"), AFX_STRING("tan"), AFX_STRING("uv") };
     mshb.triCnt = numberIndices / 3;
-    AfxBuildMeshes(sim, 1, &mshb, &msh);
+    AfxBuildMeshes(morp, 1, &mshb, &msh);
 
     afxUnit* indices = AfxGetMeshIndices(msh, 0);
 

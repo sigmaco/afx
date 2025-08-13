@@ -257,31 +257,31 @@ AFXINL afxLink*         AfxGetPrevLink(afxLink const *lnk);
     AFX_GET_LINKED_OBJECT is a macro for safe container lookup (container_of pattern).
 */
 
-#define AFX_GET_LINKED_OBJECT(type_, lnk_, offset_) \
-    ((lnk_) = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_))
+#define AFX_GET_LINKED_OBJECT(TYPE_, link_, offset_) \
+    ((TYPE_*)AFX_REBASE(link_, TYPE_, offset_))
 
 /*
     AFX_ITERATE_CHAIN is a powerful macro for iterating over intrusive linked lists (where links are embedded within larger structures). 
     It's efficient and similar in spirit to Linux kernel macros like list_for_each_entry.
-    It iterates through a circular linked list that is anchored by ch_. It allows access to each element of type type_ through the pointer lnk_.
+    It iterates through a circular linked list that is anchored by pChain_. It allows access to each element of type TYPE_ through the pointer lnk_.
     It's built for a custom data structure defined with an afxLink struct for linking nodes.
 */
 
-#define AFX_ITERATE_CHAIN(type_, iter_, link_, ch_) \
-    for (afxLink const* _next##iter_ = (ch_)->anchor.next, \
-                      * _curr##iter_ = _next##iter_; \
-         (_curr##iter_ != &(ch_)->anchor) && \
-         ((iter_) = (type_*)AFX_REBASE(_curr##iter_, type_, link_), \
-          _next##iter_ = _curr##iter_->next, 1); \
-         _curr##iter_ = _next##iter_)
+#define AFX_ITERATE_CHAIN(TYPE_, iterator_, link_, pChain_) \
+    for (afxLink const* _next##iterator_ = (pChain_)->anchor.next, \
+                      * _curr##iterator_ = _next##iterator_; \
+         (_curr##iterator_ != &(pChain_)->anchor) && \
+         ((iterator_) = (TYPE_*)AFX_REBASE(_curr##iterator_, TYPE_, link_), \
+          _next##iterator_ = _curr##iterator_->next, 1); \
+         _curr##iterator_ = _next##iterator_)
 
-#define AFX_ITERATE_CHAIN2(type_, iter2_, link_, ch_) \
-    for (afxLink const* _next##iter2_ = (ch_)->anchor.next, \
-                      * _curr##iter2_ = _next##iter2_; \
-         (_curr##iter2_ != &(ch_)->anchor) && \
-         ((iter_) = (type_*)AFX_REBASE(_curr##iter2_, type_, link_), \
-          _next##iter2_ = _curr##iter2_->next, 1); \
-         _curr##iter2_ = _next##iter2_)
+#define AFX_ITERATE_CHAIN2(TYPE_, iterator2_, link_, pChain_) \
+    for (afxLink const* _next##iterator2_ = (pChain_)->anchor.next, \
+                      * _curr##iterator2_ = _next##iterator2_; \
+         (_curr##iterator2_ != &(pChain_)->anchor) && \
+         ((iterator2_) = (TYPE_*)AFX_REBASE(_curr##iterator2_, TYPE_, link_), \
+          _next##iterator2_ = _curr##iterator2_->next, 1); \
+         _curr##iterator2_ = _next##iterator2_)
 
 /*
     AFX_ITERATE_CHAIN_B2F is the reverse counterpart of AFX_ITERATE_CHAIN.
@@ -292,13 +292,13 @@ AFXINL afxLink*         AfxGetPrevLink(afxLink const *lnk);
     This version stays compact, keeping all logic inside the for condition.
 */
 
-#define AFX_ITERATE_CHAIN_B2F(type_, iter_, link_, ch_) \
-    for (afxLink const* _prev##iter_ = (ch_)->anchor.prev, \
-                      * _curr##iter_ = _prev##iter_; \
-         (_curr##iter_ != &(ch_)->anchor) && \
-         ((iter_) = (type_*)AFX_REBASE(_curr##iter_, type_, link_), \
-          _prev##iter_ = _curr##iter_->prev, 1); \
-         _curr##iter_ = _prev##iter_)
+#define AFX_ITERATE_CHAIN_B2F(TYPE_, iterator_, link_, pChain_) \
+    for (afxLink const* _prev##iterator_ = (pChain_)->anchor.prev, \
+                      * _curr##iterator_ = _prev##iterator_; \
+         (_curr##iterator_ != &(pChain_)->anchor) && \
+         ((iterator_) = (TYPE_*)AFX_REBASE(_curr##iterator_, TYPE_, link_), \
+          _prev##iterator_ = _curr##iterator_->prev, 1); \
+         _curr##iterator_ = _prev##iterator_)
 
 /*
     Important Notes on Atomic Iteration.
@@ -311,24 +311,24 @@ AFXINL afxLink*         AfxGetPrevLink(afxLink const *lnk);
     traversal techniques (version counters, epoch-based GC, etc.).
 */
 
-#define AFX_ITERATE_CHAIN_ATOMIC(type_, iter_, link_, ch_, mem_order_) \
-    for (afxLink const* _curr##iter_ = atomic_load_explicit(&(ch_)->anchor.nextA, mem_order_), \
-                      * _next##iter_; \
-         (_curr##iter_ != &(ch_)->anchor) && \
-         ((iter_) = (type_*)AFX_REBASE(_curr##iter_, type_, link_), \
-          _next##iter_ = atomic_load_explicit(&_curr##iter_->nextA, mem_order_), 1); \
-         _curr##iter_ = _next##iter_)
+#define AFX_ITERATE_CHAIN_ATOMIC(TYPE_, iterator_, link_, pChain_, mem_order_) \
+    for (afxLink const* _curr##iterator_ = atomic_load_explicit(&(pChain_)->anchor.nextA, mem_order_), \
+                      * _next##iterator_; \
+         (_curr##iterator_ != &(pChain_)->anchor) && \
+         ((iterator_) = (TYPE_*)AFX_REBASE(_curr##iterator_, TYPE_, link_), \
+          _next##iterator_ = atomic_load_explicit(&_curr##iterator_->nextA, mem_order_), 1); \
+         _curr##iterator_ = _next##iterator_)
 
-#define AFX_ITERATE_CHAIN_ATOMIC_RELAXED(type_, iter_, link_, ch_) \
-    AFX_ITERATE_CHAIN_ATOMIC(type_, iter_, link_, ch_, memory_order_relaxed)
+#define AFX_ITERATE_CHAIN_ATOMIC_RELAXED(TYPE_, iterator_, link_, pChain_) \
+    AFX_ITERATE_CHAIN_ATOMIC(TYPE_, iterator_, link_, pChain_, memory_order_relaxed)
 
-#define AFX_ITERATE_CHAIN_ATOMIC_B2F(type_, iter_, link_, ch_, mem_order_) \
-    for (afxLink const* _curr##iter_ = atomic_load_explicit(&(ch_)->anchor.prevA, mem_order_), \
-                      * _prev##iter_; \
-         (_curr##iter_ != &(ch_)->anchor) && \
-         ((iter_) = (type_*)AFX_REBASE(_curr##iter_, type_, link_), \
-          _prev##iter_ = atomic_load_explicit(&_curr##iter_->prevA, mem_order_), 1); \
-         _curr##iter_ = _prev##iter_)
+#define AFX_ITERATE_CHAIN_ATOMIC_B2F(TYPE_, iterator_, link_, pChain_, mem_order_) \
+    for (afxLink const* _curr##iterator_ = atomic_load_explicit(&(pChain_)->anchor.prevA, mem_order_), \
+                      * _prev##iterator_; \
+         (_curr##iterator_ != &(pChain_)->anchor) && \
+         ((iterator_) = (TYPE_*)AFX_REBASE(_curr##iterator_, TYPE_, link_), \
+          _prev##iterator_ = atomic_load_explicit(&_curr##iterator_->prevA, mem_order_), 1); \
+         _curr##iterator_ = _prev##iterator_)
 
 
 #endif//AFX_CHAIN_H

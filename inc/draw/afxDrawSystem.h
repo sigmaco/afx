@@ -19,6 +19,8 @@
 // The backend is highly optimized and is set up for parallelization.
 // We welcome contributions from the open-source community.
 
+// AVX is designed to be a Vulkan-flavored OpenGL. It is not a graphics engine; it will not engage in optimizations.
+
 #ifndef AVX_DRAW_SYSTEM_H
 #define AVX_DRAW_SYSTEM_H
 
@@ -26,7 +28,7 @@
 #include "qwadro/inc/draw/afxDrawContext.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
 #include "qwadro/inc/draw/io/avxRaster.h"
-#include "qwadro/inc/draw/op/avxCanvas.h"
+#include "qwadro/inc/draw/video/avxCanvas.h"
 #include "qwadro/inc/draw/op/avxLigature.h"
 #include "qwadro/inc/draw/op/avxPipeline.h"
 #include "qwadro/inc/draw/op/avxQueryPool.h"
@@ -36,6 +38,7 @@
 #include "qwadro/inc/draw/op/avxVertexInput.h"
 #include "qwadro/inc/draw/op/avxDrawing.h"
 #include "qwadro/inc/draw/op/avxFence.h"
+#include "qwadro/inc/draw/io/afxDrawInput.h"
 
 #define AVX_MAX_BRIDGES_PER_SYSTEM (32)
 
@@ -72,14 +75,14 @@ AVX afxModule       AvxGetDrawSystemIcd
 );
 
 /*
-    The AvxGetDrawSystemProcedures() function retrieves the address of a device-specific function that allows you to 
+    The AvxResolveDrawSymbols() function retrieves the address of a device-specific function that allows you to 
     dynamically load Vulkan function pointers for a device object at runtime. It is part of Qwadro's extensible and 
     dynamic approach, enabling developers to load Qwadro functions based on their needs, instead of hardcoding everything.
 
     Returns the number of procedures found and retrieved.
 */
 
-AVX afxUnit         AvxGetDrawSystemProcedures
+AVX afxUnit         AvxResolveDrawSymbols
 (
     // The established drawing system.
     afxDrawSystem   dsys, 
@@ -101,7 +104,7 @@ AVX afxUnit         AvxGetDrawSystemProcedures
     This function allows applications to query and retrieve information about the established bridges, 
     which can be useful when dealing with systems that involve multiple hardware/software interfaces.
 
-    Returns the number of arranged bridges.
+    Returns the number of arranged bridges. If @bridges is NIL, it returns the total number of bridges from the base index.
 */
 
 AVX afxUnit         AvxGetDrawBridges
@@ -121,7 +124,7 @@ AVX afxUnit         AvxGetDrawBridges
 
 /*
     The AvxChooseDrawBridges() function provides a way to select specific drawing bridges in an established drawing system, 
-    filtered by device ID and port ID. The function returns the selected bridges in an array and allows the application 
+    filtered by device ID. The function returns the selected bridges in an array and allows the application 
     to filter the available bridges based on the provided indices. This is useful for applications that need to work 
     with multiple bridges or interfaces between components in a drawing system, such as managing communication between 
     the CPU and GPU or between different parts of the graphics pipeline.
@@ -137,11 +140,10 @@ AVX afxUnit         AvxChooseDrawBridges
     // An optional device ID for which the bridges must be linked against.
     afxUnit         ddevId, 
 
-    // An optional device port ID associated with the drawing device for which bridges must be linked against.
-    afxUnit         portId, 
-    
     // An optional bitmask describing the drawing device's port capabilities for which bridges must be linked against. 
-    afxDrawPortFlags portFlags,
+    afxDrawCaps     caps,
+
+    afxMask         exuMask,
 
     // The first index of the bridges to begin selection from.
     afxUnit         first, 
@@ -188,14 +190,14 @@ AVX afxError        AvxWaitForDrawBridges
     // The drawing system to which the specific bridge belongs.
     afxDrawSystem   dsys, 
 
+    // The timeout period that the function should wait for the bridge to become ready or to complete its operation. 
+    // The time is expressed in microseconds, and the function will stop waiting once this period has elapsed.
+    afxUnit64       timeout,
+
     // The index of the execution unit (bridge) that needs to be waited on. 
     // If the drawing system has multiple bridges or execution units (e.g., for communication between different components or devices), 
     // this index identifies the particular bridge you're concerned with.
-    afxMask         exuMask, 
-
-    // The timeout period that the function should wait for the bridge to become ready or to complete its operation. 
-    // The time is expressed in microseconds, and the function will stop waiting once this period has elapsed.
-    afxUnit64       timeout
+    afxMask         exuMask
 );
 
 /*
@@ -210,21 +212,25 @@ AVX afxError        AvxWaitForDrawBridges
 AVX afxError        AvxWaitForDrawQueue
 (
     // The drawing system that contains the queue.
-    afxDrawSystem   dsys, 
+    afxDrawSystem   dsys,
+
+    // The timeout period defines how long the function will wait for the queue to become ready. 
+    // The time is specified in microseconds.
+    afxUnit64       timeout,
 
     // The execution unit index, which likely refers to a specific queue or processing unit within the drawing system.
     // This helps to identify which execution unit's queue you are waiting for, especially if there are multiple queues in the system.
-    afxUnit         exuIdx, 
+    afxUnit         exuIdx,
 
     // The queue you want to wait for. 
     // Drawing systems often have multiple command queues for various tasks like graphics, compute, or transfer operations. 
     // The queId specifies which queue's state should be checked.
-    afxUnit         queId, 
-
-    // The timeout period defines how long the function will wait for the queue to become ready. 
-    // The time is specified in microseconds.
-    afxUnit64       timeout
+    afxUnit         queId
 );
+
+AVX void AvxGetEnabledDrawFeatures(afxDrawSystem dsys, afxDrawFeatures* features);
+
+AVX afxUnit AvxTestForDrawExtensionsEnabled(afxDrawSystem dsys, afxUnit cnt, afxString const* exts, afxBool enabled[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -313,8 +319,13 @@ AVX afxUnit AvxEvokeDrawSystems
 
 AVX afxError AvxConfigureDrawSystem
 (
-    afxUnit icd, 
-
+    // The Id of the installable client driver.
+    afxUnit icd,
+    // Desired drawing capabilities.
+    afxDrawCaps caps,
+    // Requested acceleration type.
+    afxAcceleration accel,
+    // A pointer to a system configuration structure.
     afxDrawSystemConfig* cfg
 );
 

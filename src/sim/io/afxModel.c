@@ -19,7 +19,7 @@
 #define _ASX_SKELETON_C
 //#define _ASX_PLACEMENT_C
 //#define _ASX_POSE_C
-#include "../../draw/impl/avxImplementation.h"
+#include "../../draw/ddi/avxImplementation.h"
 #include "../impl/asxImplementation.h"
 
 // IMPORTANT:
@@ -79,7 +79,7 @@ _ASXINL void AfxDescribeModel(afxModel mdl, afxModelInfo* info)
     info->jntLe = mdl->jntLe;
     info->lodType = mdl->lodType;
     info->allowedLodErrFadingFactor = mdl->allowedLodErrFadingFactor;
-    info->displacement = mdl->displacement;
+    info->displace = mdl->displace;
     info->rigCnt = mdl->rigCnt;
     info->riggedMeshCnt = mdl->usedRigCnt;
 }
@@ -92,9 +92,9 @@ _ASXINL void AfxDisplaceModel(afxModel mdl, afxTransform const* t)
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
 
     if (!t)
-        AfxResetTransform(&mdl->displacement);
+        AfxResetTransform(&mdl->displace);
     else
-        AfxCopyTransform(&mdl->displacement, t);
+        AfxCopyTransform(&mdl->displace, t);
 }
 
 _ASXINL void AfxGetModelDisplacement(afxModel mdl, afxTransform* t)
@@ -102,7 +102,7 @@ _ASXINL void AfxGetModelDisplacement(afxModel mdl, afxTransform* t)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
     AFX_ASSERT(t);
-    AfxCopyTransform(&mdl->displacement, t);
+    AfxCopyTransform(&mdl->displace, t);
 }
 
 _ASXINL void AfxComputeModelDisplacement(afxModel mdl, afxM4d m)
@@ -110,7 +110,7 @@ _ASXINL void AfxComputeModelDisplacement(afxModel mdl, afxM4d m)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
     AFX_ASSERT(m);
-    AfxComputeCompositeTransformM4d(&mdl->displacement, m);
+    AfxComputeCompositeTransformM4d(&mdl->displace, m);
 }
 
 // MESH RIGGING
@@ -125,7 +125,7 @@ _ASX void AfxDescribeMeshRig(afxModel mdl, afxUnit rigIdx, afxMeshRigInfo* info)
     // sanitize arguments
     rigIdx = AFX_MIN(rigIdx, mdl->rigCnt - 1);
 
-    asxMeshRig* rig = mdl->rigs[rigIdx];
+    asxRiggedMesh* rig = mdl->rigs[rigIdx];
     if (!rig) *info = (afxMeshRigInfo) { 0 };
     else
     {
@@ -147,7 +147,7 @@ _ASXINL afxBool AfxIsRiggedMeshTransplanted(afxModel mdl, afxUnit rigIdx)
     // sanitize arguments
     rigIdx = AFX_MIN(rigIdx, mdl->rigCnt - 1);
 
-    asxMeshRig* rig = mdl->rigs[rigIdx];
+    asxRiggedMesh* rig = mdl->rigs[rigIdx];
     return (rig && (rig->flags & afxMeshRigFlag_TRANSPLANTED));
 }
 
@@ -167,7 +167,7 @@ _ASXINL afxUnit AfxGetRiggedMeshes(afxModel mdl, afxUnit baseRigIdx, afxUnit rig
         afxUnit rigIdx = baseRigIdx + i;
         AFX_ASSERT_RANGE(mdl->rigCnt, rigIdx, 1);
 
-        asxMeshRig* rig = mdl->rigs[rigIdx];
+        asxRiggedMesh* rig = mdl->rigs[rigIdx];
         if (!rig) continue;
         afxMesh msh = rig->msh;
 
@@ -181,12 +181,12 @@ _ASXINL afxUnit AfxGetRiggedMeshes(afxModel mdl, afxUnit baseRigIdx, afxUnit rig
     return rslt;
 }
 
-_ASX afxError _AsxPopMeshRig(asxMeshRig **pRig)
+_ASX afxError _AsxPopMeshRig(asxRiggedMesh **pRig)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pRig);
 
-    asxMeshRig* rig = *pRig;
+    asxRiggedMesh* rig = *pRig;
 
     afxMesh msh = rig->msh;
     AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &msh);
@@ -194,6 +194,7 @@ _ASX afxError _AsxPopMeshRig(asxMeshRig **pRig)
     if (rig->flags & afxMeshRigFlag_TRANSPLANTED)
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &rig->skl);
+        AFX_ASSERT(rig->skl != rig->mdl);
         AfxDisposeObjects(1, &rig->skl);
         rig->flags &= ~afxMeshRigFlag_TRANSPLANTED;
     }
@@ -227,8 +228,8 @@ _ASX afxError AfxRigMeshes(afxModel mdl, afxModel skl, afxUnit baseRigIdx, afxUn
     {
         afxMesh msh = meshes ? meshes[i] : NIL;
         afxUnit rigIdx = baseRigIdx + i;
-        asxMeshRig** pRig = &mdl->rigs[rigIdx];
-        asxMeshRig* rig = *pRig;
+        asxRiggedMesh** pRig = &mdl->rigs[rigIdx];
+        asxRiggedMesh* rig = *pRig;
         afxMesh mshCurr = NIL;
 
         if (rig)
@@ -319,7 +320,7 @@ _ASX afxError AfxRigMeshes(afxModel mdl, afxModel skl, afxUnit baseRigIdx, afxUn
             else
             {
                 afxUnit idx;
-                asxMeshRig* rig = NIL;
+                asxRiggedMesh* rig = NIL;
                 AfxRequestPoolUnits(_AsxGetMeshRigPool(msh), 1, &idx, &rig);
                 if (!rig) AfxThrowError();
                 else
@@ -394,7 +395,7 @@ _ASXINL void AfxComputeRiggedMeshMatrices(afxModel mdl, afxUnit rigIdx, afxPlace
     // sanitize arguments
     rigIdx = AFX_MIN(rigIdx, mdl->rigCnt - 1);
 
-    asxMeshRig* rig = mdl->rigs[rigIdx];
+    asxRiggedMesh* rig = mdl->rigs[rigIdx];
     if (!rig) return;
 
     afxMesh msh = rig->msh;
@@ -431,7 +432,7 @@ _ASXINL void AfxSetMeshRigTxd(afxModel mdl, afxUnit rigIdx, afxMaterial mtl)
     // sanitize arguments
     rigIdx = AFX_MIN(rigIdx, mdl->rigCnt - 1);
 
-    asxMeshRig* rig = mdl->rigs[rigIdx];
+    asxRiggedMesh* rig = mdl->rigs[rigIdx];
     if (!rig) return;
 
     afxMesh msh = rig->msh;
@@ -468,7 +469,7 @@ _ASXINL afxBool AfxFindMeshRigMaterial(afxModel mdl, afxUnit rigIdx, afxString c
     // sanitize arguments
     rigIdx = AFX_MIN(rigIdx, mdl->rigCnt - 1);
 
-    asxMeshRig* rig = mdl->rigs[rigIdx];
+    asxRiggedMesh* rig = mdl->rigs[rigIdx];
     if (!rig) return FALSE;
 
     afxMesh msh = rig->msh;
@@ -866,7 +867,7 @@ _ASX void AfxBuildRiggedMeshCompositeMatrices(afxModel mdl, afxUnit rigIdx, afxP
     AFX_ASSERT(plceCap >= cnt);
     AFX_ASSERT(matrices);
 
-    asxMeshRig* rig = mdl->rigs[rigIdx];
+    asxRiggedMesh* rig = mdl->rigs[rigIdx];
     if (!rig) return;
 
     afxMesh msh = rig->msh;
@@ -956,22 +957,22 @@ _ASX afxError _AsxMdlCtorCb(afxModel mdl, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
 
-    afxSimulation sim = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    afxMorphology morp = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
     afxModelBlueprint const* mdlb = AFX_CAST(afxModelBlueprint const*, args[1]) + invokeNo;
 
-    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &mdlb->urn.s, &mdl->urn))
+    if (!AfxCatalogStrings(_AsxMorpGetModelUrnStringBase(morp), 1, &mdlb->urn.s, &mdl->urn))
     {
         AfxThrowError();
         return err;
     }
 
-    afxTransform const* displacement = &mdlb->displacement;
+    afxTransform const* displacement = &mdlb->displace;
 
     if (!displacement->flags)
-        AfxResetTransform(&mdl->displacement);
+        AfxResetTransform(&mdl->displace);
     else
-        AfxCopyTransform(&mdl->displacement, displacement);
+        AfxCopyTransform(&mdl->displace, displacement);
 
     AfxResetBoxes(1, &mdl->aabb, 0);
 
@@ -986,7 +987,7 @@ _ASX afxError _AsxMdlCtorCb(afxModel mdl, void** args, afxUnit invokeNo)
     mdl->jntCnt = jntCnt;
     mdl->lodType = lodType;
 
-    mdl->allowedLodErrFadingFactor = /*_AsxGetAllowedLodErrorFadingFactor(sim);*/ 0.80000001;
+    mdl->allowedLodErrFadingFactor = /*_AsxGetAllowedLodErrorFadingFactor(morp);*/ 0.80000001;
 
     afxObjectStash stashes[] =
     {
@@ -1052,7 +1053,7 @@ _ASX afxError _AsxMdlCtorCb(afxModel mdl, void** args, afxUnit invokeNo)
         // reset or catalog joint tags' strings.
 
         if (!mdlb->joints) AfxResetStrings(jntCnt, mdl->jntId);
-        else if (!AfxCatalogStrings(_AsxGetPivotTagStringBase(sim), jntCnt, mdlb->joints, mdl->jntId))
+        else if (!AfxCatalogStrings(_AsxMorpGetPivotTagStringBase(morp), jntCnt, mdlb->joints, mdl->jntId))
             AfxThrowError();
 
         AFX_ASSERT(mdl->jntCnt == jntCnt);
@@ -1087,7 +1088,7 @@ _ASX afxClassConfig const _ASX_MDL_CLASS_CONFIG =
 {
     .fcc = afxFcc_MDL,
     .name = "Model",
-    .desc = "Skeletal Animable Model",
+    .desc = "Animable Skeletal Model",
     .fixedSiz = sizeof(AFX_OBJECT(afxModel)),
     .ctor = (void*)_AsxMdlCtorCb,
     .dtor = (void*)_AsxMdlDtorCb
@@ -1147,31 +1148,31 @@ _ASX void AfxTransformModels(afxM3d const ltm, afxM3d const iltm, afxReal ltTol,
             AfxTransformMeshes(ltm, iltm, ltTol, atv, atTol, flags, mshCnt, meshes);
         }
 
-        AfxAssimilateTransforms(ltm, iltm, atv, 1, &mdl->displacement, &mdl->displacement);
+        AfxAssimilateTransforms(ltm, iltm, atv, 1, &mdl->displace, &mdl->displace);
     }
 }
 
-_ASX afxUnit AfxEnumerateModels(afxSimulation sim, afxUnit first, afxUnit cnt, afxModel models[])
+_ASX afxUnit AfxEnumerateModels(afxMorphology morp, afxUnit first, afxUnit cnt, afxModel models[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const* cls = _AsxGetModelClass(sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
+    afxClass const* cls = _AsxMorpGetModelClass(morp);
     AFX_ASSERT_CLASS(cls, afxFcc_MDL);
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)models);
 }
 
-_ASX afxError AfxAssembleModels(afxSimulation sim, afxUnit cnt, afxModelBlueprint const blueprints[], afxModel models[])
+_ASX afxError AfxAssembleModels(afxMorphology morp, afxUnit cnt, afxModelBlueprint const blueprints[], afxModel models[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
     AFX_ASSERT(blueprints);
     AFX_ASSERT(models);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = (afxClass*)_AsxGetModelClass(sim);
+    afxClass* cls = (afxClass*)_AsxMorpGetModelClass(morp);
     AFX_ASSERT_CLASS(cls, afxFcc_MDL);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)models, (void const*[]) { sim, blueprints }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)models, (void const*[]) { morp, blueprints }))
         AfxThrowError();
 
     return err;

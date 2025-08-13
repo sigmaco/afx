@@ -20,7 +20,7 @@
 #include "qwadro/inc/sim/afxSimDefs.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/mem/afxArray.h"
-#include "qwadro/inc/math/bound/afxBox.h"
+#include "qwadro/inc/math/coll/afxBox.h"
 #include "qwadro/inc/base/afxObject.h"
 #include "qwadro/inc/io/afxUrd.h"
 #include "qwadro/inc/math/afxVertex.h"
@@ -62,10 +62,19 @@ AFX_DEFINE_STRUCT(afxMeshMorph)
     afxMeshMorphFlags   flags;
     // For each morph target attribute, an original attribute MUST be present in the mesh.
     // Implementations SHOULD support at least 8 morphed attributes.
-    afxUnit             morphAttrCnt;
-    afxMask             morphedAttrs;
+    afxUnit             affectedAttrCnt;
+    afxMask             affectedAttrs;
     afxUnit             baseVtx;
     // All morphed data MUST have the same 'vtxCnt' as the base morph of the mesh.
+};
+
+AFX_DEFINE_STRUCT(afxMeshMorphing)
+{
+    afxFlags            flags;
+    afxMask             mask;
+    afxUnit             startMorphIdx, endMorphIdx;
+    afxReal             t, tRecip;
+    afxReal             posn;
 };
 
 AFX_DEFINE_STRUCT(afxMeshSection)
@@ -104,16 +113,16 @@ AFX_DEFINE_STRUCT(afxMeshBlueprint)
 };
 
 
-ASX afxMesh             AfxBuildParallelepipedMesh(afxSimulation sim, afxV3d whd, afxReal slantX, afxReal slantY);
-ASX afxMesh             AfxBuildDomeMesh(afxSimulation sim, afxReal radius, afxUnit slices);
+ASX afxMesh             AfxBuildParallelepipedMesh(afxMorphology morp, afxV3d whd, afxReal slantX, afxReal slantY);
+ASX afxMesh             AfxBuildDomeMesh(afxMorphology morp, afxReal radius, afxUnit slices);
 
-ASX afxMesh             AfxBuildDomeMesh2(afxSimulation sim, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv);
-ASX afxMesh             AfxBuildSphereMesh(afxSimulation sim, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv);
-ASX afxMesh             AfxBuildCapsuleMesh(afxSimulation sim, afxReal radius, afxReal height, afxUnit stacks, afxUnit slices, afxUnit cylinderSlices, afxBool inv);
-ASX afxMesh             AfxBuildPlaneMesh(afxSimulation sim, afxUnit gridSizeX, afxUnit gridSizeY, afxReal width, afxReal height);
+ASX afxMesh             AfxBuildDomeMesh2(afxMorphology morp, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv);
+ASX afxMesh             AfxBuildSphereMesh(afxMorphology morp, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv);
+ASX afxMesh             AfxBuildCapsuleMesh(afxMorphology morp, afxReal radius, afxReal height, afxUnit stacks, afxUnit slices, afxUnit cylinderSlices, afxBool inv);
+ASX afxMesh             AfxBuildPlaneMesh(afxMorphology morp, afxUnit gridSizeX, afxUnit gridSizeY, afxReal width, afxReal height);
 
-ASX afxError            AfxBuildBoxMesh(afxSimulation sim, afxV3d const whd, afxUnit secCnt, afxMesh* mesh);
-ASX afxMesh             AfxBuildDiscMesh(afxSimulation sim, afxReal radius, afxUnit secCnt);
-ASX afxError            AfxBuildGridMesh(afxSimulation sim, afxUnit rows, afxUnit layers, afxReal width, afxReal depth, afxMesh* mesh);
+ASX afxError            AfxBuildBoxMesh(afxMorphology morp, afxV3d const whd, afxUnit secCnt, afxMesh* mesh);
+ASX afxMesh             AfxBuildDiscMesh(afxMorphology morp, afxReal radius, afxUnit secCnt);
+ASX afxError            AfxBuildGridMesh(afxMorphology morp, afxUnit rows, afxUnit layers, afxReal width, afxReal depth, afxMesh* mesh);
 
 #endif//ASX_MESH_BLUEPRINT_H

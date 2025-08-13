@@ -23,13 +23,12 @@
 #include "qwadro/inc/sim/afxSimDefs.h"
 #include "qwadro/inc/math/afxTransform.h"
 
-ASX afxError        AfxAcquirePoses(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxPose lp[]);
-
 ASX afxUnit         AsxGetPoseCapacity(afxPose pose);
 
 ASX afxTransform*   AsxGetPoseTransform(afxPose pose, afxUnit artIdx);
 
-ASX void            AsxCopyPose(afxPose pose, afxPose from);
+ASX void            AsxCopyPose(afxPose pose, afxUnit toBaseArtIdx, afxPose from, afxUnit fromBaseArtIdx, afxUnit cnt, afxUnit const artMap[]);
+ASX void            AsxModulatePose(afxPose pose, afxUnit toBaseArtIdx, afxPose composite, afxUnit fromBaseArtIdx, afxUnit artCnt, afxReal weightNone, afxReal weightAll, akxTrackMask* mask, afxUnit const jntRemap[]);
 
 ASX void            AfxComputeAttachmentWorldMatrix(afxPose pose, afxModel skl, afxUnit jntIdx, afxUnit const sparseJntMap[], afxUnit const sparseJntMapRev[], afxM4d const displace, afxM4d m);
 ASX void            AfxComputeAttachmentOffset(afxPose pose, afxModel skl, afxUnit jntIdx, afxUnit const sparseJntMap[], afxUnit const sparseJntMapRev[], afxM4d const displace, afxM4d m);
@@ -41,5 +40,9 @@ ASX void            AsxApplyPoseRootMotionVectors(afxPose pose, afxV3d const tra
 ASX void            AsxCommencePoseAccumulation(afxPose pose, afxUnit baseArtIdx, afxUnit artCnt, afxUnit const jntMap[]);
 ASX void            AsxConcludePoseAccumulation(afxPose pose, afxUnit baseArtIdx, afxUnit artCnt, afxModel skl, afxReal allowedErr, afxUnit const jntMap[]);
 ASX void            AsxAccumulateLocalTransform(afxPose pose, afxUnit artIdx, afxUnit sklJntIdx, afxReal weight, afxModel skl, afxQuatBlend blendOp, afxTransform const* t);
+
+////////////////////////////////////////////////////////////////////////////////
+
+ASX afxError        AfxAcquirePoses(afxSimulation sim, afxUnit cnt, afxUnit const artCnt[], afxPose lp[]);
 
 #endif//ASX_POSE_H

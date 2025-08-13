@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// Morphable topogical mesh, a deformable mesh with fixed topology shared among shapes.
+
 /**
     O objeto afxMesh é a estrutura primária para dado geométrico no Qwadro.
     Este referencia dados de vértice, dados de triângulo, afxMaterial's, afxMeshMorph'es e afxMeshBias's.
@@ -29,7 +31,7 @@
 
     Para determinar quais articulações uma afxMesh está ligada a (uma para afxMesh rígida, muitas para afxMesh deformável), você pode acessar o arranjo de afxMeshBias's. 
     Este arranjo contém nomes das articulações as quais a afxMesh está ligada, bem como parâmetros de "oriented bounding box" para as partes da afxMesh que estão ligadas àquela articulação e outra informação pertinente a ligação malha-a-articulação.
-    Note que na maioria dos casos você não necessitará de usar os nomes das articulações no afxMeshBias diretamente, porque você pode usar um objeto asxMeshRig para fazer este trabalho (e outro trabalho necessário de ligação) para você.
+    Note que na maioria dos casos você não necessitará de usar os nomes das articulações no afxMeshBias diretamente, porque você pode usar um objeto asxRiggedMesh para fazer este trabalho (e outro trabalho necessário de ligação) para você.
 
     Os dados de índice para uma afxMesh, dado por um afxMesh referenciado pelo afxMesh, contém todos os índices para os triângulos na afxMesh.
     Estes índices sempre descrevem uma lista de triângulo - isso é, cada grupo de três índices descrevem um singelo triângulo - os dados não são organizados em "strips" ou "fans".
@@ -108,6 +110,13 @@
 
     The index data for a mesh, given by a afxMesh referenced by the mesh, contains all the indices for the triangles in the mesh. 
     These indices always describe a triangle list - that is, each group of three indices describes a single triangle - the data is not organised into strips or fans in any way. 
+*/
+
+/*
+    A morph target typically stores delta vertex positions (relative to the base mesh), and optionally, delta normals, tangents, and other attributes (UVs, colors, etc.)
+    Each morph target is essentially delta_position = target_vertex_position - base_vertex_position.
+    You generally only store deltas for affected vertices, not the entire mesh.
+    Actually, it should be always stored in delta to solve conflicts with original indexed vertices and additional buffer management.
 */
 
 /// Vertex data consists of vertex elements combined to form vertex components.
@@ -243,18 +252,18 @@ AFX_DEFINE_STRUCT(afxMeshInfo)
 };
 
 /**
-    The AfxGetMeshContext() method retrieves the simulation that provides the mesh.
+    The AfxGetMeshMateriality() method retrieves the simulation that provides the mesh.
 
     @param msh must be a valid afxMesh handle.
-    @return Must return an afxSimulation handle of the provider.
+    @return Must return an afxMorphology handle of the provider.
 */
 
-ASX afxSimulation   AfxGetMeshContext(afxMesh msh);
+ASX afxMorphology  AfxGetMeshMateriality(afxMesh msh);
 
 ASX afxBool         AfxGetMeshUrn(afxMesh msh, afxString* id);
 
 /**
-    The AfxGetMeshMorphes() method retrieves information describing one or more mesh morphes.
+    The AfxDescribeMeshMorphes() method retrieves information describing one or more mesh morphes.
 
     @param msh must be a valid afxMesh handle.
     @param baseMorphIdx is the number of the first/base morph to be indexed from.
@@ -262,10 +271,10 @@ ASX afxBool         AfxGetMeshUrn(afxMesh msh, afxString* id);
     @param info [out] must be a valid pointer to an array of afxMeshMorph structures.
 */
 
-ASX afxUnit         AfxGetMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, afxMeshMorph morphes[]);
+ASX afxUnit         AfxDescribeMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, afxMeshMorph morphes[]);
 
 /**
-    The AfxChangeMeshMorphes() method changes geometric data to one or more mesh morphes.
+    The AfxReformMesh() method changes geometric data to one or more mesh morphes.
 
     @param msh must be a valid afxMesh handle.
     @param baseMorphIdx is the number of the first/base morph to be indexed from.
@@ -273,7 +282,7 @@ ASX afxUnit         AfxGetMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit
     @param info must be a valid pointer to an array of afxMeshMorph structures.
 */
 
-ASX afxError        AfxChangeMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, afxMeshMorph const morphes[]);
+ASX afxError        AfxReformMesh(afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, afxMeshMorph const morphes[]);
 
 /**
     The AfxIsMeshDeformable() method tests whether a mesh is deformable (aka skinned).
@@ -288,7 +297,7 @@ ASX afxError        AfxChangeMeshMorphes(afxMesh msh, afxUnit baseMorphIdx, afxU
 
 ASX afxBool         AfxIsMeshDeformable(afxMesh msh);
 
-ASX afxUnit         AfxGetMeshBiases(afxMesh msh, afxUnit baseBiasIdx, afxUnit cnt, afxMeshBias biases[]);
+ASX afxUnit         AfxDescribeMeshBiases(afxMesh msh, afxUnit baseBiasIdx, afxUnit cnt, afxMeshBias biases[]);
 ASX afxString*      AfxGetMeshBiasTags(afxMesh msh, afxUnit baseBiasIdx);
 
 ASX afxUnit*        AfxGetMeshIndices(afxMesh msh, afxUnit baseTriIdx);
@@ -303,7 +312,7 @@ ASX afxUnit*        AfxGetMeshIndices(afxMesh msh, afxUnit baseTriIdx);
 ASX void            AfxDescribeMesh(afxMesh msh, afxMeshInfo* info);
 
 /**
-    The AfxGetMeshSections() method retrieves information describing one or more mesh sections.
+    The AfxDescribeMeshSections() method retrieves information describing one or more mesh sections.
 
     @param msh must be a valid afxMesh handle.
     @param baseSecIdx is the number of the first/base surface to be indexed from.
@@ -311,10 +320,10 @@ ASX void            AfxDescribeMesh(afxMesh msh, afxMeshInfo* info);
     @param info [out] must be a valid pointer to an array of afxMeshSection structures.
 */
 
-ASX afxUnit         AfxGetMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit cnt, afxMeshSection sections[]);
+ASX afxUnit         AfxDescribeMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit cnt, afxMeshSection sections[]);
 
 /**
-    The AfxResetMeshSections() method resets one or more mesh sections to new ranges.
+    The AfxSectionizeMesh() method resets one or more mesh sections to new ranges.
 
     @param msh must be a valid afxMesh handle.
     @param baseSecIdx is the number of the first/base surface to be indexed from.
@@ -322,7 +331,7 @@ ASX afxUnit         AfxGetMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit 
     @param info [out] must be a valid pointer to an array of afxMeshSection structures containing the new values.
 */
 
-ASX afxError        AfxResetMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit cnt, afxMeshSection const sections[]);
+ASX afxError        AfxSectionizeMesh(afxMesh msh, afxUnit baseSecIdx, afxUnit cnt, afxMeshSection const sections[]);
 
 /**
     The AfxInvertMeshTopology() method inverts the winding of a mesh without changing the vertex data.
@@ -337,7 +346,7 @@ ASX afxError        AfxResetMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUni
 ASX void            AfxInvertMeshTopology(afxMesh msh);
 
 /**
-    The AfxRemapMeshCoverage() method replaces material indices across mesh sections.
+    The AfxRevestMeshSections() method replaces material indices across mesh sections.
 
     It can be useful to rearrange material indices across mesh sections after modifying a mesh.
     This method will iterate for each mesh surface, look for its material index in specified table,
@@ -349,7 +358,7 @@ ASX void            AfxInvertMeshTopology(afxMesh msh);
     @return Must return the number of material indices affectively replaced.
 */
 
-ASX afxUnit         AfxRemapMeshCoverage(afxMesh msh, afxUnit mtlIdxCnt, afxUnit const mtlIdxLut[]);
+ASX afxUnit         AfxRevestMeshSections(afxMesh msh, afxUnit baseSecIdx, afxUnit secCnt, afxUnit mtlIdxCnt, afxUnit const mtlIdxLut[]);
 
 ASX afxString*      AfxGetMeshMaterials(afxMesh msh, afxUnit baseMtlIdx);
 
@@ -425,25 +434,25 @@ ASX afxError        AfxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxR
 /**
     The AfxEnumerateMeshes() function enumerates some or all meshes provided by a simulation.
 
-    @param sim must be a valid afxSimulation handle.
+    @param morp must be a valid afxMorphology handle.
     @param first is the number of the first mesh to be enumerated from.
     @param cnt is the number of meshes to be enumerated. Must be greater than 0.
     @param meshes [out] must be a valid pointer to an array of afxMesh handles.
     @return Must return any error ocurried, if any, or zero.
 */
 
-ASX afxUnit         AfxEnumerateMeshes(afxSimulation sim, afxUnit first, afxUnit cnt, afxMesh meshes[]);
+ASX afxUnit         AfxEnumerateMeshes(afxMorphology morp, afxUnit first, afxUnit cnt, afxMesh meshes[]);
 
 /**
     The AfxBuildMeshes() function compiles new meshes using specified blueprints.
 
-    @param sim must be a valid afxSimulation handle.
+    @param morp must be a valid afxMorphology handle.
     @param first is the number of the first mesh to be enumerated from.
     @param cnt is the number of meshes to be compiled. Must be greater than 0.
     @param meshes [out] must be a valid pointer to an array of afxMesh handles.
     @return Must return any error ocurried, if any, or zero.
 */
 
-ASX afxError        AfxBuildMeshes(afxSimulation sim, afxUnit cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
+ASX afxError        AfxBuildMeshes(afxMorphology morp, afxUnit cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
 
 #endif//ASX_MESH_H

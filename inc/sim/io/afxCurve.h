@@ -37,7 +37,7 @@
 #ifndef ASX_CURVE_H
 #define ASX_CURVE_H
 
-#include "qwadro/inc/math/bound/afxSphere.h"
+#include "qwadro/inc/math/coll/afxSphere.h"
 #include "qwadro/inc/sim/afxSimDefs.h"
 
 typedef enum afxCurveFlag

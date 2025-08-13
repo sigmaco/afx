@@ -44,4 +44,49 @@ AVX afxUnit         AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
 AVX avxVertexInput  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
 AVX afxUnit         AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
 
+AFX_DEFINE_STRUCT(avxBufferedRing)
+{
+    afxUnit     rounds;
+    afxSize     blockSiz;
+    afxUnit     blockAlign;
+    avxBuffer   buf;
+    afxSize     maxSiz;
+    afxUnit     blockCnt;
+    afxByte*    basePtr;
+    afxSize     currOffset;
+};
+
+AVX void    AvxMakeBufferedRing(avxBufferedRing* rng, afxUnit rounds, afxUnit blockSiz, afxUnit blockAlign, avxBuffer buf, afxSize cap, void* mapped);
+AVX afxSize AvxCycleBufferedRing(avxBufferedRing* rng);
+AVX void*   AvxAdvanceBufferedRing(avxBufferedRing* rng, afxUnit reqSiz, afxSize* pOffset, afxUnit* pRange);
+
+typedef struct
+{
+    avxBuffer buffer;
+    void* mapped_ptr;
+    afxSize capacity;
+    afxSize used;
+    int frame_in_use; // When it was last used
+} _avxFrameBufferizerChunk;
+
+typedef struct {
+    _avxFrameBufferizerChunk* last;
+    _avxFrameBufferizerChunk* chunks;
+    afxSize num_chunks;
+    afxSize capacity_chunks;
+    int current_frame;
+    
+    afxUnit rounds;
+    afxUnit blockAlign;
+    afxUnit minChunkSiz;
+    avxBufferFlags bufFlags;
+    avxBufferUsage bufUsage;
+    afxDrawSystem dsys;
+} avxBufferedPump;
+
+AVX void AvxDeployBufferedPump(avxBufferedPump* alloc);
+AVX void* AvxRequestBufferedPump(avxBufferedPump* alloc, afxSize size, avxBuffer* out_buffer, afxSize* out_offset);
+AVX void AvxAdvanceBufferedPump(avxBufferedPump* alloc);
+AVX void AvxDismantleBufferedPump(avxBufferedPump* alloc);
+
 #endif//AVX_BUFFERIZER_H

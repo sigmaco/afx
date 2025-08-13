@@ -244,7 +244,7 @@ _ASX afxError AsxAcquireShapes(afxSimulation sim, afxUnit cnt, asxShapeInfo cons
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
 
-    afxClass* cls = (afxClass*)_AsxGetPoseClass(sim);
+    afxClass* cls = (afxClass*)_AsxGetShapClass(sim);
     AFX_ASSERT_CLASS(cls, afxFcc_SHAP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)shapes, (void const*[]) { sim }))
@@ -266,7 +266,7 @@ _ASX afxError AfxBuildMeshShape(afxMesh msh, asxShape* shape)
     asxShape shap;
     asxShapeInfo shapi = { 0 };
     shapi.msh = msh;
-    AsxAcquireShapes(AfxGetMeshContext(msh), 1, &shapi, &shap);
+    AsxAcquireShapes(AfxGetMeshMateriality(msh), 1, &shapi, &shap);
 
     return err;
 }

@@ -213,7 +213,7 @@ _AFXINL afxError AfxInsertArrayUnits(afxArray* arr, afxUnit baseIdx, afxUnit cnt
         if (err) return err;
     }
 
-    afxByte* base = (afxByte*)arr->data;
+    afxByte* base = (afxByte*)arr->items;
     
     // Shift existing data to make room.
     if (baseIdx < arr->pop)
@@ -252,7 +252,7 @@ _AFXINL afxError AfxRemoveArrayUnits(afxArray* arr, afxUnit idx, afxUnit cnt)
     if (idx >= arr->pop || cnt == 0 || (idx + cnt) > arr->pop)
         return err;
 
-    afxByte* base = (afxByte*)arr->data;
+    afxByte* base = (afxByte*)arr->items;
     afxUnit remaining = arr->pop - (idx + cnt);
     if (remaining > 0)
     {
@@ -281,7 +281,7 @@ _AFXINL afxError AfxAppendArray(afxArray* arr, afxArray const* src)
 
         if (arr->unitSiz == src->unitSiz)
         {
-            AfxCopy(map, src->data, src->unitSiz * src->pop);
+            AfxCopy(map, src->items, src->unitSiz * src->pop);
         }
         else
         {
@@ -344,8 +344,8 @@ _AFXINL afxError AfxCloneArray(afxArray* arr, afxArray const* src, afxUnit baseI
 
     if (cnt > 0)
     {
-        void* srcStart = (afxByte*)src->data + baseIdx * src->unitSiz;
-        AfxMemcpy(arr->data, srcStart, cnt * src->unitSiz);
+        void* srcStart = (afxByte*)src->items + baseIdx * src->unitSiz;
+        AfxMemcpy(arr->items, srcStart, cnt * src->unitSiz);
     }
 
     arr->pop = cnt;

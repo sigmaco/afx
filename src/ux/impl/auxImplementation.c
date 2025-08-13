@@ -21,6 +21,36 @@
 
 AFX afxChain* _AfxGetSystemClassChain(void);
 
+_AUX afxError _AuxGetInteropSurfaceClass(afxDrawSystem dsys, afxString const* tool, afxClassConfig* clsc)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+    afxModule driver;
+    if (!_AuxGetIcd(0, &driver))
+    {
+        AfxThrowError();
+        return err;
+    }
+    driver->icd.getDoutClsc(dsys, tool, clsc);
+    return err;
+}
+
+_AUX afxError _AuxGetInteropSinkClass(afxMixSystem msys, afxString const* tool, afxClassConfig* clsc)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+
+    afxModule driver;
+    if (!_AuxGetIcd(0, &driver))
+    {
+        AfxThrowError();
+        return err;
+    }
+    driver->icd.getSinkClsc(msys, tool, clsc);
+    return err;
+}
+
 _AUX afxClass const* _AuxGetHidClass(afxModule icd)
 {
     afxError err = AFX_ERR_NONE;
@@ -96,7 +126,7 @@ _AUX afxError _AuxRegisterShells(afxModule icd, afxUnit cnt, afxShellInfo const 
     return err;
 }
 
-_AUX afxError _AuxImplementShell(afxModule icd, afxClassConfig const* sesCls)
+_AUX afxError _AuxImplementShell(afxModule icd, afxClassConfig const* sesCls, afxError(*getInteropDoutCls)(afxDrawSystem dsys, afxString const* tool, afxClassConfig* cfg), afxError(*getInteropSinkCls)(afxMixSystem msys, afxString const* tool, afxClassConfig* cfg))
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
@@ -108,6 +138,9 @@ _AUX afxError _AuxImplementShell(afxModule icd, afxClassConfig const* sesCls)
         AfxThrowError();
         return NIL;
     }
+
+    icd->icd.getDoutClsc = getInteropDoutCls;
+    icd->icd.getSinkClsc = getInteropSinkCls;
 
     afxClassConfig clsCfg;
 

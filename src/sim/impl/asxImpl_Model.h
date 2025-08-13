@@ -86,21 +86,47 @@ AFX_OBJECT(afxMaterial)
 
 #endif//_ASX_MATERIAL_C
 
-AFX_DEFINE_STRUCT(asxMeshRig)
+#ifdef _ASX_MORPHOLOGY_C
+
+#ifdef _ASX_MATERIAL_IMPL
+AFX_OBJECT(_asxMateriality)
+#else
+AFX_OBJECT(afxMorphology)
+#endif
+{
+    afxChain        classes;
+    afxClass        mtlCls;
+    afxClass        mshCls;
+    afxClass        mdlCls;
+    afxClass        terCls;
+
+    afxStringBase   strbMdlSklMotUrns;
+    afxStringBase   strbJointBiasesTags;
+    afxStringBase   strbMorphTags;
+};
+
+#endif//_ASX_MORPHOLOGY_C
+
+AFX_DEFINE_STRUCT(asxRiggedMesh)
 // This new rig representation allow both model and mesh to access rigging info.
 // Access to this info is important to let mesh instantiaion be bundled and to solve vertices' bias index indirection.
+// Mesh juncture.
 {
     afxMesh         msh;
     afxUnit         rigId; // afxMesh.rigs;
 
     afxModel        mdl; // afxModel.rigs;
     afxUnit         slotIdx; // mesh rig linkage index
-    afxUnit*        biasToJntMap; // [afxMesh.biasCnt] --- to assembled skeleton.
+
     afxModel        skl; // original skeleton
     afxUnit*        biasFromJntMap; // [afxMesh.biasCnt] --- from original skeleton.
+    afxUnit*        biasToJntMap; // [afxMesh.biasCnt] --- to assembled skeleton.
+    // TODO? Unify to jntMap, and use baseFromIdx and baseToIdx.
+
     afxUnit*        mtlToTxdMap; // [afxMesh.mtlCnt] --- map into global list.
     afxMaterial     txd;
     afxMeshRigFlags flags;
+    afxMask         renderMask;
     void**          idd;
     void**          udd;
 };
@@ -173,6 +199,7 @@ AFX_OBJECT(afxMesh)
     // nested bias OBB for fast lookup.
     afxBox*             biasObb; // [morphCnt][biasCnt]
 
+    // TODO: move to mesh rig
     avxVertexCache      vtxCache;
     avxBuffer           ibo;
     afxUnit32           iboBase;
@@ -196,6 +223,12 @@ AFX_OBJECT(_asxModel)
 AFX_OBJECT(afxModel)
 #endif
 {
+    // In the past, skeleton (as afxSkeleton) was separated from model.
+    // Mainly to simplify serialization, they were merged.
+    // Anyway, there was a second arrangement aimed to optimized reutilization of skeleton,
+    // where a afxModel would be a superclass of afxSkeleton. The afxModel would point to itself or other model as a skeleton.
+    // Fragments of this approach can be observed in mesh rigs.
+
     afxUnit         jntCnt;
     // array of per-joint parent indexes
     afxUnit*        jntPi; // [jntCnt]
@@ -214,10 +247,10 @@ AFX_OBJECT(afxModel)
 
     afxUnit         lodType;
     afxReal         allowedLodErrFadingFactor;
-    afxTransform    displacement;
+    afxTransform    displace;
 
     afxUnit         rigCnt;
-    asxMeshRig**    rigs;
+    asxRiggedMesh**    rigs;
     afxUnit         usedRigCnt;
     afxBox          aabb;
     afxModelFlags   flags;
@@ -264,14 +297,95 @@ AFX_OBJECT(afxPlacement)
 };
 #endif//_ASX_PLACEMENT_C
 
+
+#ifdef _ASX_TERRAIN_C
+AFX_DEFINE_STRUCT(_asxTerrSec)
+{
+    afxUnit     gridNode, gridNodeX, gridNodeZ;
+
+    afxUnit     vtxIdxCnt;
+    afxUnit     vtxCnt;
+    afxUnit     quadCnt;
+    afxUnit     vtxStartX;
+    afxUnit     vtxStartZ;
+    afxUnit     vtxPerRow;
+    afxUnit     vtxPerCol;
+
+    afxUnit     visuReqCnt;
+    afxUnit     visuVtxCnt;
+    afxV3d*     visuVtxPos;
+    afxUnit     visuVtxIdxCnt;
+    afxUnit16*  visuVtxMap;
+
+    afxSphere   bsph;
+    afxBox      aabb;
+    afxV4d      centre;
+    afxUnit     collTriCnt;
+    afxV3d*     collTriEdgeNrm; // [collTriCnt * 3]
+    afxUnit     collVtxCnt;
+    afxV3d*     collVtx;
+    afxV3d*     collVtxTan;
+    afxV3d*     collVtxBit;
+    afxV3d*     collVtxNrm;
+    afxV3d*     collVtxRgb;
+
+    afxMesh     msh;
+
+    avxBuffer   vbo;
+    afxUnit     vboBase;
+    afxUnit     vboRange;
+    afxUnit     vboStride;
+
+    avxBuffer   ibo;
+    afxUnit     iboBase;
+    afxUnit     iboRange;
+    afxUnit     iboStride;
+
+
+};
+
+AFX_OBJECT(afxTerrain)
+{
+    afxDrawSystem dsys;
+    avxBuffer   vbo;
+    avxBuffer   ibo;
+    avxBuffer   dbgLinesVbo;
+    afxUnit     dbgLinesVboRange;
+    afxUnit     dbgLinesVboStride;
+    avxBuffer   dbgLinesIbo;
+    afxUnit     dbgLinesIboRange;
+    afxUnit     dbgLinesIboStride;
+
+    avxPipeline dbgAabbPip;
+    avxPipeline meshPip;
+    avxRaster   texd;
+    avxRaster   texn;
+
+    afxUnit     width; // terrain width
+    afxUnit     depth; // terrain depth
+    afxUnit     secWidth; // sector width
+    afxUnit     secDepth; // sector depth
+    afxUnit     rowSecCnt; // row-sectors
+    afxUnit     sliceSecCnt; // slice-sectors
+    afxReal     heightScale;
+    afxUri      heightmap;
+
+    afxUnit     secCnt;
+    _asxTerrSec*sectors;
+    afxBox*     secAabb;
+
+};
+#endif//_ASX_TERRAIN_C
+
 ASX afxClassConfig const _ASX_POSE_CLASS_CONFIG;
 ASX afxClassConfig const _ASX_PLCE_CLASS_CONFIG;
 ASX afxClassConfig const _ASX_MDL_CLASS_CONFIG;
 ASX afxClassConfig const _ASX_MTL_CLASS_CONFIG;
+ASX afxClassConfig const _ASX_MORP_CLASS_CONFIG;
 ASX afxClassConfig const _ASX_MSH_CLASS_CONFIG;
 
 ASX afxPool* _AsxGetMeshRigPool(afxMesh msh);
-ASX asxMeshRig* _AsxGetMeshRig(afxMesh msh, afxUnit rigId);
+ASX asxRiggedMesh* _AsxGetMeshRig(afxMesh msh, afxUnit rigId);
 
 ASX afxTransform* _AsxMdlGetLtArray(afxModel mdl, afxUnit base);
 ASX afxM4d* _AsxMdlGetIwArray(afxModel mdl, afxUnit base);

@@ -75,8 +75,7 @@ AFX_DEFINE_STRUCT(amxTransference)
     afxUnit         decSiz;
 };
 
-AMX afxMixDevice    AfxGetMixQueueDevice(afxMixQueue mque);
-AMX afxMixSystem    AfxGetMixQueueContext(afxMixQueue mque);
-AMX afxUnit         AfxGetMixQueuePort(afxMixQueue mque);
+AMX afxMixDevice    AmxGetMixQueueDevice(afxMixQueue mque);
+AMX afxMixSystem    AmxGetMixQueueSystem(afxMixQueue mque);
 
 #endif//AMX_MIX_QUEUE_H

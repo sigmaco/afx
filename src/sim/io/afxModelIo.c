@@ -22,7 +22,7 @@
 #define _ASX_MESH_TOPOLOGY_C
 //#define _AVX_GEOMETRY_C
 #define _ASX_SIMULATION_C
-#include "../../draw/impl/avxImplementation.h"
+#include "../../draw/ddi/avxImplementation.h"
 #include "../impl/asxImplementation.h"
 
 #pragma push(pack, 1)
@@ -485,8 +485,8 @@ _ASX afxError AfxArchiveMeshes(afxStream out, afxString* sdb, afxUnit cnt, afxMe
             M4D_MSHM_HDR mshm;
             mshm.flags = m->flags;
             mshm.baseVtx = m->baseVtx;
-            mshm.morphedAttrs = m->morphedAttrs;
-            mshm.morphedAttrCnt = m->morphAttrCnt;
+            mshm.morphedAttrs = m->affectedAttrs;
+            mshm.morphedAttrCnt = m->affectedAttrCnt;
 
             if (AfxWriteStream(out, sizeof(mshm), 0, &mshm))
                 AfxThrowError();
@@ -552,7 +552,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
     mdlHdr.lodType = mdl->lodType;
     mdlHdr.jntCnt = mdl->jntCnt;
     mdlHdr.flags = mdl->flags;
-    mdlHdr.displacement = mdl->displacement;
+    mdlHdr.displacement = mdl->displace;
     mdlHdr.rigCnt = mdl->rigCnt;
 
     afxSize hdrPosBkp = AfxAskStreamPosn(out);
@@ -595,7 +595,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
 
     for (afxUnit i = 0; i < mdlHdr.rigCnt; i++)
     {
-        asxMeshRig* rig = mdl->rigs[i];
+        asxRiggedMesh* rig = mdl->rigs[i];
         if (!rig) continue;
         afxMesh msh = rig->msh;
         AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &msh);
@@ -605,7 +605,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
             afxBool skip = FALSE;
             for (afxUnit j = 0; j < i; j++)
             {
-                asxMeshRig* prevRig = mdl->rigs[j];
+                asxRiggedMesh* prevRig = mdl->rigs[j];
 
                 // must skip this mesh if this has already been included before.
                 if (!prevRig || (prevRig->msh == msh))
@@ -629,7 +629,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
 
     for (afxUnit i = 0; i < mdlHdr.rigCnt; i++)
     {
-        asxMeshRig* rig = mdl->rigs[i];
+        asxRiggedMesh* rig = mdl->rigs[i];
         if (!rig) continue;
         afxMesh msh = rig->msh;
         AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &msh);
@@ -640,7 +640,7 @@ _ASX afxError AfxDownloadModel(afxModel mdl, afxStream out)
 
             for (afxUnit j = 0; j < i; j++)
             {
-                asxMeshRig* prevRig = mdl->rigs[j];
+                asxRiggedMesh* prevRig = mdl->rigs[j];
 
                 // reuse mesh already included before.
                 if (prevRig && (prevRig->msh == msh))
@@ -710,10 +710,10 @@ _ASX afxError AsxArchiveModel(afxModel mdl, afxUri const* uri)
     return err;
 }
 
-_ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream in, afxModel* model)
+_ASX afxError AfxUploadModel(afxMorphology morp, afxString const* urn, afxStream in, afxModel* model)
 {
     afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(model);
 
@@ -749,9 +749,9 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
     mdlb.joints = strings;
     mdlb.lodType = mdlHdr.lodType;
     mdlb.rigCnt = mdlHdr.rigCnt;
-    mdlb.displacement = mdlHdr.displacement;
+    mdlb.displace = mdlHdr.displacement;
     AfxMakeString32(&mdlb.urn, urn);
-    AfxAssembleModels(sim, 1, &mdlb, &mdl);
+    AfxAssembleModels(morp, 1, &mdlb, &mdl);
 
     {
         afxUnit32* parentIdx = AfxRequestFromArena(&arena, sizeof(afxUnit32), mdlHdr.jntCnt, NIL, 0);
@@ -833,7 +833,7 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
 
     }
 
-    AfxBuildMeshes(sim, mdlHdr.mshCnt, mshbs, meshes);
+    AfxBuildMeshes(morp, mdlHdr.mshCnt, mshbs, meshes);
 
     for (afxUnit i = 0; i < mdlHdr.mshCnt; i++)
     {
@@ -872,7 +872,7 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
             mshs.triCnt = mshsHdr.triCnt;
             mshs.mtlIdx = mshsHdr.mtlIdx;
             mshs.flags = mshsHdr.flags;
-            AfxResetMeshSections(msh, k, 1, &mshs);
+            AfxSectionizeMesh(msh, k, 1, &mshs);
         }
 
         AfxSeekStream(in, mshHdr->morphsBaseOff, afxSeekOrigin_BEGIN);
@@ -882,9 +882,9 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
             M4D_MSHM_HDR mshmHdr;
             AfxReadStream(in, sizeof(mshmHdr), 0, &mshmHdr);
             afxMeshMorph mshm = { 0 };
-            mshm.morphedAttrs = mshmHdr.morphedAttrs;
+            mshm.affectedAttrs = mshmHdr.morphedAttrs;
             mshm.flags = mshmHdr.flags;
-            AfxChangeMeshMorphes(msh, k, 1, &mshm);
+            AfxReformMesh(msh, k, 1, &mshm);
         }
     }
 
@@ -897,7 +897,7 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
 
         AfxRigMeshes(mdl, NIL, i, 1, &meshes[mshrHdr.mshIdx]);
 
-        asxMeshRig* rig = mdl->rigs[i];
+        asxRiggedMesh* rig = mdl->rigs[i];
         if (!rig) continue;
         rig->flags |= mshrHdr.flags;
     }
@@ -909,7 +909,7 @@ _ASX afxError AfxUploadModel(afxSimulation sim, afxString const* urn, afxStream 
     return err;
 }
 
-_ASX afxError AfxLoadModel(afxSimulation sim, afxString const* urn, afxUri const* uri, afxModel* model)
+_ASX afxError AfxLoadModel(afxMorphology morp, afxString const* urn, afxUri const* uri, afxModel* model)
 {
     afxError err = NIL;
     afxStream iob;
@@ -919,7 +919,7 @@ _ASX afxError AfxLoadModel(afxSimulation sim, afxString const* urn, afxUri const
     AfxAcquireStream(1, &info, &iob);
 
     AfxReopenFile(iob, uri, afxFileFlag_R);
-    AfxUploadModel(sim, urn, iob, model);
+    AfxUploadModel(morp, urn, iob, model);
     AfxDisposeObjects(1, &iob);
 
     return err;

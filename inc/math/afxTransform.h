@@ -39,6 +39,25 @@
 #include "qwadro/inc/math/afxMatrix.h"
 #include "qwadro/inc/math/afxQuaternion.h"
 
+typedef enum afxDof
+{
+    afxDof_POSITION_X   = AFX_BITMASK(0),
+    afxDof_POSITION_Y   = AFX_BITMASK(1),
+    afxDof_POSITION_Z   = AFX_BITMASK(2),
+    afxDof_POSITION     = afxDof_POSITION_X | afxDof_POSITION_Y | afxDof_POSITION_Z,
+
+    afxDof_ROTATION_X   = AFX_BITMASK(3),
+    afxDof_ROTATION_Y   = AFX_BITMASK(4),
+    afxDof_ROTATION_Z   = AFX_BITMASK(5),
+    afxDof_ROTATION     = afxDof_ROTATION_X | afxDof_ROTATION_Y | afxDof_ROTATION_Z,
+
+    // scale/shear
+    afxDof_SCALE_X      = AFX_BITMASK(6),
+    afxDof_SCALE_Y      = AFX_BITMASK(7),
+    afxDof_SCALE_Z      = AFX_BITMASK(8),
+    afxDof_SCALE        = afxDof_SCALE_X | afxDof_SCALE_Y | afxDof_SCALE_Z
+} afxDof;
+
 typedef enum afxTransformFlag
 {
     afxTransformFlag_TRANSLATED = AFX_BITMASK(0), // has non-identity position

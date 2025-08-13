@@ -518,7 +518,7 @@ _AFX afxError AfxWriteStream2(afxStream out, afxUnit range, afxUnit stride, void
     AFX_ASSERT(src);
     afxUnit clampedOffRange = range;
 
-    afxUnit unitSiz = AfxMinorNonZero(stride, srcStride); // minor non-zero
+    afxUnit unitSiz = AFX_MIN_OR(stride, srcStride); // minor non-zero
 
     afxByte const*src2 = src;
     afxUnit batchSiz = (stride == srcStride) ? AfxGetIoBufferSize() : unitSiz;
@@ -826,7 +826,7 @@ _AFX afxError AfxReadStream2(afxStream in, afxUnit range, afxUnit stride, void* 
     {
         afxByte tmpBuf[4096];
         afxUnit tmpBufSiz = ARRAY_SIZE(tmpBuf);
-        afxUnit unitSiz = AfxMinorNonZero(stride, dstStride); // minor non-zero
+        afxUnit unitSiz = AFX_MIN_OR(stride, dstStride); // minor non-zero
         afxUnit unitCnt = range / unitSiz;
         afxUnit remainSiz = range % unitSiz;
 
@@ -1113,7 +1113,7 @@ _AFX afxError AfxDoStreamOutput(afxStream out, afxUnit stride, afxUnit cnt, void
     AFX_ASSERT(src);
     afxUnit clampedOffRange = stride * cnt;
 
-    afxUnit unitSiz = AfxMinorNonZero(stride, srcStride); // minor non-zero
+    afxUnit unitSiz = AFX_MIN_OR(stride, srcStride); // minor non-zero
 
     afxByte const*src2 = src;
     afxUnit batchSiz = (stride == srcStride) ? AfxGetIoBufferSize() : unitSiz;
@@ -1178,7 +1178,7 @@ _AFX afxError AfxDoStreamInput(afxStream in, afxUnit stride, afxUnit cnt, void* 
     AFX_ASSERT(dst);
     afxUnit clampedOffRange = stride * cnt;
 
-    afxUnit unitSiz = AfxMinorNonZero(stride, dstStride); // minor non-zero
+    afxUnit unitSiz = AFX_MIN_OR(stride, dstStride); // minor non-zero
 
     afxByte*dst2 = dst;
     afxUnit batchSiz = (stride == dstStride) ? AfxGetIoBufferSize() : unitSiz;

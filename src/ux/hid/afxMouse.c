@@ -701,7 +701,7 @@ _AUX afxBool AfxMouseHasHorizontalChanged(afxUnit seat, afxInt tolerance)
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
-        rslt = (((afxReal)AfxAbs(ses->seats[seat].motion[0][0] - ses->seats[seat].motion[1][0])) >= (afxReal)tolerance);
+        rslt = (((afxReal)AFX_ABS(ses->seats[seat].motion[0][0] - ses->seats[seat].motion[1][0])) >= (afxReal)tolerance);
     
     return rslt;
 }
@@ -720,7 +720,7 @@ _AUX afxBool AfxMouseHasVerticalChanged(afxUnit seat, afxInt tolerance)
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
     if (seat < ses->seatCnt)
-        rslt = (((afxReal)AfxAbs(ses->seats[seat].motion[0][1] - ses->seats[seat].motion[1][1])) >= (afxReal)tolerance);
+        rslt = (((afxReal)AFX_ABS(ses->seats[seat].motion[0][1] - ses->seats[seat].motion[1][1])) >= (afxReal)tolerance);
     
     return rslt;
 }

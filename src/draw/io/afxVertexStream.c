@@ -20,8 +20,186 @@
 #define _AVX_VERTEX_BUFFER_C
 #define _AVX_INDEX_BUFFER_C
 #define _AVX_DRAW_INPUT_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 #include "qwadro/inc/math/afxReal16.h"
+
+_AVX void AvxMakeBufferedRing(avxBufferedRing* rng, afxUnit rounds, afxUnit blockSiz, afxUnit blockAlign, avxBuffer buf, afxSize cap, void* mapped)
+{
+    // Small buffered ring utility.
+    // Reuse memory across frames (no new buffer creation).
+    // Efficient for dynamic scenes and many objects.
+    // Prevents CPU-GPU sync stalls and fragmentation.
+
+    afxError err;
+    AFX_ASSERT(rng);
+    *rng = (avxBufferedRing) { 0 };
+
+    // Use triple buffering (rounds = 3) to rotate through buffer regions.
+    rng->rounds = AFX_MAX(1, rounds);
+    rng->blockAlign = AFX_ALIGN_SIZE(AFX_MIN(AVX_BUFFER_ALIGNMENT, blockAlign), AVX_BUFFER_ALIGNMENT);
+    rng->blockSiz = AFX_MAX(rng->blockAlign, AVX_ALIGN_BUFFERED(blockSiz));
+
+    AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
+    rng->buf = buf;
+    rng->maxSiz = cap;
+    rng->blockCnt = rng->maxSiz / rng->blockSiz;
+    rng->currOffset = 0;
+    
+    // With persistent and coherent mapping, you don't need glFenceSync() unless extremely fine-grained sync is required.
+    rng->basePtr = NIL;
+    if (mapped) rng->basePtr = mapped;
+    else if (AvxMapBuffer(buf, 0, cap, NIL, (void**)&rng->basePtr))
+        AfxThrowError();
+}
+
+_AVX afxSize AvxCycleBufferedRing(avxBufferedRing* rng)
+{
+    afxError err;
+    AFX_ASSERT(rng);
+    rng->currOffset = (rng->currOffset + rng->blockSiz * rng->blockCnt / rng->rounds) % rng->maxSiz;
+    return rng->currOffset;
+}
+
+_AVX void* AvxAdvanceBufferedRing(avxBufferedRing* rng, afxUnit reqSiz, afxSize* pOffset, afxUnit* pRange)
+{
+    afxError err;
+    AFX_ASSERT(rng);
+
+    reqSiz = AFX_ALIGN_SIZE(reqSiz, rng->blockSiz);
+
+    if (rng->currOffset + reqSiz > rng->maxSiz)
+    {
+        // Wrap around
+        rng->currOffset = 0;
+    }
+
+    void* blockPtr = &rng->basePtr[rng->currOffset];
+
+    // Bind for shader access
+    // You now write directly into blockPtr and the shader sees the bound block via layout(std140, binding = %).
+    if (pOffset) *pOffset = rng->currOffset;
+    if (pRange) *pRange = reqSiz;
+
+    rng->currOffset += reqSiz;
+
+    return blockPtr;
+}
+
+void* aligned_alloc_buffer(_avxFrameBufferizerChunk* chunk, afxSize size, afxUnit align, afxSize* out_offset) {
+    afxSize aligned_offset = (chunk->used + align - 1) & ~(align - 1);
+    if (aligned_offset + size > chunk->capacity) return NULL;
+
+    *out_offset = aligned_offset;
+    chunk->used = aligned_offset + size;
+    return (char*)chunk->mapped_ptr + aligned_offset;
+}
+
+_avxFrameBufferizerChunk create_new_chunk(avxBufferedPump* alloc, afxSize size)
+{
+    _avxFrameBufferizerChunk chunk = { 0 };
+    chunk.capacity = size;
+    chunk.used = 0;
+    chunk.frame_in_use = -1;
+
+    avxBuffer buf;
+    avxBufferInfo bufi = { 0 };
+    bufi.usage = alloc->bufUsage;
+    bufi.flags = alloc->bufFlags;
+    bufi.size = chunk.capacity;
+    AvxAcquireBuffers(alloc->dsys, 1, &bufi, &buf);
+    chunk.buffer = buf;
+
+    AvxMapBuffer(buf, 0, bufi.size, NIL, &chunk.mapped_ptr);
+
+    if (!chunk.mapped_ptr)
+    {
+        afxError err;
+        AfxThrowError();
+    }
+    return chunk;
+}
+
+void AvxDeployBufferedPump(avxBufferedPump* alloc)
+{
+    alloc->capacity_chunks = 4;
+    alloc->chunks = (_avxFrameBufferizerChunk*)malloc(sizeof(_avxFrameBufferizerChunk) * alloc->capacity_chunks);
+    alloc->num_chunks = 0;
+    alloc->current_frame = 0;
+    alloc->rounds = 3; // triple buffered
+    alloc->bufUsage = avxBufferUsage_UNIFORM;
+    alloc->bufFlags = avxBufferFlag_WX;
+    alloc->minChunkSiz = (2 * 1024 * 1024); // 2MB;
+    alloc->blockAlign = 256; // 256 = uniform alignment
+}
+
+_avxFrameBufferizerChunk* find_available_chunk(avxBufferedPump* alloc, afxSize size_needed)
+{
+    if (alloc->last)
+    {
+        _avxFrameBufferizerChunk* chunk = alloc->last;
+        if (chunk->frame_in_use < alloc->current_frame - alloc->rounds)
+        {
+            chunk->used = 0;
+            chunk->frame_in_use = alloc->current_frame;
+        }
+        afxSize offset;
+        if (aligned_alloc_buffer(chunk, size_needed, alloc->blockAlign, &offset))
+        {
+            return chunk;
+        }
+    }
+
+    for (afxSize i = 0; i < alloc->num_chunks; ++i)
+    {
+        _avxFrameBufferizerChunk* chunk = &alloc->chunks[i];
+        if (chunk->frame_in_use < alloc->current_frame - alloc->rounds)
+        {
+            chunk->used = 0;
+            chunk->frame_in_use = alloc->current_frame;
+        }
+        afxSize offset;
+        if (aligned_alloc_buffer(chunk, size_needed, alloc->blockAlign, &offset))
+        {
+            return chunk;
+        }
+    }
+
+    // Allocate new chunk
+    if (alloc->num_chunks >= alloc->capacity_chunks)
+    {
+        alloc->capacity_chunks *= 2;
+        alloc->chunks = (_avxFrameBufferizerChunk*)realloc(alloc->chunks, sizeof(_avxFrameBufferizerChunk) * alloc->capacity_chunks);
+    }
+
+    _avxFrameBufferizerChunk new_chunk = create_new_chunk(alloc, alloc->minChunkSiz > size_needed ? alloc->minChunkSiz : size_needed);
+    new_chunk.frame_in_use = alloc->current_frame;
+    alloc->chunks[alloc->num_chunks++] = new_chunk;
+    return &alloc->chunks[alloc->num_chunks - 1];
+}
+
+void* AvxRequestBufferedPump(avxBufferedPump* alloc, afxSize size, avxBuffer* out_buffer, afxSize* out_offset)
+{
+    _avxFrameBufferizerChunk* chunk = find_available_chunk(alloc, size);
+    alloc->last = chunk;
+    void* ptr = aligned_alloc_buffer(chunk, size, alloc->blockAlign, out_offset);
+    *out_buffer = chunk->buffer;
+    return ptr;
+}
+
+void AvxAdvanceBufferedPump(avxBufferedPump* alloc)
+{
+    alloc->current_frame += 1;
+}
+
+void AvxDismantleBufferedPump(avxBufferedPump* alloc)
+{
+    for (afxSize i = 0; i < alloc->num_chunks; ++i)
+    {
+        AvxUnmapBuffer(alloc->chunks[i].buffer, FALSE);
+        AfxDisposeObjects(1, &alloc->chunks[i].buffer);
+    }
+    free(alloc->chunks);
+}
 
 AFX_DEFINE_STRUCT(freeVBlistEntry)
 {
@@ -30,6 +208,23 @@ AFX_DEFINE_STRUCT(freeVBlistEntry)
     avxBuffer               vbo;
     afxUnit32               offset;
     afxUnit32               size;
+};
+
+AFX_DEFINE_STRUCT(_avxSharedBuffer)
+{
+    //createdVBlistEntry* next;
+    avxBuffer           buf;
+    avxBufferUsage      reqUsage;
+    avxBufferFlags      reqFlags;
+    afxUnit             usedCnt;
+};
+
+AFX_DEFINE_STRUCT(_avxVertexCache)
+{
+    afxUnit sharedBufId;
+    afxSize offset;
+    afxUnit range;
+    afxUnit stride;
 };
 
 AFX_DEFINE_STRUCT(createdVBlistEntry)
@@ -987,6 +1182,14 @@ _AVX afxError AfxConvert2
     return err;
 }
 #endif
+
+
+
+void BufferizeTriangles(avxBufferizer vbMgr, afxUnit idxCnt, afxUnit vtxCnt)
+{
+
+}
+
 
 afxBool CreateVertexBuffer(avxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size, avxBuffer* vbo, afxUnit32* offset)
 {

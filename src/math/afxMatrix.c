@@ -19,7 +19,7 @@
 #include "qwadro/inc/math/afxMatrix.h"
 #include "qwadro/inc/math/afxScalar.h"
 #include "qwadro/inc/math/afxVector.h"
-#include "qwadro/inc/math/bound/afxPlane.h"
+#include "qwadro/inc/math/coll/afxPlane.h"
 #include "qwadro/inc/io/afxStream.h"
 
 // Memory layout: row-major
@@ -2501,9 +2501,15 @@ _AFXINL void AfxAssimilateAtm4d(afxM3d const ltm, afxM3d const iltm, afxV4d cons
     }
 }
 
-_AFX void AfxApplyMatrixRootMotionVectors(afxV3d const translation, afxV3d const rotation, afxM4d const mm, afxM4d m)
+_AFXINL void AfxM4dApplyRigidMotion(afxM4d m, afxM4d const mm, afxV3d const rotation, afxV3d const translation)
 {
     // AfxApplyRootMotionVectorsToMatrix
+
+    /*
+        It composes and applies a transformation matrix based on root motion (translation and rotation), 
+        adjusting the provided model matrix (mm) to produce a new transformed matrix (m). 
+        This is essential in animation systems when root bone motion needs to be applied to a character's world transform.
+    */
 
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(translation);

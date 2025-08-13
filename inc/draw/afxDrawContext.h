@@ -116,7 +116,6 @@ AVX afxBool AvxDoesDrawCommandsExist(afxDrawContext dctx, afxUnit batchId);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
 /*
     The AvxAcquireDrawContexts() function allocates multiple draw contexts (which could be command buffers 
     or command contexts) for recording drawing commands for a specified draw system.
@@ -131,10 +130,18 @@ AVX afxBool AvxDoesDrawCommandsExist(afxDrawContext dctx, afxUnit batchId);
 AVX afxError        AvxAcquireDrawContexts
 (
     // The draw system to provide the drawing contexts.
-    afxDrawSystem   dsys, 
-    // The execution unit index (in Mantle, this refers to a specific GPU hardware unit or execution engine).
+    afxDrawSystem   dsys,
+
+    afxDrawCaps caps,
+
+    // The execution unit (in Mantle, this refers to a specific GPU hardware unit or execution engine).
     // NOTE 1 mentions that, in Mantle, unlike Vulkan, you specify queue capabilities rather than the execution unit index.
-    afxUnit         exuIdx, 
+    afxMask         exuMask,
+
+    afxBool         once,
+
+    afxBool         deferred,
+
     // The count of the draw contexts wanted to be allocated.
     afxUnit         cnt, 
     // An array of draw contexts to be allocated.
@@ -154,21 +161,14 @@ AVX afxError        AvxExecuteDrawCommands
     // The drawing system where the draw commands will be executed.
     afxDrawSystem   dsys,
 
-    // A control structure that might define various parameters related to how the draw commands are submitted, 
-    // such as synchronization or execution order. This encapsulate details like submission flags, 
-    // command queues, or context properties that manage how and when the draw commands are executed.
-    avxSubmission*  ctrl,
-
     // The number of draw contexts to be executed.
     // This tells the function how many contexts in the @contexts array should be processed.
     afxUnit         cnt,
 
-    // An array of draw contexts that represent the individual drawing commands or operations to be executed. 
-    // Each afxDrawContext could contain specific information about a set of drawing commands, such as commands 
-    // for rendering objects, setting up shaders, and managing resources.
-    afxDrawContext  contexts[],
-
-    afxUnit const   batches[]
+    // A control structure that might define various parameters related to how the draw commands are submitted, 
+    // such as synchronization or execution order. This encapsulate details like submission flags, 
+    // command queues, or context properties that manage how and when the draw commands are executed.
+    avxSubmission   submissions[]
 );
 
 #endif//AVX_DRAW_CONTEXT_H

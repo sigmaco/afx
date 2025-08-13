@@ -39,6 +39,7 @@ typedef enum avxShaderParam
     avxShaderParam_TSBO = 7,
     avxShaderParam_UNIFORM = 8, // UBO
     avxShaderParam_BUFFER = 9, // SSBO
+    avxShaderParam_STORAGE = avxShaderParam_BUFFER,
     avxShaderParam_INPUT_ATTACHMENT = 10,
     avxShaderParam_PUSH = 11, // push constant buffer object
     avxShaderParam_FEEDBACK = 12, // transform feedback buffer
@@ -72,7 +73,7 @@ AFX_DEFINE_STRUCT(avxShaderConfig)
     afxString       tag;
 };
 
-AVX avxShaderType  AvxGetShaderStage(avxShader shd);
+AVX avxShaderType   AvxGetShaderStage(avxShader shd);
 
 AVX afxUnit         AvxQueryShaderIoChannels(avxShader shd, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[]);
 

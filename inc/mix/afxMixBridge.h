@@ -28,15 +28,15 @@
 
 #define AMX_MAX_QUEUES_PER_BRIDGE (32)
 
-typedef enum afxMixPortFlag
+typedef enum afxMixCaps
 {
-    afxMixPortFlag_MIX = AFX_BITMASK(0), // supports mixing
-    afxMixPortFlag_SIM = AFX_BITMASK(1)
-} afxMixPortFlags;
+    afxMixCaps_MIX = AFX_BITMASK(0), // supports mixing
+    afxMixCaps_SIM = AFX_BITMASK(1)
+} afxMixCaps;
 
-AFX_DEFINE_STRUCT(afxMixCapabilities)
+AFX_DEFINE_STRUCT(afxMixPortInfo)
 {
-    afxMixPortFlags capabilities;
+    afxMixCaps      capabilities;
     afxAcceleration acceleration;
     afxUnit         minQueCnt; // usually 3
     afxUnit         maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
@@ -45,14 +45,14 @@ AFX_DEFINE_STRUCT(afxMixCapabilities)
 AFX_DEFINE_STRUCT(afxMixBridgeConfig)
 {
     afxUnit         mdevId;
-    afxMixPortFlags capabilities; // specifies capabilities of queues in a port.
     afxAcceleration acceleration;
+    afxMixCaps      capabilities; // specifies capabilities of queues in a port.
     afxUnit         minQueCnt;
     afxReal const*  queuePriority;
 };
 
-AMX afxMixSystem    AmxGetBridgedMixSystem(afxMixBridge mexu);
-AMX afxMixDevice    AmxGetBridgedMixDevice(afxMixBridge mexu, afxUnit* portId);
+AMX afxMixSystem    AmxGetBridgedMixSystem(afxMixBridge mexu, afxUnit* bridgeId);
+AMX afxMixDevice    AmxGetBridgedMixDevice(afxMixBridge mexu, afxUnit* mdevId);
 
 AMX afxUnit         AmxGetMixQueues(afxMixBridge mexu, afxUnit first, afxUnit cnt, afxMixQueue queues[]);
 

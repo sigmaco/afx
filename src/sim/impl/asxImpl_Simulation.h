@@ -53,7 +53,7 @@ AFX_DEFINE_STRUCT(_asxSimulationAcquisition)
     afxClassConfig const* motvClsCfg;
     afxClassConfig const* mdlClsCfg;
     afxClassConfig const* mshClsCfg;
-    afxClassConfig const* mtlClsCfg;
+    afxClassConfig const* mtlyClsCfg;
     afxClassConfig const* poseClsCfg;
     afxClassConfig const* plceClsCfg;
     
@@ -90,7 +90,6 @@ AFX_OBJECT(afxSimulation)
     afxClass      anikCls;
     afxClass      nodCls;
     afxClass      renderers;
-    afxClass      terCls;
     afxClass        scnCls;
 
     afxClass        sklCls;
@@ -99,14 +98,11 @@ AFX_OBJECT(afxSimulation)
     afxClass        curCls;
     afxClass        sbufCls;
 
-    afxClass        mtlCls;
-    afxClass        mshCls;
-    afxClass        mdlCls;
+    afxClass        mtlyCls;
 
-    afxStringBase   strbMdlSklMotUrns;
-    afxStringBase   strbJointBiasesTags;
-    afxStringBase   strbMorphTags;
+    afxClass        shapCls;
 
+    afxChain        dags;
     afxV4d          right;
     afxV4d          up;
     afxV4d          back;
@@ -119,6 +115,8 @@ AFX_OBJECT(afxSimulation)
     afxSize         stepNum, stepsPerSecond;
     afxSize         stepTime, swapTime;
     afxReal         stepDeltaTime;
+
+    afxStringBase   strbAnimMotUrns;
 
     asxMotive       globalCapstanInterlinks;
 
@@ -147,6 +145,8 @@ AFX_DEFINE_STRUCT(_asxAnimVmt)
 
 ASX _asxAnimVmt const * _AsxSimGetAnimVmt(afxSimulation sim);
 
+ASX afxChain const* _AsxSimGetDagRoots(afxSimulation sim);
+
 ASX afxReal _AsxGetAllowedLodErrorFadingFactor(afxSimulation sim);
 
 ASX afxClass const* _AsxGetBufferClass(afxSimulation sim);
@@ -154,13 +154,16 @@ ASX afxClass const* _AsxGetCurveClass(afxSimulation sim);
 ASX afxClass const* _AsxGetPoseClass(afxSimulation sim);
 ASX afxClass const* _AsxGetPlacementClass(afxSimulation sim);
 
-ASX afxClass const* _AsxGetMaterialClass(afxSimulation sim);
-ASX afxClass const* _AsxGetModelClass(afxSimulation sim);
-ASX afxClass const* _AsxGetMeshClass(afxSimulation sim);
+ASX afxClass const* _AsxSimGetMaterialityClass(afxSimulation sim);
+ASX afxClass const* _AsxMorpGetMaterialClass(afxMorphology morp);
+ASX afxClass const* _AsxMorpGetModelClass(afxMorphology morp);
+ASX afxClass const* _AsxMorpGetMeshClass(afxMorphology morp);
+
+ASX afxClass const* _AsxGetShapClass(afxSimulation sim);
 
 ASX afxClass const* _AsxGetCapstanClass(afxSimulation sim);
 ASX afxClass const* _AsxGetBodyClass(afxSimulation sim);
-ASX afxClass const* _AsxGetTerrainClass(afxSimulation sim);
+ASX afxClass const* _AsxMorpGetTerrainClass(afxMorphology morp);
 
 ASX afxClass const* _AsxGetMotionClass(afxSimulation sim);
 ASX afxClass const* _AsxGetMotiveClass(afxSimulation sim);
@@ -173,10 +176,11 @@ ASX afxClass const* _AsxGetRendererClass(afxSimulation sim);
 
 ASX afxClass const* _AsxGetSceneClass(afxSimulation sim);
 
-ASX afxStringBase   _AsxGetModelUrnStringBase(afxSimulation sim);
-ASX afxStringBase   _AsxGetPivotTagStringBase(afxSimulation sim);
-ASX afxStringBase   _AsxGetMorphTagStringBase(afxSimulation sim);
+ASX afxStringBase   _AsxMorpGetModelUrnStringBase(afxMorphology morp);
+ASX afxStringBase   _AsxMorpGetPivotTagStringBase(afxMorphology morp);
+ASX afxStringBase   _AsxMorpGetMorphTagStringBase(afxMorphology morp);
 
+ASX afxStringBase   _AsxSimGetAnimUrnStringBase(afxSimulation sim);
 
 ASX afxClassConfig const _ASX_SIM_CLASS_CONFIG;
 

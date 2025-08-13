@@ -19,7 +19,7 @@
 #ifndef AVX_DRAW_OPS_H
 #define AVX_DRAW_OPS_H
 
-#include "qwadro/inc/draw/math/avxViewport.h"
+#include "qwadro/inc/math/avxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/draw/op/avxTransference.h"
 #include "qwadro/inc/draw/op/avxTransference.h"

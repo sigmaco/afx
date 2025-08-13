@@ -142,10 +142,10 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxUnit invokeNo)
     dev->type = info->type;
     dev->status = afxDeviceStatus_DISABLED;
     dev->acceleration = info->acceleration;
-    dev->ihvId = info->ihvId;
-    dev->ihvDevId = info->ihvDevId;
-    dev->isvId = info->isvId;
-    dev->isvDrvId = info->isvDrvId;
+    dev->hwVndId = info->hwVndId;
+    dev->hwVndDevId = info->hwVndDevId;
+    dev->swVndId = info->swVndId;
+    dev->swVndDrvId = info->swVndDrvId;
     dev->driverVer = info->driverVer;
     dev->apiVer = info->apiVer;
     dev->acceleration = info->acceleration;
@@ -154,7 +154,7 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxUnit invokeNo)
 
     afxUri urn;
     AfxWrapUriString(&urn, &info->urn);
-    AfxMakeUri8(&dev->urn, &urn);
+    AfxMakeUri32(&dev->urn, &urn);
 
     if (AfxIsUriBlank(&dev->urn.uri)) AfxThrowError();
     else

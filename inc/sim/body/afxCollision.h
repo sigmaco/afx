@@ -52,6 +52,36 @@ AFX_DEFINE_STRUCT(asxShapeInfo)
     };
 };
 
+AFX_DEFINE_STRUCT(asxRigidBody)
+{
+
+};
+
+AFX_DEFINE_STRUCT(asxSoftBody)
+{
+
+};
+
+AFX_DEFINE_STRUCT(asxCollider)
+// collider is the geometric shape of a collidable object.
+{
+    afxUnit     bsCnt;
+    afxSphere*  bs;
+    afxUnit     bbCnt;
+    afxBox*     bb;
+    afxUnit     plCnt;
+    afxPlane*   pl;
+    afxUnit     vtxCnt;
+    afxV3d*     vtx;
+    afxUnit     triCnt;
+    afxUnit*    tri;
+};
+
+AFX_DEFINE_STRUCT(asxCollision)
+// collision is the result of a collidable interaction.
+{
+
+};
 
 ASX afxError AsxAcquireShapes(afxSimulation sim, afxUnit cnt, asxShapeInfo const info[], asxShape shapes[]);
 

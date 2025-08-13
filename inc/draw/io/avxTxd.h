@@ -68,12 +68,12 @@ AFX_DEFINE_STRUCT(avxTxdInfo)
     avxSamplerInfo const*   samplers;
 };
 
-AVX afxCmdId AvxCmdBindTxds(afxDrawContext dctx, afxUnit baseSlotIdx, afxUnit cnt, avxTxd txds[]);
-AVX afxCmdId AvxCmdBindTextures(afxDrawContext dctx, afxUnit txdIdx, afxUnit cnt, afxUnit const indices[]);
+AVX afxCmdId    AvxCmdUseTxds(afxDrawContext dctx, afxUnit baseSlotIdx, afxUnit cnt, avxTxd txds[]);
+AVX afxCmdId    AvxCmdBindTextures(afxDrawContext dctx, afxUnit txdIdx, afxUnit cnt, afxUnit const indices[]);
 
-AVX afxError AvxAddTextures(avxTxd txd, afxUnit cnt, afxString const names[]);
-AVX afxError AvxFindTextures(avxTxd txd, afxUnit cnt, afxString const names[], afxUnit indices[]);
-AVX afxError AvxRequestTextures(avxTxd txd, afxUnit cnt, afxUnit indices[]);
+AVX afxError    AvxAddTextures(avxTxd txd, afxUnit cnt, afxString const names[]);
+AVX afxError    AvxFindTextures(avxTxd txd, afxUnit cnt, afxString const names[], afxUnit indices[]);
+AVX afxError    AvxRequestTextures(avxTxd txd, afxUnit cnt, afxUnit indices[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 

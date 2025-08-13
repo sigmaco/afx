@@ -44,16 +44,39 @@ _ASX afxTransform* AsxGetPoseTransform(afxPose pose, afxUnit artIdx)
     return &pose->arts[artIdx].xform;
 }
 
-_ASX void AsxCopyPose(afxPose pose, afxPose from)
+_ASX void AsxCopyPose(afxPose pose, afxUnit toBaseArtIdx, afxPose from, afxUnit fromBaseArtIdx, afxUnit cnt, afxUnit const artMap[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(pose);
+    AFX_ASSERT_RANGE(pose->artCnt, toBaseArtIdx, cnt);
     AFX_ASSERT(from);
+    AFX_ASSERT_RANGE(from->artCnt, fromBaseArtIdx, cnt);
 
-    for (afxUnit i = 0; i < from->artCnt; i++)
+    if (!artMap)
     {
-        asxArticulation* dst = &pose->arts[i];
-        asxArticulation const* src = &pose->arts[i];
+        // non-remapped copy
+
+        for (afxUnit i = 0; i < cnt; i++)
+        {
+            asxArticulation* dst = &pose->arts[toBaseArtIdx + i];
+            asxArticulation const* src = &from->arts[fromBaseArtIdx + i];
+
+            dst->weight = src->weight;
+            dst->cnt = src->cnt;
+            dst->traversalId = src->traversalId;
+            AfxCopyTransform(&dst->xform, &src->xform);
+        }
+        return;
+    }
+
+    // remapped copy
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        afxUnit artIdx = artMap[i];
+        asxArticulation* dst = &pose->arts[toBaseArtIdx + artIdx];
+        asxArticulation const* src = &from->arts[fromBaseArtIdx + artIdx];
+
         dst->weight = src->weight;
         dst->cnt = src->cnt;
         dst->traversalId = src->traversalId;
@@ -327,6 +350,79 @@ _ASX afxUnit AsxPerformManipulatedPose(afxPose pose, afxReal startTime, afxReal 
         AfxDisposeObjects(1, &moto);
     }
     return rslt;
+}
+
+_ASX afxReal GetTrackMaskBoneWeight(akxTrackMask* mask, afxUnit jntIdx)
+{
+    double result; // st7
+
+    if (jntIdx >= mask->boneCnt)
+        result = mask->defWeight;
+    else
+        result = mask->boneWeights[jntIdx];
+    return result;
+}
+
+_ASX void AsxModulatePose(afxPose pose, afxUnit toBaseArtIdx, afxPose composite, afxUnit fromBaseArtIdx, afxUnit artCnt, afxReal weightNone, afxReal weightAll, akxTrackMask* mask, afxUnit const jntRemap[])
+{
+    // Should be compatible with ModulationCompositeLocalPoseSparse(BasePose, weightNone, wieghtAll, Mask, CompositePose, jntRemap)
+    afxError err;
+
+    AFX_ASSERT_RANGE(pose->artCnt, toBaseArtIdx, artCnt);
+    AFX_ASSERT_RANGE(composite->artCnt, fromBaseArtIdx, artCnt);
+    artCnt = AFX_MIN(AFX_MIN(artCnt, pose->artCnt), composite->artCnt);
+
+    if (!mask) weightNone = weightAll;
+
+    afxReal weightScale = weightAll - weightNone;
+    if (!(AFX_ABS(weightScale) >= 0.001))
+    {
+        mask = 0;
+        if (weightNone < 0.001) return;
+
+        if (!(weightNone <= 0.99900001))
+        {
+            AsxCopyPose(pose, toBaseArtIdx, composite, 0, artCnt, NIL);
+            return;
+        }
+    }
+
+    for (afxUnit i = 0; i < artCnt; i++)
+    {
+        asxArticulation const* ts = &composite->arts[fromBaseArtIdx + i];
+        asxArticulation* td = &pose->arts[toBaseArtIdx + i];
+
+        afxReal weight = weightAll;
+
+        if (mask)
+        {
+            afxReal f;
+            if (jntRemap)
+                f = GetTrackMaskBoneWeight(mask, jntRemap[i]);
+            else
+                f = GetTrackMaskBoneWeight(mask, i);
+
+            weight = f * weightScale + weightNone;
+        }
+
+        td->xform.flags = ts->xform.flags | td->xform.flags;
+
+        if (td->xform.flags & afxTransformFlag_TRANSLATED)
+        {
+            AfxV3dMix(td->xform.position, td->xform.position, ts->xform.position, weight);
+        }
+
+        if (td->xform.flags & afxTransformFlag_ROTATED)
+        {
+            AfxV4dMix(td->xform.orientation, td->xform.orientation, ts->xform.orientation, weight);
+            AfxQuatNormalize(td->xform.orientation, td->xform.orientation);
+        }
+
+        if (td->xform.flags & afxTransformFlag_DEFORMED)
+        {
+            AfxM3dMix(td->xform.scaleShear, td->xform.scaleShear, ts->xform.scaleShear, weight);
+        }
+    }
 }
 
 _ASX afxError _AsxPoseDtorCb(afxPose pose)

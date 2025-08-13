@@ -30,7 +30,7 @@
 //#define _AVX_DRAW_OUTPUT_C
 //#define _AVX_DRAW_INPUT_C
 #define _AVX_BUFFER_C
-#include "impl/avxImplementation.h"
+#include "ddi/avxImplementation.h"
 
 _AVX _avxDsysImpl const* _AvxDsysGetImpl(afxDrawSystem dsys)
 {
@@ -38,6 +38,15 @@ _AVX _avxDsysImpl const* _AvxDsysGetImpl(afxDrawSystem dsys)
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     return dsys->pimpl;
+}
+
+_AVX afxMask _AvxDsysGetIoExuMask(afxDrawSystem dsys, afxMask* dedIoExuMask)
+{
+    afxError err = AFX_ERR_NONE;
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    if (dedIoExuMask) *dedIoExuMask = dsys->dedIoExuMask;
+    return dsys->ioExuMask;
 }
 
 _AVX afxDrawFeatures const* _AvxDsysAccessReqFeatures(afxDrawSystem dsys)
@@ -224,6 +233,10 @@ _AVX _avxDsysImpl const _AVX_DSYS_IMPL =
 
     .camCls = _AvxDsysGetCamClass,
     .txdCls = _AvxDsysGetTxdClass,
+
+    .transferCb = _AvxDsysTransferVideoMemory,
+    .cohereCb = _AvxDsysCohereMappedBuffers,
+    .remapCb = _AvxDsysRemapBuffers,
 };
 
 _AVX afxModule AvxGetDrawSystemIcd(afxDrawSystem dsys)
@@ -237,7 +250,56 @@ _AVX afxModule AvxGetDrawSystemIcd(afxDrawSystem dsys)
     return icd;
 }
 
-_AVX afxUnit AvxGetDrawSystemProcedures(afxDrawSystem dsys, afxUnit cnt, afxString const names[], void* addresses[])
+_AVX void AvxGetEnabledDrawFeatures(afxDrawSystem dsys, afxDrawFeatures* features)
+{
+    afxError err = AFX_ERR_NONE;
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+    AFX_ASSERT(features);
+    *features = dsys->requirements;
+
+    return;
+}
+
+_AVX afxUnit AvxTestForDrawExtensionsEnabled(afxDrawSystem dsys, afxUnit cnt, afxString const* exts, afxBool enabled[])
+{
+    afxError err = AFX_ERR_NONE;
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    // @names must be an array of Qwadro strings specifying the wanted symbol's names.
+    AFX_ASSERT(exts);
+    afxUnit rslt = 0;
+
+    if (enabled)
+    {
+        afxString const* reqExts;
+
+        afxUnit matchedIdx;
+        for (afxUnit i = 0; i < cnt; i++)
+        {
+            if (AfxCompareStrings(reqExts, 0, FALSE, 1, &exts[i], &matchedIdx))
+                rslt++, enabled[i] = TRUE;
+            else
+                enabled[i] = FALSE;
+        }
+    }
+    else
+    {
+        afxString const* reqExts;
+
+        afxUnit matchedIdx;
+        for (afxUnit i = 0; i < cnt; i++)
+        {
+            if (AfxCompareStrings(reqExts, 0, FALSE, 1, &exts[i], &matchedIdx))
+                rslt++;
+        }
+    }
+
+    return rslt;
+}
+
+_AVX afxUnit AvxResolveDrawSymbols(afxDrawSystem dsys, afxUnit cnt, afxString const names[], void* addresses[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -248,8 +310,8 @@ _AVX afxUnit AvxGetDrawSystemProcedures(afxDrawSystem dsys, afxUnit cnt, afxStri
     AFX_ASSERT(addresses);
     afxUnit rslt = 0;
 
-    AFX_ASSERT(dsys->pimpl->getProcs);
-    rslt = dsys->pimpl->getProcs(dsys, cnt, names, addresses);
+    AFX_ASSERT(dsys->pimpl->getProcCb);
+    rslt = dsys->pimpl->getProcCb(dsys, cnt, names, addresses);
 
     return rslt;
 }
@@ -271,26 +333,27 @@ _AVX afxUnit AvxGetDrawBridges(afxDrawSystem dsys, afxUnit baseIdx, afxUnit cnt,
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    // bridges must be a valid pointer to afxDrawBridge handles.
-    AFX_ASSERT(bridges);
-    afxUnit rslt = 0;
 
     afxUnit bridgeCnt = dsys->bridgeCnt;
-    //AFX_ASSERT_RANGE(bridgeCnt, baseExuIdx, cnt);
+    cnt = AFX_MIN(cnt, bridgeCnt - baseIdx);
 
-    if (baseIdx < bridgeCnt)
+    // bridges can be null or must be a valid pointer to afxDrawBridge handles.
+    if (!bridges) return cnt;
+
+    //AFX_ASSERT_RANGE(bridgeCnt, baseExuIdx, cnt);
+    baseIdx = AFX_MIN(baseIdx, bridgeCnt - 1);
+
+    afxUnit rslt = 0;
+    for (afxUnit i = 0; i < cnt; i++)
     {
-        for (afxUnit i = 0; i < cnt; i++)
-        {
-            afxDrawBridge dexu = dsys->bridges[baseIdx + i];
-            AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-            bridges[rslt++] = dexu;
-        }
+        afxDrawBridge dexu = dsys->bridges[baseIdx + i];
+        AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
+        bridges[rslt++] = dexu;
     }
     return rslt;
 }
 
-_AVX afxUnit AvxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, afxUnit portId, afxDrawPortFlags portFlags, afxUnit first, afxUnit maxCnt, afxDrawBridge bridges[])
+_AVX afxUnit AvxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, afxDrawCaps caps, afxMask exuMask, afxUnit first, afxUnit maxCnt, afxDrawBridge bridges[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -298,34 +361,31 @@ _AVX afxUnit AvxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, afxUnit po
     afxUnit found = 0;
     afxUnit rslt = 0;
 
-    if ((ddevId == AFX_INVALID_INDEX) && (portId == AFX_INVALID_INDEX) &&
-        (!portFlags) && (!bridges))
+    if ((ddevId == AFX_INVALID_INDEX) && (!caps) && (!bridges))
         return maxCnt ? AFX_MIN(maxCnt, dsys->bridgeCnt - first) : AFX_MIN(dsys->bridgeCnt, dsys->bridgeCnt - first);
 
     afxUnit bridgeCnt = dsys->bridgeCnt;
-    for (afxUnit i = 0; i < bridgeCnt; i++)
+    for (afxUnit exuIdx = 0; exuIdx < bridgeCnt; exuIdx++)
     {
-        afxDrawBridge dexu = dsys->bridges[i];
+        // skip if a mask is specified and this EXU is not bitmapped in it.
+        if (exuMask && !(exuMask & AFX_BITMASK(exuIdx)))
+            continue;
+
+        afxDrawBridge dexu = dsys->bridges[exuIdx];
         AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
         
-        afxUnit portId2;
-        afxDrawDevice ddev = AvxGetBridgedDrawDevice(dexu, &portId2);
+        afxDrawDevice ddev = AvxGetBridgedDrawDevice(dexu, NIL);
         AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
 
-        if ((ddevId != AFX_INVALID_INDEX) && 
-            (ddevId != AfxGetObjectId(ddev)))
+        if ((ddevId != AFX_INVALID_INDEX) && (ddevId != AfxGetObjectId(ddev)))
             continue;
 
-        if ((portId != AFX_INVALID_INDEX) && 
-            (portId != portId2))
-            continue;
-
-        if (portFlags)
+        if (caps)
         {
-            afxDrawCapabilities caps;
-            AvxQueryDrawCapabilities(ddev, portId2, 1, &caps);
+            afxDrawPortInfo capsi;
+            AvxQueryDrawCapabilities(ddev, &capsi);
             
-            if ((caps.capabilities & portFlags) != portFlags)
+            if ((capsi.capabilities & caps) != caps)
                 continue;
         }
 
@@ -348,15 +408,15 @@ _AVX afxUnit AvxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, afxUnit po
     return rslt;
 }
 
-_AVX afxError AvxWaitForDrawQueue(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queId, afxUnit64 timeout)
+_AVX afxError AvxWaitForDrawQueue(afxDrawSystem dsys, afxUnit64 timeout, afxUnit exuIdx, afxUnit queId)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    // portIdx must be a valid index to a bridge.
-    AFX_ASSERT_RANGE((afxUnit)dsys->bridgeCnt, exuIdx, 1);
     
     afxDrawBridge dexu;
+    // exuIdx must be a valid index to a bridge.
+    AFX_ASSERT_RANGE(dsys->bridgeCnt, exuIdx, 1);
     if (!AvxGetDrawBridges(dsys, exuIdx, 1, &dexu))
     {
         AfxThrowError();
@@ -378,7 +438,7 @@ _AVX afxError AvxWaitForDrawQueue(afxDrawSystem dsys, afxUnit exuIdx, afxUnit qu
     return err;
 }
 
-_AVX afxError AvxWaitForDrawBridges(afxDrawSystem dsys, afxMask exuMask, afxUnit64 timeout)
+_AVX afxError AvxWaitForDrawBridges(afxDrawSystem dsys, afxUnit64 timeout, afxMask exuMask)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -397,7 +457,6 @@ _AVX afxError AvxWaitForDrawBridges(afxDrawSystem dsys, afxMask exuMask, afxUnit
             return err;
         }
         AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-
         AvxWaitForIdleDrawBridge(dexu, timeout);
     }
     return err;
@@ -412,9 +471,17 @@ _AVX afxError AvxWaitForDrawSystem(afxDrawSystem dsys, afxUnit64 timeout)
     if (!dsys->pimpl->waitCb)
     {
         afxUnit exuCnt = dsys->bridgeCnt;
-
-        for (afxUnit i = 0; i < exuCnt; i++)
-            AvxWaitForDrawBridges(dsys, AFX_BITMASK(i), timeout);
+        for (afxUnit exuIdx = 0; exuIdx < exuCnt; exuIdx++)
+        {
+            afxDrawBridge dexu;
+            if (!AvxGetDrawBridges(dsys, exuIdx, 1, &dexu))
+            {
+                AfxThrowError();
+                return err;
+            }
+            AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
+            AvxWaitForIdleDrawBridge(dexu, timeout);
+        }
     }
     else if (dsys->pimpl->waitCb(dsys, timeout))
         AfxThrowError();
@@ -422,7 +489,7 @@ _AVX afxError AvxWaitForDrawSystem(afxDrawSystem dsys, afxUnit64 timeout)
     return err;
 }
 
-_AVX afxError _AvxTransferVideoMemory(afxDrawSystem dsys, avxTransference* ctrl, afxUnit opCnt, void const* ops)
+_AVX afxError _AvxDsysTransferVideoMemory(afxDrawSystem dsys, avxTransference* ctrl, afxUnit opCnt, void const* ops)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -431,60 +498,211 @@ _AVX afxError _AvxTransferVideoMemory(afxDrawSystem dsys, avxTransference* ctrl,
     AFX_ASSERT(ctrl);
     AFX_ASSERT(ops);
 
+    afxMask dsysIoExuMask = dsys->ioExuMask;
     afxMask exuMask = ctrl->exuMask;
     afxUnit exuCnt = dsys->bridgeCnt;
-    for (afxUnit exuIdx = 0; exuIdx < exuCnt; exuIdx++)
+    afxUnit firstExuIdx = AfxRandom2(0, exuCnt - 1);
+
+    AFX_ASSERT(!exuMask || (dsysIoExuMask & exuMask));
+
+    afxBool queued = FALSE;
+
+    while (1)
     {
-        if (exuMask && !(exuMask & AFX_BITMASK(exuIdx)))
-            continue;
-
-        afxDrawBridge dexu;
-        if (!AvxGetDrawBridges(dsys, exuIdx, 1, &dexu))
+        for (afxUnit exuIdx = firstExuIdx; exuIdx < exuCnt; exuIdx++)
         {
-            AfxThrowError();
-            return err;
-        }
+            firstExuIdx = 0;
 
-        afxClass const* dqueCls = _AvxGetDrawQueueClass(dexu);
+            // Skip non-transfer-capable EXUs.
+            if (!(dsysIoExuMask & AFX_BITMASK(exuIdx)))
+                continue; // for
 
-        // sanitize arguments
-        afxUnit totalQueCnt = dqueCls->instCnt;
-        afxUnit baseQueIdx = AFX_MIN(ctrl->baseQueIdx, totalQueCnt - 1);
-        afxUnit queCnt = AFX_CLAMP(ctrl->queCnt, 1, totalQueCnt - baseQueIdx);
-        AFX_ASSERT(queCnt);
-        afxBool queued = FALSE;
+            if (exuMask && !(exuMask & AFX_BITMASK(exuIdx)))
+                continue; // for
 
-        do
-        {
-            for (afxUnit i = 0; i < queCnt; i++)
+            // Try to pick one of the dedicated ones when EXUs are not specified.
+            if ((!exuMask) && dsys->dedIoExuMask && (!(dsys->dedIoExuMask & AFX_BITMASK(exuIdx))))
+                continue; // for
+#if 0
+            // if a mask is specified and it is not one of the existing dedicated EXUs in mask.
+            if (dsys->dedIoExuMask)
             {
-                afxUnit queIdx = baseQueIdx + i;
-
-                afxDrawQueue dque;
-                if (!AvxGetDrawQueues(dexu, queIdx, 1, &dque))
+                if (exuMask)
                 {
-                    AfxThrowError();
-                    break;
+                    if ((exuMask & dsys->dedIoExuMask))
+                    {
+                        if (!(dsys->dedIoExuMask & AFX_BITMASK(exuIdx)))
+                            continue;
+                    }
+                }
+                else
+                {
+
                 }
 
-                afxError err2;
-                if ((err2 = _AvxDqueTransferResources(dque, ctrl, opCnt, ops)))
-                {
-                    if (err2 == afxError_TIMEOUT)
-                        continue;
+                if (exuMask && (dsys->dedIoExuMask & AFX_BITMASK(exuIdx)))
+                    continue;
+            }
+#endif
 
-                    AfxThrowError();
-                    break;
-                }
-                queued = TRUE;
-                break;
+            afxDrawBridge dexu;
+            if (!AvxGetDrawBridges(dsys, exuIdx, 1, &dexu))
+            {
+                AfxThrowError();
+                continue;
             }
 
-            if (err || queued)
-                break; // reiterate if not queue for timeout?
+            afxError err2 = _AvxDexuTransferVideoMemory(dexu, ctrl, opCnt, ops);
 
-        } while (0);
-        break;
+            err = err2;
+
+            if (!err2)
+            {
+                queued = TRUE;
+                break; // for
+            }
+
+            if (err2 == afxError_TIMEOUT || err2 == afxError_BUSY)
+                continue; // for
+
+            AfxThrowError();
+        }
+
+        if (err || queued) break; // while --- find bridges
+    }
+    return err;
+}
+
+_AVX afxError _AvxDsysRemapBuffers(afxDrawSystem dsys, afxBool unmap, afxUnit cnt, _avxBufferRemapping const maps[])
+{
+    afxError err = AFX_ERR_NONE;
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(cnt);
+    AFX_ASSERT(maps);
+
+    afxError queErr;
+    afxBool queued = FALSE;
+
+    afxMask dedIoExuMask;
+    afxMask ioExuMask = _AvxDsysGetIoExuMask(dsys, &dedIoExuMask);
+    afxUnit exuIdx = 0;
+    afxDrawBridge dexu;
+    afxUnit exuCnt;
+
+    // Firstly, try to put them in a dedicated queue.
+    if (dedIoExuMask)
+    {
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawCaps_TRANSFER, dedIoExuMask, 0, 0, NIL);
+        AFX_ASSERT(exuCnt);
+        exuIdx = 0;
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawCaps_TRANSFER, dedIoExuMask, exuIdx++, 1, &dexu))
+        {
+            queErr = _AvxDexuRemapBuffers(dexu, unmap, cnt, maps);
+            err = queErr;
+
+            if (!queErr)
+            {
+                queued = TRUE;
+                break; // while
+            }
+
+            if (queErr == afxError_TIMEOUT || queErr == afxError_BUSY)
+                continue; // while
+
+            AfxThrowError();
+        }
+    }
+
+    // If we can not put them in a dedicated queue, try to put them in a shared one.
+    if (!queued)
+    {
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawCaps_TRANSFER, ioExuMask, 0, 0, NIL);
+        AFX_ASSERT(exuCnt);
+        exuIdx = 0;
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawCaps_TRANSFER, ioExuMask, exuIdx++, 1, &dexu))
+        {
+            queErr = _AvxDexuRemapBuffers(dexu, unmap, cnt, maps);
+            err = queErr;
+
+            if (!queErr)
+            {
+                queued = TRUE;
+                break; // while
+            }
+
+            if (queErr == afxError_TIMEOUT || queErr == afxError_BUSY)
+                continue; // while
+
+            AfxThrowError();
+        }
+    }
+    return err;
+}
+
+_AVX afxError _AvxDsysCohereMappedBuffers(afxDrawSystem dsys, afxBool discard, afxUnit cnt, avxBufferedMap const maps[])
+{
+    afxError err = AFX_ERR_NONE;
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(cnt);
+    AFX_ASSERT(maps);
+
+    afxError queErr;
+    afxBool queued = FALSE;
+
+    afxMask dedIoExuMask;
+    afxMask ioExuMask = _AvxDsysGetIoExuMask(dsys, &dedIoExuMask);
+    afxUnit exuIdx = 0;
+    afxDrawBridge dexu;
+    afxUnit exuCnt;
+
+    // Firstly, try to put them in a dedicated queue.
+    if (dedIoExuMask)
+    {
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawCaps_TRANSFER, dedIoExuMask, 0, 0, NIL);
+        AFX_ASSERT(exuCnt);
+        exuIdx = 0;
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawCaps_TRANSFER, dedIoExuMask, exuIdx++, 1, &dexu))
+        {
+            queErr = _AvxDexuCohereMappedBuffers(dexu, discard, cnt, maps);
+            err = queErr;
+
+            if (!queErr)
+            {
+                queued = TRUE;
+                break; // while
+            }
+
+            if (queErr == afxError_TIMEOUT || queErr == afxError_BUSY)
+                continue; // while
+
+            AfxThrowError();
+        }
+    }
+
+    // If we can not put them in a dedicated queue, try to put them in a shared one.
+    if (!queued)
+    {
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawCaps_TRANSFER, ioExuMask, 0, 0, NIL);
+        AFX_ASSERT(exuCnt);
+        exuIdx = 0;
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawCaps_TRANSFER, ioExuMask, exuIdx++, 1, &dexu))
+        {
+            queErr = _AvxDexuCohereMappedBuffers(dexu, discard, cnt, maps);
+            err = queErr;
+
+            if (!queErr)
+            {
+                queued = TRUE;
+                break; // while
+            }
+
+            if (queErr == afxError_TIMEOUT || queErr == afxError_BUSY)
+                continue; // while
+
+            AfxThrowError();
+        }
     }
     return err;
 }
@@ -576,63 +794,61 @@ _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
         afxChain* classes = &dsys->ctx.classes;
         AfxDeployChain(classes, (void*)dsys);
 
-        afxClassConfig clsCfg;
+        afxClassConfig bufClsCfg = cfg->bufClsCfg ? *cfg->bufClsCfg : _AVX_BUF_CLASS_CONFIG;
+        AFX_ASSERT(bufClsCfg.fcc == afxFcc_BUF);
+        AfxMountClass(&dsys->bufCls, NIL, classes, &bufClsCfg);
 
-        clsCfg = cfg->bufClsCfg ? *cfg->bufClsCfg : _AVX_BUF_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_BUF);
-        AfxMountClass(&dsys->bufCls, NIL, classes, &clsCfg);
+        afxClassConfig rasClsCfg = cfg->rasClsCfg ? *cfg->rasClsCfg : _AVX_RAS_CLASS_CONFIG;
+        AFX_ASSERT(rasClsCfg.fcc == afxFcc_RAS);
+        AfxMountClass(&dsys->rasCls, NIL, classes, &rasClsCfg);
 
-        clsCfg = cfg->rasClsCfg ? *cfg->rasClsCfg : _AVX_RAS_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_RAS);
-        AfxMountClass(&dsys->rasCls, NIL, classes, &clsCfg);
+        afxClassConfig canvClsCfg = cfg->canvClsCfg ? *cfg->canvClsCfg : _AVX_CANV_CLASS_CONFIG;
+        AFX_ASSERT(canvClsCfg.fcc == afxFcc_CANV);
+        AfxMountClass(&dsys->canvCls, NIL, classes, &canvClsCfg); // req RAS
 
-        clsCfg = cfg->canvClsCfg ? *cfg->canvClsCfg : _AVX_CANV_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_CANV);
-        AfxMountClass(&dsys->canvCls, NIL, classes, &clsCfg); // req RAS
+        afxClassConfig sampClsCfg = cfg->sampClsCfg ? *cfg->sampClsCfg : _AVX_SAMP_CLASS_CONFIG;
+        AFX_ASSERT(sampClsCfg.fcc == afxFcc_SAMP);
+        AfxMountClass(&dsys->sampCls, NIL, classes, &sampClsCfg);
 
-        clsCfg = cfg->sampClsCfg ? *cfg->sampClsCfg : _AVX_SAMP_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_SAMP);
-        AfxMountClass(&dsys->sampCls, NIL, classes, &clsCfg);
+        afxClassConfig ligaClsCfg = cfg->ligaClsCfg ? *cfg->ligaClsCfg : _AVX_LIGA_CLASS_CONFIG;
+        AFX_ASSERT(ligaClsCfg.fcc == afxFcc_LIGA);
+        AfxMountClass(&dsys->ligaCls, NIL, classes, &ligaClsCfg); // req BUF, RAS, SAMP
 
-        clsCfg = cfg->ligaClsCfg ? *cfg->ligaClsCfg : _AVX_LIGA_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_LIGA);
-        AfxMountClass(&dsys->ligaCls, NIL, classes, &clsCfg); // req BUF, RAS, SAMP
+        afxClassConfig vtxdClsCfg = cfg->vtxdClsCfg ? *cfg->vtxdClsCfg : _AVX_VIN_CLASS_CONFIG;
+        AFX_ASSERT(vtxdClsCfg.fcc == afxFcc_VIN);
+        AfxMountClass(&dsys->vinCls, NIL, classes, &vtxdClsCfg);
 
-        clsCfg = cfg->vtxdClsCfg ? *cfg->vtxdClsCfg : _AVX_VIN_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_VIN);
-        AfxMountClass(&dsys->vinCls, NIL, classes, &clsCfg);
+        afxClassConfig shdClsCfg = cfg->shdClsCfg ? *cfg->shdClsCfg : _AVX_SHD_CLASS_CONFIG;
+        AFX_ASSERT(shdClsCfg.fcc == afxFcc_SHD);
+        AfxMountClass(&dsys->shadCls, NIL, classes, &shdClsCfg);
 
-        clsCfg = cfg->shdClsCfg ? *cfg->shdClsCfg : _AVX_SHD_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_SHD);
-        AfxMountClass(&dsys->shadCls, NIL, classes, &clsCfg);
+        afxClassConfig pipClsCfg = cfg->pipClsCfg ? *cfg->pipClsCfg : _AVX_PIP_CLASS_CONFIG;
+        AFX_ASSERT(pipClsCfg.fcc == afxFcc_PIP);
+        AfxMountClass(&dsys->pipCls, NIL, classes, &pipClsCfg); // req SHD, LIGA, VTXD
 
-        clsCfg = cfg->pipClsCfg ? *cfg->pipClsCfg : _AVX_PIP_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_PIP);
-        AfxMountClass(&dsys->pipCls, NIL, classes, &clsCfg); // req SHD, LIGA, VTXD
+        afxClassConfig qrypClsCfg = cfg->qrypClsCfg ? *cfg->qrypClsCfg : _AVX_QRYP_CLASS_CONFIG;
+        AFX_ASSERT(qrypClsCfg.fcc == afxFcc_QRYP);
+        AfxMountClass(&dsys->qrypCls, NIL, classes, &qrypClsCfg);
 
-        clsCfg = cfg->qrypClsCfg ? *cfg->qrypClsCfg : _AVX_QRYP_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_QRYP);
-        AfxMountClass(&dsys->qrypCls, NIL, classes, &clsCfg);
+        afxClassConfig doutClsCfg = cfg->doutClsCfg ? *cfg->doutClsCfg : _AVX_DOUT_CLASS_CONFIG;
+        AFX_ASSERT(doutClsCfg.fcc == afxFcc_DOUT);
+        AfxMountClass(&dsys->doutCls, NIL, classes, &doutClsCfg); // req RAS, CANV
 
-        clsCfg = cfg->doutClsCfg ? *cfg->doutClsCfg : _AVX_DOUT_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_DOUT);
-        AfxMountClass(&dsys->doutCls, NIL, classes, &clsCfg); // req RAS, CANV
+        afxClassConfig dinClsCfg = cfg->dinClsCfg ? *cfg->dinClsCfg : _AVX_DIN_CLASS_CONFIG;
+        AFX_ASSERT(dinClsCfg.fcc == afxFcc_DIN);
+        AfxMountClass(&dsys->dinCls, NIL, classes, &dinClsCfg); // req BUF
 
-        clsCfg = cfg->dinClsCfg ? *cfg->dinClsCfg : _AVX_DIN_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_DIN);
-        AfxMountClass(&dsys->dinCls, NIL, classes, &clsCfg); // req BUF
+        afxClassConfig txdClsCfg = cfg->txdClsCfg ? *cfg->txdClsCfg : _AVX_TXD_CLASS_CONFIG;
+        AFX_ASSERT(txdClsCfg.fcc == afxFcc_TXD);
+        AfxMountClass(&dsys->txdCls, NIL, classes, &txdClsCfg); // req RAS
 
-        clsCfg = cfg->txdClsCfg ? *cfg->txdClsCfg : _AVX_TXD_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_TXD);
-        AfxMountClass(&dsys->txdCls, NIL, classes, &clsCfg); // req RAS
+        afxClassConfig camClsCfg = cfg->camClsCfg ? *cfg->camClsCfg : _AVX_CAM_CLASS_CONFIG;
+        AFX_ASSERT(camClsCfg.fcc == afxFcc_CAM);
+        AfxMountClass(&dsys->camCls, NIL, classes, &camClsCfg);
 
-        clsCfg = cfg->camClsCfg ? *cfg->camClsCfg : _AVX_CAM_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_CAM);
-        AfxMountClass(&dsys->camCls, NIL, classes, &clsCfg);
-
-        clsCfg = cfg->dexuClsCfg ? *cfg->dexuClsCfg : _AVX_DEXU_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_DEXU);
-        AfxMountClass(&dsys->dexuCls, NIL, classes, &clsCfg);
+        afxClassConfig dexuClsCfg = cfg->dexuClsCfg ? *cfg->dexuClsCfg : _AVX_DEXU_CLASS_CONFIG;
+        AFX_ASSERT(dexuClsCfg.fcc == afxFcc_DEXU);
+        AfxMountClass(&dsys->dexuCls, NIL, classes, &dexuClsCfg);
     }
 
     afxUnit totalDqueCnt = 0;
@@ -666,27 +882,66 @@ _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
         return err;
     }
 
-    afxClass* cls = (afxClass*)_AvxDsysGetDexuClass(dsys);
-    AFX_ASSERT_CLASS(cls, afxFcc_DEXU);
-
-    if (AfxAcquireObjects(cls, dsys->bridgeCnt, (afxObject*)dsys->bridges, (void const*[]) { dsys, bridgeCfgs }))
+    if (_AvxDsysBridgeDevices(dsys, dsys->bridgeCnt, bridgeCfgs, dsys->bridges))
     {
         AfxThrowError();
+
+        AfxDeallocateInstanceData(dsys, ARRAY_SIZE(stashes), stashes);
+
+        // Dismout the classes and return the error.
+        AfxDeregisterChainedClasses(&dsys->ctx.classes);
+        AFX_ASSERT(AfxIsChainEmpty(&dsys->ctx.classes));
+        return err;
     }
-    else
+    AFX_ASSERT_OBJECTS(afxFcc_DEXU, dsys->bridgeCnt, dsys->bridges);
+
+    dsys->ioExuMask = NIL;
+    dsys->dedIoExuMask = NIL;
+    dsys->gfxExuMask = NIL;
+    dsys->cfxExuMask = NIL;
+    dsys->dedCfxExuMask = NIL;
+    dsys->videoExuMask = NIL;
+
+    for (afxUnit i = 0; i < dsys->bridgeCnt; i++)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_DEXU, dsys->bridgeCnt, dsys->bridges);
-        
+        afxDrawBridge dexu;
+        AvxGetDrawBridges(dsys, i, 1, &dexu);
+        AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
+
+        afxDrawDevice ddev = AvxGetBridgedDrawDevice(dexu, NIL);
+        AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
+
+        afxDrawPortInfo capsi;
+        AvxQueryDrawCapabilities(ddev, &capsi);
+
+        if ((capsi.capabilities & afxDrawCaps_TRANSFER) == afxDrawCaps_TRANSFER)
+            dsys->ioExuMask |= AFX_BITMASK(i);
+        if (capsi.capabilities & (afxDrawCaps_TRANSFER | afxDrawCaps_COMPUTE | afxDrawCaps_DRAW) == afxDrawCaps_TRANSFER)
+            dsys->dedIoExuMask |= AFX_BITMASK(i);
+
+        if ((capsi.capabilities & afxDrawCaps_COMPUTE) == afxDrawCaps_COMPUTE)
+            dsys->cfxExuMask |= AFX_BITMASK(i);
+        if ((capsi.capabilities & (afxDrawCaps_COMPUTE | afxDrawCaps_DRAW)) == afxDrawCaps_COMPUTE)
+            dsys->dedCfxExuMask |= AFX_BITMASK(i);
+
+        if ((capsi.capabilities & afxDrawCaps_DRAW) == afxDrawCaps_DRAW)
+            dsys->gfxExuMask |= AFX_BITMASK(i);
+
+        if ((capsi.capabilities & afxDrawCaps_PRESENT) == afxDrawCaps_PRESENT)
+            dsys->videoExuMask |= AFX_BITMASK(i);
+    }
+
+    if (!err)
+    {
         afxDrawDevice ddev = AvxGetBridgedDrawDevice(dsys->bridges[0], NIL);
 
         AfxCallDevice((afxDevice)ddev, 3, dsys);
         AfxCallDevice((afxDevice)ddev, 5, dsys);
 
         if (AfxDoDeviceService((afxDevice)ddev))
-        {
             AfxThrowError(); // let the device build its DPUs.
-        }
-        else
+            
+        if (!err)
         {
             if (AfxAcquireStringCatalogs(1, &dsys->shdStrb))
                 AfxThrowError();
@@ -736,7 +991,7 @@ _AVX afxUnit AvxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
-        afxClass const* cls = _AvxGetDrawSystemClass(mdle);
+        afxClass const* cls = _AvxIcdGetDsysClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DSYS);
         rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
     }
@@ -755,7 +1010,7 @@ _AVX afxUnit AvxEvokeDrawSystems(afxUnit icd, afxUnit first, void* udd, afxBool(
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
-        afxClass const* cls = _AvxGetDrawSystemClass(mdle);
+        afxClass const* cls = _AvxIcdGetDsysClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DSYS);
         rslt = AfxEvokeObjects(cls, (void*)f, udd, first, cnt, (afxObject*)systems);
     }
@@ -774,13 +1029,13 @@ _AVX afxUnit AvxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, af
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
-        afxClass const* cls = _AvxGetDrawSystemClass(mdle);
+        afxClass const* cls = _AvxIcdGetDsysClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DSYS);
         rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)systems);
     }
 }
 
-_AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
+_AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawCaps caps, afxAcceleration accel, afxDrawSystemConfig* cfg)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
@@ -794,45 +1049,86 @@ _AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
 
     *cfg = (afxDrawSystemConfig const) { 0 };
 
-    afxModule driver;
-    if (!_AvxGetIcd(icd, &driver))
+    afxModule drv;
+    if (!_AvxGetIcd(icd, &drv))
     {
         AfxThrowError();
         return err;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &driver);
-    AFX_ASSERT(AfxTestModule(driver, afxModuleFlag_ICD | afxModuleFlag_AVX));
+    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &drv);
+    AFX_ASSERT(AfxTestModule(drv, afxModuleFlag_ICD | afxModuleFlag_AVX));
 
-    afxUnit ddevId = 0;
-    afxDrawDevice ddev;
-    if (!AvxEnumerateDrawDevices(icd, ddevId, 1, &ddev))
+    if (0 == cfg->exuCnt)
     {
-        AfxThrowError();
-        return err;
-    }
-    
-    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
-    
-    cfg->ver = 0;
-    cfg->exuCnt = 0;
-    cfg->reqExtCnt = 0;
-    cfg->reqExts = NIL;
-    cfg->reqFeatures = (afxDrawFeatures){ 0 };
-    cfg->udd = NIL;
+        cfg->exuCnt = 0;
 
-    for (afxUnit i = 0; i < AVX_MAX_BRIDGES_PER_SYSTEM; i++)
+        for (afxUnit i = 0; i < AVX_MAX_BRIDGES_PER_SYSTEM; i++)
+        {
+            afxUnit ddevId = i;
+
+            afxDrawDevice ddev;
+            if (AvxEnumerateDrawDevices(icd, ddevId, 1, &ddev))
+            {
+                AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
+
+                afxDrawPortInfo capsi;
+                AvxQueryDrawCapabilities(ddev, &capsi);
+
+                if (caps && !(caps & capsi.capabilities))
+                    continue;
+
+                if (accel && !(accel & capsi.acceleration))
+                    continue;
+
+                cfg->exus[cfg->exuCnt].capabilities = capsi.capabilities;
+                cfg->exus[cfg->exuCnt].acceleration = capsi.acceleration;
+                cfg->exus[cfg->exuCnt].ddevId = ddevId;
+                cfg->exus[cfg->exuCnt].minQueCnt = capsi.minQueCnt;
+                cfg->exus[cfg->exuCnt].queuePriority = NIL;
+                ++cfg->exuCnt;
+            }
+        }
+    }
+    else
     {
-        afxDrawCapabilities caps;
-        if (!AvxQueryDrawCapabilities(ddev, i, 1, &caps))
-            break;
+        afxUnit exuCnt = cfg->exuCnt;
+        cfg->exuCnt = 0;
 
-        cfg->exus[i].capabilities = caps.capabilities;
-        cfg->exus[i].acceleration = caps.acceleration;
-        cfg->exus[i].ddevId = ddevId;
-        cfg->exus[i].minQueCnt = caps.minQueCnt;
-        cfg->exus[i].queuePriority = NIL;
-        ++cfg->exuCnt;
+        for (afxUnit i = 0; i < exuCnt; i++)
+        {
+            afxDrawPortInfo capsi;
+            capsi.acceleration = cfg->exus[i].acceleration ? cfg->exus[i].acceleration : accel;
+            capsi.capabilities = cfg->exus[i].capabilities ? cfg->exus[i].capabilities : caps;
+            capsi.minQueCnt = cfg->exus[i].minQueCnt;
+
+            afxUnit ddevId;
+            if (AvxChooseDrawDevices(icd, NIL, NIL, &capsi, 1, &ddevId))
+            {
+                afxDrawDevice ddev;
+                AvxEnumerateDrawDevices(icd, ddevId, 1, &ddev);
+                AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
+
+                AvxQueryDrawCapabilities(ddev, &capsi);
+
+                cfg->exus[cfg->exuCnt].capabilities = capsi.capabilities;
+                cfg->exus[cfg->exuCnt].acceleration = capsi.acceleration;
+                cfg->exus[cfg->exuCnt].ddevId = ddevId;
+                cfg->exus[cfg->exuCnt].minQueCnt = capsi.minQueCnt;
+                cfg->exus[cfg->exuCnt].queuePriority = NIL;
+                ++cfg->exuCnt;
+            }
+#if 0
+            else
+            {
+                cfg->exus[i].capabilities = caps.capabilities;
+                cfg->exus[i].acceleration = caps.acceleration;
+                cfg->exus[i].minQueCnt = caps.minQueCnt;
+                cfg->exus[i].ddevId = NIL;
+            }
+#endif
+        }
     }
+
     return err;
 }
 
@@ -859,14 +1155,14 @@ _AVX afxError AvxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg
         }
     }
 
-    afxModule driver;
-    if (!_AvxGetIcd(icd, &driver))
+    afxModule drv;
+    if (!_AvxGetIcd(icd, &drv))
     {
         AfxThrowError();
         return err;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &driver);
-    AFX_ASSERT(AfxTestModule(driver, afxModuleFlag_ICD | afxModuleFlag_AVX));
+    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &drv);
+    AFX_ASSERT(AfxTestModule(drv, afxModuleFlag_ICD | afxModuleFlag_AVX));
 
     // Acquire bridges and queues
     afxUnit totalDqueCnt = 0;
@@ -922,20 +1218,11 @@ _AVX afxError AvxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg
         bridgeCfg[bridgeCnt].ddev = ddev;
 
         afxUnit minQueCnt = AFX_CLAMP(exuCfg->minQueCnt, 1, AVX_MAX_QUEUES_PER_BRIDGE);
-        afxDrawCapabilities caps2 = { 0 };
-        caps2.capabilities = exuCfg->capabilities;
-        caps2.acceleration = exuCfg->acceleration;
-        caps2.minQueCnt = minQueCnt;
+        afxDrawPortInfo capsi2 = { 0 };
+        capsi2.capabilities = exuCfg->capabilities;
+        capsi2.acceleration = exuCfg->acceleration;
+        capsi2.minQueCnt = minQueCnt;
 
-        afxUnit portId = AFX_INVALID_INDEX;
-        if (!AfxChooseDrawPorts(ddev, &caps2, 1, &portId))
-        {
-            AfxThrowError();
-            break;
-        }
-
-        AFX_ASSERT(portId != AFX_INVALID_INDEX);
-        bridgeCfg[bridgeCnt].portId = portId;
         bridgeCfg[bridgeCnt].exuIdx = bridgeCnt;
         bridgeCfg[bridgeCnt].minQueCnt = minQueCnt;
         bridgeCfg[bridgeCnt].dqueClsCfg = &_AVX_DQUE_CLASS_CONFIG;
@@ -955,11 +1242,11 @@ _AVX afxError AvxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg
     cfg2.reqFeatures = cfg->reqFeatures;
     cfg2.udd = cfg->udd;
 
-    afxClass* cls = (afxClass*)_AvxGetDrawSystemClass(driver);
+    afxClass* cls = (afxClass*)_AvxIcdGetDsysClass(drv);
     AFX_ASSERT_CLASS(cls, afxFcc_DSYS);
 
     afxDrawSystem dsys;
-    if (AfxAcquireObjects(cls, 1, (afxObject*)&dsys, (void const*[]) { driver, &cfg2, &bridgeCfg[0] }))
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&dsys, (void const*[]) { drv, &cfg2, &bridgeCfg[0] }))
     {
         AfxThrowError();
         return err;

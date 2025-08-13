@@ -21,19 +21,6 @@
 
 #include "qwadro/inc/sim/afxSimulation.h"
 
-#ifdef _ASX_BUFFER_C
-#ifdef _ASX_BUFFER_IMPL
-AFX_OBJECT(_asxBuffer)
-#else
-AFX_OBJECT(asxBuffer)
-#endif
-{
-    afxUnit bufCap;
-    asxBufferUsage usage;
-    asxBufferFlags flags;
-};
-#endif//_ASX_BUFFER_C
-
 #ifdef _ASX_CURVE_C
 #ifdef _ASX_CURVE_IMPL
 AFX_OBJECT(_asxCurve)
@@ -62,6 +49,5 @@ AFX_OBJECT(afxCurve)
 #endif//_ASX_CURVE_C
 
 ASX afxClassConfig const _ASX_CUR_CLASS_CONFIG;
-ASX afxClassConfig const _ASX_SBUF_CLASS_CONFIG;
 
 #endif//ASX_IMPL___CURVE_H

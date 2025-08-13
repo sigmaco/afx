@@ -17,7 +17,7 @@
 #define _AMX_MIX_C
 #define _AMX_BUFFER_C
 #define _AMX_AUDIO_C
-#include "../impl/amxImplementation.h"
+#include "../ddi/amxImplementation.h"
 
 AFX_DEFINE_STRUCT(amxSoundBank)
 {
@@ -129,7 +129,7 @@ _AMX void _AmxSanitizeAudioCopy(amxAudio src, amxAudio dst, amxAudioCopy const* 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AmxUpdateAudio(amxAudio aud, void const* src, afxUnit opCnt, amxAudioIo const ops[], avxFence signal)
+_AMX afxError AmxUpdateAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], void const* src, avxFence signal)
 {
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
@@ -172,7 +172,7 @@ _AMX afxError AmxUpdateAudio(amxAudio aud, void const* src, afxUnit opCnt, amxAu
     return err;
 }
 
-_AMX afxError AmxDumpAudio(amxAudio aud, void* dst, afxUnit opCnt, amxAudioIo const ops[], avxFence signal)
+_AMX afxError AmxDumpAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], void* dst, avxFence signal)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
@@ -219,7 +219,7 @@ _AMX afxError AmxDumpAudio(amxAudio aud, void* dst, afxUnit opCnt, amxAudioIo co
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AmxUploadAudio(amxAudio aud, afxStream in, afxUnit opCnt, amxAudioIo const ops[], avxFence signal)
+_AMX afxError AmxUploadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], afxStream in, avxFence signal)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
@@ -255,13 +255,13 @@ _AMX afxError AmxUploadAudio(amxAudio aud, afxStream in, afxUnit opCnt, amxAudio
     }
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
-    if (AfxWaitForMixQueue(dsys, portIdx, transfer.baseQueIdx))
+    if (AmxWaitForMixQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
     return err;
 }
 
-_AMX afxError AmxDownloadAudio(amxAudio aud, afxStream out, afxUnit opCnt, amxAudioIo const ops[], avxFence signal)
+_AMX afxError AmxDownloadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], afxStream out, avxFence signal)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
@@ -298,7 +298,7 @@ _AMX afxError AmxDownloadAudio(amxAudio aud, afxStream out, afxUnit opCnt, amxAu
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
 #if 0
-    if (AfxWaitForMixQueue(dsys, portIdx, transfer.baseQueIdx))
+    if (AmxWaitForMixQueue(dsys, portIdx, transfer.baseQueIdx))
         AfxThrowError();
 #endif
     return err;
@@ -423,7 +423,7 @@ _AMX afxError AmxPrintAudio(amxAudio aud, amxAudioPeriod const* op, afxUri const
 
     op2.offset = AfxAskStreamPosn(file);
 
-    if (AmxDownloadAudio(aud, file, 1, &op2, 0))
+    if (AmxDownloadAudio(aud, 1, &op2, file, 0))
     {
         AfxThrowError();
         AfxDisposeObjects(1, &file);
@@ -567,7 +567,7 @@ _AMX afxError AmxAcquireAudios(afxMixSystem msys, afxUnit cnt, amxAudioInfo cons
     AFX_ASSERT(info);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = (afxClass*)_AmxGetAudioClass(msys);
+    afxClass* cls = (afxClass*)_AmxMsysGetAudClass(msys);
     AFX_ASSERT_CLASS(cls, afxFcc_AUD);
 
     afxBool allocOnSysMem = TRUE;

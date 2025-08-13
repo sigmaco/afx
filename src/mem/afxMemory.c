@@ -33,10 +33,12 @@
 
 #define _AFX_VALIDATE_MEMSEG
 #define _AFX_VALIDATE_MEMSEG_EXTREMES TRUE
+#if 0
 #define _AFX_REPORT_ALLOC (TRUE)
 #define _AFX_REPORT_COALLOC (TRUE)
 #define _AFX_REPORT_REALLOC (TRUE)
 #define _AFX_REPORT_DEALLOC (TRUE)
+#endif
 
 static afxSize gMemoryBudget = 1024 * 1024 * 1024; // 1024³ = 1 GB
 static afxSize gTotalAllocatedInSystem = 0; // Track total memory allocated
@@ -527,7 +529,7 @@ _AFX void AfxStream2(afxUnit cnt, void const* src, afxSize srcStride, void* dst,
 #if 0
     afxByte* dst2 = dst;
     afxByte const* src2 = src;
-    afxSize unitSiz = AfxMinorNonZero(dstStride, srcStride);
+    afxSize unitSiz = AFX_MIN_OR(dstStride, srcStride);
 
     if ((dstStride == srcStride) && dstStride)
         AfxCopy2(len, unitSiz, src2, dst2);

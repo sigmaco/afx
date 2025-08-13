@@ -55,21 +55,22 @@
 
 #define AVX_MAX_QUEUES_PER_BRIDGE (32)
 
-typedef enum afxDrawPortFlag
+typedef enum afxDrawCaps
 {
-    afxDrawPortFlag_DRAW      = AFX_BITMASK(0), // supports draw ops
-    afxDrawPortFlag_COMPUTE   = AFX_BITMASK(1), // supports compute ops
-    afxDrawPortFlag_TRANSFER  = AFX_BITMASK(2), // supports transfer ops
-    afxDrawPortFlag_BLIT      = AFX_BITMASK(3), // can blit (and resolve?) rasters
-    afxDrawPortFlag_VIDEO     = AFX_BITMASK(4), // supports YUV enc/dec
-    afxDrawPortFlag_TRANSFORM = AFX_BITMASK(5), // can process vertices
-    afxDrawPortFlag_TESSELATE = AFX_BITMASK(6), // can tesselate primitives
-    afxDrawPortFlag_SAMPLE    = AFX_BITMASK(7), // has TMU
-} afxDrawPortFlags;
+    afxDrawCaps_DRAW        = AFX_BITMASK(0), // supports draw ops
+    afxDrawCaps_COMPUTE     = AFX_BITMASK(1), // supports compute ops
+    afxDrawCaps_TRANSFER    = AFX_BITMASK(2), // supports transfer ops
+    afxDrawCaps_BLIT        = AFX_BITMASK(3), // can blit (and resolve?) rasters
+    afxDrawCaps_VIDEO       = AFX_BITMASK(4), // supports YUV enc/dec
+    afxDrawCaps_TRANSFORM   = AFX_BITMASK(5), // can process vertices
+    afxDrawCaps_TESSELATE   = AFX_BITMASK(6), // can tesselate primitives
+    afxDrawCaps_SAMPLE      = AFX_BITMASK(7), // has TMU
+    afxDrawCaps_PRESENT     = AFX_BITMASK(8), // support deferred presentation
+} afxDrawCaps;
 
-AFX_DEFINE_STRUCT(afxDrawCapabilities)
+AFX_DEFINE_STRUCT(afxDrawPortInfo)
 {
-    afxDrawPortFlags    capabilities;
+    afxDrawCaps         capabilities;
     afxAcceleration     acceleration;
     afxUnit             minQueCnt; // usually 3
     afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
@@ -78,14 +79,14 @@ AFX_DEFINE_STRUCT(afxDrawCapabilities)
 AFX_DEFINE_STRUCT(afxDrawBridgeConfig)
 {
     afxUnit             ddevId;
-    afxDrawPortFlags    capabilities; // specifies capabilities of queues in a port.
     afxAcceleration     acceleration;
+    afxDrawCaps         capabilities; // specifies capabilities of queues in a port.
     afxUnit             minQueCnt;
     afxReal const*      queuePriority;
 };
 
-AVX afxDrawSystem   AvxGetBridgedDrawSystem(afxDrawBridge dexu);
-AVX afxDrawDevice   AvxGetBridgedDrawDevice(afxDrawBridge dexu, afxUnit* portId);
+AVX afxDrawSystem   AvxGetBridgedDrawSystem(afxDrawBridge dexu, afxUnit* bridgeId);
+AVX afxDrawDevice   AvxGetBridgedDrawDevice(afxDrawBridge dexu, afxUnit* ddevId);
 
 AVX afxUnit         AvxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cnt, afxDrawQueue queues[]);
 
