@@ -28,7 +28,7 @@
 #define AVX_SAMPLER_H
 
 #include "qwadro/inc/draw/io/avxFormat.h"
-#include "qwadro/inc/draw/math/avxColor.h"
+#include "qwadro/inc/math/avxColor.h"
 
 typedef enum avxSamplerFlag
 {
@@ -195,10 +195,11 @@ AFX_DEFINE_STRUCT(avxSamplerInfo)
     afxBool             forceExplicitReconstr;
 
     afxString           tag;
+    void*               udd;
 };
 
-#define AVX_COLOR_VALUE(r_, g_, b_, a_) (avxClearValue const){ { .rgba = { (r_), (g_), (b_), (a_) } } }
-#define AVX_DEPTH_VALUE(d_, s_) (avxClearValue const){ { .depth = (d_), .stencil = (s_) } }
+#define AVX_COLOR_VALUE(r_, g_, b_, a_) (avxClearValue){ { .rgba = { (r_), (g_), (b_), (a_) } } }
+#define AVX_DEPTH_VALUE(d_, s_) (avxClearValue){ .depth = (d_), .stencil = (s_) } 
 
 AVX avxSamplerInfo const AVX_SAMPLER_DEFAULT;
 

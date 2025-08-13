@@ -115,7 +115,7 @@ AFX_DEFINE_STRUCT(afxSystemConfig)
 // Perform a Qwadro bootstrap.
 
 AFX void                AfxConfigureSystem(afxSystemConfig* cfg);
-AFX afxError            AfxBootstrapSystem(afxSystemConfig const *config);
+AFX afxError            AfxBootstrapSystem(afxSystemConfig const* config);
 
 AFX void                AfxDoSystemShutdown(afxInt exitCode);
 AFX void                AfxRequestShutdown(afxInt exitCode);

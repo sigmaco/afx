@@ -183,4 +183,70 @@ AFX afxError    AfxFreePoolUnit(afxPool* pool, afxSize idx);
 AFX afxUnit     AfxEnumeratePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, void *items[]);
 AFX afxUnit     AfxInvokePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, afxBool(*f)(void* item, void* udd), void *udd);
 
+AFX afxError AfxRequestPoolUnitsAt(afxPool* pool, afxUnit cnt, afxUnit const ids[], void* units[]);
+
+// pool: afxPool*
+// pageIdx: user-defined variable (int or afxUnit)
+// slotIdx: user-defined variable (int or afxUnit)
+
+#define AFX_FOREACH_USED_SLOT_IN_POOL(pool, pageIdx, slotIdx) \
+    for (pageIdx = 0; pageIdx < (pool)->pageCnt; ++pageIdx) \
+        for (afxPoolPage* _page = (pool)->pages[pageIdx], _pageRef = _page; \
+             _page != NULL && _pageRef == _page; _page = NULL) \
+            for (afxMask _mask = _pageRef->usage, _u = _mask, slotIdx = 0; _u; ++slotIdx, _u >>= 1) \
+                if (_u & 1)
+
+#define AFX_FOREACH_USED_PTR_IN_POOL(pool, pageIdx, slotIdx, ptr) \
+    for (pageIdx = 0; pageIdx < (pool)->pageCnt; ++pageIdx) \
+        for (afxPoolPage* _page = (pool)->pages[pageIdx], _pageRef = _page; \
+             _page != NULL && _pageRef == _page; _page = NULL) \
+            for (afxMask _mask = _pageRef->usage, _u = _mask, slotIdx = 0; _u; ++slotIdx, _u >>= 1) \
+                if (_u & 1) \
+                    for (void* ptr = _pageRef->base + (slotIdx * (pool)->unitSiz); ptr; ptr = NULL)
+
+// pool: pointer to afxPool
+// type: the actual type stored in the pool
+// obj: name of the typed variable inside the loop
+// pageIdx, slotIdx: loop counters (you define them outside)
+
+#define AFX_FOREACH_USED_OBJ_IN_POOL(pool, type, obj, pageIdx, slotIdx) \
+    for (pageIdx = 0; pageIdx < (pool)->pageCnt; ++pageIdx) \
+        for (afxPoolPage* _page = (pool)->pages[pageIdx], _pageRef = _page; \
+             _page != NULL && _pageRef == _page; _page = NULL) \
+            for (afxMask _mask = _pageRef->usage, _u = _mask, slotIdx = 0; _u; ++slotIdx, _u >>= 1) \
+                if (_u & 1) \
+                    for (type* obj = (type*)(_pageRef->base + (slotIdx * (pool)->unitSiz)); obj; obj = NULL)
+
+// Free slot iterator with typed object.
+// Same structure as before, but it only visits free (unused) slots in the pool.
+// pool: pointer to afxPool
+// type: the actual type stored in the pool
+// obj: the loop variable of that type
+// pageIdx, slotIdx: loop counters
+
+#define AFX_FOREACH_FREE_OBJ_IN_POOL(pool, type, obj, pageIdx, slotIdx) \
+    for (pageIdx = 0; pageIdx < (pool)->pageCnt; ++pageIdx) \
+        for (afxPoolPage* _page = (pool)->pages[pageIdx], \
+                       _pageRef = _page; \
+             _page != NULL && _pageRef == _page; _page = NULL) \
+            for (afxMask _mask = _pageRef->usage, _u = ~_mask, slotIdx = 0; _u; ++slotIdx, _u >>= 1) \
+                if (_u & 1) \
+                    for (type* obj = (type*)(_pageRef->base + (slotIdx * (pool)->unitSiz)); obj; obj = NULL)
+
+
+// Early-breaking or removable loop variant.
+// This variant allows removal inside the loop by editing the bitmask and tracking objects carefully.
+// Use with caution, especially if you mutate the bitmask during iteration.
+// This one doesn't cache the original bitmask --- so if you modify _page->usage inside the loop (e.g., mark as free), 
+// it reflects immediately.
+
+#define AFX_FOREACH_USED_OBJ_IN_POOL_MUTABLE(pool, type, obj, pageIdx, slotIdx) \
+    for (pageIdx = 0; pageIdx < (pool)->pageCnt; ++pageIdx) \
+        for (afxPoolPage* _page = (pool)->pages[pageIdx]; _page; ) \
+            for (afxMask _u = _page->usage, slotIdx = 0; slotIdx < (pool)->unitsPerPage; ++slotIdx) \
+                if (_u & (1u << slotIdx)) \
+                    for (type* obj = (type*)(_page->base + (slotIdx * (pool)->unitSiz)); obj; obj = NULL)
+
+
+
 #endif//AFX_POOL_H

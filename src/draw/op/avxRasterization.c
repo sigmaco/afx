@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 
 _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* cfg)
 {
@@ -41,7 +41,9 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
     if (canv)
     {
         AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-        avxRange whd = AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO);
+        afxRect areaMax;
+        AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO, &areaMax);
+        avxRange whd = { areaMax.w, areaMax.h };
         AFX_ASSERT_RANGE(whd.w, cfg->area.x, cfg->area.w);
         AFX_ASSERT_RANGE(whd.h, cfg->area.y, cfg->area.h);
 

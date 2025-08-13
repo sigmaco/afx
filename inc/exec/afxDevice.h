@@ -56,6 +56,7 @@ typedef enum afxAcceleration
     afxAcceleration_ASIC    = AFX_BITMASK(10), // application-specific integrated circuit
     afxAcceleration_FPGA    = AFX_BITMASK(11), // field-programmable gate arrays
     afxAcceleration_DPU     = AFX_BITMASK(12), // Targa-based drawing processing unit
+    afxAcceleration_MPU     = AFX_BITMASK(13), // Amiga-based mixing processing unit
 
     afxAcceleration_TOTAL   = 12
 } afxAcceleration;
@@ -77,10 +78,10 @@ AFX_DEFINE_STRUCT(afxDeviceInfo)
     afxDeviceType       type;
     afxDeviceStatus     status;
     afxAcceleration     acceleration;
-    afxUnit32           ihvId;
-    afxUnit32           ihvDevId;
-    afxUnit32           isvId;
-    afxUnit32           isvDrvId;
+    afxUnit32           hwVndId;
+    afxUnit32           hwVndDevId;
+    afxUnit32           swVndId;
+    afxUnit32           swVndDrvId;
     afxUnit32           driverVer;
     afxUnit32           apiVer;
     afxUnit             manifestPagNo;

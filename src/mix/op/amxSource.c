@@ -28,7 +28,7 @@
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
 #define _AMX_AUDIO_C
-#include "../impl/amxImplementation.h"
+#include "../ddi/amxImplementation.h"
 
 
 _AMX afxError _AmxMsrcDtorCb(amxSource msrc)
@@ -74,7 +74,7 @@ _AMX afxError AfxAcquireMediaSource(afxMixSystem msys, afxUnit exuIdx, amxSource
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(source);
 
-    afxClass* cls = (afxClass*)NIL;// _AmxGetMediaSessionClass(msys);
+    afxClass* cls = (afxClass*)NIL;// _AmxMsysGetSesClass(msys);
     AFX_ASSERT_CLASS(cls, afxFcc_MSRC);
     
     amxSource msrc;

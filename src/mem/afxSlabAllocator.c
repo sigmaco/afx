@@ -233,18 +233,18 @@ _AFX afxError AfxDeploySlabAllocator(afxSlabAllocator* mgr, afxUnit unitSiz, afx
 {
     afxError err = NIL;
     AFX_ASSERT(mgr);
+#ifdef _AFX_SLAB_ALLOC_VALIDATION_ENABLED
+    mgr->fcc = afxFcc_SLAB;
+    mgr->anchor.fcc = afxFcc_SLAB;
+#endif
+    mgr->anchor.next = &mgr->anchor;
+    mgr->anchor.prev = &mgr->anchor;
+    mgr->anchor.firstFree = NIL;
+    mgr->anchor.unitCnt = 0;
     AFX_ASSERT(unitSiz);
     mgr->unitSiz = unitSiz;
     mgr->unitAlign = AFX_SIMD_ALIGNMENT;
     mgr->unitsPerSlab = AFX_MAX(1, unitsPerSlab);
     mgr->cachedSlabSiz = (mgr->unitsPerSlab * (mgr->unitSiz + sizeof(afxSlabLink))) + sizeof(afxSlab);
-    mgr->anchor.next = &mgr->anchor;
-    mgr->anchor.prev = &mgr->anchor;
-    mgr->anchor.firstFree = NIL;
-    mgr->anchor.unitCnt = 0;
-#ifdef _AFX_SLAB_ALLOC_VALIDATION_ENABLED
-    mgr->anchor.fcc = afxFcc_SLAB;
-    mgr->fcc = afxFcc_SLAB;
-#endif
     return err;
 }

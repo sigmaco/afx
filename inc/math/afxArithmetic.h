@@ -51,30 +51,28 @@ AFXINL void     AfxV4dSub(afxV4d v, afxV4d const a, afxV4d const b); // v = a - 
 
 // v = a / b
 
-AFXINL void     AfxDivV2d(afxV2d v, afxV2d const a, afxV2d const b); // v = a / b
+AFXINL void     AfxV2dDiv(afxV2d v, afxV2d const a, afxV2d const b); // v = a / b
 AFXINL void     AfxV3dDiv(afxV3d v, afxV3d const a, afxV3d const b); // v = a / b
-AFXINL void     AfxDivV4d(afxV4d v, afxV4d const a, afxV4d const b); // v = a / b
+AFXINL void     AfxV4dDiv(afxV4d v, afxV4d const a, afxV4d const b); // v = a / b
 
 
-// Divs
+// v = a / div
 
 AFXINL void     AfxV2dDivs(afxV2d v, afxV2d const a, afxReal div);
 AFXINL void     AfxV3dDivs(afxV3d v, afxV3d const a, afxReal div);
 AFXINL void     AfxV4dDivs(afxV4d v, afxV4d const a, afxReal div);
 
+// v = in * 0.5
+
+AFXINL void     AfxV2dHalf(afxV2d v, afxV2d const in);
+AFXINL void     AfxV3dHalf(afxV3d v, afxV3d const in);
+AFXINL void     AfxV4dHalf(afxV4d v, afxV4d const in);
+
 // v = a % b
 
-AFXINL void     AfxModV2d(afxV2d v, afxV2d const a, afxV2d const b); // v = a % b
-AFXINL void     AfxModV3d(afxV3d v, afxV3d const a, afxV3d const b); // v = a % b
-AFXINL void     AfxModV4d(afxV4d v, afxV4d const a, afxV4d const b); // v = a % b
-
-// Scales (or multiplies) a vector or scalar by a constant factor.
-// Resizing objects, scaling forces, enlarging or shrinking vectors.
-// v = a * lambda
-
-AFXINL void     AfxV2dScale(afxV2d v, afxV2d const a, afxReal lambda); // v = a * lambda
-AFXINL void     AfxV3dScale(afxV3d v, afxV3d const a, afxReal lambda); // v = a * lambda
-AFXINL void     AfxV4dScale(afxV4d v, afxV4d const a, afxReal lambda); // v = a * lambda
+AFXINL void     AfxV2dMod(afxV2d v, afxV2d const a, afxV2d const b); // v = a % b
+AFXINL void     AfxV3dMod(afxV3d v, afxV3d const a, afxV3d const b); // v = a % b
+AFXINL void     AfxV4dMod(afxV4d v, afxV4d const a, afxV4d const b); // v = a % b
 
 // v = a * b
 
@@ -102,35 +100,33 @@ AFXINL void     AfxV2dMads(afxV2d v, afxReal lambda, afxV2d const b, afxV2d cons
 AFXINL void     AfxV3dMads(afxV3d v, afxReal lambda, afxV3d const b, afxV3d const c); // v = lambda * b + c
 AFXINL void     AfxV4dMads(afxV4d v, afxReal lambda, afxV4d const b, afxV4d const c); // v = lambda * b + c
 
+// Scales (or multiplies) a vector or scalar by a constant factor.
+// Resizing objects, scaling forces, enlarging or shrinking vectors.
+// v = a * lambda
+
+AFXINL void     AfxV2dScale(afxV2d v, afxV2d const a, afxReal lambda); // v = a * lambda
+AFXINL void     AfxV3dScale(afxV3d v, afxV3d const a, afxReal lambda); // v = a * lambda
+AFXINL void     AfxV4dScale(afxV4d v, afxV4d const a, afxReal lambda); // v = a * lambda
+
 // reverse subtract
 // v = c - (a * b)
 
-AFXINL void     AfxResubV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c); // v = c - (a * b)
-AFXINL void     AfxResubV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c); // v = c - (a * b)
-AFXINL void     AfxResubV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c); // v = c - (a * b)
+AFXINL void     AfxV2dResub(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c); // v = c - (a * b)
+AFXINL void     AfxV3dResub(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c); // v = c - (a * b)
+AFXINL void     AfxV4dResub(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c); // v = c - (a * b)
 
-// Mix
-// The MIX function is conceptually similar to LERP but may involve additional functionality, such as more complex blending modes or different blending parameters. 
-// This operation is very similar to lerp, but it often uses clamping or saturating the interpolation result. 
-// It linearly blends two values (or vectors) based on a factor t.
-// Mixing colors, blending two values in a weighted way.
-// v = x * (1 - t) + y * t
 
-AFXINL void     AfxV2dMix(afxV2d v, afxV2d const x, afxV2d const y, afxReal t);
-AFXINL void     AfxV3dMix(afxV3d v, afxV3d const x, afxV3d const y, afxReal t);
-AFXINL void     AfxV4dMix(afxV4d v, afxV4d const x, afxV4d const y, afxReal t);
+AFXINL void     AfxV2dRecip(afxV2d v, afxV2d const in); // v = 1 / in
+AFXINL void     AfxV3dRecip(afxV3d v, afxV3d const in); // v = 1 / in
+AFXINL void     AfxV4dRecip(afxV4d v, afxV4d const in); // v = 1 / in
 
-// Lerp
-// LERP is a method to interpolate linearly between two values. 
-// In the context of 4D vectors, it calculates the intermediate vector between a start and end vector based on a factor t ranging from 0.0 to 1.0.
-// Linearly interpolates between two values (or vectors) based on a parameter t (usually between 0 and 1). 
-// It blends two values in a straight line.
-// Animation, transition effects, smooth movement between two points.
-// x + t * (y - x)
+// Negates a vector or scalar, flipping its sign. For a vector, it inverts the direction of the vector.
+// Used in physics simulations, reversing directions, negating forces, etc.
 
-AFXINL void     AfxV2dLerp(afxV2d v, afxV2d const x, afxV2d const y, afxReal t);
-AFXINL void     AfxV3dLerp(afxV3d v, afxV3d const x, afxV3d const y, afxReal t);
-AFXINL void     AfxV4dLerp(afxV4d v, afxV4d const x, afxV4d const y, afxReal t);
+AFXINL void     AfxV2dNeg(afxV2d v, afxV2d const in);
+AFXINL void     AfxV3dNeg(afxV3d v, afxV3d const in);
+AFXINL void     AfxV4dNeg(afxV4d v, afxV4d const in);
+AFXINL void     AfxV4dNegAffine(afxV4d v, afxV4d const in); // v = inverse of in
 
 
 #endif//AFX_ARITHMETIC_H

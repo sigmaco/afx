@@ -15,7 +15,7 @@
  */
 
   //////////////////////////////////////////////////////////////////////////////
- // TECHNICOLOR ADVANCED RASTER GRAPHICS ARCHIVE                             //
+ // TECHNICOLOR TARGA, ADVANCED RASTER GRAPHICS ARCHIVE                      //
 //////////////////////////////////////////////////////////////////////////////
 
 // This code is part of Qwadro Draw System <https://sigmaco.org/qwadro>
@@ -24,7 +24,7 @@
 #ifndef AVX_TARGA_FILE_H
 #define AVX_TARGA_FILE_H
 
-#include "qwadro/inc/draw/io/avxRasterIo.h"
+#include "qwadro/inc/draw/io/avxRaster.h"
 
 // provisory as Qwadro formats are inherited from Vulkan.
 
@@ -37,20 +37,50 @@ typedef enum afxTargaCodec
 
 typedef enum afxTargaFlag
 {
-    afxTargaFlag_X_FLIPPED  = AFX_BITMASK(0), // vertical origin is right to left.
-    afxTargaFlag_Y_FLIPPED  = AFX_BITMASK(1), // horizontal origin is top to bottom.
+    afxTargaFlag_X_FLIPPED  = AFX_BITMASK(0), // horizontal origin is top to bottom.
+    afxTargaFlag_Y_FLIPPED  = AFX_BITMASK(1), // vertical origin is right to left.
     afxTargaFlag_CUBEMAP    = AFX_BITMASK(2), // layered image is treated as cubemap.
     afxTargaFlag_3D         = AFX_BITMASK(3), // depth is treated as 3D depth instead of layers.
 } afxTargaFlags;
 
+#define AFX_TGA_ALIGNMENT (64)
+#define AFX_TGA_HDR_SIZ (18)
+#define AFX_TGA_EXT_SIZ (AFX_TGA_ALIGNMENT - AFX_TGA_HDR_SIZ) // 64 - 18 = 46
+#define AFX_TGA_UDD_SIZ (256 - AFX_TGA_EXT_SIZ - AFX_TGA_HDR_SIZ)
+
 #pragma pack(push, 1)
 
-#define AFX_TGA_HDR_SIZ (18)
-#define AFX_TGA_EXT_SIZ (64)
-#define AFX_TGA_UDD_SIZ (256 - AFX_TGA_EXT_SIZ)
+AFX_DEFINE_UNION(avxTargaFileIdd)
+{
+    afxUnit8        fcc[4]; // Originally "tga4", a FCC standing for "Targa for Qwadro" file format.
+    afxUnit8        idd[18]; // originally it was just a padding to force AFX_SIMD_ALIGNMENT right after the header.
+    struct
+    
+    {
+        afxUnit8    fcc[4]; // Originally "tga4", a FCC standing for "Targa for Qwadro" file format.
+        afxUnit16   hotspotX;
+        afxUnit16   hotspotY;
+    } icon;
+    struct
+    // Based on PC Screen Font (PSF) 2.
+    // Variable glyph width and height.
+    // Arbitrary number of glyphs.
+    // Full Unicode mapping.
+    // For a 16x16 glyph: 16 rows x 2 bytes per row = 32 bytes per glyph. Each row is packed left to right, MSB first.
+    {
+        afxUnit8    fcc[4]; // Originally "tga4", a FCC standing for "Targa for Qwadro" file format.
+        afxUnit32   flags; // Flags (0 = no Unicode table)
+        afxUnit16   glyphCnt; // Number of glyphs
+        afxUnit8    glyphStride; // bytes per glyph.
+        afxUnit8    glyphHeight; // Glyph height in pixels
+        afxUnit8    glyphWidth; // Glyph width in pixels
+    } font;
+};
+
+AFX_STATIC_ASSERT(sizeof(avxTargaFileIdd) == 18, "");
 
 AFX_DEFINE_STRUCT(avxTargaFile)
-// SIGMA FEDERATION, TRUECOLOR ADVANCED RASTER FILE HEADER
+// SIGMA FEDERATION, TECHNICOLOR RASTER FILE HEADER
 {
     // TRUEVISION INC., TGA FILE HEADER
     afxUnit8        extLen; // The number of bytes contained in SIGMA extension. A value of zero indicates that it is no a SIGMA Targa file.
@@ -67,35 +97,40 @@ AFX_DEFINE_STRUCT(avxTargaFile)
     afxUnit8        bpp; // The number of bits per pixel. This number includes the Attribute or Alpha channel bits. Common values are 8, 16, 24 and 32 but other pixel depths could be used
     afxUnit8        descriptor; // Bits 3-0: These bits specify the number of attribute bits per pixel. Bits 5 & 4: These bits are used to indicate the order in which pixel data is transferred from the file to the screen. Bit 4 is for left - to - right ordering and bit 5 is for topto - bottom ordering as shown below.
     // SIGMA FEDERATION, TARGA FILE HEADER AMENDMENT
-    afxUnit8        baseLod;
-    afxUnit8        lodCnt;
-    afxUnit16       originZ;
-    afxUnit16       depth;
     afxUnit16       flags;
-    afxUnit16       fmt;
-    // data info
+    afxUnit16       codec; // codec used to compress
     afxUnit32       encSiz; // compressed size
     afxUnit32       dataOff; // where start (above this header) the raster data // for each lod, sizeof lod is rowLen * whd[1] * whd[2] * layerCnt 
     afxUnit32       decSiz; // uncompressed size
     afxUnit16       rowStride; // bytes per row/scanline (W usually aligned/padded to some memory boundary)
     afxUnit16       rowsPerImg;
-    afxUnit8        codec; // codec used to compress
-    afxUnit8        idd[15]; // originally it was just a padding to force AFX_SIMD_ALIGNMENT right after the header.
-    afxUnit8        fcc[4]; // Originally "tga4", a FCC standing for "Targa for Qwadro" file format.
+    afxUnit8        baseLod;
+    afxUnit8        lodCnt;
+    afxUnit16       originZ;
+    afxUnit16       depth;
+    afxUnit16       fmt;
+    // data info
+    avxTargaFileIdd idd;
 };
+
+#pragma pack(pop)
 
 AFX_STATIC_ASSERT(sizeof(avxTargaFile) == 64, "");
 // Data start must be aligned to AVX_RASTER_ALIGNMENT.
 AFX_STATIC_ASSERT((sizeof(avxTargaFile)) % AVX_RASTER_ALIGNMENT, "");
 
-#pragma pack(pop)
-
 AFX_STATIC_ASSERT(AFX_IS_ALIGNED(sizeof(avxTargaFile), AFX_SIMD_ALIGNMENT), "");
 AFX_STATIC_ASSERT(sizeof(avxTargaFile) + AFX_TGA_UDD_SIZ == 256, "");
 
 
-AVX afxError AfxWriteTargaFile(afxStream out, avxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, avxRasterFlags flags, afxUnit uddSiz);
+AVX afxError AfxPrepareTargaFile(avxTargaFile* tga, avxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, avxRasterFlags flags, afxUnit uddSiz);
+
+AVX afxError AfxWriteTargaFile(avxTargaFile* tgai, void* udd, afxUnit uddSiz, afxStream out);
+
 AVX afxError AfxReadTargaFile(avxTargaFile* info, afxStream in);
+
 AVX afxError AfxDecodeTargaFile(avxTargaFile const* info, afxStream in, void* dst);
+
+// TODO: Encode/decode on DPU?
 
 #endif//AVX_TARGA_FILE_H

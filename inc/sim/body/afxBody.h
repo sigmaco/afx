@@ -32,6 +32,7 @@
 
 #include "qwadro/inc/sim/io/afxModel.h"
 #include "qwadro/inc/sim/afxCapstan.h"
+#include "qwadro/inc/sim/afxNode.h"
 
 ASX afxBool     AfxGetBodyModel(afxBody bod, afxModel* model);
 
@@ -42,15 +43,15 @@ ASX void        AsxResetBodyClock(afxBody bod);
 ASX void        AfxRecenterBodyMotiveClocks(afxBody bod, afxReal currClock);
 
 /// Update all the motors affecting a particular puppet.
-ASX void        AfxUpdateBodyMotives(afxBody bod, afxReal newClock);
+ASX void        AfxStepBodyMotives(afxBody bod, afxReal /* NOT delta */ newClock);
 
 ASX void        AfxPurgeTerminatedMotives(afxBody bod);
 
-ASX void        AfxUpdateBodyMatrix(afxBody bod, afxReal secsElapsed, afxBool inverse, afxM4d const mm, afxM4d m);
-
 ASX void        AfxAccumulateBodyAnimations(afxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose rslt, afxReal allowedErr, afxUnit const sparseJntMap[]);
 
-ASX void        AfxQueryBodyRootMotionVectors(afxBody bod, afxReal secsElapsed, afxBool inverse, afxV3d translation, afxV3d rotation);
+ASX void        AsxComputeBodyMotionVectors(afxBody bod, afxReal secsElapsed, afxBool inverse, afxV3d translation, afxV3d rotation);
+
+ASX void        AsxComputeBodyMotionMatrix(afxBody bod, afxReal secsElapsed, afxBool inverse, afxM4d const mm, afxM4d m);
 
 
 AFX_DEFINE_STRUCT(afxAnimSampleContext)
@@ -79,7 +80,18 @@ ASX void        AfxSetBodyMass(afxBody bod, afxV3d mass);
 ASX void        AfxDoBodyDynamics(afxBody bod, afxReal dt);
 ASX void        AfxApplyForceAndTorque(afxBody bod, afxV3d const force, afxV3d const torque);
 
-ASX afxBool     AfxGetBodyPose(afxBody bod, afxPose* pose);
+ASX afxBool     AfxGetBodyPose(afxBody bod, afxPose* pose, afxPlacement* placement);
+
+ASX afxError    AfxNodulateBody
+(
+    afxBody     bod, 
+    afxUnit     basePartIdx, 
+    afxUnit     cnt, 
+    afxNode     nod, 
+    void        (*sync)(afxNodular*), 
+    afxFlags    flags, 
+    afxMask     mask
+);
 
 ////////////////////////////////////////////////////////////////////////////////
 

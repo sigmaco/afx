@@ -86,6 +86,13 @@ AFX_OBJECT(_asxMotion)
 AFX_OBJECT(afxMotion)
 #endif
 {
+    // Gesture? Motion of body
+
+    // Motion Geometry?
+    // Slight inversion of "geometric motion", gives it a unique identity.
+    // Feels more like a data structure or class name.
+    // Less likely to be misinterpreted by search engines than "geometric motion".
+
     afxString           id;
     afxMask             flags;
     afxUnit             pivotCnt; // circuit count

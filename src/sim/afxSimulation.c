@@ -19,6 +19,7 @@
 #include "impl/asxImplementation.h"
 
 extern afxClassConfig const _ASX_SCN_CLASS_CONFIG;
+extern afxClassConfig const _ASX_SHAP_CLASS_CONFIG;
 
 //extern afxChain* _AfxGetSystemClassChain(void);
 
@@ -27,6 +28,14 @@ extern afxClassConfig const _ASX_SCN_CLASS_CONFIG;
 _ASX _asxAnimVmt const* _AsxSimGetAnimVmt(afxSimulation sim)
 {
     return sim->animVmt;
+}
+
+_ASX afxChain const* _AsxSimGetDagRoots(afxSimulation sim)
+{
+    afxError err = AFX_ERR_NONE;
+    // sim must be a valid afxSimulation handle.
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    return &sim->dags;
 }
 
 _ASX afxModule AfxGetSimulationIcd(afxSimulation sim)
@@ -54,6 +63,13 @@ _ASX afxDrawInput AfxGetSimulationDrawInput(afxSimulation sim)
     return sim->din;
 }
 
+_ASX afxStringBase _AsxSimGetAnimUrnStringBase(afxSimulation sim)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    return sim->strbAnimMotUrns;
+}
+
 _ASX afxClass const* _AsxGetMathBridgeClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
@@ -63,12 +79,12 @@ _ASX afxClass const* _AsxGetMathBridgeClass(afxSimulation sim)
     return cls;
 }
 
-_ASX afxClass const* _AsxGetMeshClass(afxSimulation sim)
+_ASX afxClass const* _AsxGetShapClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const* cls = &sim->mshCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_MSH);
+    afxClass const* cls = &sim->poseCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_SHAP);
     return cls;
 }
 
@@ -135,21 +151,12 @@ _ASX afxClass const* _AsxGetCurveClass(afxSimulation sim)
     return cls;
 }
 
-_ASX afxClass const* _AsxGetMaterialClass(afxSimulation sim)
+_ASX afxClass const* _AsxSimGetMaterialityClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const* cls = &sim->mtlCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_MTL);
-    return cls;
-}
-
-_ASX afxClass const* _AsxGetModelClass(afxSimulation sim)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const* cls = &sim->mdlCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_MDL);
+    afxClass const* cls = &sim->mtlyCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_MORP);
     return cls;
 }
 
@@ -157,9 +164,9 @@ _ASX afxClass const* _AsxGetRendererClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const*class = &sim->renderers;
-    AFX_ASSERT_CLASS(class, afxFcc_RND);
-    return class;
+    afxClass const*cls = &sim->renderers;
+    AFX_ASSERT_CLASS(cls, afxFcc_RND);
+    return cls;
 }
 
 _ASX afxClass const* _AsxGetSceneClass(afxSimulation sim)
@@ -175,87 +182,45 @@ _ASX afxClass const* _AsxGetLightClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const*class = &sim->lights;
-    AFX_ASSERT_CLASS(class, afxFcc_LIT);
-    return class;
+    afxClass const*cls = &sim->lights;
+    AFX_ASSERT_CLASS(cls, afxFcc_LIT);
+    return cls;
 }
 
 _ASX afxClass const* _AsxGetBodyClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const*class = &sim->bodCls;
-    AFX_ASSERT_CLASS(class, afxFcc_BOD);
-    return class;
+    afxClass const*cls = &sim->bodCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_BOD);
+    return cls;
 }
 
 _ASX afxClass const* _AsxGetCapstanClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const*class = &sim->motoCls;
-    AFX_ASSERT_CLASS(class, afxFcc_MOT);
-    return class;
+    afxClass const*cls = &sim->motoCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_MOT);
+    return cls;
 }
 
 _ASX afxClass const* _AsxGetMotiveClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const* class = &sim->motvCls;
-    AFX_ASSERT_CLASS(class, afxFcc_MOTV);
-    return class;
-}
-
-_ASX afxClass const* _AsxGetTerrainClass(afxSimulation sim)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const*class = &sim->terCls;
-    AFX_ASSERT_CLASS(class, afxFcc_TER);
-    return class;
+    afxClass const* cls = &sim->motvCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_MOTV);
+    return cls;
 }
 
 _ASX afxClass const* _AsxGetNodeClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-    afxClass const*class = &sim->nodCls;
-    AFX_ASSERT_CLASS(class, afxFcc_NOD);
-    return class;
-}
-
-_ASX afxStringBase _AsxGetModelUrnStringBase(afxSimulation sim)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-
-    if (!sim->strbMdlSklMotUrns)
-        AfxAcquireStringCatalogs(1, &sim->strbMdlSklMotUrns);
-
-    return sim->strbMdlSklMotUrns;
-}
-
-_ASX afxStringBase _AsxGetPivotTagStringBase(afxSimulation sim)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-
-    if (!sim->strbJointBiasesTags)
-        AfxAcquireStringCatalogs(1, &sim->strbJointBiasesTags);
-
-    return sim->strbJointBiasesTags;
-}
-
-_ASX afxStringBase _AsxGetMorphTagStringBase(afxSimulation sim)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
-
-    if (!sim->strbMorphTags)
-        AfxAcquireStringCatalogs(1, &sim->strbMorphTags);
-
-    return sim->strbMorphTags;
+    afxClass const*cls = &sim->nodCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_NOD);
+    return cls;
 }
 
 _ASX void AfxQuerySimulationErrorTolerance(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler)
@@ -528,7 +493,7 @@ _ASX afxBool _AsxCaptureBodCb(afxBody bod, void** udd)
 _ASX afxError AfxCullBodies(afxSimulation sim, afxFrustum const* f, afxArray* pvs)
 {
     afxError err = AFX_ERR_NONE;
-    // sim must be a valid afxDrawSystem handle.
+    // sim must be a valid afxSimulation handle.
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     AFX_ASSERT(pvs);
     AFX_ASSERT(pvs->cap);
@@ -613,6 +578,8 @@ _ASX afxError _AsxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
     else
         sim->allowedLodErrFadingFactor = cfg->allowedLodErrFadingFactor;
 
+    AfxDeployChain(&sim->dags, sim);
+
     // OBJECTS
 
     {
@@ -637,17 +604,9 @@ _ASX afxError _AsxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
         AFX_ASSERT(clsCfg.fcc == afxFcc_PLCE);
         AfxMountClass(&sim->plceCls, NIL, classes, &clsCfg);
 
-        clsCfg = cfg->mtlClsCfg ? *cfg->mtlClsCfg : _ASX_MTL_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_MTL);
-        AfxMountClass(&sim->mtlCls, NIL, classes, &clsCfg); // require tex
-
-        clsCfg = cfg->mshClsCfg ? *cfg->mshClsCfg : _ASX_MSH_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_MSH);
-        AfxMountClass(&sim->mshCls, NIL, classes, &clsCfg); // require msht, vtd
-
-        clsCfg = cfg->mdlClsCfg ? *cfg->mdlClsCfg : _ASX_MDL_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_MDL);
-        AfxMountClass(&sim->mdlCls, NIL, classes, &clsCfg); // require skl, msh
+        clsCfg = cfg->mtlyClsCfg ? *cfg->mtlyClsCfg : _ASX_MORP_CLASS_CONFIG;
+        AFX_ASSERT(clsCfg.fcc == afxFcc_MORP);
+        AfxMountClass(&sim->mtlyCls, NIL, classes, &clsCfg); // require tex
 
         clsCfg = cfg->motClsCfg ? *cfg->motClsCfg : _ASX_MOT_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_MOT);
@@ -673,13 +632,13 @@ _ASX afxError _AsxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
         AFX_ASSERT(clsCfg.fcc == afxFcc_BOD);
         AfxMountClass(&sim->bodCls, NIL, classes, &clsCfg); // require moto
 
-        clsCfg = cfg->terClsCfg ? *cfg->terClsCfg : _ASX_TER_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_TER);
-        AfxMountClass(&sim->terCls, NIL, classes, &clsCfg); // require all
-
         clsCfg = cfg->litClsCfg ? *cfg->litClsCfg : _ASX_LIT_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_LIT);
         AfxMountClass(&sim->lights, NIL, classes, &clsCfg);
+
+        clsCfg = /*cfg->shapCls ? *cfg->shapCls :*/ _ASX_SHAP_CLASS_CONFIG;
+        AFX_ASSERT(clsCfg.fcc == afxFcc_SHAP);
+        AfxMountClass(&sim->shapCls, NIL, classes, &clsCfg);
 
         clsCfg = cfg->rndClsCfg ? *cfg->rndClsCfg : _ASX_RND_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_RND);
@@ -688,11 +647,16 @@ _ASX afxError _AsxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
         clsCfg = _ASX_SCN_CLASS_CONFIG;
         AfxMountClass(&sim->scnCls, NIL, classes, &clsCfg);
 
+        clsCfg = _ASX_NOD_CLASS_CONFIG;
+        AfxMountClass(&sim->nodCls, NIL, classes, &clsCfg);
+
         clsCfg = cfg->sexuClsCfg ? *cfg->sexuClsCfg : _ASX_SEXU_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_SEXU);
         AfxMountClass(&sim->sexuCls, NIL, classes, &clsCfg); // require all
 
     }
+
+    AfxAcquireStringCatalogs(1, &sim->strbAnimMotUrns);
 
     sim->dsys = cfg->dsys;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &sim->dsys);
@@ -705,7 +669,6 @@ _ASX afxError _AsxSimCtorCb(afxSimulation sim, void** args, afxUnit invokeNo)
         sim->stepsPerSecond = 0;
         sim->stepTime = 0;
 
-        sim->strbMdlSklMotUrns = NIL;
     }
 
 

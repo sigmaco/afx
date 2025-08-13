@@ -669,8 +669,8 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxUnit length)
             xml->elemCnt = xml->tempElemArr.pop;
             afxUnit elemCnt = xml->tempElemArr.pop;
             xml->tagCnt = xml->tempTagArr.pop;
-            xml->tags = xml->tempTagArr.data;
-            xml->elems = xml->tempElemArr.data;
+            xml->tags = xml->tempTagArr.items;
+            xml->elems = xml->tempElemArr.items;
 
             for (afxUnit i = 0; i < elemCnt; i++)
             {
@@ -732,7 +732,7 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxUnit length)
             AfxDeallocate((void**)&indicesMap, AfxHere());
 
             xml->elemCnt = sorted.pop;
-            xml->elems = sorted.data;
+            xml->elems = sorted.items;
 
 #if 0
             for (afxUnit i = 0; i < elemCnt; i++)

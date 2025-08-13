@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 
 _AVX afxCmdId AvxCmdDeclareVertex(afxDrawContext dctx, avxVertexInput vin)
 {
@@ -139,7 +139,7 @@ _AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUni
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindVertexBuffers(afxDrawContext dctx, afxUnit baseSlotIdx, afxUnit cnt, avxBufferedStream const streams[])
+_AVX afxCmdId AvxCmdBindVertexBuffers(afxDrawContext dctx, afxUnit basePin, afxUnit cnt, avxBufferedStream const streams[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -159,14 +159,14 @@ _AVX afxCmdId AvxCmdBindVertexBuffers(afxDrawContext dctx, afxUnit baseSlotIdx, 
 
         The sum of @baseSlotIdx and @slotCnt must be less than or equal to the device limit 'maxVtxInSrcs'.
     */
-    AFX_ASSERT_RANGE(dctx->devLimits->maxVtxInSrcs, baseSlotIdx, cnt);
+    AFX_ASSERT_RANGE(dctx->devLimits->maxVtxInSrcs, basePin, cnt);
 #endif
 #endif
     
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindVertexBuffers), sizeof(cmd->BindVertexBuffers) + (cnt * sizeof(cmd->BindVertexBuffers.src[0])), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->BindVertexBuffers.baseSlotIdx = baseSlotIdx;
+    cmd->BindVertexBuffers.basePin = basePin;
     cmd->BindVertexBuffers.cnt = cnt;
 
     for (afxUnit i = 0; i < cnt; i++)

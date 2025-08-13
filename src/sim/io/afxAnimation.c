@@ -145,10 +145,7 @@ _ASX afxUnit AfxPerformAnimation(afxAnimation ani, afxReal startTime, afxUnit it
     for (afxUnit mdlIdx = 0; mdlIdx < cnt; mdlIdx++)
     {
         afxBody bod = bodies[mdlIdx];
-
-        if (!bod)
-            continue;
-
+        if (!bod) continue;
         AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
         
         afxModel mdl;
@@ -248,7 +245,6 @@ _ASX afxUnit AfxPerformAnimationBinding(afxAnimation ani, afxReal startTime, afx
     for (afxUnit mdlIdx = 0; mdlIdx < cnt; mdlIdx++)
     {
         afxBody bod = bodies[mdlIdx];
-
         if (!bod) continue;
         AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
 
@@ -353,7 +349,7 @@ _ASX afxError _AsxAniCtorCb(afxAnimation ani, void** args, afxUnit invokeNo)
     afxAnimationBlueprint const* anib = args[1];
     anib += invokeNo;
 
-    if (!AfxCatalogStrings(_AsxGetModelUrnStringBase(sim), 1, &anib->id.s, &ani->urn))
+    if (!AfxCatalogStrings(_AsxSimGetAnimUrnStringBase(sim), 1, &anib->id.s, &ani->urn))
         AfxThrowError();
 
     ani->dur = anib->dur;
@@ -395,7 +391,7 @@ _ASX afxClassConfig const _ASX_ANI_CLASS_CONFIG =
 {
     .fcc = afxFcc_ANI,
     .name = "Animation",
-    .desc = "Fullscene Kinematic Animation",
+    .desc = "Full Motion Animation", // or Multi-body Animation
     .fixedSiz = sizeof(AFX_OBJECT(afxAnimation)),
     .ctor = (void*)_AsxAniCtorCb,
     .dtor = (void*)_AsxAniDtorCb

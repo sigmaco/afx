@@ -26,7 +26,7 @@
 #define _AVX_DRAW_SYSTEM_C
 #define _AVX_DRAW_OUTPUT_C
 #define _AVX_DRAW_INPUT_C
-#include "impl/avxImplementation.h"
+#include "ddi/avxImplementation.h"
 #include "../impl/afxExecImplKit.h"
 
 //extern afxChain* _AfxGetSystemClassChain(void);
@@ -174,7 +174,7 @@ _AVX afxDrawLimits const* _AvxDdevGetLimits(afxDrawDevice ddev)
     return &ddev->limits;
 }
 
-_AVX afxBool AfxIsDrawDevicePrompt(afxDrawDevice ddev)
+_AVX afxBool AvxIsDrawDevicePrompt(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
     // @ddev must be a valid afxDrawDevice handle.
@@ -190,15 +190,7 @@ _AVX void* _AvxGetDrawDeviceIdd(afxDrawDevice ddev)
     return ddev->idd;
 }
 
-_AVX afxUnit AfxCountDrawPorts(afxDrawDevice ddev)
-{
-    afxError err = AFX_ERR_NONE;
-    // @ddev must be a valid afxDrawDevice handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
-    return ddev->portCnt;
-}
-
-_AVX void AfxQueryDrawDeviceLimits(afxDrawDevice ddev, afxDrawLimits* limits)
+_AVX void AvxQueryDrawDeviceLimits(afxDrawDevice ddev, afxDrawLimits* limits)
 {
     afxError err = AFX_ERR_NONE;
     // @ddev must be a valid afxDrawDevice handle.
@@ -213,7 +205,7 @@ _AVX void AfxLogDrawDeviceLimits(afxDrawDevice ddev)
     // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
     afxDrawLimits limits;
-    AfxQueryDrawDeviceLimits(ddev, &limits);
+    AvxQueryDrawDeviceLimits(ddev, &limits);
 
     afxChar buf[AFX_U16_MAX];
     afxString s;
@@ -375,7 +367,7 @@ _AVX void AfxLogDrawDeviceLimits(afxDrawDevice ddev)
     afxReal     minInterpolationOffset;
     afxReal     maxInterpolationOffset;
     afxUnit     subPixelInterpolationOffsetBits;
-    afxWhd      maxCanvasWhd;
+    afxWarp      maxCanvasWhd;
     afxFlags    canvasColorSampleCnts;
     afxFlags    canvasDepthSampleCnts;
     afxFlags    canvasStencilSampleCnts;
@@ -407,7 +399,7 @@ _AVX void AfxLogDrawDeviceLimits(afxDrawDevice ddev)
 #endif
 }
 
-_AVX void AfxQueryDrawDeviceFeatures(afxDrawDevice ddev, afxDrawFeatures* features)
+_AVX void AvxQueryDrawDeviceFeatures(afxDrawDevice ddev, afxDrawFeatures* features)
 {
     afxError err = AFX_ERR_NONE;
     // @ddev must be a valid afxDrawDevice handle.
@@ -416,7 +408,7 @@ _AVX void AfxQueryDrawDeviceFeatures(afxDrawDevice ddev, afxDrawFeatures* featur
     *features = ddev->features;
 }
 
-_AVX afxUnit AvxQueryDrawCapabilities(afxDrawDevice ddev, afxUnit basePortIdx, afxUnit portCnt, afxDrawCapabilities caps[])
+_AVX void AvxQueryDrawCapabilities(afxDrawDevice ddev, afxDrawPortInfo* caps)
 {
     afxError err = AFX_ERR_NONE;
     // @ddev must be a valid afxDrawDevice handle.
@@ -425,53 +417,16 @@ _AVX afxUnit AvxQueryDrawCapabilities(afxDrawDevice ddev, afxUnit basePortIdx, a
     //AFX_ASSERT(caps);
     afxUnit rslt = 0;
 
-    // count must be evaluated first to avoid clamp.
-    portCnt = AFX_MIN(portCnt, ddev->portCnt - basePortIdx);
-    basePortIdx = AFX_MIN(basePortIdx, ddev->portCnt - 1);
-
-    if (!caps) rslt = portCnt; 
-    else for (afxUnit i = 0; i < portCnt; i++)
+    if (caps)
     {
-        afxUnit portId = basePortIdx + i;
-        caps[i] = ddev->ports[portId].caps;
-        ++rslt;
+        caps->acceleration = ddev->acceleration;
+        caps->capabilities = ddev->capabilities;
+        caps->maxQueCnt = ddev->maxQueCnt;
+        caps->minQueCnt = ddev->minQueCnt;
     }
-
-    return rslt;
 }
 
-_AVX afxUnit AfxChooseDrawPorts(afxDrawDevice ddev, afxDrawCapabilities const* caps, afxUnit maxCnt, afxUnit portIds[])
-{
-    afxError err = AFX_ERR_NONE;
-    // @ddev must be a valid afxDrawDevice handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
-    afxUnit rslt = 0;
-
-    for (afxUnit i = ddev->portCnt; i-- > 0;)
-    {
-        afxDrawCapabilities const* port = &ddev->ports[i].caps;
-        
-        if ((port->capabilities & caps->capabilities) != caps->capabilities)
-            continue;
-
-        if ((port->acceleration & caps->acceleration) != caps->acceleration)
-            continue;
-
-        if (port->minQueCnt < caps->minQueCnt)
-            continue;
-
-        if (port->maxQueCnt < caps->maxQueCnt)
-            continue;
-
-        portIds[rslt++] = i;
-
-        if (rslt == maxCnt)
-            break;
-    }
-    return rslt;
-}
-
-_AVX afxBool AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const* features, afxDrawLimits const* limits)
+_AVX afxBool AvxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const* features, afxDrawLimits const* limits)
 {
     afxError err = AFX_ERR_NONE;
     // @ddev must be a valid afxDrawDevice handle.
@@ -701,16 +656,6 @@ _AVX afxError _AvxDdevDtorCb(afxDrawDevice ddev)
     AFX_ASSERT(!ddev->idd);
     AfxDeregisterChainedClasses(&ddev->dev.classes);
 
-    afxObjectStash stashes[] =
-    {
-        {
-            .cnt = ddev->portCnt,
-            .siz = sizeof(ddev->ports[0]),
-            .var = (void**)&ddev->ports
-        }
-    };
-    AfxDeallocateInstanceData(ddev, ARRAY_SIZE(stashes), stashes);
-
     return err;
 }
 
@@ -722,7 +667,7 @@ _AVX afxError _AvxDdevCtorCb(afxDrawDevice ddev, void** args, afxUnit invokeNo)
 
     afxModule icd = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-    afxDrawDeviceInfo const* info = AFX_CAST(afxDrawDeviceInfo const*, args[1]) + invokeNo;
+    _avxDrawDeviceRegistration const* info = AFX_CAST(_avxDrawDeviceRegistration const*, args[1]) + invokeNo;
     AFX_ASSERT(info);
 
     if (_AFX_DEV_CLASS_CONFIG.ctor(&ddev->dev, (void*[]) { icd, (void*)&info->dev }, 0))
@@ -731,56 +676,33 @@ _AVX afxError _AvxDdevCtorCb(afxDrawDevice ddev, void** args, afxUnit invokeNo)
         return err;
     }
 
-    ddev->leftHandedSpace = FALSE;
+    ddev->nonRhCoords = FALSE;
     ddev->clipSpaceDepth = avxClipSpaceDepth_ZERO_TO_ONE;
 
     ddev->idd = NIL;
 
     ddev->limits = info->limits;
     ddev->features = info->features;
-    ddev->leftHandedSpace = info->leftHandedSpace;
+    ddev->nonRhCoords = info->nonRhCoords;
     ddev->clipSpaceDepth = info->clipSpaceDepth;
-
-    ddev->portCnt = info->portCnt;
 
     ddev->pfds = &_AvxStdPfds[0];
 
-    afxObjectStash stashes[] =
+    ddev->acceleration = info->acceleration;
+    ddev->capabilities = info->capabilities;
+    
+    ddev->maxQueCnt = info->maxQueCnt;
+    ddev->minQueCnt = info->minQueCnt;
+
+    AfxMakeString128(&ddev->desc, NIL);
+    AfxMakeString8(&ddev->urn, NIL);
+            
+    if (AfxCallDevice(&ddev->dev, afxFcc_DSYS, NIL))
+        AfxThrowError();
+
+    if (err)
     {
-        {
-            .cnt = ddev->portCnt,
-            .siz = sizeof(ddev->ports[0]),
-            .var = (void**)&ddev->ports
-        }
-    };
-
-    if (AfxAllocateInstanceData(ddev, ARRAY_SIZE(stashes), stashes)) AfxThrowError();
-    else
-    {
-        if (!ddev->portCnt) AfxThrowError();
-        else
-        {
-            AFX_ASSERT(ddev->ports);
-
-            for (afxUnit i = 0; i < ddev->portCnt; i++)
-            {
-                ddev->ports[i].caps = (afxDrawCapabilities) { 0 };
-                AfxMakeString128(&ddev->ports[i].desc, NIL);
-                AfxMakeString8(&ddev->ports[i].urn, NIL);
-            }
-
-            if (AfxCallDevice(&ddev->dev, afxFcc_DSYS, NIL)) AfxThrowError();
-            else
-            {
-                if (err)
-                {
-                    AfxDeregisterChainedClasses(&ddev->dev.classes);
-                }
-            }
-        }
-
-        if (err)
-            AfxDeallocateInstanceData(ddev, ARRAY_SIZE(stashes), stashes);
+        AfxDeregisterChainedClasses(&ddev->dev.classes);
     }
 
     return err;
@@ -812,7 +734,7 @@ _AVX afxUnit AvxEnumerateDrawDevices(afxUnit icd, afxUnit first, afxUnit cnt, af
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
-        afxClass const* cls = _AvxGetDrawDeviceClass(mdle);
+        afxClass const* cls = _AvxIcdGetDdevClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DDEV);
         rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)devices);
         // devices must be an array of valid afxDrawDevice handles.
@@ -822,7 +744,7 @@ _AVX afxUnit AvxEnumerateDrawDevices(afxUnit icd, afxUnit first, afxUnit cnt, af
     return rslt;
 }
 
-_AVX afxUnit AfxInvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawDevice), afxUnit cnt)
+_AVX afxUnit AvxInvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawDevice), afxUnit cnt)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
@@ -834,7 +756,7 @@ _AVX afxUnit AfxInvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
-        afxClass const* cls = _AvxGetDrawDeviceClass(mdle);
+        afxClass const* cls = _AvxIcdGetDdevClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DDEV);
         rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
         break;
@@ -842,7 +764,7 @@ _AVX afxUnit AfxInvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool
     return rslt;
 }
 
-_AVX afxUnit AfxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawDevice), afxUnit cnt, afxDrawDevice devices[])
+_AVX afxUnit AvxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawDevice), afxUnit cnt, afxDrawDevice devices[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(devices);
@@ -854,7 +776,7 @@ _AVX afxUnit AfxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
-        afxClass const* cls = _AvxGetDrawDeviceClass(mdle);
+        afxClass const* cls = _AvxIcdGetDdevClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DDEV);
         rslt = AfxEvokeObjects(cls, (void*)f, udd, first, cnt, (afxObject*)devices);
         // @devices must be an array of valid afxDrawDevice handles.
@@ -864,7 +786,7 @@ _AVX afxUnit AfxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(
     return rslt;
 }
 
-_AVX afxUnit AfxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, afxDrawLimits const* limits, afxUnit maxCnt, afxUnit ddevId[])
+_AVX afxUnit AvxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, afxDrawLimits const* limits, afxDrawPortInfo const* caps, afxUnit maxCnt, afxUnit ddevId[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(limits);
@@ -875,7 +797,7 @@ _AVX afxUnit AfxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, 
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
-        afxClass const* cls = _AvxGetDrawDeviceClass(mdle);
+        afxClass const* cls = _AvxIcdGetDdevClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DDEV);
 
         afxUnit i = 0;
@@ -884,7 +806,25 @@ _AVX afxUnit AfxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, 
         {
             AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
 
-            if (AfxIsDrawDeviceAcceptable(ddev, features, limits))
+            if (features || limits)
+                if (!AvxIsDrawDeviceAcceptable(ddev, features, limits))
+                    continue;
+
+            if (caps)
+            {
+                if ((ddev->capabilities & caps->capabilities) != caps->capabilities)
+                    continue;
+
+                if ((ddev->acceleration & caps->acceleration) != caps->acceleration)
+                    continue;
+
+                if (ddev->minQueCnt < caps->minQueCnt)
+                    continue;
+
+                if (ddev->maxQueCnt < caps->maxQueCnt)
+                    continue;
+            }
+
             {
                 ddevId[rslt] = i;
                 ++rslt;
@@ -899,7 +839,7 @@ _AVX afxUnit AfxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, 
     return rslt;
 }
 
-_AVX afxError _AvxRegisterDrawDevices(afxModule icd, afxUnit cnt, afxDrawDeviceInfo const infos[], afxDrawDevice devices[])
+_AVX afxError _AvxRegisterDrawDevices(afxModule icd, afxUnit cnt, _avxDrawDeviceRegistration const infos[], afxDrawDevice devices[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
@@ -913,7 +853,7 @@ _AVX afxError _AvxRegisterDrawDevices(afxModule icd, afxUnit cnt, afxDrawDeviceI
         return err;
     }
 
-    afxClass* cls = (afxClass*)_AvxGetDrawDeviceClass(icd);
+    afxClass* cls = (afxClass*)_AvxIcdGetDdevClass(icd);
     AFX_ASSERT_CLASS(cls, afxFcc_DDEV);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)devices, (void const*[]) { icd, infos, NIL }))

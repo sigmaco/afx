@@ -18,7 +18,7 @@
 #define ASX_MESH_BUILDER_H
 
 #include "qwadro/inc/mem/afxArray.h"
-#include "qwadro/inc/math/bound/afxBox.h"
+#include "qwadro/inc/math/coll/afxBox.h"
 #include "qwadro/inc/base/afxObject.h"
 #include "qwadro/inc/io/afxUrd.h"
 #include "qwadro/inc/math/afxVertex.h"

@@ -16,7 +16,7 @@
 
 #define _AMX_MIX_C
 #define _AMX_VIDEO_C
-#include "../impl/amxImplementation.h"
+#include "../ddi/amxImplementation.h"
 
 AFX_OBJECT(amxVideoDecoder)
 {

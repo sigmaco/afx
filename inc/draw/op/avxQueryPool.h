@@ -60,4 +60,6 @@ AVX void                AvxResetQueries
     afxUnit             queryCnt // the number of queries to reset.
 );
 
+AVX afxError AfxAcquireQueryPools(afxDrawSystem dsys, avxQueryType type, afxUnit cap, afxUnit cnt, avxQueryPool pools[]);
+
 #endif//AVX_QUERY_POOL_H

@@ -23,8 +23,8 @@
 
 #define _AFX_STRING_RESILIENCE_ENABLED TRUE
 
-_AFXINL afxString strEmptyData = AFX_STRING("");
-_AFXINL afxString const AFX_STRING_EMPTY = AFX_STRING("");
+_AFX afxString strEmptyData = AFX_STRING("");
+_AFX afxString const AFX_STRING_EMPTY = AFX_STRING("");
 
 _AFXINL afxChar const* AfxGetStringData(afxString const* s, afxUnit base)
 {

@@ -58,6 +58,71 @@ typedef enum afxMeshRigFlag
     afxMeshRigFlag_TRANSPLANTED = AFX_BITMASK(0)
 } afxMeshRigFlags;
 
+typedef enum asxJointType
+{
+    // No relative motion between bodies. (welded parts)
+    asxJointType_FIXED,
+    // Rotation about a single axis, like a door hinge. (elbow, door)
+    asxJointType_HINGE,
+    // Free rotation in all directions, no translation. (shoulder, hip)
+    asxJointType_BALL,
+    // Movement along a single axis, no rotation. (telescopic arm, piston)
+    asxJointType_SLIDER,
+    // Like a fixed joint, but allows soft compliance (springy or damped motion). (soft ropes, cloth physics)
+    asxJointType_SPRING,
+    // Fully customizable: each axis can be locked, limited, or free. (complex mechanical systems)
+    asxJointType_6DOF,
+} asxJointType;
+
+AFX_DEFINE_STRUCT(asxJointConstraint)
+{
+    asxJointType type;
+    afxV3d anchorA; // local
+    afxV3d anchorB; // local
+    union
+    {
+        //struct { } fixed;
+        struct
+        {
+            afxV3d axis; // Hinge axis in local space
+            afxReal minAngle;
+            afxReal maxAngle;
+            afxReal damping;
+        } hinge;
+        struct
+        {
+            afxReal swingLimit;
+            afxReal twistLimit;
+        } ball;
+        struct
+        {
+            afxV3d axis; // Translation axis
+            afxReal minLimit;
+            afxReal maxLimit;
+            afxReal damping;
+        } slider;
+        struct
+        {
+            afxReal stiffness; // Hooke's Law constant
+            afxReal damping; // Energy loss
+            afxReal restLen;
+        } spring;
+        struct
+        {
+            // locked, limited or free
+
+            afxDof flags;
+
+            afxV3d linearLimitMin;
+            afxV3d linearLimitMax;
+            afxV3d angularLimitMin; // in radians
+            afxV3d angularLimitMax;
+            afxReal stiffness;
+            afxReal damping;
+        } dof;
+    };
+};
+
 AFX_DEFINE_STRUCT(afxModelInfo)
 {
     afxUnit         jntCnt;
@@ -69,7 +134,7 @@ AFX_DEFINE_STRUCT(afxModelInfo)
 
     afxUnit         lodType;
     afxReal         allowedLodErrFadingFactor;
-    afxTransform    displacement;
+    afxTransform    displace;
 
     afxUnit         rigCnt;
     afxUnit         riggedMeshCnt;
@@ -79,9 +144,9 @@ AFX_DEFINE_STRUCT(afxMeshRigInfo)
 {
     afxMeshRigFlags flags;
     afxMesh         msh;
-    afxUnit const*  biasToJnt;
-    afxUnit const*  biasFromJnt;
     afxModel        origSkl;
+    afxUnit const*  biasFromJnt;
+    afxUnit const*  biasToJnt;
     afxMaterial     txd;
 };
 
@@ -98,7 +163,7 @@ AFX_DEFINE_STRUCT(afxModelBlueprint)
     //afxTransform const* transforms; // local
     //afxM4d const*       matrices; // inverse world
     //afxReal const*      lodErrors;
-    afxTransform        displacement;
+    afxTransform        displace;
     afxUnit             rigCnt;
 };
 
@@ -148,12 +213,12 @@ ASX afxError    AsxArchiveModel(afxModel mdl, afxUri const* uri);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ASX afxUnit     AfxEnumerateModels(afxSimulation sim, afxUnit first, afxUnit cnt, afxModel models[]);
-
 ASX void        AfxTransformModels(afxM3d const ltm, afxM3d const iltm, afxReal ltmTol, afxV3d const atv, afxReal atvTol, afxFlags flags, afxUnit cnt, afxModel models[]);
 
-ASX afxError    AfxAssembleModels(afxSimulation sim, afxUnit cnt, afxModelBlueprint const blueprints[], afxModel models[]);
+ASX afxUnit     AfxEnumerateModels(afxMorphology morp, afxUnit first, afxUnit cnt, afxModel models[]);
 
-ASX afxError    AfxLoadModel(afxSimulation sim, afxString const* urn, afxUri const* uri, afxModel* model);
+ASX afxError    AfxAssembleModels(afxMorphology morp, afxUnit cnt, afxModelBlueprint const blueprints[], afxModel models[]);
+
+ASX afxError    AfxLoadModel(afxMorphology morp, afxString const* urn, afxUri const* uri, afxModel* model);
 
 #endif//ASX_MODEL_H

@@ -24,7 +24,8 @@
 #define _AMX_MIX_DEVICE_C
 #define _AMX_MIX_SYSTEM_C
 #define _AMX_SINK_C
-#include "../impl/amxImplementation.h"
+#include "../ddi/amxImplementation.h"
+#include "qwadro/inc/mix/op/afxSink.h"
 
 _AMX afxMixSystem AfxGetAudioSinkContext(afxSink sink)
 {
@@ -64,7 +65,7 @@ _AMX afxError AfxMuteAudioSink(afxSink sink, afxBool mute)
     return err;
 }
 
-_AMX afxError AfxRequestSinkBuffer(afxSink sink, afxTime timeout, afxUnit *bufIdx)
+_AMX afxError AmxLockSinkBuffer(afxSink sink, afxUnit64 timeout, afxUnit minFrameCnt, amxBufferedTrack* room)
 // Pull an available sink buffer
 {
     afxError err = AFX_ERR_NONE;
@@ -72,17 +73,17 @@ _AMX afxError AfxRequestSinkBuffer(afxSink sink, afxTime timeout, afxUnit *bufId
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
     afxUnit bufIdx2 = AFX_INVALID_INDEX;
 
-#if 0
+#if !0
     if (sink->lockCb)
     {
-        if (!(err = sink->lockCb(sink, timeout, &bufIdx2)))
+        if (!(err = sink->lockCb(sink, timeout, minFrameCnt, room)))
         {
-            AFX_ASSERT(AFX_INVALID_INDEX != bufIdx2);
-            AFX_ASSERT_RANGE(sink->latency, bufIdx2, 1);
+            //AFX_ASSERT(AFX_INVALID_INDEX != bufIdx2);
+            //AFX_ASSERT_RANGE(sink->latency, bufIdx2, 1);
         }
     }
+#else
     else
-#endif
     {
         afxBool success = FALSE;
         afxTime time, t2;
@@ -125,21 +126,31 @@ _AMX afxError AfxRequestSinkBuffer(afxSink sink, afxTime timeout, afxUnit *bufId
     }
     AFX_ASSERT(bufIdx);
     *bufIdx = bufIdx2;
+#endif
     return err;
 }
 
-_AMX afxError AfxDiscardSinkBuffer(afxSink sink, afxUnit bufIdx)
+_AMX afxError AmxUnlockSinkBuffer(afxSink sink, afxFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     // sink must be a valid afxSink handle.
-    AFX_ASSERT_OBJECTS(afxFcc_ASI, 1, &sink);
+    AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
+#if 0
     AFX_ASSERT_RANGE(sink->latency, bufIdx, 1);
 
     if (bufIdx < sink->latency)
         AfxPushInterlockedQueue(&sink->freeBuffers, (afxUnit[]) { bufIdx });
     else
         AfxThrowError();
+#else
+    if (sink->unlockCb)
+    {
+        if (!(err = sink->unlockCb(sink, flags)))
+        {
 
+        }
+    }
+#endif
     return err;
 }
 
@@ -271,7 +282,7 @@ _AMX afxError AfxOpenAudioSink(afxMixSystem msys, afxSinkConfig const* cfg, afxS
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(cfg);
 
-    afxClass* cls = (afxClass*)_AmxGetAudioSinkClass(msys);
+    afxClass* cls = (afxClass*)_AmxMsysGetSinkClass(msys);
     AFX_ASSERT_CLASS(cls, afxFcc_ASIO);
     afxSink snk;
     afxBool record = FALSE;

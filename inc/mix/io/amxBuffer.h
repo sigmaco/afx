@@ -67,11 +67,31 @@ typedef enum amxBufferFlag
 
 AFX_DEFINE_STRUCT(amxBufferInfo)
 {
-    afxUnit         size;
+    // The size in bytes of the buffer to be created.
+    afxSize         size;
+    // A bitmask specifying allowed usages of the buffer.
     amxBufferUsage  usage;
+    // A bitmask specifying additional parameters of the buffer.
     amxBufferFlags  flags;
+    // A bitmask of device bridges that will access this buffer.
+    afxMask         sharingMask;
+
+    // A amxBuffer on which the view will be created.
+    amxBuffer       base;
+    // An offset in bytes from the base address of the buffer.
+    afxSize         from;
+    // A amxFormat describing the format of the data elements in the buffer.
     amxFormat       fmt;
+
+    // A user-defined data.
     void*           udd;
+    afxString       tag;
+
+    // Possibly initial data, to avoid boilerplate with unconvenient mappings.
+    void*           data;
+    afxUnit         dataSiz;
+    // Should this buffer be mapped at creation?
+    afxBool         mapped;
 };
 
 AFX_DEFINE_STRUCT(amxBufferCopy)
@@ -120,7 +140,7 @@ AMX afxMixSystem    AmxGetBufferContext(amxBuffer buf);
 
 AMX void*           AmxGetBufferUdd(amxBuffer buf);
 
-AMX afxUnit         AmxGetBufferCapacity(amxBuffer buf, afxUnit from);
+AMX afxSize         AmxGetBufferCapacity(amxBuffer buf, afxSize from);
 
 AMX amxBufferUsage  AmxGetBufferUsage(amxBuffer buf, amxBufferUsage usage);
 
@@ -129,5 +149,7 @@ AMX amxBufferFlags  AmxGetBufferAccess(amxBuffer buf, amxBufferFlags access);
 ////////////////////////////////////////////////////////////////////////////////
 
 AMX afxError        AmxAcquireBuffers(afxMixSystem msys, afxUnit cnt, amxBufferInfo const infos[], amxBuffer buffers[]);
+
+AMX afxError        AmxLoadBuffers(afxMixSystem msys, afxUnit cnt, afxUri const uris[], amxBuffer buffers[]);
 
 #endif//AMX_BUFFER_H

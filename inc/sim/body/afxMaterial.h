@@ -46,10 +46,4 @@ ASX void            AfxShineMaterial(afxMaterial mtl, afxReal shininess);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ASX afxUnit         AfxFindMaterialIndices(afxSimulation sim, afxUnit cnt, afxString const materials[], afxUnit indices[]);
-
-ASX afxUnit         AfxEnumerateMaterials(afxSimulation sim, afxUnit first, afxUnit cnt, afxMaterial materials[]);
-
-ASX afxError        AfxDeclareMaterials(afxSimulation sim, afxUnit cnt, afxString const ids[], afxMaterial materials[]);
-
 #endif//ASX_MATERIAL_H

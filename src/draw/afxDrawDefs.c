@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "impl/avxImplementation.h"
+#include "ddi/avxImplementation.h"
 
 _AVX afxString const sigmaDrawSignature = AFX_STRING(
     "      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      \n"

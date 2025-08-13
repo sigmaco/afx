@@ -72,7 +72,7 @@
 
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/math/afxQuaternion.h"
-#include "qwadro/inc/math/bound/afxPlane.h"
+#include "qwadro/inc/math/coll/afxPlane.h"
 
 AFX afxM2d const AFX_M2D_ZERO;
 AFX afxM3d const AFX_M3D_ZERO;
@@ -320,6 +320,6 @@ AFXINL void     AfxM4dPostMultiplyAtv4dSerialized(afxM4d const m, afxUnit inStri
 AFXINL void     AfxAssimilateLtm3d(afxM3d const ltm, afxM3d const iltm, afxUnit cnt, afxM3d const in[], afxM3d out[]); // make similarity transformation on afxM3d-based scale/shear.
 AFXINL void     AfxAssimilateAtm4d(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxUnit cnt, afxM4d const in[], afxM4d out[]);
 
-AFX void        AfxApplyMatrixRootMotionVectors(afxV3d const translation, afxV3d const rotation, afxM4d const mm, afxM4d m);
+AFXINL void     AfxM4dApplyRigidMotion(afxM4d m, afxM4d const mm, afxV3d const rotation, afxV3d const translation);
 
 #endif//AFX_MATRIX_H

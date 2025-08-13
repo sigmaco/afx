@@ -61,21 +61,36 @@ typedef enum afxArrayFlag
 } afxArrayFlags;
 
 AFX_DEFINE_STRUCT(afxArray)
+// A lightweight dynamic array with alignment control, runtime validation (optional), 
+// and access to underlying data in multiple formats. It supports:
+//  Typed and byte-level data access.
+//  Manual control over memory allocation and alignment.
+//  Runtime capacity tracking for efficient appends.
 {
 #ifdef _AFX_ARRAY_VALIDATION_ENABLED
+    // A type signature used for runtime validation/debugging.
     afxFcc      fcc; // afxFcc_ARR;
 #endif
+    // Size (in bytes) of each item in the array.
     afxUnit     unitSiz;
+    // Alignment requirement of each item, typically a power of two.
+    // Useful for SIMD or architecture-specific performance optimizations.
     afxUnit     align;
-    // How many items the array can hold before reallocating.
+    // Capacity; how many items the array can hold before needing to reallocate memory.
     afxUnit     cap;
-    // How many are currently in use.
+    // Population; how many elements are currently in use (i.e. how many valid items exist).
     afxUnit     pop;
+    // A union giving access to the underlying data in multiple ways:
+    //  items: Points to the data (typed via casting later).
+    //  bytemap: Byte-level access (useful for serialization or memory scanning).
+    //  addr: The raw address, possibly used for alignment checks or pointer arithmetic.
     union
     {
+        void*   items;
         afxByte*bytemap;
-        void*   data;
+        uintptr_t addr;
     };
+    // A boolean flag indicating whether the memory has been dynamically allocated (versus statically assigned or externally managed).
     afxBool     alloced;
 };
 
@@ -85,6 +100,8 @@ AFX_DEFINE_STRUCT(afxArray)
     ((type_*)((afxByte*)(arr_)->bytemap + (idx_) * (arr_)->pop))
 #define AFX_FOR_EACH_ARRAY_UNIT(type_, varName_, arr_) \
     for (afxUnit i = 0; i < (arr_)->pop && ((varName_) = (type_*)((afxByte*)(arr_)->bytemap + i * (arr_)->unitSiz)); ++i)
+#define AFX_ITERATE_ARRAY(TYPE_, varName_, arr_) \
+    for (afxUnit varName_##Idx = 0; varName_##Idx < (arr_)->pop && ((varName_) = (TYPE_*)((afxByte*)(arr_)->bytemap + varName_##Idx * (arr_)->unitSiz)); ++varName_##Idx)
 
 /*
     The AfxMakeArray() function initializes an array directly using externally provided memory (or a null buffer for dynamic allocation).

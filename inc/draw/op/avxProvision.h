@@ -47,9 +47,9 @@ AVX afxCmdId        AvxCmdBindPipeline
     afxFlags        dynamics
 );
 
-AVX afxCmdId        AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxBufferedMap const maps[]);
-AVX afxCmdId        AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxRaster const rasters[]);
-AVX afxCmdId        AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxSampler const samplers[]);
+AVX afxCmdId        AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit pin, afxUnit cnt, avxBufferedMap const maps[]);
+AVX afxCmdId        AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit pin, afxUnit cnt, avxRaster const rasters[]);
+AVX afxCmdId        AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit pin, afxUnit cnt, avxSampler const samplers[]);
 
 AVX afxCmdId        AvxCmdBindFontSIG(afxDrawContext dctx, afxUnit first, afxUnit cnt, afxTypography typ[], avxPipeline pip[], avxSampler smp[], avxRaster ras[]);
 AVX afxError        AvxCmdStampDebug(afxDrawContext dctx, afxM4d const v, afxV2d const at, afxString const* caption);

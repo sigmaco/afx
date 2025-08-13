@@ -22,7 +22,7 @@
 #include "qwadro/inc/math/afxScalar.h"
 #include "qwadro/inc/math/afxArithmetic.h"
 #include "qwadro/inc/math/afxLogarithmic.h"
-#include "qwadro/inc/math/afxExponential.h"
+#include "qwadro/inc/math/afxArithmetic2.h"
 #include "qwadro/inc/math/afxTrigonometry.h"
 
 AFX afxV2d const AFX_V2D_X;
@@ -164,25 +164,6 @@ AFXINL void     AfxSwapV2d(afxV2d v, afxV2d other);
 AFXINL void     AfxSwapV3d(afxV3d v, afxV3d other);
 AFXINL void     AfxSwapV4d(afxV4d v, afxV4d other);
 
-////////////////////////////////////////////////////////////////////////////////
-// Clamping                                                                   //
-////////////////////////////////////////////////////////////////////////////////
-
-// Truncation removes the fractional part of a number, effectively rounding it towards zero.
-// Converting floating-point values to integers or simplifying floating-point precision.
-
-AFXINL void     AfxTruncateV2d(afxV2d v, afxV2d const in);
-AFXINL void     AfxTruncateV3d(afxV3d v, afxV3d const in);
-AFXINL void     AfxTruncateV4d(afxV4d v, afxV4d const in);
-
-// This operation clamps a value between 0 and 1. If the value is below 0, it is set to 0; if above 1, it is set to 1. 
-// Otherwise, it remains unchanged.
-// Often used in graphics for color values, blending factors, or ensuring values stay within a specific range.
-
-AFXINL void     AfxSaturateV2d(afxV2d v, afxV2d const in);
-AFXINL void     AfxSaturateV3d(afxV3d v, afxV3d const in);
-AFXINL void     AfxSaturateV4d(afxV4d v, afxV4d const in);
-
 // Normalizing a vector scales it so that its length becomes 1 (unit vector), preserving its direction.
 // Ensuring a vector has a unit length for operations like lighting calculations, physics simulations, etc.
 
@@ -195,39 +176,6 @@ AFXINL afxReal  AfxV3dNormalizeV4d(afxV3d v, afxV4d const in);
 AFXINL afxReal  AfxV2dNormalizeEstimated(afxV2d v, afxV2d const in);
 AFXINL afxReal  AfxV3dNormalizeEstimated(afxV3d v, afxV3d const in);
 AFXINL afxReal  AfxV4dNormalizeEstimated(afxV4d v, afxV4d const in);
-
-AFXINL void     AfxAbsV2d(afxV2d v, afxV2d const in); // v = abs(in)
-AFXINL void     AfxAbsV3d(afxV3d v, afxV3d const in); // v = abs(in)
-AFXINL void     AfxAbsV4d(afxV4d v, afxV4d const in); // v = abs(in)
-
-AFXINL void     AfxCeilV2d(afxV2d v, afxV2d const in); // v = ceil(in)
-AFXINL void     AfxCeilV3d(afxV3d v, afxV3d const in); // v = ceil(in)
-AFXINL void     AfxCeilV4d(afxV4d v, afxV4d const in); // v = ceil(in)
-
-AFXINL void     AfxFloorV2d(afxV2d v, afxV2d const in); // v = floor(in)
-AFXINL void     AfxFloorV3d(afxV3d v, afxV3d const in); // v = floor(in)
-AFXINL void     AfxFloorV4d(afxV4d v, afxV4d const in); // v = floor(in)
-
-AFXINL void     AfxRecipV2d(afxV2d v, afxV2d const in); // v = 1 / in
-AFXINL void     AfxRecipV3d(afxV3d v, afxV3d const in); // v = 1 / in
-AFXINL void     AfxRecipV4d(afxV4d v, afxV4d const in); // v = 1 / in
-
-// v = in * 0.5
-AFXINL void     AfxHalfV2d(afxV2d v, afxV2d const in);
-AFXINL void     AfxHalfV3d(afxV3d v, afxV3d const in);
-AFXINL void     AfxHalfV4d(afxV4d v, afxV4d const in);
-
-AFXINL void     AfxMinV2d(afxV2d v, afxV2d const a, afxV2d const b); // v = minor between A and B
-AFXINL void     AfxV3dMin(afxV3d v, afxV3d const a, afxV3d const b); // v = minor between A and B
-AFXINL void     AfxMinV4d(afxV4d v, afxV4d const a, afxV4d const b); // v = minor between A and B
-
-AFXINL void     AfxMaxV2d(afxV2d v, afxV2d const a, afxV2d const b); // v = major between A and B
-AFXINL void     AfxV3dMax(afxV3d v, afxV3d const a, afxV3d const b); // v = major between A and B
-AFXINL void     AfxMaxV4d(afxV4d v, afxV4d const a, afxV4d const b); // v = major between A and B
-
-AFXINL void     AfxClampV2d(afxV2d v, afxV2d const in, afxV2d const min, afxV2d const max); // v = IN between bounds
-AFXINL void     AfxClampV3d(afxV3d v, afxV3d const in, afxV3d const min, afxV3d const max);
-AFXINL void     AfxClampV4d(afxV4d v, afxV4d const in, afxV4d const min, afxV4d const max);
 
 AFXINL void     AfxNormalizeArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d out[]);
 AFXINL void     AfxNormalizeArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[]);
@@ -251,22 +199,6 @@ AFXINL void     AfxV4dSlerp(afxV4d v, afxV4d x, afxV4d y, afxReal t);
 ////////////////////////////////////////////////////////////////////////////////
 // Algebra                                                                    //
 ////////////////////////////////////////////////////////////////////////////////
-
-AFXINL void     AfxSqrtV2d(afxV2d v, afxV2d const in); // v = sqrt(in)
-AFXINL void     AfxSqrtV3d(afxV3d v, afxV3d const in); // v = sqrt(in)
-AFXINL void     AfxSqrtV4d(afxV4d v, afxV4d const in); // v = sqrt(in)
-
-AFXINL void     AfxRsqrtV2d(afxV2d v, afxV2d const in); // v = 1 / sqrt(in)
-AFXINL void     AfxRsqrtV3d(afxV3d v, afxV3d const in); // v = 1 / sqrt(in)
-AFXINL void     AfxRsqrtV4d(afxV4d v, afxV4d const in); // v = 1 / sqrt(in)
-
-// Negates a vector or scalar, flipping its sign. For a vector, it inverts the direction of the vector.
-// Used in physics simulations, reversing directions, negating forces, etc.
-
-AFXINL void     AfxV2dNeg(afxV2d v, afxV2d const in);
-AFXINL void     AfxV3dNeg(afxV3d v, afxV3d const in);
-AFXINL void     AfxV4dNeg(afxV4d v, afxV4d const in);
-AFXINL void     AfxV4dNegAffine(afxV4d v, afxV4d const in); // v = inverse of in
 
 AFXINL afxReal  AfxV2dSum(afxV2d const v);
 AFXINL afxReal  AfxV3dSum(afxV3d const v);

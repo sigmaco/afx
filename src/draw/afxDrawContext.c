@@ -25,9 +25,9 @@
 #define _AVX_DRAW_BRIDGE_C
 #define _AVX_DRAW_QUEUE_C
 #define _AVX_DRAW_CONTEXT_C
-#include "impl/avxImplementation.h"
+#include "ddi/avxImplementation.h"
 
-_AFX _avxCmdBatch* _AvxGetCmdBatch(afxDrawContext dctx, afxUnit idx)
+_AVX _avxCmdBatch* _AvxGetCmdBatch(afxDrawContext dctx, afxUnit idx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
@@ -42,7 +42,7 @@ _AVX _avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxC
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    AFX_ASSERT(siz >= sizeof(avxCmdHdr));
+    AFX_ASSERT(siz >= sizeof(_avxCmdHdr));
 
     _avxCmd* cmd = AfxRequestFromArena(&dctx->cmdArena, siz, 1, NIL, 0);
     AFX_ASSERT(cmd);
@@ -60,14 +60,14 @@ _AVX avxDrawContextState _AvxGetCommandStatus(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    dctx->state;
+    return dctx->state;
 }
 
 _AVX afxUnit AvxGetCommandPort(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    return dctx->portId;
+    return dctx->exuIdx;
 }
 
 _AVX afxUnit AvxGetCommandPool(afxDrawContext dctx)
@@ -100,7 +100,7 @@ _AVX afxError AvxExhaustDrawContext(afxDrawContext dctx, afxBool freeMem)
 
     if (dctx->objsToBeDisposed.pop)
     {
-        AfxDisposeObjects(dctx->objsToBeDisposed.pop, dctx->objsToBeDisposed.data);
+        AfxDisposeObjects(dctx->objsToBeDisposed.pop, dctx->objsToBeDisposed.items);
 
         AfxEmptyArray(&dctx->objsToBeDisposed, !freeMem, FALSE);
     }
@@ -557,15 +557,16 @@ _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
 
     afxDrawBridge dexu = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
+    afxBool once = *AFX_CAST(afxBool const*, args[1]);
+    afxBool deferred = *AFX_CAST(afxBool const*, args[2]);
 
     afxDrawSystem dsys = AfxGetProvider(dexu);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    afxUnit portId;
-    afxDrawDevice ddev = AvxGetBridgedDrawDevice(dexu, &portId);
+    afxDrawDevice ddev = AvxGetBridgedDrawDevice(dexu, NIL);
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
 
-    dctx->portId = portId;
+    dctx->exuIdx = dexu->exuIdx;
     dctx->poolIdx = AfxGetObjectId(dctx);
 
     dctx->cmdbLockedForReq = FALSE;
@@ -607,28 +608,43 @@ _AVX afxClassConfig const _AVX_DCTX_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit cnt, afxDrawContext contexts[])
+_AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, afxDrawCaps caps, afxMask exuMask, afxBool once, afxBool deferred, afxUnit cnt, afxDrawContext contexts[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(contexts);
     AFX_ASSERT(cnt);
 
-    afxDrawBridge dexu;
-    if (!AvxGetDrawBridges(dsys, exuIdx, 1, &dexu))
+    afxUnit exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, caps, exuMask, 0, 0, NIL);
+
+    if (!exuCnt)
     {
         AfxThrowError();
         return err;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 
-    afxClass* cls = (afxClass*)_AvxGetDrawContextClass(dexu);
-    AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
-
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)contexts, (void const*[]) { dexu }))
+    for (afxUnit exuIter = 0; exuIter < exuCnt; exuIter++)
     {
-        AfxThrowError();
-        return err;
+        afxDrawBridge dexu;
+        if (!AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, caps, exuMask, exuIter, 1, &dexu))
+        {
+            AfxThrowError();
+            continue;
+        }
+
+        afxDrawQueue dque;
+        afxUnit nextQueIdx = 0;
+        AvxGetDrawQueues(dexu, nextQueIdx, 1, &dque);
+        AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
+
+        afxClass* cls = (afxClass*)_AvxDexuGetDctxClass(dexu);
+        AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
+
+        if (AfxAcquireObjects(cls, cnt, (afxObject*)contexts, (void const*[]) { dexu, &once, &deferred }))
+        {
+            AfxThrowError();
+            return err;
+        }
     }
 
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, cnt, contexts);
@@ -636,14 +652,12 @@ _AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, afxUnit exuIdx, afxUnit
     return err;
 }
 
-_AVX afxError AvxExecuteDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, afxUnit cnt, afxDrawContext contexts[], afxUnit const batches[])
+_AVX afxError AvxExecuteDrawCommands(afxDrawSystem dsys, afxUnit cnt, avxSubmission submissions[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    AFX_ASSERT(contexts);
-    AFX_ASSERT(batches);
-    AFX_ASSERT(ctrl);
+    AFX_ASSERT(submissions);
     AFX_ASSERT(cnt);
 
     /*
@@ -651,64 +665,66 @@ _AVX afxError AvxExecuteDrawCommands(afxDrawSystem dsys, avxSubmission* ctrl, af
         Once execution of all submissions of a draw context complete, it moves from the pending state, back to the executable state.
         If a draw context was recorded with the VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT flag, it instead moves back to the invalid state.
     */
-    
-    afxMask exuMask = ctrl->exuMask;
-    afxUnit exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, AFX_INVALID_INDEX, NIL, 0, 0, NIL);
-    for (afxUnit exuIdx = 0; exuIdx < exuCnt; exuIdx++)
+
+    for (afxUnit ctxIt = 0; ctxIt < cnt; ctxIt++)
     {
-        if (exuMask && !(exuMask & AFX_BITMASK(exuIdx)))
-            continue;
+        avxSubmission* subm = &submissions[ctxIt];
 
-        afxDrawBridge dexu;
-        if (!AvxGetDrawBridges(dsys, exuIdx, 1, &dexu))
+        afxDrawContext dctx = subm->dctx;
+        if (!dctx)
         {
+            AFX_ASSERT(subm->dctx);
             AfxThrowError();
-            return err;
+            continue;
         }
+        AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
-        afxClass const* dqueCls = _AvxGetDrawQueueClass(dexu);
+        afxMask exuMask = subm->exuMask;
+        afxUnit exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, NIL, exuMask, 0, 0, NIL);
+        afxUnit nextExuIdx = AfxRandom2(0, exuCnt - 1);
 
-        // sanitize arguments
-        afxUnit totalQueCnt = dqueCls->instCnt;
-        afxUnit baseQueIdx = AFX_MIN(ctrl->baseQueIdx, totalQueCnt - 1);
-        afxUnit queCnt = AFX_CLAMP(ctrl->queCnt, 1, totalQueCnt - baseQueIdx);
-        AFX_ASSERT(queCnt);
         afxBool queued = FALSE;
 
         while (1)
         {
-            for (afxUnit queIt = 0; queIt < queCnt; queIt++)
+            for (afxUnit exuIter = nextExuIdx; exuIter < exuCnt; exuIter++)
             {
-                afxUnit queIdx = baseQueIdx + queIt;
-
-                afxDrawQueue dque;
-                if (!AvxGetDrawQueues(dexu, queIdx, 1, &dque))
+                afxDrawBridge dexu;
+                if (!AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, NIL, exuMask, exuIter, 1, &dexu))
                 {
                     AfxThrowError();
-                    break; // for
+                    continue;
                 }
-                AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
-                afxError err2 = _AvxDqueExecuteDrawCommands(dque, ctrl, cnt, contexts, batches);
+                nextExuIdx = 0;
 
-                if (!err2)
+                while (1)
                 {
-                    queued = TRUE;
-                    break; // for
-                }
-                
-                if (err2 == afxError_TIMEOUT)
-                {
-                    //err = afxError_TIMEOUT;
-                    continue; // for
-                }
+                    afxDrawQueue dque;
+                    afxUnit nextQueIdx = 0;
+                    while (AvxGetDrawQueues(dexu, nextQueIdx, 1, &dque))
+                    {
+                        AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
+                        ++nextQueIdx;
 
-                AfxThrowError();
-                break; // for
+                        afxError err2 = _AvxDqueExecuteDrawCommands(dque, 1, subm);
+
+                        if (!err2)
+                        {
+                            queued = TRUE;
+                            break; // while --- get queue
+                        }
+
+                        if (err2 == afxError_TIMEOUT || err2 == afxError_BUSY)
+                            break; // while --- get queue
+
+                        AfxThrowError();
+                    }
+                    if (err || queued) break; // while --- find queues
+                }
+                if (err || queued) break; // for --- iterate bridge
             }
-
-            if (err || queued)
-                break; // while --- reiterate if not queue for timeout?
+            if (err || queued) break; // while --- find bridges
         }
     }
     return err;

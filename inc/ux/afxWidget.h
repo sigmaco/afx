@@ -42,7 +42,7 @@
 #define AUX_WIDGET_H
 
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/draw/math/avxColor.h"
+#include "qwadro/inc/math/avxColor.h"
 #include "qwadro/inc/base/afxChain.h"
 #include "qwadro/inc/base/afxObject.h"
 #include "qwadro/inc/io/afxUri.h"
@@ -129,7 +129,7 @@ AFX_DEFINE_STRUCT(afxWidgetConfig)
 AUX afxError AfxTestWidget(afxWidget wid);
 AUX afxError AfxResetWidget(afxWidget wid);
 AUX afxError AfxDoWidgetInput(afxWidget wid);
-AUX afxError AfxDrawWidget(afxWidget wid, afxWhd const whd, afxDrawContext dctx);
+AUX afxError AfxDrawWidget(afxWidget wid, afxWarp const whd, afxDrawContext dctx);
 
 AUX afxError AuxGuiAddCombo(afxWidget wid);
 AUX afxError AuxGuiAddToggle(afxWidget wid);

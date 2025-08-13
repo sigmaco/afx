@@ -19,14 +19,14 @@
 #ifndef AVX_RASTERIZATION_H
 #define AVX_RASTERIZATION_H
 
-#include "qwadro/inc/draw/math/avxViewport.h"
+#include "qwadro/inc/math/avxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/draw/io/avxRaster.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
 #include "qwadro/inc/draw/op/avxSampler.h"
 #include "qwadro/inc/draw/op/avxQueryPool.h"
 #include "qwadro/inc/draw/op/avxTransference.h"
-#include "qwadro/inc/draw/op/avxCanvas.h"
+#include "qwadro/inc/draw/video/avxCanvas.h"
 
 // This is the maximum number of viewports and scissors supported by AVX.
 // This is the maximum even if the driver offer more than it.
@@ -109,7 +109,7 @@ AFX_DEFINE_STRUCT(avxDrawTarget)
     // Indicates the load operation to perform on buffer prior to executing the draw scope.
     avxLoadOp           loadOp;
     // Indicates the value to clear buffer to prior to executing the draw scope.
-    avxClearValue       clearValue;
+    avxClearValue       clearVal;
 };
 
 AFX_DEFINE_STRUCT(avxDrawScope)

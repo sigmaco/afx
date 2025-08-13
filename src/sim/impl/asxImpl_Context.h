@@ -78,7 +78,7 @@ AFX_OBJECT(afxContext)
 };
 #endif//_ASX_CONTEXT
 
-AFX_DEFINE_STRUCT(asxCmdHdr)
+AFX_DEFINE_STRUCT(_asxCmdHdr)
 {
     afxLink script;
     afxUnit id;
@@ -87,10 +87,10 @@ AFX_DEFINE_STRUCT(asxCmdHdr)
 
 AFX_DEFINE_UNION(asxCmd)
 {
-    asxCmdHdr hdr;
+    _asxCmdHdr hdr;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxPose src;
         afxUnit from;
@@ -100,7 +100,7 @@ AFX_DEFINE_UNION(asxCmd)
     } CopyPose;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxPose pose;
         afxV3d translation;
@@ -108,7 +108,7 @@ AFX_DEFINE_UNION(asxCmd)
     } ApplyRootMotionVectors;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxUnit baseSlot;
         afxUnit cnt;
@@ -121,7 +121,7 @@ AFX_DEFINE_UNION(asxCmd)
     } BindBuffers;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxUnit     baseIdx;
         afxUnit     cnt;
@@ -134,7 +134,7 @@ AFX_DEFINE_UNION(asxCmd)
     } BindCurves;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxUnit slot;
         void* ptr;
@@ -142,7 +142,7 @@ AFX_DEFINE_UNION(asxCmd)
     } BindMemory;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxBody bod;
         afxUnit pivotCnt;
@@ -153,7 +153,7 @@ AFX_DEFINE_UNION(asxCmd)
     } SampleBodyAnimationsAccelerated;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxBody bod;
         afxCapstan moto;
@@ -165,7 +165,7 @@ AFX_DEFINE_UNION(asxCmd)
     } SampleSingleBodyAnimation;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxBody bod;
         afxUnit basePivotIdx;
@@ -176,14 +176,14 @@ AFX_DEFINE_UNION(asxCmd)
     } SampleBodyAnimations;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxModel mdl;
         afxTransform displacement;
     } DisplaceModel;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxModel mdl;
         afxUnit rigIdx;
@@ -194,7 +194,7 @@ AFX_DEFINE_UNION(asxCmd)
     } BuildRiggedMeshCompositeMatrices;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxModel mdl;
         afxUnit baseJntIdx;
@@ -206,7 +206,7 @@ AFX_DEFINE_UNION(asxCmd)
     } RebuildPose;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxModel mdl;
         afxUnit baseJntIdx;
@@ -216,7 +216,7 @@ AFX_DEFINE_UNION(asxCmd)
     } ReparentJoints;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxModel mdl;
         afxUnit baseJntIdx;
@@ -225,7 +225,7 @@ AFX_DEFINE_UNION(asxCmd)
     } ResetJointTransforms;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxModel mdl;
         afxUnit baseJntIdx;
@@ -235,7 +235,7 @@ AFX_DEFINE_UNION(asxCmd)
     } ResetJointInversors;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxModel mdl;
         afxUnit baseJntIdx;
@@ -244,7 +244,7 @@ AFX_DEFINE_UNION(asxCmd)
     } ResetJointLodErrors;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxModel mdl;
         afxUnit baseJntIdx;
@@ -253,7 +253,7 @@ AFX_DEFINE_UNION(asxCmd)
     } BuildRestPose;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxModel mdl;
         afxUnit baseJntIdx;
@@ -267,7 +267,7 @@ AFX_DEFINE_UNION(asxCmd)
     } BuildPlacement;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxUnit bufIdx;
         afxSize offset;
@@ -279,7 +279,7 @@ AFX_DEFINE_UNION(asxCmd)
     } BuildCompositeMatrices;
     struct
     {
-        asxCmdHdr hdr;
+        _asxCmdHdr hdr;
 
         afxModel mdl;
         afxPlacement plce;

@@ -18,7 +18,7 @@
 #define _AMX_AUDIO_C
 #define _AMX_MIX_C
 //#define _AMX_MIX_SYSTEM_C
-#include "impl/amxImplementation.h"
+#include "ddi/amxImplementation.h"
 
 AFX_DEFINE_STRUCT(amxListener) // Listener information.
 {

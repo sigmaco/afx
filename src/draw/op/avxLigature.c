@@ -19,7 +19,7 @@
 #define _AVX_DRAW_C
 #define _AVX_LIGATURE_C
 #define _AVX_SHADER_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 
 _AVX afxUnit32 AvxGetLigatureHash(avxLigature liga, afxUnit set)
 {
@@ -39,7 +39,7 @@ _AVX afxUnit32 AvxGetLigatureHash(avxLigature liga, afxUnit set)
     return crc;
 }
 
-_AVX afxResult AvxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex first, afxUnit cnt, avxLigatureEntry decl[])
+_AVX afxResult AvxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex first, afxUnit cnt, avxLigament decl[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
@@ -75,9 +75,6 @@ _AVX afxError _AvxLigaDtorCb(avxLigature liga)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
 
-    afxDrawSystem dsys = AfxGetProvider(liga);
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-
     afxObjectStash const stashes[] =
     {
         {
@@ -89,6 +86,11 @@ _AVX afxError _AvxLigaDtorCb(avxLigature liga)
             .cnt = liga->setCnt,
             .siz = sizeof(liga->sets[0]),
             .var = (void**)&liga->sets
+        },
+        {
+            .cnt = liga->pushCnt,
+            .siz = sizeof(liga->pushes[0]),
+            .var = (void**)&liga->pushes
         }
     };
 
@@ -105,196 +107,236 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
 
     //afxDrawSystem dsys = args[0];
     avxLigatureConfig const* cfg = ((avxLigatureConfig const*)args[1]) + invokeNo;
-    afxUnit shaderCnt = cfg->shaderCnt;
-    avxShader* shaders = cfg->shaders;
     
+    // TODO: Acquire from draw system's limits
+    afxUnit maxPushConstantSize = 512;
+
+    // Validate push constants
+    if (cfg->pushCnt > AVX_MAX_PUSH_RANGES)
+    {
+        // invalid range
+        AfxThrowError();
+        return err;
+    }
+
+    for (afxUnit i = 0; i < cfg->pushCnt; ++i)
+    {
+        avxPushRange const* p = &cfg->pushes[i];
+
+        if (p->offset % 4 != 0 || p->size % 4 != 0)
+        {
+            // invalid alignment
+            AfxThrowError();
+            return err;
+        }
+#if 0
+        if (p->size == 0 || (p->offset + p->size) > maxPushConstantSize)
+        {
+            // invalid size
+            AfxThrowError();
+            return err;
+        }
+#endif
+        for (afxUnit j = i + 1; j < cfg->pushCnt; ++j)
+        {
+            avxPushRange const* q = &cfg->pushes[j];
+
+            if ((p->offset < q->offset + q->size) && (q->offset < p->offset + p->size))
+            {
+                // overlapping range
+                AfxThrowError();
+                return err;
+            }
+        }
+    }
+
+    // Validate ligaments
+    if (cfg->pointCnt > AVX_MAX_LIGAMENTS)
+    {
+        // invalid range
+        AfxThrowError();
+        return err;
+    }
+
+    for (afxUnit i = 0; i < cfg->pointCnt; ++i)
+    {
+        avxLigament const* l = &cfg->points[i];
+#if 0
+        if (l->cnt == 0)
+        {
+            // invalid count
+            AfxThrowError();
+            return err;
+        }
+#endif
+#if 0
+        if (l->visibility == 0)
+        {
+            // invalid visibility
+            AfxThrowError();
+            return err;
+        }
+#endif
+        if (l->type == avxShaderParam_UNIFORM || l->type == avxShaderParam_BUFFER)
+        {
+#if 0
+            if (l->buf.minSizeBound == 0)
+            {
+                // invalid siz
+                AfxThrowError();
+                return err;
+            }
+#endif
+            if (l->buf.writeable && l->type != avxShaderParam_BUFFER)
+            {
+                // type mismatch
+                AfxThrowError();
+                return err;
+            }
+            if (!l->buf.writeable && l->type != avxShaderParam_UNIFORM)
+            {
+                // type mismatch
+                AfxThrowError();
+                return err;
+            }
+        }
+    }
+
+    // Validate ligature sets
+    if (cfg->setCnt > AVX_MAX_LIGATURE_SETS)
+    {
+        // invalid range
+        AfxThrowError();
+        return err;
+    }
+
+    // Used ligament flags
+    afxBool ligamentUsed[AVX_MAX_LIGAMENTS] = { 0 };
+    afxUnit totalPointCnt = 0;
+
+    for (afxUnit i = 0; i < cfg->setCnt; ++i)
+    {
+        avxLigatureSet const* set = &cfg->sets[i];
+
+        // Bounds check
+        if ((set->baseEntryIdx + set->entryCnt) > cfg->pointCnt)
+        {
+            // invalid range
+            AfxThrowError();
+            return err;
+        }
+
+        for (afxUnit j = 0; j < set->entryCnt; ++j)
+        {
+            afxUnit ligIdx = set->baseEntryIdx + j;
+
+            if (ligamentUsed[ligIdx])
+            {
+                // Duplicate ligament
+                AfxThrowError();
+                return err; // Ligament in more than one set
+            }
+            ligamentUsed[ligIdx] = 1;
+        }
+
+        totalPointCnt += set->entryCnt;
+
+        // Optional: ensure no duplicate 'set' IDs across ligature sets
+        for (afxUnit k = i + 1; k < cfg->setCnt; ++k)
+        {
+            if (cfg->sets[i].set == cfg->sets[k].set)
+            {
+                // Duplicated set
+                AfxThrowError();
+                return err;
+            }
+        }
+    }
+
+    liga->pushes = NIL;
+    liga->totalEntries = NIL;
+    liga->sets = NIL;
+
+    afxObjectStash const stashes[] =
+    {
+        {
+            .cnt = totalPointCnt,
+            .siz = sizeof(liga->totalEntries[0]),
+            .var = (void**)&liga->totalEntries
+        },
+        {
+            .cnt = cfg->setCnt,
+            .siz = sizeof(liga->sets[0]),
+            .var = (void**)&liga->sets
+        },
+        {
+            .cnt = cfg->pushCnt,
+            .siz = sizeof(liga->pushes[0]),
+            .var = (void**)&liga->pushes
+        }
+    };
+
+    if (AfxAllocateInstanceData(liga, ARRAY_SIZE(stashes), stashes))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    afxUnit baseEntryIdx = 0;
+
+    for (afxUnit i = 0; i < cfg->setCnt; i++)
+    {
+        avxLigatureSet const* sc = &cfg->sets[i];
+        _avxLigatureSet* s = &liga->sets[i];
+
+        afxUnit entryCnt = 0;
+        for (afxUnit j = 0; j < sc->entryCnt; j++)
+        {
+            avxLigament const* pc = &cfg->points[baseEntryIdx + j];
+            _avxLigament* p = &liga->totalEntries[baseEntryIdx + j];
+
+            p->binding = pc->binding;
+            p->cnt = pc->cnt;
+            p->flags = pc->flags;
+            p->idd = NIL;
+            p->type = pc->type;
+            p->visibility = pc->visibility;
+            AfxMakeString16(&p->name, &pc->name.s);
+            ++entryCnt;
+        }
+
+        AFX_ASSERT(entryCnt == sc->entryCnt);
+        liga->totalEntryCnt += entryCnt;
+
+        s->set = sc->set;
+        s->baseEntry = baseEntryIdx;
+        baseEntryIdx += entryCnt;
+        s->entryCnt = entryCnt;
+        s->flags = sc->flags;
+        s->idd = NIL;
+        s->crc32 = NIL;
+    }
+
+    liga->totalEntryCnt = baseEntryIdx;
+    AFX_ASSERT(liga->totalEntryCnt == cfg->pointCnt);
+    liga->setCnt = cfg->setCnt;
+    
+    liga->pushCnt = cfg->pushCnt;
+    for (afxUnit i = 0; i < cfg->pushCnt; i++)
+    {
+        avxPushRange const* prc = &cfg->pushes[i];
+        _avxPushRange* pr = &liga->pushes[i];
+
+        pr->offset = prc->offset;
+        pr->size = prc->size;
+        pr->visibility = prc->visibility;
+    }
+
+    liga->udd = cfg->udd;
     liga->tag = cfg->tag;
 
-    liga->pushables = FALSE;
-
-    afxArray sets;
-    afxArray entries;
-    AfxMakeArray(&sets, sizeof(avxLigatureSet), 4, NIL, 0);
-    AfxMakeArray(&entries, sizeof(avxLigatureEntry), 40, NIL, 0);
-    AfxReserveArraySpace(&sets, 4);
-    AfxReserveArraySpace(&entries, 40);
-
-    for (afxUnit i = 0; i < shaderCnt; i++)
-    {
-        avxShader shd = shaders[i];
-
-        if (!shd)
-            continue;
-
-        AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
-        avxShaderType stage = AvxGetShaderStage(shd);
-        afxUnit resCnt = AvxQueryShaderInterfaces(shd, 0, 0, NIL);
-
-        if (shd->pushConstName.s.len)
-            liga->pushables = TRUE;
-
-        for (afxUnit j = 0; j < resCnt; j++)
-        {
-            avxShaderResource rsrc;
-            AvxQueryShaderInterfaces(shd, j, 1, &rsrc);
-            afxIndex setIdx = AFX_INVALID_INDEX;
-            //afxIndex resIdx = AFX_INVALID_INDEX;
-
-            for (afxUnit k = 0; k < sets.pop; k++)
-            {
-                avxLigatureSet* set = AfxGetArrayUnit(&sets, k);
-                AFX_ASSERT(set);
-
-                if (rsrc.set == set->set)
-                {
-                    setIdx = k;
-                    break;
-                }
-            }
-
-            if (setIdx == AFX_INVALID_INDEX)
-            {
-                avxLigatureSet* set;
-
-                if (!(set = AfxPushArrayUnits(&sets, 1, &setIdx, NIL, 0))) AfxThrowError();
-                else
-                {
-                    set->set = rsrc.set;
-                    set->baseEntry = 0;
-                    set->entryCnt = 0;
-                }
-            }
-
-            if (!err)
-            {
-                afxBool incompatible = FALSE;
-                avxLigatureSet* set = AfxGetArrayUnit(&sets, setIdx);
-                AFX_ASSERT(set);
-                AFX_ASSERT(set->set == rsrc.set);
-
-                afxBool entryExisting = FALSE;
-
-                for (afxUnit l = 0; l < entries.pop; l++)
-                {
-                    avxLigatureEntry* binding = AfxGetArrayUnit(&entries, l);
-
-                    if (binding->set == rsrc.set)
-                    {
-                        if ((entryExisting |= (rsrc.binding == binding->binding)))
-                        {
-                            if (((rsrc.type != binding->type) || (rsrc.cnt != binding->cnt)))
-                            {
-                                AfxThrowError();
-                                incompatible |= TRUE;
-                            }
-                            else
-                            {
-                                binding->visibility |= /*entry->visibility |*/ AFX_BITMASK(stage);
-                            }
-                            break;
-                        }
-                    }
-                }
-
-                if (!err && !entryExisting)
-                {
-#if 0
-                    afxString s;
-                    afxStringBase strb;
-                    AvxGetShaderStringBase(dsys, &strb);
-                    AfxRStrings2(strb, 1, &rsrc.name, &s);
-#endif
-                    avxLigatureEntry* ent;
-
-                    if (!(ent = AfxPushArrayUnits(&entries, 1, NIL, NIL, 0))) AfxThrowError();
-                    else
-                    {
-                        ent->binding = rsrc.binding;
-                        ent->visibility = AFX_BITMASK(stage);
-                        ent->type = rsrc.type;
-                        ent->cnt = rsrc.cnt;
-                        ent->set = rsrc.set;
-
-                        AfxMakeString16(&ent->name, &rsrc.name.s);
-                        ++set->entryCnt;
-                    }
-                }
-                    
-                if (incompatible)
-                    break;
-            }
-        }
-    }
-
-    if (!err)
-    {
-        liga->totalEntryCnt = 0;
-        liga->totalEntries = NIL;
-        liga->setCnt = 0;
-        liga->sets = NIL;
-
-        afxObjectStash const stashes[] =
-        {
-            {
-                .cnt = entries.pop,
-                .siz = sizeof(liga->totalEntries[0]),
-                .var = (void**)&liga->totalEntries
-            },
-            {
-                .cnt = sets.pop,
-                .siz = sizeof(liga->sets[0]),
-                .var = (void**)&liga->sets
-            }
-        };
-
-        if (AfxAllocateInstanceData(liga, ARRAY_SIZE(stashes), stashes))
-            AfxThrowError();
-    }
-
-    if (!err)
-    {
-        afxUnit baseEntryIdx = 0;
-
-        for (afxUnit i = 0; i < sets.pop; i++)
-        {
-            avxLigatureSet* set2 = AfxGetArrayUnit(&sets, i);
-            afxUnit entryCnt = 0;
-
-            for (afxUnit j = 0; j < entries.pop; j++)
-            {
-                avxLigatureEntry* ent2 = AfxGetArrayUnit(&entries, j);
-
-                if (ent2->set == set2->set)
-                {
-                    avxLigatureEntry* ent = &liga->totalEntries[liga->totalEntryCnt];
-
-                    ent->binding = ent2->binding;
-                    ent->visibility = ent2->visibility;
-                    ent->type = ent2->type;
-                    ent->cnt = ent2->cnt;
-                    ent->set = ent2->set;
-
-                    AfxMakeString16(&ent->name, &ent2->name.s);
-                    ++entryCnt;
-
-                    ++liga->totalEntryCnt;
-                }
-            }
-            AFX_ASSERT(entryCnt == set2->entryCnt);
-            avxLigatureSet* set = &liga->sets[liga->setCnt];
-            set->set = set2->set;
-            set->baseEntry = baseEntryIdx;
-            set->entryCnt = entryCnt;
-            baseEntryIdx += entryCnt;
-
-            ++liga->setCnt;
-        }
-    }
-
-    AfxEmptyArray(&sets, FALSE, FALSE);
-    AfxEmptyArray(&entries, FALSE, FALSE);
-
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
+
     return err;
 }
 
@@ -302,7 +344,7 @@ _AVX afxClassConfig const _AVX_LIGA_CLASS_CONFIG =
 {
     .fcc = afxFcc_LIGA,
     .name = "Ligature",
-    .desc = "Pipelined Resourcing Ligature",
+    .desc = "Resource Pipelining Ligature",
     .fixedSiz = sizeof(AFX_OBJECT(avxLigature)),
     .ctor = (void*)_AvxLigaCtorCb,
     .dtor = (void*)_AvxLigaDtorCb
@@ -310,7 +352,7 @@ _AVX afxClassConfig const _AVX_LIGA_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AvxDeclareLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[])
+_AVX afxError AvxAcquireLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -334,6 +376,482 @@ _AVX afxError AvxDeclareLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureCo
         avxLigature liga = ligatures[i];
     }
 #endif
+
+    return err;
+}
+
+_AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxShader shaders[], avxLigatureConfig* cfg)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    AFX_ASSERT(cfg);
+
+    *cfg = (avxLigatureConfig) { 0 };
+
+#if 0
+    afxUnit pointCnt = 0;
+    afxUnit setMap[AVX_MAX_LIGATURE_SETS];
+    afxUnit setUsed = 0;
+    AfxFill(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1); // Initialize to invalid set (-1)
+
+    for (afxUnit s = 0; s < shaderCnt; s++)
+    {
+        avxShader shd = shaders[s];
+        if (!shd) continue;
+        AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
+
+        avxShaderType stage = AvxGetShaderStage(shd);
+        afxUnit resCnt = AvxQueryShaderInterfaces(shd, 0, 0, NIL);
+
+        if (shd->pushConstName.s.len)
+        {
+            cfg->pushCnt = 1;
+        }
+
+#if 0
+
+        // Find total amount of points and make sets for them.
+        for (afxUnit j = 0; j < resCnt; j++)
+        {
+            avxShaderResource rsrc;
+            AvxQueryShaderInterfaces(shd, j, 1, &rsrc);
+
+            afxIndex setIdx;
+            avxLigatureSet* set;
+            afxBool setFound = FALSE;
+            for (setIdx = 0; setIdx < cfg->setCnt; setIdx++)
+            {
+                set = &cfg->sets[setIdx];
+                if (rsrc.set == set->set)
+                {
+                    setFound = TRUE;
+                    break;
+                }
+            }
+
+            if (!setFound)
+            {
+                setIdx = cfg->setCnt;
+                set = &cfg->sets[setIdx];
+                set->set = rsrc.set;
+                set->baseEntryIdx = 0;
+                set->entryCnt = 1;
+                set->flags = NIL;
+                ++cfg->setCnt;
+            }
+            else
+            {
+                ++set->entryCnt;
+            }
+        }
+
+        // Determine the base index for points in sets
+        afxUnit basePointIdx = 0;
+        for (afxUnit j = 0; j < cfg->setCnt; j++)
+        {
+            avxLigatureSet* set = &cfg->sets[j];
+            set->baseEntryIdx = basePointIdx;
+            basePointIdx += set->entryCnt;
+        }
+
+        // Arrange the points linearly according to the sets.
+        for (afxUnit j = 0; j < resCnt; j++)
+        {
+            avxShaderResource rsrc;
+            AvxQueryShaderInterfaces(shd, j, 1, &rsrc);
+
+            afxIndex setIdx;
+            avxLigatureSet* set;
+            afxBool setFound = FALSE;
+            for (setIdx = 0; setIdx < cfg->setCnt; setIdx++)
+            {
+                set = &cfg->sets[setIdx];
+                if (rsrc.set == set->set)
+                {
+                    setFound = TRUE;
+                    break;
+                }
+            }
+            AFX_ASSERT(setFound);
+            AFX_ASSERT(set->set == rsrc.set);
+
+            afxBool incompatible = FALSE;
+            afxBool entryExisting = FALSE;
+
+            for (afxUnit l = 0; l < set->entryCnt; l++)
+            {
+                avxLigament* binding = &cfg->points[set->baseEntryIdx + l];
+
+                //if (set->set == rsrc.set)
+                {
+                    if ((entryExisting |= (rsrc.binding == binding->binding)))
+                    {
+                        if (((rsrc.type != binding->type) || (rsrc.cnt != binding->cnt)))
+                        {
+                            AfxThrowError();
+                            incompatible |= TRUE;
+                        }
+                        else
+                        {
+                            binding->visibility |= /*entry->visibility |*/ AFX_BITMASK(stage);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (!err && !entryExisting)
+            {
+                avxLigament* ent = &cfg->points[set->baseEntryIdx + set->entryCnt];
+                ent->binding = rsrc.binding;
+                ent->visibility = AFX_BITMASK(stage);
+                ent->type = rsrc.type;
+                ent->cnt = rsrc.cnt;
+                AfxMakeString16(&ent->name, &rsrc.name.s);
+                ++set->entryCnt;
+                ++cfg->pointCnt;
+            }
+
+            if (incompatible)
+                break;
+        }
+#else
+#if 0
+        afxUnit ligIdx = 0;
+        afxUnit setCnt = 0;
+        afxUnit setMap[AVX_MAX_LIGATURE_SETS]; // Tracks existing sets
+        afxUnit setUsed = 0;
+
+        AfxFill(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1); // Initialize to invalid set (-1)
+
+        for (afxUnit i = 0; i < resCnt; ++i)
+        {
+            avxShaderResource res;
+            if (AvxQueryShaderInterfaces(shd, i, 1, &res) != 1)
+            {
+                // failture
+                AfxThrowError();
+                continue;
+            }
+
+            if (ligIdx >= AVX_MAX_LIGAMENTS)
+            {
+                // overflow
+                AfxThrowError();
+                continue;
+            }
+
+            // Look for existing set
+            afxUnit s = 0xFFFF;
+            for (afxUnit j = 0; j < setUsed; ++j)
+            {
+                if (setMap[j] == res.set)
+                {
+                    s = j;
+                    break;
+                }
+            }
+
+            // New set?
+            if (s == 0xFFFF)
+            {
+                if (setUsed >= AVX_MAX_LIGATURE_SETS)
+                {
+                    // overflow
+                    AfxThrowError();
+                    continue;
+                }
+
+                s = setUsed;
+                setMap[s] = res.set;
+
+                cfg->sets[s].set = res.set;
+                cfg->sets[s].baseEntryIdx = ligIdx;
+                cfg->sets[s].entryCnt = 0;
+                cfg->sets[s].crc32 = 0;
+                cfg->sets[s].flags = 0;
+                cfg->sets[s].idd = NIL;
+                setUsed++;
+            }
+
+            avxLigament* lig = &cfg->points[ligIdx];
+            lig->binding = res.binding;
+            lig->type = res.type;
+            lig->cnt = res.cnt;
+            AfxMakeString16(&lig->name, &res.name.s);
+            lig->visibility = AFX_BITMASK(stage); // Adjust if you can reflect stage
+            lig->flags = 0;
+
+            cfg->sets[s].entryCnt++;
+            ligIdx++;
+        }
+        cfg->pointCnt = ligIdx;
+        cfg->setCnt = setUsed;
+#else
+        
+        for (afxUnit i = 0; i < resCnt; ++i)
+        {
+            avxShaderResource res;
+            if (AvxQueryShaderInterfaces(shd, i, 1, &res) != 1)
+            {
+                // failture
+                AfxThrowError();
+                continue;
+            }
+            afxBool found = FALSE;
+
+            // Try to find a matching existing ligament
+            for (afxUnit j = 0; j < pointCnt; ++j)
+            {
+                avxLigament* lig = &cfg->points[j];
+                if (lig->binding == res.binding &&
+                    lig->type == res.type &&
+                    lig->cnt == res.cnt/* &&
+                    afxStrEq(lig->name, res.name)*/)
+                {
+                    lig->visibility |= stage;
+                    found = TRUE;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                if (pointCnt >= AVX_MAX_LIGAMENTS)
+                {
+                    // overflow
+                    AfxThrowError();
+                    continue;
+                }
+                avxLigament* lig = &cfg->points[pointCnt++];
+                lig->binding = res.binding;
+                lig->type = res.type;
+                lig->cnt = res.cnt;
+                AfxMakeString16(&lig->name, &res.name.s);
+                lig->visibility = stage;
+                lig->flags = 0;
+
+                // Track which set it belongs to
+                afxUnit setIdx = 0xFFFF;
+                for (afxUnit m = 0; m < setUsed; ++m)
+                {
+                    if (setMap[m] == res.set)
+                    {
+                        setIdx = m;
+                        break;
+                    }
+                }
+
+                if (setIdx == 0xFFFF)
+                {
+                    if (setUsed >= AVX_MAX_LIGATURE_SETS)
+                    {
+                        // overflow
+                        AfxThrowError();
+                        continue;
+                    }
+                    setIdx = setUsed;
+                    setMap[setIdx] = res.set;
+                    cfg->sets[setIdx].set = res.set;
+                    cfg->sets[setIdx].entryCnt = 0;
+                    cfg->sets[setIdx].baseEntryIdx = 0; // temporary
+                    cfg->sets[setIdx].crc32 = 0;
+                    cfg->sets[setIdx].flags = 0;
+                    cfg->sets[setIdx].idd = NIL;
+                    setUsed++;
+                }
+                cfg->sets[setIdx].entryCnt++;
+            }
+        }
+#endif
+#endif
+    }
+
+    // Assign baseEntryIdx now that ligaments are complete
+    afxUnit nextIdx = 0;
+    for (afxUnit i = 0; i < setUsed; ++i)
+    {
+        cfg->sets[i].baseEntryIdx = nextIdx;
+
+        // Compact ligaments of this set into contiguous slots
+        afxUnit end = nextIdx + cfg->sets[i].entryCnt;
+        afxUnit moved = 0;
+        for (afxUnit j = nextIdx; j < pointCnt; ++j)
+        {
+            avxLigament temp = cfg->points[j];
+            afxUnit resSet = 0xFFFF;
+
+            // Recover the set ID for this ligament
+            for (afxUnit s = 0; s < shaderCnt; ++s)
+            {
+                afxUnit resCnt = AvxQueryShaderInterfaces(shaders[s], 0, 0, NIL);
+                for (afxUnit r = 0; r < resCnt; ++r)
+                {
+                    avxShaderResource res;
+                    AvxQueryShaderInterfaces(shaders[s], r, 1, &res);
+                    if (res.binding == temp.binding &&
+                        res.type == temp.type /*&&
+                        afxStrEq(res.name, temp.name)*/)
+                    {
+                        resSet = res.set;
+                        break;
+                    }
+                }
+                if (resSet != 0xFFFF)
+                    break;
+            }
+
+            if (resSet == cfg->sets[i].set)
+            {
+                // Swap ligament into place
+                avxLigament swap = cfg->points[nextIdx + moved];
+                cfg->points[nextIdx + moved] = temp;
+                cfg->points[j] = swap;
+                moved++;
+                if (moved >= cfg->sets[i].entryCnt)
+                    break;
+            }
+        }
+
+        nextIdx = end;
+    }
+
+    cfg->pointCnt = pointCnt;
+    cfg->setCnt = setUsed;
+#endif
+
+    avxLigament merged[AVX_MAX_LIGAMENTS];
+    afxUnit mergedSet[AVX_MAX_LIGAMENTS];
+    afxUnit mergedCount = 0;
+
+    for (afxUnit i = 0; i < shaderCnt; ++i)
+    {
+        avxShader shd = shaders[i];
+        if (!shd) continue;
+        AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
+        afxMask stage = AvxGetShaderStage(shd);
+
+        if (shd->pushConstName.s.len)
+        {
+            cfg->pushCnt = 1;
+        }
+
+        afxUnit resCnt = AvxQueryShaderInterfaces(shd, 0, 0, NIL);
+        for (afxUnit j = 0; j < resCnt; ++j)
+        {
+            avxShaderResource res;
+            if (AvxQueryShaderInterfaces(shd, j, 1, &res) != 1)
+            {
+                // failure
+                AfxThrowError();
+                continue;
+            }
+            // Search for existing match
+            afxBool found = FALSE;
+            for (afxUnit m = 0; m < mergedCount; ++m)
+            {
+                avxLigament* ml = &merged[m];
+                if (mergedSet[m] == res.set &&
+                    ml->binding == res.binding &&
+                    ml->type == res.type &&
+                    ml->cnt == res.cnt /*&&
+                    afxStrEq(ml->name, res.name)*/)
+                {
+                    ml->visibility |= stage;
+                    found = TRUE;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                if (mergedCount >= AVX_MAX_LIGAMENTS)
+                {
+                    // overflow
+                    AfxThrowError();
+                    continue;
+                }
+                avxLigament* ml = &merged[mergedCount++];
+                mergedSet[mergedCount - 1] = res.set;
+                ml->binding = res.binding;
+                ml->type = res.type;
+                ml->cnt = res.cnt;
+                ml->visibility = stage;
+                AfxMakeString16(&ml->name, &res.name.s);
+            }
+        }
+    }
+
+    // Group by set
+    afxUnit setMap[AVX_MAX_LIGATURE_SETS];
+    afxUnit setCount = 0;
+    AfxFill(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1);
+
+    // First, map unique sets
+    for (afxUnit i = 0; i < mergedCount; ++i)
+    {
+        afxUnit set = mergedSet[i];
+        afxBool known = FALSE;
+        for (afxUnit s = 0; s < setCount; ++s)
+        {
+            if (setMap[s] == set)
+            {
+                known = TRUE;
+                break;
+            }
+        }
+        if (!known)
+        {
+            if (setCount >= AVX_MAX_LIGATURE_SETS)
+            {
+                // overflow
+                AfxThrowError();
+                continue;
+            }
+            setMap[setCount++] = set;
+        }
+    }
+
+    afxUnit pointIdx = 0;
+    for (afxUnit s = 0; s < setCount; ++s)
+    {
+        afxUnit currentSet = setMap[s];
+        avxLigatureSet* ligSet = &cfg->sets[s];
+        ligSet->set = currentSet;
+        ligSet->baseEntryIdx = pointIdx;
+        ligSet->entryCnt = 0;
+        ligSet->crc32 = 0;
+        ligSet->flags = 0;
+        ligSet->idd = NIL;
+
+        for (afxUnit i = 0; i < mergedCount; ++i)
+        {
+            avxLigament const* ml = &merged[i];
+
+            if (mergedSet[i] == currentSet)
+            {
+                if (pointIdx >= AVX_MAX_LIGAMENTS)
+                {
+                    // overflow
+                    AfxThrowError();
+                    continue;
+                }
+
+                avxLigament* lig = &cfg->points[pointIdx++];
+                lig->binding = ml->binding;
+                lig->type = ml->type;
+                lig->cnt = ml->cnt;
+                lig->visibility = ml->visibility;
+                lig->flags = 0;
+                AfxMakeString16(&lig->name, &ml->name.s);
+
+                ligSet->entryCnt++;
+            }
+        }
+    }
+
+    cfg->pointCnt = pointIdx;
+    cfg->setCnt = setCount;
 
     return err;
 }

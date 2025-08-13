@@ -693,7 +693,7 @@ afxResult _AfxParseUriParts(afxUri* uri)
     afxUnit len = uri->s.len;
     uri->s.start = s;
     uri->s.len = len;
-    uri->s.cap = len;
+    //uri->s.cap = len;
 
     uri->sch = uri->user = uri->h = uri->p = uri->root = 0;
     uri->dir = uri->fname = uri->fext = uri->qry = uri->frag = 0;

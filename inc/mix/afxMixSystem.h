@@ -26,6 +26,7 @@
 #define AMX_MIX_SYSTEM_H
 
 #include "qwadro/inc/mix/afxMixDevice.h"
+#include "qwadro/inc/mix/op/amxCodec.h"
 #include "qwadro/inc/mix/io/amxAudio.h"
 #include "qwadro/inc/mix/io/amxSound.h"
 #include "qwadro/inc/mix/io/amxVideo.h"
@@ -56,12 +57,12 @@ AFX_DEFINE_STRUCT(afxMixSystemConfig)
 };
 
 /*
-    The AfxGetMixSystemIcd() function retrieves the ICD (Installable Client Driver) running a specific mixing system.
+    The AmxGetMixSystemIcd() function retrieves the ICD (Installable Client Driver) running a specific mixing system.
     This allows the application to determine which implementation is being used for the mixing system and to perform
     further actions with the corresponding driver or module.
 */
 
-AMX afxModule AfxGetMixSystemIcd
+AMX afxModule AmxGetMixSystemIcd
 (
     // The mixing system for which the ICD is being queried.
     afxMixSystem msys
@@ -73,7 +74,7 @@ AMX afxModule AfxGetMixSystemIcd
     This function allows applications to query and retrieve information about the established bridges,
     which can be useful when dealing with systems that involve multiple hardware/software interfaces.
 
-    Returns the number of arranged bridges.
+    Returns the number of arranged bridges. If @bridges is NIL, it returns the total number of bridges from the base index.
 */
 
 AMX afxUnit AmxGetMixBridges
@@ -93,22 +94,24 @@ AMX afxUnit AmxGetMixBridges
 
 /*
     The AfxChooseMixBridges() function provides a way to select specific mixing bridges in an established mixing system,
-    filtered by device ID and port ID. The function returns the selected bridges in an array and allows the application
+    filtered by device ID. The function returns the selected bridges in an array and allows the application
     to filter the available bridges based on the provided indices. This is useful for applications that need to work
     with multiple bridges or interfaces between components in a mixing system, such as managing communication between
     the CPU and GPU or between different parts of the synthesis pipeline.
 */
 
-AMX afxUnit AfxQueryMixBridges
+AMX afxUnit AmxChooseMixBridges
 (
     // The established mixing system.
     afxMixSystem msys, 
 
     // An optional device ID for which the bridges must be linked against.
-    afxUnit ddevId,
+    afxUnit mdevId,
 
-    // An optional device port ID associated with the mixing device for which bridges must be linked against.
-    afxUnit portId,
+    // An optional bitmask describing the mixing device's port capabilities for which bridges must be linked against. 
+    afxMixCaps caps,
+
+    afxMask exuMask,
 
     // The first index of the bridges to begin selection from.
     afxUnit first,
@@ -121,7 +124,7 @@ AMX afxUnit AfxQueryMixBridges
 );
 
 /*
-    The AfxWaitForMixSystem() function waits for a mixing system to become ready, ensuring synchronization between the
+    The AmxWaitForMixSystem() function waits for a mixing system to become ready, ensuring synchronization between the
     application and the synthesis context. It is particularly useful for managing asynchronous tasks or ensuring the system
     is in a stable state before proceeding with further operations. It provides a way to wait for completion or readiness
     while managing timeouts for better control over the execution flow.
@@ -129,7 +132,7 @@ AMX afxUnit AfxQueryMixBridges
     If the system is not ready within the given @timeout, the function may return an error or a timeout code.
 */
 
-AMX afxError AfxWaitForMixSystem
+AMX afxError AmxWaitForMixSystem
 (
     // The mixing system that you want to wait for.
     afxMixSystem msys, 
@@ -155,18 +158,18 @@ AMX afxError AmxWaitForMixBridge
     // The mixing system to which the specific bridge belongs.
     afxMixSystem msys, 
 
+    // The timeout period that the function should wait for the bridge to become ready or to complete its operation. 
+    // The time is expressed in microseconds, and the function will stop waiting once this period has elapsed.
+    afxTime timeout,
+
     // The index of the execution unit (bridge) that needs to be waited on. 
     // If the mixing system has multiple bridges or execution units (e.g., for communication between different components or devices), 
     // this index identifies the particular bridge you're concerned with.
-    afxUnit exuIdx, 
-
-    // The timeout period that the function should wait for the bridge to become ready or to complete its operation. 
-    // The time is expressed in microseconds, and the function will stop waiting once this period has elapsed.
-    afxTime timeout
+    afxUnit exuIdx
 );
 
 /*
-    The AfxWaitForMixQueue() function waits for a specific queue in a mixing system to become ready or finish its tasks.
+    The AmxWaitForMixQueue() function waits for a specific queue in a mixing system to become ready or finish its tasks.
     It is useful for managing synchronization in systems that utilize multiple command queues, ensuring that one queue's
     operations are complete before continuing with the next phase of processing. The timeout parameter provides control
     over how long to wait, preventing the system from hanging indefinitely.
@@ -174,10 +177,14 @@ AMX afxError AmxWaitForMixBridge
     If the queue does not become ready within this time frame, the function will return an error.
 */
 
-AMX afxError AfxWaitForMixQueue
+AMX afxError AmxWaitForMixQueue
 (
     // The mixing system that contains the queue.
     afxMixSystem msys, 
+
+    // The timeout period defines how long the function will wait for the queue to become ready. 
+    // The time is specified in microseconds.
+    afxTime timeout,
 
     // The execution unit index, which likely refers to a specific queue or processing unit within the mixing system.
     // This helps to identify which execution unit's queue you are waiting for, especially if there are multiple queues in the system.
@@ -186,25 +193,23 @@ AMX afxError AfxWaitForMixQueue
     // The queue you want to wait for. 
     // Mixing systems often have multiple command queues for various tasks like synthesis, compute, or transfer operations. 
     // The queId specifies which queue's state should be checked.
-    afxUnit queIdx, 
-
-    // The timeout period defines how long the function will wait for the queue to become ready. 
-    // The time is specified in microseconds.
-    afxTime timeout
+    afxUnit queIdx
 );
+
+AMX void AmxGetEnabledDrawFeatures(afxMixSystem msys, afxMixFeatures* features);
 
 AMX afxError        AfxSinkAudioSignal(afxMixSystem msys, void* ctrl, afxSink sink, amxAudio aud, amxAudioPeriod const* seg);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /*
-    The AfxEnumerateMixSystems() function enumerates mixing systems established by a given installable client driver (ICD).
+    The AmxEnumerateMixSystems() function enumerates mixing systems established by a given installable client driver (ICD).
     By specifying a starting index and a count of systems to retrieve, you can query and retrieve information about the
     established mixing systems. This functionality is useful when your application needs to detect and interact with
     multiple systems, providing a way to select the best system for rendering.
 */
 
-AMX afxUnit AfxEnumerateMixSystems
+AMX afxUnit AmxEnumerateMixSystems
 (
     // The installable client driver (ICD) module identifier.
     afxUnit icd, 
@@ -223,13 +228,13 @@ AMX afxUnit AfxEnumerateMixSystems
 );
 
 /*
-    The AfxInvokeMixSystems() function performs custom actions on a set of mixing systems established by a given ICD.
+    The AmxInvokeMixSystems() function performs custom actions on a set of mixing systems established by a given ICD.
     By specifying a callback function, you can iterate over multiple mixing systems and apply specific logic to each system.
     This is useful when you need to perform system-specific operations, such as querying, configuring, or logging properties
     for each mixing system. The function provides a robust mechanism for handling multiple systems in a streamlined way.
 */
 
-AMX afxUnit AfxInvokeMixSystems
+AMX afxUnit AmxInvokeMixSystems
 (
     // The installable client driver (ICD) module identifier.
     afxUnit icd, 
@@ -250,13 +255,13 @@ AMX afxUnit AfxInvokeMixSystems
 );
 
 /*
-    The AfxEvokeMixSystems() function retrieves and process mixing systems in one go.
+    The AmxEvokeMixSystems() function retrieves and process mixing systems in one go.
     It not only retrieves the systems but also invokes a callback function on each one to determine when push it to the @systems array,
     enabling you to perform custom logic while working with the retrieved systems.
     This function is useful when you need to both enumerate mixing systems and apply specific actions or checks to each system.
 */
 
-AMX afxUnit AfxEvokeMixSystems
+AMX afxUnit AmxEvokeMixSystems
 (
     // The installable client driver (ICD) module identifier.
     afxUnit icd, 
@@ -280,16 +285,22 @@ AMX afxUnit AfxEvokeMixSystems
     afxMixSystem systems[]
 );
 
-AMX afxError AfxConfigureMixSystem(afxUnit icd, afxMixSystemConfig* cfg);
+AMX afxError AmxConfigureMixSystem
+(
+    afxUnit icd,
+    afxMixCaps caps,
+    afxAcceleration accel,
+    afxMixSystemConfig* cfg
+);
 
 /*
-    The AfxEstablishMixSystem() function establishes a new mixing system based on a specific driver and configuration.
+    The AmxEstablishMixSystem() function establishes a new mixing system based on a specific driver and configuration.
     It provides the ability to establish a system for rendering and mixing operations, allowing for further interaction
     with the synthesis pipeline (such as rendering, resource management, and more). This function is often used during the
     initialization phase of an application to prepare the system for tasks.
 */
 
-AMX afxError AfxEstablishMixSystem
+AMX afxError AmxEstablishMixSystem
 (
     // The installable client driver (ICD) identifier. 
     // This is an integer that uniquely identifies the driver

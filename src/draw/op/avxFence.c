@@ -19,7 +19,7 @@
 #define _AVX_DRAW_C
 #define _AVX_FENCE_C
 #include "../../impl/afxExecImplKit.h"
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 
 _AVX afxDrawSystem AvxGetFenceContext(avxFence fenc)
 {
@@ -94,7 +94,7 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     afxClock start, last;
-    if (timeout && (timeout != AFX_TIME_INFINITE))
+    if (timeout && (timeout != AFX_TIMEOUT_INFINITE))
     {
         AfxGetClock(&start);
         last = start;
@@ -115,7 +115,7 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
 
             if (timeout)
             {
-                if ((timeout == AFX_TIMEOUT_INFINITE) || (timeout == AFX_TIME_INFINITE))
+                if ((timeout == AFX_TIMEOUT_INFINITE) || (timeout == AFX_TIMEOUT_INFINITE))
                     continue;
 
                 afxClock curr;
@@ -145,7 +145,7 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
 
                 if (timeout)
                 {
-                    if ((timeout == AFX_TIMEOUT_INFINITE) || (timeout == AFX_TIME_INFINITE))
+                    if ((timeout == AFX_TIMEOUT_INFINITE) || (timeout == AFX_TIMEOUT_INFINITE))
                         continue;
 
                     afxClock curr;
@@ -163,7 +163,7 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
         }
     }
 
-    //if (dsys->waitFenc(dsys, waitAll, timeout, cnt, fences))
+    //if (dsys->waitFencCb(dsys, waitAll, timeout, cnt, fences))
         //AfxThrowError();
 
     return err;
@@ -182,7 +182,7 @@ _AVX afxError AvxResetFences(afxDrawSystem dsys, afxUnit cnt, avxFence const fen
         dfen->signaled = FALSE;
     }
 
-    //if (dsys->resetFenc(dsys, cnt, fences))
+    //if (dsys->resetFencCb(dsys, cnt, fences))
         //AfxThrowError();
 
     return err;

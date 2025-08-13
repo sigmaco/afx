@@ -18,7 +18,7 @@
 #define AUX_PAINT_H
 
 #include "qwadro/inc/draw/afxDrawDefs.h"
-#include "qwadro/inc/draw/math/avxColor.h"
+#include "qwadro/inc/math/avxColor.h"
 #include "qwadro/inc/ux/afxUxDefs.h"
 
 AFX_DEFINE_HANDLE(avxVectorizer);

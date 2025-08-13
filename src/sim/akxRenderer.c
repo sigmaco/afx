@@ -20,7 +20,7 @@
 #define _ASX_BODY_C
 #define _ASX_MATERIAL_C
 #define _AVX_VERTEX_BUFFER_C
-#include "../draw/impl/avxImplementation.h"
+#include "../draw/ddi/avxImplementation.h"
 #include "impl/asxImplementation.h"
 
 #if 0
@@ -87,7 +87,7 @@ _ASX afxError AsxDrawBodies(akxRenderer scn, afxContext sctx, afxDrawContext dct
         //AfxComputeModelDisplacement(bod->mdl, m);
         //afxReal64 ct, dt;
         //AfxGetThreadTime(&ct, &dt);
-        //AfxUpdateBodyMatrix(bod, dt, FALSE, bod->placement, bod->placement);
+        //AsxComputeBodyMotionMatrix(bod, dt, FALSE, bod->placement, bod->placement);
         //AfxSampleBodyAnimations(bod, 0, bod->cachedBoneCnt, scn->lp, 0.0, NIL);
         //AfxBuildPlacement(skl, 0, bod->cachedBoneCnt, scn->lp, m, scn->wp);
         //AfxComputeRestPosture(skl, 0, bod->cachedBoneCnt, m, scn->wp);
@@ -115,7 +115,7 @@ _ASX afxError AsxDrawBodies(akxRenderer scn, afxContext sctx, afxDrawContext dct
             AfxDescribeMesh(msh, &mshi);
 
             afxMeshMorph mshm;
-            AfxGetMeshMorphes(msh, 0, 1, &mshm);
+            AfxDescribeMeshMorphes(msh, 0, 1, &mshm);
 
             avxVertexCache vtxCache;
             avxIndexCache idxCache;
@@ -136,8 +136,9 @@ _ASX afxError AsxDrawBodies(akxRenderer scn, afxContext sctx, afxDrawContext dct
                     .stride = vtxCache.streams[1].stride
                 },
             };
+            
             AvxCmdBindVertexBuffers(dctx, 0, ARRAY_SIZE(vtxSrcs), vtxSrcs);
-                    
+
             AvxCmdUseDrawTechniqueSIGMA(dctx, scn->lightingDtec, 0, scn->rigidVin, NIL);
             //AvxCmdUseDrawTechniqueSIGMA(dctx, scn->tutCamUtilDtec, 0, scn->rigidVin, NIL);
             //AvxCmdUseDrawTechniqueSIGMA(dctx, scn->blinnTestRazrDtec, 0, scn->rigidVin, NIL);
@@ -167,7 +168,7 @@ _ASX afxError AsxDrawBodies(akxRenderer scn, afxContext sctx, afxDrawContext dct
             //AvxCmdSwitchDepthTesting(dctx, TRUE);
             //AvxCmdEnableDepthWrite(dctx, TRUE);
 
-            AvxCmdBindBuffers(dctx, 3, 0, 1, (avxBufferedMap[]) { {.buf = scn->framesets[scn->frameIdx].objUbo} });
+            AvxCmdBindBuffers(dctx, 3, 30, 1, (avxBufferedMap[]) { {.buf = scn->framesets[scn->frameIdx].objUbo} });
 
             //afxUnit const *ToBoneIndices = AfxGetMeshRigBiasToJointMapping(mdl, mshIdx);
             AfxBuildRiggedMeshCompositeMatrices(mdl, mshIdx, scn->wp[scn->frameIdx], 1, &m);
@@ -184,7 +185,7 @@ _ASX afxError AsxDrawBodies(akxRenderer scn, afxContext sctx, afxDrawContext dct
             for (afxUnit j = 0; j < surfCnt; j++)
             {
                 afxMeshSection sec;
-                AfxGetMeshSections(msh, j, 1, &sec);
+                AfxDescribeMeshSections(msh, j, 1, &sec);
 
                 if (sec.mtlIdx)
                 {
@@ -234,7 +235,7 @@ _ASX afxError AsxBeginSceneCapture(akxRenderer scn, avxCamera cam, afxSimulation
             //AfxComputeModelDisplacement(bod->mdl, m);
             //afxReal64 ct, dt;
             //AfxGetThreadTime(&ct, &dt);
-            //AfxUpdateBodyMatrix(bod, dt, FALSE, bod->placement, bod->placement);
+            //AsxComputeBodyMotionMatrix(bod, dt, FALSE, bod->placement, bod->placement);
             //AfxSampleBodyAnimations(bod, 0, bod->cachedBoneCnt, scn->lp, 0.0, NIL);
             //AfxBuildPlacement(skl, 0, bod->cachedBoneCnt, scn->lp, m, scn->wp);
             //AfxComputeRestPosture(skl, 0, bod->cachedBoneCnt, m, scn->wp);
@@ -260,7 +261,7 @@ _ASX afxError AsxBeginSceneCapture(akxRenderer scn, avxCamera cam, afxSimulation
                     AfxDescribeMesh(msh, &mshi);
 
                     afxMeshMorph mshm;
-                    AfxGetMeshMorphes(msh, 0, 1, &mshm);
+                    AfxDescribeMeshMorphes(msh, 0, 1, &mshm);
 
                     avxVertexCache vtxCache;
                     avxIndexCache idxCache;
@@ -304,7 +305,7 @@ _ASX afxError AsxBeginSceneCapture(akxRenderer scn, avxCamera cam, afxSimulation
 
 
 
-                    AvxCmdBindBuffers(dctx, 3, 0, 1, &scn->framesets[scn->frameIdx].objConstantsBuffer, NIL, NIL);
+                    AvxCmdBindBuffers(dctx, 3, 30, 1, &scn->framesets[scn->frameIdx].objConstantsBuffer, NIL, NIL);
 
                     //afxUnit const *ToBoneIndices = AfxGetMeshRigBiasToJointMapping(mdl, mshIdx);
                     AfxBuildIndexedCompositeBuffer(mdl, mshIdx, scn->wp, 1, &m);
@@ -321,7 +322,7 @@ _ASX afxError AsxBeginSceneCapture(akxRenderer scn, avxCamera cam, afxSimulation
                     for (afxUnit j = 0; j < surfCnt; j++)
                     {
                         afxMeshSection sec;
-                        AfxGetMeshSections(msh, j, 1, &sec);
+                        AfxDescribeMeshSections(msh, j, 1, &sec);
 
                         if (sec.mtlIdx)
                         {
@@ -360,7 +361,7 @@ _ASX afxError AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt,
         //AfxComputeModelDisplacement(bod->mdl, m);
         //afxReal64 ct, dt;
         //AfxGetThreadTime(&ct, &dt);
-        //AfxUpdateBodyMatrix(bod, dt, FALSE, bod->placement, bod->placement);
+        //AsxComputeBodyMotionMatrix(bod, dt, FALSE, bod->placement, bod->placement);
         //AmxCmdSampleBodyAnimationsAcceleratedLOD(sctx, bod, AsxCountJoints(mdl, 0), bod->placement, rnd->lp, rnd->wp, 0.0);
         AsxCmdSampleBodyAnimationsAcceleratedLOD(NIL, bod, AsxCountJoints(mdl, 0), bod->placement, rnd->lp, rnd->wp[rnd->frameIdx], 0.0);
         //AfxSampleBodyAnimations(bod, 0, bod->cachedBoneCnt, rnd->lp, 0.0, NIL);
@@ -384,7 +385,7 @@ _ASX afxError AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt,
                 AfxDescribeMesh(msh, &mshi);
 
                 afxMeshMorph mshm;
-                AfxGetMeshMorphes(msh, 0, 1, &mshm);
+                AfxDescribeMeshMorphes(msh, 0, 1, &mshm);
 
                 avxVertexCache vtxCache;
                 avxIndexCache idxCache;
@@ -406,7 +407,7 @@ _ASX afxError AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt,
                 //AvxCmdSwitchDepthTesting(dctx, TRUE);
                 //AvxCmdEnableDepthWrite(dctx, TRUE);
 
-                AvxCmdBindBuffers(dctx, 3, 0, 1, (avxBufferedMap[]) { {.buf = rnd->framesets[rnd->frameIdx].objUbo } });
+                AvxCmdBindBuffers(dctx, 3, 30, 1, (avxBufferedMap[]) { {.buf = rnd->framesets[rnd->frameIdx].objUbo } });
 
                 AfxBuildRiggedMeshCompositeMatrices(mdl, mshIdx, rnd->wp[rnd->frameIdx], 1, &m);
                 //AfxM4dCopyAtm(m, m);
@@ -420,7 +421,7 @@ _ASX afxError AmxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt,
                 for (afxUnit j = 0; j < surfCnt; j++)
                 {
                     afxMeshSection sec;
-                    AfxGetMeshSections(msh, j, 1, &sec);
+                    AfxDescribeMeshSections(msh, j, 1, &sec);
                     //AFX_ASSERT(msh->topology->primType == avxTopology_TRI_LIST);
 
                     akxMaterialConstants mat;
@@ -686,7 +687,7 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         vboIop.dstStride = 1;
         vboIop.srcStride = 1;
         vboIop.rowCnt = vboSpec.size;
-        AvxUpdateBuffer(rnd->testVbo, testVertices, 1, &vboIop, 0);
+        AvxUpdateBuffer(rnd->testVbo, 1, &vboIop, testVertices, 0);
 
         avxBufferInfo iboSpec = { 0 };
         iboSpec.size = sizeof(testIndices);
@@ -698,23 +699,18 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         iboIop.dstStride = 1;
         iboIop.srcStride = 1;
         iboIop.rowCnt = iboSpec.size;
-        AvxUpdateBuffer(rnd->testIbo, testIndices, 1, &iboIop, 0);
+        AvxUpdateBuffer(rnd->testIbo, 1, &iboIop, testIndices, 0);
 
         avxVertexLayout vtxl = 
         { 
             .srcCnt = 1,
-            .srcs[0] =
+            .srcs =
             {
-                .instanceRate = 0,
-                .srcIdx = 0
+                AVX_VERTEX_FETCH(0, 0, 0, 0, 1)
             },
-            .attrCnt = 1,
-            .attrs[0] =
+            .attrs =
             {
-                .location = 0,
-                .srcIdx = 0,
-                .offset = 0,
-                .fmt = avxFormat_RGB32f
+                AVX_VERTEX_ATTR(0, 0, avxFormat_RGB32f)
             }
         };
 
@@ -731,48 +727,16 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         .srcCnt = 2,
         .srcs =        
         {
-            {
-                .instanceRate = 0,
-                .srcIdx = 0
-            },
-            {
-                .instanceRate = 0,
-                .srcIdx = 1
-            },
+            AVX_VERTEX_FETCH(0, 0, 0, 0, 3),
+            AVX_VERTEX_FETCH(1, 0, 0, 3, 2)
         },
-        .attrCnt = 5,
         .attrs =
         {
-            {
-                .location = 0,
-                .srcIdx = 0,
-                .offset = 0,
-                .fmt = avxFormat_RGB32f
-            },
-            {
-                .location = 1,
-                .srcIdx = 0,
-                .offset = 12,
-                .fmt = avxFormat_RGBA8un
-            },
-            {
-                .location = 2,
-                .srcIdx = 0,
-                .offset = 16,
-                .fmt = avxFormat_RGBA32f
-            },
-            {
-                .location = 3,
-                .srcIdx = 1,
-                .offset = 0,
-                .fmt = avxFormat_RGB32f
-            },
-            {
-                .location = 6,
-                .srcIdx = 1,
-                .offset = 12,
-                .fmt = avxFormat_RG32f
-            }
+            AVX_VERTEX_ATTR(0, 0, avxFormat_RGB32f),
+            AVX_VERTEX_ATTR(1, 12, avxFormat_RGBA8un),
+            AVX_VERTEX_ATTR(2, 16, avxFormat_RGBA32f),
+            AVX_VERTEX_ATTR(3, 0, avxFormat_RGB32f),
+            AVX_VERTEX_ATTR(6, 12, avxFormat_RG32f)
         }
     };
 
@@ -786,36 +750,14 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         .srcCnt = 2,
         .srcs =
         {
-            {
-                .instanceRate = 0,
-                .srcIdx = 0
-            },
-            {
-                .instanceRate = 0,
-                .srcIdx = 1
-            }
+            AVX_VERTEX_FETCH(0, 0, 0, 0, 1),
+            AVX_VERTEX_FETCH(1, 0, 0, 1, 2)
         },
-        .attrCnt = 3,
         .attrs =
         {
-            {
-                .location = 0,
-                .srcIdx = 0,
-                .offset = 0,
-                .fmt = avxFormat_RGB32f
-            },
-            {
-                .location = 3,
-                .srcIdx = 1,
-                .offset = 0,
-                .fmt = avxFormat_RGB32f
-            },
-            {
-                .location = 6,
-                .srcIdx = 1,
-                .offset = 12,
-                .fmt = avxFormat_RG32f
-            }
+            AVX_VERTEX_ATTR(0, 0, avxFormat_RGB32f),
+            AVX_VERTEX_ATTR(3, 0, avxFormat_RGB32f),
+            AVX_VERTEX_ATTR(6, 12, avxFormat_RG32f)
         }
     };
 
@@ -825,72 +767,26 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
     rnd->rigidVin = rigidVin;
 
     {
-
         avxVertexLayout vtxl_p3n3t2_bi_mtl_mtx_jnt =
         {
             .srcCnt = 3,
             .srcs =
             {
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 0
-                },
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 1
-                },
-                {
-                    .instanceRate = 1,
-                    .srcIdx = 2
-                }
+                AVX_VERTEX_FETCH(0, 0, 0, 0, 1),
+                AVX_VERTEX_FETCH(1, 0, 0, 1, 2),
+                AVX_VERTEX_FETCH(2, 0, 1, 3, 4)
             },
-            .attrCnt = 7,
             .attrs =
             {
                 // per-vertex fetch
-                {
-                    .location = 0,
-                    .srcIdx = 0,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 3,
-                    .srcIdx = 1,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 6,
-                    .srcIdx = 1,
-                    .offset = 12,
-                    .fmt = avxFormat_RG32f
-                },
+                AVX_VERTEX_ATTR(0, 0, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(3, 0, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(6, 12, avxFormat_RG32f),
                 // per-instance fetch
-                {
-                    .location = 10,
-                    .srcIdx = 2,
-                    .offset = 0,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 11,
-                    .srcIdx = 2,
-                    .offset = 4,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 12,
-                    .srcIdx = 2,
-                    .offset = 8,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 13,
-                    .srcIdx = 2,
-                    .offset = 12,
-                    .fmt = avxFormat_R32u
-                }
+                AVX_VERTEX_ATTR(10, 0, avxFormat_R32u),
+                AVX_VERTEX_ATTR(11, 4, avxFormat_R32u),
+                AVX_VERTEX_ATTR(12, 8, avxFormat_R32u),
+                AVX_VERTEX_ATTR(13, 12, avxFormat_R32u)
             }
         };
 
@@ -904,72 +800,22 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             .srcCnt = 3,
             .srcs =
             {
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 0
-                },
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 1
-                },
-                {
-                    .instanceRate = 1,
-                    .srcIdx = 2
-                }
+                AVX_VERTEX_FETCH(0, 0, 0, 0, 2),
+                AVX_VERTEX_FETCH(1, 0, 0, 2, 2),
+                AVX_VERTEX_FETCH(2, 0, 1, 4, 4)
             },
-            .attrCnt = 8,
             .attrs =
             {
                 // per-vertex fetch
-                {
-                    .location = 0,
-                    .srcIdx = 0,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 1,
-                    .srcIdx = 0,
-                    .offset = 12,
-                    .fmt = avxFormat_R8u
-                },
-                {
-                    .location = 3,
-                    .srcIdx = 1,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 6,
-                    .srcIdx = 1,
-                    .offset = 12,
-                    .fmt = avxFormat_RG32f
-                },
-                // per-instance fetch
-                {
-                    .location = 10,
-                    .srcIdx = 2,
-                    .offset = 0,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 11,
-                    .srcIdx = 2,
-                    .offset = 4,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 12,
-                    .srcIdx = 2,
-                    .offset = 8,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 13,
-                    .srcIdx = 2,
-                    .offset = 12,
-                    .fmt = avxFormat_R32u
-                }
+                AVX_VERTEX_ATTR(0, 0, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(1, 12, avxFormat_R8u),
+                AVX_VERTEX_ATTR(3, 0, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(6, 12, avxFormat_RG32f),
+                // per instance
+                AVX_VERTEX_ATTR(10, 0, avxFormat_R32u),
+                AVX_VERTEX_ATTR(11, 4, avxFormat_R32u),
+                AVX_VERTEX_ATTR(12, 8, avxFormat_R32u),
+                AVX_VERTEX_ATTR(13, 12, avxFormat_R32u),
             }
         };
 
@@ -983,78 +829,23 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             .srcCnt = 3,
             .srcs =
             {
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 0
-                },
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 1
-                },
-                {
-                    .instanceRate = 1,
-                    .srcIdx = 2
-                }
+                AVX_VERTEX_FETCH(0, 0, 0, 0, 3),
+                AVX_VERTEX_FETCH(1, 0, 0, 3, 2),
+                AVX_VERTEX_FETCH(2, 0, 1, 5, 4)
             },
-            .attrCnt = 9,
             .attrs =
             {
                 // per-vertex fetch
-                {
-                    .location = 0,
-                    .srcIdx = 0,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 1,
-                    .srcIdx = 0,
-                    .offset = 12,
-                    .fmt = avxFormat_RG32f
-                },
-                {
-                    .location = 2,
-                    .srcIdx = 0,
-                    .offset = 20,
-                    .fmt = avxFormat_RG8u
-                },
-                {
-                    .location = 3,
-                    .srcIdx = 1,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 6,
-                    .srcIdx = 1,
-                    .offset = 12,
-                    .fmt = avxFormat_RG32f
-                },
+                AVX_VERTEX_ATTR(0, 0, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(1, 12, avxFormat_RG32f),
+                AVX_VERTEX_ATTR(2, 20, avxFormat_RG8u),
+                AVX_VERTEX_ATTR(3, 0, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(6, 12, avxFormat_RG32f),
                 // per-instance fetch
-                {
-                    .location = 10,
-                    .srcIdx = 2,
-                    .offset = 0,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 11,
-                    .srcIdx = 2,
-                    .offset = 4,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 12,
-                    .srcIdx = 2,
-                    .offset = 8,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 13,
-                    .srcIdx = 2,
-                    .offset = 12,
-                    .fmt = avxFormat_R32u
-                }
+                AVX_VERTEX_ATTR(10, 0, avxFormat_R32u),
+                AVX_VERTEX_ATTR(11, 4, avxFormat_R32u),
+                AVX_VERTEX_ATTR(12, 8, avxFormat_R32u),
+                AVX_VERTEX_ATTR(13, 12, avxFormat_R32u)
             }
         };
 
@@ -1068,78 +859,23 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             .srcCnt = 3,
             .srcs =
             {
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 0
-                },
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 1
-                },
-                {
-                    .instanceRate = 1,
-                    .srcIdx = 2
-                }
+                AVX_VERTEX_FETCH(0, 0, 0, 0, 3),
+                AVX_VERTEX_FETCH(1, 0, 0, 3, 2),
+                AVX_VERTEX_FETCH(2, 0, 1, 5, 4)
             },
-            .attrCnt = 9,
             .attrs =
             {
                 // per-vertex fetch
-                {
-                    .location = 0,
-                    .srcIdx = 0,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 1,
-                    .srcIdx = 0,
-                    .offset = 12,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 2,
-                    .srcIdx = 0,
-                    .offset = 24,
-                    .fmt = avxFormat_RGB8u
-                },
-                {
-                    .location = 3,
-                    .srcIdx = 1,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 6,
-                    .srcIdx = 1,
-                    .offset = 12,
-                    .fmt = avxFormat_RG32f
-                },
+                AVX_VERTEX_ATTR(0, 0, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(1, 12, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(2, 24, avxFormat_RGB8u),
+                AVX_VERTEX_ATTR(3, 0, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(6, 12, avxFormat_RG32f),
                 // per-instance fetch
-                {
-                    .location = 10,
-                    .srcIdx = 2,
-                    .offset = 0,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 11,
-                    .srcIdx = 2,
-                    .offset = 4,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 12,
-                    .srcIdx = 2,
-                    .offset = 8,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 13,
-                    .srcIdx = 2,
-                    .offset = 12,
-                    .fmt = avxFormat_R32u
-                }
+                AVX_VERTEX_ATTR(10, 0, avxFormat_R32u),
+                AVX_VERTEX_ATTR(11, 4, avxFormat_R32u),
+                AVX_VERTEX_ATTR(12, 8, avxFormat_R32u),
+                AVX_VERTEX_ATTR(13, 12, avxFormat_R32u),
             }
         };
 
@@ -1153,78 +889,24 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             .srcCnt = 3,
             .srcs =
             {
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 0
-                },
-                {
-                    .instanceRate = 0,
-                    .srcIdx = 1
-                },
-                {
-                    .instanceRate = 1,
-                    .srcIdx = 2
-                }
+                AVX_VERTEX_FETCH(0, 0, 0, 0, 3),
+                AVX_VERTEX_FETCH(1, 0, 0, 3, 2),
+                AVX_VERTEX_FETCH(2, 0, 1, 5, 4)
             },
-            .attrCnt = 9,
+            //.srcs[0].attrCnt = 9,
             .attrs =
             {
                 // per-vertex fetch
-                {
-                    .location = 0,
-                    .srcIdx = 0,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 1,
-                    .srcIdx = 0,
-                    .offset = 12,
-                    .fmt = avxFormat_RGBA32f
-                },
-                {
-                    .location = 2,
-                    .srcIdx = 0,
-                    .offset = 28,
-                    .fmt = avxFormat_RGBA8u
-                },
-                {
-                    .location = 3,
-                    .srcIdx = 1,
-                    .offset = 0,
-                    .fmt = avxFormat_RGB32f
-                },
-                {
-                    .location = 6,
-                    .srcIdx = 1,
-                    .offset = 12,
-                    .fmt = avxFormat_RG32f
-                },
+                AVX_VERTEX_ATTR(0, 0, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(1, 12, avxFormat_RGBA32f),
+                AVX_VERTEX_ATTR(2, 28, avxFormat_RGBA8u),
+                AVX_VERTEX_ATTR(3, 0, avxFormat_RGB32f),
+                AVX_VERTEX_ATTR(6, 12, avxFormat_RG32f),
                 // per-instance fetch
-                {
-                    .location = 10,
-                    .srcIdx = 2,
-                    .offset = 0,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 11,
-                    .srcIdx = 2,
-                    .offset = 4,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 12,
-                    .srcIdx = 2,
-                    .offset = 8,
-                    .fmt = avxFormat_R32u
-                },
-                {
-                    .location = 13,
-                    .srcIdx = 2,
-                    .offset = 12,
-                    .fmt = avxFormat_R32u
-                }
+                AVX_VERTEX_ATTR(10, 0, avxFormat_R32u),
+                AVX_VERTEX_ATTR(11, 4, avxFormat_R32u),
+                AVX_VERTEX_ATTR(12, 8, avxFormat_R32u),
+                AVX_VERTEX_ATTR(13, 12, avxFormat_R32u),
             }
         };
 
@@ -1278,26 +960,10 @@ _ASX afxError _AfxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             afxByte* mtlboPtr = NIL;
             avxBufferedMap maps[] =
             {
-                {
-                    .buf = rnd->framesets[i].objUbo,
-                    .offset = 0,
-                    .range = AvxGetBufferCapacity(rnd->framesets[i].objUbo, 0)
-                },
-                {
-                    .buf = rnd->framesets[i].biasMapUbo,
-                    .offset = 0,
-                    .range = AvxGetBufferCapacity(rnd->framesets[i].biasMapUbo, 0)
-                },
-                {
-                    .buf = rnd->framesets[i].mtlUbo,
-                    .offset = 0,
-                    .range = AvxGetBufferCapacity(rnd->framesets[i].mtlUbo, 0)
-                },
-                {
-                    .buf = rnd->framesets[i].icbo,
-                    .offset = 0,
-                    .range = AvxGetBufferCapacity(rnd->framesets[i].icbo, 0)
-                }
+                AVX_BUFFERED_MAP(rnd->framesets[i].objUbo, 0, AvxGetBufferCapacity(rnd->framesets[i].objUbo, 0), 0),
+                AVX_BUFFERED_MAP(rnd->framesets[i].biasMapUbo, 0, AvxGetBufferCapacity(rnd->framesets[i].biasMapUbo, 0), 0),
+                AVX_BUFFERED_MAP(rnd->framesets[i].mtlUbo, 0, AvxGetBufferCapacity(rnd->framesets[i].mtlUbo, 0), 0),
+                AVX_BUFFERED_MAP(rnd->framesets[i].icbo, 0, AvxGetBufferCapacity(rnd->framesets[i].icbo, 0), 0)
             };
 
             if (AvxMapBuffers(dsys, ARRAY_SIZE(maps), maps, (void**[]) {&mtboPtr, &bmboPtr, &mtlboPtr, &icboPtr }))

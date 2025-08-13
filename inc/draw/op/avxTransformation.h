@@ -23,7 +23,7 @@
 #ifndef AVX_TRANSFORMATION_H
 #define AVX_TRANSFORMATION_H
 
-#include "qwadro/inc/draw/math/avxViewport.h"
+#include "qwadro/inc/math/avxViewport.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/draw/io/avxRaster.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
@@ -40,7 +40,7 @@ AVX afxCmdId            AvxCmdDeclareVertex
 
 /*
     Bind vertex buffers to a draw context and dynamically set strides.
-    The values taken from elements #i of @buf and @offset replace the current state for the vertex input binding @baseIdx + #i, for #i in [0, @cnt].
+    The values taken from elements #i of @buf and @offset replace the current state for the vertex input binding @basePin + #i, for #i in [0, @cnt].
     The vertex input binding is updated to start at the offset indicated by @offset[#i] from the start of the buffer @buf[#i].
     If @range is not NIL then @range[#i] specifies the bound size of the vertex buffer starting from the corresponding elements of @buf[#i] plus @offset[#i].
     If @range[#i] is WHOLE_SIZE then the bound size is from @buf[#i] plus @offset[#i] to the end of the buffer @buf[#i].
@@ -55,7 +55,7 @@ AVX afxCmdId            AvxCmdBindVertexBuffers
 (
     afxDrawContext      dctx,
     // The index of the first vertex input binding whose state is updated by the command.
-    afxUnit             baseSlotIdx,
+    afxUnit             basePin,
     // The number of vertex input bindings whose state is updated by the command.
     afxUnit             cnt,
     // An array of info to set up the avxBuffer-backed streams.

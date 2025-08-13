@@ -24,10 +24,10 @@
 #define AVX_TRANSFERENCE_H
 
 //#include "qwadro/inc/draw/io/avxRaster.h"
-#include "qwadro/inc/math/afxWhd.h"
+#include "qwadro/inc/math/afxWarp.h"
 #include "qwadro/inc/draw/op/avxSampler.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
-#include "qwadro/inc/draw/math/avxViewport.h"
+#include "qwadro/inc/math/avxViewport.h"
 
 #define AVX_BUFFER_UPDATE_CAPACITY (65536)
 
@@ -50,7 +50,7 @@ AFX_DEFINE_STRUCT(avxRasterRegion)
     // The initial x, y, z offsets in texels of the sub-region of the source or destination avxRaster data.
     avxOrigin       origin;
     // The size in texels of the avxRaster to copy in width, height and depth.
-    avxRange        extent;
+    avxRange        whd;
 };
 
 AFX_DEFINE_STRUCT(avxRasterCopy)
@@ -97,7 +97,7 @@ AVX afxCmdId                AvxCmdClearBuffer
     // The buffer to be zeroed.
     avxBuffer               buf,
     // The byte offset into the buffer at which to start filling, and must be a multiple of 4.
-    afxUnit                 offset,
+    afxSize                 offset,
     // The number of bytes to zero, and must be either a multiple of 4, or 0 to zero the range from offset to the end of the buffer. 
     // If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.    
     afxUnit                 range
@@ -110,7 +110,7 @@ AVX afxCmdId                AvxCmdFillBuffer
     // The buffer to be filled.
     avxBuffer               buf,
     // The byte offset into the buffer at which to start filling, and must be a multiple of 4.
-    afxUnit                 offset,
+    afxSize                 offset,
     // The number of bytes to fill, and must be either a multiple of 4, or 0 to fill the range from offset to the end of the buffer. 
     // If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.
     afxUnit                 range,
@@ -126,7 +126,7 @@ AVX afxCmdId                AvxCmdUpdateBuffer
     // The buffer to be updated.
     avxBuffer               buf,
     // The byte offset into the buffer to start updating, and must be a multiple of 4.
-    afxUnit                 offset,
+    afxSize                 offset,
     // The number of bytes to update, and must be a multiple of 4.
     afxUnit                 range,
     // The source data for the buffer update, and must be at least @range bytes in size.
@@ -137,14 +137,14 @@ AVX afxCmdId                AvxCmdCopyBuffer
 // Copy data between avxBuffer regions.
 (
     afxDrawContext          dctx,
-    // The source buffer.
-    avxBuffer               src,
     // The destination buffer.
     avxBuffer               dst,
     // The number of regions to copy.
     afxUnit                 opCnt,
     // An array of structures specifying the regions to copy.
-    avxBufferCopy const     ops[]
+    avxBufferCopy const     ops[],
+    // The source buffer.
+    avxBuffer               src
 );
 
 AVX afxCmdId                AvxCmdClearRaster
@@ -153,54 +153,54 @@ AVX afxCmdId                AvxCmdClearRaster
     afxDrawContext          dctx,
     // The avxRaster to be cleared.
     avxRaster               ras,
-    // A structure containing the values that the avxRaster subresource ranges will be cleared to.
-    avxClearValue const*    value,
     // The number of avxRaster subresource ranges.
     afxUnit                 opCnt,
     // An array of structures describing a range of mipmap levels, array layers, and aspects to be cleared.
-    avxRasterBlock const    ops[]
+    avxRasterBlock const    ops[],
+    // A structure containing the values that the avxRaster subresource ranges will be cleared to.
+    avxClearValue           value
 );
 
 AVX afxCmdId                AvxCmdCopyRaster
 // Copy data between avxRaster's.
 (
     afxDrawContext          dctx,
-    // The source avxRaster.
-    avxRaster               src,
     // The destination avxRaster.
     avxRaster               dst,
     // The number of regions to copy.
     afxUnit                 opCnt,
     // An array of structures specifying the regions to copy.
-    avxRasterCopy const     ops[]
+    avxRasterCopy const     ops[],
+    // The source avxRaster.
+    avxRaster               src
 );
 
 AVX afxCmdId                AvxCmdResolveRaster
 // Resolve regions of an avxRaster.
 (
     afxDrawContext          dctx,
-    // The source avxRaster.
-    avxRaster               src,
     // The destination avxRaster.
     avxRaster               dst,
     // The number of regions to resolve.
     afxUnit                 opCnt,
     // An array of structures specifying the regions to resolve.
-    avxRasterCopy const     ops[]
+    avxRasterCopy const     ops[],
+    // The source avxRaster.
+    avxRaster               src
 );
 
 AVX afxCmdId                AvxCmdBlitRaster
 // Copy regions of an avxRaster, potentially performing format conversion.
 (
     afxDrawContext          dctx,
-    // The source avxRaster.
-    avxRaster               src,
     // The destination avxRaster.
     avxRaster               dst,
     // The number of regions to blit.
     afxUnit                 opCnt,
     // An array of structures specifying the regions to blit.
     avxRasterBlit const     ops[],
+    // The source avxRaster.
+    avxRaster               src,
     // A avxTexelFilter specifying the filter to apply if the blits require scaling.
     avxTexelFilter          flt
 );
@@ -211,12 +211,12 @@ AVX afxCmdId                AvxCmdPackRaster
     afxDrawContext          dctx,
     // The source avxRaster.
     avxRaster               ras,
-    // The destination buffer.
-    avxBuffer               buf,
     // The number of regions to copy.
     afxUnit                 opCnt,
     // An array of structures specifying the regions to copy.
-    avxRasterIo const       ops[]
+    avxRasterIo const       ops[],
+    // The destination buffer.
+    avxBuffer               buf
 );
 
 AVX afxCmdId                AvxCmdUnpackRaster
@@ -225,23 +225,23 @@ AVX afxCmdId                AvxCmdUnpackRaster
     afxDrawContext          dctx,
     // The destination avxRaster.
     avxRaster               ras,
-    // The source buffer.
-    avxBuffer               buf,
     // The number of regions to copy.
     afxUnit                 opCnt,
     // An array of structures specifying the regions to copy.
-    avxRasterIo const       ops[]
+    avxRasterIo const       ops[],
+    // The source buffer.
+    avxBuffer               buf
 );
 
 
 
-AVX afxCmdId                AvxCmdSubsampleRaster
-// Generate mipmaps for a avxRaster.
+AVX afxCmdId                AvxCmdRegenerateMipmapsSIGMA
+// Regenerate mipmaps for an array of avxRaster.
 (
     afxDrawContext          dctx,
-    avxRaster               ras,
-    afxUnit                 baseLod,
-    afxUnit                 lodCnt
+    afxFlags                flags,
+    afxUnit                 rasCnt,
+    avxRaster               rasters[]
 );
 
 #endif//AVX_TRANSFERENCE_H

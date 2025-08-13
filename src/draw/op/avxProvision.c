@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 
 _AVX afxCmdId AvxCmdExecuteCommands(afxDrawContext dctx, afxUnit cnt, afxDrawContext aux[], afxUnit const batches[])
 {
@@ -68,7 +68,7 @@ _AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, afxUnit segment, avxPipeli
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxBufferedMap const maps[])
+_AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit pin, afxUnit cnt, avxBufferedMap const maps[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -82,7 +82,7 @@ _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseId
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindBuffers), sizeof(cmd->BindBuffers) + (cnt * sizeof(cmd->BindBuffers.maps[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->BindBuffers.set = set;
-    cmd->BindBuffers.baseIdx = baseIdx;
+    cmd->BindBuffers.pin = pin;
     cmd->BindBuffers.cnt = cnt;
 
     for (afxUnit i = 0; i < cnt; i++)
@@ -95,7 +95,7 @@ _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit baseId
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxRaster const rasters[])
+_AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit pin, afxUnit cnt, avxRaster const rasters[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -109,7 +109,7 @@ _AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseId
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindRasters), sizeof(cmd->BindRasters) + (cnt * sizeof(cmd->BindRasters.rasters[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->BindRasters.set = set;
-    cmd->BindRasters.baseIdx = baseIdx;
+    cmd->BindRasters.pin = pin;
     cmd->BindRasters.cnt = cnt;
 
     for (afxUnit i = 0; i < cnt; i++)
@@ -119,7 +119,7 @@ _AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit baseId
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit baseIdx, afxUnit cnt, avxSampler const samplers[])
+_AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit pin, afxUnit cnt, avxSampler const samplers[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -133,7 +133,7 @@ _AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit baseI
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindSamplers), sizeof(cmd->BindSamplers) + (cnt * sizeof(cmd->BindSamplers.samplers[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->BindSamplers.set = set;
-    cmd->BindSamplers.baseIdx = baseIdx;
+    cmd->BindSamplers.pin = pin;
     cmd->BindSamplers.cnt = cnt;
 
     for (afxUnit i = 0; i < cnt; i++)

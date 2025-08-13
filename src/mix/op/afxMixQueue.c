@@ -19,7 +19,7 @@
 #define _AMX_MIX_C
 #define _AMX_MIX_BRIDGE_C
 #define _AMX_MIX_QUEUE_C
-#include "../impl/amxImplementation.h"
+#include "../ddi/amxImplementation.h"
 
 _AMX afxError _AmxMqueUnlockIoReqChain(afxMixQueue mque)
 {
@@ -102,7 +102,7 @@ _AMX afxError _AmxMquePushIoReqPacket(afxMixQueue mque, afxUnit id, afxUnit siz,
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxMixDevice AfxGetMixQueueDevice(afxMixQueue mque)
+_AMX afxMixDevice AmxGetMixQueueDevice(afxMixQueue mque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
@@ -113,20 +113,13 @@ _AMX afxMixDevice AfxGetMixQueueDevice(afxMixQueue mque)
     return mdev;
 }
 
-_AMX afxMixSystem AfxGetMixQueueContext(afxMixQueue mque)
+_AMX afxMixSystem AmxGetMixQueueSystem(afxMixQueue mque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     afxMixSystem msys = mque->msys;
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     return msys;
-}
-
-_AMX afxUnit AfxGetMixQueuePort(afxMixQueue mque)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    return mque->portId;
 }
 
 _AMX afxError _AmxMqueDtorCb(afxMixQueue mque)
@@ -154,9 +147,9 @@ _AMX afxError _AmxMqueCtorCb(afxMixQueue mque, void** args, afxUnit invokeNo)
     AFX_ASSERT(cfg);
 
     mque->mdev = cfg->mdev;
-    mque->portId = cfg->portId;
+    //mque->portId = cfg->portId;
     mque->exuIdx = cfg->exuIdx;
-    mque->msys = AmxGetBridgedMixSystem(mexu);
+    mque->msys = AmxGetBridgedMixSystem(mexu, NIL);
 
     mque->immediate = 0;// !!spec->immedate;
 

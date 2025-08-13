@@ -36,19 +36,26 @@
 // No Qwadro, usamos, como estilo de programação, muitos parênteses irrelevantes. 
 // Eles existem para fins didáticos mesmo, facilitando a vida de pessoas que não conhecem o princípio de precedência de PEMDAS.
 
-#include <math.h>
-#include "qwadro/inc/base/afxDebug.h"
-#include "qwadro/inc/math/afxSimd.h"
-//#include <stdalign.h>
-
 // AFX always targets a another object rather than 'self' to avoid using intermediate objects inside functions. It optimizes code when operations on a object type are grouped continously.
 // That means "AfxNormalizeObject(self, to)" always should export to "to" instead of doing action in place.
 
 // Qwadro uses radians as default angle measurement unit. They are natural and faster.
 
-#define MFX_USE_EXPERIMENTAL
-#define MFX_USE_RW_MATH // use RenderWare over Qwadro conventions
-//#define MFX_ALIGN_ALL // force SIMD alignment to afxV3d and other types.
+#include <math.h>
+#include "qwadro/inc/base/afxDebug.h"
+#include "qwadro/inc/math/afxSimd.h"
+//#include <stdalign.h>
+
+#ifdef AFX_ON_WINDOWS
+/*
+    __vectorcall is a Microsoft-specific calling convention introduced to pass vector types via registers,
+    not the stack, improve performance for functions involving SIMD types, reduce overhead of copying 128-bit/256-bit vectors.
+    It's part of MSVC's ABI, and also supported by Clang when targeting Windows (x86/x64) platforms.
+*/
+#   define AFXCALLV __vectorcall
+#else
+#   define AFXCALLV 
+#endif
 
 #define AFX_R(x_)   (x_)
 
@@ -116,7 +123,7 @@ typedef afxV4d  AFX_SIMD afxVector;
 typedef afxV4d  AFX_SIMD afxPoint;
 typedef afxM4d  AFX_SIMD afxMatrix;
 
-//typedef  afxUnit afxWhd[3];
+//typedef  afxUnit afxWarp[3];
 
 #ifdef MFX_ALIGN_ALL
 AFX_STATIC_ASSERT(__alignof(afxV2d) == AFX_SIMD_ALIGNMENT, "");
@@ -129,6 +136,10 @@ AFX_STATIC_ASSERT(__alignof(afxV4d) == AFX_SIMD_ALIGNMENT, "");
 AFX_STATIC_ASSERT(__alignof(afxQuat) == AFX_SIMD_ALIGNMENT, "");
 AFX_STATIC_ASSERT(__alignof(afxRotor) == AFX_SIMD_ALIGNMENT, "");
 AFX_STATIC_ASSERT(__alignof(afxMatrix) == AFX_SIMD_ALIGNMENT, "");
+
+#define MFX_USE_EXPERIMENTAL
+#define MFX_USE_RW_MATH // use RenderWare over Qwadro conventions
+//#define MFX_ALIGN_ALL // force SIMD alignment to afxV3d and other types.
 
 AFXINL void         AfxV2dNdc(afxV2d v, afxV2d const b, afxV2d const total);
 AFXINL void         AfxV2dUnndc(afxV2d v, afxV2d const b, afxV2d const total);

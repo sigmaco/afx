@@ -39,7 +39,7 @@ _ASX afxBool AfxGetBodyModel(afxBody bod, afxModel* model)
     return (mdl != NIL);
 }
 
-_ASX afxBool AfxGetBodyPose(afxBody bod, afxPose* pose)
+_ASX afxBool AfxGetBodyPose(afxBody bod, afxPose* pose, afxPlacement* placement)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
@@ -47,6 +47,10 @@ _ASX afxBool AfxGetBodyPose(afxBody bod, afxPose* pose)
     AFX_TRY_ASSERT_OBJECTS(afxFcc_POSE, 1, &pos);
     AFX_ASSERT(pose);
     *pose = pos;
+
+    if (placement)
+        *placement = bod->placement;
+
     return (pos != NIL);
 }
 
@@ -57,7 +61,7 @@ _ASX afxUnit AfxCountBodyMotives(afxBody bod)
     return bod->motives.cnt;
 }
 
-_ASX void AfxUpdateBodyMotives(afxBody bod, afxReal newClock)
+_ASX void AfxStepBodyMotives(afxBody bod, afxReal newClock)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
@@ -71,7 +75,7 @@ _ASX void AfxUpdateBodyMotives(afxBody bod, afxReal newClock)
     {
         afxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
-        AfxUpdateCapstanClock(newClock, 1, &moto);
+        AfxStepCapstans(newClock, 1, &moto);
     }
 }
 
@@ -108,9 +112,10 @@ _ASX void AfxRecenterBodyMotiveClocks(afxBody bod, afxReal currClock)
     }
 }
 
-_ASX void AfxQueryBodyRootMotionVectors(afxBody bod, afxReal secsElapsed, afxBool inverse, afxV3d translation, afxV3d rotation)
+_ASX void AsxComputeBodyMotionVectors(afxBody bod, afxReal secsElapsed, afxBool inverse, afxV3d translation, afxV3d rotation)
 {
     // AfxGetBodyRootMotionVectors
+    // AfxQueryBodyRootMotionVectors
 
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
@@ -141,14 +146,14 @@ _ASX void AfxQueryBodyRootMotionVectors(afxBody bod, afxReal secsElapsed, afxBoo
     }
 }
 
-_ASX void AfxUpdateBodyMatrix(afxBody bod, afxReal secsElapsed, afxBool inverse, afxM4d const mm, afxM4d m)
+_ASX void AsxComputeBodyMotionMatrix(afxBody bod, afxReal secsElapsed, afxBool inverse, afxM4d const mm, afxM4d m)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
 
     afxV4d t, r;
-    AfxQueryBodyRootMotionVectors(bod, secsElapsed, inverse, t, r);
-    AfxApplyMatrixRootMotionVectors(t, r, mm, m);
+    AsxComputeBodyMotionVectors(bod, secsElapsed, inverse, t, r);
+    AfxM4dApplyRigidMotion(m, mm, r, t);
 }
 
 _ASX void AfxAccumulateBodyAnimations(afxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose rslt, afxReal allowedErr, afxUnit const sparseJntMap[])
@@ -357,6 +362,42 @@ _ASX void AfxApplyForceAndTorque(afxBody bod, afxV3d const force, afxV3d const t
     AfxV3dAdd(bod->rigid.torque, bod->rigid.torque, torque);
 }
 
+_ASX afxError AfxNodulateBody(afxBody bod, afxUnit basePartIdx, afxUnit cnt, afxNode nod, void(*sync)(afxNodular*), afxFlags flags, afxMask mask)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+    AFX_ASSERT_RANGE(bod->partCnt, basePartIdx, cnt);
+
+    for (afxUnit i = 0; i < bod->partCnt; i++)
+    {
+        afxUnit partIdx = basePartIdx + i;
+        afxBodyPart* part = &bod->parts[partIdx];
+
+        afxNode curr = AfxGetLinker(&part->nodr.nod);
+
+        if (curr != nod)
+        {
+            if (curr)
+            {
+                AFX_ASSERT_OBJECTS(afxFcc_NOD, 1, &curr);
+                AfxPopLink(&part->nodr);
+            }
+
+            if (nod)
+            {
+                AFX_ASSERT_OBJECTS(afxFcc_NOD, 1, &nod);
+                AfxPushLink(&part->nodr, &nod->nodulars);
+            }
+        }
+
+        part->nodr.mask = mask;
+        part->nodr.flags = flags;
+        if (sync) part->nodr.sync = sync;
+    }
+
+    return err;
+}
+
 _ASX afxError _AsxBodDtorCb(afxBody bod)
 {
     afxError err = AFX_ERR_NONE;
@@ -375,6 +416,21 @@ _ASX afxError _AsxBodDtorCb(afxBody bod)
     if (bod->pose)
         AfxDisposeObjects(1, &bod->pose);
 
+    if (bod->placement)
+        AfxDisposeObjects(1, &bod->placement);
+
+    if (bod->parts)
+    {
+        afxObjectStash bodpStash =
+        {
+            .cnt = bod->partCnt,
+            .siz = sizeof(bod->parts[0]),
+            .var = &bod->parts,
+        };
+        if (AfxDeallocateInstanceData(bod, 1, &bodpStash))
+            AfxThrowError();
+    }
+
     return err;
 }
 
@@ -385,13 +441,40 @@ _ASX afxError _AsxBodCtorCb(afxBody bod, void** args, afxUnit invokeNo)
 
     afxSimulation sim = args[0];
     afxModel mdl = args[1];
-    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
 
-    AfxReacquireObjects(1, &mdl);
-    bod->mdl = mdl;
     AfxDeployChain(&bod->motives, bod);
     bod->reserved0 = 0;
     bod->reserved1 = 0;
+
+    AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
+    afxUnit jntCnt = AsxCountJoints(mdl, 0);
+
+    afxModelInfo mdli;
+    AfxDescribeModel(mdl, &mdli);
+
+    afxObjectStash bodpStash =
+    {
+        .cnt = mdli.rigCnt,
+        .siz = sizeof(bod->parts[0]),
+        .var = &bod->parts,
+    };
+    if (AfxAllocateInstanceData(bod, 1, &bodpStash))
+    {
+        AfxThrowError();
+    }
+
+    AFX_ASSERT(bod->parts);
+    bod->partCnt = mdli.rigCnt;
+
+    for (afxUnit i = 0; i < bod->partCnt; i++)
+    {
+        afxBodyPart* part = &bod->parts[i];
+        *part = (afxBodyPart) { 0 };
+        part->rigIdx = i; // actually 1:1
+    }
+
+    AfxReacquireObjects(1, &mdl);
+    bod->mdl = mdl;
 
     AfxV3dZero(bod->rigid.x); // Initial position (m)
     AfxV3dZero(bod->rigid.v); // Initial velocity (m/s)
@@ -404,9 +487,8 @@ _ASX afxError _AsxBodCtorCb(afxBody bod, void** args, afxUnit invokeNo)
     AfxM3dZero(bod->rigid.Ibody); // Moment of inertia (kg*m^2)
     bod->rigid.mass = 0; // Mass in kg
 
-    AfxM4dReset(bod->placement);
-
-    AfxAcquirePoses(sim, 1, (afxUnit[]) { AsxCountJoints(mdl, 0) }, &bod->pose);
+    AfxAcquirePoses(sim, 1, (afxUnit[]) { jntCnt }, &bod->pose);
+    AfxAcquirePlacements(sim, 1, (afxUnit[]) { jntCnt }, NIL, &bod->placement);
 
     return err;
 }
@@ -456,6 +538,3 @@ _ASX afxError AfxAcquireBodies(afxSimulation sim, afxModel mdl, afxUnit cnt, afx
 
     return err;
 }
-
-
-

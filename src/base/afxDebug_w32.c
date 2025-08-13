@@ -26,6 +26,9 @@
 #include <float.h>
 #include <Windows.h>
 #include <Shlwapi.h>
+#include <stdio.h>
+#include <windows.h>
+#include <intrin.h>
 //#include <Mmsystem.h>
 #pragma comment (lib, "Shlwapi")
 
@@ -491,8 +494,8 @@ _AFXINL afxResult _AfxDbgUnlock(void)
         //else
         {
             debugger.isLocked = FALSE;
-            rslt = AfxUnlockMutex(&(debugger.mtx));
             AfxSignalCondition(&debugger.cond);
+            rslt = AfxUnlockMutex(&(debugger.mtx));
             afxSystem sys;
 
             if (AfxGetSystem(&sys))
@@ -568,32 +571,33 @@ void sigHandler(int s)
     {
     case SIGTERM:
     {
-        _AfxReportFn(0, "\aEXCEPTION: termination request, sent to the program.", 0);
+        _AfxReportFn(9, "\aEXCEPTION: termination request, sent to the program.", 0);
         break;
     }
     case SIGSEGV:
     {
-        _AfxReportFn(0, "\aEXCEPTION: Invalid memory access (segmentation fault).", 0);
+        _AfxReportFn(9, "\aEXCEPTION: Invalid memory access (segmentation fault).", 0);
         break;
     }
     case SIGINT:
     {
-        _AfxReportFn(0, "\aEXCEPTION: External interrupt, usually initiated by the user.", 0);
+        _AfxReportFn(9, "\aEXCEPTION: External interrupt, usually initiated by the user.", 0);
         break;
     }
     case SIGILL:
     {
-        _AfxReportFn(0, "\aEXCEPTION: Invalid program image, such as invalid instruction.", 0);
+        _AfxReportFn(9, "\aEXCEPTION: Invalid program image, such as invalid instruction.", 0);
         break;
     }
     case SIGABRT:
+    case SIGABRT_COMPAT:
     {
-        _AfxReportFn(0, "\aEXCEPTION: Abnormal termination condition, as is e.g. initiated by abort().", 0);
+        _AfxReportFn(9, "\aEXCEPTION: Abnormal termination condition, as is e.g. initiated by abort().", 0);
         break;
     }
     case SIGFPE:
     {
-        _AfxReportFn(0, "\aEXCEPTION: Erroneous arithmetic operation such as divide by zero.", 0);
+        _AfxReportFn(9, "\aEXCEPTION: Erroneous arithmetic operation such as divide by zero.", 0);
         break;
     }
     default: break;
@@ -707,6 +711,122 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
             if (AfxReacquireConsole())
             {
                 //_AfxDbgUnlock();
+
+
+                {
+                    int cpuInfo[4];
+                    char name[49] = { 0 };
+
+                    for (int i = 0; i < 3; i++) {
+                        __cpuid(cpuInfo, 0x80000002 + i);
+                        memcpy(name + i * 16, cpuInfo, sizeof(cpuInfo));
+                    }
+
+                    printf("%s\n", name);
+                }
+
+                {
+                    int cpuInfo[4] = { 0 };
+                    char vendor[13] = { 0 };
+
+                    __cpuid(cpuInfo, 0);
+                    *((int *)&vendor[0]) = cpuInfo[1];  // EBX
+                    *((int *)&vendor[4]) = cpuInfo[3];  // EDX
+                    *((int *)&vendor[8]) = cpuInfo[2];  // ECX
+
+                    int cpuInfo1[4] = { 0 };
+                    __cpuid(cpuInfo1, 1); // Function 1 gives feature + model info
+
+                    int stepping = cpuInfo1[0] & 0xF;
+                    int model = (cpuInfo1[0] >> 4) & 0xF;
+                    int family = (cpuInfo1[0] >> 8) & 0xF;
+                    int ext_model = (cpuInfo1[0] >> 16) & 0xF;
+                    int ext_family = (cpuInfo1[0] >> 20) & 0xFF;
+
+                    int m = model, f = family;
+                    if (family == 6 || family == 15)
+                        m = model + (ext_model << 4);
+                    if (family == 15)
+                        f = family + ext_family;
+
+                    printf(" %s F%d/XF%d/FXF%d/M%d/XM%d/MXM%d/S%d\n", vendor, family, ext_family, f, model, ext_model, m, stepping);
+                }
+
+                {
+                    int cpuInfo[4];
+                    __cpuid(cpuInfo, 1);
+
+                    printf(" CPU features:");
+                    if (cpuInfo[3] & (1 << 4))   printf(" TSC,");
+                    if (cpuInfo[3] & (1 << 23))  printf(" MMX,");
+                    if (cpuInfo[3] & (1 << 25))  printf(" SSE,");
+                    if (cpuInfo[3] & (1 << 26))  printf(" SSE2,");
+                    if (cpuInfo[2] & (1 << 0))   printf(" SSE3,");
+                    if (cpuInfo[2] & (1 << 9))   printf(" SSSE3,");
+                    if (cpuInfo[2] & (1 << 19))  printf(" SSE4.1,");
+                    if (cpuInfo[2] & (1 << 20))  printf(" SSE4.2,");
+                    if (cpuInfo[2] & (1 << 28))  printf(" AVX,");
+                    if (cpuInfo[2] & (1 << 3))   printf(" MONITOR/MWAIT,");
+
+                    // Check extended features
+                    int regs[4];
+                    __cpuidex(regs, 7, 0);
+                    //printf("* CPU features (Extended)\n");
+                    if (regs[1] & (1 << 5)) printf(" AVX2,");
+                    if (regs[1] & (1 << 3)) printf(" BMI1,");
+                    if (regs[1] & (1 << 8)) printf(" BMI2,");
+                    if (regs[1] & (1 << 7)) printf(" SMEP,");
+                    if (regs[1] & (1 << 2)) printf(" SGX,");
+
+                    printf("\b \n"); // remove trailing comma
+                }
+
+                {
+                    SYSTEM_INFO sysInfo;
+                    GetSystemInfo(&sysInfo);
+                    printf(" CPU cores/threads: %lu/%lu\n",
+                        sysInfo.dwNumberOfProcessors, sysInfo.dwNumberOfProcessors);
+
+                    // Note: For physical core count, we'd need to use GetLogicalProcessorInformation().
+                }
+
+                {
+                    int regs[4];
+                    __cpuid(regs, 0x16);
+                    printf(" CPU Base Freq %d MHz; Max Freq %d MHz; Bus (Ref) Freq %d MHz\n", regs[0], regs[1], regs[2]);
+                    
+                    if (regs[0] == 0)
+                        printf("Not available (function 0x16 unsupported)\n\n");
+
+                    LARGE_INTEGER freq;
+                    if (QueryPerformanceFrequency(&freq)) {
+                        printf(" CPU Approx. base freq: %.2f MHz\n", freq.QuadPart / 1e6);
+                    }
+                    else {
+                        printf(" CPU frequency not available.\n");
+                    }
+                }
+
+                {
+                    int regs[4];
+                    for (int i = 0; ; ++i) {
+                        __cpuidex(regs, 4, i);
+                        int cache_type = regs[0] & 0x1F;
+                        if (cache_type == 0) break; // No more caches
+
+                        const char* level_str = (regs[0] >> 5) & 0x7 ? "Unified" : "Data/Instruction";
+                        int level = (regs[0] >> 5) & 0x7;
+                        int line_size = (regs[1] & 0xFFF) + 1;
+                        int partitions = ((regs[1] >> 12) & 0x3FF) + 1;
+                        int ways = ((regs[1] >> 22) & 0x3FF) + 1;
+                        int sets = regs[2] + 1;
+                        int size_kb = ways * partitions * line_size * sets / 1024;
+
+                        printf(" L%d Cache: %d KB (%s)\n", level, size_kb, level_str);
+                    }
+                    printf("\n");
+                }
+
                 return TRUE;
             }
 #endif

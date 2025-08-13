@@ -20,7 +20,7 @@
 #define ASX_IMPLEMENTATION_H
 
 #include "../../impl/afxExecImplKit.h"
-#include "../../draw/impl/avxImplementation.h"
+#include "../../draw/ddi/avxImplementation.h"
 #include "qwadro/inc/sim/afxEngine.h"
 #include "qwadro/inc/sim/afxSimulation.h"
 #include "asxImpl_Executor.h"
@@ -28,6 +28,7 @@
 #include "asxImpl_Simulation.h"
 #include "asxImpl_Body.h"
 #include "asxImpl_Curve.h"
+#include "asxImpl_Memory.h"
 #include "asxImpl_Model.h"
 #include "asxImpl_Context.h"
 

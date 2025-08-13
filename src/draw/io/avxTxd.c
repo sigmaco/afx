@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_TXD_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 #include "qwadro/inc/draw/io/avxTxd.h"
 
 #ifdef _AVX_TXD_C
@@ -51,7 +51,7 @@ AFX_OBJECT(avxTxd)
 
 #endif//_AVX_TXD_C
 
-_AVX afxCmdId AvxCmdBindTxds(afxDrawContext dctx, afxUnit baseSlotIdx, afxUnit cnt, avxTxd txds[])
+_AVX afxCmdId AvxCmdUseTxds(afxDrawContext dctx, afxUnit baseSlotIdx, afxUnit cnt, avxTxd txds[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);

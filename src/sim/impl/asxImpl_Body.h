@@ -29,6 +29,40 @@
             Skeleton
 */
 
+AFX_DEFINE_STRUCT(afxBodyPart)
+{
+    // based on RpAtomic
+    // one per mesh rigged to model
+    
+    // In RW, RpAtomic must be individual because it is bound directly to the DAG as a generic discrete object.
+    afxNodular          nodr;
+    
+    // In RW, there is one RpAtomic per mesh, which is a dynamic object storing the state of a RpGeometry.
+    // RpGeometry would be a afxMesh. All RpAtomic's collectively would be a afxBody.
+    afxUnit             rigIdx;
+
+    // based on RpInterpolator
+    afxMeshMorphing     morph;
+
+    // In RW, there are two bounding spheres for interpolated geometry, one in object space and one in world space.
+    afxBox              bb; // can change when morphing.
+    afxSphere           bs; // can change when morphing.
+
+    afxFlags            flags;
+    afxMask             mask;
+
+    // In RW, RpAtomic has a RwResEntry caching the dynamic state of a RpAtomic; RpGeometry has its own for static data.
+    arxRenderableCache  cache;
+
+
+    /*
+        RpAtomic have a render callback, a render frame counter, and a render pipeline.
+
+        RpAtomic have a link to only one RpClump nesting it in a group of related RpAtomic's, RpLight's and RwCamera's.
+        As RpClump chains RpAtomic, RpLight and RwCamera, which are DAG entities, RpClump is considered a dynamic entity.
+        RpClump is also used for providing callback function for frustum culling.
+    */
+};
 
 #ifdef _ASX_BODY_C
 #ifdef _ASX_BODY_IMPL
@@ -38,10 +72,14 @@ AFX_OBJECT(afxBody)
 #endif
 {
     afxModel            mdl;
+    afxUnit             partCnt;
+    afxBodyPart*        parts;
     afxChain            motives;
     void*               userData[4];
-    afxUnit32            reserved0,
+    afxUnit32           reserved0,
                         reserved1;
+
+
     struct RigidBody
     {
         // Constant quantities
@@ -101,7 +139,7 @@ AFX_OBJECT(afxBody)
     int inCallback : 1;
 #endif
     afxPose             pose;
-    afxM4d              placement;
+    afxPlacement        placement;
 };
 #endif//_ASX_BODY_C
 

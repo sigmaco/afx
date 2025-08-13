@@ -37,8 +37,7 @@
 #include "qwadro/inc/sim/io/afxCurve.h"
 #include "qwadro/inc/sim/io/asxBuffer.h"
 
-#include "qwadro/inc/sim/io/afxModel.h"
-#include "qwadro/inc/sim/body/afxMaterial.h"
+#include "qwadro/inc/sim/body/afxMorphology.h"
 
 #include "qwadro/inc/sim/op/afxSampleContext.h"
 #include "qwadro/inc/sim/io/afxScene.h"

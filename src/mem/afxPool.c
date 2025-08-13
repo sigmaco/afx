@@ -646,6 +646,25 @@ _AFX afxError AfxReclaimPoolUnits(afxPool* pool, afxUnit cnt, void* units[])
     return err;
 }
 
+_AFX afxError AfxRequestPoolUnitsAt(afxPool* pool, afxUnit cnt, afxUnit const ids[], void* units[])
+{
+    afxError err = NIL;
+    AFX_ASSERT(pool);
+#ifdef _AFX_POOL_VALIDATION_ENABLED
+    AFX_ASSERT(pool->fcc == afxFcc_POOL);
+#endif
+    AFX_ASSERT(units);
+    AFX_ASSERT(ids);
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        afxUnit idx = ids[i];
+        AfxTakePoolUnit(pool, idx, NIL);
+        AfxGetPoolUnit(pool, idx, &units[i]);
+    }
+    return err;
+}
+
 _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], void* units[])
 {
     afxError err = NIL;

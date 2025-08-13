@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_RASTER_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 
  // 1d               =   1 x w11 >> lod
  // 1d array         = img x w11 >> lod
@@ -80,7 +80,7 @@ _AVXINL avxRasterUsage AvxTestRasterUsage(avxRaster ras, avxRasterUsage mask)
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 #endif//AVX_VALIDATION_ENABLED
-    return ras->usage & mask;
+    return (ras->usage & mask);
 }
 
 _AVXINL avxRasterFlags AvxTestRasterFlags(avxRaster ras, avxRasterFlags mask)
@@ -90,7 +90,7 @@ _AVXINL avxRasterFlags AvxTestRasterFlags(avxRaster ras, avxRasterFlags mask)
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 #endif//AVX_VALIDATION_ENABLED
-    return ras->flags & mask;
+    return (ras->flags & mask);
 }
 
 _AVXINL void AvxGetRasterSwizzling(avxRaster ras, avxSwizzling* csw)
@@ -113,8 +113,8 @@ _AVXINL avxRange AvxGetRasterExtent(avxRaster ras, afxUnit lodIdx)
     AFX_ASSERT_RANGE(ras->lodCnt, lodIdx, 1);
 #endif//AVX_VALIDATION_ENABLED
 
-    avxRange whd = ras->extent;
-    if (AvxTestRasterFlags(ras, avxRasterFlag_UPSAMPLED))
+    avxRange whd = ras->whd;
+    if (AvxTestRasterFlags(ras, avxRasterFlag_MULTISAMP))
     {
         while (lodIdx--)
         {
@@ -145,7 +145,7 @@ _AVXINL void AvxDescribeRaster(avxRaster ras, avxRasterInfo* desc)
     AFX_ASSERT(desc);
 #endif//AVX_VALIDATION_ENABLED
     desc->lodCnt = ras->lodCnt;
-    desc->extent = AvxGetRasterExtent(ras, 0);
+    desc->whd = AvxGetRasterExtent(ras, 0);
     desc->fmt = ras->fmt;
     desc->flags = ras->flags;
     desc->usage = ras->usage;
@@ -158,7 +158,7 @@ _AVXINL void AvxDescribeRaster(avxRaster ras, avxRasterInfo* desc)
     desc->tag = ras->tag;
 }
 
-_AVXINL void _AvxSanitizeRasterRegion(avxRaster ras, avxRasterRegion const* raw, avxRasterRegion* san)
+_AVXINL void _AvxSanitizeRasterRegion(avxRaster ras, afxUnit cnt, avxRasterRegion const raw[], avxRasterRegion san[])
 {
 #if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
@@ -166,50 +166,68 @@ _AVXINL void _AvxSanitizeRasterRegion(avxRaster ras, avxRasterRegion const* raw,
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(raw);
     AFX_ASSERT(san);
+    AFX_ASSERT(cnt);
 #endif//AVX_VALIDATION_ENABLED
 
     /*
         This code sanitizes a avxRasterRegion struct to be within the bounds of a raster object.
     */
-
-    san->lodIdx = AFX_MIN(raw->lodIdx, ras->lodCnt - 1);
-    san->origin.x = AFX_MIN(raw->origin.x, (afxInt)(ras->extent.w - 1));
-    san->origin.y = AFX_MIN(raw->origin.y, (afxInt)(ras->extent.h - 1));
-    san->origin.z = AFX_MIN(raw->origin.z, (afxInt)(ras->extent.d - 1));
-    san->extent.w = AFX_CLAMP(raw->extent.w, 1, ras->extent.w - san->origin.x);
-    san->extent.h = AFX_CLAMP(raw->extent.h, 1, ras->extent.h - san->origin.y);
-    san->extent.d = AFX_CLAMP(raw->extent.d, 1, ras->extent.d - san->origin.z);
+    
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxRasterRegion* s = &san[i];
+        avxRasterRegion const* r = &raw[i];
+        s->lodIdx = AFX_MIN(r->lodIdx, ras->lodCnt - 1);
+        avxRange whd = AvxGetRasterExtent(ras, s->lodIdx);
+        s->origin.x = AFX_MIN(r->origin.x, (afxInt)(whd.w - 1));
+        s->origin.y = AFX_MIN(r->origin.y, (afxInt)(whd.h - 1));
+        s->origin.z = AFX_MIN(r->origin.z, (afxInt)(whd.d - 1));
+        s->whd.w = AFX_CLAMP(r->whd.w, 1, whd.w - s->origin.x);
+        s->whd.h = AFX_CLAMP(r->whd.h, 1, whd.h - s->origin.y);
+        s->whd.d = AFX_CLAMP(r->whd.d, 1, whd.d - s->origin.z);
+    }
 }
 
-_AVXINL void _AvxSanitizeRasterCopy(avxRaster src, avxRaster dst, avxRasterCopy const* raw, avxRasterCopy* san)
+_AVXINL void _AvxSanitizeRasterCopy(avxRaster ras, avxRaster src, afxUnit cnt, avxRasterCopy const raw[], avxRasterCopy san[])
 {
 #if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
     // src must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &src);
-    // dst must be a valid avxRaster handle.
-    AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &dst);
+    // ras must be a valid avxRaster handle.
+    AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(raw);
     AFX_ASSERT(san);
+    AFX_ASSERT(cnt);
 #endif//AVX_VALIDATION_ENABLED
 
     /*
         This code sanitizes a avxRasterCopy struct to be within the bounds of two raster objects.
     */
 
-    san->src.lodIdx = AFX_MIN(raw->src.lodIdx, src->lodCnt - 1);
-    san->src.origin.x = AFX_MIN(raw->src.origin.x, (afxInt)(src->extent.w - 1));
-    san->src.origin.y = AFX_MIN(raw->src.origin.y, (afxInt)(src->extent.h - 1));
-    san->src.origin.z = AFX_MIN(raw->src.origin.z, (afxInt)(src->extent.d - 1));
+    afxUnit srcLodCnt = src->lodCnt;
+    afxUnit dstLodCnt = ras->lodCnt;
 
-    san->dstLodIdx = AFX_MIN(raw->dstLodIdx, dst->lodCnt - 1);
-    san->dstOrigin.x = AFX_MIN(raw->dstOrigin.x, (afxInt)(dst->extent.w - 1));
-    san->dstOrigin.y = AFX_MIN(raw->dstOrigin.y, (afxInt)(dst->extent.h - 1));
-    san->dstOrigin.z = AFX_MIN(raw->dstOrigin.z, (afxInt)(dst->extent.d - 1));
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxRasterCopy* s = &san[i];
+        avxRasterCopy const* r = &raw[i];
+        s->src.lodIdx = AFX_MIN(r->src.lodIdx, srcLodCnt - 1);
+        avxRange srcExtent = AvxGetRasterExtent(src, s->src.lodIdx);
+        s->src.origin.x = AFX_MIN(r->src.origin.x, (afxInt)(srcExtent.w - 1));
+        s->src.origin.y = AFX_MIN(r->src.origin.y, (afxInt)(srcExtent.h - 1));
+        s->src.origin.z = AFX_MIN(r->src.origin.z, (afxInt)(srcExtent.d - 1));
 
-    san->src.extent.w = AFX_CLAMP(raw->src.extent.w, 1, AFX_MIN((src->extent.w - san->src.origin.x), (dst->extent.w - san->dstOrigin.x)));
-    san->src.extent.h = AFX_CLAMP(raw->src.extent.h, 1, AFX_MIN((src->extent.h - san->src.origin.y), (dst->extent.h - san->dstOrigin.y)));
-    san->src.extent.d = AFX_CLAMP(raw->src.extent.d, 1, AFX_MIN((src->extent.d - san->src.origin.z), (dst->extent.d - san->dstOrigin.z)));
+        s->dstLodIdx = AFX_MIN(r->dstLodIdx, dstLodCnt - 1);
+        avxRange dstExtent = AvxGetRasterExtent(ras, s->dstLodIdx);
+        s->dstOrigin.x = AFX_MIN(r->dstOrigin.x, (afxInt)(dstExtent.w - 1));
+        s->dstOrigin.y = AFX_MIN(r->dstOrigin.y, (afxInt)(dstExtent.h - 1));
+        s->dstOrigin.z = AFX_MIN(r->dstOrigin.z, (afxInt)(dstExtent.d - 1));
+
+        s->src.whd.w = AFX_CLAMP(r->src.whd.w, 1, AFX_MIN((srcExtent.w - s->src.origin.x), (dstExtent.w - s->dstOrigin.x)));
+        s->src.whd.h = AFX_CLAMP(r->src.whd.h, 1, AFX_MIN((srcExtent.h - s->src.origin.y), (dstExtent.h - s->dstOrigin.y)));
+        s->src.whd.d = AFX_CLAMP(r->src.whd.d, 1, AFX_MIN((srcExtent.d - s->src.origin.z), (dstExtent.d - s->dstOrigin.z)));
+    }
 }
 
 _AVX afxBool AvxQueryRasterLayout(avxRaster ras, afxUnit lodIdx, afxUnit layerIdx, avxRasterLayout* layout)
@@ -219,7 +237,7 @@ _AVX afxBool AvxQueryRasterLayout(avxRaster ras, afxUnit lodIdx, afxUnit layerId
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT_RANGE(ras->lodCnt, lodIdx, 1);
-    AFX_ASSERT_RANGE(ras->extent.d, layerIdx, 1);
+    AFX_ASSERT_RANGE(ras->whd.d, layerIdx, 1);
 #endif//AVX_VALIDATION_ENABLED
 
     afxBool is3d = AvxTestRasterFlags(ras, avxRasterFlag_3D);
@@ -260,11 +278,11 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
     afxDrawSystem dsys = AfxGetProvider(ras);
-    avxRasterInfo const* rasi = ((avxRasterInfo const *)args[1]) + invokeNo;
+    avxRasterInfo const* rasi = ((avxRasterInfo const*)args[1]) + invokeNo;
 
     if (rasi->base)
     {
-        if (rasi->base->base)
+        if (rasi->base->base && (rasi->base->base != rasi->base))
         {
             // Base raster must be a storage raster, not a raster view.
             AFX_ASSERT(!rasi->base->base);
@@ -272,6 +290,8 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
             return err;
         }
     }
+
+    ras->udd = rasi->udd;
     ras->tag = rasi->tag;
     ras->base = NIL;
 
@@ -280,7 +300,7 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
     ras->baseLod = 0;
     ras->lodCnt = AFX_MAX(rasi->lodCnt, 1);
     ras->baseLayer = 0;
-    ras->extent = AvxMaxRange(AVX_RANGE(1, 1, 1), rasi->extent);
+    ras->whd = AvxMaxRange(AVX_RANGE(1, 1, 1), rasi->whd);
 
     ras->flags = NIL;
     ras->usage = rasi->usage;
@@ -298,11 +318,10 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
     ras->swizzling.b = rasi->swizzle.b;
     ras->swizzling.a = rasi->swizzle.a;
 
-    ras->udd = rasi->udd;
 
     // FLAGS
 
-    avxRasterFlags const mipAndMs = (avxRasterFlag_MIPMAP | avxRasterFlag_UPSAMPLED);
+    avxRasterFlags const mipAndMs = (avxRasterFlag_MIPMAP | avxRasterFlag_MULTISAMP);
     avxRasterFlags flags = (rasi->flags & mipAndMs);
 
     if (flags == mipAndMs)
@@ -330,7 +349,7 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
         AfxThrowError();
         return err;
     }
-    else if ((flags == NIL) && (ras->extent.d > 1))
+    else if ((flags == NIL) && (ras->whd.d > 1))
     {
         // If not specified, default to layered.
         ras->flags |= avxRasterFlag_LAYERED;
@@ -343,7 +362,7 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
         {
             // if cubemap, layers must be a multiple of 6.
 
-            if (ras->extent.d % 6)
+            if (ras->whd.d % 6)
             {
                 AfxThrowError();
                 return err;
@@ -381,10 +400,10 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
         afxUnit align = AVX_RASTER_ALIGNMENT;
         afxUnit size = 0;
 
-        afxWhd whd = { ras->extent.w, ras->extent.h, ras->extent.d };
+        afxWarp whd = { ras->whd.w, ras->whd.h, ras->whd.d };
         afxBool is3d = !!AvxTestRasterFlags(ras, avxRasterFlag_3D);
 
-        if (AvxTestRasterFlags(ras, avxRasterFlag_UPSAMPLED))
+        if (AvxTestRasterFlags(ras, avxRasterFlag_MULTISAMP))
         {
             for (afxUnit i = 0; i < ras->lodCnt; i++)
             {
@@ -413,9 +432,9 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
 
         size = AFX_ALIGN_SIZE(size, align);
 
-        ras->size = size;
-        ras->alignment = align;
-        ras->memType = NIL;
+        ras->reqSiz = size;
+        ras->reqAlign = align;
+        ras->reqMemType = NIL;
 
         ras->storage[0].mmu = AFX_INVALID_INDEX;
         ras->storage[0].offset = 0;
@@ -449,37 +468,37 @@ _AVX afxError AvxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo c
     {
         avxRasterFlags flags = info[i].flags;
 
-        if ((flags & avxRasterFlag_CUBEMAP) && (info[i].extent.d % 6))
+        if ((flags & avxRasterFlag_CUBEMAP) && (info[i].whd.d % 6))
         {
-            AFX_ASSERT(info[i].extent.d % 6 == 0);
+            AFX_ASSERT(info[i].whd.d % 6 == 0);
             AfxThrowError();
 
-            if ((info[i].extent.d / 6) && !(flags & avxRasterFlag_LAYERED))
+            if ((info[i].whd.d / 6) && !(flags & avxRasterFlag_LAYERED))
             {
-                AFX_ASSERT_AND((info[i].extent.d / 6), (flags & avxRasterFlag_LAYERED));
+                AFX_ASSERT_AND((info[i].whd.d / 6), (flags & avxRasterFlag_LAYERED));
                 AfxThrowError();
             }
         }
 
-        if ((flags & avxRasterFlag_1D) && (info[i].extent.h > 1))
+        if ((flags & avxRasterFlag_1D) && (info[i].whd.h > 1))
         {
-            AFX_ASSERT(1 >= info[i].extent.h);
+            AFX_ASSERT(1 >= info[i].whd.h);
             AfxThrowError();
 
-            if ((info[i].extent.d > 1) && !(flags & avxRasterFlag_LAYERED))
+            if ((info[i].whd.d > 1) && !(flags & avxRasterFlag_LAYERED))
             {
-                AFX_ASSERT_OR(1 >= info[i].extent.d, flags & avxRasterFlag_LAYERED);
+                AFX_ASSERT_OR(1 >= info[i].whd.d, flags & avxRasterFlag_LAYERED);
                 AfxThrowError();
             }
         }
 
-        if ((flags & avxRasterFlag_2D) && (info[i].extent.d > 1) && !(flags & avxRasterFlag_LAYERED))
+        if ((flags & avxRasterFlag_2D) && (info[i].whd.d > 1) && !(flags & avxRasterFlag_LAYERED))
         {
             AfxThrowError();
 
-            if ((info[i].extent.d > 1) && !(flags & avxRasterFlag_LAYERED))
+            if ((info[i].whd.d > 1) && !(flags & avxRasterFlag_LAYERED))
             {
-                AFX_ASSERT_OR(1 >= info[i].extent.d, flags & avxRasterFlag_LAYERED);
+                AFX_ASSERT_OR(1 >= info[i].whd.d, flags & avxRasterFlag_LAYERED);
                 AfxThrowError();
             }
         }
@@ -507,9 +526,9 @@ _AVX afxError AvxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo c
         AFX_ASSERT(rasi.lodCnt >= info[i].lodCnt);
         AFX_ASSERT(rasi.baseLayer == info[i].baseLayer);
         AFX_ASSERT(rasi.baseLod == info[i].baseLod);
-        AFX_ASSERT(rasi.extent.w >= info[i].extent.w);
-        AFX_ASSERT(rasi.extent.h >= info[i].extent.h);
-        AFX_ASSERT(rasi.extent.d >= info[i].extent.d);
+        AFX_ASSERT(rasi.whd.w >= info[i].whd.w);
+        AFX_ASSERT(rasi.whd.h >= info[i].whd.h);
+        AFX_ASSERT(rasi.whd.d >= info[i].whd.d);
         AFX_ASSERT(rasi.exuMask == info[i].exuMask);
         AFX_ASSERT((rasi.flags & info[i].flags) == info[i].flags);
         AFX_ASSERT(rasi.fmt == info[i].fmt);

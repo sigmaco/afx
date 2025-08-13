@@ -14,6 +14,9 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+#ifndef AFX_CLASS_H
+#define AFX_CLASS_H
+
 /*
     The afxClass is a rich and powerful type meta-system, forming the core of a reflective object system 
     and component-based architecture across the whole Qwadro ecosystem.
@@ -39,9 +42,6 @@
 
     It has beeen designed for both performance (custom allocators, pools, alignment) and flexibility (plugin IO, VMT, events, extensions).
 */
-
-#ifndef AFX_CLASS_H
-#define AFX_CLASS_H
 
 #include "qwadro/inc/base/afxDebug.h"
 #include "qwadro/inc/base/afxFcc.h"

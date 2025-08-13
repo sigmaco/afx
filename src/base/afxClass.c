@@ -557,6 +557,46 @@ _AFX afxError _AfxAllocateClassInstancesAt(afxClass *cls, afxUnit subset, afxUni
     return err;
 }
 
+_AFX afxError _AfxAllocateClassInstancesAt2(afxClass *cls, afxUnit first, afxUnit cnt, afxUnit const idMap[], afxObject objects[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
+    AFX_ASSERT(cnt);
+
+    afxPool* pool = &cls->pool;
+    afxUnit room = (cls->maxInstCnt - pool->totalUsedCnt);
+
+    if ((room == 0) || (cnt > room)) AfxThrowError();
+    else
+    {
+        if (pool->totalUsedCnt == 0)
+            pool->unitsPerPage = cls->unitsPerPage ? cls->unitsPerPage : cnt;
+
+        for (afxUnit i = 0; i < cnt; i++)
+        {
+            objects[i] = NIL;
+
+            afxUnit atId = idMap ? first + idMap[i] : first + i;
+
+            if (AfxGetPoolUnit(pool, atId, NIL)) AfxThrowError();
+            else
+            {
+                if (AfxTakePoolUnit(pool, atId, NIL)) AfxThrowError();
+                else
+                {
+                    AFX_ASSERT(AfxGetPoolUnit(pool, atId, (void**)&objects[i]));
+                }
+            }
+
+            if (err)
+            {
+                _AfxDeallocateObjects(cls, i, objects);
+            }
+        }
+    }
+    return err;
+}
+
 _AFX afxError _AfxClsObjDtor(afxClass *cls, afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
@@ -1066,6 +1106,60 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxUnit cnt, afxObject objects[],
         }
     }
     
+    AfxUnlockFutex(&cls->poolLock, FALSE);
+
+    return err;
+}
+
+_AFX afxError AfxAcquireObjects2(afxClass *cls, afxUnit first, afxUnit cnt, afxUnit const IdMap[], afxObject objects[], void const* udd[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
+    AFX_ASSERT(cnt);
+    AFX_ASSERT(objects);
+
+    AfxLockFutex(&cls->poolLock, FALSE);
+
+    afxPool* pool = &cls->pool;
+
+    if (pool->totalUsedCnt >= cls->maxInstCnt)
+    {
+        AfxThrowError();
+    }
+    else
+    {
+        // If an object is statically allocated, check for the each container presence and if it is SIMD aligned.
+        if (pool->unitSiz == 0)
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                if (!objects[i])
+                    AfxThrowError();
+
+                if (!AFX_IS_ALIGNED(objects[i], AFX_SIMD_ALIGNMENT))
+                    AfxThrowError();
+            }
+        }
+        else
+        {
+            if (_AfxAllocateObjects(cls, cnt, objects))
+                AfxThrowError();
+        }
+
+        if (!err)
+        {
+            if (_AfxConstructObjects(cls, cnt, objects, (void**)udd))
+            {
+                AfxThrowError();
+                _AfxDeallocateObjects(cls, cnt, objects);
+            }
+            else
+            {
+                AFX_ASSERT_OBJECTS(cls->objFcc, cnt, objects);
+            }
+        }
+    }
+
     AfxUnlockFutex(&cls->poolLock, FALSE);
 
     return err;

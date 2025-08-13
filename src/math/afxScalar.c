@@ -37,12 +37,12 @@ _AFXINL afxBool AfxIsInfinite(afxReal value)
 
 _AFXINL afxBool AfxRealIsEquivalent(afxReal a, afxReal b)
 {
-    return !!(AfxAbs(a - b) < AFX_EPSILON);
+    return !!(AFX_ABS(a - b) < AFX_EPSILON);
 }
 
 _AFXINL afxBool  AfxRealIsEqual(afxReal a, afxReal b, afxReal epsilon)
 {
-    return !!(AfxAbs(a - b) < epsilon);
+    return !!(AFX_ABS(a - b) < epsilon);
 }
 
 _AFXINL afxReal64 AfxRecip(afxReal64 value)

@@ -19,7 +19,7 @@
 #define _AVX_DRAW_C
 #define _AVX_PIPELINE_C
 #define _AVX_RASTERIZER_C
-#include "../impl/avxImplementation.h"
+#include "../ddi/avxImplementation.h"
 
 _AVX avxColor const AVX_BLEND_CONSTANTS_DEFAULT = { 0, 0, 0, 0 };
 
@@ -570,13 +570,13 @@ _AVX afxBool AvxGetPipelineLigature(avxPipeline pip, avxLigature* ligature)
 
             listedShaderCnt = pip->stageCnt;
 
-            avxLigatureConfig ligc = { 0 };
-            ligc.shaderCnt = listedShaderCnt;
-            ligc.shaders = listedShaders;
-
             afxDrawSystem dsys = AfxGetProvider(pip);
             AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-            if (AvxDeclareLigatures(dsys, 1, &ligc, &liga)) AfxThrowError();
+
+            avxLigatureConfig ligc = { 0 };
+            AvxConfigureLigature(dsys, listedShaderCnt, listedShaders, &ligc);
+
+            if (AvxAcquireLigatures(dsys, 1, &ligc, &liga)) AfxThrowError();
             else
             {
                 AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
@@ -819,14 +819,14 @@ _AVX afxError AvxRelinkPipelineFunction(avxPipeline pip, avxShaderType stage, av
 
             listedShaderCnt = pip->stageCnt;
 
-            avxLigatureConfig ligc = { 0 };
-            ligc.shaderCnt = listedShaderCnt;
-            ligc.shaders = listedShaders;
-
-            avxLigature liga;
             afxDrawSystem dsys = AfxGetProvider(pip);
             AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-            if (AvxDeclareLigatures(dsys, 1, &ligc, &liga)) AfxThrowError();
+
+            avxLigatureConfig ligc = { 0 };
+            AvxConfigureLigature(dsys, listedShaderCnt, listedShaders, &ligc);
+
+            avxLigature liga;
+            if (AvxAcquireLigatures(dsys, 1, &ligc, &liga)) AfxThrowError();
             else
             {
                 if (pip->liga)
@@ -966,6 +966,7 @@ _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
     afxUnit sampleMaskCnt = AFX_MIN(razb->ms.sampleLvl, AVX_MAX_SAMPLE_MASKS);
     afxUnit colorOutCnt = AFX_MIN(AFX_MAX(1, razb->colorOutCnt), AVX_MAX_COLOR_OUTPUTS);
 
+    pip->udd = pipb->udd;
     pip->tag = pipb->tag;
 
     pip->liga = NIL;

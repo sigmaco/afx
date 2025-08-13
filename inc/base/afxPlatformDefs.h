@@ -21,6 +21,19 @@
  // PLATFORM HANDLING                                                         //
  ///////////////////////////////////////////////////////////////////////////////
 
+// Detect x64 architecture.
+#if defined(_M_X64) || defined(__x86_64__) || defined(__amd64__)
+#   define AFX_ARCH_X64 1
+#   define AFX_ISA_X86 1
+#   define AFX_ISA_X64 1
+#endif
+
+// Detect 32-bit x86 architecture.
+#if defined(_M_IX86) || defined(__i386__)
+#   define AFX_ARCH_X86 1
+#   define AFX_ISA_X86 1
+#endif
+
 #ifdef _WIN64
 #   define AFX_ON_X86_64 1
 #   define AFX_ON_WINDOWS 1
@@ -140,6 +153,18 @@
 #endif
 #define AFX_STATIC_ASSERT(_expression_, _message_) _Static_assert(_expression_, _message_) 
 
+// MSC (for surprise of a totally of zero persons) shits on "AFX_PTR_ALIGNMENT sizeof(void*)" and other sizeof() macroes.
+#if (defined(_MSC_VER) && !defined(__clang__))
+#ifdef AFX_ON_X86_64
+#   define AFX_PTR_ALIGNMENT 64
+#   define AFX_ATOMIC_ALIGNMENT 64
+#elif  AFX_ON_X86_32
+#   define AFX_PTR_ALIGNMENT 32
+#   define AFX_ATOMIC_ALIGNMENT 64 // assumes AFX is on WOW64
+#else
+#error ""
+#endif
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -166,10 +191,6 @@ typedef afxUnit16       afxReal16;
 typedef float           afxReal32;
 typedef double          afxReal64;
 
-typedef afxInt8         afxBool8;
-typedef afxInt16        afxBool16;
-typedef afxInt32        afxBool32;
-
 typedef char            afxChar8;
 typedef afxInt16        afxChar16;
 typedef afxInt32        afxChar32;
@@ -179,8 +200,6 @@ typedef afxUnit8        afxByte;
 typedef afxInt32        afxInt; // (signed) integral number unit
 typedef afxUnit32       afxUnit; // (unsigned) natural number unit
 typedef afxReal32       afxReal; // (floating-point) real number unit
-typedef afxBool32       afxBool;
-typedef afxInt32        afxResult;
 
 typedef uintptr_t       afxAddress;
 typedef size_t          afxSize;
@@ -188,38 +207,6 @@ typedef sig_atomic_t    afxAtomic;
 //typedef afxInt64    afxOffset;
 //typedef afxUnit64    afxAddress;
 //typedef afxUnit64    afxSize;
-
-typedef afxUnit32   afxFlags;
-typedef afxUnit32   afxMask32;
-typedef afxUnit64   afxMask64;
-typedef afxMask32   afxMask;
-
-typedef afxUnit8    afxIndex8;
-typedef afxUnit16   afxIndex16;
-typedef afxUnit32   afxIndex32;
-typedef afxIndex32  afxIndex;
-
-typedef afxInt8     afxI8;
-typedef afxInt16    afxI16;
-typedef afxInt32    afxI32;
-typedef afxInt64    afxI64;
-
-typedef afxUnit8    afxN8; 
-typedef afxUnit16   afxN16; 
-typedef afxUnit32   afxN32; 
-typedef afxUnit64   afxN64;
-
-typedef afxReal16   afxR16;
-typedef afxReal32   afxR32;
-typedef afxReal64   afxR64;
-
-typedef afxBool8    afxB8;
-typedef afxBool16   afxB16;
-typedef afxBool32   afxB32;
-
-typedef afxChar8    afxC8;
-typedef afxChar16   afxC16;
-typedef afxChar32   afxC32;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -339,11 +326,5 @@ typedef afxChar32   afxC32;
 #else
 #define AFX_MAX_SIMD_REGISTERS (8)
 #endif
-
-#define AFX_MASK64_NONE (0x0000000000000000)
-#define AFX_MASK64_ALL (0xffffffffffffffff)
-#define AFX_MASK32_NONE (0x00000000)
-#define AFX_MASK32_ALL (0xffffffff)
-
 
 #endif//AFX_PLATFORM_DEFS_H

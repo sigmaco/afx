@@ -65,6 +65,12 @@ AFX_DEFINE_STRUCT(avxSubmission)
     avxPipelineStage    signalStageMasks;
     afxUnit32           signalReserveds;
 
+    // An array of draw contexts that represent the individual drawing commands or operations to be executed. 
+    // Each afxDrawContext could contain specific information about a set of drawing commands, such as commands 
+    // for rendering objects, setting up shaders, and managing resources.
+    afxDrawContext      dctx;
+    afxUnit             batchId;
+
     // A fence which will be signaled when the operation have completed execution.
     avxFence            fence;
 };
@@ -73,28 +79,60 @@ AFX_DEFINE_STRUCT(avxPresentation)
 {
     // A bitmask specifying which bridges can assume this operation.
     // If NIL, any bridge is allowed to assume this operation.
-    afxMask             exuMask;
-    afxUnit             baseQueIdx;
-    afxUnit             queCnt;
+    afxMask         exuMask;
+    afxUnit         baseQueIdx;
+    afxUnit         queCnt;
 
+    // The frame identifier.
+    afxUnit64       frameId;
+    // A application-defined flag combo for the frame.
+    afxFlags        frameFlags;
+    // A application-defined bitmask for the frame.
+    afxMask         frameMask;
+    // A non-zero value specifying the present id to be associated with the presentation of the swapchain.
+    afxUnit64       presentId;
+
+    // A fence that the function will wait on before proceeding with the presentation. 
+    // Fences are used to ensure synchronization, especially when working with GPUs. 
+    // The function will wait for this fence to be signaled before beginning the presentation. 
+    // This ensures that drawing commands are completed before the output is presented.
+    avxFence        waitOnDpu;
     // The semaphore to wait for before issuing the present request.
-    afxSemaphore        wait;
+    afxSemaphore    wait;
+
+    // An handle to a afxDrawOuput object to be presented.
+    afxSurface   dout;
+
+    // An index to a swapchain buffer specifying which buffers to present. 
+    // This indicate which buffer is to be shown.
+    afxUnit         bufIdx;
+
+    // The number of hint regions.
+    afxUnit         hintCnt;
+    // Four regions that has changed since the last present to the swapchain.
+    afxRect         hintRcs[4];
+
+    // An array of fences to signal after the presentation is completed. 
+    // Once the presentation is done, these fences are signaled, allowing the system to continue processing other tasks 
+    // that depend on the completion of the presentation. This is useful for synchronization with other parts of the 
+    // rendering pipeline or application logic.
+    avxFence        signal;
 };
 
 AFX_DEFINE_STRUCT(avxTransference)
 {
     // A bitmask specifying which bridges can assume this operation.
     // If NIL, any bridge is allowed to assume this operation.
-    afxMask             exuMask;
-    afxUnit             baseQueIdx;
-    afxUnit             queCnt;
+    afxMask         exuMask;
+    afxUnit         baseQueIdx;
+    afxUnit         queCnt;
 
     // A semaphore upon which to wait on before the operation begin execution.
-    afxSemaphore        wait;
+    afxSemaphore    wait;
     // A semaphore which will be signaled when the operation have completed execution.
-    afxSemaphore        signal;
+    afxSemaphore    signal;
     // A fence which will be signaled when the operation have completed execution.
-    avxFence            fence;
+    avxFence        fence;
 
     union
     {
@@ -121,7 +159,6 @@ AFX_DEFINE_STRUCT(avxTransference)
 };
 
 AVX afxDrawSystem   AvxGetDrawQueueDock(afxDrawQueue dque);
-AVX afxUnit         AvxGetDrawQueuePort(afxDrawQueue dque);
 
 AVX afxError        AvxWaitForEmptyDrawQueue(afxDrawQueue dque, afxUnit64 timeout);
 
@@ -129,8 +166,10 @@ AVX afxError        AvxWaitForEmptyDrawQueue(afxDrawQueue dque, afxUnit64 timeou
 /// Close a queue debug label region.
 /// Insert a label into a queue.
 
-AVX void            AfxBeginDrawQueueDebugScope(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxString const* name, avxColor const color);
-AVX void            AfxPushDrawQueueDebugLabel(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxString const* name, avxColor const color);
-AVX void            AfxEndDrawQueueDebugScope(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx);
+AVX void            AvxBeginDrawQueueDebugScope(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxString const* name, avxColor const color);
+AVX void            AvxPushDrawQueueDebugLabel(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx, afxString const* name, avxColor const color);
+AVX void            AvxEndDrawQueueDebugScope(afxDrawSystem dsys, afxUnit exuIdx, afxUnit queIdx);
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif//AVX_DRAW_QUEUE_H

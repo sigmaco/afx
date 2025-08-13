@@ -42,7 +42,8 @@ typedef enum afxQuatBlend
 AFX afxQuat const AFX_QUAT_ZERO;
 AFX afxQuat const AFX_QUAT_IDENTITY;
 
-#define AFX_QUAT(x, y, z, w) (afxQuat const){ x, y, z, w}
+#define AFX_QUAT(x, y, z, w) (afxQuat const){ x, y, z, w }
+#define AFX_QUATERNION(x, y, z, w) (afxQuat const){ x, y, z, w }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Initialization                                                             //

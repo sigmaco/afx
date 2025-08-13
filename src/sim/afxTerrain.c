@@ -20,23 +20,9 @@
 #define _AFX_SIM_C
 #define _ASX_TERRAIN_C
 #define _ASX_SIMULATION_C
-#include "../draw/impl/avxImplementation.h"
+#include "../draw/ddi/avxImplementation.h"
 #include "impl/asxImplementation.h"
 #include "qwadro/inc/sim/afxTerrain.h"
-
-AFX_DEFINE_STRUCT(asxQuadrant)
-{
-    afxRect     bounds;
-    afxUnit     childIdx[4];
-    afxUnit     parentIdx;
-    afxChain    contents;
-};
-
-AFX_DEFINE_STRUCT(asxQuadtree)
-{
-    asxQuadrant root;
-    afxPool     quadrants;
-};
 
 /*
     Benefits of world-aligned sectors:
@@ -45,113 +31,26 @@ AFX_DEFINE_STRUCT(asxQuadtree)
         World is fully seamless - no "jumps" or gaps between sectors.
 */
 
-#ifdef _ASX_TERRAIN_C
-AFX_DEFINE_STRUCT(_asxTerrSec)
-{
-    afxUnit     gridNode, gridNodeX, gridNodeZ;
-
-    afxUnit     vtxIdxCnt;
-    afxUnit     vtxCnt;
-    afxUnit     quadCnt;
-    afxUnit     vtxStartX;
-    afxUnit     vtxStartZ;
-    afxUnit     vtxPerRow;
-    afxUnit     vtxPerCol;
-
-    afxUnit     visuReqCnt;
-    afxUnit     visuVtxCnt;
-    afxV3d*     visuVtxPos;
-    afxUnit     visuVtxIdxCnt;
-    afxUnit16*  visuVtxMap;
-
-    afxSphere   bsph;
-    afxBox      aabb;
-    afxV4d      centre;
-    afxUnit     collTriCnt;
-    afxV3d*     collTriEdgeNrm; // [collTriCnt * 3]
-    afxUnit     collVtxCnt;
-    afxV3d*     collVtx;
-    afxV3d*     collVtxTan;
-    afxV3d*     collVtxBit;
-    afxV3d*     collVtxNrm;
-    afxV3d*     collVtxRgb;
-
-    afxMesh     msh;
-
-    avxBuffer   vbo;
-    afxUnit     vboBase;
-    afxUnit     vboRange;
-    afxUnit     vboStride;
-
-    avxBuffer   ibo;
-    afxUnit     iboBase;
-    afxUnit     iboRange;
-    afxUnit     iboStride;
-
-
-};
-
-AFX_OBJECT(afxTerrain)
-{
-    afxDrawSystem dsys;
-    avxBuffer   vbo;
-    avxBuffer   ibo;
-    avxBuffer   dbgLinesVbo;
-    afxUnit     dbgLinesVboRange;
-    afxUnit     dbgLinesVboStride;
-    avxBuffer   dbgLinesIbo;
-    afxUnit     dbgLinesIboRange;
-    afxUnit     dbgLinesIboStride;
-    
-    avxPipeline dbgAabbPip;
-    avxPipeline meshPip;
-    avxRaster   texd;
-    avxRaster   texn;
-
-    afxUnit     width; // terrain width
-    afxUnit     depth; // terrain depth
-    afxUnit     secWidth; // sector width
-    afxUnit     secDepth; // sector depth
-    afxUnit     rowSecCnt; // row-sectors
-    afxUnit     sliceSecCnt; // slice-sectors
-    afxReal     heightScale;
-    afxUri      heightmap;
-    
-    afxUnit     secCnt;
-    _asxTerrSec*sectors;
-    afxBox*     secAabb;
-
-};
-#endif//_ASX_TERRAIN_C
-
-ASX void AfxDeployQuadtree(asxQuadtree* tree, afxRect* bounds)
-{
-    tree->root.bounds = *bounds;
-    tree->root.parentIdx = AFX_INVALID_INDEX;
-
-    for (afxUnit i = 0; i < /* it is always a quadtree*/ 4; i++)
-        tree->root.childIdx[i] = AFX_INVALID_INDEX;
-
-    AfxDeployChain(&tree->root.contents, tree);
-    AfxDeployPool(&tree->quadrants, sizeof(asxQuadtree), /* it is always a quadtree*/ 4, AFX_SIMD_ALIGNMENT);
-}
-
 // Function to check if a point is in front of a plane
-afxBool isPointInFrontOfPlane(afxPlane *plane, float point[3]) {
+afxBool isPointInFrontOfPlane(afxPlane *plane, float point[3])
+{
     return (plane->uvwd[0] * point[0] +
         plane->uvwd[1] * point[1] +
         plane->uvwd[2] * point[2] + plane->uvwd[AFX_PLANE_DIST]) >= 0.0f;
 }
 
 // Function to check if the AABB is in front of all frustum planes
-afxBool isBoxCulled(const afxBox *box, const afxFrustum *frustum) {
+afxBool isBoxCulled(const afxBox *box, const afxFrustum *frustum)
+{
     // Check all planes of the frustum
-    for (int i = 0; i < afxCubeFace_TOTAL; ++i) {
+    for (int i = 0; i < afxCubeFace_TOTAL; ++i)
+    {
         afxPlane *plane = &frustum->planes[i];
 
         // Check the 8 corners of the AABB
         afxBool isBehindPlane = TRUE;
-        for (int j = 0; j < 8; ++j) {
+        for (int j = 0; j < 8; ++j)
+        {
             // Generate the 8 corners of the AABB
             float corner[3] = {
                 (j & 1) ? box->max[0] : box->min[0],
@@ -160,7 +59,8 @@ afxBool isBoxCulled(const afxBox *box, const afxFrustum *frustum) {
             };
 
             // If any corner is in front of the plane, the AABB is not culled
-            if (isPointInFrontOfPlane(plane, corner)) {
+            if (isPointInFrontOfPlane(plane, corner))
+            {
                 isBehindPlane = FALSE;
                 break;
             }
@@ -176,26 +76,32 @@ afxBool isBoxCulled(const afxBox *box, const afxFrustum *frustum) {
 }
 
 // New function to check an array of AABBs
-void cullAABBs(const afxBox *boxes, size_t numBoxes, const afxFrustum *frustum, afxBool *culledResults) {
-    for (size_t i = 0; i < numBoxes; ++i) {
+void cullAABBs(const afxBox *boxes, size_t numBoxes, const afxFrustum *frustum, afxBool *culledResults)
+{
+    for (size_t i = 0; i < numBoxes; ++i)
+    {
         // Cull each box and store the result in the array
         culledResults[i] = isBoxCulled(&boxes[i], frustum);
     }
 }
 
 // Optimized function to check if the AABB is in front of all frustum planes
-void cullAABBs2(const afxBox *boxes, size_t numBoxes, const afxFrustum *frustum, afxBool *culledResults) {
-    for (size_t i = 0; i < numBoxes; ++i) {
+void cullAABBs2(const afxBox *boxes, size_t numBoxes, const afxFrustum *frustum, afxBool *culledResults)
+{
+    for (size_t i = 0; i < numBoxes; ++i)
+    {
         const afxBox *box = &boxes[i];
         afxBool isCulled = FALSE;
 
         // Check all planes of the frustum
-        for (int planeIndex = 0; planeIndex < afxCubeFace_TOTAL; ++planeIndex) {
+        for (int planeIndex = 0; planeIndex < afxCubeFace_TOTAL; ++planeIndex)
+        {
             const afxPlane *plane = &frustum->planes[planeIndex];
 
             // Check the 8 corners of the AABB
             afxBool isBehindPlane = TRUE;
-            for (int j = 0; j < 8; ++j) {
+            for (int j = 0; j < 8; ++j)
+            {
                 // Generate the 8 corners of the AABB
                 float corner[3] = {
                     (j & 1) ? box->max[0] : box->min[0],
@@ -204,14 +110,16 @@ void cullAABBs2(const afxBox *boxes, size_t numBoxes, const afxFrustum *frustum,
                 };
 
                 // If any corner is in front of the plane, the AABB is not culled
-                if (isPointInFrontOfPlane(plane, corner)) {
+                if (isPointInFrontOfPlane(plane, corner))
+                {
                     isBehindPlane = FALSE;
                     break;
                 }
             }
 
             // If the AABB is completely behind the plane, cull it
-            if (isBehindPlane) {
+            if (isBehindPlane)
+            {
                 isCulled = TRUE;  // AABB is outside of the frustum, so it's culled
                 break;
             }
@@ -400,198 +308,6 @@ afxBool GetHeightAtPosition(afxTerrain ter, float inputX, float inputZ, float* h
     return FALSE;
 }
 
-afxBool RenderCells(afxTerrain ter, afxFrustum* frustum, afxBool showFaces, afxBool showDbgLines, afxDrawContext dctx)
-{
-    afxBool result;
-
-    afxUnit cellsCulledCnt = 0;
-    afxUnit cellsToBeDrawnCnt = 0;
-    afxUnit cellsToBeDrawnIdx[64] = { 0 };
-
-    for (afxUnit i = 0; i < ter->secCnt; i++)
-    {
-        // Get the current cell dimensions.
-        afxBox aabb = ter->sectors[i].aabb;
-
-        // Check to see if the positions are in this cell.
-        //if (AfxDoesFrustumCullAabbs(frustum, 1, &aabb))
-        afxBool culled = TRUE;
-        cullAABBs2(&aabb, 1, frustum, &culled);
-
-        //culled = FALSE;
-        if (i >= 63) break;
-
-        if (culled)
-        {
-            // Increment the number of cells that were culled.
-            ++cellsCulledCnt;
-        }
-        else
-        {
-            cellsToBeDrawnIdx[cellsToBeDrawnCnt] = i;
-            ++cellsToBeDrawnCnt;
-        }
-    }
-
-    if (showDbgLines)
-    {
-        if (!ter->dbgLinesVbo)
-        {
-            // We store edges as 24 16-bit indices
-            // 2730 * 24 = 65520 indices
-            // It will crash if there are more than 2730 sectors.
-
-            avxBuffer bufs[2];
-            avxBufferInfo bufis[2] = { 0 };
-            bufis[0].size = ter->secCnt * 8 * sizeof(afxV3d);
-            bufis[0].usage = avxBufferUsage_VERTEX;
-            bufis[0].flags = avxBufferFlag_WX;
-            bufis[1].size = ter->secCnt * 24 * sizeof(afxUnit16);
-            bufis[1].usage = avxBufferUsage_INDEX;
-            bufis[1].flags = avxBufferFlag_WX;
-            AvxAcquireBuffers(ter->dsys, 2, bufis, bufs);
-
-            afxV3d* vertices = NIL;
-            afxUnit16* indices = NIL;
-            avxBufferedMap maps[2] = { 0 };
-            maps[0].buf = bufs[0];
-            maps[0].range = bufis[0].size;
-            maps[1].buf = bufs[1];
-            maps[1].range = bufis[1].size;
-            AvxMapBuffers(ter->dsys, 2, maps, (void**[]) { &vertices, &indices });
-
-            AsxGenerateAabbEdges(ter->secCnt, ter->secAabb, vertices, indices, NIL, NIL, NIL);
-#if 0
-            afxUnit baseIdx = 0;
-            for (afxUnit i = 0; i < ter->secCnt; i++)
-            {
-                _asxTerrSec* sec = &ter->sectors[i];
-                //baseIdx = sec->gridNode;
-                AfxGetAabbEdges(&sec->aabb, &vertices[i * AFX_NUM_BOX_CORNERS], baseIdx * AFX_NUM_BOX_EDGE_VERTICES, &indices[i * AFX_NUM_BOX_EDGE_VERTICES] /*i == 0 ? indices : 0*/);
-                baseIdx += AFX_NUM_BOX_EDGE_VERTICES;
-            }
-#endif       
-            AvxUnmapBuffers(ter->dsys, 2, maps);
-            ter->dbgLinesVbo = bufs[0];
-            ter->dbgLinesVboRange = bufis[0].size;
-            ter->dbgLinesVboStride = sizeof(afxV3d);
-            ter->dbgLinesIbo = bufs[1];
-            ter->dbgLinesIboRange = bufis[1].size;
-            ter->dbgLinesIboStride = sizeof(afxUnit16);
-        }
-
-        AvxCmdBindPipeline(dctx, 0, ter->dbgAabbPip, NIL, NIL);
-        
-        avxBufferedStream stream = { 0 };
-        stream.buf = ter->dbgLinesVbo;
-        stream.offset = 0;
-        stream.range = ter->dbgLinesVboRange;
-        stream.stride = ter->dbgLinesVboStride;
-        AvxCmdBindVertexBuffers(dctx, 0, 1, &stream);
-        AvxCmdBindIndexBuffer(dctx, ter->dbgLinesIbo, 0, ter->dbgLinesIboRange, ter->dbgLinesIboStride);
-
-#if !0
-        AvxCmdDrawIndexed(dctx, ter->secCnt * 24, 1, 0, 0, 0);
-#else
-        afxUnit vtxOffset = 0;
-        afxUnit idxBase = 0;
-        //for (afxUnit i = 0; i < cellsToBeDrawnCnt; i++)
-        for (afxUnit i = 0; i < ter->secCnt; i++)
-        {
-            _asxTerrSec* sec = &ter->sectors[i];
-
-            AvxCmdDrawIndexed(dctx, 24, 1, idxBase, vtxOffset, 0);
-            vtxOffset += 8 * 12;
-            idxBase += 24;
-        }
-#endif
-    }
-
-#if !0
-    if (showFaces)
-    {
-        //for (afxUnit cellIdx = 0; cellIdx < cellsToBeDrawnCnt; cellIdx++)
-        for (afxUnit cellIdx = 0; cellIdx < ter->secCnt; cellIdx++)
-        {
-            //_asxTerrSec* sec = &ter->sectors[cellsToBeDrawnIdx[cellIdx]];
-            _asxTerrSec* sec = &ter->sectors[cellIdx];
-
-            if (!sec->vbo)
-            {
-                struct
-                {
-                    afxV3d pos;
-                    afxV3d nrm;
-                    afxV3d tan;
-                    afxV3d bit;
-                    afxV2d uv;
-                }*vertices = NIL;
-                afxUnit16* indices = NIL;
-
-                avxBuffer bufs[2];
-                avxBufferInfo bufis[2] = { 0 };
-                bufis[0].size = sec->vtxCnt * sizeof(vertices[0]);
-                bufis[0].usage = avxBufferUsage_VERTEX;
-                bufis[0].flags = avxBufferFlag_WX;
-                bufis[1].size = sec->vtxIdxCnt * sizeof(indices[0]);
-                bufis[1].usage = avxBufferUsage_INDEX;
-                bufis[1].flags = avxBufferFlag_WX;
-                AvxAcquireBuffers(ter->dsys, 2, bufis, bufs);
-#if !0
-                sec->vbo = bufs[0];
-                sec->vboRange = bufis[0].size;
-                sec->vboStride = sizeof(vertices[0]);
-                sec->ibo = bufs[1];
-                sec->iboRange = bufis[1].size;
-                sec->iboStride = sizeof(indices[0]);
-
-                avxBufferedMap maps[2] = { 0 };
-                maps[0].buf = bufs[0];
-                maps[0].range = bufis[0].size;
-                maps[1].buf = bufs[1];
-                maps[1].range = bufis[1].size;
-                AvxMapBuffers(ter->dsys, 2, maps, (void**[]) { &vertices, &indices });
-
-                AfxStream2(sec->vtxIdxCnt, sec->visuVtxMap, sizeof(sec->visuVtxMap[0]), indices, sizeof(indices[0]));
-                AfxStream2(sec->vtxCnt, sec->visuVtxPos, sizeof(sec->visuVtxPos[0]), vertices, sizeof(vertices[0]));
-
-                AvxUnmapBuffers(ter->dsys, 2, maps);
-#endif
-            }
-        }
-
-        AvxCmdBindPipeline(dctx, 0, ter->meshPip, NIL, NIL);
-
-        if (!ter->texd)
-        {
-            avxRasterInfo rasi = { 0 };
-            rasi.usage = avxRasterUsage_RESAMPLE;
-            AvxLoadRasters(ter->dsys, 1, &rasi, AfxUri("../dirt01d.tga"), &ter->texd);
-        }
-
-        AvxCmdBindRasters(dctx, 0, 1, 1, &ter->texd);
-
-        //for (afxUnit i = 0; i < cellsToBeDrawnCnt; i++)
-        for (afxUnit i = 0; i < ter->secCnt; i++)
-        {
-            //_asxTerrSec* sec = &ter->sectors[cellsToBeDrawnIdx[i]];
-            _asxTerrSec* sec = &ter->sectors[i];
-
-            avxBufferedStream stream = { 0 };
-            stream.buf = sec->vbo;
-            stream.offset = sec->vboBase;
-            stream.range = sec->vboRange;
-            stream.stride = sec->vboStride;
-            AvxCmdBindVertexBuffers(dctx, 0, 1, &stream);
-            AvxCmdBindIndexBuffer(dctx, sec->ibo, sec->iboBase, sec->iboRange, sec->iboStride);
-
-            AvxCmdDrawIndexed(dctx, sec->vtxIdxCnt, 1, 0, 0, 0);
-        }
-    }
-#endif
-    return TRUE;
-}
-
 _ASX afxError AfxLoadHeighmap(afxTerrain ter, afxUnit secIdx, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
@@ -622,7 +338,7 @@ _ASX afxError AfxLoadHeighmap(afxTerrain ter, afxUnit secIdx, afxUri const* uri)
     afxMesh msh;
     AfxGetTerrainMeshes(ter, secIdx, 1, &msh);
     afxMeshMorph mshm;
-    AfxGetMeshMorphes(msh, 0, 1, &mshm);
+    AfxDescribeMeshMorphes(msh, 0, 1, &mshm);
 
     afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
 
@@ -917,7 +633,7 @@ _ASX afxError _AsxBuildTerrainVisualShape(afxTerrain ter, afxUnit baseSecIdx, af
         sec->visuVtxMap = indices;
 
         AfxMakeAabb(&ter->secAabb[secIdx], 0, NIL);
-        AfxEmboxTriangles(&ter->secAabb[secIdx], sec->vtxIdxCnt / 3, indices, sizeof(indices[0]), vertices);
+        AfxEmboxTriangles(&ter->secAabb[secIdx], sec->vtxIdxCnt / 3, vertices, indices, sizeof(indices[0]));
         sec->aabb = ter->secAabb[secIdx];
     }
     return err;
@@ -953,10 +669,11 @@ _ASX afxError _AsxTerCtorCb(afxTerrain ter, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_TER, 1, &ter);
 
-    afxSimulation sim = args[0];
+    afxMorphology morp = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
     afxTerrainConfig const* cfg = AFX_CAST(afxTerrainConfig const*, args[1]);
 
-    afxDrawSystem dsys = AfxGetSimulationDrawSystem(sim);
+    afxDrawSystem dsys = AfxGetSimulationDrawSystem(AfxGetProvider(morp));
 
     ter->dsys = dsys;
 
@@ -1038,7 +755,7 @@ _ASX afxError _AsxTerCtorCb(afxTerrain ter, void** args, afxUnit invokeNo)
     avxVertexInput vin[2];
     avxVertexLayout vtxl[2] = { 0 };
     vtxl[0].srcCnt = 1;
-    vtxl[0].attrCnt = 5;
+    vtxl[0].srcs[0].attrCnt = 5;
     vtxl[0].attrs[0].fmt = avxFormat_RGB32f;
     vtxl[0].attrs[1].fmt = avxFormat_RG32f;
     vtxl[0].attrs[1].location = 1;
@@ -1053,7 +770,7 @@ _ASX afxError _AsxTerCtorCb(afxTerrain ter, void** args, afxUnit invokeNo)
     vtxl[0].attrs[4].location = 4;
     vtxl[0].attrs[4].offset = 44;
     vtxl[1].srcCnt = 1;
-    vtxl[1].attrCnt = 1;
+    vtxl[1].srcs[0].attrCnt = 1;
     vtxl[1].attrs[0].fmt = avxFormat_RGB32f;
     AvxDeclareVertexInputs(dsys, 2, vtxl, vin);
 
@@ -1061,10 +778,13 @@ _ASX afxError _AsxTerCtorCb(afxTerrain ter, void** args, afxUnit invokeNo)
     avxPipelineBlueprint pipb[2] = { 0 };
     pipb[0].depthTestEnabled = TRUE;
     pipb[0].vin = vin[0];
-    pipb[1].primTop = avxTopology_TRI_LIST;
+    pipb[0].tag = AFX_STRING("terrainMesh");
+    pipb[0].primTop = avxTopology_TRI_LIST;
     pipb[1].depthTestEnabled = TRUE;
     pipb[1].vin = vin[1];
+    pipb[1].tag = AFX_STRING("terrainAabb");
     pipb[1].primTop = avxTopology_LINE_LIST;
+    pipb[1].fillMode = avxFillMode_LINE;
     AvxAssemblePipelines(dsys, 2, pipb, pip);
     AvxUplinkPipelineFunction(pip[0], avxShaderType_VERTEX, AfxUri("../terrainMeshVsh.glsl"), NIL, NIL, NIL);
     AvxUplinkPipelineFunction(pip[0], avxShaderType_FRAGMENT, AfxUri("../terrainMeshFsh.glsl"), NIL, NIL, NIL);
@@ -1094,15 +814,15 @@ _ASX afxClassConfig const _ASX_TER_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_ASX afxError AfxAcquireTerrain(afxSimulation sim, afxTerrainConfig const* cfg, afxTerrain* terrain)
+_ASX afxError AfxAcquireTerrain(afxMorphology morp, afxTerrainConfig const* cfg, afxTerrain* terrain)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
 
-    afxClass* cls = (afxClass *)_AsxGetTerrainClass(sim);
+    afxClass* cls = (afxClass *)_AsxMorpGetTerrainClass(morp);
     AFX_ASSERT_CLASS(cls, afxFcc_TER);
 
-    if (AfxAcquireObjects(cls, 1, (afxObject*)terrain, (void const*[]) { sim, cfg }))
+    if (AfxAcquireObjects(cls, 1, (afxObject*)terrain, (void const*[]) { morp, cfg }))
     {
         AfxThrowError();
         return err;
@@ -1111,10 +831,10 @@ _ASX afxError AfxAcquireTerrain(afxSimulation sim, afxTerrainConfig const* cfg, 
     return err;
 }
 
-_ASX afxError AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain* terrain)
+_ASX afxError AfxGenerateTerrain(afxMorphology morp, afxWhd const whd, afxTerrain* terrain)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
 
     afxUnit width = whd.w, height = whd.h, depth = whd.d;
 
@@ -1122,14 +842,14 @@ _ASX afxError AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain
     //msh = AfxBuildPlaneMesh(sim->din, 256, 256, 256, 256);
     //msh = AfxBuildParallelepipedMesh(sim->din, AfxWhd(10, 10, 10), 10, 10);
     //msh = AfxBuildCubeMesh(sim->din, 10, 1);
-    AfxBuildGridMesh(sim, 100, 100, 1000, 1000, &msh);
+    AfxBuildGridMesh(morp, 100, 100, 1000, 1000, &msh);
     //msh = AfxBuildGridMesh(sim->din, 10, 10, 10, 10);
     //msh = AfxBuildDiscMesh(sim->din, 10, 10);
     //AfxInvertMeshTopology(msh);
 
     afxTerrain ter;
     afxTerrainConfig terc = { 0 };
-    AfxAcquireTerrain(sim, &terc, &ter);
+    AfxAcquireTerrain(morp, &terc, &ter);
     AfxResetTerrainSector(ter, 0, msh);
     AfxDisposeObjects(1, &msh);
     *terrain = ter;
@@ -1137,14 +857,16 @@ _ASX afxError AfxGenerateTerrain(afxSimulation sim, afxWhd const whd, afxTerrain
     return err;
 }
 
-_ASX afxError AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* uri, afxTerrain* terrain)
+_ASX afxError AfxGenerateHeightmappedTerrain(afxMorphology morp, afxUri const* uri, afxTerrain* terrain)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
+    AFX_ASSERT_OBJECTS(afxFcc_MORP, 1, &morp);
 
+#if 0
     avxRaster ras;
     AvxLoadRasters(sim->dsys, 1, NIL, uri, &ras);
-    AvxPrintRaster(ras, 1, NIL, AfxUri("../heightmap_dump.tga"), 0);
+    AvxPrintRaster(ras, AfxUri("../heightmap_dump.tga"), NIL, 1, 0);
+#endif
 
     afxStream iob;
     afxStreamInfo iobi = { 0 };
@@ -1166,17 +888,17 @@ _ASX afxError AfxGenerateHeightmappedTerrain(afxSimulation sim, afxUri const* ur
     //tga.width = tga.width, tga.height = tga.height / 8;
 
     afxMesh msh;
-    AfxBuildGridMesh(sim, tga.width, tga.height, tga.width * 10, tga.height * 10, &msh);
+    AfxBuildGridMesh(morp, tga.width, tga.height, tga.width * 10, tga.height * 10, &msh);
 
     afxTerrain ter;
     afxTerrainConfig terc = {0};
-    AfxAcquireTerrain(sim, &terc, &ter);
+    AfxAcquireTerrain(morp, &terc, &ter);
     AfxResetTerrainSector(ter, 0, msh);
 
     //afxMesh msh;
     AfxGetTerrainMeshes(ter, 0, 1, &msh);
     afxMeshMorph mshm;
-    AfxGetMeshMorphes(msh, 0, 1, &mshm);
+    AfxDescribeMeshMorphes(msh, 0, 1, &mshm);
 
     afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
 

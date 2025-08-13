@@ -32,16 +32,16 @@ AFX_OBJECT(afxDevLink)
 #ifdef _AFX_DEVICE_C
 AFX_OBJECT(afxDevice)
 {
-    afxUri8             urn; // "//./dev/"
+    afxUri32            urn; // "//./dev/"
     afxDeviceType       type;
     afxDeviceStatus     status;
     afxAcceleration     acceleration;
     afxBool             serving;
 
-    afxUnit32           ihvId;
-    afxUnit32           ihvDevId;
-    afxUnit32           isvId;
-    afxUnit32           isvDrvId;
+    afxUnit32           hwVndId;
+    afxUnit32           hwVndDevId;
+    afxUnit32           swVndId;
+    afxUnit32           swVndDrvId;
     afxUnit32           driverVer;
     afxUnit32           apiVer;
 
@@ -91,12 +91,15 @@ AFX_OBJECT(afxModule)
         afxClass simCls;
 
         afxClass asiCls;
+        afxClass mcdcCls;
         afxClass mdevCls;
         afxClass msysCls;
 
         afxClass sshCls;
         afxClass sesCls;
         afxClass hidCls;
+        afxError(*getDoutClsc)(afxDrawSystem dsys, afxString const* tool, afxClassConfig* clsc);
+        afxError(*getSinkClsc)(afxMixSystem msys, afxString const* tool, afxClassConfig* clsc);
     } icd;
 
     afxString           description;

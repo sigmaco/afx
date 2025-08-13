@@ -41,6 +41,9 @@
     Draw I/O mechanisms are software systems that integrate various components to render complex scenes.
 */
 
+// AVX is based on an idealization of what should be OpenGL 5.
+// The SIGMA believes that better tooling for modern features will help bring back graphics programmers wary of the many Vulkan cons.
+
 #ifndef AVX_DRAW_DEFS_H
 #define AVX_DRAW_DEFS_H
 
@@ -331,7 +334,8 @@ AFX_DEFINE_HANDLE(afxDisplay);
 AFX_DEFINE_HANDLE(afxDrawQueue);
 AFX_DEFINE_HANDLE(afxDrawInput);
 AFX_DEFINE_HANDLE(afxDrawContext);
-AFX_DEFINE_HANDLE(afxDrawOutput);
+AFX_DEFINE_HANDLE(afxSurface);
+AFX_DEFINE_HANDLE(afxSurface);
 AFX_DEFINE_HANDLE(avxPipeline);
 AFX_DEFINE_HANDLE(avxRasterizer);
 AFX_DEFINE_HANDLE(avxVertexInput);

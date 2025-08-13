@@ -366,8 +366,8 @@ _AUX afxReal AfxGetCombinedKeyPressure(afxUnit seat, afxKey lhs, afxKey rhs)
 
     if (seat < ses->seatCnt)
     {
-        pressure = -AfxRealFromByte(ses->seats[seat].keyState[0][lhs]);
-        pressure += AfxRealFromByte(ses->seats[seat].keyState[0][rhs]);
+        pressure = -AFX_UN8_TO_R32(ses->seats[seat].keyState[0][lhs]);
+        pressure += AFX_UN8_TO_R32(ses->seats[seat].keyState[0][rhs]);
     }
     return pressure;
 }
@@ -383,7 +383,7 @@ _AUX afxReal AfxGetKeyPressure(afxUnit seat, afxKey code)
 
     if (seat < ses->seatCnt)
     {
-        pressure += AfxRealFromByte(ses->seats[seat].keyState[0][code]);
+        pressure += AFX_UN8_TO_R32(ses->seats[seat].keyState[0][code]);
     }
     return pressure;
 }

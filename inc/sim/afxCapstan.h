@@ -131,7 +131,7 @@ ASX void            AfxRebaseCapstanClocks(afxReal currClock, afxUnit cnt, afxCa
 
 /// Update the current motor clock to a new one. // new absolute time
 
-ASX void            AfxUpdateCapstanClock(afxReal time, afxUnit cnt, afxCapstan capstans[]);
+ASX void            AfxStepCapstans(afxReal /* NOT delta */ time, afxUnit cnt, afxCapstan capstans[]);
 
 // deveria ser suspend, já que o motor já começa ativo
 

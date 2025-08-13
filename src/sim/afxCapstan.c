@@ -253,7 +253,7 @@ _ASXINL void AfxSetCapstanWeight(afxReal weight, afxUnit cnt, afxCapstan capstan
     }
 }
 
-_ASXINL void AfxUpdateCapstanClock(afxReal time, afxUnit cnt, afxCapstan capstans[])
+_ASXINL void AfxStepCapstans(afxReal time, afxUnit cnt, afxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);

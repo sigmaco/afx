@@ -26,7 +26,7 @@ _ASX asxCmd* _AsxCtxPushCmd(afxContext ctx, afxUnit id, afxUnit siz, afxCmdId* c
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
-    AFX_ASSERT(siz >= sizeof(asxCmdHdr));
+    AFX_ASSERT(siz >= sizeof(_asxCmdHdr));
 
     asxCmd* cmd = AfxRequestFromArena(&ctx->cmdArena, siz, 1, NIL, 0);
     AFX_ASSERT(cmd);

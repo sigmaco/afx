@@ -23,9 +23,9 @@
 
 #include "../../impl/afxExecImplKit.h"
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/draw/math/avxViewport.h"
+#include "qwadro/inc/math/avxViewport.h"
 #include "qwadro/inc/ux/afxShell.h"
-#include "qwadro/../../dep_/vgl1/vgl1.h"
+//#include "qwadro/../../dep_/vgl1/vgl1.h"
 
 typedef struct afxDesktop afxDesktop;
 
@@ -34,8 +34,8 @@ AFX_DEFINE_STRUCT(afxDesktop) // DWM
     afxReal64           wpOverHp; // physical w/h
     afxReal64           wrOverHr; // (usually screen) resolution w/h
     afxReal             refreshRate;
-    afxWhd              res; // Screen resolution. Absolute extent available.
-    afxDrawOutput       dout;
+    afxWarp              res; // Screen resolution. Absolute extent available.
+    afxSurface       dout;
 };
 
 AFX_DEFINE_STRUCT(afxShellInfo)
@@ -74,14 +74,15 @@ AFX_DECLARE_STRUCT(_auxSesImpl);
 #else
 AFX_DEFINE_STRUCT(_auxSesImpl)
 {
-    afxTime(*pump)(afxSession,afxFlags,afxTime);
-    afxBool(*hasClipContent)(afxSession, afxFlags);
-    afxUnit(*getClipContent)(afxSession, afxString*);
-    afxError(*setClipContent)(afxSession, afxString const*);
+    afxUnit64(*pumpCb)(afxSession,afxFlags, afxUnit64);
+    afxBool(*hasClipboardCb)(afxSession, afxFlags);
+    afxUnit(*getClipboardCb)(afxSession, afxString*);
+    afxError(*setClipboardCb)(afxSession, afxString const*);
     afxBool(*getCurs)(afxSession, afxRect*,afxWindow,afxRect*,afxRect*);
-    afxError(*immerge)(afxSession,afxWindow,afxBool);
+    afxError(*fseCb)(afxSession,afxWindow,afxBool);
+    afxError(*focusCb)(afxSession, afxWindow, afxFlags);
     afxError(*promote)(afxSession, afxWindow);
-    afxError(*grabCursor)(afxSession, afxWindow, afxBool);
+    afxError(*grabCursorCb)(afxSession, afxWindow, afxBool);
 };
 #endif
 
@@ -144,6 +145,8 @@ AFX_OBJECT(afxSession)
     //afxUnit              dwmCnt;
     afxDesktop          dwm;
 
+    afxString4096       clipb;
+
     afxUnit             vduIdx;
     afxDrawSystem       dsys;
     afxUnit             sdevId;
@@ -164,7 +167,7 @@ AFX_DEFINE_STRUCT(_auxWndDdi)
     afxError(*adjustCb)(afxWindow, afxRect const*, afxRect const*);
     void(*focus)(afxWindow);
     afxBool(*hasFocus)(afxWindow);
-
+    afxUnit(*titleCb)(afxWindow);
 };
 #endif
 
@@ -181,10 +184,13 @@ AFX_OBJECT(afxWindow)
     afxChain        classes;
     afxClass        widCls;
 
-    afxDrawOutput   dout;
-    afxDrawOutput   frameDout;
-    afxRect         frameRect;
-    afxRect         surfaceRect; // aka client area
+    afxSurface   dout;
+    afxSurface   frameDout;
+    afxRect         frameRc;
+    afxRect         frameRcMin;
+    afxRect         frameRcMax;
+    afxRect         areaRc; // aka client area
+    afxBool         alwaysOnTop;
 
     struct// auxFrame
     {
@@ -352,7 +358,8 @@ AFX_OBJECT(afxWidget)
     afxTransform local;
     afxM4d iw;
 
-    afxResult(*update)(afxWidget wid, afxReal dt);
+    afxResult(*updateCb)(afxWidget wid, afxReal dt);
+    afxError(*renderCb)(afxWidget wid, afxDrawContext dctx);
 };
 #endif//_AUX_WIDGET_C
 #endif//_AUX_UX_C
@@ -373,7 +380,7 @@ AUX afxClass const* AfxGetKeyboardClass(afxShell ssh);
 AUX afxClass const* AfxGetControllerClass(afxShell ssh);
 AUX afxClass const* _AuxGetSessionClass(afxModule icd);
 
-AUX afxClass const* _AuxWndGetWidgetClass(afxWindow wnd);
+AUX afxClass const* _AuxWndGetWidClass(afxWindow wnd);
 AUX afxClass const* _AuxSesGetWndClass(afxSession ses);
 AUX afxClass const* _AuxSesGetXssClass(afxSession ses);
 

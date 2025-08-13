@@ -28,7 +28,46 @@
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
 #define _AMX_AUDIO_C
-#include "../impl/amxImplementation.h"
+#include "../ddi/amxImplementation.h"
+
+/*
+    Audio Element	Role in Pipeline	                Graphics Analogy
+    Track	        Audio source (sample, synth, loop)	Mesh / Object
+    Voice	        Instance of a track being played    Mesh instance / draw call
+    Sample	        Raw PCM data (per frame)	        Vertex data
+    Bus	            Group of mixed signals	            Render layer or render pass
+    DSP Unit (FX)	Filter, EQ, compressor	            Shader module (e.g., BRDF)
+    Master Bus	    Final stereo or surround output	    Framebuffer
+    Sample Rate	    44100 Hz = 44100 frames/sec	        Resolution or frame rate
+*/
+
+AFX_DEFINE_STRUCT(_amxPlaying)
+{
+    afxLink             link;
+    amxBufferedTrack    buf;
+    afxUnit64           posn;
+    afxUnit             iterCnt;
+};
+
+_AMX afxClass const* _AmxMixGetVoxClass(afxMixContext mix)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    afxClass const* cls = &mix->voxCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_VOX);
+    return cls;
+}
+
+_AMX _amxCmdBatch* _AmxGetCmdBatch(afxMixContext mix, afxUnit idx)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    _amxCmdBatch* batch = NIL;
+    afxBool valid = AfxGetPoolUnit(&mix->batches, idx, (void**)&batch);
+    if ((!valid) || (!batch)) return NIL;
+    AFX_ASSERT(batch->fcc == afxFcc_MCMD);
+    return batch;
+}
 
 _AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdId* cmdId, _amxCmd** ppCmd)
 {
@@ -46,298 +85,6 @@ _AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdI
     *ppCmd = cmd;
 
     return err;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-_AMX afxCmdId AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(CommenceMixScope), sizeof(cmd->CommenceMixScope) + (scope->chanCnt * sizeof(cmd->CommenceMixScope.chans[0])), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    
-    AFX_ASSERT(scope);
-    cmd->CommenceMixScope.scope = *scope;
-
-    if (!scope->freq)
-    {
-        if (scope->sink)
-            cmd->CommenceMixScope.scope.freq = scope->sink->freq;
-        else
-            cmd->CommenceMixScope.scope.freq = 48000;
-    }
-
-    AFX_ASSERT(scope->chans);
-
-    for (afxUnit i = 0; i < scope->chanCnt; i++)
-    {
-        cmd->CommenceMixScope.chans[i] = scope->chans[i];
-    }
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdConcludeMixScope(afxMixContext mix)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(ConcludeMixScope), sizeof(cmd->ConcludeMixScope), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdReverb(afxMixContext mix, afxUnit voice, afxReal wetMix, afxReal roomSiz, afxReal width, afxReal damp, afxReal dryMix)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(Reverb), sizeof(cmd->Reverb), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->Reverb.voice = voice;
-    cmd->Reverb.wetMix = wetMix;
-    cmd->Reverb.roomSiz = roomSiz;
-    cmd->Reverb.width = width;
-    cmd->Reverb.damp = damp;
-    cmd->Reverb.dryMix = dryMix;
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdPhaser(afxMixContext mix, afxUnit voice, afxReal floor, afxReal ceil, afxReal rate, afxReal feedback, afxReal depth, afxReal phase, afxUnit stageCnt)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(Phaser), sizeof(cmd->Phaser), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->Phaser.voice = voice;
-    cmd->Phaser.floor = floor;
-    cmd->Phaser.ceil = ceil;
-    cmd->Phaser.rate = rate;
-    cmd->Phaser.feedback = feedback;
-    cmd->Phaser.depth = depth;
-    cmd->Phaser.phase = phase;
-    cmd->Phaser.stageCnt = stageCnt;
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdGainer(afxMixContext mix, afxUnit voice, afxReal gain, afxReal pan, afxMask invChan)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(Gainer), sizeof(cmd->Gainer), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->Gainer.voice = voice;
-    cmd->Gainer.gain = gain;
-    cmd->Gainer.pan = pan;
-    cmd->Gainer.invChan = invChan;
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdFlanger(afxMixContext mix, afxUnit voice, afxReal amount, afxReal rate, afxReal amplitude, afxReal feedback, afxReal delay, afxReal phase, afxUnit flt)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(Flanger), sizeof(cmd->Flanger), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->Flanger.voice = voice;
-    cmd->Flanger.amount = amount;
-    cmd->Flanger.rate = rate;
-    cmd->Flanger.amplitude = amplitude;
-    cmd->Flanger.feedback = feedback;
-    cmd->Flanger.delay = delay;
-    cmd->Flanger.phase = phase;
-    cmd->Flanger.flt = flt;
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdAnalog(afxMixContext mix, afxUnit voice, afxUnit type, afxUnit flt, afxReal cutoff, afxReal resonance, afxReal inertia, afxReal drive, afxUnit oversamp, afxReal start, afxReal end)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(Analog), sizeof(cmd->Analog), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->Analog.voice = voice;
-    cmd->Analog.type = type;
-    cmd->Analog.flt = flt;
-    cmd->Analog.cutoff = cutoff;
-    cmd->Analog.resonance = resonance;
-    cmd->Analog.inertia = inertia;
-    cmd->Analog.drive = drive;
-    cmd->Analog.oversamp = oversamp;
-    cmd->Analog.start = start;
-    cmd->Analog.end = end;
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdCompressor(afxMixContext mix, afxUnit voice, afxReal threshold, afxReal ratio, afxReal attack, afxReal release, afxReal makeup)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(Compressor), sizeof(cmd->Compressor), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->Compressor.voice = voice;
-    cmd->Compressor.threshold = threshold;
-    cmd->Compressor.ratio = ratio;
-    cmd->Compressor.attack = attack;
-    cmd->Compressor.release = release;
-    cmd->Compressor.makeup = makeup;
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdLineIn(afxMixContext mix, afxUnit voice, afxUnit line, afxMask chanMask, afxUnit latency, afxReal pan, afxReal vol)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(LineIn), sizeof(cmd->LineIn), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->LineIn.voice = voice;
-    cmd->LineIn.line = line;
-    cmd->LineIn.chanMask = chanMask;
-    cmd->LineIn.latency = latency;
-    cmd->LineIn.pan = pan;
-    cmd->LineIn.vol = vol;
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdRemoteIn(afxMixContext mix, afxUnit voice, afxUnit src, afxMask chanMask, afxReal pan, afxReal vol)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(RemoteIn), sizeof(cmd->RemoteIn), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->RemoteIn.voice = voice;
-    cmd->RemoteIn.src = src;
-    cmd->RemoteIn.chanMask = chanMask;
-    cmd->RemoteIn.pan = pan;
-    cmd->RemoteIn.vol = vol;
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdSend(afxMixContext mix, afxUnit voice, afxBool muteSrc, afxReal amount, afxReal pan, afxUnit receiverSubmix)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(Send), sizeof(cmd->Send), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->Send.voice = voice;
-    cmd->Send.muteSrc = muteSrc;
-    cmd->Send.amount = amount;
-    cmd->Send.pan = pan;
-    cmd->Send.receiverSubmix = receiverSubmix;
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdResampleAudio(afxMixContext mix, amxAudio src, amxAudio dst, amxAudioPeriod const* srcp, amxAudioPeriod const* dstp)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    amxAudioInfo srcd, dstd;
-    AmxDescribeAudio(src, &srcd);
-    AmxDescribeAudio(src, &dstd);
-
-    // Calculate the ratio between the output and input sample rates
-    afxReal rateRatio = (afxReal)(dst->freq / src->freq);
-    // Calculate the number of samples in the output buffer
-    afxInt outputLen = (afxInt)(src->sampCnt * rateRatio);
-
-    AFX_ASSERT(dstd.sampCnt >= outputLen);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(ResampleAudio), sizeof(cmd->ResampleAudio), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->ResampleAudio.src = src;
-    cmd->ResampleAudio.dst = dst;
-
-    _AmxSanitizeAudioPeriod(src, srcp, &cmd->ResampleAudio.srcp);
-    _AmxSanitizeAudioPeriod(dst, dstp, &cmd->ResampleAudio.dstp);
-
-    return cmdId;
-}
-
-_AMX afxCmdId AmxCmdFetchAudition(afxMixContext mix, afxUnit voice, afxUnit headIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
-
-    afxCmdId cmdId;
-    _amxCmd* cmd;
-    _AmxMixPushCmd(mix, _AMX_CMD_ID(FetchAudition), sizeof(cmd->FetchAudition), &cmdId, &cmd);
-    AFX_ASSERT(cmd);
-    cmd->FetchAudition.voice = voice;
-    cmd->FetchAudition.headIdx = headIdx;
-    return cmdId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -363,27 +110,469 @@ _AMX afxUnit AfxGetMixerPool(afxMixContext mix)
     return mix->poolIdx;
 }
 
-_AMX afxError AmxRollMixContext(afxMixContext mix)
+_AMX afxError AmxCmdPlayAudio(afxMixContext mix, afxUnit cnt, amxBufferedAudio const maps[])
 {
     afxError err = AFX_ERR_NONE;
-    // mctx must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
-    afxMixSystem msys = AfxGetProvider(mix);
+    return err;
+}
 
-    afxMixBridge mexu;
-    AFX_ASSERT_RANGE(msys->bridgeCnt, /*ctrl->exuIdx*/0, 1);
-    if (!AmxGetMixBridges(msys, /*ctrl->exuIdx*/0, 1, &mexu))
+_AMX afxError AmxExhaustMixContext(afxMixContext mix, afxBool freeMem)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    if (mix->pimpl->exhaust)
     {
+        if (mix->pimpl->exhaust(mix, freeMem))
+        {
+            AfxThrowError();
+        }
+        else
+        {
+            AFX_ASSERT(AfxIsChainEmpty(&mix->commands));
+            AFX_ASSERT(mix->batches.totalUsedCnt == 0);
+        }
+        return err;
+    }
+
+    AfxLockFutex(&mix->cmdbReqLock, FALSE);
+#if 0
+    if (mix->objsToBeDisposed.pop)
+    {
+        AfxDisposeObjects(mix->objsToBeDisposed.pop, mix->objsToBeDisposed.items);
+
+        AfxEmptyArray(&mix->objsToBeDisposed, !freeMem, FALSE);
+    }
+#endif
+
+    while (1)
+    {
+        afxUnit leftCnt = 0;
+        _amxCmdBatch* batch;
+        for (afxUnit i = 0; AfxEnumeratePoolItems(&mix->batches, i, 1, (void**)&batch); i++)
+        {
+#if 0
+            while (AfxLoadAtom32(&batch->submCnt))
+            {
+                AfxYield();
+            }
+#else
+            if (AfxLoadAtom32(&batch->submCnt))
+            {
+                ++leftCnt;
+                continue;
+            }
+#endif
+            if (AmxRecycleMixCommands(mix, i, freeMem))
+                AfxThrowError();
+        }
+
+        if (leftCnt)
+            AfxYield();
+        else
+            break;
+    }
+
+    if (freeMem)
+    {
+        AfxExhaustArena(&mix->cmdArena);
+        AfxExhaustPool(&mix->batches, !freeMem);
+    }
+
+    AfxDeployChain(&mix->commands, mix);
+    AFX_ASSERT(mix->batches.totalUsedCnt == 0);
+
+    AfxUnlockFutex(&mix->cmdbReqLock, FALSE);
+
+    return err;
+}
+
+_AMX afxError AmxRecordMixCommands(afxMixContext mix, afxBool once, afxBool deferred, afxUnit* batchId)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT(batchId);
+
+    if (mix->pimpl->compose)
+    {
+        afxUnit bId;
+        if (mix->pimpl->compose(mix, once, deferred, &bId))
+        {
+            AfxThrowError();
+            bId = AFX_INVALID_INDEX;
+        }
+        else
+        {
+            //AFX_ASSERT(mix->state == amxMixContextState_EXECUTABLE);
+            AFX_ASSERT(AfxIsChainEmpty(&mix->commands));
+        }
+
+        AFX_ASSERT(batchId);
+        *batchId = bId;
+
+        return err;
+    }
+
+    // AMX assumes the compilation when ICD does not take the front.
+
+#if 0
+    if (!AfxTryLockFutex(&mix->cmdbReqLock, FALSE))
+    {
+        // Bail out immediately.
+        return err;
+    }
+#else
+    AfxLockFutex(&mix->cmdbReqLock, FALSE);
+#endif
+
+    // Firstly, try recycling batches.
+    afxBool recycled = FALSE;
+
+    afxUnit cmdbId;
+    _amxCmdBatch* cmdb;
+    AFX_ITERATE_CHAIN_B2F(_amxCmdBatch, cmdb, recyc, &mix->cmdbRecycChain)
+    {
+        AFX_ASSERT(cmdb->fcc == afxFcc_MCMD);
+
+        AfxPopLink(&cmdb->recyc);
+
+        AfxDeployChain(&cmdb->commands, mix);
+
+        // Move the allocated resource to the context.
+        if (AfxMergeArena(&mix->cmdArena, &cmdb->cmdArenaCompiled))
+        {
+            AfxThrowError();
+        }
+
+        if (mix->cmdArena.cleanupCnt > 3)
+            AfxExhaustArena(&mix->cmdArena);
+
+        AFX_ASSERT(AfxLoadAtom32(&cmdb->submCnt) == 0);
+        cmdb->submCnt = 0;
+        cmdb->submQueMask = NIL;
+
+        AFX_ASSERT(!once || (once == TRUE));
+        cmdb->once = !!once;
+        AFX_ASSERT(!deferred || (deferred == TRUE));
+        cmdb->deferred = !!deferred;
+
+        cmdbId = cmdb->uniqId;
+
+        recycled = TRUE;
+        break;
+    }
+
+    while (!recycled)
+    {
+        // If could not recycle a batch, request a new one from the pool.
+
+        if (mix->batches.totalUsedCnt >= 100)
+        {
+            AfxThrowError();
+            break;
+        }
+
+        if (AfxRequestPoolUnits(&mix->batches, 1, &cmdbId, (void**)&cmdb))
+        {
+            AfxThrowError();
+            break;
+        }
+
+        cmdb->fcc = afxFcc_MCMD;
+        cmdb->uniqId = cmdbId;
+        cmdb->submCnt = 0;
+        cmdb->submQueMask = NIL;
+
+        AfxPushLink(&cmdb->recyc, NIL);
+
+        AFX_ASSERT(!once || (once == TRUE));
+        cmdb->once = !!once;
+        AFX_ASSERT(!deferred || (deferred == TRUE));
+        cmdb->deferred = !!deferred;
+
+        AfxDeployChain(&cmdb->commands, mix);
+
+        AfxMakeArena(&cmdb->cmdArenaCompiled, NIL, AfxHere());
+        break;
+    }
+
+    if (!err)
+    {
+#if 0
+        cmdb->inMixScope = FALSE;
+        cmdb->inVideoCoding = FALSE;
+#endif
+        mix->state = amxMixState_RECORDING;
+        AFX_ASSERT(mix->state == amxMixState_RECORDING);
+
+        AFX_ASSERT(batchId);
+        *batchId = cmdbId;
+    }
+
+    AfxUnlockFutex(&mix->cmdbReqLock, FALSE);
+
+    return err;
+}
+
+_AMX afxError AmxDiscardMixCommands(afxMixContext mix, afxBool freeRes)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    if (mix->pimpl->discard)
+    {
+        if (mix->pimpl->discard(mix, freeRes))
+        {
+            AfxThrowError();
+        }
+        else
+        {
+            //AFX_ASSERT(mix->state == amxMixContextState_EXECUTABLE);
+            AFX_ASSERT(AfxIsChainEmpty(&mix->commands));
+        }
+        return err;
+    }
+
+    // AMX assumes the compilation when ICD does not take the front.
+
+    if (AfxIsChainEmpty(&mix->commands))
+        return err;
+
+#if 0
+    if (!AfxTryLockFutex(&mix->cmdbReqLock, FALSE))
+    {
+        // Bail out immediately.
+        // Don't care for robustness here because these resources will be reused anyway if this context is kept operational.
         AfxThrowError();
         return err;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+#else
+    AfxLockFutex(&mix->cmdbReqLock, FALSE);
+#endif
 
-    if (_AmxMexuRollMixers(mexu, 0, 1, 1, 1, &mix))
-        AfxThrowError();
+    // How to use @freeRes here? It is mandatory to reclaim every allocation to arena as we could purge it all at once.
+
+#if 0
+    if (freeRes)
+    {
+        AfxExhaustArena(&mix->cmdArena);
+    }
+    else
+    {
+        _amxCmd* cmd;
+        AFX_ITERATE_CHAIN(_amxCmd, cmd, hdr.script, &mix->commands)
+        {
+            AfxPopLink(&cmd->hdr.script);
+            AfxReclaimToArena(&mix->cmdArena, cmd, cmd->hdr.siz);
+        }
+    }
+#else
+    AfxExhaustArena(&mix->cmdArena);
+#endif
+
+    AfxDeployChain(&mix->commands, mix);
+
+    AfxUnlockFutex(&mix->cmdbReqLock, FALSE);
 
     return err;
+}
+
+_AMX afxError AmxCompileMixCommands(afxMixContext mix, afxUnit batchId)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    // If there was an error during recording, the application will be notified by an unsuccessful return 
+    // code returned by AfxEndCommandBuffer, and the draw context will be moved to the invalid state.
+    // The draw context must have been in the recording state, and, if successful, is moved to the executable state.
+
+    if (batchId == AFX_INVALID_INDEX)
+    {
+        AFX_ASSERT(batchId != AFX_INVALID_INDEX);
+        AfxThrowError();
+        return err;
+    }
+
+    if (mix->pimpl->compile)
+    {
+        if (mix->pimpl->compile(mix, batchId))
+        {
+            AfxThrowError();
+        }
+        else
+        {
+            //AFX_ASSERT(mix->state == amxMixContextState_EXECUTABLE);
+            AFX_ASSERT(AfxIsChainEmpty(&mix->commands));
+        }
+        return err;
+    }
+
+    // AMX assumes the compilation when ICD does not take the front.
+
+    AfxLockFutex(&mix->cmdbReqLock, FALSE);
+
+    AFX_ASSERT(AfxIsAnValidPoolUnit(&mix->batches, batchId));
+    _amxCmdBatch* batch = _AmxGetCmdBatch(mix, batchId);
+
+    if (!batch)
+    {
+        AFX_ASSERT(batch);
+    }
+    else
+    {
+        if (AfxLoadAtom32(&batch->submCnt))
+        {
+            AFX_ASSERT(batch->submCnt == 0);
+            AfxThrowError();
+        }
+        else
+        {
+            if (batch->recyc.next != &batch->recyc)
+            {
+                AFX_ASSERT(!(batch->recyc.next != &batch->recyc));
+                AfxThrowError();
+            }
+            else
+            {
+                //AfxAssumeArena(&batch->cmdArenaCompiled, &mix->cmdArena);
+                AfxMergeArena(&batch->cmdArenaCompiled, &mix->cmdArena);
+                AfxAppendChain(&batch->commands, &mix->commands);
+                AfxExhaustArena(&mix->cmdArena);
+                AFX_ASSERT(AfxIsChainEmpty(&mix->commands));
+            }
+        }
+    }
+
+    AfxUnlockFutex(&mix->cmdbReqLock, FALSE);
+
+    return err;
+}
+
+_AMX afxError AmxRecycleMixCommands(afxMixContext mix, afxUnit batchId, afxBool freeRes)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    if (batchId == AFX_INVALID_INDEX)
+    {
+        AFX_ASSERT(batchId != AFX_INVALID_INDEX);
+        AfxThrowError();
+        return err;
+    }
+
+    if (mix->pimpl->recycle)
+    {
+        if (mix->pimpl->recycle(mix, batchId, freeRes))
+        {
+            AfxThrowError();
+        }
+        return err;
+    }
+
+    // AMX assumes the compilation when ICD does not take the front.
+
+    AfxLockFutex(&mix->cmdbReqLock, FALSE);
+
+    AFX_ASSERT(AfxIsAnValidPoolUnit(&mix->batches, batchId));
+    _amxCmdBatch* cmdb = _AmxGetCmdBatch(mix, batchId);
+
+    if (!cmdb)
+    {
+        AFX_ASSERT(cmdb);
+        AfxThrowError();
+        return err;
+    }
+
+    AFX_ASSERT(cmdb->fcc == afxFcc_MCMD);
+    AFX_ASSERT(cmdb->uniqId == batchId);
+
+    // Should wait or return?
+    // On the next roll, it should be recycled anyway.
+#if 0
+    while (AfxLoadAtom32(&cmdb->submCnt))
+    {
+        AfxYield();
+    }
+#else
+    if (AfxLoadAtom32(&cmdb->submCnt))
+    {
+        AfxUnlockFutex(&mix->cmdbReqLock, FALSE);
+        return afxError_BUSY;
+    }
+#endif
+
+    // There is some issues if it is called from MPU as there not a lock mechanism for arena and batches' pool.
+
+#if 0
+    if (freeRes)
+    {
+        AFX_ASSERT(freeRes == TRUE);
+        AfxExhaustArena(&cmdb->cmdArenaCompiled);
+    }
+    else
+    {
+        _amxCmd* cmd;
+        AFX_ITERATE_CHAIN(_amxCmd, cmd, hdr.script, &cmdb->commands)
+        {
+            AfxPopLink(&cmd->hdr.script);
+            AfxReclaimToArena(&cmdb->cmdArenaCompiled, cmd, cmd->hdr.siz);
+        }
+    }
+#else
+    AfxExhaustArena(&cmdb->cmdArenaCompiled);
+#endif
+
+    AfxDeployChain(&cmdb->commands, cmdb);
+
+    afxBool recycled = FALSE;
+#if 0
+    if (3 > mix->cmdbRecycChain.cnt)
+    {
+        AfxPushLink(&cmdb->recyc, &mix->cmdbRecycChain);
+        recycled = TRUE;
+    }
+    // If could not enqueue for recyclage, destroy it.
+#endif
+
+    if (!recycled)
+    {
+        //AfxExhaustArena(&cmdb->cmdArenaCompiled);
+        AfxDismantleArena(&cmdb->cmdArenaCompiled);
+
+        if (AfxReclaimPoolUnits(&mix->batches, 1, (void**)&cmdb))
+        {
+            AfxThrowError();
+        }
+        //AfxExhaustPool(&mix->batches, FALSE);
+    }
+
+    AfxUnlockFutex(&mix->cmdbReqLock, FALSE);
+    return err;
+}
+
+_AMX afxBool AmxDoesMixCommandsExist(afxMixContext dctx, afxUnit batchId)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &dctx);
+
+    if (batchId == AFX_INVALID_INDEX)
+    {
+        AFX_ASSERT(batchId != AFX_INVALID_INDEX);
+        AfxThrowError();
+        return FALSE;
+    }
+
+    // AMX assumes the compilation when ICD does not take the front.
+
+    AfxLockFutex(&dctx->cmdbReqLock, FALSE);
+
+    _amxCmdBatch* batch = _AmxGetCmdBatch(dctx, batchId);
+
+    AfxUnlockFutex(&dctx->cmdbReqLock, FALSE);
+
+    return !!batch;
 }
 
 _AMX afxError _AmxMixDtorCb(afxMixContext mix)
@@ -396,7 +585,15 @@ _AMX afxError _AmxMixDtorCb(afxMixContext mix)
         AfxYield();
     }
 
+    AmxExhaustMixContext(mix, TRUE);
+
+    AfxDismantleFutex(&mix->cmdbReqLock);
+    AfxDeployChain(&mix->cmdbRecycChain, mix);
+
     AfxDismantleArena(&mix->cmdArena);
+    AfxExhaustPool(&mix->batches, TRUE);
+
+    AfxDismountClass(&mix->voxCls);
 
     return err;
 }
@@ -428,12 +625,20 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
 
     mix->routing = NIL;
 
+    mix->cmdbLockedForReq = FALSE;
+    AfxDeployFutex(&mix->cmdbReqLock);
+    AfxDeployChain(&mix->cmdbRecycChain, mix);
+
     AfxMakeArena(&mix->cmdArena, NIL, AfxHere());
     AfxDeployChain(&mix->commands, mix);
 
     mix->resetCb = _AmxMixResetCb;
     mix->endCb = _AmxMixEndCb;
     mix->state = amxMixState_RECORDING;
+
+    mix->pimpl = NIL;// &_AMX_MCTX_DDI;
+
+    AfxDeployPool(&mix->batches, sizeof(_amxCmdBatch), 3, 0);
 
     {
         mix->motor.flags = 1;// afxCapstanFlag_ACTIVE;
@@ -453,6 +658,8 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
         mix->motor.timing.easeOutEndClock = 0;
         mix->motor.easeOutValues = (afxUnit)0xFFFF;
     }
+
+    AfxMountClass(&mix->voxCls, NIL, NIL, &_AMX_VOX_CLASS_CONFIG);
 
     return err;
 }
@@ -476,7 +683,7 @@ _AMX afxError AmxAcquireMixContext(afxMixSystem msys, afxMixConfig const* cfg, a
     AFX_ASSERT(mixer);
     AFX_ASSERT(cfg);
 
-    afxClass* cls = (afxClass*)_AmxGetMixContextClass(msys);
+    afxClass* cls = (afxClass*)_AmxMsysGetMixClass(msys);
     AFX_ASSERT_CLASS(cls, afxFcc_MIX);
     
     afxMixContext mix;
@@ -489,5 +696,28 @@ _AMX afxError AmxAcquireMixContext(afxMixSystem msys, afxMixConfig const* cfg, a
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     AFX_ASSERT(mixer);
     *mixer = mix;
+    return err;
+}
+
+_AMX afxError AmxRollMixContext(afxMixContext mix, afxUnit sampCnt)
+{
+    afxError err = AFX_ERR_NONE;
+    // mctx must be a valid afxMixSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    afxMixSystem msys = AfxGetProvider(mix);
+
+    afxMixBridge mexu;
+    AFX_ASSERT_RANGE(msys->bridgeCnt, /*ctrl->exuIdx*/0, 1);
+    if (!AmxGetMixBridges(msys, /*ctrl->exuIdx*/0, 1, &mexu))
+    {
+        AfxThrowError();
+        return err;
+    }
+    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+
+    if (_AmxMexuRollMixers(mexu, 0, 1, 1, 1, &mix))
+        AfxThrowError();
+
     return err;
 }

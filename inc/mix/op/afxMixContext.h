@@ -14,6 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+#ifndef AMX_MIX_CONTEXT_H
+#define AMX_MIX_CONTEXT_H
+
+// Mixer
+// A mixer is a device for merging input signals to produce a combined output in the form of sound.
+
 /*
     Audio Interface
     Audio interface is basically a contraption that helps musicians and audio engineers utilize various programs and plug-ins, 
@@ -33,13 +39,8 @@
     Bigger models are typically called 'consoles' and 'desks'.
 */
 
-// Mixer
-// A mixer is a device for merging input signals to produce a combined output in the form of sound.
-
-#ifndef AMX_MIX_CONTEXT_H
-#define AMX_MIX_CONTEXT_H
-
 #include "qwadro/inc/mix/io/amxAudio.h"
+#include "qwadro/inc/mix/op/amxVoice.h"
 
 typedef enum amxLoadOp
 // An enumerated value indicating the store operation to perform on sink channel after executing the mix scope.
@@ -207,6 +208,50 @@ typedef enum amxMixState
 AMX afxUnit     AfxGetMixerPort(afxMixContext mix);
 AMX afxUnit     AfxGetMixerPool(afxMixContext mix);
 AMX amxMixState AfxGetMixerState(afxMixContext mix);
+
+AMX afxError        AmxExhaustMixContext
+(
+    afxMixContext  dctx,
+    afxBool         freeMem
+);
+
+AMX afxError        AmxRecordMixCommands
+(
+    // The draw context which the batch will be allocated from.
+    afxMixContext  dctx,
+    // A flag specifying a one-time submission batch.
+    afxBool         once,
+    // A flag specifying a inlineable batch.
+    afxBool         deferred,
+    // A variable to hold the unique identifier for the batch.
+    afxUnit*        batchId
+);
+
+AMX afxError        AmxDiscardMixCommands
+(
+    afxMixContext  dctx,
+    afxBool         freeRes
+);
+
+AMX afxError        AmxCompileMixCommands
+(
+    // The draw context recording commands.
+    afxMixContext  dctx,
+    // The batch which commands will be compiled into.
+    afxUnit         batchId
+);
+
+AMX afxError        AmxRecycleMixCommands
+(
+    // The draw context that holds the commands.
+    afxMixContext  dctx,
+    // The unique identifier for the draw batch.
+    afxUnit         batchId,
+    // A flag that indicates whether all or most of the resources owned by the batch should be reclaimed by the system.
+    afxBool         freeRes
+);
+
+AMX afxBool AmxDoesMixCommandsExist(afxMixContext dctx, afxUnit batchId);
 
 AMX afxCmdId AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope);
 AMX afxCmdId AmxCmdConcludeMixScope(afxMixContext mix);
@@ -383,7 +428,7 @@ AFX_DEFINE_STRUCT(amxVideoDecode)
 
 AMX afxCmdId        AmxCmdDecodeVideo(afxMixContext mix, amxVideoDecode const* param);
 
-AMX afxError        AmxRollMixContext(afxMixContext mix);
+AMX afxError        AmxRollMixContext(afxMixContext mix, afxUnit sampCnt);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -395,6 +440,11 @@ AFX_DEFINE_STRUCT(afxMixConfig)
     afxUnit voiceCnt;
 };
 
-AMX afxError        AmxAcquireMixContext(afxMixSystem msys, afxMixConfig const* cfg, afxMixContext* mixer);
+AMX afxError            AmxAcquireMixContext
+(
+    afxMixSystem        msys, 
+    afxMixConfig const* cfg, 
+    afxMixContext*      mixer
+);
 
 #endif//AMX_MIX_CONTEXT_H
