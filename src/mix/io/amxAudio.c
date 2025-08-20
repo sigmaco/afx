@@ -149,7 +149,7 @@ _AMX afxError AmxUpdateAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[]
     for (afxUnit i = 0; i < opCnt; i++)
     {
         amxAudioIo const* op = &ops[i];
-        //AFX_ASSERT_RANGE(ras->lodCnt, op->rgn.lodIdx, 1);
+        //AFX_ASSERT_RANGE(ras->mipCnt, op->rgn.lodIdx, 1);
         //AFX_ASSERT_RANGE_WHD(ras->whd, op->rgn.origin, op->rgn.whd);
     }
 #endif

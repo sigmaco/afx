@@ -227,3 +227,26 @@ _AVXINL void AfxMakeViewport(avxViewport* vp, afxReal x, afxReal y, afxReal w, a
         .maxDepth = maxDepth
     };
 }
+
+_AVXINL void AvxFlipViewport(avxViewport* vp, avxViewport const* in, afxBool swapDepthRange)
+{
+    afxError err = NIL;
+    AFX_ASSERT(vp);
+    AFX_ASSERT(in);
+    avxViewport flipped = *in;
+
+    // Shift origin.y by height to move origin to top-left of original viewport
+    flipped.origin[1] = in->origin[1] + in->extent[1];
+
+    // Negate the height to flip vertically
+    flipped.extent[1] = -in->extent[1];
+
+    // Optionally swap minDepth and maxDepth if your depth range needs flipping:
+    if (swapDepthRange)
+    {
+        afxReal md = flipped.minDepth;
+        flipped.minDepth = flipped.maxDepth;
+        flipped.maxDepth = md;
+    }
+    *vp = flipped;
+}

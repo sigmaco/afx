@@ -153,12 +153,12 @@ AVX afxCmdId                AvxCmdClearRaster
     afxDrawContext          dctx,
     // The avxRaster to be cleared.
     avxRaster               ras,
-    // The number of avxRaster subresource ranges.
-    afxUnit                 opCnt,
-    // An array of structures describing a range of mipmap levels, array layers, and aspects to be cleared.
-    avxRasterBlock const    ops[],
     // A structure containing the values that the avxRaster subresource ranges will be cleared to.
-    avxClearValue           value
+    avxClearValue const*    value,
+    afxUnit                 baseLod,
+    afxUnit                 lodCnt,
+    afxUnit                 baseLayer,
+    afxUnit                 layerCnt
 );
 
 AVX afxCmdId                AvxCmdCopyRaster

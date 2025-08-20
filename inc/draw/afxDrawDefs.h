@@ -331,8 +331,9 @@ AFX_DEFINE_HANDLE(afxDrawSystem);
 AFX_DEFINE_HANDLE(afxDrawThread);
 AFX_DEFINE_HANDLE(afxDrawBridge);
 AFX_DEFINE_HANDLE(afxDisplay);
+AFX_DEFINE_HANDLE(afxDisplayPort);
 AFX_DEFINE_HANDLE(afxDrawQueue);
-AFX_DEFINE_HANDLE(afxDrawInput);
+AFX_DEFINE_HANDLE(arxRenderware);
 AFX_DEFINE_HANDLE(afxDrawContext);
 AFX_DEFINE_HANDLE(afxSurface);
 AFX_DEFINE_HANDLE(afxSurface);
@@ -348,18 +349,11 @@ AFX_DEFINE_HANDLE(avxRaster);
 AFX_DEFINE_HANDLE(avxCanvas);
 
 AFX_DEFINE_HANDLE(afxDrawOperation);
-AFX_DEFINE_HANDLE(afxDrawTechnique);
 AFX_DEFINE_HANDLE(afxTypography);
-AFX_DEFINE_HANDLE(avxCamera);
 AFX_DEFINE_HANDLE(avxTxd);
 AFX_DEFINE_HANDLE(afxVertexStream);
 AFX_DEFINE_HANDLE(afxVertexBuffer);
 AFX_DEFINE_HANDLE(afxIndexBuffer);
-
-AFX_DEFINE_HANDLE(afxGeometry);
-AFX_DEFINE_HANDLE(afxMesh);
-AFX_DEFINE_HANDLE(afxMeshTopology);
-AFX_DEFINE_HANDLE(afxScene);
 
 AFX_DEFINE_STRUCT(avxViewConstants)
 {

@@ -149,7 +149,7 @@ _AVX afxError AvxMapBuffer(avxBuffer buf, afxSize offset, afxUnit range, afxFlag
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_RW));
     AFX_ASSERT_RANGE(buf->reqSiz, offset, range);
-    AFX_ASSERT(AFX_IS_ALIGNED(offset, AVX_BUFFER_ALIGNMENT));
+    AFX_ASSERT(AFX_TEST_ALIGNMENT(offset, AVX_BUFFER_ALIGNMENT));
 
     avxBufferedMap map = { 0 };
     map.buf = buf;
@@ -177,7 +177,7 @@ _AVX afxError AvxCohereMappedBuffer(avxBuffer buf, afxSize offset, afxUnit range
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     AFX_ASSERT_RANGE(buf->reqSiz, offset, range);
-    AFX_ASSERT(AFX_IS_ALIGNED(offset, AVX_BUFFER_ALIGNMENT));
+    AFX_ASSERT(AFX_TEST_ALIGNMENT(offset, AVX_BUFFER_ALIGNMENT));
 
     avxBufferedMap map = { 0 };
     map.buf = buf;
@@ -409,6 +409,13 @@ _AVX afxError _AvxBufDtorCb(avxBuffer buf)
         AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf->base);
         AfxDisposeObjects(1, &buf->base);
     }
+
+    //afxDrawSystem dsys = AfxGetProvider(buf);
+    if (_AvxDsysGetImpl(dsys)->deallocBufCb(dsys, 1, &buf))
+    {
+        AfxThrowError();
+    }
+
     return err;
 }
 
@@ -419,49 +426,19 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
 
     afxDrawSystem dsys = AvxGetBufferProvider(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-
-    avxBufferInfo const *bufi = ((avxBufferInfo const *)args[1]) + invokeNo;
+    avxBufferInfo const *bufi = args[1] ? ((avxBufferInfo const *)args[1]) + invokeNo : NIL;
     AFX_ASSERT(bufi && bufi->size && bufi->usage);
-
-    if (!bufi) AfxThrowError();
-    else if (!bufi->usage)
-        AfxThrowError();
+    avxSubbufferInfo const* sub = args[2] ? ((avxSubbufferInfo const *)args[2]) + invokeNo : NIL;
 
     buf->tag = bufi->tag;
     buf->udd = bufi->udd;
 
-    avxBuffer base = bufi->base;
-    afxSize from = bufi->from;
-    afxSize size = bufi->size;
-
-    if (!AFX_IS_ALIGNED(from, AVX_BUFFER_ALIGNMENT))
+    if (sub)
     {
-        AFX_ASSERT_ALIGNMENT(from, AVX_BUFFER_ALIGNMENT);
-        AfxThrowError();
-        err = afxError_OUT_OF_RANGE;
-        return err;
-    }
-
-    if (!base)
-    {
-        if (!size)
-        {
-            // If there is not a @base buffer, we need a size here.
-            AfxThrowError();
-            return err;
-        }
-        // If there is not a @base buffer, @from is useless and should be zero.
-        AFX_ASSERT(from == 0);
-        from = 0;
-        // Buffer capacity must be always aligned to AFX_SIMD_ALIGNMENT for a correct mapping behavior.
-        // All buffer mapping requires ranges aligned to AFX_SIMD_ALIGNMENT. This alignment is ensured at AFX level.
-        size = AFX_ALIGN_SIZE(size, AFX_SIMD_ALIGNMENT);
-    }
-    else
-    {
+        avxBuffer base = sub->buf;
         AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &base);
 
-        if (base->base)
+        if (base->base && (base->base != base))
         {
             // Base buffer must be a storage buffer, not a buffer view.
             AFX_ASSERT(!base->base);
@@ -469,53 +446,80 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
             return err;
         }
 
+        afxSize from = sub->from;
+        afxSize range = sub->range;
         afxSize srcCap = AvxGetBufferCapacity(base, 0);
+        AFX_ASSERT_RANGE(srcCap, from, range);
+
+        if (!AFX_TEST_ALIGNMENT(from, AVX_BUFFER_ALIGNMENT))
+        {
+            AFX_ASSERT_ALIGNMENT(from, AVX_BUFFER_ALIGNMENT);
+            AfxThrowError();
+            err = afxError_OUT_OF_RANGE;
+            return err;
+        }
 
         // If a capacity is not specified, the new buffer inherits the full capacity of the base buffer, 
         // excluding the portion displaced by @from.
-        if (size == 0)
-            size = srcCap - from;
+        if (range == 0)
+            range = srcCap - from;
         else
-            size = AFX_ALIGN_SIZE(size, AFX_SIMD_ALIGNMENT);
+            range = AFX_ALIGN_SIZE(range, AFX_SIMD_ALIGNMENT);
 
         // As every buffer capacity is a power of AFX_SIMD_ALIGNMENT, it should already be aligned here.
-        AFX_ASSERT_ALIGNMENT(size, AFX_SIMD_ALIGNMENT);
-
-        AFX_ASSERT_RANGE(srcCap, from, size);
+        AFX_ASSERT_ALIGNMENT(range, AFX_SIMD_ALIGNMENT);
 
         if ((from >= srcCap) ||
-            (size > srcCap) ||
-            (size > srcCap - from))
+            (range > srcCap) ||
+            (range > srcCap - from))
         {
             AfxThrowError();
             err = afxError_OUT_OF_RANGE;
             return err;
         }
         AfxReacquireObjects(1, &base);
+
+        buf->reqSiz = range;
+        buf->fmt = sub->fmt;
+
+        buf->usage = base->usage;
+        buf->flags = base->flags;
+        buf->sharingMask = base->sharingMask;
+
+        buf->storage[0] = base->storage[0];
+        buf->storageOffset = base->storageOffset;
+
+        return err;
     }
 
-    // Buffer capacity must be always aligned to AFX_SIMD_ALIGNMENT for a correct mapping behavior.
-    AFX_ASSERT_ALIGNMENT(size, AFX_SIMD_ALIGNMENT);
-    buf->reqSiz = size;
-    buf->from = from;
-    buf->base = base;
+    buf->base = NIL;
+    buf->from = 0;
+    buf->fmt = bufi->fmt;
 
-    if (err) return err;
-#ifdef AVX_VALIDATION_ENABLED
-    if (!buf->base)
-    {
-        AFX_ASSERT(buf->from == 0);
-    }
-    else
-    {
-        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &base);
-        AFX_ASSERT_ALIGNMENT(buf->from, AVX_BUFFER_ALIGNMENT);
-    }
-#endif
+    if (!bufi) AfxThrowError();
+    else if (!bufi->usage)
+        AfxThrowError();
 
     buf->usage = bufi->usage;
     buf->flags = bufi->flags;
-    buf->fmt = bufi->fmt;
+
+    afxSize size = bufi->size;
+
+    if (!size)
+    {
+        // If there is not a @base buffer, we need a size here.
+        AfxThrowError();
+        return err;
+    }
+    // If there is not a @base buffer, @from is useless and should be zero.
+    // Buffer capacity must be always aligned to AFX_SIMD_ALIGNMENT for a correct mapping behavior.
+    // All buffer mapping requires ranges aligned to AFX_SIMD_ALIGNMENT. This alignment is ensured at AFX level.
+    size = AFX_ALIGN_SIZE(size, AFX_SIMD_ALIGNMENT);
+    // Buffer capacity must be always aligned to AFX_SIMD_ALIGNMENT for a correct mapping behavior.
+    AFX_ASSERT_ALIGNMENT(size, AFX_SIMD_ALIGNMENT);
+    buf->reqSiz = size;
+
+    if (err) return err;
 
     afxUnit exuCnt = 16; // TODO Get it from DSYS
     buf->sharingMask = NIL;
@@ -526,11 +530,12 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
 
     // STORAGE
     buf->reqMemType = NIL;
+    buf->reqAlign = AVX_BUFFER_ALIGNMENT;
 
     // binding
     buf->storage[0].mmu = 0;
-    buf->storage[0].offset = 0;
-    buf->storage[0].hostedAlloc.addr = NIL;
+    buf->storageOffset = 0;
+    buf->storage[0].host.addr = NIL;
 
     buf->storage[0].mapPtr = NIL;
     buf->storage[0].mapOffset = 0;
@@ -548,7 +553,7 @@ _AVX afxClassConfig const _AVX_BUF_CLASS_CONFIG =
 {
     .fcc = afxFcc_BUF,
     .name = "Buffer",
-    .desc = "Video Memory Buffer",
+    .desc = "Video Buffer",
     .fixedSiz = sizeof(AFX_OBJECT(avxBuffer)),
     .ctor = (void*)_AvxBufCtorCb,
     .dtor = (void*)_AvxBufDtorCb
@@ -580,9 +585,9 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
             AfxThrowError();
         }
 
-        if ((!info->size) && !(info->base))
+        if (!info->size)
         {
-            AFX_ASSERT((!info->size) && !(info->base));
+            AFX_ASSERT(!info->size);
             AfxThrowError();
         }
     }
@@ -592,7 +597,7 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
     afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->bufCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_BUF);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)buffers, (void const*[]) { dsys, (void*)infos }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)buffers, (void const*[]) { dsys, (void*)infos, NIL }))
     {
         AfxThrowError();
         return err;
@@ -600,17 +605,21 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
 
     AFX_ASSERT_OBJECTS(afxFcc_BUF, cnt, buffers);
 
+    if (_AvxDsysGetImpl(dsys)->allocBufCb(dsys, cnt, infos, buffers))
+    {
+        AfxDisposeObjects(cnt, buffers);
+        AfxThrowError();
+        return err;
+    }
+
 #ifdef AVX_VALIDATION_ENABLED
     for (afxUnit i = 0; i < cnt; i++)
     {
         avxBuffer buf = buffers[i];
         avxBufferInfo const* bufi = &infos[i];
 
-        AFX_ASSERT(buf->base == bufi->base);
         AFX_ASSERT(buf->reqSiz >= bufi->size);
         AFX_ASSERT((buf->flags & bufi->flags) == bufi->flags);
-        AFX_ASSERT(buf->fmt == bufi->fmt);
-        AFX_ASSERT(buf->from == bufi->from);
         AFX_ASSERT(buf->sharingMask == bufi->sharingMask);
         AFX_ASSERT(buf->udd == bufi->udd);
         AFX_ASSERT((buf->usage & bufi->usage) == bufi->usage);
@@ -672,6 +681,63 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
         AFX_ASSERT_OBJECTS(afxFcc_BUF, cnt, buffers);
         AfxDisposeObjects(cnt, buffers);
     }
+
+    return err;
+}
+
+_AVX afxError AvxReacquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxSubbufferInfo const infos[], avxBuffer buffers[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+    AFX_ASSERT(cnt);
+    AFX_ASSERT(infos);
+    AFX_ASSERT(buffers);
+    if (!cnt || !infos || !buffers)
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxSubbufferInfo const* info = &infos[i];
+
+        if (!info->buf)
+        {
+            AFX_ASSERT(info->buf);
+            AfxThrowError();
+        }
+    }
+
+    if (err) return err;
+
+    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->bufCls(dsys);
+    AFX_ASSERT_CLASS(cls, afxFcc_BUF);
+
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)buffers, (void const*[]) { dsys, NIL, (void*)infos }))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    AFX_ASSERT_OBJECTS(afxFcc_BUF, cnt, buffers);
+
+#ifdef AVX_VALIDATION_ENABLED
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxBuffer buf = buffers[i];
+        avxSubbufferInfo const* bufi = &infos[i];
+
+        AFX_ASSERT(buf->base == bufi->buf);
+        AFX_ASSERT(buf->reqSiz >= bufi->range);
+        AFX_ASSERT((buf->flags & bufi->flags) == bufi->flags);
+        AFX_ASSERT(buf->fmt == bufi->fmt);
+        AFX_ASSERT(buf->from == bufi->from);
+        AFX_ASSERT(buf->udd == bufi->udd);
+        AFX_ASSERT(buf->tag.start == bufi->tag.start);
+    }
+#endif
 
     return err;
 }
@@ -771,7 +837,7 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps
             AfxDecAtom32(&buf->storage[0].pendingRemap);
         }
         // If buffer is host-side allocated, map directly (just do it here)
-        else if (buf->storage[0].hostedAlloc.addr)
+        else if (buf->storage[0].host.addr)
         {
 #ifndef _AVX_BUFFER_HOSTSIDE_ALWAYS_FULLY_MAPPED
             buf->storage[0].mapOffset = offset;
@@ -787,7 +853,7 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps
             buf->storage[0].mapOffset = 0;
             buf->storage[0].mapRange = buf->reqSiz;
             buf->storage[0].mapFlags = map->flags;
-            buf->storage[0].mapPtr = buf->storage[0].hostedAlloc.bytemap;
+            buf->storage[0].mapPtr = buf->storage[0].host.bytemap;
 
             AFX_ASSERT(placeholders);
             *placeholders[i] = &buf->storage[0].mapPtr[map->offset];
@@ -904,7 +970,7 @@ _AVX afxError AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap ma
                 AFX_ASSERT(0 == buf->storage[0].mapRefCnt);
 
                 // If the buffer is host-side allocated (i.e., directly accessible in CPU memory)
-                if (buf->storage[0].hostedAlloc.addr)
+                if (buf->storage[0].host.addr)
                 {
                     // Clear the mapped state for host-side buffers
                     buf->storage[0].mapOffset = 0;

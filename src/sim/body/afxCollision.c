@@ -212,12 +212,12 @@ _ASX afxError _AsxShapCtorCb(asxShape shap, void** args, afxUnit invokeNo)
 
     if (info->type == asxShapeType_MESH)
     {
-        afxMesh msh = info->msh;
-        afxMeshInfo mshi;
-        AfxDescribeMesh(msh, &mshi);
+        arxMesh msh = info->msh;
+        arxMeshInfo mshi;
+        ArxDescribeMesh(msh, &mshi);
 
-        afxUnit* indices = AfxGetMeshIndices(msh, 0);
-        afxV3d* pos = AfxAccessVertexData(msh, 0, 0, 0);
+        afxUnit* indices = ArxGetMeshIndices(msh, 0);
+        afxV3d* pos = ArxAccessVertexData(msh, 0, 0, 0);
         
         shap->triCnt = mshi.triCnt;
 
@@ -256,17 +256,17 @@ _ASX afxError AsxAcquireShapes(afxSimulation sim, afxUnit cnt, asxShapeInfo cons
     return err;
 }
 
-_ASX afxError AfxBuildMeshShape(afxMesh msh, asxShape* shape)
+_ASX afxError AfxBuildMeshShape(arxMesh msh, asxShape* shape)
 {
     afxError err = NIL;
 
-    afxMeshInfo mshi;
-    AfxDescribeMesh(msh, &mshi);
+    arxMeshInfo mshi;
+    ArxDescribeMesh(msh, &mshi);
 
     asxShape shap;
     asxShapeInfo shapi = { 0 };
     shapi.msh = msh;
-    AsxAcquireShapes(AfxGetMeshMateriality(msh), 1, &shapi, &shap);
+    AsxAcquireShapes(ArxGetMeshMateriality(msh), 1, &shapi, &shap);
 
     return err;
 }

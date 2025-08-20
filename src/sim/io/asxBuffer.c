@@ -137,7 +137,7 @@ _ASX afxError _AsxSbufCtorCb(asxBuffer sbuf, void** args, afxUnit invokeNo)
     afxSize from = bufi->from;
     afxUnit size = bufi->size;
 
-    if (!AFX_IS_ALIGNED(from, AVX_BUFFER_ALIGNMENT))
+    if (!AFX_TEST_ALIGNMENT(from, AVX_BUFFER_ALIGNMENT))
     {
         AFX_ASSERT_ALIGNMENT(from, AVX_BUFFER_ALIGNMENT);
         AfxThrowError();

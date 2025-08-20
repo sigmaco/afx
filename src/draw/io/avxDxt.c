@@ -17,7 +17,7 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #include "../ddi/avxImplementation.h"
-#include "qwadro/inc/draw/io/avxTargaFile.h"
+#include "qwadro/inc/draw/io/avxRasterFile.h"
 
 #pragma pack(push, 1)
 

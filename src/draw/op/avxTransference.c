@@ -198,7 +198,7 @@ _AVX afxCmdId AvxCmdPackRaster(afxDrawContext dctx, avxRaster ras, afxUnit opCnt
     AFX_ASSERT(ops);
 
     avxRasterInfo rasi;
-    AvxDescribeRaster(ras, &rasi);
+    AvxDescribeRaster(ras, &rasi, NIL, NIL);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(PackRaster), sizeof(cmd->PackRaster) + (opCnt * sizeof(cmd->PackRaster.ops[0])), &cmdId);
@@ -243,7 +243,7 @@ _AVX afxCmdId AvxCmdUnpackRaster(afxDrawContext dctx, avxRaster ras, afxUnit opC
     AFX_ASSERT(ops);
 
     avxRasterInfo rasi;
-    AvxDescribeRaster(ras, &rasi);
+    AvxDescribeRaster(ras, &rasi, NIL, NIL);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(UnpackRaster), sizeof(cmd->UnpackRaster) + (opCnt * sizeof(cmd->UnpackRaster.ops[0])), &cmdId);
@@ -288,8 +288,8 @@ _AVX afxCmdId AvxCmdCopyRaster(afxDrawContext dctx, avxRaster dst, afxUnit opCnt
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &src);
 
     avxRasterInfo rasi, rasi2;
-    AvxDescribeRaster(src, &rasi);
-    AvxDescribeRaster(dst, &rasi2);
+    AvxDescribeRaster(src, &rasi, NIL, NIL);
+    AvxDescribeRaster(dst, &rasi2, NIL, NIL);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(CopyRaster), sizeof(cmd->CopyRaster) + (opCnt * sizeof(cmd->CopyRaster.ops[0])), &cmdId);
@@ -336,8 +336,8 @@ _AVX afxCmdId AvxCmdResolveRaster(afxDrawContext dctx, avxRaster dst, afxUnit op
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &src);
 
     avxRasterInfo rasi, rasi2;
-    AvxDescribeRaster(src, &rasi);
-    AvxDescribeRaster(dst, &rasi2);
+    AvxDescribeRaster(src, &rasi, NIL, NIL);
+    AvxDescribeRaster(dst, &rasi2, NIL, NIL);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(ResolveRaster), sizeof(cmd->ResolveRaster) + (opCnt * sizeof(cmd->ResolveRaster.ops[0])), &cmdId);
@@ -383,8 +383,8 @@ _AVX afxCmdId AvxCmdBlitRaster(afxDrawContext dctx, avxRaster dst, afxUnit opCnt
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &src);
 
     avxRasterInfo rasi, rasi2;
-    AvxDescribeRaster(src, &rasi);
-    AvxDescribeRaster(dst, &rasi2);
+    AvxDescribeRaster(src, &rasi, NIL, NIL);
+    AvxDescribeRaster(dst, &rasi2, NIL, NIL);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BlitRaster), sizeof(cmd->BlitRaster) + (opCnt * sizeof(cmd->BlitRaster.ops[0])), &cmdId);
@@ -410,7 +410,7 @@ _AVX afxCmdId AvxCmdBlitRaster(afxDrawContext dctx, avxRaster dst, afxUnit opCnt
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdClearRaster(afxDrawContext dctx, avxRaster ras, afxUnit opCnt, avxRasterBlock const ops[], avxClearValue value)
+_AVX afxCmdId AvxCmdClearRaster(afxDrawContext dctx, avxRaster ras, avxClearValue const* value, afxUnit baseLod, afxUnit lodCnt, afxUnit baseLayer, afxUnit layerCnt)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -423,37 +423,25 @@ _AVX afxCmdId AvxCmdClearRaster(afxDrawContext dctx, avxRaster ras, afxUnit opCn
     AFX_ASSERT(!dctx->inVideoCoding);
 
     // opCnt must be greater than 0.
-    AFX_ASSERT(opCnt);
-    AFX_ASSERT(ops);
+    //AFX_ASSERT(opCnt);
+    //AFX_ASSERT(ops);
 
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
     avxRasterInfo rasi;
-    AvxDescribeRaster(ras, &rasi);
+    AvxDescribeRaster(ras, &rasi, NIL, NIL);
 
     afxCmdId cmdId;
-    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(ClearRaster), sizeof(cmd->ClearRaster) + (opCnt * sizeof(cmd->ClearRaster.ops[0])), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(ClearRaster), sizeof(cmd->ClearRaster), &cmdId);
     AFX_ASSERT(cmd);
     cmd->ClearRaster.ras = ras;
-    cmd->ClearRaster.opCnt = opCnt;
-    cmd->ClearRaster.value = value;
+    cmd->ClearRaster.lodCnt = lodCnt;
+    cmd->ClearRaster.baseLod = baseLod;
+    cmd->ClearRaster.layerCnt = layerCnt;
+    cmd->ClearRaster.baseLayer = baseLayer;
+    cmd->ClearRaster.value = *value;
 
-    for (afxUnit i = 0; i < opCnt; i++)
-    {
-        avxRasterBlock const* op = &ops[i];
-        
-        AFX_ASSERT_RANGE(rasi.lodCnt, op->baseLod, op->lodCnt);
-        AFX_ASSERT_RANGE(rasi.whd.d, op->baseLayer, op->layerCnt);
-
-        avxRasterBlock op2 = { 0 };
-        op2.baseLayer = AFX_MIN(op->baseLayer, rasi.whd.d - 1);
-        op2.layerCnt = AFX_MIN(op->layerCnt, op2.baseLayer);
-        op2.baseLod = AFX_MIN(op->baseLod, rasi.lodCnt - 1);
-        op2.lodCnt = AFX_MIN(op->lodCnt, rasi.lodCnt - op2.baseLod);
-
-        cmd->ClearRaster.ops[i] = *op;
-    }
     return cmdId;
 }
 
@@ -478,5 +466,6 @@ _AVX afxCmdId AvxCmdRegenerateMipmapsSIGMA(afxDrawContext dctx, afxFlags flags, 
     cmd->RegenerateMipmapsSIGMA.flags = flags;
     cmd->RegenerateMipmapsSIGMA.rasCnt = rasCnt;
     AfxCopy(cmd->RegenerateMipmapsSIGMA.rasters, rasters, sizeof(cmd->RegenerateMipmapsSIGMA.rasters[0]) * rasCnt);
+
     return cmdId;
 }

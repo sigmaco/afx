@@ -51,6 +51,21 @@ _ASX afxClass const* _AsxGetSimulationClass(afxModule icd)
     return cls;
 }
 
+_ASX afxClass const* _ArxGetRweClass(afxModule icd)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
+
+    if (!AfxTestModule(icd, afxModuleFlag_ICD | afxModuleFlag_ASX))
+    {
+        AfxThrowError();
+        return NIL;
+    }
+    afxClass const* cls = &icd->icd.dinCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_DIN);
+    return cls;
+}
+
 _ASX afxError _AsxRegisterEngines(afxModule icd, afxUnit cnt, afxEngineInfo const infos[], afxEngine devices[])
 {
     afxError err = AFX_ERR_NONE;
@@ -80,7 +95,7 @@ _ASX afxError _AsxRegisterEngines(afxModule icd, afxUnit cnt, afxEngineInfo cons
     return err;
 }
 
-_ASX afxError _AsxImplementSimulation(afxModule icd, afxClassConfig const* sdevCls, afxClassConfig const* simCls)
+_ASX afxError _AsxImplementSimulation(afxModule icd, afxClassConfig const* sdevCls, afxClassConfig const* simCls, afxClassConfig const* dinCls)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
@@ -128,11 +143,13 @@ _ASX afxError _AsxImplementSimulation(afxModule icd, afxClassConfig const* sdevC
                 afxSystem sys;
                 AfxGetSystem(&sys);
                 AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-                AfxPushLink(&icd->icd.asx, &sys->asx.icdChain);
+                AfxPushLink(&icd->icd.asx, &sys->asxIcdChain);
                 icd->flags |= afxModuleFlag_ASX;
             }
         }
     }
+
+    AfxMountClass(&icd->icd.dinCls, NIL, &icd->classes, dinCls);
 
     if (err)
     {
@@ -155,7 +172,7 @@ _ASX afxBool _AsxGetIcd(afxUnit icdIdx, afxModule* driver)
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     afxModule icd = NIL;
-    while ((icdIdx < sys->asx.icdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->asx.icdChain, icdIdx), AFX_OBJ(afxModule), icd.asx)))
+    while ((icdIdx < sys->asxIcdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->asxIcdChain, icdIdx), AFX_OBJ(afxModule), icd.asx)))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
 

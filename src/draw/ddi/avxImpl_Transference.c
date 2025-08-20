@@ -61,13 +61,13 @@ _AVX void _AvxGetBufferMemoryRequirements(afxDrawSystem dsys, avxBuffer buf, avx
     req2.memType = buf->reqMemType;
 }
 
-_AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit lodIdx, afxUnit layerIdx, avxRasterLayout* layout)
+_AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit lodIdx, afxUnit layerIdx, avxRasterArrangement* layout)
 {
     avxFormat fmt = ras->fmt;
     avxFormatDescription pfd;
     AvxDescribeFormats(1, &fmt, &pfd);
 
-    avxRasterLayout lay2 = { 0 };
+    avxRasterArrangement lay2 = { 0 };
     afxWarp whd = { ras->whd.w, ras->whd.h, ras->whd.d };
     afxBool is3d = !!AvxTestRasterFlags(ras, avxRasterFlag_3D);
 
@@ -117,9 +117,9 @@ _AVX afxError _AvxCommitBuffers(afxDrawSystem dsys, afxUnit exuIdx, afxUnit cnt,
     {
         avxBuffer buf = buffers[i];
 
-        if (!buf->storage[0].hostedAlloc.addr)
+        if (!buf->storage[0].host.addr)
         {
-            AfxAllocate(buf->reqSiz, AVX_BUFFER_ALIGNMENT, AfxHere(), (void**)&buf->storage[0].hostedAlloc.addr);
+            AfxAllocate(buf->reqSiz, AVX_BUFFER_ALIGNMENT, AfxHere(), (void**)&buf->storage[0].host.addr);
         }
     }
 }
@@ -130,9 +130,9 @@ _AVX afxError _AvxCommitRasters(afxDrawSystem dsys, afxUnit exuIdx, afxUnit cnt,
     {
         avxRaster ras = rasters[i];
 
-        if (!ras->storage[0].hostedAlloc.addr)
+        if (!ras->storage[0].host.addr)
         {
-            AfxAllocate(ras->reqSiz, ras->reqAlign, AfxHere(), (void**)&ras->storage[0].hostedAlloc.addr);
+            AfxAllocate(ras->reqSiz, ras->reqAlign, AfxHere(), (void**)&ras->storage[0].host.addr);
         }
     }
 }
@@ -145,7 +145,7 @@ _AVX afxCmdId _AvxCmdRegenerateMipmapsSIGMA(afxDrawContext dctx, afxFlags flags,
     for (afxUnit rasIt = 0; rasIt < rasCnt; rasIt++)
     {
         avxRaster ras = rasters[rasIt];
-        afxUnit mipLevels = ras->lodCnt;
+        afxUnit mipLevels = ras->mipCnt;
         afxUnit mipWidth = ras->whd.w;
         afxUnit mipHeight = ras->whd.h;
 
@@ -188,19 +188,99 @@ AFX_DEFINE_STRUCT(avxBufferAllocation)
     afxError    rslt;
 };
 
-_AVXINL void _AvxAllocateRasters(afxUnit cnt, avxRaster rasters[])
+_AVXINL afxError _AvxDsysDeallocateRastersCb_SW(afxDrawSystem dsys, afxUnit cnt, avxRaster rasters[])
 {
-    avxRaster ras = rasters[0];
-    afxDrawSystem dsys = AfxGetProvider(ras);
-    avxMemoryReq req = { 0 };
-    _AvxGetRasterMemoryRequirements(dsys, ras, &req);
+    afxError err = 0;
 
-    //AfxPushLink(&ras->storage[0].iommu, );
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxRaster ras = rasters[i];
+        _avxRasStorage* bufs = &ras->storage[0];
+
+        if (ras->flags & avxRasterFlag_FOREIGN)
+        {
+            bufs->host.bytemap = NIL;
+            bufs->size = 0;
+        }
+        else
+        {
+            if (bufs->host.bytemap)
+            {
+                if (AfxDeallocate((void**)&bufs->host.bytemap, AfxHere()))
+                {
+                    AfxThrowError();
+                }
+            }
+            bufs->size = 0;
+        }
+    }
+    return err;
 }
 
-_AVXINL void _AvxAllocateBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo const infos[], avxBuffer buffers[])
+_AVXINL afxError _AvxDsysAllocateRastersCb_SW(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo const infos[], avxRaster rasters[])
 {
-    afxError err;
+    afxError err = 0;
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxRasterInfo const* info = &infos[i];
+        avxRaster ras = rasters[i];
+        _avxRasStorage* bufs = &ras->storage[0];
+
+        if (ras->flags & avxRasterFlag_FOREIGN)
+        {
+            avxExorasterInfo const* info2 = (void*)info;
+            //bufs->offset = info->from;
+            AFX_ASSERT((!info2->resrvdS) || (info2->resrvdS && ras->reqSiz));
+            bufs->host.bytemap = (afxByte*)info2->resrvdA;
+            bufs->host.external = TRUE;
+            bufs->size = info2->resrvdS;
+        }
+        else
+        {
+            if (AfxAllocate(ras->reqSiz, ras->reqAlign, AfxHere(), (void**)&bufs->host.bytemap))
+            {
+                AfxThrowError();
+            }
+            bufs->host.external = FALSE;
+            bufs->size = ras->reqSiz;
+        }
+    }
+    return err;
+}
+
+_AVXINL afxError _AvxDsysDeallocateBuffersCb_SW(afxDrawSystem dsys, afxUnit cnt, avxBuffer buffers[])
+{
+    afxError err = 0;
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxBuffer buf = buffers[i];
+        _avxBufStorage* bufs = &buf->storage[0];
+
+        if (buf->flags & avxBufferFlag_F)
+        {
+            bufs->host.bytemap = NIL;
+            bufs->size = 0;
+        }
+        else
+        {
+            if (bufs->host.bytemap)
+            {
+                if (AfxDeallocate((void**)&bufs->host.bytemap, AfxHere()))
+                {
+                    AfxThrowError();
+                }
+            }
+            bufs->size = 0;
+        }
+    }
+    return err;
+}
+
+_AVXINL afxError _AvxDsysAllocateBuffersCb_SW(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo const infos[], avxBuffer buffers[])
+{
+    afxError err = 0;
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -212,16 +292,21 @@ _AVXINL void _AvxAllocateBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo 
         {
             //bufs->offset = info->from;
             AFX_ASSERT((!info->dataSiz) || (info->dataSiz && buf->reqSiz));
-            bufs->hostedAlloc.bytemap = info->data;
+            bufs->host.bytemap = info->data;
+            bufs->host.external = TRUE;
+            bufs->size = info->dataSiz;
         }
         else
         {
-            if (AfxAllocate(buf->reqSiz, buf->reqAlign, AfxHere(), (void**)&bufs->hostedAlloc.bytemap))
+            if (AfxAllocate(buf->reqSiz, buf->reqAlign, AfxHere(), (void**)&bufs->host.bytemap))
             {
                 AfxThrowError();
             }
+            bufs->host.external = FALSE;
+            bufs->size = buf->reqSiz;
         }
     }
+    return err;
 }
 
 _AVXINL void AvxCommitRasterStorage()

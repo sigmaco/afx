@@ -438,7 +438,7 @@ _AVX afxError _AvxDsysBridgeDevices(afxDrawSystem dsys, afxUnit cnt, _avxDexuAcq
     AFX_ASSERT(bridges);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = (afxClass*)_AvxDsysGetDexuClass(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDexuClassCb_SW(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_DEXU);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)bridges, (void const*[]) { dsys, configs }))

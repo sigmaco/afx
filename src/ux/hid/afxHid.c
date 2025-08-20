@@ -27,7 +27,7 @@ _AUX afxClass const* AfxGetHidClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-    afxClass const* cls = &sys->aux.hidCls;
+    afxClass const* cls = &sys->hidCls;
     AFX_ASSERT_CLASS(cls, afxFcc_HID);
     return cls;
 }

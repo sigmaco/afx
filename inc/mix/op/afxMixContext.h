@@ -161,7 +161,7 @@ typedef enum amxMixOp
     chain where audio mixing happens.
 */
 
-AFX_DEFINE_STRUCT(amxMixSink)
+AFX_DEFINE_STRUCT(amxMixTarget)
 {
     amxStoreOp      storeOp;
     amxLoadOp       loadOp;
@@ -191,7 +191,7 @@ AFX_DEFINE_STRUCT(amxMixScope)
     afxUnit             frameCnt;
     afxUnit             baseChan;
     afxUnit             chanCnt;
-    amxMixSink const*   chans;
+    amxMixTarget const*   chans;
     afxUnit             baseSamp;
     afxUnit             sampCnt;
 };
@@ -375,7 +375,11 @@ AMX afxCmdId AmxCmdResampleAudio
     amxAudioPeriod const* dsti
 );
 
-AMX afxCmdId AmxCmdBindBuffers
+AMX afxCmdId AmxBindIoStream(afxMixContext mix, afxUnit pin, afxStream iob, afxSize offset, afxSize range, afxUnit stride);
+AMX afxCmdId AmxBindBufferedStream(afxMixContext mix, afxUnit pin, amxBuffer buf, afxSize offset, afxSize range, afxUnit stride);
+AMX afxCmdId AmxBindAudioTrack(afxMixContext mix, afxUnit pin, amxAudio aud, afxUnit srcIdx, amxFormat fmt);
+
+AMX afxCmdId AmxBindBuffer
 (
     afxMixContext mix,
     afxUnit bank,
@@ -385,12 +389,14 @@ AMX afxCmdId AmxCmdBindBuffers
     afxUnit freq
 );
 
-AMX afxCmdId AmxCmdBindAudio
+AMX afxCmdId AmxBindAudio
 (
     afxMixContext mix,
     afxUnit bank,
     amxAudio aud
 );
+
+AMX afxCmdId AmxCmdTrack(afxMixContext mix, int a);
 
 AMX afxCmdId AmxCmdPlayAudioClip
 (
@@ -402,6 +408,17 @@ AMX afxCmdId AmxCmdPlayAudioClip
     afxUnit baseCh,
     afxUnit sampCnt,
     afxUnit chCnt
+);
+
+AMX afxCmdId AmxCmdCommenceMixScope
+(
+    afxMixContext mix,
+    amxMixScope const* scope
+);
+
+AMX afxCmdId AmxCmdConcludeMixScope
+(
+    afxMixContext mix
 );
 
 AFX_DEFINE_STRUCT(amxVideoPicture)
@@ -428,7 +445,7 @@ AFX_DEFINE_STRUCT(amxVideoDecode)
 
 AMX afxCmdId        AmxCmdDecodeVideo(afxMixContext mix, amxVideoDecode const* param);
 
-AMX afxError        AmxRollMixContext(afxMixContext mix, afxUnit sampCnt);
+AMX afxError        AmxRollMixContext(afxMixContext mix, afxUnit frameCnt);
 
 ////////////////////////////////////////////////////////////////////////////////
 

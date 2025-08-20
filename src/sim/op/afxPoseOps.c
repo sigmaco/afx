@@ -20,12 +20,13 @@
 #define _ASX_SIM_BRIDGE_C
 #define _ASX_SIM_QUEUE_C
 #define _ASX_CONTEXT_C
-#define _ASX_POSE_C
-#define _ASX_PLACEMENT_C
+#define _ARX_POSE_C
+#define _ARX_PLACEMENT_C
 #include "../impl/asxImplementation.h"
+#include "afx/src/render/ddi/arxImpl_Input.h"
 
 
-_ASX afxCmdId AsxCmdCopyPose(afxContext ctx, afxPose src, afxUnit from, afxPose dst, afxUnit base, afxUnit cnt)
+_ASX afxCmdId AsxCmdCopyPose(afxContext ctx, arxPose src, afxUnit from, arxPose dst, afxUnit base, afxUnit cnt)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -57,7 +58,7 @@ _ASX afxCmdId AsxCmdCopyPose(afxContext ctx, afxPose src, afxUnit from, afxPose 
     return 0;
 }
 
-_ASX afxCmdId AsxCmdApplyRootMotionVectors(afxContext ctx, afxPose pose, afxV3d const translation, afxV3d const rotation)
+_ASX afxCmdId AsxCmdApplyRootMotionVectors(afxContext ctx, arxPose pose, afxV3d const translation, afxV3d const rotation)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -76,7 +77,7 @@ _ASX afxCmdId AsxCmdApplyRootMotionVectors(afxContext ctx, afxPose pose, afxV3d 
     return 0;
 }
 
-_ASX afxCmdId AsxCmdSampleBodyAnimationsLODSparse(afxContext ctx, afxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray)
+_ASX afxCmdId AsxCmdSampleBodyAnimationsLODSparse(afxContext ctx, arxBody bod, afxUnit basePivotIdx, afxUnit pivotCnt, arxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -98,7 +99,7 @@ _ASX afxCmdId AsxCmdSampleBodyAnimationsLODSparse(afxContext ctx, afxBody bod, a
     cmd->SampleBodyAnimations.sparseBoneArray = sparseBoneArray;
 }
 
-_ASX afxCmdId AsxCmdSampleSingleBodyAnimationLODSparse(afxContext ctx, afxBody bod, afxCapstan moto, afxUnit basePivotIdx, afxUnit pivotCnt, afxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray)
+_ASX afxCmdId AsxCmdSampleSingleBodyAnimationLODSparse(afxContext ctx, arxBody bod, arxCapstan moto, afxUnit basePivotIdx, afxUnit pivotCnt, arxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -124,7 +125,7 @@ _ASX afxCmdId AsxCmdSampleSingleBodyAnimationLODSparse(afxContext ctx, afxBody b
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdSampleBodyAnimationsAcceleratedLOD(afxContext ctx, afxBody bod, afxUnit pivotCnt, afxM4d const displace, afxPose scratch, afxPlacement plce, afxReal allowedErr)
+_ASX afxCmdId AsxCmdSampleBodyAnimationsAcceleratedLOD(afxContext ctx, arxBody bod, afxUnit pivotCnt, afxM4d const displace, arxPose scratch, arxPlacement plce, afxReal allowedErr)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -151,7 +152,7 @@ _ASX afxCmdId AsxCmdSampleBodyAnimationsAcceleratedLOD(afxContext ctx, afxBody b
 
 // MODEL OPS
 
-_ASX afxCmdId AsxCmdDisplaceModel(afxContext ctx, afxModel mdl, afxTransform const* t)
+_ASX afxCmdId AsxCmdDisplaceModel(afxContext ctx, arxModel mdl, afxTransform const* t)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -173,7 +174,7 @@ _ASX afxCmdId AsxCmdDisplaceModel(afxContext ctx, afxModel mdl, afxTransform con
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdBuildRiggedMeshCompositeMatrices(afxContext ctx, afxModel mdl, afxUnit rigIdx, afxPlacement const plce, afxUnit cnt, afxUnit bufIdx, afxSize offset)
+_ASX afxCmdId AsxCmdBuildRiggedMeshCompositeMatrices(afxContext ctx, arxModel mdl, afxUnit rigIdx, arxPlacement const plce, afxUnit cnt, afxUnit bufIdx, afxSize offset)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -185,9 +186,9 @@ _ASX afxCmdId AsxCmdBuildRiggedMeshCompositeMatrices(afxContext ctx, afxModel md
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(BuildRiggedMeshCompositeMatrices), sizeof(cmd->BuildRiggedMeshCompositeMatrices), &cmdId);
     AFX_ASSERT(cmd);
 
-    afxModelInfo mdli;
+    arxModelInfo mdli;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AfxDescribeModel(mdl, &mdli);
+    ArxDescribeModel(mdl, &mdli);
     AFX_ASSERT_RANGE(mdli.rigCnt, rigIdx, 1);
 
     AFX_ASSERT(mdli.jntCnt >= cnt);
@@ -207,7 +208,7 @@ _ASX afxCmdId AsxCmdBuildRiggedMeshCompositeMatrices(afxContext ctx, afxModel md
 
 // SKELETON OPS
 
-_ASX afxCmdId AsxCmdReparentJoints(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit idxSiz, void const* idxData)
+_ASX afxCmdId AsxCmdReparentJoints(afxContext ctx, arxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit idxSiz, void const* idxData)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -219,9 +220,9 @@ _ASX afxCmdId AsxCmdReparentJoints(afxContext ctx, afxModel mdl, afxUnit baseJnt
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(ReparentJoints), sizeof(cmd->ReparentJoints) + (jntCnt * idxSiz), &cmdId);
     AFX_ASSERT(cmd);
 
-    afxModelInfo mdli;
+    arxModelInfo mdli;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AfxDescribeModel(mdl, &mdli);
+    ArxDescribeModel(mdl, &mdli);
 
     AFX_ASSERT_RANGE(mdli.jntCnt, baseJntIdx, jntCnt);
     AFX_ASSERT(idxData);
@@ -236,7 +237,7 @@ _ASX afxCmdId AsxCmdReparentJoints(afxContext ctx, afxModel mdl, afxUnit baseJnt
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdResetJointTransforms(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxTransform const transforms[])
+_ASX afxCmdId AsxCmdResetJointTransforms(afxContext ctx, arxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxTransform const transforms[])
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -248,9 +249,9 @@ _ASX afxCmdId AsxCmdResetJointTransforms(afxContext ctx, afxModel mdl, afxUnit b
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(ResetJointTransforms), sizeof(cmd->ResetJointTransforms) + (jntCnt * sizeof(cmd->ResetJointTransforms.transforms[0])), &cmdId);
     AFX_ASSERT(cmd);
 
-    afxModelInfo mdli;
+    arxModelInfo mdli;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AfxDescribeModel(mdl, &mdli);
+    ArxDescribeModel(mdl, &mdli);
 
     AFX_ASSERT_RANGE(mdli.jntCnt, baseJntIdx, jntCnt);
     AFX_ASSERT(transforms);
@@ -265,7 +266,7 @@ _ASX afxCmdId AsxCmdResetJointTransforms(afxContext ctx, afxModel mdl, afxUnit b
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdResetJointInversors(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit mtxSiz, void const* matrices)
+_ASX afxCmdId AsxCmdResetJointInversors(afxContext ctx, arxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit mtxSiz, void const* matrices)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -277,9 +278,9 @@ _ASX afxCmdId AsxCmdResetJointInversors(afxContext ctx, afxModel mdl, afxUnit ba
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(ResetJointInversors), sizeof(cmd->ResetJointInversors) + (jntCnt * mtxSiz), &cmdId);
     AFX_ASSERT(cmd);
 
-    afxModelInfo mdli;
+    arxModelInfo mdli;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AfxDescribeModel(mdl, &mdli);
+    ArxDescribeModel(mdl, &mdli);
 
     AFX_ASSERT_RANGE(mdli.jntCnt, baseJntIdx, jntCnt);
     AFX_ASSERT(matrices);
@@ -294,7 +295,7 @@ _ASX afxCmdId AsxCmdResetJointInversors(afxContext ctx, afxModel mdl, afxUnit ba
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdResetJointLodErrors(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxReal const lodErrors[])
+_ASX afxCmdId AsxCmdResetJointLodErrors(afxContext ctx, arxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxReal const lodErrors[])
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -306,9 +307,9 @@ _ASX afxCmdId AsxCmdResetJointLodErrors(afxContext ctx, afxModel mdl, afxUnit ba
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(ResetJointLodErrors), sizeof(cmd->ResetJointLodErrors) + (jntCnt * sizeof(cmd->ResetJointLodErrors.lodErrors[0])), &cmdId);
     AFX_ASSERT(cmd);
 
-    afxModelInfo mdli;
+    arxModelInfo mdli;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AfxDescribeModel(mdl, &mdli);
+    ArxDescribeModel(mdl, &mdli);
 
     AFX_ASSERT_RANGE(mdli.jntCnt, baseJntIdx, jntCnt);
     AFX_ASSERT(lodErrors);
@@ -321,7 +322,7 @@ _ASX afxCmdId AsxCmdResetJointLodErrors(afxContext ctx, afxModel mdl, afxUnit ba
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdRebuildPose(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxM4d const displace, afxPlacement plce, afxBool rigid, afxPose pose)
+_ASX afxCmdId AsxCmdRebuildPose(afxContext ctx, arxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxM4d const displace, arxPlacement plce, afxBool rigid, arxPose pose)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -333,9 +334,9 @@ _ASX afxCmdId AsxCmdRebuildPose(afxContext ctx, afxModel mdl, afxUnit baseJntIdx
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(RebuildPose), sizeof(cmd->RebuildPose), &cmdId);
     AFX_ASSERT(cmd);
 
-    afxModelInfo mdli;
+    arxModelInfo mdli;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AfxDescribeModel(mdl, &mdli);
+    ArxDescribeModel(mdl, &mdli);
 
     AFX_ASSERT_RANGE(mdli.jntCnt, baseJntIdx, jntCnt);
     AFX_ASSERT(plce);
@@ -359,7 +360,7 @@ _ASX afxCmdId AsxCmdRebuildPose(afxContext ctx, afxModel mdl, afxUnit baseJntIdx
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdBuildRestPose(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxPose pose)
+_ASX afxCmdId AsxCmdBuildRestPose(afxContext ctx, arxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, arxPose pose)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -371,9 +372,9 @@ _ASX afxCmdId AsxCmdBuildRestPose(afxContext ctx, afxModel mdl, afxUnit baseJntI
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(BuildRestPose), sizeof(cmd->BuildRestPose), &cmdId);
     AFX_ASSERT(cmd);
 
-    afxModelInfo mdli;
+    arxModelInfo mdli;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AfxDescribeModel(mdl, &mdli);
+    ArxDescribeModel(mdl, &mdli);
 
     AFX_ASSERT_RANGE(mdli.jntCnt, baseJntIdx, jntCnt);
     AFX_ASSERT(pose);
@@ -386,7 +387,7 @@ _ASX afxCmdId AsxCmdBuildRestPose(afxContext ctx, afxModel mdl, afxUnit baseJntI
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdBuildPlacement(afxContext ctx, afxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit baseReqJnt, afxUnit reqJntCnt, afxPose pose, afxM4d const displace, afxBool noComposite, afxPlacement plce)
+_ASX afxCmdId AsxCmdBuildPlacement(afxContext ctx, arxModel mdl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit baseReqJnt, afxUnit reqJntCnt, arxPose pose, afxM4d const displace, afxBool noComposite, arxPlacement plce)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -398,9 +399,9 @@ _ASX afxCmdId AsxCmdBuildPlacement(afxContext ctx, afxModel mdl, afxUnit baseJnt
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(BuildPlacement), sizeof(cmd->BuildPlacement), &cmdId);
     AFX_ASSERT(cmd);
 
-    afxModelInfo mdli;
+    arxModelInfo mdli;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AfxDescribeModel(mdl, &mdli);
+    ArxDescribeModel(mdl, &mdli);
 
     AFX_ASSERT_RANGE(mdli.jntCnt, baseJntIdx, jntCnt);
     AFX_ASSERT(pose);
@@ -423,7 +424,7 @@ _ASX afxCmdId AsxCmdBuildPlacement(afxContext ctx, afxModel mdl, afxUnit baseJnt
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdBuildCompositeMatrices(afxContext ctx, afxModel mdl, afxPlacement plce, afxUnit baseJnt, afxUnit jntCnt, afxBool /*3x4*/transposed, afxUnit bufIdx, afxSize offset)
+_ASX afxCmdId AsxCmdBuildCompositeMatrices(afxContext ctx, arxModel mdl, arxPlacement plce, afxUnit baseJnt, afxUnit jntCnt, afxBool /*3x4*/transposed, afxUnit bufIdx, afxSize offset)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -435,9 +436,9 @@ _ASX afxCmdId AsxCmdBuildCompositeMatrices(afxContext ctx, afxModel mdl, afxPlac
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(BuildCompositeMatrices), sizeof(cmd->BuildCompositeMatrices), &cmdId);
     AFX_ASSERT(cmd);
 
-    afxModelInfo mdli;
+    arxModelInfo mdli;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AfxDescribeModel(mdl, &mdli);
+    ArxDescribeModel(mdl, &mdli);
 
     AFX_ASSERT_RANGE(mdli.jntCnt, baseJnt, jntCnt);
     AFX_ASSERT(plce);
@@ -453,7 +454,7 @@ _ASX afxCmdId AsxCmdBuildCompositeMatrices(afxContext ctx, afxModel mdl, afxPlac
     return cmdId;
 }
 
-_ASX afxCmdId AsxCmdBuildIndexedCompositeMatrices(afxContext ctx, afxModel mdl, afxPlacement plce, afxUnit jntCnt, afxUnit const jntMap[], afxBool /*3x4*/transposed, afxUnit bufIdx, afxSize offset)
+_ASX afxCmdId AsxCmdBuildIndexedCompositeMatrices(afxContext ctx, arxModel mdl, arxPlacement plce, afxUnit jntCnt, afxUnit const jntMap[], afxBool /*3x4*/transposed, afxUnit bufIdx, afxSize offset)
 {
     afxError err = AFX_ERR_NONE;
     // ctx must be a valid afxContext handle.
@@ -465,9 +466,9 @@ _ASX afxCmdId AsxCmdBuildIndexedCompositeMatrices(afxContext ctx, afxModel mdl, 
     asxCmd* cmd = _AsxCtxPushCmd(ctx, ASX_GET_STD_CMD_ID(BuildIndexedCompositeMatrices), sizeof(cmd->BuildIndexedCompositeMatrices) + (jntCnt * sizeof(cmd->BuildIndexedCompositeMatrices.jntMap[0])), &cmdId);
     AFX_ASSERT(cmd);
 
-    afxModelInfo mdli;
+    arxModelInfo mdli;
     AFX_ASSERT_OBJECTS(afxFcc_MDL, 1, &mdl);
-    AfxDescribeModel(mdl, &mdli);
+    ArxDescribeModel(mdl, &mdli);
 
     AFX_ASSERT_RANGE(mdli.jntCnt, 0, jntCnt);
     AFX_ASSERT(plce);

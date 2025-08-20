@@ -56,9 +56,9 @@ AFX_OBJECT(afxContext)
 
     struct
     {
-        afxPose pose;
+        arxPose pose;
 
-        afxModel skl;
+        arxModel skl;
         afxReal allowedErr;
         afxReal allowedErrScaler;
         afxReal allowedErrEnd;
@@ -71,7 +71,7 @@ AFX_OBJECT(afxContext)
         afxUnit const* sparseJntMap;
     } pose;
 
-    afxPlacement plce;
+    arxPlacement plce;
     afxUnit baseXformIdx;
     afxUnit xformCnt;
 
@@ -92,9 +92,9 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxPose src;
+        arxPose src;
         afxUnit from;
-        afxPose dst;
+        arxPose dst;
         afxUnit base;
         afxUnit cnt;
     } CopyPose;
@@ -102,7 +102,7 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxPose pose;
+        arxPose pose;
         afxV3d translation;
         afxV3d rotation;
     } ApplyRootMotionVectors;
@@ -127,7 +127,7 @@ AFX_DEFINE_UNION(asxCmd)
         afxUnit     cnt;
         struct
         {
-            afxCurve cur;
+            arxCurve cur;
             afxUnit a;
             afxUnit b;
         }       items[];
@@ -144,22 +144,22 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxBody bod;
+        arxBody bod;
         afxUnit pivotCnt;
         afxM4d displace;
-        afxPose scratch;
-        afxPlacement plce;
+        arxPose scratch;
+        arxPlacement plce;
         afxReal allowedErr;
     } SampleBodyAnimationsAccelerated;
     struct
     {
         _asxCmdHdr hdr;
 
-        afxBody bod;
-        afxCapstan moto;
+        arxBody bod;
+        arxCapstan moto;
         afxUnit basePivotIdx;
         afxUnit pivotCnt;
-        afxPose pose;
+        arxPose pose;
         afxReal allowedErr;
         afxUnit const* sparseBoneArray;
     } SampleSingleBodyAnimation;
@@ -167,10 +167,10 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxBody bod;
+        arxBody bod;
         afxUnit basePivotIdx;
         afxUnit pivotCnt;
-        afxPose pose;
+        arxPose pose;
         afxReal allowedErr;
         afxUnit const* sparseBoneArray;
     } SampleBodyAnimations;
@@ -178,16 +178,16 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxModel mdl;
+        arxModel mdl;
         afxTransform displacement;
     } DisplaceModel;
     struct
     {
         _asxCmdHdr hdr;
 
-        afxModel mdl;
+        arxModel mdl;
         afxUnit rigIdx;
-        afxPlacement plce;
+        arxPlacement plce;
         afxUnit cnt;
         afxUnit bufIdx;
         afxSize bufOffset;
@@ -196,19 +196,19 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxModel mdl;
+        arxModel mdl;
         afxUnit baseJntIdx;
         afxUnit jntCnt;
         afxM4d displace;
-        afxPlacement plce;
+        arxPlacement plce;
         afxBool rigid;
-        afxPose pose;
+        arxPose pose;
     } RebuildPose;
     struct
     {
         _asxCmdHdr hdr;
 
-        afxModel mdl;
+        arxModel mdl;
         afxUnit baseJntIdx;
         afxUnit jntCnt;
         afxUnit idxSiz;
@@ -218,7 +218,7 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxModel mdl;
+        arxModel mdl;
         afxUnit baseJntIdx;
         afxUnit jntCnt;
         afxTransform transforms[];
@@ -227,7 +227,7 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxModel mdl;
+        arxModel mdl;
         afxUnit baseJntIdx;
         afxUnit jntCnt;
         afxUnit mtxSiz;
@@ -237,7 +237,7 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxModel mdl;
+        arxModel mdl;
         afxUnit baseJntIdx;
         afxUnit jntCnt;
         afxReal lodErrors[];
@@ -246,24 +246,24 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxModel mdl;
+        arxModel mdl;
         afxUnit baseJntIdx;
         afxUnit jntCnt;
-        afxPose pose;
+        arxPose pose;
     } BuildRestPose;
     struct
     {
         _asxCmdHdr hdr;
 
-        afxModel mdl;
+        arxModel mdl;
         afxUnit baseJntIdx;
         afxUnit jntCnt;
         afxUnit baseReqJnt;
         afxUnit reqJntCnt;
-        afxPose pose;
+        arxPose pose;
         afxM4d displace;
         afxBool noComposite;
-        afxPlacement plce;
+        arxPlacement plce;
     } BuildPlacement;
     struct
     {
@@ -271,8 +271,8 @@ AFX_DEFINE_UNION(asxCmd)
 
         afxUnit bufIdx;
         afxSize offset;
-        afxModel mdl;
-        afxPlacement plce;
+        arxModel mdl;
+        arxPlacement plce;
         afxUnit baseJnt;
         afxUnit jntCnt;
         afxBool /*3x4*/transposed;
@@ -281,8 +281,8 @@ AFX_DEFINE_UNION(asxCmd)
     {
         _asxCmdHdr hdr;
 
-        afxModel mdl;
-        afxPlacement plce;
+        arxModel mdl;
+        arxPlacement plce;
         afxUnit jntCnt;
         afxBool /*3x4*/transposed;
         afxUnit bufIdx;

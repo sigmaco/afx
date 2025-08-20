@@ -96,21 +96,21 @@ _AMX afxError _AmxSndCtorCb(amxSound snd, void** args, afxUnit invokeNo)
     AFX_ASSERT(spec);
 
     {
-        snd->ctrl.flags = /*afxCapstanFlag_ACTIVE*/0x01;
-        snd->ctrl.timing.currClock = /*startTime*/0;
+        snd->ctrl.flags = /*arxCapstanFlag_ACTIVE*/0x01;
+        //snd->ctrl.timing.currClock = /*startTime*/0;
         snd->ctrl.dtLocalClockPending = 0.0;
         snd->ctrl.localClock = 0.0;
         snd->ctrl.speed = 1.0;
         snd->ctrl.localDur = /*cfg->localDur*/spec->playLen;
         snd->ctrl.currIterIdx = 0;
         snd->ctrl.iterCnt = /*iterCnt*/spec->iterCnt;
-        snd->ctrl.timing.killClock = 0;
+        //snd->ctrl.timing.killClock = 0;
         snd->ctrl.currWeight = 1;
-        snd->ctrl.timing.easeInStartClock = 0;
-        snd->ctrl.timing.easeInEndClock = 0;
+        //snd->ctrl.timing.easeInStartClock = 0;
+        //snd->ctrl.timing.easeInEndClock = 0;
         snd->ctrl.easeInValues = (afxUnit)-65536;
-        snd->ctrl.timing.easeOutStartClock = 0;
-        snd->ctrl.timing.easeOutEndClock = 0;
+        //snd->ctrl.timing.easeOutStartClock = 0;
+        //snd->ctrl.timing.easeOutEndClock = 0;
         snd->ctrl.easeOutValues = (afxUnit)0xFFFF;
     }
     snd->audio = spec->aud;

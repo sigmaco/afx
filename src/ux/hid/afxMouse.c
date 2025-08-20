@@ -25,7 +25,7 @@
 #define _AUX_SESSION_C
 #include "../impl/auxImplementation.h"
 
-_AUX void AfxGetMouseMotion(afxUnit seat, afxReal motion[2])
+_AUX void AfxGetMouseMotion(afxUnit seat, afxV2d motion, afxV2d vel, afxV2d accel)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -41,6 +41,18 @@ _AUX void AfxGetMouseMotion(afxUnit seat, afxReal motion[2])
     {
         motion[0] = ses->seats[seat].motion[0][0];
         motion[1] = ses->seats[seat].motion[0][1];
+
+        if (vel)
+        {
+            vel[0] = ses->seats[seat].motionVel[0][0];
+            vel[1] = ses->seats[seat].motionVel[0][1];
+        }
+
+        if (accel)
+        {
+            accel[0] = ses->seats[seat].motionAcc[0][0];
+            accel[1] = ses->seats[seat].motionAcc[0][1];
+        }
     }
 }
 
@@ -725,9 +737,11 @@ _AUX afxBool AfxMouseHasVerticalChanged(afxUnit seat, afxInt tolerance)
     return rslt;
 }
 
-_AUX afxError AfxEmulateMouseMotion(afxUnit seat, afxReal const motion[2], afxWindow wnd)
+_AUX afxError AfxEmulateMouseMotion(afxUnit seat, afxV2d const motion, afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
+
+    // TODO: Drop afxWindow parameter and call session's event handler, which should pass input event for windows.
 
     afxSession ses;
     if (!AfxGetSession(&ses))
@@ -739,10 +753,50 @@ _AUX afxError AfxEmulateMouseMotion(afxUnit seat, afxReal const motion[2], afxWi
 
     if (seat < ses->seatCnt)
     {
+        afxReal t = (afxReal)AfxGetTimer();
+        afxReal dt = t - (afxReal)ses->seats[seat].lastMotionTime;
+        ses->seats[seat].lastMotionTime = t;
+
+        // Velocity (what most motion compensation uses).
+        // velocity = (pos_now - pos_prev) / dt
+
+        afxReal dx = motion[0] - ses->seats[seat].motion[0][0];
+        afxReal dy = motion[1] - ses->seats[seat].motion[0][1];
+        afxReal vx = 0, vy = 0;
+
+        if (dt > 0)
+        {
+            vx = (afxReal)dx * 1000.0f / (afxReal)dt; // pixels per second
+            vy = (afxReal)dy * 1000.0f / (afxReal)dt;
+        }
+
+        // Acceleration (less commonly needed).
+        // acceleration = (velocity_now - velocity_prev) / dt
+
+        ses->seats[seat].motionAcc[1][0] = ses->seats[seat].motionAcc[0][0];
+        ses->seats[seat].motionAcc[1][1] = ses->seats[seat].motionAcc[0][1];
+        ses->seats[seat].motionAcc[0][0] = vx - ses->seats[seat].motionVel[0][0];
+        ses->seats[seat].motionAcc[0][1] = vy - ses->seats[seat].motionVel[0][1];
+
+        ses->seats[seat].motionVel[1][0] = ses->seats[seat].motionVel[0][0];
+        ses->seats[seat].motionVel[1][1] = ses->seats[seat].motionVel[0][1];
+        ses->seats[seat].motionVel[0][0] = vx;
+        ses->seats[seat].motionVel[0][1] = vy;
+
         ses->seats[seat].motion[1][0] = ses->seats[seat].motion[0][0];
         ses->seats[seat].motion[1][1] = ses->seats[seat].motion[0][1];
         ses->seats[seat].motion[0][0] = motion[0];
         ses->seats[seat].motion[0][1] = motion[1];
+
+        // Let's say our UI rendering lags by 1 frame. You want to render the cursor slightly ahead of where it was last frame, 
+        // based on how fast it was moving.
+        // predicted_pos = current_pos + velocity * frame_delay_seconds;
+        // That's velocity-based compensation; no acceleration needed.
+        // If we wanted to simulate momentum (e.g., scroll continues after mouse release), then acceleration would help.
+
+        // Velocity = what we want for compensating UI delay.
+        // Acceleration = useful for gestures, momentum, or input prediction beyond 1 frame.
+        // So unless we’re building something with inertia, momentum, or physics, we likely only need velocity.
 
         auxEvent ev = { 0 };
         ev.ev.id = afxEvent_UX;

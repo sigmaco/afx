@@ -114,6 +114,9 @@ AUX afxBool         AfxHasClipboardContent(afxFlags flags);
 AUX afxUnit         AfxGetClipboardContent(afxString* buf);
 AUX afxError        AfxSetClipboardContent(afxString const* text);
 
+AUX afxError    AfxFocusWindow(afxWindow wnd, afxFlags flags);
+AUX afxBool     AfxGetFocusedWindow(afxWindow* window);
+
 ////////////////////////////////////////////////////////////////////////////////
 
 AUX afxUnit         AfxGetSid(afxSession ses); // can be NIL

@@ -27,7 +27,9 @@
 #include "qwadro/inc/draw/afxDrawDevice.h"
 #include "qwadro/inc/draw/afxDrawContext.h"
 #include "qwadro/inc/draw/io/avxBuffer.h"
+#include "qwadro/inc/draw/io/avxBufferUtil.h"
 #include "qwadro/inc/draw/io/avxRaster.h"
+#include "qwadro/inc/draw/io/avxRasterFile.h"
 #include "qwadro/inc/draw/video/avxCanvas.h"
 #include "qwadro/inc/draw/op/avxLigature.h"
 #include "qwadro/inc/draw/op/avxPipeline.h"
@@ -38,9 +40,29 @@
 #include "qwadro/inc/draw/op/avxVertexInput.h"
 #include "qwadro/inc/draw/op/avxDrawing.h"
 #include "qwadro/inc/draw/op/avxFence.h"
-#include "qwadro/inc/draw/io/afxDrawInput.h"
+#include "qwadro/inc/math/avxMatrix.h"
 
 #define AVX_MAX_BRIDGES_PER_SYSTEM (32)
+
+typedef enum avxEventId
+{
+    avxEventId_FENCE,
+    avxEventId_EXECUTE,
+    avxEventId_PRESENT,
+    avxEventId_UPLOAD,
+    avxEventId_DOWNLOAD,
+    avxEventId_PREFETCH,
+    avxEventId_REFRESH,
+    avxEventId_RECONNECT,
+    avxEventId_EXTENT,
+} avxEventId;
+
+AFX_DEFINE_STRUCT(avxEvent)
+{
+    avxEventId  id;
+    afxBool     posted, accepted;
+    void*       udd[1];
+};
 
 AFX_DEFINE_STRUCT(afxDrawSystemConfig)
 // The system-wide settings and parameters.

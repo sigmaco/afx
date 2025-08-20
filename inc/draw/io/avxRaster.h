@@ -20,6 +20,9 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
+#ifndef AVX_RASTER_H
+#define AVX_RASTER_H
+
 /*
     A list of function declarations related to raster operations in a graphics or rendering API, 
     related to the management and manipulation of raster data (such as textures or images) in a drawing system.
@@ -29,8 +32,7 @@
     and transferring data between the system and the GPU or storage.
 */
 
-#ifndef AVX_RASTER_H
-#define AVX_RASTER_H
+// LOD is mip level or sample level, depending on raster
 
 #include "qwadro/inc/draw/io/avxFormat.h"
 #include "qwadro/inc/io/afxUri.h"
@@ -64,9 +66,10 @@ typedef enum avxRasterUsage
 typedef enum avxRasterFlag
 {
     // has more than 1 LOD, which are subsamples from base image; (aka mipmaps).
-    avxRasterFlag_MIPMAP    = AFX_BITMASK(0),
-    // has more than 1 layer/slice (or a set of them, in case of cubemap).
-    avxRasterFlag_LAYERED   = AFX_BITMASK(1),
+    avxRasterFlag_MIP       = AFX_BITMASK(0),
+    // Depth is represented as layers.
+    // When not forced, this flag is generated when depth is greater than 1 and the raster is not volumetric.
+    avxRasterFlag_LAYER     = AFX_BITMASK(1),
     // has more than 1 LOD, which are supersamples from base image; (aka multisample).
     avxRasterFlag_MULTISAMP = AFX_BITMASK(2),
 
@@ -92,13 +95,18 @@ typedef enum avxRasterFlag
     avxRasterFlag_FOREIGN   = AFX_BITMASK(11)
 } avxRasterFlags;
 
-AFX_DEFINE_STRUCT(avxRasterLayout)
+AFX_DEFINE_STRUCT(avxRasterArrangement)
 // Information about the layout of the raster subresource.
 {
+    afxFlags        memFlags;
     // the byte offset from the start of the raster or the plane where the raster subresource begins.
     afxSize         offset;
     // the size in bytes of the raster subresource. siz includes any extra memory that is required based on rowStride.
     afxUnit         size;
+    // The alignment.
+    afxUnit         align;
+    // The byte-stride for the format;
+    afxUnit         fmtStride;
     // the number of bytes between each row of texels in an raster.
     afxUnit         rowStride;
     //  the number of bytes between each layer or (3D) slice of an raster.
@@ -127,7 +135,7 @@ typedef enum avxStorageFlag
     avxStorageFlag_EXT_D3D11TEX = AFX_BITMASK(9),
 } avxStorageFlags;
 
-AFX_DEFINE_STRUCT(avxRasterAllocation)
+AFX_DEFINE_STRUCT(avxRasterAllocation2)
 {
     avxStorageFlags resrvdF;
     union
@@ -168,26 +176,120 @@ AFX_DEFINE_STRUCT(avxRasterInfo)
     // A bitmask specifying allowed usages of the raster.
     avxRasterUsage  usage;
     // A bitmask of device bridges that will access this buffer.
-    afxMask         exuMask;
-    
-    // A avxRaster on which the view will be created.
-    avxRaster       base; // sub only
-    afxUnit         baseLod; // sub only
-    afxUnit         baseLayer; // sub only
-    avxSwizzling    swizzle; // sub only
-
+    afxMask         exuMask;    
     // A user-defined data.
     void*           udd;
     // A static string specifying a debug tag.
     afxString       tag;
+};
 
+/*
+    The AvxAcquireRasters() function acquires multiple rasters (textures or images) for use in a drawing system, 
+    based on the provided avxRasterInfo.
+*/
+
+AVX afxError AvxAcquireRasters
+(
+    // The system which will host the new acquired rasters.
+    afxDrawSystem dsys,
+    // The number of rasters to be acquired.
+    afxUnit cnt,
+    // An array of structures prescribing the rasters to be acquired.
+    avxRasterInfo const info[],
+    // An array of handles for each acquired raster.
+    avxRaster rasters[]
+);
+
+AFX_DEFINE_STRUCT(avxExorasterInfo)
+{
+    avxRasterInfo   rasi;
     // reserved for interop
     avxStorageFlags resrvdF;
     afxSize         resrvdA;
     afxSize         resrvdS;
 };
 
-// LOD is mip level or sample level, depending on raster
+AVX afxError AvxAcquireExternalRasters
+(
+    // The system which will host the new acquired rasters.
+    afxDrawSystem dsys,
+    // The number of rasters to be acquired.
+    afxUnit cnt,
+    // An array of structures prescribing the rasters to be acquired.
+    avxExorasterInfo const info[],
+    // An array of handles for each acquired raster.
+    avxRaster rasters[]
+);
+
+AFX_DEFINE_STRUCT(avxSubrasterInfo)
+{
+    // A avxRaster on which the view will be created.
+    avxRaster       ras;
+    // A avxFormat describing the format of the data elements in the raster.
+    avxFormat       fmt;
+    avxSwizzling    swizzle;
+    afxUnit         baseLod;
+    // The number of mipmaps/upsamples. Default is mipmap.
+    afxUnit         lodCnt;
+    // The index of the layer to be used as first layer by the subraster.
+    afxUnit         baseLayer;
+    afxUnit         layerCnt;
+    // A bitmask specifying additional parameters of the raster.
+    avxRasterFlags  flags;
+    // A user-defined data.
+    void*           udd;
+    // A static string specifying a debug tag.
+    afxString       tag;
+};
+
+AVX afxError AvxReacquireRasters
+(
+    // The system which will host the new acquired rasters.
+    afxDrawSystem dsys,
+    // The number of rasters to be acquired.
+    afxUnit cnt,
+    // An array of structures prescribing the rasters to be acquired.
+    avxSubrasterInfo const info[],
+    // An array of handles for each acquired raster.
+    avxRaster rasters[]
+);
+
+/*
+    The AvxLoadRasters() function loads multiple rasters from specified URIs into a drawing system.
+*/
+
+AVX afxError            AvxLoadRasters
+(
+    // The system which will host the new acquired rasters.
+    afxDrawSystem       dsys, 
+    // The number of rasters to be acquired and loaded.
+    afxUnit             cnt, 
+    // An array of structures prescribing the rasters to be acquired.
+    avxRasterInfo const info[], 
+    // An array of URIs locating the source files.
+    afxUri const        uri[], 
+    // An array of handles for each acquired raster.
+    avxRaster           rasters[]
+);
+
+/*
+    The AvxLoadSegmentedRaster() function loads a cubemap (six textures for the six sides of a cube) 
+    into the drawing system from the given URIs.
+*/
+
+AVX avxRaster           AvxLoadSegmentedRaster
+(
+    // The system which will host the new acquired raster.
+    afxDrawSystem       dsys, 
+    // The structure prescribing the new raster.
+    avxRasterInfo const*info, 
+    // The directory containing the files for each faces.
+    afxUri const*       dir, 
+    // An array of URIs locating each face in the specified directory.
+    afxUri const        faces[]
+);
+
+////////////////////////////////////////////////////////////////////////////////
 
 /*
     The AvxTestRasterUsage() function tests the usage flags of a raster and 
@@ -219,7 +321,9 @@ AVX avxRasterFlags AvxTestRasterFlags
 AVX void AvxDescribeRaster
 (
     avxRaster ras, 
-    avxRasterInfo* desc
+    avxRasterInfo* desc,
+    avxSubrasterInfo* sub,
+    avxExorasterInfo* exo
 );
 
 /*
@@ -238,7 +342,6 @@ AVX avxFormat AvxGetRasterFormat
 AVX avxFormat AvxDescribeRasterFormat
 (
     avxRaster ras, 
-    afxMask exuMask, 
     avxFormatDescription* pfd
 );
 
@@ -264,15 +367,14 @@ AVX void AvxGetRasterSwizzling
 );
 
 /*
-    The AvxQueryRasterLayout() function queries the layout of a raster at a given LOD and layer index, potentially for more detailed memory access patterns.
+    The AvxQueryRasterArrangement() function queries the layout of a raster at a given LOD and layer index, potentially for more detailed memory access patterns.
 */
 
-AVX afxBool AvxQueryRasterLayout
+AVX afxBool AvxQueryRasterArrangement
 (
     avxRaster ras, 
-    afxUnit lodIdx, 
-    afxUnit layerIdx, 
-    avxRasterLayout* layout
+    avxRasterRegion const* rgn,
+    avxRasterArrangement* layout
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -358,6 +460,8 @@ AVX afxError            AvxDumpRaster
     avxRasterIo const   ops[],
     // The destination memory.
     void*               dst,
+    // Special flags.
+    afxFlags            flags,
     // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
@@ -376,6 +480,8 @@ AVX afxError            AvxUpdateRaster
     avxRasterIo const   ops[],
     // The source memory.
     void const*         src,
+    // Special flags.
+    afxFlags            flags,
     // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
@@ -394,6 +500,8 @@ AVX afxError            AvxUploadRaster
     avxRasterIo const   ops[],
     // The source stream.
     afxStream           in,
+    // Special flags.
+    afxFlags            flags,
     // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
@@ -412,6 +520,8 @@ AVX afxError            AvxDownloadRaster
     avxRasterIo const   ops[],
     // The destination stream.
     afxStream           out,
+    // Special flags.
+    afxFlags            flags,
     // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
 );
@@ -452,60 +562,6 @@ AVX afxError            AvxReloadRaster
     afxUri const*       uri,
     // A bitmask specifying which bridges can assume this operation.
     afxMask             exuMask
-);
-
-////////////////////////////////////////////////////////////////////////////////
-
-/*
-    The AvxAcquireRasters() function acquires multiple rasters (textures or images) for use in a drawing system, 
-    based on the provided avxRasterInfo.
-*/
-
-AVX afxError AvxAcquireRasters
-(
-    // The system which will host the new acquired rasters.
-    afxDrawSystem dsys,
-    // The number of rasters to be acquired.
-    afxUnit cnt,
-    // An array of structures prescribing the rasters to be acquired.
-    avxRasterInfo const info[],
-    // An array of handles for each acquired raster.
-    avxRaster rasters[]
-);
-
-/*
-    The AvxLoadRasters() function loads multiple rasters from specified URIs into a drawing system.
-*/
-
-AVX afxError            AvxLoadRasters
-(
-    // The system which will host the new acquired rasters.
-    afxDrawSystem       dsys, 
-    // The number of rasters to be acquired and loaded.
-    afxUnit             cnt, 
-    // An array of structures prescribing the rasters to be acquired.
-    avxRasterInfo const info[], 
-    // An array of URIs locating the source files.
-    afxUri const        uri[], 
-    // An array of handles for each acquired raster.
-    avxRaster           rasters[]
-);
-
-/*
-    The AvxLoadSegmentedRaster() function loads a cubemap (six textures for the six sides of a cube) 
-    into the drawing system from the given URIs.
-*/
-
-AVX avxRaster           AvxLoadSegmentedRaster
-(
-    // The system which will host the new acquired raster.
-    afxDrawSystem       dsys, 
-    // The structure prescribing the new raster.
-    avxRasterInfo const*info, 
-    // The directory containing the files for each faces.
-    afxUri const*       dir, 
-    // An array of URIs locating each face in the specified directory.
-    afxUri const        faces[]
 );
 
 #endif//AVX_RASTER_H

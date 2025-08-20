@@ -7,10 +7,16 @@
     <Filter Include="_dll">
       <UniqueIdentifier>{fe663df2-10e0-4928-bb9a-fa629e25f8fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="qwadro\render">
+      <UniqueIdentifier>{da0ed406-7078-4bb4-8205-cddaa3f38e9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\render\ddi">
+      <UniqueIdentifier>{4b2fc855-704b-44e7-9770-55509d62a6d4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="qwadro\sim">
       <UniqueIdentifier>{2f407ed3-dab5-4277-8ec5-33e7c7e1b64f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\sim\impl">
+    <Filter Include="qwadro\sim\ddi">
       <UniqueIdentifier>{c8f4cd25-0377-4432-9a36-8e1833d41109}</UniqueIdentifier>
     </Filter>
     <Filter Include="qwadro\sim\io">
@@ -25,20 +31,14 @@
     <Filter Include="qwadro\sim\dev">
       <UniqueIdentifier>{4d73ebc4-01bb-4411-92f1-e29a276c5429}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\cine">
-      <UniqueIdentifier>{75fcb7a8-9c57-4828-bc87-296b28af7d6d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\scene">
-      <UniqueIdentifier>{81b525e1-9bad-48bc-bc67-0bacd2ff1c5c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\render">
-      <UniqueIdentifier>{da0ed406-7078-4bb4-8205-cddaa3f38e9f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro\sim\space">
       <UniqueIdentifier>{8fc7c7fc-d221-4403-aa19-92091ccc259a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\geo">
-      <UniqueIdentifier>{5e2d6cd9-d51e-44d5-aa1f-26ffa683ac68}</UniqueIdentifier>
+    <Filter Include="qwadro\anim">
+      <UniqueIdentifier>{dbc82b12-6d70-478e-a9e0-ca1d75269399}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\cad">
+      <UniqueIdentifier>{bac47c4f-8bc5-46e8-b8f8-cf8daffc5a09}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,44 +57,20 @@
     <ClInclude Include="..\..\inc\sim\afxSimDefs.h">
       <Filter>qwadro\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Animation.h">
-      <Filter>qwadro\sim\impl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Context.h">
-      <Filter>qwadro\sim\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Curve.h">
-      <Filter>qwadro\sim\impl</Filter>
+      <Filter>qwadro\sim\ddi</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Executor.h">
-      <Filter>qwadro\sim\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Model.h">
-      <Filter>qwadro\sim\impl</Filter>
+      <Filter>qwadro\sim\ddi</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\sim\impl\asxImplementation.h">
-      <Filter>qwadro\sim\impl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\sim\impl\asxImpl_Body.h">
-      <Filter>qwadro\sim\impl</Filter>
+      <Filter>qwadro\sim\ddi</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Simulation.h">
-      <Filter>qwadro\sim\impl</Filter>
+      <Filter>qwadro\sim\ddi</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\qwadro\inc\sim\io\asxBuffer.h">
       <Filter>qwadro\sim\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\io\afxTriangulation.h">
-      <Filter>qwadro\sim\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\body\afxBody.h">
-      <Filter>qwadro\sim\body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\body\afxPlacement.h">
-      <Filter>qwadro\sim\body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\body\afxPose.h">
-      <Filter>qwadro\sim\body</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\sim\op\afxMiscOps.h">
       <Filter>qwadro\sim\op</Filter>
@@ -104,27 +80,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\sim\op\afxSampleContext.h">
       <Filter>qwadro\sim\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\afxCapstan.h">
-      <Filter>qwadro\cine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\io\afxAnimation.h">
-      <Filter>qwadro\cine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\qwadro\inc\sim\io\afxCurve.h">
-      <Filter>qwadro\cine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\io\afxMotion.h">
-      <Filter>qwadro\cine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\io\afxScene.h">
-      <Filter>qwadro\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\akxRenderer.h">
-      <Filter>qwadro\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\akxLighting.h">
-      <Filter>qwadro\scene</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\sim\body\afxCollision.h">
       <Filter>qwadro\sim\body</Filter>
@@ -139,40 +94,100 @@
       <Filter>qwadro\sim\space</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Memory.h">
-      <Filter>qwadro\sim\impl</Filter>
+      <Filter>qwadro\sim\ddi</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\render\arxRenderContext.h">
+    <ClInclude Include="..\..\inc\render\arxTechnique.h">
       <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\render\arxRenderable.h">
+    <ClInclude Include="..\..\inc\render\arxScene.h">
       <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\render\arxRenderableTerrain.h">
+    <ClInclude Include="..\..\inc\render\afxVertexStream.h">
       <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\render\arxRenderableModel.h">
+    <ClInclude Include="..\..\inc\render\akxLighting.h">
       <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\render\arxRenderableBody.h">
+    <ClInclude Include="..\..\inc\render\akxRenderer.h">
       <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\body\afxMaterial.h">
-      <Filter>qwadro\geo</Filter>
+    <ClInclude Include="..\..\inc\render\arxRenderable.h">
+      <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\body\afxMorphology.h">
-      <Filter>qwadro\geo</Filter>
+    <ClInclude Include="..\..\inc\render\arxRenderableBody.h">
+      <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\io\afxMesh.h">
-      <Filter>qwadro\geo</Filter>
+    <ClInclude Include="..\..\inc\render\arxRenderableModel.h">
+      <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\io\afxMeshBlueprint.h">
-      <Filter>qwadro\geo</Filter>
+    <ClInclude Include="..\..\inc\render\arxRenderableTerrain.h">
+      <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\io\afxModel.h">
-      <Filter>qwadro\geo</Filter>
+    <ClInclude Include="..\..\inc\render\arxRenderContext.h">
+      <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\sim\afxTerrain.h">
-      <Filter>qwadro\geo</Filter>
+    <ClInclude Include="..\..\inc\render\arxCamera.h">
+      <Filter>qwadro\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\cad\arxMaterial.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\cad\arxTriangulation.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\cad\arxMeshBlueprint.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\cad\arxMesh.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\cad\arxModel.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\cad\arxGeome.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\cad\arxPlacement.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\cad\arxPose.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\cad\arxTerrain.h">
+      <Filter>qwadro\cad</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render\ddi\arxImpl_Input.h">
+      <Filter>qwadro\render\ddi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render\ddi\arxImpl_Model.h">
+      <Filter>qwadro\render\ddi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\anim\arxAnimation.h">
+      <Filter>qwadro\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\anim\arxCapstan.h">
+      <Filter>qwadro\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\anim\arxCurve.h">
+      <Filter>qwadro\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\anim\arxMotion.h">
+      <Filter>qwadro\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render\ddi\arxImpl_Curve.h">
+      <Filter>qwadro\render\ddi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render\ddi\arxImpl_Body.h">
+      <Filter>qwadro\render\ddi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\render\ddi\arxImpl_Animation.h">
+      <Filter>qwadro\render\ddi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\anim\arxBody.h">
+      <Filter>qwadro\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\arxRenderware.h">
+      <Filter>qwadro\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,30 +209,18 @@
       <Filter>qwadro\sim</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sim\impl\asxImplementation.c">
-      <Filter>qwadro\sim\impl</Filter>
+      <Filter>qwadro\sim\ddi</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Context.c">
-      <Filter>qwadro\sim\impl</Filter>
+      <Filter>qwadro\sim\ddi</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Executor.c">
-      <Filter>qwadro\sim\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxTriangulation.c">
-      <Filter>qwadro\sim\io</Filter>
+      <Filter>qwadro\sim\ddi</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sim\io\asxBuffer.c">
       <Filter>qwadro\sim\io</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\body\afxBody.c">
-      <Filter>qwadro\sim\body</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\sim\body\afxCollision.c">
-      <Filter>qwadro\sim\body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\body\afxPlacement.c">
-      <Filter>qwadro\sim\body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\body\afxPose.c">
       <Filter>qwadro\sim\body</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sim\body\afxXmd.c">
@@ -232,36 +235,6 @@
     <ClCompile Include="..\..\src\sim\op\afxPoseOps.c">
       <Filter>qwadro\sim\op</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\afxCapstan.c">
-      <Filter>qwadro\cine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\asxInstancedAnimation.c">
-      <Filter>qwadro\cine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\asxMotive.c">
-      <Filter>qwadro\cine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxAnimationIo.c">
-      <Filter>qwadro\cine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxAnimation.c">
-      <Filter>qwadro\cine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxCurve.c">
-      <Filter>qwadro\cine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxMotion.c">
-      <Filter>qwadro\cine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxScene.c">
-      <Filter>qwadro\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\akxLighting.c">
-      <Filter>qwadro\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\akxRenderer.c">
-      <Filter>qwadro\scene</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\sim\afxNode.c">
       <Filter>qwadro\sim\space</Filter>
     </ClCompile>
@@ -272,43 +245,97 @@
       <Filter>qwadro\sim\space</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Memory.c">
-      <Filter>qwadro\sim\impl</Filter>
+      <Filter>qwadro\sim\ddi</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\op\arxRenderableModel.c">
+    <ClCompile Include="..\..\src\render\arxTechnique.c">
       <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\render\arxRenderableTerrain.c">
+    <ClCompile Include="..\..\src\render\arxScene.c">
       <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\render\arxRenderable.c">
+    <ClCompile Include="..\..\src\render\afxVertexStream.c">
       <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\render\arxRenderableBody.c">
+    <ClCompile Include="..\..\src\render\akxLighting.c">
       <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\render\arxRenderContext.c">
+    <ClCompile Include="..\..\src\render\akxRenderer.c">
       <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\body\afxMaterial.c">
-      <Filter>qwadro\geo</Filter>
+    <ClCompile Include="..\..\src\render\arxRenderable.c">
+      <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\body\afxMorphology.c">
-      <Filter>qwadro\geo</Filter>
+    <ClCompile Include="..\..\src\render\arxRenderableBody.c">
+      <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxMesh.c">
-      <Filter>qwadro\geo</Filter>
+    <ClCompile Include="..\..\src\render\arxRenderableModel.c">
+      <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxMeshBlueprint.c">
-      <Filter>qwadro\geo</Filter>
+    <ClCompile Include="..\..\src\render\arxRenderableTerrain.c">
+      <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxModel.c">
-      <Filter>qwadro\geo</Filter>
+    <ClCompile Include="..\..\src\render\arxRenderContext.c">
+      <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\afxModelIo.c">
-      <Filter>qwadro\geo</Filter>
+    <ClCompile Include="..\..\src\render\arxCamera.c">
+      <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sim\afxTerrain.c">
-      <Filter>qwadro\geo</Filter>
+    <ClCompile Include="..\..\src\render\cad\arxMaterial.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\cad\arxTriangulation.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\cad\arxMeshBlueprint.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\cad\arxMesh.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\cad\arxModel.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\cad\arxModelIo.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\cad\arxGeome.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\cad\arxPlacement.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\cad\arxPose.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\cad\arxTerrain.c">
+      <Filter>qwadro\cad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\anim\arxAnimation.c">
+      <Filter>qwadro\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\anim\arxAnimationIo.c">
+      <Filter>qwadro\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\anim\arxCapstan.c">
+      <Filter>qwadro\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\anim\arxCurve.c">
+      <Filter>qwadro\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\anim\arxMotion.c">
+      <Filter>qwadro\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\anim\arxMotive.c">
+      <Filter>qwadro\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\anim\arxInstancedAnimation.c">
+      <Filter>qwadro\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\anim\arxBody.c">
+      <Filter>qwadro\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxRenderware.c">
+      <Filter>qwadro\render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

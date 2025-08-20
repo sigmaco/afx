@@ -36,7 +36,6 @@
 #include "qwadro/inc/draw/afxDrawSystem.h"
 #include "avxImpl_System.h"
 #include "avxImpl_Context.h"
-#include "avxImpl_Input.h"
 #include "avxImpl_Executor.h"
 #include "avxImpl_Pipeline.h"
 #include "avxImpl_Surface.h"
@@ -44,7 +43,6 @@
 
 AFX_DEFINE_STRUCT(_avxDrawSystemImplementation)
 {
-    afxClassConfig viddCls;
     afxClassConfig ddevCls;
     afxClassConfig dsysCls;
 };
@@ -93,6 +91,16 @@ AFX_OBJECT(afxDrawDevice)
 #endif//_AVX_DRAW_DEVICE_C
 
 #ifdef _AVX_DISPLAY_C
+
+AFX_DEFINE_STRUCT(_avxDisplayPort)
+{
+    afxBool         prime;
+    afxRect         workArea;
+    afxRect         fullArea;
+    afxChar         name[32]; // the name of the display.
+    afxChar         label[128]; // the friendly name of the display.
+};
+
 #ifdef _AVX_DISPLAY_IMPL
 #ifndef _AFX_DEVICE_C
 #   error "Require afxDevice implementation"
@@ -103,6 +111,8 @@ AFX_OBJECT(afxDisplay)
 #endif
 {
     AFX_OBJ(afxDevice)  dev;
+    afxUnit             portCnt;
+    _avxDisplayPort     ports[2];
 
     afxChar             name[32]; // the name of the display.
     afxChar             label[128]; // the friendly name of the display.
@@ -120,13 +130,11 @@ AFX_OBJECT(afxDisplay)
 #endif//_AVX_DISPLAY_C
 
 AVX afxClassConfig const _AVX_DDEV_CLASS_CONFIG;
-AVX afxClassConfig const _AVX_VDU_CLASS_CONFIG;
 
 AVX void*           _AvxGetDrawDeviceIdd(afxDrawDevice ddev);
 
 AVX afxClass const* _AvxIcdGetDdevClass(afxModule icd);
 AVX afxClass const* _AvxIcdGetDsysClass(afxModule icd);
-AVX afxClass const* _AvxGetDisplayClass(afxModule icd);
 
 AVX afxError _AvxRegisterDisplays(afxModule icd, afxUnit cnt, avxDisplayInfo const infos[], afxDisplay displays[]);
 AVX afxError _AvxRegisterDrawDevices(afxModule icd, afxUnit cnt, _avxDrawDeviceRegistration const infos[], afxDrawDevice devices[]);

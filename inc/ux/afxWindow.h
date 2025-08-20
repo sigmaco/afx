@@ -49,14 +49,13 @@ typedef enum afxWindowFlag
 
 AFX_DEFINE_STRUCT(afxWindowConfig)
 {
-    afxInt              atX;
-    afxInt              atY;
     afxWindowFlags      flags;
     afxString           title;
     afxBool             (*eventCb)(afxWindow, auxEvent*);
     afxDrawSystem       dsys;
-    afxSurfaceConfig frame;
-    afxSurfaceConfig area;
+    afxSurfaceConfig    dout;
+    afxInt              atX;
+    afxInt              atY;
     void*               udd;
     afxString           tag;
 };
@@ -96,20 +95,16 @@ AUX void            AfxGetWindowRect
 AUX afxError        AfxAdjustWindow
 (
     afxWindow       wnd, 
-    afxRect const*  frame,
-    afxRect const*  surface
+    afxRect const*  area
 );
 
 /*
-    The AfxGetWindowDrawOutput() function retrieves the afxSurface for the entire afxWindow, including title bar, menus, and scroll bars. 
-    A afxWindow-owned afxSurface permits painting anywhere in a window, because the origin of the afxSurface is the upper-left corner of the afxWindow instead of the surface (aka client area).
-
-    The AfxGetSurfaceDrawOutput() function retrieves a handle to a afxSurface for the surface (aka client area) of a specified afxWindow or for the entire screen. 
+    The AfxGetWindowSurface() function retrieves a handle to a afxSurface for the surface (aka client area) of a specified afxWindow or for the entire screen. 
     You can use the returned handle in subsequent draw system functions to draw in the afxSurface. 
     The afxSurface is an opaque data structure, whose values are used internally by Qwadro Draw I/O System.
 */
 
-AUX afxMask AfxGetWindowDrawOutput(afxWindow wnd, afxSurface* frame, afxSurface* surface);
+AUX afxError AfxGetWindowSurface(afxWindow wnd, afxSurface* surface);
 
 /*
     The AfxTraceScreenToSurface() function converts the screen coordinates of a specified point on the screen to surface coordinates.
@@ -129,7 +124,7 @@ AUX afxBool AfxTraceSurfaceToScreen(afxWindow wnd, afxUnit const surfPos[2], afx
     Disabling cursory may be used to grab and/or center the mouse to be used in window surface as, for example, a interactive aim.
 */
 
-AUX afxError AfxMakeWindowCursory(afxWindow wnd, afxBool cursory, afxRect const* confinement);
+AUX afxError AfxMakeWindowCursory(afxWindow wnd, afxRect const* confinement, afxBool cursory);
 
 /*
     Changes the text of the specified afxWindow's title bar (if it has one). 
@@ -154,7 +149,10 @@ AUX afxError AfxRedrawWidgets(afxWindow wnd, afxDrawContext dctx);
 */
 
 AUX afxError        AfxLoadWindowIcon(afxWindow wnd, afxUri const* uri);
-AUX afxError        AfxChangeWindowIcon(afxWindow wnd, avxRaster ras);
+AUX afxError        AfxChangeWindowIcon(afxWindow wnd, avxRaster ras, avxRasterRegion const* rgn);
+
+AUX afxError        AfxLoadWindowCursor(afxWindow wnd, afxUri const* uri);
+AUX afxError        AfxChangeWindowCursor(afxWindow wnd, avxRaster curs, avxRasterRegion const* rgn, afxInt hotspotX, afxInt hotspotY);
 
 AUX void*           AfxGetWindowUdd(afxWindow wnd);
 

@@ -392,7 +392,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
     afxUnit pointCnt = 0;
     afxUnit setMap[AVX_MAX_LIGATURE_SETS];
     afxUnit setUsed = 0;
-    AfxFill(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1); // Initialize to invalid set (-1)
+    AfxFillPattern(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1); // Initialize to invalid set (-1)
 
     for (afxUnit s = 0; s < shaderCnt; s++)
     {
@@ -522,7 +522,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
         afxUnit setMap[AVX_MAX_LIGATURE_SETS]; // Tracks existing sets
         afxUnit setUsed = 0;
 
-        AfxFill(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1); // Initialize to invalid set (-1)
+        AfxFillPattern(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1); // Initialize to invalid set (-1)
 
         for (afxUnit i = 0; i < resCnt; ++i)
         {
@@ -785,7 +785,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
     // Group by set
     afxUnit setMap[AVX_MAX_LIGATURE_SETS];
     afxUnit setCount = 0;
-    AfxFill(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1);
+    AfxFillPattern(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1);
 
     // First, map unique sets
     for (afxUnit i = 0; i < mergedCount; ++i)

@@ -44,13 +44,13 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
         afxRect areaMax;
         AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO, &areaMax);
         avxRange whd = { areaMax.w, areaMax.h };
-        AFX_ASSERT_RANGE(whd.w, cfg->area.x, cfg->area.w);
-        AFX_ASSERT_RANGE(whd.h, cfg->area.y, cfg->area.h);
+        AFX_ASSERT_RANGE(whd.w, cfg->area.area.x, cfg->area.area.w);
+        AFX_ASSERT_RANGE(whd.h, cfg->area.area.y, cfg->area.area.h);
 
-        cfg2.area.x = AFX_CLAMP(cfg->area.x, 0, (afxInt)whd.w);
-        cfg2.area.y = AFX_CLAMP(cfg->area.y, 0, (afxInt)whd.h);
-        cfg2.area.w = cfg->area.w ? AFX_CLAMP(cfg->area.w, 1, whd.w - cfg2.area.x) : whd.w;
-        cfg2.area.h = cfg->area.h ? AFX_CLAMP(cfg->area.h, 1, whd.h - cfg2.area.y) : whd.h;
+        cfg2.area.area.x = AFX_CLAMP(cfg->area.area.x, 0, (afxInt)whd.w);
+        cfg2.area.area.y = AFX_CLAMP(cfg->area.area.y, 0, (afxInt)whd.h);
+        cfg2.area.area.w = cfg->area.area.w ? AFX_CLAMP(cfg->area.area.w, 1, whd.w - cfg2.area.area.x) : whd.w;
+        cfg2.area.area.h = cfg->area.area.h ? AFX_CLAMP(cfg->area.area.h, 1, whd.h - cfg2.area.area.y) : whd.h;
     }
 
     dctx->inDrawScope = TRUE;
@@ -58,8 +58,6 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(CommenceDrawScope), sizeof(cmd->CommenceDrawScope) + (cfg2.targetCnt * sizeof(cmd->CommenceDrawScope.targets[0])), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->CommenceDrawScope.baseLayer = cfg2.baseLayer;
-    cmd->CommenceDrawScope.layerCnt = cfg2.layerCnt;
     cmd->CommenceDrawScope.targetCnt = cfg2.targetCnt;
     cmd->CommenceDrawScope.canv = canv;
     cmd->CommenceDrawScope.area = cfg2.area;
@@ -75,18 +73,18 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
     //if (!cfg2.depth) cmd->CommenceDrawScope.hasD = FALSE;
     //else
     {
-        AFX_ASSERT_BOUNDS(cfg2.depth.loadOp, avxLoadOp_LOAD, avxLoadOp_DONT_CARE);
-        AFX_ASSERT_BOUNDS(cfg2.depth.storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
-        cmd->CommenceDrawScope.depth = cfg2.depth;
+        AFX_ASSERT_BOUNDS(cfg2.ds[0].loadOp, avxLoadOp_LOAD, avxLoadOp_DONT_CARE);
+        AFX_ASSERT_BOUNDS(cfg2.ds[0].storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
+        cmd->CommenceDrawScope.ds[0] = cfg2.ds[0];
         cmd->CommenceDrawScope.hasD = TRUE;
     }
 
     //if (!cfg2.stencil) cmd->CommenceDrawScope.hasS = FALSE;
     //else
     {
-        AFX_ASSERT_BOUNDS(cfg2.stencil.loadOp, avxLoadOp_LOAD, avxLoadOp_DONT_CARE);
-        AFX_ASSERT_BOUNDS(cfg2.stencil.storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
-        cmd->CommenceDrawScope.stencil = cfg2.stencil;
+        AFX_ASSERT_BOUNDS(cfg2.ds[1].loadOp, avxLoadOp_LOAD, avxLoadOp_DONT_CARE);
+        AFX_ASSERT_BOUNDS(cfg2.ds[1].storeOp, avxStoreOp_STORE, avxStoreOp_DONT_CARE);
+        cmd->CommenceDrawScope.ds[1] = cfg2.ds[1];
         cmd->CommenceDrawScope.hasS = TRUE;
     }
 
@@ -113,6 +111,38 @@ _AVX afxCmdId AvxCmdConcludeDrawScope(afxDrawContext dctx)
     cmd->ConcludeDrawScope.nothing = NIL;
 
     dctx->inDrawScope = FALSE;
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdClearCanvas(afxDrawContext dctx, afxUnit annexCnt, afxUnit const annexes[], avxClearValue const values[], afxUnit areaCnt, afxLayeredRect const areas[])
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
+    // This command must only be called outside of a draw scope instance.
+    AFX_ASSERT(dctx->inDrawScope);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    afxCmdId cmdId;
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(ClearCanvas), sizeof(cmd->ClearCanvas) + (areaCnt * sizeof(cmd->ClearCanvas.areas[0])), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->ClearCanvas.annexCnt = annexCnt;
+    cmd->ClearCanvas.areaCnt = areaCnt;
+
+    for (afxUnit i = 0; i < annexCnt; i++)
+    {
+        cmd->ClearCanvas.annexes[i] = annexes ? annexes[i] : i;
+        cmd->ClearCanvas.values[i] = values[i];
+    }
+
+    for (afxUnit i = 0; i < areaCnt; i++)
+    {
+        cmd->ClearCanvas.areas[i] = areas[i];
+    }
+
     return cmdId;
 }
 

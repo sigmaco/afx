@@ -20,6 +20,9 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
+#ifndef AVX_CANVAS_H
+#define AVX_CANVAS_H
+
 /**
     No Qwadro, avxCanvas é um recurso que combina operações de framebuffer e draw scope em outras APIs.
     An surface is a memory location that can act as a buffer for the canvas. Think of it as an image or renderbuffer.
@@ -33,38 +36,45 @@
     A 'Raster' is the actual VRAM-buffered image --- the memory/storage side. Canvas binds one or more Rasters as attachments.
 */
 
-#ifndef AVX_CANVAS_H
-#define AVX_CANVAS_H
-
 #include "qwadro/inc/draw/io/avxRaster.h"
 
 #define AVX_MAX_AUX_BUFFERS (2)
 #define AVX_MAX_COLOR_BUFFERS (8)
-#define AVX_MAX_CANVAS_ANNEXES (AVX_MAX_COLOR_BUFFERS + AVX_MAX_AUX_BUFFERS)
+#define AVX_MAX_CANVAS_BUFFERS (AVX_MAX_COLOR_BUFFERS + AVX_MAX_AUX_BUFFERS)
 
 typedef enum avxCanvasFlag
 {
     // No annexes.
+    // Each buffer must be at least as large as the canvas dimensions.
     avxCanvasFlag_VOID          = AFX_BITMASK(0),
+    // Has color annex.
+    avxCanvasFlag_COLOR         = AFX_BITMASK(1),
     // Has depth annex.
-    avxCanvasFlag_DEPTH         = AFX_BITMASK(1),
+    avxCanvasFlag_DEPTH         = AFX_BITMASK(2),
     // Has stencil annex.
-    avxCanvasFlag_STENCIL       = AFX_BITMASK(2),
+    avxCanvasFlag_STENCIL       = AFX_BITMASK(3),
     // Has a combined depth+stencil annex.
-    avxCanvasFlag_COMBINED_DS   = AFX_BITMASK(3)
+    avxCanvasFlag_COMBINED_DS   = AFX_BITMASK(4),
+    // Draw buffers can be rebinded after acquisition of canvas.
+    // If not flagged so, managed allocation takes place for any missing buffer.
+    avxCanvasFlag_REBINDABLE    = AFX_BITMASK(5),
 } avxCanvasFlags;
 
-AFX_DEFINE_STRUCT(avxCanvasAnnex)
+AFX_DEFINE_STRUCT(avxCanvasBuffer)
 {
     // a avxRaster handle which will be used as the buffer.
     avxRaster       ras;
-    // format used to create an image used with this canvas. Ignored if @ras is present.
+    // format used to create an image used with this canvas.
+    // Ignored if @ras is present.
     avxFormat       fmt; // layout
-    // usage used to create an image used with this canvas. Ignored if @ras is present.
+    // usage used to create an image used with this canvas.
+    // Ignored if @ras is present.
     avxRasterUsage  usage;
-    // flags used to create an image that will be used with this canvas. Ignored if @ras is present.
+    // flags used to create an image that will be used with this canvas. 
+    // Ignored if @ras is present.
     avxRasterFlags  flags;
-    afxUnit         sampleCnt; // layout. I am still in doubt if I let this here or in pipeline.
+    // layout. I am still in doubt if I let this here or in pipeline.
+    afxUnit         sampleCnt; 
 };
 
 /*
@@ -100,11 +110,11 @@ AVX afxUnit         AvxGetCanvasArea
 );
 
 /*
-    The AvxQueryDrawBufferSlots() function populates the provided pointers (colorSlotCnt, dSlotIdx, and sSlotIdx) 
+    The AvxQueryCanvasSlots() function populates the provided pointers (colorSlotCnt, dSlotIdx, and sSlotIdx) 
     with relevant data and returns the total number of attachment slots that can be used.
 */
 
-AVX afxUnit         AvxQueryDrawBufferSlots
+AVX afxUnit         AvxQueryCanvasSlots
 // Returns the total of buffer slots in canvas.
 (
     // The canvas in which the slots are being managed.
@@ -154,10 +164,10 @@ AVX afxUnit         AvxGetDrawBuffers
     This function will allow you to specify a starting index, how many color buffers to retrieve, 
     and provide an recipient array to hold the retrieved color buffers.
 
-    It returns a boolean value indicating whether the retrieval was successful or not.
+    It returns a amount of retrivied color buffers.
 */
 
-AVX afxBool         AvxGetColorBuffers
+AVX afxUnit         AvxGetColorBuffers
 (
     // The canvas object from which the color buffers are being retrieved.
     avxCanvas       canv, 
@@ -176,13 +186,13 @@ AVX afxBool         AvxGetColorBuffers
 );
 
 /*
-    The AvxGetDepthBuffers() function retrieves the depth buffer and stencil buffer associated with a given canvas. 
+    The AvxGetAuxBuffers() function retrieves the depth buffer and stencil buffer associated with a given canvas. 
     It populates the provided pointers for the depth and stencil buffers, which can be used for further processing or rendering.
 
-    It returns a boolean value indicating whether the retrieval was successful or not.
+    It returns the amount of retrieved auxiliar buffers.
 */
 
-AVX afxBool         AvxGetDepthBuffers
+AVX afxUnit         AvxGetAuxBuffers
 (
     // The canvas from which the depth and stencil buffers are being retrieved.
     avxCanvas       canv, 
@@ -228,12 +238,15 @@ AVX afxError            AvxPrintDrawBuffer
 AFX_DEFINE_STRUCT(avxCanvasConfig)
 // A structure specifying a canvas configuration.
 {
-    // the dimensions of the canvas.
+    // Flags.
+    avxCanvasFlags      flags;
+    // The dimensions of the canvas.
     avxRange            whd;
-    afxFlags            flags;
+    // Multisampling order (2^lodCnt); 1 = 1x, 2 = 2x, 3 = 4x, 4 = 8x, ...
+    afxUnit             lodCnt;
     // the number of attachments.
     afxUnit             slotCnt;
-    avxCanvasAnnex      slots[AVX_MAX_CANVAS_ANNEXES];
+    avxCanvasBuffer     slots[AVX_MAX_CANVAS_BUFFERS];
     afxString           tag;
     void*               udd;
 };

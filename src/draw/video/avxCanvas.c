@@ -36,7 +36,7 @@ _AVX afxUnit AvxGetCanvasArea(avxCanvas canv, avxOrigin origin, afxRect* area)
     origin = AvxClampOrigin(origin, AVX_RANGE(canv->whd.w - 1, canv->whd.h - 1, canv->whd.d - 1));
     avxRange whd = AvxSubtractRange(canv->whd, AVX_RANGE(origin.x, origin.y, origin.z));
     AFX_ASSERT(area);
-    *area = AVX_RECT(origin.x, origin.y, whd.w, whd.h);
+    *area = AFX_RECT(origin.x, origin.y, whd.w, whd.h);
     return whd.w * whd.h;
 }
 
@@ -57,7 +57,7 @@ _AVX afxUnit AvxClipCanvas_(avxCanvas canv, afxRect const* rc, afxBool flipY, av
     };
 
     if (flipY)
-        AfxFlipRectVertically(&rcClip, whd.h, &rcClip);
+        AfxFlipRect(&rcClip, whd.h, &rcClip);
 
     vp->origin[0] = AFX_MIN(rc->x, (afxInt)whd.w - 1);
     vp->origin[1] = AFX_MIN(rc->y, (afxInt)whd.h - 1);
@@ -85,7 +85,7 @@ _AVX afxUnit AvxClipCanvas2_(avxCanvas canv, afxRect const* rc, afxBool flipY, a
     };
 
     if (flipY)
-        AfxFlipRectVertically(&rcClip, whd.h, &rcClip);
+        AfxFlipRect(&rcClip, whd.h, &rcClip);
 
     vp->origin[0] = AFX_MIN(rc->x, (afxInt)whd.w - 1);
     vp->origin[1] = AFX_MIN(rc->y, (afxInt)whd.h - 1);
@@ -108,7 +108,7 @@ _AVX avxRange AvxGetCanvasExtentNdc(avxCanvas canv, afxV2d const origin, afxV2d 
     return AVX_RANGE(ran[0], ran[1], canv->whd.d);
 }
 
-_AVX afxUnit AvxQueryDrawBufferSlots(avxCanvas canv, afxUnit* colorSlotCnt, afxUnit* dSlotIdx, afxUnit* sSlotIdx)
+_AVX afxUnit AvxQueryCanvasSlots(avxCanvas canv, afxUnit* colorSlotCnt, afxUnit* dSlotIdx, afxUnit* sSlotIdx)
 {
     afxError err = AFX_ERR_NONE;
     // @canv must be a valid avxCanvas handle.
@@ -131,18 +131,21 @@ _AVX afxUnit AvxGetDrawBuffers(avxCanvas canv, afxUnit baseSlotIdx, afxUnit cnt,
     afxError err = AFX_ERR_NONE;
     // @canv must be a valid avxCanvas handle.
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-    AFX_ASSERT_RANGE(canv->slotCnt, baseSlotIdx, cnt);
-    AFX_ASSERT(rasters);
     afxUnit rslt = 0;
-    
+
+    AFX_ASSERT_RANGE(canv->slotCnt, baseSlotIdx, cnt);
+    if (baseSlotIdx >= canv->slotCnt)
+        return rslt;
+
     baseSlotIdx = AFX_MIN(baseSlotIdx, canv->slotCnt - 1);
     cnt = AFX_MAX(cnt, canv->slotCnt - baseSlotIdx);
+    AFX_ASSERT(rasters);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
         afxUnit slotIdx = baseSlotIdx + i;
         avxRaster ras = canv->slots[slotIdx].ras;
-        
+
         if (ras)
         {
             AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
@@ -153,22 +156,27 @@ _AVX afxUnit AvxGetDrawBuffers(avxCanvas canv, afxUnit baseSlotIdx, afxUnit cnt,
     return rslt;
 }
 
-_AVX afxBool AvxGetColorBuffers(avxCanvas canv, afxUnit baseSlotIdx, afxUnit cnt, avxRaster rasters[])
+_AVX afxUnit AvxGetColorBuffers(avxCanvas canv, afxUnit baseSlotIdx, afxUnit cnt, avxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     // @canv must be a valid avxCanvas handle.
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
+    afxUnit rslt = 0;
+
     AFX_ASSERT_RANGE(canv->colorCnt, baseSlotIdx, cnt);
+    if (baseSlotIdx >= canv->colorCnt)
+        return rslt;
 
     baseSlotIdx = AFX_MIN(baseSlotIdx, canv->colorCnt - 1);
     cnt = AFX_MAX(cnt, canv->colorCnt - baseSlotIdx);
 
-    afxBool rslt = AvxGetDrawBuffers(canv, baseSlotIdx, cnt, rasters);
-    AFX_ASSERT_OBJECTS(afxFcc_RAS, rslt, rasters);
+    rslt = AvxGetDrawBuffers(canv, baseSlotIdx, cnt, rasters);
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_RAS, rslt, rasters);
+
     return rslt;
 }
 
-_AVX afxBool AvxGetDepthBuffers(avxCanvas canv, avxRaster* depth, avxRaster* stencil)
+_AVX afxUnit AvxGetAuxBuffers(avxCanvas canv, avxRaster* depth, avxRaster* stencil)
 {
     afxError err = AFX_ERR_NONE;
     // @canv must be a valid avxCanvas handle.
@@ -178,97 +186,123 @@ _AVX afxBool AvxGetDepthBuffers(avxCanvas canv, avxRaster* depth, avxRaster* ste
 
     afxUnit dSlotIdx = AFX_INVALID_INDEX;
     afxUnit sSlotIdx = AFX_INVALID_INDEX;    
-    if (AvxQueryDrawBufferSlots(canv, NIL, &dSlotIdx, &sSlotIdx) && 
-        ((dSlotIdx != AFX_INVALID_INDEX) || (sSlotIdx != AFX_INVALID_INDEX)))
+    if (!AvxQueryCanvasSlots(canv, NIL, &dSlotIdx, &sSlotIdx))
+        return rslt;
+
+    if (depth)
     {
-        avxRaster ras = NIL;
-
-        if (depth)
+        avxRaster d = NIL;
+        if ((dSlotIdx != AFX_INVALID_INDEX) && AvxGetDrawBuffers(canv, dSlotIdx, 1, &d))
         {
-            if (!AvxGetDrawBuffers(canv, dSlotIdx, 1, &ras)) *depth = NIL;
-            else
-            {
-                AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-                *depth = ras;
-                ++rslt;
-            }
+            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &d);
+            *depth = d;
+            ++rslt;
         }
+        else *depth = NIL;
+    }
 
-        if (stencil)
+    if (stencil)
+    {
+        avxRaster s = NIL;
+        if ((sSlotIdx != AFX_INVALID_INDEX) && AvxGetDrawBuffers(canv, sSlotIdx, 1, &s))
         {
-            if (!AvxGetDrawBuffers(canv, sSlotIdx, 1, &ras)) *stencil = NIL;
-            else
-            {
-                AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-                *stencil = ras;
-                ++rslt;
-            }
+            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &s);
+            *stencil = s;
+            ++rslt;
         }
+        else *stencil = NIL;
     }
     return rslt;
 }
 
-_AVX afxError _AvxRelinkDrawBuffersCb(avxCanvas canv, afxBool managed, afxUnit baseSlot, afxUnit cnt, avxRaster rasters[])
+_AVX afxError _AvxCanvRelinkDrawBuffersCb_SW(avxCanvas canv, afxBool regen, afxUnit baseSlot, afxUnit cnt, avxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     // @canv must be a valid avxCanvas handle.
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
     AFX_ASSERT_RANGE(canv->slotCnt, baseSlot, cnt);
-    AFX_ASSERT(rasters);
+
+    if (canv->flags & avxCanvasFlag_VOID)
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    afxDrawSystem dsys = AfxGetProvider(canv);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     for (afxUnit idx = 0; idx < cnt; idx++)
     {
         afxUnit slotIdx = baseSlot + idx;
-        avxRaster curr = canv->slots[slotIdx].ras;
+        _avxCanvasUnit* slot = &canv->slots[slotIdx];
+        avxRaster curr = slot->ras;
         avxRaster ras = rasters ? rasters[idx] : NIL;
 
-        if (ras == curr)
-            continue;
+        // If current is NIL, we must proceed to managed generation.
+        if ((ras == curr) && (curr)) continue;
+
+        if (curr)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &curr);
+            AfxDisposeObjects(1, &curr);
+            slot->ras = NIL;
+            --canv->linkedCnt;
+        }
+        else if (regen)
+        {
+            //canv->slots[slotIdx].managed = TRUE;
+
+            avxRasterInfo rasi = { 0 };
+            rasi.usage = slot->usage | avxRasterUsage_DRAW;
+            rasi.flags = slot->flags;
+            rasi.fmt = slot->fmt;
+            rasi.whd.w = AFX_ALIGN_SIZE(canv->whd.w, 16); // aligned to tile
+            rasi.whd.h = AFX_ALIGN_SIZE(canv->whd.h, 16); // aligned to tile
+            rasi.whd.d = canv->whd.d;
+
+            if (1 < (rasi.lodCnt = slot->sampleCnt))
+                rasi.flags |= avxRasterFlag_MULTISAMP;
+
+            if (AvxAcquireRasters(dsys, 1, &rasi, &ras))
+            {
+                AfxThrowError();
+            }
+            else
+            {
+                AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+            }
+        }
 
         if (ras)
         {
             AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
-            if (!AvxTestRasterUsage(ras, avxRasterUsage_DRAW))
+            if (slot->usage != AvxTestRasterUsage(ras, slot->usage))
             {
                 AfxThrowError();
                 continue;
             }
 
-            if (canv->slots[slotIdx].fmt != AvxGetRasterFormat(ras))
+            if (slot->fmt != AvxGetRasterFormat(ras))
             {
                 AfxThrowError();
                 continue;
             }
 
             avxRange ext = AvxGetRasterExtent(ras, 0);
-
+            // Each buffer must be at least as large as the canvas dimensions.
             if ((ext.w < canv->whd.w) && (ext.h < canv->whd.h) && (ext.d < canv->whd.d))
             {
                 AfxThrowError();
                 continue;
             }
 
+            if (!regen)
             AfxReacquireObjects(1, &ras);
-            canv->slots[slotIdx].managed = !!managed;
-
-            if (!curr)
-                ++canv->linkedCnt;
+            //slot->managed = !!managed;
+            ++canv->linkedCnt;
         }
-
-        canv->slots[slotIdx].ras = ras;
-
-        if (!ras)
-            canv->slots[slotIdx].managed = TRUE;
-
-        if (curr)
-        {
-            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &curr);
-            AfxDisposeObjects(1, &curr);
-
-            if (!ras)
-                --canv->linkedCnt;
-        }
+        slot->ras = ras;
     }
     return err;
 }
@@ -280,43 +314,61 @@ _AVX afxError _AvxBindDrawBuffers(avxCanvas canv, afxUnit baseSlot, afxUnit cnt,
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
     AFX_TRY_ASSERT_OBJECTS(afxFcc_RAS, cnt, rasters);
     AFX_ASSERT_RANGE(canv->slotCnt, baseSlot, cnt);
-    AFX_ASSERT(rasters);
+
+    if (canv->flags & avxCanvasFlag_VOID)
+    {
+        AfxThrowError();
+        return err;
+    }
 
     if (!canv->relink)
     {
-        if (_AvxRelinkDrawBuffersCb(canv, FALSE, baseSlot, cnt, rasters))
+        // canv->pimpl->bind(canv, FASE, baseSlot, cnt, rasters);
+        if (_AvxCanvRelinkDrawBuffersCb_SW(canv, TRUE, baseSlot, cnt, rasters))
             AfxThrowError();
     }
-    else if (canv->relink(canv, FALSE, baseSlot, cnt, rasters))
+    else if (canv->relink(canv, TRUE, baseSlot, cnt, rasters))
         AfxThrowError();
 
     return err;
 }
 
-_AVX afxError _AvxBindDepthBuffer(avxCanvas canv, avxRaster depth)
+_AVXINL afxError _AvxBindDepthBuffer(avxCanvas canv, avxRaster depth)
 {
     afxError err = AFX_ERR_NONE;
     // @canv must be a valid avxCanvas handle.
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
     AFX_TRY_ASSERT_OBJECTS(afxFcc_RAS, 1, &depth);
-    
+
+    if (canv->flags & avxCanvasFlag_VOID)
+    {
+        AfxThrowError();
+        return err;
+    }
+
     afxUnit slotIdx;
-    if (!AvxQueryDrawBufferSlots(canv, NIL, &slotIdx, NIL) || (slotIdx == AFX_INVALID_INDEX)) AfxThrowError();
+    if (!AvxQueryCanvasSlots(canv, NIL, &slotIdx, NIL) || (slotIdx == AFX_INVALID_INDEX)) AfxThrowError();
     else if (_AvxBindDrawBuffers(canv, slotIdx, 1, &depth))
         AfxThrowError();
 
     return err;
 }
 
-_AVX afxError _AvxBindStencilBuffer(avxCanvas canv, avxRaster stencil)
+_AVXINL afxError _AvxBindStencilBuffer(avxCanvas canv, avxRaster stencil)
 {
     afxError err = AFX_ERR_NONE;
     // @canv must be a valid avxCanvas handle.
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
     AFX_TRY_ASSERT_OBJECTS(afxFcc_RAS, 1, &stencil);
-    
+
+    if (canv->flags & avxCanvasFlag_VOID)
+    {
+        AfxThrowError();
+        return err;
+    }
+
     afxUnit slotIdx;
-    if (!AvxQueryDrawBufferSlots(canv, NIL, NIL, &slotIdx) || (slotIdx == AFX_INVALID_INDEX)) AfxThrowError();
+    if (!AvxQueryCanvasSlots(canv, NIL, NIL, &slotIdx) || (slotIdx == AFX_INVALID_INDEX)) AfxThrowError();
     else if (_AvxBindDrawBuffers(canv, slotIdx, 1, &stencil))
         AfxThrowError();
 
@@ -329,7 +381,13 @@ _AVX afxError AvxPrintDrawBuffer(avxCanvas canv, afxUnit slotIdx, avxRasterIo co
     // @canv must be a valid avxCanvas handle.
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
     AFX_ASSERT_RANGE(canv->slotCnt, slotIdx, 1);
-    
+
+    if (canv->flags & avxCanvasFlag_VOID)
+    {
+        AfxThrowError();
+        return err;
+    }
+
     avxRaster ras;
     if (!AvxGetDrawBuffers(canv, slotIdx, 1, &ras))
     {
@@ -378,7 +436,7 @@ _AVX afxError _AvxRedoDrawBuffers(avxCanvas canv)
 
     for (afxUnit i = 0; i < canv->slotCnt; i++)
     {
-        avxDrawSurfaceSlot* surf = &canv->slots[i];
+        _avxCanvasUnit* surf = &canv->slots[i];
 
         if (!surf->managed)
             continue;
@@ -399,7 +457,7 @@ _AVX afxError _AvxRedoDrawBuffers(avxCanvas canv)
 
         if (!canv->relink)
         {
-            if (_AvxRelinkDrawBuffersCb(canv, TRUE, i, 1, &ras))
+            if (_AvxCanvRelinkDrawBuffersCb_SW(canv, TRUE, i, 1, &ras))
                 AfxThrowError();
         }
         else if (canv->relink(canv, TRUE, i, 1, &ras))
@@ -419,7 +477,11 @@ _AVX afxError _AvxCanvDtorCb(avxCanvas canv)
 
     for (afxUnit i = 0; i < canv->slotCnt; i++)
     {
-        avxRaster ras = canv->slots[i].ras;
+        _avxCanvasUnit* slot = &canv->slots[i];        
+        _AvxCanvRelinkDrawBuffersCb_SW(canv, FALSE, i, 1, NIL);
+        AFX_ASSERT(!slot->ras);
+#if 0
+        avxRaster ras = slot->ras;
 
         if (ras)
         {
@@ -427,6 +489,7 @@ _AVX afxError _AvxCanvDtorCb(avxCanvas canv)
             AfxDisposeObjects(1, &ras);
             canv->slots[i].ras = NIL;
         }
+#endif
     }
 
     afxObjectStash const stashs[] =
@@ -454,7 +517,7 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
 
     //afxWarp const* whd = args[1];
     //afxUnit surCnt = *(afxUnit const *)args[2];
-    //avxCanvasAnnex const* surCfgs = args[3];
+    //avxCanvasBuffer const* surCfgs = args[3];
 
     if (!cfg->slotCnt)
     {
@@ -474,11 +537,15 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
     canv->whd.w = AFX_MAX(1, cfg->whd.w);
     canv->whd.h = AFX_MAX(1, cfg->whd.h);
     canv->whd.d = AFX_MAX(1, cfg->whd.d);
+    canv->whdMin = canv->whd;
+    canv->whdMax = (avxRange){ limits->maxCanvasWhd.w, limits->maxCanvasWhd.h, limits->maxCanvasWhd.d};
 
+    AFX_ASSERT_CAPACITY(limits->canvasNoAttachmentsSampleCnts, cfg->lodCnt);
+    canv->lodCnt = AFX_MAX(1, cfg->lodCnt);
     
     canv->readjust = NIL;// _SglReadjustCanvasCb;
 
-    canv->flags = NIL;
+    canv->flags = cfg->flags;
 
     afxBool combinedDs = FALSE;
     afxUnit depthInIdx = AFX_INVALID_INDEX;
@@ -488,24 +555,24 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
 
     for (afxUnit i = 0; i < cfg->slotCnt; i++)
     {
-        avxCanvasAnnex const* sur = &cfg->slots[i];
+        avxCanvasBuffer const* sur = &cfg->slots[i];
         AFX_ASSERT(sur->fmt);
         AFX_ASSERT(sur->sampleCnt);
 
-        if (AfxIsPixelFormatDepth(sur->fmt))
+        if (AvxTestDepthFormat(sur->fmt))
         {
             if (depthInIdx == AFX_INVALID_INDEX)
                 ++slotCnt;
 
             depthInIdx = i;
 
-            if ((combinedDs = AfxIsPixelFormatCombinedDepthStencil(sur->fmt)))
+            if ((combinedDs = AvxTestCombinedDsFormat(sur->fmt)))
                 stencilInIdx = depthInIdx;
 
             continue;
         }
 
-        if (AfxIsPixelFormatStencil(sur->fmt))
+        if (AvxTestStencilFormat(sur->fmt))
         {
             if (stencilInIdx == AFX_INVALID_INDEX)
                 ++slotCnt;
@@ -516,6 +583,15 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
 
         ++colorCnt;
         ++slotCnt;
+    }
+
+    if (!colorCnt)
+        canv->flags |= avxCanvasFlag_COLOR;
+
+    if (!slotCnt)
+    {
+        canv->flags |= cfg->flags & ~(avxCanvasFlag_COLOR | avxCanvasFlag_DEPTH | avxCanvasFlag_STENCIL | avxCanvasFlag_COMBINED_DS);
+        canv->flags |= avxCanvasFlag_VOID;
     }
 
     canv->linkedCnt = 0;
@@ -562,13 +638,13 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
 
     AFX_ASSERT(canv->slots);
     canv->slotCnt = slotCnt;
-    avxCanvasAnnex const* surCfg;
-    avxDrawSurfaceSlot* surf;
+    avxCanvasBuffer const* surCfg;
+    _avxCanvasUnit* surf;
 
     for (afxUnit i = 0; i < slotCnt; i++)
     {
         surf = &canv->slots[i];
-        *surf = (avxDrawSurfaceSlot) { 0 };
+        *surf = (_avxCanvasUnit) { 0 };
 
         surCfg = &cfg->slots[i];
 
@@ -585,7 +661,7 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
             AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
             avxRasterInfo rasi;
-            AvxDescribeRaster(ras, &rasi);
+            AvxDescribeRaster(ras, &rasi, NIL, NIL);
 
             surf->ras = ras;
             surf->managed = FALSE;
@@ -611,32 +687,9 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
             surf->flags = cfg->slots[i].flags;
             surf->sampleCnt = cfg->slots[i].sampleCnt;
 
-            avxRasterInfo rasi = { 0 };
-            rasi.usage = surf->usage | avxRasterUsage_DRAW;
-            rasi.flags = surf->flags;
-            rasi.fmt = surf->fmt;
-            rasi.whd.w = AFX_ALIGN_SIZE(canv->whd.w, 16); // aligned to tile
-            rasi.whd.h = AFX_ALIGN_SIZE(canv->whd.h, 16); // aligned to tile
-            rasi.whd.d = canv->whd.d;
-            
-            if (1 < (rasi.lodCnt = surf->sampleCnt))
-                rasi.flags |= avxRasterFlag_MULTISAMP;
-
-            if (AvxAcquireRasters(dsys, 1, &rasi, &ras))
+            if (_AvxCanvRelinkDrawBuffersCb_SW(canv, TRUE, i, 1, &ras))
             {
                 AfxThrowError();
-            }
-            else
-            {
-                AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-
-                if (_AvxBindDrawBuffers(canv, i, 1, &ras))
-                {
-                    AfxThrowError();
-                }
-
-                AFX_ASSERT(canv->slots[i].ras == ras); // relink must set it.
-                AfxDisposeObjects(1, &ras);
             }
         }
 
@@ -723,19 +776,18 @@ _AVX afxError AvxConfigureCanvas(afxDrawSystem dsys, avxCanvasConfig* cfg)
     cfg2.whd.w = AFX_MAX(1, AFX_MIN(limits->maxCanvasWhd.w, cfg->whd.w));
     cfg2.whd.h = AFX_MAX(1, AFX_MIN(limits->maxCanvasWhd.h, cfg->whd.h));
     cfg2.whd.d = AFX_MAX(1, AFX_MIN(limits->maxCanvasWhd.d, cfg->whd.d));
+    
+    cfg2.lodCnt = AFX_MAX(1, AFX_MIN(limits->canvasNoAttachmentsSampleCnts, cfg->lodCnt));
 
-    cfg2.slotCnt = AFX_MIN(cfg->slotCnt, limits->maxColorAttachments);
+    cfg2.slotCnt = AFX_MIN(cfg->slotCnt, limits->maxColorAttachments + 2);
 
     if (!cfg2.slotCnt)
     {
+        cfg2.flags |= cfg->flags & ~(avxCanvasFlag_COLOR | avxCanvasFlag_DEPTH | avxCanvasFlag_STENCIL | avxCanvasFlag_COMBINED_DS);
         cfg2.flags |= avxCanvasFlag_VOID;
-        //AfxZero(cfg2.annexes, sizeof(cfg2.annexes));
     }
     else
     {
-        cfg2.flags |= avxCanvasFlag_VOID;
-        //AfxZero(cfg2.annexes[cfg2.annexCnt], sizeof(cfg2.annexes) - (sizeof(cfg2.annexes[0]) * cfg2.annexCnt));
-
         afxBool combinedDs = FALSE;
         afxUnit depthInIdx = AFX_INVALID_INDEX;
         afxUnit stencilInIdx = AFX_INVALID_INDEX;
@@ -744,23 +796,23 @@ _AVX afxError AvxConfigureCanvas(afxDrawSystem dsys, avxCanvasConfig* cfg)
 
         for (afxUnit i = 0; i < cfg2.slotCnt; i++)
         {
-            avxCanvasAnnex const* ac = &cfg->slots[i];
+            avxCanvasBuffer const* ac = &cfg->slots[i];
             AFX_ASSERT(ac->fmt);
 
-            if (AfxIsPixelFormatDepth(ac->fmt))
+            if (AvxTestDepthFormat(ac->fmt))
             {
                 if (depthInIdx == AFX_INVALID_INDEX)
                     ++slotCnt;
 
                 depthInIdx = i;
 
-                if ((combinedDs = AfxIsPixelFormatCombinedDepthStencil(ac->fmt)))
+                if ((combinedDs = AvxTestCombinedDsFormat(ac->fmt)))
                     stencilInIdx = depthInIdx;
 
                 continue;
             }
 
-            if (AfxIsPixelFormatStencil(ac->fmt))
+            if (AvxTestStencilFormat(ac->fmt))
             {
                 if (stencilInIdx == AFX_INVALID_INDEX)
                     ++slotCnt;
@@ -769,55 +821,73 @@ _AVX afxError AvxConfigureCanvas(afxDrawSystem dsys, avxCanvasConfig* cfg)
                 continue;
             }
 
-            avxCanvasAnnex* c = &cfg->slots[colorCnt];
+            avxCanvasBuffer* c = &cfg2.slots[colorCnt];
             *c = *ac;
+            c->usage |= avxRasterUsage_DRAW;
+            c->fmt = ac->fmt;
+            c->flags = ac->flags;
+            c->ras = ac->ras;
             c->sampleCnt = AFX_MAX(1, c->sampleCnt);
 
             ++colorCnt;
             ++slotCnt;
         }
 
+        if (!slotCnt)
+            cfg2.flags |= avxCanvasFlag_VOID;
+
+        if (!colorCnt)
+            cfg2.flags |= avxCanvasFlag_COLOR;
+
         if (depthInIdx != AFX_INVALID_INDEX)
         {
-            cfg2.flags |= avxCanvasFlag_DEPTH;
-            avxCanvasAnnex* d = &cfg2.slots[(slotCnt - colorCnt - 1)];
-            avxCanvasAnnex const* dc = &cfg->slots[depthInIdx];
-            *d = *dc;
-            d->usage |= avxRasterUsage_DRAW;
-            d->sampleCnt = AFX_MAX(1, d->sampleCnt);
+            if (combinedDs)
+            {
+                cfg2.flags |= avxCanvasFlag_DEPTH | avxCanvasFlag_STENCIL | avxCanvasFlag_COMBINED_DS;
+                avxCanvasBuffer* ds = &cfg2.slots[(slotCnt - colorCnt - 1)];
+                avxCanvasBuffer const* dsc = &cfg->slots[depthInIdx];
+                *ds = *dsc;
+                ds->usage |= avxRasterUsage_DRAW;
+                ds->fmt = dsc->fmt;
+                ds->flags = dsc->flags;
+                ds->ras = dsc->ras;
+                ds->sampleCnt = AFX_MAX(1, ds->sampleCnt);
+
+                // How to nest separated D/S?
+            }
+            else
+            {
+                cfg2.flags |= avxCanvasFlag_DEPTH;
+                avxCanvasBuffer* d = &cfg2.slots[(slotCnt - colorCnt - 1)];
+                avxCanvasBuffer const* dc = &cfg->slots[depthInIdx];
+                *d = *dc;
+                d->usage |= avxRasterUsage_DRAW;
+                d->fmt = dc->fmt;
+                d->flags = dc->flags;
+                d->ras = dc->ras;
+                d->sampleCnt = AFX_MAX(1, d->sampleCnt);
+            }
         }
 
         if (stencilInIdx != AFX_INVALID_INDEX)
         {
-            cfg2.flags |= avxCanvasFlag_STENCIL;
+            if (!combinedDs)
+            {
+                cfg2.flags |= avxCanvasFlag_STENCIL;
 
-            if (combinedDs)
-            {
-                cfg2.flags |= avxCanvasFlag_COMBINED_DS;
-                avxCanvasAnnex* s = &cfg2.slots[(slotCnt - colorCnt - 1)];
-                avxCanvasAnnex const* sc = &cfg->slots[stencilInIdx];
+                avxCanvasBuffer* s = &cfg2.slots[(slotCnt - 1)];
+                avxCanvasBuffer const* sc = &cfg->slots[stencilInIdx];
                 *s = *sc;
                 s->usage |= avxRasterUsage_DRAW;
-                s->sampleCnt = AFX_MAX(1, s->sampleCnt);
-            }
-            else if (depthInIdx != AFX_INVALID_INDEX)
-            {
-                avxCanvasAnnex* s = &cfg2.slots[(slotCnt - 1)];
-                avxCanvasAnnex const* sc = &cfg->slots[stencilInIdx];
-                *s = *sc;
-                s->usage |= avxRasterUsage_DRAW;
-                s->sampleCnt = AFX_MAX(1, s->sampleCnt);
-            }
-            else
-            {
-                avxCanvasAnnex* s = &cfg2.slots[(slotCnt - 1)];
-                avxCanvasAnnex const* sc = &cfg->slots[stencilInIdx];
-                *s = *sc;
-                s->usage |= avxRasterUsage_DRAW;
+                s->fmt = sc->fmt;
+                s->flags = sc->flags;
+                s->ras = sc->ras;
                 s->sampleCnt = AFX_MAX(1, s->sampleCnt);
             }
         }
     }
+
+    *cfg = cfg2;
     return err;
 }
 
@@ -853,7 +923,7 @@ _AVX afxError AvxCoacquireCanvas(afxDrawSystem dsys, avxCanvasConfig const* cfg,
 
         for (afxUnit j = 0; j < cfg->slotCnt; j++)
         {
-            avxDrawSurfaceSlot* surf = &canv->slots[j];
+            _avxCanvasUnit* surf = &canv->slots[j];
 
             // combined DS reduces one slot.
             if (j == canv->slotCnt)

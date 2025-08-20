@@ -16,8 +16,8 @@
 
 // This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
 
-#ifndef AVX_RECT_H
-#define AVX_RECT_H
+#ifndef AFX_RECT_H
+#define AFX_RECT_H
 
 #include "qwadro/inc/math/afxVector.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
@@ -36,15 +36,33 @@ AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxRect)
     afxUnit w, h;
 };
 
-AVX afxRect const AVX_RECT_ZERO;
-AVX afxRect const AVX_RECT_MIN;
-AVX afxRect const AVX_RECT_MAX;
+AFX_DEFINE_STRUCT(afxLayeredRect)
+// Structure specifying a layered rectangle of consideration.
+{
+    // the two-dimensional region to be considered.
+    afxRect             area;
+    // The first layer to be considered.
+    afxUnit32           baseLayer;
+    // The number of layers to considered.
+    afxUnit32           layerCnt;
+};
 
-#define AVX_RECT(x_, y_, w_, h_) (afxRect){ \
-    .x = (afxInt)(x_), \
-    .y = (afxInt)(y_), \
-    .w = (afxUnit)(w_), \
-    .h = (afxUnit)(h_) }
+AFX afxRect const AFX_RECT_ZERO;
+AFX afxRect const AFX_RECT_MIN;
+AFX afxRect const AFX_RECT_MAX;
+
+#define AFX_RECT(x_, y_, w_, h_) (afxRect){ \
+    .x = (afxInt)(x_), .y = (afxInt)(y_), \
+    .w = (afxUnit)(w_), .h = (afxUnit)(h_) }
+
+AFX afxLayeredRect const AFX_LAYERED_RECT_ZERO;
+AFX afxLayeredRect const AFX_LAYERED_RECT_MIN;
+AFX afxLayeredRect const AFX_LAYERED_RECT_MAX;
+
+#define AFX_LAYERED_RECT(x_, y_, w_, h_, z_, d_) (afxLayeredRect){ \
+    .area.x = (afxInt)(x_), .area.y = (afxInt)(y_), \
+    .area.w = (afxUnit)(w_), .area.h = (afxUnit)(h_), \
+    .baseLayer = (z_), .layerCnt = (d_) }
 
 /*
     The AfxGetRectArea() function calculates the square units for a rectangle.
@@ -93,7 +111,7 @@ AFXINL afxBool      AfxAreRectsEqual
     afxRect const*  b
 );
 
-AVXINL afxBool      AvxAreRectsOverlapping
+AVXINL afxBool      AfxAreRectsOverlapping
 (
     afxRect const*  a,
     afxRect const*  b
@@ -106,7 +124,7 @@ AVXINL afxBool      AvxAreRectsOverlapping
     It's like a "soft containment" check, useful for layout fuzziness, hit testing, or floating-point rounding tolerances.
 */
 
-AVXINL afxBool      AvxDoesRectContainBiased
+AVXINL afxBool      AfxDoesRectContainBiased
 (
     afxRect const*  a, 
     afxRect const*  b, 
@@ -115,12 +133,12 @@ AVXINL afxBool      AvxDoesRectContainBiased
 );
 
 /*
-    The AvxDoesRectContain() function checks whether rect @a fully contains rect @b.
+    The AfxDoesRectContain() function checks whether rect @a fully contains rect @b.
     It's inclusive containment, which mean boundaries are allowed to touch.
     Returns true if @b fits completely within @a.
 */
 
-AVXINL afxBool      AvxDoesRectContain
+AVXINL afxBool      AfxDoesRectContain
 (
     // The major rect.
     afxRect const*  a,
@@ -128,24 +146,34 @@ AVXINL afxBool      AvxDoesRectContain
     afxRect const*  b
 );
 
-AVXINL afxBool      AvxIsRectOutside
+AVXINL afxBool      AfxIsRectOutside
 (
     afxRect const*  a, 
     afxRect const*  b
 );
 
-AVXINL afxBool      AvxDoRectsIntersect
+AVXINL afxBool      AfxDoRectsIntersect
 (
     afxRect const*  a, 
     afxRect const*  b
+);
+
+AVXINL void     AfxExtractRectMargins
+(
+    afxRect const* outer, 
+    afxRect const* inner, 
+    afxInt* left, 
+    afxInt* top, 
+    afxInt* right, 
+    afxInt* bottom
 );
 
 /*
-    The AfxFlipRectVertically() function transforms the rectangle's y coordinate, 
+    The AfxFlipRect() function transforms the rectangle's y coordinate, 
     flipping it relative to the vertical extent (origin shift) - using the total height of the space to invert it for bottom-up/top-down rendering.
 */
 
-AFXINL void         AfxFlipRectVertically
+AFXINL void         AfxFlipRect
 (
     // The source rectangle.
     afxRect const*  rc,
@@ -178,12 +206,12 @@ AVXINL afxUnit      AfxScissorRect
 );
 
 /*
-    The AfxMakeRect() function calculates the inclusive bounding rectangle for a number of "outside" rectangles
+    The AfxAccumulateRects() function calculates the inclusive bounding rectangle for a number of "outside" rectangles
     (rectangles outside a given rectangle), the goal is to take a list of rectangles and return the smallest rectangle that
     encompasses all those given rectangles.
 */
 
-AVXINL void         AfxMakeRect
+AVXINL void         AfxAccumulateRects
 (
     afxRect*        rc, 
     afxUnit         cnt, 
@@ -209,4 +237,4 @@ AVXINL afxUnit      AfxClampRect
     afxRect const*  max
 );
 
-#endif//AVX_RECT_H
+#endif//AFX_RECT_H

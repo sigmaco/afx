@@ -102,8 +102,12 @@ AFX_OBJECT(afxSession)
     afxClass            xssCls;
 
     afxWindow           focusedWnd;
+    afxBool             cursHidden;
     afxWindow           cursCapturedOn;
     afxRect             cursRect;
+    afxV2d              cursVel;
+    afxV2d              cursAcc;
+    afxReal             lastCursUpdTime;
 
     struct
     {
@@ -120,7 +124,9 @@ AFX_OBJECT(afxSession)
         afxBool         mbState[2][AFX_MB_TOTAL]; // [ last, prev ][i]
         afxReal         wheelDelta[2]; // [ last, prev ]
         afxV2d          motion[2]; // [ last, prev ]
-        afxV2d          motionAcc[2]; // motion acceleration
+        afxV2d          motionVel[2]; // Ex.: the cursor is moving 500 px / sec to the right.
+        afxV2d          motionAcc[2]; // The speed is increasing rapidly; the user is flicking the mouse.
+        afxReal         lastMotionTime; // ms
 
         // gamepad
         afxBool         fn[2][4]; // function keys
@@ -163,8 +169,9 @@ AFX_DECLARE_STRUCT(_auxWndDdi);
 AFX_DEFINE_STRUCT(_auxWndDdi)
 {
     afxError(*redrawCb)(afxWindow, afxRect const*);
-    afxError(*chIconCb)(afxWindow, avxRaster);
-    afxError(*adjustCb)(afxWindow, afxRect const*, afxRect const*);
+    afxError(*chIconCb)(afxWindow, avxRaster, avxRasterRegion const* rgn);
+    afxError(*chCursCb)(afxWindow, avxRaster, avxRasterRegion const* rgn, afxInt hotspotX, afxInt hotspotY);
+    afxError(*adjustCb)(afxWindow, afxRect const*);
     void(*focus)(afxWindow);
     afxBool(*hasFocus)(afxWindow);
     afxUnit(*titleCb)(afxWindow);
@@ -208,6 +215,9 @@ AFX_OBJECT(afxWindow)
     afxUnit          marginB;
 
     avxRaster       icon;
+    avxRasterRegion iconCrop;
+    avxRaster       curs;
+    avxRasterRegion cursCrop;
     afxString2048   title;
 
     afxBool         active;
@@ -383,5 +393,14 @@ AUX afxClass const* _AuxGetSessionClass(afxModule icd);
 AUX afxClass const* _AuxWndGetWidClass(afxWindow wnd);
 AUX afxClass const* _AuxSesGetWndClass(afxSession ses);
 AUX afxClass const* _AuxSesGetXssClass(afxSession ses);
+
+AUX afxError _AfxSesFocusWindowCb(afxSession ses, afxWindow wnd, afxFlags flags);
+AUX afxError _AfxSesSetClipboardContentCb(afxSession ses, afxString const* buf);
+AUX afxUnit _AfxSesGetClipboardContentCb(afxSession ses, afxString* buf);
+AUX afxBool _AfxSesHasClipboardContentCb(afxSession ses, afxFlags flags);
+AUX afxUnit64 _AfxSesPollInputCb(afxSession ses, afxFlags flags, afxUnit64 timeout);
+
+AUX afxUnit _AfxWndFormatTitleCb(afxWindow wnd);
+AUX afxError _AfxWndAdjustCb(afxWindow wnd, afxRect const* c);
 
 #endif//AUX_IMPL___SHELL_H

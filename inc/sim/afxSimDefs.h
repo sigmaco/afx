@@ -62,27 +62,15 @@ AFX_DEFINE_HANDLE(afxSimBridge);
 AFX_DEFINE_HANDLE(afxSimQueue);
 AFX_DEFINE_HANDLE(afxContext);
 
-AFX_DEFINE_HANDLE(akxLight);
-AFX_DEFINE_HANDLE(akxRenderer);
 AFX_DEFINE_HANDLE(akxEntity);
 AFX_DEFINE_HANDLE(afxNode);
-AFX_DEFINE_HANDLE(afxBody);
-AFX_DEFINE_HANDLE(afxCapstan);
-AFX_DEFINE_HANDLE(afxMotion);
-AFX_DEFINE_HANDLE(afxAnimation);
+AFX_DEFINE_HANDLE(arxBody);
+AFX_DEFINE_HANDLE(arxCapstan);
+AFX_DEFINE_HANDLE(arxMotion);
+AFX_DEFINE_HANDLE(arxAnimation);
 
-AFX_DEFINE_HANDLE(afxTerrain);
 
-AFX_DEFINE_HANDLE(afxCurve);
-AFX_DEFINE_HANDLE(afxAttitude);
-AFX_DEFINE_HANDLE(afxPosture);
-AFX_DEFINE_HANDLE(afxPlacement);
-AFX_DEFINE_HANDLE(afxPose);
-AFX_DEFINE_HANDLE(afxSkeleton);
-
-AFX_DEFINE_HANDLE(afxMaterial);
-AFX_DEFINE_HANDLE(afxMorphology);
-AFX_DEFINE_HANDLE(afxModel);
+AFX_DEFINE_HANDLE(arxCurve);
 
 AFX_DEFINE_HANDLE(asxBuffer);
 

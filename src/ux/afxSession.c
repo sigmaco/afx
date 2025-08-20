@@ -187,6 +187,27 @@ _AUX afxClass const* _AuxSesGetXssClass(afxSession ses)
     return cls;
 }
 
+_AUX afxBool AfxGetFocusedWindow(afxWindow* window)
+{
+    afxError err = AFX_ERR_NONE;
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return FALSE;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    afxWindow wnd = ses->focusedWnd;
+    if (window) *window = wnd;
+    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
+    return !!wnd;
+}
+
+_AUX afxError AfxFocusWindow(afxWindow wnd, afxFlags flags)
+{
+    afxError err = AFX_ERR_NONE;
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return afxError_NOT_READY;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    return ses->pimpl->focusCb(ses, wnd, flags);
+}
+
 _AUX afxBool AfxGetSessionVideo(afxDrawSystem* system)
 {
     afxError err = AFX_ERR_NONE;
@@ -194,9 +215,8 @@ _AUX afxBool AfxGetSessionVideo(afxDrawSystem* system)
     if (!AfxGetSession(&ses)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxDrawSystem dsys = ses->dsys;
+    if(system) *system = dsys;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    AFX_ASSERT(system);
-    *system = dsys;
     return !!dsys;
 }
 

@@ -18,30 +18,30 @@
 #define ASX_MISC_OPS_H
 
 #include "afxSampleContext.h"
-#include "qwadro/inc/sim/io/afxMesh.h"
+#include "qwadro/inc/render/cad/arxMesh.h"
 
 ASX afxCmdId AsxCmdBindBuffers(afxContext ctx, afxUnit baseSlot, afxUnit cnt, avxBuffer buffers[], afxUnit const offsets[], afxUnit const ranges[]);
 
 // MESH OPS
 
-ASX afxCmdId        AsxCmdChangeMeshMorphes(afxContext sctx, afxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, afxMeshMorph const morphes[]);
+ASX afxCmdId        AsxCmdChangeMeshMorphes(afxContext sctx, arxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, arxMeshMorph const morphes[]);
 
-ASX afxCmdId        AsxCmdResetMeshSections(afxContext sctx, afxMesh msh, afxUnit baseSecIdx, afxUnit cnt, afxMeshSection const sections[]);
+ASX afxCmdId        AsxCmdResetMeshSections(afxContext sctx, arxMesh msh, afxUnit baseSecIdx, afxUnit cnt, arxMeshSection const sections[]);
 
-ASX afxCmdId        AsxCmdInvertMeshTopology(afxContext sctx, afxMesh msh);
+ASX afxCmdId        AsxCmdInvertMeshTopology(afxContext sctx, arxMesh msh);
 
-ASX afxCmdId        AsxCmdRemapMeshCoverage(afxContext sctx, afxMesh msh, afxUnit mtlIdxCnt, afxUnit const mtlIdxLut[]);
+ASX afxCmdId        AsxCmdRemapMeshCoverage(afxContext sctx, arxMesh msh, afxUnit mtlIdxCnt, afxUnit const mtlIdxLut[]);
 
-ASX afxCmdId        AsxCmdUpdateMeshIndices(afxContext sctx, afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void const* src, afxUnit srcIdxSiz);
-ASX afxCmdId        AsxCmdDumpMeshIndices(afxContext sctx, afxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void* dst, afxUnit dstIdxSiz);
+ASX afxCmdId        AsxCmdUpdateMeshIndices(afxContext sctx, arxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void const* src, afxUnit srcIdxSiz);
+ASX afxCmdId        AsxCmdDumpMeshIndices(afxContext sctx, arxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void* dst, afxUnit dstIdxSiz);
 
-ASX afxCmdId        AsxCmdRecomputeMeshBounds(afxContext sctx, afxMesh msh, afxUnit morphIdx, afxUnit baseSecIdx, afxUnit cnt, afxUnit posAttrIdx);
-ASX afxCmdId        AsxCmdUpdateMeshBounds(afxContext sctx, afxMesh msh, afxUnit morphIdx, afxUnit baseSecIdx, afxUnit cnt, afxBox const aabbs[]);
+ASX afxCmdId        AsxCmdRecomputeMeshBounds(afxContext sctx, arxMesh msh, afxUnit morphIdx, afxUnit baseSecIdx, afxUnit cnt, afxUnit posAttrIdx);
+ASX afxCmdId        AsxCmdUpdateMeshBounds(afxContext sctx, arxMesh msh, afxUnit morphIdx, afxUnit baseSecIdx, afxUnit cnt, afxBox const aabbs[]);
 
-ASX afxCmdId        AsxCmdRecomputeMeshNormals(afxContext sctx, afxMesh msh, afxUnit morphIdx, afxUnit posAttrIdx, afxUnit nrmAttrIdx);
-ASX afxCmdId        AsxCmdRecomputeMeshTangents(afxContext sctx, afxMesh msh, afxUnit morphIdx, afxUnit posAttrIdx, afxUnit uvAttrIdx, afxUnit tanAttrIdx, afxUnit bitAttrIdx);
+ASX afxCmdId        AsxCmdRecomputeMeshNormals(afxContext sctx, arxMesh msh, afxUnit morphIdx, afxUnit posAttrIdx, afxUnit nrmAttrIdx);
+ASX afxCmdId        AsxCmdRecomputeMeshTangents(afxContext sctx, arxMesh msh, afxUnit morphIdx, afxUnit posAttrIdx, afxUnit uvAttrIdx, afxUnit tanAttrIdx, afxUnit bitAttrIdx);
 
-ASX afxCmdId        AsxCmdTransformMeshes(afxContext sctx, afxM3d const ltm, afxM3d const iltm, afxReal ltTol, afxV3d const atv, afxReal atTol, afxFlags flags, afxUnit cnt, afxMesh meshes[]);
+ASX afxCmdId        AsxCmdTransformMeshes(afxContext sctx, afxM3d const ltm, afxM3d const iltm, afxReal ltTol, afxV3d const atv, afxReal atTol, afxFlags flags, afxUnit cnt, arxMesh meshes[]);
 
 // MESH OPT EXT
 

@@ -70,7 +70,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR | avxFormatFlag_sRGB,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     [avxFormat_BGRA8v] =
     {
@@ -86,7 +86,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR | avxFormatFlag_sRGB,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     [avxFormat_BGR8v] = // B8G8R8X8_UNORM_SRGB (0xEA)
     {
@@ -121,7 +121,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 255.0f, 0, 0, 0},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_BLIT_SRC
+        .rasCaps = avxFormatCap_BLIT_SRC
     },
     [avxFormat_RG8un] = // R8G8_UNORM (0x106)
     {
@@ -137,7 +137,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 255.0f, 1.0f / 255.0f, 0, 0 },
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     [avxFormat_RGBA8un] = // R8G8B8A8_UNORM (0xC7)
     {
@@ -153,7 +153,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     [avxFormat_BGRA8un] = // B8G8R8A8_UNORM (0xC0)
     {
@@ -169,7 +169,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f, 1.0f / 255.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     [avxFormat_BGR8un] = // B8G8R8X8_UNORM (0xE9)
     {
@@ -204,7 +204,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 127.f, 0, 0, 0},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC
     },
     [avxFormat_RG8sn] = // R8G8_SNORM (0x107)
     {
@@ -220,7 +220,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 127.0f, 1.0f / 127.0f, 0, 0 },
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     [avxFormat_RGBA8sn] = // R8G8B8A8_SNORM (0xc9)
     {
@@ -236,7 +236,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 127.0f, 1.0f / 127.0f, 1.0f / 127.0f, 1.0f / 127.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     
     ////////////////////////////////////////////////////////////////////////////
@@ -256,7 +256,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 65535.0f, 0, 0, 0 },
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC
     },
     [avxFormat_RG16un] = // R16G16_UNORM (0xcc)
     {
@@ -272,7 +272,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 65535.0f, 1.0f / 65535.0f, 0, 0 },
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC
     },
 
     ////////////////////////////////////////////////////////////////////////////
@@ -291,7 +291,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .isNormalized = {TRUE, TRUE, TRUE, TRUE},
         .tof = {1.0f / 32767.0f, 0, 0, 0 },
         .bcWh = { 1, 1 },
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC
     },
     [avxFormat_RG16sn] = // R16G16_SNORM (0xcd)
     {
@@ -307,7 +307,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 32767.0f, 1.0f / 32767.0f, 0, 0 },
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT_SRC | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
 
     ////////////////////////////////////////////////////////////////////////////
@@ -327,7 +327,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f, 1.f, 0.f, 0.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     [avxFormat_RGBA16f] = // R16G16B16A16_FLOAT (0x84)
     {
@@ -343,7 +343,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f, 1.f, 1.f, 1.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
 
     ////////////////////////////////////////////////////////////////////////////
@@ -363,7 +363,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f, 0.f, 0.f, 0.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     [avxFormat_RG32f] = // R32G32_FLOAT (0x85)
     {
@@ -379,7 +379,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f, 1.0f, 0.f, 0.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     [avxFormat_RGB32f] = // R32G32B32_FLOAT (0x40)
     {
@@ -395,7 +395,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f, 1.0f, 1.0f, 0.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
     [avxFormat_RGBA32f] =// R32G32B32A32_FLOAT (0x0)
     {
@@ -411,7 +411,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f, 1.0f, 1.0f, 1.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW | avxFormatCap_BLEND
     },
 
     ////////////////////////////////////////////////////////////////////////////
@@ -430,7 +430,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .isNormalized = {FALSE, FALSE, FALSE, FALSE},
         .tof = {1.0f, 0.f, 0.f, 0.f},
         .bcWh = { 1, 1 },
-        .rasterCaps = avxFormatCap_COPY
+        .rasCaps = avxFormatCap_COPY
     },
     [avxFormat_RG32u] = // R32G32_UINT (0x87)
     {
@@ -445,7 +445,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .isNormalized = {FALSE, FALSE, FALSE, FALSE},
         .tof = {1.0f, 1.0f, 0.f, 0.f},
         .bcWh = { 1, 1 },
-        .rasterCaps = avxFormatCap_COPY
+        .rasCaps = avxFormatCap_COPY
     },
     [avxFormat_RGB32u] = // R32G32B32_UINT (0x42)
     {
@@ -460,7 +460,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .isNormalized = {FALSE, FALSE, FALSE, FALSE},
         .tof = {1.0f, 1.0f, 1.0f, 0.f},
         .bcWh = { 1, 1 },
-        .rasterCaps = avxFormatCap_COPY
+        .rasCaps = avxFormatCap_COPY
     },
     [avxFormat_RGBA32u] = // R32G32B32A32_UINT (0x2)
     {
@@ -475,7 +475,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .isNormalized = {FALSE, FALSE, FALSE, FALSE},
         .tof = {1.0f, 1.0f, 1.0f, 1.0f},
         .bcWh = { 1, 1 },
-        .rasterCaps = avxFormatCap_COPY
+        .rasCaps = avxFormatCap_COPY
     },
 
     ////////////////////////////////////////////////////////////////////////////
@@ -494,7 +494,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .isNormalized = {FALSE, FALSE, FALSE, FALSE},
         .tof = {1.0f, 0.f, 0.f, 0.f},
         .bcWh = { 1, 1 },
-        .rasterCaps = avxFormatCap_COPY
+        .rasCaps = avxFormatCap_COPY
     },
     [avxFormat_RG32i] = // R32G32_SINT (0x86)
     {
@@ -509,7 +509,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .isNormalized = {FALSE, FALSE, FALSE, FALSE},
         .tof = {1.0f, 1.0f, 0.f, 0.f},
         .bcWh = { 1, 1 },
-        .rasterCaps = avxFormatCap_COPY
+        .rasCaps = avxFormatCap_COPY
     },
     [avxFormat_RGB32i] = // R32G32B32_SINT (0x41)
     {
@@ -524,7 +524,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .isNormalized = {FALSE, FALSE, FALSE, FALSE},
         .tof = {1.0f, 1.0f, 1.0f, 0.f},
         .bcWh = { 1, 1 },
-        .rasterCaps = avxFormatCap_COPY
+        .rasCaps = avxFormatCap_COPY
     },
     [avxFormat_RGBA32i] = // R32G32B32A32_SINT (0x1)
     {
@@ -539,7 +539,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .isNormalized = {FALSE, FALSE, FALSE, FALSE},
         .tof = {1.0f, 1.0f, 1.0f, 1.0f},
         .bcWh = { 1, 1 },
-        .rasterCaps = avxFormatCap_COPY
+        .rasCaps = avxFormatCap_COPY
     },
 
     
@@ -561,7 +561,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 15.0f, 1.0f / 15.0f, 1.0f / 15.0f, 1.0f / 15.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
+        .rasCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
     },
             
     ////////////////////////////////////////////////////////////////////////////
@@ -581,7 +581,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 31.0f, 1.0f / 63.0f, 1.0f / 31.0f, 0},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
+        .rasCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
     },
 
     ////////////////////////////////////////////////////////////////////////////
@@ -601,7 +601,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 31.0f, 1.0f / 31.0f, 1.0f / 31.0f, 1.0f / 1.0f},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_COLOR,
-        .rasterCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
+        .rasCaps = avxFormatCap_BLIT | avxFormatCap_DRAW
     },
     
     ///////////////////////////////////////////////////////////////////////////
@@ -622,7 +622,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f, 0, 0, 0},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_STENCIL | avxFormatFlag_LUMINANCE,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_DRAW
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_DRAW
     },
     [avxFormat_D16un] =
     {
@@ -638,7 +638,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 65535.0f, 0, 0, 0},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_DEPTH,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
     },
     [avxFormat_D16unS8u] =
     {
@@ -654,7 +654,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 65535.0f, 1.f, 0, 0},
         .bcWh = { 1, 1 },
         .flags = 0, // UNSUPPORTED IN GL // avxFormatFlag_DEPTH | avxFormatFlag_STENCIL,
-        .rasterCaps = 0, // UNSUPPORTED IN GL // avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
+        .rasCaps = 0, // UNSUPPORTED IN GL // avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
     },
     [avxFormat_X8D24un] = // R24_UNORM_X8_TYPELESS (0xD9)
     {
@@ -670,7 +670,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 16777215.0f, 0, 0, 0},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_DEPTH,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_DRAW
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_DRAW
     },
     [avxFormat_D24unS8u] =
     {
@@ -686,7 +686,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f / 16777215.0f, 1.f, 0, 0},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_DEPTH | avxFormatFlag_STENCIL,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
     },
     [avxFormat_D32f] =
     {
@@ -702,7 +702,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = {1.0f, 0, 0, 0},
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_DEPTH,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
     },
     [avxFormat_D32fS8u] =
     {
@@ -718,7 +718,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
         .tof = { 1.0f, 1.0f, 0, 0 },
         .bcWh = { 1, 1 },
         .flags = avxFormatFlag_DEPTH | avxFormatFlag_STENCIL,
-        .rasterCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
+        .rasCaps = avxFormatCap_COPY | avxFormatCap_BLIT | avxFormatCap_DRAW
     },
     
     ///////////////////////////////////////////////////////////////////////////
@@ -885,8 +885,8 @@ _AVXINL afxUnit AvxChooseFormats(avxFormatDescription const* pfd, afxUnit maxCnt
             continue;
 
         if (((ref->flags & pfd->flags) != pfd->flags) ||
-            ((ref->rasterCaps & pfd->rasterCaps) != pfd->rasterCaps) ||
-            ((ref->bufferCaps & pfd->bufferCaps) != pfd->bufferCaps))
+            ((ref->rasCaps & pfd->rasCaps) != pfd->rasCaps) ||
+            ((ref->bufCaps & pfd->bufCaps) != pfd->bufCaps))
             continue;
 
 #if 0
@@ -975,7 +975,7 @@ _AVXINL afxUnit AfxGetBpp(avxFormat fmt)
     return _AvxStdPfds[fmt].bpp;
 }
 
-_AVXINL afxBool AfxIsPixelFormatCombinedDepthStencil(avxFormat fmt)
+_AVXINL afxBool AvxTestCombinedDsFormat(avxFormat fmt)
 {
     afxError err = NIL;
     AFX_ASSERT(fmt);
@@ -992,7 +992,7 @@ _AVXINL afxBool AfxIsPixelFormatCombinedDepthStencil(avxFormat fmt)
     return FALSE;
 }
 
-_AVXINL afxBool AfxIsPixelFormatDepth(avxFormat fmt)
+_AVXINL afxBool AvxTestDepthFormat(avxFormat fmt)
 {
     afxError err = NIL;
     AFX_ASSERT(fmt);
@@ -1012,7 +1012,7 @@ _AVXINL afxBool AfxIsPixelFormatDepth(avxFormat fmt)
     return _AvxStdPfds[fmt].flags & avxFormatFlag_DEPTH;
 }
 
-_AVXINL afxBool AfxIsPixelFormatStencil(avxFormat fmt)
+_AVXINL afxBool AvxTestStencilFormat(avxFormat fmt)
 {
     afxError err = NIL;
     AFX_ASSERT(fmt);
@@ -1030,7 +1030,7 @@ _AVXINL afxBool AfxIsPixelFormatStencil(avxFormat fmt)
     return _AvxStdPfds[fmt].flags & avxFormatFlag_STENCIL;
 }
 
-_AVXINL afxBool AfxIsSrgb(avxFormat fmt)
+_AVXINL afxBool AvxTestSrgbFormat(avxFormat fmt)
 {
     afxError err = NIL;
     AFX_ASSERT(fmt);
@@ -1038,7 +1038,7 @@ _AVXINL afxBool AfxIsSrgb(avxFormat fmt)
     return _AvxStdPfds[fmt].flags & avxFormatFlag_sRGB;
 }
 
-_AVXINL afxBool AfxIsPixelFormatCompressed(avxFormat fmt)
+_AVXINL afxBool AvxTestCompressedFormat(avxFormat fmt)
 {
     afxError err = NIL;
     AFX_ASSERT(fmt);
@@ -1141,4 +1141,92 @@ _AVX void AvxConvertFormat(afxUnit32 rowSize, afxUnit32 rowCnt,
             }
         }
     }
+}
+
+_AVXINL afxBool AvxTestCompatibleFormats(avxFormat base, avxFormat other)
+{
+    afxError err;
+
+    /*
+        According to Vulkan, two formats are compatible if:
+         - They have the same number of components
+         - Each component has the same size (in bits)
+         - The total bit size (BPP) matches
+         - Component layout matches (e.g., same order/swizzle)
+         - Same block size if compressed
+         - (For most cases) only the type differs (UNORM vs SNORM vs UINT, etc.)
+    */
+
+    avxFormatDescription const* a = &_AvxStdPfds[base];
+    avxFormatDescription const* b = &_AvxStdPfds[other];
+
+    // Compressed formats are only compatible with themselves.
+    if ((a->flags & avxFormatFlag_COMPRESSED) || (b->flags & avxFormatFlag_COMPRESSED))
+    {
+        return a == b; // Pointers must be equal, or you can check name/equivalence.
+    }
+
+    // Depth/stencil formats generally are not compatible with color formats.
+    afxBool aIsDepthStencil = (a->flags & (avxFormatFlag_DEPTH | avxFormatFlag_STENCIL));
+    afxBool bIsDepthStencil = (b->flags & (avxFormatFlag_DEPTH | avxFormatFlag_STENCIL));
+    if (aIsDepthStencil != bIsDepthStencil)
+    {
+        return FALSE;
+    }
+
+    // Check component count.
+    if (a->compCnt != b->compCnt)
+        return FALSE;
+
+    // Check each component: type and bit size must match.
+    for (afxIndex i = 0; i < a->compCnt; ++i)
+    {
+        if (a->bpc[i] != b->bpc[i])
+            return FALSE;
+
+        // Component *type* may differ (UNORM <> SRGB <> SNORM <> UINT <> FLOAT)
+        // But all types must be the same *class* — up to you how strict you want to be
+        // We skip that for now (or loosen it based on type class below)
+    }
+
+    // Check total bit size
+    if (a->bpp != b->bpp)
+        return FALSE;
+
+    // Check stride/padding — optional, can be relaxed if tightly packed.
+    if (a->stride != b->stride)
+        return FALSE;
+
+    // Check swizzle/channel layout (must match).
+    for (afxIndex i = 0; i < 4; ++i)
+    {
+        if (a->swizzle[i] != b->swizzle[i])
+            return FALSE;
+    }
+
+    // Same block size for compressed formats.
+    if ((a->bcWh[0] != b->bcWh[0]) || (a->bcWh[1] != b->bcWh[1]))
+        return FALSE;
+
+    return TRUE;
+}
+
+_AVX afxUnit AvxChooseCompatibleFormats(avxFormat base, afxUnit maxCnt, avxFormat compatibles[])
+// Preallocated buffer, or NULL to count only
+{
+    maxCnt = AFX_MIN(maxCnt, avxFormat_TOTAL);
+    afxIndex matchCnt = 0;
+
+    for (afxIndex i = 0; i < maxCnt; ++i)
+    {
+        if (AvxTestCompatibleFormats(base, i))
+        {
+            if (compatibles)
+            {
+                compatibles[matchCnt] = i;
+            }
+            ++matchCnt;
+        }
+    }
+    return matchCnt;
 }

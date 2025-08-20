@@ -53,7 +53,7 @@ AFX_OBJECT(amxVoice)
         afxInt          currIterIdx;
         afxInt          iterCnt;
         afxReal         currWeight;
-        afxCapstanTiming  timing;
+        //arxCapstanTiming  timing;
         afxUnit32       easeInValues;
         afxUnit32       easeOutValues;
         void*           userData[4];
@@ -144,7 +144,7 @@ AFX_OBJECT(afxMixContext)
     afxLink     executor;
     struct
     {
-        /*afxCapstanFlags*/afxFlags   flags;
+        /*arxCapstanFlags*/afxFlags   flags;
         afxReal         dtLocalClockPending;
         afxReal         localClock;
         afxReal         speed;
@@ -152,11 +152,93 @@ AFX_OBJECT(afxMixContext)
         afxInt          currIterIdx;
         afxInt          iterCnt;
         afxReal         currWeight;
-        afxCapstanTiming  timing;
+        struct {
+            afxReal         currClock;
+            afxReal         killClock;
+            afxReal         easeInStartClock;
+            afxReal         easeInEndClock;
+            afxReal         easeOutStartClock;
+            afxReal         easeOutEndClock;
+        }  timing;
         afxUnit32       easeInValues;
         afxUnit32       easeOutValues;
         void*           userData[4];
     } motor;
+
+    struct
+    {
+        afxFcc type;
+        union
+        {
+            struct
+            {
+                amxBuffer buf;
+                afxSize offset;
+                afxSize range;
+            } buf;
+            struct
+            {
+                amxAudio aud;
+            } aud;
+            struct
+            {
+                //amxVideo vid;
+                int a;
+            } vid;
+        };
+    } banks[4];
+    afxUnit bankCnt;
+    struct
+    {
+        afxFcc type;
+        afxSize posn;
+        union
+        {
+            struct
+            {
+                afxStream iob;
+                afxSize offset;
+                afxSize range;
+                afxUnit stride;
+            } iob;
+            struct
+            {
+                amxBuffer buf;
+                afxSize offset;
+                afxSize range;
+                afxUnit stride;
+            } buf;
+        };
+    } streams[4];
+    afxUnit streamCnt;
+    struct
+    {
+        afxFcc type;
+        afxSize posn;
+        afxUnit srcIdx;
+        afxUnit location;
+        amxFormat fmt;
+        afxFlags flags;
+        union
+        {
+            struct
+            {
+                amxBuffer buf;
+                afxSize offset;
+                afxSize range;
+            } buf;
+            struct
+            {
+                amxAudio aud;
+            } aud;
+            struct
+            {
+                //amxVideo vid;
+                int a;
+            } vid;
+        };
+    } tracks[4];
+    afxUnit trackCnt;
 
     afxClass     voxCls;
 };
@@ -203,7 +285,7 @@ AFX_DEFINE_UNION(_amxCmd)
         _amxCmdHdr hdr;
 
         amxMixScope scope;
-        amxMixSink AFX_SIMD chans[];
+        amxMixTarget AFX_SIMD chans[];
     } CommenceMixScope;
     struct
     {

@@ -41,7 +41,7 @@ AFX_STATIC_ASSERT(sizeof(AFX_OBJECT(afxSystem)) > sizeof(afxSystem), "");
 
 _AFX afxBool sysReady = FALSE;
 #if !0
-_AFX AFX_ALIGN(16) afxByte theSysData[  AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) + 
+_AFX AFX_ALIGNED(16) afxByte theSysData[  AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) + 
                                         AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT)] = { 0 };
 _AFX afxSystem TheSystem = (void*)&theSysData;
 AFX_STATIC_ASSERT(sizeof(TheSystem[0]) > sizeof(void*), "");
@@ -385,9 +385,9 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
     sys->hwThreadingCap = cfg->hwThreadingCap;
     sys->reallocatorFn = cfg->reallocatorFn;
 
-    sys->asx.disabled = cfg->asxDisabled;
-    sys->aux.disabled = cfg->auxDisabled;
-    sys->avx.disabled = cfg->avxDisabled;
+    sys->asxDisabled = cfg->asxDisabled;
+    sys->auxDisabled = cfg->auxDisabled;
+    sys->avxDisabled = cfg->avxDisabled;
 
     afxClassConfig clsCfg;
 
@@ -573,9 +573,14 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
         cfg.asxDisabled = FALSE;
     }
 
+    AfxMakeUri32(&cfg.shell, AfxUri("//./z/wshell4d.inf"));
+
     if (!(AfxGetInitializationBool(&ini, &AFX_STRING("Shell"), &AFX_STRING("bDisabled"), &cfg.auxDisabled)))
     {
         cfg.auxDisabled = FALSE;
+
+        AfxGetInitializationString(&ini, &AFX_STRING("Shell"), &AFX_STRING("sModule"), &cfg.shell.uri.s);
+        AfxReparseUri(&cfg.shell.uri);
     }
 
     AfxDismantleManifest(&ini);

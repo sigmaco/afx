@@ -28,13 +28,13 @@
 #endif
 
 #ifdef AFX_ON_WINDOWS
-typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile long       afxAtom32;
-typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile long long  afxAtom64;
-typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile void*      afxAtomPtr;
+typedef AFX_ALIGNED(AFX_ATOMIC_ALIGNMENT) volatile long       afxAtom32;
+typedef AFX_ALIGNED(AFX_ATOMIC_ALIGNMENT) volatile long long  afxAtom64;
+typedef AFX_ALIGNED(AFX_ATOMIC_ALIGNMENT) volatile void*      afxAtomPtr;
 #else // LINUX
-typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile    int32_t	afxAtom32;
-typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile    int64_t	afxAtom64;
-typedef AFX_ALIGN(AFX_ATOMIC_ALIGNMENT) volatile    void*   afxAtomPtr;
+typedef AFX_ALIGNED(AFX_ATOMIC_ALIGNMENT) volatile    int32_t	afxAtom32;
+typedef AFX_ALIGNED(AFX_ATOMIC_ALIGNMENT) volatile    int64_t	afxAtom64;
+typedef AFX_ALIGNED(AFX_ATOMIC_ALIGNMENT) volatile    void*   afxAtomPtr;
 #endif
 
 AFX_STATIC_ASSERT(sizeof(afxAtom32) == sizeof(afxByte[4]), "");

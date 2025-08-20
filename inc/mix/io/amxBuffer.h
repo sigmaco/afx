@@ -65,6 +65,23 @@ typedef enum amxBufferFlag
     amxBufferFlag_ACCESS    = (amxBufferFlag_RWX | amxBufferFlag_C)
 } amxBufferFlags;
 
+AFX_DEFINE_STRUCT(amxSubbufferInfo)
+{
+    // A bitmask specifying additional parameters of the buffer.
+    amxBufferFlags  flags;
+    // A amxBuffer on which the view will be created.
+    amxBuffer       base;
+    // An offset in bytes from the base address of the buffer.
+    afxSize         from;
+    // The size in bytes of the buffer to be created.
+    afxSize         range;
+    // A amxFormat describing the format of the data elements in the buffer.
+    amxFormat       fmt;
+    // A user-defined data.
+    void*           udd;
+    afxString       tag;
+};
+
 AFX_DEFINE_STRUCT(amxBufferInfo)
 {
     // The size in bytes of the buffer to be created.
@@ -76,17 +93,22 @@ AFX_DEFINE_STRUCT(amxBufferInfo)
     // A bitmask of device bridges that will access this buffer.
     afxMask         sharingMask;
 
-    // A amxBuffer on which the view will be created.
-    amxBuffer       base;
-    // An offset in bytes from the base address of the buffer.
-    afxSize         from;
     // A amxFormat describing the format of the data elements in the buffer.
     amxFormat       fmt;
-
-    // A user-defined data.
+    // An user-defined data.
     void*           udd;
     afxString       tag;
 
+    // Possibly initial data, to avoid boilerplate with unconvenient mappings.
+    void*           data;
+    afxUnit         dataSiz;
+    // Should this buffer be mapped at creation?
+    afxBool         mapped;
+};
+
+AFX_DEFINE_STRUCT(amxExobufferInfo)
+{
+    amxBufferInfo   info;
     // Possibly initial data, to avoid boilerplate with unconvenient mappings.
     void*           data;
     afxUnit         dataSiz;

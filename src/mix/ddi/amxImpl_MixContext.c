@@ -246,7 +246,7 @@ _AMX afxError _AmxSpuCmd_ConcludeMixScope(amxMpu* mpu, _amxCmd const* cmd)
 
         for (afxUnit chIdx = 0; chIdx < mpu->sinkChanCnt; chIdx++)
         {
-            amxMixSink const* msc = &mpu->sinkChans[chIdx];
+            amxMixTarget const* msc = &mpu->sinkChans[chIdx];
 
             switch (msc->loadOp)
             {
@@ -474,8 +474,8 @@ _AMXINL afxReal _MixLocalClock(afxMixContext mix, afxReal* clamped)
     }
     return localClock;
 }
-
-_AMXINL void AfxQueryMixState(afxMixContext mix, afxCapstanState* state)
+#if 0
+_AMXINL void AfxQueryMixState(afxMixContext mix, arxCapstanState* state)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
@@ -488,7 +488,7 @@ _AMXINL void AfxQueryMixState(afxMixContext mix, afxCapstanState* state)
     afxReal localDur = mix->motor.localDur;
 
     AFX_ASSERT(state);
-    state->active = 1;// (mix->motor.flags & afxCapstanFlag_ACTIVE) == afxCapstanFlag_ACTIVE;
+    state->active = 1;// (mix->motor.flags & arxCapstanFlag_ACTIVE) == arxCapstanFlag_ACTIVE;
     state->speed = speed;
     state->iterCnt = iterCnt;
     state->currIterIdx = currIterIdx;
@@ -500,7 +500,7 @@ _AMXINL void AfxQueryMixState(afxMixContext mix, afxCapstanState* state)
 
     // determine iteration state
 #if 0
-    if (mix->motor.flags & afxCapstanFlag_FORCE_CLAMPLED_LOOPS)
+    if (mix->motor.flags & arxCapstanFlag_FORCE_CLAMPLED_LOOPS)
     {
         state->overflow = FALSE;
         state->underflow = FALSE;
@@ -546,9 +546,9 @@ _AMXINL void AfxQueryMixState(afxMixContext mix, afxCapstanState* state)
     }
 }
 
-void _SetUpSampleContext(afxSampleContext* ctx, afxMixContext mix)
+void _SetUpSampleContext(arxSampleContext* ctx, afxMixContext mix)
 {
-    afxCapstanState ms;
+    arxCapstanState ms;
     AfxQueryMixState(mix, &ms);
     ctx->localClock = ms.localClockClamped;
     ctx->localDur = ms.localDur;
@@ -556,6 +556,7 @@ void _SetUpSampleContext(afxSampleContext* ctx, afxMixContext mix)
     ctx->underflowLoop = ms.underflow;
     ctx->overflowLoop = ms.overflow;
 }
+#endif
 
 _AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mix)
 {
@@ -572,11 +573,11 @@ _AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mix)
         afxReal dt = curTime - mix->motor.localClock;
         mix->motor.localClock = curTime;
         mix->motor.dtLocalClockPending += dt;
-
-        afxSampleContext sampCtx;
+#if 0
+        arxSampleContext sampCtx;
         _SetUpSampleContext(&sampCtx, mix);
         mpu->sampCtx = sampCtx;
-
+#endif
         _amxCmd* cmdHdr;
         AFX_ITERATE_CHAIN_B2F(_amxCmd, cmdHdr, hdr.script, &mix->commands)
         {

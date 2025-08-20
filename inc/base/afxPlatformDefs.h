@@ -119,9 +119,9 @@
 #define AFXCALL __cdecl
 
 #if defined(_WIN32) && !defined(__MINGW32__)
-#  define AFX_ALIGN(...) __declspec(align(__VA_ARGS__))
+#  define AFX_ALIGNED(...) __declspec(align(__VA_ARGS__))
 #else
-#  define AFX_ALIGN(...) __attribute__((aligned(__VA_ARGS__)))
+#  define AFX_ALIGNED(...) __attribute__((aligned(__VA_ARGS__)))
 #endif
 
 #if !defined (AFX_DEPRECATED)

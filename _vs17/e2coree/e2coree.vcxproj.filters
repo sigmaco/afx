@@ -40,9 +40,6 @@
     <Filter Include="qwadro\draw\op">
       <UniqueIdentifier>{e80395e3-ca28-436b-acf2-f14675fb1b70}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\draw\kit">
-      <UniqueIdentifier>{82a859d1-1a20-4630-b0aa-a605dc3480e2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro\ux">
       <UniqueIdentifier>{48d030f3-72a8-4944-bc51-b137ff852524}</UniqueIdentifier>
     </Filter>
@@ -306,9 +303,6 @@
     <ClInclude Include="..\..\inc\draw\io\avxBuffer.h">
       <Filter>qwadro\draw\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\draw\io\afxVertexStream.h">
-      <Filter>qwadro\draw\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\draw\op\avxDrawing.h">
       <Filter>qwadro\draw\op</Filter>
     </ClInclude>
@@ -326,9 +320,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\draw\op\avxTransformationEXT.h">
       <Filter>qwadro\draw\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\draw\kit\afxDrawTechnique.h">
-      <Filter>qwadro\draw\kit</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\ux\afxSession.h">
       <Filter>qwadro\ux</Filter>
@@ -420,9 +411,6 @@
     <ClInclude Include="..\..\inc\draw\io\avxTxd.h">
       <Filter>qwadro\draw\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\draw\io\avxTargaFile.h">
-      <Filter>qwadro\draw\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\math\afxHyperbolicTrigonometry.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
@@ -501,22 +489,10 @@
     <ClInclude Include="..\..\inc\draw\video\avxCanvas.h">
       <Filter>qwadro\draw\video</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\draw\video\avxDisplay.h">
-      <Filter>qwadro\draw\video</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\draw\video\avxCamera.h">
-      <Filter>qwadro\draw\video</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\draw\io\afxDrawInput.h">
-      <Filter>qwadro\draw\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\mix\op\afxMixContext.h">
       <Filter>qwadro\mix</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\draw\ddi\avxImpl_Executor.h">
-      <Filter>qwadro\draw\ddi</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\draw\ddi\avxImpl_Input.h">
       <Filter>qwadro\draw\ddi</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\draw\ddi\avxImpl_Pipeline.h">
@@ -623,6 +599,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\draw\ddi\avxImpl_Surface.h">
       <Filter>qwadro\draw\ddi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\io\avxRasterFile.h">
+      <Filter>qwadro\draw\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\video\afxDisplay.h">
+      <Filter>qwadro\draw\video</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\draw\io\avxBufferUtil.h">
+      <Filter>qwadro\draw\io</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -849,9 +834,6 @@
     <ClCompile Include="..\..\src\draw\io\avxFormat.c">
       <Filter>qwadro\draw\io</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\draw\io\afxVertexStream.c">
-      <Filter>qwadro\draw\io</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\draw\op\avxDrawing.c">
       <Filter>qwadro\draw\op</Filter>
     </ClCompile>
@@ -866,9 +848,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\draw\op\avxTransformation.c">
       <Filter>qwadro\draw\op</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\draw\kit\afxDrawTechnique.c">
-      <Filter>qwadro\draw\kit</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ux\afxSession.c">
       <Filter>qwadro\ux</Filter>
@@ -972,9 +951,6 @@
     <ClCompile Include="..\..\src\draw\io\avxTxd.c">
       <Filter>qwadro\draw\io</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\draw\io\avxTargaFile.c">
-      <Filter>qwadro\draw\io</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\draw\io\avxDxt.c">
       <Filter>qwadro\draw\io</Filter>
     </ClCompile>
@@ -1055,15 +1031,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\draw\video\avxCanvas.c">
       <Filter>qwadro\draw\video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\draw\video\avxDisplay.c">
-      <Filter>qwadro\draw\video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\draw\video\avxCamera.c">
-      <Filter>qwadro\draw\video</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\draw\io\afxDrawInput.c">
-      <Filter>qwadro\draw\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\mix\op\afxMixQueue.c">
       <Filter>qwadro\mix</Filter>
@@ -1175,6 +1142,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\draw\ddi\avxImpl_Surface.c">
       <Filter>qwadro\draw\ddi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Raster.c">
+      <Filter>qwadro\draw\ddi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Buffer.c">
+      <Filter>qwadro\draw\ddi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Canvas.c">
+      <Filter>qwadro\draw\ddi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\io\avxRasterFile.c">
+      <Filter>qwadro\draw\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\video\afxDisplay.c">
+      <Filter>qwadro\draw\video</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\io\avxBufferUtil.c">
+      <Filter>qwadro\draw\io</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

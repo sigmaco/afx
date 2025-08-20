@@ -18,9 +18,13 @@
 
 #include "qwadro/inc/draw/afxDrawSystem.h"
 
-afxRect const AVX_RECT_ZERO = { 0, 0, 0, 0 };
-afxRect const AVX_RECT_MIN = { AFX_I32_MIN, AFX_I32_MIN, 1, 1 };
-afxRect const AVX_RECT_MAX = { AFX_I32_MAX, AFX_I32_MAX, AFX_U32_MAX, AFX_U32_MAX };
+afxRect const AFX_RECT_ZERO = { 0, 0, 0, 0 };
+afxRect const AFX_RECT_MIN = { AFX_I32_MIN, AFX_I32_MIN, 1, 1 };
+afxRect const AFX_RECT_MAX = { AFX_I32_MAX, AFX_I32_MAX, AFX_U32_MAX, AFX_U32_MAX };
+
+afxLayeredRect const AFX_LAYERED_RECT_ZERO = { 0, 0, 0, 0, 0, 0 };
+afxLayeredRect const AFX_LAYERED_RECT_MIN = { AFX_I32_MIN, AFX_I32_MIN, 1, 1, 0, 1 };
+afxLayeredRect const AFX_LAYERED_RECT_MAX = { AFX_I32_MAX, AFX_I32_MAX, AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX };
 
 _AVXINL afxUnit AfxGetRectArea(afxRect const* rc)
 {
@@ -71,7 +75,7 @@ _AFXINL afxBool AfxAreRectsEqual(afxRect const* a, afxRect const* b)
     return ((a->x == b->x) && (a->y == b->y) && (a->w == b->w) && (a->h == b->h));
 }
 
-_AVXINL afxBool AvxAreRectsOverlapping(afxRect const* a, afxRect const* b)
+_AVXINL afxBool AfxAreRectsOverlapping(afxRect const* a, afxRect const* b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(a);
@@ -96,7 +100,7 @@ _AVXINL afxBool AvxAreRectsOverlapping(afxRect const* a, afxRect const* b)
     return TRUE; // overlapping
 }
 
-_AVXINL afxBool AvxDoesRectContainBiased(afxRect const* a, afxRect const* b, afxInt tolX, afxInt tolY)
+_AVXINL afxBool AfxDoesRectContainBiased(afxRect const* a, afxRect const* b, afxInt tolX, afxInt tolY)
 // Compare if rectangle \a a contains rectangle \a b in coordinate, with specified tolerance allowed.
 {
     afxError err = AFX_ERR_NONE;
@@ -108,7 +112,7 @@ _AVXINL afxBool AvxDoesRectContainBiased(afxRect const* a, afxRect const* b, afx
             ((b->y + b->h) <= (a->y + a->h + tolY));
 }
 
-_AVXINL afxBool AvxDoesRectContain(afxRect const* a, afxRect const* b)
+_AVXINL afxBool AfxDoesRectContain(afxRect const* a, afxRect const* b)
 // This checks that all corners of b are inside a, i.e., b is entirely within a.
 {
     afxError err = AFX_ERR_NONE;
@@ -120,7 +124,7 @@ _AVXINL afxBool AvxDoesRectContain(afxRect const* a, afxRect const* b)
             ((b->y + b->h) <= (a->y + a->h));
 }
 
-_AVXINL afxBool AvxIsRectOutside(afxRect const* a, afxRect const* b)
+_AVXINL afxBool AfxIsRectOutside(afxRect const* a, afxRect const* b)
 // This test whether @a and @b don't intersect at all.
 {
     return ((b->x + (afxInt)b->w) <= a->x ||
@@ -129,7 +133,7 @@ _AVXINL afxBool AvxIsRectOutside(afxRect const* a, afxRect const* b)
         b->y >= (a->y + (afxInt)a->h));
 }
 
-_AVXINL afxBool AvxDoRectsIntersect(afxRect const* a, afxRect const* b)
+_AVXINL afxBool AfxDoRectsIntersect(afxRect const* a, afxRect const* b)
 // This test whether @a and @b overlap at all (fully or partially).
 {
     return !((b->x + (afxInt)b->w) <= a->x ||
@@ -138,13 +142,32 @@ _AVXINL afxBool AvxDoRectsIntersect(afxRect const* a, afxRect const* b)
         b->y >= (a->y + (afxInt)a->h));
 }
 
-_AFXINL void AfxFlipRectVertically(afxRect const* rc, afxUnit height, afxRect* flipped)
+_AVXINL void AfxExtractRectMargins(afxRect const* outer, afxRect const* inner, afxInt* left, afxInt* top, afxInt* right, afxInt* bottom)
+{
+    afxError err = NIL;
+    AFX_ASSERT(outer);
+    AFX_ASSERT(inner);
+    AFX_ASSERT(left);
+    AFX_ASSERT(top);
+    AFX_ASSERT(right);
+    AFX_ASSERT(bottom);
+    // calculate the margins between two such rectangles, for example, the difference between an outer rectangle and an inner rectangle;
+    // where the inner rectangle is fully contained inside the outer.
+
+    // Assumes inner is inside outer.
+    *left = inner->x - outer->x;
+    *top = inner->y - outer->y;
+    *right = (outer->x + (afxInt)outer->w) - (inner->x + (afxInt)inner->w);
+    *bottom = (outer->y + (afxInt)outer->h) - (inner->y + (afxInt)inner->h);
+}
+
+_AFXINL void AfxFlipRect(afxRect const* rc, afxUnit height, afxRect* flipped)
 {
     afxError err = NIL;
     AFX_ASSERT(flipped);
     AFX_ASSERT(height);
     AFX_ASSERT(rc);
-    *flipped = AVX_RECT(rc->x, (height - (rc->y + rc->h)), rc->w, rc->h);
+    *flipped = AFX_RECT(rc->x, (height - (rc->y + rc->h)), rc->w, rc->h);
 }
 
 _AVXINL afxUnit AfxScissorRect(afxRect const* rc, afxUnit maxW, afxUnit maxH, afxRect outsides[4])
@@ -162,19 +185,19 @@ _AVXINL afxUnit AfxScissorRect(afxRect const* rc, afxUnit maxW, afxUnit maxH, af
 
     // Left exclusion
     if (rc->x < 0)
-        outsides[invRcCnt++] = AVX_RECT( rc->x, rc->y, -rc->x, rc->h );
+        outsides[invRcCnt++] = AFX_RECT( rc->x, rc->y, -rc->x, rc->h );
 
     // Right exclusion
     if (rc->x + rc->w > maxW)
-        outsides[invRcCnt++] = AVX_RECT(maxW, rc->y, (rc->x + rc->w) - maxW, rc->h );
+        outsides[invRcCnt++] = AFX_RECT(maxW, rc->y, (rc->x + rc->w) - maxW, rc->h );
 
     // Top exclusion
     if (rc->y < 0)
-        outsides[invRcCnt++] = AVX_RECT( rc->x, rc->y, rc->w, -rc->y );
+        outsides[invRcCnt++] = AFX_RECT( rc->x, rc->y, rc->w, -rc->y );
 
     // Bottom exclusion
     if (rc->y + rc->h > maxH)
-        outsides[invRcCnt++] = AVX_RECT(rc->x, maxH, rc->w, (rc->y + rc->h) - maxH );
+        outsides[invRcCnt++] = AFX_RECT(rc->x, maxH, rc->w, (rc->y + rc->h) - maxH );
 
     return invRcCnt;
 }
@@ -186,7 +209,7 @@ _AVXINL afxUnit AfxClampRect(afxRect* rc, afxRect const* src, afxRect const* min
     AFX_ASSERT(min);
     AFX_ASSERT(max);
     AFX_ASSERT(rc);
-    *rc = AVX_RECT( AFX_CLAMP(src->x, min->x, max->x),
+    *rc = AFX_RECT( AFX_CLAMP(src->x, min->x, max->x),
                     AFX_CLAMP(src->y, min->y, max->y),
                     AFX_CLAMP(src->w, min->w, max->w),
                     AFX_CLAMP(src->h, min->h, max->h));
@@ -194,7 +217,7 @@ _AVXINL afxUnit AfxClampRect(afxRect* rc, afxRect const* src, afxRect const* min
     return (rc->w * rc->h);
 }
 
-_AVXINL void AfxMakeRect(afxRect* rc, afxUnit cnt, afxRect* in)
+_AVXINL void AfxAccumulateRects(afxRect* rc, afxUnit cnt, afxRect* in)
 {
     afxError err = NIL;
     AFX_ASSERT(in);
@@ -217,5 +240,5 @@ _AVXINL void AfxMakeRect(afxRect* rc, afxUnit cnt, afxRect* in)
         if (r.y + r.h > maxY) maxY = r.y + r.h;
     }
 
-    *rc = AVX_RECT(minX, minY, maxX - minX, maxY - minY);
+    *rc = AFX_RECT(minX, minY, maxX - minX, maxY - minY);
 }

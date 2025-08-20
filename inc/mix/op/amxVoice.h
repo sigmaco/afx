@@ -23,9 +23,20 @@
 
 #include "qwadro/inc/mix/afxMixDefs.h"
 
+typedef enum amxVoiceCap
+{
+    amxVoiceCap_REVERB,
+    amxVoiceCap_PHASE,
+    amxVoiceCap_GAIN,
+    amxVoiceCap_ANALOG,
+    amxVoiceCap_FLANGE,
+    amxVoiceCap_COMPRESS,
+
+} amxVoiceCaps;
+
 ////////////////////////////////////////////////////////////////////////////////
 
 AMX afxError AmxDeallocateVoices(afxMixContext mix, afxUnit firstId, afxUnit cnt, afxUnit voiceIdMap[]);
-AMX afxError AmxAllocateVoices(afxMixContext mix, afxUnit cnt, afxUnit voiceIds[]);
+AMX afxError AmxAllocateVoices(afxMixContext mix, amxVoiceCaps caps, afxUnit cnt, afxUnit voiceIds[]);
 
 #endif//AMX_VOICE_H

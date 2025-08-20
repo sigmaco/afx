@@ -20,11 +20,11 @@
 
 ASX afxChar const *shdResTypeNames[];
 
-_ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxUnit elemIdx, afxSkeleton skl, afxModel* model)
+_ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxUnit elemIdx, arxSkeleton skl, arxModel* model)
 {
     afxError err = AFX_ERR_NONE;
     
-    afxModelBlueprint config = { 0 };
+    arxModelBlueprint config = { 0 };
     
     afxString const mdlAttrNames[] =
     {
@@ -238,8 +238,8 @@ _ASX afxError AfxAssembleModelFromXml(afxSimulation sim, afxXml const* xml, afxU
         }
     }
 
-    afxModel mdl;
-    AfxAssembleModels(sim, 1, &config, &mdl);
+    arxModel mdl;
+    ArxAssembleModels(sim, 1, &config, &mdl);
 
     
 

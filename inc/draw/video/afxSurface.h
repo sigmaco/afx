@@ -16,8 +16,8 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#ifndef AVX_DRAW_OUTPUT_H
-#define AVX_DRAW_OUTPUT_H
+#ifndef AVX_SURFACE_H
+#define AVX_SURFACE_H
 
 // afxSurface é um objeto que abstrai a ideia de swapchain junto a surface da plataforma.
  
@@ -64,7 +64,7 @@
 
 #include "qwadro/inc/draw/video/avxCanvas.h"
 #include "qwadro/inc/draw/afxDrawBridge.h"
-#include "qwadro/inc/draw/video/avxDisplay.h"
+#include "qwadro/inc/draw/video/afxDisplay.h"
 
 typedef enum avxPresentFlag
 // Flags specifying the presentation rules.
@@ -441,7 +441,7 @@ AFX_DEFINE_STRUCT(afxSurfaceConfig)
     // canvas
     // formats for color, depth and stencil format, respectively. Pass zero to let driver choose the optimal format. Pass zero to disable depth and/or stencil.
     // DRAW; used as (drawable) target surface for rasterization.
-    avxCanvasConfig     canvas;
+    avxCanvasConfig     ccfg;
     avxColorSpace       colorSpc; // avxColorSpace_STANDARD; if sRGB isn't present, fall down to LINEAR.
     afxBool             resizable;
 
@@ -631,4 +631,10 @@ AVX afxError AvxPresentSurfaces
     avxPresentation presentations[]
 );
 
-#endif//AVX_DRAW_OUTPUT_H
+/// If you don't know what the physical aspect ratio is of the device you're using 
+/// (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
+/// you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
+
+AVX afxReal64       AvxFindPhysicalAspectRatio(afxUnit screenWidth, afxUnit screenHeight);
+
+#endif//AVX_SURFACE_H

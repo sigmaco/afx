@@ -796,7 +796,7 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], voi
         AFX_ASSERT(AfxGetPoolUnit(pool, idx2, NIL));
         void*ptr;
         AfxGetPoolUnit(pool, idx2, &ptr);
-        AFX_ASSERT(AFX_IS_ALIGNED(ptr, AFX_POOL_ALIGNMENT));
+        AFX_ASSERT(AFX_TEST_ALIGNMENT(ptr, AFX_POOL_ALIGNMENT));
 
         if (!ptr)
         {
@@ -820,7 +820,7 @@ _AFX afxError AfxDeployPool(afxPool* pool, afxUnit unitSiz, afxUnit unitsPerPage
 #endif
     pool->unitsPerPage = AFX_CLAMP(unitsPerPage, 1, AFX_MAX_UNITS_PER_POOL_PAGE);
     pool->memAlign = AFX_MAX(AFX_POOL_ALIGNMENT, AFX_ALIGN_SIZE(memAlign, AFX_PTR_ALIGNMENT));
-    AFX_ASSERT(AFX_IS_ALIGNED(pool->memAlign, AFX_POOL_ALIGNMENT));
+    AFX_ASSERT(AFX_TEST_ALIGNMENT(pool->memAlign, AFX_POOL_ALIGNMENT));
     pool->unitSiz = unitSiz;
     pool->totalUsedCnt = 0;
     pool->pageCnt = 0;

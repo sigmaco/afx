@@ -162,7 +162,7 @@ _AMX afxError _AmxRegisterAudioStreamInterface(afxModule icd, afxClassConfig con
         afxSystem sys;
         AfxGetSystem(&sys);
         AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-        AfxPushLink(&icd->icd.amx, &sys->amx.icdChain);
+        AfxPushLink(&icd->icd.amx, &sys->amxIcdChain);
         icd->flags |= afxModuleFlag_AMX;
     }
 
@@ -253,7 +253,7 @@ _AMX afxError _AmxImplementMixSystem(afxModule icd, _amxMixSystemImplementation 
     afxSystem sys;
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-    AfxPushLink(&icd->icd.amx, &sys->amx.icdChain);
+    AfxPushLink(&icd->icd.amx, &sys->amxIcdChain);
     icd->flags |= afxModuleFlag_AMX;
 
     if (err)
@@ -279,7 +279,7 @@ _AMX afxBool _AmxGetIcd(afxUnit icdIdx, afxModule* driver)
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     afxModule icd = NIL;
-    while ((icdIdx < sys->amx.icdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->amx.icdChain, icdIdx), AFX_OBJ(afxModule), icd.amx)))
+    while ((icdIdx < sys->amxIcdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->amxIcdChain, icdIdx), AFX_OBJ(afxModule), icd.amx)))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
 

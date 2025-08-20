@@ -29,20 +29,20 @@
 _AVX afxSurfaceConfig const AVX_DEFAULT_SURFACE_CONFIG =
 {
     .colorSpc = avxColorSpace_STANDARD,
-    .canvas.whd = { 1, 1, 1 },
-    .canvas.slotCnt = 2,
-    .canvas.slots[0].fmt = avxFormat_BGRA8v,
-    .canvas.slots[0].usage = avxRasterUsage_DRAW | avxRasterUsage_TEXTURE,
-    .canvas.slots[1].fmt = avxFormat_D32f,
-    .canvas.slots[1].usage = avxRasterUsage_DRAW,
-    .canvas.slots[2].usage = avxRasterUsage_DRAW,
-    .canvas.slots[3].usage = avxRasterUsage_DRAW,
-    .canvas.slots[4].usage = avxRasterUsage_DRAW,
-    .canvas.slots[5].usage = avxRasterUsage_DRAW,
-    .canvas.slots[6].usage = avxRasterUsage_DRAW,
-    .canvas.slots[7].usage = avxRasterUsage_DRAW,
-    .canvas.slots[8].usage = avxRasterUsage_DRAW,
-    .canvas.slots[9].usage = avxRasterUsage_DRAW,
+    .ccfg.whd = { 1, 1, 1 },
+    .ccfg.slotCnt = 2,
+    .ccfg.slots[0].fmt = avxFormat_BGRA8v,
+    .ccfg.slots[0].usage = avxRasterUsage_DRAW | avxRasterUsage_TEXTURE,
+    .ccfg.slots[1].fmt = avxFormat_D32f,
+    .ccfg.slots[1].usage = avxRasterUsage_DRAW,
+    .ccfg.slots[2].usage = avxRasterUsage_DRAW,
+    .ccfg.slots[3].usage = avxRasterUsage_DRAW,
+    .ccfg.slots[4].usage = avxRasterUsage_DRAW,
+    .ccfg.slots[5].usage = avxRasterUsage_DRAW,
+    .ccfg.slots[6].usage = avxRasterUsage_DRAW,
+    .ccfg.slots[7].usage = avxRasterUsage_DRAW,
+    .ccfg.slots[8].usage = avxRasterUsage_DRAW,
+    .ccfg.slots[9].usage = avxRasterUsage_DRAW,
     .minBufCnt = 3,
     .presentMode = NIL,
     .presentAlpha = FALSE,
@@ -53,6 +53,23 @@ _AVX afxSurfaceConfig const AVX_DEFAULT_SURFACE_CONFIG =
     .refreshRate = 1,
     .exclusive = FALSE
 };
+
+_AVX afxReal64 AvxFindPhysicalAspectRatio(afxUnit screenWidth, afxUnit screenHeight)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(screenWidth);
+    AFX_ASSERT(screenHeight);
+    afxReal64 ratio, div = (afxReal64)screenWidth / (afxReal64)screenHeight;
+
+    if (div <= 1.4)
+        ratio = 1.33;
+    else if (div <= 1.6)
+        ratio = 1.5599999;
+    else
+        ratio = 1.78;
+
+    return ratio;
+}
 
 _AVX afxUnit _AvxDoutIsSuspended(afxSurface dout)
 {
@@ -144,7 +161,7 @@ _AVX void AvxDescribeSurface(afxSurface dout, afxSurfaceConfig* cfg)
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AFX_ASSERT(cfg);
     *cfg = (afxSurfaceConfig) { 0 };
-    cfg->canvas = dout->ccfg;
+    cfg->ccfg = dout->ccfg;
     cfg->colorSpc = dout->colorSpc;
     cfg->doNotClip = dout->doNotClip;
     cfg->iop.endpointNotifyFn = dout->endpointNotifyFn;
@@ -157,6 +174,7 @@ _AVX void AvxDescribeSurface(afxSurface dout, afxSurfaceConfig* cfg)
     cfg->udd[1] = dout->udd[1];
     cfg->udd[2] = dout->udd[2];
     cfg->udd[3] = dout->udd[3];
+    cfg->tag = dout->tag;
     cfg->resolution = dout->resolution;
     cfg->refreshRate = dout->refreshRate;
 }
@@ -521,7 +539,7 @@ _AVX afxBool AvxGetSurfaceCanvas(afxSurface dout, afxUnit bufIdx, avxCanvas* can
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
-    afxRect rc = AVX_RECT_ZERO;
+    afxRect rc = AFX_RECT_ZERO;
     avxCanvas canv;
 
     AFX_ASSERT(bufIdx != AFX_INVALID_INDEX);
@@ -688,7 +706,7 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
     dout->resizing = FALSE;
     dout->resizable = TRUE;
     dout->refreshRate = 1;
-    //AFX_ASSERT(AFX_IS_ALIGNED(&dout->resolution, 16));
+    //AFX_ASSERT(AFX_TEST_ALIGNMENT(&dout->resolution, 16));
     dout->resolution = AVX_RANGE(AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX);
     dout->wrOverHr = dout->resolution.w / dout->resolution.h;
     dout->wpOverHp = AvxFindPhysicalAspectRatio(dout->resolution.w, dout->resolution.h);
@@ -708,7 +726,7 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
     // canvas
     //dout->extent = AvxMaxRange(AVX_RANGE(1, 1, 1), cfg->extent);
     dout->colorSpc = cfg->colorSpc ? cfg->colorSpc : avxColorSpace_STANDARD; // sRGB is the default
-    dout->ccfg = cfg->canvas;
+    dout->ccfg = cfg->ccfg;
     AvxConfigureCanvas(dsys, &dout->ccfg);
     dout->wwOverHw = dout->ccfg.whd.w / dout->ccfg.whd.h;
 
@@ -720,14 +738,14 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
 #if 0
     for (afxUnit i = 0; i < dout->ccfg.annexCnt; i++)
     {
-        avxCanvasAnnex* a = &dout->ccfg.annexes[i];
+        avxCanvasBuffer* a = &dout->ccfg.annexes[i];
     }
 #endif
     // swapchain
     dout->bufCnt = AFX_MAX(1, AFX_MIN(cfg->minBufCnt, def.minBufCnt)); // 2 or 3; double or triple buffered for via-memory presentation.
 
-    dout->area = AVX_RECT(0, 0, dout->ccfg.whd.w, dout->ccfg.whd.h);
-    dout->dstArea = AVX_RECT_ZERO;
+    dout->area = AFX_RECT(0, 0, dout->ccfg.whd.w, dout->ccfg.whd.h);
+    dout->dstArea = AFX_RECT_ZERO;
     dout->persistBlit = FALSE;
 
     dout->submCnt = 0;

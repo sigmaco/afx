@@ -48,7 +48,7 @@ AFX_DEFINE_STRUCT(asxShapeInfo)
         afxBox      box;
         afxSphere   sph;
         afxPlane    plane;
-        afxMesh     msh;
+        arxMesh     msh;
     };
 };
 
@@ -85,6 +85,6 @@ AFX_DEFINE_STRUCT(asxCollision)
 
 ASX afxError AsxAcquireShapes(afxSimulation sim, afxUnit cnt, asxShapeInfo const info[], asxShape shapes[]);
 
-ASX afxError AfxBuildMeshShape(afxMesh msh, asxShape* shape);
+ASX afxError AfxBuildMeshShape(arxMesh msh, asxShape* shape);
 
 #endif//ASX_COLLISION_H

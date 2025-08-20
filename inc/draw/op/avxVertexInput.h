@@ -44,25 +44,33 @@ AFX_DEFINE_STRUCT(avxVertexSource)
 
 AFX_DEFINE_STRUCT(avxVertexFetch)
 {
-    afxUnit         pin; // is the binding number which this stream takes its data from.
-    afxUnit32       mimStride;
-    afxUnit         instRate; // 0 = disabled // the number of successive instances that will use the same value of the vertex attribute when instanced rendering is enabled.
+    // The binding number which this stream takes its data from.
+    afxUnit         pin;
+    afxUnit32       minStride;
+    // The number of successive instances that will use the same value of the vertex attribute when instanced rendering is enabled.
+    // 0 = disabled
+    afxUnit         instRate;
     afxUnit         baseAttrIdx;
     afxUnit         attrCnt;
     afxFlags        flags;
 };
 
 AFX_DEFINE_STRUCT(avxVertexAttr)
-/// vertex attribute input stream
+// vertex attribute input stream.
 {
-    afxUnit         location; // is the shader input location number for this attribute.
-    afxUnit32       offset; // is a byte offset of this attribute relative to the start of an element in the vertex input binding.
-    afxFlags        flags; // special flags used to opportunistic optimization
-    avxFormat       fmt; // is the size and type of the vertex attribute data.
+    // The shader input location number for this attribute.
+    afxUnit         location;
+    // A byte offset of this attribute relative to the start of an element in the vertex input binding.
+    afxUnit32       offset;
+    // Special flags used to opportunistic optimization.
+    afxFlags        flags;
+    // The size and type of the vertex attribute data.
+    avxFormat       fmt;
 };
 
 AFX_DEFINE_STRUCT(avxVertexLayout)
 {
+    // Special flags used to opportunistic optimization.
     afxFlags        flags;
     afxUnit         srcCnt;
     avxVertexFetch  srcs[AVX_MAX_VERTEX_SOURCES];
@@ -72,7 +80,7 @@ AFX_DEFINE_STRUCT(avxVertexLayout)
 };
 
 #define AVX_VERTEX_FETCH(uPin, uMinStride, uInstRate, uBaseAttrIdx, uAttrCnt) \
-    (avxVertexFetch){ .pin = (uPin), .mimStride = (uMinStride), .instRate = (uInstRate), .baseAttrIdx = (uBaseAttrIdx), .attrCnt = (uAttrCnt) }
+    (avxVertexFetch){ .pin = (uPin), .minStride = (uMinStride), .instRate = (uInstRate), .baseAttrIdx = (uBaseAttrIdx), .attrCnt = (uAttrCnt) }
 
 #define AVX_VERTEX_ATTR(uLocation, uOffset, eFmt) \
     (avxVertexAttr){ .location = (uLocation), .offset = (uOffset), .fmt = (eFmt) }

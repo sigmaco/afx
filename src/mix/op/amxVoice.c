@@ -123,21 +123,21 @@ _AMX afxError _AmxVoxCtorCb(amxVoice vox, void** args, afxUnit invokeNo)
     //AFX_ASSERT(spec);
 
     {
-        vox->ctrl.flags = /*afxCapstanFlag_ACTIVE*/0x01;
-        vox->ctrl.timing.currClock = /*startTime*/0;
+        vox->ctrl.flags = /*arxCapstanFlag_ACTIVE*/0x01;
+        //vox->ctrl.timing.currClock = /*startTime*/0;
         vox->ctrl.dtLocalClockPending = 0.0;
         vox->ctrl.localClock = 0.0;
         vox->ctrl.speed = 1.0;
         vox->ctrl.localDur = /*cfg->localDur*/NIL;//spec->playLen;
         vox->ctrl.currIterIdx = 0;
         vox->ctrl.iterCnt = /*iterCnt*/NIL;//spec->iterCnt;
-        vox->ctrl.timing.killClock = 0;
+        //vox->ctrl.timing.killClock = 0;
         vox->ctrl.currWeight = 1;
-        vox->ctrl.timing.easeInStartClock = 0;
-        vox->ctrl.timing.easeInEndClock = 0;
+        //vox->ctrl.timing.easeInStartClock = 0;
+        //vox->ctrl.timing.easeInEndClock = 0;
         vox->ctrl.easeInValues = (afxUnit)-65536;
-        vox->ctrl.timing.easeOutStartClock = 0;
-        vox->ctrl.timing.easeOutEndClock = 0;
+        //vox->ctrl.timing.easeOutStartClock = 0;
+        //vox->ctrl.timing.easeOutEndClock = 0;
         vox->ctrl.easeOutValues = (afxUnit)0xFFFF;
     }
 
@@ -184,7 +184,7 @@ _AMX afxError AmxDeallocateVoices(afxMixContext mix, afxUnit firstId, afxUnit cn
     return err;
 }
 
-_AMX afxError AmxAllocateVoices(afxMixContext mix, afxUnit cnt, afxUnit voiceIds[])
+_AMX afxError AmxAllocateVoices(afxMixContext mix, amxVoiceCaps caps, afxUnit cnt, afxUnit voiceIds[])
 {
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);

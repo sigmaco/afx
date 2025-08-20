@@ -153,7 +153,7 @@ AFX_OBJECT(amxSound)
         afxInt          currIterIdx;
         afxInt          iterCnt;
         afxReal         currWeight;
-        afxCapstanTiming  timing;
+        //arxCapstanTiming  timing;
         afxUnit32       easeInValues;
         afxUnit32       easeOutValues;
         void*           userData[4];

@@ -25,22 +25,10 @@
 #ifndef ASX_SIMULATION_H
 #define ASX_SIMULATION_H
 
+#include "qwadro/inc/math/coll/afxFrustum.h"
 #include "qwadro/inc/sim/afxEngine.h"
-#include "qwadro/inc/sim/akxLighting.h"
-
-#include "qwadro/inc/sim/io/afxAnimation.h"
-#include "qwadro/inc/sim/afxCapstan.h"
-#include "qwadro/inc/sim/io/afxMotion.h"
-#include "qwadro/inc/sim/akxRenderer.h"
-
-//#include "qwadro/inc/cad/afxSkeleton.h"
-#include "qwadro/inc/sim/io/afxCurve.h"
 #include "qwadro/inc/sim/io/asxBuffer.h"
-
-#include "qwadro/inc/sim/body/afxMorphology.h"
-
 #include "qwadro/inc/sim/op/afxSampleContext.h"
-#include "qwadro/inc/sim/io/afxScene.h"
 
 AFX_DEFINE_STRUCT(afxSimulationConfig)
 {
@@ -63,7 +51,7 @@ AFX_DEFINE_STRUCT(afxSimulationConfig)
     afxReal             allowedLodErrFadingFactor;
 
     afxDrawSystem       dsys;
-    afxDrawInput        din;
+    arxRenderware        din;
 
 };
 
@@ -89,10 +77,10 @@ ASX void            AfxComputeSimilarity(afxSimulation sim, afxReal unitsPerMete
 
 
 ASX afxDrawSystem   AfxGetSimulationDrawSystem(afxSimulation sim);
-ASX afxDrawInput    AfxGetSimulationDrawInput(afxSimulation sim);
+ASX arxRenderware    AfxGetSimulationDrawInput(afxSimulation sim);
 
-ASX afxUnit         AfxEnumerateBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBody bodies[]);
-ASX afxUnit         AfxInvokeBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBool(*f)(afxBody, void*), void *udd);
+ASX afxUnit         AfxEnumerateBodies(afxSimulation sim, afxUnit first, afxUnit cnt, arxBody bodies[]);
+ASX afxUnit         AfxInvokeBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBool(*f)(arxBody, void*), void *udd);
 
 ASX afxError        AfxExecuteSampleCommands(afxSimulation sim, asxSubmission* ctrl, afxUnit cnt, afxContext contexts[]);
 

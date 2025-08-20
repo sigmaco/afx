@@ -366,9 +366,9 @@ typedef enum avxFormatCap
     avxFormatCap_COMPOSE    = (avxFormatCap_DRAW | avxFormatCap_BLEND),
 
     // Usable as a (read-only) sampled image/texture.
-    avxFormatCap_RASTER     = AFX_BITMASK(6),
+    avxFormatCap_TEXTURE    = AFX_BITMASK(6),
     // Supports shader image fetch/load/store.
-    avxFormatCap_IMAGE      = AFX_BITMASK(7),
+    avxFormatCap_STORAGE    = AFX_BITMASK(7),
     // Usable as a (read-only) tensor fetch buffer, aka texel buffer.
     avxFormatCap_FETCH      = AFX_BITMASK(8),
     // Usable as a (RW) tensor buffer, aka storage texel buffer.
@@ -403,9 +403,9 @@ AFX_DEFINE_STRUCT(avxFormatDescription)
     // What the format represents (e.g., COLOR, DEPTH, etc.).
     avxFormatFlags  flags;
     // Capabilities as a sampled image/texture.
-    avxFormatCaps   rasterCaps;
+    avxFormatCaps   rasCaps;
     // Capabilities as a buffer (e.g., vertex, uniform, etc.).
-    avxFormatCaps   bufferCaps;
+    avxFormatCaps   bufCaps;
     // Human-readable name (e.g., "RGBA8_UNORM").
     afxString       name;
 };
@@ -421,12 +421,43 @@ AVX void AvxConvertFormat(afxUnit32 rowSize, afxUnit32 rowCnt,
 
 AVXINL afxUnit      AfxGetBpp(avxFormat fmt);
 
-AVXINL afxBool      AfxIsPixelFormatDepth(avxFormat fmt);
-AVXINL afxBool      AfxIsPixelFormatStencil(avxFormat fmt);
-AVXINL afxBool      AfxIsPixelFormatCombinedDepthStencil(avxFormat fmt);
-AVXINL afxBool      AfxIsSrgb(avxFormat fmt);
-AVXINL afxBool      AfxIsPixelFormatCompressed(avxFormat fmt);
+AVXINL afxBool      AvxTestDepthFormat(avxFormat fmt);
+AVXINL afxBool      AvxTestStencilFormat(avxFormat fmt);
+AVXINL afxBool      AvxTestCombinedDsFormat(avxFormat fmt);
+AVXINL afxBool      AvxTestSrgbFormat(avxFormat fmt);
+AVXINL afxBool      AvxTestCompressedFormat(avxFormat fmt);
 #endif
 
+/*
+    According to Vulkan, two formats are compatible if:
+     - They have the same number of components
+     - Each component has the same size (in bits)
+     - The total bit size (BPP) matches
+     - Component layout matches (e.g., same order/swizzle)
+     - Same block size if compressed
+     - (For most cases) only the type differs (UNORM vs SNORM vs UINT, etc.)
+*/
+
+/*
+    The AvxTestCompatibleFormats() function tests whether two formats are in the same format compatibility class;
+    similar to how Vulkan treats them for VkImageView.
+*/
+
+AVXINL afxBool      AvxTestCompatibleFormats
+(
+    avxFormat       base, 
+    avxFormat       other
+);
+
+/*
+    The AvxChooseCompatibleFormats() function will scan the list of formats and return the ones compatible with the given one.
+*/
+
+AVX afxUnit         AvxChooseCompatibleFormats
+(
+    avxFormat       base, 
+    afxUnit         maxCnt, 
+    avxFormat       compatibles[]
+);
 
 #endif//AVX_FORMAT_H

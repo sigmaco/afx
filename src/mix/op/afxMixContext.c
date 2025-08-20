@@ -89,6 +89,63 @@ _AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdI
 
 ////////////////////////////////////////////////////////////////////////////////
 
+_AMX afxCmdId AmxBindIoStream(afxMixContext mix, afxUnit pin, afxStream iob, afxSize offset, afxSize range, afxUnit stride)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    mix->streams[pin].type = afxFcc_IOB;
+    mix->streams[pin].iob.iob = iob;
+    mix->streams[pin].iob.offset = offset;
+    mix->streams[pin].iob.range = range;
+    mix->streams[pin].iob.stride = stride;
+}
+
+_AMX afxCmdId AmxBindBufferedStream(afxMixContext mix, afxUnit pin, amxBuffer buf, afxSize offset, afxSize range, afxUnit stride)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    mix->streams[pin].type = afxFcc_MBUF;
+    mix->streams[pin].posn = 0;
+    mix->streams[pin].buf.buf = buf;
+    mix->streams[pin].buf.offset = offset;
+    mix->streams[pin].buf.range = range;
+    mix->streams[pin].buf.stride = stride;
+}
+
+_AMX afxCmdId AmxBindAudioTrack(afxMixContext mix, afxUnit pin, amxAudio aud, afxUnit srcIdx, amxFormat fmt)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    mix->tracks[pin].type = afxFcc_AUD;
+    mix->tracks[pin].posn = 0;
+    mix->tracks[pin].fmt = fmt;
+    mix->tracks[pin].srcIdx = srcIdx;
+    mix->tracks[pin].aud.aud = aud;
+}
+
+_AMX afxCmdId AmxBindBuffer(afxMixContext mix, afxUnit bank, amxBuffer buf, afxUnit offset, afxUnit range, afxUnit freq)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    mix->banks[bank].type = afxFcc_MBUF;
+    mix->banks[bank].buf.buf = buf;
+    mix->banks[bank].buf.offset = offset;
+    mix->banks[bank].buf.range = range;
+}
+
+_AMX afxCmdId AmxBindAudio(afxMixContext mix, afxUnit bank, amxAudio aud)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+
+    mix->banks[bank].type = afxFcc_AUD;
+    mix->banks[bank].aud.aud = aud;
+}
+
 _AMX amxMixState AfxGetMixerState(afxMixContext mix)
 {
     afxError err = AFX_ERR_NONE;
@@ -641,7 +698,7 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
     AfxDeployPool(&mix->batches, sizeof(_amxCmdBatch), 3, 0);
 
     {
-        mix->motor.flags = 1;// afxCapstanFlag_ACTIVE;
+        mix->motor.flags = 1;// arxCapstanFlag_ACTIVE;
         mix->motor.timing.currClock = 0;// cfg->currClock; --- set by roll
         mix->motor.dtLocalClockPending = 0.0;
         mix->motor.localClock = 0.0;
@@ -699,7 +756,7 @@ _AMX afxError AmxAcquireMixContext(afxMixSystem msys, afxMixConfig const* cfg, a
     return err;
 }
 
-_AMX afxError AmxRollMixContext(afxMixContext mix, afxUnit sampCnt)
+_AMX afxError AmxRollMixContext(afxMixContext mix, afxUnit frameCnt)
 {
     afxError err = AFX_ERR_NONE;
     // mctx must be a valid afxMixSystem handle.

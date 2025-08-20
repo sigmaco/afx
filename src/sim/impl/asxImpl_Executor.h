@@ -38,11 +38,11 @@ AFX_DEFINE_STRUCT(asxSpu)
     afxBool         running;
     afxBool         instanced;
     
-    afxPose         pose;
+    arxPose         pose;
     afxUnit         basXform;
     afxUnit         xformCnt;
     
-    afxModel        skl;
+    arxModel        skl;
     afxUnit         baseJnt;
     afxUnit         jntCnt;
     afxReal         allowedErr;

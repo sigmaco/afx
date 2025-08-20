@@ -161,7 +161,7 @@ AFX void AfxRaiseException(afxError errCode, afxHere const hint);
 #   define AFX_ASSERT_OR(condA_,condB_)  ((!!(((condA_) && !(condB_)) || ((condB_) && !(condA_))))||(AfxThrowError(),AfxReportAssert("%s\n    %s",AFX_STRINGIFY(((condA_) && !(condB_)) || ((condB_) && !(condA_))),errorMsg[0]),0))
 
 #   define AFX_ASSERT_DIFF(a_,b_)         ((!!(((void const*)(a_) != (void const*)(b_))))||(AfxThrowError(),AfxReportAssert("%s\n    %s",AFX_STRINGIFY((cond_)),errorMsg[0]),0))
-#   define AFX_ASSERT_ALIGNMENT(addr_,align_) ((!!((AFX_IS_ALIGNED((addr_),(align_)))))||(AfxThrowError(),AfxReportAssert("%s(%u) is not aligned to %u bytes",AFX_STRINGIFY((addr_)), (addr_), (align_),errorMsg[0]),0))
+#   define AFX_ASSERT_ALIGNMENT(addr_,align_) ((!!((AFX_TEST_ALIGNMENT((addr_),(align_)))))||(AfxThrowError(),AfxReportAssert("%s(%u) is not aligned to %u bytes",AFX_STRINGIFY((addr_)), (addr_), (align_),errorMsg[0]),0))
 
 #else
 

@@ -134,6 +134,8 @@ AVXINL avxOrigin AvxClampOrigin(avxOrigin const origin, avxRange const max);
 
 AVXINL avxOrigin AvxHalfOrigin(avxOrigin const in);
 
-AVXINL void         AfxMakeViewport(avxViewport* vp, afxReal x, afxReal y, afxReal w, afxReal h, afxReal minDepth, afxReal maxDepth);
+AVXINL void     AfxMakeViewport(avxViewport* vp, afxReal x, afxReal y, afxReal w, afxReal h, afxReal minDepth, afxReal maxDepth);
+
+AVXINL void     AvxFlipViewport(avxViewport* vp, avxViewport const* in, afxBool swapDepthRange);
 
 #endif//AVX_VIEWPORT_H

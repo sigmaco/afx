@@ -57,13 +57,13 @@ AUX afxBool         AfxIsXmb2Pressed(afxUnit seat);
 AUX afxBool         AfxWasXmb2Pressed(afxUnit seat);
 AUX afxBool         AfxWasXmb2Released(afxUnit seat);
 
-AUX void            AfxGetMouseMotion(afxUnit seat, afxReal motion[2]);
+AUX void            AfxGetMouseMotion(afxUnit seat, afxV2d motion, afxV2d vel, afxV2d accel);
 AUX afxReal         AfxGetMouseWheelDelta(afxUnit seat);
 
 AUX afxBool         AfxMouseHasHorizontalChanged(afxUnit seat, afxInt tolerance);
 AUX afxBool         AfxMouseHasVerticalChanged(afxUnit seat, afxInt tolerance);
 
-AUX afxError        AfxEmulateMouseMotion(afxUnit seat, afxReal const motion[2], afxWindow wnd);
+AUX afxError        AfxEmulateMouseMotion(afxUnit seat, afxV2d const motion, afxWindow wnd);
 AUX afxError        AfxEmulateMouseWheelAction(afxUnit seat, afxReal delta, afxWindow wnd);
 AUX afxError        AfxEmulateMouseButtonActions(afxUnit seat, afxUnit cnt, afxMouseButton const butt[], afxBool const pressed[], afxWindow wnd);
 AUX afxError        AfxReleaseMouseButtons(afxUnit seat, afxWindow wnd);
