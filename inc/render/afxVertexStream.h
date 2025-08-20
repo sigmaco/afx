@@ -19,8 +19,8 @@
 #ifndef ARX_BUFFERIZER_H
 #define ARX_BUFFERIZER_H
 
-#include "qwadro/inc/draw/io/avxBuffer.h"
-#include "qwadro/inc/draw/op/avxVertexInput.h"
+#include "qwadro/inc/draw/avxBuffer.h"
+#include "qwadro/inc/draw/avxVertexInput.h"
 #include "qwadro/inc/render/arxRenderable.h"
 
 AFX_DEFINE_HANDLE(arxBufferizer);

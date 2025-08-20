@@ -19,26 +19,8 @@
     <Filter Include="qwadro\sim\ddi">
       <UniqueIdentifier>{c8f4cd25-0377-4432-9a36-8e1833d41109}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\sim\io">
-      <UniqueIdentifier>{fd97b524-c9a2-4fa3-88a0-5963f9c7016a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\sim\body">
-      <UniqueIdentifier>{3dcb5169-f799-4eb8-94e0-bb85dec39221}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\sim\op">
-      <UniqueIdentifier>{83f1d15f-f865-49a0-93b8-07709c273b45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\sim\dev">
-      <UniqueIdentifier>{4d73ebc4-01bb-4411-92f1-e29a276c5429}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\sim\space">
-      <UniqueIdentifier>{8fc7c7fc-d221-4403-aa19-92091ccc259a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro\anim">
       <UniqueIdentifier>{dbc82b12-6d70-478e-a9e0-ca1d75269399}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\cad">
-      <UniqueIdentifier>{bac47c4f-8bc5-46e8-b8f8-cf8daffc5a09}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -68,30 +50,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Simulation.h">
       <Filter>qwadro\sim\ddi</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\qwadro\inc\sim\io\asxBuffer.h">
-      <Filter>qwadro\sim\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\op\afxMiscOps.h">
-      <Filter>qwadro\sim\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\op\afxPoseOps.h">
-      <Filter>qwadro\sim\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\op\afxSampleContext.h">
-      <Filter>qwadro\sim\op</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\body\afxCollision.h">
-      <Filter>qwadro\sim\body</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\sim\afxNode.h">
-      <Filter>qwadro\sim\space</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\qwadro\inc\sim\afxOctree.h">
-      <Filter>qwadro\sim\space</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\qwadro\inc\sim\afxQuadtree.h">
-      <Filter>qwadro\sim\space</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\sim\impl\asxImpl_Memory.h">
       <Filter>qwadro\sim\ddi</Filter>
@@ -129,33 +87,6 @@
     <ClInclude Include="..\..\inc\render\arxCamera.h">
       <Filter>qwadro\render</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\render\cad\arxMaterial.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\render\cad\arxTriangulation.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\render\cad\arxMeshBlueprint.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\render\cad\arxMesh.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\render\cad\arxModel.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\render\cad\arxGeome.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\render\cad\arxPlacement.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\render\cad\arxPose.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\render\cad\arxTerrain.h">
-      <Filter>qwadro\cad</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\render\ddi\arxImpl_Input.h">
       <Filter>qwadro\render\ddi</Filter>
     </ClInclude>
@@ -189,6 +120,63 @@
     <ClInclude Include="..\..\inc\render\arxRenderware.h">
       <Filter>qwadro\render</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\render\arxMeshBlueprint.h">
+      <Filter>qwadro\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\arxModel.h">
+      <Filter>qwadro\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\arxPlacement.h">
+      <Filter>qwadro\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\arxPose.h">
+      <Filter>qwadro\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\arxTerrain.h">
+      <Filter>qwadro\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\arxTriangulation.h">
+      <Filter>qwadro\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\arxGeome.h">
+      <Filter>qwadro\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\arxMaterial.h">
+      <Filter>qwadro\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\render\arxMesh.h">
+      <Filter>qwadro\render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\afxCollision.h">
+      <Filter>qwadro\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\asxBuffer.h">
+      <Filter>qwadro\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\afxPoseOps.h">
+      <Filter>qwadro\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\afxSampleContext.h">
+      <Filter>qwadro\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\afxMiscOps.h">
+      <Filter>qwadro\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\arxCapstan.h">
+      <Filter>qwadro\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\arxCurve.h">
+      <Filter>qwadro\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\arxMotion.h">
+      <Filter>qwadro\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\arxAnimation.h">
+      <Filter>qwadro\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\sim\arxBody.h">
+      <Filter>qwadro\sim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="e2synerg.rc">
@@ -216,33 +204,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Executor.c">
       <Filter>qwadro\sim\ddi</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\io\asxBuffer.c">
-      <Filter>qwadro\sim\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\body\afxCollision.c">
-      <Filter>qwadro\sim\body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\body\afxXmd.c">
-      <Filter>qwadro\sim\body</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\afxSampleContext.c">
-      <Filter>qwadro\sim\op</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\op\afxMiscOps.c">
-      <Filter>qwadro\sim\op</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\op\afxPoseOps.c">
-      <Filter>qwadro\sim\op</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\afxNode.c">
-      <Filter>qwadro\sim\space</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\afxOctree.c">
-      <Filter>qwadro\sim\space</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sim\afxQuadtree.c">
-      <Filter>qwadro\sim\space</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Memory.c">
       <Filter>qwadro\sim\ddi</Filter>
@@ -280,36 +241,6 @@
     <ClCompile Include="..\..\src\render\arxCamera.c">
       <Filter>qwadro\render</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\render\cad\arxMaterial.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render\cad\arxTriangulation.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render\cad\arxMeshBlueprint.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render\cad\arxMesh.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render\cad\arxModel.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render\cad\arxModelIo.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render\cad\arxGeome.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render\cad\arxPlacement.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render\cad\arxPose.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\render\cad\arxTerrain.c">
-      <Filter>qwadro\cad</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\render\anim\arxAnimation.c">
       <Filter>qwadro\anim</Filter>
     </ClCompile>
@@ -336,6 +267,75 @@
     </ClCompile>
     <ClCompile Include="..\..\src\render\arxRenderware.c">
       <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxModel.c">
+      <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxModelIo.c">
+      <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxPlacement.c">
+      <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxPose.c">
+      <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxTerrain.c">
+      <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxTriangulation.c">
+      <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxGeome.c">
+      <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxMaterial.c">
+      <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxMesh.c">
+      <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render\arxMeshBlueprint.c">
+      <Filter>qwadro\render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\afxCollision.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\afxXmd.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\asxBuffer.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\afxMiscOps.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\afxPoseOps.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\arxAnimationIo.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\arxBody.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\arxCapstan.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\arxCurve.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\arxInstancedAnimation.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\arxMotion.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\arxMotive.c">
+      <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sim\arxAnimation.c">
+      <Filter>qwadro\sim</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

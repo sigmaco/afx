@@ -26,7 +26,7 @@
 #include "qwadro/inc/render/arxRenderableTerrain.h"
 #include "qwadro/inc/render/arxScene.h"
 #include "qwadro/inc/render/akxRenderer.h"
-#include "qwadro/inc/math/coll/afxFrustum.h"
+#include "qwadro/inc/math/afxFrustum.h"
 
 #ifdef _ARX_RENDER_CONTEXT_C
 

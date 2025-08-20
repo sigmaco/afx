@@ -26,7 +26,7 @@
 
 #include "qwadro/inc/exec/afxDevice.h"
 #include "qwadro/inc/mix/afxMixBridge.h"
-#include "qwadro/inc/mix/op/afxSink.h"
+#include "qwadro/inc/mix/afxSink.h"
 
 #define AFX_MAX_AUDITION_HEADS 8
 #define AFX_MAX_AUDIO_CHANNELS 32

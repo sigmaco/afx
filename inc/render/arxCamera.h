@@ -73,7 +73,7 @@
 #include "qwadro/inc/render/arxRenderable.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/mem/afxArray.h"
-#include "qwadro/inc/math/coll/afxFrustum.h"
+#include "qwadro/inc/math/afxFrustum.h"
 #include "qwadro/inc/math/avxMatrix.h"
 
 typedef enum afxCameraFlag

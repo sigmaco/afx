@@ -34,8 +34,8 @@
 
 // COMMAND BATCH --- a group of records processed as a single unit, usually without input from a user.
 
-#include "qwadro/inc/draw/op/avxDrawing.h"
-#include "qwadro/inc/draw/op/avxProvision.h"
+#include "qwadro/inc/draw/avxDrawing.h"
+#include "qwadro/inc/draw/avxProvision.h"
 #include "qwadro/inc/draw/afxDrawBridge.h"
 
 typedef enum afxDrawContextFlag

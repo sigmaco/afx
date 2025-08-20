@@ -36,20 +36,18 @@
 
 */
 
-#include "qwadro/inc/draw/io/avxTxd.h"
-#include "qwadro/inc/draw/io/avxRasterFile.h"
-#include "qwadro/inc/draw/afxDrawContext.h"
+#include "qwadro/inc/draw/afxDrawSystem.h"
 
 #include "qwadro/inc/render/arxRenderable.h"
 #include "qwadro/inc/render/arxRenderableModel.h"
 #include "qwadro/inc/render/arxRenderableBody.h"
 #include "qwadro/inc/render/arxRenderableTerrain.h"
-#include "qwadro/inc/render/cad/arxTerrain.h"
-#include "qwadro/inc/render/cad/arxModel.h"
-#include "qwadro/inc/render/cad/arxMesh.h"
-#include "qwadro/inc/render/cad/arxPlacement.h"
-#include "qwadro/inc/render/cad/arxPose.h"
-#include "qwadro/inc/render/cad/arxGeome.h"
+#include "qwadro/inc/render/arxTerrain.h"
+#include "qwadro/inc/render/arxModel.h"
+#include "qwadro/inc/render/arxMesh.h"
+#include "qwadro/inc/render/arxPlacement.h"
+#include "qwadro/inc/render/arxPose.h"
+#include "qwadro/inc/render/arxGeome.h"
 #include "qwadro/inc/render/arxCamera.h"
 #include "qwadro/inc/render/arxScene.h"
 #include "qwadro/inc/render/afxVertexStream.h"

@@ -22,9 +22,9 @@
 #define AUX_SESSION_H
 
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/math/avxViewport.h"
-#include "qwadro/inc/ux/hid/afxKeyboard.h"
-#include "qwadro/inc/ux/hid/afxMouse.h"
+#include "qwadro/inc/draw/avxViewport.h"
+#include "qwadro/inc/ux/afxKeyboard.h"
+#include "qwadro/inc/ux/afxMouse.h"
 
 typedef enum afxSessionState
 {

@@ -24,7 +24,7 @@
 #include "qwadro/inc/render/arxScene.h"
 #include "qwadro/inc/render/arxRenderContext.h"
 #include "qwadro/inc/render/akxRenderer.h"
-#include "qwadro/inc/render/cad/arxTerrain.h"
+#include "qwadro/inc/render/arxTerrain.h"
 
 AFX_DEFINE_STRUCT(_arxVisualTechnique)
 {

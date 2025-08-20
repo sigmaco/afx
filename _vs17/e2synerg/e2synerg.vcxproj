@@ -19,9 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\qwadro\inc\sim\afxOctree.h" />
-    <ClInclude Include="..\..\..\qwadro\inc\sim\afxQuadtree.h" />
-    <ClInclude Include="..\..\..\qwadro\inc\sim\io\asxBuffer.h" />
+    <ClInclude Include="..\..\inc\render\arxGeome.h" />
+    <ClInclude Include="..\..\inc\render\arxMaterial.h" />
+    <ClInclude Include="..\..\inc\render\arxMesh.h" />
+    <ClInclude Include="..\..\inc\render\arxMeshBlueprint.h" />
+    <ClInclude Include="..\..\inc\render\arxModel.h" />
+    <ClInclude Include="..\..\inc\render\arxPlacement.h" />
+    <ClInclude Include="..\..\inc\render\arxPose.h" />
     <ClInclude Include="..\..\inc\render\arxRenderware.h" />
     <ClInclude Include="..\..\inc\render\anim\arxAnimation.h" />
     <ClInclude Include="..\..\inc\render\anim\arxBody.h" />
@@ -39,24 +43,22 @@
     <ClInclude Include="..\..\inc\render\arxRenderableTerrain.h" />
     <ClInclude Include="..\..\inc\render\arxRenderContext.h" />
     <ClInclude Include="..\..\inc\render\arxCamera.h" />
-    <ClInclude Include="..\..\inc\render\cad\arxMaterial.h" />
-    <ClInclude Include="..\..\inc\render\cad\arxMesh.h" />
-    <ClInclude Include="..\..\inc\render\cad\arxMeshBlueprint.h" />
-    <ClInclude Include="..\..\inc\render\cad\arxModel.h" />
-    <ClInclude Include="..\..\inc\render\cad\arxGeome.h" />
-    <ClInclude Include="..\..\inc\render\cad\arxPlacement.h" />
-    <ClInclude Include="..\..\inc\render\cad\arxPose.h" />
-    <ClInclude Include="..\..\inc\render\cad\arxTerrain.h" />
-    <ClInclude Include="..\..\inc\render\cad\arxTriangulation.h" />
+    <ClInclude Include="..\..\inc\render\arxTerrain.h" />
+    <ClInclude Include="..\..\inc\render\arxTriangulation.h" />
+    <ClInclude Include="..\..\inc\sim\afxCollision.h" />
     <ClInclude Include="..\..\inc\sim\afxEngine.h" />
-    <ClInclude Include="..\..\inc\sim\afxNode.h" />
+    <ClInclude Include="..\..\inc\sim\afxMiscOps.h" />
+    <ClInclude Include="..\..\inc\sim\afxPoseOps.h" />
+    <ClInclude Include="..\..\inc\sim\afxSampleContext.h" />
     <ClInclude Include="..\..\inc\sim\afxSimBridge.h" />
     <ClInclude Include="..\..\inc\sim\afxSimDefs.h" />
     <ClInclude Include="..\..\inc\sim\afxSimulation.h" />
-    <ClInclude Include="..\..\inc\sim\body\afxCollision.h" />
-    <ClInclude Include="..\..\inc\sim\op\afxMiscOps.h" />
-    <ClInclude Include="..\..\inc\sim\op\afxPoseOps.h" />
-    <ClInclude Include="..\..\inc\sim\op\afxSampleContext.h" />
+    <ClInclude Include="..\..\inc\sim\arxAnimation.h" />
+    <ClInclude Include="..\..\inc\sim\arxBody.h" />
+    <ClInclude Include="..\..\inc\sim\arxCapstan.h" />
+    <ClInclude Include="..\..\inc\sim\arxCurve.h" />
+    <ClInclude Include="..\..\inc\sim\arxMotion.h" />
+    <ClInclude Include="..\..\inc\sim\asxBuffer.h" />
     <ClInclude Include="..\..\src\render\ddi\arxImpl_Input.h" />
     <ClInclude Include="..\..\src\render\ddi\arxImpl_Model.h" />
     <ClInclude Include="..\..\src\render\ddi\arxImpl_Animation.h" />
@@ -78,6 +80,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\render\arxGeome.c" />
+    <ClCompile Include="..\..\src\render\arxMaterial.c" />
+    <ClCompile Include="..\..\src\render\arxMesh.c" />
+    <ClCompile Include="..\..\src\render\arxMeshBlueprint.c" />
+    <ClCompile Include="..\..\src\render\arxModel.c" />
+    <ClCompile Include="..\..\src\render\arxModelIo.c" />
+    <ClCompile Include="..\..\src\render\arxPlacement.c" />
+    <ClCompile Include="..\..\src\render\arxPose.c" />
     <ClCompile Include="..\..\src\render\arxRenderware.c" />
     <ClCompile Include="..\..\src\render\anim\arxAnimation.c" />
     <ClCompile Include="..\..\src\render\anim\arxAnimationIo.c" />
@@ -98,33 +108,29 @@
     <ClCompile Include="..\..\src\render\arxRenderableTerrain.c" />
     <ClCompile Include="..\..\src\render\arxRenderContext.c" />
     <ClCompile Include="..\..\src\render\arxCamera.c" />
-    <ClCompile Include="..\..\src\render\cad\arxMaterial.c" />
-    <ClCompile Include="..\..\src\render\cad\arxMesh.c" />
-    <ClCompile Include="..\..\src\render\cad\arxMeshBlueprint.c" />
-    <ClCompile Include="..\..\src\render\cad\arxModel.c" />
-    <ClCompile Include="..\..\src\render\cad\arxModelIo.c" />
-    <ClCompile Include="..\..\src\render\cad\arxGeome.c" />
-    <ClCompile Include="..\..\src\render\cad\arxPlacement.c" />
-    <ClCompile Include="..\..\src\render\cad\arxPose.c" />
-    <ClCompile Include="..\..\src\render\cad\arxTerrain.c" />
-    <ClCompile Include="..\..\src\render\cad\arxTriangulation.c" />
+    <ClCompile Include="..\..\src\render\arxTerrain.c" />
+    <ClCompile Include="..\..\src\render\arxTriangulation.c" />
+    <ClCompile Include="..\..\src\sim\afxCollision.c" />
     <ClCompile Include="..\..\src\sim\afxEngine.c" />
-    <ClCompile Include="..\..\src\sim\afxNode.c" />
-    <ClCompile Include="..\..\src\sim\afxOctree.c" />
-    <ClCompile Include="..\..\src\sim\afxQuadtree.c" />
-    <ClCompile Include="..\..\src\sim\afxSampleContext.c" />
+    <ClCompile Include="..\..\src\sim\afxMiscOps.c" />
+    <ClCompile Include="..\..\src\sim\afxPoseOps.c" />
     <ClCompile Include="..\..\src\sim\afxSimBridge.c" />
     <ClCompile Include="..\..\src\sim\afxSimQueue.c" />
     <ClCompile Include="..\..\src\sim\afxSimulation.c" />
-    <ClCompile Include="..\..\src\sim\body\afxCollision.c" />
-    <ClCompile Include="..\..\src\sim\body\afxXmd.c" />
+    <ClCompile Include="..\..\src\sim\afxXmd.c" />
+    <ClCompile Include="..\..\src\sim\arxAnimation.c" />
+    <ClCompile Include="..\..\src\sim\arxAnimationIo.c" />
+    <ClCompile Include="..\..\src\sim\arxBody.c" />
+    <ClCompile Include="..\..\src\sim\arxCapstan.c" />
+    <ClCompile Include="..\..\src\sim\arxCurve.c" />
+    <ClCompile Include="..\..\src\sim\arxInstancedAnimation.c" />
+    <ClCompile Include="..\..\src\sim\arxMotion.c" />
+    <ClCompile Include="..\..\src\sim\arxMotive.c" />
+    <ClCompile Include="..\..\src\sim\asxBuffer.c" />
     <ClCompile Include="..\..\src\sim\impl\asxImplementation.c" />
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Context.c" />
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Executor.c" />
     <ClCompile Include="..\..\src\sim\impl\asxImpl_Memory.c" />
-    <ClCompile Include="..\..\src\sim\io\asxBuffer.c" />
-    <ClCompile Include="..\..\src\sim\op\afxMiscOps.c" />
-    <ClCompile Include="..\..\src\sim\op\afxPoseOps.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

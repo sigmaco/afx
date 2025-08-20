@@ -26,14 +26,14 @@
 #define AMX_MIX_SYSTEM_H
 
 #include "qwadro/inc/mix/afxMixDevice.h"
-#include "qwadro/inc/mix/op/amxCodec.h"
-#include "qwadro/inc/mix/io/amxAudio.h"
-#include "qwadro/inc/mix/io/amxSound.h"
-#include "qwadro/inc/mix/io/amxVideo.h"
-#include "qwadro/inc/mix/op/afxSink.h"
-#include "qwadro/inc/mix/op/afxMixContext.h"
-#include "qwadro/inc/mix/io/amxSoundscape.h"
-#include "qwadro/inc/mix/io/amxBuffer.h"
+#include "qwadro/inc/mix/amxCodec.h"
+#include "qwadro/inc/mix/amxAudio.h"
+#include "qwadro/inc/mix/amxSound.h"
+#include "qwadro/inc/mix/amxVideo.h"
+#include "qwadro/inc/mix/afxSink.h"
+#include "qwadro/inc/mix/afxMixContext.h"
+#include "qwadro/inc/mix/amxSoundscape.h"
+#include "qwadro/inc/mix/amxBuffer.h"
 
 #define AMX_MAX_BRIDGES_PER_SYSTEM (32)
 

@@ -25,10 +25,10 @@
 #ifndef ASX_SIMULATION_H
 #define ASX_SIMULATION_H
 
-#include "qwadro/inc/math/coll/afxFrustum.h"
+#include "qwadro/inc/math/afxFrustum.h"
 #include "qwadro/inc/sim/afxEngine.h"
-#include "qwadro/inc/sim/io/asxBuffer.h"
-#include "qwadro/inc/sim/op/afxSampleContext.h"
+#include "qwadro/inc/sim/asxBuffer.h"
+#include "qwadro/inc/sim/afxSampleContext.h"
 
 AFX_DEFINE_STRUCT(afxSimulationConfig)
 {

@@ -23,7 +23,7 @@
 
 #include "../../impl/afxExecImplKit.h"
 #include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/math/avxViewport.h"
+#include "qwadro/inc/draw/avxViewport.h"
 #include "qwadro/inc/ux/afxShell.h"
 //#include "qwadro/../../dep_/vgl1/vgl1.h"
 

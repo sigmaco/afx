@@ -20,8 +20,8 @@
 #include "qwadro/inc/sim/afxSimDefs.h"
 #include "qwadro/inc/draw/afxDrawDefs.h"
 #include "qwadro/inc/mem/afxArray.h"
-#include "qwadro/inc/render/cad/arxMesh.h"
-#include "qwadro/inc/render/cad/arxModel.h"
+#include "qwadro/inc/render/arxMesh.h"
+#include "qwadro/inc/render/arxModel.h"
 #include "qwadro/inc/render/arxRenderable.h"
 
 AFX_DEFINE_STRUCT(arxRenderableCache)

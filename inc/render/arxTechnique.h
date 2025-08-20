@@ -28,8 +28,8 @@
 */
 
 #include "qwadro/inc/render/arxRenderable.h"
-#include "qwadro/inc/draw/op/avxPipeline.h"
-#include "qwadro/inc/draw/op/avxRasterization.h"
+#include "qwadro/inc/draw/avxPipeline.h"
+#include "qwadro/inc/draw/avxRasterization.h"
 
 AFX_DEFINE_STRUCT(arxDrawPass)
 {
