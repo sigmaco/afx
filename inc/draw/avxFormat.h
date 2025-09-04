@@ -342,6 +342,8 @@ typedef enum avxFormatFlag
     avxFormatFlag_NORMALIZED    = AFX_BITMASK(8),
 } avxFormatFlags;
 
+// TODO: Rename avxFormatCap to avxFormatUsage to better fit the semantic across the framework.
+
 typedef enum avxFormatCap
 // Bitmask flags specifying capabilities (or possible usages) of a data format,
 // essentially, how a format can be used, in contrast to avxFormatFlags, which describes what a format represents.
@@ -384,7 +386,7 @@ AFX_DEFINE_STRUCT(avxFormatDescription)
     afxUnit32       bpp;
     // Bytes per pixel (total size per element, including padding).
     afxUnit32       stride;
-    // Number of actual components (1–4); e.g., 3 for RGB, 4 for RGBA.
+    // Number of actual components (1Â–4); e.g., 3 for RGB, 4 for RGBA.
     afxUnit32       compCnt;
     // Type of each component (e.g., UINT8, FLOAT32, etc.).
     avxFormatType   type[4];
