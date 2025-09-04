@@ -83,11 +83,11 @@ AFX_OBJECT(afxModule)
         afxLink asx; // ICD attachment for ASX implementations
         afxLink aux; // ICD attachment for AUX implementations
 
-        afxClass viddCls;
         afxClass ddevCls;
         afxClass dsysCls;
 
         afxClass sdevCls;
+        afxClass dinCls;
         afxClass simCls;
 
         afxClass asiCls;
@@ -96,8 +96,10 @@ AFX_OBJECT(afxModule)
         afxClass msysCls;
 
         afxClass sshCls;
+        afxClass vduCls;
         afxClass sesCls;
         afxClass hidCls;
+        afxError(*getVduClsc)(afxModule icd, afxString const* tool, afxClassConfig* clsc);
         afxError(*getDoutClsc)(afxDrawSystem dsys, afxString const* tool, afxClassConfig* clsc);
         afxError(*getSinkClsc)(afxMixSystem msys, afxString const* tool, afxClassConfig* clsc);
     } icd;
@@ -228,36 +230,36 @@ AFX_OBJECT(afxThreadPool)
 #ifdef _AFX_SYSTEM_C
 AFX_OBJECT(afxSystem)
 {
-    afxBool                 isInBootUp;
-    afxBool                 isInShutdown;
-    afxBool                 operating;
-    afxBool                 interruptionRequested;
-    afxInt                  exitCode;
+    afxBool         isInBootUp;
+    afxBool         isInShutdown;
+    afxBool         operating;
+    afxBool         interruptionRequested;
+    afxInt          exitCode;
 
-    afxChain                classes;
-    afxClass                mmuCls;
-    afxClass                strbCls;
-    afxClass                mdleCls;
-    afxClass                thrCls;
-    afxClass                thrpCls;
-    afxClass                svcCls;
-    afxClass                devCls;
-    afxClass                cdcCls;
-    afxClass                iosCls;
-    afxClass                fsysCls;
-    afxClass                exuCls;
+    afxChain        classes;
+    afxClass        mmuCls;
+    afxClass        strbCls;
+    afxClass        mdleCls;
+    afxClass        thrCls;
+    afxClass        thrpCls;
+    afxClass        svcCls;
+    afxClass        devCls;
+    afxClass        cdcCls;
+    afxClass        iosCls;
+    afxClass        fsysCls;
+    afxClass        exuCls;
 
-    afxUnit                  ptrSiz;
-    afxBool                 bigEndian;
-    afxUnit                  memPageSiz; // The page size and the granularity of page protection and commitment.
-    afxUnit                  allocGranularity;
-    afxUnit                  hwThreadingCap; // # of logical proc units (hardware threads)
-    afxReal                 unitsPerMeter; // the number of units in a meter.
-    afxSize                 maxMemUsage;
-    afxUnit                  ioBufSiz;
-    afxIoBridge             primeExu;
-    afxUnit32                primeTid;
-    afxThread               primeThr;
+    afxUnit         ptrSiz;
+    afxBool         bigEndian;
+    afxUnit         memPageSiz; // The page size and the granularity of page protection and commitment.
+    afxUnit         allocGranularity;
+    afxUnit         hwThreadingCap; // # of logical proc units (hardware threads)
+    afxReal         unitsPerMeter; // the number of units in a meter.
+    afxSize         maxMemUsage;
+    afxUnit         ioBufSiz;
+    afxIoBridge     primeExu;
+    afxUnit32       primeTid;
+    afxThread       primeThr;
 
     afxAssertHook           assertHook; // external assertion handling function (optional)
     afxReallocatorFn        reallocatorFn;
@@ -272,50 +274,40 @@ AFX_OBJECT(afxSystem)
 
     afxModule               e2coree;
 
-
     // avx
-    struct
-    {
-        afxBool             disabled;
-        afxModule           e2drawDll;
-        afxClass            viddCls;
-        afxClass            ddevCls;
-        afxClass            dsysCls;
-        afxChain            icdChain;
-        afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
-    }                       avx;
+    afxBool             avxDisabled;
+    afxModule           e2drawDll;
+    afxClass            ddevCls;
+    afxClass            dsysCls;
+    afxChain            avxIcdChain;
+    afxError            (*avxIoctl)(afxSystem, afxModule, afxUnit, void*);
+
     // amx
-    struct
-    {
-        afxBool             disabled;
-        afxModule           e2mixDll;
-        afxClass            asiCls;
-        afxClass            mdevCls;
-        afxClass            msysCls;
-        afxChain            icdChain;
-        afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
-    }                       amx;
+    afxBool             amxDisabled;
+    afxModule           e2mixDll;
+    afxClass            asiCls;
+    afxClass            mdevCls;
+    afxClass            msysCls;
+    afxChain            amxIcdChain;
+    afxError            (*amxIoctl)(afxSystem, afxModule, afxUnit, void*);
+    
     // asx
-    struct
-    {
-        afxBool             disabled;
-        afxModule           e2simDll;
-        afxClass            sdevCls;
-        afxClass            simCls;
-        afxChain            icdChain;
-        afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
-    }                       asx;
+    afxBool             asxDisabled;
+    afxModule           e2simDll;
+    afxClass            sdevCls;
+    afxClass            simCls;
+    afxChain            asxIcdChain;
+    afxError            (*asxIoctl)(afxSystem, afxModule, afxUnit, void*);
+    
     // aux (shell)
-    struct
-    {
-        afxBool             disabled;
-        afxModule           e2mmuxDll;
-        afxChain            icdChain;
-        afxClass            sshCls;
-        afxClass            sesCls;
-        afxClass            hidCls;
-        afxError            (*ioctl)(afxSystem, afxModule, afxUnit, void*);
-    }                       aux;
+    afxBool             auxDisabled;
+    afxModule           e2mmuxDll;
+    afxChain            auxIcdChain;
+    afxClass            vduCls;
+    afxClass            sshCls;
+    afxClass            sesCls;
+    afxClass            hidCls;
+    afxError            (*auxIoctl)(afxSystem, afxModule, afxUnit, void*);
 
     struct
     {

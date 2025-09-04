@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
+ *         Q W A D R O   M U L T I M E D I A   A V   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -26,14 +26,14 @@
 #define AMX_MIX_SYSTEM_H
 
 #include "qwadro/inc/mix/afxMixDevice.h"
-#include "qwadro/inc/mix/op/amxCodec.h"
-#include "qwadro/inc/mix/io/amxAudio.h"
-#include "qwadro/inc/mix/io/amxSound.h"
-#include "qwadro/inc/mix/io/amxVideo.h"
-#include "qwadro/inc/mix/op/afxSink.h"
-#include "qwadro/inc/mix/op/afxMixContext.h"
-#include "qwadro/inc/mix/io/amxSoundscape.h"
-#include "qwadro/inc/mix/io/amxBuffer.h"
+#include "qwadro/inc/mix/amxCodec.h"
+#include "qwadro/inc/mix/amxAudio.h"
+#include "qwadro/inc/mix/amxSound.h"
+#include "qwadro/inc/mix/amxVideo.h"
+#include "qwadro/inc/mix/afxSink.h"
+#include "qwadro/inc/mix/afxMixContext.h"
+#include "qwadro/inc/mix/amxSoundscape.h"
+#include "qwadro/inc/mix/amxBuffer.h"
 
 #define AMX_MAX_BRIDGES_PER_SYSTEM (32)
 

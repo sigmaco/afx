@@ -24,13 +24,9 @@
 #include "qwadro/inc/sim/afxEngine.h"
 #include "qwadro/inc/sim/afxSimulation.h"
 #include "asxImpl_Executor.h"
-#include "asxImpl_Animation.h"
-#include "asxImpl_Simulation.h"
-#include "asxImpl_Body.h"
-#include "asxImpl_Curve.h"
 #include "asxImpl_Memory.h"
-#include "asxImpl_Model.h"
 #include "asxImpl_Context.h"
+#include "asxImpl_Simulation.h"
 
 AFX_DEFINE_STRUCT(afxEngineInfo)
 {
@@ -83,22 +79,18 @@ AFX_OBJECT(afxEngine)
 #endif//_ASX_ENGINE_C
 
 ASX afxError _AsxRegisterEngines(afxModule icd, afxUnit cnt, afxEngineInfo const infos[], afxEngine devices[]);
-ASX afxError _AsxImplementSimulation(afxModule icd, afxClassConfig const* sdevCls, afxClassConfig const* simCls);
+ASX afxError _AsxImplementSimulation(afxModule icd, afxClassConfig const* sdevCls, afxClassConfig const* simCls, afxClassConfig const* dinCls);
 
 ASX afxClassConfig const _ASX_SDEV_CLASS_CONFIG;
 
 ASX afxClassConfig const _ASX_NOD_CLASS_CONFIG;
-
-ASX afxClassConfig const _ASX_LIT_CLASS_CONFIG;
-ASX afxClassConfig const _ASX_RND_CLASS_CONFIG;
-ASX afxClassConfig const _ASX_TER_CLASS_CONFIG;
 
 
 
 ASX afxClass const* _AsxGetEngineClass(afxModule icd);
 
 ASX afxClass const* _AsxGetSimulationClass(afxModule icd);
-
+ASX afxClass const* _ArxGetRweClass(afxModule icd);
 ASX afxBool _AsxGetIcd(afxUnit icdIdx, afxModule* driver);
 
 #endif//ASX_IMPLEMENTATION_H

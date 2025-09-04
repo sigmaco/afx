@@ -42,10 +42,11 @@
 #include "qwadro/inc/base/afxString.h"
 #include "qwadro/inc/math/afxMathDefs.h"
 #include "qwadro/inc/math/coll/afxBox.h"
+#include "qwadro/inc/math/coll/afxFrustum.h"
 #include "qwadro/inc/math/coll/afxSphere.h"
 #include "qwadro/inc/sim/afxSimDefs.h"
-#include "qwadro/inc/sim/body/afxPose.h"
-#include "qwadro/inc/sim/body/afxPlacement.h"
+#include "qwadro/inc/render/cad/arxPose.h"
+#include "qwadro/inc/render/cad/arxPlacement.h"
 
 #define ASX_NODE_DEFAULT_FILL_THRESHOLD (0.2)
 
@@ -92,18 +93,18 @@ AFX_OBJECT(afxNode)
     {
         struct
         {
-            afxBody bod;
+            arxBody bod;
             afxReal fillThreshold;
             //afxBool owned;
         } animBlend;
         struct
         {
-            afxPose pose;
+            arxPose pose;
             //afxBool owned;
         } pose;
         struct
         {
-            afxPose(*sample)(void*, afxInt, afxReal, afxInt const*);
+            arxPose(*sample)(void*, afxInt, afxReal, afxInt const*);
             void(*setClock)(void*, afxReal);
             void(*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool);
             void *udd;
@@ -118,7 +119,7 @@ AFX_OBJECT(afxNode)
         } crossfade;
         struct
         {
-            afxModel skl;
+            arxModel skl;
             afxQuatBlend quatMode;
             afxReal fillThreshold;
         } weightedBlend;
@@ -134,7 +135,7 @@ AFX_OBJECT(afxNode)
     afxTransform t;
     // Like RenderWare, Qwadro uses two matrices but both are cached once it uses a afxTransform to do transformations.
     afxM4d w, m;
-    //afxPlacement plce;
+    //arxPlacement plce;
     afxUnit ltaCnt;
     afxUnit taCnt;
 };
@@ -147,15 +148,15 @@ AFX_DEFINE_STRUCT(afxNodular)
     afxMask     mask;
 };
 
-ASX afxError AsxCreateDagAnimationBlend(afxNode parent, afxBody bod, afxNode* node);
-ASX afxError AsxCreateDagAnimationBlend2(afxNode parent, afxModel mdl, afxNode* node);
+ASX afxError AsxCreateDagAnimationBlend(afxNode parent, arxBody bod, afxNode* node);
+ASX afxError AsxCreateDagAnimationBlend2(afxNode parent, arxModel mdl, afxNode* node);
 
-ASX afxError AsxCreateDagPose(afxNode parent, afxPose pose, afxNode* node);
+ASX afxError AsxCreateDagPose(afxNode parent, arxPose pose, afxNode* node);
 ASX afxError AsxCreateDagCallback(afxNode parent, void(*sample()), void(*clock()), void(*motions()), void* udd, afxNode* node);
 
 ASX afxError AsxCreateDagCrossfade(afxNode a, afxNode b, afxReal weightNone, afxReal weightAll, akxTrackMask* mask, afxUnit jntCnt, afxNode* node);
 
-ASX afxError AsxCreateDagWeightedBlend(afxNode parent, afxModel skl, afxReal fillThreshold, afxQuatBlend blend, afxUnit jntCnt, afxNode* node);
+ASX afxError AsxCreateDagWeightedBlend(afxNode parent, arxModel skl, afxReal fillThreshold, afxQuatBlend blend, afxUnit jntCnt, afxNode* node);
 
 ASX afxError AsxDeleteDagNode(afxNode nod);
 
@@ -165,7 +166,7 @@ ASX afxError AsxTransformNode(afxNode nod, afxTransform const* t);
 
 ASX afxError AsxStepDag(afxNode nod, afxReal /* NOT delta*/ clock);
 
-ASX afxError AsxSampleDag(afxNode nod, afxUnit jntCnt, afxReal allowedErr, afxUnit const sparseJntMap[], void* cache, afxPose* pose);
+ASX afxError AsxSampleDag(afxNode nod, afxUnit jntCnt, afxReal allowedErr, afxUnit const sparseJntMap[], void* cache, arxPose* pose);
 
 ASX afxError AsxComputeDagMotionVectors(afxNode nod, afxReal secsElapsed, afxBool inv, afxV3d translation, afxV3d rotation);
 
@@ -176,17 +177,17 @@ ASX void    AsxGetNodeMatrix(afxNode nod, afxM4d m);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ASX afxError AsxAcquireJunctionNode(afxSimulation sim, afxNode parent, afxModel skl, afxQuatBlend blendOp, afxReal fillThreshold, afxNode* node);
+ASX afxError AsxAcquireJunctionNode(afxSimulation sim, afxNode parent, arxModel skl, afxQuatBlend blendOp, afxReal fillThreshold, afxNode* node);
 
 ASX afxError AsxAcquireCrossfadeNode(afxSimulation sim, afxNode parent, afxNode a, afxNode b, afxReal weightNone, afxReal weightAll, akxTrackMask* trackMask, afxNode* node);
 
-ASX afxError AsxAcquireCallbackNode(afxSimulation sim, afxNode parent, afxPose(*sample)(void*, afxInt, afxReal, afxInt const*), void(*setClock)(void*, afxReal), void(*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool), void* udd, afxNode* node);
+ASX afxError AsxAcquireCallbackNode(afxSimulation sim, afxNode parent, arxPose(*sample)(void*, afxInt, afxReal, afxInt const*), void(*setClock)(void*, afxReal), void(*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool), void* udd, afxNode* node);
 
-ASX afxError AsxAcquirePoseNode(afxSimulation sim, afxNode parent, afxPose pose, afxNode* node);
+ASX afxError AsxAcquirePoseNode(afxSimulation sim, afxNode parent, arxPose pose, afxNode* node);
 
-ASX afxError AsxAcquireAnimationNode(afxSimulation sim, afxNode parent, afxBody bod, afxReal fillThreshold, afxNode* node);
+ASX afxError AsxAcquireAnimationNode(afxSimulation sim, afxNode parent, arxBody bod, afxReal fillThreshold, afxNode* node);
 
-ASX afxError AsxAcquirePlacementNode(afxSimulation sim, afxNode parent, afxPlacement plce, afxNode* node);
+ASX afxError AsxAcquirePlacementNode(afxSimulation sim, afxNode parent, arxPlacement plce, afxNode* node);
 
 ASX afxError AsxCaptureNodesInFrustum(afxSimulation sim, afxFrustum const* f, afxArray* pvs);
 ASX afxError AsxUpdateDags(afxReal allowedErr, afxBool matrices, afxBool poses, afxBool placements, afxUnit cnt, afxNode nodes[]);

@@ -30,7 +30,8 @@
 
 AFX void        AfxZero(void* start, afxSize range);
 AFX void*       AfxFind(void const* start, afxSize range, afxInt c);
-AFX void        AfxFill(void* start, afxSize range, void const* pattern, afxSize patternSiz);
+AFX void        AfxFill(void* start, afxInt value, afxSize range);
+AFX void        AfxFillPattern(void* start, afxSize range, void const* pattern, afxSize patternSiz);
 AFX void        AfxMove(void* dst, void const* src, afxSize size);
 AFX void        AfxCopy(void* dst, void const* src, afxSize size);
 AFX afxInt      AfxCompare(void const* a, void const* b, afxSize siz);

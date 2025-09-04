@@ -17,8 +17,9 @@
 #define _ASX_SIM_C
 //#define _ASX_SIMULATION_C
 #define _ASX_NODE_C
-#define _ASX_POSE_C
+#define _ARX_POSE_C
 #include "impl/asxImplementation.h"
+#include "../render/ddi/arxImpl_Input.h"
 
 _ASX void AsxGetDagWeight(afxNode nod, afxReal* weight, akxTrackMask** trackMask)
 {
@@ -170,7 +171,7 @@ _ASX afxError AsxComputeDagMotionVectors(afxNode nod, afxReal secsElapsed, afxBo
     {
     case asxNodeType_Leaf_AnimBlend:
     {
-        AsxComputeBodyMotionVectors(nod->animBlend.bod, secsElapsed, inv, translation, rotation);
+        ArxComputeBodyMotionVectors(nod->animBlend.bod, secsElapsed, inv, translation, rotation);
         break;
     }
     case asxNodeType_Leaf_Pose:
@@ -303,7 +304,7 @@ _ASX afxError AsxStepDag(afxNode nod, afxReal clock)
     {
     case asxNodeType_Leaf_AnimBlend:
     {
-        AfxStepBodyMotives(nod->animBlend.bod, clock);
+        ArxStepBodyMotives(nod->animBlend.bod, clock);
         break;
     }
     case asxNodeType_Leaf_Callback:
@@ -328,27 +329,30 @@ _ASX afxError AsxStepDag(afxNode nod, afxReal clock)
     return err;
 }
 
-_ASX afxError AsxSampleDag(afxNode nod, afxUnit jntCnt, afxReal allowedErr, afxUnit const sparseJntMap[], void* cache, afxPose* attitude)
+_ASX afxError AsxSampleDag(afxNode nod, afxUnit jntCnt, afxReal allowedErr, afxUnit const sparseJntMap[], void* cache, arxPose* attitude)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_NOD, 1, &nod);
 
     afxSimulation sim = AfxGetProvider(nod);
+    arxRenderware din = AfxGetSimulationDrawInput(sim);
 
     switch (nod->type)
     {
     case asxNodeType_Leaf_AnimBlend:
     {
-        afxBody bod = nod->animBlend.bod;
-        afxModel mdl;
-        AfxGetBodyModel(bod, &mdl);
+        arxBody bod = nod->animBlend.bod;
+        arxModel mdl;
+        ArxGetBodyModel(bod, &mdl);
 
-        afxPose pose;
-        AfxAcquirePoses(sim, 1, &jntCnt, &pose);
+        arxPose pose;
+        arxPoseInfo posei = { 0 };
+        posei.artCnt = jntCnt;
+        ArxAcquirePoses(din, 1, &posei, &pose);
         {
-            AsxCommencePoseAccumulation(pose, 0, jntCnt, NIL);
-            AfxAccumulateBodyAnimations(bod, 0, jntCnt, pose, allowedErr, sparseJntMap);
-            AsxConcludePoseAccumulation(pose, 0, jntCnt, mdl, allowedErr, sparseJntMap);
+            ArxCommencePoseAccumulation(pose, 0, jntCnt, NIL);
+            ArxAccumulateBodyAnimations(bod, 0, jntCnt, pose, allowedErr, sparseJntMap);
+            ArxConcludePoseAccumulation(pose, 0, jntCnt, mdl, allowedErr, sparseJntMap);
         }
         *attitude = pose;
         break;
@@ -362,9 +366,11 @@ _ASX afxError AsxSampleDag(afxNode nod, afxUnit jntCnt, afxReal allowedErr, afxU
         }
         else
         {
-            afxPose pose;
-            AfxAcquirePoses(sim, 1, &jntCnt, &pose);
-            AsxCopyPose(pose, 0, nod->pose.pose, 0, jntCnt, sparseJntMap);
+            arxPose pose;
+            arxPoseInfo posei = { 0 };
+            posei.artCnt = jntCnt;
+            ArxAcquirePoses(din, 1, &posei, &pose);
+            ArxCopyPose(pose, 0, nod->pose.pose, 0, jntCnt, sparseJntMap);
             *attitude = pose;
         }
         break;
@@ -408,7 +414,7 @@ _ASX afxError AsxSampleDag(afxNode nod, afxUnit jntCnt, afxReal allowedErr, afxU
             return err;
         }
 
-        afxPose poseA, poseB;
+        arxPose poseA, poseB;
     L26:
         AsxSampleDag(first, jntCnt, allowedErr, sparseJntMap, cache, &poseA);
         AsxSampleDag(last, jntCnt, allowedErr, sparseJntMap, cache, &poseB);
@@ -418,20 +424,22 @@ _ASX afxError AsxSampleDag(afxNode nod, afxUnit jntCnt, afxReal allowedErr, afxU
 
         if (isTempPoseA)
         {
-            AsxModulatePose(poseA, 0, poseB, 0, AsxGetPoseCapacity(poseA), nod->crossfade.weightNone, nod->crossfade.weightAll, nod->crossfade.trackMask, sparseJntMap);
+            ArxModulatePose(poseA, 0, poseB, 0, ArxGetPoseCapacity(poseA), nod->crossfade.weightNone, nod->crossfade.weightAll, nod->crossfade.trackMask, sparseJntMap);
             *attitude = poseA;
         }
         else if (isTempPoseB)
         {
-            AsxModulatePose(poseB, 0, poseA, 0, AsxGetPoseCapacity(poseB), 1.f - nod->crossfade.weightNone, 1.f - nod->crossfade.weightAll, nod->crossfade.trackMask, sparseJntMap);
+            ArxModulatePose(poseB, 0, poseA, 0, ArxGetPoseCapacity(poseB), 1.f - nod->crossfade.weightNone, 1.f - nod->crossfade.weightAll, nod->crossfade.trackMask, sparseJntMap);
             *attitude = poseB;
         }
         else
         {
-            afxPose pose;
-            AfxAcquirePoses(sim, 1, &jntCnt, &pose);
-            AsxCopyPose(pose, 0, poseA, 0, jntCnt, NIL);
-            AsxModulatePose(pose, 0, poseB, 0, AsxGetPoseCapacity(pose), nod->crossfade.weightNone, nod->crossfade.weightAll, nod->crossfade.trackMask, sparseJntMap);
+            arxPose pose;
+            arxPoseInfo posei = { 0 };
+            posei.artCnt = jntCnt;
+            ArxAcquirePoses(din, 1, &posei, &pose);
+            ArxCopyPose(pose, 0, poseA, 0, jntCnt, NIL);
+            ArxModulatePose(pose, 0, poseB, 0, ArxGetPoseCapacity(pose), nod->crossfade.weightNone, nod->crossfade.weightAll, nod->crossfade.trackMask, sparseJntMap);
             *attitude = pose;
             AfxDisposeObjects(1, &poseA);
             AfxDisposeObjects(1, &poseB);
@@ -447,11 +455,13 @@ _ASX afxError AsxSampleDag(afxNode nod, afxUnit jntCnt, afxReal allowedErr, afxU
             n = AFX_REBASE(AfxGetFirstLink(&n->children), AFX_OBJECT(afxNode), parent);
         }
 
-        afxPose pose;
-        AfxAcquirePoses(sim, 1, &jntCnt, &pose);
+        arxPose pose;
+        arxPoseInfo posei = { 0 };
+        posei.artCnt = jntCnt;
+        posei.fillThreshold = nod->weightedBlend.fillThreshold;;
+        ArxAcquirePoses(din, 1, &jntCnt, &pose);
 
-        pose->fillThreshold = nod->weightedBlend.fillThreshold;
-        AsxCommencePoseAccumulation(pose, 0, jntCnt, sparseJntMap);
+        ArxCommencePoseAccumulation(pose, 0, jntCnt, sparseJntMap);
 
         afxNode child;
         AFX_ITERATE_CHAIN(AFX_OBJECT(afxNode), child, parent, &n->children)
@@ -460,7 +470,7 @@ _ASX afxError AsxSampleDag(afxNode nod, afxUnit jntCnt, afxReal allowedErr, afxU
 
             if (AFX_ABS(w) >= 0.001)
             {
-                afxPose pose2;
+                arxPose pose2;
                 AsxSampleDag(child, jntCnt, allowedErr, sparseJntMap, cache, pose2);
 
                 for (afxUnit i = 0; i < jntCnt; i++)
@@ -473,14 +483,14 @@ _ASX afxError AsxSampleDag(afxNode nod, afxUnit jntCnt, afxReal allowedErr, afxU
                     akxTrackMask* trackMask = child->trackMask;
                     if (trackMask) w = w * trackMask->boneWeights[jntIdx];
 
-                    AsxAccumulateLocalTransform(pose, i, jntIdx, w, n->weightedBlend.skl, n->weightedBlend.quatMode, &pose2->arts[i].xform);
+                    ArxAccumulateLocalTransform(pose, i, jntIdx, w, n->weightedBlend.skl, n->weightedBlend.quatMode, &pose2->arts[i].xform);
                 }
 
                 AfxDisposeObjects(1, &pose2);
             }
         }
 
-        AsxConcludePoseAccumulation(pose, 0, jntCnt, n->weightedBlend.skl, allowedErr, sparseJntMap);
+        ArxConcludePoseAccumulation(pose, 0, jntCnt, n->weightedBlend.skl, allowedErr, sparseJntMap);
         *attitude = pose;
 
         break;
@@ -596,7 +606,7 @@ _ASXINL afxError AfxAcquireNodes(afxSimulation sim, afxUnit cnt, afxNode nod[])
     return err;
 }
 
-_ASX afxError AsxAcquireJunctionNode(afxSimulation sim, afxNode parent, afxModel skl, afxQuatBlend blendOp, afxReal fillThreshold, afxNode* node)
+_ASX afxError AsxAcquireJunctionNode(afxSimulation sim, afxNode parent, arxModel skl, afxQuatBlend blendOp, afxReal fillThreshold, afxNode* node)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -652,7 +662,7 @@ _ASX afxError AsxAcquireCrossfadeNode(afxSimulation sim, afxNode parent, afxNode
     return err;
 }
 
-_ASX afxError AsxAcquireCallbackNode(afxSimulation sim, afxNode parent, afxPose(*sample)(void*, afxInt, afxReal, afxInt const*), void(*setClock)(void*, afxReal), void(*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool), void* udd, afxNode* node)
+_ASX afxError AsxAcquireCallbackNode(afxSimulation sim, afxNode parent, arxPose(*sample)(void*, afxInt, afxReal, afxInt const*), void(*setClock)(void*, afxReal), void(*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool), void* udd, afxNode* node)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -675,7 +685,7 @@ _ASX afxError AsxAcquireCallbackNode(afxSimulation sim, afxNode parent, afxPose(
     return err;
 }
 
-_ASX afxError AsxAcquirePoseNode(afxSimulation sim, afxNode parent, afxPose pose, afxNode* node)
+_ASX afxError AsxAcquirePoseNode(afxSimulation sim, afxNode parent, arxPose pose, afxNode* node)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -697,7 +707,7 @@ _ASX afxError AsxAcquirePoseNode(afxSimulation sim, afxNode parent, afxPose pose
     return err;
 }
 
-_ASX afxError AsxAcquireAnimationNode(afxSimulation sim, afxNode parent, afxBody bod, afxReal fillThreshold, afxNode* node)
+_ASX afxError AsxAcquireAnimationNode(afxSimulation sim, afxNode parent, arxBody bod, afxReal fillThreshold, afxNode* node)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -720,7 +730,7 @@ _ASX afxError AsxAcquireAnimationNode(afxSimulation sim, afxNode parent, afxBody
     return err;
 }
 
-_ASX afxError AsxAcquirePlacementNode(afxSimulation sim, afxNode parent, afxPlacement plce, afxNode* node)
+_ASX afxError AsxAcquirePlacementNode(afxSimulation sim, afxNode parent, arxPlacement plce, afxNode* node)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
@@ -737,7 +747,7 @@ _ASX afxError AsxAcquirePlacementNode(afxSimulation sim, afxNode parent, afxPlac
     else
     {
         afxUnit artCnt = 256;
-        //AfxAcquirePlacements(sim, 1, &artCnt, NIL, &plce);
+        //ArxAcquirePlacements(sim, 1, &artCnt, NIL, &plce);
     }
     //nod->plce = plce;
     //nod->pose.owned = TRUE;
@@ -952,30 +962,30 @@ _ASX void _AsxNodUpdatePlacement(afxNode nod, afxReal allowedErr)
 
     if (nod->type == asxNodeType_Leaf_AnimBlend)
     {
-        afxBody bod = nod->animBlend.bod;
-        afxModel skl;
-        AfxGetBodyModel(bod, &skl);
+        arxBody bod = nod->animBlend.bod;
+        arxModel skl;
+        ArxGetBodyModel(bod, &skl);
 
-        afxPose pose;
-        afxPlacement plce;
-        AfxGetBodyPose(bod, &pose, &plce);
+        arxPose pose;
+        arxPlacement plce;
+        ArxGetBodyPose(bod, &pose, &plce);
 
-        afxUnit jntCnt = AsxCountJoints(skl, 0);
+        afxUnit jntCnt = ArxCountJoints(skl, 0);
         afxReal sampleLodErr = 0.0;
-        afxUnit sampledJntCnt = AsxCountJoints(skl, sampleLodErr);
+        afxUnit sampledJntCnt = ArxCountJoints(skl, sampleLodErr);
 
-        if (!AfxCountBodyMotives(bod))
+        if (!ArxCountBodyMotives(bod))
         {
-            AfxBuildPlacement(plce, NIL, skl, 0, jntCnt, 0, jntCnt, nod->w, FALSE);
+            ArxBuildPlacement(plce, NIL, skl, 0, jntCnt, 0, jntCnt, nod->w, FALSE);
         }
         else
         {
             //afxReal allowedErr = 0.f;
-            afxUnit lodJntCnt = AsxCountJoints(skl, allowedErr);
-            AsxCommencePoseAccumulation(pose, 0, jntCnt, NIL);
-            AfxAccumulateBodyAnimations(bod, 0, jntCnt, pose, allowedErr, NIL);
-            AsxConcludePoseAccumulation(pose, 0, jntCnt, skl, allowedErr, NIL);
-            AfxBuildPlacement(plce, pose, skl, 0, jntCnt, 0, lodJntCnt, nod->w, FALSE);
+            afxUnit lodJntCnt = ArxCountJoints(skl, allowedErr);
+            ArxCommencePoseAccumulation(pose, 0, jntCnt, NIL);
+            ArxAccumulateBodyAnimations(bod, 0, jntCnt, pose, allowedErr, NIL);
+            ArxConcludePoseAccumulation(pose, 0, jntCnt, skl, allowedErr, NIL);
+            ArxBuildPlacement(plce, pose, skl, 0, jntCnt, 0, lodJntCnt, nod->w, FALSE);
         }
     }
 }

@@ -51,8 +51,8 @@ AFX_DEFINE_STRUCT(amxMpu)
     afxUnit         sinkSampCnt;
     afxUnit         sinkBaseChan;
     afxUnit         sinkChanCnt;
-    amxMixSink      sinkChans[32]; // our SPU supports at least 32 sink channels.
-    afxSampleContext  sampCtx;
+    amxMixTarget      sinkChans[32]; // our SPU supports at least 32 sink channels.
+    //arxSampleContext  sampCtx;
 };
 
 AFX_DEFINE_STRUCT(_amxMexuAcquisition)

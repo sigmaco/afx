@@ -21,6 +21,44 @@
 
 AFX afxChain* _AfxGetSystemClassChain(void);
 
+_AVX afxClass const* _AvxGetDisplayClass(afxModule icd)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
+
+    if (!AfxTestModule(icd, afxModuleFlag_ICD | afxModuleFlag_AVX))
+    {
+        AfxThrowError();
+        return NIL;
+    }
+    afxClass const* cls = &icd->icd.vduCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_VDU);
+    return cls;
+}
+
+_AUX afxError _AuxGetInteropDisplayClass(afxUnit icd, afxString const* tool, afxClassConfig* clsc)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
+
+    afxModule driver;
+    if (!_AuxGetIcd(icd, &driver))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    if (!AfxTestModule(driver, afxModuleFlag_ICD | afxModuleFlag_AUX))
+    {
+        AfxThrowError();
+        return NIL;
+    }
+    
+    driver->icd.getVduClsc(driver, tool, clsc);
+
+    return err;
+}
+
 _AUX afxError _AuxGetInteropSurfaceClass(afxDrawSystem dsys, afxString const* tool, afxClassConfig* clsc)
 {
     afxError err = AFX_ERR_NONE;
@@ -126,11 +164,11 @@ _AUX afxError _AuxRegisterShells(afxModule icd, afxUnit cnt, afxShellInfo const 
     return err;
 }
 
-_AUX afxError _AuxImplementShell(afxModule icd, afxClassConfig const* sesCls, afxError(*getInteropDoutCls)(afxDrawSystem dsys, afxString const* tool, afxClassConfig* cfg), afxError(*getInteropSinkCls)(afxMixSystem msys, afxString const* tool, afxClassConfig* cfg))
+_AUX afxError _AuxImplementShell(afxModule icd, _afxShellImplementation const* cfg)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-    AFX_ASSERT(sesCls);
+    AFX_ASSERT(cfg);
 
     if (!AfxTestModule(icd, afxModuleFlag_ICD))
     {
@@ -139,29 +177,57 @@ _AUX afxError _AuxImplementShell(afxModule icd, afxClassConfig const* sesCls, af
         return NIL;
     }
 
-    icd->icd.getDoutClsc = getInteropDoutCls;
-    icd->icd.getSinkClsc = getInteropSinkCls;
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
-    afxClassConfig clsCfg;
+    afxBool vduMounted = FALSE, sesMounted = FALSE;
 
-    clsCfg = sesCls ? *sesCls : _AUX_SES_CLASS_CONFIG;
-    AFX_ASSERT(clsCfg.fcc == afxFcc_SES);
-    AFX_ASSERT(clsCfg.fixedSiz >= _AUX_SES_CLASS_CONFIG.fixedSiz);
-    if ((clsCfg.fcc != afxFcc_SES) ||
-        (_AUX_SES_CLASS_CONFIG.fixedSiz > clsCfg.fixedSiz))
+    afxClassConfig vduCfg2 = cfg->vduCls.fcc ? cfg->vduCls : _AVX_VDU_CLASS_CONFIG;
+    AFX_ASSERT(vduCfg2.fcc == afxFcc_VDU);
+    AFX_ASSERT(vduCfg2.fixedSiz >= _AVX_VDU_CLASS_CONFIG.fixedSiz);
+    if ((vduCfg2.fcc != afxFcc_VDU) ||
+        (_AVX_VDU_CLASS_CONFIG.fixedSiz > vduCfg2.fixedSiz))
     {
         AfxThrowError();
+        return err;
     }
-    else if (AfxMountClass(&icd->icd.sesCls, NIL, &icd->classes, &clsCfg)) // require base*
+    else if (AfxMountClass(&icd->icd.vduCls, &sys->vduCls, &icd->classes, &vduCfg2)) // require base*
     {
         AfxThrowError();
+        return err;
     }
     else
     {
-        afxSystem sys;
-        AfxGetSystem(&sys);
-        AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-        AfxPushLink(&icd->icd.aux, &sys->aux.icdChain);
+        vduMounted = TRUE;
+    }
+
+    afxClassConfig sesClsCfg = cfg->sesCls.fcc ? cfg->sesCls : _AUX_SES_CLASS_CONFIG;
+    AFX_ASSERT(sesClsCfg.fcc == afxFcc_SES);
+    AFX_ASSERT(sesClsCfg.fixedSiz >= _AUX_SES_CLASS_CONFIG.fixedSiz);
+    if ((sesClsCfg.fcc != afxFcc_SES) ||
+        (_AUX_SES_CLASS_CONFIG.fixedSiz > sesClsCfg.fixedSiz))
+    {
+        AfxThrowError();
+        AfxDismountClass(&icd->icd.vduCls);
+        return err;
+    }
+    else if (AfxMountClass(&icd->icd.sesCls, NIL, &icd->classes, &sesClsCfg)) // require base*
+    {
+        AfxThrowError();
+        AfxDismountClass(&icd->icd.vduCls);
+        return err;
+    }
+    else
+    {
+        sesMounted = TRUE;
+    }
+
+    {
+        icd->icd.getDoutClsc = cfg->getInteropDoutCls;
+        icd->icd.getSinkClsc = cfg->getInteropSinkCls;
+
+        AfxPushLink(&icd->icd.aux, &sys->auxIcdChain);
         icd->flags |= afxModuleFlag_AUX;
     }
 
@@ -185,7 +251,7 @@ _AUX afxBool _AuxGetIcd(afxUnit icdIdx, afxModule* driver)
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     afxModule icd = NIL;
-    while ((icdIdx < sys->aux.icdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->aux.icdChain, icdIdx), AFX_OBJ(afxModule), icd.aux)))
+    while ((icdIdx < sys->auxIcdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->auxIcdChain, icdIdx), AFX_OBJ(afxModule), icd.aux)))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
 
@@ -211,9 +277,14 @@ _AUX afxError auxScmHook(afxModule mdle, afxManifest const* ini)
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     // HIDs must be installed here. It is not implementation-dependent. It does not store state.
-    AfxMountClass(&sys->aux.hidCls, (afxClass*)_AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AUX_HID_CLASS_CONFIG);
+    AfxMountClass(&sys->hidCls, (afxClass*)_AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AUX_HID_CLASS_CONFIG);
 
     //AfxMountClass(&sys->aux.sshCls, (afxClass*)_AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AUX_SSH_CLASS_CONFIG); // require base*
+
+    afxClassConfig vduClsCfg = _AVX_VDU_CLASS_CONFIG;
+    vduClsCfg.ctor = NIL;
+    vduClsCfg.dtor = NIL;
+    AfxMountClass(&sys->vduCls, (afxClass*)_AfxGetDeviceClass(), &sys->classes, &vduClsCfg);
 
     if (!err)
     {

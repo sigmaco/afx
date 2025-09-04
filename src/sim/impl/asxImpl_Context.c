@@ -14,18 +14,19 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _ASX_POSE_C
-#define _ASX_PLACEMENT_C
-#define _ASX_BODY_C
-#define _ASX_MODEL_C
-#define _ASX_ANIMATION_C
-#define _ASX_MOTION_C
-#define _ASX_MOTOR_C
+#define _ARX_POSE_C
+#define _ARX_PLACEMENT_C
+#define _ARX_BODY_C
+#define _ARX_MODEL_C
+#define _ARX_ANIMATION_C
+#define _ARX_MOTION_C
+#define _ARX_MOTOR_C
 #define _ASX_SIM_BRIDGE_C
 #define _ASX_SIM_QUEUE_C
 #define _ASX_CONTEXT_C
 #include "afx/src/sim/impl/asxImplementation.h"
 #include "afx/src/sim/impl/asxImpl_Context.h"
+#include "afx/src/render/ddi/arxImpl_Input.h"
 
 _ASX afxError _AsxSpuCmd_CopyPose(asxSpu* spu, asxCmd const* cmd)
 {
@@ -34,8 +35,8 @@ _ASX afxError _AsxSpuCmd_CopyPose(asxSpu* spu, asxCmd const* cmd)
     afxUnit cnt = cmd->CopyPose.cnt;
     afxUnit base = cmd->CopyPose.base;
     afxUnit from = cmd->CopyPose.from;
-    afxPose dst = cmd->CopyPose.dst;
-    afxPose src = cmd->CopyPose.src;
+    arxPose dst = cmd->CopyPose.dst;
+    arxPose src = cmd->CopyPose.src;
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -55,7 +56,7 @@ _ASX afxCmdId _AsxSpuCmd_ApplyRootMotionVectors(asxSpu* spu, asxCmd const* cmd)
 {
     afxError err = AFX_ERR_NONE;
 
-    afxTransform* t = AsxGetPoseTransform(cmd->ApplyRootMotionVectors.pose, 0);
+    afxTransform* t = ArxGetPoseTransform(cmd->ApplyRootMotionVectors.pose, 0);
     AfxV3dAdd(t->position, t->position, cmd->ApplyRootMotionVectors.translation);
 
     afxQuat rot;

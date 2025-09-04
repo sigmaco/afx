@@ -753,7 +753,7 @@ _AFX afxError _AfxConstructObjects(afxClass *cls, afxUnit cnt, afxObject objects
             continue;
 
         afxObjectBase* hdr = (void*)obj;
-        AFX_ASSERT(AFX_IS_ALIGNED(hdr, AFX_SIMD_ALIGNMENT));
+        AFX_ASSERT(AFX_TEST_ALIGNMENT(hdr, AFX_SIMD_ALIGNMENT));
         
         hdr->fcc = afxFcc_OBJ;
         hdr->cls = cls;
@@ -773,10 +773,10 @@ _AFX afxError _AfxConstructObjects(afxClass *cls, afxUnit cnt, afxObject objects
         }
 
         obj = GET_OBJ_ADDR(hdr);
-        AFX_ASSERT(AFX_IS_ALIGNED(obj, AFX_SIMD_ALIGNMENT));
+        AFX_ASSERT(AFX_TEST_ALIGNMENT(obj, AFX_SIMD_ALIGNMENT));
         objects[i] = obj;// hdr + 1; // move the pointer forward
 
-        AFX_ASSERT(AFX_IS_ALIGNED(objects[i], AFX_SIMD_ALIGNMENT));
+        AFX_ASSERT(AFX_TEST_ALIGNMENT(objects[i], AFX_SIMD_ALIGNMENT));
         
         if (err)
         {
@@ -1082,7 +1082,7 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxUnit cnt, afxObject objects[],
                 if (!objects[i])
                     AfxThrowError();
 
-                if (!AFX_IS_ALIGNED(objects[i], AFX_SIMD_ALIGNMENT))
+                if (!AFX_TEST_ALIGNMENT(objects[i], AFX_SIMD_ALIGNMENT))
                     AfxThrowError();
             }
         }
@@ -1136,7 +1136,7 @@ _AFX afxError AfxAcquireObjects2(afxClass *cls, afxUnit first, afxUnit cnt, afxU
                 if (!objects[i])
                     AfxThrowError();
 
-                if (!AFX_IS_ALIGNED(objects[i], AFX_SIMD_ALIGNMENT))
+                if (!AFX_TEST_ALIGNMENT(objects[i], AFX_SIMD_ALIGNMENT))
                     AfxThrowError();
             }
         }

@@ -343,10 +343,10 @@ _AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
         sys->aux.ioctl(sys, sys->aux.e2mmuxDll, 4, NIL);
     }
 #endif
-    if (sys->aux.e2mmuxDll)
+    if (sys->e2mmuxDll)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->aux.e2mmuxDll);
-        AfxDisposeObjects(1, &sys->aux.e2mmuxDll);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->e2mmuxDll);
+        AfxDisposeObjects(1, &sys->e2mmuxDll);
     }
     //AfxZero(&sys->aux, sizeof(sys->aux));
 
@@ -357,10 +357,10 @@ _AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
         sys->asx.ioctl(sys, sys->asx.e2soundDll, 4, NIL);
     }
 #endif
-    if (sys->amx.e2mixDll)
+    if (sys->e2mixDll)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->amx.e2mixDll);
-        AfxDisposeObjects(1, &sys->amx.e2mixDll);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->e2mixDll);
+        AfxDisposeObjects(1, &sys->e2mixDll);
     }
     //AfxZero(&sys->asx, sizeof(sys->asx));
 
@@ -371,10 +371,10 @@ _AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
         sys->amx.ioctl(sys, sys->amx.e2simDll, 4, NIL);
 }
 #endif
-    if (sys->asx.e2simDll)
+    if (sys->e2simDll)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->asx.e2simDll);
-        AfxDisposeObjects(1, &sys->asx.e2simDll);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->e2simDll);
+        AfxDisposeObjects(1, &sys->e2simDll);
     }
     //AfxZero(&sys->amx, sizeof(sys->amx));
 #if 0
@@ -383,10 +383,10 @@ _AFX afxError _AfxDoSubsystemShutdown(afxSystem sys)
         sys->avx.ioctl(sys, sys->avx.e2drawDll, 4, NIL);
     }
 #endif
-    if (sys->avx.e2drawDll)
+    if (sys->e2drawDll)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->avx.e2drawDll);
-        AfxDisposeObjects(1, &sys->avx.e2drawDll);
+        AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &sys->e2drawDll);
+        AfxDisposeObjects(1, &sys->e2drawDll);
     }
 
     //AfxZero(&sys->avx, sizeof(sys->avx));
@@ -571,7 +571,6 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         return err;
     }
 
-
 #ifndef _AFX_DISABLE_DEBUGGER
     _AfxDbgAttach(NIL);
 #endif
@@ -599,10 +598,10 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
     }
 
     // Loading modulations
-    AfxDeployChain(&sys->avx.icdChain, sys);
-    AfxDeployChain(&sys->amx.icdChain, sys);
-    AfxDeployChain(&sys->aux.icdChain, sys);
-    AfxDeployChain(&sys->asx.icdChain, sys);
+    AfxDeployChain(&sys->avxIcdChain, sys);
+    AfxDeployChain(&sys->amxIcdChain, sys);
+    AfxDeployChain(&sys->auxIcdChain, sys);
+    AfxDeployChain(&sys->asxIcdChain, sys);
 
     avxScmHook(sys->e2coree, &ini);
     amxScmHook(sys->e2coree, &ini);
@@ -680,10 +679,11 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         else
         {
             AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2simDll);
-            sys->asx.e2simDll = e2simDll;
+            sys->e2simDll = e2simDll;
         }
     }
 
+    AfxFindFiles(&config->shell.uri, afxFileFlag_R, (void*)_AfxLoadAndAttachIcd, sys);
     _AfxScanIcdManifests(sys, &ini);
 
 #if 0
@@ -692,7 +692,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
     afxUri2048 uri, uri2;
     AfxMakeUri2048(&uri2, NIL);
     AfxMakeUri2048(&uri, NIL);
-                
+
     //AfxCanonicalizePath(&uri.uri, TRUE);
 
     AfxFormatUri(&uri.uri, "art://./actor/");

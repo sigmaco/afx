@@ -254,7 +254,7 @@ AFX_OBJECT(avxQueryPool)
 #endif
 
 #ifdef _AVX_CANVAS_C
-AFX_DEFINE_STRUCT(avxDrawSurfaceSlot)
+AFX_DEFINE_STRUCT(_avxCanvasUnit)
 {
     avxRaster       ras; // the texture subresource that will be output to for this color attachment.
     avxRaster       resolve; // the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
@@ -272,18 +272,19 @@ AFX_OBJECT(avxCanvas)
 {
     afxString       tag;
     void*           udd;
-    avxRange        whd; // D is layered    
+    avxCanvasFlags  flags;
     avxRange        whdMin; // when a user-provided raster are attached
-    avxRange        whdMax; // when a user-provided raster are attached    
+    avxRange        whdMax; // when a user-provided raster are attached
+    avxRange        whd; // D is layered
+    afxUnit         lodCnt;
     afxUnit         linkedCnt;
     afxUnit         slotCnt; // immutable
-    avxDrawSurfaceSlot*slots;
+    _avxCanvasUnit* slots;
     afxFlags        ownershipMask; // one for each surface. Forcing it to be limited to max 32 surfaces.
     afxUnit         colorCnt;
     afxUnit         dsSlotIdx[2];
-    avxCanvasFlags  flags;
-    afxError(*readjust)(avxCanvas, afxWarp const);
-    afxError(*relink)(avxCanvas, afxBool, afxUnit, afxUnit, avxRaster[]);
+    afxError        (*readjust)(avxCanvas, afxWarp const);
+    afxError        (*relink)(avxCanvas, afxBool, afxUnit, afxUnit, avxRaster[]);
     void*           idd[2];
 };
 #endif//_AVX_CANVAS_C

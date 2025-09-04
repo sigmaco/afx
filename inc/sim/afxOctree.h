@@ -23,8 +23,8 @@
 #include "qwadro/inc/math/coll/afxBox.h"
 #include "qwadro/inc/math/coll/afxSphere.h"
 #include "qwadro/inc/sim/afxSimDefs.h"
-#include "qwadro/inc/sim/body/afxPose.h"
-#include "qwadro/inc/sim/body/afxPlacement.h"
+#include "qwadro/inc/render/cad/arxPose.h"
+#include "qwadro/inc/render/cad/arxPlacement.h"
 
 /*
     An Octree is a tree data structure that is commonly used to partition a three-dimensional space by recursively

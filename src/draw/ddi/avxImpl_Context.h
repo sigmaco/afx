@@ -259,8 +259,12 @@ AFX_DEFINE_UNION(_avxCmd)
         afxDrawContext dctx;
         avxRaster ras;
         avxClearValue value;
-        afxUnit opCnt;
-        avxRasterBlock AFX_SIMD ops[];
+        afxUnit baseLod;
+        afxUnit lodCnt;
+        afxUnit baseLayer;
+        afxUnit layerCnt;
+        //afxUnit opCnt;
+        //avxRasterBlock AFX_SIMD ops[];
     } ClearRaster;
     struct
     {
@@ -581,16 +585,13 @@ AFX_DEFINE_UNION(_avxCmd)
     {
         _avxCmdHdr hdr;
 
+        afxFlags        flags;
         afxString       dbgTag;
         avxCanvas       canv;
-        afxRect         area;
-        afxBool         hasD;
-        avxDrawTarget   depth;
-        afxBool         hasS;
-        avxDrawTarget   stencil;
+        afxLayeredRect  area;
+        afxBool         hasD, hasS;
+        avxDrawTarget   ds[AVX_MAX_AUX_BUFFERS];
         afxUnit         targetCnt;
-        afxUnit         baseLayer;
-        afxUnit         layerCnt;
         avxDrawTarget AFX_SIMD targets[];
     } CommenceDrawScope;
     struct
@@ -605,6 +606,16 @@ AFX_DEFINE_UNION(_avxCmd)
 
         afxBool useAuxContexts;
     } NextPass;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        afxUnit annexCnt;
+        afxUnit annexes[AVX_MAX_CANVAS_BUFFERS];
+        avxClearValue values[AVX_MAX_CANVAS_BUFFERS];
+        afxUnit areaCnt;
+        afxLayeredRect AFX_SIMD areas[];
+    } ClearCanvas;
     struct
     {
         _avxCmdHdr hdr;
@@ -810,6 +821,7 @@ AFX_DEFINE_UNION(_avxCmdLut)
         void* AdjustCurtainsSIGMA;
         void* CommenceDrawScope;
         void* ConcludeDrawScope;
+        void* ClearCanvas;
         void* NextPass;
         void* SetFillModeEXT;
         void* SetRasterizationSamplesEXT;

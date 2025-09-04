@@ -65,14 +65,14 @@
 
 #define AFX_DEFINE_HANDLE(object) typedef struct object##_T* object
 #define AFX_DEFINE_STRUCT(struct_) typedef struct struct_ struct_; struct struct_ 
-#define AFX_DEFINE_STRUCT_ALIGNED(align_, struct_) typedef struct AFX_ALIGN(align_) struct_ AFX_ALIGN(align_) struct_; struct AFX_ALIGN(align_) struct_ 
+#define AFX_DEFINE_STRUCT_ALIGNED(align_, struct_) typedef struct AFX_ALIGNED(align_) struct_ AFX_ALIGNED(align_) struct_; struct AFX_ALIGNED(align_) struct_ 
 #define AFX_DEFINE_UNION(union_) typedef union union_ union_; union union_ 
-#define AFX_DEFINE_UNION_ALIGNED(align_, union_) typedef  AFX_ALIGN(align_)  union union_ union_ ; union union_ 
+#define AFX_DEFINE_UNION_ALIGNED(align_, union_) typedef  AFX_ALIGNED(align_)  union union_ union_ ; union union_ 
 
 #define AFX_DECLARE_STRUCT(struct_) typedef struct struct_ struct_ 
-#define AFX_DECLARE_STRUCT_ALIGN(align_, struct_) typedef struct AFX_ALIGN(align_) struct_ AFX_ALIGN(align_) struct_ 
+#define AFX_DECLARE_STRUCT_ALIGN(align_, struct_) typedef struct AFX_ALIGNED(align_) struct_ AFX_ALIGNED(align_) struct_ 
 #define AFX_DECLARE_UNION(union_) typedef union union_ union_ 
-#define AFX_DECLARE_UNION_ALIGNED(align_, union_) typedef union AFX_ALIGN(align_) union_ AFX_ALIGN(align_) union_ 
+#define AFX_DECLARE_UNION_ALIGNED(align_, union_) typedef union AFX_ALIGNED(align_) union_ AFX_ALIGNED(align_) union_ 
 
 #define _AFX_STR(X) #X
 #define AFX_STRINGIFY(X) _AFX_STR(X)
@@ -97,8 +97,8 @@
 #   define container_of AFX_REBASE
 #endif
 
-#define AFX_SIMD AFX_ALIGN(AFX_SIMD_ALIGNMENT) // make SIMD vector alignment
-#define AFX_ADDR  AFX_ALIGN(8) // make machine-dependent pointer alignment
+#define AFX_SIMD AFX_ALIGNED(AFX_SIMD_ALIGNMENT) // make SIMD vector alignment
+#define AFX_ADDR  AFX_ALIGNED(8) // make machine-dependent pointer alignment
 #define AFX_VLA(type, name, align) type __declspec(align(align)) name
 
 #define NIL (0)
@@ -395,7 +395,7 @@ AFX afxUnit AfxFlagsFindMsb(afxFlags mask);
 #define AfxFlagsMark(_var_,_mask_) (((afxFlags)(_var_)) |= ((afxFlags)(_mask_)))
 #define AfxFlagsClear(_var_,_mask_) (((afxFlags)(_var_)) &= ~((afxFlags)(_mask_)))
 
-#define AFX_IS_ALIGNED(ptr_, alignment_) (((uintptr_t)(ptr_) % (alignment_)) == 0)
+#define AFX_TEST_ALIGNMENT(ptr_, alignment_) (((uintptr_t)(ptr_) % (alignment_)) == 0)
 
 #define AFX_ABS(x_) ((0 > (x_)) ? -(x_) : (x_))
 #define AFX_ABSF(x_) ((0 > (afxReal)(x_)) ? -(afxReal)(x_) : (afxReal)(x_))

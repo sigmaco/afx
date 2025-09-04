@@ -65,7 +65,7 @@ _AVX afxDrawLimits const* _AvxDsysAccessLimits(afxDrawSystem dsys)
     return dsys->limits;
 }
 
-_AVX afxClass const* _AvxDsysGetDexuClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetDexuClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -75,7 +75,7 @@ _AVX afxClass const* _AvxDsysGetDexuClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetFencClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetFencClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -85,7 +85,7 @@ _AVX afxClass const* _AvxDsysGetFencClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetDoutClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetDoutClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -95,17 +95,7 @@ _AVX afxClass const* _AvxDsysGetDoutClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetDinClass(afxDrawSystem dsys)
-{
-    afxError err = AFX_ERR_NONE;
-    // @dsys must be a valid afxDrawSystem handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    afxClass const* cls = &dsys->dinCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_DIN);
-    return cls;
-}
-
-_AVX afxClass const* _AvxDsysGetQrypClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetQrypClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -115,7 +105,7 @@ _AVX afxClass const* _AvxDsysGetQrypClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetVtxdClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetVinClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -125,7 +115,7 @@ _AVX afxClass const* _AvxDsysGetVtxdClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetRasClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetRasClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -135,7 +125,7 @@ _AVX afxClass const* _AvxDsysGetRasClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetBufClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetBufClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -145,7 +135,7 @@ _AVX afxClass const* _AvxDsysGetBufClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetSampClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetSampClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -155,7 +145,7 @@ _AVX afxClass const* _AvxDsysGetSampClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetPipClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetPipClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -165,7 +155,7 @@ _AVX afxClass const* _AvxDsysGetPipClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetCanvClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetCanvClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -175,7 +165,7 @@ _AVX afxClass const* _AvxDsysGetCanvClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetShadClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetShadClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -185,7 +175,7 @@ _AVX afxClass const* _AvxDsysGetShadClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetLigaClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetLigaClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -195,7 +185,7 @@ _AVX afxClass const* _AvxDsysGetLigaClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetTxdClass(afxDrawSystem dsys)
+_AVX afxClass const* _AvxDsysGetTxdClassCb_SW(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -205,38 +195,31 @@ _AVX afxClass const* _AvxDsysGetTxdClass(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX afxClass const* _AvxDsysGetCamClass(afxDrawSystem dsys)
-{
-    afxError err = AFX_ERR_NONE;
-    // @dsys must be a valid afxDrawSystem handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    afxClass const* cls = &dsys->camCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_CAM);
-    return cls;
-}
-
 _AVX _avxDsysImpl const _AVX_DSYS_IMPL =
 {
-    .fencCls = _AvxDsysGetFencClass,
-    .dexuCls = _AvxDsysGetDexuClass,
-    .doutCls = _AvxDsysGetDoutClass,
-    .dinCls = _AvxDsysGetDinClass,
-    .qrypCls = _AvxDsysGetQrypClass,
-    .vtxdCls = _AvxDsysGetVtxdClass,
-    .rasCls = _AvxDsysGetRasClass,
-    .bufCls = _AvxDsysGetBufClass,
-    .sampCls = _AvxDsysGetSampClass,
-    .pipCls = _AvxDsysGetPipClass,
-    .canvCls = _AvxDsysGetCanvClass,
-    .shadCls = _AvxDsysGetShadClass,
-    .ligaCls = _AvxDsysGetLigaClass,
+    .fencCls = _AvxDsysGetFencClassCb_SW,
+    .dexuCls = _AvxDsysGetDexuClassCb_SW,
+    .doutCls = _AvxDsysGetDoutClassCb_SW,
+    .qrypCls = _AvxDsysGetQrypClassCb_SW,
+    .vtxdCls = _AvxDsysGetVinClassCb_SW,
+    .rasCls = _AvxDsysGetRasClassCb_SW,
+    .bufCls = _AvxDsysGetBufClassCb_SW,
+    .sampCls = _AvxDsysGetSampClassCb_SW,
+    .pipCls = _AvxDsysGetPipClassCb_SW,
+    .canvCls = _AvxDsysGetCanvClassCb_SW,
+    .shadCls = _AvxDsysGetShadClassCb_SW,
+    .ligaCls = _AvxDsysGetLigaClassCb_SW,
 
-    .camCls = _AvxDsysGetCamClass,
-    .txdCls = _AvxDsysGetTxdClass,
+    .txdCls = _AvxDsysGetTxdClassCb_SW,
 
-    .transferCb = _AvxDsysTransferVideoMemory,
-    .cohereCb = _AvxDsysCohereMappedBuffers,
-    .remapCb = _AvxDsysRemapBuffers,
+    .transferCb = _AvxDsysTransferCb_SW,
+    .cohereCb = _AvxDsysCohereMappedBuffersCb_SW,
+    .remapCb = _AvxDsysRemapBuffersCb_SW,
+
+    .allocRasCb = _AvxDsysAllocateRastersCb_SW,
+    .deallocRasCb = _AvxDsysDeallocateRastersCb_SW,
+    .allocBufCb = _AvxDsysAllocateBuffersCb_SW,
+    .deallocBufCb = _AvxDsysDeallocateBuffersCb_SW,
 };
 
 _AVX afxModule AvxGetDrawSystemIcd(afxDrawSystem dsys)
@@ -489,7 +472,7 @@ _AVX afxError AvxWaitForDrawSystem(afxDrawSystem dsys, afxUnit64 timeout)
     return err;
 }
 
-_AVX afxError _AvxDsysTransferVideoMemory(afxDrawSystem dsys, avxTransference* ctrl, afxUnit opCnt, void const* ops)
+_AVX afxError _AvxDsysTransferCb_SW(afxDrawSystem dsys, avxTransference* ctrl, afxUnit opCnt, void const* ops)
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -573,7 +556,7 @@ _AVX afxError _AvxDsysTransferVideoMemory(afxDrawSystem dsys, avxTransference* c
     return err;
 }
 
-_AVX afxError _AvxDsysRemapBuffers(afxDrawSystem dsys, afxBool unmap, afxUnit cnt, _avxBufferRemapping const maps[])
+_AVX afxError _AvxDsysRemapBuffersCb_SW(afxDrawSystem dsys, afxBool unmap, afxUnit cnt, _avxBufferRemapping const maps[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -640,7 +623,7 @@ _AVX afxError _AvxDsysRemapBuffers(afxDrawSystem dsys, afxBool unmap, afxUnit cn
     return err;
 }
 
-_AVX afxError _AvxDsysCohereMappedBuffers(afxDrawSystem dsys, afxBool discard, afxUnit cnt, avxBufferedMap const maps[])
+_AVX afxError _AvxDsysCohereMappedBuffersCb_SW(afxDrawSystem dsys, afxBool discard, afxUnit cnt, avxBufferedMap const maps[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -834,17 +817,9 @@ _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
         AFX_ASSERT(doutClsCfg.fcc == afxFcc_DOUT);
         AfxMountClass(&dsys->doutCls, NIL, classes, &doutClsCfg); // req RAS, CANV
 
-        afxClassConfig dinClsCfg = cfg->dinClsCfg ? *cfg->dinClsCfg : _AVX_DIN_CLASS_CONFIG;
-        AFX_ASSERT(dinClsCfg.fcc == afxFcc_DIN);
-        AfxMountClass(&dsys->dinCls, NIL, classes, &dinClsCfg); // req BUF
-
         afxClassConfig txdClsCfg = cfg->txdClsCfg ? *cfg->txdClsCfg : _AVX_TXD_CLASS_CONFIG;
         AFX_ASSERT(txdClsCfg.fcc == afxFcc_TXD);
         AfxMountClass(&dsys->txdCls, NIL, classes, &txdClsCfg); // req RAS
-
-        afxClassConfig camClsCfg = cfg->camClsCfg ? *cfg->camClsCfg : _AVX_CAM_CLASS_CONFIG;
-        AFX_ASSERT(camClsCfg.fcc == afxFcc_CAM);
-        AfxMountClass(&dsys->camCls, NIL, classes, &camClsCfg);
 
         afxClassConfig dexuClsCfg = cfg->dexuClsCfg ? *cfg->dexuClsCfg : _AVX_DEXU_CLASS_CONFIG;
         AFX_ASSERT(dexuClsCfg.fcc == afxFcc_DEXU);

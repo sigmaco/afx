@@ -43,9 +43,9 @@
 #ifndef AVX_DRAW_QUEUE_H
 #define AVX_DRAW_QUEUE_H
 
-#include "qwadro/inc/draw/op/avxPipeline.h"
-#include "qwadro/inc/draw/io/avxRaster.h"
-#include "qwadro/inc/draw/io/avxBuffer.h"
+#include "qwadro/inc/draw/avxPipeline.h"
+#include "qwadro/inc/draw/avxRaster.h"
+#include "qwadro/inc/draw/avxBuffer.h"
 
 AFX_DEFINE_STRUCT(avxSubmission)
 {

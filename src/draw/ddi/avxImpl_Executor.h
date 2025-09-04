@@ -45,12 +45,13 @@ AFX_DEFINE_STRUCT(avxDpu)
     afxSize         numOfFedInstances;
 
     // draw scope
+    afxBool         inDrawScope;
     avxCanvas           canv;
     afxRect             area; //  the area that is affected by the draw scope.
     afxUnit             baseLayer; // the index of the first attachment layer that will be drawn.
     afxUnit             layerCnt; // the number of layers drawn to in each attachment when viewMask is 0.
     afxUnit             targetCnt; // the number of video surfaces.
-    avxDrawTarget       targets[8]; // structures describing any color attachments used.
+    avxDrawTarget       targets[AVX_MAX_CANVAS_BUFFERS]; // structures describing any color attachments used.
     afxBool             useDepth;
     avxDrawTarget       depth; // structure describing a depth attachment.
     afxBool             useStencil;
@@ -58,8 +59,8 @@ AFX_DEFINE_STRUCT(avxDpu)
 
     // transform scope
     afxUnit     vpCnt;
-    avxViewport vps[8];
-    afxRect     scissors[8];
+    avxViewport vps[AVX_MAX_VIEWPORTS];
+    afxRect     scissors[AVX_MAX_VIEWPORTS];
 
     avxBuffer   ibo;
     afxSize     iboBase;

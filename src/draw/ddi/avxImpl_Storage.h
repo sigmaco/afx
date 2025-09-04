@@ -38,7 +38,7 @@ AFX_DEFINE_STRUCT(_avxRasStorage)
     afxLink iommu;
     // binding
     afxUnit mmu; // memory holder
-    afxSize offset; // offset into memory holder bound to this storage block.
+    afxSize size; // offset into memory holder bound to this storage block.
     // Persistent mapping required at acquisition. Do not allow unmapping.
     afxBool     permanentlyMapped;
     afxAtom32   pendingRemap;
@@ -48,20 +48,40 @@ AFX_DEFINE_STRUCT(_avxRasStorage)
     afxByte*    mapPtr; // used by mapping
     union
     {
-        afxSize     addr;
-        afxByte*    bytemap;
-        afxUnit8*   u8;
-        afxUnit16*  u16;
-        afxUnit32*  u32;
-        afxInt8*    i8;
-        afxInt16*   i16;
-        afxInt32*   i32;
-        afxReal32*  f32;
-        afxReal64*  f64;
-        afxV2d*     f32v2;
-        afxV3d*     f32v3;
-        afxV4d*     f32v4;
-    } hostedAlloc;
+        struct
+        {
+            union
+            {
+                afxSize     addr;
+                afxByte*    bytemap;
+                afxUnit8*   u8;
+                afxUnit16*  u16;
+                afxUnit32*  u32;
+                afxInt8*    i8;
+                afxInt16*   i16;
+                afxInt32*   i32;
+                afxReal32*  f32;
+                afxReal64*  f64;
+                afxV2d*     f32v2;
+                afxV3d*     f32v3;
+                afxV4d*     f32v4;
+            };
+            afxBool external;
+        } host;
+        struct
+        {
+            int fd;
+        } fd;
+        struct
+        {
+            afxString type;
+            union
+            {
+                void* handle;
+                void* name;
+            };
+        } w32;
+    };
 };
 
 AFX_DEFINE_STRUCT(_avxBufStorage)
@@ -69,7 +89,7 @@ AFX_DEFINE_STRUCT(_avxBufStorage)
     afxLink iommu;
     // binding
     afxUnit mmu; // memory holder
-    afxSize offset; // offset into memory holder bound to this storage block.
+    afxSize size; // offset into memory holder bound to this storage block.
     // Persistent mapping required at acquisition. Do not allow unmapping.
     afxBool     permanentlyMapped; // TODO: Eliminate it? Now we have ref-counted mapping.
     afxAtom32   pendingRemap;
@@ -80,20 +100,40 @@ AFX_DEFINE_STRUCT(_avxBufStorage)
     afxByte*    mapPtr; // used by mapping
     union
     {
-        afxSize     addr;
-        afxByte*    bytemap;
-        afxUnit8*   u8;
-        afxUnit16*  u16;
-        afxUnit32*  u32;
-        afxInt8*    i8;
-        afxInt16*   i16;
-        afxInt32*   i32;
-        afxReal32*  f32;
-        afxReal64*  f64;
-        afxV2d*     f32v2;
-        afxV3d*     f32v3;
-        afxV4d*     f32v4;
-    } hostedAlloc;
+        struct
+        {
+            union
+            {
+                afxSize     addr;
+                afxByte*    bytemap;
+                afxUnit8*   u8;
+                afxUnit16*  u16;
+                afxUnit32*  u32;
+                afxInt8*    i8;
+                afxInt16*   i16;
+                afxInt32*   i32;
+                afxReal32*  f32;
+                afxReal64*  f64;
+                afxV2d*     f32v2;
+                afxV3d*     f32v3;
+                afxV4d*     f32v4;
+            };
+            afxBool external;
+        } host;
+        struct
+        {
+            int fd;
+        } fd;
+        struct
+        {
+            afxString type;
+            union
+            {
+                void* handle;
+                void* name;
+            };
+        } w32;
+    };
 };
 
 #ifdef _AVX_BUFFER_C
@@ -121,6 +161,7 @@ AFX_OBJECT(avxBuffer)
     // required memory conditions for this storage block.
     afxFlags        reqMemType;
     _avxBufStorage  storage[1]; // non-sparse
+    afxSize         storageOffset;
 };
 #endif//_AVX_BUFFER_C
 
@@ -136,14 +177,18 @@ AFX_OBJECT(avxRaster)
     avxRaster       base; // sub
     avxRasterFlags  flags;
     avxRasterUsage  usage;
-    afxUnit         baseLod; // sub
-    afxUnit         lodCnt; // mip level cnt
+    afxUnit         baseMip; // sub
+    afxUnit         mipCnt; // mip level cnt
     afxUnit         baseLayer; // sub
     avxRange        whd; // extent of image
+    afxUnit         spp; // samples per pixel --- 1, 2, 4, 8, 16, 32, or 64.
     avxFormat       fmt;
-    afxUnit         sampleCnt; // 1, 2, 4, 8, 16, 32, or 64.
+    afxUnit         fmtStride; // cached to avoid queries.
     avxSwizzling    swizzling; // sub
     
+    afxBool         sub;
+    afxBool         exo;
+
     // STORAGE
     // required size of this storage block.
     afxSize         reqSiz;
@@ -151,6 +196,7 @@ AFX_OBJECT(avxRaster)
     // required memory conditions for this storage block.
     afxFlags        reqMemType;
     _avxRasStorage  storage[1]; // non-sparse
+    afxSize         storageOffset;
 
     // GAMBIARRA
     afxBool _dout; // DOUT buffer
@@ -170,5 +216,19 @@ AVXINL void _AvxSanitizeBufferIo(avxBuffer buf, avxBuffer src, afxUnit cnt, avxB
 
 AVXINL void _AvxAllocateRasters(afxUnit cnt, avxRaster rasters[]);
 AVXINL void _AvxAllocateBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo const infos[], avxBuffer buffers[]);
+
+AVXINL void _AvxDpuUpdateRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], afxByte const* src);
+AVXINL void _AvxDpuDumpRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], afxByte* dst);
+AVXINL void _AvxDpuUnpackRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], avxBuffer buf);
+AVXINL void _AvxDpuPackRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], avxBuffer buf);
+AVXINL void _AvxDpuUploadRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], afxStream in);
+AVX void _AvxDpuDownloadRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], afxStream out);
+AVX void _AvxDpuCopyRaster(avxDpu* dpu, avxRaster dst, afxUnit opCnt, avxRasterCopy const ops[], avxRaster src);
+AVX void _AvxDpuResolveRaster(avxDpu* dpu, avxRaster dst, afxUnit opCnt, avxRasterCopy const ops[], avxRaster src);
+AVX void _AvxDpuBlitRaster(avxDpu* dpu, avxRaster dst, afxUnit opCnt, avxRasterBlit const ops[], avxRaster src, avxTexelFilter flt);
+AVX void _AvxDpuClearRaster(avxDpu* dpu, avxRaster ras, avxClearValue const* clearVal, afxUnit baseLodIdx, afxUnit lodCnt, afxUnit baseLayer, afxUnit layerCnt);
+
+AVXINL void* _AvxGetClientRasterData(avxRaster ras, afxSize from);
+AVXINL void* _AvxGetClientBufferData(avxBuffer buf, afxSize from);
 
 #endif//AVX_IMPL___STORAGE_H

@@ -20,6 +20,7 @@
 #define ASX_IMPL___SIMULATION_H
 
 #include "qwadro/inc/sim/afxSimulation.h"
+#include "afx/src/render/ddi/arxImpl_Input.h"
 
 #define ASX_MAX_SIM_BRIDGE_PER_CONTEXT 16
 
@@ -32,7 +33,7 @@ AFX_DEFINE_STRUCT(_asxSimulationAcquisition)
     void*               udd;
 
     afxDrawSystem       dsys;
-    afxDrawInput        din;
+    arxRenderware        din;
 
     afxBox              extent;
 
@@ -44,6 +45,9 @@ AFX_DEFINE_STRUCT(_asxSimulationAcquisition)
     afxReal             allowedLodErrFadingFactor;
 
     afxClassConfig const* sbufClsCfg;
+
+    afxClassConfig const* sexuClsCfg;
+
     afxClassConfig const* curClsCfg;
     afxClassConfig const* motClsCfg;
     afxClassConfig const* capsClsCfg;
@@ -51,17 +55,6 @@ AFX_DEFINE_STRUCT(_asxSimulationAcquisition)
     afxClassConfig const* anikClsCfg;
     afxClassConfig const* bodClsCfg;
     afxClassConfig const* motvClsCfg;
-    afxClassConfig const* mdlClsCfg;
-    afxClassConfig const* mshClsCfg;
-    afxClassConfig const* mtlyClsCfg;
-    afxClassConfig const* poseClsCfg;
-    afxClassConfig const* plceClsCfg;
-    
-    afxClassConfig const* terClsCfg;
-    afxClassConfig const* litClsCfg;
-    afxClassConfig const* rndClsCfg;
-
-    afxClassConfig const* sexuClsCfg;
 };
 
 #ifdef _ASX_SIMULATION_C
@@ -80,27 +73,21 @@ AFX_OBJECT(afxSimulation)
     afxChain        classes;
     afxClass        sexuCls;
 
-    afxClass      bodCls;
-    afxClass      motoCls;
-    afxClass      lights;
+    afxClass      nodCls;
+    afxClass        sbufCls;
 
+    afxClass        shapCls;
+
+
+    afxClass      curCls;
     afxClass      motCls;
     afxClass      motvCls;
     afxClass      aniCls;
     afxClass      anikCls;
-    afxClass      nodCls;
-    afxClass      renderers;
-    afxClass        scnCls;
+    afxClass      motoCls;
+    afxClass      bodCls;
 
-    afxClass        sklCls;
-    afxClass        poseCls;
-    afxClass        plceCls;
-    afxClass        curCls;
-    afxClass        sbufCls;
-
-    afxClass        mtlyCls;
-
-    afxClass        shapCls;
+    afxStringBase   strbAnimMotUrns;
 
     afxChain        dags;
     afxV4d          right;
@@ -116,101 +103,71 @@ AFX_OBJECT(afxSimulation)
     afxSize         stepTime, swapTime;
     afxReal         stepDeltaTime;
 
-    afxStringBase   strbAnimMotUrns;
-
-    asxMotive       globalCapstanInterlinks;
+    arxMotive       globalCapstanInterlinks;
 
     afxError(*waitCb)(afxSimulation,afxTime);
 
     afxDrawSystem  dsys;
-    afxDrawInput    din;
+    arxRenderware    din;
 
     struct smt* Smt;
     struct smt2* Smt2;
-    struct _asxAnimVmt const*animVmt;
 
     struct _afxSimIdd* idd;
     void* udd; // user-defined data
 };
 #endif//_ASX_SIMULATION_C
 
-AFX_DEFINE_STRUCT(_asxAnimVmt)
-{
-    void(*PoseAccumulateBindingState)(asxMotive, afxUnit, afxUnit, afxPose, afxReal, afxUnit const*);
-    void(*AnimationAccumulateBindingState)(asxMotive, afxUnit, afxUnit, afxPose, afxReal, const afxUnit *);
-    void(*AnimationAccumulateLoopTransform)(asxMotive, afxReal, afxReal*, afxV3d, afxV3d, afxBool);
-    void(*AnimationBuildDirect)(asxMotive, afxUnit, afxM4d const, afxPlacement, afxReal);
-    void(*PoseBuildDirect)(asxMotive, afxUnit, afxM4d const, afxPlacement);
-};
-
-ASX _asxAnimVmt const * _AsxSimGetAnimVmt(afxSimulation sim);
-
 ASX afxChain const* _AsxSimGetDagRoots(afxSimulation sim);
 
 ASX afxReal _AsxGetAllowedLodErrorFadingFactor(afxSimulation sim);
 
 ASX afxClass const* _AsxGetBufferClass(afxSimulation sim);
-ASX afxClass const* _AsxGetCurveClass(afxSimulation sim);
-ASX afxClass const* _AsxGetPoseClass(afxSimulation sim);
-ASX afxClass const* _AsxGetPlacementClass(afxSimulation sim);
-
-ASX afxClass const* _AsxSimGetMaterialityClass(afxSimulation sim);
-ASX afxClass const* _AsxMorpGetMaterialClass(afxMorphology morp);
-ASX afxClass const* _AsxMorpGetModelClass(afxMorphology morp);
-ASX afxClass const* _AsxMorpGetMeshClass(afxMorphology morp);
 
 ASX afxClass const* _AsxGetShapClass(afxSimulation sim);
 
-ASX afxClass const* _AsxGetCapstanClass(afxSimulation sim);
-ASX afxClass const* _AsxGetBodyClass(afxSimulation sim);
-ASX afxClass const* _AsxMorpGetTerrainClass(afxMorphology morp);
-
-ASX afxClass const* _AsxGetMotionClass(afxSimulation sim);
-ASX afxClass const* _AsxGetMotiveClass(afxSimulation sim);
-ASX afxClass const* _AsxGetAnimationClass(afxSimulation sim);
-ASX afxClass const* _AsxGetInstancedAnimationClass(afxSimulation sim);
-
-ASX afxClass const* _AsxGetLightClass(afxSimulation sim);
 ASX afxClass const* _AsxGetNodeClass(afxSimulation sim);
-ASX afxClass const* _AsxGetRendererClass(afxSimulation sim);
 
-ASX afxClass const* _AsxGetSceneClass(afxSimulation sim);
-
-ASX afxStringBase   _AsxMorpGetModelUrnStringBase(afxMorphology morp);
-ASX afxStringBase   _AsxMorpGetPivotTagStringBase(afxMorphology morp);
-ASX afxStringBase   _AsxMorpGetMorphTagStringBase(afxMorphology morp);
-
-ASX afxStringBase   _AsxSimGetAnimUrnStringBase(afxSimulation sim);
 
 ASX afxClassConfig const _ASX_SIM_CLASS_CONFIG;
 
 typedef struct smt
 {
-    void(*SampleTrackUUULocalAtTime0)(afxPivotalMotion const* SourceTrack, afxTransform *Result);
-    void(*SampleTrackUUULocal)(const afxSampleContext *Context, const afxPivotalMotion *SourceTrack, asxCachedMotionTransform *Track, afxTransform *Result);
-    void(*SampleTrackUUU)(const afxSampleContext *Context, const afxPivotalMotion *SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*SampleTrackIII)(const afxSampleContext *Context, const afxPivotalMotion*SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*SampleTrackCII)(const afxSampleContext *Context, const afxPivotalMotion*SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*SampleTrackCCI)(const afxSampleContext *Context, const afxPivotalMotion*SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*SampleTrackCAI)(const afxSampleContext *Context, const afxPivotalMotion*SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*SampleTrackAII)(const afxSampleContext *Context, const afxPivotalMotion*SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*SampleTrackACI)(const afxSampleContext *Context, const afxPivotalMotion*SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*SampleTrackAAI)(const afxSampleContext *Context, const afxPivotalMotion*SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*Samplers[3][3][3])(const afxSampleContext *, const afxPivotalMotion *, asxCachedMotionTransform *, const afxTransform *, const afxM4d, const afxM4d, afxM4d, afxM4d);
-    void(*SampleTrackSSS)(const afxSampleContext *Context, const afxPivotalMotion *SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*(*GetTrackSamplerFor)(const afxPivotalMotion *Track))(const afxSampleContext *, const afxPivotalMotion *, asxCachedMotionTransform *, const afxTransform *, const afxM4d, const afxM4d, afxM4d, afxM4d);
-    void(*SampleTrackUUUAtTime0)(const afxSampleContext *Context, const afxPivotalMotion *SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4, const afxM4d ParentMatrix, afxM4d WorldResult, afxM4d CompositeResult);
-    void(*SampleTrackUUUBlendWithTime0)(const afxSampleContext *Context, const afxPivotalMotion *SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4, const afxM4d ParentMatrix, afxM4d WorldResult, afxM4d CompositeResult, afxReal BlendAmount);
-    void(*SampleTrackIIU)(const afxSampleContext *Context, const afxPivotalMotion *SourceTrack, asxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*SampleTrackPOLocal)(const afxSampleContext *Context, const afxPivotalMotion *SourceTrack, asxCachedMotionTransform *Track, afxV3d ResultPosition, afxQuat ResultOrientation);
+    void(*SampleTrackUUULocalAtTime0)(arxPivotalMotion const* SourceTrack, afxTransform *Result);
+    void(*SampleTrackUUULocal)(const arxSampleContext *Context, const arxPivotalMotion *SourceTrack, arxCachedMotionTransform *Track, afxTransform *Result);
+    void(*SampleTrackUUU)(const arxSampleContext *Context, const arxPivotalMotion *SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackIII)(const arxSampleContext *Context, const arxPivotalMotion*SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackCII)(const arxSampleContext *Context, const arxPivotalMotion*SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackCCI)(const arxSampleContext *Context, const arxPivotalMotion*SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackCAI)(const arxSampleContext *Context, const arxPivotalMotion*SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackAII)(const arxSampleContext *Context, const arxPivotalMotion*SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackACI)(const arxSampleContext *Context, const arxPivotalMotion*SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackAAI)(const arxSampleContext *Context, const arxPivotalMotion*SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*Samplers[3][3][3])(const arxSampleContext *, const arxPivotalMotion *, arxCachedMotionTransform *, const afxTransform *, const afxM4d, const afxM4d, afxM4d, afxM4d);
+    void(*SampleTrackSSS)(const arxSampleContext *Context, const arxPivotalMotion *SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*(*GetTrackSamplerFor)(const arxPivotalMotion *Track))(const arxSampleContext *, const arxPivotalMotion *, arxCachedMotionTransform *, const afxTransform *, const afxM4d, const afxM4d, afxM4d, afxM4d);
+    void(*SampleTrackUUUAtTime0)(const arxSampleContext *Context, const arxPivotalMotion *SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4, const afxM4d ParentMatrix, afxM4d WorldResult, afxM4d CompositeResult);
+    void(*SampleTrackUUUBlendWithTime0)(const arxSampleContext *Context, const arxPivotalMotion *SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4, const afxM4d ParentMatrix, afxM4d WorldResult, afxM4d CompositeResult, afxReal BlendAmount);
+    void(*SampleTrackIIU)(const arxSampleContext *Context, const arxPivotalMotion *SourceTrack, arxCachedMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackPOLocal)(const arxSampleContext *Context, const arxPivotalMotion *SourceTrack, arxCachedMotionTransform *Track, afxV3d ResultPosition, afxQuat ResultOrientation);
 } smt;
 
 typedef struct smt2
 {
     void(*CubicCoefficients)(afxReal const a[3], afxReal const b[3], afxReal t, afxReal* ci_3, afxReal* ci_2, afxReal* ci_1, afxReal* ci);
     void(*SampleBSpline)(afxUnit Degree, afxUnit Dimension, afxBool Normalize, const afxReal *ti, const afxReal *pi, afxReal t, afxReal *Result);
-    char(*ConstructBSplineBuffers)(afxInt dim, afxCurve prev, afxCurve c, afxCurve next, afxReal prevCurDur, afxReal curDur, afxReal nextCurDur, afxInt knotIdx, afxReal* ti, afxReal* pi, afxReal** tiPtr, afxReal** piPtr, afxReal const* identityVec);
-    void(*EvaluateCurve)(const afxSampleContext *Context, afxCurve Curve, const afxReal *IdentityVector, int Dimension, afxReal *Result, afxBool CurveIsNormalized);
+    char(*ConstructBSplineBuffers)(afxInt dim, arxCurve prev, arxCurve c, arxCurve next, afxReal prevCurDur, afxReal curDur, afxReal nextCurDur, afxInt knotIdx, afxReal* ti, afxReal* pi, afxReal** tiPtr, afxReal** piPtr, afxReal const* identityVec);
+    void(*EvaluateCurve)(const arxSampleContext *Context, arxCurve Curve, const afxReal *IdentityVector, int Dimension, afxReal *Result, afxBool CurveIsNormalized);
 } smt2;
+
+ARX afxClass const* _ArxGetCurveClass(afxSimulation sim);
+ARX afxClass const* _ArxGetCapstanClass(afxSimulation sim);
+ARX afxClass const* _ArxGetBodyClass(afxSimulation sim);
+ARX afxClass const* _ArxGetMotionClass(afxSimulation sim);
+ARX afxClass const* _ArxGetMotiveClass(afxSimulation sim);
+ARX afxClass const* _ArxGetAnimationClass(afxSimulation sim);
+ARX afxClass const* _ArxGetInstancedAnimationClass(afxSimulation sim);
+
+ARX afxStringBase   _ArxDinGetAnimUrnStringBase(afxSimulation sim);
 
 #endif//ASX_IMPL___SIMULATION_H

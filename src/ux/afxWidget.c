@@ -75,7 +75,7 @@ _AUX afxError _AuxWidCtorCb(afxWidget wid, void** args, afxUnit invokeNo)
     AFX_ASSERT(cfg);
 
     afxSurface dout;
-    AfxGetWindowDrawOutput(wnd, NIL, &dout);
+    AfxGetWindowSurface(wnd, &dout);
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     afxDrawSystem dsys = AvxGetSurfaceSystem(dout);
 

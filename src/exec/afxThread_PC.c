@@ -47,7 +47,7 @@ afxUnit const sizeOfThr = sizeof(AFX_OBJ(afxThread));
 afxUnit const sizeOfThrAligned = AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT);
 AFX_STATIC_ASSERT(AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT) >= sizeof(AFX_OBJ(afxThread)), "");
 AFX_STATIC_ASSERT(sizeof(AFX_OBJECT(afxThread)) > sizeof(afxThread), "");
-_AFX AFX_ALIGN(16) afxByte thePrimeThrData[AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) +
+_AFX AFX_ALIGNED(16) afxByte thePrimeThrData[AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT) +
 AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxThread)), AFX_SIMD_ALIGNMENT)] = { 0 };
 _AFX afxThread ThePrimeThread = (void*)&thePrimeThrData;
 AFX_STATIC_ASSERT(sizeof(ThePrimeThread[0]) > sizeof(void*), "");

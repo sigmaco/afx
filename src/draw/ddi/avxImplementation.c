@@ -29,21 +29,6 @@
 //#define _AVX_BUFFER_C
 #include "avxImplementation.h"
 
-_AVX afxClass const* _AvxGetDisplayClass(afxModule icd)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-
-    if (!AfxTestModule(icd, afxModuleFlag_ICD | afxModuleFlag_AVX))
-    {
-        AfxThrowError();
-        return NIL;
-    }
-    afxClass const* cls = &icd->icd.viddCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_VDU);
-    return cls;
-}
-
 _AVX afxClass const* _AvxIcdGetDdevClass(afxModule icd)
 {
     afxError err = AFX_ERR_NONE;
@@ -78,7 +63,7 @@ _AVX afxError _AvxImplementDrawSystem(afxModule icd, _avxDrawSystemImplementatio
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-    //AFX_ASSERT((ddevCls && dsysCls) || viddCls);
+    AFX_ASSERT(cfg);
 
     if (!AfxTestModule(icd, afxModuleFlag_ICD))
     {
@@ -91,28 +76,7 @@ _AVX afxError _AvxImplementDrawSystem(afxModule icd, _avxDrawSystemImplementatio
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
-    afxBool viddMounted = FALSE, dsysMounted = FALSE, ddevMounted = FALSE;
-
-    afxClassConfig viddCfg2;
-
-    viddCfg2 = cfg->viddCls.fcc ? cfg->viddCls : _AVX_VDU_CLASS_CONFIG;
-    AFX_ASSERT(viddCfg2.fcc == afxFcc_VDU);
-    AFX_ASSERT(viddCfg2.fixedSiz >= _AVX_VDU_CLASS_CONFIG.fixedSiz);
-    if ((viddCfg2.fcc != afxFcc_VDU) ||
-        (_AVX_VDU_CLASS_CONFIG.fixedSiz > viddCfg2.fixedSiz))
-    {
-        AfxThrowError();
-        return err;
-    }
-    else if (AfxMountClass(&icd->icd.viddCls, &sys->avx.viddCls, &icd->classes, &viddCfg2)) // require base*
-    {
-        AfxThrowError();
-        return err;
-    }
-    else
-    {
-        viddMounted = TRUE;
-    }
+    afxBool dsysMounted = FALSE, ddevMounted = FALSE;
 
     afxClassConfig ddevCls2 = cfg->ddevCls.fcc ? cfg->ddevCls : _AVX_DDEV_CLASS_CONFIG;
     AFX_ASSERT(ddevCls2.fcc == afxFcc_DDEV);
@@ -121,13 +85,11 @@ _AVX afxError _AvxImplementDrawSystem(afxModule icd, _avxDrawSystemImplementatio
         (_AVX_DDEV_CLASS_CONFIG.fixedSiz > ddevCls2.fixedSiz))
     {
         AfxThrowError();
-        AfxDismountClass(&icd->icd.viddCls);
         return err;
     }
-    else if (AfxMountClass(&icd->icd.ddevCls, &sys->avx.ddevCls, &icd->classes, &ddevCls2)) // require base*
+    else if (AfxMountClass(&icd->icd.ddevCls, &sys->ddevCls, &icd->classes, &ddevCls2)) // require base*
     {
         AfxThrowError();
-        AfxDismountClass(&icd->icd.viddCls);
         return err;
     }
 
@@ -140,14 +102,12 @@ _AVX afxError _AvxImplementDrawSystem(afxModule icd, _avxDrawSystemImplementatio
         (_AVX_DSYS_CLASS_CONFIG.fixedSiz > dsysCls2.fixedSiz))
     {
         AfxThrowError();
-        AfxDismountClass(&icd->icd.viddCls);
         AfxDismountClass(&icd->icd.ddevCls);
         return err;
     }
-    else if (AfxMountClass(&icd->icd.dsysCls, &sys->avx.dsysCls, &icd->classes, &dsysCls2)) // require base*
+    else if (AfxMountClass(&icd->icd.dsysCls, &sys->dsysCls, &icd->classes, &dsysCls2)) // require base*
     {
         AfxThrowError();
-        AfxDismountClass(&icd->icd.viddCls);
         AfxDismountClass(&icd->icd.ddevCls);
         return err;
     }
@@ -163,18 +123,12 @@ _AVX afxError _AvxImplementDrawSystem(afxModule icd, _avxDrawSystemImplementatio
 
         if (ddevMounted)
             AfxDismountClass(&icd->icd.ddevCls);
-
-        if (viddMounted)
-            AfxDismountClass(&icd->icd.viddCls);
     }
     else
     {
         if (!icd->icd.avx.chain)
         {
-            afxSystem sys;
-            AfxGetSystem(&sys);
-            AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-            AfxPushLink(&icd->icd.avx, &sys->avx.icdChain);
+            AfxPushLink(&icd->icd.avx, &sys->avxIcdChain);
             icd->flags |= afxModuleFlag_AVX;
         }
     }
@@ -194,7 +148,7 @@ _AVX afxBool _AvxGetIcd(afxUnit icdIdx, afxModule* driver)
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     afxModule icd = NIL;
-    while ((icdIdx < sys->avx.icdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->avx.icdChain, icdIdx), AFX_OBJ(afxModule), icd.avx)))
+    while ((icdIdx < sys->avxIcdChain.cnt) && (icd = AFX_REBASE(AfxFindFirstLink(&sys->avxIcdChain, icdIdx), AFX_OBJ(afxModule), icd.avx)))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
 
@@ -222,18 +176,13 @@ _AVX afxError avxScmHook(afxModule mdle, afxManifest const* ini)
     afxClassConfig ddevClsCfg = _AVX_DDEV_CLASS_CONFIG;
     ddevClsCfg.ctor = NIL;
     ddevClsCfg.dtor = NIL;
-    AfxMountClass(&sys->avx.ddevCls, (afxClass*)_AfxGetDeviceClass(), &sys->classes, &ddevClsCfg);
+    AfxMountClass(&sys->ddevCls, (afxClass*)_AfxGetDeviceClass(), &sys->classes, &ddevClsCfg);
     
     afxClassConfig dsysClsCfg = _AVX_DSYS_CLASS_CONFIG;
     dsysClsCfg.ctor = NIL;
     dsysClsCfg.dtor = NIL;
-    AfxMountClass(&sys->avx.dsysCls, NIL, &sys->classes, &dsysClsCfg);
+    AfxMountClass(&sys->dsysCls, NIL, &sys->classes, &dsysClsCfg);
     
-    afxClassConfig viddClsCfg = _AVX_VDU_CLASS_CONFIG;
-    viddClsCfg.ctor = NIL;
-    viddClsCfg.dtor = NIL;
-    AfxMountClass(&sys->avx.viddCls, (afxClass*)_AfxGetDeviceClass(), &sys->classes, &viddClsCfg);
-
     if (!err)
     {
         //sys->avx.ready = TRUE;

@@ -26,21 +26,44 @@
 
 #include "qwadro/inc/draw/afxDrawDevice.h"
 #include "qwadro/inc/draw/afxDrawContext.h"
-#include "qwadro/inc/draw/io/avxBuffer.h"
-#include "qwadro/inc/draw/io/avxRaster.h"
-#include "qwadro/inc/draw/video/avxCanvas.h"
-#include "qwadro/inc/draw/op/avxLigature.h"
-#include "qwadro/inc/draw/op/avxPipeline.h"
-#include "qwadro/inc/draw/op/avxQueryPool.h"
-#include "qwadro/inc/draw/op/avxPipeline.h"
-#include "qwadro/inc/draw/op/avxSampler.h"
-#include "qwadro/inc/draw/op/avxShader.h"
-#include "qwadro/inc/draw/op/avxVertexInput.h"
-#include "qwadro/inc/draw/op/avxDrawing.h"
-#include "qwadro/inc/draw/op/avxFence.h"
-#include "qwadro/inc/draw/io/afxDrawInput.h"
+#include "qwadro/inc/draw/avxBuffer.h"
+#include "qwadro/inc/draw/avxBufferUtil.h"
+#include "qwadro/inc/draw/avxRaster.h"
+#include "qwadro/inc/draw/avxRasterFile.h"
+#include "qwadro/inc/draw/avxCanvas.h"
+#include "qwadro/inc/draw/avxLigature.h"
+#include "qwadro/inc/draw/avxPipeline.h"
+#include "qwadro/inc/draw/avxQueryPool.h"
+#include "qwadro/inc/draw/avxPipeline.h"
+#include "qwadro/inc/draw/avxSampler.h"
+#include "qwadro/inc/draw/avxShader.h"
+#include "qwadro/inc/draw/avxVertexInput.h"
+#include "qwadro/inc/draw/avxDrawing.h"
+#include "qwadro/inc/draw/avxFence.h"
+#include "qwadro/inc/math/avxMatrix.h"
+#include "qwadro/inc/draw/avxTxd.h"
 
 #define AVX_MAX_BRIDGES_PER_SYSTEM (32)
+
+typedef enum avxEventId
+{
+    avxEventId_FENCE,
+    avxEventId_EXECUTE,
+    avxEventId_PRESENT,
+    avxEventId_UPLOAD,
+    avxEventId_DOWNLOAD,
+    avxEventId_PREFETCH,
+    avxEventId_REFRESH,
+    avxEventId_RECONNECT,
+    avxEventId_EXTENT,
+} avxEventId;
+
+AFX_DEFINE_STRUCT(avxEvent)
+{
+    avxEventId  id;
+    afxBool     posted, accepted;
+    void*       udd[1];
+};
 
 AFX_DEFINE_STRUCT(afxDrawSystemConfig)
 // The system-wide settings and parameters.

@@ -94,6 +94,7 @@ AFX_DEFINE_STRUCT(afxSystemConfig)
     afxBool                 avxDisabled;
     afxBool                 asxDisabled;
     afxBool                 auxDisabled;
+    afxUri32                shell;
 
     afxChar const*          appId; // a 32-byte long unique identifier for the application.
     union

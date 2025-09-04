@@ -193,7 +193,7 @@ _AFXINL void* AfxFillSSE(void* start, afxSize range, void const* pattern, afxSiz
 }
 #endif//AFX_ON_X86
 
-_AFXINL void AfxFill(void* start, afxSize range, void const* pattern, afxSize patternSiz)
+_AFXINL void AfxFillPattern(void* start, afxSize range, void const* pattern, afxSize patternSiz)
 {
     afxError err = NIL;
 
@@ -219,6 +219,11 @@ _AFXINL void AfxFill(void* start, afxSize range, void const* pattern, afxSize pa
     for (afxSize i = 0; i < range; ++i)
         d[i] = s[i % patternSiz];
 #endif
+}
+
+_AFX void AfxFill(void* start, afxInt value, afxSize range)
+{
+    AfxFillPattern(start, range, (afxInt[]) { 0 }, sizeof(afxInt));
 }
 
 #ifdef AFX_ON_X86
@@ -862,7 +867,7 @@ _AFX void* AfxMemset(void* dst, afxInt val, afxSize siz)
 {
 #ifdef _AFX_USE_MEMSET_FAST_PATH
     afxChar val2 = (afxChar)val;
-    AfxFill(dst, siz, &val2, sizeof(val2));
+    AfxFillPattern(dst, siz, &val2, sizeof(val2));
     return dst;
 #else
     return memset(dst, val, siz);
@@ -913,7 +918,7 @@ _AFX void const* AfxMemchr(void const* buf, afxInt val, afxUnit cap)
 void* memset(void* dst, int val, size_t siz)
 {
     afxChar val2 = (afxChar)val;
-    AfxFill(dst, siz, &val2, sizeof(val2));
+    AfxFillPattern(dst, siz, &val2, sizeof(val2));
     return dst;
 }
 #endif//_AFX_DONT_REIMPLEMENT_MEMSET

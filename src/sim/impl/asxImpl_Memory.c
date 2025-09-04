@@ -15,12 +15,12 @@
  */
 
 #define _ASX_POSE_C
-#define _ASX_PLACEMENT_C
-#define _ASX_BODY_C
-#define _ASX_MODEL_C
-#define _ASX_ANIMATION_C
-#define _ASX_MOTION_C
-#define _ASX_MOTOR_C
+#define _ARX_PLACEMENT_C
+#define _ARX_BODY_C
+#define _ARX_MODEL_C
+#define _ARX_ANIMATION_C
+#define _ARX_MOTION_C
+#define _ARX_MOTOR_C
 #define _ASX_SIM_BRIDGE_C
 #define _ASX_SIM_QUEUE_C
 #define _ASX_CONTEXT_C

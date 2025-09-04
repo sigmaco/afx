@@ -35,8 +35,8 @@
 
 #include "qwadro/inc/exec/afxDevice.h"
 #include "qwadro/inc/draw/afxDrawBridge.h"
-#include "qwadro/inc/draw/video/afxSurface.h"
-#include "qwadro/inc/draw/video/avxDisplay.h"
+#include "qwadro/inc/draw/afxSurface.h"
+#include "qwadro/inc/draw/afxDisplay.h"
 
 AFX_DEFINE_STRUCT(afxDrawFeatures)
 /**
@@ -177,21 +177,45 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
     Understanding these limits is important for optimizing performance and ensuring compatibility across different hardware and platforms.
 */
 {
+    afxUnit     maxMemAllocCnt;
+    afxSize     sparseAddrSpaceSiz;
+    afxSize     nonCoherentAtomSiz;
+    afxUnit     discreteQueuePriorities;
+    afxBool     timestampComputeAndGraphics;
+    afxReal     timestampPeriod;
+
+    // Buffered memory
+    afxSize     minBufMapAlign;
+    afxSize     minTboOffsetAlign;
+    afxSize     minUboOffsetAlign;
+    afxSize     minSsboOffsetAlign;
+    afxSize     optimalBufCopyOffsetAlign;
+    afxSize     optimalBufCopyRowPitchAlign;
+
+    afxUnit     maxTboCap; // in texels
+    afxSize     bufferRasterGranularity;
+    afxUnit     maxUboRange;
+    afxUnit     maxSsboRange;
+
+    // Rasters
     afxUnit     maxRasterDim1D;
     afxUnit     maxRasterDim2D;
     afxUnit     maxRasterDim3D;
     afxUnit     maxRasterDimCube;
     afxUnit     maxRasterLayers;
-    afxUnit     maxTboCap; // in texels
-    afxUnit     maxUboRange;
-    afxUnit     maxSsboRange;
-    afxUnit     maxPushConstsSiz;
-    afxUnit     maxMemAllocCnt;
-    afxUnit     maxSamplerAllocCnt;
-    afxSize     bufferRasterGranularity;
-    afxSize     sparseAddrSpaceSiz;
-    afxUnit     maxBoundPerLigas;
 
+    afxFlags    sampledRasterColorSampleCnts;
+    afxFlags    sampledRasterIntegerSampleCnts;
+    afxFlags    sampledRasterDepthSampleCnts;
+    afxFlags    sampledRasterStencilSampleCnts;
+    afxFlags    storageRasterSampleCnts;
+
+    // Sampler
+    afxUnit     maxSamplerAllocCnt;
+    afxReal     maxSamplerLodBias;
+    afxReal     maxSamplerAnisotropy;
+
+    // Pipelines
     afxUnit     maxPerStageSamplers;
     afxUnit     maxPerStageUbos;
     afxUnit     maxPerStageSsbos;
@@ -200,6 +224,9 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
     afxUnit     maxPerStageInputAttachments;
     afxUnit     maxPerStageResources;
 
+    // Ligatures
+    afxUnit     maxPushConstsSiz;
+    afxUnit     maxBoundPerLigas;
     afxUnit     maxPerLigaSamplers;
     afxUnit     maxPerLigaUbos;
     afxUnit     maxPerLigaUbosDynamic;
@@ -209,12 +236,20 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
     afxUnit     maxPerLigaStorageImages;
     afxUnit     maxPerLigaInputAttachments;
 
+    // Compute shader
+    afxUnit     maxComputeSharedMemSiz;
+    afxWarp     maxComputeWarpCnt;
+    afxUnit     maxComputeWarpInvocations;
+    afxWarp     maxComputeWarpSiz;
+
+    // Vertex input
     afxUnit     maxVtxIns;
     afxUnit     maxVtxInSrcs;
     afxUnit     maxVtxInOffset;
     afxUnit     maxVtxInSrcStride;
     afxUnit     maxVtxOutCompos;
 
+    // Tesselation
     afxUnit     maxTessGenLvl;
     afxUnit     maxTessPatchSiz;
     afxUnit     maxTessCtrlPerVtxInComps;
@@ -224,41 +259,47 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
     afxUnit     maxTessEvalInComps;
     afxUnit     maxTessEvalOutComps;
 
+    // Primitive shader
     afxUnit     maxPrimShadInvocations;
     afxUnit     maxPrimInComps;
     afxUnit     maxPrimOutComps;
     afxUnit     maxPrimOutVertices;
     afxUnit     maxPrimTotalOutComps;
 
-    afxUnit     maxFragInComps;
-    afxUnit     maxFragOutAttachments;
-    afxUnit     maxFragDualSrcAttachments;
-    afxUnit     maxFragCombinedOutputResources;
+    // Clipping
+    afxUnit     maxClipDistances;
+    afxUnit     maxCullDistances;
+    afxUnit     maxCombinedClipAndCullDistances;
 
-    afxUnit     maxComputeSharedMemSiz;
-    afxWarp      maxComputeWarpCnt;
-    afxUnit     maxComputeWarpInvocations;
-    afxWarp      maxComputeWarpSiz;
+    // Viewport
+    afxUnit     maxVpCnt;
+    afxUnit     maxVpDimensions[2];
+    afxV2d      vpBoundsRange;
+    afxUnit     vpSubPixelBits;
 
+    // Rasterization
     afxUnit     subPixelPreciBits;
     afxUnit     subTexelPreciBits;
     afxUnit     mipmapPrecisionBits;
     afxUnit     maxDrawIndexedIdxValue;
     afxUnit     maxDrawIndirectCnt;
 
-    afxReal     maxSamplerLodBias;
-    afxReal     maxSamplerAnisotropy;
+    afxV2d      pointSizRange;
+    afxV2d      lineWidthRange;
+    afxReal     pointSizGranularity;
+    afxReal     lineWidthGranularity;
+    afxBool     strictLines;
 
-    afxUnit     maxVpCnt;
-    afxUnit     maxVpDimensions[2];
-    afxV2d      vpBoundsRange;
-    afxUnit     vpSubPixelBits;
-    
-    afxSize     minBufMapAlign;
-    afxSize     minTboOffsetAlign;
-    afxSize     minUboOffsetAlign;
-    afxSize     minSsboOffsetAlign;
-    
+    afxBool     standardSampleLocations;
+    afxUnit     maxSampleMaskWords;
+
+    // Fragment shader
+    afxUnit     maxFragInComps;
+    afxUnit     maxFragOutAttachments;
+    afxUnit     maxFragDualSrcAttachments;
+    afxUnit     maxFragCombinedOutputResources;
+
+    // Fragment operations
     afxInt      minTexelOffset;
     afxUnit     maxTexelOffset;
     afxInt      minTexelGatherOffset;
@@ -267,41 +308,13 @@ AFX_DEFINE_STRUCT(afxDrawLimits)
     afxReal     maxInterpolationOffset;
     afxUnit     subPixelInterpolationOffsetBits;
 
-    afxWarp      maxCanvasWhd;
+    // Canvas
+    afxWarp     maxCanvasWhd;
     afxFlags    canvasColorSampleCnts;
     afxFlags    canvasDepthSampleCnts;
     afxFlags    canvasStencilSampleCnts;
     afxFlags    canvasNoAttachmentsSampleCnts;
     afxUnit     maxColorAttachments;
-
-    afxFlags    sampledRasterColorSampleCnts;
-    afxFlags    sampledRasterIntegerSampleCnts;
-    afxFlags    sampledRasterDepthSampleCnts;
-    afxFlags    sampledRasterStencilSampleCnts;
-    afxFlags    storageRasterSampleCnts;
-    afxUnit     maxSampleMaskWords;
-
-    afxBool     timestampComputeAndGraphics;
-    afxReal     timestampPeriod;
-    
-    afxUnit     maxClipDistances;
-    afxUnit     maxCullDistances;
-    afxUnit     maxCombinedClipAndCullDistances;
-    
-    afxUnit     discreteQueuePriorities;
-    
-    afxV2d      pointSizRange;
-    afxV2d      lineWidthRange;
-    afxReal     pointSizGranularity;
-    afxReal     lineWidthGranularity;
-    afxBool     strictLines;
-    
-    afxBool     standardSampleLocations;
-    
-    afxSize     optimalBufCopyOffsetAlign;
-    afxSize     optimalBufCopyRowPitchAlign;
-    
-    afxSize     nonCoherentAtomSiz;
 };
 
 // DRAW DEVICE HANDLING ////////////////////////////////////////////////////////
