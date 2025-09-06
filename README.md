@@ -1,6 +1,6 @@
 ![Logo](doc/qwadro-banner-2048x520-bg-t.png)
 
-# SIGMA Acceleration Frameworks Extensions & Experiments
+## Acceleration Frameworks Extensions & Experiments (AFX)
 The **Acceleration Frameworks Extensions & Experiments** (**AFX**) is a free and open-source software (FOSS), the standard implementation of the **Qwadro** API specification, ISO C17 open standard, low-level data-oriented, federated execution ecosystem that offers a set of acceleration building blocks to edify system softwares targeting computer simulations and multimedia user experiences. It is essentially a set of software infrastructures whose middlewares, libraries, drivers and engines developed on the Qwadro relies on. AFX is released as open source under the Qwadro License.
 
 The **SIGMA FEDERATION** and all members shall not be held liable to any person or entity for any reason related to the adoption or implementation of, nor adherence to the recommendations in, nor any other use of this project nor any accompanying software.
