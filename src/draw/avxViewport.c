@@ -14,12 +14,9 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #include "ddi/avxImplementation.h"
-
-avxViewport const AVX_VIEWPORT_MIN = { .origin = { AFX_R32_MIN, AFX_R32_MIN }, .extent = { 1, 1 } };
-avxViewport const AVX_VIEWPORT_MAX = { .origin = { AFX_R32_MAX, AFX_R32_MAX }, .extent = { AFX_R32_MAX, AFX_R32_MAX } };
 
 avxOrigin const AVX_ORIGIN_ZERO = { 0, 0, 0 };
 avxOrigin const AVX_ORIGIN_MIN = { AFX_I32_MIN, AFX_I32_MIN, AFX_I32_MIN };
@@ -248,4 +245,83 @@ _AVXINL void AvxFlipViewport(avxViewport* vp, avxViewport const* in, afxBool swa
         flipped.maxDepth = md;
     }
     *vp = flipped;
+}
+
+_AVXINL void AvxViewportTransform(avxViewport const* vp, avxViewportFlags flags, afxUnit cnt, afxV4d const ndcPos[], afxV4d canvPos[], afxUnit dstStride, afxUnit srcStride)
+{
+    afxError err = NIL;
+    AFX_ASSERT(vp);
+    AFX_ASSERT_ALIGNMENT(srcStride, sizeof(afxReal));
+    AFX_ASSERT(!srcStride || (srcStride >= sizeof(afxV3d)));
+    AFX_ASSERT_ALIGNMENT(dstStride, sizeof(afxReal));
+    AFX_ASSERT(!dstStride || (dstStride >= sizeof(afxV3d)));
+    srcStride = AFX_OR(srcStride, sizeof(afxV3d));
+    dstStride = AFX_OR(dstStride, sizeof(afxV3d));
+    afxUnit srcStep = srcStride / sizeof(afxReal);
+    afxUnit dstStep = dstStride / sizeof(afxReal);
+    afxReal const* ndcPos2 = &ndcPos[0][0];
+    afxReal* canvPos2 = &canvPos[0][0];
+
+    afxReal vpX = vp->origin[0];
+    afxReal vpY = vp->origin[1];
+    afxReal vpW = vp->extent[0];
+    afxReal vpH = vp->extent[1];
+    afxReal minDepth = vp->minDepth;
+    afxReal depthDiff = (vp->maxDepth - vp->minDepth);
+
+    // If we're following Vulkan-style NDC where Z is already in [0, 1], skip the ndcZ * 0.5 + 0.5 step.
+    if (flags & avxViewportFlag_NDCZ)
+    {
+        if (flags & avxViewportFlag_FLIP)
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit dstIdx = i * dstStep;
+                afxUnit srcIdx = i * srcStep;
+                // X and Y: [-1, 1] -> canvas coordinates
+                canvPos2[dstIdx + 0] =      vpX + (        (ndcPos2[srcIdx + 0] * 0.5f + 0.5f)) * vpW;
+                canvPos2[dstIdx + 1] =      vpY + ( 1.0f - (ndcPos2[srcIdx + 1] * 0.5f + 0.5f)) * vpH; // Y-flip
+                canvPos2[dstIdx + 2] = minDepth + (        (ndcPos2[srcIdx + 2]))               * depthDiff;
+            }
+        }
+        else
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit dstIdx = i * dstStep;
+                afxUnit srcIdx = i * srcStep;
+                // X and Y: [-1, 1] -> canvas coordinates
+                canvPos2[dstIdx + 0] =      vpX + (ndcPos2[srcIdx + 0] * 0.5f + 0.5f) * vpW;
+                canvPos2[dstIdx + 1] =      vpY + (ndcPos2[srcIdx + 1] * 0.5f + 0.5f) * vpH;
+                canvPos2[dstIdx + 2] = minDepth + (ndcPos2[srcIdx + 2])               * depthDiff; // raw NDC Z
+            }
+        }
+    }
+    else
+    {
+        if (flags & avxViewportFlag_FLIP)
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit dstIdx = i * dstStep;
+                afxUnit srcIdx = i * srcStep;
+                // X and Y: [-1, 1] -> canvas coordinates
+                canvPos2[dstIdx + 0] =      vpX + (        (ndcPos2[srcIdx + 0] * 0.5f + 0.5f)) * vpW;
+                canvPos2[dstIdx + 1] =      vpY + ( 1.0f - (ndcPos2[srcIdx + 1] * 0.5f + 0.5f)) * vpH; // Y-flip
+                canvPos2[dstIdx + 2] = minDepth + (        (ndcPos2[srcIdx + 2] * 0.5f + 0.5f)) * depthDiff;
+            }
+        }
+        else
+        {
+            for (afxUnit i = 0; i < cnt; i++)
+            {
+                afxUnit dstIdx = i * dstStep;
+                afxUnit srcIdx = i * srcStep;
+                // X and Y: [-1, 1] -> canvas coordinates
+                canvPos2[dstIdx + 0] =      vpX + (ndcPos2[srcIdx + 0] * 0.5f + 0.5f) * vpW;
+                canvPos2[dstIdx + 1] =      vpY + (ndcPos2[srcIdx + 1] * 0.5f + 0.5f) * vpH;
+                canvPos2[dstIdx + 2] = minDepth + (ndcPos2[srcIdx + 2] * 0.5f + 0.5f) * depthDiff;
+            }
+        }
+    }
 }

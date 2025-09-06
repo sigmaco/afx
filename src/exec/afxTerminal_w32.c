@@ -23,7 +23,7 @@
 #endif
 #include "../../dep/stb_sprintf.h"
 #include <stdio.h>
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
 
 extern afxString const qwadroSignature;
 
@@ -104,6 +104,7 @@ _AFX afxResult AfxPrint(afxUnit32 color, afxChar const* msg)
 
         SetConsoleTextAttribute(ttyOut, tattr);
         fputs(msg, ttyOutFd);
+        SetConsoleTextAttribute(ttyOut, FOREGROUND_INTENSITY); // grey
         fflush(ttyOutFd);
         rslt = 1;
     }

@@ -15,13 +15,14 @@
  */
 
 // This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
-//#include "../draw/ddi/avxImplementation.h"
-#include "qwadro/inc/math/afxMatrix.h"
-#include "qwadro/inc/draw/avxMatrix.h"
-#include "qwadro/inc/math/afxMathDefs.h"
-#include "qwadro/inc/math/afxVector.h"
-#include "qwadro/inc/math/afxPlane.h"
+//#include "qwadro/draw/ddi/avxImplementation.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/draw/avxMatrix.h"
+#include "qwadro/math/afxMathDefs.h"
+#include "qwadro/math/afxVector.h"
+#include "qwadro/coll/afxPlane.h"
 
 #if 0
 avxClipSpace const  AVX_CLIP_SPACE_QWADRO =
@@ -727,4 +728,49 @@ _AVXINL void AfxDecomposeOffcenterPerspectiveM4d(afxM4d m, afxReal* left, afxRea
     *bottom = (n / m[1][1]) * (m[2][1] - 1.f);
     *near = n;
     *far = f;
+}
+
+_AVXINL void AvxDoNdcCoordinates(afxUnit cnt, afxV4d const clipPos[], afxV4d ndcPos[], afxUnit srcStride, afxUnit dstStride)
+{
+    afxError err = NIL;
+    AFX_ASSERT_ALIGNMENT(srcStride, sizeof(afxReal));
+    AFX_ASSERT(!srcStride || (srcStride >= sizeof(afxV3d)));
+    AFX_ASSERT_ALIGNMENT(dstStride, sizeof(afxReal));
+    AFX_ASSERT(!dstStride || (dstStride >= sizeof(afxV3d)));
+    srcStride = AFX_OR(srcStride, sizeof(afxV3d));
+    dstStride = AFX_OR(dstStride, sizeof(afxV3d));
+    afxUnit srcStep = srcStride / sizeof(afxReal);
+    afxUnit dstStep = dstStride / sizeof(afxReal);
+    afxReal const* clipPos2 = &clipPos[0][0];
+    afxReal* ndcPos2 = &ndcPos[0][0];
+
+    if ((clipPos == ndcPos) && (dstStep == srcStep))
+    {
+        for (afxUnit i = 0; i < cnt; i++)
+        {
+            afxUnit srcIdx = i * srcStep;
+            afxReal w = clipPos2[srcIdx + 3];
+            afxReal wr = 1.f / w;
+            ndcPos2[srcIdx + 0] *= wr;
+            ndcPos2[srcIdx + 1] *= wr;
+            ndcPos2[srcIdx + 2] *= wr;
+            // w_ndc is always 1.0. The purpose of this step is to flatten from 4D homogeneous space to 3D normalized space.
+            ndcPos2[srcIdx + 3] = 1.0;
+        }
+    }
+    else
+    {
+        for (afxUnit i = 0; i < cnt; i++)
+        {
+            afxUnit dstIdx = i * dstStep;
+            afxUnit srcIdx = i * srcStep;
+            afxReal w = clipPos2[srcIdx + 3];
+            afxReal wr = 1.f / w;
+            ndcPos2[dstIdx + 0] = clipPos2[srcIdx + 0] * wr;
+            ndcPos2[dstIdx + 1] = clipPos2[srcIdx + 1] * wr;
+            ndcPos2[dstIdx + 2] = clipPos2[srcIdx + 2] * wr;
+            // w_ndc is always 1.0. The purpose of this step is to flatten from 4D homogeneous space to 3D normalized space.
+            ndcPos2[dstIdx + 3] = 1.0;
+        }
+    }
 }

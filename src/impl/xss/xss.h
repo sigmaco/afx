@@ -4,7 +4,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "qwadro/inc/afxQwadro.h"
+#include "qwadro/afxQwadro.h"
 
 // The Luna semantic version number components.
 #define LUNA_VERSION_MAJOR 0

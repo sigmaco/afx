@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -17,11 +17,11 @@
 #define _ARX_SCENE_C
 #include "ddi/arxImpl_Input.h"
 #include "../draw/ddi/avxImplementation.h"
-#include "qwadro/inc/render/arxScene.h"
+#include "qwadro/render/arxScene.h"
 
 AFX_OBJECT(arxScene)
 {
-    arxRenderware    din;
+    arxRenderware    rwe;
     arxSkyType      skyType;
     arxMesh         skyMsh;
     avxColor        apexCol;
@@ -107,8 +107,8 @@ _ARX afxError ArxDrawSky(afxDrawContext dctx, arxScene scn)
     {
         AvxCmdUseDrawTechniqueSIGMA(dctx, scn->sky.skyDtec, 0, scn->sky.skyVin, NIL);
 
-        AvxCmdBindSamplers(dctx, 0, 1, 1, &scn->sky.smp);
-        AvxCmdBindRasters(dctx, 0, 1, 1, &scn->sky.cubemap);
+        AvxCmdBindSamplers(dctx, avxBus_DRAW, 0, 1, 1, &scn->sky.smp);
+        AvxCmdBindRasters(dctx, avxBus_DRAW, 0, 1, 1, &scn->sky.cubemap);
 
         AvxCmdBindVertexBuffers(dctx, 0, 1, (avxBufferedStream[]) { {.buf = scn->sky.cube, .stride = sizeof(afxV3d) } });
         //AvxCmdResetVertexStreams(dctx, 1, NIL, (afxUnit32[]) { sizeof(afxV3d) }, NIL);
@@ -127,9 +127,9 @@ _ARX afxError ArxReloadSkyVisual(arxScene scn, afxUri const* uri)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SCN, 1, &scn);
     
-    arxRenderware din = scn->din;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
-    afxDrawSystem dsys = ArxGetDrawInputContext(din); // temp workaround to get a context.
+    arxRenderware rwe = scn->rwe;
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
+    afxDrawSystem dsys = ArxGetRenderwareDrawSystem(rwe); // temp workaround to get a context.
 
     if (scn->skyType)
     {
@@ -164,7 +164,7 @@ _ARX afxError ArxReloadSkyVisual(arxScene scn, afxUri const* uri)
 
             if (i == 0)
             {
-                if (AvxLoadRasters(dsys, 1, &rasi, &urib.uri, &cubemap))
+                if (AvxLoadRasters(dsys, 1, &rasi, &urib.uri, NIL, &cubemap))
                 {
                     AfxThrowError();
                     break;
@@ -215,14 +215,14 @@ _ARX afxError _ArxScnCtorCb(arxScene scn, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SCN, 1, &scn);
 
-    arxRenderware din = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    arxRenderware rwe = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     arxSceneInfo const* info = AFX_CAST(arxSceneInfo const*, args[1]) + invokeNo;
     AFX_ASSERT(info);
 
-    afxDrawSystem dsys = ArxGetDrawInputContext(din); // temp workaround to get a context.
+    afxDrawSystem dsys = ArxGetRenderwareDrawSystem(rwe); // temp workaround to get a context.
 
-    scn->din = din;
+    scn->rwe = rwe;
 
     AfxV3dSet(scn->sky.rotPivot, 0, 0, 1);
     scn->sky.cubemapColorIntensity = 1.f;
@@ -239,7 +239,7 @@ _ARX afxError _ArxScnCtorCb(arxScene scn, void** args, afxUnit invokeNo)
         mshb.attrCnt = 1;
         mshb.vtxCnt = ARRAY_SIZE(skyboxVertices) / 3;
         mshb.triCnt = mshb.vtxCnt / 3;
-        ArxBuildMeshes(din, 1, &mshb, &scn->skyMsh);
+        ArxBuildMeshes(rwe, 1, &mshb, &scn->skyMsh);
         AFX_ASSERT_OBJECTS(afxFcc_MSH, 1, &scn->skyMsh);
 
         ArxFormatVertexAttribute(scn->skyMsh, 0, avxFormat_RGB32f, arxVertexFlag_POSITIONAL | arxVertexFlag_SPATIAL | arxVertexFlag_ATV, &AFX_STRING("pos"));
@@ -297,19 +297,19 @@ _ARX afxError _ArxScnCtorCb(arxScene scn, void** args, afxUnit invokeNo)
 
         afxUri uri;
         AfxMakeUri(&uri, 0, "../data/pipeline/skybox/skybox.xsh.xml", 0);
-        ArxLoadDrawTechnique(din, &uri, &scn->sky.skyDtec);
+        ArxLoadDrawTechnique(rwe, &uri, &scn->sky.skyDtec);
 
         avxVertexLayout skyVtxl =
         {
-            .srcCnt = 1,
-            .srcs = { AVX_VERTEX_FETCH(0, 0, 0, 0, 1) },
+            .binCnt = 1,
+            .bins = { AVX_VERTEX_STREAM(0, 0, 0, 0, 1) },
             .attrs = { AVX_VERTEX_ATTR(0, 0, avxFormat_RGB32f) }
         };
 
         AvxDeclareVertexInputs(dsys, 1, &skyVtxl, &scn->sky.skyVin);
         AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &scn->sky.skyVin);
 
-        avxSamplerInfo smpSpec = { 0 };
+        avxSamplerConfig smpSpec = { 0 };
         smpSpec.magnify = avxTexelFilter_LINEAR;
         smpSpec.minify = avxTexelFilter_LINEAR;
         smpSpec.mipFlt = avxTexelFilter_LINEAR;
@@ -322,13 +322,13 @@ _ARX afxError _ArxScnCtorCb(arxScene scn, void** args, afxUnit invokeNo)
     }
     else
     {
-        scn->skyMsh = ArxBuildSphereMesh(din, 2.0, 20, 20, TRUE);
+        ArxBuildSphereMesh(rwe, 2.0, 20, 20, TRUE, &scn->skyMsh);
 
         AvxMakeColor(scn->apexCol, 0.f, 0.15f, 0.66f, 1.f);
         AvxMakeColor(scn->centreCol, 0.81f, 0.38f, 0.66f, 1.f);
 
         avxPipeline pip;
-        avxPipelineBlueprint pipb = { 0 };
+        avxPipelineConfig pipb = { 0 };
         AvxAssemblePipelines(dsys, 1, &pipb, &pip);
         
         afxUri uri;
@@ -365,18 +365,18 @@ _ARX afxClassConfig const _ARX_SCN_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_ARX afxError ArxAcquireScenes(arxRenderware din, afxUnit cnt, arxSceneInfo infos[], arxScene scenes[])
+_ARX afxError ArxAcquireScenes(arxRenderware rwe, afxUnit cnt, arxSceneInfo infos[], arxScene scenes[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     AFX_ASSERT(scenes);
     AFX_ASSERT(infos);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = (afxClass*)_ArxGetSceneClass(din);
+    afxClass* cls = (afxClass*)_ArxRweGetScnClass(rwe);
     AFX_ASSERT_CLASS(cls, afxFcc_SCN);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)scenes, (void const*[]) { din, infos }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)scenes, (void const*[]) { rwe, infos }))
         AfxThrowError();
 
     return err;

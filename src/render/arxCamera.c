@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -32,9 +32,9 @@ _ARXINL void ArxSetCameraAspectRatios(arxCamera cam, afxReal physAspectRatio, af
     AFX_ASSERT_OBJECTS(afxFcc_CAM, 1, &cam);
     AFX_ASSERT(screenExtent);
     AFX_ASSERT(windowExtent);
-    cam->wpOverHp = physAspectRatio;
-    cam->wrOverHr = screenExtent[0] / screenExtent[1];
-    cam->wwOverHw = windowExtent[0] / windowExtent[1];
+    cam->wpOverHp = physAspectRatio ? physAspectRatio : 1;
+    cam->wrOverHr = AFX_MAX(1, screenExtent[0]) / AFX_MAX(1, screenExtent[1]);
+    cam->wwOverHw = AFX_MAX(1, windowExtent[0]) / AFX_MAX(1, windowExtent[1]);
     cam->shouldSyncP = TRUE;
 }
 
@@ -806,8 +806,8 @@ _ARX afxError _ArxCamCtorCb(arxCamera cam, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_CAM, 1, &cam);
 
-    arxRenderware din = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    arxRenderware rwe = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
 
     cam->perspective = TRUE;
 
@@ -840,15 +840,15 @@ _ARX afxClassConfig const _ARX_CAM_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_ARX afxError ArxAcquireCameras(arxRenderware din, afxUnit cnt, arxCamera cameras[])
+_ARX afxError ArxAcquireCameras(arxRenderware rwe, afxUnit cnt, arxCamera cameras[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
 
-    afxClass* cls = (afxClass*)_ArxDinGetCamClassCb_SW(din);
+    afxClass* cls = (afxClass*)_ArxRweGetCamClassCb_SW(rwe);
     AFX_ASSERT_CLASS(cls, afxFcc_CAM);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)cameras, (void const*[]) { din }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)cameras, (void const*[]) { rwe }))
     {
         AfxThrowError();
         return err;

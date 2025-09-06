@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This software is part of Advanced Multimedia UX Extensions & Experiments.
+
 #define _AUX_UX_C
 #define _AUX_WIDGET_C
 #define _AUX_WINDOW_C
@@ -35,8 +37,8 @@ _AUX afxError AfxDoWidgetInput(afxWidget wid)
 {
     afxError err = NIL;
 
-    afxWindow wnd = AfxGetProvider(wid);
-    afxSession ses = AfxGetProvider(wnd);
+    afxWindow wnd = AfxGetHost(wid);
+    afxSession ses = AfxGetHost(wnd);
 
     return err;
 }
@@ -48,11 +50,11 @@ _AUX afxError AfxTestWidget(afxWidget wid)
     return err;
 }
 
-_AUX afxError AfxDrawWidget(afxWidget wid, afxWarp const whd, afxDrawContext dctx)
+_AUX afxError AfxDrawWidget(afxWidget wid, afxRect const* area, afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
-    wid->renderCb(wid, dctx);
+    wid->renderCb(wid, area, dctx);
     return err;
 }
 
@@ -77,7 +79,9 @@ _AUX afxError _AuxWidCtorCb(afxWidget wid, void** args, afxUnit invokeNo)
     afxSurface dout;
     AfxGetWindowSurface(wnd, &dout);
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    afxDrawSystem dsys = AvxGetSurfaceSystem(dout);
+    afxDrawSystem dsys = AvxGetSurfaceHost(dout);
+
+
 
     return err;
 }

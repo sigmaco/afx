@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -21,10 +21,10 @@
 #define _ARX_RENDER_CONTEXT_C
 #include "ddi/arxImpl_Input.h"
 #include "../draw/ddi/avxImplementation.h"
-#include "qwadro/inc/render/arxScene.h"
-#include "qwadro/inc/render/arxRenderContext.h"
-#include "qwadro/inc/render/akxRenderer.h"
-#include "qwadro/inc/render/arxTerrain.h"
+#include "qwadro/render/arxScene.h"
+#include "qwadro/render/arxRenderContext.h"
+#include "qwadro/render/akxRenderer.h"
+#include "qwadro/cad/arxTerrain.h"
 
 AFX_DEFINE_STRUCT(_arxVisualTechnique)
 {
@@ -66,8 +66,8 @@ _ARX afxError ArxCmdPostUniform(arxRenderContext rctx, afxUnit set, afxUnit bind
         if (out_buffer)
         {
             frame->boundDynUbosRangeToBeFlused[set][binding] = out_offset + dataSiz;
-            avxBufferedMap map = AVX_BUFFERED_MAP(out_buffer, 0, AvxGetBufferCapacity(out_buffer, 0), NIL);
-            AvxCmdBindBuffers(frame->drawDctx, set, binding, 1, &map);
+            avxBufferedMap map = AVX_BUFFERED_MAP(out_buffer, out_offset, AvxGetBufferCapacity(out_buffer, out_offset), NIL);
+            AvxCmdBindBuffers(frame->drawDctx, avxBus_DRAW, set, binding, 1, &map);
         }
     }
     else
@@ -152,17 +152,20 @@ _ARX afxError ArxCmdPostVertexIndices(arxRenderContext rctx, afxUnit idxCnt, afx
     }
 }
 
-_ARX afxError ArxStageMaterials(arxRenderContext rctx, arxGeome morp, afxUnit cnt, afxUnit indices[])
+_ARX afxError ArxStageMaterials(arxRenderContext rctx, afxUnit cnt, afxUnit indices[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RCTX, 1, &rctx);
 
-    afxClass* mtlCls = (afxClass*)_ArxMorpGetMaterialClass(morp);
+    arxRenderware rwe = rctx->rwe;
+
+    afxClass* mtlCls = (afxClass*)_ArxRweGetMtlClass(rwe);
 
     for (afxUnit i = 0; i < cnt; i++)
     {
         arxMaterial mtl;
-        ArxEnumerateMaterials(morp, indices[i], 1, &mtl);
+        if (!ArxEnumerateMaterials(rwe, indices[i], 1, &mtl))
+            continue;
 
         _arxVisualMaterial* instMtl;
         afxUnit mtlId = AfxGetObjectId(mtl);
@@ -188,7 +191,7 @@ _ARX afxError ArxStageMaterials(arxRenderContext rctx, arxGeome morp, afxUnit cn
     return err;
 }
 
-_ARX afxBool ArxStdNodeCullCallback(void* udd, afxNode nod)
+_ARX afxBool ArxStdNodeCullCallback(void* udd, arxNode nod)
 {
     return FALSE; // do not cull
 }
@@ -262,7 +265,7 @@ _ARX afxError ArxCmdUseCamera(arxRenderContext rctx, arxCamera cam, afxRect cons
 
     AvxCmdUpdateBuffer(frame->transferDctx, frame->viewUbo, 0, sizeof(*viewConsts), viewConsts);
 
-    AvxCmdBindBuffers(frame->drawDctx, 0, 0, 1, (avxBufferedMap[]) { { .buf = frame->viewUbo } });
+    AvxCmdBindBuffers(frame->drawDctx, avxBus_DRAW, 0, 0, 1, (avxBufferedMap[]) { { .buf = frame->viewUbo } });
 
     return err;
 }
@@ -337,7 +340,9 @@ _ARX afxError ArxBeginScene(arxRenderContext rctx, afxDrawContext transferDctx, 
     if (!transferDctx)
     {
         afxDrawContext dctx;
-        AvxAcquireDrawContexts(rctx->dsys, afxDrawCaps_TRANSFER, NIL, TRUE, FALSE, 1, &dctx);
+        avxContextInfo ctxi = { 0 };
+        ctxi.caps = afxDrawFn_TRANSFER;
+        AvxAcquireDrawContexts(rctx->dsys, &ctxi, 1, &dctx);
         
         if (frame->transferDctx)
             AfxDisposeObjects(1, &frame->transferDctx);
@@ -359,7 +364,9 @@ _ARX afxError ArxBeginScene(arxRenderContext rctx, afxDrawContext transferDctx, 
     if (!drawDctx)
     {
         afxDrawContext dctx;
-        AvxAcquireDrawContexts(rctx->dsys, afxDrawCaps_DRAW, NIL, TRUE, FALSE, 1, &dctx);
+        avxContextInfo ctxi = { 0 };
+        ctxi.caps = afxDrawFn_DRAW;
+        AvxAcquireDrawContexts(rctx->dsys, &ctxi, 1, &dctx);
 
         if (frame->drawDctx)
             AfxDisposeObjects(1, &frame->drawDctx);
@@ -412,7 +419,7 @@ _ARX afxError ArxEndScene(arxRenderContext rctx, afxUnit id)
 
     for (afxUnit i = 0; i < 4; i++)
     {
-        for (afxUnit j = 0; j < 8; j++)
+        for (afxUnit j = 0; j < 32; j++)
         {
             if (frame->boundDynUbos[i][j])
             {
@@ -489,19 +496,19 @@ _ARX afxError _ArxRctxCtorCb(arxRenderContext rctx, void** args, afxUnit invokeN
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RCTX, 1, &rctx);
 
-    arxRenderware din = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    arxRenderware rwe = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     afxSimulation sim = args[1];
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     arxSceneInfo const* info = AFX_CAST(arxSceneInfo const*, args[1]) + invokeNo;
     AFX_ASSERT(info);
 
-    //arxRenderware din = info->din;
-    afxDrawSystem dsys = ArxGetDrawInputContext(din); // temp workaround to get a context.
+    //arxRenderware rwe = info->rwe;
+    afxDrawSystem dsys = ArxGetRenderwareDrawSystem(rwe); // temp workaround to get a context.
 
     rctx->sim = sim;
     rctx->dsys = dsys;
-    rctx->din = din;
+    rctx->rwe = rwe;
 
     AfxMakeArena(&rctx->cmdArena, NIL, AfxHere());
     AfxDeployChain(&rctx->commands, rctx);
@@ -543,28 +550,19 @@ _ARX afxClassConfig const _ARX_RCTX_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_ARX afxError ArxAcquireRenderContext(arxRenderware din, afxSimulation sim, afxUnit cnt, arxSceneInfo infos[], arxRenderContext* context)
+_ARX afxError ArxAcquireRenderContext(arxRenderware rwe, afxSimulation sim, afxUnit cnt, arxSceneInfo infos[], arxRenderContext* context)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     AFX_ASSERT(context);
     AFX_ASSERT(infos);
     AFX_ASSERT(cnt);
 
-    static afxBool rctxClsInitied = FALSE;
-    static afxClass rctxClass;
-
-    if (!rctxClsInitied)
-    {
-        AfxMountClass(&rctxClass, NIL, NIL, &_ARX_RCTX_CLASS_CONFIG);
-        rctxClsInitied = TRUE;
-    }
-
-    afxClass* cls = (afxClass*)&rctxClass;
+    afxClass* cls = (afxClass*)_ArxRweGetRctxClass(rwe);
     AFX_ASSERT_CLASS(cls, afxFcc_RCTX);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)context, (void const*[]) { din, sim, infos }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)context, (void const*[]) { rwe, sim, infos }))
         AfxThrowError();
 
     return err;

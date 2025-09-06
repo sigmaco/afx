@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -19,7 +19,7 @@
 #define _AFX_DRAW_TECHNIQUE_C
 #include "ddi/arxImpl_Input.h"
 
-ARX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, afxUnit specId, avxPipelineBlueprint* pipb, avxShaderType shaderStages[], afxUri shaderUris[], afxString shaderFns[]);
+ARX afxError _AvxParseXmlPipelineBlueprint(afxXml const* xml, afxUnit elemIdx, afxUnit specId, avxPipelineConfig* pipb, avxShaderType shaderStages[], afxUri shaderUris[], afxString shaderFns[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -32,13 +32,13 @@ _ARX afxCmdId AvxCmdUseDrawTechniqueSIGMA(afxDrawContext dctx, arxTechnique dtec
     return  AvxCmdBindPipeline(dctx, 0, pass->pip, vin, dynamics);
 }
 
-_ARX afxError ArxUpdateRasterizationPass(arxTechnique dtec, afxUnit passIdx, avxPipelineBlueprint const* cfg)
+_ARX afxError ArxUpdateRasterizationPass(arxTechnique dtec, afxUnit passIdx, avxPipelineConfig const* cfg)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DTEC, 1, &dtec);
 
-    arxRenderware din = AfxGetProvider(dtec);
-    afxDrawSystem dsys = ArxGetDrawInputContext(din);
+    arxRenderware rwe = AfxGetHost(dtec);
+    afxDrawSystem dsys = ArxGetRenderwareDrawSystem(rwe);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     avxPipeline pip;
     AvxAssemblePipelines(dsys, 1, cfg, &pip);
@@ -66,8 +66,8 @@ _ARX afxError _ArxDtecCtorCb(arxTechnique dtec, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DTEC, 1, &dtec);
 
-    arxRenderware din = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    arxRenderware rwe = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     afxUnit const passCnt = *(((afxUnit const*)args[1]) + invokeNo);
 
      AfxAllocate(passCnt * sizeof(dtec->passes[0]), 0, AfxHere(), (void**)&dtec->passes);
@@ -94,10 +94,10 @@ _ARX afxClassConfig const _ARX_DTEC_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_ARX afxError ArxLoadDrawTechnique(arxRenderware din, afxUri const* uri, arxTechnique* technique)
+_ARX afxError ArxLoadDrawTechnique(arxRenderware rwe, afxUri const* uri, arxTechnique* technique)
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     AFX_ASSERT(technique);
     AFX_ASSERT(uri);
 
@@ -125,10 +125,10 @@ _ARX afxError ArxLoadDrawTechnique(arxRenderware din, afxUri const* uri, arxTech
 
     afxUnit passCnt = AfxFindXmlTaggedElements(&xml, xmlElemIdx, 0, &AFX_STRING("Pass"), NIL, 0, NIL, NIL);
 
-    afxClass* cls = (afxClass*)ArxGetDrawTechniqueClass(din);
+    afxClass* cls = (afxClass*)_ArxRweGetTechClass(rwe);
     AFX_ASSERT_CLASS(cls, afxFcc_DTEC);
 
-    if (AfxAcquireObjects(cls, 1, (afxObject*)technique, (void const*[]) { din, (void*)&passCnt })) AfxThrowError();
+    if (AfxAcquireObjects(cls, 1, (afxObject*)technique, (void const*[]) { rwe, (void*)&passCnt })) AfxThrowError();
     else
     {
         afxUnit n0ChildCnt = AfxCountXmlChilds(&xml, xmlElemIdx);
@@ -148,7 +148,7 @@ _ARX afxError ArxLoadDrawTechnique(arxRenderware din, afxUri const* uri, arxTech
             if (AfxCompareStrings(&name, 0, TRUE, 1, &AFX_STRING("Pass"), NIL))
             {
                 afxUnit arrelIdx;
-                avxPipelineBlueprint config = { 0 };
+                avxPipelineConfig config = { 0 };
                 _AvxParseXmlPipelineBlueprint(&xml, nodeIdx, 0, &config, shaderStages, shaderUris, shaderFns);
 
                 ArxUpdateRasterizationPass(*technique, passIdx, &config);

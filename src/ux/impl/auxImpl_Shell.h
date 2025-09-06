@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This software is part of Advanced Multimedia UX Extensions & Experiments.
+
   //////////////////////////////////////////////////////////////////////////////
  // Advanced User Experience                                                 //
 //////////////////////////////////////////////////////////////////////////////
@@ -22,9 +24,9 @@
 #define AUX_IMPL___SHELL_H
 
 #include "../../impl/afxExecImplKit.h"
-#include "qwadro/inc/ux/afxUxDefs.h"
-#include "qwadro/inc/draw/avxViewport.h"
-#include "qwadro/inc/ux/afxShell.h"
+#include "qwadro/ux/afxUxDefs.h"
+#include "qwadro/draw/avxViewport.h"
+#include "qwadro/ux/afxShell.h"
 //#include "qwadro/../../dep_/vgl1/vgl1.h"
 
 typedef struct afxDesktop afxDesktop;
@@ -50,6 +52,14 @@ AFX_DEFINE_STRUCT(afxShellInfo)
     afxClassConfig const*   xssClsCfg;
 };
 
+AFX_DEFINE_STRUCT(afxHidInfo)
+{
+    afxDeviceInfo   dev;
+    afxHidType      type;
+    afxHidCaps      caps;
+    afxHidLimits    limits;
+};
+
 #ifdef _AUX_UX_C
 #ifdef _AUX_SHELL_C
 #ifndef _AFX_DEVICE_C
@@ -59,7 +69,6 @@ AFX_OBJECT(afxShell)
 {
     AFX_OBJ(afxDevice)  dev;
     afxClass            kbdCls;
-    afxClass            mseCls;
     afxClass            padCls;
     afxClass            sesCls;
 
@@ -81,6 +90,7 @@ AFX_DEFINE_STRUCT(_auxSesImpl)
     afxBool(*getCurs)(afxSession, afxRect*,afxWindow,afxRect*,afxRect*);
     afxError(*fseCb)(afxSession,afxWindow,afxBool);
     afxError(*focusCb)(afxSession, afxWindow, afxFlags);
+    afxError(*drawBgCb)(afxSession, afxDrawContext, afxFlags);
     afxError(*promote)(afxSession, afxWindow);
     afxError(*grabCursorCb)(afxSession, afxWindow, afxBool);
 };
@@ -99,6 +109,7 @@ AFX_OBJECT(afxSession)
     afxChain            classes;
     afxClass            termCls;
     afxClass            wndCls;
+    afxClass            fntCls;
     afxClass            xssCls;
 
     afxWindow           focusedWnd;
@@ -251,14 +262,6 @@ AFX_OBJECT(afxWindow)
 };
 #endif//_AUX_WINDOW_C
 
-AFX_DEFINE_STRUCT(afxHidInfo)
-{
-    afxDeviceInfo   dev;
-    afxHidType      type;
-    afxHidCaps      caps;
-    afxHidLimits    limits;
-};
-
 #ifdef _AUX_HID_C
 #ifndef _AFX_DEVICE_C
 #   error "Require afxDevice implementation"
@@ -288,19 +291,6 @@ AFX_OBJECT(afxKeyboard)
     afxUnit             keyCnt;
     afxUnit8            lastKeyState[afxKey_TOTAL];
     afxUnit8            prevKeyState[afxKey_TOTAL];
-};
-#endif//_AUX_KEYBOARD_C
-
-#ifdef _AUX_MOUSE_C
-#ifndef _AFX_CONTEXT_C
-#   error "Require afxDevLink implementation"
-#endif
-AFX_OBJECT(afxMouse)
-{
-    AFX_OBJ(afxDevLink) ctx;
-    afxUnit             port;
-    afxHidFlag          flags;
-    void*               idd;
 
     // mouse
     afxUnit             buttonCnt;
@@ -312,7 +302,7 @@ AFX_OBJECT(afxMouse)
     afxV2d              lastMotion;
     afxV2d              prevMotion;
 };
-#endif//_AUX_MOUSE_C
+#endif//_AUX_KEYBOARD_C
 
 #ifdef _AUX_GAMEPAD_C
 #ifndef _AFX_CONTEXT_C
@@ -369,10 +359,48 @@ AFX_OBJECT(afxWidget)
     afxM4d iw;
 
     afxResult(*updateCb)(afxWidget wid, afxReal dt);
-    afxError(*renderCb)(afxWidget wid, afxDrawContext dctx);
+    afxError(*renderCb)(afxWidget wid, afxRect const* area, afxDrawContext dctx);
 };
 #endif//_AUX_WIDGET_C
 #endif//_AUX_UX_C
+
+#ifdef _AUX_FONT_C
+
+AFX_DEFINE_STRUCT(_auxFontPage)
+{
+
+};
+
+AFX_DEFINE_STRUCT(_auxFontImage)
+{
+    afxReal     height;
+    afxReal     ascent;
+    afxReal     descent;
+    afxUnit     baseGlyph;
+    afxUnit     glyphCnt;
+    avxRaster   ras;
+};
+
+#ifdef _AUX_FONT_IMPL
+AFX_OBJECT(_auxFont)
+#else
+AFX_OBJECT(afxFont)
+#endif
+{
+    afxUnit         pagCnt;
+    _auxFontPage*   pages;
+
+    afxDrawSystem   dsys;
+    afxBool         fntEnabled;
+    avxPipeline     fntPip;
+    avxSampler      fntSamp;
+    avxBuffer       fntVbo;
+    afxByte*        fntVboPtr;
+    avxBufferedRing fntVboRng;
+    afxUnit         fntStoreLen;
+};
+
+#endif
 
 AUX afxClassConfig const _AuxCtrlStdImplementation;
 AUX afxClassConfig const _AuxKbdStdImplementation;
@@ -384,6 +412,7 @@ AUX afxClassConfig const _AUX_WND_CLASS_CONFIG;
 AUX _auxWndDdi const _AUX_WND_IMPL;
 
 AUX afxClassConfig const _AUX_WID_CLASS_CONFIG;
+AUX afxClassConfig const _AUX_FNT_CLASS_CONFIG;
 
 AUX afxClass const* AfxGetMouseClass(afxShell ssh);
 AUX afxClass const* AfxGetKeyboardClass(afxShell ssh);
@@ -392,6 +421,7 @@ AUX afxClass const* _AuxGetSessionClass(afxModule icd);
 
 AUX afxClass const* _AuxWndGetWidClass(afxWindow wnd);
 AUX afxClass const* _AuxSesGetWndClass(afxSession ses);
+AUX afxClass const* _AuxSesGetFntClass(afxSession ses);
 AUX afxClass const* _AuxSesGetXssClass(afxSession ses);
 
 AUX afxError _AfxSesFocusWindowCb(afxSession ses, afxWindow wnd, afxFlags flags);

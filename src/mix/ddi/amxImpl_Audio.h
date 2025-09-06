@@ -7,19 +7,27 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                     Q W A D R O   S O U N D   I / O   S Y S T E M
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #ifndef AMX_IMPL___AUDIO_H
 #define AMX_IMPL___AUDIO_H
 
 #include "amxImpl_Executor.h"
+
+typedef enum amxAudioLayout
+{
+    amxAudioLayout_INTERLEAVED = 0,
+    amxAudioLayout_PLANAR = 1 // Deinterleaved
+} amxAudioLayout;
+
+AMX afxBool audio_apply_layout(amxAudio a, amxAudioLayout desiredLayout, afxUnit baseSeg, afxUnit segCnt);
 
 AMX afxError _AmxFillAudio(amxAudio aud, amxAudioPeriod const* op, afxReal amplitude, afxReal freq, afxReal period);
 AMX afxError _AmxCopyAudio(amxAudio src, amxAudio dst, amxAudioCopy const* op);
@@ -38,8 +46,22 @@ AMX afxError _AmxSpu_ResampleF32I16(amxMpu* mpu, amxAudio src, amxAudio dst, amx
 AMX afxError _AmxSpu_ResampleI16F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
 AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
 
-AMX void _AmxGenerateSineWave(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGenerateSquareWave(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGenerateTriangleWave(amxAudio aud, afxUnit chIdx, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateSineWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateSquareWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateTriangleWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateSawtoothWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateWhiteNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGeneratePinkNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateBrownianNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateBlueNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateVioletNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateGrayNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+
+AMX afxError _AmxFillBuffer(amxBuffer buf, afxSize offset, afxSize range, afxUnit stride, afxUnit sampleCnt, afxUnit sampleRate, amxFormat fmt, afxReal amplitude, afxReal freq, afxReal dur);
+AMX afxError _AmxDumpBuffer(amxBuffer buf, amxBufferIo const* op, void* dst);
+AMX afxError _AmxUpdateBuffer(amxBuffer buf, amxBufferIo const* op, void const* src);
+AMX afxError _AmxDownloadBuffer(amxBuffer buf, amxBufferIo const* op, afxStream iob);
+AMX afxError _AmxUploadBuffer(amxBuffer buf, amxBufferIo const* op, afxStream iob);
+AMX afxError _AmxCopyBuffer(amxBuffer buf, amxBufferCopy const* op, amxBuffer dst);
 
 #endif//AMX_IMPL___AUDIO_H

@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 //#define _AFX_DEVICE_C
@@ -23,7 +24,7 @@
 #define _AFX_THREAD_C
 #define _AVX_DRAW_BRIDGE_C
 #define _AVX_DRAW_QUEUE_C
-//#define _AVX_DRAW_OUTPUT_C
+//#define _AVX_SURFACE_C
 #define _AVX_DRAW_CONTEXT_C
 #define _AVX_BUFFER_C
 #include "avxImplementation.h"
@@ -31,8 +32,7 @@
 _AVX afxError _AvxDpuWork_CallbackCb(avxDpu* dpu, _avxIoReqPacket* work)
 {
     afxError err = AFX_ERR_NONE;
-    work->Callback.f(dpu, work->Callback.udd);
-    return err;
+    return work->Callback.f(dpu, work->Callback.udd);
 }
 
 _AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, _avxIoReqPacket* work)
@@ -92,12 +92,13 @@ _AVX afxBool _PullDque(afxDrawQueue dque, avxDpu* dpu)
         AFX_ITERATE_CHAIN_B2F(_avxIoReqPacket, iorp, hdr.chain, &dque->iorpChn)
         {
             AFX_ASSERT(dque->iorpChn.cnt);
-            AfxGetTime(&iorp->hdr.pullTime);
+            AfxGetClock(&iorp->hdr.pullTime);
 
             AFX_ASSERT(iorpVmt->f[iorp->hdr.id]);
-            iorpVmt->f[iorp->hdr.id](dpu, iorp);
+            if (afxError_TIMEOUT == iorpVmt->f[iorp->hdr.id](dpu, iorp))
+                continue;
 
-            AfxGetTime(&iorp->hdr.complTime);
+            AfxGetClock(&iorp->hdr.complTime);
             _AvxDquePopIoReqPacket(dque, iorp);
         }
         AfxSignalCondition(&dque->idleCnd);
@@ -140,12 +141,13 @@ _AVX afxBool _AvxDpu_ProcCb(avxDpu* dpu)
             AFX_ITERATE_CHAIN_B2F(_avxIoReqPacket, iorp, hdr.chain, &dque->iorpChn)
             {
                 AFX_ASSERT(dque->iorpChn.cnt);
-                AfxGetTime(&iorp->hdr.pullTime);
+                AfxGetClock(&iorp->hdr.pullTime);
 
                 AFX_ASSERT(iorpVmt->f[iorp->hdr.id]);
-                iorpVmt->f[iorp->hdr.id](dpu, iorp);
+                if (afxError_TIMEOUT == iorpVmt->f[iorp->hdr.id](dpu, iorp))
+                    continue;
 
-                AfxGetTime(&iorp->hdr.complTime);
+                AfxGetClock(&iorp->hdr.complTime);
                 _AvxDquePopIoReqPacket(dque, iorp);
             }
             AfxSignalCondition(&dque->idleCnd);

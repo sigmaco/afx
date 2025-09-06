@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -19,8 +19,8 @@
 #define _ASX_NODE_C
 #include "ddi/arxImpl_Input.h"
 #include "../draw/ddi/avxImplementation.h"
-#include "qwadro/inc/render/arxScene.h"
-#include "qwadro/inc/sim/afxSimulation.h"
+#include "qwadro/render/arxScene.h"
+#include "qwadro/sim/afxSimulation.h"
 
 
 _ARX afxError ArxCmdRenderBodies(arxRenderContext rctx, afxM4d m, afxUnit cnt, arxBody bodies[])
@@ -95,11 +95,12 @@ _ARX afxError ArxCmdRenderBodies(arxRenderContext rctx, afxM4d m, afxUnit cnt, a
         afxM4d matrices[256];
         AFX_ASSERT(ARRAY_SIZE(matrices) >= instBod->jntCnt);
         ArxBuildCompositeMatrices(plce, instBod->mdl, 0, instBod->jntCnt, FALSE, matrices);
-#if 0
+#if !0
+        //AvxCmdUpdateBuffer(frame->transferDctx, instBod->perFrame[rctx->frameIdx].mtxUbo, instBod->perFrame[rctx->frameIdx].mtxUboBase, instBod->perFrame[rctx->frameIdx].mtxUboRange, matrices);
         AvxCmdUpdateBuffer(frame->transferDctx, instBod->perFrame[rctx->frameIdx].mtxUbo, instBod->perFrame[rctx->frameIdx].mtxUboBase, instBod->perFrame[rctx->frameIdx].mtxUboRange, matrices);
 
         frame->mtxStackUboBaseOffset = instBod->perFrame[rctx->frameIdx].mtxUboBase;
-        AvxCmdBindBuffers(frame->drawDctx, 3, 0, 1, (avxBufferedMap[]) { {.buf = instBod->perFrame[rctx->frameIdx].mtxUbo } });
+        AvxCmdBindBuffers(frame->drawDctx, avxBus_DRAW, 3, 30, 1, (avxBufferedMap[]) { {.buf = instBod->perFrame[rctx->frameIdx].mtxUbo } });
 #else
         void* matrixStack;
         ArxCmdPostUniform(rctx, 3, 30, instBod->perFrame[rctx->frameIdx].mtxUboRange, &matrixStack);
@@ -110,25 +111,25 @@ _ARX afxError ArxCmdRenderBodies(arxRenderContext rctx, afxM4d m, afxUnit cnt, a
     return err;
 }
 
-_ARX afxError ArxCmdRenderNode(arxRenderContext rctx, afxUnit cnt, afxNode nodes[])
+_ARX afxError ArxCmdRenderNode(arxRenderContext rctx, afxUnit cnt, arxNode nodes[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RCTX, 1, &rctx);
 
     for (afxUnit nodIdx = 0; nodIdx < cnt; nodIdx++)
     {
-        afxNode nod = nodes[nodIdx];
+        arxNode nod = nodes[nodIdx];
         if (!nod) continue;
         AFX_ASSERT_OBJECTS(afxFcc_NOD, 1, &nod);
 
-        if (nod->type == asxNodeType_Leaf_AnimBlend)
+        if (nod->type == arxNodeType_Leaf_AnimBlend)
         {
-            arxBody bod = nod->animBlend.bod;
+            arxBody bod = nod->bod;
             if (!bod) continue;
             AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
 
             afxM4d w;
-            AsxGetNodeMatrix(nod, w);
+            ArxGetNodeMatrix(nod, w);
             ArxCmdRenderBodies(rctx, w, 1, &bod);
         }
     }

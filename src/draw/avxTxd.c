@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+ // This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_TXD_C
@@ -161,7 +161,7 @@ _AVX afxError AvxRequestTextures(avxTxd txd, afxUnit cnt, afxUnit indices[])
 
                 avxRasterInfo rasi = { 0 };
 
-                if (AvxLoadRasters(AfxGetProvider(txd), 1, &rasi, &urib.uri, &tex->ras))
+                if (AvxLoadRasters(AfxGetHost(txd), 1, &rasi, &urib.uri, NIL, &tex->ras))
                     AfxThrowError();
             }
             ++tex->reqCnt;

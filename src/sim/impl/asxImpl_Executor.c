@@ -18,7 +18,7 @@
 
 #define _ASX_SIM_QUEUE_C
 #define _ASX_SIM_BRIDGE_C
-#include "afx/src/sim/impl/asxImplementation.h"
+#include "asxImplementation.h"
 
 _ASX afxError _AsxSpuWork_CallbackCb(asxSpu* spu, asxWork* work)
 {

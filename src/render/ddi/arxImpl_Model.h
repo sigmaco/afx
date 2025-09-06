@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -19,7 +19,7 @@
 #ifndef ARX_IMPL___CAD_H
 #define ARX_IMPL___CAD_H
 
-#include "qwadro/inc/render/arxRenderware.h"
+#include "qwadro/render/arxRenderware.h"
 
 #ifdef _ARX_MATERIAL_C
 
@@ -94,14 +94,6 @@ AFX_OBJECT(arxGeome)
 #endif
 {
     afxChain        classes;
-    afxClass        mtlCls;
-    afxClass        mshCls;
-    afxClass        mdlCls;
-    afxClass        terCls;
-
-    afxStringBase   strbMdlSklMotUrns;
-    afxStringBase   strbJointBiasesTags;
-    afxStringBase   strbMorphTags;
 };
 
 #endif//_ARX_GEOME_C

@@ -7,14 +7,14 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
- // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #define _AMX_MIX_C
 #define _AMX_MIX_SYSTEM_C
@@ -28,7 +28,7 @@
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
 #define _AMX_AUDIO_C
-#include "../ddi/amxImplementation.h"
+#include "ddi/amxImplementation.h"
 
 
 _AMX afxError _AmxMsrcDtorCb(amxSource msrc)
@@ -61,7 +61,7 @@ _AMX afxClassConfig const _AMX_MSRC_CLASS_CONFIG =
     .fcc = afxFcc_MSRC,
     .name = "MediaSource",
     .desc = "Media Source",
-    //.fixedSiz = sizeof(AFX_OBJECT(amxSession)),
+    //.fixedSiz = sizeof(AFX_OBJECT(amxTracker)),
     .ctor = (void*)_AmxMsrcCtorCb,
     .dtor = (void*)_AmxMsrcDtorCb
 };

@@ -15,16 +15,9 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #include "ddi/avxImplementation.h"
-
-_AVX avxSwizzling const AVX_COLOR_SWIZZLING_IDENTITY =
-{
-    avxColorSwizzle_R,
-    avxColorSwizzle_G,
-    avxColorSwizzle_B,
-    avxColorSwizzle_A
-};
 
 _AVX afxReal AfxToSrgba(afxReal linear)
 {

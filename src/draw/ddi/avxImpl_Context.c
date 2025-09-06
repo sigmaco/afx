@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 //#define _AFX_DEVICE_C
@@ -22,7 +23,7 @@
 #define _AVX_DRAW_BRIDGE_C
 //#define _AVX_DRAW_SYSTEM_C
 #define _AVX_DRAW_QUEUE_C
-//#define _AVX_DRAW_OUTPUT_C
+//#define _AVX_SURFACE_C
 #define _AVX_DRAW_CONTEXT_C
 #define _AVX_BUFFER_C
 #include "avxImplementation.h"
@@ -94,7 +95,7 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx, afxUnit batch
         //AFX_ASSERT(dctx->portId == dpu->portId);
         //cmdb->state = avxDrawContextState_INVALID;
 
-        afxDrawBridge dexu = AfxGetProvider(dctx);
+        afxDrawBridge dexu = AfxGetHost(dctx);
         AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 #if 0
         //afxUnit poolIdx = dctx->poolIdx;

@@ -22,7 +22,7 @@
 //#define _ARX_BODY_C
 //#define _ARX_MODEL_C
 //#define _ARX_MOTOR_C
-#include "../../sim/impl/asxImplementation.h"
+#include "impl/asxImplementation.h"
 
 _ARX afxMask ArxGetMotionFlags(arxMotion mot)
 {
@@ -48,7 +48,7 @@ _ARXINL afxBool ArxFindMotionTransform(arxMotion mot, afxString const* seqId, af
     afxBool found = FALSE;
     afxUnit pivotCnt = mot->pivotCnt;
 
-    //afxStringBase strb = _ArxGetPivotTagStringBase(AfxGetProvider(mot));
+    //afxStringBase strb = _ArxGetPivotTagStringBase(AfxGetHost(mot));
 
     for (afxUnit i = 0; i < pivotCnt; i++)
     {
@@ -77,7 +77,7 @@ _ARXINL afxBool ArxFindMotionVector(arxMotion mot, afxString const* seqId, afxUn
     afxBool rslt = FALSE;
     afxUnit vecCnt = mot->vecCnt;
 
-    afxStringBase strb = _ArxDinGetAnimUrnStringBase(AfxGetProvider(mot));
+    afxStringBase strb = _ArxRweGetAnimUrnStringBase(AfxGetHost(mot));
 
     for (afxUnit i = 0; i < vecCnt; i++)
     {
@@ -142,7 +142,7 @@ _ARX afxError _ArxMotCtorCb(arxMotion mot, void** args, afxUnit invokeNo)
     arxMotionBlueprint const* motb = args[1];
     motb += invokeNo;
 
-    if (!AfxCatalogStrings(_ArxDinGetAnimUrnStringBase(sim), 1, &motb->id.s, &mot->id))
+    if (!AfxCatalogStrings(_ArxRweGetAnimUrnStringBase(sim), 1, &motb->id.s, &mot->id))
         AfxThrowError();
 
     afxUnit vecCnt = motb->vecCnt;
@@ -172,7 +172,7 @@ _ARX afxError _ArxMotCtorCb(arxMotion mot, void** args, afxUnit invokeNo)
         for (afxUnit i = 0; i < vecCnt; i++)
             AfxResetStrings(1, &mot->vectors[i]);
     }
-    else if (!AfxCatalogStrings(_ArxDinGetAnimUrnStringBase(sim), vecCnt, motb->vectors, mot->vectors)) // AfxRegisterMorphTags is temp
+    else if (!AfxCatalogStrings(_ArxRweGetAnimUrnStringBase(sim), vecCnt, motb->vectors, mot->vectors)) // AfxRegisterMorphTags is temp
         AfxThrowError();
 
     if ((mot->vecCnt = vecCnt))
@@ -194,7 +194,7 @@ _ARX afxError _ArxMotCtorCb(arxMotion mot, void** args, afxUnit invokeNo)
         for (afxUnit i = 0; i < pivotCnt; i++)
             AfxResetStrings(1, &mot->pivots[i]);
     }
-    else if (!AfxCatalogStrings(_ArxDinGetAnimUrnStringBase(sim), pivotCnt, motb->pivots, mot->pivots))
+    else if (!AfxCatalogStrings(_ArxRweGetAnimUrnStringBase(sim), pivotCnt, motb->pivots, mot->pivots))
         AfxThrowError();
 
     if ((mot->pivotCnt = pivotCnt))

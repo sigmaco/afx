@@ -29,6 +29,9 @@ _AFXINL afxBool AfxIsAnValidPoolUnit(afxPool* pool, afxSize idx)
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
 #endif
 
+    // Avoid division by zero.
+    if (!pool->unitsPerPage) return FALSE;
+
     afxSize pageIdx = idx / pool->unitsPerPage;
 
     if (0 == pool->pageCnt || (pageIdx >= pool->pageCnt))
@@ -241,6 +244,9 @@ _AFX afxBool AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr)
 #endif
     afxBool alloced = 0;
 
+    // Avoid division by zero.
+    if (!pool->unitsPerPage) return FALSE;
+
     afxSize pageIdx = idx / pool->unitsPerPage;
 
     if (pool->pageCnt > pageIdx)
@@ -332,6 +338,9 @@ _AFX afxError AfxTakePoolUnit(afxPool* pool, afxSize idx, void *val)
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
 #endif
+    
+    // Avoid division by zero.
+    if (!pool->unitsPerPage) return FALSE;
 
     afxPoolPage *pag;
     afxSize pageIdx = idx / pool->unitsPerPage;

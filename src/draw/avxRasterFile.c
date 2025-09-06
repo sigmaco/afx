@@ -14,10 +14,9 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #include "ddi/avxImplementation.h"
-#include "qwadro/inc/draw/avxRasterFile.h"
 
 static_assert(sizeof(avxFormat) == sizeof(afxUnit32), "");
 static_assert(sizeof(avxTgaFlags) == sizeof(afxUnit32), "");
@@ -211,14 +210,16 @@ void DecompressRleChunk(afxStream stream, afxUnit width, afxUnit height, afxUnit
     while (currByte < siz)
     {
         afxByte hdr;
-        AfxReadStream(stream, sizeof(afxByte), 0, &hdr);
+        if (AfxReadStream(stream, sizeof(afxByte), 0, &hdr))
+            break;
 
         afxUnit runLen = (hdr & 0x7F) + 1;
 
         if (hdr & 0x80) // high bit is set when it's a run-length packet.
         {
             afxByte buf[4];
-            AfxReadStream(stream, sizeof(afxByte) * byteCnt, 0, buf);
+            if (AfxReadStream(stream, sizeof(afxByte) * byteCnt, 0, buf))
+                break;
 
             for (afxUnit i = 0; i < runLen; i++)
             {
@@ -232,7 +233,9 @@ void DecompressRleChunk(afxStream stream, afxUnit width, afxUnit height, afxUnit
 
             for (afxUnit i = 0; i < runLen; i++)
             {
-                AfxReadStream(stream, sizeof(afxByte) * byteCnt, 0, &dst[currByte]);
+                if (AfxReadStream(stream, sizeof(afxByte) * byteCnt, 0, &dst[currByte]))
+                    break;
+
                 currByte += byteCnt;
             }
         }
@@ -261,7 +264,7 @@ void DecodeRle8(afxUnit w, afxUnit h, afxByte const* in, afxByte* out)
     }
 }
 
-_AVX afxError AfxPrepareRasterFile(avxRasterFile* tga, avxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, avxRasterFlags flags, afxUnit uddSiz)
+_AVX afxError AvxPrepareRasterFile(avxRasterFile* tga, avxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, avxRasterFlags flags, afxUnit uddSiz)
 {
     afxError err = NIL;
     AFX_ASSERT(tga);
@@ -322,9 +325,18 @@ _AVX afxError AfxPrepareRasterFile(avxRasterFile* tga, avxRasterIo* iop, afxUnit
     tgai.lodCnt = AFX_MAX(1, lodCnt);
     tgai.baseLod = iop->rgn.lodIdx;
     tgai.fmt = fmt ? fmt : avxFormat_BGRA8un;
-    tgai.bpp = pfd.bpp / pfd.bcWh[0];
+    tgai.bpp = pfd.bpp / (pfd.bcWh[0] * pfd.bcWh[1]); // 128 / (4*4) == 8, 32 / 1*1 ==32
     tgai.descriptor = 0;
 
+    if (pfd.bpc[3])
+        tgai.descriptor |= (AFX_MIN(pfd.bpc[3], 8) & 0x0F); // Set to 8 alpha bits --- (8 & 0x0F)
+#if 0
+    if (flags & avxRasterFlag_MIRRORED)
+        tgai.flags |= avxTgaFlag_MIRRORED;
+
+    if (flags & avxRasterFlag_FLIPPED)
+        tgai.flags |= avxTgaFlag_FLIPPED;
+#endif
     if (flags & avxRasterFlag_CUBEMAP)
         tgai.flags |= avxTgaFlag_CUBEMAP;
 
@@ -345,7 +357,7 @@ _AVX afxError AfxPrepareRasterFile(avxRasterFile* tga, avxRasterIo* iop, afxUnit
     return err;
 }
 
-_AVX afxError AfxWriteRasterFile(avxRasterFile* tgai, void* udd, afxUnit uddSiz, afxStream out)
+_AVX afxError AvxWriteRasterFile(avxRasterFile* tgai, void* udd, afxUnit uddSiz, afxStream out)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
@@ -371,7 +383,7 @@ _AVX afxError AfxWriteRasterFile(avxRasterFile* tgai, void* udd, afxUnit uddSiz,
     return err;
 }
 
-_AVX afxError AfxReadRasterFile(avxRasterFile* info, afxStream in)
+_AVX afxError AvxReadRasterFile(avxRasterFile* info, afxStream in)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
@@ -446,8 +458,24 @@ _AVX afxError AfxReadRasterFile(avxRasterFile* info, afxStream in)
         info->encSiz = 0;
         info->codec = (tgai.imgType >= 9 && 11 <= tgai.imgType) ? avxTgaCodec_RLE8 : avxTgaCodec_NONE;
 
-        afxUnit8 alphaBits = tgai.descriptor & 0x0F;
+        // "Attribute" bits per pixel (usually alpha bits).
+        // Check both pixel depth and image descriptor to confirm if alpha is present.
+        afxUnit8 alphaBits = (tgai.descriptor & 0x0F);
         
+        // If bit 5 is not set (0), image is stored bottom-up (not inverted).
+        // If bit 5 is set (1), image is stored top-down  (inverted vertically, common for modern usage).
+        // This is often where people get confused. Bit 5 is a vertical flip flag.
+        afxBool isTopdown = (tgai.descriptor & AFX_BITMASK(5));
+        if (isTopdown) tgai.flags |= avxTgaFlag_FLIPPED;
+
+        // Bit 4: Left-to-right (horizontal origin).
+        // If bit is not set (0), origin is on left side (standard).
+        // If bit is set (1), origin is on right side (mirrored horizontally).
+        afxBool isRightToLeft = (tgai.descriptor & AFX_BITMASK(4));
+        if (isRightToLeft) tgai.flags |= avxTgaFlag_MIRRORED;
+
+        afxUnit8 reservedBits = tgai.descriptor >> 6; // bits 6–7
+
         switch (tgai.imgType)
         {
         case 2: // DATA TYPE 2 - TRUE-COLOR IMAGES
@@ -582,7 +610,7 @@ _AVX afxError AfxReadRasterFile(avxRasterFile* info, afxStream in)
     return err;
 }
 
-_AVX afxError AfxDecodeRasterFile(avxRasterFile const* meta, afxStream in, void* dst)
+_AVX afxError AvxDecodeRasterFile(avxRasterFile const* meta, afxStream in, void* dst)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);

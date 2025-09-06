@@ -5,7 +5,7 @@
 #define _AFX_SCRIPT_C
 #include "../afxIoImplKit.h"
 #include "xss.h"
-#include "qwadro/inc/exec/afxScript.h"
+#include "qwadro/exec/afxScript.h"
 
 AFX void GenAcqObj(xssVm vm);
 AFX void GenRelObj(void* data);
@@ -453,11 +453,11 @@ void _XsCamGet(xssVm vm)
 void _XsCamAcquire(xssVm vm)
 {
     afxUri uri;
-    arxRenderware din = XssPullInstance(vm, 1);
+    arxRenderware rwe = XssPullInstance(vm, 1);
     afxV3d v;
     XssPullReal3(vm, 2, v);
     arxCamera cam;
-    AvxAcquireCameras(din, 1, &cam);
+    AvxAcquireCameras(rwe, 1, &cam);
     AvxTranslateCamera(cam, v);
     XssPushInstance(vm, 0, cam);
 }

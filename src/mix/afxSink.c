@@ -7,14 +7,14 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
- // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #define _AMX_MIX_C
 #define _AMX_MIX_SYSTEM_C
@@ -24,14 +24,14 @@
 #define _AMX_MIX_DEVICE_C
 #define _AMX_MIX_SYSTEM_C
 #define _AMX_SINK_C
-#include "../ddi/amxImplementation.h"
-#include "qwadro/inc/mix/afxSink.h"
+#include "ddi/amxImplementation.h"
+#include "qwadro/mix/afxSink.h"
 
 _AMX afxMixSystem AfxGetAudioSinkContext(afxSink sink)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
-    afxMixSystem msys = AfxGetProvider(sink);
+    afxMixSystem msys = AfxGetHost(sink);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     return msys;
 }
@@ -42,7 +42,7 @@ _AMX afxMixDevice AfxGetAudioSinkDevice(afxSink sink)
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
     afxMixSystem msys = AfxGetAudioSinkContext(sink);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    afxMixDevice mdev = AfxGetProvider(sink);
+    afxMixDevice mdev = AfxGetHost(sink);
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
     return mdev;
 }
@@ -62,6 +62,15 @@ _AMX afxError AfxMuteAudioSink(afxSink sink, afxBool mute)
 
     sink->muteReqCnt += !!mute;
 
+    return err;
+}
+
+_AMX afxError AmxGetSinkTrack(afxSink sink, amxAudio* track)
+{
+    afxError err = AFX_ERR_NONE;
+    // sink must be a valid afxSink handle.
+    AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
+    *track = sink->buffers[0];
     return err;
 }
 
@@ -228,21 +237,21 @@ _AMX afxError _AmxAsioCtorCb(afxSink sink, void** args, afxUnit invokeNo)
         audi.chanCnt = sink->chanCnt;
         audi.fmt = sink->fmt;
         audi.freq = sink->freq;
-        audi.sampCnt = sink->samplesPerFrame;
+        audi.sampCnt = sink->freq * AFX_MAX(1, sink->latency);
+        audi.segCnt = 1;
         audi.udd = sink;
 
-        for (afxUnit i = 0; i < sink->latency; i++)
+        if (AmxAcquireAudios(msys, 1, &audi, &sink->buffers[0]))
         {
-            if (AmxAcquireAudios(msys, 1, &audi, &sink->buffers[i]))
-            {
-                AfxThrowError();
-                // Dispose all objects acquire up to this iteration.
-                AfxDisposeObjects(i, sink->buffers);
-            }
-
-            // Enqueue our buffer into the queue of disponible buffers.
-            AfxPushInterlockedQueue(&sink->freeBuffers, (afxUnit[]) { i });
+            AfxThrowError();
+            // Dispose all objects acquire up to this iteration.
+            //AfxDisposeObjects(1, &sink->buffers[0]);
         }
+
+        // Enqueue our buffer into the queue of disponible buffers.
+        AfxPushInterlockedQueue(&sink->freeBuffers, (afxUnit[]) { 0 });
+        
+        audio_ringbuffer_init(&sink->rb, (void*)AmxGetBufferAddress(AmxGetAudioBuffer(sink->buffers[0]), 0), 4, sink->freq, 2);
 
         if (err)
             AfxDeallocateInstanceData(sink, ARRAY_SIZE(stashs), stashs);
@@ -268,7 +277,7 @@ _AMX afxError AfxConfigureAudioSink(afxMixSystem msys, afxSinkConfig* cfg)
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(cfg);
     *cfg = (afxSinkConfig) { 0 };
-    cfg->fmt = amxFormat_S16i;
+    cfg->fmt = amxFormat_S32f; // 32-bit stereo
     cfg->freq = 48000; // DVD
     cfg->chanCnt = 2; // stereo
     cfg->samplesPerFrame = cfg->freq / 60;

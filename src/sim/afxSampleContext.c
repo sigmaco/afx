@@ -95,7 +95,7 @@ _ASX afxError AfxRecycleCatalyst(afxContext ctx, afxBool freeRes)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_CTX, 1, &ctx);
 
-    afxSimQueue sque = AfxGetProvider(ctx);
+    afxSimQueue sque = AfxGetHost(ctx);
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
     //afxUnit poolIdx = ctx->poolIdx;

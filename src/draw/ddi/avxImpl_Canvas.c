@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_CANVAS_C
@@ -29,7 +30,7 @@ _AVX afxSize _AvxGetRasterRange(avxRaster ras, avxRasterRegion const* rgn, afxSi
     return 0;
 }
 
-_AVX afxError _AvxDpuClearCanvas(avxDpu* dpu, afxUnit annexCnt, afxUnit const annexes[], avxClearValue const values[], afxUnit areaCnt, afxLayeredRect const areas[])
+_AVX afxError _AvxDpuClearCanvas(avxDpu* dpu, afxUnit binCnt, afxUnit const bins[], avxClearValue const values[], afxUnit areaCnt, afxLayeredRect const areas[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(dpu->inDrawScope);
@@ -39,10 +40,10 @@ _AVX afxError _AvxDpuClearCanvas(avxDpu* dpu, afxUnit annexCnt, afxUnit const an
 
     // TODO: It will be need to generate a new FBO, bind attachments to it, to be able to choose LOD and layer, then clear.
 
-    for (afxUnit i = 0; i < annexCnt; i++)
+    for (afxUnit i = 0; i < binCnt; i++)
     {
         avxRaster ras;
-        if (!AvxGetDrawBuffers(dpu->canv, annexes[i], 1, &ras))
+        if (!AvxGetDrawBuffers(dpu->canv, bins[i], 1, &ras))
             continue;
 
         afxByte* dstData = _AvxGetClientRasterData(ras, 0);
@@ -98,7 +99,7 @@ _AVX void _AvxDpuCommenceDrawScope(avxDpu* dpu, avxCanvas canv, afxRect const* a
 
     afxUnit maxColSurCnt;
     afxUnit dsSurIdx[2] = { AFX_INVALID_INDEX, AFX_INVALID_INDEX };
-    afxUnit maxSurCnt = AvxQueryCanvasSlots(canv, &maxColSurCnt, &dsSurIdx[0], &dsSurIdx[1]);
+    afxUnit maxSurCnt = AvxQueryCanvasBins(canv, &maxColSurCnt, &dsSurIdx[0], &dsSurIdx[1]);
     afxBool hasDs = ((dsSurIdx[1] != AFX_INVALID_INDEX) || (dsSurIdx[0] != AFX_INVALID_INDEX));
     afxBool combinedDs = (hasDs && (dsSurIdx[1] == dsSurIdx[0]));
     cCnt = AFX_MIN(cCnt, maxColSurCnt);
@@ -270,7 +271,7 @@ _AVX void _AvxDpuConcludeDrawScope(avxDpu* dpu)
     if (canv)
     {
         afxUnit surCnt;
-        surCnt = AvxQueryCanvasSlots(canv, NIL, NIL, NIL);
+        surCnt = AvxQueryCanvasBins(canv, NIL, NIL, NIL);
 #if 0
         if (surCnt)
         {
@@ -323,10 +324,10 @@ _AVX afxError _AvxDpuResolveCanvas(avxDpu* dpu, avxCanvas src, avxCanvas dst, af
             Avoid any format conversion or scaling.
     */
 
-    for (afxUnit sbufIdx = 0, dbufIdx = 0; (sbufIdx < src->slotCnt) && (dbufIdx < dst->slotCnt); sbufIdx++, dbufIdx++)
+    for (afxUnit sbufIdx = 0, dbufIdx = 0; (sbufIdx < src->binCnt) && (dbufIdx < dst->binCnt); sbufIdx++, dbufIdx++)
     {
-        if (src->slots[sbufIdx].ras && dst->slots[dbufIdx].ras)
-            _AvxDpuResolveRaster(dpu, dst->slots[dbufIdx].ras, opCnt, ops, src->slots[sbufIdx].ras);
+        if (src->bins[sbufIdx].buf && dst->bins[dbufIdx].buf)
+            _AvxDpuResolveRaster(dpu, dst->bins[dbufIdx].buf, opCnt, ops, src->bins[sbufIdx].buf);
     }
     return err;
 }
@@ -350,10 +351,10 @@ _AVX afxError _AvxDpuBlitCanvas(avxDpu* dpu, avxCanvas src, avxCanvas dst, afxUn
         (e.g., for mipmap generation or format conversion), a shader-based blit might be required.
     */
 
-    for (afxUnit sbufIdx = 0, dbufIdx = 0; (sbufIdx < src->slotCnt) && (dbufIdx < dst->slotCnt); sbufIdx++, dbufIdx++)
+    for (afxUnit sbufIdx = 0, dbufIdx = 0; (sbufIdx < src->binCnt) && (dbufIdx < dst->binCnt); sbufIdx++, dbufIdx++)
     {
-        if (src->slots[sbufIdx].ras && dst->slots[dbufIdx].ras)
-            _AvxDpuBlitRaster(dpu, dst->slots[dbufIdx].ras, opCnt, ops, src->slots[sbufIdx].ras, flt);
+        if (src->bins[sbufIdx].buf && dst->bins[dbufIdx].buf)
+            _AvxDpuBlitRaster(dpu, dst->bins[dbufIdx].buf, opCnt, ops, src->bins[sbufIdx].buf, flt);
     }
     return err;
 }

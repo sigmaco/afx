@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+ // This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
@@ -45,9 +45,9 @@ _AVX afxCmdId AvxCmdCopyBuffer(afxDrawContext dctx, avxBuffer dst, afxUnit opCnt
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &dst);
 
     // src must have been created with avxBufferUsage_UPLOAD usage flag.
-    AFX_ASSERT(AvxGetBufferAccess(src, avxBufferFlag_R));
+    AFX_ASSERT(AvxGetBufferFlags(src, avxBufferFlag_R));
     // dst must have been created with avxBufferUsage_DOWNLOAD usage flag.
-    AFX_ASSERT(AvxGetBufferAccess(dst, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferFlags(dst, avxBufferFlag_W));
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(CopyBuffer), sizeof(cmd->CopyBuffer) + (opCnt * sizeof(cmd->CopyBuffer.ops[0])), &cmdId);
@@ -76,7 +76,7 @@ _AVX afxCmdId AvxCmdFillBuffer(afxDrawContext dctx, avxBuffer buf, afxSize offse
     // @buf must be a valid avxBuffer handle.
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     // buf must have been created with avxBufferUsage_DOWNLOAD usage flag.
-    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_W));
 
     afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
     // offset must be less than the size of buf.
@@ -114,7 +114,7 @@ _AVX afxCmdId AvxCmdClearBuffer(afxDrawContext dctx, avxBuffer buf, afxSize offs
     // @buf must be a valid avxBuffer handle.
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     // buf must have been created with avxBufferUsage_DOWNLOAD usage flag.
-    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_W));
 
     afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
     // offset must be less than the size of buf.
@@ -147,7 +147,7 @@ _AVX afxCmdId AvxCmdUpdateBuffer(afxDrawContext dctx, avxBuffer buf, afxSize off
     // @buf must be a valid avxBuffer handle.
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     // buf must have been created with avxBufferUsage_DOWNLOAD usage flag.
-    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_W));
 
     afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
     // offset must be less than the size of buf.

@@ -19,13 +19,14 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #ifndef AVX_IMPL___OUTPUT_H
 #define AVX_IMPL___OUTPUT_H
 
-#include "qwadro/inc/draw/afxDrawSystem.h"
-#include "qwadro/inc/mem/afxInterlockedQueue.h"
-#include "qwadro/inc/mem/afxSlabAllocator.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/mem/afxInterlockedQueue.h"
+#include "qwadro/mem/afxSlabAllocator.h"
 
 /*
     Blit: Transfers or copies pixel data from one area to another within or between buffers. It’s used for operations like rendering images or updating parts of the screen.
@@ -39,17 +40,19 @@ AFX_DECLARE_STRUCT(_avxDoutDdi);
 #else
 AFX_DEFINE_STRUCT(_avxDoutDdi)
 {
+    afxString const* tag;
     afxError(*ioctlCb)(afxSurface dout, afxUnit code, va_list ap);
     afxError(*adjustCb)(afxSurface dout, afxRect const* rc, afxBool fse);
     afxError(*regenCb)(afxSurface dout, afxBool build);
     afxError(*presentCb)(afxDrawQueue dque, avxPresentation* pres);
-    afxError(*lockCb)(afxSurface dout, afxUnit64 timeout, afxSemaphore sem, avxFence fenc, afxMask exuMask, afxUnit *bufIdx);
+    afxError(*lockCb)(afxSurface dout, afxUnit64 timeout, afxMask exuMask, afxUnit *bufIdx, avxFence signal);
     afxError(*unlockCb)(afxSurface dout, afxUnit bufIdx);
     afxError(*modeSetCb)(afxSurface dout, avxModeSetting const* mode);
+    afxError(*presOnDpuCb)(void* dpu, avxPresentation* pres);
 };
 #endif
 
-#ifdef _AVX_DRAW_OUTPUT_C
+#ifdef _AVX_SURFACE_C
 
 AFX_DEFINE_STRUCT(afxVideoEndpoint)
 {
@@ -73,14 +76,16 @@ AFX_DEFINE_STRUCT(afxVideoEndpoint)
     afxBool             doNotClip; // usually false to don't do off-screen draw on compositor-based endpoints (aka window).
 };
 
-AFX_DEFINE_STRUCT(_avxDoutBuffer)
+AFX_DEFINE_STRUCT(_avxSurfaceBuffer)
 {
     afxBool     locked;
     avxCanvas   canv;
     avxRaster   ras;
+    afxUnit     rcCnt;
+    afxRect     rects[4];
 };
 
-#ifdef _AVX_DRAW_OUTPUT_IMPL
+#ifdef _AVX_SURFACE_IMPL
 AFX_OBJECT(_avxSurface)
 #else
 AFX_OBJECT(afxSurface)
@@ -118,9 +123,9 @@ AFX_OBJECT(afxSurface)
 
     // SWAPCHAIN
     afxUnit             bufCnt; // usually 2 or 3; double or triple buffered.
-    _avxDoutBuffer*     buffers;
+    _avxSurfaceBuffer*     buffers;
     afxInterlockedQueue freeBuffers;
-    afxAtom32           presentingBufIdx;
+    afxAtom32           lastPresentedBufIdx;
     afxRect             dstArea;
     afxBool             persistBlit;
     afxBool             fse;
@@ -144,7 +149,7 @@ AFX_OBJECT(afxSurface)
     afxClock            prevBufReqTime;
     afxInt              bufReqPerSec;
 };
-#endif//_AVX_DRAW_OUTPUT_C
+#endif//_AVX_SURFACE_C
 
 AVX afxClassConfig const _AVX_DOUT_CLASS_CONFIG;
 AVX _avxDoutDdi const _AVX_DOUT_DDI;

@@ -15,7 +15,7 @@
  */
 
 #include "impl/asxImplementation.h"
-#include "qwadro/inc/sim/afxQuadtree.h"
+#include "qwadro/sim/afxQuadtree.h"
 
 
 ASX void AfxDeployQuadtree(asxQuadtree* tree, afxRect* bounds)

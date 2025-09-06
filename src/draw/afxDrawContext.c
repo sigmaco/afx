@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
@@ -77,14 +78,22 @@ _AVX afxUnit AvxGetCommandPool(afxDrawContext dctx)
     return dctx->poolIdx;
 }
 
+_AVX afxError AvxTraverseDrawCommands(afxDrawContext dctx, afxCmdId(*f)(void* udd, void* cmd), void* udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+
+    return err;
+}
+
 _AVX afxError AvxExhaustDrawContext(afxDrawContext dctx, afxBool freeMem)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
-    if (dctx->pimpl->exhaust)
+    if (dctx->ddi->exhaust)
     {
-        if (dctx->pimpl->exhaust(dctx, freeMem))
+        if (dctx->ddi->exhaust(dctx, freeMem))
         {
             AfxThrowError();
         }
@@ -153,10 +162,10 @@ _AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool d
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT(batchId);
 
-    if (dctx->pimpl->compose)
+    if (dctx->ddi->compose)
     {
         afxUnit bId;
-        if (dctx->pimpl->compose(dctx, once, deferred, &bId))
+        if (dctx->ddi->compose(dctx, once, deferred, &bId))
         {
             AfxThrowError();
             bId = AFX_INVALID_INDEX;
@@ -278,9 +287,9 @@ _AVX afxError AvxDiscardDrawCommands(afxDrawContext dctx, afxBool freeRes)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
-    if (dctx->pimpl->discard)
+    if (dctx->ddi->discard)
     {
-        if (dctx->pimpl->discard(dctx, freeRes))
+        if (dctx->ddi->discard(dctx, freeRes))
         {
             AfxThrowError();
         }
@@ -352,9 +361,9 @@ _AVX afxError AvxCompileDrawCommands(afxDrawContext dctx, afxUnit batchId)
         return err;
     }
 
-    if (dctx->pimpl->compile)
+    if (dctx->ddi->compile)
     {
-        if (dctx->pimpl->compile(dctx, batchId))
+        if (dctx->ddi->compile(dctx, batchId))
         {
             AfxThrowError();
         }
@@ -419,9 +428,9 @@ _AVX afxError AvxRecycleDrawCommands(afxDrawContext dctx, afxUnit batchId, afxBo
         return err;
     }
 
-    if (dctx->pimpl->recycle)
+    if (dctx->ddi->recycle)
     {
-        if (dctx->pimpl->recycle(dctx, batchId, freeRes))
+        if (dctx->ddi->recycle(dctx, batchId, freeRes))
         {
             AfxThrowError();
         }
@@ -557,10 +566,10 @@ _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
 
     afxDrawBridge dexu = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-    afxBool once = *AFX_CAST(afxBool const*, args[1]);
-    afxBool deferred = *AFX_CAST(afxBool const*, args[2]);
-
-    afxDrawSystem dsys = AfxGetProvider(dexu);
+    AFX_ASSERT(args[1]);
+    avxContextInfo const* info = AFX_CAST(avxContextInfo const*, args[1]);
+    
+    afxDrawSystem dsys = AfxGetHost(dexu);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     afxDrawDevice ddev = AvxGetBridgedDrawDevice(dexu, NIL);
@@ -582,8 +591,7 @@ _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
     dctx->deferred = FALSE;
     dctx->once = FALSE;
     
-
-    dctx->pimpl = &_AVX_DCTX_DDI;
+    dctx->ddi = &_AVX_DCTX_DDI;
     
     AfxDeployPool(&dctx->batches, sizeof(_avxCmdBatch), 3, 0);
 
@@ -599,7 +607,7 @@ _AVX afxClassConfig const _AVX_DCTX_CLASS_CONFIG =
 {
     .fcc = afxFcc_DCTX,
     .name = "DrawContext",
-    .desc = "Draw Operation Context",
+    .desc = "AVX Operation Context",
     .fixedSiz = sizeof(AFX_OBJECT(afxDrawContext)),
     .unitsPerPage = 4,
     .ctor = (void*)_AvxDctxCtorCb,
@@ -608,14 +616,14 @@ _AVX afxClassConfig const _AVX_DCTX_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, afxDrawCaps caps, afxMask exuMask, afxBool once, afxBool deferred, afxUnit cnt, afxDrawContext contexts[])
+_AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, avxContextInfo const* info, afxUnit cnt, afxDrawContext contexts[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(contexts);
     AFX_ASSERT(cnt);
 
-    afxUnit exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, caps, exuMask, 0, 0, NIL);
+    afxUnit exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, info->caps, info->exuMask, 0, 0, NIL);
 
     if (!exuCnt)
     {
@@ -626,7 +634,7 @@ _AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, afxDrawCaps caps, afxMa
     for (afxUnit exuIter = 0; exuIter < exuCnt; exuIter++)
     {
         afxDrawBridge dexu;
-        if (!AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, caps, exuMask, exuIter, 1, &dexu))
+        if (!AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, info->caps, info->exuMask, exuIter, 1, &dexu))
         {
             AfxThrowError();
             continue;
@@ -640,7 +648,7 @@ _AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, afxDrawCaps caps, afxMa
         afxClass* cls = (afxClass*)_AvxDexuGetDctxClass(dexu);
         AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
 
-        if (AfxAcquireObjects(cls, cnt, (afxObject*)contexts, (void const*[]) { dexu, &once, &deferred }))
+        if (AfxAcquireObjects(cls, cnt, (afxObject*)contexts, (void const*[]) { dexu, info }))
         {
             AfxThrowError();
             return err;
@@ -727,5 +735,230 @@ _AVX afxError AvxExecuteDrawCommands(afxDrawSystem dsys, afxUnit cnt, avxSubmiss
             if (err || queued) break; // while --- find bridges
         }
     }
+    return err;
+}
+
+
+
+_AVX afxError AvxPrepareDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBool once, afxBool deferred)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    AFX_ASSERT_RANGE(dctx->binCnt, bin, 1);
+
+    if (dctx->ddi->compose)
+    {
+        afxUnit bId;
+        if (dctx->ddi->compose(dctx, once, deferred, &bId))
+        {
+            AfxThrowError();
+            bId = AFX_INVALID_INDEX;
+        }
+        else
+        {
+            //AFX_ASSERT(dctx->state == avxDrawContextState_EXECUTABLE);
+            AFX_ASSERT(AfxIsChainEmpty(&dctx->commands));
+        }
+
+        return err;
+    }
+
+    // AVX assumes the compilation when ICD does not take the front.
+
+#if 0
+    if (!AfxTryLockFutex(&dctx->cmdbReqLock, FALSE))
+    {
+        // Bail out immediately.
+        return err;
+    }
+#else
+    AfxLockFutex(&dctx->cmdbReqLock, FALSE);
+#endif
+
+    // Firstly, try recycling batches.
+    afxBool recycled = FALSE;
+
+    afxUnit cmdbId;
+    _avxCmdBatch* cmdb;
+    AFX_ITERATE_CHAIN_B2F(_avxCmdBatch, cmdb, recyc, &dctx->cmdbRecycChain)
+    {
+        AFX_ASSERT(cmdb->fcc == afxFcc_DCMD);
+
+        AfxPopLink(&cmdb->recyc);
+
+        AfxDeployChain(&cmdb->commands, dctx);
+
+        // Move the allocated resource to the context.
+        if (AfxMergeArena(&dctx->cmdArena, &cmdb->cmdArenaCompiled))
+        {
+            AfxThrowError();
+        }
+
+        if (dctx->cmdArena.cleanupCnt > 3)
+            AfxExhaustArena(&dctx->cmdArena);
+
+        AFX_ASSERT(AfxLoadAtom32(&cmdb->submCnt) == 0);
+        cmdb->submCnt = 0;
+        cmdb->submQueMask = NIL;
+
+        AFX_ASSERT(!once || (once == TRUE));
+        cmdb->once = !!once;
+        AFX_ASSERT(!deferred || (deferred == TRUE));
+        cmdb->deferred = !!deferred;
+
+        cmdbId = cmdb->uniqId;
+
+        recycled = TRUE;
+        break;
+    }
+
+    while (!recycled)
+    {
+        // If could not recycle a batch, request a new one from the pool.
+
+        if (dctx->batches.totalUsedCnt >= 100)
+        {
+            AfxThrowError();
+            break;
+        }
+
+        if (AfxRequestPoolUnits(&dctx->batches, 1, &cmdbId, (void**)&cmdb))
+        {
+            AfxThrowError();
+            break;
+        }
+
+        cmdb->fcc = afxFcc_DCMD;
+        cmdb->uniqId = cmdbId;
+        cmdb->submCnt = 0;
+        cmdb->submQueMask = NIL;
+
+        AfxPushLink(&cmdb->recyc, NIL);
+
+        AFX_ASSERT(!once || (once == TRUE));
+        cmdb->once = !!once;
+        AFX_ASSERT(!deferred || (deferred == TRUE));
+        cmdb->deferred = !!deferred;
+
+        AfxDeployChain(&cmdb->commands, dctx);
+
+        AfxMakeArena(&cmdb->cmdArenaCompiled, NIL, AfxHere());
+        break;
+    }
+
+    if (!err)
+    {
+        cmdb->inDrawScope = FALSE;
+        cmdb->inVideoCoding = FALSE;
+
+        dctx->state = avxDrawContextState_RECORDING;
+        AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
+
+    }
+
+    AfxUnlockFutex(&dctx->cmdbReqLock, FALSE);
+
+    return err;
+}
+
+_AVX afxError AvxPurgeDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBool freeRes)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+
+    if (bin == AFX_INVALID_INDEX)
+    {
+        AFX_ASSERT(bin != AFX_INVALID_INDEX);
+        AfxThrowError();
+        return err;
+    }
+
+    if (dctx->ddi->recycle)
+    {
+        if (dctx->ddi->recycle(dctx, bin, freeRes))
+        {
+            AfxThrowError();
+        }
+        return err;
+    }
+
+    // AVX assumes the compilation when ICD does not take the front.
+
+    AfxLockFutex(&dctx->cmdbReqLock, FALSE);
+
+    AFX_ASSERT(AfxIsAnValidPoolUnit(&dctx->batches, bin));
+    _avxCmdBatch* cmdb = _AvxGetCmdBatch(dctx, bin);
+
+    if (!cmdb)
+    {
+        AFX_ASSERT(cmdb);
+        AfxThrowError();
+        return err;
+    }
+
+    AFX_ASSERT(cmdb->fcc == afxFcc_DCMD);
+    AFX_ASSERT(cmdb->uniqId == bin);
+
+    // Should wait or return?
+    // On the next roll, it should be recycled anyway.
+#if 0
+    while (AfxLoadAtom32(&cmdb->submCnt))
+    {
+        AfxYield();
+    }
+#else
+    if (AfxLoadAtom32(&cmdb->submCnt))
+    {
+        AfxUnlockFutex(&dctx->cmdbReqLock, FALSE);
+        return afxError_BUSY;
+    }
+#endif
+
+    // There is some issues if it is called from DPU as there not a lock mechanism for arena and batches' pool.
+
+#if 0
+    if (freeRes)
+    {
+        AFX_ASSERT(freeRes == TRUE);
+        AfxExhaustArena(&cmdb->cmdArenaCompiled);
+    }
+    else
+    {
+        _avxCmd* cmd;
+        AFX_ITERATE_CHAIN(_avxCmd, cmd, hdr.script, &cmdb->commands)
+        {
+            AfxPopLink(&cmd->hdr.script);
+            AfxReclaimToArena(&cmdb->cmdArenaCompiled, cmd, cmd->hdr.siz);
+        }
+    }
+#else
+    AfxExhaustArena(&cmdb->cmdArenaCompiled);
+#endif
+
+    AfxDeployChain(&cmdb->commands, cmdb);
+
+    afxBool recycled = FALSE;
+#if 0
+    if (3 > dctx->cmdbRecycChain.cnt)
+    {
+        AfxPushLink(&cmdb->recyc, &dctx->cmdbRecycChain);
+        recycled = TRUE;
+    }
+    // If could not enqueue for recyclage, destroy it.
+#endif
+
+    if (!recycled)
+    {
+        //AfxExhaustArena(&cmdb->cmdArenaCompiled);
+        AfxDismantleArena(&cmdb->cmdArenaCompiled);
+
+        if (AfxReclaimPoolUnits(&dctx->batches, 1, (void**)&cmdb))
+        {
+            AfxThrowError();
+        }
+        //AfxExhaustPool(&dctx->batches, FALSE);
+    }
+
+    AfxUnlockFutex(&dctx->cmdbReqLock, FALSE);
     return err;
 }

@@ -7,18 +7,20 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This software is part of Advanced Multimedia Extensions & Experiments.
+
 #define _AMX_AUDIO_C
-#define _AMX_AUDIO_C
+#define _AMX_SOUND_C
 #define _AMX_MIX_C
 //#define _AMX_MIX_SYSTEM_C
-#include "../ddi/amxImplementation.h"
+#include "ddi/amxImplementation.h"
 
 _AMX void AmxTransformSound(amxSound snd, afxTransform const* t)
 {
@@ -78,7 +80,7 @@ _AMX afxError _AmxSndDtorCb(amxSound snd)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
 
-    afxMixSystem msys = AfxGetProvider(snd);
+    amxSoundscape snds = AfxGetHost(snd);
 
 
 
@@ -90,8 +92,8 @@ _AMX afxError _AmxSndCtorCb(amxSound snd, void** args, afxUnit invokeNo)
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
 
-    afxMixSystem msys = AfxGetProvider(snd);
-    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+    amxSoundscape snds = AfxGetHost(snd);
+    AFX_ASSERT_OBJECTS(afxFcc_SNDS, 1, &snds);
     amxSoundInfo const* spec = AFX_CAST(amxSoundInfo const*, args[1]) + invokeNo;
     AFX_ASSERT(spec);
 
@@ -132,17 +134,17 @@ _AMX afxClassConfig const _AMX_SND_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AmxDoSound(afxMixSystem msys, amxSoundInfo const* info, afxUnit* soundId)
+_AMX afxError AmxDoSound(amxSoundscape snds, amxSoundInfo const* info, afxUnit* soundId)
 {
     afxResult err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+    AFX_ASSERT_OBJECTS(afxFcc_SNDS, 1, &snds);
     AFX_ASSERT(soundId);
     AFX_ASSERT(info);
 
     amxSound snd;
-    afxClass* cls = (afxClass*)_AmxMsysGetSndClass(msys);
+    afxClass* cls = (afxClass*)_AmxSndsGetSndClass(snds);
     AFX_ASSERT_CLASS(cls, afxFcc_SND);    
-    if (AfxAcquireObjects(cls, 1, (afxObject)&snd, (void const*[]) { msys, info }))
+    if (AfxAcquireObjects(cls, 1, (afxObject)&snd, (void const*[]) { snds, info }))
     {
         AfxThrowError();
         return err;

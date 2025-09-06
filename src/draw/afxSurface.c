@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 //#define _AVX_DRAW_SYSTEM_C
@@ -23,53 +24,8 @@
 //#define _AFX_CONTEXT_C
 //#define _AVX_DRAW_DEVICE_C
 //#define _AVX_DRAW_SYSTEM_C
-#define _AVX_DRAW_OUTPUT_C
+#define _AVX_SURFACE_C
 #include "ddi/avxImplementation.h"
-
-_AVX afxSurfaceConfig const AVX_DEFAULT_SURFACE_CONFIG =
-{
-    .colorSpc = avxColorSpace_STANDARD,
-    .ccfg.whd = { 1, 1, 1 },
-    .ccfg.slotCnt = 2,
-    .ccfg.slots[0].fmt = avxFormat_BGRA8v,
-    .ccfg.slots[0].usage = avxRasterUsage_DRAW | avxRasterUsage_TEXTURE,
-    .ccfg.slots[1].fmt = avxFormat_D32f,
-    .ccfg.slots[1].usage = avxRasterUsage_DRAW,
-    .ccfg.slots[2].usage = avxRasterUsage_DRAW,
-    .ccfg.slots[3].usage = avxRasterUsage_DRAW,
-    .ccfg.slots[4].usage = avxRasterUsage_DRAW,
-    .ccfg.slots[5].usage = avxRasterUsage_DRAW,
-    .ccfg.slots[6].usage = avxRasterUsage_DRAW,
-    .ccfg.slots[7].usage = avxRasterUsage_DRAW,
-    .ccfg.slots[8].usage = avxRasterUsage_DRAW,
-    .ccfg.slots[9].usage = avxRasterUsage_DRAW,
-    .minBufCnt = 3,
-    .presentMode = NIL,
-    .presentAlpha = FALSE,
-    .presentTransform = NIL,
-    .doNotClip = FALSE,
-    .resolution = AVX_RANGE(AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX), // ignore the IntelliDumb warning
-    .resizable = TRUE,
-    .refreshRate = 1,
-    .exclusive = FALSE
-};
-
-_AVX afxReal64 AvxFindPhysicalAspectRatio(afxUnit screenWidth, afxUnit screenHeight)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(screenWidth);
-    AFX_ASSERT(screenHeight);
-    afxReal64 ratio, div = (afxReal64)screenWidth / (afxReal64)screenHeight;
-
-    if (div <= 1.4)
-        ratio = 1.33;
-    else if (div <= 1.6)
-        ratio = 1.5599999;
-    else
-        ratio = 1.78;
-
-    return ratio;
-}
 
 _AVX afxUnit _AvxDoutIsSuspended(afxSurface dout)
 {
@@ -119,12 +75,12 @@ _AVX afxError _AvxDoutFreeAllBuffers(afxSurface dout)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxDrawSystem AvxGetSurfaceSystem(afxSurface dout)
+_AVX afxDrawSystem AvxGetSurfaceHost(afxSurface dout)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    afxDrawSystem dsys = AfxGetProvider(dout);
+    afxDrawSystem dsys = AfxGetHost(dout);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     return dsys;
 }
@@ -134,7 +90,7 @@ _AVX afxModule AvxGetSurfaceIcd(afxSurface dout)
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-    afxDrawSystem dsys = AvxGetSurfaceSystem(dout);
+    afxDrawSystem dsys = AvxGetSurfaceHost(dout);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxModule icd = AvxGetDrawSystemIcd(dsys);
     AFX_ASSERT_OBJECTS(afxFcc_ICD, 1, &icd);
@@ -166,7 +122,7 @@ _AVX void AvxDescribeSurface(afxSurface dout, afxSurfaceConfig* cfg)
     cfg->doNotClip = dout->doNotClip;
     cfg->iop.endpointNotifyFn = dout->endpointNotifyFn;
     cfg->iop.endpointNotifyObj = dout->endpointNotifyObj;
-    cfg->minBufCnt = dout->bufCnt;
+    cfg->latency = dout->bufCnt;
     cfg->presentAlpha = dout->presentAlpha;
     cfg->presentMode = dout->presentMode;
     cfg->presentTransform = dout->presentTransform;
@@ -217,6 +173,21 @@ _AVX void _AvxDoutGetExtentNormalized(afxSurface dout, afxV3d whd)
     afxRect whd2;
     AvxGetSurfaceArea(dout, &whd2);
     AfxV3dSet(whd, AfxNdcf(whd2.w, dout->resolution.w), AfxNdcf(whd2.h, dout->resolution.h), (afxReal)1);
+}
+
+_AVX afxError _AvxDoutImplAdjustCb(afxSurface dout, afxRect const* area, afxBool fse)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
+
+    dout->area.x = area->x;
+    dout->area.y = area->y;
+    dout->area.w = AFX_MAX(1, area->w);
+    dout->area.h = AFX_MAX(1, area->h);
+    dout->wwOverHw = (afxReal64)dout->area.w / (afxReal64)dout->area.h;
+    dout->ccfg.whd = AvxMaxRange(AVX_RANGE(1, 1, 1), AVX_RANGE(dout->area.w, dout->area.h, 1));
+
+    return err;
 }
 
 _AVX afxError AvxAdjustSurface(afxSurface dout, afxRect const* area, afxBool fse)
@@ -338,9 +309,113 @@ _AVX afxError AvxChangeSurfaceSettings(afxSurface dout, avxModeSetting const* mo
 
 // BUFFERIZATION ///////////////////////////////////////////////////////////////
 
+_AVX afxError _AvxDoutImplRegenBuffers(afxSurface dout, afxBool build)
+{
+    afxError err = AFX_ERR_NONE;
+    // @dout must be a valid afxSurface handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
+
+    AvxWaitForSurface(dout, 0);
+
+    afxDrawSystem dsys = AvxGetSurfaceHost(dout);
+
+    for (afxUnit i = 0; i < dout->bufCnt; i++)
+    {
+        _avxSurfaceBuffer* slot = &dout->buffers[i];
+        ++slot->locked;
+
+        if (slot->canv)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &slot->canv);
+            AfxDisposeObjects(1, &slot->canv);
+            AFX_ASSERT(!slot->canv);
+            slot->ras = NIL;
+        }
+
+        if (!build)
+            continue;
+
+        if (AvxCoacquireCanvas(dsys, &dout->ccfg, 1, &slot->canv))
+        {
+            AfxThrowError();
+
+            // delete buffers?
+        }
+        else
+        {
+            avxCanvas canv = slot->canv;
+            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
+            avxRaster ras;
+            AvxGetDrawBuffers(canv, 0, 1, &ras);
+            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+            slot->ras = ras;
+        }
+
+        --slot->locked;
+    }
+    return err;
+}
+
+_AVX afxBool AvxGetSurfaceCanvas(afxSurface dout, afxUnit bufIdx, avxCanvas* canvas, afxRect* area)
+{
+    afxError err = AFX_ERR_NONE;
+    // @dout must be a valid afxSurface handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
+
+    afxRect rc = AFX_RECT_ZERO;
+    avxCanvas canv = NIL;
+
+    AFX_ASSERT(bufIdx != AFX_INVALID_INDEX);
+    AFX_ASSERT_RANGE(dout->bufCnt, bufIdx, 1);
+    if (bufIdx >= dout->bufCnt)
+    {
+        AfxThrowError();
+    }
+    else
+    {
+        if ((canv = dout->buffers[bufIdx].canv))
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
+            AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO, &rc);
+        }
+    }
+
+    AFX_ASSERT(canvas);
+    *canvas = canv;
+    AFX_ASSERT(area);
+    *area = rc;
+    return !!canv;
+}
+
+_AVX afxBool AvxGetSurfaceBuffer(afxSurface dout, afxUnit bufIdx, avxRaster* buffer)
+{
+    afxError err = AFX_ERR_NONE;
+    // @dout must be a valid afxSurface handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
+
+    avxRaster ras = NIL;
+
+    afxRect area;
+    avxCanvas canv;
+    AFX_ASSERT(bufIdx != AFX_INVALID_INDEX);
+    AFX_ASSERT_RANGE(dout->bufCnt, bufIdx, 1);
+    if (AvxGetSurfaceCanvas(dout, bufIdx, &canv, &area))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
+        if (AvxGetDrawBuffers(canv, 0, 1, &ras))
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+        }
+    }
+
+    AFX_ASSERT(buffer);
+    *buffer = ras;
+    return !!ras;
+}
+
 // Pull an available draw output buffer (usually from the WSI).
 
-_AVX afxError AvxLockSurfaceBuffer(afxSurface dout, afxUnit64 timeout, afxMask exuMask, afxUnit* bufIdx, afxSemaphore sem, avxFence fenc)
+_AVX afxError AvxLockSurfaceBuffer(afxSurface dout, afxUnit64 timeout, afxMask exuMask, afxUnit* bufIdx, avxFence signal)
 {
     afxError err = AFX_ERR_NONE;
     // @dout must be a valid afxSurface handle.
@@ -350,7 +425,7 @@ _AVX afxError AvxLockSurfaceBuffer(afxSurface dout, afxUnit64 timeout, afxMask e
 
     if (dout->pimpl->lockCb)
     {
-        err = dout->pimpl->lockCb(dout, timeout, sem, fenc, exuMask, &bufIdx2);
+        err = dout->pimpl->lockCb(dout, timeout, exuMask, &bufIdx2, signal);
 
         if (!err)
         {
@@ -369,7 +444,7 @@ _AVX afxError AvxLockSurfaceBuffer(afxSurface dout, afxUnit64 timeout, afxMask e
 
     afxBool success = FALSE;
     afxClock timeoutStart, last;
-    afxBool wait = (timeout != 0);
+    afxBool wait = (timeout != AFX_TIMEOUT_NONE);
     afxBool finite = (timeout != AFX_TIMEOUT_INFINITE);
 
     if (wait && finite)
@@ -430,7 +505,7 @@ _AVX afxError AvxLockSurfaceBuffer(afxSurface dout, afxUnit64 timeout, afxMask e
 
         if (AfxPopInterlockedQueue(&dout->freeBuffers, &lockedBufIdx))
         {
-            _avxDoutBuffer* slot = &dout->buffers[lockedBufIdx];
+            _avxSurfaceBuffer* slot = &dout->buffers[lockedBufIdx];
             avxCanvas canv = slot->canv;
 
             if (canv)
@@ -465,7 +540,7 @@ _AVX afxError AvxLockSurfaceBuffer(afxSurface dout, afxUnit64 timeout, afxMask e
                 afxInt64 elapsed = AfxGetNanosecondsElapsed(&timeoutStart, &last);
 
                 if (elapsed > 0)
-                    timeout -= elapsed;
+                    timeout -= (timeout > elapsed) ? elapsed : 0;
                 else if (0 > elapsed)
                     timeout = 0;
 
@@ -509,7 +584,7 @@ _AVX afxError AvxUnlockSurfaceBuffer(afxSurface dout, afxUnit bufIdx)
         return err;
     }
 
-    _avxDoutBuffer* slot = &dout->buffers[bufIdx];
+    _avxSurfaceBuffer* slot = &dout->buffers[bufIdx];
     if (!slot->locked)
     {
         AfxThrowError();
@@ -531,63 +606,6 @@ _AVX afxError AvxUnlockSurfaceBuffer(afxSurface dout, afxUnit bufIdx)
     }
 
     return err;
-}
-
-_AVX afxBool AvxGetSurfaceCanvas(afxSurface dout, afxUnit bufIdx, avxCanvas* canvas, afxRect* area)
-{
-    afxError err = AFX_ERR_NONE;
-    // @dout must be a valid afxSurface handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-
-    afxRect rc = AFX_RECT_ZERO;
-    avxCanvas canv;
-
-    AFX_ASSERT(bufIdx != AFX_INVALID_INDEX);
-    AFX_ASSERT_RANGE(dout->bufCnt, bufIdx, 1);
-    if (bufIdx >= dout->bufCnt)
-    {
-        AfxThrowError();
-    }
-    else
-    {
-        if ((canv = dout->buffers[bufIdx].canv))
-        {
-            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-            AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO, &rc);
-        }
-    }
-
-    AFX_ASSERT(canvas);
-    *canvas = canv;
-    AFX_ASSERT(area);
-    *area = rc;
-    return !!canv;
-}
-
-_AVX afxBool AvxGetSurfaceBuffer(afxSurface dout, afxUnit bufIdx, avxRaster* buffer)
-{
-    afxError err = AFX_ERR_NONE;
-    // @dout must be a valid afxSurface handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-
-    avxRaster ras = NIL;
-
-    afxRect area;
-    avxCanvas canv;
-    AFX_ASSERT(bufIdx != AFX_INVALID_INDEX);
-    AFX_ASSERT_RANGE(dout->bufCnt, bufIdx, 1);
-    if (AvxGetSurfaceCanvas(dout, bufIdx, &canv, &area))
-    {
-        AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-        if (AvxGetDrawBuffers(canv, 0, 1, &ras))
-        {
-            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-        }
-    }
-
-    AFX_ASSERT(buffer);
-    *buffer = ras;
-    return !!ras;
 }
 
 _AVX afxError AvxPrintSurfaceBuffer(afxSurface dout, afxUnit bufIdx, avxRasterIo const* op, afxUri const* uri, afxMask exuMask)
@@ -697,10 +715,16 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
     afxSurfaceConfig const* cfg = ((afxSurfaceConfig const *)args[1]) + invokeNo;
     AFX_ASSERT(cfg);
     
-    afxSurfaceConfig def;
+    afxSurfaceConfig def = { 0 };
     AvxConfigureSurface(dsys, &def);
 
     dout->pimpl = &_AVX_DOUT_DDI;
+
+    dout->udd[0] = cfg->udd[0];
+    dout->udd[1] = cfg->udd[1];
+    dout->udd[2] = cfg->udd[2];
+    dout->udd[3] = cfg->udd[3];
+    dout->tag = cfg->tag;
 
     // endpoint
     dout->resizing = FALSE;
@@ -714,15 +738,10 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
     dout->presentTransform = cfg->presentTransform ? cfg->presentTransform : def.presentTransform; // The default is to leave it as it is.
     dout->presentMode = cfg->presentMode ? cfg->presentMode : def.presentMode; // The default avxPresentMode_LIFO is already zero.
     dout->doNotClip = !!cfg->doNotClip; // don't spend resources doing off-screen draw.
-    dout->udd[0] = cfg->udd[0];
-    dout->udd[1] = cfg->udd[1];
-    dout->udd[2] = cfg->udd[2];
-    dout->udd[3] = cfg->udd[3];
     dout->endpointNotifyObj = cfg->iop.endpointNotifyObj;
     dout->endpointNotifyFn = cfg->iop.endpointNotifyFn;
     dout->idd = NIL;
-    dout->tag = cfg->tag;
-
+    
     // canvas
     //dout->extent = AvxMaxRange(AVX_RANGE(1, 1, 1), cfg->extent);
     dout->colorSpc = cfg->colorSpc ? cfg->colorSpc : avxColorSpace_STANDARD; // sRGB is the default
@@ -730,26 +749,26 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
     AvxConfigureCanvas(dsys, &dout->ccfg);
     dout->wwOverHw = dout->ccfg.whd.w / dout->ccfg.whd.h;
 
-    if (!dout->ccfg.slotCnt)
+    if (!dout->ccfg.binCnt)
     {
-        AFX_ASSERT(dout->ccfg.slotCnt);
+        AFX_ASSERT(dout->ccfg.binCnt);
         AfxThrowError();
     }
 #if 0
     for (afxUnit i = 0; i < dout->ccfg.annexCnt; i++)
     {
-        avxCanvasBuffer* a = &dout->ccfg.annexes[i];
+        avxDrawBin* a = &dout->ccfg.annexes[i];
     }
 #endif
     // swapchain
-    dout->bufCnt = AFX_MAX(1, AFX_MIN(cfg->minBufCnt, def.minBufCnt)); // 2 or 3; double or triple buffered for via-memory presentation.
+    dout->bufCnt = AFX_MAX(1, AFX_MIN(cfg->latency, def.latency)); // 2 or 3; double or triple buffered for via-memory presentation.
 
     dout->area = AFX_RECT(0, 0, dout->ccfg.whd.w, dout->ccfg.whd.h);
     dout->dstArea = AFX_RECT_ZERO;
     dout->persistBlit = FALSE;
 
     dout->submCnt = 0;
-    dout->presentingBufIdx = AFX_INVALID_INDEX;
+    dout->lastPresentedBufIdx = AFX_INVALID_INDEX;
     dout->suspendCnt = 1;
     AfxDeployFutex(&dout->suspendSlock);
 
@@ -791,7 +810,7 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
     AFX_ASSERT_EXTENT(dout->resolution.d, dout->ccfg.whd.d);
 
     AFX_ASSERT(dout->bufCnt);
-    AFX_ASSERT(dout->ccfg.slots[0].usage & avxRasterUsage_DRAW);
+    AFX_ASSERT(dout->ccfg.bins[0].usage & avxRasterUsage_DRAW);
     AFX_ASSERT(dout->refreshRate);
     AFX_ASSERT(dout->wpOverHp);
     AFX_ASSERT(dout->wrOverHr);
@@ -809,8 +828,8 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
 _AVX afxClassConfig const _AVX_DOUT_CLASS_CONFIG =
 {
     .fcc = afxFcc_DOUT,
-    .name = "DrawOutput",
-    .desc = "Draw Output Mechanism",
+    .name = "Surface",
+    .desc = "Presentable Video Surface",
     .fixedSiz = sizeof(AFX_OBJECT(afxSurface)),
     .ctor = (void*)_AvxDoutCtorCb,
     .dtor = (void*)_AvxDoutDtorCb
@@ -854,7 +873,32 @@ _AVX afxError AvxConfigureSurface(afxDrawSystem dsys, afxSurfaceConfig* cfg)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(cfg);
-    *cfg = AVX_DEFAULT_SURFACE_CONFIG;
+
+    // Used to opt for sRGB format. Safe if used after being zeroed.
+    //cfg->colorSpc = avxColorSpace_STANDARD;
+
+    if (!cfg->ccfg.binCnt)
+    {
+        cfg->ccfg.binCnt = 1;
+
+        if (cfg->colorSpc == avxColorSpace_STANDARD)
+            cfg->ccfg.bins[0].fmt = avxFormat_BGRA8v;
+        else
+            cfg->ccfg.bins[0].fmt = avxFormat_BGRA8un;
+    }
+
+    AvxConfigureCanvas(dsys, &cfg->ccfg);
+
+    cfg->latency = 2;
+    cfg->presentMode = NIL;
+    cfg->presentAlpha = FALSE;
+    cfg->presentTransform = NIL;
+    cfg->doNotClip = FALSE;
+    cfg->resolution = AVX_RANGE(AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX);
+    cfg->resizable = TRUE;
+    cfg->refreshRate = 1;
+    cfg->exclusive = FALSE;
+
     return err;
 }
 

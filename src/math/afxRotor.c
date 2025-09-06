@@ -16,10 +16,10 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/inc/math/afxRotor.h"
-#include "qwadro/inc/math/afxQuaternion.h"
-#include "qwadro/inc/math/afxMatrix.h"
-#include "qwadro/inc/math/afxVector.h"
+#include "qwadro/math/afxRotor.h"
+#include "qwadro/math/afxQuaternion.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/math/afxVector.h"
 
 _AFXINL void AfxSetBiv3d(afxV3d biv, afxReal b01, afxReal b02, afxReal b12)
 {

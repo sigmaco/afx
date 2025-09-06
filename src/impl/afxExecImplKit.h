@@ -19,7 +19,7 @@
 #ifndef AFX_EXEC_IMPL_KIT_H
 #define AFX_EXEC_IMPL_KIT_H
 
-#include "qwadro/inc/exec/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
 #ifdef _AFX_CONTEXT_C
 AFX_OBJECT(afxDevLink)
@@ -240,6 +240,7 @@ AFX_OBJECT(afxSystem)
     afxClass        mmuCls;
     afxClass        strbCls;
     afxClass        mdleCls;
+    afxClass        procCls;
     afxClass        thrCls;
     afxClass        thrpCls;
     afxClass        svcCls;
@@ -336,16 +337,17 @@ AFX afxClass*           _AfxGetSemaphoreClass(afxDevLink ctx);
 
 AFX afxClassConfig const _AfxSemStdImplementation;
 
-AFX afxClass const*     _AfxGetStreamClass(void);
-AFX afxClass*           _AfxGetStorageClass(void);
-AFX afxClass*           _AfxGetMmuClass(void);
-AFX afxClass*           _AfxGetModuleClass(void);
-AFX afxClass*           _AfxGetServiceClass(void);
-AFX afxClass*           _AfxGetStringBaseClass(void);
-AFX afxClass*           _AfxGetThreadClass(void);
-AFX afxClass*           _AfxGetThreadPoolClass(void);
-AFX afxClass const*     _AfxGetDeviceClass(void);
-AFX afxClass const*     _AfxGetIoBridgeClass(void);
+AFX afxClass const*     _AfxSysGetIobClass(afxSystem sys);
+AFX afxClass const*     _AfxSysGetFsysClass(afxSystem sys);
+AFX afxClass const*     _AfxSysGetMmuClass(afxSystem sys);
+AFX afxClass const*     _AfxSysGetMdleClass(afxSystem sys);
+AFX afxClass const*     _AfxSysGetSvcClass(afxSystem sys);
+AFX afxClass const*     _AfxSysGetStrbClass(afxSystem sys);
+AFX afxClass const*     _AfxSysGetProcClass(afxSystem sys);
+AFX afxClass const*     _AfxSysGetThrClass(afxSystem sys);
+AFX afxClass const*     _AfxSysGetThrpClass(afxSystem sys);
+AFX afxClass const*     _AfxSysGetDevClass(afxSystem sys);
+AFX afxClass const*     _AfxSysGetExuClass(afxSystem sys);
 
 AFX afxError _AfxAttachCoreModule(afxModule* e2coree);
 AFX afxError _AfxAttachTargaModule(afxModule* e2targa);

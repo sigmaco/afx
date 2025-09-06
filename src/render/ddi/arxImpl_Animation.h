@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -20,7 +20,7 @@
 #define ARX_IMPL___ANIMATION_H
 
 //#include "../impl/afxExecImplKit.h"
-#include "qwadro/inc/render/arxRenderware.h"
+#include "qwadro/render/arxRenderware.h"
 
 typedef enum arxTrackSampler
 {
@@ -53,15 +53,15 @@ AFX_OBJECT(_arxCapstan)
 AFX_OBJECT(arxCapstan)
 #endif
 {
-    arxCapstanFlags   flags;
-    afxReal         dtLocalClockPending;
-    afxReal         localClock;
+    arxCapstanFlags flags;
+    afxReal         dtLocalTimePending;
+    afxReal         localTime;
     afxReal         speed;
     afxReal         localDur;
     afxInt          currIterIdx;
     afxInt          iterCnt;
     afxReal         currWeight;
-    arxCapstanTiming  timing;
+    arxCapstanTiming timing;
     afxUnit32       easeInValues;
     afxUnit32       easeOutValues;
     void*           udd[4];
@@ -191,10 +191,10 @@ AFX_DEFINE_STRUCT(arxTrackTarget) // draft
     arxInstancedAnimation Binding;
     arxInstancedAnimationId BindingID; // size = 28
     arxBody OnInstance; // 32
-    afxAccumOp AccumulationMode; // 36
+    arxAccumOp AccumulationMode; // 36
     float LODCopyScaler; // 40
-    akxTrackMask *TrackMask; // 44
-    akxTrackMask *ModelMask; // 48
+    arxTrackMask *TrackMask; // 44
+    arxTrackMask *ModelMask; // 48
 };
 
 #ifdef _ARX_ANIMATION_C
@@ -252,15 +252,15 @@ AFX_DECLARE_STRUCT(arxMotiveCallbacks);
 typedef struct controlled_pose
 {
     arxPose Attitude; // 0
-    const akxTrackMask *ModelMask; // 4
+    const arxTrackMask *ModelMask; // 4
 } controlled_pose;
 
 typedef struct controlled_animation
 {
     arxInstancedAnimation Binding; // 0
-    afxAccumOp AccumulationMode; // 4
-    const akxTrackMask *TrackMask; // 8
-    const akxTrackMask *ModelMask; // 12
+    arxAccumOp AccumulationMode; // 4
+    const arxTrackMask *TrackMask; // 8
+    const arxTrackMask *ModelMask; // 12
 } controlled_animation;
 
 AFX_DEFINE_STRUCT(_arxMotvDdi)

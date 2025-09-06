@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_RASTER_C
@@ -27,6 +28,16 @@
  // cube             =   1 x wh1 >> lod
  // cube array       = img x wh1 >> lod
  // 3d               =   1 x whd >> lod
+
+_AVXINL afxDrawSystem AvxGetRasterHost(avxRaster ras)
+{
+    afxError err = AFX_ERR_NONE;
+    // @ras must be a valid avxRaster handle.
+    AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+    afxDrawSystem dsys = AfxGetHost(ras);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    return dsys;
+}
 
 _AVXINL avxFormat AvxGetRasterFormat(avxRaster ras)
 {
@@ -57,24 +68,24 @@ _AVXINL avxFormat AvxDescribeRasterFormat(avxRaster ras, avxFormatDescription* p
     return fmt;
 }
 
-_AVXINL avxRasterUsage AvxTestRasterUsage(avxRaster ras, avxRasterUsage mask)
+_AVXINL avxRasterUsage AvxGetRasterUsage(avxRaster ras, avxRasterUsage mask)
 {
 #if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 #endif//AVX_VALIDATION_ENABLED
-    return (ras->usage & mask);
+    return (!mask) ? ras->usage : (ras->usage & mask);
 }
 
-_AVXINL avxRasterFlags AvxTestRasterFlags(avxRaster ras, avxRasterFlags mask)
+_AVXINL avxRasterFlags AvxGetRasterFlags(avxRaster ras, avxRasterFlags mask)
 {
 #if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 #endif//AVX_VALIDATION_ENABLED
-    return (ras->flags & mask);
+    return (!mask) ? ras->flags : (ras->flags & mask);
 }
 
 _AVXINL void AvxGetRasterSwizzling(avxRaster ras, avxSwizzling* csw)
@@ -170,6 +181,13 @@ _AVXINL void _AvxSanitizeRasterRegion(avxRaster ras, afxUnit cnt, avxRasterRegio
         s->whd.w = AFX_CLAMP(r->whd.w, 1, whd.w - s->origin.x);
         s->whd.h = AFX_CLAMP(r->whd.h, 1, whd.h - s->origin.y);
         s->whd.d = AFX_CLAMP(r->whd.d, 1, whd.d - s->origin.z);
+
+        // whd.w MUST not be 0.
+        // whd.h MUST not be 0.
+        // whd.d MUST not be 0.
+        AFX_ASSERT(s->whd.w);
+        AFX_ASSERT(s->whd.h);
+        AFX_ASSERT(s->whd.d);
     }
 }
 
@@ -234,7 +252,7 @@ _AVX afxBool AvxQueryRasterArrangement(avxRaster ras, avxRasterRegion const* rgn
         if (!size)
         {
             afxWarp whd = { ras->whd.w, ras->whd.h, ras->whd.d };
-            afxBool is3d = !!AvxTestRasterFlags(ras, avxRasterFlag_3D);
+            afxBool is3d = !!AvxGetRasterFlags(ras, avxRasterFlag_3D);
 
             for (afxUnit i = 0; i < mipCnt; i++)
             {
@@ -272,7 +290,7 @@ _AVX afxBool AvxQueryRasterArrangement(avxRaster ras, avxRasterRegion const* rgn
     avxFormatDescription pfd;
     AvxDescribeFormats(1, &ras->fmt, &pfd);
 
-    afxBool is3d = AvxTestRasterFlags(ras, avxRasterFlag_3D);
+    afxBool is3d = AvxGetRasterFlags(ras, avxRasterFlag_3D);
     AFX_ASSERT(!rgn->origin.z || !is3d);
 
     afxUnit targetMipLevel = rgn->lodIdx;
@@ -347,7 +365,7 @@ _AVX afxError _AvxRasDtorCb(avxRaster ras)
         AfxDisposeObjects(1, &ras->base);
     }
 
-    afxDrawSystem dsys = AfxGetProvider(ras);
+    afxDrawSystem dsys = AvxGetRasterHost(ras);
     if (_AvxDsysGetImpl(dsys)->deallocRasCb(dsys, 1, &ras))
     {
         AfxThrowError();
@@ -361,7 +379,7 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
-    afxDrawSystem dsys = AfxGetProvider(ras);
+    afxDrawSystem dsys = AvxGetRasterHost(ras);
     avxRasterInfo const* rasi = args[1] ? ((avxRasterInfo const*)args[1]) + invokeNo : NIL;
     avxSubrasterInfo const* subi = args[2] ? ((avxSubrasterInfo const*)args[2]) + invokeNo : NIL;
     avxExorasterInfo const* exorasi = args[3] ? ((avxExorasterInfo const*)args[3]) + invokeNo : NIL;

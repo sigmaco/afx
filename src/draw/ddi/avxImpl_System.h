@@ -19,11 +19,12 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #ifndef AVX_IMPL___SYSTEM_H
 #define AVX_IMPL___SYSTEM_H
 
-#include "qwadro/inc/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 AFX_DEFINE_STRUCT(_avxBufferRemapping)
 {
@@ -51,6 +52,9 @@ AFX_DEFINE_STRUCT(_avxDsysImpl)
     afxError(*deallocRasCb)(afxDrawSystem, afxUnit, avxRaster[]);
     afxError(*allocBufCb)(afxDrawSystem, afxUnit, avxBufferInfo const[], avxBuffer[]);
     afxError(*deallocBufCb)(afxDrawSystem, afxUnit, avxBuffer[]);
+
+    afxError(*resetQryp)(afxDrawSystem, avxQueryPool, afxUnit, afxUnit);
+    afxResult(*getQrypRslt)(afxDrawSystem, avxQueryPool, afxUnit, afxUnit, void*, afxSize, afxSize, avxQueryResultFlags);
 
     afxClass const*(*dexuCls)(afxDrawSystem);
     afxClass const*(*fencCls)(afxDrawSystem);

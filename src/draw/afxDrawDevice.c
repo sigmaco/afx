@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
@@ -24,7 +25,7 @@
 #define _AVX_DRAW_SYSTEM_C
 #define _AVX_DRAW_DEVICE_C
 #define _AVX_DRAW_SYSTEM_C
-#define _AVX_DRAW_OUTPUT_C
+#define _AVX_SURFACE_C
 #define _AVX_DRAW_INPUT_C
 #include "ddi/avxImplementation.h"
 #include "../impl/afxExecImplKit.h"
@@ -789,8 +790,8 @@ _AVX afxUnit AvxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(
 _AVX afxUnit AvxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, afxDrawLimits const* limits, afxDrawPortInfo const* caps, afxUnit maxCnt, afxUnit ddevId[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(limits);
-    AFX_ASSERT(features);
+    //AFX_ASSERT(limits);
+    //AFX_ASSERT(features);
     afxUnit rslt = 0;
     afxModule mdle;
     while (_AvxGetIcd(icd, &mdle))
@@ -800,10 +801,10 @@ _AVX afxUnit AvxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, 
         afxClass const* cls = _AvxIcdGetDdevClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DDEV);
 
-        afxUnit i = 0;
         afxDrawDevice ddev;
-        while (AfxEnumerateObjects(cls, i, 1, (afxObject*)&ddev))
+        for (afxUnit i = 0; TRUE; i++)
         {
+            if (!AfxEnumerateObjects(cls, i, 1, (afxObject*)&ddev)) break;
             AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
 
             if (features || limits)
@@ -832,7 +833,6 @@ _AVX afxUnit AvxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, 
                 if (maxCnt > rslt)
                     break;
             }
-            i++;
         }
         break;
     }

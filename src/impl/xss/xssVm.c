@@ -20,7 +20,7 @@
   #include <time.h>
   #include <stdio.h>
 #endif
-//#include "qwadro/inc/ux/afxUxDefs.h"
+//#include "qwadro/ux/afxUxDefs.h"
 
 // The behavior of realloc() when the size is 0 is implementation defined. It
 // may return a non-NULL pointer which must not be dereferenced but nevertheless

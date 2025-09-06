@@ -19,11 +19,12 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #ifndef AVX_IMPL___PIPELINE_H
 #define AVX_IMPL___PIPELINE_H
 
-#include "qwadro/inc/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 #ifdef _AVX_LIGATURE_C
 
@@ -60,7 +61,7 @@ AFX_DEFINE_STRUCT(_avxLigament)
     void*           idd;
 };
 
-AFX_DEFINE_STRUCT(_avxLigatureSet)
+AFX_DEFINE_STRUCT(_avxLigamentSet)
 {
     afxUnit         set;
     afxUnit         baseEntry;
@@ -83,7 +84,7 @@ AFX_OBJECT(avxLigature)
     afxUnit         totalEntryCnt;
     _avxLigament*   totalEntries; // The map of binding indices pointing to the avxLigatureEntry, which this avxLigature describes.
     afxUnit         setCnt;
-    _avxLigatureSet*sets;
+    _avxLigamentSet*sets;
 };
 #endif//_AVX_LIGATURE_C
 
@@ -105,7 +106,8 @@ AFX_OBJECT(avxPipeline)
 {
     afxString           tag;
     void*               udd;
-    avxPipelineType     type;
+    afxFlags            flags;
+    avxBus            type;
     afxUnit             stageCnt;
     avxShaderSlot*      stages;    
     avxLigature         liga;
@@ -172,8 +174,8 @@ AFX_OBJECT(avxPipeline)
 
     // stencil test
     afxBool             stencilTestEnabled; // FALSE
-    avxStencilInfo      stencilFront; // is the configuration values controlling the corresponding parameters of the stencil test.
-    avxStencilInfo      stencilBack; // is the configuration controlling the corresponding parameters of the stencil test.
+    avxStencilConfig      stencilFront; // is the configuration values controlling the corresponding parameters of the stencil test.
+    avxStencilConfig      stencilBack; // is the configuration controlling the corresponding parameters of the stencil test.
 
     // depth test
     afxBool             depthTestEnabled; // controls whether depth testing is enabled. // FALSE
@@ -203,8 +205,8 @@ AFX_OBJECT(avxVertexInput)
     afxFlags        flags;
     afxUnit         totalAttrCnt;
     avxVertexAttr*  attrs;
-    afxUnit         srcCnt;
-    avxVertexFetch* srcs;
+    afxUnit         binCnt;
+    avxVertexStream* bins;
     afxString       tag;
     void*           udd;
 };
@@ -249,20 +251,26 @@ AFX_OBJECT(avxQueryPool)
     afxString       tag;
     void*           udd;
     avxQueryType    type;
-    afxUnit         cap;
+    afxUnit         slotCnt;
 };
 #endif
 
-#ifdef _AVX_CANVAS_C
-AFX_DEFINE_STRUCT(_avxCanvasUnit)
+AFX_DEFINE_STRUCT(_avxCanvDdi)
 {
-    avxRaster       ras; // the texture subresource that will be output to for this color attachment.
+    afxError(*relink)(avxCanvas, afxBool, afxUnit, afxUnit, avxRaster[]);
+    afxError(*readjust)(avxCanvas, afxWarp const);
+};
+
+#ifdef _AVX_CANVAS_C
+AFX_DEFINE_STRUCT(_avxDrawBin)
+{
+    avxRaster       buf; // the texture subresource that will be output to for this color attachment.
     avxRaster       resolve; // the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
     afxBool         managed;
     avxFormat       fmt; // the format of the image that will be used for the attachment.
     avxRasterUsage  usage; // additional properties of the attachment.
     avxRasterFlags  flags;
-    afxUnit         sampleCnt; // the number of samples of the image.
+    afxUnit         lodCnt; // the number of samples of the image.
 };
 #ifdef _AVX_CANVAS_IMPL
 AFX_OBJECT(_avxCanvas)
@@ -270,21 +278,20 @@ AFX_OBJECT(_avxCanvas)
 AFX_OBJECT(avxCanvas)
 #endif
 {
+    _avxCanvDdi const*ddi;
     afxString       tag;
     void*           udd;
     avxCanvasFlags  flags;
     avxRange        whdMin; // when a user-provided raster are attached
     avxRange        whdMax; // when a user-provided raster are attached
     avxRange        whd; // D is layered
-    afxUnit         lodCnt;
+    afxUnit         lodCnt; // multisampling level (2^lodCnt)
     afxUnit         linkedCnt;
-    afxUnit         slotCnt; // immutable
-    _avxCanvasUnit* slots;
+    afxUnit         binCnt; // immutable
+    _avxDrawBin*    bins;
     afxFlags        ownershipMask; // one for each surface. Forcing it to be limited to max 32 surfaces.
     afxUnit         colorCnt;
-    afxUnit         dsSlotIdx[2];
-    afxError        (*readjust)(avxCanvas, afxWarp const);
-    afxError        (*relink)(avxCanvas, afxBool, afxUnit, afxUnit, avxRaster[]);
+    afxUnit         dsBinIdx[2];
     void*           idd[2];
 };
 #endif//_AVX_CANVAS_C
@@ -297,9 +304,10 @@ AFX_OBJECT(avxSampler)
 #endif
 {
     afxString       tag;
-    void*           udd;
+    void*           udd;    
     afxUnit32       crc;
-    avxSamplerInfo  cfg;
+    afxFlags        flags;
+    avxSamplerConfig  cfg;
 };
 #endif
 

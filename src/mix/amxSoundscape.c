@@ -7,19 +7,30 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _AMX_AUDIENT_C
-#include "../ddi/amxImplementation.h"
+// This software is part of Advanced Multimedia Extensions & Experiments.
+
+#define _AMX_SOUNDSCAPE_C
+#include "ddi/amxImplementation.h"
 
 // É muito difícil inventar uma coisa quando ninguém inventou aquilo ainda.
 
 // Audient means a person who listens or hears.
+
+_AMX afxClass const* _AmxSndsGetSndClass(amxSoundscape snds)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SNDS, 1, &snds);
+    afxClass const* cls = &snds->sndCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_SND);
+    return cls;
+}
 
 _AMX afxError AmxSetAuditionRenderer(amxSoundscape snds, afxUnit exuIdx)
 {
@@ -88,6 +99,9 @@ _AMX afxError _AmxSndsDtorCb(amxSoundscape snds)
         AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &snds->mix);
         AmxRouteAudition(snds, NIL, 0);
     }
+    
+    AfxDeregisterChainedClasses(&snds->classes);
+    AFX_ASSERT(AfxIsChainEmpty(&snds->classes));
 
     return err;
 }
@@ -99,13 +113,28 @@ _AMX afxError _AmxSndsCtorCb(amxSoundscape snds, void** args, afxUnit invokeNo)
 
     afxMixSystem msys = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+    amxSoundscapeConfig const* cfg = ((amxSoundscapeConfig const*)args[1]) + invokeNo;
 
+    snds->ambiOrder = AFX_MAX(1, cfg->ambiOrder);
+    snds->flags = cfg->flags;
     snds->exuIdx = 0;
     snds->mix = NIL;
     snds->baseSmixIdx = 1;
     AfxResetTransform(&snds->placement);
     AfxV3dZero(snds->velocity);
 
+    afxChain* classes = &snds->classes;
+    AfxDeployChain(classes, (void*)snds);
+
+    afxClassConfig clsCfg = /*cfg->sndClsCfg ? *cfg->sndClsCfg :*/ _AMX_SND_CLASS_CONFIG;
+    AFX_ASSERT(clsCfg.fcc == afxFcc_SND);
+    AfxMountClass(&snds->sndCls, NIL, &snds->classes, &clsCfg);
+
+    if (err)
+    {
+        AfxDeregisterChainedClasses(&snds->classes);
+        AFX_ASSERT(AfxIsChainEmpty(&snds->classes));
+    }
     return err;
 }
 
@@ -113,7 +142,7 @@ _AMX afxClassConfig const _AMX_SNDS_CLASS_CONFIG =
 {
     .fcc = afxFcc_SNDS,
     .name = "Soundscape",
-    .desc = "Soundscape",
+    .desc = "Ambisonic Soundscape",
     .fixedSiz = sizeof(AFX_OBJECT(amxSoundscape)),
     .ctor = (void*)_AmxSndsCtorCb,
     .dtor = (void*)_AmxSndsDtorCb
@@ -121,23 +150,24 @@ _AMX afxClassConfig const _AMX_SNDS_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError AmxAcquireSoundscape(afxMixSystem msys, amxSoundscape* soundscape)
+_AMX afxError AmxAcquireSoundscape(afxMixSystem msys, amxSoundscapeConfig const* cfg, amxSoundscape* soundscape)
 {
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+    AFX_ASSERT(soundscape);
+    AFX_ASSERT(cfg);
 
-    afxClass* cls = (afxClass*)_AmxMsysGetAudiClass(msys);
+    afxClass* cls = (afxClass*)_AmxMsysGetSndsClass(msys);
     AFX_ASSERT_CLASS(cls, afxFcc_SNDS);
-    amxSoundscape snds;
-
-    if (AfxAcquireObjects(cls, 1, (afxObject*)&snds, (void const*[]) { msys }))
+    
+    if (AfxAcquireObjects(cls, 1, (afxObject*)soundscape, (void const*[]) { msys, (void*)cfg }))
     {
         AfxThrowError();
         return err;
     }
-    
-    AFX_ASSERT_OBJECTS(afxFcc_SNDS, 1, &snds);
-    *soundscape = snds;
-
+    else
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_SNDS, 1, soundscape);
+    }
     return err;
 }

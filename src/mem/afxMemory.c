@@ -459,7 +459,10 @@ _AFX afxError AfxAcquireMemory(afxMemoryFlags flags, afxSize siz, afxUri const* 
 {
     afxError err = AFX_ERR_NONE;
 
-    afxClass* cls = _AfxGetMmuClass();
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = _AfxSysGetMmuClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_MMU);
     afxMemory mem = NIL;
 

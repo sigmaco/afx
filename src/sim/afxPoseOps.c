@@ -22,7 +22,7 @@
 #define _ASX_CONTEXT_C
 #define _ARX_POSE_C
 #define _ARX_PLACEMENT_C
-#include "../impl/asxImplementation.h"
+#include "impl/asxImplementation.h"
 #include "afx/src/render/ddi/arxImpl_Input.h"
 
 

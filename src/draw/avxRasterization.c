@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
@@ -88,6 +88,7 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
         cmd->CommenceDrawScope.hasS = TRUE;
     }
 
+    cmd->CommenceDrawScope.flags = cfg2.flags;
     cmd->CommenceDrawScope.dbgTag = cfg2.tag;
 
     return cmdId;
@@ -114,14 +115,14 @@ _AVX afxCmdId AvxCmdConcludeDrawScope(afxDrawContext dctx)
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdClearCanvas(afxDrawContext dctx, afxUnit annexCnt, afxUnit const annexes[], avxClearValue const values[], afxUnit areaCnt, afxLayeredRect const areas[])
+_AVX afxCmdId AvxCmdClearCanvas(afxDrawContext dctx, afxUnit bufCnt, afxUnit const bins[], avxClearValue const values[], afxUnit areaCnt, afxLayeredRect const areas[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
     AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
-    // This command must only be called outside of a draw scope instance.
+    // This command must only be called inside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
@@ -129,12 +130,12 @@ _AVX afxCmdId AvxCmdClearCanvas(afxDrawContext dctx, afxUnit annexCnt, afxUnit c
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(ClearCanvas), sizeof(cmd->ClearCanvas) + (areaCnt * sizeof(cmd->ClearCanvas.areas[0])), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->ClearCanvas.annexCnt = annexCnt;
+    cmd->ClearCanvas.bufCnt = bufCnt;
     cmd->ClearCanvas.areaCnt = areaCnt;
 
-    for (afxUnit i = 0; i < annexCnt; i++)
+    for (afxUnit i = 0; i < bufCnt; i++)
     {
-        cmd->ClearCanvas.annexes[i] = annexes ? annexes[i] : i;
+        cmd->ClearCanvas.bins[i] = bins ? bins[i] : i;
         cmd->ClearCanvas.values[i] = values[i];
     }
 

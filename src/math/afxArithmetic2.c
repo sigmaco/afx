@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/inc/math/afxArithmetic2.h"
+#include "qwadro/math/afxArithmetic2.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // EXTENDED ARITHMETICA                                                       //

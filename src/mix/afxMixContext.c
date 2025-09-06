@@ -7,14 +7,14 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
- // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #define _AMX_MIX_C
 #define _AMX_MIX_SYSTEM_C
@@ -28,7 +28,7 @@
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
 #define _AMX_AUDIO_C
-#include "../ddi/amxImplementation.h"
+#include "ddi/amxImplementation.h"
 
 /*
     Audio Element	Role in Pipeline	                Graphics Analogy
@@ -48,15 +48,6 @@ AFX_DEFINE_STRUCT(_amxPlaying)
     afxUnit64           posn;
     afxUnit             iterCnt;
 };
-
-_AMX afxClass const* _AmxMixGetVoxClass(afxMixContext mix)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    afxClass const* cls = &mix->voxCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_VOX);
-    return cls;
-}
 
 _AMX _amxCmdBatch* _AmxGetCmdBatch(afxMixContext mix, afxUnit idx)
 {
@@ -88,63 +79,6 @@ _AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdI
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-_AMX afxCmdId AmxBindIoStream(afxMixContext mix, afxUnit pin, afxStream iob, afxSize offset, afxSize range, afxUnit stride)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-
-    mix->streams[pin].type = afxFcc_IOB;
-    mix->streams[pin].iob.iob = iob;
-    mix->streams[pin].iob.offset = offset;
-    mix->streams[pin].iob.range = range;
-    mix->streams[pin].iob.stride = stride;
-}
-
-_AMX afxCmdId AmxBindBufferedStream(afxMixContext mix, afxUnit pin, amxBuffer buf, afxSize offset, afxSize range, afxUnit stride)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-
-    mix->streams[pin].type = afxFcc_MBUF;
-    mix->streams[pin].posn = 0;
-    mix->streams[pin].buf.buf = buf;
-    mix->streams[pin].buf.offset = offset;
-    mix->streams[pin].buf.range = range;
-    mix->streams[pin].buf.stride = stride;
-}
-
-_AMX afxCmdId AmxBindAudioTrack(afxMixContext mix, afxUnit pin, amxAudio aud, afxUnit srcIdx, amxFormat fmt)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-
-    mix->tracks[pin].type = afxFcc_AUD;
-    mix->tracks[pin].posn = 0;
-    mix->tracks[pin].fmt = fmt;
-    mix->tracks[pin].srcIdx = srcIdx;
-    mix->tracks[pin].aud.aud = aud;
-}
-
-_AMX afxCmdId AmxBindBuffer(afxMixContext mix, afxUnit bank, amxBuffer buf, afxUnit offset, afxUnit range, afxUnit freq)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-
-    mix->banks[bank].type = afxFcc_MBUF;
-    mix->banks[bank].buf.buf = buf;
-    mix->banks[bank].buf.offset = offset;
-    mix->banks[bank].buf.range = range;
-}
-
-_AMX afxCmdId AmxBindAudio(afxMixContext mix, afxUnit bank, amxAudio aud)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-
-    mix->banks[bank].type = afxFcc_AUD;
-    mix->banks[bank].aud.aud = aud;
-}
 
 _AMX amxMixState AfxGetMixerState(afxMixContext mix)
 {
@@ -180,9 +114,9 @@ _AMX afxError AmxExhaustMixContext(afxMixContext mix, afxBool freeMem)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
-    if (mix->pimpl->exhaust)
+    if (mix->ddi->exhaust)
     {
-        if (mix->pimpl->exhaust(mix, freeMem))
+        if (mix->ddi->exhaust(mix, freeMem))
         {
             AfxThrowError();
         }
@@ -252,10 +186,10 @@ _AMX afxError AmxRecordMixCommands(afxMixContext mix, afxBool once, afxBool defe
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     AFX_ASSERT(batchId);
 
-    if (mix->pimpl->compose)
+    if (mix->ddi->compose)
     {
         afxUnit bId;
-        if (mix->pimpl->compose(mix, once, deferred, &bId))
+        if (mix->ddi->compose(mix, once, deferred, &bId))
         {
             AfxThrowError();
             bId = AFX_INVALID_INDEX;
@@ -378,9 +312,9 @@ _AMX afxError AmxDiscardMixCommands(afxMixContext mix, afxBool freeRes)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
-    if (mix->pimpl->discard)
+    if (mix->ddi->discard)
     {
-        if (mix->pimpl->discard(mix, freeRes))
+        if (mix->ddi->discard(mix, freeRes))
         {
             AfxThrowError();
         }
@@ -452,9 +386,9 @@ _AMX afxError AmxCompileMixCommands(afxMixContext mix, afxUnit batchId)
         return err;
     }
 
-    if (mix->pimpl->compile)
+    if (mix->ddi->compile)
     {
-        if (mix->pimpl->compile(mix, batchId))
+        if (mix->ddi->compile(mix, batchId))
         {
             AfxThrowError();
         }
@@ -519,9 +453,9 @@ _AMX afxError AmxRecycleMixCommands(afxMixContext mix, afxUnit batchId, afxBool 
         return err;
     }
 
-    if (mix->pimpl->recycle)
+    if (mix->ddi->recycle)
     {
-        if (mix->pimpl->recycle(mix, batchId, freeRes))
+        if (mix->ddi->recycle(mix, batchId, freeRes))
         {
             AfxThrowError();
         }
@@ -632,6 +566,34 @@ _AMX afxBool AmxDoesMixCommandsExist(afxMixContext dctx, afxUnit batchId)
     return !!batch;
 }
 
+_AMX afxError _AmxMixResetCb(afxMixContext mix, afxBool freeMem, afxBool permanent)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(mix->state != amxMixState_PENDING);
+    mix->disposable = !permanent;
+
+    AfxDeployChain(&mix->commands, mix);
+    AfxExhaustArena(&mix->cmdArena);
+
+    return err;
+}
+
+_AMX afxError _AmxMixEndCb(afxMixContext mix)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    return err;
+}
+
+_amxMctxDdi const _AMX_MCTX_DDI =
+{
+    .compose = NIL,
+    .compile = NIL,
+    .recycle = NIL,
+    .discard = NIL,
+    .exhaust = NIL
+};
+
 _AMX afxError _AmxMixDtorCb(afxMixContext mix)
 {
     afxError err = AFX_ERR_NONE;
@@ -650,8 +612,6 @@ _AMX afxError _AmxMixDtorCb(afxMixContext mix)
     AfxDismantleArena(&mix->cmdArena);
     AfxExhaustPool(&mix->batches, TRUE);
 
-    AfxDismountClass(&mix->voxCls);
-
     return err;
 }
 
@@ -662,8 +622,8 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
 
     afxMixSystem msys = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+    AFX_ASSERT(args[1]);
     afxMixConfig const* cfg = AFX_CAST(afxMixConfig const*, args[1]) + invokeNo;
-    AFX_ASSERT(cfg);
 
     //afxUnit chanCnt = AFX_MAX(1, cfg->chanCnt);
     //afxUnit freq = AFX_MAX(1, cfg->freq);
@@ -671,6 +631,9 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
     //mix->latency = AFX_MAX(cfg->latency, 4096);
     //mix->freq = freq;
     //mix->chanCnt = chanCnt;
+
+    mix->tag = cfg->tag;
+    mix->udd = cfg->udd;
 
     mix->disabled = FALSE;
 
@@ -689,11 +652,9 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
     AfxMakeArena(&mix->cmdArena, NIL, AfxHere());
     AfxDeployChain(&mix->commands, mix);
 
-    mix->resetCb = _AmxMixResetCb;
-    mix->endCb = _AmxMixEndCb;
     mix->state = amxMixState_RECORDING;
 
-    mix->pimpl = NIL;// &_AMX_MCTX_DDI;
+    mix->ddi = &_AMX_MCTX_DDI;
 
     AfxDeployPool(&mix->batches, sizeof(_amxCmdBatch), 3, 0);
 
@@ -715,8 +676,6 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
         mix->motor.timing.easeOutEndClock = 0;
         mix->motor.easeOutValues = (afxUnit)0xFFFF;
     }
-
-    AfxMountClass(&mix->voxCls, NIL, NIL, &_AMX_VOX_CLASS_CONFIG);
 
     return err;
 }
@@ -756,25 +715,69 @@ _AMX afxError AmxAcquireMixContext(afxMixSystem msys, afxMixConfig const* cfg, a
     return err;
 }
 
-_AMX afxError AmxRollMixContext(afxMixContext mix, afxUnit frameCnt)
+_AMX afxError AmxExecuteMixCommands(afxMixContext mix, afxUnit cnt, amxSubmission const subms[])
 {
     afxError err = AFX_ERR_NONE;
     // mctx must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
-    afxMixSystem msys = AfxGetProvider(mix);
+    afxMixSystem msys = AfxGetHost(mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
-    afxMixBridge mexu;
-    AFX_ASSERT_RANGE(msys->bridgeCnt, /*ctrl->exuIdx*/0, 1);
-    if (!AmxGetMixBridges(msys, /*ctrl->exuIdx*/0, 1, &mexu))
+    for (afxUnit ctxIt = 0; ctxIt < cnt; ctxIt++)
     {
-        AfxThrowError();
-        return err;
+        amxSubmission const* subm = &subms[ctxIt];
+
+        if (!_AmxGetCmdBatch(mix, subm->batchId))
+            continue;
+
+        afxMask exuMask = subm->exuMask;
+        afxUnit exuCnt = AmxChooseMixBridges(msys, AFX_INVALID_INDEX, NIL, exuMask, 0, 0, NIL);
+        afxUnit nextExuIdx = AfxRandom2(0, exuCnt - 1);
+
+        afxBool queued = FALSE;
+
+        while (1)
+        {
+            for (afxUnit exuIter = nextExuIdx; exuIter < exuCnt; exuIter++)
+            {
+                afxMixBridge dexu;
+                if (!AmxChooseMixBridges(msys, AFX_INVALID_INDEX, NIL, exuMask, exuIter, 1, &dexu))
+                {
+                    AfxThrowError();
+                    continue;
+                }
+
+                nextExuIdx = 0;
+
+                while (1)
+                {
+                    afxMixQueue mque;
+                    afxUnit nextQueIdx = 0;
+                    while (AmxGetMixQueues(dexu, nextQueIdx, 1, &mque))
+                    {
+                        AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+                        ++nextQueIdx;
+
+                        afxError err2 = _AmxMqueExecuteMixCommands(mque, 1, subm);
+
+                        if (!err2)
+                        {
+                            queued = TRUE;
+                            break; // while --- get queue
+                        }
+
+                        if (err2 == afxError_TIMEOUT || err2 == afxError_BUSY)
+                            break; // while --- get queue
+
+                        AfxThrowError();
+                    }
+                    if (err || queued) break; // while --- find queues
+                }
+                if (err || queued) break; // for --- iterate bridge
+            }
+            if (err || queued) break; // while --- find bridges
+        }
     }
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-
-    if (_AmxMexuRollMixers(mexu, 0, 1, 1, 1, &mix))
-        AfxThrowError();
-
     return err;
 }

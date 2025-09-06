@@ -14,14 +14,14 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+ // This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_QUERY_POOL_C
 #define _AVX_DRAW_CONTEXT_C
 #include "ddi/avxImplementation.h"
 
-_AVX afxCmdId AvxCmdPipelineBarrier(afxDrawContext dctx, avxPipelineStage dstStage, avxPipelineAccess dstAcc)
+_AVX afxCmdId AvxCmdDeclareDependency(afxDrawContext dctx, avxBusStage dstStage, avxPipelineAccess dstAcc)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
@@ -34,43 +34,56 @@ _AVX afxCmdId AvxCmdPipelineBarrier(afxDrawContext dctx, avxPipelineStage dstSta
     return cmdId;
 }
 
-AVX afxCmdId AvxCmdBeginQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit queryIdx, afxBool precise)
+_AVX afxCmdId AvxCmdDeclareBarrier(afxDrawContext dctx, avxBusStage dstStage, avxPipelineAccess dstAcc)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+
+    afxCmdId cmdId;
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(PipelineBarrier), sizeof(cmd->PipelineBarrier), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->PipelineBarrier.dstStage = dstStage;
+    cmd->PipelineBarrier.dstAccess = dstAcc;
+    return cmdId;
+}
+
+AVX afxCmdId AvxCmdBeginQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit slot, afxBool precise)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &pool);
-    AFX_ASSERT_RANGE(pool->cap, queryIdx, 1);
+    AFX_ASSERT_RANGE(pool->slotCnt, slot, 1);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BeginQuery), sizeof(cmd->BeginQuery), &cmdId);
     AFX_ASSERT(cmd);
     cmd->BeginQuery.pool = pool;
-    cmd->BeginQuery.queryIdx = queryIdx;
+    cmd->BeginQuery.slot = slot;
     cmd->BeginQuery.precise = precise;
     return cmdId;
 }
 
-AVX afxCmdId AvxCmdEndQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit queryIdx)
+AVX afxCmdId AvxCmdEndQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit slot)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &pool);
-    AFX_ASSERT_RANGE(pool->cap, queryIdx, 1);
+    AFX_ASSERT_RANGE(pool->slotCnt, slot, 1);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(EndQuery), sizeof(cmd->EndQuery), &cmdId);
     AFX_ASSERT(cmd);
     cmd->EndQuery.pool = pool;
-    cmd->EndQuery.queryIdx = queryIdx;
+    cmd->EndQuery.slot = slot;
     return cmdId;
 }
 
-AVX afxCmdId AvxCmdCopyQueryResults(afxDrawContext dctx, avxQueryPool pool, afxUnit baseQuery, afxUnit queryCnt, avxBuffer buf, afxSize offset, afxSize stride, avxQueryResultFlags flags)
+AVX afxCmdId AvxCmdCopyQueryResults(afxDrawContext dctx, avxQueryPool pool, afxUnit baseSlot, afxUnit slotCnt, avxBuffer buf, afxSize offset, afxSize stride, avxQueryResultFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &pool);
-    AFX_ASSERT_RANGE(pool->cap, baseQuery, queryCnt);
+    AFX_ASSERT_RANGE(pool->slotCnt, baseSlot, slotCnt);
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     AFX_ASSERT_RANGE(AvxGetBufferCapacity(buf, 0), offset, stride);
 
@@ -78,8 +91,8 @@ AVX afxCmdId AvxCmdCopyQueryResults(afxDrawContext dctx, avxQueryPool pool, afxU
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(CopyQueryResults), sizeof(cmd->CopyQueryResults), &cmdId);
     AFX_ASSERT(cmd);
     cmd->CopyQueryResults.pool = pool;
-    cmd->CopyQueryResults.baseQuery = baseQuery;
-    cmd->CopyQueryResults.queryCnt = queryCnt;
+    cmd->CopyQueryResults.baseSlot = baseSlot;
+    cmd->CopyQueryResults.slotCnt = slotCnt;
     cmd->CopyQueryResults.buf = buf;
     cmd->CopyQueryResults.offset = offset;
     cmd->CopyQueryResults.stride = stride;
@@ -87,34 +100,34 @@ AVX afxCmdId AvxCmdCopyQueryResults(afxDrawContext dctx, avxQueryPool pool, afxU
     return cmdId;
 }
 
-AVX afxCmdId AvxCmdResetQueries(afxDrawContext dctx, avxQueryPool pool, afxUnit baseQuery, afxUnit queryCnt)
+AVX afxCmdId AvxCmdResetQueries(afxDrawContext dctx, avxQueryPool pool, afxUnit baseSlot, afxUnit slotCnt)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &pool);
-    AFX_ASSERT_RANGE(pool->cap, baseQuery, queryCnt);
+    AFX_ASSERT_RANGE(pool->slotCnt, baseSlot, slotCnt);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(ResetQueries), sizeof(cmd->ResetQueries), &cmdId);
     AFX_ASSERT(cmd);
     cmd->ResetQueries.pool = pool;
-    cmd->ResetQueries.baseQuery = baseQuery;
-    cmd->ResetQueries.queryCnt = queryCnt;
+    cmd->ResetQueries.baseSlot = baseSlot;
+    cmd->ResetQueries.slotCnt = slotCnt;
     return cmdId;
 }
 
-AVX afxCmdId AvxCmdWriteTimestamp(afxDrawContext dctx, avxQueryPool pool, afxUnit queryIdx, avxPipelineStage stage)
+AVX afxCmdId AvxCmdQueryTimestamp(afxDrawContext dctx, avxQueryPool pool, afxUnit slot, avxBusStage stage)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &pool);
-    AFX_ASSERT_RANGE(pool->cap, queryIdx, 1);
+    AFX_ASSERT_RANGE(pool->slotCnt, slot, 1);
 
     afxCmdId cmdId;
-    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(WriteTimestamp), sizeof(cmd->WriteTimestamp), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(QueryTimestamp), sizeof(cmd->QueryTimestamp), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->WriteTimestamp.pool = pool;
-    cmd->WriteTimestamp.queryIdx = queryIdx;
-    cmd->WriteTimestamp.stage = stage;
+    cmd->QueryTimestamp.pool = pool;
+    cmd->QueryTimestamp.slot = slot;
+    cmd->QueryTimestamp.stage = stage;
     return cmdId;
 }

@@ -16,7 +16,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_THREAD_POOL_C
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
 
 _AFX afxInt _AFX_THRP_PROC(afxThreadPool thrp)
 {
@@ -269,7 +269,7 @@ _AFX afxError AfxBuildThreadPool(afxHere const hint, afxThreadPoolInfo const* in
     afxSystem sys;
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-    afxClass* cls = _AfxGetThreadPoolClass();
+    afxClass* cls = _AfxSysGetThrpClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_THRP);
     
     afxThreadPool thrp;

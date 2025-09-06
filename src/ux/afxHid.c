@@ -14,12 +14,14 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+ // This software is part of Advanced Multimedia UX Extensions & Experiments.
+
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
 #define _AFX_SYSTEM_C
 #define _AUX_UX_C
 #define _AUX_HID_C
-#include "../impl/auxImplementation.h"
+#include "impl/auxImplementation.h"
 
 _AUX afxClass const* AfxGetHidClass(void)
 {

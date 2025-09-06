@@ -15,13 +15,14 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 //#define _AFX_DEVICE_C
 //#define _AVX_DRAW_DEVICE_C
 #define _AVX_DRAW_BRIDGE_C
 //#define _AVX_DRAW_QUEUE_C
-//#define _AVX_DRAW_OUTPUT_C
+//#define _AVX_SURFACE_C
 //#define _AVX_DRAW_CONTEXT_C
 //#define _AVX_BUFFER_C
 #include "ddi/avxImplementation.h"
@@ -50,7 +51,7 @@ _AVX afxDrawSystem AvxGetBridgedDrawSystem(afxDrawBridge dexu, afxUnit* bridgeId
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-    afxDrawSystem dsys = AfxGetProvider(dexu);
+    afxDrawSystem dsys = AfxGetHost(dexu);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     if (bridgeId) *bridgeId = AfxGetObjectId(dexu);
     return dsys;

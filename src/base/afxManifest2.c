@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
 
 AFX_DEFINE_STRUCT(_afxIniRecord)
 {

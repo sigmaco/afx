@@ -22,6 +22,12 @@
 #define _AFX_CORE_C
 #include "../impl/afxExecImplKit.h"
 
+AFX_OBJECT(afxProcess)
+{
+    PROCESS_INFORMATION pi;
+    STARTUPINFO si;
+};
+
 void CreateIsolatedProcess(const char *application)
 {
     STARTUPINFO si;
@@ -82,4 +88,60 @@ void CreateIsolatedProcess(const char *application)
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
     CloseHandle(hJob);
+}
+
+_AFX afxError _AfxProcCtorCb(afxProcess proc, void** args, afxUnit invokeNo)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_PROC, 1, &proc);
+
+    afxShell sh = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_USYS, 1, &sh);
+    AFX_ASSERT(args[1]);
+    afxProcessInfo const* info = ((afxProcessInfo const*)args[1]) + invokeNo;
+
+    return err;
+}
+
+_AFX afxError _AfxProcDtorCb(afxProcess proc)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_PROC, 1, &proc);
+
+    return err;
+}
+
+_AFX afxClassConfig const _AFX_PROC_CLASS_CONFIG =
+{
+    .fcc = afxFcc_PROC,
+    .name = "Process",
+    .desc = "Process",
+    .fixedSiz = sizeof(AFX_OBJECT(afxProcess)),
+    .ctor = (void*)_AfxProcCtorCb,
+    .dtor = (void*)_AfxProcDtorCb,
+    //.event = (void*)_AfxXssEvent
+};
+
+_AFX afxError AfxSpawnProcess(afxUnit reserved, afxProcessInfo const* info, afxUnit cnt, afxProcess procs[])
+{
+    afxError err = NIL;
+    AFX_ASSERT(info);
+
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = (afxClass*)_AfxSysGetProcClass(sys);
+    AFX_ASSERT_CLASS(cls, afxFcc_PROC);
+
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)procs, (void const*[]) { sys, (void*)info, }))
+    {
+        AfxThrowError();
+        return err;
+    }
+    else
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_PROC, cnt, procs);
+    }
+
+    return err;
 }

@@ -16,8 +16,8 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/inc/math/afxTransform.h"
-#include "qwadro/inc/math/afxMatrix.h"
+#include "qwadro/math/afxTransform.h"
+#include "qwadro/math/afxMatrix.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

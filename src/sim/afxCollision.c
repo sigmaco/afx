@@ -16,8 +16,8 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#include "../impl/asxImplementation.h"
-#include "qwadro/inc/sim/body/afxCollision.h"
+#include "impl/asxImplementation.h"
+#include "qwadro/sim/afxCollision.h"
 
 AFX_DEFINE_STRUCT(asxTriangle)
 {
@@ -184,7 +184,7 @@ _ASX afxError _AsxShapDtorCb(asxShape shap)
 
     switch (shap->info.type)
     {
-    case asxShapeType_MESH:
+    case arxShapeType_MESH:
     {
 
         break;
@@ -210,7 +210,7 @@ _ASX afxError _AsxShapCtorCb(asxShape shap, void** args, afxUnit invokeNo)
     if (!shap->info.t.flags)
         AfxResetTransform(&shap->info.t);
 
-    if (info->type == asxShapeType_MESH)
+    if (info->type == arxShapeType_MESH)
     {
         arxMesh msh = info->msh;
         arxMeshInfo mshi;
@@ -256,7 +256,7 @@ _ASX afxError AsxAcquireShapes(afxSimulation sim, afxUnit cnt, asxShapeInfo cons
     return err;
 }
 
-_ASX afxError AfxBuildMeshShape(arxMesh msh, asxShape* shape)
+_ASX afxError AfxBuildMeshShape(afxSimulation sim, arxMesh msh, asxShape* shape)
 {
     afxError err = NIL;
 
@@ -266,7 +266,7 @@ _ASX afxError AfxBuildMeshShape(arxMesh msh, asxShape* shape)
     asxShape shap;
     asxShapeInfo shapi = { 0 };
     shapi.msh = msh;
-    AsxAcquireShapes(ArxGetMeshMateriality(msh), 1, &shapi, &shap);
+    AsxAcquireShapes(sim, 1, &shapi, &shap);
 
     return err;
 }

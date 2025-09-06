@@ -26,7 +26,7 @@ _AFX void* AfxGetSemaphoreContext(afxSemaphore sem)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SEM, 1, &sem);
-    void* ctx = AfxGetProvider(sem);
+    void* ctx = AfxGetHost(sem);
     //AfxAssertObjects(1, &ctx, afxFcc_DEVK);
     return ctx;
 }

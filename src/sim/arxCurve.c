@@ -16,7 +16,7 @@
 
 #define _ARX_C
 #define _ARX_CURVE_C
-#include "../../sim/impl/asxImplementation.h"
+#include "impl/asxImplementation.h"
 
 _ARXINL afxUnit ArxCountCurveKnots(arxCurve c)
 {
@@ -130,46 +130,39 @@ _ARXINL afxInt ArxGetCurveDegree(arxCurve c)
     return c->degree;
 }
 
-_ARXINL arxCurveFlags ArxGetCurveFlags(arxCurve c)
+_ARXINL arxCurveFlags ArxGetCurveFlags(arxCurve c, arxCurveFlags mask)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_CUR, 1, &c);
-    return c->flags;
+    return (!mask) ? c->flags : (c->flags & mask);
 }
 
-_ARXINL arxCurveFlags ArxTestCurveFlags(arxCurve c, arxCurveFlags mask)
+_ARXINL afxBool ArxTestCurveKeyframed(arxCurve c)
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_CUR, 1, &c);
-    return (c->flags & mask);
+    return !!ArxGetCurveFlags(c, arxCurveFlag_KEYFRAMED);
 }
 
-_ARXINL afxBool ArxIsCurveKeyframed(arxCurve c)
-{
-    afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_CUR, 1, &c);
-    return !!ArxTestCurveFlags(c, arxCurveFlag_KEYFRAMED);
-}
-
-_ARXINL afxBool ArxIsCurveIdentity(arxCurve c)
+_ARXINL afxBool ArxTestCurveIdentity(arxCurve c)
 {
     afxError err = NIL;
     AFX_ASSERT(c);
-    return !!ArxTestCurveFlags(c, arxCurveFlag_IDENTITY);
+    return !!ArxGetCurveFlags(c, arxCurveFlag_IDENTITY);
 }
 
-_ARXINL afxBool ArxIsCurveConstantOrIdentity(arxCurve c)
+_ARXINL afxBool ArxTestCurveConstantOrIdentity(arxCurve c)
 {
     afxError err = NIL;
     AFX_ASSERT(c);
-    return !!ArxTestCurveFlags(c, arxCurveFlag_IDENTITY | arxCurveFlag_CONSTANT);
+    return !!ArxGetCurveFlags(c, arxCurveFlag_IDENTITY | arxCurveFlag_CONSTANT);
 }
 
-_ARXINL afxBool ArxIsCurveConstantNotIdentity(arxCurve c)
+_ARXINL afxBool ArxTestCurveConstantNotIdentity(arxCurve c)
 {
     afxError err = NIL;
     AFX_ASSERT(c);
-    return ArxIsCurveConstantOrIdentity(c) && !ArxIsCurveIdentity(c);
+    return ArxTestCurveConstantOrIdentity(c) && !ArxTestCurveIdentity(c);
 }
 
 _ARXINL afxReal* ArxGetCurveKnots(arxCurve c)
@@ -453,7 +446,7 @@ _ARX void ArxExtractCurveKnotValues(arxCurve c, afxUnit knotIdx, afxUnit knotCnt
     afxError err = NIL;
     AFX_ASSERT(c);
 
-    if (ArxIsCurveIdentity(c))
+    if (ArxTestCurveIdentity(c))
     {
         for (afxUnit i = 0; i < c->dimens; i++)
             ctrlResults[i] = identivec[i];
@@ -566,7 +559,7 @@ _ARX void ArxEvaluateCurveAtKnot(arxCurve c, afxUnit dimens, afxBool normalize, 
     afxReal tiBufferSpace[8];
     afxReal piBufferSpace[64];
 
-    if (ArxIsCurveConstantOrIdentity(c))
+    if (ArxTestCurveConstantOrIdentity(c))
     {
         ArxExtractCurveKnotValue(c, 0, rslt, identityVec);
     }

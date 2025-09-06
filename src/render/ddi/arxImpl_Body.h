@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -19,7 +19,7 @@
 #ifndef ARX_IMPL___BODY_H
 #define ARX_IMPL___BODY_H
 
-#include "qwadro/inc/render/arxRenderware.h"
+#include "qwadro/render/arxRenderware.h"
 
 /*
     Body
@@ -35,7 +35,7 @@ AFX_DEFINE_STRUCT(arxBodyPart)
     // one per mesh rigged to model
     
     // In RW, RpAtomic must be individual because it is bound directly to the DAG as a generic discrete object.
-    afxNodular          nodr;
+    arxNodular          nodr;
     
     // In RW, there is one RpAtomic per mesh, which is a dynamic object storing the state of a RpGeometry.
     // RpGeometry would be a arxMesh. All RpAtomic's collectively would be a arxBody.

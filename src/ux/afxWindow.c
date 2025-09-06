@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This software is part of Advanced Multimedia UX Extensions & Experiments.
+
 #define _AUX_UX_C
 //#define _AUX_SHELL_C
 #define _AUX_SESSION_C
@@ -118,14 +120,15 @@ _AUX afxError AfxLoadWindowIcon(afxWindow wnd, afxUri const* uri)
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(uri);
 
-    afxDrawSystem dsys = AvxGetSurfaceSystem(wnd->dout ? wnd->dout : wnd->frameDout);
+    afxDrawSystem dsys = AvxGetSurfaceHost(wnd->dout ? wnd->dout : wnd->frameDout);
     
     avxRasterInfo rasi = { 0 };
     rasi.flags = avxRasterFlag_2D;
     rasi.usage = avxRasterUsage_SRC;
     
     avxRaster ras;
-    if (AvxLoadRasters(dsys, 1, &rasi, &uri[0], &ras))
+    avxRasterFile tga = { 0 };
+    if (AvxLoadRasters(dsys, 1, &rasi, &uri[0], &tga, &ras))
     {
         AfxThrowError();
         return err;
@@ -148,14 +151,15 @@ _AUX afxError AfxLoadWindowCursor(afxWindow wnd, afxUri const* uri)
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     AFX_ASSERT(uri);
 
-    afxDrawSystem dsys = AvxGetSurfaceSystem(wnd->dout ? wnd->dout : wnd->frameDout);
+    afxDrawSystem dsys = AvxGetSurfaceHost(wnd->dout ? wnd->dout : wnd->frameDout);
 
     avxRasterInfo rasi = { 0 };
     rasi.flags = avxRasterFlag_2D;
     rasi.usage = avxRasterUsage_SRC;
 
     avxRaster ras;
-    if (AvxLoadRasters(dsys, 1, &rasi, &uri[0], &ras))
+    avxRasterFile tga = { 0 };
+    if (AvxLoadRasters(dsys, 1, &rasi, &uri[0], &tga, &ras))
     {
         AfxThrowError();
         return err;
@@ -191,23 +195,25 @@ _AUX afxError AfxRedrawWindow(afxWindow wnd, afxRect const* area)
     return err;
 }
 
-_AUX afxError AfxRedrawWidgets(afxWindow wnd, afxDrawContext dctx)
+_AUX afxError AfxRedrawWidgets(afxWindow wnd, afxRect const* area, afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
 
     afxClass const* cls = _AuxWndGetWidClass(wnd);
 
+    afxRect area2 = area ? *area : wnd->areaRc;
+
+    // Desist if there is not area.
+    if (1 >= AfxGetRectArea(&area2))
+        return err;
+
     afxUnit i = 0;
     afxWidget wid;
     while (AfxEnumerateObjects(cls, i, 1, (afxObject*)&wid))
     {
         AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
-        afxWarp whd;
-        whd.w = wnd->areaRc.w;
-        whd.h = wnd->areaRc.h;
-        whd.d = 1;
-        AfxDrawWidget(wid, whd, dctx);
+        AfxDrawWidget(wid, &area2, dctx);
         i++;
     }
     return err;
@@ -472,7 +478,7 @@ _AUX afxError _AuxAdjustWindowSurfaceFromNdc(afxWindow wnd, afxV2d const offset,
     return err;
 }
 
-_AUX afxBool _AuxWndStdEventCb(afxWindow wnd, auxEvent *ev)
+_AUX afxBool AFX_WND_EVENT_HANDLER(afxWindow wnd, auxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
@@ -586,6 +592,8 @@ _AUX afxError _AuxWndCtorCb(afxWindow wnd, void** args, afxUnit invokeNo)
     
     wnd->udd = cfg->udd;
 
+    AfxResetEventHandler(wnd, (void*)(cfg->eventCb ? cfg->eventCb : AFX_WND_EVENT_HANDLER));
+
     return err;
 }
 
@@ -593,11 +601,11 @@ _AUX afxClassConfig const _AUX_WND_CLASS_CONFIG =
 {
     .fcc = afxFcc_WND,
     .name = "Window",
-    .desc = "Desktop Window",
+    .desc = "Desktop Environment Window",
     .fixedSiz = sizeof(AFX_OBJECT(afxWindow)),
     .ctor = (void*)_AuxWndCtorCb,
     .dtor = (void*)_AuxWndDtorCb,
-    .event = (void*)_AuxWndStdEventCb
+    .event = (void*)AFX_WND_EVENT_HANDLER
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -615,17 +623,13 @@ _AUX afxError AfxConfigureWindow(afxWindowConfig* cfg, afxV2d const origin, afxV
     }
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
-    afxDrawSystem dsys = cfg->dsys;
-    
     afxWindowConfig cfg2 = { 0 };
-    cfg2.dsys = dsys;
-    cfg2.eventCb = _AuxWndStdEventCb;
+    cfg2 = *cfg;
 
-    AvxConfigureSurface(dsys, &cfg2.dout);
-    cfg2.dout.doNotClip = FALSE;
-    cfg2.dout.presentAlpha = avxVideoAlpha_PREMUL;
-    cfg2.dout.ccfg.slots[0].usage |= avxRasterUsage_DRAW | avxRasterUsage_TEXTURE;
-    cfg2.dout.ccfg.slots[1].usage |= avxRasterUsage_DRAW | avxRasterUsage_TEXTURE;
+    if (!cfg2.dsys)
+        AfxGetSessionVideo(&cfg2.dsys);
+
+    cfg2.eventCb = AFX_WND_EVENT_HANDLER;
 
     afxDesktop* dwm = &ses->dwm;
     afxRect rc = { 0 };
@@ -651,6 +655,11 @@ _AUX afxError AfxConfigureWindow(afxWindowConfig* cfg, afxV2d const origin, afxV
     cfg2.atY = rc.y;
     cfg2.dout.ccfg.whd.w = rc.w;
     cfg2.dout.ccfg.whd.h = rc.h;
+
+    AvxConfigureSurface(cfg2.dsys, &cfg2.dout);
+    cfg2.dout.doNotClip = FALSE;
+    //cfg2.dout.presentAlpha = avxVideoAlpha_PREMUL;
+
     *cfg = cfg2;
 
     return err;

@@ -23,13 +23,13 @@
 #define _AFX_DRAW_OUTPUT_C
 #include "../impl/afxIoImplKit.h"
 #include "../impl/afxExecImplKit.h"
-#include "qwadro/inc/io/afxIoBridge.h"
+#include "qwadro/io/afxIoBridge.h"
 
 _AFX afxDevice AfxGetIoBridgeDevice(afxIoBridge exu)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
-    afxDevice dev = AfxGetProvider(exu);
+    afxDevice dev = AfxGetHost(exu);
     AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
     return dev;
 }
@@ -313,7 +313,10 @@ _AFX afxError AfxAcquireIoBridge(afxIoBridgeConfig const* cfg, afxIoBridge* brid
         totalDqueCnt += bridgeCfg.minQueCnt;
     }
 
-    afxClass* cls = (afxClass*)_AfxGetIoBridgeClass();
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = (afxClass*)_AfxSysGetExuClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_EXU);
 
     if (AfxAcquireObjects(cls, 1, (afxObject*)bridge, (void const*[]) { NIL, NIL, &bridgeCfg, &_AfxXqueStdImplementation })) AfxThrowError();

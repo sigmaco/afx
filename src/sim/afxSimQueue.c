@@ -108,7 +108,7 @@ _ASX afxEngine AfxGetSampleQueueDevice(afxSimQueue sque)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
-    afxSimBridge sexu = AfxGetProvider(sque);
+    afxSimBridge sexu = AfxGetHost(sque);
     AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
     afxEngine sdev = AfxGetMathBridgeDevice(sexu);
     AFX_ASSERT_OBJECTS(afxFcc_SDEV, 1, &sdev);

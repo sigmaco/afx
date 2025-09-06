@@ -20,7 +20,7 @@
 #define _ASX_SIM_BRIDGE_C
 #define _ASX_SIM_QUEUE_C
 #define _ASX_CONTEXT_C
-#include "../impl/asxImplementation.h"
+#include "impl/asxImplementation.h"
 
 
 _ASX afxCmdId AsxCmdBindMemory(afxContext ctx, afxUnit slot, void* ptr, afxSize siz)

@@ -19,8 +19,8 @@
 #ifndef ASX_IMPL___SIMULATION_H
 #define ASX_IMPL___SIMULATION_H
 
-#include "qwadro/inc/sim/afxSimulation.h"
-#include "afx/src/render/ddi/arxImpl_Input.h"
+#include "qwadro/sim/afxSimulation.h"
+#include "../../render/ddi/arxImpl_Input.h"
 
 #define ASX_MAX_SIM_BRIDGE_PER_CONTEXT 16
 
@@ -33,7 +33,7 @@ AFX_DEFINE_STRUCT(_asxSimulationAcquisition)
     void*               udd;
 
     afxDrawSystem       dsys;
-    arxRenderware        din;
+    arxRenderware        rwe;
 
     afxBox              extent;
 
@@ -43,8 +43,6 @@ AFX_DEFINE_STRUCT(_asxSimulationAcquisition)
     afxV3d              origin;
     afxReal             unitsPerMeter;
     afxReal             allowedLodErrFadingFactor;
-
-    afxClassConfig const* sbufClsCfg;
 
     afxClassConfig const* sexuClsCfg;
 
@@ -74,7 +72,6 @@ AFX_OBJECT(afxSimulation)
     afxClass        sexuCls;
 
     afxClass      nodCls;
-    afxClass        sbufCls;
 
     afxClass        shapCls;
 
@@ -108,7 +105,7 @@ AFX_OBJECT(afxSimulation)
     afxError(*waitCb)(afxSimulation,afxTime);
 
     afxDrawSystem  dsys;
-    arxRenderware    din;
+    arxRenderware    rwe;
 
     struct smt* Smt;
     struct smt2* Smt2;
@@ -122,11 +119,9 @@ ASX afxChain const* _AsxSimGetDagRoots(afxSimulation sim);
 
 ASX afxReal _AsxGetAllowedLodErrorFadingFactor(afxSimulation sim);
 
-ASX afxClass const* _AsxGetBufferClass(afxSimulation sim);
-
 ASX afxClass const* _AsxGetShapClass(afxSimulation sim);
 
-ASX afxClass const* _AsxGetNodeClass(afxSimulation sim);
+ASX afxClass const* _ArxGetNodeClass(afxSimulation sim);
 
 
 ASX afxClassConfig const _ASX_SIM_CLASS_CONFIG;
@@ -168,6 +163,6 @@ ARX afxClass const* _ArxGetMotiveClass(afxSimulation sim);
 ARX afxClass const* _ArxGetAnimationClass(afxSimulation sim);
 ARX afxClass const* _ArxGetInstancedAnimationClass(afxSimulation sim);
 
-ARX afxStringBase   _ArxDinGetAnimUrnStringBase(afxSimulation sim);
+ARX afxStringBase   _ArxRweGetAnimUrnStringBase(afxSimulation sim);
 
 #endif//ASX_IMPL___SIMULATION_H

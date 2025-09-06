@@ -22,7 +22,7 @@
 #define _AFX_IO_QUEUE_C
 #define _AFX_DRAW_OUTPUT_C
 #include "../impl/afxIoImplKit.h"
-#include "qwadro/inc/io/afxIoBridge.h"
+#include "qwadro/io/afxIoBridge.h"
 
 _AFX afxError _AfxXpuStdWorkCallbackCb(afxIoBridge exu, afxStdWork* work)
 {

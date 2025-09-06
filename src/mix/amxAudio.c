@@ -7,17 +7,19 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This software is part of Advanced Multimedia Extensions & Experiments.
+
 #define _AMX_MIX_C
 #define _AMX_BUFFER_C
 #define _AMX_AUDIO_C
-#include "../ddi/amxImplementation.h"
+#include "ddi/amxImplementation.h"
 
 AFX_DEFINE_STRUCT(amxSoundBank)
 {
@@ -59,11 +61,11 @@ typedef struct _WAVHeader
 } _WAVHeader;
 #pragma pack(pop)
 
-_AMXINL afxMixSystem AmxGetAudioProvider(amxAudio aud)
+_AMXINL afxMixSystem AmxGetAudioHost(amxAudio aud)
 {
     afxError err;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
-    afxMixSystem msys = AfxGetProvider(aud);
+    afxMixSystem msys = AfxGetHost(aud);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     return msys;
 }
@@ -79,6 +81,13 @@ _AMXINL void AmxDescribeAudio(amxAudio aud, amxAudioInfo* desc)
     desc->sampCnt = aud->sampCnt;
     //desc->frameCnt = aud->frameCnt;
     desc->udd = aud->udd;
+}
+
+_AMXINL amxBuffer AmxGetAudioBuffer(amxAudio aud)
+{
+    afxError err;
+    AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
+    return aud->buf;
 }
 
 _AMXINL afxReal AmxGetAudioDuration(amxAudio aud)
@@ -134,17 +143,6 @@ _AMX afxError AmxUpdateAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[]
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
-    afxUnit portIdx = 0;
-    afxMixBridge mexu;
-    afxMixSystem msys = AmxGetAudioProvider(aud);
-    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    if (!AmxGetMixBridges(msys, portIdx, 1, &mexu))
-    {
-        AfxThrowError();
-        return err;
-    }
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-
 #if _AFX_DEBUG
     for (afxUnit i = 0; i < opCnt; i++)
     {
@@ -159,16 +157,17 @@ _AMX afxError AmxUpdateAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[]
     transfer.dst.aud = aud;
     transfer.src.src = src;
 
-    if (_AmxMexuTransferBuffers(mexu, &transfer, opCnt, ops))
+    afxMixSystem msys = AmxGetAudioHost(aud);
+    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+
+    if (_AmxMsysGetImpl(msys)->transferCb(msys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
     }
+
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
-#if 0
-    if (AfxWaitForIdleMixQueue(msys, portIdx, transfer.baseQueIdx))
-        AfxThrowError();
-#endif
+
     return err;
 }
 
@@ -180,17 +179,6 @@ _AMX afxError AmxDumpAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], 
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
     AFX_ASSERT(dst);
-
-    afxUnit portId = 0;
-    afxMixBridge mexu;
-    afxMixSystem msys = AmxGetAudioProvider(aud);
-    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    if (!AmxGetMixBridges(msys, portId, 1, &mexu))
-    {
-        AfxThrowError();
-        return err;
-    }
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
 #if _AFX_DEBUG
     for (afxUnit i = 0; i < opCnt; i++)
@@ -204,16 +192,17 @@ _AMX afxError AmxDumpAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], 
     transfer.src.aud = aud;
     transfer.dst.dst = dst;
 
-    if (_AmxMexuTransferBuffers(mexu, &transfer, opCnt, ops))
+    afxMixSystem msys = AmxGetAudioHost(aud);
+    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+
+    if (_AmxMsysGetImpl(msys)->transferCb(msys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
     }
+
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
-#if 0
-    if (AfxWaitForIdleMixQueue(dsys, portIdx, transfer.baseQueIdx))
-        AfxThrowError();
-#endif
+
     return err;
 }
 
@@ -223,17 +212,6 @@ _AMX afxError AmxUploadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[]
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
-
-    afxUnit portId = 0;
-    afxMixBridge mexu;
-    afxMixSystem msys = AmxGetAudioProvider(aud);
-    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    if (!AmxGetMixBridges(msys, portId, 1, &mexu))
-    {
-        AfxThrowError();
-        return err;
-    }
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
 #if _AFX_DEBUG
     for (afxUnit i = 0; i < opCnt; i++)
@@ -248,16 +226,17 @@ _AMX afxError AmxUploadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[]
     transfer.dst.aud = aud;
     transfer.src.iob = in;
 
-    if (_AmxMexuTransferBuffers(mexu, &transfer, opCnt, ops))
+    afxMixSystem msys = AmxGetAudioHost(aud);
+    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+
+    if (_AmxMsysGetImpl(msys)->transferCb(msys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
     }
+
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
-#if 0
-    if (AmxWaitForMixQueue(dsys, portIdx, transfer.baseQueIdx))
-        AfxThrowError();
-#endif
+
     return err;
 }
 
@@ -265,17 +244,6 @@ _AMX afxError AmxDownloadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
-
-    afxUnit portId = 0;
-    afxMixBridge mexu;
-    afxMixSystem msys = AmxGetAudioProvider(aud);
-    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    if (!AmxGetMixBridges(msys, portId, 1, &mexu))
-    {
-        AfxThrowError();
-        return err;
-    }
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
 #if _AFX_DEBUG
     for (afxUnit i = 0; i < opCnt; i++)
@@ -290,17 +258,17 @@ _AMX afxError AmxDownloadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops
     transfer.src.aud = aud;
     transfer.dst.iob = out;
 
-    if (_AmxMexuTransferBuffers(mexu, &transfer, opCnt, ops))
+    afxMixSystem msys = AmxGetAudioHost(aud);
+    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+
+    if (_AmxMsysGetImpl(msys)->transferCb(msys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
     }
 
     AFX_ASSERT(transfer.baseQueIdx != AFX_INVALID_INDEX);
-#if 0
-    if (AmxWaitForMixQueue(dsys, portIdx, transfer.baseQueIdx))
-        AfxThrowError();
-#endif
+
     return err;
 }
 
@@ -430,7 +398,7 @@ _AMX afxError AmxPrintAudio(amxAudio aud, amxAudioPeriod const* op, afxUri const
         return err;
     }
 
-    afxMixSystem msys = AmxGetAudioProvider(aud);
+    afxMixSystem msys = AmxGetAudioHost(aud);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     if (AmxWaitForMixBridge(msys, 0, 0))
         AfxThrowError();
@@ -447,36 +415,20 @@ _AMX afxError _AmxAudDtorCb(amxAudio aud)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
-    afxMixSystem msys = AmxGetAudioProvider(aud);
+    afxMixSystem msys = AmxGetAudioHost(aud);
 
-    if (aud->mappedRange)
-    {
-        //AfxUnmapAudio(aud, TRUE);
-        AFX_ASSERT(aud->sysmemBuffered || !aud->mappedRange);
-    }
-
-    if (aud->bytemap)
-    {
-        if (!aud->sysmemBuffered)
-        {
-            AfxThrowError();
-        }
-        else
-        {
-            AfxDeallocate((void**)&aud->bytemap, AfxHere());
-            aud->sysmemBuffered = FALSE;
-        }
-    }
+    if (aud->buf)
+        AfxDisposeObjects(1, &aud->buf);
 
     return err;
 }
-
+AMX afxError _AmxSpu_ResampleI16F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
 _AMX afxError _AmxAudCtorCb(amxAudio aud, void** args, afxUnit invokeNo)
 {
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
-    afxMixSystem msys = AmxGetAudioProvider(aud);
+    afxMixSystem msys = AmxGetAudioHost(aud);
     amxAudioInfo const *spec = ((amxAudioInfo const *)args[1]) + invokeNo;
     AFX_ASSERT(spec);
     afxBool allocOnSysMem = *(afxBool*)(args[2]);
@@ -518,32 +470,32 @@ _AMX afxError _AmxAudCtorCb(amxAudio aud, void** args, afxUnit invokeNo)
     aud->fmtBps = bps;
     aud->fmtStride = bps / AFX_BYTE_SIZE;
 
+    afxUnit segCnt = AFX_MAX(1, spec->segCnt);
     afxUnit sampCnt = AFX_MAX(1, spec->sampCnt);
     afxUnit chanCnt = AFX_MAX(1, spec->chanCnt);
     afxUnit freq = AFX_MAX(1, spec->freq);
     
     aud->sampCnt = sampCnt;
     aud->chanCnt = chanCnt;
-    //aud->frameCnt = frameCnt;
+    aud->segCnt = segCnt;
     aud->freq = freq;
 
-    afxUnit siz = AFX_ALIGN_SIZE((aud->fmtStride * sampCnt * chanCnt), AFX_SIMD_ALIGNMENT) * chanCnt;
+    afxUnit siz = AFX_ALIGN_SIZE((aud->fmtStride * sampCnt * chanCnt), AFX_SIMD_ALIGNMENT) * segCnt;
     aud->bufCap = AFX_ALIGN_SIZE(siz, AFX_SIMD_ALIGNMENT);
     
-    aud->bytemap = NIL;
-    aud->mappedOffset = 0;
-    aud->mappedRange = 0;
-    aud->mappedFlags = NIL;
-
     aud->tag = spec->tag;
     aud->udd = spec->udd;
-    aud->sysmemBuffered = !!allocOnSysMem;
 
-    if (allocOnSysMem)
-    {
-        if (AfxAllocate(aud->bufCap, AFX_SIMD_ALIGNMENT, AfxHere(), (void**)&aud->bytemap))
-            AfxThrowError();
-    }
+    amxBuffer buf;
+    amxBufferInfo bufi = { 0 };
+    bufi.fmt = aud->fmt;
+    bufi.size = aud->bufCap;
+    bufi.usage = amxBufferUsage_MIX;
+    bufi.flags = amxBufferFlag_RW;
+    AmxAcquireBuffers(msys, 1, &bufi, &buf);
+
+    aud->buf = buf;
+
     return err;
 }
 
@@ -623,6 +575,7 @@ _AMX afxError AmxLoadAudios(afxMixSystem msys, afxUnit cnt, afxUri const uris[],
 
         amxAudioInfo audi = { 0 };
         audi.fmt = fmt;
+        audi.segCnt = 1;
         audi.sampCnt = totalSamplesPerChan; // our channel will contain a fraction of the frequency.
         audi.chanCnt = hdr.chanCnt; // our channels will be deinterlaved for that fraction.
         audi.freq = hdr.freq;
@@ -639,8 +592,9 @@ _AMX afxError AmxLoadAudios(afxMixSystem msys, afxUnit cnt, afxUri const uris[],
         iop.offset = 0;// AfxAskStreamPosn(iob);
         iop.samplesPerChan = hdr.chanCnt; // interleaved
         iop.chansPerFrame = audi.sampCnt;
-        iop.period.sampCnt = audi.sampCnt;
+        iop.period.segCnt = 1;
         iop.period.chanCnt = audi.chanCnt;
+        iop.period.sampCnt = audi.sampCnt;
         //iop.fmt = fmt;
         //AmxUploadAudio(buffers[fIdx], 1, &iop, iob, 0);
         //_AmxUploadAudio(buffers[fIdx], &iop, iob);

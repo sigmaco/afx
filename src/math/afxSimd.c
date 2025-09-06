@@ -16,6 +16,6 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/inc/math/afxSimd.h"
+#include "qwadro/math/afxSimd.h"
 
 

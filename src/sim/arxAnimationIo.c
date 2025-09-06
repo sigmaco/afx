@@ -23,7 +23,7 @@
 #define _ARX_BODY_C
 #define _ARX_MODEL_C
 #define _ARX_MOTOR_C
-#include "../../sim/impl/asxImplementation.h"
+#include "impl/asxImplementation.h"
 
 ARX afxError ArxWriteMappedStrings(afxStream out, afxString* sdb, afxUnit cnt, afxString const strings[]);
 ARX afxError ArxReadMappedStrings(afxStream in, afxString const* sdb, afxUnit cnt, afxString strings[]);
