@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_RASTER_C
@@ -30,7 +31,7 @@ _AVXINL void _AvxDpuUpdateRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxR
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(dpu->inDrawScope == FALSE); // This is a transfer operation.
 
-    afxBool is3d = AvxTestRasterFlags(ras, avxRasterFlag_3D);
+    afxBool is3d = AvxGetRasterFlags(ras, avxRasterFlag_3D);
 
     avxFormatDescription pfd;
     AvxDescribeFormats(1, &ras->fmt, &pfd);
@@ -121,7 +122,7 @@ _AVXINL void _AvxDpuDumpRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxRas
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(dpu->inDrawScope == FALSE); // This is a transfer operation.
 
-    afxBool is3d = AvxTestRasterFlags(ras, avxRasterFlag_3D);
+    afxBool is3d = AvxGetRasterFlags(ras, avxRasterFlag_3D);
 
     avxFormatDescription pfd;
     AvxDescribeFormats(1, &ras->fmt, &pfd);
@@ -248,7 +249,7 @@ _AVXINL void _AvxDpuUploadRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxR
 
     AFX_ASSERT(dpu->inDrawScope == FALSE); // This is a transfer operation.
 
-    afxBool is3d = AvxTestRasterFlags(ras, avxRasterFlag_3D);
+    afxBool is3d = AvxGetRasterFlags(ras, avxRasterFlag_3D);
 
     avxFormatDescription pfd;
     AvxDescribeFormats(1, &ras->fmt, &pfd);
@@ -345,7 +346,7 @@ _AVX void _AvxDpuDownloadRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxRa
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(dpu->inDrawScope == FALSE); // This is a transfer operation.
 
-    afxBool is3d = AvxTestRasterFlags(ras, avxRasterFlag_3D);
+    afxBool is3d = AvxGetRasterFlags(ras, avxRasterFlag_3D);
 
     avxFormatDescription pfd;
     AvxDescribeFormats(1, &ras->fmt, &pfd);
@@ -468,7 +469,7 @@ _AVX void _AvxDpuCopyRaster(avxDpu* dpu, avxRaster dst, afxUnit opCnt, avxRaster
         AFX_ASSERT(srcPfd.bcWh[1] == dstPfd.bcWh[1]);
 
         afxUnit pixelSize = srcPfd.stride;
-        afxBool compressed = srcPfd.flags & avxFormatFlag_COMPRESSED;
+        afxBool compressed = srcPfd.flags & avxFormatFlag_BC;
 
         // Compute sizes for selected mip levels
         avxRange srcMipSize = src->whd;
@@ -593,9 +594,9 @@ _AVX void _AvxDpuResolveRaster(avxDpu* dpu, avxRaster dst, afxUnit opCnt, avxRas
             Avoid any format conversion or scaling.
     */
     AFX_ASSERT(src->mipCnt > 1);
-    AFX_ASSERT(AvxTestRasterFlags(src, avxRasterFlag_MULTISAMP));
+    AFX_ASSERT(AvxGetRasterFlags(src, avxRasterFlag_MULTISAMP));
     AFX_ASSERT(src->mipCnt == 1);
-    //AFX_ASSERT(!AvxTestRasterFlags(dst, avxRasterFlag_MULTISAMP));
+    //AFX_ASSERT(!AvxGetRasterFlags(dst, avxRasterFlag_MULTISAMP));
     //AFX_ASSERT(src->m.fmt == dst->m.fmt); // GL can deal with some potential convertions.
 
     for (afxUnit i = 0; i < opCnt; i++)

@@ -54,7 +54,7 @@ _AFX afxError _AfxAttachCoreModule(afxModule* e2coree)
     afxUri* name;
     name = AfxUri("e2coree.dll");
 
-    afxClass* cls = _AfxGetModuleClass();
+    afxClass* cls = _AfxSysGetMdleClass(sys);
 
     _e2coreeMdl = (void*)_e2coreeMdlObj;
     if (_AfxConstructObjects(cls, 1, (afxObject*)&_e2coreeMdl, (void*[]) { sys, name, name })) AfxThrowError();

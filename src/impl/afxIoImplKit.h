@@ -19,7 +19,7 @@
 #ifndef AFX_IO_IMPL_KIT_H
 #define AFX_IO_IMPL_KIT_H
 
-#include "qwadro/inc/exec/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
 AFX_DECLARE_UNION(afxStdWork);
 

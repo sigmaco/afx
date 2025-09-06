@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
@@ -45,7 +46,75 @@ _AVX afxCmdId AvxCmdExecuteCommands(afxDrawContext dctx, afxUnit cnt, afxDrawCon
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, afxUnit segment, avxPipeline pip, avxVertexInput vin, afxFlags dynamics)
+_AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, avxBus bus, avxPipeline pip, avxVertexInput vin, afxFlags dynamics)
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+    // This command must not be recorded when transform feedback is active.
+    AFX_ASSERT(!dctx->xfbActive);
+
+    // pip must be a valid avxPipeline handle.
+    AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
+
+    afxCmdId cmdId;
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindPipeline), sizeof(cmd->BindPipeline), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->BindPipeline.pip = pip;
+    cmd->BindPipeline.bus = bus;
+    cmd->BindPipeline.vin = vin;
+    cmd->BindPipeline.dynamics = dynamics;
+    cmd->BindPipeline.flags = NIL;
+
+    dctx->pipelines[bus].pip = pip;
+    dctx->pipelines[bus].useSepShaders = FALSE;
+    dctx->pipelines[bus].vin = vin;
+    dctx->pipelines[bus].dynFlags = dynamics;
+
+    avxLigature liga;
+    AvxGetPipelineLigature(pip, &liga);
+    dctx->ligatures[bus].liga = liga;
+    dctx->ligatures[bus].ligaBindCmdId = cmdId;
+
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdUseLigature(afxDrawContext dctx, avxBus bus, avxLigature liga, afxFlags flags)
+{
+    afxError err = AFX_ERR_NONE;
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the recording state.
+    AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
+    // This command must only be called outside of a video coding scope.
+    AFX_ASSERT(!dctx->inVideoCoding);
+
+    // liga must be a valid avxLigature handle.
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
+
+#if 0
+    if (dctx->ligatures[bus].liga == liga)
+        return dctx->ligatures[bus].bindCmdId;
+#endif
+
+    afxCmdId cmdId;
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(UseLigature), sizeof(cmd->UseLigature), &cmdId);
+    AFX_ASSERT(cmd);
+    cmd->UseLigature.liga = liga;
+    cmd->UseLigature.bus = bus;
+    cmd->UseLigature.flags = flags;
+
+    dctx->ligatures[bus].liga = liga;
+    dctx->ligatures[bus].ligaBindCmdId = cmdId;
+
+    return cmdId;
+}
+
+_AVX afxCmdId AvxCmdBindShadersEXT(afxDrawContext dctx, afxUnit cnt, avxShaderType const stages[], avxShader shaders[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -56,19 +125,22 @@ _AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, afxUnit segment, avxPipeli
     AFX_ASSERT(!dctx->inVideoCoding);
 
     // pip must be a valid avxPipeline handle.
-    AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_SHD, cnt, shaders);
 
     afxCmdId cmdId;
-    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindPipeline), sizeof(cmd->BindPipeline), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindShadersEXT), sizeof(cmd->BindShadersEXT) + (cnt * sizeof(cmd->BindShadersEXT.stages[0])), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->BindPipeline.pip = pip;
-    cmd->BindPipeline.segment = segment;
-    cmd->BindPipeline.vin = vin;
-    cmd->BindPipeline.dynamics = dynamics;
+    cmd->BindShadersEXT.cnt = cnt;
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        cmd->BindShadersEXT.stages[i].shd = shaders[i];
+        cmd->BindShadersEXT.stages[i].stage = stages[i];
+    }
+
     return cmdId;
 }
-
-_AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit pin, afxUnit cnt, avxBufferedMap const maps[])
+_AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, avxBus bus, afxUnit set, afxUnit pin, afxUnit cnt, avxBufferedMap const maps[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -81,21 +153,28 @@ _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, afxUnit set, afxUnit pin, a
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindBuffers), sizeof(cmd->BindBuffers) + (cnt * sizeof(cmd->BindBuffers.maps[0])), &cmdId);
     AFX_ASSERT(cmd);
+    cmd->BindBuffers.bus = bus;
     cmd->BindBuffers.set = set;
     cmd->BindBuffers.pin = pin;
     cmd->BindBuffers.cnt = cnt;
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        avxBufferedMap const* map = &maps[i];
+        avxBufferedMap const* map = maps ? &maps[i] : &(avxBufferedMap const) { 0 };
+
         cmd->BindBuffers.maps[i].buf = map->buf;
         cmd->BindBuffers.maps[i].offset = map->offset;
         cmd->BindBuffers.maps[i].range = map->range;
+
+        dctx->ligatures[bus].bindings[set][pin].buf.buf = map->buf;
+        dctx->ligatures[bus].bindings[set][pin].buf.offset = map->offset;
+        dctx->ligatures[bus].bindings[set][pin].buf.range = map->range;
+        dctx->ligatures[bus].bindings[set][pin].buf.bufBindCmdId = cmdId;
     }
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit pin, afxUnit cnt, avxRaster const rasters[])
+_AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, avxBus bus, afxUnit set, afxUnit pin, afxUnit cnt, avxRaster const rasters[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -108,18 +187,23 @@ _AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, afxUnit set, afxUnit pin, a
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindRasters), sizeof(cmd->BindRasters) + (cnt * sizeof(cmd->BindRasters.rasters[0])), &cmdId);
     AFX_ASSERT(cmd);
+    cmd->BindRasters.bus = bus;
     cmd->BindRasters.set = set;
     cmd->BindRasters.pin = pin;
     cmd->BindRasters.cnt = cnt;
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        cmd->BindRasters.rasters[i] = rasters ? rasters[i] : NIL;
+        avxRaster ras = rasters ? rasters[i] : NIL;
+        cmd->BindRasters.rasters[i] = ras;
+
+        dctx->ligatures[bus].bindings[set][pin].img.ras = ras;
+        dctx->ligatures[bus].bindings[set][pin].img.rasBindCmdId = cmdId;
     }
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit pin, afxUnit cnt, avxSampler const samplers[])
+_AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, avxBus bus, afxUnit set, afxUnit pin, afxUnit cnt, avxSampler const samplers[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -132,13 +216,19 @@ _AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, afxUnit set, afxUnit pin, 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindSamplers), sizeof(cmd->BindSamplers) + (cnt * sizeof(cmd->BindSamplers.samplers[0])), &cmdId);
     AFX_ASSERT(cmd);
+    cmd->BindSamplers.bus = bus;
     cmd->BindSamplers.set = set;
     cmd->BindSamplers.pin = pin;
     cmd->BindSamplers.cnt = cnt;
 
     for (afxUnit i = 0; i < cnt; i++)
-        cmd->BindSamplers.samplers[i] = samplers[i];
+    {
+        avxSampler samp = samplers ? samplers[i] : NIL;
+        cmd->BindSamplers.samplers[i] = samp;
 
+        dctx->ligatures[bus].bindings[set][pin].img.samp = samp;
+        dctx->ligatures[bus].bindings[set][pin].img.sampBindCmdId = cmdId;
+    }
     return cmdId;
 }
 
@@ -200,7 +290,7 @@ _AVX afxCmdId AvxCmdBindArgumentBuffersSIGMA(afxDrawContext dctx, afxUnit bufIdx
 
     if (bufGenCnt)
     {
-        if (AvxAcquireBuffers(AfxGetProvider(AfxGetProvider(AfxGetProvider(dctx))), bufGenCnt, bufis, bufGens))
+        if (AvxAcquireBuffers(AfxGetHost(AfxGetHost(AfxGetHost(dctx))), bufGenCnt, bufis, bufGens))
         {
             AfxThrowError();
         }
@@ -223,7 +313,7 @@ _AVX afxCmdId AvxCmdBindArgumentBuffersSIGMA(afxDrawContext dctx, afxUnit bufIdx
             obsToBeDisposed[i] = bufGens[i];
         }
 
-        if (AvxMapBuffers(AfxGetProvider(bufGens[0]), bufGenCnt, bufGenRemaps, bufPtr))
+        if (AvxMapBuffers(AfxGetHost(bufGens[0]), bufGenCnt, bufGenRemaps, bufPtr))
         {
             AfxThrowError();
         }
@@ -292,7 +382,7 @@ _AVX afxCmdId AvxCmdBindArgumentBuffersSIGMA(afxDrawContext dctx, afxUnit bufIdx
     return err;
 }
 
-_AVX afxCmdId AvxCmdPushUniformsSIGMA(afxDrawContext dctx, afxUnit set, afxUnit binding, void const* data, afxUnit dataSiz)
+_AVX afxCmdId AvxCmdPushUniformsSIGMA(afxDrawContext dctx, avxBus bus, afxUnit set, afxUnit binding, void const* data, afxUnit dataSiz)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -315,7 +405,7 @@ _AVX afxCmdId AvxCmdPushUniformsSIGMA(afxDrawContext dctx, afxUnit set, afxUnit 
     map.offset = dctx->argBufs[set].nextOffset;
     map.range = siz;
     map.flags = dctx->argBufs[set].map.flags;
-    AvxCmdBindBuffers(dctx, set, binding, 1, &map);
+    AvxCmdBindBuffers(dctx, bus, set, binding, 1, &map);
 
     AfxCopy(&(dctx->argBufs[set].bytemap[dctx->argBufs[set].nextOffset]), data, dataSiz);
 

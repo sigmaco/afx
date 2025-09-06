@@ -243,7 +243,10 @@ _AFX afxUnit AfxInvokeDevices(afxDeviceType type, afxUnit first, afxUnit cnt, af
 
     if (!type)
     {
-        afxClass const* cls = _AfxGetDeviceClass();
+        afxSystem sys;
+        AfxGetSystem(&sys);
+        AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+        afxClass const* cls = _AfxSysGetDevClass(sys);
         AFX_ASSERT_CLASS(cls, afxFcc_DEV);
         rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
     }
@@ -272,7 +275,11 @@ _AFX afxUnit AfxEnumerateDevices(afxDeviceType type, afxUnit first, afxUnit cnt,
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     afxResult rslt = 0;
-    afxClass const* cls = _AfxGetDeviceClass();
+
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass const* cls = _AfxSysGetDevClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_DEV);
 
     if (!type)
@@ -312,7 +319,10 @@ _AFX afxUnit AfxCountDevices(afxDeviceType type)
 
     if (!type)
     {
-        afxClass const* cls = _AfxGetDeviceClass();
+        afxSystem sys;
+        AfxGetSystem(&sys);
+        AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+        afxClass const* cls = _AfxSysGetDevClass(sys);
         AFX_ASSERT_CLASS(cls, afxFcc_DEV);
         rslt = AfxEnumerateObjects(cls, 0, 0, NIL);
     }

@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
 
 
 _AFXINL void AfxDeployChain(afxChain *ch, void *holder)

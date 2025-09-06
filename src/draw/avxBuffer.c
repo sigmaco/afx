@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_BUFFER_C
@@ -22,20 +23,20 @@
 
 #define _AVX_BUFFER_HOSTSIDE_ALWAYS_FULLY_MAPPED TRUE
 
-_AVX afxDrawSystem AvxGetBufferProvider(avxBuffer buf)
+_AVX afxDrawSystem AvxGetBufferHost(avxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    afxDrawSystem dsys = AfxGetProvider(buf);
+    afxDrawSystem dsys = AfxGetHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     return dsys;
 }
 
-_AVX void* AvxGetBufferUdd(avxBuffer buf)
+_AVX afxSize AvxGetBufferAddress(avxBuffer buf, afxSize from)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    return buf->udd;
+    return buf->storage[0].host.addr + buf->storageOffset;
 }
 
 _AVX afxSize AvxGetBufferCapacity(avxBuffer buf, afxSize from)
@@ -45,18 +46,18 @@ _AVX afxSize AvxGetBufferCapacity(avxBuffer buf, afxSize from)
     return AFX_MIN(buf->reqSiz, buf->reqSiz - from);
 }
 
-_AVX avxBufferUsage AvxGetBufferUsage(avxBuffer buf, avxBufferUsage usage)
+_AVX avxBufferUsage AvxGetBufferUsage(avxBuffer buf, avxBufferUsage mask)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    return usage ? (buf->usage & usage) : buf->usage;
+    return (!mask) ? buf->usage : (buf->usage & mask);
 }
 
-_AVX avxBufferFlags AvxGetBufferAccess(avxBuffer buf, avxBufferFlags access)
+_AVX avxBufferFlags AvxGetBufferFlags(avxBuffer buf, avxBufferFlags mask)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    return access ? ((buf->flags & avxBufferFlag_ACCESS) & access) : access;
+    return (!mask) ? buf->flags : (buf->flags & mask);
 }
 
 _AVXINL void _AvxSanitizeBufferCopy(avxBuffer buf, avxBuffer src, afxUnit cnt, avxBufferCopy const raw[], avxBufferCopy san[])
@@ -126,9 +127,9 @@ _AVX afxError AvxUnmapBuffer(avxBuffer buf, afxBool wait)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_RW));
+    AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_RW));
 
-    afxDrawSystem dsys = AvxGetBufferProvider(buf);
+    afxDrawSystem dsys = AvxGetBufferHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     avxBufferedMap map = { 0 };
@@ -147,7 +148,7 @@ _AVX afxError AvxMapBuffer(avxBuffer buf, afxSize offset, afxUnit range, afxFlag
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_RW));
+    AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_RW));
     AFX_ASSERT_RANGE(buf->reqSiz, offset, range);
     AFX_ASSERT(AFX_TEST_ALIGNMENT(offset, AVX_BUFFER_ALIGNMENT));
 
@@ -157,7 +158,7 @@ _AVX afxError AvxMapBuffer(avxBuffer buf, afxSize offset, afxUnit range, afxFlag
     map.range = range;
     map.flags = flags;
 
-    afxDrawSystem dsys = AvxGetBufferProvider(buf);
+    afxDrawSystem dsys = AvxGetBufferHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     void* holder;
@@ -185,7 +186,7 @@ _AVX afxError AvxCohereMappedBuffer(avxBuffer buf, afxSize offset, afxUnit range
     map.range = range;
     map.flags = flags;
 
-    afxDrawSystem dsys = AvxGetBufferProvider(buf);
+    afxDrawSystem dsys = AvxGetBufferHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     if (AvxCohereMappedBuffers(dsys, discard, 1, &map))
@@ -200,7 +201,7 @@ _AVX afxError AvxDumpBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_R));
+    AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_R));
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
     AFX_ASSERT(dst);
@@ -223,7 +224,7 @@ _AVX afxError AvxDumpBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[
     transfer.dst.dst = dst;
 
     // Get the draw system context associated with the buffer
-    afxDrawSystem dsys = AvxGetBufferProvider(buf);
+    afxDrawSystem dsys = AvxGetBufferHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     // Perform the transfer (dump) of data
@@ -249,7 +250,7 @@ _AVX afxError AvxUpdateBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const op
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_W));
     AFX_ASSERT(opCnt);
     AFX_ASSERT(ops);
     AFX_ASSERT(src);
@@ -272,7 +273,7 @@ _AVX afxError AvxUpdateBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const op
     transfer.src.src = src;
 
     // Get the draw system associated with the buffer
-    afxDrawSystem dsys = AvxGetBufferProvider(buf);
+    afxDrawSystem dsys = AvxGetBufferHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     // Perform the data transfer (buffer update)
@@ -300,7 +301,7 @@ _AVX afxError AvxUploadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const op
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_W));
+    AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_W));
 
 #if AVX_VALIDATION_ENABLED
     // Validation of the buffer operations (only happens when validation is enabled)
@@ -321,7 +322,7 @@ _AVX afxError AvxUploadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const op
     transfer.src.iob = in;
 
     // Get the draw system (context) associated with the buffer
-    afxDrawSystem dsys = AvxGetBufferProvider(buf);
+    afxDrawSystem dsys = AvxGetBufferHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     // Perform the actual transfer of data
@@ -346,7 +347,7 @@ _AVX afxError AvxDownloadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const 
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
-    AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_R));
+    AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_R));
 
 #if AVX_VALIDATION_ENABLED
     // Validate the buffer operations (only happens when validation is enabled)
@@ -367,7 +368,7 @@ _AVX afxError AvxDownloadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const 
     transfer.dst.iob = out;
 
     // Get the draw system context associated with the buffer
-    afxDrawSystem dsys = AvxGetBufferProvider(buf);
+    afxDrawSystem dsys = AvxGetBufferHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     // Perform the transfer (download) of data
@@ -394,7 +395,7 @@ _AVX afxError _AvxBufDtorCb(avxBuffer buf)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
 
-    afxDrawSystem dsys = AvxGetBufferProvider(buf);
+    afxDrawSystem dsys = AvxGetBufferHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     while (buf->storage[0].mapPtr)
@@ -410,7 +411,7 @@ _AVX afxError _AvxBufDtorCb(avxBuffer buf)
         AfxDisposeObjects(1, &buf->base);
     }
 
-    //afxDrawSystem dsys = AfxGetProvider(buf);
+    //afxDrawSystem dsys = AvxGetBufferHost(buf);
     if (_AvxDsysGetImpl(dsys)->deallocBufCb(dsys, 1, &buf))
     {
         AfxThrowError();
@@ -424,7 +425,7 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
 
-    afxDrawSystem dsys = AvxGetBufferProvider(buf);
+    afxDrawSystem dsys = AvxGetBufferHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     avxBufferInfo const *bufi = args[1] ? ((avxBufferInfo const *)args[1]) + invokeNo : NIL;
     AFX_ASSERT(bufi && bufi->size && bufi->usage);
@@ -553,7 +554,7 @@ _AVX afxClassConfig const _AVX_BUF_CLASS_CONFIG =
 {
     .fcc = afxFcc_BUF,
     .name = "Buffer",
-    .desc = "Video Buffer",
+    .desc = "Video Buffer", // AVX Buffer
     .fixedSiz = sizeof(AFX_OBJECT(avxBuffer)),
     .ctor = (void*)_AvxBufCtorCb,
     .dtor = (void*)_AvxBufDtorCb
@@ -612,6 +613,8 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
         return err;
     }
 
+    if (err) return err;
+
 #ifdef AVX_VALIDATION_ENABLED
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -665,8 +668,9 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
             {
                 AFX_ASSERT(bufi->data);
                 avxBufferIo iop = { 0 };
-                iop.srcStride = bufi->dataSiz;
-                iop.rowCnt = 1;
+                iop.srcStride = 1;
+                iop.dstStride = 1;
+                iop.rowCnt = bufi->dataSiz;
                 if (AvxUpdateBuffer(buf, 1, &iop, bufi->data, 0))
                 {
                     AfxThrowError();
@@ -778,7 +782,7 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps
 
         // Perform validation if enabled
 #ifdef AVX_VALIDATION_ENABLED
-        AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_RW));
+        AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_RW));
 
         if (bufCap < map->offset + map->range)
         {
@@ -788,7 +792,7 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps
         }
         
         // Check that the buffer context matches the draw system.
-        afxDrawSystem dsys2 = AvxGetBufferProvider(buf);
+        afxDrawSystem dsys2 = AvxGetBufferHost(buf);
         if (dsys2 != dsys)
         {
             AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys2);
@@ -938,11 +942,11 @@ _AVX afxError AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap ma
         if (buf->storage[0].permanentlyMapped) continue;
 
 #if AVX_VALIDATION_ENABLED
-        AFX_ASSERT(AvxGetBufferAccess(buf, avxBufferFlag_RW));
+        AFX_ASSERT(AvxGetBufferFlags(buf, avxBufferFlag_RW));
 
         // Validate the draw system context of the buffer
         // Ensure the buffer is associated with the current draw system
-        afxDrawSystem dsys2 = AvxGetBufferProvider(buf);
+        afxDrawSystem dsys2 = AvxGetBufferHost(buf);
         AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys2);
 
         if (dsys2 != dsys)
@@ -1058,7 +1062,7 @@ _AVX afxError AvxCohereMappedBuffers(afxDrawSystem dsys, afxBool discard, afxUni
         }
 
         // Ensure the buffer belongs to the same draw system as the provided one
-        afxDrawSystem dsys2 = AvxGetBufferProvider(buf);
+        afxDrawSystem dsys2 = AvxGetBufferHost(buf);
         if (dsys2 != dsys)
         {
             // If the buffer belongs to a different system, throw an error

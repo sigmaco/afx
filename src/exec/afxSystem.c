@@ -19,7 +19,13 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
+#define _AVX_DRAW_C
+#include "src/draw/ddi/avxImplementation.h"
+#define _AMX_MIX_C
+#include "src/mix/ddi/amxImplementation.h"
+#define _AUX_UX_C
+#include "src/ux/impl/auxImplementation.h"
 
 _AFX afxChar const _rwBuildDateTime[];
 static afxChar const  _rwBuildDateTime[] = "\nCore built at " __DATE__ " " __TIME__ "\n";
@@ -37,8 +43,6 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo);
 _AFX afxError _AfxSysDtor(afxSystem sys);
 extern afxError _AfxAttachDriver(afxModule mdle, afxUri const* manifest, void* udd);
 
-extern afxError avxScmHook(afxModule mdle, afxManifest const* ini);
-extern afxError amxScmHook(afxModule mdle, afxManifest const* ini);
 extern afxError auxScmHook(afxModule mdle, afxManifest const* ini);
 
 _AFX afxClass* _AfxGetSysMgr(void)
@@ -130,110 +134,99 @@ _AFX afxUnit AfxGetThreadingCapacity(void)
     return sys->hwThreadingCap;
 }
 
-_AFX afxClass const* _AfxGetIoBridgeClass(void)
+_AFX afxClass const* _AfxSysGetExuClass(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass const* cls = &sys->exuCls;
     AFX_ASSERT_CLASS(cls, afxFcc_EXU);
     return cls;
 }
 
-_AFX afxClass const* _AfxGetStreamClass(void)
+_AFX afxClass const* _AfxSysGetIobClass(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass const* cls = &sys->iosCls;
     AFX_ASSERT_CLASS(cls, afxFcc_IOB);
     return cls;
 }
 
-_AFX afxClass* _AfxGetStorageClass(void)
+_AFX afxClass const* _AfxSysGetFsysClass(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->fsysCls;
     AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
     return cls;
 }
 
-_AFX afxClass* _AfxGetServiceClass(void)
+_AFX afxClass const* _AfxSysGetSvcClass(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->svcCls;
     AFX_ASSERT_CLASS(cls, afxFcc_SVC);
     return cls;
 }
 
-_AFX afxClass* _AfxGetThreadClass(void)
+_AFX afxClass const* _AfxSysGetProcClass(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass *cls = &sys->procCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_PROC);
+    return cls;
+}
+
+_AFX afxClass const* _AfxSysGetThrClass(afxSystem sys)
+{
+    afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->thrCls;
     AFX_ASSERT_CLASS(cls, afxFcc_THR);
     return cls;
 }
 
-_AFX afxClass* _AfxGetThreadPoolClass(void)
+_AFX afxClass const* _AfxSysGetThrpClass(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->thrpCls;
     AFX_ASSERT_CLASS(cls, afxFcc_THRP);
     return cls;
 }
 
-_AFX afxClass* _AfxGetStringBaseClass(void)
+_AFX afxClass const* _AfxSysGetStrbClass(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->strbCls;
     AFX_ASSERT_CLASS(cls, afxFcc_STRB);
     return cls;
 }
 
-_AFX afxClass* _AfxGetMmuClass(void)
+_AFX afxClass const* _AfxSysGetMmuClass(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->mmuCls;
     AFX_ASSERT_CLASS(cls, afxFcc_MMU);
     return cls;
 }
 
-_AFX afxClass* _AfxGetModuleClass(void)
+_AFX afxClass const* _AfxSysGetMdleClass(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass *cls = &sys->mdleCls;
     AFX_ASSERT_CLASS(cls, afxFcc_MDLE);
     return cls;
 }
 
-_AFX afxClass const* _AfxGetDeviceClass(void)
+_AFX afxClass const* _AfxSysGetDevClass(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass const* cls = &sys->devCls;
     AFX_ASSERT_CLASS(cls, afxFcc_DEV);
@@ -597,15 +590,21 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         AfxReportY("HW threading: %d", sys->hwThreadingCap);
     }
 
-    // Loading modulations
-    AfxDeployChain(&sys->avxIcdChain, sys);
-    AfxDeployChain(&sys->amxIcdChain, sys);
-    AfxDeployChain(&sys->auxIcdChain, sys);
-    AfxDeployChain(&sys->asxIcdChain, sys);
+    ////////////////////////////////////////////////////////////////////////////
+    // AVX                                                                    //
+    ////////////////////////////////////////////////////////////////////////////
 
-    avxScmHook(sys->e2coree, &ini);
-    amxScmHook(sys->e2coree, &ini);
-    auxScmHook(sys->e2coree, &ini);
+    AfxDeployChain(&sys->avxIcdChain, sys);
+
+    afxClassConfig ddevClsCfg = _AVX_DDEV_CLASS_CONFIG;
+    ddevClsCfg.ctor = NIL;
+    ddevClsCfg.dtor = NIL;
+    AfxMountClass(&sys->ddevCls, (afxClass*)_AfxSysGetDevClass(sys), &sys->classes, &ddevClsCfg);
+
+    afxClassConfig dsysClsCfg = _AVX_DSYS_CLASS_CONFIG;
+    dsysClsCfg.ctor = NIL;
+    dsysClsCfg.dtor = NIL;
+    AfxMountClass(&sys->dsysCls, NIL, &sys->classes, &dsysClsCfg);
 
 #if 0
     if (!err)
@@ -623,7 +622,25 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
             sys->avx.e2drawDll = e2drawDll;
         }
     }
+#endif
 
+    ////////////////////////////////////////////////////////////////////////////
+    // AMX                                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+
+    AfxDeployChain(&sys->amxIcdChain, sys);
+
+    afxClassConfig mdevClsCfg = _AMX_MDEV_CLASS_CONFIG;
+    mdevClsCfg.ctor = NIL;
+    mdevClsCfg.dtor = NIL;
+    AfxMountClass(&sys->mdevCls, (afxClass*)_AfxSysGetDevClass(sys), &sys->classes, &mdevClsCfg);
+
+    afxClassConfig msysClsCfg = _AMX_MSYS_CLASS_CONFIG;
+    msysClsCfg.ctor = NIL;
+    msysClsCfg.dtor = NIL;
+    AfxMountClass(&sys->msysCls, NIL, &sys->classes, &msysClsCfg);
+
+#if 0
     if (!err)
     {
         // Loding AMX
@@ -639,7 +656,59 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
             sys->amx.e2mixDll = e2mixDll;
         }
     }
+#endif
 
+    ////////////////////////////////////////////////////////////////////////////
+    // AUX                                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+
+    AfxDeployChain(&sys->auxIcdChain, sys);
+
+    afxClassConfig hidClsCfg = _AUX_HID_CLASS_CONFIG;
+    hidClsCfg.ctor = NIL;
+    hidClsCfg.dtor = NIL;
+    // HIDs must be installed here. It is not implementation-dependent. It does not store state.
+    AfxMountClass(&sys->hidCls, (afxClass*)_AfxSysGetDevClass(sys), &sys->classes, &hidClsCfg);
+
+    afxClassConfig sshClsCfg = _AUX_SSH_CLASS_CONFIG;
+    sshClsCfg.ctor = NIL;
+    sshClsCfg.dtor = NIL;
+    AfxMountClass(&sys->sshCls, (afxClass*)_AfxSysGetDevClass(sys), &sys->classes, &sshClsCfg); // require base*
+
+    afxClassConfig vduClsCfg = _AVX_VDU_CLASS_CONFIG;
+    vduClsCfg.ctor = NIL;
+    vduClsCfg.dtor = NIL;
+    AfxMountClass(&sys->vduCls, (afxClass*)_AfxSysGetDevClass(sys), &sys->classes, &vduClsCfg);
+
+    if (!err)
+    {
+        afxHidInfo hidInfos[] =
+        {
+            {
+                .dev.urn = AFX_STRING("kbd"),
+                .dev.type = afxDeviceType_HID,
+                .type = afxHidType_KEYBOARD
+            },
+            {
+                .dev.urn = AFX_STRING("mse"),
+                .dev.type = afxDeviceType_HID,
+                .type = afxHidType_MOUSE
+            },
+            {
+                .dev.urn = AFX_STRING("gpad"),
+                .dev.type = afxDeviceType_HID,
+                .type = afxHidType_GAMEPAD
+            }
+        };
+        afxHid hidevices[ARRAY_SIZE(hidInfos)];
+
+        if (_AuxRegisterHids(sys->e2coree, ARRAY_SIZE(hidInfos), hidInfos, hidevices)) AfxThrowError();
+        else
+        {
+        }
+    }
+
+#if 0
     if (!err)
     {
         // Loading AUX
@@ -663,6 +732,12 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
     }
 #endif
 
+    ////////////////////////////////////////////////////////////////////////////
+    // ASX                                                                    //
+    ////////////////////////////////////////////////////////////////////////////
+
+    AfxDeployChain(&sys->asxIcdChain, sys);
+
     if (!err)
     {
         // Loading ASX
@@ -673,7 +748,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
 
         if (AfxLoadModule(&uri, AFX_BITMASK(8), &e2simDll))
         {
-            AfxThrowError();
+            //AfxThrowError();
             err = 0;
         }
         else

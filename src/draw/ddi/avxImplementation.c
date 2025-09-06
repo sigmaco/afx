@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AFX_SYSTEM_C
 #define _AFX_MODULE_C
@@ -24,7 +25,7 @@
 //#define _AVX_DRAW_BRIDGE_C
 //#define _AVX_DRAW_SYSTEM_C
 //#define _AVX_DRAW_QUEUE_C
-//#define _AVX_DRAW_OUTPUT_C
+//#define _AVX_SURFACE_C
 //#define _AVX_DRAW_CONTEXT_C
 //#define _AVX_BUFFER_C
 #include "avxImplementation.h"
@@ -162,31 +163,4 @@ _AVX afxBool _AvxGetIcd(afxUnit icdIdx, afxModule* driver)
     AFX_ASSERT(driver);
     *driver = icd;
     return found;
-}
-
-_AVX afxError avxScmHook(afxModule mdle, afxManifest const* ini)
-{
-    afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-
-    afxClassConfig ddevClsCfg = _AVX_DDEV_CLASS_CONFIG;
-    ddevClsCfg.ctor = NIL;
-    ddevClsCfg.dtor = NIL;
-    AfxMountClass(&sys->ddevCls, (afxClass*)_AfxGetDeviceClass(), &sys->classes, &ddevClsCfg);
-    
-    afxClassConfig dsysClsCfg = _AVX_DSYS_CLASS_CONFIG;
-    dsysClsCfg.ctor = NIL;
-    dsysClsCfg.dtor = NIL;
-    AfxMountClass(&sys->dsysCls, NIL, &sys->classes, &dsysClsCfg);
-    
-    if (!err)
-    {
-        //sys->avx.ready = TRUE;
-    }
-
-    return err;
 }

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -18,9 +18,9 @@
 
 #define _ARX_VERTEX_BUFFER_C
 #define _ARX_INDEX_BUFFER_C
-#define _ARX_DRAW_INPUT_C
+#define _ARX_RENDER_CONTEXT_C
 #include "ddi/arxImpl_Input.h"
-#include "qwadro/inc/math/afxReal16.h"
+#include "qwadro/math/afxReal16.h"
 
 void* aligned_alloc_buffer(_arxFrameBufferizerChunk* chunk, afxSize size, afxUnit align, afxSize* out_offset) {
     afxSize aligned_offset = (chunk->used + align - 1) & ~(align - 1);
@@ -192,7 +192,7 @@ AFX_DEFINE_STRUCT(DynamicVertexBuffer)
 
 AFX_OBJECT(arxBufferizer)
 {
-    arxRenderware        din;
+    arxRenderware        rwe;
     afxUnit32           DefaultVBSize;
 
     StrideEntry*        StrideList;
@@ -1182,7 +1182,7 @@ afxBool CreateVertexBuffer(arxBufferizer vbMgr, afxUnit32 stride, afxUnit32 size
         if (size >= freelist->size)
             freelist->size = size;
         
-        afxDrawSystem dsys = ArxGetDrawInputContext(vbMgr->din);
+        afxDrawSystem dsys = ArxGetRenderwareDrawSystem(vbMgr->rwe);
 
         avxBuffer vbo;
         avxBufferInfo spec = { 0 };
@@ -1449,7 +1449,7 @@ afxBool DynamicVertexBufferCreate(arxBufferizer vbMgr, afxUnit size, avxBuffer *
             vbMgr->DynamicVertexBufferList = currentVertexBuffer;
         }
 
-        afxDrawSystem dsys = ArxGetDrawInputContext(vbMgr->din);
+        afxDrawSystem dsys = ArxGetRenderwareDrawSystem(vbMgr->rwe);
 
         avxBufferInfo spec = { 0 };
         spec.size = size;
@@ -1651,7 +1651,7 @@ _ARX afxError _ArxBufzCtor(arxBufferizer vbuf, void** args, afxUnit invokeNo)
     afxResult err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_VBUF, 1, &vbuf);
 
-    arxRenderware din = args[0];
+    arxRenderware rwe = args[0];
     arxBufferizerInfo const* info = ((arxBufferizerInfo const *)args[1]) + invokeNo;
 
     _VertexBufferManagerOpen(vbuf);
@@ -1669,17 +1669,17 @@ _ARX afxClassConfig const _ARX_VBUF_CLASS_CONFIG =
     .dtor = (void*)_ArxBufzDtor
 };
 
-_ARX afxError AfxAcquireBufferizer(arxRenderware din, arxBufferizerInfo const* info, arxBufferizer bufferizer[])
+_ARX afxError AfxAcquireBufferizer(arxRenderware rwe, arxBufferizerInfo const* info, arxBufferizer bufferizer[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     AFX_ASSERT(bufferizer);
     AFX_ASSERT(info);
 
-    afxClass* cls = ArxGetVertexBufferClass(din);
+    afxClass* cls = _ArxRweGetVbufClass(rwe);
     AFX_ASSERT_CLASS(cls, afxFcc_VBUF);
 
-    if (AfxAcquireObjects(cls, 1, (afxObject*)bufferizer, (void const*[]) { din, info }))
+    if (AfxAcquireObjects(cls, 1, (afxObject*)bufferizer, (void const*[]) { rwe, info }))
         AfxThrowError();
 
     return err;

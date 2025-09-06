@@ -19,7 +19,7 @@
 #ifndef ASX_IMPL___CONTEXT_H
 #define ASX_IMPL___CONTEXT_H
 
-#include "qwadro/inc/sim/afxSimulation.h"
+#include "qwadro/sim/afxSimulation.h"
 
 // A catalyst is an event or person causing a change.
 

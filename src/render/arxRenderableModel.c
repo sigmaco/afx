@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -23,7 +23,7 @@
 #define _ARX_RENDER_CONTEXT_C
 #include "ddi/arxImpl_Input.h"
 #include "../draw/ddi/avxImplementation.h"
-#include "qwadro/inc/render/arxScene.h"
+#include "qwadro/render/arxScene.h"
 
 AFX_DEFINE_STRUCT(avxIndexBuffer)
 {
@@ -49,7 +49,7 @@ AFX_DEFINE_STRUCT(createdVBlistEntry)
 
 AFX_OBJECT(arxBufferizer)
 {
-    arxRenderware        din;
+    arxRenderware        rwe;
     afxUnit32           DefaultVBSize;
 
     freeVBlistEntry*    freelist;
@@ -89,7 +89,7 @@ afxBool ArxBufferizeIndices(arxBufferizer vbMgr, afxUnit32 stride, afxUnit32 siz
         if (size >= freelist->size)
             freelist->size = size;
         
-        afxDrawSystem dsys = ArxGetDrawInputContext(vbMgr->din);
+        afxDrawSystem dsys = ArxGetRenderwareDrawSystem(vbMgr->rwe);
 
         avxBuffer vbo;
         avxBufferInfo spec = { 0 };
@@ -449,9 +449,9 @@ _ASX afxError ArxBufferizeMesh(arxMesh msh, afxUnit morphIdx, arxVertexCache* vt
         }
 
         avxBuffer buf;
-        arxRenderware din = AfxGetProvider(AfxGetProvider(msh));
-        afxDrawSystem dsys = ArxGetDrawInputContext(din);
-        AvxAcquireBuffers(/*din*/dsys, 1, &vboSpec, &buf);
+        arxRenderware rwe = AfxGetHost(msh);
+        afxDrawSystem dsys = ArxGetRenderwareDrawSystem(rwe);
+        AvxAcquireBuffers(/*rwe*/dsys, 1, &vboSpec, &buf);
         cache->buf = buf;
 
         for (afxUnit srcIdx = 0; srcIdx < 2; srcIdx++)
@@ -496,8 +496,8 @@ _ASX afxError ArxBufferizeMesh(arxMesh msh, afxUnit morphIdx, arxVertexCache* vt
 
     if (!msh->ibo)
     {
-        arxRenderware din = AfxGetProvider(AfxGetProvider(msh));
-        afxDrawSystem dsys = ArxGetDrawInputContext(din);
+        arxRenderware rwe = AfxGetHost(msh);
+        afxDrawSystem dsys = ArxGetRenderwareDrawSystem(rwe);
 
         afxUnit idxSiz = msh->minIdxSiz;
         idxSiz = AFX_MAX(sizeof(afxUnit16), idxSiz); // atleast 16-bit.
@@ -766,7 +766,7 @@ _ARX afxError ArxCmdRenderModels(arxRenderContext rctx, afxUnit cnt, arxModel mo
         frame->mtlDataUboBaseOffset = 0;
         frame->biasMapFboBaseOffset = instMdl->biasMapFboBase;
         frame->biasMapFboBaseIdx = 0;
-        AvxCmdBindBuffers(frame->drawDctx, 3, 31, 1, (avxBufferedMap[]) { {.buf = instMdl->biasMapFbo } });
+        AvxCmdBindBuffers(frame->drawDctx, avxBus_DRAW, 3, 31, 1, (avxBufferedMap[]) { {.buf = instMdl->biasMapFbo } });
 
         afxUnit biasMapBufBaseOffset = 0;
         afxUnit biasMapBufBaseIdx = 0;
@@ -785,7 +785,7 @@ _ARX afxError ArxCmdRenderModels(arxRenderContext rctx, afxUnit cnt, arxModel mo
             arxMeshInfo mshi;
             ArxDescribeMesh(msh, &mshi);
 
-            ArxStageMaterials(rctx, AfxGetProvider(mdl), mshi.mtlCnt, mdl->rigs[rigIdx]->mtlToTxdMap);
+            ArxStageMaterials(rctx, mshi.mtlCnt, mdl->rigs[rigIdx]->mtlToTxdMap);
 
 
             afxUnit biasMapSiz = mshi.biasCnt * sizeof(rig.biasToJnt[0]);
@@ -982,10 +982,10 @@ afxBool RenderCells(arxRenderContext rctx, afxDrawContext dctx, avxVertexInput v
         {
             avxRasterInfo rasi = { 0 };
             rasi.usage = avxRasterUsage_TEXTURE;
-            AvxLoadRasters(ter->dsys, 1, &rasi, AfxUri("../dirt01d.tga"), &ter->texd);
+            AvxLoadRasters(ter->dsys, 1, &rasi, AfxUri("../dirt01d.tga"), NIL, &ter->texd);
         }
 
-        AvxCmdBindRasters(dctx, 0, 1, 1, &ter->texd);
+        AvxCmdBindRasters(dctx, avxBus_DRAW, 0, 1, 1, &ter->texd);
 
         //for (afxUnit i = 0; i < cellsToBeDrawnCnt; i++)
         for (afxUnit i = 0; i < ter->secCnt; i++)

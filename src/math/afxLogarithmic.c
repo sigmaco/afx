@@ -16,4 +16,4 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/inc/math/afxLogarithmic.h"
+#include "qwadro/math/afxLogarithmic.h"

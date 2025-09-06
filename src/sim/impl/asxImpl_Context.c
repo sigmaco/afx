@@ -24,9 +24,9 @@
 #define _ASX_SIM_BRIDGE_C
 #define _ASX_SIM_QUEUE_C
 #define _ASX_CONTEXT_C
-#include "afx/src/sim/impl/asxImplementation.h"
-#include "afx/src/sim/impl/asxImpl_Context.h"
-#include "afx/src/render/ddi/arxImpl_Input.h"
+#include "asxImplementation.h"
+#include "asxImpl_Context.h"
+#include "../../render/ddi/arxImpl_Input.h"
 
 _ASX afxError _AsxSpuCmd_CopyPose(asxSpu* spu, asxCmd const* cmd)
 {
@@ -124,7 +124,7 @@ _ASX afxError _AsxSpuRollContext(asxSpu* spu, afxContext ctx)
         //AFX_ASSERT(ctx->portId == spu->portId);
         ctx->state = asxContextState_INVALID;
 
-        afxSimQueue sque = AfxGetProvider(ctx);
+        afxSimQueue sque = AfxGetHost(ctx);
         AFX_ASSERT_OBJECTS(afxFcc_SQUE, 1, &sque);
 
         //afxUnit poolIdx = ctx->poolIdx;

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -17,7 +17,7 @@
 #define _ARX_PLACEMENT_C
 //#define _ARX_POSE_C
 //#define _ARX_MODEL_C
-#include "../ddi/arxImpl_Input.h"
+#include "ddi/arxImpl_Input.h"
 
 _ARX afxUnit ArxGetPlacementCapacity(arxPlacement plce)
 {
@@ -368,8 +368,8 @@ _ARX afxError _ArxPosbCtorCb(arxPlacement plce, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_PLCE, 1, &plce);
 
-    arxRenderware din = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    arxRenderware rwe = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     afxUnit artCnt = *(((afxUnit const*)(args[1])) + invokeNo);
     afxBool excludeComposite = args[2] ? *(((afxBool const*)(args[2])) + invokeNo) : TRUE;
     
@@ -395,15 +395,15 @@ _ARX afxClassConfig const _ARX_PLCE_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_ARX afxError ArxAcquirePlacements(arxRenderware din, afxUnit cnt, afxUnit const artCnt[], afxBool const excludeComposite[], arxPlacement placements[])
+_ARX afxError ArxAcquirePlacements(arxRenderware rwe, afxUnit cnt, afxUnit const artCnt[], afxBool const excludeComposite[], arxPlacement placements[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
 
-    afxClass* cls = (afxClass*)_ArxGetPlacementClass(din);
+    afxClass* cls = (afxClass*)_ArxRweGetPlceClass(rwe);
     AFX_ASSERT_CLASS(cls, afxFcc_PLCE);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)placements, (void const*[]) { din, artCnt, excludeComposite }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)placements, (void const*[]) { rwe, artCnt, excludeComposite }))
         AfxThrowError();
 
     return err;

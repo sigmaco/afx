@@ -657,7 +657,7 @@ _AFX afxArchive AfxOpenArchive(afxUri const* uri, afxFileFlags const flags, afxE
     if (AfxReopenFile(file, uri, (flags & afxIoFlag_RWX))) AfxThrowError();
     else
 {
-        afxStorage fsys = AfxGetProvider(file);
+        afxStorage fsys = AfxGetHost(file);
         afxUnit diskId = AfxGetObjectId(fsys);
 
         afxClass* cls = (afxClass*)AfxGetArchiveClass(fsys);

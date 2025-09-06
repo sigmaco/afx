@@ -62,7 +62,7 @@ _ASX afxClass const* _ArxGetRweClass(afxModule icd)
         return NIL;
     }
     afxClass const* cls = &icd->icd.dinCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_DIN);
+    AFX_ASSERT_CLASS(cls, afxFcc_RWE);
     return cls;
 }
 
@@ -110,6 +110,9 @@ _ASX afxError _AsxImplementSimulation(afxModule icd, afxClassConfig const* sdevC
 
     afxClassConfig clsCfg;
 
+    afxSystem sys;
+    AfxGetSystem(&sys);
+
     if (!err)
     {
         clsCfg = sdevCls ? *sdevCls : _ASX_SDEV_CLASS_CONFIG;
@@ -120,7 +123,7 @@ _ASX afxError _AsxImplementSimulation(afxModule icd, afxClassConfig const* sdevC
         {
             AfxThrowError();
         }
-        else if (AfxMountClass(&icd->icd.sdevCls, (afxClass*)_AfxGetDeviceClass(), &icd->classes, &clsCfg)) // require base*
+        else if (AfxMountClass(&icd->icd.sdevCls, (afxClass*)_AfxSysGetDevClass(sys), &icd->classes, &clsCfg)) // require base*
         {
             AfxThrowError();
         }

@@ -19,6 +19,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #ifndef AVX_IMPLEMENTATION_H
 #define AVX_IMPLEMENTATION_H
@@ -33,7 +34,7 @@
 #define AVX_FEATURE_VALIDATION_ENABLED TRUE
 #endif
 
-#include "qwadro/inc/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxDrawSystem.h"
 #include "avxImpl_System.h"
 #include "avxImpl_Context.h"
 #include "avxImpl_Executor.h"
@@ -51,7 +52,7 @@ AFX_DEFINE_STRUCT(_avxDrawDeviceRegistration)
 {
     afxDeviceInfo       dev;
     afxAcceleration     acceleration;
-    afxDrawCaps         capabilities;
+    afxDrawFn         capabilities;
     afxDrawFeatures     features;
     afxDrawLimits       limits;
     afxUnit             minQueCnt; // usually 3
@@ -72,7 +73,7 @@ AFX_OBJECT(afxDrawDevice)
 {
     AFX_OBJ(afxDevice)  dev;
     afxAcceleration     acceleration;
-    afxDrawCaps         capabilities;
+    afxDrawFn         capabilities;
     afxDrawFeatures     features;
     afxDrawLimits       limits;
     afxUnit             minQueCnt; // usually 3

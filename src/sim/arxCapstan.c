@@ -16,7 +16,7 @@
 
 #define _AFX_SIM_C
 #define _ARX_MOTOR_C
-#include "../../sim/impl/asxImplementation.h"
+#include "impl/asxImplementation.h"
 
 _ARXINL void* ArxGetCapstanUdd(arxCapstan caps, afxUnit idx)
 {
@@ -29,7 +29,7 @@ _ARXINL void* ArxGetCapstanUdd(arxCapstan caps, afxUnit idx)
     return caps->udd[idx];
 }
 
-_ARXINL void ArxSetCapstanClockOnly(afxReal time, afxUnit cnt, arxCapstan capstans[])
+_ARXINL void ArxSetCapstanTimeOnly(afxReal timestep, afxUnit cnt, arxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -39,7 +39,7 @@ _ARXINL void ArxSetCapstanClockOnly(afxReal time, afxUnit cnt, arxCapstan capsta
         arxCapstan caps = capstans[i];
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
 
-        caps->timing.currClock = time;
+        caps->timing.currTime = timestep;
     }
 }
 
@@ -61,7 +61,7 @@ _ARXINL afxBool ArxCapstanHasTerminated(arxCapstan caps)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
-    return (caps->flags & arxCapstanFlag_KILL_ONCE_COMPLETE) && caps->timing.currClock >= caps->timing.killClock;
+    return (caps->flags & arxCapstanFlag_KILL_ONCE_COMPLETE) && caps->timing.currTime >= caps->timing.killTime;
 }
 
 _ARXINL afxBool ArxCapstanHasEffect(arxCapstan caps)
@@ -167,7 +167,7 @@ _ARXINL void ArxGetCapstanTiming(arxCapstan caps, arxCapstanTiming* timing)
     *timing = caps->timing;
 }
 
-_ARXINL void ArxRebaseCapstanClocks(afxReal currClock, afxUnit cnt, arxCapstan capstans[])
+_ARXINL void ArxRebaseCapstanTimes(afxReal timestep, afxUnit cnt, arxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -176,16 +176,16 @@ _ARXINL void ArxRebaseCapstanClocks(afxReal currClock, afxUnit cnt, arxCapstan c
     {
         arxCapstan caps = capstans[i];
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
-        caps->timing.currClock += currClock;
-        caps->timing.killClock += currClock;
-        caps->timing.easeInStartClock += currClock;
-        caps->timing.easeInEndClock += currClock;
-        caps->timing.easeOutStartClock += currClock;
-        caps->timing.easeOutEndClock += currClock;
+        caps->timing.currTime += timestep;
+        caps->timing.killTime += timestep;
+        caps->timing.easeInStartTime += timestep;
+        caps->timing.easeInEndTime += timestep;
+        caps->timing.easeOutStartTime += timestep;
+        caps->timing.easeOutEndTime += timestep;
     }
 }
 
-_ARXINL void ArxResetCapstanLocalClock(afxReal localClock, afxUnit cnt, arxCapstan capstans[])
+_ARXINL void ArxResetCapstanLocalTime(afxReal localTime, afxUnit cnt, arxCapstan capstans[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, cnt, capstans);
@@ -194,8 +194,8 @@ _ARXINL void ArxResetCapstanLocalClock(afxReal localClock, afxUnit cnt, arxCapst
     {
         arxCapstan caps = capstans[i];
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
-        caps->dtLocalClockPending = 0.0;
-        caps->localClock = localClock;
+        caps->dtLocalTimePending = 0.0;
+        caps->localTime = localTime;
     }
 }
 
@@ -262,9 +262,9 @@ _ARXINL void ArxStepCapstans(afxReal time, afxUnit cnt, arxCapstan capstans[])
     {
         arxCapstan caps = capstans[i];
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
-        afxReal dt = time - caps->timing.currClock;
-        caps->timing.currClock = time;
-        caps->dtLocalClockPending += dt;
+        afxReal dt = time - caps->timing.currTime;
+        caps->timing.currTime = time;
+        caps->dtLocalTimePending += dt;
     }
 }
 
@@ -285,7 +285,7 @@ _ARXINL void ArxScheduleCapstanTermination(afxReal atSecs, afxUnit cnt, arxCapst
         arxCapstan caps = capstans[i];
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
         caps->flags |= arxCapstanFlag_KILL_ONCE_COMPLETE;
-        caps->timing.killClock = atSecs;
+        caps->timing.killTime = atSecs;
     }
 }
 
@@ -294,8 +294,8 @@ _ARXINL void ArxQueryCapstanState(arxCapstan caps, arxCapstanState* state)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
 
-    afxReal localClockRaw, localClockClamped;
-    localClockRaw = ArxQueryCapstanLocalClock(caps, &localClockClamped);
+    afxReal localTimeRaw, localTimeClamped;
+    localTimeRaw = ArxQueryCapstanLocalTime(caps, &localTimeClamped);
     afxReal speed = caps->speed;
     afxInt iterCnt = state->iterCnt;
     afxInt currIterIdx = caps->currIterIdx;
@@ -308,8 +308,8 @@ _ARXINL void ArxQueryCapstanState(arxCapstan caps, arxCapstanState* state)
     state->currIterIdx = currIterIdx;
     state->currWeight = caps->currWeight;
     state->effectiveWeight = state->active ? ArxGetCapstanEaseCurveMultiplier(caps) * caps->currWeight : 0.f;
-    state->localClockRaw = localClockRaw;
-    state->localClockClamped = localClockClamped;
+    state->localTimeRaw = localTimeRaw;
+    state->localTimeClamped = localTimeClamped;
     state->localDur = localDur;
 
     // determine iteration state
@@ -341,7 +341,7 @@ _ARXINL void ArxQueryCapstanState(arxCapstan caps, arxCapstanState* state)
             state->dur = (localDur / speed) * iterCnt;
 
             if (currIterIdx < iterCnt)
-                state->durLeft = (afxReal)(iterCnt - currIterIdx - 1) * (1.0 / speed * localDur) + (localDur - localClockRaw) * (1.0 / speed);
+                state->durLeft = (afxReal)(iterCnt - currIterIdx - 1) * (1.0 / speed * localDur) + (localDur - localTimeRaw) * (1.0 / speed);
             else
                 state->durLeft = 0.0;
         }
@@ -352,7 +352,7 @@ _ARXINL void ArxQueryCapstanState(arxCapstan caps, arxCapstanState* state)
             if (caps->currIterIdx < 0)
                 state->durLeft = 0.0;
             else
-                state->durLeft = -(1.0 / speed * localDur) * (afxReal)currIterIdx - 1.0 / speed * localClockRaw;
+                state->durLeft = -(1.0 / speed * localDur) * (afxReal)currIterIdx - 1.0 / speed * localTimeRaw;
         }
     }
 }
@@ -361,12 +361,12 @@ _ARXINL afxReal ArxCapstanEaseIn(arxCapstan caps, afxReal Duration, afxBool from
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
-    afxReal currClock = caps->timing.currClock;
+    afxReal currTime = caps->timing.currTime;
     afxReal multiplier = fromCurrent ? ArxGetCapstanEaseCurveMultiplier(caps) : 0.0;    
     ArxEnableCapstanEaseIn(TRUE, 1, &caps);
     ArxEnableCapstanEaseOut(FALSE, 1, &caps);
-    afxReal fromCurrenta = currClock + Duration;
-    ArxSetCapstanEaseInCurve(caps, currClock, fromCurrenta, multiplier, multiplier, 1.0, 1.0);
+    afxReal fromCurrenta = currTime + Duration;
+    ArxSetCapstanEaseInCurve(caps, currTime, fromCurrenta, multiplier, multiplier, 1.0, 1.0);
     return fromCurrenta;
 }
 
@@ -374,26 +374,26 @@ _ARXINL afxReal ArxCapstanEaseOut(arxCapstan caps, afxReal duration)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
-    afxReal currClock = caps->timing.currClock;
+    afxReal currTime = caps->timing.currTime;
     afxReal multiplier = ArxGetCapstanEaseCurveMultiplier(caps);
     ArxEnableCapstanEaseIn(FALSE, 1, &caps);
     ArxEnableCapstanEaseOut(TRUE, 1, &caps);
-    afxReal durationa = currClock + duration;
-    ArxSetCapstanEaseOutCurve(caps, currClock, durationa, multiplier, multiplier, 0.0, 0.0);
+    afxReal durationa = currTime + duration;
+    ArxSetCapstanEaseOutCurve(caps, currTime, durationa, multiplier, multiplier, 0.0, 0.0);
     return durationa;
 }
 
 // Modulus local clock and dependents
 
-_ARXINL void _AfxCapstanModulusLocalClock(arxCapstan caps)
+_ARXINL void _AfxCapstanModulusLocalTime(arxCapstan caps)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
-    afxReal t = caps->localClock / caps->localDur;
+    afxReal t = caps->localTime / caps->localDur;
     afxInt currIterIdx = caps->currIterIdx;
     afxInt i = currIterIdx + (afxInt)t;
 
-    if (caps->localClock < 0.0)
+    if (caps->localTime < 0.0)
         --i;
 
     afxInt iterCnt = caps->iterCnt;
@@ -413,7 +413,7 @@ _ARXINL void _AfxCapstanModulusLocalClock(arxCapstan caps)
     if (j)
     {
         caps->currIterIdx = j + currIterIdx;
-        caps->localClock = caps->localClock - (afxReal64)j * caps->localDur;
+        caps->localTime = caps->localTime - (afxReal64)j * caps->localDur;
     }
 }
 
@@ -422,28 +422,28 @@ _ARXINL void ArxSetCapstanTargetState(arxCapstan caps, afxReal currGlobalTime, a
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
     afxReal t = (targetGlobalTime - currGlobalTime) * caps->speed;
-    caps->dtLocalClockPending = 0.0;
-    caps->timing.currClock = currGlobalTime;
+    caps->dtLocalTimePending = 0.0;
+    caps->timing.currTime = currGlobalTime;
     caps->currIterIdx = loopIndex;
-    caps->localClock = localTime - t;
-    _AfxCapstanModulusLocalClock(caps);
+    caps->localTime = localTime - t;
+    _AfxCapstanModulusLocalTime(caps);
 }
 
-_ARXINL afxReal ArxQueryCapstanLocalClock(arxCapstan caps, afxReal* clamped)
+_ARXINL afxReal ArxQueryCapstanLocalTime(arxCapstan caps, afxReal* clamped)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
     afxInt currIterIdx = caps->currIterIdx;
     afxInt iterCnt = caps->iterCnt;
 
-    if (caps->dtLocalClockPending != 0.0)
+    if (caps->dtLocalTimePending != 0.0)
     {
         // process pending local clock
 
         while (1)
         {
-            afxReal t = caps->speed * caps->dtLocalClockPending + caps->localClock;
-            caps->localClock = t;
+            afxReal t = caps->speed * caps->dtLocalTimePending + caps->localTime;
+            caps->localTime = t;
 
             if (1) // [!]
             {
@@ -461,24 +461,24 @@ _ARXINL afxReal ArxQueryCapstanLocalClock(arxCapstan caps, afxReal* clamped)
                         break; // avoid modulus
                 }
             }
-            _AfxCapstanModulusLocalClock(caps);
+            _AfxCapstanModulusLocalTime(caps);
             break;
         }
-        caps->dtLocalClockPending = 0.0; // reset pending local clock
+        caps->dtLocalTimePending = 0.0; // reset pending local clock
     }
     
-    afxReal localClock = caps->localClock;
+    afxReal localTime = caps->localTime;
 
     if (clamped)
     {
-        if (localClock < 0.0)
+        if (localTime < 0.0)
             *clamped = 0.0;
-        else if (localClock > caps->localDur)
+        else if (localTime > caps->localDur)
             *clamped = caps->localDur;
         else
-            *clamped = localClock;
+            *clamped = localTime;
     }
-    return localClock;
+    return localTime;
 }
 
 _ARXINL void _PackEaseCurve(afxUnit *result, afxReal Af, afxReal Bf, afxReal Cf, afxReal Df)
@@ -490,8 +490,8 @@ _ARXINL void ArxSetCapstanEaseInCurve(arxCapstan caps, afxReal StartSeconds, afx
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
-    caps->timing.easeInStartClock = StartSeconds;
-    caps->timing.easeInEndClock = EndSeconds;
+    caps->timing.easeInStartTime = StartSeconds;
+    caps->timing.easeInEndTime = EndSeconds;
     _PackEaseCurve(&caps->easeInValues, StartValue, StartTangent, EndTangent, EndValue);
 }
 
@@ -499,8 +499,8 @@ _ARXINL void ArxSetCapstanEaseOutCurve(arxCapstan caps, afxReal StartSeconds, af
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
-    caps->timing.easeOutStartClock = StartSeconds;
-    caps->timing.easeOutEndClock = EndSeconds;
+    caps->timing.easeOutStartTime = StartSeconds;
+    caps->timing.easeOutEndTime = EndSeconds;
     _PackEaseCurve(&caps->easeOutValues, StartValue, StartTangent, EndTangent, EndValue);
 }
 
@@ -553,33 +553,33 @@ _ARXINL afxReal ArxGetCapstanEaseCurveMultiplier(arxCapstan caps)
 
     afxReal result = 1.0;
 
-    if (caps->timing.easeInStartClock >= caps->timing.easeOutStartClock && (caps->flags & arxCapstanFlag_EASE_OUT) && caps->flags & arxCapstanFlag_EASE_IN)
+    if (caps->timing.easeInStartTime >= caps->timing.easeOutStartTime && (caps->flags & arxCapstanFlag_EASE_OUT) && caps->flags & arxCapstanFlag_EASE_IN)
     {
-        if (caps->timing.currClock > caps->timing.easeOutEndClock)
+        if (caps->timing.currTime > caps->timing.easeOutEndTime)
         {
-            if (caps->timing.currClock > caps->timing.easeInStartClock)
+            if (caps->timing.currTime > caps->timing.easeInStartTime)
             {
-                if (caps->timing.currClock <= caps->timing.easeInEndClock)
-                    result = _ComputeEaseCurve(easeInValues, caps->timing.easeInStartClock, caps->timing.currClock, caps->timing.easeInEndClock);
+                if (caps->timing.currTime <= caps->timing.easeInEndTime)
+                    result = _ComputeEaseCurve(easeInValues, caps->timing.easeInStartTime, caps->timing.currTime, caps->timing.easeInEndTime);
             }
             else
             {
-                afxReal a = (caps->timing.currClock - caps->timing.easeOutEndClock) / (caps->timing.easeInStartClock - caps->timing.easeOutEndClock);
+                afxReal a = (caps->timing.currTime - caps->timing.easeOutEndTime) / (caps->timing.easeInStartTime - caps->timing.easeOutEndTime);
                 result = (1.0 - a) * easeOutValues[3] + easeInValues[0] * (a);
             }
         }
         else
         {
-            result = _ComputeEaseCurve(easeOutValues, caps->timing.easeOutStartClock, caps->timing.currClock, caps->timing.easeOutEndClock);
+            result = _ComputeEaseCurve(easeOutValues, caps->timing.easeOutStartTime, caps->timing.currTime, caps->timing.easeOutEndTime);
         }
     }
     else
     {
-        if ((caps->flags & arxCapstanFlag_EASE_OUT) && caps->timing.currClock >= caps->timing.easeOutStartClock)
-            result = _ComputeEaseCurve(easeOutValues, caps->timing.easeOutStartClock, caps->timing.currClock, caps->timing.easeOutEndClock);
+        if ((caps->flags & arxCapstanFlag_EASE_OUT) && caps->timing.currTime >= caps->timing.easeOutStartTime)
+            result = _ComputeEaseCurve(easeOutValues, caps->timing.easeOutStartTime, caps->timing.currTime, caps->timing.easeOutEndTime);
 
-        if ((caps->flags & arxCapstanFlag_EASE_IN) && caps->timing.currClock <= caps->timing.easeInEndClock)
-            result = _ComputeEaseCurve(easeInValues, caps->timing.easeInStartClock, caps->timing.currClock, caps->timing.easeInEndClock);
+        if ((caps->flags & arxCapstanFlag_EASE_IN) && caps->timing.currTime <= caps->timing.easeInEndTime)
+            result = _ComputeEaseCurve(easeInValues, caps->timing.easeInStartTime, caps->timing.currTime, caps->timing.easeInEndTime);
     }
     return result;
 }
@@ -606,20 +606,20 @@ _ARX afxError _ArxMotoCtorCb(arxCapstan caps, void** args, afxUnit invokeNo)
     arxCapstanConfig const* cfg = AFX_CAST(arxCapstanConfig const*, args[1]);
 
     caps->flags = arxCapstanFlag_ACTIVE;
-    caps->timing.currClock = cfg->currClock;
-    caps->dtLocalClockPending = 0.0;
-    caps->localClock = 0.0;
+    caps->timing.currTime = cfg->currTime;
+    caps->dtLocalTimePending = 0.0;
+    caps->localTime = 0.0;
     caps->speed = 1.0;
     caps->localDur = cfg->localDur;
     caps->currIterIdx = 0;
     caps->iterCnt = cfg->iterCnt;
-    caps->timing.killClock = 0;
+    caps->timing.killTime = 0;
     caps->currWeight = 1;
-    caps->timing.easeInStartClock = 0;
-    caps->timing.easeInEndClock = 0;
+    caps->timing.easeInStartTime = 0;
+    caps->timing.easeInEndTime = 0;
     caps->easeInValues = (afxUnit)-65536;
-    caps->timing.easeOutStartClock = 0;
-    caps->timing.easeOutEndClock = 0;
+    caps->timing.easeOutStartTime = 0;
+    caps->timing.easeOutEndTime = 0;
     caps->easeOutValues = (afxUnit)0xFFFF;
 
     return err;
@@ -731,7 +731,7 @@ _ARX afxUnit AfxRecenterAllCapstanClocks(afxSimulation sim, afxReal dCurrentCloc
     while (!AfxEnumerateObjects(cls, i++, 1, (afxObject*)&caps))
     {
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &caps);
-        ArxRebaseCapstanClocks(dCurrentClock, 1, &caps);
+        ArxRebaseCapstanTimes(dCurrentClock, 1, &caps);
     }
     return i;
 }

@@ -19,11 +19,12 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #ifndef AVX_IMPL___STORAGE_H
 #define AVX_IMPL___STORAGE_H
 
-#include "qwadro/inc/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 typedef enum _avxMemFlag
 {
@@ -229,6 +230,13 @@ AVX void _AvxDpuBlitRaster(avxDpu* dpu, avxRaster dst, afxUnit opCnt, avxRasterB
 AVX void _AvxDpuClearRaster(avxDpu* dpu, avxRaster ras, avxClearValue const* clearVal, afxUnit baseLodIdx, afxUnit lodCnt, afxUnit baseLayer, afxUnit layerCnt);
 
 AVXINL void* _AvxGetClientRasterData(avxRaster ras, afxSize from);
+
 AVXINL void* _AvxGetClientBufferData(avxBuffer buf, afxSize from);
+AVX void _AvxFillBuffer(avxBuffer buf, afxUnit offset, afxUnit range, afxUnit data);
+AVX void _AvxCopyBuffer(avxBuffer buf, afxUnit opCnt, avxBufferCopy const ops[], avxBuffer src);
+AVX void _AvxDumpBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxByte* dst);
+AVX void _AvxUpdateBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxByte const* src);
+AVX void _AvxDownloadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxStream out);
+AVX void _AvxUploadBuffer(avxBuffer buf, afxUnit opCnt, avxBufferIo const ops[], afxStream in);
 
 #endif//AVX_IMPL___STORAGE_H

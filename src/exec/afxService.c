@@ -16,7 +16,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_SERVICE_C
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
 
 _AFX afxError AfxDoService(afxService svc, afxTime timeout)
 {
@@ -176,10 +176,14 @@ _AFX afxClassConfig const _AFX_SVC_CLASS_CONFIG =
 _AFX afxError AfxAcquireServices(afxUnit cnt, afxServiceConfig const config[], afxService services[])
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = _AfxGetServiceClass();
+
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = (afxClass*)_AfxSysGetSvcClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_SVC);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)services, (void const*[]) { NIL, (void*)config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)services, (void const*[]) { sys, (void*)config }))
         AfxThrowError();
 
     AFX_ASSERT_OBJECTS(afxFcc_SVC, cnt, services);

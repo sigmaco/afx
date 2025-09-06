@@ -18,7 +18,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_THREAD_C
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
 
 #ifdef AFX_ON_WINDOWS
 #   include <combaseapi.h>
@@ -170,7 +170,7 @@ _AFX afxBool AfxGetThread(afxThread* thread)
     *thread = _currThr;
     return !!_currThr;
 #else
-    _currThr = AfxGetClassInstance(_AfxGetThreadClass(), _currThrObjId);
+    _currThr = AfxGetClassInstance(_AfxSysGetThrClass(), _currThrObjId);
     *thread = _currThr;
     return !!_currThr;
 #endif
@@ -805,7 +805,10 @@ _AFX afxUnit AfxInvokeThreads(afxUnit first, afxUnit cnt, afxBool(*f)(afxThread,
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(f);
     AFX_ASSERT(cnt);
-    afxClass* cls = _AfxGetThreadClass();
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = (afxClass*)_AfxSysGetThrClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_THR);
     return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
@@ -815,7 +818,10 @@ _AFX afxUnit AfxEnumerateThreads(afxUnit first, afxUnit cnt, afxThread threads[]
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(threads);
     AFX_ASSERT(cnt);
-    afxClass* cls = _AfxGetThreadClass();
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = (afxClass*)_AfxSysGetThrClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_THR);
     afxUnit rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)threads);
     AFX_ASSERT_OBJECTS(afxFcc_THR, rslt, threads);
@@ -835,7 +841,7 @@ _AFX afxError AfxAcquireThreads(afxHere const hint, afxThreadConfig const* cfg, 
     afxSystem sys;
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-    afxClass* cls = _AfxGetThreadClass();
+    afxClass* cls = (afxClass*)_AfxSysGetThrClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_THR);
     
     if (AfxAcquireObjects(cls, cnt, (afxObject*)threads, (void const*[]) { sys, hint, (void*)cfg, }))

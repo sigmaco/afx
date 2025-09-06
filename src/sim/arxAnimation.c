@@ -20,7 +20,7 @@
 //#define _ARX_BODY_C
 //#define _ARX_MODEL_C
 //#define _ARX_MOTOR_C
-#include "../../sim/impl/asxImplementation.h"
+#include "impl/asxImplementation.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -95,7 +95,7 @@ _ARX afxError ArxRelinkMotions(arxAnimation ani, afxUnit baseSlot, afxUnit slotC
     baseSlot = AFX_MIN(baseSlot, ani->motSlotCnt);
     slotCnt = AFX_MIN(slotCnt, ani->motSlotCnt - baseSlot);
 
-    afxSimulation sim = AfxGetProvider(ani);
+    afxSimulation sim = AfxGetHost(ani);
 
     for (afxUnit i = 0; i < slotCnt; i++)
     {
@@ -136,7 +136,7 @@ _ARX afxUnit ArxPerformAnimation(arxAnimation ani, afxReal startTime, afxUnit it
     AFX_ASSERT(256 >= motCnt);
     arxTrackTarget targets[256];
 
-    afxSimulation sim = AfxGetProvider(ani);
+    afxSimulation sim = AfxGetHost(ani);
 
     afxUnit foundCnt = 0;
 
@@ -176,9 +176,9 @@ _ARX afxUnit ArxPerformAnimation(arxAnimation ani, afxReal startTime, afxUnit it
         afxMask flags = ArxGetMotionFlags(mot) & 0xFFFF;
         
         if (flags & 0x1)
-            targets[foundCnt].AccumulationMode = afxAccumOp_CONST;
+            targets[foundCnt].AccumulationMode = arxAccumOp_CONST;
         else
-            targets[foundCnt].AccumulationMode = (flags >> 1) & afxAccumOp_DELTA;
+            targets[foundCnt].AccumulationMode = (flags >> 1) & arxAccumOp_DELTA;
 
         ++foundCnt;
     }
@@ -195,7 +195,7 @@ _ARX afxUnit ArxPerformAnimation(arxAnimation ani, afxReal startTime, afxUnit it
     {
         arxCapstan moto;
         arxCapstanConfig motoCfg = { 0 };
-        motoCfg.currClock = startTime;
+        motoCfg.currTime = startTime;
         motoCfg.localDur = ani->dur;
         motoCfg.iterCnt = iterCnt;
 
@@ -236,7 +236,7 @@ _ARX afxUnit ArxPerformAnimationBinding(arxAnimation ani, afxReal startTime, afx
     AFX_ASSERT(256 >= motCnt);
     arxTrackTarget targets[256];
 
-    afxSimulation sim = AfxGetProvider(ani);
+    afxSimulation sim = AfxGetHost(ani);
 
     afxUnit foundCnt = 0;
 
@@ -276,9 +276,9 @@ _ARX afxUnit ArxPerformAnimationBinding(arxAnimation ani, afxReal startTime, afx
         afxMask flags = ArxGetMotionFlags(mot) & 0xFFFF;
 
         if (flags & 0x1)
-            targets[foundCnt].AccumulationMode = afxAccumOp_CONST;
+            targets[foundCnt].AccumulationMode = arxAccumOp_CONST;
         else
-            targets[foundCnt].AccumulationMode = (flags >> 1) & afxAccumOp_DELTA;
+            targets[foundCnt].AccumulationMode = (flags >> 1) & arxAccumOp_DELTA;
 
         ++foundCnt;
     }
@@ -288,7 +288,7 @@ _ARX afxUnit ArxPerformAnimationBinding(arxAnimation ani, afxReal startTime, afx
 
     arxCapstan moto;
     arxCapstanConfig motoCfg = { 0 };
-    motoCfg.currClock = startTime;
+    motoCfg.currTime = startTime;
     motoCfg.localDur = ani->dur;
     motoCfg.iterCnt = iterCnt;
 
@@ -347,7 +347,7 @@ _ARX afxError _ArxAniCtorCb(arxAnimation ani, void** args, afxUnit invokeNo)
     arxAnimationBlueprint const* anib = args[1];
     anib += invokeNo;
 
-    if (!AfxCatalogStrings(_ArxDinGetAnimUrnStringBase(sim), 1, &anib->id.s, &ani->urn))
+    if (!AfxCatalogStrings(_ArxRweGetAnimUrnStringBase(sim), 1, &anib->id.s, &ani->urn))
         AfxThrowError();
 
     ani->dur = anib->dur;

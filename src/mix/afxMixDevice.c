@@ -7,17 +7,14 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _CRT_SECURE_NO_WARNINGS 1
-#define WIN32_LEAN_AND_MEAN 1
-#include <stdio.h>
-#include <Windows.h>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
@@ -272,8 +269,8 @@ _AMX afxUnit AmxEnumerateMixDevices(afxUnit icd, afxUnit first, afxUnit cnt, afx
 _AMX afxUnit AmxChooseMixDevices(afxUnit icd, afxMixFeatures const* features, afxMixLimits const* limits, afxMixPortInfo const* caps, afxUnit maxCnt, afxUnit mdevId[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(limits);
-    AFX_ASSERT(features);
+    //AFX_ASSERT(limits);
+    //AFX_ASSERT(features);
     afxUnit rslt = 0;
     afxModule mdle;
     while (_AmxGetIcd(icd, &mdle))
@@ -283,10 +280,11 @@ _AMX afxUnit AmxChooseMixDevices(afxUnit icd, afxMixFeatures const* features, af
         afxClass const* cls = _AmxIcdGetMdevClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_MDEV);
 
-        afxUnit i = 0;
         afxMixDevice mdev;
-        while (AfxEnumerateObjects(cls, i, 1, (afxObject*)&mdev))
+        for (afxUnit i = 0; TRUE; i++)
         {
+            if (!AfxEnumerateObjects(cls, i, 1, (afxObject*)&mdev))
+                break;
             AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
 
             if (features || limits)
@@ -315,7 +313,6 @@ _AMX afxUnit AmxChooseMixDevices(afxUnit icd, afxMixFeatures const* features, af
                 if (maxCnt > rslt)
                     break;
             }
-            i++;
         }
         break;
     }

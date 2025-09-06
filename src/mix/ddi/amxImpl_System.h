@@ -7,19 +7,43 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                     Q W A D R O   S O U N D   I / O   S Y S T E M
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #ifndef AMX_IMPL___SYSTEM_H
 #define AMX_IMPL___SYSTEM_H
 
-#include "qwadro/inc/mix/afxMixSystem.h"
+#include "qwadro/mix/afxMixSystem.h"
+#include "amxImpl_Executor.h"
+#include "amxImpl_Soundscape.h"
+
+#ifndef _AMX_MIX_C
+AFX_DECLARE_STRUCT(_amxMsysImpl);
+#else
+AFX_DEFINE_STRUCT(_amxMsysImpl)
+{
+    afxError(*waitCb)(afxMixSystem, afxUnit64);
+    //afxError(*waitFencCb)(afxMixSystem, afxBool, afxUnit64, afxUnit, amxFence const[]);
+    //afxError(*resetFencCb)(afxMixSystem, afxUnit, amxFence const[]);
+    afxError(*cohereCb)(afxMixSystem, afxBool, afxUnit, amxBufferedMap const[]);
+    afxError(*remapCb)(afxMixSystem, afxBool, afxUnit, _amxBufferRemapping const[]);
+    afxUnit(*getProcCb)(afxMixSystem, afxUnit, afxString const[], void*[]);
+    afxError(*transferCb)(afxMixSystem dsys, amxTransference* ctrl, afxUnit opCnt, void const* ops);
+    afxError(*allocBufCb)(afxMixSystem, afxUnit, amxBufferInfo const[], amxBuffer[]);
+    afxError(*deallocBufCb)(afxMixSystem, afxUnit, amxBuffer[]);
+
+    afxClass const*(*mexuCls)(afxMixSystem);
+    afxClass const*(*fencCls)(afxMixSystem);
+    afxClass const*(*sinkCls)(afxMixSystem);
+    afxClass const*(*bufCls)(afxMixSystem);
+};
+#endif
 
 
 AFX_DEFINE_STRUCT(_amxMsysAcquisition)
@@ -34,9 +58,12 @@ AFX_DEFINE_STRUCT(_amxMsysAcquisition)
     afxClassConfig const* mbufClsCfg;
     afxClassConfig const* wavClsCfg;
     afxClassConfig const* sndClsCfg;
-    afxClassConfig const* audiClsCfg;
+    afxClassConfig const* sndsClsCfg;
 
-    afxClassConfig const* msesClsCfg;
+    afxClassConfig const* vidClsCfg;
+    afxClassConfig const* viddClsCfg;
+
+    afxClassConfig const* traxClsCfg;
     afxClassConfig const* sinkClsCfg;
 
     afxClassConfig const* mexuClsCfg;
@@ -51,21 +78,30 @@ AFX_OBJECT(afxMixSystem)
 #endif
 {
     AFX_OBJECT(afxDevLink) ctx;
+    _amxMsysImpl const* ddi;
     afxBool             running;
     afxUnit             bridgeCnt;
-    afxMixBridge*     bridges;
-    afxMixFeatures    requirements;
+    afxMixBridge*       bridges;
+    afxMask             ioExuMask;
+    afxMask             dedIoExuMask;
+    afxMask             cfxExuMask;
+    afxMask             dedCfxExuMask;
+    afxMask             gfxExuMask;
+    afxMask             videoExuMask;
+    afxMixFeatures      requirements;
+    afxMixLimits const* limits;
 
     //afxChain            classes;
     afxClass            mexuCls;
     afxClass            asioCls;
     afxClass            mbufCls;
     afxClass            wavCls;
-    afxClass            sndCls;
-    afxClass            audiCls;
+    afxClass            sndsCls;
     afxClass            brokCls;
+    afxClass            vidCls;
+    afxClass            viddCls;
     afxClass            mixCls;
-    afxClass            msesCls;
+    afxClass            traxCls;
     afxClass            mcdcCls;
     afxClass            msrcCls;
     afxClass            msnkCls;
@@ -77,6 +113,7 @@ AFX_OBJECT(afxMixSystem)
     afxV3d              listener;
     afxV3d              orientation;
 
+    afxChain        activeTrackers;
     afxError(*waitCb)(afxMixSystem);
 
     struct _afxSctxIdd* idd;
@@ -105,67 +142,6 @@ AFX_DEFINE_STRUCT(afxTrackedNote)
     afxUnit     loopCnt;
 };
 
-#ifdef _AMX_AUDIENT_C
-#ifdef _AMX_AUDIENT_IMPL
-AFX_OBJECT(_amxAudient)
-#else
-AFX_OBJECT(amxSoundscape)
-#endif
-{
-    afxTransform    placement;
-    afxV3d          velocity;
-
-    afxMixContext        mix;
-    afxUnit         baseSmixIdx;
-    afxUnit         exuIdx; // renderer
-};
-#endif
-
-#ifdef _AMX_MIX_C
-#ifdef _AMX_SOUND_IMPL
-AFX_OBJECT(_amxSound)
-#else
-AFX_OBJECT(amxSound)
-#endif
-{
-    afxReal gain; // A value of 0.0 is meaningless with respect to a logarithmic scale; it is silent.
-    afxBool looping;
-    afxV3d position;
-    afxV3d velocity;
-    afxV3d direction;
-    afxReal pitch; // A multiplier for the frequency (sample rate) of the source's buffer.
-    afxReal innerConeAngle; // The angle covered by the inner cone, where the source will not attenuate.
-    afxReal outerConeAngle; // The angle covered by the outer cone, where the source will be fully attenuated.
-
-    afxBool playing;
-    afxSphere bounding;
-
-    afxTransform t;
-    afxLink playQueue;
-
-    struct
-    {
-        afxFlags   flags;
-        afxReal         dtLocalClockPending;
-        afxReal         localClock;
-        afxReal         speed;
-        afxReal         localDur;
-        afxInt          currIterIdx;
-        afxInt          iterCnt;
-        afxReal         currWeight;
-        //arxCapstanTiming  timing;
-        afxUnit32       easeInValues;
-        afxUnit32       easeOutValues;
-        void*           userData[4];
-    } ctrl;
-    amxAudio    audio;
-    afxUnit     chanCnt;
-    afxUnit     offset;
-    afxFlags    flags;
-    afxReal     streamPos;
-};
-#endif
-
 #ifdef _AMX_AUDIO_C
 #ifdef _AMX_WAVEFORM_IMPL
 AFX_OBJECT(_amxAudio)
@@ -177,30 +153,20 @@ AFX_OBJECT(amxAudio)
     afxUnit         sampCnt; // Number of samples (e.g., time slots)
     // its length, meaning the number of sample frames inside the buffer.
     afxUnit         chanCnt; // Number of channels (e.g., stereo = 2)
-    //afxUnit         frameCnt; // Number of frames (playable intervals)
+    afxUnit         segCnt; // Number of frames (playable intervals)
     afxUnit         freq; // the sample rate, the number of sample frames played per second.
 
     afxUnit         fmtBps;
     afxUnit         fmtStride;
     
+    afxUnit64 current_sample_time;
+
     afxString       tag;
     void*           udd;
     
-    avxBufferFlags  bufFlags;
+    amxBufferFlags  bufFlags;
     afxUnit         bufCap; // with any alignment
-    union
-    {
-        void*       data;
-        afxByte*    bytemap;
-        afxReal32*  samples32f;
-        afxInt16*   samples16i;
-    };
-    afxUnit         mappedOffset;
-    afxUnit         mappedRange;
-    afxFlags        mappedFlags;
-    afxBool         sysmemBuffered;
-    afxAtom32       pendingRemap;
-    afxError        (*bufRemap)(amxAudio, afxUnit, afxUnit, afxFlags, void**);
+    amxBuffer       buf;
 };
 #endif
 
@@ -213,6 +179,7 @@ AFX_DEFINE_STRUCT(_amxBufStorage)
     // Persistent mapping required at acquisition. Do not allow unmapping.
     afxBool     permanentlyMapped;
     afxAtom32   pendingRemap;
+    afxUnit     mapRefCnt;
     afxSize     mapOffset;
     afxUnit     mapRange;
     afxFlags    mapFlags;
@@ -250,6 +217,8 @@ AFX_OBJECT(amxBuffer)
     amxBufferUsage  usage;
     amxBufferFlags  flags;
     amxFormat       fmt; // for tensor buffer
+    afxUnit         fmtBps;
+    afxUnit         fmtStride;
 
     afxMask         sharingMask;
 
@@ -265,23 +234,31 @@ AFX_OBJECT(amxBuffer)
 
 AMX afxClass const* _AmxMsysGetMexuClass(afxMixSystem msys);
 AMX afxClass const* _AmxMsysGetSinkClass(afxMixSystem msys);
-AMX afxClass const* _AmxMsysGetSesClass(afxMixSystem msys);
+AMX afxClass const* _AmxMsysGetTraxClass(afxMixSystem msys);
 
 AMX afxClassConfig const _AMX_MCDC_CLASS_CONFIG;
 AMX afxClassConfig const _AMX_ASIO_CLASS_CONFIG;
-AMX afxClassConfig const _AMX_MSES_CLASS_CONFIG;
+AMX afxClassConfig const _AMX_TRAX_CLASS_CONFIG;
 
 AMX afxClassConfig const _AMX_MBUF_CLASS_CONFIG;
 AMX afxClassConfig const _AMX_SND_CLASS_CONFIG;
 AMX afxClassConfig const _AMX_AUD_CLASS_CONFIG;
 AMX afxClassConfig const _AMX_SNDS_CLASS_CONFIG;
 
+AMX afxClassConfig const _AMX_VID_CLASS_CONFIG;
+AMX afxClassConfig const _AMX_VIDD_CLASS_CONFIG;
+
 AMX afxClassConfig const _AMX_MSYS_CLASS_CONFIG;
 
 AMX afxClass const* _AmxMsysGetMixClass(afxMixSystem msys);
 AMX afxClass const* _AmxMsysGetAudClass(afxMixSystem msys);
 AMX afxClass const* _AmxMsysGetBufClass(afxMixSystem msys);
-AMX afxClass const* _AmxMsysGetSndClass(afxMixSystem msys);
-AMX afxClass const* _AmxMsysGetAudiClass(afxMixSystem msys);
+AMX afxClass const* _AmxMsysGetSndsClass(afxMixSystem msys);
+
+AMX afxClass const* _AmxMsysGetVidClass(afxMixSystem msys);
+AMX afxClass const* _AmxMsysGetViddClass(afxMixSystem msys);
+
+AMX _amxMsysImpl const* _AmxMsysGetImpl(afxMixSystem msys);
+AMX afxMask _AmxMsysGetIoExuMask(afxMixSystem msys, afxMask* dedIoExuMask);
 
 #endif//AMX_IMPL___SYSTEM_H

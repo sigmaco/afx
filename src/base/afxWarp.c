@@ -16,10 +16,10 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/inc/math/afxScalar.h"
-#include "qwadro/inc/math/afxVector.h"
-#include "qwadro/inc/math/afxMatrix.h"
-#include "qwadro/inc/base/afxWarp.h"
+#include "qwadro/math/afxScalar.h"
+#include "qwadro/math/afxVector.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/base/afxWarp.h"
 
 //_AFX afxWarp const AFX_WHD_ZERO = { 0, 0, 0 };
 //_AFX afxWarp const AFX_WHD_IDENTITY = { 1, 1, 1 };

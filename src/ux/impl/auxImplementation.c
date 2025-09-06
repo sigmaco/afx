@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This software is part of Advanced Multimedia UX Extensions & Experiments.
+
 #define _AFX_SYSTEM_C
 #define _AFX_MODULE_C
 #define _AUX_UX_C
@@ -265,54 +267,4 @@ _AUX afxBool _AuxGetIcd(afxUnit icdIdx, afxModule* driver)
     AFX_ASSERT(driver);
     *driver = icd;
     return found;
-}
-
-_AUX afxError auxScmHook(afxModule mdle, afxManifest const* ini)
-{
-    afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-
-    // HIDs must be installed here. It is not implementation-dependent. It does not store state.
-    AfxMountClass(&sys->hidCls, (afxClass*)_AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AUX_HID_CLASS_CONFIG);
-
-    //AfxMountClass(&sys->aux.sshCls, (afxClass*)_AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AUX_SSH_CLASS_CONFIG); // require base*
-
-    afxClassConfig vduClsCfg = _AVX_VDU_CLASS_CONFIG;
-    vduClsCfg.ctor = NIL;
-    vduClsCfg.dtor = NIL;
-    AfxMountClass(&sys->vduCls, (afxClass*)_AfxGetDeviceClass(), &sys->classes, &vduClsCfg);
-
-    if (!err)
-    {
-        afxHidInfo hidInfos[] =
-        {
-            {
-                .dev.urn = AFX_STRING("kbd"),
-                .dev.type = afxDeviceType_HID,
-                .type = afxHidType_KEYBOARD
-            },
-            {
-                .dev.urn = AFX_STRING("mse"),
-                .dev.type = afxDeviceType_HID,
-                .type = afxHidType_MOUSE
-            },
-            {
-                .dev.urn = AFX_STRING("gpad"),
-                .dev.type = afxDeviceType_HID,
-                .type = afxHidType_GAMEPAD
-            }
-        };
-        afxHid hidevices[ARRAY_SIZE(hidInfos)];
-
-        if (_AuxRegisterHids(mdle, ARRAY_SIZE(hidInfos), hidInfos, hidevices)) AfxThrowError();
-        else
-        {
-        }
-    }
-
-    return err;
 }

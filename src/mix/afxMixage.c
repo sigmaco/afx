@@ -7,14 +7,14 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
- // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #define _AMX_MIX_C
 #define _AMX_MIX_SYSTEM_C
@@ -28,7 +28,7 @@
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
 #define _AMX_AUDIO_C
-#include "../ddi/amxImplementation.h"
+#include "ddi/amxImplementation.h"
 
 _AMX afxCmdId AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope)
 {
@@ -44,17 +44,14 @@ _AMX afxCmdId AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope
     AFX_ASSERT(cmd);
     
     AFX_ASSERT(scope);
-    cmd->CommenceMixScope.scope = *scope;
-
-    if (!scope->freq)
-    {
-        if (scope->sink)
-            cmd->CommenceMixScope.scope.freq = scope->sink->freq;
-        else
-            cmd->CommenceMixScope.scope.freq = 48000;
-    }
-
-    AFX_ASSERT(scope->chans);
+    cmd->CommenceMixScope.baseChan = scope->baseChan;
+    cmd->CommenceMixScope.baseSamp = scope->baseSamp;
+    cmd->CommenceMixScope.baseSeg = scope->baseSeg;
+    cmd->CommenceMixScope.chanCnt = scope->chanCnt;
+    cmd->CommenceMixScope.sampCnt = scope->sampCnt;
+    cmd->CommenceMixScope.segCnt = scope->segCnt;
+    cmd->CommenceMixScope.flags = scope->flags;
+    cmd->CommenceMixScope.sink = scope->sink;
 
     for (afxUnit i = 0; i < scope->chanCnt; i++)
     {
@@ -317,5 +314,21 @@ _AMX afxCmdId AmxCmdFetchAudition(afxMixContext mix, afxUnit voice, afxUnit head
     AFX_ASSERT(cmd);
     cmd->FetchAudition.voice = voice;
     cmd->FetchAudition.headIdx = headIdx;
+    return cmdId;
+}
+
+_AMX afxCmdId AmxCmdDeclareTimelineBarrier(afxMixContext mix, afxReal time)
+{
+    afxError err = AFX_ERR_NONE;
+    // mix must be a valid afxMixContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    // mix must be in the recording state.
+    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+
+    afxCmdId cmdId;
+    _amxCmd* cmd;
+    _AmxMixPushCmd(mix, _AMX_CMD_ID(FetchAudition), sizeof(cmd->FetchAudition), &cmdId, &cmd);
+    AFX_ASSERT(cmd);
+
     return cmdId;
 }

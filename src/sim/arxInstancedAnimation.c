@@ -20,6 +20,6 @@
 #define _ARX_MOTION_C
 #define _ARX_BODY_C
 #define _ASX_SIMULATION_C
-#include "../../sim/impl/asxImplementation.h"
+#include "impl/asxImplementation.h"
 
 

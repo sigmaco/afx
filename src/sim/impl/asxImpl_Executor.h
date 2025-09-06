@@ -19,7 +19,7 @@
 #ifndef ASX_IMPL___EXECUTOR_H
 #define ASX_IMPL___EXECUTOR_H
 
-#include "qwadro/inc/sim/afxSimulation.h"
+#include "qwadro/sim/afxSimulation.h"
 
 #define ASX_MAX_SIM_QUEUE_PER_BRIDGE 32
 

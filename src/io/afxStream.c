@@ -1548,8 +1548,11 @@ _AFX afxError AfxAcquireImplementedStream(afxIobImpl const* pimpl, afxUnit cnt, 
         AfxThrowError();
         return err;
     }
-    
-    afxClass* cls = (afxClass*)_AfxGetStreamClass();
+
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = (afxClass*)_AfxSysGetIobClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_IOB);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)streams, (void const*[]) { NIL, infos, pimpl }))

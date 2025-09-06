@@ -19,7 +19,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
 
 #define _AFX_STRING_RESILIENCE_ENABLED TRUE
 

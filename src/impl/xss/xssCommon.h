@@ -1,7 +1,7 @@
 #ifndef xssCommon_h
 #define xssCommon_h
 
-#include "qwadro/inc/afxQwadro.h"
+#include "qwadro/afxQwadro.h"
 
 // This header contains macros and defines used across the entire Luna
 // implementation. In particular, it contains "configuration" defines that

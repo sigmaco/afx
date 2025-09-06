@@ -14,7 +14,9 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/inc/ux/auxPaint.h"
+// This software is part of Advanced Multimedia UX Extensions & Experiments.
+
+#include "qwadro/ux/auxPaint.h"
 
 void ClumpRenderBoundingBox(afxDrawContext dctx, afxBox box, afxM4d const m)
 {

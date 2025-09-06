@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+ // This software is part of Advanced Multimedia UX Extensions & Experiments.
+
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
 #define _AFX_DEVICE_C
@@ -44,15 +46,6 @@ _AUX afxString const sigmaUxSignature = AFX_STRING(
 ////////////////////////////////////////////////////////////////////////////////
 // SHELL HANDLING                                                             //
 ////////////////////////////////////////////////////////////////////////////////
-
-_AUX afxClass const* AfxGetMouseClass(afxShell ssh)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
-    afxClass const* cls = &ssh->mseCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_MSE);
-    return cls;
-}
 
 _AUX afxClass const* AfxGetKeyboardClass(afxShell ssh)
 {
@@ -115,9 +108,6 @@ _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxUnit invokeNo)
 
         clsCfg = info->kbdClsCfg ? *info->kbdClsCfg : _AuxKbdStdImplementation;
         AfxMountClass(&ssh->kbdCls, NIL, &ssh->dev.classes, &clsCfg);
-
-        clsCfg = info->mseClsCfg ? *info->mseClsCfg : _AuxMseStdImplementation;
-        AfxMountClass(&ssh->mseCls, NIL, &ssh->dev.classes, &clsCfg);
 
         clsCfg = info->padClsCfg ? *info->padClsCfg : _AuxCtrlStdImplementation;
         AfxMountClass(&ssh->padCls, NIL, &ssh->dev.classes, &clsCfg);

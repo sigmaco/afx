@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_RASTER_C
@@ -69,9 +70,9 @@ _AVX void _GetImageSubresourceLayout(afxDrawSystem dsys, avxRaster ras, afxUnit 
 
     avxRasterArrangement lay2 = { 0 };
     afxWarp whd = { ras->whd.w, ras->whd.h, ras->whd.d };
-    afxBool is3d = !!AvxTestRasterFlags(ras, avxRasterFlag_3D);
+    afxBool is3d = !!AvxGetRasterFlags(ras, avxRasterFlag_3D);
 
-    if (AvxTestRasterFlags(ras, avxRasterFlag_MULTISAMP))
+    if (AvxGetRasterFlags(ras, avxRasterFlag_MULTISAMP))
     {
         while (lodIdx--)
         {
@@ -151,7 +152,7 @@ _AVX afxCmdId _AvxCmdRegenerateMipmapsSIGMA(afxDrawContext dctx, afxFlags flags,
 
         for (afxUnit i = 1; i < mipLevels; i++)
         {
-            AvxCmdPipelineBarrier(dctx, avxPipelineStage_TRANSFER, NIL);
+            AvxCmdDeclareBarrier(dctx, avxBusStage_TRANSFER, NIL);
 
             // Set up blit
             avxRasterBlit blit =

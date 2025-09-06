@@ -19,148 +19,150 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\afxQwadro.h" />
-    <ClInclude Include="..\..\inc\base\afxChain.h" />
-    <ClInclude Include="..\..\inc\base\afxClass.h" />
-    <ClInclude Include="..\..\inc\base\afxCoreDefs.h" />
-    <ClInclude Include="..\..\inc\base\afxDebug.h" />
-    <ClInclude Include="..\..\inc\base\afxEvent.h" />
-    <ClInclude Include="..\..\inc\base\afxFcc.h" />
-    <ClInclude Include="..\..\inc\base\afxFixedString.h" />
-    <ClInclude Include="..\..\inc\base\afxIterator.h" />
-    <ClInclude Include="..\..\inc\base\afxManifest.h" />
-    <ClInclude Include="..\..\inc\base\afxManifest2.h" />
-    <ClInclude Include="..\..\inc\base\afxObject.h" />
-    <ClInclude Include="..\..\inc\base\afxPlatformDefs.h" />
-    <ClInclude Include="..\..\inc\base\afxRawString.h" />
-    <ClInclude Include="..\..\inc\base\afxRect.h" />
-    <ClInclude Include="..\..\inc\base\afxString.h" />
-    <ClInclude Include="..\..\inc\base\afxVersion.h" />
-    <ClInclude Include="..\..\inc\base\afxWarp.h" />
-    <ClInclude Include="..\..\inc\draw\afxDisplay.h" />
-    <ClInclude Include="..\..\inc\draw\afxDrawBridge.h" />
-    <ClInclude Include="..\..\inc\draw\afxDrawContext.h" />
-    <ClInclude Include="..\..\inc\draw\afxDrawDefs.h" />
-    <ClInclude Include="..\..\inc\draw\afxDrawDevice.h" />
-    <ClInclude Include="..\..\inc\draw\afxDrawQueue.h" />
-    <ClInclude Include="..\..\inc\draw\afxDrawSystem.h" />
-    <ClInclude Include="..\..\inc\draw\afxSurface.h" />
-    <ClInclude Include="..\..\inc\draw\avxBuffer.h" />
-    <ClInclude Include="..\..\inc\draw\avxBufferUtil.h" />
-    <ClInclude Include="..\..\inc\draw\avxCanvas.h" />
-    <ClInclude Include="..\..\inc\draw\avxColor.h" />
-    <ClInclude Include="..\..\inc\draw\avxDrawing.h" />
-    <ClInclude Include="..\..\inc\draw\avxFence.h" />
-    <ClInclude Include="..\..\inc\draw\avxFormat.h" />
-    <ClInclude Include="..\..\inc\draw\avxLigature.h" />
-    <ClInclude Include="..\..\inc\draw\avxMatrix.h" />
-    <ClInclude Include="..\..\inc\draw\avxPipeline.h" />
-    <ClInclude Include="..\..\inc\draw\avxProvision.h" />
-    <ClInclude Include="..\..\inc\draw\avxQueryPool.h" />
-    <ClInclude Include="..\..\inc\draw\avxRaster.h" />
-    <ClInclude Include="..\..\inc\draw\avxRasterFile.h" />
-    <ClInclude Include="..\..\inc\draw\avxRasterization.h" />
-    <ClInclude Include="..\..\inc\draw\avxRasterizationEXT.h" />
-    <ClInclude Include="..\..\inc\draw\avxSampler.h" />
-    <ClInclude Include="..\..\inc\draw\avxShader.h" />
-    <ClInclude Include="..\..\inc\draw\avxSynchronization.h" />
-    <ClInclude Include="..\..\inc\draw\avxTransference.h" />
-    <ClInclude Include="..\..\inc\draw\avxTransformation.h" />
-    <ClInclude Include="..\..\inc\draw\avxTransformationEXT.h" />
-    <ClInclude Include="..\..\inc\draw\avxTxd.h" />
-    <ClInclude Include="..\..\inc\draw\avxVertexInput.h" />
-    <ClInclude Include="..\..\inc\draw\avxViewport.h" />
-    <ClInclude Include="..\..\inc\exec\afxAtomic.h" />
-    <ClInclude Include="..\..\inc\exec\afxClock.h" />
-    <ClInclude Include="..\..\inc\exec\afxCondition.h" />
-    <ClInclude Include="..\..\inc\exec\afxDevice.h" />
-    <ClInclude Include="..\..\inc\exec\afxModule.h" />
-    <ClInclude Include="..\..\inc\exec\afxMutex.h" />
-    <ClInclude Include="..\..\inc\exec\afxProcess.h" />
-    <ClInclude Include="..\..\inc\exec\afxScript.h" />
-    <ClInclude Include="..\..\inc\exec\afxSemaphore.h" />
-    <ClInclude Include="..\..\inc\exec\afxService.h" />
-    <ClInclude Include="..\..\inc\exec\afxFutex.h" />
-    <ClInclude Include="..\..\inc\exec\afxSystem.h" />
-    <ClInclude Include="..\..\inc\exec\afxTerminal.h" />
-    <ClInclude Include="..\..\inc\exec\afxThread.h" />
-    <ClInclude Include="..\..\inc\exec\afxThreadPool.h" />
-    <ClInclude Include="..\..\inc\exec\afxTime.h" />
-    <ClInclude Include="..\..\inc\io\afxArchive.h" />
-    <ClInclude Include="..\..\inc\io\afxData.h" />
-    <ClInclude Include="..\..\inc\io\afxDatabase.h" />
-    <ClInclude Include="..\..\inc\io\afxFile.h" />
-    <ClInclude Include="..\..\inc\io\afxIoBridge.h" />
-    <ClInclude Include="..\..\inc\io\afxIoContext.h" />
-    <ClInclude Include="..\..\inc\io\afxResource.h" />
-    <ClInclude Include="..\..\inc\io\afxRing.h" />
-    <ClInclude Include="..\..\inc\io\afxSource.h" />
-    <ClInclude Include="..\..\inc\io\afxStorage.h" />
-    <ClInclude Include="..\..\inc\io\afxStream.h" />
-    <ClInclude Include="..\..\inc\io\afxStreamOps.h" />
-    <ClInclude Include="..\..\inc\io\afxUrd.h" />
-    <ClInclude Include="..\..\inc\io\afxUri.h" />
-    <ClInclude Include="..\..\inc\io\afxXml.h" />
-    <ClInclude Include="..\..\inc\math\afxArithmetic.h" />
-    <ClInclude Include="..\..\inc\math\afxArithmetic2.h" />
-    <ClInclude Include="..\..\inc\math\afxBox.h" />
-    <ClInclude Include="..\..\inc\math\afxCapsule.h" />
-    <ClInclude Include="..\..\inc\math\afxFrustum.h" />
-    <ClInclude Include="..\..\inc\math\afxHyperbolicTrigonometry.h" />
-    <ClInclude Include="..\..\inc\math\afxLogarithmic.h" />
-    <ClInclude Include="..\..\inc\math\afxMathDefs.h" />
-    <ClInclude Include="..\..\inc\math\afxMatrix.h" />
-    <ClInclude Include="..\..\inc\math\afxPlane.h" />
-    <ClInclude Include="..\..\inc\math\afxQuaternion.h" />
-    <ClInclude Include="..\..\inc\math\afxRay.h" />
-    <ClInclude Include="..\..\inc\math\afxReal16.h" />
-    <ClInclude Include="..\..\inc\math\afxRotor.h" />
-    <ClInclude Include="..\..\inc\math\afxScalar.h" />
-    <ClInclude Include="..\..\inc\math\afxSimd.h" />
-    <ClInclude Include="..\..\inc\math\afxSpace.h" />
-    <ClInclude Include="..\..\inc\math\afxSphere.h" />
-    <ClInclude Include="..\..\inc\math\afxTransform.h" />
-    <ClInclude Include="..\..\inc\math\afxTrigonometry.h" />
-    <ClInclude Include="..\..\inc\math\afxVector.h" />
-    <ClInclude Include="..\..\inc\math\afxVertex.h" />
-    <ClInclude Include="..\..\inc\math\afxVolume.h" />
-    <ClInclude Include="..\..\inc\math\avxMatrix.h" />
-    <ClInclude Include="..\..\inc\mem\afxArena.h" />
-    <ClInclude Include="..\..\inc\mem\afxArray.h" />
-    <ClInclude Include="..\..\inc\mem\afxInterlockedQueue.h" />
-    <ClInclude Include="..\..\inc\mem\afxMappedString.h" />
-    <ClInclude Include="..\..\inc\mem\afxMemory.h" />
-    <ClInclude Include="..\..\inc\mem\afxMemoryUtil.h" />
-    <ClInclude Include="..\..\inc\mem\afxPool.h" />
-    <ClInclude Include="..\..\inc\mem\afxQueue.h" />
-    <ClInclude Include="..\..\inc\mem\afxSlabAllocator.h" />
-    <ClInclude Include="..\..\inc\mem\afxStack.h" />
-    <ClInclude Include="..\..\inc\mix\afxMixBridge.h" />
-    <ClInclude Include="..\..\inc\mix\afxMixContext.h" />
-    <ClInclude Include="..\..\inc\mix\afxMixDefs.h" />
-    <ClInclude Include="..\..\inc\mix\afxMixDevice.h" />
-    <ClInclude Include="..\..\inc\mix\afxMixQueue.h" />
-    <ClInclude Include="..\..\inc\mix\afxMixSystem.h" />
-    <ClInclude Include="..\..\inc\mix\afxSink.h" />
-    <ClInclude Include="..\..\inc\mix\amxAudio.h" />
-    <ClInclude Include="..\..\inc\mix\amxBuffer.h" />
-    <ClInclude Include="..\..\inc\mix\amxCodec.h" />
-    <ClInclude Include="..\..\inc\mix\amxSession.h" />
-    <ClInclude Include="..\..\inc\mix\amxSound.h" />
-    <ClInclude Include="..\..\inc\mix\amxSoundscape.h" />
-    <ClInclude Include="..\..\inc\mix\amxSource.h" />
-    <ClInclude Include="..\..\inc\mix\amxVideo.h" />
-    <ClInclude Include="..\..\inc\mix\amxVoice.h" />
-    <ClInclude Include="..\..\inc\ux\afxGamepad.h" />
-    <ClInclude Include="..\..\inc\ux\afxHid.h" />
-    <ClInclude Include="..\..\inc\ux\afxKeyboard.h" />
-    <ClInclude Include="..\..\inc\ux\afxMouse.h" />
-    <ClInclude Include="..\..\inc\ux\afxSession.h" />
-    <ClInclude Include="..\..\inc\ux\afxShell.h" />
-    <ClInclude Include="..\..\inc\ux\afxUxDefs.h" />
-    <ClInclude Include="..\..\inc\ux\afxWidget.h" />
-    <ClInclude Include="..\..\inc\ux\afxWindow.h" />
-    <ClInclude Include="..\..\inc\ux\auxPaint.h" />
+    <ClInclude Include="..\..\qwadro\afxQwadro.h" />
+    <ClInclude Include="..\..\qwadro\base\afxChain.h" />
+    <ClInclude Include="..\..\qwadro\base\afxClass.h" />
+    <ClInclude Include="..\..\qwadro\base\afxCoreDefs.h" />
+    <ClInclude Include="..\..\qwadro\base\afxDebug.h" />
+    <ClInclude Include="..\..\qwadro\base\afxEvent.h" />
+    <ClInclude Include="..\..\qwadro\base\afxFcc.h" />
+    <ClInclude Include="..\..\qwadro\base\afxFixedString.h" />
+    <ClInclude Include="..\..\qwadro\base\afxIterator.h" />
+    <ClInclude Include="..\..\qwadro\base\afxManifest.h" />
+    <ClInclude Include="..\..\qwadro\base\afxManifest2.h" />
+    <ClInclude Include="..\..\qwadro\base\afxObject.h" />
+    <ClInclude Include="..\..\qwadro\base\afxPlatformDefs.h" />
+    <ClInclude Include="..\..\qwadro\base\afxRawString.h" />
+    <ClInclude Include="..\..\qwadro\base\afxRect.h" />
+    <ClInclude Include="..\..\qwadro\base\afxString.h" />
+    <ClInclude Include="..\..\qwadro\base\afxVersion.h" />
+    <ClInclude Include="..\..\qwadro\base\afxWarp.h" />
+    <ClInclude Include="..\..\qwadro\coll\afxBox.h" />
+    <ClInclude Include="..\..\qwadro\coll\afxCapsule.h" />
+    <ClInclude Include="..\..\qwadro\coll\afxFrustum.h" />
+    <ClInclude Include="..\..\qwadro\coll\afxPlane.h" />
+    <ClInclude Include="..\..\qwadro\coll\afxRay.h" />
+    <ClInclude Include="..\..\qwadro\coll\afxSphere.h" />
+    <ClInclude Include="..\..\qwadro\coll\afxVolume.h" />
+    <ClInclude Include="..\..\qwadro\draw\afxDrawBridge.h" />
+    <ClInclude Include="..\..\qwadro\draw\afxDrawContext.h" />
+    <ClInclude Include="..\..\qwadro\draw\afxDrawDefs.h" />
+    <ClInclude Include="..\..\qwadro\draw\afxDrawDevice.h" />
+    <ClInclude Include="..\..\qwadro\draw\afxDrawQueue.h" />
+    <ClInclude Include="..\..\qwadro\draw\afxDrawSystem.h" />
+    <ClInclude Include="..\..\qwadro\draw\afxSurface.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxBuffer.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxBuffered.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxCanvas.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxColor.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxDrawing.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxFence.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxFormat.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxLigature.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxMatrix.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxPipeline.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxProvision.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxQueryPool.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxRaster.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxRasterFile.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxRasterIo.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxRasterization.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxRasterizationEXT.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxSampler.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxShader.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxSynchronization.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxTransference.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxTransformation.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxTransformationEXT.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxTxd.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxVertexInput.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxViewport.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxAtomic.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxClock.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxCondition.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxDevice.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxModule.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxMutex.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxProcess.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxScript.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxSemaphore.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxService.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxFutex.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxSystem.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxTerminal.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxThread.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxThreadPool.h" />
+    <ClInclude Include="..\..\qwadro\exec\afxTime.h" />
+    <ClInclude Include="..\..\qwadro\io\afxArchive.h" />
+    <ClInclude Include="..\..\qwadro\io\afxData.h" />
+    <ClInclude Include="..\..\qwadro\io\afxDatabase.h" />
+    <ClInclude Include="..\..\qwadro\io\afxFile.h" />
+    <ClInclude Include="..\..\qwadro\io\afxIoBridge.h" />
+    <ClInclude Include="..\..\qwadro\io\afxIoContext.h" />
+    <ClInclude Include="..\..\qwadro\io\afxResource.h" />
+    <ClInclude Include="..\..\qwadro\io\afxSource.h" />
+    <ClInclude Include="..\..\qwadro\io\afxStorage.h" />
+    <ClInclude Include="..\..\qwadro\io\afxStream.h" />
+    <ClInclude Include="..\..\qwadro\io\afxStreamOps.h" />
+    <ClInclude Include="..\..\qwadro\io\afxUrd.h" />
+    <ClInclude Include="..\..\qwadro\io\afxUri.h" />
+    <ClInclude Include="..\..\qwadro\io\afxXml.h" />
+    <ClInclude Include="..\..\qwadro\math\afxArithmetic.h" />
+    <ClInclude Include="..\..\qwadro\math\afxArithmetic2.h" />
+    <ClInclude Include="..\..\qwadro\math\afxHyperbolicTrigonometry.h" />
+    <ClInclude Include="..\..\qwadro\math\afxLogarithmic.h" />
+    <ClInclude Include="..\..\qwadro\math\afxMathDefs.h" />
+    <ClInclude Include="..\..\qwadro\math\afxMatrix.h" />
+    <ClInclude Include="..\..\qwadro\math\afxQuaternion.h" />
+    <ClInclude Include="..\..\qwadro\math\afxReal16.h" />
+    <ClInclude Include="..\..\qwadro\math\afxRotor.h" />
+    <ClInclude Include="..\..\qwadro\math\afxScalar.h" />
+    <ClInclude Include="..\..\qwadro\math\afxSimd.h" />
+    <ClInclude Include="..\..\qwadro\math\afxSpace.h" />
+    <ClInclude Include="..\..\qwadro\math\afxTransform.h" />
+    <ClInclude Include="..\..\qwadro\math\afxTrigonometry.h" />
+    <ClInclude Include="..\..\qwadro\math\afxVector.h" />
+    <ClInclude Include="..\..\qwadro\math\afxVertex.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxArena.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxArray.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxInterlockedQueue.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxMappedString.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxMemory.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxMemoryUtil.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxPool.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxQueue.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxRing.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxSlabAllocator.h" />
+    <ClInclude Include="..\..\qwadro\mem\afxStack.h" />
+    <ClInclude Include="..\..\qwadro\mix\afxMixBridge.h" />
+    <ClInclude Include="..\..\qwadro\mix\afxMixContext.h" />
+    <ClInclude Include="..\..\qwadro\mix\afxMixDefs.h" />
+    <ClInclude Include="..\..\qwadro\mix\afxMixDevice.h" />
+    <ClInclude Include="..\..\qwadro\mix\afxMixQueue.h" />
+    <ClInclude Include="..\..\qwadro\mix\afxMixSystem.h" />
+    <ClInclude Include="..\..\qwadro\mix\afxSink.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxAudio.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxAudioFile.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxBuffer.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxCodec.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxTracker.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxSound.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxSoundscape.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxSource.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxVideo.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxVideoDecoder.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxVoice.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxDisplay.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxFont.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxGamepad.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxHid.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxKeyboard.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxSession.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxShell.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxUxDefs.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxWidget.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxWindow.h" />
+    <ClInclude Include="..\..\qwadro\ux\auxPaint.h" />
     <ClInclude Include="..\..\src\draw\ddi\avxImplementation.h" />
     <ClInclude Include="..\..\src\draw\ddi\avxImpl_Context.h" />
     <ClInclude Include="..\..\src\draw\ddi\avxImpl_Executor.h" />
@@ -187,13 +189,14 @@
     <ClInclude Include="..\..\src\mix\ddi\amxImpl_Audio.h" />
     <ClInclude Include="..\..\src\mix\ddi\amxImpl_Executor.h" />
     <ClInclude Include="..\..\src\mix\ddi\amxImpl_MixContext.h" />
+    <ClInclude Include="..\..\src\mix\ddi\amxImpl_Soundscape.h" />
     <ClInclude Include="..\..\src\mix\ddi\amxImpl_System.h" />
     <ClInclude Include="..\..\src\ux\impl\auxImplementation.h" />
     <ClInclude Include="..\..\src\ux\impl\auxImpl_Shell.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\inc\draw\README.md" />
+    <None Include="..\..\qwadro\draw\README.md" />
     <None Include="..\..\README.md" />
     <None Include="..\..\src\impl\xss\xssCore.xss" />
     <None Include="..\..\src\impl\xss\xssCore.xss.inc" />
@@ -223,7 +226,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\base\afxRect.c" />
     <ClCompile Include="..\..\src\base\afxWarp.c" />
-    <ClCompile Include="..\..\src\draw\afxDisplay.c" />
+    <ClCompile Include="..\..\src\coll\afxBox.c" />
+    <ClCompile Include="..\..\src\coll\afxCapsule.c" />
+    <ClCompile Include="..\..\src\coll\afxFrustum.c" />
+    <ClCompile Include="..\..\src\coll\afxPlane.c" />
+    <ClCompile Include="..\..\src\coll\afxRay.c" />
+    <ClCompile Include="..\..\src\coll\afxSphere.c" />
     <ClCompile Include="..\..\src\draw\afxDrawBridge.c" />
     <ClCompile Include="..\..\src\draw\afxDrawContext.c" />
     <ClCompile Include="..\..\src\draw\afxDrawDefs.c" />
@@ -232,11 +240,12 @@
     <ClCompile Include="..\..\src\draw\afxDrawSystem.c" />
     <ClCompile Include="..\..\src\draw\afxSurface.c" />
     <ClCompile Include="..\..\src\draw\avxBuffer.c" />
-    <ClCompile Include="..\..\src\draw\avxBufferUtil.c" />
+    <ClCompile Include="..\..\src\draw\avxBuffered.c" />
     <ClCompile Include="..\..\src\draw\avxCanvas.c" />
+    <ClCompile Include="..\..\src\draw\avxClipping.c" />
     <ClCompile Include="..\..\src\draw\avxColor.c" />
     <ClCompile Include="..\..\src\draw\avxDrawing.c" />
-    <ClCompile Include="..\..\src\draw\avxDxt.c" />
+    <ClCompile Include="..\..\src\draw\avxFormatDXT.c" />
     <ClCompile Include="..\..\src\draw\avxFence.c" />
     <ClCompile Include="..\..\src\draw\avxFormat.c" />
     <ClCompile Include="..\..\src\draw\avxLigature.c" />
@@ -294,13 +303,8 @@
     <ClCompile Include="..\..\src\io\afxStreamXpu.c" />
     <ClCompile Include="..\..\src\math\afxArithmetic.c" />
     <ClCompile Include="..\..\src\math\afxArithmetic2.c" />
-    <ClCompile Include="..\..\src\math\afxBox.c" />
-    <ClCompile Include="..\..\src\math\afxCapsule.c" />
-    <ClCompile Include="..\..\src\math\afxFrustum.c" />
     <ClCompile Include="..\..\src\math\afxHyperbolicTrigonometry.c" />
     <ClCompile Include="..\..\src\math\afxLogarithmic.c" />
-    <ClCompile Include="..\..\src\math\afxPlane.c" />
-    <ClCompile Include="..\..\src\math\afxRay.c" />
     <ClCompile Include="..\..\src\math\afxReal16.c" />
     <ClCompile Include="..\..\src\afxQwadro.c" />
     <ClCompile Include="..\..\src\afxQwadroCpp.cpp" />
@@ -338,7 +342,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\src\io\afxRing.c" />
     <ClCompile Include="..\..\src\io\afxSource.c" />
     <ClCompile Include="..\..\src\io\afxStorage.c" />
     <ClCompile Include="..\..\src\io\afxStream.c" />
@@ -350,13 +353,11 @@
     <ClCompile Include="..\..\src\math\afxRotor.c" />
     <ClCompile Include="..\..\src\math\afxScalar.c" />
     <ClCompile Include="..\..\src\math\afxSimd.c" />
-    <ClCompile Include="..\..\src\math\afxSphere.c" />
     <ClCompile Include="..\..\src\math\afxTrigonometry.c" />
     <ClCompile Include="..\..\src\math\afxVector.c" />
     <ClCompile Include="..\..\src\math\afxMathOps.c" />
     <ClCompile Include="..\..\src\math\afxTransform.c" />
     <ClCompile Include="..\..\src\math\afxVertex.c" />
-    <ClCompile Include="..\..\src\math\avxMatrix.c" />
     <ClCompile Include="..\..\src\mem\afxArena.c" />
     <ClCompile Include="..\..\src\mem\afxArray.c" />
     <ClCompile Include="..\..\src\mem\afxInterlockedQueue.c" />
@@ -365,6 +366,7 @@
     <ClCompile Include="..\..\src\mem\afxMemoryUtil.c" />
     <ClCompile Include="..\..\src\mem\afxPool.c" />
     <ClCompile Include="..\..\src\mem\afxQueue.c" />
+    <ClCompile Include="..\..\src\mem\afxRing.c" />
     <ClCompile Include="..\..\src\mem\afxSlabAllocator.c" />
     <ClCompile Include="..\..\src\mem\afxStack.c" />
     <ClCompile Include="..\..\src\mix\afxMixage.c" />
@@ -376,22 +378,28 @@
     <ClCompile Include="..\..\src\mix\afxMixSystem.c" />
     <ClCompile Include="..\..\src\mix\afxSink.c" />
     <ClCompile Include="..\..\src\mix\amxAudio.c" />
+    <ClCompile Include="..\..\src\mix\amxAudioFile.c" />
     <ClCompile Include="..\..\src\mix\amxBuffer.c" />
     <ClCompile Include="..\..\src\mix\amxCodec.c" />
-    <ClCompile Include="..\..\src\mix\amxSession.c" />
+    <ClCompile Include="..\..\src\mix\amxTracker.c" />
     <ClCompile Include="..\..\src\mix\amxSound.c" />
     <ClCompile Include="..\..\src\mix\amxSoundscape.c" />
     <ClCompile Include="..\..\src\mix\amxSource.c" />
     <ClCompile Include="..\..\src\mix\amxVideo.c" />
+    <ClCompile Include="..\..\src\mix\amxVideoDecoder.c" />
     <ClCompile Include="..\..\src\mix\amxVoice.c" />
     <ClCompile Include="..\..\src\mix\ddi\amxImplementation.c" />
     <ClCompile Include="..\..\src\mix\ddi\amxImpl_Audio.c" />
+    <ClCompile Include="..\..\src\mix\ddi\amxImpl_Buffer.c" />
     <ClCompile Include="..\..\src\mix\ddi\amxImpl_Executor.c" />
     <ClCompile Include="..\..\src\mix\ddi\amxImpl_MixContext.c" />
+    <ClCompile Include="..\..\src\mix\ddi\amxImpl_Soundscape.c" />
+    <ClCompile Include="..\..\src\mix\ddi\amxImpl_Temp.c" />
+    <ClCompile Include="..\..\src\ux\afxDisplay.c" />
+    <ClCompile Include="..\..\src\ux\afxFont.c" />
     <ClCompile Include="..\..\src\ux\afxGamepad.c" />
     <ClCompile Include="..\..\src\ux\afxHid.c" />
     <ClCompile Include="..\..\src\ux\afxKeyboard.c" />
-    <ClCompile Include="..\..\src\ux\afxMouse.c" />
     <ClCompile Include="..\..\src\ux\afxSession.c" />
     <ClCompile Include="..\..\src\ux\afxShell.c" />
     <ClCompile Include="..\..\src\ux\afxWidget.c" />
@@ -490,7 +498,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>__e2coree__;__e2targa__;__e2mmux__;__e2mix__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;..\..\..;..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level4</WarningLevel>
       <SmallerTypeCheck>true</SmallerTypeCheck>
@@ -513,7 +521,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>__e2coree__;__e2targa__;__e2mmux__;__e2mix__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;..\..\..;..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level4</WarningLevel>
       <SmallerTypeCheck>true</SmallerTypeCheck>
@@ -537,7 +545,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <PreprocessorDefinitions>__e2coree__;__e2targa__;__e2mmux__;__e2mix__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;..\..\..;..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
@@ -552,7 +560,7 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <PreprocessorDefinitions>__e2coree__;__e2targa__;__e2mmux__;__e2mix__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..;..\..\..;..\..;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>

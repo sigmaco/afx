@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This software is part of Advanced Video Graphics Extensions & Experiments.
+
 #define _AVX_DRAW_C
 #define _AVX_SHADER_C
 #include "ddi/avxImplementation.h"
@@ -190,7 +192,7 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                 if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
                 else
                 {
-                    AFX_ASSERT(set < AVX_MAX_LIGATURE_SETS);
+                    AFX_ASSERT(set < AVX_MAX_LIGAMENT_SETS);
                     decl->set = set;
                     AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
                     decl->binding = binding;
@@ -234,7 +236,7 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                 if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
                 else
                 {
-                    AFX_ASSERT(set < AVX_MAX_LIGATURE_SETS);
+                    AFX_ASSERT(set < AVX_MAX_LIGAMENT_SETS);
                     decl->set = set;
                     AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
                     decl->binding = binding;
@@ -270,7 +272,7 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                 if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
                 else
                 {
-                    AFX_ASSERT(set < AVX_MAX_LIGATURE_SETS);
+                    AFX_ASSERT(set < AVX_MAX_LIGAMENT_SETS);
                     decl->set = set;
                     AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
                     decl->binding = binding;
@@ -303,7 +305,7 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
                 if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
                 else
                 {
-                    AFX_ASSERT(set < AVX_MAX_LIGATURE_SETS);
+                    AFX_ASSERT(set < AVX_MAX_LIGAMENT_SETS);
                     decl->set = set;
                     AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
                     decl->binding = binding;
@@ -387,6 +389,15 @@ _AVX afxError _AvxLoadGlScript(afxStream file, afxArray* fCode)
 ////////////////////////////////////////////////////////////////////////////////
 // SHADER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
+
+_AVX afxDrawSystem AvxGetShaderHost(avxShader shd)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
+    afxDrawSystem dsys = AfxGetHost(shd);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    return dsys;
+}
 
 _AVX afxError AvxSerializeShader(avxShader shd, afxStream ios)
 {
@@ -660,7 +671,7 @@ _AVX afxError _AvxShdCtorCb(avxShader shd, void** args, afxUnit invokeNo)
         {
             avxShaderResource const *decl = AfxGetArrayUnit(&fResources, j);
             shd->resDecls[j].set = decl->set;
-            AFX_ASSERT(AVX_MAX_LIGATURE_SETS > shd->resDecls[j].set);
+            AFX_ASSERT(AVX_MAX_LIGAMENT_SETS > shd->resDecls[j].set);
             shd->resDecls[j].binding = decl->binding;
             AFX_ASSERT(AVX_MAX_LIGAMENTS > shd->resDecls[j].binding);
             //shd->resDecls[j].visibility = decl->visibility;

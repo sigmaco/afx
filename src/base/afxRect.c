@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
 
-#include "qwadro/inc/base/afxRect.h"
+#include "qwadro/base/afxRect.h"
 
 afxRect const AFX_RECT_ZERO = { 0, 0, 0, 0 };
 afxRect const AFX_RECT_MIN = { AFX_I32_MIN, AFX_I32_MIN, 1, 1 };

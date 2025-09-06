@@ -429,7 +429,10 @@ _AFX afxUnit AfxInvokeModules(afxUnit first, afxUnit cnt, afxBool(*f)(afxModule,
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
-    afxClass* cls = _AfxGetModuleClass();
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = (afxClass*)_AfxSysGetMdleClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_MDLE);
     return cnt ? AfxInvokeObjects(cls, first, cnt, (void*)f, udd) : 0;
 }
@@ -439,7 +442,10 @@ _AFX afxUnit AfxEnumerateModules(afxUnit first, afxUnit cnt, afxModule executabl
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     AFX_ASSERT(executables);
-    afxClass* cls = _AfxGetModuleClass();
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = (afxClass*)_AfxSysGetMdleClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_MDLE);
     return cnt ? AfxEnumerateObjects(cls, first, cnt, (afxObject*)executables) : 0;
 }
@@ -577,10 +583,14 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
 
     // acquire a module object.
 
-    afxClass* cls = _AfxGetModuleClass();
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+
+    afxClass* cls = (afxClass*)_AfxSysGetMdleClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_MDLE);
 
-    if (AfxAcquireObjects(cls, 1, (afxObject*)&mdle, (void const*[]) { NIL, &path.uri, &flags, &hMod }))
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&mdle, (void const*[]) { sys, &path.uri, &flags, &hMod }))
     {
         AfxThrowError();
         FreeLibrary(hMod);

@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_BUFFER_C
@@ -59,9 +60,9 @@ void _AvxFetchVertices(avxVertexInput vtxd, afxUnit vtxCnt, afxUnit instCnt, avx
 
     // bind buffers
 
-    for (afxUnit fIdx = 0; fIdx < vtxd->srcCnt; fIdx++)
+    for (afxUnit fIdx = 0; fIdx < vtxd->binCnt; fIdx++)
     {
-        avxVertexFetch const* vtxf = &vtxd->srcs[fIdx];
+        avxVertexStream const* vtxf = &vtxd->bins[fIdx];
         avxBufferedStream const* vtxs = &streams[vtxf->pin];
         AfxReadBuffer(vtxs->buf, vtxs->offset, vtxs->range, vtxs->stride, data);
 
@@ -84,9 +85,9 @@ void _AvxFetchVertices(avxVertexInput vtxd, afxUnit vtxCnt, afxUnit instCnt, avx
         {
             // step per-vertex stream fetch
 
-            for (afxUnit fIdx = 0; fIdx < vtxd->srcCnt; fIdx++)
+            for (afxUnit fIdx = 0; fIdx < vtxd->binCnt; fIdx++)
             {
-                avxVertexFetch const* vs = &vtxd->srcs[fIdx];
+                avxVertexStream const* vs = &vtxd->bins[fIdx];
 
                 for (afxUnit aIdx = 0; aIdx < vtxd->totalAttrCnt; aIdx++)
                 {
@@ -104,9 +105,9 @@ void _AvxFetchVertices(avxVertexInput vtxd, afxUnit vtxCnt, afxUnit instCnt, avx
 
         // step per-instance stream fetch
 
-        for (afxUnit fIdx = 0; fIdx < vtxd->srcCnt; fIdx++)
+        for (afxUnit fIdx = 0; fIdx < vtxd->binCnt; fIdx++)
         {
-            avxVertexFetch const* vtxf = &vtxd->srcs[fIdx];
+            avxVertexStream const* vtxf = &vtxd->bins[fIdx];
 
             if (vtxf->instRate)
                 srcPtr[vtxf->pin] += srcStride[vtxf->pin];
@@ -127,15 +128,15 @@ void fetch_vertex(MyVertexInput* out, int vertexIdx, const avxVertexInput layout
     for (int attrIdx = 0; attrIdx < layout->totalAttrCnt; ++attrIdx)
     {
         avxVertexAttr* attr = &layout->attrs[attrIdx];
-        avxVertexFetch* fetch = NULL;
+        avxVertexStream* fetch = NULL;
 
         // Find the fetch config for this attribute
-        for (int srcIdx = 0; srcIdx < layout->srcCnt; ++srcIdx)
+        for (int srcIdx = 0; srcIdx < layout->binCnt; ++srcIdx)
         {
-            if (layout->srcs[srcIdx].baseAttrIdx <= attrIdx &&
-                attrIdx < layout->srcs[srcIdx].baseAttrIdx + layout->srcs[srcIdx].attrCnt)
+            if (layout->bins[srcIdx].baseAttrIdx <= attrIdx &&
+                attrIdx < layout->bins[srcIdx].baseAttrIdx + layout->bins[srcIdx].attrCnt)
             {
-                fetch = &layout->srcs[srcIdx];
+                fetch = &layout->bins[srcIdx];
                 break;
             }
         }
@@ -220,7 +221,7 @@ void ndc_to_screen(float screenPos[2], const float clipPos[4], int screenW, int 
     // Call this for all 3 triangle vertices.
 }
 
-void AvxViewportTransform(avxViewport const*vp, afxUnit cnt, afxV4d const clipPos[], afxV3d screenPos[])
+void AvxViewportTransform0(avxViewport const*vp, afxUnit cnt, afxV4d const clipPos[], afxV3d screenPos[])
 {
     // From NDC to Screen Coordinates
     // You have vertices in NDC space after perspective divide :
@@ -317,7 +318,7 @@ void rasterize_triangle(MyTransformedVertex tri[3], const avxViewport* vp, uint3
     float screen[3][3]; // 3 vertices, each with x, y, z
     for (int i = 0; i < 3; ++i) {
         perspective_divide(tri[i].clipPos);
-        AvxViewportTransform(vp, 1, &tri[i].clipPos, &screen[i]);
+        AvxViewportTransform0(vp, 1, &tri[i].clipPos, &screen[i]);
     }
 
     float* v0 = screen[0];
@@ -331,7 +332,6 @@ void rasterize_triangle(MyTransformedVertex tri[3], const avxViewport* vp, uint3
     int maxY = (int)fminf(fbHeight - 1, ceilf(fmaxf(fmaxf(v0[1], v1[1]), v2[1])));
 
     float area = edge_fn(v0[0], v0[1], v1[0], v1[1], v2[0], v2[1]);
-
     if (area == 0.0f) return; // Degenerate triangle
 
     for (int y = minY; y <= maxY; ++y) {

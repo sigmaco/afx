@@ -18,7 +18,7 @@
 #define _AFX_SCRIPT_C
 #include "../impl/afxIoImplKit.h"
 #include "./../impl/xss/xss.h"
-#include "qwadro/inc/exec/afxScript.h"
+#include "qwadro/exec/afxScript.h"
 
 AFX xssVm xssCreateVm(LunaConfiguration const* config);
 AFX afxError xssDestroyVm(xssVm vm);

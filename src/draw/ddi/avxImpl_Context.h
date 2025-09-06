@@ -19,13 +19,14 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #ifndef AVX_IMPL___CONTEXT_H
 #define AVX_IMPL___CONTEXT_H
 
-#include "qwadro/inc/draw/afxDrawSystem.h"
-#include "qwadro/inc/mem/afxInterlockedQueue.h"
-#include "qwadro/inc/mem/afxSlabAllocator.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/mem/afxInterlockedQueue.h"
+#include "qwadro/mem/afxSlabAllocator.h"
 
 typedef enum avxDrawContextState
 /// Each draw context is always in one of the following states
@@ -103,6 +104,18 @@ AFX_DEFINE_STRUCT(_avxCmdBatch)
     };
 };
 
+AFX_DEFINE_STRUCT(_avxDctxRoll)
+{
+    
+
+};
+
+AFX_DEFINE_STRUCT(_avxDctxCmdBin)
+{
+    afxChain        commands;
+
+};
+
 #ifdef _AVX_DRAW_CONTEXT_C
 #ifdef _AVX_DRAW_CONTEXT_IMPL
 AFX_OBJECT(_avxDrawContext)
@@ -110,7 +123,7 @@ AFX_OBJECT(_avxDrawContext)
 AFX_OBJECT(afxDrawContext)
 #endif
 {
-    _avxDctxDdi const*  pimpl;
+    _avxDctxDdi const*  ddi;
     avxDrawContextState state;
     afxBool             once; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
     afxBool             deferred;
@@ -130,6 +143,14 @@ AFX_OBJECT(afxDrawContext)
     afxChain        commands;
     afxArena        cmdArena; // owned by dsys data for specific port
 
+
+    afxChain        ioCmds;
+    afxChain        drawCmds;
+    afxChain        dispatchCmds;
+
+    afxUnit binCnt;
+    afxUnit rollCnt;
+
     struct
     {
         avxBufferedMap  map;
@@ -142,8 +163,53 @@ AFX_OBJECT(afxDrawContext)
 
     struct
     {
+        struct
+        {
+            avxLigature liga;
+            afxCmdId    ligaBindCmdId;
+            union
+            {
+                struct
+                {
+                    avxBuffer   buf;
+                    afxSize     offset;
+                    afxUnit     range;
+                    afxCmdId    bufBindCmdId;
+                } buf;
+                struct
+                {
+                    avxRaster   ras;
+                    avxSampler  samp;
+                    afxCmdId    sampBindCmdId;
+                    afxCmdId    rasBindCmdId;
+                } img;
+            } bindings[8][96];
+        } ligatures[avxBus_TOTAL];
+        struct
+        {
+            avxPipeline pip;
+            afxFlags dynFlags;
+            avxVertexInput vin;
+            afxBool useSepShaders;
+            avxShader shaders[8];
+        } pipelines[avxBus_TOTAL];
+
+        struct
+        {
+            avxVertexInput vin;
+            afxCmdId vinBindCmdId;
+            avxBufferedStream streams[32];
+            afxCmdId vboBindCmdId[32];
+            avxBuffer ibo;
+            afxUnit32 iboOffset;
+            afxUnit32 iboRange;
+            afxUnit32 iboStride;
+            afxCmdId iboBindCmdId;
+        } vertices;
+
         afxBool         inDrawScope;
         afxBool         inVideoCoding;
+        afxBool         xfbActive;
 
         avxCanvas           canv;
         afxRect             area;
@@ -280,15 +346,36 @@ AFX_DEFINE_UNION(_avxCmd)
     {
         _avxCmdHdr hdr;
 
-        afxUnit segment;
+        avxBus bus;
         avxPipeline pip;
         avxVertexInput vin;
         afxFlags dynamics;
+        afxFlags flags;
     } BindPipeline;
     struct
     {
         _avxCmdHdr hdr;
 
+        afxUnit cnt;
+        struct
+        {
+            avxShaderType stage;
+            avxShader shd;
+        } AFX_SIMD stages[];
+    } BindShadersEXT;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        avxBus bus;
+        avxLigature liga;
+        afxFlags flags;
+    } UseLigature;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        avxBus bus;
         afxUnit set;
         afxUnit pin;
         afxUnit cnt;
@@ -298,6 +385,7 @@ AFX_DEFINE_UNION(_avxCmd)
     {
         _avxCmdHdr hdr;
 
+        avxBus bus;
         afxUnit set;
         afxUnit pin;
         afxUnit cnt;
@@ -307,6 +395,7 @@ AFX_DEFINE_UNION(_avxCmd)
     {
         _avxCmdHdr hdr;
 
+        avxBus bus;
         afxUnit set;
         afxUnit pin;
         afxUnit cnt;
@@ -413,7 +502,7 @@ AFX_DEFINE_UNION(_avxCmd)
         _avxCmdHdr hdr;
 
         avxVertexInput vin;
-    } DeclareVertex;
+    } UseVertexInput;
     struct
     {
         _avxCmdHdr hdr;
@@ -610,8 +699,8 @@ AFX_DEFINE_UNION(_avxCmd)
     {
         _avxCmdHdr hdr;
 
-        afxUnit annexCnt;
-        afxUnit annexes[AVX_MAX_CANVAS_BUFFERS];
+        afxUnit bufCnt;
+        afxUnit bins[AVX_MAX_CANVAS_BUFFERS];
         avxClearValue values[AVX_MAX_CANVAS_BUFFERS];
         afxUnit areaCnt;
         afxLayeredRect AFX_SIMD areas[];
@@ -688,7 +777,7 @@ AFX_DEFINE_UNION(_avxCmd)
     {
         _avxCmdHdr hdr;
 
-        avxPipelineStage dstStage;
+        avxBusStage dstStage;
         avxPipelineAccess dstAccess;
     } PipelineBarrier;
 
@@ -698,7 +787,7 @@ AFX_DEFINE_UNION(_avxCmd)
         _avxCmdHdr hdr;
 
         avxQueryPool pool;
-        afxUnit queryIdx;
+        afxUnit slot;
         afxBool precise;
     } BeginQuery;
     struct
@@ -706,15 +795,15 @@ AFX_DEFINE_UNION(_avxCmd)
         _avxCmdHdr hdr;
 
         avxQueryPool pool;
-        afxUnit queryIdx;
+        afxUnit slot;
     } EndQuery;
     struct
     {
         _avxCmdHdr hdr;
 
         avxQueryPool pool;
-        afxUnit baseQuery;
-        afxUnit queryCnt;
+        afxUnit baseSlot;
+        afxUnit slotCnt;
         avxBuffer buf;
         afxSize offset;
         afxSize stride;
@@ -725,17 +814,17 @@ AFX_DEFINE_UNION(_avxCmd)
         _avxCmdHdr hdr;
 
         avxQueryPool pool;
-        afxUnit baseQuery;
-        afxUnit queryCnt;
+        afxUnit baseSlot;
+        afxUnit slotCnt;
     } ResetQueries;
     struct
     {
         _avxCmdHdr hdr;
 
         avxQueryPool pool;
-        afxUnit queryIdx;
-        avxPipelineStage stage;
-    } WriteTimestamp;
+        afxUnit slot;
+        avxBusStage stage;
+    } QueryTimestamp;
 
     struct
     {
@@ -777,6 +866,8 @@ AFX_DEFINE_UNION(_avxCmdLut)
 
         // GENERAL OPERATIONS
         void* BindPipeline;
+        void* BindShadersEXT;
+        void* UseLigature;
         void* BindBuffers;
         void* BindRasters;
         void* BindSamplers;
@@ -793,7 +884,7 @@ AFX_DEFINE_UNION(_avxCmdLut)
         void* StampDebug;
 
         // TRANSFORMATION OPERATIONS
-        void* DeclareVertex;
+        void* UseVertexInput;
         void* SwitchFrontFace;
         void* SetCullMode;
         void* AdjustViewports;
@@ -841,7 +932,7 @@ AFX_DEFINE_UNION(_avxCmdLut)
         void* EndQuery;
         void* CopyQueryResults;
         void* ResetQueries;
-        void* WriteTimestamp;
+        void* QueryTimestamp;
 
         void* PushDebugScope;
         void* PopDebugScope;

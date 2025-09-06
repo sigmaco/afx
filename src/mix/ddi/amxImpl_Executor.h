@@ -7,19 +7,29 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                     Q W A D R O   S O U N D   I / O   S Y S T E M
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #ifndef AMX_IMPL___EXECUTOR_H
 #define AMX_IMPL___EXECUTOR_H
 
-#include "qwadro/inc/mix/afxMixSystem.h"
+#include "qwadro/mix/afxMixSystem.h"
+
+AFX_DEFINE_STRUCT(_amxBufferRemapping)
+{
+    amxBuffer       buf;
+    afxSize         offset;
+    afxUnit         range;
+    afxFlags        flags;
+    afxBool         unmap;
+    void**          placeholder;
+};
 
 AFX_DECLARE_UNION(_amxIoReqPacket);
 AFX_DECLARE_UNION(_amxIoReqLut);
@@ -43,12 +53,15 @@ AFX_DEFINE_STRUCT(amxMpu)
     afxUnit         samplesPerFrame;
     afxUnit         tmpBufCap;
     amxAudio        a, b;
+    afxUnit         queuedFrameCnt;
 
     afxUnit         mixFreq; // the mix frequency used in a mix scope.
-    afxSink         sinkBuf; // the audio's sink buffer object.
+    amxAudio        sinkBuf; // the audio's sink buffer object.
     afxUnit         sinkBufIdx;
     afxUnit         sinkBaseSamp;
+    afxUnit         sinkBaseSeg;
     afxUnit         sinkSampCnt;
+    afxUnit         sinkSegCnt;
     afxUnit         sinkBaseChan;
     afxUnit         sinkChanCnt;
     amxMixTarget      sinkChans[32]; // our SPU supports at least 32 sink channels.
@@ -78,8 +91,6 @@ AFX_OBJECT(afxMixBridge)
     
     afxChain        classes;
     afxClass        mqueCls;
-
-    afxChain        activeMixers;
 
     afxError        (*pingCb)(afxMixBridge, afxUnit);
 
@@ -131,8 +142,14 @@ AFX_DEFINE_STRUCT(_amxIoReqPacketHdr)
     afxUnit reqSubmNo; // required submission num ordinal (need be executed before this). Usually submissions of resource benefiting of fetch priority.
     afxTime pushTime; // submission (into input) time
     afxTime pullTime; // fecth (by queue) time
-    afxTime complTime; // completation time
+    afxUnit dpuId;
+    afxUnit syncUnitId;
+    void* syncIdd0;
+    afxSize syncIdd1;
     afxError(*exec)(void*, afxMixBridge, afxUnit queIdx, _amxIoReqPacket*);
+    afxTime complTime; // completation time
+    avxFence completionFence;
+    afxSize idd[4];
 };
 
 AFX_DEFINE_UNION(_amxIoReqLut)
@@ -144,8 +161,9 @@ AFX_DEFINE_UNION(_amxIoReqLut)
         void* Transfer;
         void* Sink;
         void* Remap;
+        void* SyncMaps;
     };
-    void(*f[])(void*, _amxIoReqPacket const*);
+    afxError(*f[])(void*, _amxIoReqPacket const*);
 };
 
 #define _AMX_GET_STD_IORP_ID(cmdName_) (offsetof(_amxIoReqLut, cmdName_) / sizeof(void*))
@@ -159,9 +177,13 @@ AFX_DEFINE_UNION(_amxIoReqPacket)
 
         afxSemaphore    wait;
         afxSemaphore    signal;
-        avxFence        fence;
-        afxUnit         mixCnt;
-        afxMixContext AFX_SIMD mixers[];
+        //avxFence        fence;
+        afxUnit         cmdbCnt;
+        struct
+        {
+            afxMixContext mctx;
+            afxUnit batchId;
+        } AFX_SIMD cmdbs[];
     } Execute;
     struct
     {
@@ -169,12 +191,12 @@ AFX_DEFINE_UNION(_amxIoReqPacket)
 
         afxSemaphore    wait;
         afxSemaphore    signal;
-        avxFence        fence;
+        //avxFence        fence;
 
         union
         {
             amxAudio    aud;
-            avxBuffer   buf;
+            amxBuffer   buf;
             void*       dst;
             void const* src;
             afxStream   iob;
@@ -183,7 +205,7 @@ AFX_DEFINE_UNION(_amxIoReqPacket)
         union
         {
             amxAudio    aud;
-            avxBuffer   buf;
+            amxBuffer   buf;
             void*       dst;
             void const* src;
             afxStream   iob;
@@ -192,37 +214,70 @@ AFX_DEFINE_UNION(_amxIoReqPacket)
         afxCodec        codec;
         afxUnit         decSiz;
         afxUnit         opCnt;
-        amxAudioIo AFX_SIMD wavOps[];
+        union
+        {
+            amxAudioIo AFX_SIMD wavOps[];
+            amxAudioCopy AFX_SIMD wavCpyOps[];
+            amxBufferIo AFX_SIMD bufOps[];
+            amxBufferCopy AFX_SIMD bufCpyOps[];
+        };
     } Transfer;
     struct
     {
         _amxIoReqPacketHdr hdr;
 
         afxSemaphore    wait;
-        afxSink         sink;
-        amxAudio        buf;
-        amxAudioPeriod seg;
+        afxUnit         opCnt;
+        struct
+        {
+            afxSink     sink;
+            afxUnit     bufIdx;
+        } AFX_SIMD      ops[];
     } Sink;
     struct
     {
         _amxIoReqPacketHdr hdr;
-
-        amxAudio        wav;
-        afxSize         off;
-        afxUnit         ran;
-        afxFlags        flags;
-        void**          placeholder;
+        afxUnit     firstMapIdx;
+        afxUnit     mapCnt;
+        afxUnit     firstUnmapIdx;
+        afxUnit     unmapCnt;
+        union
+        {
+            _amxBufferRemapping mapOps[];
+            _amxBufferRemapping unmapOps[];
+        };
     } Remap;
+    struct
+    {
+        _amxIoReqPacketHdr  hdr;
+        afxUnit     baseFlushIdx;
+        afxUnit     flushCnt;
+        afxUnit     baseFetchIdx;
+        afxUnit     fetchCnt;
+        union
+        {
+            amxBufferedMap ops[];
+        };
+    } SyncMaps;
     struct
     {
         _amxIoReqPacketHdr hdr;
 
         afxUnit         submType;
-        void(*f)(void*, void*);
+        afxError(*f)(void*, void*);
         void*           udd;
         afxUnit         dataSiz;
         afxByte AFX_SIMD data[];
     } Callback;
+    struct
+    {
+        _amxIoReqPacketHdr hdr;
+
+        afxBool waitAll;
+        afxUnit64 timeout;
+        afxUnit cnt;
+        /*amxFence*/void* fences[];
+    } WaitForFences;
 };
 
 AMX afxError _AmxMquePopIoReqPacket(afxMixQueue mque, _amxIoReqPacket* work);
@@ -233,9 +288,14 @@ AMX void* _AmxMquePushBlob(afxMixQueue mque, afxUnit siz);
 AMX afxClassConfig const _AMX_MQUE_CLASS_CONFIG;
 AMX afxClassConfig const _AMX_MEXU_CLASS_CONFIG;
 
-AMX afxClass const* _AmxGetMixQueueClass(afxMixBridge mexu);
+AMX afxClass const* _AmxMexuGetMqueClass(afxMixBridge mexu);
 
 AMX afxError _AmxMsysBridgeDevices(afxMixSystem msys, afxUnit cnt, _amxMexuAcquisition const configs[], afxMixBridge bridges[]);
+
+AMX afxError _AmxMexuRemapBuffers(afxMixBridge mexu, afxBool unmap, afxUnit cnt, _amxBufferRemapping const maps[]);
+AMX afxError _AmxMexuCohereMappedBuffers(afxMixBridge mexu, afxBool discard, afxUnit cnt, amxBufferedMap const maps[]);
+AMX afxError _AmxMexuTransferMixMemory(afxMixBridge mexu, amxTransference* ctrl, afxUnit opCnt, void const* ops);
+AMX afxError _AmxMexuSinkBuffers(afxMixBridge mexu, afxUnit cnt, amxFlush presentations[]);
 
 // standard sound port methods
 
@@ -248,10 +308,15 @@ AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mix);
 
 // Common queued operations
 
-AMX afxError _AmxMexuSubmitCallback(afxMixBridge mexu, void(*f)(void*, void*), void* udd);
-AMX afxError _AmxSubmitSoundCommands(afxMixBridge mexu, amxSubmission const* ctrl, afxUnit cnt, amxTracker trackers[]);
-AMX afxError _AmxMexuTransferBuffers(afxMixBridge mexu, amxTransference const* ctrl, afxUnit opCnt, void const* ops);
-AMX afxError _AmxMexuSubmitSink(afxMixBridge mexu, void* ctrl, afxSink sink, amxAudio aud, amxAudioPeriod const* seg);
-AMX afxError _AmxMexuRollMixers(afxMixBridge mexu, afxReal clock, afxReal dur, afxUnit iterCnt, afxUnit cnt, afxMixContext mixers[]);
+//AMX afxError _AmxMexuSubmitCallback(afxMixBridge mexu, afxError(*f)(void*, void*), void* udd);
+AMX afxError _AmxMexuExecuteMixCommands(afxMixBridge mexu, afxUnit frameCnt, afxUnit cnt, afxMixContext mixers[]);
+
+AMX afxError _AmxMqueSubmitCallback(afxMixQueue mque, afxError(*f)(void*, void*), void* udd);
+AMX afxError _AmxMqueExecuteMixCommands(afxMixQueue mque, afxUnit cnt, amxSubmission subms[]);
+AMX afxError _AmxMqueTransferResources(afxMixQueue mque, amxTransference const* ctrl, afxUnit opCnt, void const* ops);
+AMX afxError _AmxMqueRemapBuffers(afxMixQueue mque, afxUnit mapCnt, _amxBufferRemapping const maps[], afxUnit unmapCnt, _amxBufferRemapping const unmaps[]);
+AMX afxError _AmxMqueCohereMappedBuffers(afxMixQueue mque, afxUnit flushCnt, amxBufferedMap const flushes[], afxUnit fetchCnt, amxBufferedMap const fetches[]);
+
+AMX afxError _AmxMqueSinkBuffers(afxMixQueue mque, afxUnit cnt, amxFlush presentations[]);
 
 #endif//AMX_IMPL___EXECUTOR_H

@@ -146,7 +146,10 @@ _AFX afxError AfxAcquireStringCatalogs(afxUnit cnt, afxStringBase catalogs[])
     AFX_ASSERT(catalogs);
     AFX_ASSERT(cnt);
 
-    if (AfxAcquireObjects(_AfxGetStringBaseClass(), cnt, (afxObject*)catalogs, (void const*[]) { 0 }))
+    afxSystem sys;
+    AfxGetSystem(&sys);
+
+    if (AfxAcquireObjects(_AfxSysGetStrbClass(sys), cnt, (afxObject*)catalogs, (void const*[]) { 0 }))
         AfxThrowError();
 
     return err;

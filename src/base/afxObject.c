@@ -15,7 +15,7 @@
  */
 
 //#define _AFX_SYSTEM_C
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
 
 #define OBJ_HDR_SIZ     AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT)
 #define GET_OBJ_HDR(obj_) ((void*)(((afxByte*)obj_) - OBJ_HDR_SIZ))
@@ -127,7 +127,7 @@ _AFXINL afxBool AfxDoesObjectInherit(afxObject obj, afxClass const* cls)
     return FALSE;
 }
 
-_AFXINL void* AfxGetProvider(afxObject obj)
+_AFXINL void* AfxGetHost(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
     afxObjectBase const* hdr = GET_OBJ_HDR(obj);

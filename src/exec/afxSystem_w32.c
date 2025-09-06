@@ -440,7 +440,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
                 AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &e2coree);
                 sys->e2coree = e2coree;
 
-                if (AfxAcquireIoBridge(&cfg->mainIoBridge, &sys->primeExu))
+                if (AfxAcquireIoBridge(&cfg->exus[0], &sys->primeExu))
                     AfxThrowError();
 
                 if (err)
@@ -557,9 +557,9 @@ _AFX void AfxConfigureSystem(afxSystemConfig* config)
     //if (platform)
     {
 #ifdef AFX_ON_WINDOWS
-        AfxZero(&cfg.w32, sizeof(cfg.w32));
-        cfg.w32.hInst = GetModuleHandle(NULL);
-        cfg.w32.hWnd = GetActiveWindow();
+        AfxZero(&cfg.idd.w32, sizeof(cfg.idd.w32));
+        cfg.idd.w32.hInst = GetModuleHandle(NULL);
+        cfg.idd.w32.hWnd = GetActiveWindow();
 #endif
     }
 

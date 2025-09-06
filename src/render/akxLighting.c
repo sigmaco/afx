@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -17,7 +17,7 @@
 #define _AFX_SIM_C
 #define _ARX_LIGHT_C
 #include "ddi/arxImpl_Input.h"
-#include "qwadro/inc/render/akxLighting.h"
+#include "qwadro/render/akxLighting.h"
 
 _ARX afxError _ArxLitDtor(akxLight lit)
 {
@@ -32,7 +32,7 @@ _ARX afxError _ArxLitCtor(akxLight lit, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_LIT, 1, &lit);
 
-    arxRenderware din = args[0];
+    arxRenderware rwe = args[0];
     akxLightType type = *(akxLightType*)args[1];
     lit->type = (type) ? type : akxLightType_SPOT;
     
@@ -87,42 +87,42 @@ _ARX afxError _ArxLitCtor(akxLight lit, void** args, afxUnit invokeNo)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_ARX afxError ArxAcquireDirectionalLights(arxRenderware din, afxUnit cnt, afxUnit uid[])
+_ARX afxError ArxAcquireDirectionalLights(arxRenderware rwe, afxUnit cnt, afxUnit uid[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     akxLight lit;
 
     for (afxUnit i = 0; i < cnt; i++)
-        if (AfxAcquireObjects((afxClass *)_ArxGetLightClass(din), 1, (afxObject*)&lit, (void const*[]) { din, (akxLightType[]) { akxLightType_DIRECTIONAL } })) AfxThrowError();
+        if (AfxAcquireObjects((afxClass *)_ArxRweGetLitClass(rwe), 1, (afxObject*)&lit, (void const*[]) { rwe, (akxLightType[]) { akxLightType_DIRECTIONAL } })) AfxThrowError();
         else
             uid[i] = AfxGetObjectId(lit);
 
     return err;
 }
 
-_ARX afxError ArxAcquireOmniLights(arxRenderware din, afxUnit cnt, afxUnit uid[])
+_ARX afxError ArxAcquireOmniLights(arxRenderware rwe, afxUnit cnt, afxUnit uid[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     akxLight lit;
 
     for (afxUnit i = 0; i < cnt; i++)
-        if (AfxAcquireObjects((afxClass *)_ArxGetLightClass(din), 1, (afxObject*)&lit, (void const*[]) { din, (akxLightType[]) { akxLightType_OMNI } })) AfxThrowError();
+        if (AfxAcquireObjects((afxClass *)_ArxRweGetLitClass(rwe), 1, (afxObject*)&lit, (void const*[]) { rwe, (akxLightType[]) { akxLightType_OMNI } })) AfxThrowError();
         else
             uid[i] = AfxGetObjectId(lit);
 
     return err;
 }
 
-_ARX afxError ArxAcquireSpotLights(arxRenderware din, afxUnit cnt, afxUnit uid[])
+_ARX afxError ArxAcquireSpotLights(arxRenderware rwe, afxUnit cnt, afxUnit uid[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     akxLight lit;
 
     for (afxUnit i = 0; i < cnt; i++)
-        if (AfxAcquireObjects((afxClass *)_ArxGetLightClass(din), 1, (afxObject*)&lit, (void const*[]) { din, (akxLightType[]) { akxLightType_SPOT } })) AfxThrowError();
+        if (AfxAcquireObjects((afxClass *)_ArxRweGetLitClass(rwe), 1, (afxObject*)&lit, (void const*[]) { rwe, (akxLightType[]) { akxLightType_SPOT } })) AfxThrowError();
         else
             uid[i] = AfxGetObjectId(lit);
 

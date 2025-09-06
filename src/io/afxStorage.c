@@ -755,7 +755,7 @@ _AFX afxError _AfxFsysCtorCb(afxStorage fsys, void** args, afxUnit invokeNo)
     if (_MountStorageUnit(fsys, endpoint, ioFlags)) AfxThrowError();
     else
     {
-        //AfxMountClass(&fsys->fileCls, (afxClass*)_AfxGetStreamClass(), &fsys->classes, &_AfxFileClsCfg);
+        //AfxMountClass(&fsys->fileCls, (afxClass*)_AfxSysGetIobClass(), &fsys->classes, &_AfxFileClsCfg);
         AfxMountClass(&fsys->archCls, NIL, &fsys->classes, &_AfxArcClsCfg); // require iob
         AfxMountClass(&fsys->urdCls, NIL, &fsys->classes, &_AfxUrdClsCfg);
 
@@ -800,7 +800,10 @@ _AFX afxUnit AfxInvokeStorages(afxUnit first, afxUnit cnt, afxBool(*f)(afxStorag
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
-    afxClass* cls = _AfxGetStorageClass();
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = _AfxSysGetFsysClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
     return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
@@ -810,7 +813,10 @@ _AFX afxUnit AfxEnumerateStorages(afxUnit first, afxUnit cnt, afxStorage systems
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cnt);
     AFX_ASSERT(systems);
-    afxClass* cls = _AfxGetStorageClass();
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+    afxClass* cls = _AfxSysGetFsysClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)systems);
 }
@@ -825,7 +831,10 @@ _AFX afxError AfxMountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFil
 
     if (!AfxGetStorage(diskId, &fsys))
     {
-        afxClass* cls = _AfxGetStorageClass();
+        afxSystem sys;
+        AfxGetSystem(&sys);
+        AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+        afxClass* cls = _AfxSysGetFsysClass(sys);
         AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
 
         if (AfxAcquireObjects(cls, 1, (afxObject*)&fsys, (void const*[]) { &diskId, endpoint, &ioFlags, NIL }))

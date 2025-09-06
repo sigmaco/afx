@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -23,32 +23,36 @@
 #ifndef ARX_IMPL___INPUT_H
 #define ARX_IMPL___INPUT_H
 
-#include "qwadro/inc/draw/afxDrawSystem.h"
-#include "qwadro/inc/render/arxRenderware.h"
-#include "qwadro/inc/render/arxRenderContext.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/render/arxRenderware.h"
+#include "qwadro/render/arxRenderContext.h"
 #include "arxImpl_Model.h"
 #include "arxImpl_Animation.h"
 #include "arxImpl_Body.h"
 #include "arxImpl_Curve.h"
+#include "arxImpl_Memory.h"
 
-AFX_DEFINE_STRUCT(_arxDinAcquisition)
+AFX_DEFINE_STRUCT(_arxRweAcquisition)
 {
-    arxRenderwareConfig  cfg;
-    afxDrawSystem       dsys;
+    arxRenderwareConfig     cfg;
+    afxDrawSystem           dsys;
 
-    afxClassConfig const* mdlClsCfg;
-    afxClassConfig const* mshClsCfg;
-    afxClassConfig const* mtlyClsCfg;
-    afxClassConfig const* poseClsCfg;
-    afxClassConfig const* plceClsCfg;
+    afxClassConfig const*   sbufClsCfg;
 
-    afxClassConfig const* terClsCfg;
-    afxClassConfig const* litClsCfg;
-    afxClassConfig const* rndClsCfg;
+    afxClassConfig const*   mdlClsCfg;
+    afxClassConfig const*   mshClsCfg;
+    afxClassConfig const*   poseClsCfg;
+    afxClassConfig const*   plceClsCfg;
+
+    afxClassConfig const*   terClsCfg;
+    afxClassConfig const*   litClsCfg;
+    afxClassConfig const*   rndClsCfg;
+
+    afxClassConfig const*   rctxClsCfg;
 };
 
-#ifdef _ARX_DRAW_INPUT_C
-AFX_DEFINE_STRUCT(afxDrawInputEndpoint)
+#ifdef _ARX_RENDER_CONTEXT_C
+AFX_DEFINE_STRUCT(_arxRweEndpoint)
 {
     afxLink          ddev;
     afxChain            instances;
@@ -57,7 +61,7 @@ AFX_DEFINE_STRUCT(afxDrawInputEndpoint)
     afxString           name;
 };
 
-#ifdef _ARX_DRAW_INPUT_IMPL
+#ifdef _ARX_RENDER_CONTEXT_IMPL
 AFX_OBJECT(_arxDrawInput)
 #else
 AFX_OBJECT(arxRenderware)
@@ -80,7 +84,18 @@ AFX_OBJECT(arxRenderware)
     afxClass        sklCls;
     afxClass        poseCls;
     afxClass        plceCls;
-    afxClass        mtlyCls;
+
+    afxClass        sbufCls;
+    afxClass        mtlCls;
+    afxClass        mshCls;
+    afxClass        mdlCls;
+    afxClass        terCls;
+
+    afxClass        rctxCls;
+
+    afxStringBase   strbMdlSklMotUrns;
+    afxStringBase   strbJointBiasesTags;
+    afxStringBase   strbMorphTags;
 
     struct smt* Smt;
     struct smt2* Smt2;
@@ -105,7 +120,7 @@ AFX_OBJECT(arxRenderware)
     struct _afxDinIdd*  idd;
     void*               udd; // user-defined data
 };
-#endif//_ARX_DRAW_INPUT_C
+#endif//_ARX_RENDER_CONTEXT_C
 
 
 #ifdef _ARX_CAMERA_C
@@ -171,24 +186,25 @@ AFX_OBJECT(afxGeometry)
 
 #endif
 
-ARX afxClassConfig const _ARX_DIN_CLASS_CONFIG;
+ARX afxClassConfig const _ARX_RWE_CLASS_CONFIG;
 
-ARX afxClass const* ArxGetDrawTechniqueClass(arxRenderware din);
-ARX afxClass*       ArxGetIndexBufferClass(arxRenderware din);
-ARX afxClass*       ArxGetVertexBufferClass(arxRenderware din);
-ARX afxClass const* ArxGetTextureClass(arxRenderware din);
+ARX afxClass const* _ArxRweGetTechClass(arxRenderware rwe);
+ARX afxClass*       _ArxRweGetIbufClass(arxRenderware rwe);
+ARX afxClass*       _ArxRweGetVbufClass(arxRenderware rwe);
+ARX afxClass const* _ArxRweGetTexClass(arxRenderware rwe);
 
-ARX afxClass const* ArxGetGeometryClass(arxRenderware din);
-ARX afxClass const* ArxGetMeshTopologyClass(arxRenderware din);
+ARX afxClass const* _ArxRweGetGeomClass(arxRenderware rwe);
+ARX afxClass const* _ArxRweGetMshtClass(arxRenderware rwe);
 
-ARX afxClass const* _ArxDinGetCamClassCb_SW(arxRenderware din);
+ARX afxClass const* _ArxRweGetCamClassCb_SW(arxRenderware rwe);
 
-ARX afxClass const* _ArxGetPoseClass(arxRenderware din);
-ARX afxClass const* _ArxGetPlacementClass(arxRenderware din);
-ARX afxClass const* _ArxDinGetGeomClass(arxRenderware din);
-ARX afxClass const* _ArxGetLightClass(arxRenderware din);
-ARX afxClass const* _ArxGetRendererClass(arxRenderware din);
-ARX afxClass const* _ArxGetSceneClass(arxRenderware din);
+ARX afxClass const* _ArxRweGetPoseClass(arxRenderware rwe);
+ARX afxClass const* _ArxRweGetPlceClass(arxRenderware rwe);
+ARX afxClass const* _ArxDinGetGeomClass(arxRenderware rwe);
+ARX afxClass const* _ArxRweGetLitClass(arxRenderware rwe);
+ARX afxClass const* _ArxRweGetRndrClass(arxRenderware rwe);
+ARX afxClass const* _ArxRweGetScnClass(arxRenderware rwe);
+ARX afxClass const* _ArxRweGetRctxClass(arxRenderware rwe);
 
 ARX afxClassConfig const _ARX_CAM_CLASS_CONFIG;
 ARX afxClassConfig const _ARX_LIT_CLASS_CONFIG;
@@ -199,13 +215,16 @@ ARX afxClassConfig const _ARX_TEX_CLASS_CONFIG;
 ARX afxClassConfig const _ARX_DTEC_CLASS_CONFIG;
 ARX afxClassConfig const _ARX_VBUF_CLASS_CONFIG;
 
+ARX afxClassConfig const _ARX_RCTX_CLASS_CONFIG;
 
-ARX afxClass const* _ArxMorpGetMaterialClass(arxGeome morp);
-ARX afxClass const* _ArxMorpGetModelClass(arxGeome morp);
-ARX afxClass const* _ArxMorpGetMeshClass(arxGeome morp);
-ARX afxClass const* _ArxMorpGetTerrainClass(arxGeome morp);
-ARX afxStringBase   _ArxMorpGetModelUrnStringBase(arxGeome morp);
-ARX afxStringBase   _ArxMorpGetPivotTagStringBase(arxGeome morp);
-ARX afxStringBase   _ArxMorpGetMorphTagStringBase(arxGeome morp);
+ARX afxClass const* _ArxRweGetMtlClass(arxRenderware rwe);
+ARX afxClass const* _ArxRweGetMdlClass(arxRenderware rwe);
+ARX afxClass const* _ArxRweGetMshClass(arxRenderware rwe);
+ARX afxClass const* _ArxRweGetTerClass(arxRenderware rwe);
+ARX afxStringBase   _ArxRweGetModelUrnStringBase(arxRenderware rwe);
+ARX afxStringBase   _ArxRweGetPivotTagStringBase(arxRenderware rwe);
+ARX afxStringBase   _ArxRweGetMorphTagStringBase(arxRenderware rwe);
+
+ARX afxClass const* _ArxRweGetRbufClass(arxRenderware rwe);
 
 #endif//ARX_IMPL___INPUT_H

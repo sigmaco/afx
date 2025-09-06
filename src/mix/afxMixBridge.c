@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *       Q W A D R O   S O U N D   S Y N T H E S I S   I N F R A S T R U C T U R E
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA A4D <https://sigmaco.org/a4d>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #define _AMX_MIX_C
 #define _AMX_MIX_BRIDGE_C
@@ -22,7 +23,7 @@
 #define _AMX_MIX_CONTEXT_C
 #include "ddi/amxImplementation.h"
 
-_AMX afxClass const* _AmxGetMixQueueClass(afxMixBridge mexu)
+_AMX afxClass const* _AmxMexuGetMqueClass(afxMixBridge mexu)
 {
     afxError err = AFX_ERR_NONE;
     // mexu must be a valid afxMixBridge handle.
@@ -36,7 +37,7 @@ _AMX afxMixSystem AmxGetBridgedMixSystem(afxMixBridge mexu, afxUnit* bridgeId)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    afxMixSystem msys = AfxGetProvider(mexu);
+    afxMixSystem msys = AfxGetHost(mexu);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     if (bridgeId) *bridgeId = AfxGetObjectId(mexu);
     return msys;
@@ -60,7 +61,7 @@ _AMX afxUnit AmxGetMixQueues(afxMixBridge mexu, afxUnit baseQueIdx, afxUnit cnt,
     // queues must be a valid pointer to the afxMixQueue handles.
     AFX_ASSERT(queues);
 
-    afxClass const* mqueCls = _AmxGetMixQueueClass(mexu);
+    afxClass const* mqueCls = _AmxMexuGetMqueClass(mexu);
     AFX_ASSERT_CLASS(mqueCls, afxFcc_MQUE);
     afxUnit rslt = _AfxEnumerateObjectsUnlocked(mqueCls, FALSE, baseQueIdx, cnt, (afxObject*)queues);
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, rslt, queues);
@@ -110,7 +111,7 @@ _AMX afxError AmxWaitForIdleMixBridge(afxMixBridge mexu, afxUnit64 timeout)
     if (mexu->pingCb)
         mexu->pingCb(mexu, 0);
 
-    afxClass const* mqueCls = _AmxGetMixQueueClass(mexu);
+    afxClass const* mqueCls = _AmxMexuGetMqueClass(mexu);
     AFX_ASSERT_CLASS(mqueCls, afxFcc_MQUE);
     afxUnit queCnt = mqueCls->instCnt;
 
@@ -119,14 +120,14 @@ _AMX afxError AmxWaitForIdleMixBridge(afxMixBridge mexu, afxUnit64 timeout)
 
     return err;
 }
-
-_AMX afxError _AmxMexuSubmitCallback(afxMixBridge mexu, void(*f)(void*, void*), void* udd)
+#if 0
+_AMX afxError _AmxMexuSubmitCallback(afxMixBridge mexu, afxError(*f)(void*, void*), void* udd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     AFX_ASSERT(f);
 
-    afxClass const* mqueCls = _AmxGetMixQueueClass(mexu);
+    afxClass const* mqueCls = _AmxMexuGetMqueClass(mexu);
 
     // sanitize arguments
     afxUnit totalQueCnt = mqueCls->instCnt;
@@ -162,148 +163,7 @@ _AMX afxError _AmxMexuSubmitCallback(afxMixBridge mexu, void(*f)(void*, void*), 
     return err;
 }
 
-_AMX afxError _AmxMexuTransferBuffers(afxMixBridge mexu, amxTransference const* ctrl, afxUnit opCnt, void const* ops)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    AFX_ASSERT(opCnt);
-    AFX_ASSERT(ops);
-
-    afxClass const* mqueCls = _AmxGetMixQueueClass(mexu);
-
-    // sanitize arguments
-    afxUnit totalQueCnt = mqueCls->instCnt;
-    afxUnit baseQueIdx = AFX_MIN(ctrl->baseQueIdx, totalQueCnt - 1);
-    afxUnit queCnt = AFX_CLAMP(ctrl->queCnt, 1, totalQueCnt - baseQueIdx);
-    AFX_ASSERT(queCnt);
-    afxBool queued = FALSE;
-
-    for (afxUnit queIdx = 0; queIdx < queCnt; queIdx++)
-    {
-        afxMixQueue mque;
-        if (!AmxGetMixQueues(mexu, baseQueIdx + queIdx, 1, &mque)) continue;
-        else
-        {
-            AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-            if (!AfxTryLockMutex(&mque->iorpChnMtx))
-                continue;
-        }
-
-        afxCmdId cmdId;
-        _amxIoReqPacket* work;
-        _AmxMquePushIoReqPacket(mque, _AMX_GET_STD_IORP_ID(Transfer), sizeof(work->Transfer) + (opCnt * sizeof(work->Transfer.wavOps[0])), &cmdId, &work);
-        AFX_ASSERT(work);
-
-        work->Transfer.srcFcc = ctrl->srcFcc;
-        work->Transfer.dstFcc = ctrl->dstFcc;
-        work->Transfer.codec = ctrl->codec;
-        work->Transfer.decSiz = ctrl->decSiz;
-
-        work->Transfer.opCnt = opCnt;
-
-        switch (ctrl->srcFcc)
-        {
-        case afxFcc_AUD:
-        {
-            work->Transfer.src.aud = ctrl->src.aud;
-            AfxReacquireObjects(1, &work->Transfer.src.aud);
-            break;
-        }
-        case afxFcc_IOB:
-        {
-            work->Transfer.src.iob = ctrl->src.iob;
-            AfxReacquireObjects(1, &work->Transfer.src.iob);
-            break;
-        }
-        case NIL:
-        {
-            work->Transfer.src.src = ctrl->src.src;
-            break;
-        }
-        default: AfxThrowError(); break;
-        }
-
-        switch (ctrl->dstFcc)
-        {
-        case afxFcc_AUD:
-        {
-            work->Transfer.dst.aud = ctrl->dst.aud;
-            AfxReacquireObjects(1, &work->Transfer.dst.aud);
-            break;
-        }
-        case afxFcc_IOB:
-        {
-            work->Transfer.dst.iob = ctrl->dst.iob;
-            AfxReacquireObjects(1, &work->Transfer.dst.iob);
-            break;
-        }
-        case NIL:
-        {
-            work->Transfer.dst.dst = ctrl->dst.dst;
-            break;
-        }
-        default: AfxThrowError(); break;
-        }
-
-        amxAudioIo const* riops = ops;
-        for (afxUnit i = 0; i < opCnt; i++)
-        {
-            work->Transfer.wavOps[i] = riops[i];
-        }
-        int a = 1;
-
-        AfxUnlockMutex(&mque->iorpChnMtx);
-
-        mexu->pingCb(mexu, 0);
-        break;
-    }
-    return err;
-}
-
-_AMX afxError _AmxMexuSubmitSink(afxMixBridge mexu, void* ctrl, afxSink sink, amxAudio aud, amxAudioPeriod const* seg)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    AFX_ASSERT(sink);
-    AFX_ASSERT(seg);
-    AFX_ASSERT(aud);
-
-    afxClass const* mqueCls = _AmxGetMixQueueClass(mexu);
-
-    // sanitize arguments
-    afxUnit baseQueIdx = 0;
-    afxUnit queCnt = mqueCls->instCnt;
-    AFX_ASSERT(queCnt);
-
-    for (afxUnit queIdx = 0; queIdx < queCnt; queIdx++)
-    {
-        afxMixQueue mque;
-        if (!AmxGetMixQueues(mexu, baseQueIdx + queIdx, 1, &mque)) continue;
-        else
-        {
-            AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-            if (!AfxTryLockMutex(&mque->iorpChnMtx))
-                continue;
-        }
-
-        afxCmdId cmdId;
-        _amxIoReqPacket* work;
-        _AmxMquePushIoReqPacket(mque, _AMX_GET_STD_IORP_ID(Sink), sizeof(work->Sink), &cmdId, &work);
-        AFX_ASSERT(work);
-
-        work->Sink.buf = aud;
-        work->Sink.sink = sink;
-        work->Sink.seg = *seg;
-
-        AfxUnlockMutex(&mque->iorpChnMtx);
-
-        mexu->pingCb(mexu, 0);
-        break;
-    }
-    return err;
-}
-
-_AMX afxError _AmxMexuRollMixers(afxMixBridge mexu, afxReal startTime, afxReal dur, afxUnit iterCnt, afxUnit cnt, afxMixContext mixers[])
+_AMX afxError _AmxMexuExecuteMixCommands(afxMixBridge mexu, afxUnit frameCnt, afxUnit cnt, afxMixContext mixers[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
@@ -315,14 +175,208 @@ _AMX afxError _AmxMexuRollMixers(afxMixBridge mexu, afxReal startTime, afxReal d
         
         AfxReacquireObjects(1, &mix);
 
-        if (mix->executor.chain)
-            AfxPopLink(&mix->executor);
-        
-        AfxPushLink(&mix->executor, &mexu->activeMixers);
-        mix->state = amxMixState_PENDING;
-        mix->motor.localClock = startTime;
-        mix->motor.localDur = dur;
-        mix->motor.iterCnt = iterCnt;
+        mix->queuedFrameCnt = frameCnt;
+
+    }
+    return err;
+}
+#endif
+
+_AMX afxError _AmxMexuTransferMixMemory(afxMixBridge mexu, amxTransference* ctrl, afxUnit opCnt, void const* ops)
+{
+    afxError err = AFX_ERR_NONE;
+    // @mexu must be a valid afxMixBridge handle.
+    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    AFX_ASSERT(opCnt);
+    AFX_ASSERT(ctrl);
+    AFX_ASSERT(ops);
+
+    afxBool queued = FALSE;
+    afxClass const* mqueCls = _AmxMexuGetMqueClass(mexu);
+
+    // sanitize arguments
+    afxUnit totalQueCnt = mqueCls->instCnt;
+    afxUnit baseQueIdx = AFX_MIN(ctrl->baseQueIdx, totalQueCnt - 1);
+    afxUnit queCnt = AFX_CLAMP(ctrl->queCnt, 1, totalQueCnt - baseQueIdx);
+    AFX_ASSERT(queCnt);
+
+    while (1)
+    {
+        for (afxUnit i = 0; i < queCnt; i++)
+        {
+            afxUnit queIdx = baseQueIdx + i;
+
+            afxMixQueue mque;
+            if (!AmxGetMixQueues(mexu, queIdx, 1, &mque))
+            {
+                AfxThrowError();
+                continue; // for
+            }
+
+            afxError err2 = _AmxMqueTransferResources(mque, ctrl, opCnt, ops);
+
+            err = err2;
+
+            if (!err2)
+            {
+                queued = TRUE;
+                break; // for --- iterate queues
+            }
+
+            if (err2 == afxError_TIMEOUT || err2 == afxError_BUSY)
+                continue; // for
+
+            AfxThrowError();
+        }
+
+        if (err || queued) break; // while --- reiterate if not queue for timeout?
+    }
+    return err;
+}
+
+_AMX afxError _AmxMexuRemapBuffers(afxMixBridge mexu, afxBool unmap, afxUnit cnt, _amxBufferRemapping const maps[])
+{
+    afxError err = AFX_ERR_NONE;
+    // @mexu must be a valid afxMixBridge handle.
+    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    AFX_ASSERT(cnt);
+    AFX_ASSERT(maps);
+
+    afxBool queued = FALSE;
+    afxMixQueue mque;
+    afxUnit queIdx = 0;
+    while (AmxGetMixQueues(mexu, queIdx++, 1, &mque))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+
+        if (unmap)
+        {
+            afxError err2 = _AmxMqueRemapBuffers(mque, 0, NIL, cnt, maps);
+            err = err2;
+
+            if (!err2)
+            {
+                queued = TRUE;
+                break; // while --- iterate queues
+            }
+
+            if (err2 == afxError_TIMEOUT || err2 == afxError_BUSY)
+                continue; // while
+
+            // If synchronization fails, throw an error.
+            AfxThrowError();
+        }
+        else
+        {
+            afxError err2 = _AmxMqueRemapBuffers(mque, cnt, maps, 0, NIL);
+            err = err2;
+
+            if (!err2)
+            {
+                queued = TRUE;
+                break; // while --- iterate queues
+            }
+
+            if (err2 == afxError_TIMEOUT || err2 == afxError_BUSY)
+                continue; // while
+
+            // If flushing fails, throw an error
+            AfxThrowError();
+        }
+    }
+
+    if (queued)
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+        // Wait for the draw queue to finish the operation, otherwise we will have not pointers.
+        //if (AmxWaitForEmptyMixQueue(mque, AFX_TIMEOUT_INFINITE))
+        if (AmxWaitForEmptyMixQueue(mexu, queIdx - 1, AFX_TIMEOUT_INFINITE))
+            AfxThrowError();
+    }
+    return err;
+}
+
+_AMX afxError _AmxMexuCohereMappedBuffers(afxMixBridge mexu, afxBool discard, afxUnit cnt, amxBufferedMap const maps[])
+{
+    afxError err = AFX_ERR_NONE;
+    // @mexu must be a valid afxMixBridge handle.
+    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    AFX_ASSERT(cnt);
+    AFX_ASSERT(maps);
+
+    afxBool queued = FALSE;
+    afxMixQueue mque;
+    afxUnit queIdx = 0;
+    while (AmxGetMixQueues(mexu, queIdx++, 1, &mque))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+
+        if (discard)
+        {
+            afxError err2 = _AmxMqueCohereMappedBuffers(mque, 0, NIL, cnt, maps);
+            err = err2;
+
+            if (!err2)
+            {
+                queued = TRUE;
+                break; // while --- iterate queues
+            }
+
+            if (err2 == afxError_TIMEOUT || err2 == afxError_BUSY)
+                continue; // while
+
+            // If synchronization fails, throw an error.
+            AfxThrowError();
+        }
+        else
+        {
+            afxError err2 = _AmxMqueCohereMappedBuffers(mque, cnt, maps, 0, NIL);
+            err = err2;
+
+            if (!err2)
+            {
+                queued = TRUE;
+                break; // while --- iterate queues
+            }
+
+            if (err2 == afxError_TIMEOUT || err2 == afxError_BUSY)
+                continue; // while
+
+            // If flushing fails, throw an error
+            AfxThrowError();
+        }
+    }
+    return err;
+}
+
+_AMX afxError _AmxMexuSinkBuffers(afxMixBridge mexu, afxUnit cnt, amxFlush presentations[])
+{
+    afxError err = AFX_ERR_NONE;
+    // @mexu must be a valid afxMixBridge handle.
+    AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
+    AFX_ASSERT(cnt);
+    AFX_ASSERT(presentations);
+
+    afxMixQueue mque;
+    afxUnit queIdx = 0;
+    afxBool queued = FALSE;
+    while (AmxGetMixQueues(mexu, queIdx++, 1, &mque))
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+
+        afxError err2 = _AmxMqueSinkBuffers(mque, cnt, presentations);
+
+        if (!err2)
+        {
+            queued = TRUE;
+            break; // while
+        }
+
+        if (err2 == afxError_TIMEOUT || err2 == afxError_BUSY)
+            continue; // while
+
+        err = err2;
+        AfxThrowError();
     }
     return err;
 }
@@ -397,7 +451,7 @@ _AMX afxError _AmxMexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
     AFX_ASSERT(mctxClsCfg.fcc == afxFcc_MIX);
     //AfxMountClass(&mexu->mctxCls, NIL, &mexu->classes, &mctxClsCfg);
 
-    afxClass* mqueCls = (afxClass*)_AmxGetMixQueueClass(mexu);
+    afxClass* mqueCls = (afxClass*)_AmxMexuGetMqueClass(mexu);
     AFX_ASSERT_CLASS(mqueCls, afxFcc_MQUE);
     afxDrawQueue queues[AMX_MAX_QUEUES_PER_BRIDGE];
     AFX_ASSERT(AMX_MAX_QUEUES_PER_BRIDGE >= cfg->minQueCnt);
@@ -421,7 +475,6 @@ _AMX afxError _AmxMexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
             AfxThrowError();
         }
 
-        AfxDeployChain(&mexu->activeMixers, mexu);
     }
     
     if (err)

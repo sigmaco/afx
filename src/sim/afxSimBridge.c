@@ -46,7 +46,7 @@ _ASX afxSimulation AfxGetMathBridgeContext(afxSimBridge sexu)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SEXU, 1, &sexu);
-    afxSimulation sim = AfxGetProvider(sexu);
+    afxSimulation sim = AfxGetHost(sexu);
     AFX_ASSERT_OBJECTS(afxFcc_SIM, 1, &sim);
     return sim;
 }

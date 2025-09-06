@@ -15,26 +15,46 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_FENCE_C
 #include "../impl/afxExecImplKit.h"
 #include "ddi/avxImplementation.h"
 
-_AVX afxDrawSystem AvxGetFenceContext(avxFence fenc)
+_AVX afxDrawSystem AvxGetFenceHost(avxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
-    afxDrawSystem dsys = AfxGetProvider(fenc);
+    afxDrawSystem dsys = AfxGetHost(fenc);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     return dsys;
 }
 
-_AVX afxBool AvxIsFenceSignaled(avxFence fenc)
+_AVX afxBool AvxCheckForFenceSignaled(avxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
     return AfxLoadAtom32(&fenc->signaled);
+}
+
+_AVX afxError AvxGetTimelineFenceCounter(avxFence fenc, afxUnit64* value)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
+    AFX_ASSERT(fenc->flags & avxFenceFlag_TIMELINE);
+    AFX_ASSERT(value);
+    *value = (afxUnit64)AfxLoadAtom64(&fenc->value);
+    return err;
+}
+
+_AVX afxError AvxSignalTimelineFence(avxFence fenc, afxUnit64 value)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
+    AFX_ASSERT(fenc->flags & avxFenceFlag_TIMELINE);
+    AfxStoreAtom64(&fenc->value, (afxInt64)value);
+    return err;
 }
 
 _AVX afxError _AvxFencDtorCb(avxFence fenc)
@@ -52,9 +72,14 @@ _AVX afxError _AvxFencCtorCb(avxFence fenc, void** args, afxUnit invokeNo)
 
     afxDrawSystem dsys = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    afxBool signaled = *(afxBool const*)args[1];
+    avxFenceInfo const* info = ((avxFenceInfo const*)args[1]) + invokeNo;
 
-    fenc->signaled = !!signaled;
+    fenc->signaled = info->initialVal;
+    fenc->value = info->initialVal;
+    fenc->flags = info->flags;
+
+    fenc->tag = info->tag;
+    fenc->udd = info->udd;
 
     return err;
 }
@@ -63,7 +88,7 @@ _AVX afxClassConfig const _AVX_FENC_CLASS_CONFIG =
 {
     .fcc = afxFcc_FENC,
     .name = "Fence",
-    .desc = "Drawing Device Synchronization Fence",
+    .desc = "Synchronization Fence",
     .fixedSiz = sizeof(AFX_OBJECT(avxFence)),
     .ctor = (void*)_AvxFencCtorCb,
     .dtor = (void*)_AvxFencDtorCb
@@ -71,7 +96,7 @@ _AVX afxClassConfig const _AVX_FENC_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AvxAcquireFences(afxDrawSystem dsys, afxBool signaled, afxUnit cnt, avxFence fences[])
+_AVX afxError AvxAcquireFences(afxDrawSystem dsys, afxUnit cnt, avxFenceInfo const info[], avxFence fences[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -81,16 +106,16 @@ _AVX afxError AvxAcquireFences(afxDrawSystem dsys, afxBool signaled, afxUnit cnt
     afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->fencCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_FENC);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)fences, (void const*[]) { dsys, &signaled }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)fences, (void const*[]) { dsys, info }))
         AfxThrowError();
 
     return err;
 }
 
-_AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 timeout, afxUnit cnt, avxFence const fences[])
+_AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxUnit64 timeout, afxBool waitAll, afxUnit cnt, avxFence const fences[], afxUnit64 const values[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_FENC, cnt, fences);
+    AFX_ASSERT(fences);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     afxClock start, last;
@@ -107,9 +132,17 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
             for (afxUnit i = 0; i < cnt; i++)
             {
                 avxFence dfen = fences[i];
+                if (!dfen) continue;
                 AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &dfen);
 
-                if (AfxLoadAtom32(&dfen->signaled))
+                if (dfen->flags & avxFenceFlag_TIMELINE)
+                {
+                    AFX_ASSERT(values);
+                    // vkWaitSemaphores waits until the semaphore value is greater than or equal to the specified value.
+                    if (values[i] <= (afxUnit64)AfxLoadAtom64(&dfen->value))
+                        return err;
+                }
+                else if (AfxLoadAtom32(&dfen->signaled))
                     return err;
             }
 
@@ -136,11 +169,19 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
         for (afxUnit i = 0; i < cnt; i++)
         {
             avxFence dfen = fences[i];
+            if (!dfen) continue;
             AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &dfen);
 
             while (1)
             {
-                if (AfxLoadAtom32(&dfen->signaled))
+                if (dfen->flags & avxFenceFlag_TIMELINE)
+                {
+                    AFX_ASSERT(values);
+                    // vkWaitSemaphores waits until the semaphore value is greater than or equal to the specified value.
+                    if (values[i] <= (afxUnit64)AfxLoadAtom64(&dfen->value))
+                        break;
+                }
+                else if (AfxLoadAtom32(&dfen->signaled))
                     break;
 
                 if (timeout)
@@ -172,14 +213,22 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxBool waitAll, afxUnit64 ti
 _AVX afxError AvxResetFences(afxDrawSystem dsys, afxUnit cnt, avxFence const fences[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_FENC, cnt, fences);
+    AFX_ASSERT(fences);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     
     for (afxUnit i = 0; i < cnt; i++)
     {
         avxFence dfen = fences[i];
+        if (!dfen) continue;
         AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &dfen);
-        dfen->signaled = FALSE;
+
+        // Does the new synchronization primitive allow resetting its payload?
+        // No, allowing the payload value to “go backwards” is problematic. 
+        // Applications looking for reset behavior should create a new instance of the synchronization primitive instead.
+        if (!(dfen->flags & avxFenceFlag_TIMELINE))
+        {
+            AfxStoreAtom64(&dfen->signaled, 0);
+        }
     }
 
     //if (dsys->resetFencCb(dsys, cnt, fences))

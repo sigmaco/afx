@@ -24,7 +24,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
 
 #if !0
 

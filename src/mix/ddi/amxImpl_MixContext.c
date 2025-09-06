@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                     Q W A D R O   S O U N D   I / O   S Y S T E M
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA A4D <https://sigmaco.org/a4d>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #define _AMX_MIX_C
 //#define _AMX_MIX_BRIDGE_C
@@ -27,11 +28,103 @@
 #define _AMX_SINK_C
 #include "amxImplementation.h"
 
+void resample_stream(ResampleState* state, float* out, int out_count)
+{
+    int out_written = 0;
+
+    while (out_written < out_count && state->in_pos + 1 < state->in_len)
+    {
+        int i = state->in_pos * 2; // stereo
+
+        float l0 = state->input_buf[i];
+        float r0 = state->input_buf[i + 1];
+        float l1 = state->input_buf[i + 2];
+        float r1 = state->input_buf[i + 3];
+
+        float frac = (float)(state->frac_pos);
+
+        float l = l0 + (l1 - l0) * frac;
+        float r = r0 + (r1 - r0) * frac;
+
+        out[out_written * 2] = l;
+        out[out_written * 2 + 1] = r;
+
+        out_written++;
+        state->frac_pos += 1.0 / state->ratio;
+
+        while (state->frac_pos >= 1.0) {
+            state->in_pos++;
+            state->frac_pos -= 1.0;
+        }
+    }
+}
+
+void fill_sink_buffer(float* out, int out_frames, ResampleState* state)
+{
+    int written = 0;
+    while (written < out_frames)
+    {
+        if (state->in_pos + 1 >= state->in_len)
+        {
+            // No more input, must wait for next Doom buffer
+            state->needs_more_input = TRUE;
+            break;
+        }
+
+        int i = state->in_pos * 2;
+        float l0 = state->input_buf[i];
+        float r0 = state->input_buf[i + 1];
+        float l1 = state->input_buf[i + 2];
+        float r1 = state->input_buf[i + 3];
+
+        float frac = (float)(state->frac_pos);
+
+        float l = l0 + (l1 - l0) * frac;
+        float r = r0 + (r1 - r0) * frac;
+
+        out[written * 2 + 0] = l;
+        out[written * 2 + 1] = r;
+        written++;
+
+        state->frac_pos += 1.0 / state->ratio;
+
+        while (state->frac_pos >= 1.0) {
+            state->in_pos++;
+            state->frac_pos -= 1.0;
+        }
+    }
+
+    // Pad remainder with silence if underrun
+    while (written < out_frames)
+    {
+        out[written * 2 + 0] = 0.0f;
+        out[written * 2 + 1] = 0.0f;
+        written++;
+    }
+}
+
+// Doom push update (on 512-sample cycle)
+void doom_audio_update(ResampleState* state, int16_t const* doom_buf)
+{
+    //int16_t doom_buf[512 * 2];
+    //doom_render(doom_buf); // get next 512 interleaved stereo samples
+
+    // Convert to float
+    afxUnit soCnt;
+    //resample_44100_to_48000_interleaved2(doom_buf, SAMPLECOUNT, 512, state->input_buf, &soCnt, SAMPLERATE, 48000);
+    afxError err;
+    AfxThrowError();
+    state->in_len = 512;
+    state->in_pos = 0;
+    // Don't reset frac_pos
+    state->needs_more_input = FALSE;
+}
+
 _AMX afxError _AmxSpuLoadAudio(amxMpu* mpu, amxAudio src, amxAudio dst, afxUnit chIdx, afxUnit baseSamp, afxUnit sampCnt, amxMixFactor fac, afxReal constant)
 {
     afxError err = NIL;
-    afxReal32* out = &dst->samples32f[chIdx * dst->sampCnt + baseSamp];
-    afxReal32 const* in = &src->samples32f[chIdx * src->sampCnt + baseSamp];
+    afxReal32* out = &dst->buf->storage[0].hostedAlloc.f32[chIdx * dst->sampCnt + baseSamp];
+    afxReal32 const* in = &src->buf->storage[0].hostedAlloc.f32[chIdx * src->sampCnt + baseSamp];
 
     switch (fac)
     {
@@ -141,8 +234,8 @@ _AMX afxError _AmxSpuLoadAudio(amxMpu* mpu, amxAudio src, amxAudio dst, afxUnit 
 _AMX afxError _AmxSpu_StoreAudio(amxMpu* mpu, amxAudio src, amxAudio dst, afxUnit chIdx, afxUnit baseSamp, afxUnit sampCnt, amxMixOp op)
 {
     afxError err = AFX_ERR_NONE;
-    afxReal32* out = &dst->samples32f[chIdx * dst->sampCnt + baseSamp];
-    afxReal32 const* in = &src->samples32f[chIdx * src->sampCnt + baseSamp];
+    afxReal32* out = &dst->buf->storage[0].hostedAlloc.f32[chIdx * dst->sampCnt + baseSamp];
+    afxReal32 const* in = &src->buf->storage[0].hostedAlloc.f32[chIdx * src->sampCnt + baseSamp];
 
     switch (op)
     {
@@ -200,21 +293,71 @@ _AMX afxError _AmxSpuCmd_CommenceMixScope(amxMpu* mpu, _amxCmd const* cmd)
 {
     afxError err = AFX_ERR_NONE;
 
-    afxUnit sinkChanCnt = cmd->CommenceMixScope.scope.chanCnt;
+    afxUnit sinkChanCnt = cmd->CommenceMixScope.chanCnt;
 
     AFX_ASSERT(ARRAY_SIZE(mpu->sinkChans) >= sinkChanCnt);
     sinkChanCnt = AFX_MIN(sinkChanCnt, ARRAY_SIZE(mpu->sinkChans));
     
     mpu->sinkChanCnt = sinkChanCnt;
-    mpu->sinkBaseChan = cmd->CommenceMixScope.scope.baseChan;
-    mpu->sinkBaseSamp = cmd->CommenceMixScope.scope.baseSamp;
-    mpu->sinkSampCnt = cmd->CommenceMixScope.scope.sampCnt;
-    mpu->sinkBuf = cmd->CommenceMixScope.scope.sink;
-    mpu->mixFreq = cmd->CommenceMixScope.scope.freq;
+    mpu->sinkBaseChan = cmd->CommenceMixScope.baseChan;
+    mpu->sinkBaseSamp = cmd->CommenceMixScope.baseSamp;
+    mpu->sinkBaseSeg = cmd->CommenceMixScope.baseSeg;
+    mpu->sinkSegCnt = cmd->CommenceMixScope.segCnt;
+    mpu->sinkSampCnt = cmd->CommenceMixScope.sampCnt;
+    mpu->sinkBuf = cmd->CommenceMixScope.sink;
+    mpu->mixFreq = mpu->sinkBuf->freq;
 
     for (afxUnit i = 0; i < sinkChanCnt; i++)
     {
         mpu->sinkChans[i] = cmd->CommenceMixScope.chans[i];
+    }
+
+    afxUnit queuedFrameCnt = mpu->queuedFrameCnt;
+
+    for (afxUnit chIdx = 0; chIdx < mpu->sinkChanCnt; chIdx++)
+    {
+        amxMixTarget const* msc = &mpu->sinkChans[chIdx];
+
+        switch (msc->loadOp)
+        {
+        case amxLoadOp_CLEAR:
+        {
+            //_AmxGenerateSquareWave(mpu->a, chIdx, 1, 440.0, 60);
+            amxAudioPeriod op = { 0 };
+            op.baseChan = mpu->sinkBaseChan;
+            op.baseSamp = mpu->sinkBaseSamp;
+            op.baseSeg = mpu->sinkBaseSeg;
+            op.sampCnt = queuedFrameCnt;
+            op.chanCnt = 1;
+            op.segCnt = 1;
+            _AmxFillAudio(mpu->a, &op, msc->clearAmpl, mpu->mixFreq, 1);
+            break;
+        }
+        case amxLoadOp_LOAD:
+        {
+            amxAudioInterference op = { 0 };
+            op.dstFreq = mpu->mixFreq;
+            op.dst.baseChan = chIdx;
+            op.dst.chanCnt = 1;
+            op.dst.sampCnt = queuedFrameCnt;
+            op.dst.segCnt = 1;
+
+            op.srcFreq = mpu->sinkBuf->freq;
+            op.src.baseChan = mpu->sinkBaseChan + msc->chIdx;
+            op.src.baseSamp = mpu->sinkBaseSamp;
+            op.src.sampCnt = queuedFrameCnt;
+            op.src.chanCnt = 1;
+            op.src.segCnt = 1;
+
+            _AmxSpu_ResampleWave(mpu, cmd->CommenceMixScope.sink, mpu->a, &op);
+            break;
+        }
+        case amxLoadOp_DONT_CARE:
+        {
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
     }
     return err;
 }
@@ -223,64 +366,28 @@ _AMX afxError _AmxSpuCmd_ConcludeMixScope(amxMpu* mpu, _amxCmd const* cmd)
 {
     afxError err = AFX_ERR_NONE;
 
-    amxBufferedTrack room;
-    if (AmxLockSinkBuffer(mpu->sinkBuf, 0, 512, &room))
-        return err;
+    afxUnit queuedFrameCnt = mpu->queuedFrameCnt;
 
-    amxAudio out = mpu->sinkBuf->buffers[mpu->sinkBufIdx];
+    amxAudio out = mpu->sinkBuf;
     afxUnit sinkSampCnt = out->sampCnt;
     afxUnit sinkBaseSamp = 0;
 
     // Calculate the number of frames to process
-    afxInt frames = (sinkSampCnt + mpu->samplesPerFrame - 1) / mpu->samplesPerFrame; // Round up
+    afxInt blocks = (sinkSampCnt + mpu->samplesPerFrame - 1) / mpu->samplesPerFrame; // Round up
 
-    for (afxInt frame = 0; frame < frames; frame++)
+    for (afxInt block = 0; block < blocks; block++)
     {
-        int frameStart = frame * mpu->samplesPerFrame;
-        int frameEnd = (frame + 1) * mpu->samplesPerFrame;
+        int blockStart = block * mpu->samplesPerFrame;
+        int blockEnd = (block + 1) * mpu->samplesPerFrame;
 
-        if (frameEnd > sinkSampCnt)
-            frameEnd = sinkSampCnt;  // Handle the last chunk that may not be full
+        if (blockEnd > sinkSampCnt)
+            blockEnd = sinkSampCnt;  // Handle the last chunk that may not be full
 
-        int frameSiz = frameEnd - frameStart;
+        int blockSiz = blockEnd - blockStart;
 
         for (afxUnit chIdx = 0; chIdx < mpu->sinkChanCnt; chIdx++)
         {
             amxMixTarget const* msc = &mpu->sinkChans[chIdx];
-
-            switch (msc->loadOp)
-            {
-            case amxLoadOp_CLEAR:
-            {
-                //_AmxGenerateSquareWave(mpu->a, chIdx, 1, 440.0, 60);
-                amxAudioPeriod op = { 0 };
-                op.baseChan = mpu->sinkBaseChan + chIdx;
-                op.chanCnt = 1;
-                op.sampCnt = frameSiz;
-                _AmxFillAudio(mpu->a, &op, msc->clearAmpl, mpu->mixFreq, 1);
-                break;
-            }
-            case amxLoadOp_LOAD:
-            {
-                amxAudioInterference op = { 0 };
-                op.dstFreq = mpu->mixFreq;
-                op.dst.baseChan = chIdx;
-                op.dst.chanCnt = 1;
-                op.dst.sampCnt = frameSiz;
-                op.srcFreq = mpu->sinkBuf->freq;
-                op.src.baseChan = mpu->sinkBaseChan + chIdx;
-                op.src.baseSamp = sinkBaseSamp;
-                op.src.sampCnt = sinkSampCnt;
-                op.src.chanCnt = 1;
-                _AmxSpu_ResampleWave(mpu, out, mpu->a, &op);
-                break;
-            }
-            case amxLoadOp_DONT_CARE:
-            {
-                break;
-            }
-            default: AfxThrowError(); break;
-            }
 
             switch (msc->storeOp)
             {
@@ -290,12 +397,14 @@ _AMX afxError _AmxSpuCmd_ConcludeMixScope(amxMpu* mpu, _amxCmd const* cmd)
                 op.dstFreq = mpu->sinkBuf->freq;
                 op.src.chanCnt = 1;
                 op.src.baseChan = chIdx;
-                op.src.sampCnt = frameSiz;
+                op.src.sampCnt = blockSiz;
                 op.srcFreq = mpu->mixFreq;
+                op.src.segCnt = 1;
                 op.dst.baseChan = mpu->sinkBaseChan + chIdx;
                 op.dst.baseSamp = sinkBaseSamp;
                 op.dst.sampCnt = sinkSampCnt;
                 op.dst.chanCnt = 1;
+                op.dst.segCnt = 1;
                 _AmxSpu_ResampleWave(mpu, mpu->a, out, &op);
                 break;
             }
@@ -316,8 +425,6 @@ _AMX afxError _AmxSpuCmd_ConcludeMixScope(amxMpu* mpu, _amxCmd const* cmd)
             }
         }
     }
-
-    AfxPushInterlockedQueue(&mpu->sinkBuf->readyBuffers, &mpu->sinkBufIdx);
 
     mpu->sinkBuf = NIL;
     mpu->sinkBufIdx = AFX_INVALID_INDEX;
@@ -363,10 +470,10 @@ _AMX void _AmxSpuCmd_FetchAudition(amxMpu* mpu, _amxCmd const* cmd)
     //cmd->Audit();
     afxMixSystem msys = mpu->msys;
     afxMixContext mix = mpu->mix;
-    
+#if 0
     amxSound snd;
     afxUnit i = 0;
-    while (AfxEnumerateObjects(_AmxMsysGetSndClass(msys), i++, 1, (afxObject*)&snd))
+    while (AfxEnumerateObjects(_AmxSndsGetSndClass(msys), i++, 1, (afxObject*)&snd))
     {
         AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
 
@@ -374,6 +481,7 @@ _AMX void _AmxSpuCmd_FetchAudition(amxMpu* mpu, _amxCmd const* cmd)
         //AfxResampleAudio(snd->audio, mix->latency, mix->chanCnt, mix->freq, sizeof(mpu->bufA), mpu->bufA);
 
     }
+#endif
 }
 
 _AMX void _AmxSpuCmd_Reverb(amxMpu* mpu, _amxCmd const* cmd)
@@ -474,6 +582,7 @@ _AMXINL afxReal _MixLocalClock(afxMixContext mix, afxReal* clamped)
     }
     return localClock;
 }
+
 #if 0
 _AMXINL void AfxQueryMixState(afxMixContext mix, arxCapstanState* state)
 {
@@ -578,6 +687,8 @@ _AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mix)
         _SetUpSampleContext(&sampCtx, mix);
         mpu->sampCtx = sampCtx;
 #endif
+        mpu->queuedFrameCnt = mix->queuedFrameCnt;
+
         _amxCmd* cmdHdr;
         AFX_ITERATE_CHAIN_B2F(_amxCmd, cmdHdr, hdr.script, &mix->commands)
         {
@@ -592,6 +703,10 @@ _AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mix)
             _AMX_SPU_CMD_VMT.f[cmdHdr->hdr.id](mpu, cmdHdr);
         }
 
+        mix->current_sample_time += mpu->queuedFrameCnt;
+        mix->queuedFrameCnt -= mpu->queuedFrameCnt;
+        mpu->queuedFrameCnt = 0;
+
 #if 0
         if (!err)
         {
@@ -602,7 +717,7 @@ _AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mix)
         {
             AFX_ASSERT(mix->m.portId == mpu->portId);
             mix->m.state = avxDrawContextState_INVALID;
-            afxMixQueue mque = AfxGetProvider(mix);
+            afxMixQueue mque = AfxGetHost(mix);
             AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
             afxUnit poolIdx = mix->m.poolIdx;
@@ -622,24 +737,4 @@ _AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mix)
     //AfxDisposeObjects(1, &mix);
     return err;
 }
-
-_AMX afxError _AmxMixResetCb(afxMixContext mix, afxBool freeMem, afxBool permanent)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT(mix->state != amxMixState_PENDING);
-    mix->disposable = !permanent;
-
-    AfxDeployChain(&mix->commands, mix);
-    AfxExhaustArena(&mix->cmdArena);
-
-    return err;
-}
-
-_AMX afxError _AmxMixEndCb(afxMixContext mix)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    return err;
-}
-
 

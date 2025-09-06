@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This software is part of Advanced Multimedia UX Extensions & Experiments.
+
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
 
@@ -22,7 +24,7 @@
 #define _AUX_GAMEPAD_C
 #define _AUX_CONTROLLER_C
 #define _AFX_CONTEXT_C
-#include "../impl/auxImplementation.h"
+#include "impl/auxImplementation.h"
 
 _AUX afxError _AuxCtrlDtor(afxController ctrl)
 {

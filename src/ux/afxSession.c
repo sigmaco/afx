@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This software is part of Advanced Multimedia UX Extensions & Experiments.
+
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
 #define _AFX_DEVICE_C
@@ -178,6 +180,15 @@ _AUX afxClass const* _AuxSesGetWndClass(afxSession ses)
     return cls;
 }
 
+_AUX afxClass const* _AuxSesGetFntClass(afxSession ses)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    afxClass const* cls = &ses->fntCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_WND);
+    return cls;
+}
+
 _AUX afxClass const* _AuxSesGetXssClass(afxSession ses)
 {
     afxError err = AFX_ERR_NONE;
@@ -195,7 +206,7 @@ _AUX afxBool AfxGetFocusedWindow(afxWindow* window)
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     afxWindow wnd = ses->focusedWnd;
     if (window) *window = wnd;
-    AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
     return !!wnd;
 }
 
@@ -206,6 +217,16 @@ _AUX afxError AfxFocusWindow(afxWindow wnd, afxFlags flags)
     if (!AfxGetSession(&ses)) return afxError_NOT_READY;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
     return ses->pimpl->focusCb(ses, wnd, flags);
+}
+
+_AUX afxError AfxDrawBackgroundEXT(afxDrawContext dctx, afxFlags flags)
+{
+    afxError err = AFX_ERR_NONE;
+    afxSession ses;
+    if (!AfxGetSession(&ses)) return afxError_NOT_READY;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    if (!ses->pimpl->drawBgCb) return afxError_UNSUPPORTED;
+    return ses->pimpl->drawBgCb(ses, dctx, flags);
 }
 
 _AUX afxBool AfxGetSessionVideo(afxDrawSystem* system)
@@ -281,10 +302,36 @@ _AUX afxError AfxStepSession(afxSession ses, void const* set, void* get)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
 
-    afxShell ssh = AfxGetProvider(ses);
+    afxShell ssh = AfxGetHost(ses);
     //ssh->step(ssh, ses, set, get);
 
     return err;
+}
+
+_AUX afxBool AFX_SES_EVENT_HANDLER(afxSession ses, auxEvent *ev)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+
+    afxWindow focusedWnd = NIL;
+    AfxGetFocusedWindow(&focusedWnd);
+
+    switch (ev->id)
+    {
+    default:
+    {
+        auxEvent ev2 = *ev;
+        ev2.ev.id = afxEvent_UX;
+        ev2.ev.siz = sizeof(ev2);
+        
+        if (!ev2.wnd)
+            ev2.wnd = focusedWnd;
+
+        if (focusedWnd)
+            AfxEmitEvent(focusedWnd, (void*)&ev2);
+    }
+    }
+    return TRUE;
 }
 
 _AUX afxError _AuxSesDtorCb(afxSession ses)
@@ -312,6 +359,8 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
     _auxSessionAcquisition const* cfg = AFX_CAST(_auxSessionAcquisition const*, args[1]) + invokeNo;
     AFX_ASSERT(cfg);
 
+    AfxResetEventHandler(ses, (void*)AFX_SES_EVENT_HANDLER);
+
     ses->pimpl = &_AUX_SES_IMPL;
 
     {
@@ -321,6 +370,9 @@ _AUX afxError _AuxSesCtorCb(afxSession ses, void** args, afxUnit invokeNo)
 
         clsCfg = cfg->wndClsCfg ? *cfg->wndClsCfg : _AUX_WND_CLASS_CONFIG;
         AfxMountClass(&ses->wndCls, NIL, &ses->classes, &clsCfg);
+
+        clsCfg = /*cfg->wndClsCfg ? *cfg->wndClsCfg :*/ _AUX_FNT_CLASS_CONFIG;
+        AfxMountClass(&ses->fntCls, NIL, &ses->classes, &clsCfg);
 
         clsCfg = cfg->xssClsCfg ? *cfg->xssClsCfg : (afxClassConfig) { 0 };
         AfxMountClass(&ses->xssCls, NIL, &ses->classes, &clsCfg);
@@ -480,7 +532,7 @@ _AUX afxClassConfig const _AUX_SES_CLASS_CONFIG =
 {
     .fcc = afxFcc_SES,
     .name = "Session",
-    .desc = "User Session",
+    .desc = "UX Session",
     .fixedSiz = sizeof(AFX_OBJECT(afxSession)),
     .ctor = (void*)_AuxSesCtorCb,
     .dtor = (void*)_AuxSesDtorCb,

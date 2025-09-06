@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *             Q W A D R O   R E N D E R I N G   I N F R A S T R U C T U R E
+ *          Q W A D R O   4 D   R E N D E R I N G   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -22,7 +22,7 @@
 #define _ARX_VERTEX_BUFFER_C
 #include "../draw/ddi/avxImplementation.h"
 #include "ddi/arxImpl_Input.h"
-#include "qwadro/inc/sim/afxSimulation.h"
+#include "qwadro/sim/afxSimulation.h"
 
 #if 0
 _ARX afxBool _AsxCaptureBodCb(arxBody bod, void** udd)
@@ -171,7 +171,7 @@ _ARX afxError ArxDrawBodies(akxRenderer scn, afxContext sctx, afxDrawContext dct
             //AvxCmdSwitchDepthTesting(dctx, TRUE);
             //AvxCmdEnableDepthWrite(dctx, TRUE);
 
-            AvxCmdBindBuffers(dctx, 3, 30, 1, (avxBufferedMap[]) { {.buf = scn->framesets[scn->frameIdx].objUbo} });
+            AvxCmdBindBuffers(dctx, avxBus_DRAW, 3, 30, 1, (avxBufferedMap[]) { {.buf = scn->framesets[scn->frameIdx].objUbo} });
 
             //afxUnit const *ToBoneIndices = AfxGetMeshRigBiasToJointMapping(mdl, mshIdx);
             ArxBuildRiggedMeshCompositeMatrices(mdl, mshIdx, scn->wp[scn->frameIdx], 1, &m);
@@ -413,7 +413,7 @@ _ARX afxError ArxCmdDrawBodies(afxDrawContext dctx, akxRenderer rnd, afxReal dt,
                 //AvxCmdSwitchDepthTesting(dctx, TRUE);
                 //AvxCmdEnableDepthWrite(dctx, TRUE);
 
-                AvxCmdBindBuffers(dctx, 3, 30, 1, (avxBufferedMap[]) { {.buf = rnd->framesets[rnd->frameIdx].objUbo } });
+                AvxCmdBindBuffers(dctx, avxBus_DRAW, 3, 30, 1, (avxBufferedMap[]) { {.buf = rnd->framesets[rnd->frameIdx].objUbo } });
 
                 ArxBuildRiggedMeshCompositeMatrices(mdl, mshIdx, rnd->wp[rnd->frameIdx], 1, &m);
                 //AfxM4dCopyAtm(m, m);
@@ -577,7 +577,7 @@ _ARX afxError ArxBeginSceneRendering(akxRenderer rnd, arxCamera cam, afxRect con
     }
 
     AvxCmdUpdateBuffer(dctx, rnd->framesets[frameIdx].viewUbo, 0, sizeof(*viewConstants), viewConstants);
-    AvxCmdBindBuffers(dctx, 0, 0, 1, (avxBufferedMap[]) { {.buf = rnd->framesets[frameIdx].viewUbo } });
+    AvxCmdBindBuffers(dctx, avxBus_DRAW, 0, 0, 1, (avxBufferedMap[]) { {.buf = rnd->framesets[frameIdx].viewUbo } });
     return err;
 }
 
@@ -605,9 +605,9 @@ _ARX afxError _ArxRndDtor(akxRenderer rnd)
     AfxDisposeObjects(1, &rnd->testDtec);
     AfxDisposeObjects(1, &rnd->tutCamUtilDtec);
 
-    arxRenderware din = rnd->din;
+    arxRenderware rwe = rnd->rwe;
 
-    AfxDisposeObjects(1, &din);
+    AfxDisposeObjects(1, &rwe);
 #if 0
     for (afxUnit i = 0; i < rnd->frameCnt; i++)
     {
@@ -626,12 +626,12 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_RND, 1, &rnd);
 
-    arxRenderware din = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    arxRenderware rwe = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
     akxRendererConfig const* config = ((akxRendererConfig const*)args[1]) + invokeNo;
 
     rnd->cachedSim = config->sim;
-    afxDrawSystem dsys = ArxGetDrawInputContext(din);
+    afxDrawSystem dsys = ArxGetRenderwareDrawSystem(rwe);
     rnd->cachedDsys = dsys;
     
     //rnd->dout = NIL;
@@ -644,7 +644,7 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
 
     // acquire and set up our dedicated draw input device.
 
-    if (!config->din)
+    if (!config->rwe)
     {
         arxRenderwareConfig dinConfig = { 0 };
         dinConfig.dsys = dsys;
@@ -653,14 +653,14 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         dinConfig.cmdPoolMemStock = 4096;
         dinConfig.estimatedSubmissionCnt = 3;
 
-        ArxOpenRenderware(0, &dinConfig, &din);
-        AFX_ASSERT(din);
+        ArxOpenRenderware(0, &dinConfig, &rwe);
+        AFX_ASSERT(rwe);
     }
     else
     {
-        AfxReacquireObjects(1, &din);
+        AfxReacquireObjects(1, &rwe);
     }
-    rnd->din = din;
+    rnd->rwe = rwe;
 
     afxUri uri;
     avxVertexInput vin;
@@ -708,10 +708,10 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
 
         avxVertexLayout vtxl = 
         { 
-            .srcCnt = 1,
-            .srcs =
+            .binCnt = 1,
+            .bins =
             {
-                AVX_VERTEX_FETCH(0, 0, 0, 0, 1)
+                AVX_VERTEX_STREAM(0, 0, 0, 0, 1)
             },
             .attrs =
             {
@@ -724,16 +724,16 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
         rnd->testVin = vin;
 
         AfxMakeUri(&uri, 0, "../gfx/test/test.xsh.xml", 0);
-        ArxLoadDrawTechnique(din, &uri, &rnd->testDtec);
+        ArxLoadDrawTechnique(rwe, &uri, &rnd->testDtec);
     }
 
     avxVertexLayout skinVtxl =
     {
-        .srcCnt = 2,
-        .srcs =        
+        .binCnt = 2,
+        .bins =        
         {
-            AVX_VERTEX_FETCH(0, 0, 0, 0, 3),
-            AVX_VERTEX_FETCH(1, 0, 0, 3, 2)
+            AVX_VERTEX_STREAM(0, 0, 0, 0, 3),
+            AVX_VERTEX_STREAM(1, 0, 0, 3, 2)
         },
         .attrs =
         {
@@ -752,11 +752,11 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
 
     avxVertexLayout rigidVtxl =
     {
-        .srcCnt = 2,
-        .srcs =
+        .binCnt = 2,
+        .bins =
         {
-            AVX_VERTEX_FETCH(0, 0, 0, 0, 1),
-            AVX_VERTEX_FETCH(1, 0, 0, 1, 2)
+            AVX_VERTEX_STREAM(0, 0, 0, 0, 1),
+            AVX_VERTEX_STREAM(1, 0, 0, 1, 2)
         },
         .attrs =
         {
@@ -774,12 +774,12 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
     {
         avxVertexLayout vtxl_p3n3t2_bi_mtl_mtx_jnt =
         {
-            .srcCnt = 3,
-            .srcs =
+            .binCnt = 3,
+            .bins =
             {
-                AVX_VERTEX_FETCH(0, 0, 0, 0, 1),
-                AVX_VERTEX_FETCH(1, 0, 0, 1, 2),
-                AVX_VERTEX_FETCH(2, 0, 1, 3, 4)
+                AVX_VERTEX_STREAM(0, 0, 0, 0, 1),
+                AVX_VERTEX_STREAM(1, 0, 0, 1, 2),
+                AVX_VERTEX_STREAM(2, 0, 1, 3, 4)
             },
             .attrs =
             {
@@ -802,12 +802,12 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
 
         avxVertexLayout vtxl_p3j1n3t2_bi_mtl_mtx_jnt =
         {
-            .srcCnt = 3,
-            .srcs =
+            .binCnt = 3,
+            .bins =
             {
-                AVX_VERTEX_FETCH(0, 0, 0, 0, 2),
-                AVX_VERTEX_FETCH(1, 0, 0, 2, 2),
-                AVX_VERTEX_FETCH(2, 0, 1, 4, 4)
+                AVX_VERTEX_STREAM(0, 0, 0, 0, 2),
+                AVX_VERTEX_STREAM(1, 0, 0, 2, 2),
+                AVX_VERTEX_STREAM(2, 0, 1, 4, 4)
             },
             .attrs =
             {
@@ -831,12 +831,12 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
 
         avxVertexLayout vtxl_p3j2n3t2_bi_mtl_mtx_jnt =
         {
-            .srcCnt = 3,
-            .srcs =
+            .binCnt = 3,
+            .bins =
             {
-                AVX_VERTEX_FETCH(0, 0, 0, 0, 3),
-                AVX_VERTEX_FETCH(1, 0, 0, 3, 2),
-                AVX_VERTEX_FETCH(2, 0, 1, 5, 4)
+                AVX_VERTEX_STREAM(0, 0, 0, 0, 3),
+                AVX_VERTEX_STREAM(1, 0, 0, 3, 2),
+                AVX_VERTEX_STREAM(2, 0, 1, 5, 4)
             },
             .attrs =
             {
@@ -861,12 +861,12 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
 
         avxVertexLayout vtxl_p3j3n3t2_bi_mtl_mtx_jnt =
         {
-            .srcCnt = 3,
-            .srcs =
+            .binCnt = 3,
+            .bins =
             {
-                AVX_VERTEX_FETCH(0, 0, 0, 0, 3),
-                AVX_VERTEX_FETCH(1, 0, 0, 3, 2),
-                AVX_VERTEX_FETCH(2, 0, 1, 5, 4)
+                AVX_VERTEX_STREAM(0, 0, 0, 0, 3),
+                AVX_VERTEX_STREAM(1, 0, 0, 3, 2),
+                AVX_VERTEX_STREAM(2, 0, 1, 5, 4)
             },
             .attrs =
             {
@@ -891,14 +891,14 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
 
         avxVertexLayout vtxl_p3j4n3t2_bi_mtl_mtx_jnt =
         {
-            .srcCnt = 3,
-            .srcs =
+            .binCnt = 3,
+            .bins =
             {
-                AVX_VERTEX_FETCH(0, 0, 0, 0, 3),
-                AVX_VERTEX_FETCH(1, 0, 0, 3, 2),
-                AVX_VERTEX_FETCH(2, 0, 1, 5, 4)
+                AVX_VERTEX_STREAM(0, 0, 0, 0, 3),
+                AVX_VERTEX_STREAM(1, 0, 0, 3, 2),
+                AVX_VERTEX_STREAM(2, 0, 1, 5, 4)
             },
-            //.srcs[0].attrCnt = 9,
+            //.bins[0].attrCnt = 9,
             .attrs =
             {
                 // per-vertex fetch
@@ -979,7 +979,9 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
             rnd->framesets[i].mtlboPtr = mtlboPtr;
             rnd->framesets[i].icboPtr = icboPtr;
 
-            AvxAcquireFences(dsys, TRUE, 1, &rnd->framesets[i].drawCompletedFence);
+            avxFenceInfo feni = { 0 };
+            feni.initialVal = TRUE;
+            AvxAcquireFences(dsys, 1, &feni, &rnd->framesets[i].drawCompletedFence);
         }
 
         //AfxTextureBlueprintEnd(&depthSurfB, 0, NIL);
@@ -987,7 +989,7 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
 
     {
         AfxMakeUri(&uri, 0, "../gfx/body/body.xsh.xml", 0);
-        ArxLoadDrawTechnique(din, &uri, &rnd->bodyDtec);
+        ArxLoadDrawTechnique(rwe, &uri, &rnd->bodyDtec);
     }
 
     ArxRendererSetStar(rnd, AFX_V4D(0, 0, 0, 1), AFX_V3D(-0.8660f, 0.5f, 0), AFX_V4D(0.8, 0.8, 0.8, 0.8));
@@ -995,18 +997,18 @@ _ARX afxError _ArxRndCtor(akxRenderer rnd, void** args, afxUnit invokeNo)
     
     arxPoseInfo posei = { 0 };
     posei.artCnt = 255;
-    ArxAcquirePoses(rnd->din, 1, &posei, &rnd->lp);
-    ArxAcquirePlacements(rnd->din, 1, (afxUnit[]) { 255 }, (afxBool[]) {TRUE}, &rnd->wp[0]);
-    ArxAcquirePlacements(rnd->din, 1, (afxUnit[]) { 255 }, (afxBool[]) { TRUE }, &rnd->wp[1]);
+    ArxAcquirePoses(rnd->rwe, 1, &posei, &rnd->lp);
+    ArxAcquirePlacements(rnd->rwe, 1, (afxUnit[]) { 255 }, (afxBool[]) {TRUE}, &rnd->wp[0]);
+    ArxAcquirePlacements(rnd->rwe, 1, (afxUnit[]) { 255 }, (afxBool[]) { TRUE }, &rnd->wp[1]);
 
     AfxMakeUri(&uri, 0, "../gfx/testLighting/testLighting.xsh.xml", 0);
-    ArxLoadDrawTechnique(din, &uri, &rnd->blinnTestRazrDtec);
+    ArxLoadDrawTechnique(rwe, &uri, &rnd->blinnTestRazrDtec);
 
     AfxMakeUri(&uri, 0, "../gfx/tutCamUtil/tutCamUtil.xsh.xml", 0);
-    ArxLoadDrawTechnique(din, &uri, &rnd->tutCamUtilDtec);
+    ArxLoadDrawTechnique(rwe, &uri, &rnd->tutCamUtilDtec);
 
     AfxMakeUri(&uri, 0, "../gfx/lighting/lighting.xsh.xml", 0);
-    ArxLoadDrawTechnique(din, &uri, &rnd->lightingDtec);
+    ArxLoadDrawTechnique(rwe, &uri, &rnd->lightingDtec);
 
     AfxMakeArray(&rnd->capturedNodes, sizeof(arxBody), 100, NIL, 0);
 
@@ -1026,12 +1028,12 @@ _ARX afxClassConfig const _ARX_RND_CLASS_CONFIG =
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_ARX afxError ArxAcquireRenderers(arxRenderware din, afxUnit cnt, akxRenderer rnd[], akxRendererConfig const config[])
+_ARX afxError ArxAcquireRenderers(arxRenderware rwe, afxUnit cnt, akxRenderer rnd[], akxRendererConfig const config[])
 {
     afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DIN, 1, &din);
+    AFX_ASSERT_OBJECTS(afxFcc_RWE, 1, &rwe);
 
-    if (AfxAcquireObjects((afxClass *)_ArxGetRendererClass(din), cnt, (afxObject*)rnd, (void const*[]) { din, (void*)config }))
+    if (AfxAcquireObjects((afxClass *)_ArxRweGetRndrClass(rwe), cnt, (afxObject*)rnd, (void const*[]) { rwe, (void*)config }))
         AfxThrowError();
 
     return err;

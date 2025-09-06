@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                     Q W A D R O   S O U N D   I / O   S Y S T E M
+ *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA A4D <https://sigmaco.org/a4d>
+// This software is part of Advanced Multimedia Extensions & Experiments.
 
 #define _AFX_SYSTEM_C
 #define _AFX_MODULE_C
@@ -153,15 +154,16 @@ _AMX afxError _AmxRegisterAudioStreamInterface(afxModule icd, afxClassConfig con
     // AfxOpenAudioSink(vaioId, "//./in2"); // headmic
     // AfxOpenAudioSink(vaioId, "//./in3"); // mix
 
-    if (AfxMountClass(&icd->icd.asiCls, (afxClass*)_AfxGetDeviceClass(), &icd->classes, &clsCfg)) // require base*
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+
+    if (AfxMountClass(&icd->icd.asiCls, (afxClass*)_AfxSysGetDevClass(sys), &icd->classes, &clsCfg)) // require base*
     {
         AfxThrowError();
     }
     else
     {
-        afxSystem sys;
-        AfxGetSystem(&sys);
-        AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
         AfxPushLink(&icd->icd.amx, &sys->amxIcdChain);
         icd->flags |= afxModuleFlag_AMX;
     }
@@ -210,6 +212,10 @@ _AMX afxError _AmxImplementMixSystem(afxModule icd, _amxMixSystemImplementation 
         return err;
     }
 
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+
     clsCfg = cfg->mdevCls.fcc ? cfg->mdevCls : _AMX_MDEV_CLASS_CONFIG;
     AFX_ASSERT(clsCfg.fcc == afxFcc_MDEV);
     AFX_ASSERT(clsCfg.fixedSiz >= _AMX_MDEV_CLASS_CONFIG.fixedSiz);
@@ -221,7 +227,7 @@ _AMX afxError _AmxImplementMixSystem(afxModule icd, _amxMixSystemImplementation 
         AfxDismountClass(&icd->icd.mcdcCls);
         return err;
     }
-    else if (AfxMountClass(&icd->icd.mdevCls, (afxClass*)_AfxGetDeviceClass(), &icd->classes, &clsCfg)) // require base*
+    else if (AfxMountClass(&icd->icd.mdevCls, (afxClass*)_AfxSysGetDevClass(sys), &icd->classes, &clsCfg)) // require base*
     {
         AfxThrowError();
         AfxDismountClass(&icd->icd.asiCls);
@@ -250,9 +256,6 @@ _AMX afxError _AmxImplementMixSystem(afxModule icd, _amxMixSystemImplementation 
         return err;
     }
 
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     AfxPushLink(&icd->icd.amx, &sys->amxIcdChain);
     icd->flags |= afxModuleFlag_AMX;
 
@@ -295,27 +298,6 @@ _AMX afxBool _AmxGetIcd(afxUnit icdIdx, afxModule* driver)
     return found;
 }
 
-_AMX afxError amxScmHook(afxModule mdle, afxManifest const* ini)
-{
-    afxError err = NIL;
-    AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
-
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-
-    //AfxMountClass(&sys->amx.sdevCls, (afxClass*)_AfxGetDeviceClass(), _AfxGetSystemClassChain(), &_AMX_MDEV_CLASS_CONFIG); // require base*
-
-    if (!err)
-    {
-        //sys->amx.ready = TRUE;
-    }
-
-    //_AmxImplementMixSystem(mdle, , &_AMX_MDEV_CLASS_CONFIG, &_AMX_MSYS_CLASS_CONFIG);
-
-    return err;
-}
-
 _AMX afxError amxIcdHook(afxModule icd, afxUri const* manifest)
 {
     afxError err = AFX_ERR_NONE;
@@ -353,7 +335,7 @@ _AMX afxError amxIcdHook(afxModule icd, afxUri const* manifest)
             //.dev.ioctl = (void*)_ZalSdevIoctrlCb,
             //.relinkAsioCb = _ZalRelinkAsioWasapiCb,
 
-            .capabilities = afxMixCaps_MIX | afxMixCaps_SIM,
+            .capabilities = afxMixCaps_MIX | afxMixCaps_TRANSFER,
             .minQueCnt = 2,
             .maxQueCnt = 16,
         },
@@ -368,3 +350,70 @@ _AMX afxError amxIcdHook(afxModule icd, afxUri const* manifest)
 
     return err;
 }
+
+int audio_ringbuffer_init(AudioRingBuffer* rb, void* bufPtr, afxUnit bufStride, size_t capacity_frames, size_t channels) {
+    rb->capacity = capacity_frames;
+    rb->channels = channels;
+    rb->write_pos = 0;
+    rb->read_pos = 0;
+    rb->buffer = bufPtr;
+    rb->bufStride = bufStride;
+    return rb->buffer ? 0 : -1;
+}
+
+void audio_ringbuffer_free(AudioRingBuffer* rb) {
+    rb->buffer = NULL;
+}
+
+void audio_ringbuffer_write(AudioRingBuffer* rb, const afxByte* input, afxUnit srcStride, size_t frames) {
+    for (size_t i = 0; i < frames; ++i) {
+        size_t index = (rb->write_pos % rb->capacity) * rb->channels;
+        AfxCopy(&rb->buffer[rb->bufStride * index], &input[srcStride * i * rb->channels], sizeof(AFX_MAX(1, AFX_MIN(rb->bufStride, srcStride))) * rb->channels);
+        rb->write_pos++;
+
+        // Overwrite oldest data if buffer is full
+        if (rb->write_pos - rb->read_pos > rb->capacity) {
+            rb->read_pos = rb->write_pos - rb->capacity;
+        }
+    }
+}
+
+size_t audio_ringbuffer_read(AudioRingBuffer* rb, afxByte* output, afxUnit dstStride, size_t max_frames) {
+    size_t available = rb->write_pos - rb->read_pos;
+    size_t to_read = (available < max_frames) ? available : max_frames;
+
+    for (size_t i = 0; i < to_read; ++i) {
+        size_t index = ((rb->read_pos + i) % rb->capacity) * rb->channels;
+        AfxCopy(&output[dstStride * i * rb->channels], &rb->buffer[rb->bufStride * index], sizeof(AFX_MAX(1, AFX_MIN(rb->bufStride, dstStride))) * rb->channels);
+    }
+
+    rb->read_pos += to_read;
+    return to_read;
+}
+
+size_t audio_ringbuffer_available(const AudioRingBuffer* rb)
+{
+    /*
+        works only if write_pos is always ahead of or equal to read_pos, and your ring buffer is using monotonically increasing counters (not wrapping indices).
+        However, in most ring buffer implementations, the read and write positions wrap around the buffer size, meaning the indices reset to zero after reaching the end of the buffer array. In that case, the function above would break or give incorrect results.
+    */
+    return rb->write_pos - rb->read_pos;
+}
+
+size_t audio_ringbuffer_writable(const AudioRingBuffer* rb) {
+    return rb->capacity - audio_ringbuffer_available(rb);
+}
+
+
+/*
+    AudioRingBuffer rb;
+    audio_ringbuffer_init(&rb, 48000, 2); // 1 sec stereo buffer
+
+    // Simulate writing 512 stereo frames
+    float input[512 * 2] = { fill with samples };
+    audio_ringbuffer_write(&rb, input, 512);
+
+    // Read up to 256 frames
+    float output[256 * 2];
+    size_t read = audio_ringbuffer_read(&rb, output, 256);
+*/

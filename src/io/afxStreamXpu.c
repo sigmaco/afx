@@ -102,7 +102,7 @@ _AFX afxError _XpuRollStreams(afxIoBridge exu, afxUnit cnt, afxStream streams[])
         {
             AFX_ASSERT(mix->m.portId == spu->portId);
             mix->m.state = avxDrawContextState_INVALID;
-            afxMixQueue sque = AfxGetProvider(mix);
+            afxMixQueue sque = AfxGetHost(mix);
             AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &sque);
 
             afxUnit poolIdx = mix->m.poolIdx;

@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/inc/math/afxTrigonometry.h"
+#include "qwadro/math/afxTrigonometry.h"
 
 // Returns the hyperbolic sine function; (e^x - e^(-x)) / 2.
 

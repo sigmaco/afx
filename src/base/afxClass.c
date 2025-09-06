@@ -15,7 +15,7 @@
  */
 
 #define _AFX_MANAGER_C
-#include "../impl/afxExecImplKit.h"
+#include "src/impl/afxExecImplKit.h"
 
 #define OBJ_HDR_SIZ     AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT)
 #define GET_OBJ_HDR(obj_) ((void*)(((afxByte*)obj_) - OBJ_HDR_SIZ))
@@ -1261,7 +1261,23 @@ _AFX afxUnit _AfxAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fc
         AFX_ASSERT(cls->fcc == afxFcc_CLS);
         afxBool found = FALSE;
 
-        do if (cls->objFcc == fcc) { found = TRUE;  break; }
+        do if (cls->objFcc == fcc)
+        {
+#if 0
+            // Must be the class which registers the size.
+            //if (cls->fixedSiz)
+            if (hdr->cls->fixedSiz)
+            {
+                void* ptr;
+                afxBool booked = AfxGetPoolUnit(&hdr->cls->pool, hdr->instIdx, &ptr);
+                AFX_ASSERT(booked);
+                if (!booked)
+                    break;
+            }
+#endif
+            found = TRUE;
+            break;
+        }
         while ((cls = AfxGetSubClass(cls)));
 
         if (!found) ++exceptions;

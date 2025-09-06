@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/inc/math/afxVertex.h"
+#include "qwadro/math/afxVertex.h"
 
 _AFXINL afxReal AfxGetDistanceBetweenV3d(afxV3d const v, afxV3d const other)
 {

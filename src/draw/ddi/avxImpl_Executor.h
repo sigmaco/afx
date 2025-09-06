@@ -19,13 +19,14 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #ifndef AVX_IMPL___EXECUTOR_H
 #define AVX_IMPL___EXECUTOR_H
 
-#include "qwadro/inc/draw/afxDrawSystem.h"
-#include "qwadro/inc/mem/afxInterlockedQueue.h"
-#include "qwadro/inc/mem/afxSlabAllocator.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/mem/afxInterlockedQueue.h"
+#include "qwadro/mem/afxSlabAllocator.h"
 
 AFX_DECLARE_UNION(_avxIoReqPacket);
 AFX_DECLARE_UNION(_avxIoReqLut);
@@ -117,7 +118,11 @@ AFX_OBJECT(_avxFence)
 AFX_OBJECT(avxFence)
 #endif
 {
+    afxString tag;
+    void* udd;
+    avxFenceFlags flags;
     afxAtom32 signaled;
+    afxAtom64 value;
 };
 #endif//_AVX_FENCE_C
 
@@ -161,7 +166,7 @@ AFX_DEFINE_UNION(_avxIoReqLut)
         void* SyncMaps;
         void* Stamp;
     };
-    void(*f[])(void*, _avxIoReqPacket*);
+    afxError(*f[])(void*, _avxIoReqPacket*);
 };
 
 #define _AVX_GET_STD_IORP_ID(cmdName_) (offsetof(_avxIoReqLut, cmdName_) / sizeof(void*))
@@ -173,14 +178,16 @@ AFX_DEFINE_STRUCT(_avxIoReqPacketHdr)
     afxUnit siz;
     afxUnit submNo; // this submission number ordinal (B2F)
     afxUnit reqSubmNo; // required submission num ordinal (need be executed before this). Usually submissions of resource benefiting of fetch priority.
-    afxTime pushTime; // submission (into input) time
-    afxTime pullTime; // fecth (by queue) time
+    afxClock pushTime; // submission (into input) time
+    afxClock pullTime; // fecth (by queue) time
+    afxBool pulled;
     afxUnit dpuId;
     afxUnit syncUnitId;
     void* syncIdd0;
     afxSize syncIdd1;
     afxError(*exec)(void*, afxDrawBridge, afxUnit queIdx, _avxIoReqPacket*);
-    afxTime complTime; // completation time
+    afxClock complTime; // completation time
+    afxBool completed;
     avxFence completionFence;
     afxSize idd[4];
 };
@@ -280,7 +287,7 @@ AFX_DEFINE_UNION(_avxIoReqPacket)
         _avxIoReqPacketHdr hdr;
 
         afxUnit         submType;
-        void            (*f)(void*, void*);
+        afxError        (*f)(void*, void*);
         void*           udd;
         afxUnit         dataSiz;
         afxByte AFX_SIMD data[];
@@ -353,7 +360,7 @@ AVX afxError _AvxDqueExecuteDrawCommands(afxDrawQueue dque, afxUnit cnt, avxSubm
 AVX afxError _AvxDqueTransferResources(afxDrawQueue dque, avxTransference const* ctrl, afxUnit opCnt, void const* ops);
 AVX afxError _AvxDqueRemapBuffers(afxDrawQueue dque, afxUnit mapCnt, _avxBufferRemapping const maps[], afxUnit unmapCnt, _avxBufferRemapping const unmaps[]);
 AVX afxError _AvxDqueCohereMappedBuffers(afxDrawQueue dque, afxUnit flushCnt, avxBufferedMap const flushes[], afxUnit fetchCnt, avxBufferedMap const fetches[]);
-AVX afxError _AvxDqueSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), void* udd);
+AVX afxError _AvxDqueSubmitCallback(afxDrawQueue dque, afxError(*f)(void*, void*), void* udd);
 
 AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name, avxColor const color);
 AVX void _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, avxColor const color);

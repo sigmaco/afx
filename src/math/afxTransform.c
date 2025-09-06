@@ -16,11 +16,11 @@
 
 // This code is part of SIGMA Advanced Math Extensions for Qwadro
 
-#include "qwadro/inc/math/afxTransform.h"
-#include "qwadro/inc/math/afxMatrix.h"
-#include "qwadro/inc/math/afxVector.h"
-#include "qwadro/inc/math/afxQuaternion.h"
-#include "qwadro/inc/io/afxStream.h"
+#include "qwadro/math/afxTransform.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/math/afxVector.h"
+#include "qwadro/math/afxQuaternion.h"
+#include "qwadro/io/afxStream.h"
 
 afxTransform const AFX_TRANSFORM_ZERO =
 {

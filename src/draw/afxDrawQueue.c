@@ -15,13 +15,14 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 //#define _AFX_DEVICE_C
 //#define _AVX_DRAW_DEVICE_C
 //#define _AVX_DRAW_BRIDGE_C
 #define _AVX_DRAW_QUEUE_C
-//#define _AVX_DRAW_OUTPUT_C
+//#define _AVX_SURFACE_C
 #define _AVX_DRAW_CONTEXT_C
 #define _AVX_BUFFER_C
 #include "ddi/avxImplementation.h"
@@ -79,7 +80,7 @@ _AVX afxError _AvxDquePushIoReqPacket(afxDrawQueue dque, afxUnit id, afxUnit siz
         AfxZero(iorp, sizeof(iorp->hdr));
         iorp->hdr.id = id;
         iorp->hdr.siz = siz;
-        AfxGetTime(&iorp->hdr.pushTime);
+        AfxGetClock(&iorp->hdr.pushTime);
         AFX_ASSERT(cmdId);
         *cmdId = AfxPushLink(&iorp->hdr.chain, &dque->iorpChn);
         AFX_ASSERT(pIorp);
@@ -242,7 +243,7 @@ _AVX afxError AvxWaitForEmptyDrawQueue(afxDrawQueue dque, afxUnit64 timeout)
     return err;
 }
 
-_AVX afxError _AvxDqueSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), void* udd)
+_AVX afxError _AvxDqueSubmitCallback(afxDrawQueue dque, afxError(*f)(void*, void*), void* udd)
 {
     afxError err = AFX_ERR_NONE;
     // dque must be a valid afxDrawQueue handle.
@@ -269,7 +270,7 @@ _AVX afxError _AvxDqueSubmitCallback(afxDrawQueue dque, void(*f)(void*, void*), 
 
     AfxUnlockMutex(&dque->iorpChnMtx);
 
-    afxDrawBridge dexu = AfxGetProvider(dque);
+    afxDrawBridge dexu = AfxGetHost(dque);
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     _AvxDexu_PingCb(dexu, 0);
 
@@ -326,7 +327,7 @@ _AVX afxError _AvxDqueExecuteDrawCommands(afxDrawQueue dque, afxUnit cnt, avxSub
 
     AfxUnlockMutex(&dque->iorpChnMtx);
 
-    afxDrawBridge dexu = AfxGetProvider(dque);
+    afxDrawBridge dexu = AfxGetHost(dque);
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     _AvxDexu_PingCb(dexu, 0);
 
@@ -462,7 +463,7 @@ _AVX afxError _AvxDqueTransferResources(afxDrawQueue dque, avxTransference const
 
     AfxUnlockMutex(&dque->iorpChnMtx);
 
-    afxDrawBridge dexu = AfxGetProvider(dque);
+    afxDrawBridge dexu = AfxGetHost(dque);
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     _AvxDexu_PingCb(dexu, 0);
 
@@ -544,7 +545,7 @@ _AVX afxError _AvxDqueRemapBuffers(afxDrawQueue dque, afxUnit mapCnt, _avxBuffer
 
     AfxUnlockMutex(&dque->iorpChnMtx);
 
-    afxDrawBridge dexu = AfxGetProvider(dque);
+    afxDrawBridge dexu = AfxGetHost(dque);
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     _AvxDexu_PingCb(dexu, 0);
 
@@ -624,7 +625,7 @@ _AVX afxError _AvxDqueCohereMappedBuffers(afxDrawQueue dque, afxUnit flushCnt, a
 
     AfxUnlockMutex(&dque->iorpChnMtx);
 
-    afxDrawBridge dexu = AfxGetProvider(dque);
+    afxDrawBridge dexu = AfxGetHost(dque);
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     _AvxDexu_PingCb(dexu, 0);
 

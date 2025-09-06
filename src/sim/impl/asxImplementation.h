@@ -21,10 +21,9 @@
 
 #include "../../impl/afxExecImplKit.h"
 #include "../../draw/ddi/avxImplementation.h"
-#include "qwadro/inc/sim/afxEngine.h"
-#include "qwadro/inc/sim/afxSimulation.h"
+#include "qwadro/sim/afxEngine.h"
+#include "qwadro/sim/afxSimulation.h"
 #include "asxImpl_Executor.h"
-#include "asxImpl_Memory.h"
 #include "asxImpl_Context.h"
 #include "asxImpl_Simulation.h"
 

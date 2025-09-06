@@ -19,7 +19,7 @@
 #define _ARX_ANIMATION_C
 #define _ARX_MOTION_C
 #define _ARX_SKELETON_C
-#include "../../sim/impl/asxImplementation.h"
+#include "impl/asxImplementation.h"
 
 AFX_DEFINE_STRUCT(arxModelLink)
 {
@@ -60,7 +60,7 @@ _ARX afxUnit ArxCountBodyMotives(arxBody bod)
     return bod->motives.cnt;
 }
 
-_ARX void ArxStepBodyMotives(arxBody bod, afxReal newClock)
+_ARX void ArxStepBodyMotives(arxBody bod, afxReal time)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
@@ -74,7 +74,7 @@ _ARX void ArxStepBodyMotives(arxBody bod, afxReal newClock)
     {
         arxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
-        ArxStepCapstans(newClock, 1, &moto);
+        ArxStepCapstans(time, 1, &moto);
     }
 }
 
@@ -107,7 +107,7 @@ _ARX void ArxRecenterBodyMotiveClocks(arxBody bod, afxReal currClock)
     {
         arxCapstan moto = intk->moto;
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
-        ArxRebaseCapstanClocks(currClock, 1, &moto);
+        ArxRebaseCapstanTimes(currClock, 1, &moto);
     }
 }
 
@@ -221,9 +221,9 @@ _ARX afxBool AfxSampleSingleBodyAnimation(arxBody bod, arxCapstan moto, afxUnit 
             if (ArxCapstanHasEffect(moto))
             {
                 if (intk->isAnim)
-                    _ArxSimGetAnimVmt(AfxGetProvider(bod))->AnimationAccumulateBindingState(intk, basePivotIdx, pivotCnt, pose, allowedErr, sparseJntMap);
+                    _ArxSimGetAnimVmt(AfxGetHost(bod))->AnimationAccumulateBindingState(intk, basePivotIdx, pivotCnt, pose, allowedErr, sparseJntMap);
                 else
-                    _ArxSimGetAnimVmt(AfxGetProvider(bod))->PoseAccumulateBindingState(intk, basePivotIdx, pivotCnt, pose, allowedErr, sparseJntMap);
+                    _ArxSimGetAnimVmt(AfxGetHost(bod))->PoseAccumulateBindingState(intk, basePivotIdx, pivotCnt, pose, allowedErr, sparseJntMap);
             }
             ++fnd;
         }
@@ -256,9 +256,9 @@ _ARX void AfxSampleBodyAnimationsAccelerated(arxBody bod, afxUnit pivotCnt, afxM
         arxMotive intk = AFX_REBASE(lnk, AFX_OBJ(arxMotive), bod);
 
         if (intk->isAnim)
-            _ArxSimGetAnimVmt(AfxGetProvider(bod))->AnimationBuildDirect(intk, pivotCnt, displace, plce, allowedErr);
+            _ArxSimGetAnimVmt(AfxGetHost(bod))->AnimationBuildDirect(intk, pivotCnt, displace, plce, allowedErr);
         else
-            _ArxSimGetAnimVmt(AfxGetProvider(bod))->PoseBuildDirect(intk, pivotCnt, displace, plce);
+            _ArxSimGetAnimVmt(AfxGetHost(bod))->PoseBuildDirect(intk, pivotCnt, displace, plce);
     }
     else if (bod->motives.cnt > 1)
     {
@@ -361,7 +361,7 @@ _ARX void ArxApplyForceAndTorque(arxBody bod, afxV3d const force, afxV3d const t
     AfxV3dAdd(bod->rigid.torque, bod->rigid.torque, torque);
 }
 
-_ARX afxError ArxNodulateBody(arxBody bod, afxUnit basePartIdx, afxUnit cnt, afxNode nod, void(*sync)(afxNodular*), afxFlags flags, afxMask mask)
+_ARX afxError ArxNodulateBody(arxBody bod, afxUnit basePartIdx, afxUnit cnt, arxNode nod, void(*sync)(arxNodular*), afxFlags flags, afxMask mask)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
@@ -372,7 +372,7 @@ _ARX afxError ArxNodulateBody(arxBody bod, afxUnit basePartIdx, afxUnit cnt, afx
         afxUnit partIdx = basePartIdx + i;
         arxBodyPart* part = &bod->parts[partIdx];
 
-        afxNode curr = AfxGetLinker(&part->nodr.nod);
+        arxNode curr = AfxGetLinker(&part->nodr.nod);
 
         if (curr != nod)
         {
@@ -483,15 +483,15 @@ _ARX afxError _ArxBodCtorCb(arxBody bod, void** args, afxUnit invokeNo)
     AfxQuatReset(bod->rigid.q); // Identity quaternion (no rotation)
     AfxV3dZero(bod->rigid.angularMom); // Initial angular momentum
     AfxV3dZero(bod->rigid.linearMom); // Initial linear momentum
-    AfxM3dZero(bod->rigid.Ibody); // Moment of inertia (kg*m^2)
-    bod->rigid.mass = 0; // Mass in kg
+    AfxM3dReset(bod->rigid.Ibody); // Moment of inertia (kg*m^2)
+    bod->rigid.mass = AFX_R32_MAX; // Mass in kg
 
-    arxRenderware din = AfxGetSimulationDrawInput(sim);
+    arxRenderware rwe = AfxGetSimulationDrawInput(sim);
 
     arxPoseInfo posei = { 0 };
     posei.artCnt = jntCnt;
-    ArxAcquirePoses(din, 1, &posei, &bod->pose);
-    ArxAcquirePlacements(din, 1, (afxUnit[]) { jntCnt }, NIL, &bod->placement);
+    ArxAcquirePoses(rwe, 1, &posei, &bod->pose);
+    ArxAcquirePlacements(rwe, 1, (afxUnit[]) { jntCnt }, NIL, &bod->placement);
 
     return err;
 }
@@ -542,15 +542,15 @@ _ARX afxError ArxAcquireBodies(afxSimulation sim, arxModel mdl, afxUnit cnt, arx
     return err;
 }
 
-_ARX afxUnit ArxPerformManipulatedPose(arxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, akxTrackMask* modelMask, afxUnit cnt, arxBody bodies[])
+_ARX afxUnit ArxPerformManipulatedPose(arxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, arxTrackMask* modelMask, afxUnit cnt, arxBody bodies[])
 {
     afxError err = NIL;
     AFX_ASSERT_OBJECTS(afxFcc_POSE, 1, &pose);
     AFX_ASSERT(bodies);
     afxUnit rslt = 0;
 
-    arxRenderware din = AfxGetProvider(pose);
-
+    arxRenderware rwe = AfxGetHost(pose);
+    afxSimulation sim = NIL;
     arxTrackTarget targets[256];
 
     for (afxUnit mdlIdx = 0; mdlIdx < cnt; mdlIdx++)
@@ -559,6 +559,7 @@ _ARX afxUnit ArxPerformManipulatedPose(arxPose pose, afxReal startTime, afxReal 
 
         if (!bod) continue;
         AFX_ASSERT_OBJECTS(afxFcc_BOD, 1, &bod);
+        sim = AfxGetHost(bod);
 
         targets[mdlIdx] = (arxTrackTarget) { 0 };
         targets[mdlIdx].ModelMask = modelMask;
@@ -567,11 +568,11 @@ _ARX afxUnit ArxPerformManipulatedPose(arxPose pose, afxReal startTime, afxReal 
 
     arxCapstan moto;
     arxCapstanConfig motoCfg = { 0 };
-    motoCfg.currClock = startTime;
+    motoCfg.currTime = startTime;
     motoCfg.localDur = duration;
     motoCfg.iterCnt = iterCnt;
 
-    if (ArxAcquireCapstans(din, &motoCfg, 1, &moto))
+    if (ArxAcquireCapstans(sim, &motoCfg, 1, &moto))
     {
         AfxThrowError();
     }
@@ -580,7 +581,7 @@ _ARX afxUnit ArxPerformManipulatedPose(arxPose pose, afxReal startTime, afxReal 
         AFX_ASSERT_OBJECTS(afxFcc_MOTO, 1, &moto);
 
         arxMotive motives[256];
-        if (AfxAcquireObjects((afxClass*)_ArxGetMotiveClass(din), cnt, (afxObject*)motives, (void const*[]) { din, pose, moto, &targets[0] }))
+        if (AfxAcquireObjects((afxClass*)_ArxGetMotiveClass(sim), cnt, (afxObject*)motives, (void const*[]) { sim, pose, moto, &targets[0] }))
         {
             AfxThrowError();
         }

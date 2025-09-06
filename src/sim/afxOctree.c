@@ -15,7 +15,7 @@
  */
 
 #include "impl/asxImplementation.h"
-#include "qwadro/inc/sim/afxOctree.h"
+#include "qwadro/sim/afxOctree.h"
 
 
 ASX void AfxDeployOctree(afxOctree* tree, afxBox* bounds)

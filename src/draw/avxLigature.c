@@ -15,11 +15,30 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
 #define _AVX_LIGATURE_C
 #define _AVX_SHADER_C
 #include "ddi/avxImplementation.h"
+
+_AVX afxDrawSystem AvxGetLigatureHost(avxLigature liga)
+{
+    afxError err = AFX_ERR_NONE;
+    // @liga must be a valid avxLigature handle.
+    AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
+    afxDrawSystem dsys = AfxGetHost(liga);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    return dsys;
+}
+
+_AVX afxFlags AvxGetLigatureFlags(avxLigature liga, afxFlags mask)
+{
+    afxError err = AFX_ERR_NONE;
+    // @liga must be a valid avxLigature handle.
+    AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
+    return (!mask) ? liga->flags : (liga->flags & mask);
+}
 
 _AVX afxUnit32 AvxGetLigatureHash(avxLigature liga, afxUnit set)
 {
@@ -203,7 +222,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
     }
 
     // Validate ligature sets
-    if (cfg->setCnt > AVX_MAX_LIGATURE_SETS)
+    if (cfg->setCnt > AVX_MAX_LIGAMENT_SETS)
     {
         // invalid range
         AfxThrowError();
@@ -216,7 +235,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
 
     for (afxUnit i = 0; i < cfg->setCnt; ++i)
     {
-        avxLigatureSet const* set = &cfg->sets[i];
+        avxLigamentSet const* set = &cfg->sets[i];
 
         // Bounds check
         if ((set->baseEntryIdx + set->entryCnt) > cfg->pointCnt)
@@ -286,8 +305,8 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
 
     for (afxUnit i = 0; i < cfg->setCnt; i++)
     {
-        avxLigatureSet const* sc = &cfg->sets[i];
-        _avxLigatureSet* s = &liga->sets[i];
+        avxLigamentSet const* sc = &cfg->sets[i];
+        _avxLigamentSet* s = &liga->sets[i];
 
         afxUnit entryCnt = 0;
         for (afxUnit j = 0; j < sc->entryCnt; j++)
@@ -390,7 +409,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
 
 #if 0
     afxUnit pointCnt = 0;
-    afxUnit setMap[AVX_MAX_LIGATURE_SETS];
+    afxUnit setMap[AVX_MAX_LIGAMENT_SETS];
     afxUnit setUsed = 0;
     AfxFillPattern(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1); // Initialize to invalid set (-1)
 
@@ -417,7 +436,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
             AvxQueryShaderInterfaces(shd, j, 1, &rsrc);
 
             afxIndex setIdx;
-            avxLigatureSet* set;
+            avxLigamentSet* set;
             afxBool setFound = FALSE;
             for (setIdx = 0; setIdx < cfg->setCnt; setIdx++)
             {
@@ -449,7 +468,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
         afxUnit basePointIdx = 0;
         for (afxUnit j = 0; j < cfg->setCnt; j++)
         {
-            avxLigatureSet* set = &cfg->sets[j];
+            avxLigamentSet* set = &cfg->sets[j];
             set->baseEntryIdx = basePointIdx;
             basePointIdx += set->entryCnt;
         }
@@ -461,7 +480,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
             AvxQueryShaderInterfaces(shd, j, 1, &rsrc);
 
             afxIndex setIdx;
-            avxLigatureSet* set;
+            avxLigamentSet* set;
             afxBool setFound = FALSE;
             for (setIdx = 0; setIdx < cfg->setCnt; setIdx++)
             {
@@ -519,7 +538,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
 #if 0
         afxUnit ligIdx = 0;
         afxUnit setCnt = 0;
-        afxUnit setMap[AVX_MAX_LIGATURE_SETS]; // Tracks existing sets
+        afxUnit setMap[AVX_MAX_LIGAMENT_SETS]; // Tracks existing sets
         afxUnit setUsed = 0;
 
         AfxFillPattern(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1); // Initialize to invalid set (-1)
@@ -555,7 +574,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
             // New set?
             if (s == 0xFFFF)
             {
-                if (setUsed >= AVX_MAX_LIGATURE_SETS)
+                if (setUsed >= AVX_MAX_LIGAMENT_SETS)
                 {
                     // overflow
                     AfxThrowError();
@@ -644,7 +663,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
 
                 if (setIdx == 0xFFFF)
                 {
-                    if (setUsed >= AVX_MAX_LIGATURE_SETS)
+                    if (setUsed >= AVX_MAX_LIGAMENT_SETS)
                     {
                         // overflow
                         AfxThrowError();
@@ -783,7 +802,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
     }
 
     // Group by set
-    afxUnit setMap[AVX_MAX_LIGATURE_SETS];
+    afxUnit setMap[AVX_MAX_LIGAMENT_SETS];
     afxUnit setCount = 0;
     AfxFillPattern(setMap, sizeof(setMap), (afxByte[]) { 0xFF }, 1);
 
@@ -802,7 +821,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
         }
         if (!known)
         {
-            if (setCount >= AVX_MAX_LIGATURE_SETS)
+            if (setCount >= AVX_MAX_LIGAMENT_SETS)
             {
                 // overflow
                 AfxThrowError();
@@ -816,7 +835,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
     for (afxUnit s = 0; s < setCount; ++s)
     {
         afxUnit currentSet = setMap[s];
-        avxLigatureSet* ligSet = &cfg->sets[s];
+        avxLigamentSet* ligSet = &cfg->sets[s];
         ligSet->set = currentSet;
         ligSet->baseEntryIdx = pointIdx;
         ligSet->entryCnt = 0;
