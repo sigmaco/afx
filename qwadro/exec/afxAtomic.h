@@ -21,7 +21,7 @@
 #ifndef AFX_ATOMIC_H
 #define AFX_ATOMIC_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 
 #ifndef AFX_ATOMIC_ALIGNMENT
 #   define AFX_ATOMIC_ALIGNMENT sizeof(afxUnit64) 

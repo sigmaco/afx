@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -247,6 +247,15 @@ _AVX void AvxGetEnabledDrawFeatures(afxDrawSystem dsys, afxDrawFeatures* feature
     return;
 }
 
+_AVX avxClipSpaceDepth AvxGetOperationalClipSpaceDepth(afxDrawSystem dsys, afxReal* rangeEpsilon)
+{
+    afxError err = AFX_ERR_NONE;
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    if (rangeEpsilon) *rangeEpsilon = dsys->clipSpaceDepthRangeEpsilon;
+    return dsys->clipSpaceDepth;
+}
+
 _AVX afxUnit AvxTestForDrawExtensionsEnabled(afxDrawSystem dsys, afxUnit cnt, afxString const* exts, afxBool enabled[])
 {
     afxError err = AFX_ERR_NONE;
@@ -338,7 +347,7 @@ _AVX afxUnit AvxGetDrawBridges(afxDrawSystem dsys, afxUnit baseIdx, afxUnit cnt,
     return rslt;
 }
 
-_AVX afxUnit AvxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, afxDrawFn caps, afxMask exuMask, afxUnit first, afxUnit maxCnt, afxDrawBridge bridges[])
+_AVX afxUnit AvxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, avxAptitude caps, afxMask exuMask, afxUnit first, afxUnit maxCnt, afxDrawBridge bridges[])
 {
     afxError err = AFX_ERR_NONE;
     // @dsys must be a valid afxDrawSystem handle.
@@ -552,8 +561,13 @@ _AVX afxError _AvxDsysTransferCb_SW(afxDrawSystem dsys, avxTransference* ctrl, a
 
             AfxThrowError();
         }
+        
+        // Try again
+        if (err == afxError_TIMEOUT || err == afxError_BUSY)
+            continue; // while
 
-        if (err || queued) break; // while --- find bridges
+        if (err || queued)
+            break; // while --- find bridges
     }
     return err;
 }
@@ -578,10 +592,10 @@ _AVX afxError _AvxDsysRemapBuffersCb_SW(afxDrawSystem dsys, afxBool unmap, afxUn
     // Firstly, try to put them in a dedicated queue.
     if (dedIoExuMask)
     {
-        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawFn_TRANSFER, dedIoExuMask, 0, 0, NIL);
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, dedIoExuMask, 0, 0, NIL);
         AFX_ASSERT(exuCnt);
         exuIdx = 0;
-        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawFn_TRANSFER, dedIoExuMask, exuIdx++, 1, &dexu))
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, dedIoExuMask, exuIdx++, 1, &dexu))
         {
             queErr = _AvxDexuRemapBuffers(dexu, unmap, cnt, maps);
             err = queErr;
@@ -602,10 +616,10 @@ _AVX afxError _AvxDsysRemapBuffersCb_SW(afxDrawSystem dsys, afxBool unmap, afxUn
     // If we can not put them in a dedicated queue, try to put them in a shared one.
     if (!queued)
     {
-        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawFn_TRANSFER, ioExuMask, 0, 0, NIL);
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, ioExuMask, 0, 0, NIL);
         AFX_ASSERT(exuCnt);
         exuIdx = 0;
-        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawFn_TRANSFER, ioExuMask, exuIdx++, 1, &dexu))
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, ioExuMask, exuIdx++, 1, &dexu))
         {
             queErr = _AvxDexuRemapBuffers(dexu, unmap, cnt, maps);
             err = queErr;
@@ -645,10 +659,10 @@ _AVX afxError _AvxDsysCohereMappedBuffersCb_SW(afxDrawSystem dsys, afxBool disca
     // Firstly, try to put them in a dedicated queue.
     if (dedIoExuMask)
     {
-        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawFn_TRANSFER, dedIoExuMask, 0, 0, NIL);
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, dedIoExuMask, 0, 0, NIL);
         AFX_ASSERT(exuCnt);
         exuIdx = 0;
-        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawFn_TRANSFER, dedIoExuMask, exuIdx++, 1, &dexu))
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, dedIoExuMask, exuIdx++, 1, &dexu))
         {
             queErr = _AvxDexuCohereMappedBuffers(dexu, discard, cnt, maps);
             err = queErr;
@@ -669,10 +683,10 @@ _AVX afxError _AvxDsysCohereMappedBuffersCb_SW(afxDrawSystem dsys, afxBool disca
     // If we can not put them in a dedicated queue, try to put them in a shared one.
     if (!queued)
     {
-        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawFn_TRANSFER, ioExuMask, 0, 0, NIL);
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, ioExuMask, 0, 0, NIL);
         AFX_ASSERT(exuCnt);
         exuIdx = 0;
-        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawFn_TRANSFER, ioExuMask, exuIdx++, 1, &dexu))
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, ioExuMask, exuIdx++, 1, &dexu))
         {
             queErr = _AvxDexuCohereMappedBuffers(dexu, discard, cnt, maps);
             err = queErr;
@@ -774,10 +788,11 @@ _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
     dsys->requirements = cfg->reqFeatures;
     dsys->leftHandedSpace = FALSE;//ddev->leftHandedSpace;
     dsys->clipSpaceDepth = avxClipSpaceDepth_ZERO_TO_ONE;//ddev->clipSpaceDepth;
+    dsys->clipSpaceDepthRangeEpsilon = AFX_EPSILON;
 
     {
         afxChain* classes = &dsys->ctx.classes;
-        AfxDeployChain(classes, (void*)dsys);
+        AfxMakeChain(classes, (void*)dsys);
 
         afxClassConfig bufClsCfg = cfg->bufClsCfg ? *cfg->bufClsCfg : _AVX_BUF_CLASS_CONFIG;
         AFX_ASSERT(bufClsCfg.fcc == afxFcc_BUF);
@@ -900,20 +915,20 @@ _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
         afxDrawPortInfo capsi;
         AvxQueryDrawCapabilities(ddev, &capsi);
 
-        if ((capsi.capabilities & afxDrawFn_TRANSFER) == afxDrawFn_TRANSFER)
+        if ((capsi.capabilities & avxAptitude_DMA) == avxAptitude_DMA)
             dsys->ioExuMask |= AFX_BITMASK(i);
-        if ((capsi.capabilities & (afxDrawFn_TRANSFER | afxDrawFn_COMPUTE | afxDrawFn_DRAW)) == afxDrawFn_TRANSFER)
+        if ((capsi.capabilities & (avxAptitude_DMA | avxAptitude_PCX | avxAptitude_GFX)) == avxAptitude_DMA)
             dsys->dedIoExuMask |= AFX_BITMASK(i);
 
-        if ((capsi.capabilities & afxDrawFn_COMPUTE) == afxDrawFn_COMPUTE)
+        if ((capsi.capabilities & avxAptitude_PCX) == avxAptitude_PCX)
             dsys->cfxExuMask |= AFX_BITMASK(i);
-        if ((capsi.capabilities & (afxDrawFn_COMPUTE | afxDrawFn_DRAW)) == afxDrawFn_COMPUTE)
+        if ((capsi.capabilities & (avxAptitude_PCX | avxAptitude_GFX)) == avxAptitude_PCX)
             dsys->dedCfxExuMask |= AFX_BITMASK(i);
 
-        if ((capsi.capabilities & afxDrawFn_DRAW) == afxDrawFn_DRAW)
+        if ((capsi.capabilities & avxAptitude_GFX) == avxAptitude_GFX)
             dsys->gfxExuMask |= AFX_BITMASK(i);
 
-        if ((capsi.capabilities & afxDrawFn_PRESENT) == afxDrawFn_PRESENT)
+        if ((capsi.capabilities & avxAptitude_PRESENT) == avxAptitude_PRESENT)
             dsys->videoExuMask |= AFX_BITMASK(i);
     }
 
@@ -979,7 +994,7 @@ _AVX afxUnit AvxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AVX) == (afxModuleFlag_ICD | afxModuleFlag_AVX));
         afxClass const* cls = _AvxIcdGetDsysClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_DSYS);
-        rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+        rslt = AfxInvokeObjects(cls, (void*)f, udd, first, cnt);
     }
     return rslt;
 }
@@ -1033,7 +1048,7 @@ _AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
         return err;
     }
 
-    afxDrawFn caps = cfg->caps;
+    avxAptitude caps = cfg->caps;
     afxAcceleration accel = cfg->accel;
 
     afxModule drv;

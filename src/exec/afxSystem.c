@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -461,12 +461,19 @@ _AFX afxBool _AfxLoadAndAttachIcd(void* udd, afxUnit diskId, afxUnit endpointIdx
     AfxClipUriPath(&manifestFile, osPath);
     AfxLoadInitializationFile(&ini, osPath);
 
-    afxUri basePath, fname, fext;
-    AfxExcerptPathSegments(path, &basePath, &basePath, &fname, &fext);
-
     afxUri2048 dllFile;
     AfxMakeUri2048(&dllFile, NIL);
-    AfxFormatUri(&dllFile.uri, "%.*s/%.*s.dll", AfxPushString(&basePath.s), AfxPushString(&fname.s));
+
+    if (AfxGetInitializationUri(&ini, &AFX_STRING("Qwadro.Icd"), &AFX_STRING("DllFile"), &dllFile.uri))
+    {
+
+    }
+    else
+    {
+        afxUri basePath, fname, fext;
+        AfxExcerptPathSegments(path, &basePath, &basePath, &fname, &fext);
+        AfxFormatUri(&dllFile.uri, "%.*s/%.*s.dll", AfxPushString(&basePath.s), AfxPushString(&fname.s));
+    }
 
     afxModule icd;
     if (AfxLoadModule(&dllFile.uri, NIL, &icd))
@@ -578,8 +585,10 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
 
     AFX_ASSERT(TheSystem == sys);
     AfxZero(TheSystem, sizeof(afxObjectBase));
-    if (_AfxConstructObjects(cls, 1, (void**)&TheSystem, (void*[]) { &ini, (void*)config }))
+    if (_AfxSetUpObjects(cls, 1, (void**)&TheSystem, (void*[]) { &ini, (void*)config }))
+    {
         AfxThrowError();
+    }
     else
     {
         AFX_ASSERT(TheSystem != sys); // Attention! Ctor moves the object pointer to hide out the object base.
@@ -594,7 +603,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
     // AVX                                                                    //
     ////////////////////////////////////////////////////////////////////////////
 
-    AfxDeployChain(&sys->avxIcdChain, sys);
+    AfxMakeChain(&sys->avxIcdChain, sys);
 
     afxClassConfig ddevClsCfg = _AVX_DDEV_CLASS_CONFIG;
     ddevClsCfg.ctor = NIL;
@@ -628,7 +637,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
     // AMX                                                                    //
     ////////////////////////////////////////////////////////////////////////////
 
-    AfxDeployChain(&sys->amxIcdChain, sys);
+    AfxMakeChain(&sys->amxIcdChain, sys);
 
     afxClassConfig mdevClsCfg = _AMX_MDEV_CLASS_CONFIG;
     mdevClsCfg.ctor = NIL;
@@ -662,7 +671,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
     // AUX                                                                    //
     ////////////////////////////////////////////////////////////////////////////
 
-    AfxDeployChain(&sys->auxIcdChain, sys);
+    AfxMakeChain(&sys->auxIcdChain, sys);
 
     afxClassConfig hidClsCfg = _AUX_HID_CLASS_CONFIG;
     hidClsCfg.ctor = NIL;
@@ -736,14 +745,14 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
     // ASX                                                                    //
     ////////////////////////////////////////////////////////////////////////////
 
-    AfxDeployChain(&sys->asxIcdChain, sys);
+    AfxMakeChain(&sys->asxIcdChain, sys);
 
     if (!err)
     {
         // Loading ASX
 
         afxUri uri;
-        AfxMakeUri(&uri, 0, "e2synerg", 0);
+        AfxMakeUri(&uri, 0, "e2iridee", 0);
         afxModule e2simDll = NIL;
 
         if (AfxLoadModule(&uri, AFX_BITMASK(8), &e2simDll))
@@ -814,7 +823,7 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
         if (_AfxDoSubsystemShutdown(sys))
             AfxThrowError();
 
-        if (_AfxDestructObjects(cls, 1, (void*[]) { sys }))
+        if (_AfxCleanUpObjects(cls, 1, (void*[]) { sys }))
             AfxThrowError();
     }
 
@@ -847,7 +856,7 @@ _AFX void AfxDoSystemShutdown(afxInt exitCode)
         AFX_ASSERT_CLASS(cls, afxFcc_SYS);
 
         AFX_ASSERT(TheSystem == sys);
-        if (_AfxDestructObjects(cls, 1, (void**)&TheSystem))
+        if (_AfxCleanUpObjects(cls, 1, (void**)&TheSystem))
             AfxThrowError();
 
         AfxDismountClass(cls);

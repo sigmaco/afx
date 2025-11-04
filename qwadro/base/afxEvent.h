@@ -17,6 +17,6 @@
 #ifndef AFX_EVENT_H
 #define AFX_EVENT_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 
 #endif//AFX_EVENT_H

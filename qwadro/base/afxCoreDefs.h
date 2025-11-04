@@ -208,7 +208,8 @@ typedef enum afxError
 // The afxError type allows for clear and consistent error handling and success status reporting in your code.
 {
     // Zero indicates a successful operation.
-    afxError_SUCCESS,
+    afxError_NONE,
+    afxError_SUCCESS = afxError_NONE,
 
     // Positive codes
     // These represent status. Isn't necessarily a direct success or error (for example, 
@@ -331,7 +332,7 @@ AFX_DEFINE_HANDLE(afxIoQueue);
 AFX_DEFINE_HANDLE(afxShell);
 AFX_DEFINE_HANDLE(afxDrawSystem);
 AFX_DEFINE_HANDLE(afxMixSystem);
-AFX_DEFINE_HANDLE(afxSimulation);
+AFX_DEFINE_HANDLE(arxSimulation);
 AFX_DEFINE_HANDLE(afxWindow);
 
 AFX_DEFINE_UNION(afxUdd)

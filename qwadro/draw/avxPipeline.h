@@ -65,18 +65,22 @@ typedef enum avxBus
 // to which pieces of pipeline state may be connected in parallel.
 {
     // Specifies the rasterization/graphics bus.
-    avxBus_DRAW,
+    avxBus_GFX,
     // Specifies the compute bus.
-    avxBus_DISPATCH,
+    avxBus_PCX,
     // Specifies the ray tracing bus.
-    avxBus_TRACE,
+    avxBus_RTX,
 
     avxBus_TOTAL
 } avxBus;
 
 AFX_DEFINE_STRUCT(avxPipelineConfig)
 {
+    // Bus which this pipeline will be executed.
+    // Probably will be removed by specialized acquision functions.
     avxBus              bus;
+    // The avxCodebase to be used to assemble programmable functions.
+    avxCodebase         codb;
     // A optional handle to a avxLigature object.
     // If NIL, one new avxLigature object will be generated for the pipeline.
     avxLigature         liga;
@@ -173,7 +177,7 @@ AFX_DEFINE_STRUCT(avxPipelineConfig)
     avxLogicOp          pixelLogicOp;
 };
 
-AVX afxError            AvxAssembleComputePipelines
+AVX afxError            AvxAssemblePcxPipelines
 (
     afxDrawSystem dsys, 
     afxUnit cnt, 
@@ -181,7 +185,7 @@ AVX afxError            AvxAssembleComputePipelines
     avxPipeline pipelines[]
 );
 
-AVX afxError            AvxAssemblePipelines
+AVX afxError            AvxAssembleGfxPipelines
 (
     afxDrawSystem dsys, 
     afxUnit cnt, 
@@ -413,11 +417,12 @@ typedef enum avxColorOutputFlag
 
 AFX_DEFINE_STRUCT(avxPipelineInfo)
 {
-    void*               udd;
-    afxString           tag;
-    afxUnit             stageCnt;
-    avxLigature         liga;
-    avxVertexInput      vin;
+    avxBus          bus;
+    afxUnit         stageCnt;
+    avxLigature     liga;
+    avxVertexInput  vin;
+    void*           udd;
+    afxString       tag;
 };
 
 
@@ -457,6 +462,11 @@ AVX afxDrawSystem   AvxGetPipelineHost
     avxPipeline pip
 );
 
+AVX avxBus          AvxGetPipelineBus
+(
+    avxPipeline pip
+);
+
 AVX afxFlags            AvxGetPipelineFlags
 (
     avxPipeline pip, 
@@ -485,19 +495,27 @@ AVX afxUnit             AvxGetMultisamplingMasks
     afxMask sampleMask[]
 );
 
+AVX afxBool             AvxGetPipelineCodebase
+(
+    avxPipeline pip,
+    avxCodebase* codebase
+);
+
 AVX afxBool             AvxGetPipelineShader
 (
     avxPipeline pip, 
     avxShaderType stage, 
-    avxShader* shader
+    afxUnit* prog,
+    afxString* func
 );
 
-AVX afxUnit             AvxGetPipelineShaders
+AVX afxUnit             AvxGetPipelinePrograms
 (
     avxPipeline pip, 
     afxIndex first, 
     afxUnit cnt, 
-    avxShader shaders[]
+    afxUnit progs[],
+    afxString funcs[]
 );
 
 AVX afxBool             AvxGetPipelineLigature
@@ -516,7 +534,7 @@ AFX_DEFINE_STRUCT(avxShaderSpecialization)
 // Structure specifying specialized shader linking into a pipeline.
 {
     avxShaderType   stage;
-    avxShader       shd;
+    afxString       prog;
     afxString       fn;
     afxString       constants[AVX_MAX_SHADER_SPECIALIZATIONS];
     union
@@ -527,31 +545,11 @@ AFX_DEFINE_STRUCT(avxShaderSpecialization)
     }               constantValues[AVX_MAX_SHADER_SPECIALIZATIONS];
 };
 
-AVX afxError            AvxRelinkPipelineFunction
+AVX afxError            AvxReprogramPipeline
 (
     avxPipeline pip, 
     afxUnit cnt, 
     avxShaderSpecialization const specs[]
-);
-
-AVX afxError            AvxUplinkPipelineFunction
-(
-    avxPipeline pip, 
-    avxShaderType stage, 
-    afxUri const* uri, 
-    afxString const* fn, 
-    afxUnit const specIds[], 
-    void const* specValues[]
-);
-
-AVX afxError            AfxRecompilePipelineFunction
-(
-    avxPipeline pip, 
-    avxShaderType stage, 
-    afxString const* code, 
-    afxString const* fn, 
-    afxUnit const specIds[], 
-    void const* specValues[]
 );
 
 // TODO: Attach multiple shaders for same stage, then use AvxCmdBindShaders(dctx, cnt, avxShaderType stage, afxUnit shdIdx) to select one at execution time.

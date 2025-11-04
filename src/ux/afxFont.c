@@ -1,24 +1,163 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced Multimedia UX Extensions & Experiments.
+// This software is part of Advanced User Experiences Extensions & Experiments.
 
 #define _AUX_UX_C
 #define _AUX_FONT_C
 #include "src/ux/impl/auxImplementation.h"
+#include "dep/stb_truetype.h"
+
+// Unicode code point: U+FFFD
+// UTF-8 encoding: EF BF BD
+// The official name is "Replacement Character".
+// It is used to represent an unknown, unrecognized, or unrepresentable character in Unicode.
+#define AFX_UTF_REPLACEMENT_CHAR 0xFFFD // is the Unicode replacement character.
+
+// Unicode: U+FFFE
+// Meaning: Not a character.
+// It is used in combination with U+FEFF to detect byte order in UTF-16 encodings.
+// For example, if you read two bytes FF FE, it usually indicates UTF-16LE (little-endian).
+// If you read FE FF, it indicates UTF-16BE (big-endian).
+// Because of that, 0xFFFE is never a valid character in normal Unicode text; it helps detect encoding issues.
+#define AFX_UTF_NACHAR 0xFFFE
+
+// Unicode: U + FFFF
+// Also a noncharacter.
+// It's never assigned to a character and is not valid for text interchange.
+// Like U + FFFE, it can be used internally in software (for example, as a sentinel value).
+#define AFX_UTF_INVALID 0xFFFF
+
+AFX_DEFINE_STRUCT(BakedFont)
+{
+    // height of the font.
+    afxReal height;
+    // font glyphs ascent and descent.
+    afxReal ascent;
+    // font glyphs ascent and descent.
+    afxReal descent;
+    // glyph array offset inside the font glyph baking output array.
+    afxUnit glyph_offset;
+    // number of glyphs of this font inside the glyph baking array output.
+    afxUnit glyph_count;
+    // font codepoint ranges as pairs of (from/to) and 0 as last element.
+    afxUnit const* ranges;
+};
+
+AFX_DEFINE_STRUCT(afxGlyph)
+{
+    afxUnit codepoint;
+    float xAdvance;
+    float x0, y0, x1, y1, w, h;
+    float u0, v0, u1, v1;
+};
+
+AFX_DEFINE_STRUCT(auxGlyph)
+{
+    // Texture coordinates.
+    afxV2d uv[2];
+    // Offset between top left and glyph.
+    afxV2d offset;
+    // Size of the glyph.
+    afxReal width, height;
+    // Offset to the next glyph.
+    afxReal xadvance;
+};
+
+AFX_DEFINE_STRUCT(afxFontAtlas)
+{
+    avxRange    whd;
+    avxRaster   ras;
+};
+
+AFX_DEFINE_STRUCT(GlyphInfo) {
+    float ax; // advance.x
+    float x0, y0, x1, y1; // screen quad
+    float s0, t0, s1, t1; // texture UVs
+};
+
+AFX_DEFINE_STRUCT(GlyphPage) {
+    avxRaster texture_id;
+    GlyphInfo glyphs[96]; // 96 = strip size
+    afxBool loaded;
+};
+
+#if 0
+GlyphPage* get_glyph_page(GlyphPage* glyph_pages, int codepoint, stbtt_fontinfo* font, float scale) {
+    int base = (codepoint / 96) * 96;
+    int page_index = codepoint / 96;
+
+    if (!glyph_pages[page_index].loaded) {
+        // Rasterize 96 glyphs into texture
+        unsigned char bitmap[512 * 128] = { 0 }; // tweak size based on font
+        stbtt_packedchar packed[96];
+
+        stbtt_pack_context pc;
+        stbtt_PackBegin(&pc, bitmap, 512, 128, 0, 1, NULL);
+        stbtt_PackSetOversampling(&pc, 2, 2);
+
+        stbtt_PackFontRange(&pc, font_data, 0, scale * 72.0f, base, 96, packed);
+        stbtt_PackEnd(&pc);
+
+        // Upload to GPU
+        GLuint tex;
+        glGenTextures(1, &tex);
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 512, 128, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        // Store texture and metadata
+        glyph_pages[page_index].texture_id = tex;
+        for (int i = 0; i < 96; i++) {
+            glyph_pages[page_index].glyphs[i] = convert_to_GlyphInfo(packed[i]);
+        }
+
+        glyph_pages[page_index].loaded = true;
+    }
+
+    return &glyph_pages[page_index];
+}
+#endif
+
+_AUX afxReal AfxMeasureTextWidth(afxFont fnt, afxReal fntHeight, afxString const* text)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_FNT, 1, &fnt);
+
+
+}
+
+_AUX void AfxQueryFontGlyph(afxFont fnt, afxReal fntHeight, afxUnit cnt, afxUnit codepointPairs[][2], auxGlyph glyphes[])
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_FNT, 1, &fnt);
+    AFX_ASSERT(codepointPairs);
+    AFX_ASSERT(glyphes);
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        auxGlyph* glyph = &glyphes[i];
+
+
+    }
+}
+
+// We can better handle it by binding the font to a surface, where the binding state would hold the dynamic data.
+// And, we could draw it during presentation calls.
 
 _AFX afxError AfxTranscribe(afxFont fnt, afxRect const* area, afxUnit col, afxUnit row, afxString const* text)
 {
@@ -129,7 +268,7 @@ _AFX afxError AfxFlushDeviceFont(afxFont fnt, afxDrawContext dctx, avxViewport c
     AFX_ASSERT_OBJECTS(afxFcc_FNT, 1, &fnt);
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
-    AvxCmdBindPipeline(dctx, 0, fnt->fntPip, NIL, NIL);
+    AvxCmdBindPipeline(dctx, fnt->fntPip, NIL, NIL);
 
     afxM4d p;
     AfxM4dReset(p);
@@ -137,8 +276,8 @@ _AFX afxError AfxFlushDeviceFont(afxFont fnt, afxDrawContext dctx, avxViewport c
     //AfxComputeBasicOrthographicMatrix(p, vp.extent[0] / vp.extent[1], 1.0, 3.0, &AVX_CLIP_SPACE_OPENGL);
     AvxCmdPushConstants(dctx, 0, sizeof(p), p);
 
-    //AvxCmdBindRasters(dctx, avxBus_DRAW, 0, 0, 1, &dout->fntRas);
-    AvxCmdBindSamplers(dctx, avxBus_DRAW, 0, 0, 1, &fnt->fntSamp);
+    //AvxCmdBindRasters(dctx, avxBus_GFX, 0, 0, 1, &dout->fntRas);
+    AvxCmdBindSamplers(dctx, avxBus_GFX, 0, 0, 1, &fnt->fntSamp);
 
     avxBufferedStream bufi = { 0 };
     bufi.buf = fnt->fntVbo;
@@ -173,8 +312,8 @@ _AUX afxError _AuxFntCtorCb(afxFont fnt, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_FNT, 1, &fnt);
 
-    afxSession ses = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    afxEnvironment env = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
     AFX_ASSERT(args[1]);
     afxFontConfig const* cfg = AFX_CAST(afxFontConfig const*, args[1]) + invokeNo;
 
@@ -197,7 +336,7 @@ _AUX afxError _AuxFntCtorCb(afxFont fnt, void** args, afxUnit invokeNo)
         vlay.attrs[2].location = 2;
         vlay.attrs[2].offset = 16;
         vlay.attrs[2].fmt = avxFormat_RGBA8un;
-        AvxDeclareVertexInputs(dsys, 1, &vlay, &vin);
+        AvxAcquireVertexInputs(dsys, 1, &vlay, &vin);
         AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
 
         avxPipeline pip;
@@ -236,11 +375,21 @@ _AUX afxError _AuxFntCtorCb(afxFont fnt, void** args, afxUnit invokeNo)
         }\
         ");
 
-        AvxAssemblePipelines(dsys, 1, &pipb, &pip);
+        AvxAssembleGfxPipelines(dsys, 1, &pipb, &pip);
         AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
-        AfxRecompilePipelineFunction(pip, avxShaderType_VERTEX, &fontVsh, NIL, NIL, NIL);
-        AfxRecompilePipelineFunction(pip, avxShaderType_FRAGMENT, &fontFsh, NIL, NIL, NIL);
         AfxDisposeObjects(1, &vin);
+
+        avxCodebase codb;
+        AvxGetPipelineCodebase(pip, &codb);
+        AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &codb);
+        avxShaderSpecialization specs[2] = { 0 };
+        specs[0].stage = avxShaderType_VERTEX;
+        specs[0].prog = AFX_STRING("fontVsh");
+        specs[1].stage = avxShaderType_FRAGMENT;
+        specs[1].prog = AFX_STRING("fontFsh");
+        AvxCompileShader(codb, &specs[0].prog, &fontVsh);
+        AvxCompileShader(codb, &specs[1].prog, &fontFsh);
+        AvxReprogramPipeline(pip, 2, specs);
 
         avxBuffer fntDataBuf;
         avxBufferInfo vboSpec = { 0 };
@@ -258,7 +407,7 @@ _AUX afxError _AuxFntCtorCb(afxFont fnt, void** args, afxUnit invokeNo)
         smpCnf.uvw[1] = avxTexelWrap_EDGE;
         smpCnf.uvw[2] = avxTexelWrap_EDGE;
         AvxConfigureSampler(dsys, &smpCnf);
-        AvxDeclareSamplers(dsys, 1, &smpCnf, &fntSamp);
+        AvxAcquireSamplers(dsys, 1, &smpCnf, &fntSamp);
         AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &fntSamp);
 
         fnt->fntVbo = fntDataBuf;
@@ -290,13 +439,13 @@ _AUX afxError AfxAcquireFonts(afxUnit cnt, afxFontConfig const cfg[], afxFont fo
 {
     afxError err = AFX_ERR_NONE;
 
-    afxSession ses;
-    if (!AfxGetSession(&ses))
+    afxEnvironment env;
+    if (!AfxGetEnvironment(&env))
     {
         AfxThrowError();
         return err;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
 
     if (!cfg)
     {
@@ -304,10 +453,10 @@ _AUX afxError AfxAcquireFonts(afxUnit cnt, afxFontConfig const cfg[], afxFont fo
         return err;
     }
 
-    afxClass* cls = (afxClass*)_AuxSesGetFntClass(ses);
+    afxClass* cls = (afxClass*)_AuxEnvGetFntClass(env);
     AFX_ASSERT_CLASS(cls, afxFcc_FNT);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)fonts, (void const*[]) { ses, cfg }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)fonts, (void const*[]) { env, cfg }))
     {
         AfxThrowError();
         return err;

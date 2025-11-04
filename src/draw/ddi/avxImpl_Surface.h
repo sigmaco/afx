@@ -76,13 +76,14 @@ AFX_DEFINE_STRUCT(afxVideoEndpoint)
     afxBool             doNotClip; // usually false to don't do off-screen draw on compositor-based endpoints (aka window).
 };
 
-AFX_DEFINE_STRUCT(_avxSurfaceBuffer)
+AFX_DEFINE_STRUCT(_avxSurfaceSwap)
 {
-    afxBool     locked;
-    avxCanvas   canv;
-    avxRaster   ras;
-    afxUnit     rcCnt;
-    afxRect     rects[4];
+    afxBool         locked;
+    avxCanvas       canv;
+    avxRaster       ras;
+    afxLayeredRect  bounds;
+    afxUnit         updRcCnt;
+    afxRect         updRcs[4];
 };
 
 #ifdef _AVX_SURFACE_IMPL
@@ -122,8 +123,8 @@ AFX_OBJECT(afxSurface)
     afxBool             resizing;
 
     // SWAPCHAIN
-    afxUnit             bufCnt; // usually 2 or 3; double or triple buffered.
-    _avxSurfaceBuffer*     buffers;
+    afxUnit             swapCnt; // usually 2 or 3; double or triple buffered.
+    _avxSurfaceSwap*    swaps;
     afxInterlockedQueue freeBuffers;
     afxAtom32           lastPresentedBufIdx;
     afxRect             dstArea;

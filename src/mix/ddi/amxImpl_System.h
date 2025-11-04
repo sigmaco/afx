@@ -61,7 +61,9 @@ AFX_DEFINE_STRUCT(_amxMsysAcquisition)
     afxClassConfig const* sndsClsCfg;
 
     afxClassConfig const* vidClsCfg;
-    afxClassConfig const* viddClsCfg;
+    //afxClassConfig const* viddClsCfg;
+    afxClassConfig const* mdecClsCfg;
+    afxClassConfig const* mencClsCfg;
 
     afxClassConfig const* traxClsCfg;
     afxClassConfig const* sinkClsCfg;
@@ -99,7 +101,9 @@ AFX_OBJECT(afxMixSystem)
     afxClass            sndsCls;
     afxClass            brokCls;
     afxClass            vidCls;
-    afxClass            viddCls;
+    //afxClass            viddCls;
+    afxClass            mdecCls;
+    afxClass            mencCls;
     afxClass            mixCls;
     afxClass            traxCls;
     afxClass            mcdcCls;
@@ -247,6 +251,8 @@ AMX afxClassConfig const _AMX_SNDS_CLASS_CONFIG;
 
 AMX afxClassConfig const _AMX_VID_CLASS_CONFIG;
 AMX afxClassConfig const _AMX_VIDD_CLASS_CONFIG;
+AMX afxClassConfig const _AMX_MDEC_CLASS_CONFIG;
+AMX afxClassConfig const _AMX_MENC_CLASS_CONFIG;
 
 AMX afxClassConfig const _AMX_MSYS_CLASS_CONFIG;
 
@@ -257,6 +263,8 @@ AMX afxClass const* _AmxMsysGetSndsClass(afxMixSystem msys);
 
 AMX afxClass const* _AmxMsysGetVidClass(afxMixSystem msys);
 AMX afxClass const* _AmxMsysGetViddClass(afxMixSystem msys);
+AMX afxClass const* _AmxMsysGetMencClass(afxMixSystem msys);
+AMX afxClass const* _AmxMsysGetMdecClass(afxMixSystem msys);
 
 AMX _amxMsysImpl const* _AmxMsysGetImpl(afxMixSystem msys);
 AMX afxMask _AmxMsysGetIoExuMask(afxMixSystem msys, afxMask* dedIoExuMask);

@@ -84,22 +84,6 @@ AVX afxError    AvxOpenTxd
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxCmdId    AvxCmdUseTxds
-(
-    afxDrawContext dctx, 
-    afxUnit baseSlotIdx, 
-    afxUnit cnt, 
-    avxTxd txds[]
-);
-
-AVX afxCmdId    AvxCmdBindTextures
-(
-    afxDrawContext dctx, 
-    afxUnit txdIdx, 
-    afxUnit cnt, 
-    afxUnit const indices[]
-);
-
 AVX afxError    AvxAddTextures
 (
     avxTxd txd, 
@@ -120,6 +104,24 @@ AVX afxError    AvxRequestTextures
     avxTxd txd, 
     afxUnit cnt, 
     afxUnit indices[]
+);
+
+////////////////////////////////////////////////////////////////////////////////
+
+AVX afxCmdId    AvxCmdUseTxds
+(
+    afxDrawContext dctx,
+    afxUnit baseSlotIdx,
+    afxUnit cnt,
+    avxTxd txds[]
+);
+
+AVX afxCmdId    AvxCmdBindTextures
+(
+    afxDrawContext dctx,
+    afxUnit txdIdx,
+    afxUnit cnt,
+    afxUnit const indices[]
 );
 
 #endif//AVX_TXD_H

@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -137,7 +137,7 @@ _AFX afxError _AfxDevCtorCb(afxDevice dev, void** args, afxUnit invokeNo)
     afxDeviceInfo const* info = (afxDeviceInfo const*)(args[1]) + invokeNo;
     AFX_ASSERT(info);
 
-    AfxDeployChain(&dev->classes, dev);
+    AfxMakeChain(&dev->classes, dev);
 
     dev->type = info->type;
     dev->status = afxDeviceStatus_DISABLED;
@@ -248,7 +248,7 @@ _AFX afxUnit AfxInvokeDevices(afxDeviceType type, afxUnit first, afxUnit cnt, af
         AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
         afxClass const* cls = _AfxSysGetDevClass(sys);
         AFX_ASSERT_CLASS(cls, afxFcc_DEV);
-        rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+        rslt = AfxInvokeObjects(cls, (void*)f, udd, first, cnt);
     }
     else
     {

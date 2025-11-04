@@ -28,7 +28,7 @@
 #define AFX_QUEUE_H
 
 #include "qwadro/base/afxCoreDefs.h"
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 
 #if (defined _AFX_DEBUG) && !(defined(_AFX_QUEUE_VALIDATION_ENABLED))
 #   define _AFX_QUEUE_VALIDATION_ENABLED TRUE

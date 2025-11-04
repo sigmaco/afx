@@ -43,7 +43,7 @@ AFX_DEFINE_STRUCT(_amxMixDeviceRegistration)
 {
     afxDeviceInfo       dev;
     afxAcceleration     acceleration;
-    afxMixCaps          capabilities;
+    amxAptitude          capabilities;
     afxMixFeatures      features;
     afxMixLimits        limits;
     afxUnit             minQueCnt; // usually 3
@@ -62,7 +62,7 @@ AFX_OBJECT(afxMixDevice)
 {
     AFX_OBJ(afxDevice)  dev;
     afxAcceleration     acceleration;
-    afxMixCaps          capabilities;
+    amxAptitude          capabilities;
     afxMixFeatures      features;
     afxMixLimits        limits;
     afxUnit             minQueCnt; // usually 3

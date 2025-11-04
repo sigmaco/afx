@@ -93,10 +93,10 @@ AVX afxCmdId        AvxCmdDrawIndirect
 );
 
 /// Draw primitives with indirect parameters and draw count.
-/// AvxCmdDrawIndirectCount behaves similarly to AvxCmdDrawIndirect except that the draw count is read by the device from a buffer during execution.
+/// AvxCmdDrawIndirect2 behaves similarly to AvxCmdDrawIndirect except that the draw count is read by the device from a buffer during execution.
 /// The command will read an unsigned 32-bit integer from @cntBuf located at @cntBufOff and use this as the draw count.
 
-AVX afxCmdId        AvxCmdDrawIndirectCount
+AVX afxCmdId        AvxCmdDrawIndirect2
 (
     afxDrawContext  dctx,
     avxBuffer       buf, // is the buffer containing draw parameters.
@@ -143,10 +143,10 @@ AVX afxCmdId        AvxCmdDrawIndexedIndirect
 );
 
 /// Draw parameters with indirect parameters, indexed vertices, and draw count.
-/// AvxCmdDrawIndexedIndirectCount behaves similarly to AvxCmdDrawIndexedIndirect except that the draw count is read by the device from a buffer during execution.
+/// AvxCmdDrawIndexedIndirect2 behaves similarly to AvxCmdDrawIndexedIndirect except that the draw count is read by the device from a buffer during execution.
 /// The command will read an unsigned 32-bit integer from @cntBuf located at @cntBufOff and use this as the draw count.
 
-AVX afxCmdId        AvxCmdDrawIndexedIndirectCount
+AVX afxCmdId        AvxCmdDrawIndexedIndirect2
 (
     afxDrawContext  dctx,
     avxBuffer       buf, // is the buffer containing draw parameters.

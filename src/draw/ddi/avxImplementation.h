@@ -52,7 +52,7 @@ AFX_DEFINE_STRUCT(_avxDrawDeviceRegistration)
 {
     afxDeviceInfo       dev;
     afxAcceleration     acceleration;
-    afxDrawFn         capabilities;
+    avxAptitude         capabilities;
     afxDrawFeatures     features;
     afxDrawLimits       limits;
     afxUnit             minQueCnt; // usually 3
@@ -73,7 +73,7 @@ AFX_OBJECT(afxDrawDevice)
 {
     AFX_OBJ(afxDevice)  dev;
     afxAcceleration     acceleration;
-    afxDrawFn         capabilities;
+    avxAptitude         capabilities;
     afxDrawFeatures     features;
     afxDrawLimits       limits;
     afxUnit             minQueCnt; // usually 3
@@ -119,6 +119,7 @@ AFX_OBJECT(afxDisplay)
     afxChar             label[128]; // the friendly name of the display.
     afxUnit             dimWh[2]; // the physical width and height of the visible portion of the display, in millimeters.
     afxUnit             resWh[2]; // the physical, native, or preferred resolution of the display.
+    afxUnit             dpi[2];
     avxVideoTransform supportedXforms; // transforms are supported by this display.
     afxBool             planeReorder; // can re-arrange the planes on this display in any order relative to each other?
     afxBool             persistentContent; // can submit persistent present operations on swapchains created against this display?

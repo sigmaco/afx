@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -63,7 +63,7 @@ _AVX afxError _AvxDquePopIoReqPacket(afxDrawQueue dque, _avxIoReqPacket* iorp)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
     AfxPopLink(&iorp->hdr.chain);
-    AfxReclaimToArena(&dque->iorpArena, iorp, iorp->hdr.siz);
+    AfxReclaimArena(&dque->iorpArena, iorp, iorp->hdr.siz);
     return err;
 }
 
@@ -72,7 +72,7 @@ _AVX afxError _AvxDquePushIoReqPacket(afxDrawQueue dque, afxUnit id, afxUnit siz
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
 
-    _avxIoReqPacket* iorp = AfxRequestFromArena(&dque->iorpArena, siz, 1, NIL, 0);
+    _avxIoReqPacket* iorp = AfxRequestArena(&dque->iorpArena, siz, 1, NIL, 0);
     
     if (!iorp) AfxThrowError();
     else
@@ -348,19 +348,24 @@ _AVX afxError _AvxDqueTransferResources(afxDrawQueue dque, avxTransference const
     afxCmdId cmdId;
     _avxIoReqPacket* iorp;
 
-    if ((ctrl->dstFcc == afxFcc_RAS) && (ctrl->srcFcc == afxFcc_RAS))
+    if ((ctrl->dstFcc == afxFcc_RAS) || (ctrl->srcFcc == afxFcc_RAS))
     {
-        if (_AvxDquePushIoReqPacket(dque, _AVX_GET_STD_IORP_ID(Transfer), sizeof(iorp->Transfer) + (opCnt * sizeof(iorp->Transfer.rasCpyOps[0])), &cmdId, &iorp))
-            AfxThrowError();
-    }
-    else if ((ctrl->dstFcc == afxFcc_RAS) || (ctrl->srcFcc == afxFcc_RAS))
-    {
-        if (_AvxDquePushIoReqPacket(dque, _AVX_GET_STD_IORP_ID(Transfer), sizeof(iorp->Transfer) + (opCnt * sizeof(iorp->Transfer.rasOps[0])), &cmdId, &iorp))
+        if ((ctrl->dstFcc == afxFcc_RAS) && (ctrl->srcFcc == afxFcc_RAS))
+        {
+            if (_AvxDquePushIoReqPacket(dque, _AVX_GET_STD_IORP_ID(Transfer), sizeof(iorp->Transfer) + (opCnt * sizeof(iorp->Transfer.rasCpyOps[0])), &cmdId, &iorp))
+                AfxThrowError();
+        }
+        else if (_AvxDquePushIoReqPacket(dque, _AVX_GET_STD_IORP_ID(Transfer), sizeof(iorp->Transfer) + (opCnt * sizeof(iorp->Transfer.rasOps[0])), &cmdId, &iorp))
             AfxThrowError();
     }
     else
     {
-        if (_AvxDquePushIoReqPacket(dque, _AVX_GET_STD_IORP_ID(Transfer), sizeof(iorp->Transfer) + (opCnt * sizeof(iorp->Transfer.bufOps[0])), &cmdId, &iorp))
+        if ((ctrl->dstFcc == afxFcc_BUF) && (ctrl->srcFcc == afxFcc_BUF))
+        {
+            if (_AvxDquePushIoReqPacket(dque, _AVX_GET_STD_IORP_ID(Transfer), sizeof(iorp->Transfer) + (opCnt * sizeof(iorp->Transfer.bufCpyOps[0])), &cmdId, &iorp))
+                AfxThrowError();
+        }
+        else if (_AvxDquePushIoReqPacket(dque, _AVX_GET_STD_IORP_ID(Transfer), sizeof(iorp->Transfer) + (opCnt * sizeof(iorp->Transfer.bufOps[0])), &cmdId, &iorp))
             AfxThrowError();
     }
 
@@ -431,31 +436,43 @@ _AVX afxError _AvxDqueTransferResources(afxDrawQueue dque, avxTransference const
         default: AfxThrowError(); break;
         }
 
-        if ((ctrl->dstFcc == afxFcc_RAS) && (ctrl->srcFcc == afxFcc_RAS))
+        if ((ctrl->dstFcc == afxFcc_RAS) || (ctrl->srcFcc == afxFcc_RAS))
         {
-            avxRasterCopy const* riops = ops;
-            for (afxUnit i = 0; i < opCnt; i++)
+            if ((ctrl->dstFcc == afxFcc_RAS) && (ctrl->srcFcc == afxFcc_RAS))
             {
-                iorp->Transfer.rasCpyOps[i] = riops[i];
+                avxRasterCopy const* riops = ops;
+                for (afxUnit i = 0; i < opCnt; i++)
+                {
+                    iorp->Transfer.rasCpyOps[i] = riops[i];
+                }
+            }
+            else
+            {
+                avxRasterIo const* riops = ops;
+                for (afxUnit i = 0; i < opCnt; i++)
+                {
+                    iorp->Transfer.rasOps[i] = riops[i];
+                }
             }
             int a = 1;
         }
-        else if ((ctrl->dstFcc == afxFcc_RAS) || (ctrl->srcFcc == afxFcc_RAS))
+        else if ((ctrl->srcFcc == afxFcc_BUF) || (ctrl->dstFcc == afxFcc_BUF))
         {
-            avxRasterIo const* riops = ops;
-            for (afxUnit i = 0; i < opCnt; i++)
+            if ((ctrl->srcFcc == afxFcc_BUF) && (ctrl->dstFcc == afxFcc_BUF))
             {
-                iorp->Transfer.rasOps[i] = riops[i];
+                avxBufferCopy const* biops = ops;
+                for (afxUnit i = 0; i < opCnt; i++)
+                {
+                    iorp->Transfer.bufCpyOps[i] = biops[i];
+                }
             }
-            int a = 1;
-        }
-        else
-        {
-            avxBufferIo const* biops = ops;
-            for (afxUnit i = 0; i < opCnt; i++)
+            else
             {
-                AFX_ASSERT((ctrl->srcFcc == afxFcc_BUF || ctrl->dstFcc == afxFcc_BUF));
-                iorp->Transfer.bufOps[i] = biops[i];
+                avxBufferIo const* biops = ops;
+                for (afxUnit i = 0; i < opCnt; i++)
+                {
+                    iorp->Transfer.bufOps[i] = biops[i];
+                }
             }
             int a = 1;
         }
@@ -690,13 +707,13 @@ _AVX afxError _AvxDqueCtorCb(afxDrawQueue dque, void** args, afxUnit invokeNo)
     AfxMakeArena(&dque->iorpArena, NIL, AfxHere());
 
     AfxDeployMutex(&dque->iorpChnMtx, AFX_MTX_PLAIN);
-    AfxDeployChain(&dque->iorpChn, dque);
+    AfxMakeChain(&dque->iorpChn, dque);
     //AfxDeployMutex(&dque->idleCndMtx, AFX_MTX_PLAIN);
     AfxDeployCondition(&dque->idleCnd);
 
     dque->closed = FALSE;
 
-    AfxDeployChain(&dque->classes, (void*)dque);
+    AfxMakeChain(&dque->classes, (void*)dque);
 
     return err;
 }

@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -902,6 +902,41 @@ _AFXINL void AfxM3dSub(afxM3d m, afxM3d const a, afxM3d const b)
 }
 
 _AFXINL void AfxM4dSub(afxM4d m, afxM4d const a, afxM4d const b)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(m);
+    AFX_ASSERT(a);
+    AFX_ASSERT(b);
+    AfxV4dSub(m[0], a[0], b[0]);
+    AfxV4dSub(m[1], a[1], b[1]);
+    AfxV4dSub(m[2], a[2], b[2]);
+    AfxV4dSub(m[3], a[3], b[3]);
+}
+
+// Diff
+
+_AFXINL void AfxM2dDiff(afxM2d m, afxM2d const a, afxM2d const b)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(m);
+    AFX_ASSERT(a);
+    AFX_ASSERT(b);
+    AfxV2dSub(m[0], a[0], b[0]);
+    AfxV2dSub(m[1], a[1], b[1]);
+}
+
+_AFXINL void AfxM3dDiff(afxM3d m, afxM3d const a, afxM3d const b)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(m);
+    AFX_ASSERT(a);
+    AFX_ASSERT(b);
+    AfxV3dSub(m[0], a[0], b[0]);
+    AfxV3dSub(m[1], a[1], b[1]);
+    AfxV3dSub(m[2], a[2], b[2]);
+}
+
+_AFXINL void AfxM4dDiff(afxM4d m, afxM4d const a, afxM4d const b)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(m);

@@ -1,24 +1,24 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *         Q W A D R O   M U L T I M E D I A   U X   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced Multimedia UX Extensions & Experiments.
+// This software is part of Advanced User Experiences Extensions & Experiments.
 
 #define _AUX_UX_C
 //#define _AUX_SHELL_C
-#define _AUX_SESSION_C
+#define _AUX_ENVIRONMENT_C
 #define _AUX_WINDOW_C
 #include "impl/auxImplementation.h"
 
@@ -330,7 +330,7 @@ _AUX afxUnit AfxFormatWindowTitle(afxWindow wnd, afxChar const* fmt, ...)
     return wnd->title.s.len;
 }
 
-_AUX afxBool AfxTraceScreenToSurface(afxWindow wnd, afxUnit const screenPos[2], afxUnit surfPos[2])
+_AUX afxBool AfxGetOnSurfaceScreenPosition(afxWindow wnd, afxUnit const screenPos[2], afxUnit surfPos[2])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
@@ -345,7 +345,7 @@ _AUX afxBool AfxTraceScreenToSurface(afxWindow wnd, afxUnit const screenPos[2], 
     return rslt;
 }
 
-_AUX afxBool AfxTraceSurfaceToScreen(afxWindow wnd, afxUnit const surfPos[2], afxUnit screenPos[2])
+_AUX afxBool AfxGetOnScreenSurfacePosition(afxWindow wnd, afxUnit const surfPos[2], afxUnit screenPos[2])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
@@ -508,7 +508,7 @@ _AUX afxBool AFX_WND_EVENT_HANDLER(afxWindow wnd, auxEvent *ev)
             }
             else if (AfxWasKeyPressed(0, afxKey_F11))
             {
-                AfxMakeWindowExclusive(wnd, !wnd->fullscreen);
+                AfxTakeFullscreen(wnd, !wnd->fullscreen);
             }
         }
         break;
@@ -537,8 +537,8 @@ _AUX afxError _AuxWndCtorCb(afxWindow wnd, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
 
-    afxSession ses = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+    afxEnvironment env = args[0];
+    AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
     afxWindowConfig const* cfg = (afxWindowConfig const*)(args[1]) + invokeNo;
     afxClassConfig const* widClsCfg = args[2];
 
@@ -549,7 +549,7 @@ _AUX afxError _AuxWndCtorCb(afxWindow wnd, void** args, afxUnit invokeNo)
     }
     
     wnd->pimpl = &_AUX_WND_IMPL;
-    wnd->dwm = &ses->dwm;
+    wnd->dwm = &env->dwm;
 
     wnd->alwaysOnTop = FALSE;
     wnd->active = FALSE;
@@ -569,7 +569,7 @@ _AUX afxError _AuxWndCtorCb(afxWindow wnd, void** args, afxUnit invokeNo)
     wnd->hoveredWidg = NIL;
     wnd->focusedWidg = NIL;
 
-    AfxDeployChain(&wnd->classes, wnd);
+    AfxMakeChain(&wnd->classes, wnd);
 
     AfxMakeString2048(&wnd->title, &AFX_STRING("Multimedia UX Infrastructure --- Qwadro Execution Ecosystem (c) 2017 SIGMA --- Public Test Build"));
 
@@ -610,29 +610,30 @@ _AUX afxClassConfig const _AUX_WND_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AUX afxError AfxConfigureWindow(afxWindowConfig* cfg, afxV2d const origin, afxV2d const extent)
+_AUX afxError AfxConfigureWindow(afxEnvironment env, afxWindowConfig* cfg, afxV2d const origin, afxV2d const extent)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(cfg);
-
-    afxSession ses;
-    if (!AfxGetSession(&ses))
+#if 0
+    afxEnvironment env;
+    if (!AfxGetEnvironment(&env))
     {
         AfxThrowError();
         return err;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+#endif
+    AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
 
     afxWindowConfig cfg2 = { 0 };
     cfg2 = *cfg;
 
     if (!cfg2.dsys)
-        AfxGetSessionVideo(&cfg2.dsys);
+        AfxGetEnvironmentVideo(&cfg2.dsys);
 
     cfg2.eventCb = AFX_WND_EVENT_HANDLER;
 
-    afxDesktop* dwm = &ses->dwm;
-    afxRect rc = { 0 };
+    afxDesktop* dwm = &env->dwm;
+    afxRect rc = { .w = cfg2.dout.ccfg.whd.w, .h = cfg2.dout.ccfg.whd.h };
 
     if (origin)
     {
@@ -651,8 +652,8 @@ _AUX afxError AfxConfigureWindow(afxWindowConfig* cfg, afxV2d const origin, afxV
         rc.h = (afxUnit)dwm->res.h / 2;
     }
 
-    cfg2.atX = rc.x;
-    cfg2.atY = rc.y;
+    cfg2.x = rc.x;
+    cfg2.y = rc.y;
     cfg2.dout.ccfg.whd.w = rc.w;
     cfg2.dout.ccfg.whd.h = rc.h;
 
@@ -665,19 +666,20 @@ _AUX afxError AfxConfigureWindow(afxWindowConfig* cfg, afxV2d const origin, afxV
     return err;
 }
 
-_AUX afxError AfxAcquireWindow(afxWindowConfig const* cfg, afxWindow* window)
+_AUX afxError AfxAcquireWindow(afxEnvironment env, afxWindowConfig const* cfg, afxWindow* window)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(window);
     AFX_ASSERT(cfg);
-
-    afxSession ses;
-    if (!AfxGetSession(&ses))
+#if 0
+    afxEnvironment env;
+    if (!AfxGetEnvironment(&env))
     {
         AfxThrowError();
         return err;
     }
-    AFX_ASSERT_OBJECTS(afxFcc_SES, 1, &ses);
+#endif
+    AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
 
     if (!cfg)
     {
@@ -685,12 +687,12 @@ _AUX afxError AfxAcquireWindow(afxWindowConfig const* cfg, afxWindow* window)
         return err;
     }
 
-    afxClass* cls = (afxClass*)_AuxSesGetWndClass(ses);
+    afxClass* cls = (afxClass*)_AuxEnvGetWndClass(env);
     AFX_ASSERT_CLASS(cls, afxFcc_WND);
 
     afxWindow wnd;
 
-    if (AfxAcquireObjects(cls, 1, (afxObject*)&wnd, (void const*[]) { ses, cfg, (void*)&_AUX_WID_CLASS_CONFIG }))
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&wnd, (void const*[]) { env, cfg, (void*)&_AUX_WID_CLASS_CONFIG }))
     {
         AfxThrowError();
         return err;

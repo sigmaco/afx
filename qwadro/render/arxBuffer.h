@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
 #ifndef ARX_BUFFER_H
 #define ARX_BUFFER_H
 
@@ -112,7 +114,7 @@ AFX_DEFINE_STRUCT(arxBufferIo)
     afxUnit         rowCnt; // is the number of rows to stream in/out.
 };
 
-ARX arxRenderware   ArxGetBufferHost(arxBuffer sbuf);
+ARX arxRenderContext   ArxGetBufferHost(arxBuffer sbuf);
 
 ARX void*           ArxGetBufferUdd(arxBuffer sbuf);
 
@@ -120,12 +122,18 @@ ARX afxUnit         ArxGetBufferCapacity(arxBuffer sbuf, afxUnit from);
 
 ARX arxBufferUsage  ArxGetBufferUsage(arxBuffer sbuf, arxBufferUsage usage);
 
-ARX arxBufferFlags  ArxGetBufferAccess(arxBuffer sbuf, arxBufferFlags access);
+ARX arxBufferFlags  ArxGetBufferFlags(arxBuffer sbuf, arxBufferFlags mask);
 
 ARX void*           ArxGetBufferData(arxBuffer sbuf, afxSize from);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError        ArxAcquireBuffers(arxRenderware rwe, afxUnit cnt, arxBufferInfo const infos[], arxBuffer buffers[]);
+ARX afxError        ArxAcquireBuffers
+(
+    arxRenderContext rctx, 
+    afxUnit cnt, 
+    arxBufferInfo const infos[], 
+    arxBuffer buffers[]
+);
 
 #endif//ARX_BUFFER_H

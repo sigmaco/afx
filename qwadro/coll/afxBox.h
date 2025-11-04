@@ -27,9 +27,15 @@
 
 #include "qwadro/coll/afxVolume.h"
 
+// A line list means we're rendering edges, so each line connects 2 vertices, 
+// and we use pairs of indices to define each line segment.
+// The vertices are defined as 8 unique corner points.
 #define AFX_NUM_BOX_CORNERS (8)
+// For a cuboid box, there are 12 edges.
 #define AFX_NUM_BOX_EDGES (12)
+// So we need 24 vertices or its indices per box.
 #define AFX_NUM_BOX_EDGE_VERTICES (24)
+#define AFX_NUM_BOX_FACE_VERTICES (36)
 
 #define AFX_AABB(minX_, minY_, minZ_, maxX_, maxY_, maxZ_) \
     (afxBox){ .min = { (minX_), (minY_), (minZ_) }, .max = { (maxX_), (maxY_), (maxZ_) } }
@@ -73,7 +79,7 @@ AFXINL void         AfxCopyBoxes(afxUnit cnt, afxBox const in[], afxUnit inStrid
 AFXINL void         AfxResetBoxes(afxUnit cnt, afxBox boxes[], afxUnit stride);
 
 
-AFXINL void         AsxGenerateAabbFaces(afxUnit cnt, afxBox const aabbs[], afxV3d vertices[][8], afxUnit16 indices16[][24], afxUnit32 indices32[][24], afxUnit* outVtxCnt, afxUnit* outIdxCnt);
-AFXINL void         AsxGenerateIndexedLinesForAabbs(afxUnit cnt, afxBox const aabbs[], afxV3d vertices[][8], afxUnit16 indices16[][24], afxUnit32 indices32[][24], afxUnit* outVtxCnt, afxUnit* outIdxCnt);
+AFXINL afxUnit      AsxGenerateIndexedFacesForAabbs(afxUnit cnt, afxBox const aabbs[], afxV3d vertices[][AFX_NUM_BOX_CORNERS], afxUnit vtxStride, afxUnit indices[][AFX_NUM_BOX_FACE_VERTICES], afxUnit idxSiz);
+AFXINL afxUnit      AsxGenerateIndexedLinesForAabbs(afxUnit cnt, afxBox const aabbs[], afxV3d vertices[][AFX_NUM_BOX_CORNERS], afxUnit vtxStride, afxUnit indices[][AFX_NUM_BOX_EDGE_VERTICES], afxUnit idxSiz);
 
 #endif//AFX_BOX_H

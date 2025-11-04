@@ -31,7 +31,8 @@
 #include "qwadro/mix/amxAudioFile.h"
 #include "qwadro/mix/amxSound.h"
 #include "qwadro/mix/amxVideo.h"
-#include "qwadro/mix/amxVideoDecoder.h"
+#include "qwadro/mix/amxEncoder.h"
+#include "qwadro/mix/amxDecoder.h"
 #include "qwadro/mix/afxSink.h"
 #include "qwadro/mix/afxMixContext.h"
 #include "qwadro/mix/amxSoundscape.h"
@@ -46,7 +47,7 @@ AFX_DEFINE_STRUCT(afxMixSystemConfig)
     afxUnit             verMajor;
     afxUnit             verMinor;
     // The functions to be capable on bridged devices.
-    afxMixCaps          caps;
+    amxAptitude          caps;
     // The acceleration to be available on bridged devices.
     afxAcceleration     accel;
     // The features to be enabled.
@@ -236,7 +237,7 @@ AMX afxUnit AmxChooseMixBridges
     afxUnit mdevId,
 
     // An optional bitmask describing the mixing device's port capabilities for which bridges must be linked against. 
-    afxMixCaps caps,
+    amxAptitude caps,
 
     afxMask exuMask,
 

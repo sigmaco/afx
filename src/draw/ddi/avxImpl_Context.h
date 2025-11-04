@@ -191,7 +191,7 @@ AFX_OBJECT(afxDrawContext)
             afxFlags dynFlags;
             avxVertexInput vin;
             afxBool useSepShaders;
-            avxShader shaders[8];
+            avxCodebase shaders[8];
         } pipelines[avxBus_TOTAL];
 
         struct
@@ -212,7 +212,7 @@ AFX_OBJECT(afxDrawContext)
         afxBool         xfbActive;
 
         avxCanvas           canv;
-        afxRect             area;
+        avxDrawScope        ccfg;
 
         avxPipeline         pip;
 
@@ -360,7 +360,7 @@ AFX_DEFINE_UNION(_avxCmd)
         struct
         {
             avxShaderType stage;
-            avxShader shd;
+            avxCodebase shd;
         } AFX_SIMD stages[];
     } BindShadersEXT;
     struct
@@ -437,7 +437,7 @@ AFX_DEFINE_UNION(_avxCmd)
         afxUnit32 cntBufOff;
         afxUnit32 maxDrawCnt;
         afxUnit32 stride;
-    } DrawIndirectCount;
+    } DrawIndirect2;
     struct
     {
         _avxCmdHdr hdr;
@@ -463,7 +463,7 @@ AFX_DEFINE_UNION(_avxCmd)
         afxUnit32 cntBufOff;
         afxUnit32 maxDrawCnt;
         afxUnit32 stride;
-    } DrawIndexedIndirectCount;
+    } DrawIndexedIndirect2;
     struct
     {
         _avxCmdHdr hdr;
@@ -677,7 +677,7 @@ AFX_DEFINE_UNION(_avxCmd)
         afxFlags        flags;
         afxString       dbgTag;
         avxCanvas       canv;
-        afxLayeredRect  area;
+        afxLayeredRect  bounds;
         afxBool         hasD, hasS;
         avxDrawTarget   ds[AVX_MAX_AUX_BUFFERS];
         afxUnit         targetCnt;
@@ -874,10 +874,10 @@ AFX_DEFINE_UNION(_avxCmdLut)
         void* ExecuteCommands;
         void* Draw;
         void* DrawIndirect;
-        void* DrawIndirectCount;
+        void* DrawIndirect2;
         void* DrawIndexed;
         void* DrawIndexedIndirect;
-        void* DrawIndexedIndirectCount;
+        void* DrawIndexedIndirect2;
         void* Dispatch;
         void* DispatchIndirect;
         void* PushConstants;

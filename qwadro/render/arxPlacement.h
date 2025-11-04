@@ -14,10 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// O objeto arxPlacement é um buffer usado para manter o estado de um arxSkeleton de arxModel como expressado no "world space". 
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
 
 #ifndef ARX_PLACEMENT_H
 #define ARX_PLACEMENT_H
+
+// O objeto arxPlacement é um buffer usado para manter o estado de um arxSkeleton de arxModel como expressado no "world space". 
 
 #include "qwadro/render/arxRenderable.h"
 
@@ -35,16 +37,16 @@ ARX afxM4d*     ArxGetPlacementDeltas(arxPlacement plce, afxUnit baseArtIdx);
 
 // Pass NIL as @pose to ArxBuildPlacement() to compute the rest placement.
 // Pass TRUE as composite to ArxBuildPlacement() to compute the placement's composite buffer.
-ARX void        ArxBuildPlacement(arxPlacement plce, arxPose pose, arxModel skl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit baseReqJnt, afxUnit reqJntCnt, afxM4d const displace, afxBool skipDeltas);
+ARX void        ArxBuildPlacement(arxPlacement plce, arxPose pose, arxSkeleton skl, afxUnit baseJntIdx, afxUnit jntCnt, afxUnit baseReqJnt, afxUnit reqJntCnt, afxM4d const displace, afxBool skipDeltas);
 
 // extract the pose
-ARX void        ArxRebuildPose(arxPlacement plce, arxModel skl, afxUnit baseJntIdx, afxUnit jntCnt, afxM4d const displace, afxBool rigid, arxPose pose);
+ARX void        ArxRebuildPose(arxPlacement plce, arxSkeleton skl, afxUnit baseJntIdx, afxUnit jntCnt, afxM4d const displace, afxBool rigid, arxPose pose);
 
-ARX void        ArxBuildCompositeMatrices(arxPlacement plce, arxModel skl, afxUnit baseJnt, afxUnit cnt, afxBool /*3x4*/transposed, afxM4d matrices[]);
-ARX void        ArxBuildIndexedCompositeMatrices(arxPlacement plce, arxModel skl, afxUnit cnt, afxUnit const jntMap[], afxBool /*3x4*/transposed, afxM4d matrices[]);
+ARX void        ArxBuildCompositeMatrices(arxPlacement plce, arxSkeleton skl, afxUnit baseJnt, afxUnit cnt, afxBool /*3x4*/transposed, afxM4d matrices[]);
+ARX void        ArxBuildIndexedCompositeMatrices(arxPlacement plce, arxSkeleton skl, afxUnit cnt, afxUnit const jntMap[], afxBool /*3x4*/transposed, afxM4d matrices[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError    ArxAcquirePlacements(arxRenderware rwe, afxUnit cnt, afxUnit const artCnt[], afxBool const excludeDeltas[], arxPlacement placements[]);
+ARX afxError    ArxAcquirePlacements(arxRenderContext rctx, afxUnit cnt, afxUnit const artCnt[], afxBool const excludeDeltas[], arxPlacement placements[]);
 
 #endif//ARX_PLACEMENT_H

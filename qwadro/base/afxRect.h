@@ -36,7 +36,7 @@ AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxRect)
     afxUnit w, h;
 };
 
-AFX_DEFINE_STRUCT(afxLayeredRect)
+AFX_DEFINE_STRUCT_ALIGNED(AFX_SIMD_ALIGNMENT, afxLayeredRect)
 // Structure specifying a layered rectangle of consideration.
 {
     // the two-dimensional region to be considered.

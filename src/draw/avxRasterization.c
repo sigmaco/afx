@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -19,6 +19,34 @@
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
 #include "ddi/avxImplementation.h"
+
+_AVXINL void AfxMinLayeredRect(afxLayeredRect* rc, afxLayeredRect const* a, afxLayeredRect const* b)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(rc);
+    AFX_ASSERT(b);
+    AFX_ASSERT(a);
+    rc->area.x = AFX_MIN(a->area.x, b->area.x);
+    rc->area.y = AFX_MIN(a->area.y, b->area.y);
+    rc->area.w = AFX_MIN(a->area.w, (b->area.w - rc->area.x));
+    rc->area.h = AFX_MIN(a->area.h, (b->area.h - rc->area.y));
+    rc->baseLayer = AFX_MIN(a->baseLayer, b->baseLayer);
+    rc->layerCnt = AFX_MIN(a->layerCnt, b->layerCnt);
+}
+
+_AVXINL void AfxMaxLayeredRect(afxLayeredRect* rc, afxLayeredRect const* a, afxLayeredRect const* b)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT(rc);
+    AFX_ASSERT(b);
+    AFX_ASSERT(a);
+    rc->area.x = AFX_MAX(a->area.x, b->area.x);
+    rc->area.y = AFX_MAX(a->area.y, b->area.y);
+    rc->area.w = AFX_MAX(a->area.w, (b->area.w - rc->area.x));
+    rc->area.h = AFX_MAX(a->area.h, (b->area.h - rc->area.y));
+    rc->baseLayer = AFX_MAX(a->baseLayer, b->baseLayer);
+    rc->layerCnt = AFX_MAX(a->layerCnt, b->layerCnt);
+}
 
 _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* cfg)
 {
@@ -41,26 +69,30 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
     if (canv)
     {
         AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-        afxRect areaMax;
-        AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO, &areaMax);
-        avxRange whd = { areaMax.w, areaMax.h };
-        AFX_ASSERT_RANGE(whd.w, cfg->area.area.x, cfg->area.area.w);
-        AFX_ASSERT_RANGE(whd.h, cfg->area.area.y, cfg->area.area.h);
+        afxLayeredRect areaMax;
+        AvxGetCanvasExtent(canv, NIL, &areaMax);
+        AFX_ASSERT_RANGE(areaMax.area.w, cfg->bounds.area.x, cfg->bounds.area.w);
+        AFX_ASSERT_RANGE(areaMax.area.h, cfg->bounds.area.y, cfg->bounds.area.h);
+        AFX_ASSERT_RANGE(areaMax.layerCnt, cfg->bounds.baseLayer, cfg->bounds.layerCnt);
 
-        cfg2.area.area.x = AFX_CLAMP(cfg->area.area.x, 0, (afxInt)whd.w);
-        cfg2.area.area.y = AFX_CLAMP(cfg->area.area.y, 0, (afxInt)whd.h);
-        cfg2.area.area.w = cfg->area.area.w ? AFX_CLAMP(cfg->area.area.w, 1, whd.w - cfg2.area.area.x) : whd.w;
-        cfg2.area.area.h = cfg->area.area.h ? AFX_CLAMP(cfg->area.area.h, 1, whd.h - cfg2.area.area.y) : whd.h;
+        cfg2.bounds.area.x = AFX_CLAMP(cfg->bounds.area.x, 0, (afxInt)areaMax.area.w);
+        cfg2.bounds.area.y = AFX_CLAMP(cfg->bounds.area.y, 0, (afxInt)areaMax.area.h);
+        cfg2.bounds.area.w = cfg->bounds.area.w ? AFX_CLAMP(cfg->bounds.area.w, 1, areaMax.area.w - cfg2.bounds.area.x) : areaMax.area.w;
+        cfg2.bounds.area.h = cfg->bounds.area.h ? AFX_CLAMP(cfg->bounds.area.h, 1, areaMax.area.h - cfg2.bounds.area.y) : areaMax.area.h;
+        cfg2.bounds.baseLayer = AFX_CLAMP(cfg->bounds.baseLayer, areaMax.baseLayer, areaMax.layerCnt - 1);
+        cfg2.bounds.layerCnt = AFX_CLAMP(cfg->bounds.layerCnt, areaMax.baseLayer, areaMax.layerCnt);
     }
 
     dctx->inDrawScope = TRUE;
+    dctx->canv = canv;
+    dctx->ccfg = cfg2;
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(CommenceDrawScope), sizeof(cmd->CommenceDrawScope) + (cfg2.targetCnt * sizeof(cmd->CommenceDrawScope.targets[0])), &cmdId);
     AFX_ASSERT(cmd);
     cmd->CommenceDrawScope.targetCnt = cfg2.targetCnt;
     cmd->CommenceDrawScope.canv = canv;
-    cmd->CommenceDrawScope.area = cfg2.area;
+    cmd->CommenceDrawScope.bounds = cfg2.bounds;
 
     for (afxUnit i = 0; i < cfg2.targetCnt; i++)
     {
@@ -112,6 +144,9 @@ _AVX afxCmdId AvxCmdConcludeDrawScope(afxDrawContext dctx)
     cmd->ConcludeDrawScope.nothing = NIL;
 
     dctx->inDrawScope = FALSE;
+    dctx->canv = NIL;
+    dctx->ccfg = (avxDrawScope) { 0 };
+
     return cmdId;
 }
 
@@ -141,7 +176,7 @@ _AVX afxCmdId AvxCmdClearCanvas(afxDrawContext dctx, afxUnit bufCnt, afxUnit con
 
     for (afxUnit i = 0; i < areaCnt; i++)
     {
-        cmd->ClearCanvas.areas[i] = areas[i];
+        AfxMinLayeredRect(&cmd->ClearCanvas.areas[i], &areas[i], &dctx->ccfg.bounds);
     }
 
     return cmdId;

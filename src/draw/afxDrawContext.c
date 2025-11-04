@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -45,7 +45,7 @@ _AVX _avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxC
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT(siz >= sizeof(_avxCmdHdr));
 
-    _avxCmd* cmd = AfxRequestFromArena(&dctx->cmdArena, siz, 1, NIL, 0);
+    _avxCmd* cmd = AfxRequestArena(&dctx->cmdArena, siz, 1, NIL, 0);
     AFX_ASSERT(cmd);
     cmd->hdr.id = id;
     cmd->hdr.siz = siz;
@@ -148,7 +148,7 @@ _AVX afxError AvxExhaustDrawContext(afxDrawContext dctx, afxBool freeMem)
         AfxExhaustPool(&dctx->batches, !freeMem);
     }
 
-    AfxDeployChain(&dctx->commands, dctx);
+    AfxMakeChain(&dctx->commands, dctx);
     AFX_ASSERT(dctx->batches.totalUsedCnt == 0);
 
     AfxUnlockFutex(&dctx->cmdbReqLock, FALSE);
@@ -205,10 +205,10 @@ _AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool d
 
         AfxPopLink(&cmdb->recyc);
 
-        AfxDeployChain(&cmdb->commands, dctx);
+        AfxMakeChain(&cmdb->commands, dctx);
 
         // Move the allocated resource to the context.
-        if (AfxMergeArena(&dctx->cmdArena, &cmdb->cmdArenaCompiled))
+        if (AfxMergeArenas(&dctx->cmdArena, &cmdb->cmdArenaCompiled))
         {
             AfxThrowError();
         }
@@ -241,7 +241,7 @@ _AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool d
             break;
         }
 
-        if (AfxRequestPoolUnits(&dctx->batches, 1, &cmdbId, (void**)&cmdb))
+        if (AfxRequestPoolUnits(&dctx->batches, AfxHere(), 1, &cmdbId, (void**)&cmdb))
         {
             AfxThrowError();
             break;
@@ -259,7 +259,7 @@ _AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool d
         AFX_ASSERT(!deferred || (deferred == TRUE));
         cmdb->deferred = !!deferred;
 
-        AfxDeployChain(&cmdb->commands, dctx);
+        AfxMakeChain(&cmdb->commands, dctx);
 
         AfxMakeArena(&cmdb->cmdArenaCompiled, NIL, AfxHere());
         break;
@@ -331,14 +331,14 @@ _AVX afxError AvxDiscardDrawCommands(afxDrawContext dctx, afxBool freeRes)
         AFX_ITERATE_CHAIN(_avxCmd, cmd, hdr.script, &dctx->commands)
         {
             AfxPopLink(&cmd->hdr.script);
-            AfxReclaimToArena(&dctx->cmdArena, cmd, cmd->hdr.siz);
+            AfxReclaimArena(&dctx->cmdArena, cmd, cmd->hdr.siz);
         }
     }
 #else
     AfxExhaustArena(&dctx->cmdArena);
 #endif
 
-    AfxDeployChain(&dctx->commands, dctx);
+    AfxMakeChain(&dctx->commands, dctx);
 
     AfxUnlockFutex(&dctx->cmdbReqLock, FALSE);
 
@@ -403,7 +403,7 @@ _AVX afxError AvxCompileDrawCommands(afxDrawContext dctx, afxUnit batchId)
             else
             {
                 //AfxAssumeArena(&batch->cmdArenaCompiled, &dctx->cmdArena);
-                AfxMergeArena(&batch->cmdArenaCompiled, &dctx->cmdArena);
+                AfxMergeArenas(&batch->cmdArenaCompiled, &dctx->cmdArena);
                 AfxAppendChain(&batch->commands, &dctx->commands);
                 AfxExhaustArena(&dctx->cmdArena);
                 AFX_ASSERT(AfxIsChainEmpty(&dctx->commands));
@@ -483,14 +483,14 @@ _AVX afxError AvxRecycleDrawCommands(afxDrawContext dctx, afxUnit batchId, afxBo
         AFX_ITERATE_CHAIN(_avxCmd, cmd, hdr.script, &cmdb->commands)
         {
             AfxPopLink(&cmd->hdr.script);
-            AfxReclaimToArena(&cmdb->cmdArenaCompiled, cmd, cmd->hdr.siz);
+            AfxReclaimArena(&cmdb->cmdArenaCompiled, cmd, cmd->hdr.siz);
         }
     }
 #else
     AfxExhaustArena(&cmdb->cmdArenaCompiled);
 #endif
 
-    AfxDeployChain(&cmdb->commands, cmdb);
+    AfxMakeChain(&cmdb->commands, cmdb);
 
     afxBool recycled = FALSE;
 #if 0
@@ -507,7 +507,7 @@ _AVX afxError AvxRecycleDrawCommands(afxDrawContext dctx, afxUnit batchId, afxBo
         //AfxExhaustArena(&cmdb->cmdArenaCompiled);
         AfxDismantleArena(&cmdb->cmdArenaCompiled);
 
-        if (AfxReclaimPoolUnits(&dctx->batches, 1, (void**)&cmdb))
+        if (AfxReclaimPoolUnits(&dctx->batches, AfxHere(), 1, (void**)&cmdb))
         {
             AfxThrowError();
         }
@@ -551,7 +551,7 @@ _AVX afxError _AvxDctxDtorCb(afxDrawContext dctx)
     AfxEmptyArray(&dctx->objsToBeDisposed, FALSE, FALSE);
 
     AfxDismantleFutex(&dctx->cmdbReqLock);
-    AfxDeployChain(&dctx->cmdbRecycChain, dctx);
+    AfxMakeChain(&dctx->cmdbRecycChain, dctx);
 
     AfxDismantleArena(&dctx->cmdArena);
     AfxExhaustPool(&dctx->batches, TRUE);
@@ -580,7 +580,7 @@ _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
 
     dctx->cmdbLockedForReq = FALSE;
     AfxDeployFutex(&dctx->cmdbReqLock);
-    AfxDeployChain(&dctx->cmdbRecycChain, dctx);
+    AfxMakeChain(&dctx->cmdbRecycChain, dctx);
 
     AfxMakeArena(&dctx->cmdArena, NIL, AfxHere());
 
@@ -593,10 +593,10 @@ _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
     
     dctx->ddi = &_AVX_DCTX_DDI;
     
-    AfxDeployPool(&dctx->batches, sizeof(_avxCmdBatch), 3, 0);
+    AfxSetUpPool(&dctx->batches, sizeof(_avxCmdBatch), 3, 0);
 
 
-    AfxDeployChain(&dctx->commands, dctx);
+    AfxMakeChain(&dctx->commands, dctx);
 
     AfxMakeArray(&dctx->objsToBeDisposed, sizeof(afxObject), 4, NIL, 0);
 
@@ -786,10 +786,10 @@ _AVX afxError AvxPrepareDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBo
 
         AfxPopLink(&cmdb->recyc);
 
-        AfxDeployChain(&cmdb->commands, dctx);
+        AfxMakeChain(&cmdb->commands, dctx);
 
         // Move the allocated resource to the context.
-        if (AfxMergeArena(&dctx->cmdArena, &cmdb->cmdArenaCompiled))
+        if (AfxMergeArenas(&dctx->cmdArena, &cmdb->cmdArenaCompiled))
         {
             AfxThrowError();
         }
@@ -822,7 +822,7 @@ _AVX afxError AvxPrepareDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBo
             break;
         }
 
-        if (AfxRequestPoolUnits(&dctx->batches, 1, &cmdbId, (void**)&cmdb))
+        if (AfxRequestPoolUnits(&dctx->batches, AfxHere(), 1, &cmdbId, (void**)&cmdb))
         {
             AfxThrowError();
             break;
@@ -840,7 +840,7 @@ _AVX afxError AvxPrepareDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBo
         AFX_ASSERT(!deferred || (deferred == TRUE));
         cmdb->deferred = !!deferred;
 
-        AfxDeployChain(&cmdb->commands, dctx);
+        AfxMakeChain(&cmdb->commands, dctx);
 
         AfxMakeArena(&cmdb->cmdArenaCompiled, NIL, AfxHere());
         break;
@@ -928,14 +928,14 @@ _AVX afxError AvxPurgeDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBool
         AFX_ITERATE_CHAIN(_avxCmd, cmd, hdr.script, &cmdb->commands)
         {
             AfxPopLink(&cmd->hdr.script);
-            AfxReclaimToArena(&cmdb->cmdArenaCompiled, cmd, cmd->hdr.siz);
+            AfxReclaimArena(&cmdb->cmdArenaCompiled, cmd, cmd->hdr.siz);
         }
     }
 #else
     AfxExhaustArena(&cmdb->cmdArenaCompiled);
 #endif
 
-    AfxDeployChain(&cmdb->commands, cmdb);
+    AfxMakeChain(&cmdb->commands, cmdb);
 
     afxBool recycled = FALSE;
 #if 0
@@ -952,7 +952,7 @@ _AVX afxError AvxPurgeDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBool
         //AfxExhaustArena(&cmdb->cmdArenaCompiled);
         AfxDismantleArena(&cmdb->cmdArenaCompiled);
 
-        if (AfxReclaimPoolUnits(&dctx->batches, 1, (void**)&cmdb))
+        if (AfxReclaimPoolUnits(&dctx->batches, AfxHere(), 1, (void**)&cmdb))
         {
             AfxThrowError();
         }

@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -211,25 +211,57 @@ _AFXINL void AfxQuatRotationFromAxis(afxQuat q, afxV3d const axis, afxReal phi)
 _AFXINL void AfxQuatRotationFromEuler(afxQuat q, afxV3d const pitchYawRoll)
 {
     // Should be compatible with XMVECTOR XMQuaternionRotationRollPitchYawFromVector(FXMVECTOR Angles)
+    /*
+        WARNING:
+
+        Qwadro assumes pitchYawRoll vector -> [pitch, yaw, roll], which typically means:
+            pitch -> rotation around X-axis (elevation)
+            yaw -> rotation around Y-axis (azimuth)
+            roll -> rotation around Z-axis
+
+        This is the standard aeronautical convention, and it matches Yaw-Pitch-Roll rotation order if applied as:
+        Q = Q_roll * Q_pitch * Q_yaw
+
+        This uses the well-established formula for composing a quaternion from Euler angles in Y-X-Z rotation order, assuming:
+            First rotate about Y (azimuth)
+            Then rotate about X (elevation)
+            Then rotate about Z (roll)
+        Which is exactly what works for a spherical camera system with orientation driven by azimuth, elevation, and roll.
+
+        But DirectXMath (XMQuaternionRotationRollPitchYawFromVector) assumes a Roll-Pitch-Yaw (Z-X-Y) vector,
+        and parameters are passed as:
+        XMQuaternionRotationRollPitchYaw(roll, pitch, yaw)
+        So if you're feeding [pitch, yaw, roll] into a DXMath function that expects [roll, pitch, yaw], 
+        you'll get completely wrong orientations.
+
+
+    */
 
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(q);
     AFX_ASSERT(pitchYawRoll);
 
-    afxReal const halfpitch = pitchYawRoll[0] * 0.5f;
+    afxReal const halfpitch = pitchYawRoll[0] * 0.5f; // rotation around X
     afxReal cp = AfxCosf(halfpitch);
     afxReal sp = AfxSinf(halfpitch);
-    afxReal const halfyaw = pitchYawRoll[1] * 0.5f;
+    afxReal const halfyaw = pitchYawRoll[1] * 0.5f; // rotation around Y
     afxReal cy = AfxCosf(halfyaw);
     afxReal sy = AfxSinf(halfyaw);
-    afxReal const halfroll = pitchYawRoll[2] * 0.5f;
+    afxReal const halfroll = pitchYawRoll[2] * 0.5f; // rotation around Z
     afxReal cr = AfxCosf(halfroll);
     afxReal sr = AfxSinf(halfroll);
 
+#if 0 // DXMath wrong way
     q[0] = cr * sp * cy + sr * cp * sy;
     q[1] = cr * cp * sy - sr * sp * cy;
     q[2] = sr * cp * cy - cr * sp * sy;
     q[3] = cr * cp * cy + sr * sp * sy;
+#endif
+    // Quaternion composition: Q = Q_yaw * Q_pitch * Q_roll
+    q[0] = sp * cy * cr + cp * sy * sr; // x
+    q[1] = cp * sy * cr - sp * cy * sr; // y
+    q[2] = cp * cy * sr - sp * sy * cr; // z
+    q[3] = cp * cy * cr + sp * sy * sr; // w
 }
 
 ////////////////////////////////////////////////////////////////////////////////

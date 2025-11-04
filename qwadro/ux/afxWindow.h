@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced Multimedia UX Extensions & Experiments.
+// This software is part of Advanced User Experiences Extensions & Experiments.
 
   //////////////////////////////////////////////////////////////////////////////
  // Advanced User Experience                                                 //
@@ -43,36 +43,61 @@
 // our facade
 
 typedef enum afxWindowFlag
+// Flags specifying behavior and characteristics for windows.
 {
-    afxWindowFlag_MINIMIZABLE,
-    afxWindowFlag_MAXIMIZABLE,
-    afxWindowFlag_RESIZABLE,
-    afxWindowFlag_IMMERSIVE,
+    // The window can be minimized by frame control.
+    afxWindowFlag_MINIMIZABLE   = AFX_BITMASK(0),
+    // The window can be maximized by frame control.
+    afxWindowFlag_MAXIMIZABLE   = AFX_BITMASK(1),
+    // The window can be resized by frame control.
+    afxWindowFlag_RESIZABLE     = AFX_BITMASK(2),
+    // The window can take full control of the display port.
+    afxWindowFlag_IMMERSIVE     = AFX_BITMASK(3),
 } afxWindowFlags;
 
 AFX_DEFINE_STRUCT(afxWindowConfig)
+// The strucuture specifying the configuration of a window.
 {
+    // The bitmask specifying behavior and characteristics of the window.
     afxWindowFlags      flags;
+    // A string specifying the main caption for the window.
     afxString           title;
+    // The event handler callback assigned to the window.
     afxBool             (*eventCb)(afxWindow, auxEvent*);
+    // The draw system providing the drawable surface and resources for the window.
     afxDrawSystem       dsys;
+    // The configuration of the drawable surface.
     afxSurfaceConfig    dout;
-    afxInt              atX;
-    afxInt              atY;
+    // Optional. The display port to which the window will be open on.
+    afxDisplayPort      disp;
+    // The origin of the window. If display port is specified, it is related to the area covered by the display port, 
+    // else case it is related to the desktop coordinate system (which can be negative).
+    afxInt              x, y;
+    // A user-defined data.
     void*               udd;
+    // An debugging string.
     afxString           tag;
 };
 
 AUX afxError AfxConfigureWindow
 (
+    // The session which the window will be into.
+    afxEnvironment env,
+    // A structure specifying the configuration for the window.
     afxWindowConfig* cfg, 
+    // The optional desired origin in NDC.
     afxV2d const origin, 
+    // The optional desired extent in NDC.
     afxV2d const extent
 );
 
 AUX afxError AfxAcquireWindow
 (
+    // The session which the window will be into.
+    afxEnvironment env,
+    // A structure specifying the configuration for the window.
     afxWindowConfig const* cfg, 
+    // A placeholder to receive the handle of the acquired window.
     afxWindow* window
 );
 
@@ -91,14 +116,19 @@ AUX afxBool AFX_WND_EVENT_HANDLER(afxWindow wnd, auxEvent *ev);
 
 AUX void            AfxGetWindowRect
 (
+    // The handle of the afxWindow.
     afxWindow       wnd, 
+    // The afxRect structure which will be filled with the geometry of the window frame.
     afxRect*        frame, 
+    // The afxRect structure which will be filled with the geometry of the window surface.
     afxRect*        surface
 );
 
 AUX afxError        AfxAdjustWindow
 (
+    // The handle of the afxWindow.
     afxWindow       wnd, 
+    // The afxRect specifying the desired geometry for the window.
     afxRect const*  area
 );
 
@@ -108,19 +138,39 @@ AUX afxError        AfxAdjustWindow
     The afxSurface is an opaque data structure, whose values are used internally by Qwadro Draw I/O System.
 */
 
-AUX afxError AfxGetWindowSurface(afxWindow wnd, afxSurface* surface);
+AUX afxError AfxGetWindowSurface
+(
+    // The handle of the afxWindow owning the surface.
+    afxWindow wnd, 
+    // A placeholder which will hold the handle of the afxSurface object.
+    afxSurface* surface
+);
 
 /*
-    The AfxTraceScreenToSurface() function converts the screen coordinates of a specified point on the screen to surface coordinates.
+    The AfxGetOnSurfaceScreenPosition() function converts the screen coordinates of a specified point on the screen to surface coordinates.
 */
 
-AUX afxBool AfxTraceScreenToSurface(afxWindow wnd, afxUnit const screenPos[2], afxUnit surfPos[2]);
+AUX afxBool AfxGetOnSurfaceScreenPosition
+(
+    // The handle of the afxWindow owning the surface.
+    afxWindow wnd,
+    afxUnit const screenPos[2],
+    afxUnit surfPos[2]
+);
 
 /*
-    The AfxTraceSurfaceToScreen() function converts the surface coordinates of a specified point to screen coordinates.
+    The AfxGetOnScreenSurfacePosition() function converts the surface coordinates of a specified point to screen coordinates.
 */
 
-AUX afxBool AfxTraceSurfaceToScreen(afxWindow wnd, afxUnit const surfPos[2], afxUnit screenPos[2]);
+AUX afxBool AfxGetOnScreenSurfacePosition
+(
+    // The handle of the afxWindow owning the surface.
+    afxWindow wnd, 
+    // The coordinates in window's surface area.
+    afxUnit const surfPos[2], 
+    // A variable which will hold the resolved coordinates in screen space.
+    afxUnit screenPos[2]
+);
 
 /*
     The AfxMakeWindowCursory() method makes a window cursory, that is, superficial, lacking in depth.
@@ -128,7 +178,15 @@ AUX afxBool AfxTraceSurfaceToScreen(afxWindow wnd, afxUnit const surfPos[2], afx
     Disabling cursory may be used to grab and/or center the mouse to be used in window surface as, for example, a interactive aim.
 */
 
-AUX afxError AfxMakeWindowCursory(afxWindow wnd, afxRect const* confinement, afxBool cursory);
+AUX afxError AfxMakeWindowCursory
+(
+    // The handle of the afxWindow owning the surface.
+    afxWindow wnd, 
+    // A optional afxRect structure limiting the surface subarea of confinement.
+    afxRect const* confinement, 
+    // A boolean key specifying whether "on surface" or "in surface".
+    afxBool cursory
+);
 
 /*
     Changes the text of the specified afxWindow's title bar (if it has one). 
@@ -136,15 +194,37 @@ AUX afxError AfxMakeWindowCursory(afxWindow wnd, afxRect const* confinement, afx
     However, AfxFormatWindowTitle() cannot change the text of a control in another application.
 */
 
-AUX afxUnit AfxFormatWindowTitle(afxWindow wnd, afxChar const* fmt, ...);
+AUX afxUnit AfxFormatWindowTitle
+(
+    // The handle of the afxWindow to be renamed.
+    afxWindow wnd, 
+    // The string specifying text and/or format for the caption.
+    afxChar const* fmt, 
+    // Optional arguments to the formattation string.
+    ...
+);
 
 /*
     The AfxRedrawWindow() function updates the specified rectangle or region in a window's surface (aka client area).
 */
 
-AUX afxError AfxRedrawWindow(afxWindow wnd, afxRect const* area);
+AUX afxError AfxRedrawWindow
+(
+    // The handle of the afxWindow to be redrawn.
+    afxWindow wnd, 
+    // An optinal afxRect limiting an area of interest to be redrawn.
+    afxRect const* area
+);
 
-AUX afxError AfxRedrawWidgets(afxWindow wnd, afxRect const* area, afxDrawContext dctx);
+AUX afxError AfxRedrawWidgets
+(
+    // The handle of the afxWindow to be redrawn.
+    afxWindow wnd, 
+    // An optional afxRect limiting an area of interest where widgets will be redrawn.
+    afxRect const* area, 
+    // The afxDrawContext to be used to store the commands generated.
+    afxDrawContext dctx
+);
 
 //AUX void AfxStepWindow(afxWindow wnd, afxReal64* ct, afxReal64* dt);
 
@@ -152,12 +232,50 @@ AUX afxError AfxRedrawWidgets(afxWindow wnd, afxRect const* area, afxDrawContext
     Sets the afxWindow's icon in the Shell.
 */
 
-AUX afxError        AfxLoadWindowIcon(afxWindow wnd, afxUri const* uri);
-AUX afxError        AfxChangeWindowIcon(afxWindow wnd, avxRaster ras, avxRasterRegion const* rgn);
+AUX afxError        AfxLoadWindowIcon
+(
+    // The handle of the afxWindow to be redecorated.
+    afxWindow wnd, 
+    // The URI specifying the location of the file containing the icon art.
+    afxUri const* uri
+);
 
-AUX afxError        AfxLoadWindowCursor(afxWindow wnd, afxUri const* uri);
-AUX afxError        AfxChangeWindowCursor(afxWindow wnd, avxRaster curs, avxRasterRegion const* rgn, afxInt hotspotX, afxInt hotspotY);
+AUX afxError        AfxChangeWindowIcon
+(
+    // The handle of the afxWindow to be redecorated.
+    afxWindow wnd, 
+    // The handle of a avxRaster used as source for the icon.
+    avxRaster ras, 
+    // The region of the specified raster specifying the icon.
+    avxRasterRegion const* rgn
+);
 
-AUX void*           AfxGetWindowUdd(afxWindow wnd);
+AUX afxError        AfxLoadWindowCursor
+(
+    // The handle of the afxWindow to be redecorated.
+    afxWindow wnd,
+    // The URI specifying the location of the file containing the cursor art.
+    afxUri const* uri
+);
+
+AUX afxError        AfxChangeWindowCursor
+(
+    // The handle of the afxWindow to be redecorated.
+    afxWindow wnd,
+    // The handle of a avxRaster used as source for the cursor.
+    avxRaster curs,
+    // The region of the specified raster specifying the cursor.
+    avxRasterRegion const* rgn, 
+    // The horizontal displacement for the cursor's affection point.
+    afxInt hotspotX, 
+    // The vertical displacement for the cursor's affection point.
+    afxInt hotspotY
+);
+
+AUX void*           AfxGetWindowUdd
+(
+    // The handle of the afxWindow.
+    afxWindow wnd
+);
 
 #endif//AUX_WINDOW_H

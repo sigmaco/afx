@@ -67,6 +67,9 @@
 ///     Em left-handed, um valor positivo ao eixo X representa o quão a "esquerda" algo está.
 ///     Em right-handed, um valor positivo ao eixo X representa o quão a "direita" algo está.
 
+// Qwadro is designed to use right-handed coordinate system and counterclockwise (CCW) orientation.
+// This choice has been intended to favor our right-handed defenders coming down our towers to defend our base.
+
 #ifndef AFX_MATRIX_H
 #define AFX_MATRIX_H
 
@@ -150,6 +153,10 @@ AFXINL void     AfxM4dAdd(afxM4d m, afxM4d const a, afxM4d const b); // m = a + 
 AFXINL void     AfxM2dSub(afxM2d m, afxM2d const a, afxM2d const b); // m = a - b
 AFXINL void     AfxM3dSub(afxM3d m, afxM3d const a, afxM3d const b); // m = a - b
 AFXINL void     AfxM4dSub(afxM4d m, afxM4d const a, afxM4d const b); // m = a - b
+
+AFXINL void     AfxM2dDiff(afxM2d m, afxM2d const a, afxM2d const b); // m = a - b
+AFXINL void     AfxM3dDiff(afxM3d m, afxM3d const a, afxM3d const b); // m = a - b
+AFXINL void     AfxM4dDiff(afxM4d m, afxM4d const a, afxM4d const b); // m = a - b
 
 AFXINL void     AfxM2dScale(afxM2d m, afxM2d const in, afxReal scale);
 AFXINL void     AfxM3dScale(afxM3d m, afxM3d const in, afxReal scale);

@@ -15,6 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
 
 #ifndef ARX_TECHNIQUE_H
 #define ARX_TECHNIQUE_H
@@ -45,7 +46,7 @@ AFX_DEFINE_STRUCT(arxDrawSubpass)
 AFX_OBJECT(arxTechnique)
 {
     afxUnit             shadCnt;
-    avxShader*          shaders;
+    avxCodebase*          shaders;
     afxUnit             pipCnt;
     afxString*          pipUrnMap;
     avxPipeline*        pipelines;
@@ -73,6 +74,6 @@ ARX afxCmdId            AvxCmdUseDrawTechniqueSIGMA(afxDrawContext dctx, arxTech
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError            ArxLoadDrawTechnique(arxRenderware rwe, afxUri const* uri, arxTechnique* technique);
+ARX afxError            ArxLoadDrawTechnique(arxRenderContext rctx, afxUri const* uri, arxTechnique* technique);
 
 #endif//ARX_TECHNIQUE_H

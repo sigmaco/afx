@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -66,7 +66,7 @@ _AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdI
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     AFX_ASSERT(siz >= sizeof(_amxCmdHdr));
 
-    _amxCmd* cmd = AfxRequestFromArena(&mix->cmdArena, siz, 1, NIL, 0);
+    _amxCmd* cmd = AfxRequestArena(&mix->cmdArena, siz, 1, NIL, 0);
     AFX_ASSERT(cmd);
     cmd->hdr.id = id;
     cmd->hdr.siz = siz;
@@ -172,7 +172,7 @@ _AMX afxError AmxExhaustMixContext(afxMixContext mix, afxBool freeMem)
         AfxExhaustPool(&mix->batches, !freeMem);
     }
 
-    AfxDeployChain(&mix->commands, mix);
+    AfxMakeChain(&mix->commands, mix);
     AFX_ASSERT(mix->batches.totalUsedCnt == 0);
 
     AfxUnlockFutex(&mix->cmdbReqLock, FALSE);
@@ -229,10 +229,10 @@ _AMX afxError AmxRecordMixCommands(afxMixContext mix, afxBool once, afxBool defe
 
         AfxPopLink(&cmdb->recyc);
 
-        AfxDeployChain(&cmdb->commands, mix);
+        AfxMakeChain(&cmdb->commands, mix);
 
         // Move the allocated resource to the context.
-        if (AfxMergeArena(&mix->cmdArena, &cmdb->cmdArenaCompiled))
+        if (AfxMergeArenas(&mix->cmdArena, &cmdb->cmdArenaCompiled))
         {
             AfxThrowError();
         }
@@ -265,7 +265,7 @@ _AMX afxError AmxRecordMixCommands(afxMixContext mix, afxBool once, afxBool defe
             break;
         }
 
-        if (AfxRequestPoolUnits(&mix->batches, 1, &cmdbId, (void**)&cmdb))
+        if (AfxRequestPoolUnits(&mix->batches, AfxHere(), 1, &cmdbId, (void**)&cmdb))
         {
             AfxThrowError();
             break;
@@ -283,7 +283,7 @@ _AMX afxError AmxRecordMixCommands(afxMixContext mix, afxBool once, afxBool defe
         AFX_ASSERT(!deferred || (deferred == TRUE));
         cmdb->deferred = !!deferred;
 
-        AfxDeployChain(&cmdb->commands, mix);
+        AfxMakeChain(&cmdb->commands, mix);
 
         AfxMakeArena(&cmdb->cmdArenaCompiled, NIL, AfxHere());
         break;
@@ -356,14 +356,14 @@ _AMX afxError AmxDiscardMixCommands(afxMixContext mix, afxBool freeRes)
         AFX_ITERATE_CHAIN(_amxCmd, cmd, hdr.script, &mix->commands)
         {
             AfxPopLink(&cmd->hdr.script);
-            AfxReclaimToArena(&mix->cmdArena, cmd, cmd->hdr.siz);
+            AfxReclaimArena(&mix->cmdArena, cmd, cmd->hdr.siz);
         }
     }
 #else
     AfxExhaustArena(&mix->cmdArena);
 #endif
 
-    AfxDeployChain(&mix->commands, mix);
+    AfxMakeChain(&mix->commands, mix);
 
     AfxUnlockFutex(&mix->cmdbReqLock, FALSE);
 
@@ -428,7 +428,7 @@ _AMX afxError AmxCompileMixCommands(afxMixContext mix, afxUnit batchId)
             else
             {
                 //AfxAssumeArena(&batch->cmdArenaCompiled, &mix->cmdArena);
-                AfxMergeArena(&batch->cmdArenaCompiled, &mix->cmdArena);
+                AfxMergeArenas(&batch->cmdArenaCompiled, &mix->cmdArena);
                 AfxAppendChain(&batch->commands, &mix->commands);
                 AfxExhaustArena(&mix->cmdArena);
                 AFX_ASSERT(AfxIsChainEmpty(&mix->commands));
@@ -508,14 +508,14 @@ _AMX afxError AmxRecycleMixCommands(afxMixContext mix, afxUnit batchId, afxBool 
         AFX_ITERATE_CHAIN(_amxCmd, cmd, hdr.script, &cmdb->commands)
         {
             AfxPopLink(&cmd->hdr.script);
-            AfxReclaimToArena(&cmdb->cmdArenaCompiled, cmd, cmd->hdr.siz);
+            AfxReclaimArena(&cmdb->cmdArenaCompiled, cmd, cmd->hdr.siz);
         }
     }
 #else
     AfxExhaustArena(&cmdb->cmdArenaCompiled);
 #endif
 
-    AfxDeployChain(&cmdb->commands, cmdb);
+    AfxMakeChain(&cmdb->commands, cmdb);
 
     afxBool recycled = FALSE;
 #if 0
@@ -532,7 +532,7 @@ _AMX afxError AmxRecycleMixCommands(afxMixContext mix, afxUnit batchId, afxBool 
         //AfxExhaustArena(&cmdb->cmdArenaCompiled);
         AfxDismantleArena(&cmdb->cmdArenaCompiled);
 
-        if (AfxReclaimPoolUnits(&mix->batches, 1, (void**)&cmdb))
+        if (AfxReclaimPoolUnits(&mix->batches, AfxHere(), 1, (void**)&cmdb))
         {
             AfxThrowError();
         }
@@ -572,7 +572,7 @@ _AMX afxError _AmxMixResetCb(afxMixContext mix, afxBool freeMem, afxBool permane
     AFX_ASSERT(mix->state != amxMixState_PENDING);
     mix->disposable = !permanent;
 
-    AfxDeployChain(&mix->commands, mix);
+    AfxMakeChain(&mix->commands, mix);
     AfxExhaustArena(&mix->cmdArena);
 
     return err;
@@ -607,7 +607,7 @@ _AMX afxError _AmxMixDtorCb(afxMixContext mix)
     AmxExhaustMixContext(mix, TRUE);
 
     AfxDismantleFutex(&mix->cmdbReqLock);
-    AfxDeployChain(&mix->cmdbRecycChain, mix);
+    AfxMakeChain(&mix->cmdbRecycChain, mix);
 
     AfxDismantleArena(&mix->cmdArena);
     AfxExhaustPool(&mix->batches, TRUE);
@@ -647,16 +647,16 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
 
     mix->cmdbLockedForReq = FALSE;
     AfxDeployFutex(&mix->cmdbReqLock);
-    AfxDeployChain(&mix->cmdbRecycChain, mix);
+    AfxMakeChain(&mix->cmdbRecycChain, mix);
 
     AfxMakeArena(&mix->cmdArena, NIL, AfxHere());
-    AfxDeployChain(&mix->commands, mix);
+    AfxMakeChain(&mix->commands, mix);
 
     mix->state = amxMixState_RECORDING;
 
     mix->ddi = &_AMX_MCTX_DDI;
 
-    AfxDeployPool(&mix->batches, sizeof(_amxCmdBatch), 3, 0);
+    AfxSetUpPool(&mix->batches, sizeof(_amxCmdBatch), 3, 0);
 
     {
         mix->motor.flags = 1;// arxCapstanFlag_ACTIVE;

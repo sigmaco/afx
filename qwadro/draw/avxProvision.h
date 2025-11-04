@@ -43,9 +43,6 @@ AVX afxCmdId        AvxCmdBindPipeline
 (
     // The draw context that the pipeline will be bound to. 
     afxDrawContext  dctx,
-    // A value specifying to which bus the pipeline will be bound.
-    // Binding one bus does not disturb the other buses.
-    avxBus      bus,
     // The pipeline to be bound.
     avxPipeline     pip,
     // The vertex input to be bound when the pipeline is a rasterizer.
@@ -61,8 +58,8 @@ AVX afxCmdId        AvxCmdBindShadersEXT
     afxUnit         cnt,
     // An array of values specifying the stage for each shader.
     avxShaderType const stages[],
-    // An array of avxShader handles describing the shader object to be bound.
-    avxShader       shaders[]
+    // An array of avxCodebase handles describing the shader object to be bound.
+    avxCodebase       shaders[]
 );
 
 AVX afxCmdId AvxCmdUseLigature

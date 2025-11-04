@@ -26,7 +26,7 @@
 #ifndef AFX_OBJECT_H
 #define AFX_OBJECT_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/exec/afxAtomic.h"
 #include "qwadro/base/afxFcc.h"
 #include "qwadro/base/afxChain.h"
@@ -130,8 +130,8 @@ AFX_DEFINE_STRUCT(afxObjectStash)
 AFX void                AfxResetEventHandler(afxObject obj, afxBool(*handler)(afxObject obj,afxEvent*));
 
 AFX afxBool             AfxNotifyObject(afxObject obj, afxEvent *ev);
-AFX afxError            AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[], afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev));
-AFX afxError            AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[], afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev));
+AFX afxError            AfxConnectObjects(afxObject obj, afxBool(*handler)(afxObject obj, afxObject watched, afxEvent *ev), afxUnit cnt, afxObject watcheds[]);
+AFX afxError            AfxDisconnectObjects(afxObject obj, afxBool(*handler)(afxObject obj, afxObject watched, afxEvent *ev), afxUnit cnt, afxObject watcheds[]);
 
 AFX afxResult           AfxTestObjectFcc(afxObject obj, afxFcc fcc);
 AFX afxFcc              AfxGetObjectFcc(afxObject obj);
@@ -155,8 +155,28 @@ AFXINL afxError         AfxDeallocateInstanceData(afxObject obj, afxUnit cnt, af
 // %p?%.4s#%i
 #define AfxPushObject(obj_) 0,0,0//(obj_), (obj_) ? AfxGetObjectFccAsString((afxHandle*)obj_) : NIL, (obj_) ? ((afxHandle*)obj_)->refCnt : 0
 
+/*
+    In Qwadro, we do not "create" things. This may be confuse but remember that the Qwadro is literally an alchemist canvas.
+    This mean that we declare, proclaim, promulgate and/or publicize things using classes, we never create them. 
+    That is why you "acquire" things, via AfxAcquireObjects(), where everything existing is already existing before you but has not been yet "classified".
+
+    The result of an acquisition is a handle to an entity. Despite it being a combined object-handle given the afxObject component, 
+    the object is idealized to be just a state of your contract of acquision. Thus, the object acquired is firstly symbolic.
+*/
+
 AFX afxError    AfxAcquireObjects(afxClass* cls, afxUnit cnt, afxObject objects[], void const* udd[]);
+
+/*
+    As a whole system, handles are shareable, where they can be reacquired across the system.
+*/
+
 AFX afxError    AfxReacquireObjects(afxUnit cnt, afxObject objects[]);
+
+/*
+    As every handle is shareable and things not being created, the function to get rid of it is the AfxDisposeObjects().
+    This function can destroy the object when the reference counter is decremented to zero, and deallocate its storage if the pool is ready to free the page backing such object.
+*/
+
 AFX afxBool     AfxDisposeObjects(afxUnit cnt, afxObject objects[]);
 
 #ifndef _AFX_MANAGER_C

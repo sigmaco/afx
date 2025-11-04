@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced Multimedia UX Extensions & Experiments.
+// This software is part of Advanced User Experiences Extensions & Experiments.
 
   //////////////////////////////////////////////////////////////////////////////
  // Advanced User Experience                                                 //
@@ -79,37 +79,38 @@ AFX_OBJECT(afxShell)
 #endif//_AUX_SHELL_C
 
 #ifndef _AUX_UX_C
-AFX_DECLARE_STRUCT(_auxSesImpl);
+AFX_DECLARE_STRUCT(_auxEnvImpl);
 #else
-AFX_DEFINE_STRUCT(_auxSesImpl)
+AFX_DEFINE_STRUCT(_auxEnvImpl)
 {
-    afxUnit64(*pumpCb)(afxSession,afxFlags, afxUnit64);
-    afxBool(*hasClipboardCb)(afxSession, afxFlags);
-    afxUnit(*getClipboardCb)(afxSession, afxString*);
-    afxError(*setClipboardCb)(afxSession, afxString const*);
-    afxBool(*getCurs)(afxSession, afxRect*,afxWindow,afxRect*,afxRect*);
-    afxError(*fseCb)(afxSession,afxWindow,afxBool);
-    afxError(*focusCb)(afxSession, afxWindow, afxFlags);
-    afxError(*drawBgCb)(afxSession, afxDrawContext, afxFlags);
-    afxError(*promote)(afxSession, afxWindow);
-    afxError(*grabCursorCb)(afxSession, afxWindow, afxBool);
+    afxUnit64(*pumpCb)(afxEnvironment,afxFlags, afxUnit64);
+    afxBool(*hasClipboardCb)(afxEnvironment, afxUnit slot, afxFlags);
+    afxUnit(*getClipboardCb)(afxEnvironment, afxUnit slot, afxFlags flags, afxString*);
+    afxError(*setClipboardCb)(afxEnvironment, afxUnit slot, afxFlags flags, afxString const*);
+    afxBool(*getCurs)(afxEnvironment, afxRect*,afxWindow,afxRect*,afxRect*);
+    afxError(*fseCb)(afxEnvironment,afxWindow,afxBool);
+    afxError(*focusCb)(afxEnvironment, afxWindow, afxFlags);
+    afxError(*drawBgCb)(afxEnvironment, afxDrawContext, afxFlags);
+    afxError(*promote)(afxEnvironment, afxWindow);
+    afxError(*grabCursorCb)(afxEnvironment, afxWindow, afxBool);
 };
 #endif
 
-#ifdef _AUX_SESSION_C
-#ifdef _AUX_SESSION_IMPL
-AFX_OBJECT(_auxSession)
+#ifdef _AUX_ENVIRONMENT_C
+#ifdef _AUX_ENVIRONMENT_IMPL
+AFX_OBJECT(_auxEnvironment)
 #else
-AFX_OBJECT(afxSession)
+AFX_OBJECT(afxEnvironment)
 #endif
 {
-    _auxSesImpl const*  pimpl;
+    _auxEnvImpl const*  pimpl;
     void*               idd;
 
     afxChain            classes;
     afxClass            termCls;
     afxClass            wndCls;
     afxClass            fntCls;
+    afxClass            themCls;
     afxClass            xssCls;
 
     afxWindow           focusedWnd;
@@ -168,11 +169,11 @@ AFX_OBJECT(afxSession)
     afxDrawSystem       dsys;
     afxUnit             sdevId;
     afxUnit             soutIdx;
-    afxMixSystem     msys;
-    afxSink      aso;
+    afxMixSystem        msys;
+    afxSink             aso;
 
 };
-#endif//_AUX_SESSION_C
+#endif//_AUX_ENVIRONMENT_C
 
 #ifndef _AUX_UX_C
 AFX_DECLARE_STRUCT(_auxWndDdi);
@@ -405,32 +406,36 @@ AFX_OBJECT(afxFont)
 AUX afxClassConfig const _AuxCtrlStdImplementation;
 AUX afxClassConfig const _AuxKbdStdImplementation;
 AUX afxClassConfig const _AuxMseStdImplementation;
-AUX afxClassConfig const _AUX_SES_CLASS_CONFIG;
-AUX _auxSesImpl const _AUX_SES_IMPL;
+AUX afxClassConfig const _AUX_ENV_CLASS_CONFIG;
+AUX _auxEnvImpl const _AUX_ENV_IMPL;
 
 AUX afxClassConfig const _AUX_WND_CLASS_CONFIG;
 AUX _auxWndDdi const _AUX_WND_IMPL;
 
 AUX afxClassConfig const _AUX_WID_CLASS_CONFIG;
 AUX afxClassConfig const _AUX_FNT_CLASS_CONFIG;
+AUX afxClassConfig const _AUX_THEM_CLASS_CONFIG;
 
 AUX afxClass const* AfxGetMouseClass(afxShell ssh);
 AUX afxClass const* AfxGetKeyboardClass(afxShell ssh);
 AUX afxClass const* AfxGetControllerClass(afxShell ssh);
-AUX afxClass const* _AuxGetSessionClass(afxModule icd);
+AUX afxClass const* _AuxIcdGetEnvClass(afxModule icd);
 
 AUX afxClass const* _AuxWndGetWidClass(afxWindow wnd);
-AUX afxClass const* _AuxSesGetWndClass(afxSession ses);
-AUX afxClass const* _AuxSesGetFntClass(afxSession ses);
-AUX afxClass const* _AuxSesGetXssClass(afxSession ses);
+AUX afxClass const* _AuxEnvGetWndClass(afxEnvironment env);
+AUX afxClass const* _AuxEnvGetFntClass(afxEnvironment env);
+AUX afxClass const* _AuxEnvGetThemClass(afxEnvironment env);
+AUX afxClass const* _AuxEnvGetXssClass(afxEnvironment env);
 
-AUX afxError _AfxSesFocusWindowCb(afxSession ses, afxWindow wnd, afxFlags flags);
-AUX afxError _AfxSesSetClipboardContentCb(afxSession ses, afxString const* buf);
-AUX afxUnit _AfxSesGetClipboardContentCb(afxSession ses, afxString* buf);
-AUX afxBool _AfxSesHasClipboardContentCb(afxSession ses, afxFlags flags);
-AUX afxUnit64 _AfxSesPollInputCb(afxSession ses, afxFlags flags, afxUnit64 timeout);
+AUX afxError _AfxEnvFocusWindowCb(afxEnvironment env, afxWindow wnd, afxFlags flags);
+AUX afxError _AfxEnvSetClipboardContentCb(afxEnvironment env, afxUnit slot, afxFlags flags, afxString const* buf);
+AUX afxUnit _AfxEnvGetClipboardContentCb(afxEnvironment env, afxUnit slot, afxFlags flags, afxString* buf);
+AUX afxBool _AfxEnvHasClipboardContentCb(afxEnvironment env, afxUnit slot, afxFlags flags);
+AUX afxUnit64 _AfxEnvPollInputCb(afxEnvironment env, afxFlags flags, afxUnit64 timeout);
 
 AUX afxUnit _AfxWndFormatTitleCb(afxWindow wnd);
 AUX afxError _AfxWndAdjustCb(afxWindow wnd, afxRect const* c);
+
+AUX afxEnvironment gActiveEnv;
 
 #endif//AUX_IMPL___SHELL_H

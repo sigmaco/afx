@@ -56,22 +56,26 @@
 
 #define AVX_MAX_QUEUES_PER_BRIDGE (32)
 
-typedef enum afxDrawFn
+typedef enum avxAptitude
+// Flags specifying the facilities on a draw device for performing a specified task.
 {
-    afxDrawFn_DRAW      = AFX_BITMASK(0), // supports draw ops
-    afxDrawFn_COMPUTE   = AFX_BITMASK(1), // supports compute ops
-    afxDrawFn_TRANSFER  = AFX_BITMASK(2), // supports transfer ops
-    afxDrawFn_BLIT      = AFX_BITMASK(3), // can blit (and resolve?) rasters
-    afxDrawFn_VIDEO     = AFX_BITMASK(4), // supports YUV enc/dec
-    afxDrawFn_TRANSFORM = AFX_BITMASK(5), // can process vertices
-    afxDrawFn_TESSELATE = AFX_BITMASK(6), // can tesselate primitives
-    afxDrawFn_SAMPLE    = AFX_BITMASK(7), // has TMU
-    afxDrawFn_PRESENT   = AFX_BITMASK(8), // support deferred presentation
-} afxDrawFn;
+    // Supports transfer ops via direct memory access.
+    avxAptitude_DMA      = AFX_BITMASK(0),
+    // Supports graphics ops, including transformation, tesselation, rasterization and resampling.
+    avxAptitude_GFX      = AFX_BITMASK(1),
+    // Support deferred presentation.
+    avxAptitude_PRESENT  = AFX_BITMASK(2),
+    // Supports programmable general purpose parallel computation.
+    avxAptitude_PCX     = AFX_BITMASK(3),
+    // Supports fixed-function YUV video encoding/decoding.
+    avxAptitude_VCX     = AFX_BITMASK(4),
+    // Supports raytracing ops
+    avxAptitude_RTX      = AFX_BITMASK(5),
+} avxAptitude;
 
 AFX_DEFINE_STRUCT(afxDrawPortInfo)
 {
-    afxDrawFn         capabilities;
+    avxAptitude         capabilities;
     afxAcceleration     acceleration;
     afxUnit             minQueCnt; // usually 3
     afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
@@ -81,7 +85,7 @@ AFX_DEFINE_STRUCT(afxDrawBridgeConfig)
 {
     afxUnit             ddevId;
     afxAcceleration     acceleration;
-    afxDrawFn         capabilities; // specifies capabilities of queues in a port.
+    avxAptitude         capabilities; // specifies capabilities of queues in a port.
     afxUnit             minQueCnt;
     afxReal const*      queuePriority;
 };

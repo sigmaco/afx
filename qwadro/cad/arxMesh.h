@@ -14,10 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// Morphable topogical mesh, a deformable mesh with fixed topology shared among shapes.
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
 
 #ifndef ARX_MESH_H
 #define ARX_MESH_H
+
+// Morphable topogical mesh, a deformable mesh with fixed topology shared among shapes.
 
 /**
     O objeto arxMesh é a estrutura primária para dado geométrico no Qwadro.
@@ -34,7 +36,7 @@
 
     Para determinar quais articulações uma arxMesh está ligada a (uma para arxMesh rígida, muitas para arxMesh deformável), você pode acessar o arranjo de arxMeshBias's. 
     Este arranjo contém nomes das articulações as quais a arxMesh está ligada, bem como parâmetros de "oriented bounding box" para as partes da arxMesh que estão ligadas àquela articulação e outra informação pertinente a ligação malha-a-articulação.
-    Note que na maioria dos casos você não necessitará de usar os nomes das articulações no arxMeshBias diretamente, porque você pode usar um objeto _arxRiggedMesh para fazer este trabalho (e outro trabalho necessário de ligação) para você.
+    Note que na maioria dos casos você não necessitará de usar os nomes das articulações no arxMeshBias diretamente, porque você pode usar um objeto _arxMeshLinkage para fazer este trabalho (e outro trabalho necessário de ligação) para você.
 
     Os dados de índice para uma arxMesh, dado por um arxMesh referenciado pelo arxMesh, contém todos os índices para os triângulos na arxMesh.
     Estes índices sempre descrevem uma lista de triângulo - isso é, cada grupo de três índices descrevem um singelo triângulo - os dados não são organizados em "strips" ou "fans".
@@ -150,7 +152,7 @@ typedef enum arxVertexFlag
     arxVertexFlag_SPATIAL = AFX_BITMASK(3),
 
     arxVertexFlag_NORMALIZED = AFX_BITMASK(4),
-    arxVertexFlag_RASTERIZATION = AFX_BITMASK(5),
+    arxVertexFlag_VISUAL = AFX_BITMASK(5),
 
     // affected by affine transformations (ex.: position). Non-delta spatial attributes should receive affine transformations.
     arxVertexFlag_ATV = AFX_BITMASK(10),
@@ -258,9 +260,16 @@ AFX_DEFINE_STRUCT(arxMeshInfo)
     @return Must return an arxGeome handle of the provider.
 */
 
-ARX arxRenderware   ArxGetMeshHost(arxMesh msh);
+ARX arxRenderContext ArxGetMeshHost
+(
+    arxMesh msh
+);
 
-ARX afxBool         ArxGetMeshUrn(arxMesh msh, afxString* id);
+ARX afxBool ArxGetMeshUrn
+(
+    arxMesh msh, 
+    afxString* id
+);
 
 /**
     The ArxDescribeMeshMorphes() method retrieves information describing one or more mesh morphes.
@@ -271,7 +280,13 @@ ARX afxBool         ArxGetMeshUrn(arxMesh msh, afxString* id);
     @param info [out] must be a valid pointer to an array of arxMeshMorph structures.
 */
 
-ARX afxUnit         ArxDescribeMeshMorphes(arxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, arxMeshMorph morphes[]);
+ARX afxUnit ArxDescribeMeshMorphes
+(
+    arxMesh msh, 
+    afxUnit baseMorphIdx, 
+    afxUnit cnt, 
+    arxMeshMorph morphes[]
+);
 
 /**
     The ArxReformMesh() method changes geometric data to one or more mesh morphes.
@@ -282,7 +297,13 @@ ARX afxUnit         ArxDescribeMeshMorphes(arxMesh msh, afxUnit baseMorphIdx, af
     @param info must be a valid pointer to an array of arxMeshMorph structures.
 */
 
-ARX afxError        ArxReformMesh(arxMesh msh, afxUnit baseMorphIdx, afxUnit cnt, arxMeshMorph const morphes[]);
+ARX afxError ArxReformMesh
+(
+    arxMesh msh, 
+    afxUnit baseMorphIdx, 
+    afxUnit cnt, 
+    arxMeshMorph const morphes[]
+);
 
 /**
     The ArxIsMeshDeformable() method tests whether a mesh is deformable (aka skinned).
@@ -295,12 +316,30 @@ ARX afxError        ArxReformMesh(arxMesh msh, afxUnit baseMorphIdx, afxUnit cnt
     @return Must return TRUE if the mesh has more than one bias, or FALSE if has only one.
 */
 
-ARX afxBool         ArxIsMeshDeformable(arxMesh msh);
+ARX afxBool ArxIsMeshDeformable
+(
+    arxMesh msh
+);
 
-ARX afxUnit         ArxDescribeMeshBiases(arxMesh msh, afxUnit baseBiasIdx, afxUnit cnt, arxMeshBias biases[]);
-ARX afxString*      ArxGetMeshBiasTags(arxMesh msh, afxUnit baseBiasIdx);
+ARX afxUnit ArxDescribeMeshBiases
+(
+    arxMesh msh, 
+    afxUnit baseBiasIdx, 
+    afxUnit cnt, 
+    arxMeshBias biases[]
+);
 
-ARX afxUnit*        ArxGetMeshIndices(arxMesh msh, afxUnit baseTriIdx);
+ARX afxString* ArxGetMeshBiasTags
+(
+    arxMesh msh, 
+    afxUnit baseBiasIdx
+);
+
+ARX afxUnit* ArxGetMeshIndices
+(
+    arxMesh msh, 
+    afxUnit baseTriIdx
+);
 
 /**
     The ArxDescribeMesh() method retrieves information describing the mesh.
@@ -309,7 +348,11 @@ ARX afxUnit*        ArxGetMeshIndices(arxMesh msh, afxUnit baseTriIdx);
     @param info [out] must be a valid pointer to a arxMeshInfo structure.
 */
 
-ARX void            ArxDescribeMesh(arxMesh msh, arxMeshInfo* info);
+ARX void ArxDescribeMesh
+(
+    arxMesh msh, 
+    arxMeshInfo* info
+);
 
 /**
     The ArxDescribeMeshSections() method retrieves information describing one or more mesh sections.
@@ -320,7 +363,13 @@ ARX void            ArxDescribeMesh(arxMesh msh, arxMeshInfo* info);
     @param info [out] must be a valid pointer to an array of arxMeshSection structures.
 */
 
-ARX afxUnit         ArxDescribeMeshSections(arxMesh msh, afxUnit baseSecIdx, afxUnit cnt, arxMeshSection sections[]);
+ARX afxUnit ArxDescribeMeshSections
+(
+    arxMesh msh, 
+    afxUnit baseSecIdx, 
+    afxUnit cnt, 
+    arxMeshSection sections[]
+);
 
 /**
     The ArxSectionizeMesh() method resets one or more mesh sections to new ranges.
@@ -331,7 +380,13 @@ ARX afxUnit         ArxDescribeMeshSections(arxMesh msh, afxUnit baseSecIdx, afx
     @param info [out] must be a valid pointer to an array of arxMeshSection structures containing the new values.
 */
 
-ARX afxError        ArxSectionizeMesh(arxMesh msh, afxUnit baseSecIdx, afxUnit cnt, arxMeshSection const sections[]);
+ARX afxError ArxSectionizeMesh
+(
+    arxMesh msh, 
+    afxUnit baseSecIdx, 
+    afxUnit cnt, 
+    arxMeshSection const sections[]
+);
 
 /**
     The ArxInvertMeshTopology() method inverts the winding of a mesh without changing the vertex data.
@@ -343,7 +398,10 @@ ARX afxError        ArxSectionizeMesh(arxMesh msh, afxUnit baseSecIdx, afxUnit c
     @param msh must be a valid arxMesh handle.
 */
 
-ARX void            ArxInvertMeshTopology(arxMesh msh);
+ARX void ArxInvertMeshTopology
+(
+    arxMesh msh
+);
 
 /**
     The ArxRevestMeshSections() method replaces material indices across mesh sections.
@@ -358,18 +416,38 @@ ARX void            ArxInvertMeshTopology(arxMesh msh);
     @return Must return the number of material indices affectively replaced.
 */
 
-ARX afxUnit         ArxRevestMeshSections(arxMesh msh, afxUnit baseSecIdx, afxUnit secCnt, afxUnit mtlIdxCnt, afxUnit const mtlIdxLut[]);
+ARX afxUnit ArxRevestMeshSections
+(
+    arxMesh msh, 
+    afxUnit baseSecIdx, 
+    afxUnit secCnt, 
+    afxUnit mtlIdxCnt, 
+    afxUnit const mtlIdxLut[]
+);
 
-ARX afxString*      ArxGetMeshMaterials(arxMesh msh, afxUnit baseMtlIdx);
+ARX afxString* ArxGetMeshMaterials
+(
+    arxMesh msh, 
+    afxUnit baseMtlIdx
+);
 
-ARX afxError        ArxUpdateMeshIndices(arxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void const* src, afxUnit srcIdxSiz);
-ARX afxError        ArxDumpMeshIndices(arxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void* dst, afxUnit dstIdxSiz);
+ARX afxError ArxRecomputeMeshBounds
+(
+    arxMesh msh, 
+    afxUnit morphIdx, 
+    afxUnit baseSecIdx, 
+    afxUnit cnt, 
+    afxUnit posAttrIdx
+);
 
-ARX afxError        ArxUploadMeshIndices(arxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, afxStream in, afxUnit srcIdxSiz);
-ARX afxError        ArxDownloadMeshIndices(arxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, afxStream out, afxUnit dstIdxSiz);
-
-ARX afxError        ArxRecomputeMeshBounds(arxMesh msh, afxUnit morphIdx, afxUnit baseSecIdx, afxUnit cnt, afxUnit posAttrIdx);
-ARX afxError        ArxUpdateMeshBounds(arxMesh msh, afxUnit morphIdx, afxUnit baseSecIdx, afxUnit cnt, afxBox const aabbs[]);
+ARX afxError ArxUpdateMeshBounds
+(
+    arxMesh msh, 
+    afxUnit morphIdx, 
+    afxUnit baseSecIdx, 
+    afxUnit cnt, 
+    afxBox const aabbs[]
+);
 
 /**
     The ArxRecomputeMeshNormals() method computes normal vectors of vertices for a mesh morph.
@@ -383,7 +461,13 @@ ARX afxError        ArxUpdateMeshBounds(arxMesh msh, afxUnit morphIdx, afxUnit b
     @return Must return any error ocurried, if any, or zero.
 */
 
-ARX afxError        ArxRecomputeMeshNormals(arxMesh msh, afxUnit morphIdx, afxUnit posAttrIdx, afxUnit nrmAttrIdx);
+ARX afxError ArxRecomputeMeshNormals
+(
+    arxMesh msh, 
+    afxUnit morphIdx, 
+    afxUnit posAttrIdx, 
+    afxUnit nrmAttrIdx
+);
 
 /**
     The ArxRecomputeMeshTangents() method performs tangent frame cosputations on a mesh.
@@ -399,18 +483,37 @@ ARX afxError        ArxRecomputeMeshNormals(arxMesh msh, afxUnit morphIdx, afxUn
     @return Must return any error ocurried, if any, or zero.
 */
 
-ARX afxError        ArxRecomputeMeshTangents(arxMesh msh, afxUnit morphIdx, afxUnit posAttrIdx, afxUnit uvAttrIdx, afxUnit tanAttrIdx, afxUnit bitAttrIdx);
+ARX afxError ArxRecomputeMeshTangents
+(
+    arxMesh msh, 
+    afxUnit morphIdx, 
+    afxUnit posAttrIdx, 
+    afxUnit uvAttrIdx, 
+    afxUnit tanAttrIdx, 
+    afxUnit bitAttrIdx
+);
 
-ARX afxError        ArxBufferizeMesh(arxMesh msh, afxUnit morphIdx, arxVertexCache* vtxCache, arxIndexCache* idxCache);
-ARX afxError        ArxDestripifyMesh(arxMesh msh, afxUnit baseTriIdx, afxUnit triCnt, void const* src, afxUnit srcIdxSiz);
+ARX afxError ArxBufferizeMesh
+(
+    arxMesh msh, 
+    afxUnit morphIdx, 
+    arxVertexCache* vtxCache, 
+    arxIndexCache* idxCache
+);
+
+ARX afxError ArxDestripifyMesh
+(
+    arxMesh msh, 
+    afxUnit baseTriIdx, 
+    afxUnit triCnt, 
+    void const* src, 
+    afxUnit srcIdxSiz
+);
 
 ARX afxUnit ArxFindVertexAttributes(arxMesh msh, afxUnit cnt, afxString const usages[], afxUnit indices[]);
 ARX afxError ArxDescribeVertexAttribute(arxMesh msh, afxUnit attrIdx, arxVertexAttribute* info);
-ARX afxError ArxFormatVertexAttribute(arxMesh msh, afxUnit attrIdx, avxFormat fmt, arxVertexFlags flags, afxString const* usage);
+ARX afxError ArxFormatVertexAttribute(arxMesh msh, afxUnit attrIdx, avxFormat fmt, arxVertexFlags flags);
 ARX void* ArxAccessVertexData(arxMesh msh, afxUnit attrIdx, afxUnit morphIdx, afxUnit baseVtx);
-ARX afxError ArxUpdateVertexData(arxMesh msh, afxUnit attrIdx, afxUnit morphIdx, afxUnit baseVtx, afxUnit vtxCnt, void const* src, afxUnit32 srcStride);
-ARX afxError ArxUploadVertexData(arxMesh msh, afxUnit attrIdx, afxUnit morphIdx, afxUnit baseVtx, afxUnit vtxCnt, afxStream in, afxUnit stride);
-ARX afxError ArxDownloadVertexData(arxMesh msh, afxUnit attrIdx, afxUnit morphIdx, afxUnit baseVtx, afxUnit vtxCnt, afxStream out, afxUnit stride);
 ARX afxError ArxInvertVertexData(arxMesh msh, afxUnit attrIdx, afxUnit morphIdx, afxUnit baseVtx, afxUnit vtxCnt);
 ARX afxError ArxNormalizeVertexData(arxMesh msh, afxUnit attrIdx, afxUnit morphIdx, afxUnit baseVtx, afxUnit vtxCnt);
 
@@ -418,41 +521,69 @@ ARX afxError ArxNormalizeVertexData(arxMesh msh, afxUnit attrIdx, afxUnit morphI
 
 /**
     The ArxTransformMeshes() function similarity transforms an array of meshes.
-
-    @param ltm is the 3x3 linear transformation to perform.
-    @param iltm is the 3x3 inverse linear transformation to perform.
-    @param ltTol is the tolerance factor for linear transformations.
-    @param atv is the translation to perform.
-    @param atTol is the tolerance factor for affine transformations.
-    @param cnt is the number of meshes to be transformed.
-    @param meshes must be a valid pointer to an array of arxMesh handles.
-    @return Must return any error ocurried, if any, or zero.
 */
 
-ARX afxError        ArxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxReal ltTol, afxV3d const atv, afxReal atTol, afxFlags flags, afxUnit cnt, arxMesh meshes[]);
+ARX afxError ArxTransformMeshes
+// Returns any error ocurried, if any, or zero.
+(
+    // The 3x3 linear transformation to perform.
+    afxM3d const ltm, 
+    // The 3x3 inverse linear transformation to perform.
+    afxM3d const iltm, 
+    // The tolerance factor for linear transformations.
+    afxReal ltTol, 
+    // The translation to perform.
+    afxV3d const atv, 
+    // The tolerance factor for affine transformations.
+    afxReal atTol, 
+    // Special behavior flags for transforming mesh data.
+    afxFlags flags,
+    // The number of meshes to be transformed.
+    afxUnit cnt, 
+    // A valid pointer to an array of arxMesh handles.
+    arxMesh meshes[]
+);
 
 /**
     The ArxEnumerateMeshes() function enumerates some or all meshes provided by a simulation.
-
-    @param morp must be a valid arxGeome handle.
-    @param first is the number of the first mesh to be enumerated from.
-    @param cnt is the number of meshes to be enumerated. Must be greater than 0.
-    @param meshes [out] must be a valid pointer to an array of arxMesh handles.
-    @return Must return any error ocurried, if any, or zero.
 */
 
-ARX afxUnit         ArxEnumerateMeshes(arxRenderware rwe, afxUnit first, afxUnit cnt, arxMesh meshes[]);
+ARX afxUnit ArxEnumerateMeshes
+// Returns any error ocurried, if any, or zero.
+(
+    // The arxRenderContext hosting the desired meshes.
+    arxRenderContext rctx, 
+    // The number of the first mesh to be enumerated from.
+    afxUnit first, 
+    // The number of meshes to be enumerated. Must be greater than 0.
+    afxUnit cnt, 
+    // A valid pointer to an array of arxMesh handles.
+    arxMesh meshes[]
+);
 
 /**
     The ArxBuildMeshes() function compiles new meshes using specified blueprints.
-
-    @param morp must be a valid arxGeome handle.
-    @param first is the number of the first mesh to be enumerated from.
-    @param cnt is the number of meshes to be compiled. Must be greater than 0.
-    @param meshes [out] must be a valid pointer to an array of arxMesh handles.
-    @return Must return any error ocurried, if any, or zero.
 */
 
-ARX afxError        ArxBuildMeshes(arxRenderware rwe, afxUnit cnt, arxMeshBlueprint const blueprints[], arxMesh meshes[]);
+ARX afxError ArxBuildMeshes
+// Returns any error ocurried, if any, or zero.
+(
+    // The arxRenderContext to host the built meshes.
+    arxRenderContext rctx, 
+    // The number of meshes to be compiled. Must be greater than 0.
+    afxUnit cnt, 
+    afxString const urns[], 
+    arxMeshBlueprint const blueprints[], 
+    // A valid pointer to an array of arxMesh handles.
+    arxMesh meshes[]
+);
+
+ARX afxBool ArxIdentifyMeshes
+(
+    arxRenderContext rctx, 
+    afxUnit cnt, 
+    afxString const ids[], 
+    arxMesh meshes[]
+);
 
 #endif//ARX_MESH_H

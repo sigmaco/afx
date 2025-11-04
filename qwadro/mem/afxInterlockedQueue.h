@@ -27,7 +27,7 @@
 #define AFX_INTERLOCKED_QUEUE_H
 
 #include "qwadro/base/afxCoreDefs.h"
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/exec/afxAtomic.h"
 
 #if (defined _AFX_DEBUG) && !(defined(_AFX_INTERLOCKED_QUEUE_VALIDATION_ENABLED))

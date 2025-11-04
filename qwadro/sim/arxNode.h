@@ -14,6 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
+#ifndef ARX_NODE_H
+#define ARX_NODE_H
+
 // Frames define the spatial relationships between the objects to which they are attached.
 // The newly created frame has no parent and is its own root.
 // To be of any use the frame should be attached to an object; frames can be added to cameras and lights.
@@ -35,16 +40,13 @@
 // Object space is the coordinate system from an object's point of view. The origin of object space is at the object's pivot point, and its axes are rotated with the object.
 // Local space is similar to object space, however it uses the origin and axes of the object's parent node in the hierarchy of objects.This is useful when you haven't transformed the object itself, but it is part of a group that is transformed.
 
-#ifndef ARX_NODE_H
-#define ARX_NODE_H
-
 #include "qwadro/base/afxObject.h"
 #include "qwadro/base/afxString.h"
 #include "qwadro/math/afxMathDefs.h"
 #include "qwadro/coll/afxBox.h"
 #include "qwadro/coll/afxFrustum.h"
 #include "qwadro/coll/afxSphere.h"
-#include "qwadro/sim/afxSimDefs.h"
+#include "qwadro/sim/arxSimDefs.h"
 #include "qwadro/cad/arxPose.h"
 #include "qwadro/render/arxPlacement.h"
 
@@ -153,16 +155,16 @@ ARX afxError ArxRelinkDagPose(arxNode nod, arxPose pose);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError ArxAcquireJunctionNode(afxSimulation sim, arxNode parent, arxModel skl, afxQuatBlend blendOp, afxReal fillThreshold, arxNode* node);
-ARX afxError ArxAcquireCrossfadeNode(afxSimulation sim, arxNode parent, arxNode a, arxNode b, afxReal weightNone, afxReal weightAll, arxTrackMask* trackMask, arxNode* node);
-ARX afxError ArxAcquireCallbackNode(afxSimulation sim, arxNode parent, afxError(*sample)(void*, afxReal, arxPose, afxUnit, afxUnit const*), void(*setClock)(void*, afxReal), void(*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool), void* udd, arxNode* node);
-ARX afxError ArxAcquirePoseNode(afxSimulation sim, arxNode parent, arxPose pose, arxNode* node);
-ARX afxError ArxAcquireAnimationNode(afxSimulation sim, arxNode parent, arxBody bod, afxReal fillThreshold, arxNode* node);
-ARX afxError ArxAcquirePlacementNode(afxSimulation sim, arxNode parent, arxPlacement plce, arxNode* node);
+ARX afxError ArxAcquireJunctionNode(arxSimulation sim, arxNode parent, arxModel skl, afxQuatBlend blendOp, afxReal fillThreshold, arxNode* node);
+ARX afxError ArxAcquireCrossfadeNode(arxSimulation sim, arxNode parent, arxNode a, arxNode b, afxReal weightNone, afxReal weightAll, arxTrackMask* trackMask, arxNode* node);
+ARX afxError ArxAcquireCallbackNode(arxSimulation sim, arxNode parent, afxError(*sample)(void*, afxReal, arxPose, afxUnit, afxUnit const*), void(*setClock)(void*, afxReal), void(*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool), void* udd, arxNode* node);
+ARX afxError ArxAcquirePoseNode(arxSimulation sim, arxNode parent, arxPose pose, arxNode* node);
+ARX afxError ArxAcquireAnimationNode(arxSimulation sim, arxNode parent, arxBody bod, afxReal fillThreshold, arxNode* node);
+ARX afxError ArxAcquirePlacementNode(arxSimulation sim, arxNode parent, arxPlacement plce, arxNode* node);
 
-ARX afxError ArxCaptureNodes(afxSimulation sim, afxBool(*node)(arxNode nod, void *udd), afxArray* pvs);
-ARX afxError ArxCaptureNodesInFrustum(afxSimulation sim, afxFrustum const* f, afxArray* pvs);
-ARX afxError ArxCaptureNodesInSphere(afxSimulation sim, afxSphere const* area, afxArray* pvs);
+ARX afxError ArxCaptureNodes(arxSimulation sim, afxBool(*node)(arxNode nod, void *udd), afxArray* pvs);
+ARX afxError ArxCaptureNodesInFrustum(arxSimulation sim, afxFrustum const* f, afxArray* pvs);
+ARX afxError ArxCaptureNodesInSphere(arxSimulation sim, afxSphere const* area, afxArray* pvs);
 ARX afxError ArxUpdateDags(afxReal allowedErr, afxBool matrices, afxBool poses, afxBool placements, afxUnit cnt, arxNode nodes[]);
 
 #endif//ARX_NODE_H

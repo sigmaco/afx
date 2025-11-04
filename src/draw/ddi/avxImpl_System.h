@@ -155,9 +155,9 @@ AFX_OBJECT(afxDrawSystem)
 
     afxStringBase   shdStrb;
 
-    afxBool     leftHandedSpace;
-    avxClipSpaceDepth clipSpaceDepth;
-
+    afxBool             leftHandedSpace;
+    avxClipSpaceDepth   clipSpaceDepth;
+    afxReal             clipSpaceDepthRangeEpsilon;
 
     struct
     {

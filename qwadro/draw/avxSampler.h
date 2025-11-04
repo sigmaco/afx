@@ -268,7 +268,7 @@ AVX afxError        AvxConfigureSampler
     avxSamplerConfig* cfg
 );
 
-AVX afxError        AvxDeclareSamplers
+AVX afxError        AvxAcquireSamplers
 (
     afxDrawSystem dsys, 
     afxUnit cnt, 

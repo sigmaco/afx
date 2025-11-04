@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -179,20 +179,20 @@ _AFX afxResult AfxReacquireConsole(void)
                 else
                 {
                     ttyOut = GetStdHandle(STD_OUTPUT_HANDLE);
+					COORD coord = GetLargestConsoleWindowSize(ttyOut);
 
                     afxChar buf[1024];
                     stbsp_sprintf(buf, "Terminal --- Qwadro Execution Ecosystem (c) 2017 SIGMA --- Public Test Build");
                     SetConsoleTitleA(buf);
-
+#if 0 // disabled on Win10 to test why console was deformed
                     short fontSizX = 16, fontSizY = 16;
                     CONSOLE_FONT_INFOEX cfi = { .cbSize = sizeof(cfi),.nFont = 0,.dwFontSize = { fontSizX, fontSizY },.FontFamily = FF_DONTCARE,.FontWeight = FW_NORMAL };
                     wcscpy(cfi.FaceName, L"Consolas");
                     SetCurrentConsoleFontEx(ttyOut, FALSE, &cfi);
-                    COORD coord = GetLargestConsoleWindowSize(ttyOut);
 
                     MoveWindow(ttyWnd, -4, -4, 80 * fontSizX, coord.Y * fontSizY, TRUE);
                     //ShowScrollBar(debugger.conWnd, SB_BOTH, FALSE);
-
+#endif
                     coord.X = 80;
                     coord.Y = 5000;
                     SetConsoleScreenBufferSize(ttyOut, coord);

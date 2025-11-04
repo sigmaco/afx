@@ -2,6 +2,8 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/**/*.dmp
+
 /_vs17/.vs
 /_vs17/**/.vs
 /_vs17/**/Debug
@@ -39,3 +41,7 @@
 /afx/bink1/dep
 /afx/cadio/dep
 /afx/rad3d/dep
+
+/dep/vld/
+/qwd/w32d/vld*
+/qwd/w64d/vld*

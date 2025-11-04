@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -429,7 +429,7 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     avxBufferInfo const *bufi = args[1] ? ((avxBufferInfo const *)args[1]) + invokeNo : NIL;
     AFX_ASSERT(bufi && bufi->size && bufi->usage);
-    avxSubbufferInfo const* sub = args[2] ? ((avxSubbufferInfo const *)args[2]) + invokeNo : NIL;
+    avxMetabufferInfo const* sub = args[2] ? ((avxMetabufferInfo const *)args[2]) + invokeNo : NIL;
 
     buf->tag = bufi->tag;
     buf->udd = bufi->udd;
@@ -542,7 +542,7 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
     buf->storage[0].mapOffset = 0;
     buf->storage[0].mapRange = 0;
     buf->storage[0].mapFlags = NIL;
-    buf->storage[0].mapRefCnt = 1;
+    buf->storage[0].mapRefCnt = 0;
 
     buf->storage[0].pendingRemap = 0;
     buf->storage[0].permanentlyMapped = !!bufi->mapped;
@@ -592,7 +592,7 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
             AfxThrowError();
         }
     }
-
+    
     if (err) return err;
 
     afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->bufCls(dsys);
@@ -689,7 +689,7 @@ _AVX afxError AvxAcquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferInfo c
     return err;
 }
 
-_AVX afxError AvxReacquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxSubbufferInfo const infos[], avxBuffer buffers[])
+_AVX afxError AvxReacquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxMetabufferInfo const infos[], avxBuffer buffers[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -705,7 +705,7 @@ _AVX afxError AvxReacquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxSubbufferI
 
     for (afxUnit i = 0; i < cnt; i++)
     {
-        avxSubbufferInfo const* info = &infos[i];
+        avxMetabufferInfo const* info = &infos[i];
 
         if (!info->buf)
         {
@@ -731,7 +731,7 @@ _AVX afxError AvxReacquireBuffers(afxDrawSystem dsys, afxUnit cnt, avxSubbufferI
     for (afxUnit i = 0; i < cnt; i++)
     {
         avxBuffer buf = buffers[i];
-        avxSubbufferInfo const* bufi = &infos[i];
+        avxMetabufferInfo const* bufi = &infos[i];
 
         AFX_ASSERT(buf->base == bufi->buf);
         AFX_ASSERT(buf->reqSiz >= bufi->range);
@@ -817,6 +817,8 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps
         // If the buffer has already been mapped, check if the region is valid
         if (buf->storage[0].mapPtr)
         {
+            AFX_ASSERT(buf->storage[0].mapRefCnt);
+
             AFX_ASSERT_RANGE(buf->reqSiz, buf->storage[0].mapOffset, buf->storage[0].mapRange);
 
             // Validate if the requested region is within the currently mapped region
@@ -841,43 +843,48 @@ _AVX afxError AvxMapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap maps
             AfxDecAtom32(&buf->storage[0].pendingRemap);
         }
         // If buffer is host-side allocated, map directly (just do it here)
-        else if (buf->storage[0].host.addr)
-        {
-#ifndef _AVX_BUFFER_HOSTSIDE_ALWAYS_FULLY_MAPPED
-            buf->storage[0].mapOffset = offset;
-            buf->storage[0].mapRange = range;
-            buf->storage[0].mapFlags = map->flags;
-            buf->storage[0].mapPtr = &buf->storage[0].hostedAlloc.bytemap[offset];
-
-            AFX_ASSERT(placeholders);
-            *placeholders[i] = buf->storage[0].mapPtr;
-#else
-            // Always map the whole buffer when host-side allocated.
-            buf->storage[0].mapRefCnt = 1;
-            buf->storage[0].mapOffset = 0;
-            buf->storage[0].mapRange = buf->reqSiz;
-            buf->storage[0].mapFlags = map->flags;
-            buf->storage[0].mapPtr = buf->storage[0].host.bytemap;
-
-            AFX_ASSERT(placeholders);
-            *placeholders[i] = &buf->storage[0].mapPtr[map->offset];
-#endif
-            // Decrement the pending remap count as no new operation was added
-            AfxDecAtom32(&buf->storage[0].pendingRemap);
-        }
         else
         {
-            // Buffer needs to be mapped through a draw system operation
-            remaps2[opCnt].buf = buf;
-            remaps2[opCnt].offset = offset;
-            remaps2[opCnt].range = range;
-            remaps2[opCnt].flags = map->flags;
-            remaps2[opCnt].unmap = FALSE;
-            remaps2[opCnt].placeholder = placeholders[i];
-            AFX_ASSERT(remaps2[opCnt].placeholder);
-            opCnt++;
+            AFX_ASSERT(buf->storage[0].mapRefCnt == 0);
 
-            //AfxDecAtom32(&buf->pendingRemap);
+            if (buf->storage[0].host.addr)
+            {
+#ifndef _AVX_BUFFER_HOSTSIDE_ALWAYS_FULLY_MAPPED
+                buf->storage[0].mapOffset = offset;
+                buf->storage[0].mapRange = range;
+                buf->storage[0].mapFlags = map->flags;
+                buf->storage[0].mapPtr = &buf->storage[0].hostedAlloc.bytemap[offset];
+
+                AFX_ASSERT(placeholders);
+                *placeholders[i] = buf->storage[0].mapPtr;
+#else
+                // Always map the whole buffer when host-side allocated.
+                buf->storage[0].mapRefCnt = 1;
+                buf->storage[0].mapOffset = 0;
+                buf->storage[0].mapRange = buf->reqSiz;
+                buf->storage[0].mapFlags = map->flags;
+                buf->storage[0].mapPtr = buf->storage[0].host.bytemap;
+
+                AFX_ASSERT(placeholders);
+                *placeholders[i] = &buf->storage[0].mapPtr[map->offset];
+#endif
+                // Decrement the pending remap count as no new operation was added
+                AfxDecAtom32(&buf->storage[0].pendingRemap);
+            }
+            else
+            {
+                // Buffer needs to be mapped through a draw system operation
+                remaps2[opCnt].buf = buf;
+                remaps2[opCnt].offset = offset;
+                remaps2[opCnt].range = range;
+                remaps2[opCnt].flags = map->flags;
+                remaps2[opCnt].unmap = FALSE;
+                remaps2[opCnt].placeholder = placeholders[i];
+                AFX_ASSERT(remaps2[opCnt].placeholder);
+                opCnt++;
+
+                //AfxDecAtom32(&buf->pendingRemap);
+            }
         }
     }
 
@@ -968,14 +975,14 @@ _AVX afxError AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap ma
         {
             AFX_ASSERT(buf->storage[0].mapRefCnt);
 
-            if (1 == buf->storage[0].mapRefCnt)
+            // If the buffer is host-side allocated (i.e., directly accessible in CPU memory)
+            if (buf->storage[0].host.addr)
             {
                 --buf->storage[0].mapRefCnt;
-                AFX_ASSERT(0 == buf->storage[0].mapRefCnt);
 
-                // If the buffer is host-side allocated (i.e., directly accessible in CPU memory)
-                if (buf->storage[0].host.addr)
+                if (0 == buf->storage[0].mapRefCnt)
                 {
+                    AFX_ASSERT(0 == buf->storage[0].mapRefCnt);
                     // Clear the mapped state for host-side buffers
                     buf->storage[0].mapOffset = 0;
                     buf->storage[0].mapRange = 0;
@@ -984,8 +991,13 @@ _AVX afxError AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap ma
                     // Decrement the pending remap counter
                     AfxDecAtom32(&buf->storage[0].pendingRemap);
                 }
-                else
+            }
+            else
+            {
+                if (1 == buf->storage[0].mapRefCnt)
                 {
+                    AFX_ASSERT(1 == buf->storage[0].mapRefCnt);
+
                     // If the buffer is not host-side allocated, prepare it for an unmap operation
                     unmaps2[opCnt].buf = buf;
                     unmaps2[opCnt].offset = 0;
@@ -995,7 +1007,15 @@ _AVX afxError AvxUnmapBuffers(afxDrawSystem dsys, afxUnit cnt, avxBufferedMap ma
                     unmaps2[opCnt].placeholder = NIL;
                     opCnt++;
                 }
+                else
+                {
+                    --buf->storage[0].mapRefCnt;
+                }
             }
+        }
+        else
+        {
+            AFX_ASSERT(buf->storage[0].mapRefCnt == 0);
         }
     }
 
@@ -1085,5 +1105,54 @@ _AVX afxError AvxCohereMappedBuffers(afxDrawSystem dsys, afxBool discard, afxUni
         AfxThrowError();
     }
     // Return the error code (AFX_ERR_NONE if successful)
+    return err;
+}
+
+_AVX afxError AvxCopyBuffers(afxDrawSystem dsys, afxMask exuMask, afxUnit cnt, avxBufferedCopy const ops[])
+{
+    afxError err = AFX_ERR_NONE;
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+    AFX_ASSERT(cnt);
+    AFX_ASSERT(ops);
+    
+    // TODO: Use command context?
+
+    for (afxUnit i = 0; i < cnt; i++)
+    {
+        avxBufferedCopy const* op = &ops[i];
+        AFX_ASSERT_ALIGNMENT(op->dstOffset, AVX_BUFFER_ALIGNMENT);
+        AFX_ASSERT_ALIGNMENT(op->srcOffset, AVX_BUFFER_ALIGNMENT);
+
+        avxBuffer dst = op->dst;
+        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &dst);
+        AFX_ASSERT_RANGE(AvxGetBufferCapacity(dst, 0), op->dstOffset, op->range);
+
+        avxBuffer src = op->src;
+        AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &src);
+        AFX_ASSERT_RANGE(AvxGetBufferCapacity(src, 0), op->srcOffset, op->range);
+
+        // Prepare the transfer structure
+        avxTransference transfer = { 0 };
+        transfer.exuMask = exuMask;
+        transfer.dstFcc = afxFcc_BUF;
+        transfer.srcFcc = afxFcc_BUF;
+        transfer.dst.buf = dst;
+        transfer.src.src = src;
+
+        avxBufferCopy op2 = { 0 };
+        op2.dstOffset = op->dstOffset;
+        op2.srcOffset = op->srcOffset;
+        op2.range = op->range;
+
+        // Perform the data transfer (buffer update)
+        if (_AvxDsysGetImpl(dsys)->transferCb(dsys, &transfer, 1, &op2))
+        {
+            // If transfer fails, throw an error
+            AfxThrowError();
+            //return err;
+        }
+    }
     return err;
 }

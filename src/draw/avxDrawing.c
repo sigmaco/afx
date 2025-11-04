@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -37,6 +37,25 @@ _AVX afxCmdId AvxCmdDraw(afxDrawContext dctx, afxUnit vtxCnt, afxUnit instCnt, a
 
     AFX_ASSERT(vtxCnt);
     //AFX_ASSERT(instCnt);
+
+#if 0
+#if _AFX_DEBUG
+    AFX_ASSERT(dctx->vertices.vin);
+    avxVertexLayout vil;
+    AvxDescribeVertexLayout(dctx->vertices.vin, &vil);
+    for (afxUnit i = 0; i < vil.binCnt; i++)
+    {
+        avxBuffer buf = dctx->vertices.streams[i].buf;
+        afxUnit bufCap = AvxGetBufferCapacity(buf, 0);
+        afxSize bufBase = dctx->vertices.streams[i].offset;
+        afxUnit bufRange = dctx->vertices.streams[i].range;
+        afxUnit bufStride = dctx->vertices.streams[i].stride;
+
+        AFX_ASSERT_RANGE(bufCap, baseVtx * bufStride + bufBase, 1);
+        AFX_ASSERT_RANGE(bufCap, bufBase, vtxCnt * bufStride);
+    }
+#endif
+#endif
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(Draw), sizeof(cmd->Draw), &cmdId);
@@ -76,7 +95,7 @@ _AVX afxCmdId AvxCmdDrawIndirect(afxDrawContext dctx, avxBuffer buf, afxUnit32 o
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdDrawIndirectCount(afxDrawContext dctx, avxBuffer buf, afxUnit32 offset, avxBuffer cntBuf, afxUnit32 cntBufOff, afxUnit32 maxDrawCnt, afxUnit32 stride)
+_AVX afxCmdId AvxCmdDrawIndirect2(afxDrawContext dctx, avxBuffer buf, afxUnit32 offset, avxBuffer cntBuf, afxUnit32 cntBufOff, afxUnit32 maxDrawCnt, afxUnit32 stride)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -98,14 +117,14 @@ _AVX afxCmdId AvxCmdDrawIndirectCount(afxDrawContext dctx, avxBuffer buf, afxUni
     AFX_ASSERT(stride);
 
     afxCmdId cmdId;
-    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(DrawIndirectCount), sizeof(cmd->DrawIndirectCount), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(DrawIndirect2), sizeof(cmd->DrawIndirect2), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->DrawIndirectCount.buf = buf;
-    cmd->DrawIndirectCount.cntBuf = cntBuf;
-    cmd->DrawIndirectCount.cntBufOff = cntBufOff;
-    cmd->DrawIndirectCount.maxDrawCnt = maxDrawCnt;
-    cmd->DrawIndirectCount.offset = offset;
-    cmd->DrawIndirectCount.stride = stride;
+    cmd->DrawIndirect2.buf = buf;
+    cmd->DrawIndirect2.cntBuf = cntBuf;
+    cmd->DrawIndirect2.cntBufOff = cntBufOff;
+    cmd->DrawIndirect2.maxDrawCnt = maxDrawCnt;
+    cmd->DrawIndirect2.offset = offset;
+    cmd->DrawIndirect2.stride = stride;
     return cmdId;
 }
 
@@ -187,7 +206,7 @@ _AVX afxCmdId AvxCmdDrawIndexedIndirect(afxDrawContext dctx, avxBuffer buf, afxU
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdDrawIndexedIndirectCount(afxDrawContext dctx, avxBuffer buf, afxUnit32 offset, avxBuffer cntBuf, afxUnit32 cntBufOff, afxUnit32 maxDrawCnt, afxUnit32 stride)
+_AVX afxCmdId AvxCmdDrawIndexedIndirect2(afxDrawContext dctx, avxBuffer buf, afxUnit32 offset, avxBuffer cntBuf, afxUnit32 cntBufOff, afxUnit32 maxDrawCnt, afxUnit32 stride)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -208,14 +227,14 @@ _AVX afxCmdId AvxCmdDrawIndexedIndirectCount(afxDrawContext dctx, avxBuffer buf,
     AFX_ASSERT(stride);
 
     afxCmdId cmdId;
-    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(DrawIndexedIndirectCount), sizeof(cmd->DrawIndexedIndirectCount), &cmdId);
+    _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(DrawIndexedIndirect2), sizeof(cmd->DrawIndexedIndirect2), &cmdId);
     AFX_ASSERT(cmd);
-    cmd->DrawIndexedIndirectCount.buf = buf;
-    cmd->DrawIndexedIndirectCount.cntBuf = cntBuf;
-    cmd->DrawIndexedIndirectCount.cntBufOff = cntBufOff;
-    cmd->DrawIndexedIndirectCount.maxDrawCnt = maxDrawCnt;
-    cmd->DrawIndexedIndirectCount.offset = offset;
-    cmd->DrawIndexedIndirectCount.stride = stride;
+    cmd->DrawIndexedIndirect2.buf = buf;
+    cmd->DrawIndexedIndirect2.cntBuf = cntBuf;
+    cmd->DrawIndexedIndirect2.cntBufOff = cntBufOff;
+    cmd->DrawIndexedIndirect2.maxDrawCnt = maxDrawCnt;
+    cmd->DrawIndexedIndirect2.offset = offset;
+    cmd->DrawIndexedIndirect2.stride = stride;
     return cmdId;
 }
 

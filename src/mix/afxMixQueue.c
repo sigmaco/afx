@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -58,7 +58,7 @@ _AMX afxError _AmxMquePopBlob(afxMixQueue mque, void* blob, afxUnit siz)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-    AfxReclaimToArena(&mque->iorpArena, blob, siz);
+    AfxReclaimArena(&mque->iorpArena, blob, siz);
     return err;
 }
 
@@ -67,7 +67,7 @@ _AMX void* _AmxMquePushBlob(afxMixQueue mque, afxUnit siz)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
-    void* blob = AfxRequestFromArena(&mque->iorpArena, siz, 1, NIL, 0);
+    void* blob = AfxRequestArena(&mque->iorpArena, siz, 1, NIL, 0);
     AFX_ASSERT(blob);
     return blob;
 }
@@ -78,7 +78,7 @@ _AMX afxError _AmxMquePopIoReqPacket(afxMixQueue mque, _amxIoReqPacket* iorp)
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     AFX_ASSERT(iorp);
     AfxPopLink(&iorp->hdr.chain);
-    AfxReclaimToArena(&mque->iorpArena, iorp, iorp->hdr.siz);
+    AfxReclaimArena(&mque->iorpArena, iorp, iorp->hdr.siz);
     return err;
 }
 
@@ -87,7 +87,7 @@ _AMX afxError _AmxMquePushIoReqPacket(afxMixQueue mque, afxUnit id, afxUnit siz,
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
-    _amxIoReqPacket* iorp = AfxRequestFromArena(&mque->iorpArena, siz, 1, NIL, 0);
+    _amxIoReqPacket* iorp = AfxRequestArena(&mque->iorpArena, siz, 1, NIL, 0);
     AFX_ASSERT(iorp);
     iorp->hdr.id = id;
     iorp->hdr.siz = siz;
@@ -527,7 +527,7 @@ _AMX afxError _AmxMqueCtorCb(afxMixQueue mque, void** args, afxUnit invokeNo)
     AfxMakeArena(&mque->iorpArena, NIL, AfxHere());
 
     AfxDeployMutex(&mque->iorpChnMtx, AFX_MTX_PLAIN);
-    AfxDeployChain(&mque->iorpChn, mexu);
+    AfxMakeChain(&mque->iorpChn, mexu);
     AfxDeployMutex(&mque->idleCndMtx, AFX_MTX_PLAIN);
     AfxDeployCondition(&mque->idleCnd);
 

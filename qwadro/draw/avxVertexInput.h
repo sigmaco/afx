@@ -109,7 +109,7 @@ AFX_DEFINE_STRUCT(avxVertexLayout)
     void*           udd;
 };
 
-AVX afxError    AvxDeclareVertexInputs
+AVX afxError    AvxAcquireVertexInputs
 (
     afxDrawSystem dsys, 
     afxUnit cnt, 

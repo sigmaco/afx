@@ -1,20 +1,20 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *         Q W A D R O   M U L T I M E D I A   U X   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
- // This software is part of Advanced Multimedia UX Extensions & Experiments.
+ // This software is part of Advanced User Experiences Extensions & Experiments.
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
@@ -102,7 +102,7 @@ _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxUnit invokeNo)
     if (_AFX_DEV_CLASS_CONFIG.ctor(&ssh->dev, (void*[]) { icd, (void*)&info->dev }, 0)) AfxThrowError();
     else
     {
-        //AfxGetSubClass(AfxGetShellClass(ssh))->ctor(ssh, args, invokeNo);
+        //AfxGetSubclass(AfxGetShellClass(ssh))->ctor(ssh, args, invokeNo);
 
         afxClassConfig clsCfg;
 
@@ -112,7 +112,7 @@ _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxUnit invokeNo)
         clsCfg = info->padClsCfg ? *info->padClsCfg : _AuxCtrlStdImplementation;
         AfxMountClass(&ssh->padCls, NIL, &ssh->dev.classes, &clsCfg);
 
-        clsCfg = info->sesClsCfg ? *info->sesClsCfg : _AUX_SES_CLASS_CONFIG;
+        clsCfg = info->sesClsCfg ? *info->sesClsCfg : _AUX_ENV_CLASS_CONFIG;
         AfxMountClass(&ssh->sesCls, NIL, &ssh->dev.classes, &clsCfg);
 
         clsCfg = info->wndClsCfg ? *info->wndClsCfg : _AUX_WND_CLASS_CONFIG;
@@ -139,7 +139,7 @@ _AUX afxClassConfig const _AUX_SSH_CLASS_CONFIG =
 {
     .fcc = afxFcc_SSH,
     .name = "Shell",
-    .desc = "Shell Driver Interface",
+    .desc = "Installable Client Shell",
     .fixedSiz = sizeof(AFX_OBJECT(afxShell)),
     .ctor = (void*)_AuxSshCtorCb,
     .dtor = (void*)_AuxSshDtorCb
@@ -163,7 +163,7 @@ _AUX afxUnit AfxInvokeShells(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AUX) == (afxModuleFlag_ICD | afxModuleFlag_AUX));
         afxClass const* cls = _AuxGetShellClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_SSH);
-        rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+        rslt = AfxInvokeObjects(cls, (void*)f, udd, first, cnt);
         break;
     }
     return rslt;

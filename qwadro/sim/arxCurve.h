@@ -14,6 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
+#ifndef ARX_CURVE_H
+#define ARX_CURVE_H
+
 // Accelerated curve cosputation
 
 // A curve is a continuous and smooth mathematical object representing a set of points that form a shape or path in a given space.
@@ -33,9 +38,6 @@
 // Knots are the things that make the curve continuous, like in Bezier curves, 
 // the line segment from the mid point control point have to have the same tangent 
 // and length and if they are then the Bezier curves are c-continuous.
-
-#ifndef ARX_CURVE_H
-#define ARX_CURVE_H
 
 #include "qwadro/coll/afxSphere.h"
 #include "qwadro/render/arxRenderable.h"
@@ -160,13 +162,13 @@ ARX void            ArxMakeCurveDaKC32f(arxCurve c, afxUnit degree, afxUnit dim,
 
 ARX void            ArxBeginCurveCopy(arxCurveBlueprint* cb, arxCurve src);
 ARX void            ArxBeginCurve(arxCurveBlueprint* cb, arxCurveFormat fmt, afxUnit degree, afxUnit dimension, afxUnit knotCnt);
-ARX arxCurve        ArxEndCurve(arxCurveBlueprint* cb, afxSimulation sim);
+ARX arxCurve        ArxEndCurve(arxCurveBlueprint* cb, arxSimulation sim);
 
 ARXINL void         ArxResetCurveInfo(arxCurveInfo* cb, arxCurveFormat fmt, afxUnit degree, afxUnit dimens, afxUnit knotCnt);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError        ArxAcquireCurves(afxSimulation sim, afxUnit cnt, arxCurveInfo const info[], arxCurve curves[]);
-ARX afxError        ArxAssembleCurves(afxSimulation sim, afxUnit cnt, arxCurveBlueprint const blueprints[], arxCurve curves[]);
+ARX afxError        ArxAcquireCurves(arxSimulation sim, afxUnit cnt, arxCurveInfo const info[], arxCurve curves[]);
+ARX afxError        ArxAssembleCurves(arxSimulation sim, afxUnit cnt, arxCurveBlueprint const blueprints[], arxCurve curves[]);
 
 #endif//ARX_CURVE_H

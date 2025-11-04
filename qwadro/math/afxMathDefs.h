@@ -42,7 +42,7 @@
 // Qwadro uses radians as default angle measurement unit. They are natural and faster.
 
 #include <math.h>
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/math/afxSimd.h"
 //#include <stdalign.h>
 

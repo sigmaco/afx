@@ -14,213 +14,112 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
 #ifndef ARX_RENDER_CONTEXT_H
 #define ARX_RENDER_CONTEXT_H
 
-#include "qwadro/sim/afxSimDefs.h"
-#include "qwadro/draw/afxDrawDefs.h"
-#include "qwadro/mem/afxArray.h"
+// arxRenderContext devices operates like device submission queues grouping sets of draw streams and present their result to the connected draw output devices.
+
+// No QWADRO, há um conceito de uma fila de submissão de trabalho para a GPU. Porém, diferentemente do Vulkan, no QWADRO esta "fila" é separada em dois.
+// A primeira parte contém a demanda e a segunda parte o estado da fila junto a ponte.
+// Isto porque assim podemos usar a mesma demanda para dois contextos diferentes, cada qual contendo a outra parte, e logo, seu estado particular.
+
+/*
+    Draw input refers to the data or instructions provided to a system or application to create or render graphical content. 
+    It involves the input that specifies what should be drawn, how it should be drawn, and where it should appear.
+
+    In graphics programming, draw input consists of the commands or data used to generate visual content on the screen.
+    In 3D graphics, vertex data includes coordinates, colors, and texture coordinates that define the geometry of objects.
+    In game development, draw input refers to the data and instructions used to render game graphics and scenes.
+    In vector graphics, draw input consists of commands and parameters that define shapes and lines in a vector-based drawing application.
+
+*/
+
+#include "qwadro/draw/afxDrawSystem.h"
+
 #include "qwadro/render/arxRenderable.h"
-#include "qwadro/render/arxRenderableBody.h"
-#include "qwadro/render/arxRenderableModel.h"
-#include "qwadro/render/arxRenderableTerrain.h"
-#include "qwadro/render/arxScene.h"
-#include "qwadro/render/akxRenderer.h"
-#include "qwadro/render/arxBuffer.h"
-#include "qwadro/coll/afxFrustum.h"
+#include "qwadro/render/arxRenderModel.h"
+#include "qwadro/render/arxRenderBody.h"
+#include "qwadro/render/arxRenderTerrain.h"
+#include "qwadro/cad/arxTerrain.h"
+#include "qwadro/cad/arxModel.h"
+#include "qwadro/cad/arxMesh.h"
+#include "qwadro/render/arxPlacement.h"
+#include "qwadro/cad/arxPose.h"
+#include "qwadro/render/arxCamera.h"
+#include "qwadro/render/arxSky.h"
+#include "qwadro/render/arxBufferizer.h"
+#include "qwadro/render/arxTechnique.h"
+#include "qwadro/render/arxDrawInput.h"
+#include "qwadro/render/arxIllumination.h"
+#include "qwadro/render/arxRenderer.h"
+#include "qwadro/sim/arxAnimation.h"
 
-#ifdef _ARX_RENDER_CONTEXT_C
 
-
-#pragma pack(push, 1)
-AFX_DEFINE_STRUCT(DrawIndexedIndirectCmd)
+typedef enum arxEventId
 {
-    avxDrawIndexedIndirect cmd;
-    afxUnit mtlDataOffset;
-    afxUnit mtxStackOffset;
-    afxUnit jntMapOffset;
+    arxEventId_
+} arxEventId;
+
+AFX_DEFINE_STRUCT(arxEvent)
+{
+    arxEventId  id;
+    afxBool     posted, accepted;
+    void*       udd[1];
 };
 
-AFX_DEFINE_STRUCT(StepCmd)
+typedef afxBool(*afxDrawInputProc)(arxRenderContext rctx, arxEvent const* ev);
+
+AFX_DEFINE_STRUCT(arxRenderwareConfig)
 {
-    afxUnit nodId;
-    afxUnit bodId;
-    afxReal dist;
+    afxDrawSystem       dsys;
+    afxDrawInputProc    proc;
+    afxUnit             dragTxuBase;
+    afxUnit             dragTxuCnt;
+
+    afxUnit             cmdPoolMemStock;
+    afxUnit             estimatedSubmissionCnt;
+    afxUnit             minVtxBufCap;
+    afxUnit             maxVtxBufCap;
+    afxUnit             minIdxBufCap;
+    afxUnit             maxIdxBufCap;
+    void*               udd;
 };
 
-AFX_DEFINE_STRUCT(RenderCmd)
-{
-    afxUnit nodId;
-    afxUnit bodId;
-    afxUnit prtId;
-    afxUnit mdlId;
-    afxUnit mshId;
-    afxUnit mshsId;
-    afxUnit primId;
-    afxReal dist;
+ARX afxDrawSystem   ArxGetRenderwareDrawSystem(arxRenderContext rctx);
 
-    avxDrawIndexedIndirect cmd;
-    afxUnit mtlDataOffset;
-    afxUnit mtxStackOffset;
-    afxUnit jntMapOffset;
-};
-#pragma pack(pop)
+ARX void*           ArxGetRenderwareUdd(arxRenderContext rctx);
 
+// OPTICAL MATRIX UTILITY
 
-AFX_DEFINE_STRUCT(_arxVisualMaterial)
-{
-    afxLink rctx;
-    afxLink     technique;
-    arxMaterial mtl;
-    avxBuffer   dataUbo;
-    afxUnit     dataUboBase;
-    afxUnit     dataUboRange;
-};
+ARX void            ArxGetClipSpaceInfo(arxRenderContext rctx, avxClipSpaceDepth* depth, afxBool* leftHanded);
 
-AFX_DEFINE_STRUCT(_arxVisualMesh)
-{
-    afxLink rctx;
-    arxMesh msh;
-    arxVertexCache vtxCache;
-    arxIndexCache idxCache;
-};
+ARX void            ArxComputeLookToMatrices(arxRenderContext rctx, afxV3d const eye, afxV3d const dir, afxM4d v, afxM4d iv);
+ARX void            ArxComputeLookAtMatrices(arxRenderContext rctx, afxV3d const eye, afxV3d const target, afxM4d v, afxM4d iv);
 
-AFX_DEFINE_STRUCT(_arxVisualModel)
-{
-    afxLink     rctx;
-    arxModel    mdl;
-    afxUnit     rigCnt;
-    afxUnit     biasMapPop; // total
-    avxBuffer   biasMapFbo;
-    afxUnit     biasMapFboBase;
-    afxUnit     biasMapFboRange;
+ARX void            ArxComputeBasicOrthographicMatrices(arxRenderContext rctx, afxReal aspectRatio, afxReal scale, afxReal range, afxM4d p, afxM4d ip);
+ARX void            ArxComputeOrthographicMatrices(arxRenderContext rctx, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+ARX void            ArxComputeOffcenterOrthographicMatrices(arxRenderContext rctx, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+ARX void            ArxComputeBoundingOrthographicMatrices(arxRenderContext rctx, afxBox const aabb, afxM4d p, afxM4d ip);
 
-    avxBufferedStream sklVbo;
-    avxBufferedStream sklIbo;
-};
+ARX void            ArxComputeFovMatrices(arxRenderContext rctx, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+ARX void            ArxComputeFrustrumMatrices(arxRenderContext rctx, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+ARX void            ArxComputeBasicPerspectiveMatrices(arxRenderContext rctx, afxReal aspectRatio, afxReal range, afxM4d p, afxM4d ip);
+ARX void            ArxComputePerspectiveMatrices(arxRenderContext rctx, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
 
-AFX_DEFINE_STRUCT(_arxVisualBody)
-{
-    afxLink     rctx;
-    arxBody     bod;
-    arxModel    mdl;
-    afxUnit     jntCnt;
-    struct
-    {
-        avxBuffer   mtxUbo;
-        afxUnit     mtxUboBase;
-        afxUnit     mtxUboRange;
-    } perFrame[3];
-};
+ARX afxError        ArxUplinkTxds(arxRenderContext rctx, afxUnit baseSlot, afxUnit slotCnt, afxUri const uris[]);
 
-AFX_DEFINE_STRUCT(arxRenderFrame)
-{
-    arxCamera activeCam;
-    akxViewConstants viewConsts;
+////////////////////////////////////////////////////////////////////////////////
 
-    avxBuffer viewUbo;
+ARX afxError ArxConfigureRenderContext(afxUnit icd, arxRenderwareConfig* cfg);
 
-    arxModel activeSkl;
-    afxSize biasMapFboBaseOffset;
-    afxSize biasMapFboBaseIdx;
-    afxSize mtxStackUboBaseOffset;
-    afxSize mtlDataUboBaseOffset;
-
-    afxBool internalTransferDctx;
-    afxDrawContext transferDctx;
-    afxBool internalDrawDctx;
-    afxDrawContext drawDctx;
-    afxUnit dbId, tbId;
-
-    avxBuffer boundDynVbo;
-    afxUnit boundDynVboRangeToBeFlused;
-    avxBuffer boundDynIbo;
-    afxUnit boundDynIboRangeToBeFlused;
-    avxBuffer boundDynUbos[4][32];
-    afxUnit boundDynUbosRangeToBeFlused[4][32];
-};
-
-AFX_OBJECT(arxRenderContext)
-{
-    afxSimulation sim;
-    afxDrawSystem   dsys;
-    arxRenderware    rwe;
-
-    afxChain        commands;
-    afxArena        cmdArena; // owned by dsys data for specific port
-
-    afxPool visualMaterials;
-    afxPool visualMeshes;
-    afxPool visualModels;
-    afxPool visualBodies;
-
-    afxBool inFrameGoingOn;
-    afxUnit frameIdx;
-    afxUnit frameCnt;
-    arxRenderFrame frames[3];
-    afxUnit perSecFrame;
-
-    arxBufferedPump dynVtxAlloc;
-    arxBufferedPump dynIdxAlloc;
-    arxBufferedPump dynUnfmAlloc;
-};
-#endif//_ARX_RENDER_CONTEXT_C
-
-ARX afxError ArxAcquireRenderContext(arxRenderware rwe, afxSimulation sim, afxUnit cnt, arxSceneInfo infos[], arxRenderContext* context);
-
-ARX afxError ArxStageMaterials(arxRenderContext rctx, afxUnit cnt, afxUnit indices[]);
-
-ARX afxBool RenderCells(arxRenderContext rctx, afxDrawContext dctx, avxVertexInput vin, arxTerrain ter, afxFrustum* frustum, afxBool showFaces, afxBool showDbgLines);
-
-ARX afxError ArxCmdRenderMeshes(arxRenderContext rctx, afxUnit cnt, arxMesh meshes[]);
-ARX afxError ArxCmdRenderModels(arxRenderContext rctx, afxUnit cnt, arxModel models[]);
-ARX afxError ArxCmdRenderBodies(arxRenderContext rctx, afxM4d m, afxUnit cnt, arxBody bodies[]);
-ARX afxError ArxCmdRenderNode(arxRenderContext rctx, afxUnit cnt, arxNode nodes[]);
-ARX afxError ArxCmdRenderTerrain(arxRenderContext rctx, arxTerrain ter);
-
-/*
-    Start of a new rendering frame.
-    Prepares the system for rendering a new frame.
-
-    ArxBeginFrame() is called to mark the start of frame rendering. 
-    The application should still call ArxBeginFrame() but omit rendering work for the frame if shouldRender is FALSE.
-
-    Runtimes must not perform frame synchronization or throttling through the ArxBeginFrame() function and should instead do so through ArxWaitFrame().
-*/
-
-ARX afxError ArxBeginFrame(arxRenderContext rctx, void* param, afxUnit* frameIdx);
-
-/*
-    Finalize the frame and present it to the screen (swap buffers).
-
-    Every call to ArxEndFrame() must be preceded by a successful call to ArxBeginFrame().
-
-*/
-
-// Completes the frame. Executes buffer swaps and ensures the rendered scene is displayed.
-
-ARX afxError ArxEndFrame(arxRenderContext rctx, void* param, afxUnit* perSecFrame);
-
-// ArxWaitFrame throttles the application frame loop in order to synchronize application frame submissions with the display.
-
-ARX afxError ArxWaitFrame(arxRenderContext rctx, void* param);
-
-// Set up the scene for rendering (e.g., camera, lighting).
-// Starts the definition of a scene. Typically, you would place draw calls and object updates between BeginScene and EndScene.
-
-ARX afxError ArxBeginScene(arxRenderContext rctx, afxDrawContext transferDctx, afxDrawContext drawDctx);
-
-// Finish setting up the scene (submit draw calls).
-// Ends the definition of the current scene.
-// Internally may batch and sort draw calls, set states, etc.
-
-ARX afxError ArxEndScene(arxRenderContext rctx, afxUnit id);
-
-ARX afxError ArxCmdUseRenderTechnique(arxRenderContext rctx, arxTechnique dtec, afxUnit passId, avxVertexInput vin, afxFlags dynamics);
-ARX afxError ArxCmdUseCamera(arxRenderContext rctx, arxCamera cam, afxRect const* drawArea);
-
-ARX afxError ArxCmdPostUniform(arxRenderContext rctx, afxUnit set, afxUnit binding, afxUnit dataSiz, void** pData);
-ARX afxError ArxCmdPostVertices(arxRenderContext rctx, afxUnit vtxCnt, afxUnit vtxSiz, void** pVertices);
-ARX afxError ArxCmdPostVertexIndices(arxRenderContext rctx, afxUnit idxCnt, afxUnit idxSiz, void** pIndices);
+ARX afxError ArxAcquireRenderContext
+(
+    afxUnit icd,
+    arxRenderwareConfig const* cfg, 
+    arxRenderContext* input
+);
 
 #endif//ARX_RENDER_CONTEXT_H

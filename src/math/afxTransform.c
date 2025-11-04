@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -89,6 +89,38 @@ _AFXINL void AfxSetTransform(afxTransform* t, afxV3d const position, afxQuat con
 
         if (!AfxM3dIsIdentity(scaleShear))
             t->flags |= afxTransformFlag_DEFORMED;
+    }
+}
+
+_AFXINL void AfxMakeRigidTransform(afxTransform* t, afxV3d const pos, afxQuat const orient, afxBool check)
+{
+    afxError err = NIL;
+
+    if (!(pos && orient))
+    {
+        AfxResetTransform(t);
+        return;
+    }
+    
+    t->flags = NIL;
+    AfxM3dCopy(t->scaleShear, AFX_M3D_IDENTITY);
+
+    if (!pos) AfxV3dZero(t->position);
+    else
+    {
+        AfxV3dCopy(t->position, pos);
+
+        if (!check || !AfxV3dIsZero(pos))
+            t->flags |= afxTransformFlag_TRANSLATED;
+    }
+
+    if (!orient) AfxQuatReset(t->orientation);
+    else
+    {
+        AfxQuatCopy(t->orientation, orient);
+
+        if (!check || !AfxQuatIsIdentity(orient))
+            t->flags |= afxTransformFlag_ROTATED;
     }
 }
 

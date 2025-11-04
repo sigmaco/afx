@@ -167,15 +167,15 @@ AVX afxError            AvxConfigureCanvas
 );
 
 /*
-    The AvxCoacquireCanvas() acquires one or more actual canvas objects based on the configuration (cfg).
+    The AvxAcquireCanvas() acquires one or more actual canvas objects based on the configuration (cfg).
     This is where real GPU resources are created; framebuffers, images, views, etc.
 
     Example:
         avxCanvas myCanvases[3];
-        AvxCoacquireCanvas(dsys, &cfg, 3, myCanvases); // Create triple-buffered canvas set
+        AvxAcquireCanvas(dsys, &cfg, 3, myCanvases); // Create triple-buffered canvas set
 */
 
-AVX afxError                AvxCoacquireCanvas
+AVX afxError                AvxAcquireCanvas
 // Acquire a new buffered drawing canvas object.
 (
     // the draw system that provides the canvas.
@@ -211,20 +211,20 @@ AVX avxCanvasFlags  AvxGetCanvasFlags
 );
 
 /*
-    The AvxGetCanvasArea() function retrieves the dimensions (width and height) of a given canvas. 
+    The AvxGetCanvasExtent() function retrieves the dimensions (width and height) of a given canvas. 
     This information is essential for rendering, scaling, and layout management in graphical applications, 
     particularly when dealing with dynamic or resizable drawing surfaces.
     It also provides the area's magnitude (width × height in pixels) as a return value.
 */
 
-AVX afxUnit         AvxGetCanvasArea
+AVX afxUnit         AvxGetCanvasExtent
 (
     // A canvas object that represents a framebuffer, render target, or drawable surface.
     avxCanvas       canv,
     // Represents the origin or coordinate space used to define the area.
-    avxOrigin       origin,
-    // A pointer to an afxRect structure that will be filled with the canvas's area.
-    afxRect*        area
+    avxOrigin const*origin,
+    // A pointer to an afxLayeredRect structure that will be filled with the canvas's extent.
+    afxLayeredRect* extent
 );
 
 /*

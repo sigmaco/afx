@@ -5,7 +5,7 @@ Vendor=SIGMA Technology Group
 Href=https://sigmaco.org
 FeatureScore=1
 Service=pragma
-DllFile=catalyst.dll
+DllFile=e2catalyst.dll
 Devices=Icd.Devices
 
 [Icd.Devices]

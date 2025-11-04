@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -104,10 +104,10 @@ _AFX afxError _AfxStrcCtor(afxStringBase strc, void** args, afxUnit invokeNo)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_STRB, 1, &strc);
     
-    AfxDeployChain(&strc->strings, strc);
+    AfxMakeChain(&strc->strings, strc);
     strc->first = NIL;
 
-    //AfxDeployPool(&strc, sizeof(afxMappedString), 32);
+    //AfxSetUpPool(&strc, sizeof(afxMappedString), 32);
 
     return err;
 }
@@ -149,7 +149,7 @@ _AFX afxError AfxAcquireStringCatalogs(afxUnit cnt, afxStringBase catalogs[])
     afxSystem sys;
     AfxGetSystem(&sys);
 
-    if (AfxAcquireObjects(_AfxSysGetStrbClass(sys), cnt, (afxObject*)catalogs, (void const*[]) { 0 }))
+    if (AfxAcquireObjects((afxClass*)_AfxSysGetStrbClass(sys), cnt, (afxObject*)catalogs, (void const*[]) { 0 }))
         AfxThrowError();
 
     return err;

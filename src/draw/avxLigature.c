@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -399,7 +399,7 @@ _AVX afxError AvxAcquireLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureCo
     return err;
 }
 
-_AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxShader shaders[], avxLigatureConfig* cfg)
+_AVX afxError AvxConfigureLigature(afxDrawSystem dsys, avxLigatureConfig* cfg, avxCodebase codb, afxUnit progCnt, afxUnit progs[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -415,7 +415,7 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
 
     for (afxUnit s = 0; s < shaderCnt; s++)
     {
-        avxShader shd = shaders[s];
+        avxCodebase shd = shaders[s];
         if (!shd) continue;
         AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
@@ -739,27 +739,27 @@ _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, afxUnit shaderCnt, avxSha
     cfg->setCnt = setUsed;
 #endif
 
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &codb);
+
     avxLigament merged[AVX_MAX_LIGAMENTS];
     afxUnit mergedSet[AVX_MAX_LIGAMENTS];
     afxUnit mergedCount = 0;
 
-    for (afxUnit i = 0; i < shaderCnt; ++i)
+    for (afxUnit i = 0; i < progCnt; ++i)
     {
-        avxShader shd = shaders[i];
-        if (!shd) continue;
-        AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
-        afxMask stage = AvxGetShaderStage(shd);
+        afxUnit prog = progs[i];
 
-        if (shd->pushConstName.s.len)
-        {
-            cfg->pushCnt = 1;
-        }
+        // TODO continue if invalid?
 
-        afxUnit resCnt = AvxQueryShaderInterfaces(shd, 0, 0, NIL);
+        afxMask stage = AvxGetShaderStage(codb, prog);
+
+        cfg->pushCnt += AvxDoesShaderHavePushConstants(codb, prog) ? 1 : 0;
+
+        afxUnit resCnt = AvxQueryShaderInterfaces(codb, prog, 0, 0, NIL);
         for (afxUnit j = 0; j < resCnt; ++j)
         {
             avxShaderResource res;
-            if (AvxQueryShaderInterfaces(shd, j, 1, &res) != 1)
+            if (AvxQueryShaderInterfaces(codb, prog, j, 1, &res) != 1)
             {
                 // failure
                 AfxThrowError();

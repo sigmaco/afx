@@ -15,6 +15,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
 #ifndef ARX_MOTION_H
 #define ARX_MOTION_H
 
@@ -68,6 +70,6 @@ ARX void        ArxUpdateMotionTransforms(arxMotion mot, afxUnit baseSeqIdx, afx
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError    ArxAssembleMotions(afxSimulation sim, afxUnit cnt, arxMotionBlueprint const blueprints[], arxMotion motions[]);
+ARX afxError    ArxAssembleMotions(arxSimulation sim, afxUnit cnt, arxMotionBlueprint const blueprints[], arxMotion motions[]);
 
 #endif//ARX_MOTION_H

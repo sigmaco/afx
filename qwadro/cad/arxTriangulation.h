@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
 #ifndef ARX_MESH_BUILDER_H
 #define ARX_MESH_BUILDER_H
 
@@ -23,7 +25,7 @@
 #include "qwadro/io/afxUrd.h"
 #include "qwadro/math/afxVertex.h"
 #include "qwadro/base/afxFixedString.h"
-#include "qwadro/sim/afxSimDefs.h"
+#include "qwadro/sim/arxSimDefs.h"
 #include "qwadro/render/arxRenderable.h"
 
 AFX_DEFINE_STRUCT(akxVertex)

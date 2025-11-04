@@ -15,6 +15,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
+#ifndef ARX_MOTOR_H
+#define ARX_MOTOR_H
+
 // Servo
 // Governor
 // Regulator
@@ -31,10 +36,7 @@
 
 // Essential part of our machinima.
 
-#ifndef ARX_MOTOR_H
-#define ARX_MOTOR_H
-
-#include "qwadro/sim/afxSimDefs.h"
+#include "qwadro/sim/arxSimDefs.h"
 #include "qwadro/cad/arxPose.h"
 
 AFX_DEFINE_STRUCT(arxCapstanTiming)
@@ -166,6 +168,6 @@ ARX afxBool         ArxReleaseUnusedCapstans(afxUnit cnt, arxCapstan capstans[])
 ARX afxBool         ArxReleaseOnceUnusedCapstans(afxUnit cnt, arxCapstan capstans[]);
 ARX afxBool         ArxReleaseTerminatedCapstans(afxUnit cnt, arxCapstan capstans[]);
 
-ARX afxError        ArxAcquireCapstans(afxSimulation sim, arxCapstanConfig const* cfg, afxUnit cnt, arxCapstan capstans[]);
+ARX afxError        ArxAcquireCapstans(arxSimulation sim, arxCapstanConfig const* cfg, afxUnit cnt, arxCapstan capstans[]);
 
 #endif//ARX_MOTOR_H

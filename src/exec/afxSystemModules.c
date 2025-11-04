@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -54,10 +54,10 @@ _AFX afxError _AfxAttachCoreModule(afxModule* e2coree)
     afxUri* name;
     name = AfxUri("e2coree.dll");
 
-    afxClass* cls = _AfxSysGetMdleClass(sys);
+    afxClass* cls = (afxClass*)_AfxSysGetMdleClass(sys);
 
     _e2coreeMdl = (void*)_e2coreeMdlObj;
-    if (_AfxConstructObjects(cls, 1, (afxObject*)&_e2coreeMdl, (void*[]) { sys, name, name })) AfxThrowError();
+    if (_AfxSetUpObjects(cls, 1, (afxObject*)&_e2coreeMdl, (void*[]) { sys, name, name })) AfxThrowError();
     else
     {
         AFX_ASSERT(_e2coreeMdl != (void*)_e2coreeMdlObj);
@@ -65,7 +65,7 @@ _AFX afxError _AfxAttachCoreModule(afxModule* e2coree)
 
         if (err)
         {
-            if (_AfxDestructObjects(cls, 1, (afxObject*)&_e2coreeMdl))
+            if (_AfxCleanUpObjects(cls, 1, (afxObject*)&_e2coreeMdl))
                 AfxThrowError();
 
             AFX_ASSERT(_e2coreeMdl == (void*)_e2coreeMdlObj);

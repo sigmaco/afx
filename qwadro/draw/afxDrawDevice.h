@@ -38,7 +38,7 @@
 #include "qwadro/exec/afxDevice.h"
 #include "qwadro/draw/afxDrawBridge.h"
 #include "qwadro/draw/afxSurface.h"
-#include "qwadro/ux/afxDisplay.h"
+#include "qwadro/hid/afxDisplay.h"
 
 AFX_DEFINE_STRUCT(afxDrawFeatures)
 /**

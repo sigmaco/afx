@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
 #ifndef ARX_TERRAIN_H
 #define ARX_TERRAIN_H
 
@@ -37,11 +39,11 @@ ARX afxBool     ArxGetTerrainHeightAt(arxTerrain ter, afxReal x, afxReal z, afxR
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError    ArxAcquireTerrain(arxRenderware rwe, arxTerrainConfig const* cfg, arxTerrain* terrain);
+ARX afxError    ArxAcquireTerrain(arxRenderContext rctx, arxTerrainConfig const* cfg, arxTerrain* terrain);
 
-ARX afxError    ArxGenerateTerrain(arxRenderware rwe, afxWarp const whd, arxTerrain* terrain);
+ARX afxError    ArxGenerateTerrain(arxRenderContext rctx, afxWarp const whd, arxTerrain* terrain);
 
-ARX afxError    ArxGenerateHeightmappedTerrain(arxRenderware rwe, afxUri const* uri, arxTerrain* terrain);
+ARX afxError    ArxGenerateHeightmappedTerrain(arxRenderContext rctx, afxUri const* uri, arxTerrain* terrain);
 
 
 #endif//ARX_TERRAIN_H

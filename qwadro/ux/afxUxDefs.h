@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced Multimedia UX Extensions & Experiments.
+// This software is part of Advanced User Experiences Extensions & Experiments.
 
   //////////////////////////////////////////////////////////////////////////////
  // Advanced User Experience on Qwadro                                       //
@@ -51,9 +51,10 @@
 
 AFX_DEFINE_HANDLE(afxWidget);
 AFX_DEFINE_HANDLE(afxScript);
-AFX_DEFINE_HANDLE(afxSession);
+AFX_DEFINE_HANDLE(afxEnvironment);
 AFX_DEFINE_HANDLE(afxTerminal);
 AFX_DEFINE_HANDLE(afxFont);
+AFX_DEFINE_HANDLE(afxTheme);
 
 typedef enum auxEventId
 {

@@ -75,11 +75,18 @@
 typedef enum avxTopology
 {
     avxTopology_TRI_LIST, // Mesh is made from triangles.
+    
+    // In this topology, each new triangle shares two vertices with the previous triangle, 
+    // and only one new vertex is introduced.
     avxTopology_TRI_STRIP,
+
+    // In this topology, all triangles share a common central vertex, and each triangle adds a new vertex at the boundary.
     avxTopology_TRI_FAN,
 
     avxTopology_LINE_LIST, // Mesh is made from lines.
-    avxTopology_LINE_STRIP, // Mesh is a line strip.
+
+    // This involves a continuous line sequence, where each triangle's first and last vertex will connect to form a strip
+    avxTopology_LINE_STRIP,
 
     avxTopology_POINT_LIST, // Mesh is made from points.
 
@@ -87,6 +94,10 @@ typedef enum avxTopology
     avxTopology_LINE_STRIP_ADJACENT,
 
     avxTopology_TRI_LIST_ADJACENT,
+
+    // In triangle strip adjacency, each triangle shares edges with its neighbors,     
+    // but also includes information about the vertices adjacent to those edges. 
+    // This is similar to how avxTopology_TRI_LIST_ADJACENT works, but for a strip.
     avxTopology_TRI_STRIP_ADJACENT,
 
     avxTopology_PATCH_LIST,
@@ -340,7 +351,7 @@ AFX_DEFINE_HANDLE(afxSurface);
 AFX_DEFINE_HANDLE(avxPipeline);
 AFX_DEFINE_HANDLE(avxRasterizer);
 AFX_DEFINE_HANDLE(avxVertexInput);
-AFX_DEFINE_HANDLE(avxShader);
+AFX_DEFINE_HANDLE(avxCodebase);
 AFX_DEFINE_HANDLE(avxLigature);
 AFX_DEFINE_HANDLE(avxSampler);
 AFX_DEFINE_HANDLE(avxQueryPool);

@@ -127,7 +127,7 @@ void xssFreeVM(xssVm vm)
 }
 #endif
 
-_AFX xssVm xssCreateVm(LunaConfiguration const* config)
+xssVm xssCreateVm(LunaConfiguration const* config)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -174,7 +174,7 @@ _AFX xssVm xssCreateVm(LunaConfiguration const* config)
     return vm;
 }
 
-_AFX afxError xssDestroyVm(xssVm vm)
+afxError xssDestroyVm(xssVm vm)
 {
     afxError err = AFX_ERR_NONE;
 

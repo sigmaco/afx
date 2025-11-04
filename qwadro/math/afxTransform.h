@@ -87,7 +87,9 @@ AFXINL void     AfxResetTransform(afxTransform* t); // make identity
 
 AFXINL void     AfxCopyTransform(afxTransform* t, afxTransform const *in);
 
-AFXINL void     AfxSetTransform(afxTransform* t, afxV3d const position, afxQuat const orientation, afxM3d const scaleShear, afxBool check);
+AFXINL void     AfxSetTransform(afxTransform* t, afxV3d const pos, afxQuat const orient, afxM3d const scaleShear, afxBool check);
+
+AFXINL void     AfxMakeRigidTransform(afxTransform* t, afxV3d const pos, afxQuat const orient, afxBool check);
 
 AFXINL void     AfxClipTransformDofs(afxTransform* t, afxFlags allowedDOFs);
 

@@ -15,15 +15,17 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-/// Qwadro armazena animações em partes baseadas em quão muitos modelos estão envolvidos numa animação.
-/// Assim sendo, uma arxAnimation é a moção de um conjunto de arxModel's animando sobre tempo.
-/// A arxAnimation contém um ou mais arxMotion's, cada do qual correspondendo à moção de um modelo específico (desde que uma animação pode envolver múltiplos modelos, se o autor assim escolher).
-/// O arxMotion é constituído de curvas, cada da qual especifica a translação, rotação e escala de uma junta no akxSkeleton do correspondente arxModel.
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
 
 #ifndef ARX_ANIMATION_H
 #define ARX_ANIMATION_H
 
-#include "qwadro/sim/afxSimDefs.h"
+// Qwadro armazena animações em partes baseadas em quão muitos modelos estão envolvidos numa animação.
+// Assim sendo, uma arxAnimation é a moção de um conjunto de arxModel's animando sobre tempo.
+// A arxAnimation contém um ou mais arxMotion's, cada do qual correspondendo à moção de um modelo específico (desde que uma animação pode envolver múltiplos modelos, se o autor assim escolher).
+// O arxMotion é constituído de curvas, cada da qual especifica a translação, rotação e escala de uma junta no akxSkeleton do correspondente arxModel.
+
+#include "qwadro/sim/arxSimDefs.h"
 #include "qwadro/sim/arxCurve.h"
 #include "qwadro/math/afxTransform.h"
 #include "qwadro/base/afxFixedString.h"
@@ -64,9 +66,9 @@ ARX afxError    ArxArchiveAnimation(arxAnimation ani, afxUri const* uri);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError    ArxLoadAnimation(afxSimulation sim, afxString const* urn, afxUri const* uri, arxAnimation* animation);
+ARX afxError    ArxLoadAnimation(arxSimulation sim, afxString const* urn, afxUri const* uri, arxAnimation* animation);
 
-ARX afxError    ArxAssembleAnimations(afxSimulation sim, afxUnit cnt, arxAnimationBlueprint const blueprints[], arxAnimation animations[]);
+ARX afxError    ArxAssembleAnimations(arxSimulation sim, afxUnit cnt, arxAnimationBlueprint const blueprints[], arxAnimation animations[]);
 
 ARX void        ArxTransformAnimations(afxM3d const ltm, afxM3d const iltm, afxReal linearTol, afxV4d const atv, afxReal affineTol, afxFlags flags, afxUnit cnt, arxAnimation animations[]);
 

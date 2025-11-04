@@ -17,7 +17,7 @@
 #ifndef AFX_CLOCK_H
 #define AFX_CLOCK_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/exec/afxTime.h"
 
 AFX_DEFINE_UNION_ALIGNED(AFX_SIMD_ALIGNMENT, afxClock)

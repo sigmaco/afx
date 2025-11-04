@@ -65,7 +65,7 @@
 
 #include "qwadro/draw/avxCanvas.h"
 #include "qwadro/draw/afxDrawBridge.h"
-#include "qwadro/ux/afxDisplay.h"
+#include "qwadro/hid/afxDisplay.h"
 
 typedef enum avxPresentFlag
 // Flags specifying the presentation rules.
@@ -135,34 +135,40 @@ AFX_DEFINE_STRUCT(afxSurfaceInterop)
 
 AFX_DEFINE_STRUCT(afxSurfaceConfig)
 {
-    // The configuration for the canvases, and its draw buffers.
-    avxCanvasConfig     ccfg;
-    avxColorSpace       colorSpc; // avxColorSpace_STANDARD; if sRGB isn't present, fall down to LINEAR.
-    afxBool             resizable;
-
+    // The display from which the surface will be acquired.
+    afxDisplay          dpy;
+    // Boolean requesting full, exclusive control of the video endpoint.
+    afxBool             exclusive;
+    // The screen resolution to be used to mode-set the video endpoint.
+    avxRange            resolution;
+    // The refresh rate to be used to mode-set the video endpoint.
+    afxReal64           refreshRate;
+    
     // Swapchain
+    // The configuration for the canvas, and its draw buffers.
+    avxCanvasConfig     ccfg;
+    // A value specifying the way the swapchain interprets image data.
+    avxColorSpace       colorSpc;
+    // Boolean requesting adjustability.
+    afxBool             resizable;
     // The latency of swapchain measured in latent buffers.
     // Usually 2 or 3, for a double or triple-buffered mechanism, respectively.
     afxUnit             latency;
     // Endpoint
     // Flags specifying how the video endpoint presentation mechanism should behaves.
     avxPresentFlags     presentMode;
-    // Flags specifying how the video endpoint compositor should consider the alpha channel (for example, using it for transparency).
-    avxVideoAlpha       presentAlpha;
     // Flags specifying how the video endpoint should position the image.
     avxVideoTransform   presentTransform;
-
-    // The refresh rate to be used to mode-set the video endpoint.
-    afxReal64           refreshRate;
-    // The screen resolution to be used to mode-set the video endpoint.
-    avxRange            resolution;
-    // Boolean requesting full, exclusive control of the video endpoint.
-    afxBool             exclusive;
-    // Boolean specifying when to do not do off-screen draw.
+    // Flags specifying how the video endpoint compositor should consider the alpha channel (for example, using it for transparency).
+    avxVideoAlpha       presentAlpha;
+    // Boolean specifying when to do not do off-screen blitting.
     afxBool             doNotClip;
 
+    // A debuggint string.
     afxString           tag;
+    // A user-defined data.
     void*               udd[4];
+    // Interoperability extender.
     afxSurfaceInterop   iop;
 };
 
@@ -184,7 +190,7 @@ AVX afxError AvxConfigureSurface
 );
 
 /*
-    The AvxOpenSurface() function opens a drawing output context with specific settings provided
+    The AvxAcquireSurface() function opens a drawing output context with specific settings provided
     in the configuration structure. This could involve creating a window for rendering,
     allocating a framebuffer, setting up a full-screen display, or initializing other kinds
     of graphical outputs.
@@ -193,7 +199,7 @@ AVX afxError AvxConfigureSurface
     which can be used to perform further rendering or interaction.
 */
 
-AVX afxError AvxOpenSurface
+AVX afxError AvxAcquireSurface
 (
     // The drawing system where the drawing output context will be created or opened.
     afxDrawSystem dsys,
@@ -535,11 +541,11 @@ AVX afxError AvxLockSurfaceBuffer
     // A bitmask specifying which bridges can used the buffer when ready and signaled so.
     afxMask exuMask,
 
-    // A pointer to store the index of the reserved buffer.
-    afxUnit* bufIdx,
-
     // A fence to signal.
-    avxFence signal
+    avxFence signal,
+
+    // A pointer to store the index of the reserved buffer.
+    afxUnit* bufIdx
 );
 
 /*
@@ -579,9 +585,9 @@ AVX afxBool AvxGetSurfaceCanvas
     // Pointer to an placeholder that will be populated with the avxCanvas object handle.
     avxCanvas* canvas,
 
-    // Pointer to an afxRect defining the area of the canvas being referenced.
+    // Pointer to an afxLayeredRect structure defining the area and layers of the canvas being referenced.
     // Could be used to query or limit to a subregion of the canvas.
-    afxRect* area
+    afxLayeredRect* bounds
 );
 
 /*

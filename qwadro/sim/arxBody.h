@@ -14,21 +14,23 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-/// O objeto arxBody aloja o estado de um arxModel no tempo de execução.
-/// O arxModel é apenas dados estruturados para um modelo particular --- isto é, este não há qualquer conceito de onde este está, qual estado este está em, ou quais animações estão interagindo em si.
-/// O arxBody mantém rastreio disto e provém um número de funções úteis para facilitar o trabalho com estados de modelo. 
-
-/// Enquanto todas as suas entidades idênticas deveriam compartilhar o mesmo arxModel, desde que seus dados de malha e esqueleto sejam idênticos, cada um deveria ainda haver seu próprio arxBody.
-/// Dito isto porque os dados do arxBody são todos dinâmicos, e não são compartilhados através de múltiplos modelos, mesmo se estes foram feitos do mesmo arxModel.
-/// Assim, enquanto é comum colocar a hierarquia de estruturas do arxModel no cache e instanciá-las múltiplas vezes, você nunca deveria colocar objetos arxBody no cache e reusá-los.
-/// Eles deveriam sempre ser instanciados e liberados ao longo da existência das entidades que eles representam na sua aplicação.
-
-/// Note, no entanto, que estes são simplesmente ponteiros para os dados originais que vocÊ passou durante a instanciação.
-/// O arxBody não mantém cópias dos dados (para minimizar uso de memória), então você não pode liberar os dados originais do modelo e esperar obter ponteiros válidos de volta aqui.
-/// Para aquilo que importa, se você liberar os dados originais do modelo, nenhuma das chamadas para arxBody funcionarão, desde que elas todas dependem daqueles dados, como você esperaria.
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
 
 #ifndef ARX_BODY_H
 #define ARX_BODY_H
+
+// O objeto arxBody aloja o estado de um arxModel no tempo de execução.
+// O arxModel é apenas dados estruturados para um modelo particular --- isto é, este não há qualquer conceito de onde este está, qual estado este está em, ou quais animações estão interagindo em si.
+// O arxBody mantém rastreio disto e provém um número de funções úteis para facilitar o trabalho com estados de modelo. 
+
+// Enquanto todas as suas entidades idênticas deveriam compartilhar o mesmo arxModel, desde que seus dados de malha e esqueleto sejam idênticos, cada um deveria ainda haver seu próprio arxBody.
+// Dito isto porque os dados do arxBody são todos dinâmicos, e não são compartilhados através de múltiplos modelos, mesmo se estes foram feitos do mesmo arxModel.
+// Assim, enquanto é comum colocar a hierarquia de estruturas do arxModel no cache e instanciá-las múltiplas vezes, você nunca deveria colocar objetos arxBody no cache e reusá-los.
+// Eles deveriam sempre ser instanciados e liberados ao longo da existência das entidades que eles representam na sua aplicação.
+
+// Note, no entanto, que estes são simplesmente ponteiros para os dados originais que vocÊ passou durante a instanciação.
+// O arxBody não mantém cópias dos dados (para minimizar uso de memória), então você não pode liberar os dados originais do modelo e esperar obter ponteiros válidos de volta aqui.
+// Para aquilo que importa, se você liberar os dados originais do modelo, nenhuma das chamadas para arxBody funcionarão, desde que elas todas dependem daqueles dados, como você esperaria.
 
 #include "qwadro/cad/arxModel.h"
 #include "qwadro/sim/arxCapstan.h"
@@ -114,11 +116,11 @@ AFX_DEFINE_STRUCT(arxBodyInfo)
 
 ARX afxError    ArxSpawnBodies(arxModel proto, afxUnit cnt, arxBody bod[]);
 
-ARX afxError    ArxAcquireBodies(afxSimulation sim, arxModel mdl, afxUnit cnt, arxBody bodies[]);
+ARX afxError    ArxAcquireBodies(arxSimulation sim, arxModel mdl, afxUnit cnt, arxBody bodies[]);
 
 ARX afxUnit     ArxPerformManipulatedPose(arxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, arxTrackMask* modelMask, afxUnit cnt, arxBody bodies[]);
 
-ASX afxUnit         AfxEnumerateBodies(afxSimulation sim, afxUnit first, afxUnit cnt, arxBody bodies[]);
-ASX afxUnit         AfxInvokeBodies(afxSimulation sim, afxUnit first, afxUnit cnt, afxBool(*f)(arxBody, void*), void *udd);
+ASX afxUnit         ArxEnumerateBodies(arxSimulation sim, afxUnit first, afxUnit cnt, arxBody bodies[]);
+ASX afxUnit         ArxInvokeBodies(arxSimulation sim, afxUnit first, afxUnit cnt, afxBool(*f)(arxBody, void*), void *udd);
 
 #endif//ARX_BODY_H

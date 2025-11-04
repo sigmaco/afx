@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -29,7 +29,7 @@ _AFX afxError _AfxXquePopWork(afxIoQueue xque, afxStdWork* work)
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
     AfxPopLink(&work->hdr.chain);
-    AfxReclaimToArena(&xque->workArena, work, work->hdr.siz);
+    AfxReclaimArena(&xque->workArena, work, work->hdr.siz);
     return err;
 }
 
@@ -38,7 +38,7 @@ _AFX afxStdWork* _AfxXquePushWork(afxIoQueue xque, afxUnit id, afxUnit siz, afxC
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
 
-    afxStdWork* work = AfxRequestFromArena(&xque->workArena, siz, 1, NIL, 0);
+    afxStdWork* work = AfxRequestArena(&xque->workArena, siz, 1, NIL, 0);
     AFX_ASSERT(work);
     work->hdr.id = id;
     work->hdr.siz = siz;
@@ -102,13 +102,13 @@ _AFX afxError _AfxXqueCtorCb(afxIoQueue xque, void** args, afxUnit invokeNo)
     AfxMakeArena(&xque->workArena, NIL, AfxHere());
 
     AfxDeployMutex(&xque->workChnMtx, AFX_MTX_PLAIN);
-    AfxDeployChain(&xque->workChn, exu);
+    AfxMakeChain(&xque->workChn, exu);
     AfxDeployMutex(&xque->idleCndMtx, AFX_MTX_PLAIN);
     AfxDeployCondition(&xque->idleCnd);
 
     xque->closed = FALSE;
 
-    AfxDeployChain(&xque->classes, (void*)xque);
+    AfxMakeChain(&xque->classes, (void*)xque);
 
     return err;
 }

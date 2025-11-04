@@ -117,7 +117,7 @@ AFX_DEFINE_STRUCT(afxSystemConfig)
     afxUnit                 ioArenaSpace;
     afxUnit                 hwThreadingCap; // max amount of hardware threads managed by Qwadro.
     afxReal                 unitsToMeter; // the number of units in a meter.
-    
+    afxBool                 strictStorage;
     afxAssertHook           assertHook; // external assertion handling function (optional)
     afxReallocatorFn        reallocatorFn;
 

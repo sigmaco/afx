@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *            Q W A D R O   M U L T I M E D I A   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -129,12 +129,21 @@ _AMX afxClass const* _AmxMsysGetVidClass(afxMixSystem msys)
     return cls;
 }
 
-_AMX afxClass const* _AmxMsysGetViddClass(afxMixSystem msys)
+_AMX afxClass const* _AmxMsysGetMencClass(afxMixSystem msys)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    afxClass const* cls = &msys->viddCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_VIDD);
+    afxClass const* cls = &msys->mencCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_MENC);
+    return cls;
+}
+
+_AMX afxClass const* _AmxMsysGetMdecClass(afxMixSystem msys)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
+    afxClass const* cls = &msys->mdecCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_MDEC);
     return cls;
 }
 
@@ -181,7 +190,7 @@ _AMX afxUnit AmxGetMixBridges(afxMixSystem msys, afxUnit baseIdx, afxUnit cnt, a
     return rslt;
 }
 
-_AMX afxUnit AmxChooseMixBridges(afxMixSystem msys, afxUnit mdevId, afxMixCaps caps, afxMask exuMask, afxUnit first, afxUnit maxCnt, afxMixBridge bridges[])
+_AMX afxUnit AmxChooseMixBridges(afxMixSystem msys, afxUnit mdevId, amxAptitude caps, afxMask exuMask, afxUnit first, afxUnit maxCnt, afxMixBridge bridges[])
 {
     afxError err = AFX_ERR_NONE;
     // msys must be a valid afxMixSystem handle.
@@ -402,10 +411,10 @@ _AMX afxError _AmxMsysRemapBuffersCb_SW(afxMixSystem msys, afxBool unmap, afxUni
     // Firstly, try to put them in a dedicated queue.
     if (dedIoExuMask)
     {
-        exuCnt = AmxChooseMixBridges(msys, AFX_INVALID_INDEX, afxMixCaps_TRANSFER, dedIoExuMask, 0, 0, NIL);
+        exuCnt = AmxChooseMixBridges(msys, AFX_INVALID_INDEX, amxAptitude_DMA, dedIoExuMask, 0, 0, NIL);
         AFX_ASSERT(exuCnt);
         exuIdx = 0;
-        while (AmxChooseMixBridges(msys, AFX_INVALID_INDEX, afxMixCaps_TRANSFER, dedIoExuMask, exuIdx++, 1, &mexu))
+        while (AmxChooseMixBridges(msys, AFX_INVALID_INDEX, amxAptitude_DMA, dedIoExuMask, exuIdx++, 1, &mexu))
         {
             queErr = _AmxMexuRemapBuffers(mexu, unmap, cnt, maps);
             err = queErr;
@@ -426,10 +435,10 @@ _AMX afxError _AmxMsysRemapBuffersCb_SW(afxMixSystem msys, afxBool unmap, afxUni
     // If we can not put them in a dedicated queue, try to put them in a shared one.
     if (!queued)
     {
-        exuCnt = AmxChooseMixBridges(msys, AFX_INVALID_INDEX, afxMixCaps_TRANSFER, ioExuMask, 0, 0, NIL);
+        exuCnt = AmxChooseMixBridges(msys, AFX_INVALID_INDEX, amxAptitude_DMA, ioExuMask, 0, 0, NIL);
         AFX_ASSERT(exuCnt);
         exuIdx = 0;
-        while (AmxChooseMixBridges(msys, AFX_INVALID_INDEX, afxMixCaps_TRANSFER, ioExuMask, exuIdx++, 1, &mexu))
+        while (AmxChooseMixBridges(msys, AFX_INVALID_INDEX, amxAptitude_DMA, ioExuMask, exuIdx++, 1, &mexu))
         {
             queErr = _AmxMexuRemapBuffers(mexu, unmap, cnt, maps);
             err = queErr;
@@ -469,10 +478,10 @@ _AMX afxError _AmxMsysCohereMappedBuffersCb_SW(afxMixSystem msys, afxBool discar
     // Firstly, try to put them in a dedicated queue.
     if (dedIoExuMask)
     {
-        exuCnt = AmxChooseMixBridges(msys, AFX_INVALID_INDEX, afxMixCaps_TRANSFER, dedIoExuMask, 0, 0, NIL);
+        exuCnt = AmxChooseMixBridges(msys, AFX_INVALID_INDEX, amxAptitude_DMA, dedIoExuMask, 0, 0, NIL);
         AFX_ASSERT(exuCnt);
         exuIdx = 0;
-        while (AmxChooseMixBridges(msys, AFX_INVALID_INDEX, afxMixCaps_TRANSFER, dedIoExuMask, exuIdx++, 1, &mexu))
+        while (AmxChooseMixBridges(msys, AFX_INVALID_INDEX, amxAptitude_DMA, dedIoExuMask, exuIdx++, 1, &mexu))
         {
             queErr = _AmxMexuCohereMappedBuffers(mexu, discard, cnt, maps);
             err = queErr;
@@ -493,10 +502,10 @@ _AMX afxError _AmxMsysCohereMappedBuffersCb_SW(afxMixSystem msys, afxBool discar
     // If we can not put them in a dedicated queue, try to put them in a shared one.
     if (!queued)
     {
-        exuCnt = AmxChooseMixBridges(msys, AFX_INVALID_INDEX, afxMixCaps_TRANSFER, ioExuMask, 0, 0, NIL);
+        exuCnt = AmxChooseMixBridges(msys, AFX_INVALID_INDEX, amxAptitude_DMA, ioExuMask, 0, 0, NIL);
         AFX_ASSERT(exuCnt);
         exuIdx = 0;
-        while (AmxChooseMixBridges(msys, AFX_INVALID_INDEX, afxMixCaps_TRANSFER, ioExuMask, exuIdx++, 1, &mexu))
+        while (AmxChooseMixBridges(msys, AFX_INVALID_INDEX, amxAptitude_DMA, ioExuMask, exuIdx++, 1, &mexu))
         {
             queErr = _AmxMexuCohereMappedBuffers(mexu, discard, cnt, maps);
             err = queErr;
@@ -609,7 +618,7 @@ _AMX afxError _AmxMsysCtorCb(afxMixSystem msys, void** args, afxUnit invokeNo)
 
     {
         afxChain* classes = &msys->ctx.classes;
-        AfxDeployChain(classes, (void*)msys);
+        AfxMakeChain(classes, (void*)msys);
 
         afxClassConfig clsCfg;
 
@@ -629,9 +638,13 @@ _AMX afxError _AmxMsysCtorCb(afxMixSystem msys, void** args, afxUnit invokeNo)
         AFX_ASSERT(clsCfg.fcc == afxFcc_VID);
         AfxMountClass(&msys->vidCls, NIL, classes, &clsCfg);
 
-        clsCfg = cfg->viddClsCfg ? *cfg->viddClsCfg : _AMX_VIDD_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_VIDD);
-        AfxMountClass(&msys->viddCls, NIL, classes, &clsCfg);
+        clsCfg = cfg->mdecClsCfg ? *cfg->mdecClsCfg : _AMX_MDEC_CLASS_CONFIG;
+        AFX_ASSERT(clsCfg.fcc == afxFcc_MDEC);
+        AfxMountClass(&msys->mdecCls, NIL, classes, &clsCfg);
+
+        clsCfg = cfg->mencClsCfg ? *cfg->mencClsCfg : _AMX_MENC_CLASS_CONFIG;
+        AFX_ASSERT(clsCfg.fcc == afxFcc_MENC);
+        AfxMountClass(&msys->mencCls, NIL, classes, &clsCfg);
 
         clsCfg = cfg->mixClsCfg ? *cfg->mixClsCfg : _AMX_MIX_CLASS_CONFIG;
         AFX_ASSERT(clsCfg.fcc == afxFcc_MIX);
@@ -733,24 +746,24 @@ _AMX afxError _AmxMsysCtorCb(afxMixSystem msys, void** args, afxUnit invokeNo)
         afxMixPortInfo capsi;
         AmxQueryMixCapabilities(mdev, &capsi);
 
-        if ((capsi.capabilities & afxMixCaps_TRANSFER) == afxMixCaps_TRANSFER)
+        if ((capsi.capabilities & amxAptitude_DMA) == amxAptitude_DMA)
             msys->ioExuMask |= AFX_BITMASK(i);
-        if ((capsi.capabilities & (afxMixCaps_TRANSFER | afxMixCaps_COMPUTE | afxMixCaps_MIX)) == afxMixCaps_TRANSFER)
+        if ((capsi.capabilities & (amxAptitude_DMA | amxAptitude_COMPUTE | amxAptitude_SFX)) == amxAptitude_DMA)
             msys->dedIoExuMask |= AFX_BITMASK(i);
 
-        if ((capsi.capabilities & afxMixCaps_COMPUTE) == afxMixCaps_COMPUTE)
+        if ((capsi.capabilities & amxAptitude_COMPUTE) == amxAptitude_COMPUTE)
             msys->cfxExuMask |= AFX_BITMASK(i);
-        if ((capsi.capabilities & (afxMixCaps_COMPUTE | afxMixCaps_MIX)) == afxMixCaps_COMPUTE)
+        if ((capsi.capabilities & (amxAptitude_COMPUTE | amxAptitude_SFX)) == amxAptitude_COMPUTE)
             msys->dedCfxExuMask |= AFX_BITMASK(i);
 
-        if ((capsi.capabilities & afxMixCaps_MIX) == afxMixCaps_MIX)
+        if ((capsi.capabilities & amxAptitude_SFX) == amxAptitude_SFX)
             msys->gfxExuMask |= AFX_BITMASK(i);
 
-        if ((capsi.capabilities & afxDrawFn_PRESENT) == afxDrawFn_PRESENT)
+        if ((capsi.capabilities & avxAptitude_PRESENT) == avxAptitude_PRESENT)
             msys->videoExuMask |= AFX_BITMASK(i);
     }
 
-    AfxDeployChain(&msys->activeTrackers, msys);
+    AfxMakeChain(&msys->activeTrackers, msys);
 
     afxMixDevice mdev = AmxGetBridgedMixDevice(msys->bridges[0], NIL);
 
@@ -838,7 +851,7 @@ _AMX afxUnit AmxInvokeMixSystems(afxUnit icd, afxUnit first, void *udd, afxBool(
         AFX_ASSERT(AfxTestModule(mdle, afxModuleFlag_ICD | afxModuleFlag_AMX) == (afxModuleFlag_ICD | afxModuleFlag_AMX));
         afxClass const* cls = _AmxIcdGetMsysClass(mdle);
         AFX_ASSERT_CLASS(cls, afxFcc_MSYS);
-        rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+        rslt = AfxInvokeObjects(cls, (void*)f, udd, first, cnt);
     }
     return rslt;
 }
@@ -855,7 +868,7 @@ _AMX afxError AmxConfigureMixSystem(afxUnit icd, afxMixSystemConfig* cfg)
         return err;
     }
 
-    afxMixCaps caps = cfg->caps;
+    amxAptitude caps = cfg->caps;
     afxAcceleration accel = cfg->accel;
 
     afxModule drv;

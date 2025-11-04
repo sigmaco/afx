@@ -36,7 +36,7 @@
     into the drawing system from the given URIs.
 */
 
-AVX avxRaster           AvxLoadSegmentedRaster
+AVX afxError            AvxLoadSegmentedRaster
 (
     // The system which will host the new acquired raster.
     afxDrawSystem       dsys, 
@@ -45,17 +45,33 @@ AVX avxRaster           AvxLoadSegmentedRaster
     // The directory containing the files for each faces.
     afxUri const*       dir, 
     // An array of URIs locating each face in the specified directory.
-    afxUri const        faces[]
+    afxUri const        faces[],
+    // An placeholder for the acquired avxRaster.
+    avxRaster*          raster
 );
 
 ////////////////////////////////////////////////////////////////////////////////
+
+AFX_DEFINE_STRUCT(avxRasteredCopy)
+// Especificação de operação de cópia de avxRaster.
+{
+    // The destination avxRaster.
+    avxRaster           dst;
+    afxUnit             dstLodIdx;
+    // select the initial x, y, and z offsets in texels of the sub-regions of the source and destination avxRaster data.
+    avxOrigin           dstOrigin;
+    // The source avxRaster.
+    avxRaster           src;
+    avxRasterRegion     rgn;
+};
 
 AFX_DEFINE_STRUCT(avxRasterCopy)
 // Especificação de operação de cópia de avxRaster.
 {
     avxRasterRegion src;
     afxUnit         dstLodIdx;
-    avxOrigin       dstOrigin; // select the initial x, y, and z offsets in texels of the sub-regions of the source and destination avxRaster data.
+    // select the initial x, y, and z offsets in texels of the sub-regions of the source and destination avxRaster data.
+    avxOrigin       dstOrigin;
 };
 
 /*

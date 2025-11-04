@@ -28,7 +28,7 @@
 #ifndef AFX_STACK_H
 #define AFX_STACK_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/base/afxFcc.h"
 #include "qwadro/mem/afxMemory.h"
 

@@ -43,7 +43,7 @@
     It has beeen designed for both performance (custom allocators, pools, alignment) and flexibility (plugin IO, VMT, events, extensions).
 */
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/base/afxFcc.h"
 #include "qwadro/base/afxChain.h"
 #include "qwadro/exec/afxFutex.h"
@@ -211,6 +211,7 @@ AFX_DEFINE_STRUCT(afxClass)
     afxBool         (*defEvent)(afxObject obj, afxEvent *ev);
     afxBool         (*defEventFilter)(afxObject obj, afxObject watched, afxEvent *ev);
     
+    afxBool         dbgAcq;
 
     afxUnit         instBaseSiz;
     // A virtual method table (manual polymorphism).
@@ -231,8 +232,8 @@ AFX afxUnit         AfxGetSizeOfObject(afxClass const* cls, afxUnit* strictSize)
 
 AFXINL afxArena*    AfxGetClassArena(afxClass *cls);
 
-AFXINL afxClass*    AfxGetSubClass(afxClass const* cls);
-AFXINL afxObject    AfxGetClassInstance(afxClass const* cls, afxUnit32 uniqueId);
+AFXINL afxClass*    AfxGetSubclass(afxClass const* cls);
+AFXINL afxObject    AfxGetInstance(afxClass const* cls, afxUnit32 uniqueId);
 
 // Pass NIL into objects to AfxEnumerateObjects() to return a total number of instances.
 
@@ -243,19 +244,19 @@ AFX afxUnit         AfxEvokeObjects(afxClass const* cls, afxBool(*f)(afxObject,v
 
 /// The AfxInvokeClassInstances2() function is used to apply the given callback function to all objects in the specified class.
 /// If any invocation of the callback function returns a failure status the interation is terminated. However, AfxInvokeClassInstances2 will still return successfully.
-AFX afxUnit         AfxInvokeObjects(afxClass const* cls, afxUnit first, afxUnit cnt, afxBool(*f)(afxObject obj, void *udd), void* udd);
+AFX afxUnit         AfxInvokeObjects(afxClass const* cls, afxBool(*f)(afxObject obj, void *udd), void* udd, afxUnit first, afxUnit cnt);
 
 /// The AfxInvokeClassInstances2() function is used to apply the given callback function to all objects in the specified class using another callback as filter.
 /// If any invocation of the exec() callback function returns a failure status the iteration is terminated.
 /// If a invocation of the flt() callback function returns non-zero the object is passed to the exec() callback.
 /// However, AfxInvokeClassInstances2 will return count of objects that passed in flt() callback.
-AFX afxUnit         AfxInvokeClassInstances2(afxClass const* cls, afxUnit first, afxUnit cnt, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2);
+AFX afxUnit         AfxInvokeClassInstances2(afxClass const* cls, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2, afxUnit first, afxUnit cnt);
 
 AFX afxError        _AfxDeallocateObjects(afxClass* cls, afxUnit cnt, afxObject objects[]);
 AFX afxError        _AfxAllocateObjects(afxClass* cls, afxUnit cnt, afxObject objects[]);
 AFX afxError        _AfxAllocateClassInstancesAt(afxClass* cls, afxUnit base, afxUnit cnt, afxObject objects[]);
-AFX afxError        _AfxDestructObjects(afxClass* cls, afxUnit cnt, afxObject objects[]);
-AFX afxError        _AfxConstructObjects(afxClass* cls, afxUnit cnt, afxObject objects[], void** udd);
+AFX afxError        _AfxCleanUpObjects(afxClass* cls, afxUnit cnt, afxObject objects[]);
+AFX afxError        _AfxSetUpObjects(afxClass* cls, afxUnit cnt, afxObject objects[], void** udd);
 
 AFX afxResult       AfxDeregisterChainedClasses(afxChain* ch);
 AFX afxResult       AfxExhaustChainedClasses(afxChain* ch);

@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -138,7 +138,7 @@ _AFX afxBool AfxPopArenaCleanup(afxArena* aren, void(*action)(void *,void*), voi
  * Allocate SIZE bytes of memory inside REGION.  The memory is
  * deallocated when AfxExhaustArena is called for this aren.
  */
-//_AFX void *AfxRequestFromArena(afxArena* aren, afxSize size);
+//_AFX void *AfxRequestArena(afxArena* aren, afxSize size);
 
 /** Allocate array with integer overflow checks, in aren */
 _AFX void *AfxRequestArenaUnits(afxArena* aren, afxSize num, afxSize size);
@@ -184,7 +184,7 @@ _AFX char *AfxArenaDuplicateString(afxArena* aren, const char *string);
  * Recycle an allocated memory block. Pass size used to alloc it.
  * Does nothing if recycling is not enabled for the aren.
  */
-_AFX void AfxReclaimToArena(afxArena* aren, void *block, afxSize size);
+_AFX void AfxReclaimArena(afxArena* aren, void *block, afxSize size);
 
 /*
  * Print some REGION statistics to OUT.
@@ -282,7 +282,7 @@ _AFX void _AfxArenDeallocBlockCleanupAction(void *data, void*extra)
     AfxDeallocate((void**)&data, AfxHere());
 }
 
-_AFX void* AfxRequestFromArena(afxArena* aren, afxSize size, afxUnit cnt, void const* src, afxUnit stride)
+_AFX void* AfxRequestArena(afxArena* aren, afxSize size, afxUnit cnt, void const* src, afxUnit stride)
 {
     afxError err = NIL;
     AFX_ASSERT(aren);
@@ -389,7 +389,7 @@ _AFX void* AfxRequestFromArena(afxArena* aren, afxSize size, afxUnit cnt, void c
                 /* put wasted part in recycle bin for later use */
                 aren->totalAllocated += wasted;
                 ++aren->smallItems;
-                AfxReclaimToArena(aren, aren->data + aren->allocated, wasted);
+                AfxReclaimArena(aren, aren->data + aren->allocated, wasted);
                 aren->allocated += wasted;
             }
 
@@ -433,10 +433,10 @@ _AFX void* AfxRequestFromArena(afxArena* aren, afxSize size, afxUnit cnt, void c
 _AFX char* AfxArenaDuplicateString(afxArena* aren, const char *string)
 {
     afxUnit len = strlen(string) + 1;
-    return (char *)AfxRequestFromArena(aren, sizeof(char), len, string, len);
+    return (char *)AfxRequestArena(aren, sizeof(char), len, string, len);
 }
 
-_AFX void AfxReclaimToArena(afxArena* aren, void *block, afxSize size)
+_AFX void AfxReclaimArena(afxArena* aren, void *block, afxSize size)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(aren);
@@ -598,7 +598,7 @@ _AFX void AfxLogArenaStats(afxArena* aren)
     AfxReportWarn("memory: %s", buf);
 }
 
-_AFX afxError AfxMergeArena(afxArena* dst, afxArena* src)
+_AFX afxError AfxMergeArenas(afxArena* dst, afxArena* src)
 {
     afxError err = 0;
     AFX_ASSERT(dst);

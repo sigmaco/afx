@@ -261,7 +261,7 @@ AFX_OBJECT(afxSystem)
     afxIoBridge     primeExu;
     afxUnit32       primeTid;
     afxThread       primeThr;
-
+    afxBool         strictStorage;
     afxAssertHook           assertHook; // external assertion handling function (optional)
     afxReallocatorFn        reallocatorFn;
     afxProfilerPushTimerFn  profilerPushTimer; // external (optional) function for tracking performance of the system that is called when a timer starts. (only called in Debug and Profile binaries; this is not called in Release)
