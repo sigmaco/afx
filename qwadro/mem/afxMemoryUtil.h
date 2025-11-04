@@ -21,7 +21,7 @@
 #ifndef AFX_MEMORY_UTIL_H
 #define AFX_MEMORY_UTIL_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/base/afxObject.h"
 #include "qwadro/base/afxChain.h"
 #include "qwadro/base/afxFcc.h"

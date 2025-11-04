@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -495,7 +495,7 @@ _AVX afxClassConfig const _AVX_SAMP_CLASS_CONFIG =
 {
     .fcc = afxFcc_SAMP,
     .name = "Sampler",
-    .desc = "Fixed-Function Texture Sampler State Object",
+    .desc = "Texture Sampler State Object",
     .fixedSiz = sizeof(AFX_OBJECT(avxSampler)),
     .ctor = (void*)_AvxSampCtorCb,
     .dtor = (void*)_AvxSampDtorCb
@@ -601,7 +601,7 @@ _AVX afxError AvxConfigureSampler(afxDrawSystem dsys, avxSamplerConfig* cfg)
     return err;
 }
 
-_AVX afxError AvxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerConfig const cfg[], avxSampler samplers[])
+_AVX afxError AvxAcquireSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerConfig const cfg[], avxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
     // dsys must be a valid afxDrawSystem handle.
@@ -614,7 +614,7 @@ _AVX afxError AvxDeclareSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerConf
 
     // dsys must support at least one bridge with one of the GRAPHICS or COMPUTE capabilities.    
     afxDrawBridge dexu;
-    afxBool bridgedFound = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, afxDrawFn_DRAW | afxDrawFn_COMPUTE, NIL, 0, 1, &dexu);
+    afxBool bridgedFound = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_GFX | avxAptitude_PCX, NIL, 0, 1, &dexu);
     AFX_ASSERT(bridgedFound);
 
     afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->sampCls(dsys);

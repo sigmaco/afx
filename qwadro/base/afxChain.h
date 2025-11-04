@@ -49,7 +49,7 @@
 #ifndef AFX_CHAIN_H
 #define AFX_CHAIN_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/exec/afxAtomic.h"
 
 // std::list is a container that supports constant time insertion and removal of elements from anywhere in the container.
@@ -100,7 +100,7 @@ struct afxChain
     The AfxDeplyChain() function initializes a chain. Basically a constructor; makes the list safe for use.
 */
 
-AFXINL void             AfxDeployChain
+AFXINL void             AfxMakeChain
 (
     afxChain*           ch,
     void*               holder
@@ -299,6 +299,30 @@ AFXINL afxLink*         AfxGetPrevLink(afxLink const *lnk);
          ((iterator_) = (TYPE_*)AFX_REBASE(_curr##iterator_, TYPE_, link_), \
           _prev##iterator_ = _curr##iterator_->prev, 1); \
          _curr##iterator_ = _prev##iterator_)
+
+#define AFX_ITERATE_CHAIN2_B2F(TYPE2_, iterator2_, link2_, pChain2_) \
+    for (afxLink const* _prev##iterator2_ = (pChain2_)->anchor.prev, \
+                      * _curr##iterator2_ = _prev##iterator2_; \
+         (_curr##iterator2_ != &(pChain2_)->anchor) && \
+         ((iterator2_) = (TYPE2_*)AFX_REBASE(_curr##iterator2_, TYPE2_, link2_), \
+          _prev##iterator2_ = _curr##iterator2_->prev, 1); \
+         _curr##iterator2_ = _prev##iterator2_)
+
+#define AFX_ITERATE_CHAIN3_B2F(TYPE3_, iterator3_, link3_, pChain3_) \
+    for (afxLink const* _prev##iterator3_ = (pChain3_)->anchor.prev, \
+                      * _curr##iterator3_ = _prev##iterator3_; \
+         (_curr##iterator3_ != &(pChain3_)->anchor) && \
+         ((iterator3_) = (TYPE3_*)AFX_REBASE(_curr##iterator3_, TYPE3_, link3_), \
+          _prev##iterator3_ = _curr##iterator3_->prev, 1); \
+         _curr##iterator3_ = _prev##iterator3_)
+
+#define AFX_ITERATE_CHAIN4_B2F(TYPE4_, iterator4_, link4_, pChain4_) \
+    for (afxLink const* _prev##iterator4_ = (pChain4_)->anchor.prev, \
+                      * _curr##iterator4_ = _prev##iterator4_; \
+         (_curr##iterator4_ != &(pChain4_)->anchor) && \
+         ((iterator4_) = (TYPE4_*)AFX_REBASE(_curr##iterator4_, TYPE4_, link4_), \
+          _prev##iterator4_ = _curr##iterator4_->prev, 1); \
+         _curr##iterator4_ = _prev##iterator4_)
 
 /*
     Important Notes on Atomic Iteration.

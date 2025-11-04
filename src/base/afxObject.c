@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -121,7 +121,7 @@ _AFXINL afxBool AfxDoesObjectInherit(afxObject obj, afxClass const* cls)
             if (objCls == cls)
                 return TRUE;
 
-            cls = AfxGetSubClass(cls);
+            cls = AfxGetSubclass(cls);
         }
     }
     return FALSE;
@@ -207,7 +207,7 @@ _AFXINL afxError AfxAllocateInstanceData(afxObject obj, afxUnit cnt, afxObjectSt
     {
         afxObjectStash const* stash = &stashes[i];
         afxUnit alignedSiz = AFX_ALIGN_SIZE(stash->siz, AFX_MAX(AFX_SIMD_ALIGNMENT, stash->align));
-        void* p = stash->cnt ? AfxRequestFromArena(aren, alignedSiz, AFX_MAX(1, stash->cnt), NIL, 0) : NIL;
+        void* p = stash->cnt ? AfxRequestArena(aren, alignedSiz, AFX_MAX(1, stash->cnt), NIL, 0) : NIL;
 
         if (stash->cnt && !p)
         {
@@ -217,7 +217,7 @@ _AFXINL afxError AfxAllocateInstanceData(afxObject obj, afxUnit cnt, afxObjectSt
             {
                 afxObjectStash const* stash2 = &stashes[j];
                 afxUnit alignedSiz = AFX_ALIGN_SIZE(stash2->siz, AFX_MAX(sizeof(void*), stash2->align));
-                AfxReclaimToArena(aren, *stash2->var, AFX_MAX(1, stash2->cnt) * alignedSiz);
+                AfxReclaimArena(aren, *stash2->var, AFX_MAX(1, stash2->cnt) * alignedSiz);
             }
         }
         *stash->var = p;
@@ -243,7 +243,7 @@ _AFXINL afxError AfxDeallocateInstanceData(afxObject obj, afxUnit cnt, afxObject
             if (p)
             {
                 afxUnit alignedSiz = AFX_ALIGN_SIZE(stash->siz, AFX_MAX(AFX_SIMD_ALIGNMENT, stash->align));
-                AfxReclaimToArena(aren, p, AFX_MAX(1, stash->cnt) * alignedSiz);
+                AfxReclaimArena(aren, p, AFX_MAX(1, stash->cnt) * alignedSiz);
             }
             *stash->var = NIL;
         }
@@ -266,7 +266,7 @@ _AFX void AfxResetEventHandler(afxObject obj, afxBool(*handler)(afxObject,afxEve
     }
 }
 
-_AFX afxError AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[], afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev))
+_AFX afxError AfxDisconnectObjects(afxObject obj, afxBool(*handler)(afxObject obj, afxObject watched, afxEvent *ev), afxUnit cnt, afxObject watcheds[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -289,7 +289,7 @@ _AFX afxError AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watched
             {
                 AFX_ASSERT(AfxGetLinker(&flt->watched) == watched);
 
-                if ((AfxGetLinker(&flt->holder) == obj) && (!fn || (flt->fn == fn)))
+                if ((AfxGetLinker(&flt->holder) == obj) && (!handler || (flt->fn == handler)))
                 {
                     AfxPopLink(&flt->watched);
                     AfxPopLink(&flt->holder);
@@ -307,7 +307,7 @@ _AFX afxError AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watched
                         filterInst->watching = NIL;
                     }
 
-                    if (fn)
+                    if (handler)
                         break;
                 }
             }
@@ -331,7 +331,7 @@ _AFX afxError AfxDisconnectObjects(afxObject obj, afxUnit cnt, afxObject watched
     return err;
 }
 
-_AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[], afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev))
+_AFX afxError AfxConnectObjects(afxObject obj, afxBool(*handler)(afxObject obj, afxObject watched, afxEvent *ev), afxUnit cnt, afxObject watcheds[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(watcheds);
@@ -351,7 +351,7 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
         AfxReportMessage("Installing watcher <%p> for %p...", obj, watched);
         //AFX_ASSERT(fn);
 
-        while (fn)
+        while (handler)
         {
             afxEventFilter *flt;
 
@@ -361,7 +361,7 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
                 {
                     AFX_ASSERT(AfxGetLinker(&flt->watched) == watched);
 
-                    if ((AfxGetLinker(&flt->holder) == obj) && (flt->fn == fn))
+                    if ((AfxGetLinker(&flt->holder) == obj) && (flt->fn == handler))
                         break; // already exists
                 }
             }
@@ -370,7 +370,7 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
                 if (AfxAllocate(sizeof(*hdr->watchers), 0, AfxHere(), (void**)&hdr->watchers)) AfxThrowError();
                 else
                 {
-                    AfxDeployChain(hdr->watchers, watched);
+                    AfxMakeChain(hdr->watchers, watched);
                 }
             }
 
@@ -381,7 +381,7 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
                     if (AfxAllocate(sizeof(*filterInst->watching), 0, AfxHere(), (void**)&filterInst->watching)) AfxThrowError();
                     else
                     {
-                        AfxDeployChain(filterInst->watching, obj);
+                        AfxMakeChain(filterInst->watching, obj);
                     }
                 }
 
@@ -392,7 +392,7 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
                     {
                         AfxPushLink(&flt->holder, filterInst->watching);
                         AfxPushLink(&flt->watched, hdr->watchers);
-                        flt->fn = fn;
+                        flt->fn = handler;
                     }
                 }
             }
@@ -418,7 +418,7 @@ _AFX afxError AfxConnectObjects(afxObject obj, afxUnit cnt, afxObject watcheds[]
 
         if (err)
         {
-            AfxDisconnectObjects(obj, objIdx, watcheds, fn);
+            AfxDisconnectObjects(obj, handler, objIdx, watcheds);
             break;
         }
     }

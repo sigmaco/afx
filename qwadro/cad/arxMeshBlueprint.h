@@ -14,17 +14,19 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
 #ifndef ARX_MESH_BLUEPRINT_H
 #define ARX_MESH_BLUEPRINT_H
 
-#include "qwadro/sim/afxSimDefs.h"
+#include "qwadro/sim/arxSimDefs.h"
 #include "qwadro/draw/afxDrawDefs.h"
 #include "qwadro/mem/afxArray.h"
 #include "qwadro/coll/afxBox.h"
 #include "qwadro/base/afxObject.h"
 #include "qwadro/io/afxUrd.h"
 #include "qwadro/math/afxVertex.h"
-//#include "qwadro/draw/afxVertexStream.h"
+//#include "qwadro/draw/arxBufferizer.h"
 #include "qwadro/base/afxFixedString.h"
 #include "qwadro/cad/arxTriangulation.h"
 
@@ -108,21 +110,20 @@ AFX_DEFINE_STRUCT(arxMeshBlueprint)
     arxMeshMorph const* morphs;
     afxString const*    morphTags;
 
-    afxString32         urn;
     void*               udd;
 };
 
 
-ARX afxError            ArxBuildParallelepipedMesh(arxRenderware rwe, afxV3d whd, afxReal slantX, afxReal slantY, arxMesh* mesh);
-ARX afxError            ArxBuildDomeMesh(arxRenderware rwe, afxReal radius, afxUnit slices, arxMesh* mesh);
+ARX afxError            ArxBuildParallelepipedMesh(arxRenderContext rctx, afxV3d whd, afxReal slantX, afxReal slantY, afxV3d const pivot, arxMesh* mesh);
+ARX afxError            ArxBuildDomeMesh(arxRenderContext rctx, afxReal radius, afxUnit slices, afxV3d const pivot, arxMesh* mesh);
 
-ARX afxError            ArxBuildDomeMesh2(arxRenderware rwe, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv, arxMesh* mesh);
-ARX afxError            ArxBuildSphereMesh(arxRenderware rwe, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv, arxMesh* mesh);
-ARX afxError            ArxBuildCapsuleMesh(arxRenderware rwe, afxReal radius, afxReal height, afxUnit stacks, afxUnit slices, afxUnit cylinderSlices, afxBool inv, arxMesh* mesh);
-ARX afxError            ArxBuildPlaneMesh(arxRenderware rwe, afxUnit gridSizeX, afxUnit gridSizeY, afxReal width, afxReal height, arxMesh* mesh);
+ARX afxError            ArxBuildDomeMesh2(arxRenderContext rctx, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv, afxV3d const pivot, arxMesh* mesh);
+ARX afxError            ArxBuildSphereMesh(arxRenderContext rctx, afxReal radius, afxUnit stacks, afxUnit slices, afxBool inv, afxV3d const pivot, arxMesh* mesh);
+ARX afxError            ArxBuildCapsuleMesh(arxRenderContext rctx, afxReal radius, afxReal height, afxUnit stacks, afxUnit slices, afxUnit cylinderSlices, afxBool inv, afxV3d const pivot, arxMesh* mesh);
+ARX afxError            ArxBuildPlaneMesh(arxRenderContext rctx, afxUnit gridSizeX, afxUnit gridSizeY, afxReal width, afxReal height, afxV3d const pivot, arxMesh* mesh);
 
-ARX afxError            ArxBuildBoxMesh(arxRenderware rwe, afxV3d const whd, afxUnit secCnt, arxMesh* mesh);
-ARX afxError            ArxBuildDiscMesh(arxRenderware rwe, afxReal radius, afxUnit secCnt, arxMesh* mesh);
-ARX afxError            ArxBuildGridMesh(arxRenderware rwe, afxUnit rows, afxUnit layers, afxReal width, afxReal depth, arxMesh* mesh);
+ARX afxError            ArxBuildBoxMesh(arxRenderContext rctx, afxV3d const whd, afxV3d const pivot, afxUnit secCnt, arxMesh* mesh);
+ARX afxError            ArxBuildDiscMesh(arxRenderContext rctx, afxReal radius, afxUnit secCnt, afxV3d const pivot, arxMesh* mesh);
+ARX afxError            ArxBuildGridMesh(arxRenderContext rctx, afxUnit rows, afxUnit layers, afxReal width, afxReal depth, afxV3d const pivot, arxMesh* mesh);
 
 #endif//ARX_MESH_BLUEPRINT_H

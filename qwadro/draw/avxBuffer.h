@@ -114,6 +114,22 @@ typedef enum avxMappingFlag
     // Actually these flags seems useless as we changed the behavior of buffer mapping to match Vulkan.
 } avxMappingFlags;
 
+AFX_DEFINE_STRUCT(avxBufferedCopy)
+// Structure specifying a avxBuffer-backed copy.
+{
+    avxBuffer       dst;
+    // is the starting offset in bytes from the start of dstBuffer.
+    afxSize         dstOffset;
+    // is the number of bytes to copy.
+    afxUnit         range;
+    // is the starting offset in bytes from the start of srcBuffer.
+    afxSize         srcOffset;
+    avxBuffer       src;
+};
+
+#define AVX_BUFFERED_COPY(uSrcOffset, uDstOffset, uRange) \
+    (avxBufferedCopy){ .srcOffset = (uSrcOffset), .dstOffset = (uDstOffset), .range = (uRange) }
+
 AFX_DEFINE_STRUCT(avxBufferCopy)
 // Structure specifying a avxBuffer-backed copy.
 {
@@ -224,7 +240,7 @@ AVX afxError AvxAcquireBuffers
     avxBuffer buffers[]
 );
 
-AFX_DEFINE_STRUCT(avxSubbufferInfo)
+AFX_DEFINE_STRUCT(avxMetabufferInfo)
 {
     // A bitmask specifying additional parameters of the buffer.
     avxBufferFlags  flags;
@@ -249,7 +265,7 @@ AVX afxError AvxReacquireBuffers
     // Number of buffers to acquire.
     afxUnit cnt,
     // Array of buffer descriptors.
-    avxSubbufferInfo const infos[],
+    avxMetabufferInfo const infos[],
     // An output array which receives handles of the acquired buffers.
     avxBuffer buffers[]
 );
@@ -333,6 +349,23 @@ AVX afxError AvxCohereMappedBuffers
     afxUnit         cnt,
     // An array of buffered map operations.
     avxBufferedMap const maps[]
+);
+
+/*
+    The AvxCopyBuffers() function schedules one or more copy operations of AVX buffers' data locally or across memory domains.
+*/
+
+AVX afxError                AvxCopyBuffers
+(
+    // The draw system providing the buffers.
+    afxDrawSystem           dsys,
+    // Mask specifying which execution units should execute the copy. 
+    // Think of this as a way to filter or select copy pipelines.
+    afxMask                 exuMask,
+    // The number of buffer copy operations to perform.
+    afxUnit                 cnt,
+    // An array of avxBufferedCopy structs, each describing one buffer copy operation (src, dst, size, offsets, etc.).
+    avxBufferedCopy const   ops[]
 );
 
 ////////////////////////////////////////////////////////////////////////////////

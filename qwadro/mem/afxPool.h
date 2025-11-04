@@ -33,7 +33,7 @@
 #ifndef AFX_POOL_H
 #define AFX_POOL_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/base/afxFcc.h"
 #include "qwadro/mem/afxMemory.h"
 
@@ -93,12 +93,12 @@ AFX_DEFINE_STRUCT(afxPool)
 };
 
 /*
-    The AfxDeployPool() function configures a memory pool but does not allocate memory.
+    The AfxSetUpPool() function configures a memory pool but does not allocate memory.
     Actual allocations happen on-demand via requisition and reclamation operations.
     That approach avoids overcommitting memory and lets application scale dynamically based on real usage.
 */
 
-AFX afxError    AfxDeployPool
+AFX afxError    AfxSetUpPool
 (
     afxPool*    pool, 
     // Size of each allocation unit.
@@ -146,6 +146,7 @@ AFX afxError    AfxExhaustPool
 AFX afxError    AfxRequestPoolUnits
 (
     afxPool*    pool, 
+    afxHere const dbg,
     afxUnit     cnt, 
     afxUnit     ids[], 
     void*       units[]
@@ -166,6 +167,7 @@ AFX afxError    AfxRequestPoolUnits
 AFX afxError    AfxReclaimPoolUnits
 (
     afxPool*    pool,
+    afxHere const dbg,
     afxUnit     cnt, 
     void*       units[]
 );
@@ -183,7 +185,7 @@ AFX afxError    AfxFreePoolUnit(afxPool* pool, afxSize idx);
 AFX afxUnit     AfxEnumeratePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, void *items[]);
 AFX afxUnit     AfxInvokePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, afxBool(*f)(void* item, void* udd), void *udd);
 
-AFX afxError AfxRequestPoolUnitsAt(afxPool* pool, afxUnit cnt, afxUnit const ids[], void* units[]);
+AFX afxError AfxRequestPoolUnitsAt(afxPool* pool, afxHere const dbg, afxUnit cnt, afxUnit const ids[], void* units[]);
 
 // pool: afxPool*
 // pageIdx: user-defined variable (int or afxUnit)

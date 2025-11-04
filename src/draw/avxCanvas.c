@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -39,15 +39,23 @@ _AVX avxCanvasFlags AvxGetCanvasFlags(avxCanvas canv, avxCanvasFlags mask)
     return (!mask) ? canv->flags : (canv->flags & mask);
 }
 
-_AVX afxUnit AvxGetCanvasArea(avxCanvas canv, avxOrigin origin, afxRect* area)
+_AVX afxUnit AvxGetCanvasExtent(avxCanvas canv, avxOrigin const* origin, afxLayeredRect* extent)
 {
     afxError err = AFX_ERR_NONE;
     // @canv must be a valid avxCanvas handle.
     AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-    origin = AvxClampOrigin(origin, AVX_RANGE(canv->whd.w - 1, canv->whd.h - 1, canv->whd.d - 1));
-    avxRange whd = AvxSubtractRange(canv->whd, AVX_RANGE(origin.x, origin.y, origin.z));
-    AFX_ASSERT(area);
-    *area = AFX_RECT(origin.x, origin.y, whd.w, whd.h);
+    avxRange whd = canv->whd;
+    avxOrigin origin2 = (avxOrigin) { 0 };
+
+    if (origin)
+    {
+        origin2 = *origin;
+        origin2 = AvxClampOrigin(origin2, AVX_RANGE(whd.w - 1, whd.h - 1, whd.d - 1));
+        whd = AvxSubtractRange(whd, AVX_RANGE(origin2.x, origin2.y, origin2.z));
+    }
+    
+    AFX_ASSERT(extent);
+    *extent = AFX_LAYERED_RECT(origin2.x, origin2.y, whd.w, whd.h, origin2.z, whd.d);
     return whd.w * whd.h;
 }
 
@@ -145,11 +153,10 @@ _AVX afxUnit AvxGetDrawBuffers(avxCanvas canv, afxUnit baseBinIdx, afxUnit cnt, 
     afxUnit rslt = 0;
 
     AFX_ASSERT_RANGE(canv->binCnt, baseBinIdx, cnt);
-    if (baseBinIdx >= canv->binCnt)
-        return rslt;
+    if (baseBinIdx >= canv->binCnt) return rslt;
+    //baseBinIdx = AFX_MIN(baseBinIdx, canv->binCnt - 1);
+    cnt = AFX_MIN(cnt, canv->binCnt - baseBinIdx);
 
-    baseBinIdx = AFX_MIN(baseBinIdx, canv->binCnt - 1);
-    cnt = AFX_MAX(cnt, canv->binCnt - baseBinIdx);
     AFX_ASSERT(rasters);
 
     for (afxUnit i = 0; i < cnt; i++)
@@ -175,11 +182,9 @@ _AVX afxUnit AvxGetColorBuffers(avxCanvas canv, afxUnit baseBinIdx, afxUnit cnt,
     afxUnit rslt = 0;
 
     AFX_ASSERT_RANGE(canv->colorCnt, baseBinIdx, cnt);
-    if (baseBinIdx >= canv->colorCnt)
-        return rslt;
-
-    baseBinIdx = AFX_MIN(baseBinIdx, canv->colorCnt - 1);
-    cnt = AFX_MAX(cnt, canv->colorCnt - baseBinIdx);
+    if (baseBinIdx >= canv->colorCnt) return rslt;
+    //baseBinIdx = AFX_MIN(baseBinIdx, canv->colorCnt - 1);
+    cnt = AFX_MIN(cnt, canv->colorCnt - baseBinIdx);
 
     rslt = AvxGetDrawBuffers(canv, baseBinIdx, cnt, rasters);
     AFX_TRY_ASSERT_OBJECTS(afxFcc_RAS, rslt, rasters);
@@ -309,8 +314,10 @@ _AVX afxError _AvxCanvRelinkDrawBuffersCb_SW(avxCanvas canv, afxBool regen, afxU
             }
 
             if (!regen)
-            AfxReacquireObjects(1, &ras);
-            //bin->managed = !!managed;
+            {
+                AfxReacquireObjects(1, &ras);
+                //bin->managed = !!managed;
+            }
             ++canv->linkedCnt;
         }
         bin->buf = ras;
@@ -420,10 +427,11 @@ _AVX afxError AvxPrintDrawBuffer(avxCanvas canv, afxUnit binIdx, avxRasterIo con
     }
     else
     {
-        afxRect area;
+        afxLayeredRect bounds;
         avxRasterIo op2 = { 0 };
-        AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO, &area);
-        op2.rgn.whd = (avxRange){ area.w, area.h };
+        AvxGetCanvasExtent(canv, NIL, &bounds);
+        op2.rgn.origin = (avxOrigin) { bounds.area.x, bounds.area.y, bounds.baseLayer };
+        op2.rgn.whd = (avxRange){ bounds.area.w, bounds.area.h, bounds.layerCnt };
 
         if (AvxPrintRaster(ras, &op2, 1, uri, exuMask))
             AfxThrowError();
@@ -443,7 +451,7 @@ _AVX afxError _AvxRedoDrawBuffers(avxCanvas canv)
 
     avxRasterInfo rasi = { 0 };
     rasi.lodCnt = 1;
-    rasi.whd = AvxGetCanvasArea(canv, AVX_ORIGIN_ZERO);
+    rasi.whd = AvxGetCanvasExtent(canv, AVX_ORIGIN_ZERO);
 
     for (afxUnit i = 0; i < canv->binCnt; i++)
     {
@@ -655,23 +663,23 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
 
     AFX_ASSERT(canv->bins);
     canv->binCnt = binCnt;
-    avxDrawBin const* surCfg;
-    _avxDrawBin* surf;
+    avxDrawBin const* binCfg;
+    _avxDrawBin* bin;
 
     for (afxUnit i = 0; i < binCnt; i++)
     {
-        surf = &canv->bins[i];
-        *surf = (_avxDrawBin) { 0 };
+        bin = &canv->bins[i];
+        *bin = (_avxDrawBin) { 0 };
 
-        surCfg = &cfg->bins[i];
+        binCfg = &cfg->bins[i];
 
         if (i == canv->dsBinIdx[1])
-            surCfg = &cfg->bins[stencilInIdx];
+            binCfg = &cfg->bins[stencilInIdx];
 
         if (i == canv->dsBinIdx[0])
-            surCfg = &cfg->bins[depthInIdx];
+            binCfg = &cfg->bins[depthInIdx];
 
-        avxRaster ras = surCfg->buf;
+        avxRaster ras = binCfg->buf;
 
         if (ras)
         {
@@ -680,13 +688,13 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
             avxRasterInfo rasi;
             AvxDescribeRaster(ras, &rasi, NIL, NIL);
 
-            surf->buf = ras;
-            surf->managed = FALSE;
-            surf->resolve = NIL;
-            surf->fmt = rasi.fmt;
-            surf->usage = rasi.usage;
-            surf->flags = rasi.flags;
-            surf->lodCnt = rasi.lodCnt;
+            bin->buf = ras;
+            bin->managed = FALSE;
+            bin->resolve = NIL;
+            bin->fmt = rasi.fmt;
+            bin->usage = rasi.usage;
+            bin->flags = rasi.flags;
+            bin->lodCnt = rasi.lodCnt;
 
             if (_AvxBindDrawBuffers(canv, i, 1, &ras))
             {
@@ -696,13 +704,13 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
         }
         else
         {
-            surf->buf = NIL;
-            surf->managed = TRUE;
-            surf->resolve = NIL;
-            surf->fmt = cfg->bins[i].fmt;
-            surf->usage = cfg->bins[i].usage | avxRasterUsage_DRAW;
-            surf->flags = cfg->bins[i].flags;
-            surf->lodCnt = cfg->bins[i].lodCnt;
+            bin->buf = NIL;
+            bin->managed = TRUE;
+            bin->resolve = NIL;
+            bin->fmt = binCfg->fmt;
+            bin->usage = binCfg->usage | avxRasterUsage_DRAW;
+            bin->flags = binCfg->flags;
+            bin->lodCnt = binCfg->lodCnt;
 
             if (_AvxCanvRelinkDrawBuffersCb_SW(canv, TRUE, i, 1, &ras))
             {
@@ -932,7 +940,7 @@ _AVX afxError AvxConfigureCanvas(afxDrawSystem dsys, avxCanvasConfig* cfg)
     return err;
 }
 
-_AVX afxError AvxCoacquireCanvas(afxDrawSystem dsys, avxCanvasConfig const* cfg, afxUnit cnt, avxCanvas canvases[])
+_AVX afxError AvxAcquireCanvas(afxDrawSystem dsys, avxCanvasConfig const* cfg, afxUnit cnt, avxCanvas canvases[])
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);

@@ -151,9 +151,7 @@ AFX_DEFINE_STRUCT(avxRasterFile)
 
 #pragma pack(pop)
 
-AFX_STATIC_ASSERT(sizeof(avxRasterFile) == 64, "");
-// Data start must be aligned to AVX_RASTER_ALIGNMENT.
-AFX_STATIC_ASSERT((sizeof(avxRasterFile)) % AVX_RASTER_ALIGNMENT, "");
+AFX_STATIC_ASSERT(sizeof(avxRasterFile) == 64, "Header must be 64-byte aligned");
 
 AFX_STATIC_ASSERT(AFX_TEST_ALIGNMENT(sizeof(avxRasterFile), AFX_SIMD_ALIGNMENT), "");
 AFX_STATIC_ASSERT(sizeof(avxRasterFile) + AFX_TGA_UDD_SIZ == 256, "");

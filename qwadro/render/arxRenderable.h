@@ -14,6 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // ADVANCED RENDERWARE EXTENSIONS & EXPERIMENTS                             //
+//////////////////////////////////////////////////////////////////////////////
+
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
 /*
     A scene is a observation of a simulation.
 */
@@ -21,7 +27,7 @@
 #ifndef ARX_RENDERABLE_H
 #define ARX_RENDERABLE_H
 
-#include "qwadro/sim/afxSimDefs.h"
+#include "qwadro/sim/arxSimDefs.h"
 #include "qwadro/draw/afxDrawDefs.h"
 #include "qwadro/mem/afxArray.h"
 
@@ -53,41 +59,61 @@
 // It has renderization cache (RwResEntry).
 // It has render pipeline, render callback and render counter.
 
+#ifndef __e2iridee__
+#   ifdef _DEBUG
+#       define ARX DLLIMPORT extern 
+#       define ARXINL DLLIMPORT EMBED
+#   else
+#       define ARX DLLIMPORT extern 
+#       define ARXINL DLLIMPORT EMBED
+#   endif
+#else
+#   ifdef _DEBUG
+#       define _ARX DLLEXPORT
+#       define ARX DLLEXPORT extern 
+#       define _ARXINL DLLEXPORT INLINE
+#       define ARXINL DLLEXPORT EMBED
+#   else
+#       define _ARX DLLEXPORT
+#       define ARX DLLEXPORT extern 
+#       define _ARXINL DLLEXPORT INLINE
+#       define ARXINL DLLEXPORT EMBED
+#   endif
+#endif//__e2iridee__
 
-#define ARX ASX
-#define _ARX _ASX
-#define ARXINL ASXINL
-#define _ARXINL _ASXINL
-
-AFX_DEFINE_HANDLE(arxRenderware);
 AFX_DEFINE_HANDLE(arxRenderContext);
+AFX_DEFINE_HANDLE(arxDrawInput);
 
 AFX_DEFINE_HANDLE(arxBuffer);
 
 AFX_DEFINE_HANDLE(arxCamera);
-AFX_DEFINE_HANDLE(arxMesh);
-AFX_DEFINE_HANDLE(arxMeshTopology);
-AFX_DEFINE_HANDLE(arxScene);
+AFX_DEFINE_HANDLE(arxSky);
 
 AFX_DEFINE_HANDLE(arxRenderable);
 AFX_DEFINE_HANDLE(arxTechnique);
 
 AFX_DEFINE_HANDLE(akxLight);
-AFX_DEFINE_HANDLE(akxRenderer);
+AFX_DEFINE_HANDLE(arxRenderer);
 AFX_DEFINE_HANDLE(arxTerrain);
 AFX_DEFINE_HANDLE(arxPlacement);
 AFX_DEFINE_HANDLE(arxPose);
 AFX_DEFINE_HANDLE(arxAttitude);
 AFX_DEFINE_HANDLE(arxPosture);
-AFX_DEFINE_HANDLE(arxSkeleton);
 AFX_DEFINE_HANDLE(arxMaterial);
+AFX_DEFINE_HANDLE(arxMtd);
 AFX_DEFINE_HANDLE(arxGeome);
+
+AFX_DEFINE_HANDLE(arxMesh);
+AFX_DEFINE_HANDLE(arxMeshTopology);
+AFX_DEFINE_HANDLE(arxSkeleton);
 AFX_DEFINE_HANDLE(arxModel);
+AFX_DEFINE_HANDLE(arxMeshLinkage);
+
 
 AFX_DEFINE_HANDLE(arxMotive);
 
 AFX_DEFINE_HANDLE(afxDrawOperation);
-AFX_DEFINE_HANDLE(afxVertexStream);
+AFX_DEFINE_HANDLE(arxBufferizer);
 AFX_DEFINE_HANDLE(afxVertexBuffer);
 AFX_DEFINE_HANDLE(afxIndexBuffer);
 

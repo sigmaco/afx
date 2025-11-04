@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -46,7 +46,7 @@ _AVX afxCmdId AvxCmdExecuteCommands(afxDrawContext dctx, afxUnit cnt, afxDrawCon
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, avxBus bus, avxPipeline pip, avxVertexInput vin, afxFlags dynamics)
+_AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, avxPipeline pip, avxVertexInput vin, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.
@@ -60,6 +60,9 @@ _AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, avxBus bus, avxPipeline pi
 
     // pip must be a valid avxPipeline handle.
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
+
+    avxBus bus = AvxGetPipelineBus(pip);
+    AFX_ASSERT(bus < avxBus_TOTAL);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindPipeline), sizeof(cmd->BindPipeline), &cmdId);
@@ -75,11 +78,13 @@ _AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, avxBus bus, avxPipeline pi
     dctx->pipelines[bus].vin = vin;
     dctx->pipelines[bus].dynFlags = dynamics;
 
-    avxLigature liga;
+    avxLigature liga = NIL;
     AvxGetPipelineLigature(pip, &liga);
-    dctx->ligatures[bus].liga = liga;
-    dctx->ligatures[bus].ligaBindCmdId = cmdId;
-
+    if (dctx->ligatures[bus].liga != liga)
+    {
+        dctx->ligatures[bus].liga = liga;
+        dctx->ligatures[bus].ligaBindCmdId = cmdId;
+    }
     return cmdId;
 }
 
@@ -108,13 +113,15 @@ _AVX afxCmdId AvxCmdUseLigature(afxDrawContext dctx, avxBus bus, avxLigature lig
     cmd->UseLigature.bus = bus;
     cmd->UseLigature.flags = flags;
 
-    dctx->ligatures[bus].liga = liga;
-    dctx->ligatures[bus].ligaBindCmdId = cmdId;
-
+    if (dctx->ligatures[bus].liga != liga)
+    {
+        dctx->ligatures[bus].liga = liga;
+        dctx->ligatures[bus].ligaBindCmdId = cmdId;
+    }
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdBindShadersEXT(afxDrawContext dctx, afxUnit cnt, avxShaderType const stages[], avxShader shaders[])
+_AVX afxCmdId AvxCmdBindShadersEXT(afxDrawContext dctx, afxUnit cnt, avxShaderType const stages[], avxCodebase shaders[])
 {
     afxError err = AFX_ERR_NONE;
     // dctx must be a valid afxDrawContext handle.

@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -122,7 +122,7 @@ _AFX _afxCmd* _AfxIocPushCmd(afxIoContext ioc, afxUnit id, afxUnit siz, afxCmdId
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
     AFX_ASSERT(siz >= sizeof(_afxCmdHdr));
 
-    _afxCmd* cmd = AfxRequestFromArena(&ioc->cmdArena, siz, 1, NIL, 0);
+    _afxCmd* cmd = AfxRequestArena(&ioc->cmdArena, siz, 1, NIL, 0);
     AFX_ASSERT(cmd);
     cmd->hdr.id = id;
     cmd->hdr.siz = siz;
@@ -211,7 +211,7 @@ _AFX afxError AfxExhaustIoContext(afxIoContext ioc, afxBool freeMem)
         AfxExhaustPool(&ioc->batches, !freeMem);
     }
 
-    AfxDeployChain(&ioc->commands, ioc);
+    AfxMakeChain(&ioc->commands, ioc);
     AFX_ASSERT(ioc->batches.totalUsedCnt == 0);
 
     AfxUnlockFutex(&ioc->cmdbReqLock, FALSE);
@@ -268,10 +268,10 @@ _AFX afxError AfxRecordIoCommands(afxIoContext ioc, afxBool once, afxBool deferr
 
         AfxPopLink(&cmdb->recyc);
 
-        AfxDeployChain(&cmdb->commands, ioc);
+        AfxMakeChain(&cmdb->commands, ioc);
 
         // Move the allocated resource to the context.
-        if (AfxMergeArena(&ioc->cmdArena, &cmdb->cmdArenaCompiled))
+        if (AfxMergeArenas(&ioc->cmdArena, &cmdb->cmdArenaCompiled))
         {
             AfxThrowError();
         }
@@ -322,7 +322,7 @@ _AFX afxError AfxRecordIoCommands(afxIoContext ioc, afxBool once, afxBool deferr
         AFX_ASSERT(!deferred || (deferred == TRUE));
         cmdb->deferred = !!deferred;
 
-        AfxDeployChain(&cmdb->commands, ioc);
+        AfxMakeChain(&cmdb->commands, ioc);
 
         AfxMakeArena(&cmdb->cmdArenaCompiled, NIL, AfxHere());
         break;
@@ -391,14 +391,14 @@ _AFX afxError AfxDiscardIoCommands(afxIoContext ioc, afxBool freeRes)
         AFX_ITERATE_CHAIN(_afxCmd, cmd, hdr.script, &ioc->commands)
         {
             AfxPopLink(&cmd->hdr.script);
-            AfxReclaimToArena(&ioc->cmdArena, cmd, cmd->hdr.siz);
+            AfxReclaimArena(&ioc->cmdArena, cmd, cmd->hdr.siz);
         }
     }
 #else
     AfxExhaustArena(&ioc->cmdArena);
 #endif
 
-    AfxDeployChain(&ioc->commands, ioc);
+    AfxMakeChain(&ioc->commands, ioc);
 
     AfxUnlockFutex(&ioc->cmdbReqLock, FALSE);
 
@@ -463,7 +463,7 @@ _AFX afxError AfxCompileIoCommands(afxIoContext ioc, afxUnit batchId)
             else
             {
                 //AfxAssumeArena(&batch->cmdArenaCompiled, &ioc->cmdArena);
-                AfxMergeArena(&batch->cmdArenaCompiled, &ioc->cmdArena);
+                AfxMergeArenas(&batch->cmdArenaCompiled, &ioc->cmdArena);
                 AfxAppendChain(&batch->commands, &ioc->commands);
                 AfxExhaustArena(&ioc->cmdArena);
                 AFX_ASSERT(AfxIsChainEmpty(&ioc->commands));
@@ -543,14 +543,14 @@ _AFX afxError AfxRecycleIoCommands(afxIoContext ioc, afxUnit batchId, afxBool fr
         AFX_ITERATE_CHAIN(_afxCmd, cmd, hdr.script, &cmdb->commands)
         {
             AfxPopLink(&cmd->hdr.script);
-            AfxReclaimToArena(&cmdb->cmdArenaCompiled, cmd, cmd->hdr.siz);
+            AfxReclaimArena(&cmdb->cmdArenaCompiled, cmd, cmd->hdr.siz);
         }
     }
 #else
     AfxExhaustArena(&cmdb->cmdArenaCompiled);
 #endif
 
-    AfxDeployChain(&cmdb->commands, cmdb);
+    AfxMakeChain(&cmdb->commands, cmdb);
 
     afxBool recycled = FALSE;
 #if 0
@@ -609,7 +609,7 @@ _AFX afxError _AfxIocDtorCb(afxIoContext ioc)
     AfxExhaustIoContext(ioc, TRUE);
 
     AfxDismantleFutex(&ioc->cmdbReqLock);
-    AfxDeployChain(&ioc->cmdbRecycChain, ioc);
+    AfxMakeChain(&ioc->cmdbRecycChain, ioc);
 
     AfxDismantleArena(&ioc->cmdArena);
     AfxExhaustPool(&ioc->batches, TRUE);
@@ -632,7 +632,7 @@ _AFX afxError _AfxIocCtorCb(afxIoContext ioc, void** args, afxUnit invokeNo)
 
     ioc->cmdbLockedForReq = FALSE;
     AfxDeployFutex(&ioc->cmdbReqLock);
-    AfxDeployChain(&ioc->cmdbRecycChain, ioc);
+    AfxMakeChain(&ioc->cmdbRecycChain, ioc);
 
     AfxMakeArena(&ioc->cmdArena, NIL, AfxHere());
 
@@ -643,9 +643,9 @@ _AFX afxError _AfxIocCtorCb(afxIoContext ioc, void** args, afxUnit invokeNo)
     static _afxIocDdi _AFX_IOC_DDI = { 0 };
     ioc->pimpl = &_AFX_IOC_DDI;
     
-    AfxDeployPool(&ioc->batches, sizeof(_afxCmdBatch), 3, 0);
+    AfxSetUpPool(&ioc->batches, sizeof(_afxCmdBatch), 3, 0);
 
-    AfxDeployChain(&ioc->commands, ioc);
+    AfxMakeChain(&ioc->commands, ioc);
 
     return err;
 }

@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -236,7 +236,7 @@ _AFXINL void AfxGetAabbCorners(afxBox const* bb, afxV3d vertices[AFX_NUM_BOX_COR
     AfxV3dSet(vertices[7], bb->min[0], bb->max[1], bb->max[2]); // Back-left top
 }
 
-_AFXINL void AsxGenerateIndexedLinesForAabbs(afxUnit cnt, afxBox const aabbs[], afxV3d vertices[][8], afxUnit16 indices16[][24], afxUnit32 indices32[][24], afxUnit* outVtxCnt, afxUnit* outIdxCnt)
+_AFXINL afxUnit AsxGenerateIndexedLinesForAabbs(afxUnit cnt, afxBox const aabbs[], afxV3d vertices[][AFX_NUM_BOX_CORNERS], afxUnit vtxStride, afxUnit indices[][AFX_NUM_BOX_EDGE_VERTICES], afxUnit idxSiz)
 // Generate an Indexed Line List for AABBs.
 // A line list means we're rendering edges, so each line connects 2 vertices, and we use pairs of indices to define each line segment.
 // For a cube (AABB), there are 12 edges, so we need 24 indices per AABB.
@@ -244,12 +244,15 @@ _AFXINL void AsxGenerateIndexedLinesForAabbs(afxUnit cnt, afxBox const aabbs[], 
     afxError err = NIL;
     AFX_ASSERT(vertices);
     // vertices[] array must be capable of storing @cnt * 8 vertices.
-    AFX_ASSERT(indices16 || indices32);
+    AFX_ASSERT(indices);
     // indices[] array must be capable of stroring @cnt * 24 indices.
-    if (outIdxCnt) *outIdxCnt = cnt * 24;
-    if (outVtxCnt) *outVtxCnt = cnt * 8;
+    
+    //if (outIdxCnt) *outIdxCnt = cnt * 24;
+    //if (outVtxCnt) *outVtxCnt = cnt * 8;
 
-    static afxUnit const cubeLineIndices[24] =
+    afxUnit rslt = cnt * AFX_NUM_BOX_EDGES;
+
+    static afxUnit const cubeLineIndices[AFX_NUM_BOX_EDGE_VERTICES] =
     {
         // Bottom edges
         0, 1,  1, 3,  3, 2,  2, 0,
@@ -264,7 +267,7 @@ _AFXINL void AsxGenerateIndexedLinesForAabbs(afxUnit cnt, afxBox const aabbs[], 
         afxBox const* box = &aabbs[bbIdx];
         afxReal xmin = box->min[0], ymin = box->min[1], zmin = box->min[2];
         afxReal xmax = box->max[0], ymax = box->max[1], zmax = box->max[2];
-        afxV3d const corners[8] =
+        afxV3d const corners[AFX_NUM_BOX_CORNERS] =
         {
             {xmin, ymin, zmin}, // 0
             {xmax, ymin, zmin}, // 1
@@ -277,7 +280,7 @@ _AFXINL void AsxGenerateIndexedLinesForAabbs(afxUnit cnt, afxBox const aabbs[], 
         };
 
         // vertices[bbIdx * 8 + j], corners[j]
-        for (afxUnit j = 0; j < 8; ++j)
+        for (afxUnit j = 0; j < AFX_NUM_BOX_CORNERS; ++j)
         {
             AfxV3dCopy(vertices[bbIdx][j], corners[j]);
         }
@@ -285,14 +288,37 @@ _AFXINL void AsxGenerateIndexedLinesForAabbs(afxUnit cnt, afxBox const aabbs[], 
         // Copy line indices (offset by current AABB vertex index base)
         // indices[bbIdx * 24 + j] = cubeLineIndices[j] + bbIdx * 8;
 
-        if (indices16)
-            for (afxUnit j = 0; j < 24; ++j) indices16[bbIdx][j] = cubeLineIndices[j] + bbIdx * 8;
-        if (indices32)
-            for (afxUnit j = 0; j < 24; ++j) indices32[bbIdx][j] = cubeLineIndices[j] + bbIdx * 8;
+        if (sizeof(afxUnit16) == idxSiz)
+        {
+            afxUnit16* indices16 = (afxUnit16*)indices;
+
+            for (afxUnit j = 0; j < AFX_NUM_BOX_EDGE_VERTICES; ++j)
+                indices16[(bbIdx * AFX_NUM_BOX_EDGE_VERTICES) + j] = (bbIdx * AFX_NUM_BOX_CORNERS) + cubeLineIndices[j];
+        }
+        else if (sizeof(afxUnit32) == idxSiz)
+        {
+            afxUnit32* indices32 = (afxUnit32*)indices;
+
+            for (afxUnit j = 0; j < AFX_NUM_BOX_EDGE_VERTICES; ++j)
+                indices32[(bbIdx * AFX_NUM_BOX_EDGE_VERTICES) + j] = (bbIdx * AFX_NUM_BOX_CORNERS) + cubeLineIndices[j];
+        }
+        else if (sizeof(afxUnit8) == idxSiz)
+        {
+            afxUnit8* indices8 = (afxUnit8*)indices;
+
+            for (afxUnit j = 0; j < AFX_NUM_BOX_EDGE_VERTICES; ++j)
+                indices8[(bbIdx * AFX_NUM_BOX_EDGE_VERTICES) + j] = (bbIdx * AFX_NUM_BOX_CORNERS) + cubeLineIndices[j];
+        }
+        else
+        {
+            AFX_ASSERT((idxSiz == sizeof(afxUnit16)) || (idxSiz == sizeof(afxUnit32)) || (idxSiz == sizeof(afxUnit8)));
+            AfxThrowError();
+        }
     }
+    return rslt;
 }
 
-_AFXINL void AsxGenerateAabbFaces(afxUnit cnt, afxBox const aabbs[], afxV3d vertices[][8], afxUnit16 indices16[][24], afxUnit32 indices32[][24], afxUnit* outVtxCnt, afxUnit* outIdxCnt)
+_AFXINL afxUnit AsxGenerateIndexedFacesForAabbs(afxUnit cnt, afxBox const aabbs[], afxV3d vertices[][AFX_NUM_BOX_CORNERS], afxUnit vtxStride, afxUnit indices[][AFX_NUM_BOX_FACE_VERTICES], afxUnit idxSiz)
 // Generate an indexed triangle list for an array of AABBs.
 // Each AABB will be converted into a cube (box) made of 12 triangles (2 per face × 6 faces).
 // Each triangle consists of 3 vertex indices, so you'll generate 36 indices per AABB.
@@ -301,12 +327,15 @@ _AFXINL void AsxGenerateAabbFaces(afxUnit cnt, afxBox const aabbs[], afxV3d vert
     afxError err = NIL;
     AFX_ASSERT(vertices);
     // vertices[] array must be capable of storing @cnt * 8 vertices.
-    AFX_ASSERT(indices16 || indices32);
+    AFX_ASSERT(indices);
     // indices[] array must be capable of stroring @cnt * 36 indices.
-    if (outIdxCnt) *outIdxCnt = cnt * 36;
-    if (outVtxCnt) *outVtxCnt = cnt * 8;
+    
+    //if (outIdxCnt) *outIdxCnt = cnt * 36;
+    //if (outVtxCnt) *outVtxCnt = cnt * 8;
 
-    static afxUnit const cubeIndices[36] =
+    afxUnit rslt = cnt * AFX_NUM_BOX_FACE_VERTICES;
+
+    static afxUnit const cubeFaceIndices[AFX_NUM_BOX_FACE_VERTICES] =
     {
 #if 0 // CW
         // Front face
@@ -342,7 +371,7 @@ _AFXINL void AsxGenerateAabbFaces(afxUnit cnt, afxBox const aabbs[], afxV3d vert
         afxBox const* box = &aabbs[bbIdx];
         afxReal xmin = box->min[0], ymin = box->min[1], zmin = box->min[2];
         afxReal xmax = box->max[0], ymax = box->max[1], zmax = box->max[2];
-        afxV3d const corners[8] =
+        afxV3d const cubeCorners[AFX_NUM_BOX_CORNERS] =
         {
             {xmin, ymin, zmin}, // 0
             {xmax, ymin, zmin}, // 1
@@ -355,19 +384,42 @@ _AFXINL void AsxGenerateAabbFaces(afxUnit cnt, afxBox const aabbs[], afxV3d vert
         };
         
         // vertices[bbIdx * 8 + j], corners[j]
-        for (afxUnit j = 0; j < 8; ++j)
+        for (afxUnit j = 0; j < AFX_NUM_BOX_CORNERS; ++j)
         {
-            AfxV3dCopy(vertices[bbIdx][j], corners[j]);
+            AfxV3dCopy(vertices[bbIdx][j], cubeCorners[j]);
         }
 
         // Copy indices (offset by vertex start index)
         // indices[bbIdx * 36 + j] = cubeIndices[j] + bbIdx * 8;
 
-        if (indices16)
-            for (afxUnit j = 0; j < 36; ++j) indices16[bbIdx][j] = cubeIndices[j] + bbIdx * 8;
-        else if (indices32)
-            for (afxUnit j = 0; j < 36; ++j) indices32[bbIdx][j] = cubeIndices[j] + bbIdx * 8;
+        if (sizeof(afxUnit16) == idxSiz)
+        {
+            afxUnit16* indices16 = (afxUnit16*)indices;
+
+            for (afxUnit j = 0; j < AFX_NUM_BOX_FACE_VERTICES; ++j)
+                indices16[(bbIdx * AFX_NUM_BOX_FACE_VERTICES) + j] = (bbIdx * AFX_NUM_BOX_CORNERS) + cubeFaceIndices[j];
+        }
+        else if (sizeof(afxUnit32) == idxSiz)
+        {
+            afxUnit32* indices32 = (afxUnit32*)indices;
+
+            for (afxUnit j = 0; j < AFX_NUM_BOX_FACE_VERTICES; ++j)
+                indices32[(bbIdx * AFX_NUM_BOX_FACE_VERTICES) + j] = (bbIdx * AFX_NUM_BOX_CORNERS) + cubeFaceIndices[j];
+        }
+        else if (sizeof(afxUnit8) == idxSiz)
+        {
+            afxUnit8* indices8 = (afxUnit8*)indices;
+
+            for (afxUnit j = 0; j < AFX_NUM_BOX_FACE_VERTICES; ++j)
+                indices8[(bbIdx * AFX_NUM_BOX_FACE_VERTICES) + j] = (bbIdx * AFX_NUM_BOX_CORNERS) + cubeFaceIndices[j];
+        }
+        else
+        {
+            AFX_ASSERT((idxSiz == sizeof(afxUnit16)) || (idxSiz == sizeof(afxUnit32)) || (idxSiz == sizeof(afxUnit8)));
+            AfxThrowError();
+        }
     }
+    return rslt;
 }
 
 _AFXINL afxUnit AfxDoesAabbIncludeAtv3d(afxBox const* bb, afxUnit cnt, afxV3d const point[])
@@ -524,7 +576,7 @@ _AFXINL void AfxCopyBoxes(afxUnit cnt, afxBox const in[], afxUnit inStride, afxB
         for (afxUnit i = 0; i < cnt; i++)
         {
             out[0] = box;
-            out = AFX_CAST(afxByte const*, out) + outStride;
+            out = (afxBox*)(AFX_CAST(afxByte const*, out) + outStride);
         }
     }
     else
@@ -532,8 +584,8 @@ _AFXINL void AfxCopyBoxes(afxUnit cnt, afxBox const in[], afxUnit inStride, afxB
         for (afxUnit i = 0; i < cnt; i++)
         {
             out[0] = in[0];
-            out = AFX_CAST(afxByte const*, out) + outStride;
-            in = AFX_CAST(afxByte const*, in) + inStride;
+            out = (afxBox*)(AFX_CAST(afxByte const*, out) + outStride);
+            in = (afxBox const*)(AFX_CAST(afxByte const*, in) + inStride);
         }
     }
 }
@@ -555,7 +607,7 @@ _AFXINL void AfxResetBoxes(afxUnit cnt, afxBox boxes[], afxUnit stride)
         for (afxUnit i = 0; i < cnt; i++)
         {
             AfxMakeAabb(&boxes[0], 0, NIL);
-            boxes = AFX_CAST(afxByte const*, boxes) + stride;
+            boxes = (afxBox*)(AFX_CAST(afxByte const*, boxes) + stride);
         }
     }
 }

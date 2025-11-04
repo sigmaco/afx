@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -259,12 +259,12 @@ _AFX afxBool AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr)
             return FALSE;
         }
 
+        afxSize localIdx = idx % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
+        //afxUnit32 mask = AFX_BITMASK(localIdx);
+        alloced = AFX_TEST_BIT_SET(pag->usage, localIdx); //pag->usage & mask;
+
         if (pag->base)
         {
-            afxSize localIdx = idx % /*AFX_MAX_UNITS_PER_POOL_PAGE*/pool->unitsPerPage;
-            //afxUnit32 mask = AFX_BITMASK(localIdx);
-            alloced = AFX_TEST_BIT_SET(pag->usage, localIdx); //pag->usage & mask;
-
             if (/*alloced && */ptr)
                 *ptr = &pag->base[pool->unitSiz * localIdx];
 
@@ -570,7 +570,7 @@ _AFX afxError DeletePoolPage(afxPool* pool, afxUnit pagIdx)
     return err;
 }
 
-_AFX afxError AfxReclaimPoolUnits(afxPool* pool, afxUnit cnt, void* units[])
+_AFX afxError AfxReclaimPoolUnits(afxPool* pool, afxHere const dbg, afxUnit cnt, void* units[])
 {
     afxError err = NIL;
     AFX_ASSERT(pool);
@@ -585,9 +585,9 @@ _AFX afxError AfxReclaimPoolUnits(afxPool* pool, afxUnit cnt, void* units[])
     afxUnit unitSiz = pool->unitSiz;
     afxUnit unitsPerPage = pool->unitsPerPage;
 
-    for (afxUnit objIdx = 0; objIdx < cnt; objIdx++)
+    for (afxUnit i = 0; i < cnt; i++)
     {
-        afxByte* unit = units[objIdx];
+        afxByte* unit = units[i];
         //afxSize pagSiz = unitsPerPage * unitSiz;
         afxUnit localIdx, idx;
         afxBool found = AfxFindPoolUnit(pool, unit, &idx, &localIdx);
@@ -655,7 +655,7 @@ _AFX afxError AfxReclaimPoolUnits(afxPool* pool, afxUnit cnt, void* units[])
     return err;
 }
 
-_AFX afxError AfxRequestPoolUnitsAt(afxPool* pool, afxUnit cnt, afxUnit const ids[], void* units[])
+_AFX afxError AfxRequestPoolUnitsAt(afxPool* pool, afxHere const dbg, afxUnit cnt, afxUnit const ids[], void* units[])
 {
     afxError err = NIL;
     AFX_ASSERT(pool);
@@ -674,7 +674,7 @@ _AFX afxError AfxRequestPoolUnitsAt(afxPool* pool, afxUnit cnt, afxUnit const id
     return err;
 }
 
-_AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], void* units[])
+_AFX afxError AfxRequestPoolUnits(afxPool* pool, afxHere const dbg, afxUnit cnt, afxUnit ids[], void* units[])
 {
     afxError err = NIL;
     AFX_ASSERT(pool);
@@ -690,8 +690,10 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], voi
     for (afxUnit reqIdx = 0; reqIdx < cnt; reqIdx++)
     {
         afxUnit localIdx, idx2;
-        afxBool found = FALSE;
+        afxBool pageFound = FALSE;
+        afxBool unitFound = FALSE;
 
+        afxSize nextPageIdx = 0;
         afxSize pageIdx = 0;
         afxPoolPage *pag;
 
@@ -742,12 +744,20 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], voi
                 break;
         }
 #else
-        if (!found)
+        if (!unitFound)
         {
             for (pageIdx = 0; pageIdx < pool->pageCnt; pageIdx++)
             {
                 pag = pool->pages[pageIdx];
-                if (!pag) continue;
+                if (!pag)
+                {
+                    if (!pageFound)
+                    {
+                        pageFound = TRUE;
+                        nextPageIdx = pageIdx;
+                    }
+                    continue;
+                }
 #ifdef _AFX_POOL_VALIDATION_ENABLED
                 AFX_ASSERT(pag->fcc == afxFcc_POOL);
 #endif
@@ -763,12 +773,12 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], voi
 
                     if (!booked)
                     {
-                        found = TRUE;
+                        unitFound = TRUE;
                         break;
                     }
                 }
 
-                if (found)
+                if (unitFound)
                     break;
                 else
                     AfxThrowError();
@@ -776,17 +786,25 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], voi
         }
 #endif
 
-        if (!found)
+        if (!unitFound)
         {
             // if no room, generate a new page.
-            pageIdx = pool->pageCnt;
+
+            if (!pageFound)
+            {
+                pageIdx = pool->pageCnt;
+                pageFound = TRUE;
+            }
+            else
+                pageIdx = nextPageIdx;
+
             localIdx = 0;
-            found = TRUE;
+            unitFound = TRUE;
         }
 
         idx2 = (pageIdx * unitsPerPage) + localIdx;
 
-        if (found)
+        if (unitFound)
         {
             AFX_ASSERT(!AfxGetPoolUnit(pool, idx2, NIL));
 
@@ -810,7 +828,7 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], voi
         if (!ptr)
         {
             AfxThrowError();
-            AfxReclaimPoolUnits(pool, reqIdx, units);
+            AfxReclaimPoolUnits(pool, AfxHere(), reqIdx, units);
             return err;
         }
         units[reqIdx] = ptr;
@@ -818,7 +836,7 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxUnit cnt, afxUnit ids[], voi
     return err;
 }
 
-_AFX afxError AfxDeployPool(afxPool* pool, afxUnit unitSiz, afxUnit unitsPerPage, afxUnit memAlign)
+_AFX afxError AfxSetUpPool(afxPool* pool, afxUnit unitSiz, afxUnit unitsPerPage, afxUnit memAlign)
 {
     afxError err = NIL;
     AFX_ASSERT(pool);
@@ -835,7 +853,7 @@ _AFX afxError AfxDeployPool(afxPool* pool, afxUnit unitSiz, afxUnit unitsPerPage
     pool->pageCnt = 0;
     pool->pages = NIL; // Will allocate on first use
     pool->mem = NIL;
-    AfxDeployChain(&pool->freePags, pool);
+    AfxMakeChain(&pool->freePags, pool);
     return err;
 }
 
@@ -906,7 +924,7 @@ _AFX afxError AfxTestDictionarys(void)
 
 
     afxPool pool;
-    AfxDeployPool(&pool, 4, 33, 0);
+    AfxSetUpPool(&pool, 4, 33, 0);
     afxSize idx;
 
     for (afxUnit i = 0; i < 3000; i++)
@@ -918,7 +936,7 @@ _AFX afxError AfxTestDictionarys(void)
 
     void* unit;
     for (afxUnit i = 0; i < 3000; i++)
-        AfxRequestPoolUnits(&pool, 1, &idx, &unit);
+        AfxRequestPoolUnits(&pool, AfxHere(), 1, &idx, &unit);
 
 
     AfxExhaustPool(&pool, FALSE);

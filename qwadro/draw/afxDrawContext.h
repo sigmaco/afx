@@ -104,7 +104,7 @@ typedef enum avxContextFlag
 AFX_DEFINE_STRUCT(avxContextInfo)
 {
     avxContextFlags flags;
-    afxDrawFn       caps;
+    avxAptitude       caps;
     // The execution unit (in Mantle, this refers to a specific GPU hardware unit or execution engine).
     // NOTE 1 mentions that, in Mantle, unlike Vulkan, you specify queue capabilities rather than the execution unit index.
     afxMask         exuMask;

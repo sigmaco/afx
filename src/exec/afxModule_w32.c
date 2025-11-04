@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -360,8 +360,8 @@ _AFX afxError _AfxMdleCtorCb(afxModule mdle, void** args, afxUnit invokeNo)
     afxModuleFlags const* pFlags = AFX_CAST(afxModuleFlags const*, args[2]) + invokeNo;
     void* osHandle = AFX_CAST(void**, args[3])[invokeNo];
 
-    AfxDeployChain(&mdle->classes, mdle);
-    AfxDeployChain(&mdle->devices, mdle);
+    AfxMakeChain(&mdle->classes, mdle);
+    AfxMakeChain(&mdle->devices, mdle);
     mdle->attached = FALSE;
     mdle->etc = (afxManifest) { 0 };
 
@@ -434,7 +434,7 @@ _AFX afxUnit AfxInvokeModules(afxUnit first, afxUnit cnt, afxBool(*f)(afxModule,
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass* cls = (afxClass*)_AfxSysGetMdleClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_MDLE);
-    return cnt ? AfxInvokeObjects(cls, first, cnt, (void*)f, udd) : 0;
+    return cnt ? AfxInvokeObjects(cls, (void*)f, udd, first, cnt) : 0;
 }
 
 _AFX afxUnit AfxEnumerateModules(afxUnit first, afxUnit cnt, afxModule executables[])

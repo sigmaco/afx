@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced Multimedia UX Extensions & Experiments.
+// This software is part of Advanced User Experiences Extensions & Experiments.
 
   //////////////////////////////////////////////////////////////////////////////
  // The Unified Shell                                                        //
@@ -27,11 +27,11 @@
 
 #include "qwadro/ux/afxUxDefs.h"
 // ux
-#include "qwadro/ux/afxHid.h"
-#include "qwadro/ux/afxGamepad.h"
+#include "qwadro/hid/afxHid.h"
+#include "qwadro/hid/afxGamepad.h"
 #include "qwadro/ux/afxWindow.h"
 #include "qwadro/ux/afxWidget.h"
-#include "qwadro/ux/afxSession.h"
+#include "qwadro/ux/afxEnvironment.h"
 
 AFX_DEFINE_STRUCT(afxFileDrop)
 {
@@ -49,9 +49,9 @@ AFX_DEFINE_STRUCT(afxShellFeatures)
 
 AUX afxBool         AfxIsShellPrompt(afxShell ssh);
 
-AUX afxUnit         AfxInvokeSessions(afxShell ssh, afxUnit first, afxUnit cnt, afxBool(*f)(afxSession, void*), void *udd);
-AUX afxUnit         AfxEvokeSessions(afxShell ssh, afxBool(*flt)(afxSession, void*), void* fdd, afxUnit first, afxUnit cnt, afxSession sessions[]);
-AUX afxUnit         AfxEnumerateSessions(afxShell ssh, afxUnit first, afxUnit cnt, afxSession sessions[]);
+AUX afxUnit         AfxInvokeSessions(afxShell ssh, afxUnit first, afxUnit cnt, afxBool(*f)(afxEnvironment, void*), void *udd);
+AUX afxUnit         AfxEvokeSessions(afxShell ssh, afxBool(*flt)(afxEnvironment, void*), void* fdd, afxUnit first, afxUnit cnt, afxEnvironment sessions[]);
+AUX afxUnit         AfxEnumerateSessions(afxShell ssh, afxUnit first, afxUnit cnt, afxEnvironment sessions[]);
 
 AUX void*           AfxGetShellIdd(afxShell ssh);
 

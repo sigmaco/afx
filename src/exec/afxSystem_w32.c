@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -55,6 +55,45 @@ AFX afxError _AfxInitMmu(afxThread thr);
 AFX afxError _AfxDeinitMmu(afxThread thr);
 
 // READ ONLY METHODS //////////////////////////////////////////////////////////
+
+typedef LONG(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
+
+void Win32GetWindowsVersion(afxUnit* verMajor, afxUnit* verMinor, afxUnit* verBuild, afxUnit* platId)
+{
+    HMODULE hMod = GetModuleHandleW(L"ntdll.dll");
+    if (hMod)
+    {
+        RtlGetVersionPtr fxPtr = (RtlGetVersionPtr)GetProcAddress(hMod, "RtlGetVersion");
+        if (fxPtr != NULL)
+        {
+            RTL_OSVERSIONINFOW rovi = { 0 };
+            rovi.dwOSVersionInfoSize = sizeof(rovi);
+            if (fxPtr(&rovi) == 0)
+            {
+                printf("Windows Version: %lu.%lu (Build %lu)\n", rovi.dwMajorVersion, rovi.dwMinorVersion, rovi.dwBuildNumber);
+                *verMajor = rovi.dwMajorVersion;
+                *verMinor = rovi.dwMinorVersion;
+                *verBuild = rovi.dwBuildNumber;
+                *platId = rovi.dwPlatformId;
+            }
+            else
+            {
+                printf("Failed to get version info.\n");
+            }
+        }
+    }
+}
+
+afxString Win32GetWindowsName(DWORD major, DWORD minor)
+{
+    if (major == 10 && minor == 0) return AFX_STRING("Windows 10 or 11");
+    if (major == 6 && minor == 3) return AFX_STRING("Windows 8.1");
+    if (major == 6 && minor == 2) return AFX_STRING("Windows 8");
+    if (major == 6 && minor == 1) return AFX_STRING("Windows 7");
+    if (major == 6 && minor == 0) return AFX_STRING("Windows Vista");
+    if (major == 5 && minor == 1) return AFX_STRING("Windows XP");
+    return AFX_STRING("Unknown Windows version");
+}
 
 _AFX afxResult PrimeThreadProc(afxThread thr, afxEvent* ev)
 {
@@ -331,6 +370,31 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
     return err;
 }
 
+_AFX afxError _AfxSysDtor(afxSystem sys)
+{
+    afxError err = AFX_ERR_NONE;
+    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
+
+    AfxDisposeObjects(1, &sys->e2coree);
+    AfxDisposeObjects(1, &sys->primeThr);
+
+    // objects will be released at class drop.
+    AfxDeregisterChainedClasses(&sys->classes);
+
+    //AfxDeallocateUri(&sys->pwd.uri);
+
+    //AfxDismantleArena(&sys->ioArena);
+    //AfxReleaseObject(&(sys->memD->obj));
+
+    //_AfxFreeExternalAllocations();
+
+    _AfxDeinitMmu(NIL);
+
+    AfxZero(sys, sizeof(sys[0]));
+
+    return err;
+}
+
 _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 {
     afxError err = AFX_ERR_NONE;
@@ -344,7 +408,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
     _AfxInitMmu(NIL);
 
     afxChain* classes = &sys->classes;
-    AfxDeployChain(classes, sys);
+    AfxMakeChain(classes, sys);
     AfxMountClass(&sys->strbCls, NIL, classes, &_AFX_STRB_CLASS_CONFIG);
 
     // setting the process working directory and the Qwadro/system working directory...
@@ -451,31 +515,6 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 
     if (err)
         AfxDeregisterChainedClasses(&sys->classes);
-
-    return err;
-}
-
-_AFX afxError _AfxSysDtor(afxSystem sys)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-
-    AfxDisposeObjects(1, &sys->e2coree);
-    AfxDisposeObjects(1, &sys->primeThr);
-
-    // objects will be released at class drop.
-    AfxDeregisterChainedClasses(&sys->classes);
-
-    //AfxDeallocateUri(&sys->pwd.uri);
-
-    //AfxDismantleArena(&sys->ioArena);
-    //AfxReleaseObject(&(sys->memD->obj));
-
-    //_AfxFreeExternalAllocations();
-    
-    _AfxDeinitMmu(NIL);
-
-    AfxZero(sys, sizeof(sys[0]));
 
     return err;
 }

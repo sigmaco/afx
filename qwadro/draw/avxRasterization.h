@@ -120,7 +120,7 @@ AFX_DEFINE_STRUCT(avxDrawScope)
     // The canvas containing the attached buffers that are used with the draw scope.
     avxCanvas           canv;
     // The area that is affected by the draw scope.
-    afxLayeredRect      area;
+    afxLayeredRect      bounds;
     // The number of video surfaces.
     afxUnit             targetCnt;
     // Structures describing any color attachments used.

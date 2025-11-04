@@ -14,10 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+
 #ifndef ARX_BVH_H
 #define ARX_BVH_H
 
-#include "qwadro/sim/afxSimDefs.h"
+#include "qwadro/sim/arxSimDefs.h"
 #include "qwadro/base/afxFixedString.h"
 #include "qwadro/cad/arxMesh.h"
 

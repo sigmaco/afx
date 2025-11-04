@@ -56,7 +56,11 @@
 #include "qwadro/mix/afxMixSystem.h"
 // AUX
 #include "qwadro/ux/afxShell.h"
+#if !0
+// ARX
+#include "qwadro/render/arxRenderContext.h"
 // ASX
-#include "qwadro/sim/afxSimulation.h"
+#include "qwadro/sim/arxSimulation.h"
+#endif
 
 #endif//AFX_QWADRO_H

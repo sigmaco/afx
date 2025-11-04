@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -33,8 +33,8 @@ AVX afxError _AfxFetchRasterFromTarga(avxRaster ras, afxUnit opCnt, avxRasterIo 
 
 _AVXINL void _AvxSanitizeRasterIo(avxRaster ras, afxSize bufCap, afxUnit cnt, avxRasterIo const raw[], avxRasterIo san[])
 {
-#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
+#if AVX_VALIDATION_ENABLED
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(raw);
@@ -628,7 +628,7 @@ _AVX afxError AvxLoadRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo cons
                 op.rowsPerImg = tgai.rowsPerImg;
                 //op.decSiz = tgai.decSiz;
 
-                void* data = AfxRequestFromArena(&arena, tgai.decSiz, 1, NIL, 0);
+                void* data = AfxRequestArena(&arena, tgai.decSiz, 1, NIL, 0);
 
                 AvxDecodeRasterFile(&tgai, file, data);
                 AvxUpdateRaster(rasters[i], 1, &op, data, NIL, rasi.exuMask);
@@ -647,7 +647,7 @@ _AVX afxError AvxLoadRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo cons
     return err;
 }
 
-_AVX avxRaster AvxLoadSegmentedRaster(afxDrawSystem dsys, avxRasterInfo const* info, afxUri const* dir, afxUri const faces[])
+_AVX afxError AvxLoadSegmentedRaster(afxDrawSystem dsys, avxRasterInfo const* info, afxUri const* dir, afxUri const faces[], avxRaster* raster)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -682,5 +682,7 @@ _AVX avxRaster AvxLoadSegmentedRaster(afxDrawSystem dsys, avxRasterInfo const* i
                 AfxThrowError();
         }
     }
-    return ras;
+    AFX_ASSERT(raster);
+    *raster = ras;
+    return err;
 }

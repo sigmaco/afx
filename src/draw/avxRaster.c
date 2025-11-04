@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *        Q W A D R O   V I D E O   G R A P H I C S   I N F R A S T R U C T U R E
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -106,12 +106,14 @@ _AVXINL avxRange AvxGetRasterExtent(avxRaster ras, afxUnit lodIdx)
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT_RANGE(ras->mipCnt, lodIdx, 1);
 
+    afxBool is3d = ras->flags & avxRasterFlag_3D;
+
     avxRange whd = ras->whd;
     while (lodIdx--)
     {
         whd.w = whd.w >> 1;
         whd.h = whd.h >> 1;
-        whd.d = whd.d >> 1;
+        if (!is3d) whd.d = whd.d >> 1;
     }
     return whd;
 }
@@ -156,8 +158,8 @@ _AVXINL void AvxDescribeRaster(avxRaster ras, avxRasterInfo* desc, avxSubrasterI
 
 _AVXINL void _AvxSanitizeRasterRegion(avxRaster ras, afxUnit cnt, avxRasterRegion const raw[], avxRasterRegion san[])
 {
-#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
+#if AVX_VALIDATION_ENABLED
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(raw);
@@ -193,8 +195,8 @@ _AVXINL void _AvxSanitizeRasterRegion(avxRaster ras, afxUnit cnt, avxRasterRegio
 
 _AVXINL void _AvxSanitizeRasterCopy(avxRaster ras, avxRaster src, afxUnit cnt, avxRasterCopy const raw[], avxRasterCopy san[])
 {
-#if AVX_VALIDATION_ENABLED
     afxError err = AFX_ERR_NONE;
+#if AVX_VALIDATION_ENABLED
     // src must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &src);
     // ras must be a valid avxRaster handle.

@@ -1,4 +1,4 @@
-// This technology is part of Qwadro (c) 2017 SIGMA Federation
+// Qwadro (c) 2017 SIGMA
 
 ffi class UxEvent {
     ffi firm Register(sName) // return bool
@@ -6,17 +6,31 @@ ffi class UxEvent {
     ffi firm Trigger(sName, hTarget) // return bool
 }
 
-ffi class Hid {
-    ffi firm Reacquire(nPort)
-    ffi firm Release(nPort)
+ffi class Environment {
+    ffi firm Reacquire(uSeat)
+    ffi firm Release(uSeat)
     
-    ffi firm GetKeyPressure(nPort, nCode)
-    ffi firm GetKeyCombo(nPort, afNeg, afPos)
+    ffi firm GetKeyPressure(uSeat, nCode)
+    ffi firm GetKeyCombo(uSeat, afNeg, afPos)
     
-    ffi firm LmbIsPressed(nPort)
-    ffi firm RmbIsPressed(nPort)
+    ffi firm LmbIsPressed(uSeat)
+    ffi firm RmbIsPressed(uSeat)
     
-    ffi firm GetMotionX(nPort)
-    ffi firm GetMotionY(nPort)
-    ffi firm GetWheelDelta(nPort)
+    ffi firm GetMotionX(uSeat)
+    ffi firm GetMotionY(uSeat)
+    ffi firm GetWheelDelta(uSeat)
+}
+
+ffi class Window {
+    ffi firm Acquire(x, y, w, h)
+    ffi firm Dispose(hWnd)
+    
+    ffi firm GetSurface(hWnd)
+    ffi firm Adjust(hWnd, w, h)
+    
+    ffi firm Caption(hWnd, title)
+    ffi firm Redraw(hWnd, x, y, w, h)
+    
+    ffi firm LoadIcon(hWnd, uri)
+    ffi firm LoadCursor(hWnd, uri)    
 }

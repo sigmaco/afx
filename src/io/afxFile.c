@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -413,7 +413,7 @@ _AFX afxError AfxReopenFile(afxStream iob, afxUri const* uri, afxFileFlags flags
     if (!AfxFindFiles(uri, flags, _AfxOpenFileCb, (void*[]) { &diskId, &endpointIdx, &iob->idd.f.url.uri, &iob->idd.f.resolvedUrl.uri }))
     {
         AfxThrowError();
-        AfxReportError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->s : &AFX_STRING_EMPTY));
+        AfxReportError("Couldn't resolve URI <%.*s>", AfxPushString(uri ? &uri->s : &AFX_STRING_EMPTY));
         return err;
     }
     
@@ -446,7 +446,8 @@ _AFX afxError AfxReopenFile(afxStream iob, afxUri const* uri, afxFileFlags flags
     if (!(iob->idd.f.fd = fopen((char const*)(iob->idd.f.resolvedUrl.buf), mode)))
     {
         AfxThrowError();
-        AfxReportError("Couldn't open <%.*s>", AfxPushString(uri ? &uri->s : &AFX_STRING_EMPTY));
+        perror("fopen failed");
+        AfxReportError("Couldn't open resolved URI <%.*s>('%.*s')", AfxPushString(uri ? &uri->s : &AFX_STRING_EMPTY), AfxPushString(&iob->idd.f.resolvedUrl.uri.s));
         return err;
     }
 

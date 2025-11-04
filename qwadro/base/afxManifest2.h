@@ -21,7 +21,7 @@
 #ifndef AFX_MANIFEST_H
 #define AFX_MANIFEST_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/base/afxFcc.h"
 #include "qwadro/mem/afxMemory.h"
 #include "qwadro/mem/afxMappedString.h"

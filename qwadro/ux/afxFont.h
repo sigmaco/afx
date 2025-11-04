@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced Multimedia UX Extensions & Experiments.
+// This software is part of Advanced User Experiences Extensions & Experiments.
 
 #ifndef AUX_FONT_H
 #define AUX_FONT_H

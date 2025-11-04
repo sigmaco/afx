@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -30,6 +30,7 @@
 extern afxClassConfig const _AfxFileClsCfg;
 extern afxClassConfig const _AfxArcClsCfg;
 extern afxClassConfig const _AfxUrdClsCfg;
+_AFX afxBool resolveUnmountedVolumes = TRUE; // strictStorage
 
 _AFX afxClass const* AfxGetFileClass(afxStorage fsys)
 {
@@ -325,7 +326,32 @@ _AFX afxError AfxResolveUris2(afxFileFlags const permissions, afxUnit cnt, afxUr
             }
 
             if (!resolved)
-                AfxThrowError(); // unresolved.
+            {
+                if (resolveUnmountedVolumes)
+                {
+                    //if ((fsto->flags & ioPerms) == ioPerms)
+                    {
+                        AfxFormatUri(&out[i], "%.*s/%.*s\0", AfxPushString(AfxGetUriString(&dev)), AfxPushString(pathStr));
+                        AfxCanonicalizePath(&out[i], AFX_ON_WINDOWS);
+                        //AfxReportMessage(dstData);
+
+                        if (!stat(dstData, &(st)) || (ioPerms & afxFileFlag_W) || hasWildcard)
+                        {
+                            if (((st.st_mode & flagsToTest) == flagsToTest) || ioPerms & afxFileFlag_W || hasWildcard)
+                            {
+                                resolved = TRUE;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!resolved)
+                {
+                    AfxThrowError(); // unresolved.
+                    err = afxError_NOT_FOUND;
+                }
+            }
 
             //AfxReportWarn("%x %x %x %x %x", st.st_mode & _S_IFREG, st.st_mode & _S_IFDIR, st.st_mode & _S_IREAD, st.st_mode & _S_IWRITE, st.st_mode & _S_IEXEC);
         }
@@ -748,9 +774,9 @@ _AFX afxError _AfxFsysCtorCb(afxStorage fsys, void** args, afxUnit invokeNo)
     AfxFormatUri(&fsys->baseUrl.uri, "//./%c/", diskId);
     fsys->diskId = diskId;
 
-    AfxDeployChain(&fsys->storages, fsys);
-    AfxDeployChain(&fsys->classes, fsys);
-    AfxDeployChain(&fsys->fileChain, fsys);
+    AfxMakeChain(&fsys->storages, fsys);
+    AfxMakeChain(&fsys->classes, fsys);
+    AfxMakeChain(&fsys->fileChain, fsys);
 
     if (_MountStorageUnit(fsys, endpoint, ioFlags)) AfxThrowError();
     else
@@ -803,9 +829,9 @@ _AFX afxUnit AfxInvokeStorages(afxUnit first, afxUnit cnt, afxBool(*f)(afxStorag
     afxSystem sys;
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-    afxClass* cls = _AfxSysGetFsysClass(sys);
+    afxClass* cls = (afxClass*)_AfxSysGetFsysClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, (void*)f, udd, first, cnt);
 }
 
 _AFX afxUnit AfxEnumerateStorages(afxUnit first, afxUnit cnt, afxStorage systems[])
@@ -816,7 +842,7 @@ _AFX afxUnit AfxEnumerateStorages(afxUnit first, afxUnit cnt, afxStorage systems
     afxSystem sys;
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-    afxClass* cls = _AfxSysGetFsysClass(sys);
+    afxClass* cls = (afxClass*)_AfxSysGetFsysClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)systems);
 }
@@ -834,7 +860,7 @@ _AFX afxError AfxMountStorageUnit(afxChar diskId, afxUri const* endpoint, afxFil
         afxSystem sys;
         AfxGetSystem(&sys);
         AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
-        afxClass* cls = _AfxSysGetFsysClass(sys);
+        afxClass* cls = (afxClass*)_AfxSysGetFsysClass(sys);
         AFX_ASSERT_CLASS(cls, afxFcc_FSYS);
 
         if (AfxAcquireObjects(cls, 1, (afxObject*)&fsys, (void const*[]) { &diskId, endpoint, &ioFlags, NIL }))

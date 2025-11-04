@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced Multimedia UX Extensions & Experiments.
+// This software is part of Advanced User Experiences Extensions & Experiments.
 
 /*
     Widgets are smaller graphical elements or controls within a window that enable user interaction. 
@@ -48,6 +48,7 @@
 #include "qwadro/io/afxUri.h"
 #include "qwadro/math/afxTransform.h"
 #include "qwadro/ux/afxFont.h"
+#include "qwadro/ux/afxTheme.h"
 
 typedef enum afxWidgetFlag
 {

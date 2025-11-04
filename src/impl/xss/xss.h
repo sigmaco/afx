@@ -271,6 +271,7 @@ typedef struct
   // User-defined data associated with the VM.
   void* userData;
 
+  xssVm parent;
 } LunaConfiguration;
 
 typedef enum
@@ -552,5 +553,10 @@ LUNA_API void* xssGetUserData(xssVm vm);
 
 // Sets user data associated with the LunaVM.
 LUNA_API void xssSetUserData(xssVm vm, void* userData);
+
+
+
+LUNA_API xssVm xssCreateVm(LunaConfiguration const* config);
+LUNA_API afxError xssDestroyVm(xssVm vm);
 
 #endif

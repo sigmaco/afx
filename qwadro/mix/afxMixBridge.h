@@ -29,17 +29,25 @@
 
 #define AMX_MAX_QUEUES_PER_BRIDGE (32)
 
-typedef enum afxMixCaps
+typedef enum amxAptitude
 {
-    afxMixCaps_MIX      = AFX_BITMASK(0), // supports mixing
-    afxMixCaps_COMPUTE  = AFX_BITMASK(1),
-    afxMixCaps_TRANSFER = AFX_BITMASK(2),
-    afxMixCaps_SINK     = AFX_BITMASK(3)
-} afxMixCaps;
+    // Supports transfers via direct memory access.
+    amxAptitude_DMA       = AFX_BITMASK(0),
+    // Supports sound effects.
+    amxAptitude_SFX       = AFX_BITMASK(1),
+    // Supports video effects.
+    amxAptitude_VFX       = AFX_BITMASK(2),
+    // Supports general purpose computation.
+    amxAptitude_COMPUTE   = AFX_BITMASK(3),
+    // Supports on-device output.
+    amxAptitude_SINK      = AFX_BITMASK(4),
+    // Supports video acceleration on input/output.
+    amxAptitude_VAIO      = AFX_BITMASK(5),
+} amxAptitude;
 
 AFX_DEFINE_STRUCT(afxMixPortInfo)
 {
-    afxMixCaps      capabilities;
+    amxAptitude      capabilities;
     afxAcceleration acceleration;
     afxUnit         minQueCnt; // usually 3
     afxUnit         maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
@@ -49,7 +57,7 @@ AFX_DEFINE_STRUCT(afxMixBridgeConfig)
 {
     afxUnit         mdevId;
     afxAcceleration acceleration;
-    afxMixCaps      capabilities; // specifies capabilities of queues in a port.
+    amxAptitude      capabilities; // specifies capabilities of queues in a port.
     afxUnit         minQueCnt;
     afxReal const*  queuePriority;
 };

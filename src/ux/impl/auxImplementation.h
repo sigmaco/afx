@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced Multimedia UX Extensions & Experiments.
+// This software is part of Advanced User Experiences Extensions & Experiments.
 
   //////////////////////////////////////////////////////////////////////////////
  // Advanced User Experience                                                 //
@@ -23,10 +23,10 @@
 #ifndef AUX_IMPLEMENTATION_H
 #define AUX_IMPLEMENTATION_H
 
-#include "../../../qwadro/ux/afxShell.h"
+#include "qwadro/ux/afxShell.h"
 #include "auxImpl_Shell.h"
 
-AFX_DEFINE_STRUCT(_auxSessionAcquisition)
+AFX_DEFINE_STRUCT(_auxEnvAcquisition)
 {
     afxUnit             seatCnt;
     afxSeatConfig const*seats;

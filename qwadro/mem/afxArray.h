@@ -46,7 +46,7 @@
 #ifndef AFX_ARRAY_H
 #define AFX_ARRAY_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/base/afxFcc.h"
 #include "qwadro/mem/afxMemory.h"
 

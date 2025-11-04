@@ -40,7 +40,7 @@
 #ifndef AFX_FUTEX_H
 #define AFX_FUTEX_H
 
-#include "qwadro/base/afxDebug.h"
+#include "qwadro/exec/afxDebug.h"
 #include "qwadro/exec/afxMutex.h"
 #include "qwadro/base/afxFcc.h"
 

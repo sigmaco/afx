@@ -1,20 +1,20 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                      Q W A D R O   U S E R   I / O   S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced Multimedia UX Extensions & Experiments.
+// This software is part of Advanced User Experiences Extensions & Experiments.
 
 #define _AFX_SYSTEM_C
 #define _AFX_MODULE_C
@@ -121,7 +121,7 @@ _AUX afxClass const* _AuxGetShellClass(afxModule icd)
     return cls;
 }
 
-_AUX afxClass const* _AuxGetSessionClass(afxModule icd)
+_AUX afxClass const* _AuxIcdGetEnvClass(afxModule icd)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
@@ -132,7 +132,7 @@ _AUX afxClass const* _AuxGetSessionClass(afxModule icd)
         return NIL;
     }
     afxClass const* cls = &icd->icd.sesCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_SES);
+    AFX_ASSERT_CLASS(cls, afxFcc_ENV);
     return cls;
 }
 
@@ -204,11 +204,11 @@ _AUX afxError _AuxImplementShell(afxModule icd, _afxShellImplementation const* c
         vduMounted = TRUE;
     }
 
-    afxClassConfig sesClsCfg = cfg->sesCls.fcc ? cfg->sesCls : _AUX_SES_CLASS_CONFIG;
-    AFX_ASSERT(sesClsCfg.fcc == afxFcc_SES);
-    AFX_ASSERT(sesClsCfg.fixedSiz >= _AUX_SES_CLASS_CONFIG.fixedSiz);
-    if ((sesClsCfg.fcc != afxFcc_SES) ||
-        (_AUX_SES_CLASS_CONFIG.fixedSiz > sesClsCfg.fixedSiz))
+    afxClassConfig sesClsCfg = cfg->sesCls.fcc ? cfg->sesCls : _AUX_ENV_CLASS_CONFIG;
+    AFX_ASSERT(sesClsCfg.fcc == afxFcc_ENV);
+    AFX_ASSERT(sesClsCfg.fixedSiz >= _AUX_ENV_CLASS_CONFIG.fixedSiz);
+    if ((sesClsCfg.fcc != afxFcc_ENV) ||
+        (_AUX_ENV_CLASS_CONFIG.fixedSiz > sesClsCfg.fixedSiz))
     {
         AfxThrowError();
         AfxDismountClass(&icd->icd.vduCls);

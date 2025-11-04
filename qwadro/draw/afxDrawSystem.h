@@ -38,7 +38,7 @@
 #include "qwadro/draw/avxQueryPool.h"
 #include "qwadro/draw/avxPipeline.h"
 #include "qwadro/draw/avxSampler.h"
-#include "qwadro/draw/avxShader.h"
+#include "qwadro/draw/avxCodebase.h"
 #include "qwadro/draw/avxVertexInput.h"
 #include "qwadro/draw/avxDrawing.h"
 #include "qwadro/draw/avxFence.h"
@@ -75,7 +75,7 @@ AFX_DEFINE_STRUCT(afxDrawSystemConfig)
     afxUnit             verMajor;
     afxUnit             verMinor;
     // The functions to be capable on bridged devices.
-    afxDrawFn           caps;
+    avxAptitude           caps;
     // The acceleration to be available on bridged devices.
     afxAcceleration     accel;
     // The features to be enabled.
@@ -289,7 +289,7 @@ AVX afxUnit         AvxChooseDrawBridges
     afxUnit         ddevId, 
 
     // An optional bitmask describing the drawing device's port capabilities for which bridges must be linked against. 
-    afxDrawFn     caps,
+    avxAptitude     caps,
 
     afxMask         exuMask,
 
@@ -388,6 +388,12 @@ AVX afxUnit AvxTestForDrawExtensionsEnabled
     afxUnit cnt, 
     afxString const* exts, 
     afxBool enabled[]
+);
+
+AVX avxClipSpaceDepth AvxGetOperationalClipSpaceDepth
+(
+    afxDrawSystem dsys,
+    afxReal* rangeEpsilon
 );
 
 #endif//AVX_DRAW_SYSTEM_H

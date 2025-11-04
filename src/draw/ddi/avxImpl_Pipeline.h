@@ -37,7 +37,7 @@ AFX_DEFINE_STRUCT(_avxPushRange)
 
 AFX_DEFINE_STRUCT(_avxLigament)
 {
-    afxUnit32       binding; // A unique identifier for a resource binding within the avxLigature, corresponding to a avxLigatureEntry.binding and a @binding attribute in the avxShader.
+    afxUnit32       binding; // A unique identifier for a resource binding within the avxLigature, corresponding to a avxLigatureEntry.binding and a @binding attribute in the avxCodebase.
     //afxUnit         cachedSet;
     afxMask         visibility; // A bitset of the members of avxShaderType. Each set bit indicates that a avxLigatureEntry's resource will be accessible from the associated shader stage.
     avxShaderParam  type;
@@ -88,10 +88,11 @@ AFX_OBJECT(avxLigature)
 };
 #endif//_AVX_LIGATURE_C
 
-AFX_DEFINE_STRUCT(avxShaderSlot)
+AFX_DEFINE_STRUCT(_avxProgrammableStage)
 {
-    avxShaderType      stage;
-    avxShader           shd;
+    avxShaderType       stage;
+    // Unique identifier for code unit into the linked avxCodebase.
+    afxUnit             progId;
     afxString8          fn;
     //constants;
     //                  specId;
@@ -107,9 +108,11 @@ AFX_OBJECT(avxPipeline)
     afxString           tag;
     void*               udd;
     afxFlags            flags;
-    avxBus            type;
+    avxBus              bus;
+    avxCodebase         codb;
     afxUnit             stageCnt;
-    avxShaderSlot*      stages;    
+    _avxProgrammableStage*stages;    
+    afxBool             isUserLiga;
     avxLigature         liga;
     afxUnit             specializedWorkGrpSiz[3];
 
@@ -213,31 +216,44 @@ AFX_OBJECT(avxVertexInput)
 #endif
 
 #ifdef _AVX_SHADER_C
+
+AFX_DEFINE_STRUCT(_avxCodeBlock)
+{
+    afxString           tag;
+    void*               udd;
+    afxString32         name;
+    avxShaderType       stage;
+
+    afxUnit             verMajor;
+    afxUnit             verMinor;
+    afxBool             extended;
+    afxByte*            code;
+    afxUnit             codeLen;
+    afxString           entry;
+
+    afxString32         pushConstName;
+    afxUnit             resDeclCnt;
+    avxShaderResource*  resDecls;
+
+    afxUnit             ioDeclCnt;
+    avxShaderIoChannel* ioDecls;
+    avxTopology         topology;
+};
+
 #ifdef _AVX_SHADER_IMPL
-AFX_OBJECT(_avxShader)
+AFX_OBJECT(_avxCodebase)
 #else
-AFX_OBJECT(avxShader)
+AFX_OBJECT(avxCodebase)
 #endif
 {
-    afxString               tag;
-    void*                   udd;
-    afxUri128               uri;
-    avxShaderType           stage;
-
-    afxUnit                 verMajor;
-    afxUnit                 verMinor;
-    afxBool                 extended;
-    afxByte*                code;
-    afxUnit16               codeLen;
-    afxString               entry;
-
-    afxString32             pushConstName;
-    afxUnit8                resDeclCnt;
-    avxShaderResource*      resDecls;
-
-    afxUnit8                ioDeclCnt;
-    avxShaderIoChannel*     ioDecls;
-    avxTopology             topology;
+    // Debugging tag.
+    afxString       tag;
+    // User-defined data.
+    void*           udd;
+    // Optional base URL for file lookup.
+    afxUri128       url;
+    // A pool of code units.
+    afxPool         codes;
 };
 #endif//_AVX_SHADER_C
 

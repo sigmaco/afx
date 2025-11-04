@@ -28,9 +28,6 @@
     <Filter Include="qwadro\impl">
       <UniqueIdentifier>{adcc620f-ecca-4935-b10a-6c6dfd3a4713}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\impl\xss">
-      <UniqueIdentifier>{19183132-f8c7-4476-bbc4-953c4b5cc7d2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro\draw">
       <UniqueIdentifier>{3afda542-c68a-4419-8b07-5dbbd7f435b7}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,12 @@
     </Filter>
     <Filter Include="qwadro\coll">
       <UniqueIdentifier>{a655fe12-7d18-4b3f-8405-327b0978e20e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\hid">
+      <UniqueIdentifier>{ba798ec4-4588-46cd-8243-9c3ca43e9671}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\impl\xss">
+      <UniqueIdentifier>{98e32295-8519-4cee-84ce-1e65fd3a1182}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -101,9 +104,6 @@
     </ClInclude>
     <ClInclude Include="..\..\qwadro\mem\afxMappedString.h">
       <Filter>qwadro\mem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\base\afxDebug.h">
-      <Filter>qwadro\base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\qwadro\base\afxEvent.h">
       <Filter>qwadro\base</Filter>
@@ -201,48 +201,6 @@
     <ClInclude Include="..\..\src\impl\afxIoImplKit.h">
       <Filter>qwadro\impl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssCompiler.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssCore.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssDebug.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssMath.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssOpcodes.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssOptMeta.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssOptRandom.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssPrimitive.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssUtils.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssValue.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssVm.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xssCommon.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\impl\xss\xss.h">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\exec\afxScript.h">
-      <Filter>qwadro\exec</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\qwadro\exec\afxProcess.h">
       <Filter>qwadro\exec</Filter>
     </ClInclude>
@@ -327,9 +285,6 @@
     <ClInclude Include="..\..\qwadro\draw\avxSampler.h">
       <Filter>qwadro\draw</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\qwadro\draw\avxShader.h">
-      <Filter>qwadro\draw</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\qwadro\draw\avxSynchronization.h">
       <Filter>qwadro\draw</Filter>
     </ClInclude>
@@ -404,18 +359,6 @@
     </ClInclude>
     <ClInclude Include="..\..\qwadro\draw\avxViewport.h">
       <Filter>qwadro\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\ux\afxGamepad.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\ux\afxHid.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\ux\afxKeyboard.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\ux\afxSession.h">
-      <Filter>qwadro\ux</Filter>
     </ClInclude>
     <ClInclude Include="..\..\qwadro\ux\afxShell.h">
       <Filter>qwadro\ux</Filter>
@@ -540,14 +483,8 @@
     <ClInclude Include="..\..\qwadro\math\afxTransform.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\qwadro\ux\afxDisplay.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\qwadro\ux\afxFont.h">
       <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\mix\amxVideoDecoder.h">
-      <Filter>qwadro\mix</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\mix\ddi\amxImpl_Soundscape.h">
       <Filter>qwadro\mix\ddi</Filter>
@@ -588,10 +525,85 @@
     <ClInclude Include="..\..\qwadro\coll\afxBox.h">
       <Filter>qwadro\coll</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\qwadro\ux\afxTheme.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\draw\avxCodebase.h">
+      <Filter>qwadro\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\mix\amxDecoder.h">
+      <Filter>qwadro\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\mix\amxEncoder.h">
+      <Filter>qwadro\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\ux\afxEnvironment.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\ux\afxScript.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\exec\afxDebug.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\hid\afxDisplay.h">
+      <Filter>qwadro\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\hid\afxHid.h">
+      <Filter>qwadro\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\hid\afxGamepad.h">
+      <Filter>qwadro\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\hid\afxKeyboard.h">
+      <Filter>qwadro\hid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xss.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssCommon.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssCompiler.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssCore.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssDebug.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssMath.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssOpcodes.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssOptMeta.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssOptRandom.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssPrimitive.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssUtils.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssValue.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\impl\xss\xssVm.h">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md">
       <Filter>qwadro</Filter>
+    </None>
+    <None Include="..\..\qwadro\draw\README.md">
+      <Filter>qwadro\draw</Filter>
     </None>
     <None Include="..\..\src\impl\xss\xssCore.xss">
       <Filter>qwadro\impl\xss</Filter>
@@ -610,9 +622,6 @@
     </None>
     <None Include="..\..\src\impl\xss\xssOptRandom.xss.inc">
       <Filter>qwadro\impl\xss</Filter>
-    </None>
-    <None Include="..\..\qwadro\draw\README.md">
-      <Filter>qwadro\draw</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -661,9 +670,6 @@
       <Filter>qwadro\mem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\base\afxCoreDefs.c">
-      <Filter>qwadro\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\base\afxDebug_w32.c">
       <Filter>qwadro\base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\base\afxFixedString.c">
@@ -756,39 +762,6 @@
     <ClCompile Include="..\..\src\io\afxIoPort.c">
       <Filter>qwadro\io</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\xssCompiler.c">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\xssCore.c">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\xssDebug.c">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\xssOptMeta.c">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\xssOptRandom.c">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\xssPrimitive.c">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\xssUtils.c">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\xssValue.c">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\xssVm.c">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\exec\afxScript.c">
-      <Filter>qwadro\exec</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\impl\xss\xssInterfaceIo.c">
-      <Filter>qwadro\impl\xss</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\exec\afxProcess_W32.c">
       <Filter>qwadro\exec</Filter>
     </ClCompile>
@@ -799,9 +772,6 @@
       <Filter>qwadro\exec</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ux\impl\auxImplementation.c">
-      <Filter>qwadro\ux\impl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ux\impl\auxImpl_Session.c">
       <Filter>qwadro\ux\impl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ux\impl\auxImpl_Widget.c">
@@ -942,9 +912,6 @@
     <ClCompile Include="..\..\src\draw\avxSampler.c">
       <Filter>qwadro\draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\draw\avxShader.c">
-      <Filter>qwadro\draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\draw\avxSynchronization.c">
       <Filter>qwadro\draw</Filter>
     </ClCompile>
@@ -969,15 +936,6 @@
     <ClCompile Include="..\..\src\draw\avxColor.c">
       <Filter>qwadro\draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ux\afxHid.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ux\afxKeyboard.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ux\afxSession.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\ux\afxShell.c">
       <Filter>qwadro\ux</Filter>
     </ClCompile>
@@ -988,9 +946,6 @@
       <Filter>qwadro\ux</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ux\auxPaint.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ux\afxGamepad.c">
       <Filter>qwadro\ux</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\mix\afxMixage.c">
@@ -1104,17 +1059,11 @@
     <ClCompile Include="..\..\src\math\afxTransform.c">
       <Filter>qwadro\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ux\afxDisplay.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\ux\afxFont.c">
       <Filter>qwadro\ux</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\mix\ddi\amxImpl_Temp.c">
       <Filter>qwadro\mix\ddi</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\mix\amxVideoDecoder.c">
-      <Filter>qwadro\mix</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\mix\ddi\amxImpl_Soundscape.c">
       <Filter>qwadro\mix\ddi</Filter>
@@ -1160,6 +1109,72 @@
     </ClCompile>
     <ClCompile Include="..\..\src\coll\afxBox.c">
       <Filter>qwadro\coll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\afxTheme.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\avxCodebase.c">
+      <Filter>qwadro\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\amxDecoder.c">
+      <Filter>qwadro\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\amxEncoder.c">
+      <Filter>qwadro\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\afxEnvironment.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xssInterfaceIo.c">
+      <Filter>qwadro\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\afxScript.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ux\impl\auxImpl_Environment.c">
+      <Filter>qwadro\ux\impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\exec\afxDebug_w32.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hid\afxDisplay.c">
+      <Filter>qwadro\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hid\afxHid.c">
+      <Filter>qwadro\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hid\afxGamepad.c">
+      <Filter>qwadro\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hid\afxKeyboard.c">
+      <Filter>qwadro\hid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\xssCompiler.c">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\xssCore.c">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\xssDebug.c">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\xssOptMeta.c">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\xssOptRandom.c">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\xssPrimitive.c">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\xssUtils.c">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\xssValue.c">
+      <Filter>qwadro\impl\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\impl\xss\xssVm.c">
+      <Filter>qwadro\impl\xss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

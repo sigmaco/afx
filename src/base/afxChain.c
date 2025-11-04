@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -17,7 +17,7 @@
 #include "src/impl/afxExecImplKit.h"
 
 
-_AFXINL void AfxDeployChain(afxChain *ch, void *holder)
+_AFXINL void AfxMakeChain(afxChain *ch, void *holder)
 {
     afxError err = AFX_ERR_NONE;
     AFX_ASSERT(ch);
@@ -99,7 +99,7 @@ _AFXINL void AfxAppendChain(afxChain* ch, afxChain* other)
     ch->cnt += other->cnt;
 
     // Reset other
-    AfxDeployChain(other, other->holder);
+    AfxMakeChain(other, other->holder);
 }
 
 _AFXINL void AfxPrependChain(afxChain* ch, afxChain* other)
@@ -146,7 +146,7 @@ _AFXINL void AfxPrependChain(afxChain* ch, afxChain* other)
     ch->cnt += other->cnt;
 
     // Reset other
-    AfxDeployChain(other, other->holder);
+    AfxMakeChain(other, other->holder);
 }
 
 _AFXINL afxUnit AfxGetChainLength(afxChain const *ch)

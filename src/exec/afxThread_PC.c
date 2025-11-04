@@ -1,13 +1,13 @@
 /*
- *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
- *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
- *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
- *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
- *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
- *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
- *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *           ::::::::    :::::::::::    ::::::::    ::::     ::::       :::
+ *          :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:
+ *          +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+
+ *          +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:
+ *                 +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+
+ *          #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#
+ *           ########    ###########    ########    ###       ###   ###     ###
  *
- *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                     S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -170,7 +170,7 @@ _AFX afxBool AfxGetThread(afxThread* thread)
     *thread = _currThr;
     return !!_currThr;
 #else
-    _currThr = AfxGetClassInstance(_AfxSysGetThrClass(), _currThrObjId);
+    _currThr = AfxGetInstance(_AfxSysGetThrClass(), _currThrObjId);
     *thread = _currThr;
     return !!_currThr;
 #endif
@@ -810,7 +810,7 @@ _AFX afxUnit AfxInvokeThreads(afxUnit first, afxUnit cnt, afxBool(*f)(afxThread,
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
     afxClass* cls = (afxClass*)_AfxSysGetThrClass(sys);
     AFX_ASSERT_CLASS(cls, afxFcc_THR);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, (void*)f, udd, first, cnt);
 }
 
 _AFX afxUnit AfxEnumerateThreads(afxUnit first, afxUnit cnt, afxThread threads[])

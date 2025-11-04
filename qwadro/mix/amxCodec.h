@@ -76,7 +76,7 @@ AFX_OBJECT(amxCodec)
 {
     int a;
 };
-
+#if 0
 AFX_OBJECT(amxEncoder)
 {
     int a;
@@ -86,7 +86,7 @@ AFX_OBJECT(amxDecoder)
 {
     int a;
 };
-
+#endif
 AFX_DEFINE_STRUCT(amxCodecFeatures)
 {
     afxBool encode;

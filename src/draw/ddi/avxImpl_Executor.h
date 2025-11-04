@@ -242,6 +242,7 @@ AFX_DEFINE_UNION(_avxIoReqPacket)
         {
             avxRasterCopy AFX_SIMD rasCpyOps[];
             avxRasterIo AFX_SIMD rasOps[];
+            avxBufferCopy AFX_SIMD bufCpyOps[];
             avxBufferIo AFX_SIMD bufOps[];
         };
     } Transfer;

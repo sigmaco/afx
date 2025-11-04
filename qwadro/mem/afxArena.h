@@ -131,15 +131,15 @@ AFX afxError        AfxAssumeArena
 );
 
 /*
-    The AfxMergeArena() function merges all reusable allocations from a source arena into a destination one,
+    The AfxMergeArenas() function merges all reusable allocations from a source arena into a destination one,
     while ensuring that resources aren't leaked or corrupted.
 
     Zero-allocation design: Reuses existing cleanup arrays when possible.
-    Safe to call just before AfxDismantleArena(src) (since AfxMergeArena() takes over all ownership).
+    Safe to call just before AfxDismantleArena(src) (since AfxMergeArenas() takes over all ownership).
     Does not free or reuse chunks directly — but their cleanups now live in dst, so they’ll be freed when dst is exhausted.
 */
 
-AFX afxError        AfxMergeArena
+AFX afxError        AfxMergeArenas
 (
     afxArena*       dst, 
     // The arena is no longer active.
@@ -147,12 +147,12 @@ AFX afxError        AfxMergeArena
 );
 
 /*
-    The AfxRequestFromArena() function allocates and optionally initializes portions of a given size, from the arena.    
+    The AfxRequestArena() function allocates and optionally initializes portions of a given size, from the arena.    
     If @src is non-null, it copies from @src, possibly with a @stride.
     This supports bulk allocation with optional init. Great for tightly packed data like structs or strings.
 */
 
-AFX void*           AfxRequestFromArena
+AFX void*           AfxRequestArena
 (
     // Arena to allocate from.
     afxArena*       aren, 
@@ -167,11 +167,11 @@ AFX void*           AfxRequestFromArena
 );
 
 /*
-    The AfxReclaimToArena() function returns memory to the arena if recycling is enabled.
+    The AfxReclaimArena() function returns memory to the arena if recycling is enabled.
     Adds the pointer to the recycleBin for reuse.
 */
 
-AFX void            AfxReclaimToArena
+AFX void            AfxReclaimArena
 (
     afxArena*       aren, 
     void*           p, 
