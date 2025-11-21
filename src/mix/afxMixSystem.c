@@ -30,13 +30,13 @@
 //#define _AMX_MIX_QUEUE_C
 //#define _AMX_MIX_INPUT_C
 //#define _AMX_SINK_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 #define _AUX_UX_C
-#include "src/ux/impl/auxImplementation.h"
+#include "src/ux/auxIcd.h"
 
-_AMX _amxMsysImpl const* _AmxMsysGetImpl(afxMixSystem msys)
+_AMX _amxDdiMsys const* _AmxMsysGetImpl(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     return msys->ddi;
@@ -44,7 +44,7 @@ _AMX _amxMsysImpl const* _AmxMsysGetImpl(afxMixSystem msys)
 
 _AMX afxMask _AmxMsysGetIoExuMask(afxMixSystem msys, afxMask* dedIoExuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     if (dedIoExuMask) *dedIoExuMask = msys->dedIoExuMask;
@@ -53,7 +53,7 @@ _AMX afxMask _AmxMsysGetIoExuMask(afxMixSystem msys, afxMask* dedIoExuMask)
 
 _AMX afxModule AmxGetMixSystemIcd(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxModule mdle = AfxGetHost(msys);
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
@@ -62,7 +62,7 @@ _AMX afxModule AmxGetMixSystemIcd(afxMixSystem msys)
 
 _AMX void AmxGetEnabledDrawFeatures(afxMixSystem msys, afxMixFeatures* features)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
@@ -74,7 +74,7 @@ _AMX void AmxGetEnabledDrawFeatures(afxMixSystem msys, afxMixFeatures* features)
 
 _AMX afxClass const* _AmxMsysGetSinkClass(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->asioCls;
@@ -84,7 +84,7 @@ _AMX afxClass const* _AmxMsysGetSinkClass(afxMixSystem msys)
 
 _AMX afxClass const* _AmxMsysGetTraxClass(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->traxCls;
@@ -94,7 +94,7 @@ _AMX afxClass const* _AmxMsysGetTraxClass(afxMixSystem msys)
 
 _AMX afxClass const* _AmxMsysGetMexuClass(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // msys must be a valid afxMixDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->mexuCls;
@@ -104,7 +104,7 @@ _AMX afxClass const* _AmxMsysGetMexuClass(afxMixSystem msys)
 
 _AMX afxClass const* _AmxMsysGetMixClass(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->mixCls;
     AFX_ASSERT_CLASS(cls, afxFcc_MIX);
@@ -113,7 +113,7 @@ _AMX afxClass const* _AmxMsysGetMixClass(afxMixSystem msys)
 
 _AMX afxClass const* _AmxMsysGetBufClass(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->mbufCls;
     AFX_ASSERT_CLASS(cls, afxFcc_MBUF);
@@ -122,7 +122,7 @@ _AMX afxClass const* _AmxMsysGetBufClass(afxMixSystem msys)
 
 _AMX afxClass const* _AmxMsysGetVidClass(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->vidCls;
     AFX_ASSERT_CLASS(cls, afxFcc_VID);
@@ -131,7 +131,7 @@ _AMX afxClass const* _AmxMsysGetVidClass(afxMixSystem msys)
 
 _AMX afxClass const* _AmxMsysGetMencClass(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->mencCls;
     AFX_ASSERT_CLASS(cls, afxFcc_MENC);
@@ -140,7 +140,7 @@ _AMX afxClass const* _AmxMsysGetMencClass(afxMixSystem msys)
 
 _AMX afxClass const* _AmxMsysGetMdecClass(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->mdecCls;
     AFX_ASSERT_CLASS(cls, afxFcc_MDEC);
@@ -149,7 +149,7 @@ _AMX afxClass const* _AmxMsysGetMdecClass(afxMixSystem msys)
 
 _AMX afxClass const* _AmxMsysGetAudClass(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->wavCls;
     AFX_ASSERT_CLASS(cls, afxFcc_AUD);
@@ -158,7 +158,7 @@ _AMX afxClass const* _AmxMsysGetAudClass(afxMixSystem msys)
 
 _AMX afxClass const* _AmxMsysGetSndsClass(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->sndsCls;
     AFX_ASSERT_CLASS(cls, afxFcc_SNDS);
@@ -167,7 +167,7 @@ _AMX afxClass const* _AmxMsysGetSndsClass(afxMixSystem msys)
 
 _AMX afxUnit AmxGetMixBridges(afxMixSystem msys, afxUnit baseIdx, afxUnit cnt, afxMixBridge bridges[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
@@ -192,7 +192,7 @@ _AMX afxUnit AmxGetMixBridges(afxMixSystem msys, afxUnit baseIdx, afxUnit cnt, a
 
 _AMX afxUnit AmxChooseMixBridges(afxMixSystem msys, afxUnit mdevId, amxAptitude caps, afxMask exuMask, afxUnit first, afxUnit maxCnt, afxMixBridge bridges[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxUnit found = 0;
@@ -247,7 +247,7 @@ _AMX afxUnit AmxChooseMixBridges(afxMixSystem msys, afxUnit mdevId, amxAptitude 
 
 _AMX afxError AmxWaitForMixQueue(afxMixSystem msys, afxTime timeout, afxUnit exuIdx, afxUnit queIdx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     // exuIdx must be a valid index to a bridge.
@@ -269,7 +269,7 @@ _AMX afxError AmxWaitForMixQueue(afxMixSystem msys, afxTime timeout, afxUnit exu
 
 _AMX afxError AmxWaitForMixBridge(afxMixSystem msys, afxTime timeout, afxUnit exuIdx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     // exuIdx must be a valid index to a bridge.
@@ -290,7 +290,7 @@ _AMX afxError AmxWaitForMixBridge(afxMixSystem msys, afxTime timeout, afxUnit ex
 
 _AMX afxError AmxWaitForMixSystem(afxMixSystem msys, afxTime timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
@@ -309,7 +309,7 @@ _AMX afxError AmxWaitForMixSystem(afxMixSystem msys, afxTime timeout)
 
 _AMX afxError _AmxMsysTransferCb_SW(afxMixSystem msys, amxTransference* ctrl, afxUnit opCnt, void const* ops)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(opCnt);
@@ -393,7 +393,7 @@ _AMX afxError _AmxMsysTransferCb_SW(afxMixSystem msys, amxTransference* ctrl, af
 
 _AMX afxError _AmxMsysRemapBuffersCb_SW(afxMixSystem msys, afxBool unmap, afxUnit cnt, _amxBufferRemapping const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(cnt);
@@ -460,7 +460,7 @@ _AMX afxError _AmxMsysRemapBuffersCb_SW(afxMixSystem msys, afxBool unmap, afxUni
 
 _AMX afxError _AmxMsysCohereMappedBuffersCb_SW(afxMixSystem msys, afxBool discard, afxUnit cnt, amxBufferedMap const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(cnt);
@@ -525,7 +525,7 @@ _AMX afxError _AmxMsysCohereMappedBuffersCb_SW(afxMixSystem msys, afxBool discar
     return err;
 }
 
-_AMX _amxMsysImpl const _AMX_MSYS_IMPL =
+_AMX _amxDdiMsys const _AMX_MSYS_IMPL =
 {
 #if 0
     .fencCls = _AmxMsysGetFencClassCb_SW,
@@ -544,7 +544,7 @@ _AMX _amxMsysImpl const _AMX_MSYS_IMPL =
 
 _AMX afxError _AmxMsysDtorCb(afxMixSystem msys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
     afxModule icd = AmxGetMixSystemIcd(msys);
@@ -587,14 +587,14 @@ _AMX afxError _AmxMsysDtorCb(afxMixSystem msys)
 
 _AMX afxError _AmxMsysCtorCb(afxMixSystem msys, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     //AFX_ASSERT(spec);
 
     afxModule icd = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-    _amxMsysAcquisition const* cfg = AFX_CAST(_amxMsysAcquisition const*, args[1]) + invokeNo;
-    _amxMexuAcquisition* bridgeCfgs = AFX_CAST(_amxMexuAcquisition*, args[2]) + invokeNo;
+    __amxMsysAcq const* cfg = AFX_CAST(__amxMsysAcq const*, args[1]) + invokeNo;
+    _amxMexuAcq* bridgeCfgs = AFX_CAST(_amxMexuAcq*, args[2]) + invokeNo;
 
     if (!cfg)
     {
@@ -801,7 +801,7 @@ _AMX afxClassConfig const _AMX_MSYS_CLASS_CONFIG =
 
 _AMX afxUnit AmxEnumerateMixSystems(afxUnit icd, afxUnit first, afxUnit cnt, afxMixSystem systems[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(systems);
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;
@@ -819,7 +819,7 @@ _AMX afxUnit AmxEnumerateMixSystems(afxUnit icd, afxUnit first, afxUnit cnt, afx
 
 _AMX afxUnit AmxEvokeMixSystems(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxMixSystem), afxUnit cnt, afxMixSystem systems[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(systems);
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
@@ -839,7 +839,7 @@ _AMX afxUnit AmxEvokeMixSystems(afxUnit icd, afxUnit first, void* udd, afxBool(*
 
 _AMX afxUnit AmxInvokeMixSystems(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*, afxMixSystem), afxUnit cnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
     afxUnit rslt = 0;
@@ -858,7 +858,7 @@ _AMX afxUnit AmxInvokeMixSystems(afxUnit icd, afxUnit first, void *udd, afxBool(
 
 _AMX afxError AmxConfigureMixSystem(afxUnit icd, afxMixSystemConfig* cfg)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
     AFX_ASSERT(cfg);
 
@@ -955,7 +955,7 @@ _AMX afxError AmxConfigureMixSystem(afxUnit icd, afxMixSystemConfig* cfg)
 
 _AMX afxError AmxEstablishMixSystem(afxUnit icd, afxMixSystemConfig const* cfg, afxMixSystem* system)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
     AFX_ASSERT(system);
     AFX_ASSERT(cfg);
@@ -988,7 +988,7 @@ _AMX afxError AmxEstablishMixSystem(afxUnit icd, afxMixSystemConfig const* cfg, 
     // Acquire bridges and queues
     afxUnit totalSqueCnt = 0;
     afxUnit baseQueIdx[AMX_MAX_BRIDGES_PER_SYSTEM] = { 0 };
-    _amxMexuAcquisition bridgeCfg[AMX_MAX_BRIDGES_PER_SYSTEM] = { 0 };
+    _amxMexuAcq bridgeCfg[AMX_MAX_BRIDGES_PER_SYSTEM] = { 0 };
     afxUnit bridgeCnt = 0;
 
     AFX_ASSERT_RANGE(AMX_MAX_BRIDGES_PER_SYSTEM, 0, cfg->exuCnt);
@@ -1056,7 +1056,7 @@ _AMX afxError AmxEstablishMixSystem(afxUnit icd, afxMixSystemConfig const* cfg, 
         return err;
     }
 
-    _amxMsysAcquisition cfg2 = { 0 };
+    __amxMsysAcq cfg2 = { 0 };
     cfg2.bridgeCnt = bridgeCnt;
     cfg2.reqExtCnt = cfg->extCnt;
     cfg2.reqExts = cfg->exts;

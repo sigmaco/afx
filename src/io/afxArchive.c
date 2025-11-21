@@ -112,7 +112,7 @@ typedef afxError (*_afxZipRecordCallback)(afxArchive arc, afxUnit idx, _afxZipSe
 #if 0
 _AFX afxBool _AfxGetArcD(afxArchive arc, struct _afxArcD **arc, struct _afxSysD* sysD)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
     AFX_ASSERT(arc);
     AfxAssertType(sysD, afxFcc_SYS);
@@ -122,7 +122,7 @@ _AFX afxBool _AfxGetArcD(afxArchive arc, struct _afxArcD **arc, struct _afxSysD*
 
 _AFX afxError _AfxZipFindAndReadCdHdr(afxStream file, _afxZipSerializedCdHdr *endRecord)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
 
     if (AfxSeekStream(file, 0, afxSeekOrigin_END)) AfxThrowError();
@@ -186,7 +186,7 @@ _AFX afxError _AfxZipFindAndReadCdHdr(afxStream file, _afxZipSerializedCdHdr *en
 _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endRecord, _afxZipRecordCallback callback, void *user_data)
 {
     _afxZipSerializedCdEntryHdr fileHdr;
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     afxStream ios = arc->file;
@@ -308,7 +308,7 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
 
 _AFX afxError _AfxZipReadEntryData(afxStream file, _afxZipSerializedCdEntryHdr *header, void *out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
 
     if (header->codec == 0) // Store
@@ -336,7 +336,7 @@ _AFX afxError _AfxZipReadEntryData(afxStream file, _afxZipSerializedCdEntryHdr *
 
 _AFX afxError _AfxZipReadCdEntryCallback(afxArchive arc, afxUnit idx, _afxZipSerializedCdEntryHdr *header, afxUri const *path, void *extra, char *comment, void *user_data)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     (void)extra;
     (void)comment;
     (void)user_data;
@@ -360,7 +360,7 @@ _AFX afxError _AfxZipReadCdEntryCallback(afxArchive arc, afxUnit idx, _afxZipSer
 
 _AFX afxUnit AfxCountArchivedFiles(afxArchive arc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     //AFX_ASSERT(&arc->entries.fcc afxFcc_ARR);
@@ -369,7 +369,7 @@ _AFX afxUnit AfxCountArchivedFiles(afxArchive arc)
 
 _AFX afxBool AfxFindArchivedFile(afxArchive arc, afxUri const *name, afxUnit *idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(name);
@@ -394,7 +394,7 @@ _AFX afxBool AfxFindArchivedFile(afxArchive arc, afxUri const *name, afxUnit *id
 
 _AFX afxSize AfxGetArchivedFileOffset(afxArchive arc, afxUnit idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -404,7 +404,7 @@ _AFX afxSize AfxGetArchivedFileOffset(afxArchive arc, afxUnit idx)
 
 _AFX afxBool AfxArchivedFileIsDirectory(afxArchive arc, afxUnit idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -427,7 +427,7 @@ _AFX afxBool AfxArchivedFileIsDirectory(afxArchive arc, afxUnit idx)
 
 _AFX afxError AfxDumpArchivedFile(afxArchive arc, afxUnit idx, afxUnit bufSiz, void *buf)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -452,7 +452,7 @@ _AFX afxError AfxDumpArchivedFile(afxArchive arc, afxUnit idx, afxUnit bufSiz, v
 
 _AFX afxError AfxForkArchivedFile(afxArchive arc, afxUnit idx, afxStream *ios)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -484,7 +484,7 @@ _AFX afxError AfxForkArchivedFile(afxArchive arc, afxUnit idx, afxStream *ios)
 
 _AFX afxError AfxDescribeArchivedFile(afxArchive arc, afxUnit idx, afxArchiveItemDescriptor *desc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -501,7 +501,7 @@ _AFX afxError AfxDescribeArchivedFile(afxArchive arc, afxUnit idx, afxArchiveIte
 
 _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxUnit idx, afxStream *in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -532,7 +532,7 @@ _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxUnit idx, afxStream *in)
 
 _AFX afxError AfxExtractArchivedFile(afxArchive arc, afxUnit idx, afxUri const *uri) // extract to file directory.
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -566,7 +566,7 @@ _AFX afxError AfxExtractArchivedFile(afxArchive arc, afxUnit idx, afxUri const *
 
 _AFX afxUnit AfxGetArchivedFileCodec(afxArchive arc, afxUnit idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -577,7 +577,7 @@ _AFX afxUnit AfxGetArchivedFileCodec(afxArchive arc, afxUnit idx)
 
 _AFX afxUnit AfxGetArchivedFileUncompressedSize(afxArchive arc, afxUnit idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -587,7 +587,7 @@ _AFX afxUnit AfxGetArchivedFileUncompressedSize(afxArchive arc, afxUnit idx)
 
 _AFX afxUnit32 AfxGetArchivedFileCrc(afxArchive arc, afxUnit idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -597,7 +597,7 @@ _AFX afxUnit32 AfxGetArchivedFileCrc(afxArchive arc, afxUnit idx)
 
 _AFX afxString* AfxGetArchivedFileName(afxArchive arc, afxUnit idx, afxUri *name)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AFX_ASSERT(idx < arc->entries.pop);
@@ -609,7 +609,7 @@ _AFX afxString* AfxGetArchivedFileName(afxArchive arc, afxUnit idx, afxUri *name
 
 _AFX afxError _AfxArcCtor(afxArchive arc, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     afxStorage fsys = args[0];
@@ -622,7 +622,7 @@ _AFX afxError _AfxArcCtor(afxArchive arc, void** args, afxUnit invokeNo)
 
 _AFX afxError _AfxArcDtor(afxArchive arc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ARC, 1, &arc);
 
     AfxEmptyArray(&arc->entries, FALSE, FALSE);
@@ -644,7 +644,7 @@ _AFX afxClassConfig const _AfxArcClsCfg =
 
 _AFX afxArchive AfxOpenArchive(afxUri const* uri, afxFileFlags const flags, afxError* error)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(uri);
     afxArchive arc = NIL;
 

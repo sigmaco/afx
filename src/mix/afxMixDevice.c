@@ -26,7 +26,7 @@
 #define _AMX_MIX_INPUT_C
 #define _AMX_SINK_C
 #define _AMX_MIX_SYSTEM_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 extern afxClassConfig const _AMX_ASIO_CLASS_CONFIG;
 AFX afxChain* _AfxGetSystemClassChain(void);
@@ -54,14 +54,14 @@ _AMX afxString const sigmaMixSignature = AFX_STRING(
 
 _AMX afxBool AmxIsMixDevicePrompt(afxMixDevice mdev)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
     return mdev->dev.serving;
 }
 
 _AMX afxError AmxDescribeMixDevice(afxMixDevice mdev, afxMixDeviceInfo* desc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
     AFX_ASSERT(desc);
 
@@ -82,7 +82,7 @@ _AMX afxError AmxDescribeMixDevice(afxMixDevice mdev, afxMixDeviceInfo* desc)
 
 _AMX void AmxQueryMixDeviceLimits(afxMixDevice mdev, afxMixLimits* limits)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
     AFX_ASSERT(limits);
     *limits = mdev->limits;
@@ -90,7 +90,7 @@ _AMX void AmxQueryMixDeviceLimits(afxMixDevice mdev, afxMixLimits* limits)
 
 _AMX void AmxQueryMixDeviceFeatures(afxMixDevice mdev, afxMixFeatures* features)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
     AFX_ASSERT(features);
     *features = mdev->features;
@@ -98,7 +98,7 @@ _AMX void AmxQueryMixDeviceFeatures(afxMixDevice mdev, afxMixFeatures* features)
 
 _AMX void AmxQueryMixCapabilities(afxMixDevice mdev, afxMixPortInfo* caps)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @mdev must be a valid afxMixDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
     //AFX_ASSERT_RANGE(mdev->portCnt, basePortIdx, portCnt);
@@ -116,7 +116,7 @@ _AMX void AmxQueryMixCapabilities(afxMixDevice mdev, afxMixPortInfo* caps)
 
 _AMX afxBool AmxIsMixDeviceAcceptable(afxMixDevice mdev, afxMixFeatures const* features, afxMixLimits const* limits)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @mdev must be a valid afxMixDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
     AFX_ASSERT(limits);
@@ -137,7 +137,7 @@ _AMX afxBool AmxIsMixDeviceAcceptable(afxMixDevice mdev, afxMixFeatures const* f
 
 _AMX afxError _AmxMdevDtorCb(afxMixDevice mdev)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
 
     AfxDeregisterChainedClasses(&mdev->dev.classes);
@@ -153,11 +153,11 @@ _AMX afxError _AmxMdevDtorCb(afxMixDevice mdev)
 
 _AMX afxError _AmxMdevCtorCb(afxMixDevice mdev, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxModule icd = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-    _amxMixDeviceRegistration const* info = ((_amxMixDeviceRegistration const *)args[1]) + invokeNo;
+    _amxMdevReg const* info = ((_amxMdevReg const *)args[1]) + invokeNo;
     AFX_ASSERT(info);
 
     if (_AFX_DEV_CLASS_CONFIG.ctor(&mdev->dev, (void*[]) { icd, (void*)&info->dev }, 0))
@@ -211,7 +211,7 @@ _AMX afxClassConfig const _AMX_MDEV_CLASS_CONFIG =
 
 _AMX afxUnit AmxInvokeMixDevices(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*, afxMixDevice), afxUnit cnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
     afxUnit rslt = 0;
@@ -230,7 +230,7 @@ _AMX afxUnit AmxInvokeMixDevices(afxUnit icd, afxUnit first, void *udd, afxBool(
 
 _AMX afxUnit AmxEvokeMixDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*,afxMixDevice), afxUnit cnt, afxMixDevice devices[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(devices);
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;
@@ -249,7 +249,7 @@ _AMX afxUnit AmxEvokeMixDevices(afxUnit icd, afxUnit first, void* udd, afxBool(*
 
 _AMX afxUnit AmxEnumerateMixDevices(afxUnit icd, afxUnit first, afxUnit cnt, afxMixDevice devices[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(devices);
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;
@@ -268,7 +268,7 @@ _AMX afxUnit AmxEnumerateMixDevices(afxUnit icd, afxUnit first, afxUnit cnt, afx
 
 _AMX afxUnit AmxChooseMixDevices(afxUnit icd, afxMixFeatures const* features, afxMixLimits const* limits, afxMixPortInfo const* caps, afxUnit maxCnt, afxUnit mdevId[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(limits);
     //AFX_ASSERT(features);
     afxUnit rslt = 0;
@@ -319,9 +319,9 @@ _AMX afxUnit AmxChooseMixDevices(afxUnit icd, afxMixFeatures const* features, af
     return rslt;
 }
 
-_AMX afxError _AmxRegisterMixDevices(afxModule icd, afxUnit cnt, _amxMixDeviceRegistration const infos[], afxMixDevice devices[])
+_AMX afxError _AmxRegisterMixDevices(afxModule icd, afxUnit cnt, _amxMdevReg const infos[], afxMixDevice devices[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     AFX_ASSERT(devices);
     AFX_ASSERT(infos);

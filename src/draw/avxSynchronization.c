@@ -19,11 +19,11 @@
 #define _AVX_DRAW_C
 #define _AVX_QUERY_POOL_C
 #define _AVX_DRAW_CONTEXT_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 _AVX afxCmdId AvxCmdDeclareDependency(afxDrawContext dctx, avxBusStage dstStage, avxPipelineAccess dstAcc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     afxCmdId cmdId;
@@ -36,7 +36,7 @@ _AVX afxCmdId AvxCmdDeclareDependency(afxDrawContext dctx, avxBusStage dstStage,
 
 _AVX afxCmdId AvxCmdDeclareBarrier(afxDrawContext dctx, avxBusStage dstStage, avxPipelineAccess dstAcc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     afxCmdId cmdId;
@@ -49,7 +49,7 @@ _AVX afxCmdId AvxCmdDeclareBarrier(afxDrawContext dctx, avxBusStage dstStage, av
 
 AVX afxCmdId AvxCmdBeginQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit slot, afxBool precise)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &pool);
     AFX_ASSERT_RANGE(pool->slotCnt, slot, 1);
@@ -65,7 +65,7 @@ AVX afxCmdId AvxCmdBeginQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit sl
 
 AVX afxCmdId AvxCmdEndQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit slot)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &pool);
     AFX_ASSERT_RANGE(pool->slotCnt, slot, 1);
@@ -80,7 +80,7 @@ AVX afxCmdId AvxCmdEndQuery(afxDrawContext dctx, avxQueryPool pool, afxUnit slot
 
 AVX afxCmdId AvxCmdCopyQueryResults(afxDrawContext dctx, avxQueryPool pool, afxUnit baseSlot, afxUnit slotCnt, avxBuffer buf, afxSize offset, afxSize stride, avxQueryResultFlags flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &pool);
     AFX_ASSERT_RANGE(pool->slotCnt, baseSlot, slotCnt);
@@ -102,7 +102,7 @@ AVX afxCmdId AvxCmdCopyQueryResults(afxDrawContext dctx, avxQueryPool pool, afxU
 
 AVX afxCmdId AvxCmdResetQueries(afxDrawContext dctx, avxQueryPool pool, afxUnit baseSlot, afxUnit slotCnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &pool);
     AFX_ASSERT_RANGE(pool->slotCnt, baseSlot, slotCnt);
@@ -118,7 +118,7 @@ AVX afxCmdId AvxCmdResetQueries(afxDrawContext dctx, avxQueryPool pool, afxUnit 
 
 AVX afxCmdId AvxCmdQueryTimestamp(afxDrawContext dctx, avxQueryPool pool, afxUnit slot, avxBusStage stage)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_OBJECTS(afxFcc_QRYP, 1, &pool);
     AFX_ASSERT_RANGE(pool->slotCnt, slot, 1);

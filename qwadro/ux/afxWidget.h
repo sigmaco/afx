@@ -87,17 +87,6 @@ AFX_DEFINE_STRUCT(afxStyle)
     int a;
 };
 
-AFX_DEFINE_STRUCT(afxLayout)
-{
-    struct
-    {
-        afxRect margin;
-        afxRect border;
-        afxRect padding;
-        afxUnit  wh[2];
-    };
-};
-
 AFX_DEFINE_STRUCT(afxWidgetStyle)
 {
     afxRect     rect;
@@ -108,25 +97,6 @@ AFX_DEFINE_STRUCT(afxWidgetStyle)
 AFX_DEFINE_STRUCT(afxWidgetVertex)
 {
     afxV2d      xy, uv;
-};
-
-/*
-    This layout engine can measure child sizes, arrange rows/columns with wrapping, respect margins and padding, and handle centering, stretching, shrinking.
-*/
-
-AFX_DEFINE_STRUCT(auxLayout)
-{
-    afxReal width, height;          // desired size (-1 for auto)
-    afxReal minWidth, minHeight;
-    afxReal maxWidth, maxHeight;
-
-    afxV4d margin;              // top, right, bottom, left
-    afxV4d padding;
-
-    afxInt expandX : 1;
-    afxInt expandY : 1;
-    afxInt alignX;                   // 0=left, 1=center, 2=right
-    afxInt alignY;                   // 0=top, 1=center, 2=bottom
 };
 
 AFX_DECLARE_STRUCT(afxWidgetImplementation);
@@ -149,10 +119,6 @@ AUX afxError AfxResetWidget(afxWidget wid);
 AUX afxError AfxDoWidgetInput(afxWidget wid);
 AUX afxError AfxDrawWidget(afxWidget wid, afxRect const* area, afxDrawContext dctx);
 
-AUX afxError AuxGuiAddCombo(afxWidget wid);
-AUX afxError AuxGuiAddToggle(afxWidget wid);
-AUX afxError AuxGuiAddSlider(afxWidget wid);
-
 AFX_DEFINE_STRUCT(auxButton)
 {
     afxUnit id;
@@ -163,13 +129,72 @@ AFX_DEFINE_STRUCT(auxButton)
     afxBool hidden;
 };
 
-AUX afxError AuxGuiAddButtons(afxWidget wid, afxUnit cnt, auxButton buttons[]);
+typedef enum auxLayoutDirection
+{
+    auxLayoutDirection_VERTICAL,
+    auxLayoutDirection_HORIZONTAL,
+    auxLayoutDirection_L2R,
+    auxLayoutDirection_T2B
+} auxLayoutDirection;
 
-AUX afxError AuxGuiPushGroup(afxWidget wid);
-AUX afxError AuxGuiPopGroup(afxWidget wid);
+AFX_DEFINE_STRUCT(afxButtonInfo)
+{
+    afxFlags flags;
+    afxString name;
+    afxString caption;
+    afxRect bounds;
+};
 
-AUX afxError AuxGuiBeginPanel(afxWidget wid, afxRect area, afxFlags flags, afxString const name);
-AUX afxError AuxGuiEndPanel(afxWidget wid);
+AFX_DEFINE_STRUCT(afxLabelInfo)
+{
+    afxFlags flags;
+    afxString name;
+    afxString caption;
+    afxRect bounds;
+};
+
+AFX_DEFINE_STRUCT(afxTextInputInfo)
+{
+    afxFlags flags;
+    afxString name;
+    afxString caption;
+    afxRect bounds;
+};
+
+AFX_DEFINE_STRUCT(afxCheckboxInfo)
+{
+    afxString caption;
+    afxString hint; // on_hover_text
+};
+
+AFX_DEFINE_STRUCT(afxPanelInfo)
+{
+    afxWidgetFlags flags2;
+    afxFlags flags;
+    afxString name;
+    afxString caption;
+    afxRect bounds;
+};
+
+AUX afxError AfxLockWidget(afxWidget wid);
+AUX afxError AfxUnlockWidget(afxWidget wid);
+
+AUX afxCmdId AfxGuiCommencePanel(afxWidget wid, afxPanelInfo const* info);
+AUX afxCmdId AfxGuiConcludePanel(afxWidget wid);
+
+AUX afxCmdId AfxGuiPushLayout(afxWidget wid, auxLayoutDirection dir);
+AUX afxCmdId AfxGuiPopLayout(afxWidget wid);
+
+AUX afxCmdId AfxGuiPushGroup(afxWidget wid, afxString const* caption);
+AUX afxCmdId AfxGuiPopGroup(afxWidget wid);
+
+AUX afxCmdId AfxGuiButton(afxWidget wid, afxButtonInfo const* info, afxUnit* optionIdx);
+AUX afxCmdId AfxGuiLabel(afxWidget wid, afxLabelInfo const* info);
+AUX afxCmdId AfxGuiTextInputInlined(afxWidget wid, afxTextInputInfo const* info);
+AUX afxCmdId AfxGuiCheckbox(afxWidget wid, afxCheckboxInfo const* info, afxBool* checked);
+
+AUX afxCmdId AfxGuiDisable(afxWidget wid);
+AUX afxCmdId AfxGuiSeparator(afxWidget wid);
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -19,7 +19,7 @@
 #define _AMX_MIX_C
 #define _AMX_BUFFER_C
 #define _AMX_AUDIO_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 AFX_DEFINE_STRUCT(amxSoundBank)
 {
@@ -99,7 +99,7 @@ _AMXINL afxReal AmxGetAudioDuration(amxAudio aud)
 
 _AMX void _AmxSanitizeAudioPeriod(amxAudio aud, amxAudioPeriod const* raw, amxAudioPeriod* san)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
     AFX_ASSERT(raw);
     AFX_ASSERT(san);
@@ -117,7 +117,7 @@ _AMX void _AmxSanitizeAudioPeriod(amxAudio aud, amxAudioPeriod const* raw, amxAu
 
 _AMX void _AmxSanitizeAudioCopy(amxAudio src, amxAudio dst, amxAudioCopy const* raw, amxAudioCopy* san)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &src);
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &dst);
     AFX_ASSERT(raw);
@@ -173,7 +173,7 @@ _AMX afxError AmxUpdateAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[]
 
 _AMX afxError AmxDumpAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], void* dst, avxFence signal)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
     AFX_ASSERT(((aud->bufFlags & avxBufferFlag_ACCESS) & avxBufferFlag_R));
     AFX_ASSERT(opCnt);
@@ -210,7 +210,7 @@ _AMX afxError AmxDumpAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], 
 
 _AMX afxError AmxUploadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], afxStream in, avxFence signal)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
 #if _AFX_DEBUG
@@ -242,7 +242,7 @@ _AMX afxError AmxUploadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[]
 
 _AMX afxError AmxDownloadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], afxStream out, avxFence signal)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
 #if _AFX_DEBUG
@@ -274,7 +274,7 @@ _AMX afxError AmxDownloadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops
 
 _AMX afxError AmxPrintAudio(amxAudio aud, amxAudioPeriod const* op, afxUri const* uri)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     if (!uri || AfxIsUriBlank(uri))
@@ -412,7 +412,7 @@ _AMX afxError AmxPrintAudio(amxAudio aud, amxAudioPeriod const* op, afxUri const
 
 _AMX afxError _AmxAudDtorCb(amxAudio aud)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_AUD, 1, &aud);
 
     afxMixSystem msys = AmxGetAudioHost(aud);
@@ -513,7 +513,7 @@ _AMX afxClassConfig const _AMX_AUD_CLASS_CONFIG =
 
 _AMX afxError AmxAcquireAudios(afxMixSystem msys, afxUnit cnt, amxAudioInfo const info[], amxAudio audios[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(audios);
     AFX_ASSERT(info);
@@ -532,7 +532,7 @@ _AMX afxError AmxAcquireAudios(afxMixSystem msys, afxUnit cnt, amxAudioInfo cons
 
 _AMX afxError AmxLoadAudios(afxMixSystem msys, afxUnit cnt, afxUri const uris[], amxAudio audios[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(audios);
     AFX_ASSERT(uris);

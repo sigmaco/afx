@@ -27,12 +27,12 @@
 #define _AMX_MIX_CONTEXT_C
 #define _AMX_TRACKER_C
 #define _AMX_AUDIO_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 #include "qwadro/mix/amxTracker.h"
 
 _AMX afxClass const* _AmxTraxGetVoxClass(amxTracker trax)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
     afxClass const* cls = &trax->voxCls;
     AFX_ASSERT_CLASS(cls, afxFcc_VOX);
@@ -41,7 +41,7 @@ _AMX afxClass const* _AmxTraxGetVoxClass(amxTracker trax)
 
 _AMX afxCmdId AmxBindIoStream(amxTracker trax, afxUnit pin, afxStream iob, afxSize offset, afxSize range, afxUnit stride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     trax->srcs[pin].type = afxFcc_IOB;
@@ -57,7 +57,7 @@ _AMX afxCmdId AmxBindIoStream(amxTracker trax, afxUnit pin, afxStream iob, afxSi
 
 _AMX afxCmdId AmxBindBufferedStream(amxTracker trax, afxUnit pin, amxBuffer buf, afxSize offset, afxSize range, afxUnit freq, amxFormat fmt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     trax->srcs[pin].type = afxFcc_MBUF;
@@ -74,7 +74,7 @@ _AMX afxCmdId AmxBindBufferedStream(amxTracker trax, afxUnit pin, amxBuffer buf,
 
 _AMX afxCmdId AmxBindAudioTrack(amxTracker trax, afxUnit track, amxAudio aud, afxUnit srcIdx, amxFormat fmt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     trax->tracks[track].type = afxFcc_AUD;
@@ -86,7 +86,7 @@ _AMX afxCmdId AmxBindAudioTrack(amxTracker trax, afxUnit track, amxAudio aud, af
 
 _AMX afxCmdId AmxBindBuffer(amxTracker trax, afxUnit bank, amxBuffer buf, afxUnit offset, afxUnit range, afxUnit freq)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     trax->banks[bank].type = afxFcc_MBUF;
@@ -97,7 +97,7 @@ _AMX afxCmdId AmxBindBuffer(amxTracker trax, afxUnit bank, amxBuffer buf, afxUni
 
 _AMX afxCmdId AmxBindAudio(amxTracker trax, afxUnit bank, amxAudio aud)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     trax->banks[bank].type = afxFcc_AUD;
@@ -106,14 +106,14 @@ _AMX afxCmdId AmxBindAudio(amxTracker trax, afxUnit bank, amxAudio aud)
 
 AMX afxCmdId AmxBindSink(amxTracker trax, afxSink sink)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
     trax->sink = sink;
 }
 
 _AMX afxError AmxStartTracker(amxTracker trax, afxBool resume)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     trax->playing = TRUE;
@@ -145,7 +145,7 @@ _AMX afxError AmxStartTracker(amxTracker trax, afxBool resume)
 
 _AMX afxError AmxStopTracker(amxTracker trax, afxBool suspend)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     trax->playing = suspend ? trax->playing : FALSE;
@@ -159,7 +159,7 @@ _AMX afxError AmxStopTracker(amxTracker trax, afxBool suspend)
 
 _AMX afxError AmxExhaustTracker(amxTracker trax, afxFlags flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     if (AmxStopTracker(trax, FALSE))
@@ -170,7 +170,7 @@ _AMX afxError AmxExhaustTracker(amxTracker trax, afxFlags flags)
 
 _AMX afxError _AmxTraxDtorCb(amxTracker trax)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     if (AmxExhaustTracker(trax, NIL))
@@ -184,7 +184,7 @@ _AMX afxError _AmxTraxDtorCb(amxTracker trax)
 
 _AMX afxError _AmxTraxCtorCb(amxTracker trax, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     afxMixSystem msys = args[0];
@@ -226,7 +226,7 @@ _AMX afxClassConfig const _AMX_TRAX_CLASS_CONFIG =
 
 _AMX afxError AmxAcquireTracker(afxMixSystem msys, amxTrackerConfig const* cfg, amxTracker* tracker)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(tracker);
 

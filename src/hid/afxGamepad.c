@@ -24,18 +24,18 @@
 #define _AUX_GAMEPAD_C
 #define _AUX_CONTROLLER_C
 #define _AFX_CONTEXT_C
-#include "../ux/impl/auxImplementation.h"
+#include "../ux/auxIcd.h"
 
 _AUX afxError _AuxCtrlDtor(afxController ctrl)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_CTRL, 1, &ctrl);
     return err;
 }
 
 _AUX afxResult _AuxCtrlCtor(afxController ctrl, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_CTRL, 1, &ctrl);
 
     afxUnit const *ports = args[0];
@@ -62,7 +62,7 @@ _AUX afxClassConfig const _AuxCtrlStdImplementation =
 #if 0
 _AUX afxError AfxAcquireControllers(afxUnit cnt, afxUnit const port[], afxController controllers[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxClass* cls = AfxGetControllerClass();
     AFX_ASSERT_CLASS(cls, afxFcc_CTRL);
 
@@ -95,7 +95,7 @@ _AUX afxError AfxAcquireControllers(afxUnit cnt, afxUnit const port[], afxContro
 
 _AUX afxController AfxGetController(afxUnit port)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxUnit i = 0;
     afxController ctrl;
     while (AfxEnumerateControllers(i, 1, &ctrl))

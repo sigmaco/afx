@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 // These are the common transfer operations. That is why they forbids inDrawScope and inVideoCoding.
 
@@ -26,7 +26,7 @@
 
 _AVX afxCmdId AvxCmdCopyBuffer(afxDrawContext dctx, avxBuffer dst, afxUnit opCnt, avxBufferCopy const ops[], avxBuffer src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -63,7 +63,7 @@ _AVX afxCmdId AvxCmdCopyBuffer(afxDrawContext dctx, avxBuffer dst, afxUnit opCnt
 
 _AVX afxCmdId AvxCmdFillBuffer(afxDrawContext dctx, avxBuffer buf, afxSize offset, afxUnit range, afxUnit value)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -101,7 +101,7 @@ _AVX afxCmdId AvxCmdFillBuffer(afxDrawContext dctx, avxBuffer buf, afxSize offse
 
 _AVX afxCmdId AvxCmdClearBuffer(afxDrawContext dctx, avxBuffer buf, afxSize offset, afxUnit range)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -134,7 +134,7 @@ _AVX afxCmdId AvxCmdClearBuffer(afxDrawContext dctx, avxBuffer buf, afxSize offs
 
 _AVX afxCmdId AvxCmdUpdateBuffer(afxDrawContext dctx, avxBuffer buf, afxSize offset, afxUnit range, void const* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -178,7 +178,7 @@ _AVX afxCmdId AvxCmdUpdateBuffer(afxDrawContext dctx, avxBuffer buf, afxSize off
 
 _AVX afxCmdId AvxCmdPackRaster(afxDrawContext dctx, avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], avxBuffer buf)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -223,7 +223,7 @@ _AVX afxCmdId AvxCmdPackRaster(afxDrawContext dctx, avxRaster ras, afxUnit opCnt
 
 _AVX afxCmdId AvxCmdUnpackRaster(afxDrawContext dctx, avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], avxBuffer buf)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -268,7 +268,7 @@ _AVX afxCmdId AvxCmdUnpackRaster(afxDrawContext dctx, avxRaster ras, afxUnit opC
 
 _AVX afxCmdId AvxCmdCopyRaster(afxDrawContext dctx, avxRaster dst, afxUnit opCnt, avxRasterCopy const ops[], avxRaster src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -316,7 +316,7 @@ _AVX afxCmdId AvxCmdCopyRaster(afxDrawContext dctx, avxRaster dst, afxUnit opCnt
 
 _AVX afxCmdId AvxCmdResolveRaster(afxDrawContext dctx, avxRaster dst, afxUnit opCnt, avxRasterCopy const ops[], avxRaster src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -363,7 +363,7 @@ _AVX afxCmdId AvxCmdResolveRaster(afxDrawContext dctx, avxRaster dst, afxUnit op
 
 _AVX afxCmdId AvxCmdBlitRaster(afxDrawContext dctx, avxRaster dst, afxUnit opCnt, avxRasterBlit const ops[], avxRaster src, avxTexelFilter flt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -412,7 +412,7 @@ _AVX afxCmdId AvxCmdBlitRaster(afxDrawContext dctx, avxRaster dst, afxUnit opCnt
 
 _AVX afxCmdId AvxCmdClearRaster(afxDrawContext dctx, avxRaster ras, avxClearValue const* value, afxUnit baseLod, afxUnit lodCnt, afxUnit baseLayer, afxUnit layerCnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -447,7 +447,7 @@ _AVX afxCmdId AvxCmdClearRaster(afxDrawContext dctx, avxRaster ras, avxClearValu
 
 _AVX afxCmdId AvxCmdRegenerateMipmapsSIGMA(afxDrawContext dctx, afxFlags flags, afxUnit rasCnt, avxRaster rasters[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.

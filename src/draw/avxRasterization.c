@@ -18,11 +18,11 @@
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 _AVXINL void AfxMinLayeredRect(afxLayeredRect* rc, afxLayeredRect const* a, afxLayeredRect const* b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(rc);
     AFX_ASSERT(b);
     AFX_ASSERT(a);
@@ -36,7 +36,7 @@ _AVXINL void AfxMinLayeredRect(afxLayeredRect* rc, afxLayeredRect const* a, afxL
 
 _AVXINL void AfxMaxLayeredRect(afxLayeredRect* rc, afxLayeredRect const* a, afxLayeredRect const* b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(rc);
     AFX_ASSERT(b);
     AFX_ASSERT(a);
@@ -50,7 +50,7 @@ _AVXINL void AfxMaxLayeredRect(afxLayeredRect* rc, afxLayeredRect const* a, afxL
 
 _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* cfg)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -82,10 +82,6 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
         cfg2.bounds.baseLayer = AFX_CLAMP(cfg->bounds.baseLayer, areaMax.baseLayer, areaMax.layerCnt - 1);
         cfg2.bounds.layerCnt = AFX_CLAMP(cfg->bounds.layerCnt, areaMax.baseLayer, areaMax.layerCnt);
     }
-
-    dctx->inDrawScope = TRUE;
-    dctx->canv = canv;
-    dctx->ccfg = cfg2;
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(CommenceDrawScope), sizeof(cmd->CommenceDrawScope) + (cfg2.targetCnt * sizeof(cmd->CommenceDrawScope.targets[0])), &cmdId);
@@ -123,12 +119,17 @@ _AVX afxCmdId AvxCmdCommenceDrawScope(afxDrawContext dctx, avxDrawScope const* c
     cmd->CommenceDrawScope.flags = cfg2.flags;
     cmd->CommenceDrawScope.dbgTag = cfg2.tag;
 
+    dctx->inDrawScope = TRUE;
+    dctx->inDrawScopeCmd = cmd;
+    dctx->canv = canv;
+    dctx->ccfg = cfg2;
+
     return cmdId;
 }
 
 _AVX afxCmdId AvxCmdConcludeDrawScope(afxDrawContext dctx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -144,6 +145,7 @@ _AVX afxCmdId AvxCmdConcludeDrawScope(afxDrawContext dctx)
     cmd->ConcludeDrawScope.nothing = NIL;
 
     dctx->inDrawScope = FALSE;
+    dctx->inDrawScopeCmd = cmd;
     dctx->canv = NIL;
     dctx->ccfg = (avxDrawScope) { 0 };
 
@@ -152,7 +154,7 @@ _AVX afxCmdId AvxCmdConcludeDrawScope(afxDrawContext dctx)
 
 _AVX afxCmdId AvxCmdClearCanvas(afxDrawContext dctx, afxUnit bufCnt, afxUnit const bins[], avxClearValue const values[], afxUnit areaCnt, afxLayeredRect const areas[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -184,7 +186,7 @@ _AVX afxCmdId AvxCmdClearCanvas(afxDrawContext dctx, afxUnit bufCnt, afxUnit con
 
 _AVX afxCmdId AvxCmdNextPass(afxDrawContext dctx, afxBool useAuxScripts)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -203,7 +205,7 @@ _AVX afxCmdId AvxCmdNextPass(afxDrawContext dctx, afxBool useAuxScripts)
 
 _AVX afxCmdId AvxCmdSwitchRasterization(afxDrawContext dctx, afxBool disabled)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -223,7 +225,7 @@ _AVX afxCmdId AvxCmdSwitchRasterization(afxDrawContext dctx, afxBool disabled)
 
 _AVX afxCmdId AvxCmdSetLineWidth(afxDrawContext dctx, afxReal lineWidth)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -240,7 +242,7 @@ _AVX afxCmdId AvxCmdSetLineWidth(afxDrawContext dctx, afxReal lineWidth)
 
 _AVX afxCmdId AvxCmdSwitchDepthBias(afxDrawContext dctx, afxBool enabled)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -260,7 +262,7 @@ _AVX afxCmdId AvxCmdSwitchDepthBias(afxDrawContext dctx, afxBool enabled)
 
 _AVX afxCmdId AvxCmdSetDepthBias(afxDrawContext dctx, afxReal constFactor, afxReal clamp, afxReal slopeFactor)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -279,7 +281,7 @@ _AVX afxCmdId AvxCmdSetDepthBias(afxDrawContext dctx, afxReal constFactor, afxRe
 
 _AVX afxCmdId AvxCmdSwitchDepthTesting(afxDrawContext dctx, afxBool enable)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -299,7 +301,7 @@ _AVX afxCmdId AvxCmdSwitchDepthTesting(afxDrawContext dctx, afxBool enable)
 
 _AVX afxCmdId AvxCmdSetDepthCompareOp(afxDrawContext dctx, avxCompareOp op)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -320,7 +322,7 @@ _AVX afxCmdId AvxCmdSetDepthCompareOp(afxDrawContext dctx, avxCompareOp op)
 
 _AVX afxCmdId AvxCmdSwitchDepthWrites(afxDrawContext dctx, afxBool disable)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -340,7 +342,7 @@ _AVX afxCmdId AvxCmdSwitchDepthWrites(afxDrawContext dctx, afxBool disable)
 
 _AVX afxCmdId AvxCmdSwitchStencilTesting(afxDrawContext dctx, afxBool enable)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -357,7 +359,7 @@ _AVX afxCmdId AvxCmdSwitchStencilTesting(afxDrawContext dctx, afxBool enable)
 
 _AVX afxCmdId AvxCmdSetStencilCompareMask(afxDrawContext dctx, avxFaceMask faceMask, afxMask compareMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -377,7 +379,7 @@ _AVX afxCmdId AvxCmdSetStencilCompareMask(afxDrawContext dctx, avxFaceMask faceM
 
 _AVX afxCmdId AvxCmdSetStencilWriteMask(afxDrawContext dctx, avxFaceMask faceMask, afxMask writeMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -397,7 +399,7 @@ _AVX afxCmdId AvxCmdSetStencilWriteMask(afxDrawContext dctx, avxFaceMask faceMas
 
 _AVX afxCmdId AvxCmdSetStencilReference(afxDrawContext dctx, avxFaceMask faceMask, afxUnit32 reference)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -417,7 +419,7 @@ _AVX afxCmdId AvxCmdSetStencilReference(afxDrawContext dctx, avxFaceMask faceMas
 
 _AVX afxCmdId AvxCmdSetStencilOp(afxDrawContext dctx, avxFaceMask faceMask, avxStencilOp failOp, avxStencilOp passOp, avxStencilOp depthFailOp, avxCompareOp compareOp)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -438,7 +440,7 @@ _AVX afxCmdId AvxCmdSetStencilOp(afxDrawContext dctx, avxFaceMask faceMask, avxS
 
 _AVX afxCmdId AvxCmdSwitchDepthBoundsTesting(afxDrawContext dctx, afxBool enable)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -458,7 +460,7 @@ _AVX afxCmdId AvxCmdSwitchDepthBoundsTesting(afxDrawContext dctx, afxBool enable
 
 _AVX afxCmdId AvxCmdSetDepthBounds(afxDrawContext dctx, afxV2d const bounds)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -475,7 +477,7 @@ _AVX afxCmdId AvxCmdSetDepthBounds(afxDrawContext dctx, afxV2d const bounds)
 
 _AVX afxCmdId AvxCmdSetBlendConstants(afxDrawContext dctx, afxV4d const blendConstants)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -492,7 +494,7 @@ _AVX afxCmdId AvxCmdSetBlendConstants(afxDrawContext dctx, afxV4d const blendCon
 
 _AVX afxCmdId AvxCmdAdjustScissors(afxDrawContext dctx, afxUnit baseIdx, afxUnit cnt, afxRect const rects[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.

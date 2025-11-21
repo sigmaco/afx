@@ -41,7 +41,7 @@ AFX_OBJECT(afxFile)
 
 _AFX afxBool _AfxIobEosFileCb(afxStream file)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
 
@@ -51,7 +51,7 @@ _AFX afxBool _AfxIobEosFileCb(afxStream file)
 
 _AFX afxError _AfxIobSeekFileCb(afxStream file, afxSize offset, afxSeekOrigin origin)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
 
@@ -68,7 +68,7 @@ _AFX afxError _AfxIobSeekFileCb(afxStream file, afxSize offset, afxSeekOrigin or
 
 _AFX afxUnit _AfxIobTellFileCb(afxStream file)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
     return ftell(file->idd.f.fd);
@@ -76,7 +76,7 @@ _AFX afxUnit _AfxIobTellFileCb(afxStream file)
 
 _AFX afxError _AfxIobWriteFileCb(afxStream file, void const* const src, afxUnit32 siz)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
     AFX_ASSERT(siz);
@@ -89,7 +89,7 @@ _AFX afxError _AfxIobWriteFileCb(afxStream file, void const* const src, afxUnit3
 
 _AFX afxError _AfxIobReadFileCb(afxStream file, void *dst, afxUnit32 siz)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
     AFX_ASSERT(siz);
@@ -109,7 +109,7 @@ _AFX afxError _AfxIobReadFileCb(afxStream file, void *dst, afxUnit32 siz)
 
 _AFX afxError _AfxIobDtorFileCb(afxStream file)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
 
@@ -145,7 +145,7 @@ afxIobImpl const fileStreamImpl =
 
 _AFX afxResult AfxFlushFileCache(afxStream file)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
     AFX_ASSERT(file->pimpl == &fileStreamImpl);
@@ -158,7 +158,7 @@ _AFX afxResult AfxFlushFileCache(afxStream file)
 
 _AFX afxError AfxReadFileLine(afxStream file, afxString* str)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
     AFX_ASSERT(file->pimpl == &fileStreamImpl);
@@ -176,7 +176,7 @@ _AFX afxError AfxReadFileLine(afxStream file, afxString* str)
 
 _AFX afxBool AfxTestFileFlags(afxStream file, afxFileFlags flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
     return file->flags & flags;
@@ -184,7 +184,7 @@ _AFX afxBool AfxTestFileFlags(afxStream file, afxFileFlags flags)
 
 _AFX afxBool AfxGetFileUri(afxStream file, afxUri* location)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
     AFX_ASSERT(location);
@@ -194,7 +194,7 @@ _AFX afxBool AfxGetFileUri(afxStream file, afxUri* location)
 
 _AFX afxBool AfxGetResolvedFileUri(afxStream file, afxUri* location)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(file->typeFcc == afxFcc_FILE);
     AFX_ASSERT(location);
@@ -205,7 +205,7 @@ _AFX afxBool AfxGetResolvedFileUri(afxStream file, afxUri* location)
 
 _AFX afxBool AfxTrackFileSegment(afxStream file, void const* at, afxUnit* segIdx)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     for (afxUnit i = 0; i < file->idd.f.segCnt; i++)
@@ -226,7 +226,7 @@ _AFX afxBool AfxTrackFileSegment(afxStream file, void const* at, afxUnit* segIdx
 
 _AFX void* AfxResolveFileReference(afxStream file, afxFileBlock const* ref)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT(ref);
     AFX_ASSERT_RANGE(file->idd.f.segCnt, ref->segIdx, 1);
@@ -236,7 +236,7 @@ _AFX void* AfxResolveFileReference(afxStream file, afxFileBlock const* ref)
 
 _AFX afxBool AfxOpenFileSegments(afxStream file, afxUnit baseSegIdx, afxUnit segCnt, afxStream in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT_RANGE(file->idd.f.segCnt, baseSegIdx, segCnt);
     afxBool ret = TRUE;
@@ -296,7 +296,7 @@ _AFX afxBool AfxOpenFileSegments(afxStream file, afxUnit baseSegIdx, afxUnit seg
 
 _AFX void AfxCloseFileSegments(afxStream file, afxUnit baseSegIdx, afxUnit segCnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
     AFX_ASSERT_RANGE(file->idd.f.segCnt, baseSegIdx, segCnt);
 
@@ -318,7 +318,7 @@ _AFX void AfxCloseFileSegments(afxStream file, afxUnit baseSegIdx, afxUnit segCn
 
 _AFX afxError AfxRealizeFileSegments(afxStream file, afxUnit32 baseSegOffset, afxUnit segCnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &file);
 
     if (!segCnt)
@@ -362,7 +362,7 @@ _AFX afxError AfxRealizeFileSegments(afxStream file, afxUnit32 baseSegOffset, af
 
 _AFX afxBool _AfxOpenFileCb(void* udd, afxUnit diskId, afxUnit endpointIdx, afxUri const* path, afxUri const* osPath)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool next = TRUE;
 
     afxUnit* diskIdVar = ((void**)udd)[0];
@@ -383,7 +383,7 @@ _AFX afxBool _AfxOpenFileCb(void* udd, afxUnit diskId, afxUnit endpointIdx, afxU
 
 _AFX afxError AfxReopenFile(afxStream iob, afxUri const* uri, afxFileFlags flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(uri);
 #ifdef _AFX_DBG_FILE
@@ -478,7 +478,7 @@ _AFX afxError AfxReopenFile(afxStream iob, afxUri const* uri, afxFileFlags flags
 
 _AFX afxError AfxReloadFile(afxStream iob, afxUri const* uri)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT2(uri, !AfxIsUriBlank(uri));
 
@@ -519,7 +519,7 @@ _AFX afxError AfxReloadFile(afxStream iob, afxUri const* uri)
 #if 0
 _AFX afxError AfxWrapFile(afxStream iob, void* fd, afxIoFlags flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(fd);
     afxStream file = NIL;
 
@@ -543,7 +543,7 @@ _AFX afxError AfxWrapFile(afxStream iob, void* fd, afxIoFlags flags)
 
 _AFX afxError AfxOpenFile(afxUri const* uri, afxFileFlags flags, afxStream* file)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 #ifdef _AFX_DBG_FILE
     AfxReportMessage("Opening... <%.*s>", AfxPushString(AfxGetUriString(uri)));
 #endif
@@ -584,7 +584,7 @@ _AFX afxError AfxOpenFile(afxUri const* uri, afxFileFlags flags, afxStream* file
 _AFX afxError AfxLoadFile(afxUri const* uri, afxStream* file)
 // will upload the entire file data into RAM and close the file.
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 #ifdef _AFX_DBG_FILE
     AfxReportMessage("Loading... <%.*s>", AfxPushString(AfxGetUriString(uri)));
 #endif

@@ -19,23 +19,18 @@
 #define _AUX_UX_C
 #define _AUX_WIDGET_C
 #define _AUX_WINDOW_C
-#include "impl/auxImplementation.h"
-
-_AUX afxCmdId AfxWidCommencePanel()
-{
-
-}
+#include "auxIcd.h"
 
 _AUX afxError AfxResetWidget(afxWidget wid)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     return err;
 }
 
 _AUX afxError AfxDoWidgetInput(afxWidget wid)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     afxWindow wnd = AfxGetHost(wid);
     afxEnvironment env = AfxGetHost(wnd);
@@ -45,14 +40,40 @@ _AUX afxError AfxDoWidgetInput(afxWidget wid)
 
 _AUX afxError AfxTestWidget(afxWidget wid)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
+
+    return err;
+}
+
+_AUX afxError AfxLockWidget(afxWidget wid)
+{
+    afxError err = { 0 };
+    AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
+    
+    // reset chain
+    AfxMakeChain(&wid->commands, wid);
+    // exhaust arena
+    if (wid->cmdArena.cleanupCnt > 3)
+        AfxExhaustArena(&wid->cmdArena);
+
+    wid->currNode = NIL;
+
+    return err;
+}
+
+_AUX afxError AfxUnlockWidget(afxWidget wid)
+{
+    afxError err = { 0 };
+    AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
+
+    wid->updateCb(wid, 0);
 
     return err;
 }
 
 _AUX afxError AfxDrawWidget(afxWidget wid, afxRect const* area, afxDrawContext dctx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
     wid->renderCb(wid, area, dctx);
     return err;
@@ -60,15 +81,17 @@ _AUX afxError AfxDrawWidget(afxWidget wid, afxRect const* area, afxDrawContext d
 
 _AUX afxError _AuxWidDtorCb(afxWidget wid)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
+
+    AfxDismantleArena(&wid->cmdArena);
 
     return err;
 }
 
 _AUX afxError _AuxWidCtorCb(afxWidget wid, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_WID, 1, &wid);
 
     afxWindow wnd = args[0];
@@ -82,6 +105,8 @@ _AUX afxError _AuxWidCtorCb(afxWidget wid, void** args, afxUnit invokeNo)
     afxDrawSystem dsys = AvxGetSurfaceHost(dout);
 
 
+    AfxMakeArena(&wid->cmdArena, NIL, AfxHere());
+    AfxMakeChain(&wid->commands, wid);
 
     return err;
 }
@@ -100,7 +125,7 @@ _AUX afxClassConfig const _AUX_WID_CLASS_CONFIG =
 
 _AUX afxError AfxAcquireWidgets(afxWindow wnd, afxUnit cnt, afxWidgetConfig const cfg[], afxWidget widgets[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
 
     afxClass* cls = (afxClass*)_AuxWndGetWidClass(wnd);

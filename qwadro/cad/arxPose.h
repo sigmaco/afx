@@ -53,6 +53,6 @@ AFX_DEFINE_STRUCT(arxPoseInfo)
     void*       udd;
 };
 
-ARX afxError    ArxAcquirePoses(arxRenderContext rctx, afxUnit cnt, arxPoseInfo const info[], arxPose lp[]);
+ARX afxError    ArxAcquirePoses(arxScenario scio, afxUnit cnt, arxPoseInfo const info[], arxPose lp[]);
 
 #endif//ARX_POSE_H

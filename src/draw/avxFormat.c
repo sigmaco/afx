@@ -16,7 +16,7 @@
 
 // This software is part of Advanced Video Graphics Extensions & Experiments.
 
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 afxUnit32 const sRgb8ToRealLut[256] =
 // lookup table for unorm8 srgb -> float conversion
@@ -866,7 +866,7 @@ _AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL] =
 
 _AVXINL void AvxDescribeFormats(afxUnit cnt, avxFormat const formats[], avxFormatDescription pfd[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(formats);
     AFX_ASSERT(pfd);
     AFX_ASSERT(cnt);
@@ -882,7 +882,7 @@ _AVXINL void AvxDescribeFormats(afxUnit cnt, avxFormat const formats[], avxForma
 
 _AVXINL afxUnit AvxChooseFormats(avxFormatDescription const* pfd, afxUnit maxCnt, avxFormat formats[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(formats);
     AFX_ASSERT(maxCnt);
     AFX_ASSERT(pfd);
@@ -970,7 +970,7 @@ _AVXINL afxUnit AvxChooseFormats(avxFormatDescription const* pfd, afxUnit maxCnt
 
 _AVXINL afxUnit AfxGetBpp(avxFormat fmt)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(fmt);
     AFX_ASSERT(avxFormat_TOTAL > fmt);
     
@@ -979,7 +979,7 @@ _AVXINL afxUnit AfxGetBpp(avxFormat fmt)
 
 _AVXINL afxBool AvxTestCombinedDsFormat(avxFormat fmt)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(fmt);
     AFX_ASSERT(avxFormat_TOTAL > fmt);
 
@@ -996,7 +996,7 @@ _AVXINL afxBool AvxTestCombinedDsFormat(avxFormat fmt)
 
 _AVXINL afxBool AvxTestDepthFormat(avxFormat fmt)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(fmt);
     AFX_ASSERT(avxFormat_TOTAL > fmt);
 
@@ -1016,7 +1016,7 @@ _AVXINL afxBool AvxTestDepthFormat(avxFormat fmt)
 
 _AVXINL afxBool AvxTestStencilFormat(avxFormat fmt)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(fmt);
     AFX_ASSERT(avxFormat_TOTAL > fmt);
 
@@ -1034,7 +1034,7 @@ _AVXINL afxBool AvxTestStencilFormat(avxFormat fmt)
 
 _AVXINL afxBool AvxTestSrgbFormat(avxFormat fmt)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(fmt);
     AFX_ASSERT(avxFormat_TOTAL > fmt);
     return _AvxStdPfds[fmt].flags & avxFormatFlag_sRGB;
@@ -1042,7 +1042,7 @@ _AVXINL afxBool AvxTestSrgbFormat(avxFormat fmt)
 
 _AVXINL afxBool AvxTestCompressedFormat(avxFormat fmt)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(fmt);
     AFX_ASSERT(avxFormat_TOTAL > fmt);
     return _AvxStdPfds[fmt].flags & avxFormatFlag_BC || (fmt >= avxFormat_DXT1un && fmt <= avxFormat_ASTC12v);
@@ -1306,7 +1306,7 @@ inline void transcode_pixel(const uint8_t* src, const avxFormatDescription* srcF
 
 _AVX void AvxTranscodeFormat(avxFormat srcFmt, avxFormat dstFmt, afxUnit cnt, void const* srcBuf, void* dstBuf, afxUnit srcStride, afxUnit dstStride)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     avxFormatDescription const* srcDesc = &_AvxStdPfds[srcFmt];
     avxFormatDescription const* dstDesc = &_AvxStdPfds[dstFmt];
 
@@ -1327,7 +1327,7 @@ _AVX void AvxConvertFormat(afxUnit32 rowSize, afxUnit32 rowCnt,
     void const* srcBuffer, afxUnit32 rowStrideSrc, avxFormat srcFmt, avxFormat dstFmt,
     void* dstBuffer, afxUnit32 rowStrideDst)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     avxFormatDescription const* srcDesc = &_AvxStdPfds[srcFmt];
     avxFormatDescription const* dstDesc = &_AvxStdPfds[dstFmt];
 

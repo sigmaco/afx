@@ -67,7 +67,7 @@ _AFX afxV4d const AFX_V4D_IDENTITY = { AFX_R(0), AFX_R(0), AFX_R(0), AFX_R(1) };
 
 _AFXINL void AfxFillV2d(afxV2d v, afxReal value)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     v[0] = value;
     v[1] = value;
@@ -75,7 +75,7 @@ _AFXINL void AfxFillV2d(afxV2d v, afxReal value)
 
 _AFXINL void AfxFillV3d(afxV3d v, afxReal value)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     v[0] = value;
     v[1] = value;
@@ -84,7 +84,7 @@ _AFXINL void AfxFillV3d(afxV3d v, afxReal value)
 
 _AFXINL void AfxFillV4d(afxV4d v, afxReal value)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     v[0] = value;
     v[1] = value;
@@ -96,21 +96,21 @@ _AFXINL void AfxFillV4d(afxV4d v, afxReal value)
 
 _AFXINL void AfxV2dZero(afxV2d v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AfxV2dCopy(v, AFX_V2D_ZERO);
 }
 
 _AFXINL void AfxV3dZero(afxV3d v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AfxV3dCopy(v, AFX_V3D_ZERO);
 }
 
 _AFXINL void AfxV4dZero(afxV4d v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AfxV4dCopy(v, AFX_V4D_ZERO);
 }
@@ -119,7 +119,7 @@ _AFXINL void AfxV4dZero(afxV4d v)
 
 _AFXINL void AfxV2dSet(afxV2d v, afxReal x, afxReal y)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     v[0] = x;
     v[1] = y;
@@ -127,7 +127,7 @@ _AFXINL void AfxV2dSet(afxV2d v, afxReal x, afxReal y)
 
 _AFXINL void AfxV3dSet(afxV3d v, afxReal x, afxReal y, afxReal z)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     v[0] = x;
     v[1] = y;
@@ -136,7 +136,7 @@ _AFXINL void AfxV3dSet(afxV3d v, afxReal x, afxReal y, afxReal z)
 
 _AFXINL void AfxV4dSet(afxV4d v, afxReal x, afxReal y, afxReal z, afxReal w)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     v[0] = x;
     v[1] = y;
@@ -148,7 +148,7 @@ _AFXINL void AfxV4dSet(afxV4d v, afxReal x, afxReal y, afxReal z, afxReal w)
 
 _AFXINL void AfxResetV4d(afxV4d v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AfxV4dCopy(v, AFX_V4D_W);
 }
@@ -168,7 +168,7 @@ _AFXINL afxBool AfxV4dIsIdentity(afxV4d const v)
 
 _AFXINL afxBool AfxV2dAreEquals(afxV2d const v, afxV2d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return  (AFX_R(v[0] < other[0] + AFX_EPSILON && v[0] > other[0] - AFX_EPSILON)) +
@@ -177,7 +177,7 @@ _AFXINL afxBool AfxV2dAreEquals(afxV2d const v, afxV2d const other)
 
 _AFXINL afxBool AfxV3dAreEquals(afxV3d const v, afxV3d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return  (AFX_R(v[0] < other[0] + AFX_EPSILON && v[0] > other[0] - AFX_EPSILON)) +
@@ -187,7 +187,7 @@ _AFXINL afxBool AfxV3dAreEquals(afxV3d const v, afxV3d const other)
 
 _AFXINL afxBool AfxV4dAreEquals(afxV4d const v, afxV4d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return  (AFX_R(v[0] < other[0] + AFX_EPSILON && v[0] > other[0] - AFX_EPSILON)) +
@@ -200,7 +200,7 @@ _AFXINL afxBool AfxV4dAreEquals(afxV4d const v, afxV4d const other)
 
 _AFXINL afxBool AfxV2dIsInBounds(afxV2d const v, afxV2d const bounds)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(bounds);
     return (((v[0] <= bounds[0] && v[0] >= -bounds[0]) && (v[1] <= bounds[1] && v[1] >= -bounds[1])) != 0);
@@ -208,7 +208,7 @@ _AFXINL afxBool AfxV2dIsInBounds(afxV2d const v, afxV2d const bounds)
 
 _AFXINL afxBool AfxV3dIsInBounds(afxV3d const v, afxV3d const bounds)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(bounds);
     return (((v[0] <= bounds[0] && v[0] >= -bounds[0]) && (v[1] <= bounds[1] && v[1] >= -bounds[1]) && (v[2] <= bounds[2] && v[2] >= -bounds[2])) != 0);
@@ -216,7 +216,7 @@ _AFXINL afxBool AfxV3dIsInBounds(afxV3d const v, afxV3d const bounds)
 
 _AFXINL afxBool AfxV4dIsInBounds(afxV4d const v, afxV4d const bounds)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(bounds);
     return (((v[0] <= bounds[0] && v[0] >= -bounds[0]) && (v[1] <= bounds[1] && v[1] >= -bounds[1]) && (v[2] <= bounds[2] && v[2] >= -bounds[2]) && (v[3] <= bounds[3] && v[3] >= -bounds[3])) != 0);
@@ -226,7 +226,7 @@ _AFXINL afxBool AfxV4dIsInBounds(afxV4d const v, afxV4d const bounds)
 
 _AFXINL afxBool AfxV2dIsLessOrEqual(afxV2d const v, afxV2d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return (((v[0] <= other[0]) && (v[1] <= other[1])) != 0);
@@ -234,7 +234,7 @@ _AFXINL afxBool AfxV2dIsLessOrEqual(afxV2d const v, afxV2d const other)
 
 _AFXINL afxBool AfxV3dIsLessOrEqual(afxV3d const v, afxV3d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return (((v[0] <= other[0]) && (v[1] <= other[1]) && (v[2] <= other[2])) != 0);
@@ -242,7 +242,7 @@ _AFXINL afxBool AfxV3dIsLessOrEqual(afxV3d const v, afxV3d const other)
 
 _AFXINL afxBool AfxV4dIsLessOrEqual(afxV4d const v, afxV4d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return (((v[0] <= other[0]) && (v[1] <= other[1]) && (v[2] <= other[2]) && (v[3] <= other[3])) != 0);
@@ -252,7 +252,7 @@ _AFXINL afxBool AfxV4dIsLessOrEqual(afxV4d const v, afxV4d const other)
 
 _AFXINL afxBool AfxV2dIsLessThan(afxV2d const v, afxV2d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return (((v[0] < other[0]) && (v[1] < other[1])) != 0);
@@ -260,7 +260,7 @@ _AFXINL afxBool AfxV2dIsLessThan(afxV2d const v, afxV2d const other)
 
 _AFXINL afxBool AfxV3dIsLessThan(afxV3d const v, afxV3d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return (((v[0] < other[0]) && (v[1] < other[1]) && (v[2] < other[2])) != 0);
@@ -268,7 +268,7 @@ _AFXINL afxBool AfxV3dIsLessThan(afxV3d const v, afxV3d const other)
 
 _AFXINL afxBool AfxV4dIsLessThan(afxV4d const v, afxV4d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return (((v[0] < other[0]) && (v[1] < other[1]) && (v[2] < other[2]) && (v[3] < other[3])) != 0);
@@ -278,21 +278,21 @@ _AFXINL afxBool AfxV4dIsLessThan(afxV4d const v, afxV4d const other)
 
 _AFXINL afxBool AfxV2dIsZero(afxV2d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return (AFX_R(0) == (v[0] + v[1]));
 }
 
 _AFXINL afxBool AfxV3dIsZero(afxV3d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return (AFX_R(0) == (v[0] + v[1] + v[2]));
 }
 
 _AFXINL afxBool AfxV4dIsZero(afxV4d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return (AFX_R(0) == (v[0] + v[1] + v[2] + v[3]));
 }
@@ -301,21 +301,21 @@ _AFXINL afxBool AfxV4dIsZero(afxV4d const v)
 
 _AFXINL afxBool AfxV2dIsInfinite(afxV2d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return (AfxIsInfinite(v[0]) ? 0xFFFFFFFFU : 0) | (AfxIsInfinite(v[1]) ? 0xFFFFFFFFU : 0);
 }
 
 _AFXINL afxBool AfxV3dIsInfinite(afxV3d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return (AfxIsInfinite(v[0]) ? 0xFFFFFFFFU : 0) | (AfxIsInfinite(v[1]) ? 0xFFFFFFFFU : 0) | (AfxIsInfinite(v[2]) ? 0xFFFFFFFFU : 0);
 }
 
 _AFXINL afxBool AfxV4dIsInfinite(afxV4d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return ((AfxIsInfinite(v[0])) ? 0xFFFFFFFFU : 0) | (AfxIsInfinite(v[1]) ? 0xFFFFFFFFU : 0) | (AfxIsInfinite(v[2]) ? 0xFFFFFFFFU : 0) | (AfxIsInfinite(v[3]) ? 0xFFFFFFFFU : 0);
 }
@@ -326,7 +326,7 @@ _AFXINL afxBool AfxV3dIsNormalized(afxV3d const v)
 {
     // From Crytek
 
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     afxReal f = AfxV3dMag(v);
     return f >= 0.95f && f <= 1.05f;
@@ -336,21 +336,21 @@ _AFXINL afxBool AfxV3dIsNormalized(afxV3d const v)
 
 _AFXINL afxBool AfxV2dIsNan(afxV2d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return (AfxIsNan(v[0]) || AfxIsNan(v[1]));
 }
 
 _AFXINL afxBool AfxV3dIsNan(afxV3d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return (AfxIsNan(v[0]) || AfxIsNan(v[1]) || AfxIsNan(v[2]));
 }
 
 _AFXINL afxBool AfxV4dIsNan(afxV4d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return (AfxIsNan(v[0]) || AfxIsNan(v[1]) || AfxIsNan(v[2]) || AfxIsNan(v[3]));
 }
@@ -365,7 +365,7 @@ _AFXINL afxBool AfxV4dIsNan(afxV4d const v)
 
 _AFXINL void AfxV2dCopy(afxV2d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(v, in);
@@ -375,7 +375,7 @@ _AFXINL void AfxV2dCopy(afxV2d v, afxV2d const in)
 
 _AFXINL void AfxV3dCopy(afxV3d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(v, in);
@@ -386,7 +386,7 @@ _AFXINL void AfxV3dCopy(afxV3d v, afxV3d const in)
 
 _AFXINL void AfxV4dCopy(afxV4d v, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(v, in);
@@ -398,7 +398,7 @@ _AFXINL void AfxV4dCopy(afxV4d v, afxV4d const in)
 
 _AFXINL void AfxCopyArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d out[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(out);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(out, in);
@@ -409,7 +409,7 @@ _AFXINL void AfxCopyArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d out[])
 
 _AFXINL void AfxCopyArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(out);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(out, in);
@@ -420,7 +420,7 @@ _AFXINL void AfxCopyArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[])
 
 _AFXINL void AfxCopyArrayedV4d(afxUnit cnt, afxV4d const in[], afxV4d out[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(out);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(out, in);
@@ -431,7 +431,7 @@ _AFXINL void AfxCopyArrayedV4d(afxUnit cnt, afxV4d const in[], afxV4d out[])
 
 _AFXINL void AfxV3dCopyAtv2d(afxV3d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(v, in);
@@ -442,7 +442,7 @@ _AFXINL void AfxV3dCopyAtv2d(afxV3d v, afxV2d const in)
 
 _AFXINL void AfxV4dCopyAtv3d(afxV4d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(v, in);
@@ -456,7 +456,7 @@ _AFXINL void AfxV4dCopyAtv3d(afxV4d v, afxV3d const in)
 
 _AFXINL void AfxV3dCopyV2d(afxV3d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(v, in);
@@ -467,7 +467,7 @@ _AFXINL void AfxV3dCopyV2d(afxV3d v, afxV2d const in)
 
 _AFXINL void AfxV4dCopyV2d(afxV4d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(v, in);
@@ -479,7 +479,7 @@ _AFXINL void AfxV4dCopyV2d(afxV4d v, afxV2d const in)
 
 _AFXINL void AfxV4dCopyV3d(afxV4d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     AFX_ASSERT_DIFF(v, in);
@@ -493,7 +493,7 @@ _AFXINL void AfxV4dCopyV3d(afxV4d v, afxV3d const in)
 
 _AFXINL void AfxSwapV2d(afxV2d v, afxV2d other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     AFX_ASSERT(v != other);
@@ -505,7 +505,7 @@ _AFXINL void AfxSwapV2d(afxV2d v, afxV2d other)
 
 _AFXINL void AfxSwapV3d(afxV3d v, afxV3d other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     AFX_ASSERT(v != other);
@@ -517,7 +517,7 @@ _AFXINL void AfxSwapV3d(afxV3d v, afxV3d other)
 
 _AFXINL void AfxSwapV4d(afxV4d v, afxV4d other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     AFX_ASSERT(v != other);
@@ -531,7 +531,7 @@ _AFXINL void AfxSwapV4d(afxV4d v, afxV4d other)
 
 _AFXINL afxReal AfxV2dNormalize(afxV2d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     afxReal len = AfxV2dMag(in);
@@ -545,7 +545,7 @@ _AFXINL afxReal AfxV2dNormalize(afxV2d v, afxV2d const in)
 
 _AFXINL afxReal AfxV3dNormalize(afxV3d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     afxReal len = AfxV3dMag(in);
@@ -559,7 +559,7 @@ _AFXINL afxReal AfxV3dNormalize(afxV3d v, afxV3d const in)
 
 _AFXINL afxReal AfxV4dNormalize(afxV4d v, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     afxReal len = AfxV4dMag(in);
@@ -575,7 +575,7 @@ _AFXINL afxReal AfxV4dNormalize(afxV4d v, afxV4d const in)
 
 _AFXINL afxReal AfxV3dNormalizeV4d(afxV3d v, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     afxReal len = AfxV4dMag(in);
@@ -589,7 +589,7 @@ _AFXINL afxReal AfxV3dNormalizeV4d(afxV3d v, afxV4d const in)
 
 _AFXINL afxReal AfxV4dNormalizeV3d(afxV4d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     afxReal len = AfxV3dMag(in);
@@ -605,7 +605,7 @@ _AFXINL afxReal AfxV4dNormalizeV3d(afxV4d v, afxV3d const in)
 
 _AFXINL afxReal AfxV2dNormalizeEstimated(afxV2d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     afxReal len = AfxV2dMagRecip(in);
@@ -615,7 +615,7 @@ _AFXINL afxReal AfxV2dNormalizeEstimated(afxV2d v, afxV2d const in)
 
 _AFXINL afxReal AfxV3dNormalizeEstimated(afxV3d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     afxReal len = AfxV3dMagRecip(in);
@@ -625,7 +625,7 @@ _AFXINL afxReal AfxV3dNormalizeEstimated(afxV3d v, afxV3d const in)
 
 _AFXINL afxReal AfxV4dNormalizeEstimated(afxV4d v, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     afxReal len = AfxV4dMagRecip(in);
@@ -635,7 +635,7 @@ _AFXINL afxReal AfxV4dNormalizeEstimated(afxV4d v, afxV4d const in)
 
 _AFXINL void AfxNormalizeArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d out[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(out);
 
@@ -645,7 +645,7 @@ _AFXINL void AfxNormalizeArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d out[]
 
 _AFXINL void AfxNormalizeArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(out);
 
@@ -655,7 +655,7 @@ _AFXINL void AfxNormalizeArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[]
 
 _AFXINL void AfxNormalizeArrayedV4d(afxUnit cnt, afxV4d const in[], afxV4d out[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(out);
 
@@ -665,7 +665,7 @@ _AFXINL void AfxNormalizeArrayedV4d(afxUnit cnt, afxV4d const in[], afxV4d out[]
 
 _AFXINL void AfxZeroOrNormalizeArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d out[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(out);
 
@@ -682,7 +682,7 @@ _AFXINL void AfxZeroOrNormalizeArrayedV2d(afxUnit cnt, afxV2d const in[], afxV2d
 
 _AFXINL void AfxZeroOrNormalizeArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d out[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(out);
 
@@ -699,7 +699,7 @@ _AFXINL void AfxZeroOrNormalizeArrayedV3d(afxUnit cnt, afxV3d const in[], afxV3d
 
 _AFXINL void AfxZeroOrNormalizeArrayedV4d(afxUnit cnt, afxV4d const in[], afxV4d out[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(out);
 
@@ -801,21 +801,21 @@ _AFXINL void AfxV4dSlerp(afxV4d v, afxV4d x, afxV4d y, afxReal t)
 
 _AFXINL afxReal AfxV2dSum(afxV2d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return v[0] + v[1];
 }
 
 _AFXINL afxReal AfxV3dSum(afxV3d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return v[0] + v[1] + v[2];
 }
 
 _AFXINL afxReal AfxV4dSum(afxV4d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return v[0] + v[1] + v[2] + v[3];
 }
@@ -824,7 +824,7 @@ _AFXINL afxReal AfxV4dSum(afxV4d const v)
 
 _AFXINL afxReal AfxV2dDot(afxV2d const v, afxV2d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return  (v[0] * other[0]) + 
@@ -833,7 +833,7 @@ _AFXINL afxReal AfxV2dDot(afxV2d const v, afxV2d const other)
 
 _AFXINL afxReal AfxV3dDot(afxV3d const v, afxV3d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return  (v[0] * other[0]) + 
@@ -843,7 +843,7 @@ _AFXINL afxReal AfxV3dDot(afxV3d const v, afxV3d const other)
 
 _AFXINL afxReal AfxV4dDot(afxV4d const v, afxV4d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return  (v[0] * other[0]) + 
@@ -857,7 +857,7 @@ _AFXINL afxReal AfxV4dDot(afxV4d const v, afxV4d const other)
 
 _AFXINL afxReal AfxV2dDist(afxV2d const v, afxV2d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return AfxSqrtf(
@@ -867,7 +867,7 @@ _AFXINL afxReal AfxV2dDist(afxV2d const v, afxV2d const other)
 
 _AFXINL afxReal AfxV3dDist(afxV3d const v, afxV3d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return AfxSqrtf(
@@ -878,7 +878,7 @@ _AFXINL afxReal AfxV3dDist(afxV3d const v, afxV3d const other)
 
 _AFXINL afxReal AfxV4dDist(afxV4d const v, afxV4d const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(other);
     return AfxSqrtf(
@@ -892,7 +892,7 @@ _AFXINL afxReal AfxV4dDist(afxV4d const v, afxV4d const other)
 
 _AFXINL void AfxV2dCross(afxV2d v, afxV2d const a, afxV2d const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
@@ -906,7 +906,7 @@ _AFXINL void AfxV2dCross(afxV2d v, afxV2d const a, afxV2d const b)
 
 _AFXINL void AfxV3dCross(afxV3d v, afxV3d const a, afxV3d const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
@@ -920,7 +920,7 @@ _AFXINL void AfxV3dCross(afxV3d v, afxV3d const a, afxV3d const b)
 
 _AFXINL void AfxV4dCross(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
@@ -937,21 +937,21 @@ _AFXINL void AfxV4dCross(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const 
 
 _AFXINL afxReal AfxV2dSq(afxV2d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return AfxV2dDot(v, v);
 }
 
 _AFXINL afxReal AfxV3dSq(afxV3d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return AfxV3dDot(v, v);
 }
 
 _AFXINL afxReal AfxV4dSq(afxV4d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return AfxV4dDot(v, v);
 }
@@ -960,21 +960,21 @@ _AFXINL afxReal AfxV4dSq(afxV4d const v)
 
 _AFXINL afxReal AfxV2dMag(afxV2d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return AfxSqrtf(AfxV2dSq(v));
 }
 
 _AFXINL afxReal AfxV3dMag(afxV3d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return AfxSqrtf(AfxV3dSq(v));
 }
 
 _AFXINL afxReal AfxV4dMag(afxV4d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return AfxSqrtf(AfxV4dSq(v));
 }
@@ -983,21 +983,21 @@ _AFXINL afxReal AfxV4dMag(afxV4d const v)
 
 _AFXINL afxReal AfxV2dMagRecip(afxV2d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return AfxRsqrtf(AfxV2dSq(v));
 }
 
 _AFXINL afxReal AfxV3dMagRecip(afxV3d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return AfxRsqrtf(AfxV3dSq(v));
 }
 
 _AFXINL afxReal AfxV4dMagRecip(afxV4d const v)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     return AfxRsqrtf(AfxV4dSq(v));
 }
@@ -1011,7 +1011,7 @@ _AFXINL afxReal AfxV4dMagRecip(afxV4d const v)
 
 _AFXINL void AfxV2dPostMultiplyM2d(afxV2d v, afxM2d const m, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(in);
     AFX_ASSERT(v);
@@ -1025,7 +1025,7 @@ _AFXINL void AfxV2dPostMultiplyM2d(afxV2d v, afxM2d const m, afxV2d const in)
 
 _AFXINL void AfxV3dPostMultiplyM3d(afxV3d v, afxM3d const m, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(m);
     AFX_ASSERT(in);
@@ -1041,7 +1041,7 @@ _AFXINL void AfxV3dPostMultiplyM3d(afxV3d v, afxM3d const m, afxV3d const in)
 
 _AFXINL void AfxV4dPostMultiplyM4d(afxV4d v, afxM4d const m, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(m);
     AFX_ASSERT(in);
@@ -1058,7 +1058,7 @@ _AFXINL void AfxV4dPostMultiplyM4d(afxV4d v, afxM4d const m, afxV4d const in)
 
 _AFXINL void AfxV3dPostMultiplyLtm4d(afxV3d v, afxM4d const m, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(m);
     AFX_ASSERT(in);
@@ -1074,7 +1074,7 @@ _AFXINL void AfxV3dPostMultiplyLtm4d(afxV3d v, afxM4d const m, afxV3d const in)
 
 _AFXINL void AfxV4dPostMultiplyM3d(afxV4d v, afxM3d const m, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(m);
     AFX_ASSERT(in);
@@ -1103,7 +1103,7 @@ _AFXINL void TransposeVectorTransform4x3(afxV3d Dest, float D3, afxM4d const Tra
 
 _AFXINL void AfxV2dPostMultiplyAtm4d(afxV2d v, afxM4d const m, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(in);
     AFX_ASSERT(v);
@@ -1118,7 +1118,7 @@ _AFXINL void AfxV2dPostMultiplyAtm4d(afxV2d v, afxM4d const m, afxV2d const in)
 
 _AFXINL void AfxV3dPostMultiplyAtm4d(afxV3d v, afxM4d const m, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(m);
     AFX_ASSERT(in);
@@ -1134,7 +1134,7 @@ _AFXINL void AfxV3dPostMultiplyAtm4d(afxV3d v, afxM4d const m, afxV3d const in)
 
 _AFXINL void AfxV4dPostMultiplyAtm4d(afxV4d v, afxM4d const m, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(m);
     AFX_ASSERT(in);
@@ -1153,7 +1153,7 @@ _AFXINL void AfxV4dPostMultiplyAtm4d(afxV4d v, afxM4d const m, afxV4d const in)
 
 _AFXINL void AfxV2dPreMultiplyM2d(afxV2d v, afxV2d const in, afxM2d const m)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(m);
     AFX_ASSERT(v);
@@ -1168,7 +1168,7 @@ _AFXINL void AfxV2dPreMultiplyM2d(afxV2d v, afxV2d const in, afxM2d const m)
 
 _AFXINL void AfxV3dPreMultiplyM3d(afxV3d v, afxV3d const in, afxM3d const m)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(m);
     AFX_ASSERT(v);
@@ -1184,7 +1184,7 @@ _AFXINL void AfxV3dPreMultiplyM3d(afxV3d v, afxV3d const in, afxM3d const m)
 
 _AFXINL void AfxV4dPreMultiplyM4d(afxV4d v, afxV4d const in, afxM4d const m)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(m);
     AFX_ASSERT(v);
@@ -1205,7 +1205,7 @@ _AFXINL void AfxV4dPreMultiplyM4d(afxV4d v, afxV4d const in, afxM4d const m)
 
 _AFXINL void AfxV3dPreMultiplyLtm4d(afxV3d v, afxV3d const in, afxM4d const m)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(m);
     AFX_ASSERT(v);
@@ -1221,7 +1221,7 @@ _AFXINL void AfxV3dPreMultiplyLtm4d(afxV3d v, afxV3d const in, afxM4d const m)
 
 _AFXINL void AfxV4dPreMultiplyM3d(afxV4d v, afxV4d const in, afxM3d const m)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(m);
     AFX_ASSERT(v);
@@ -1238,7 +1238,7 @@ _AFXINL void AfxV4dPreMultiplyM3d(afxV4d v, afxV4d const in, afxM3d const m)
 
 _AFXINL void AfxV2dPreMultiplyAtm4d(afxV2d v, afxV2d const in, afxM4d const m)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(m);
     AFX_ASSERT(v);
@@ -1253,7 +1253,7 @@ _AFXINL void AfxV2dPreMultiplyAtm4d(afxV2d v, afxV2d const in, afxM4d const m)
 
 _AFXINL void AfxV3dPreMultiplyAtm4d(afxV3d v, afxV3d const in, afxM4d const m)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(m);
     AFX_ASSERT(v);
@@ -1269,7 +1269,7 @@ _AFXINL void AfxV3dPreMultiplyAtm4d(afxV3d v, afxV3d const in, afxM4d const m)
 
 _AFXINL void AfxV4dPreMultiplyAtm4d(afxV4d v, afxV4d const in, afxM4d const m)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(m);
     AFX_ASSERT(v);
@@ -1288,7 +1288,7 @@ _AFXINL void AfxV4dPreMultiplyAtm4d(afxV4d v, afxV4d const in, afxM4d const m)
 
 _AFXINL void AfxAssimilateAtv3d(afxM3d const ltm, afxV4d const atv, afxUnit cnt, afxV3d const in[], afxV3d out[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(atv);
     AFX_ASSERT(ltm);
     AFX_ASSERT(cnt);
@@ -1306,7 +1306,7 @@ _AFXINL void AfxAssimilateAtv3d(afxM3d const ltm, afxV4d const atv, afxUnit cnt,
 _AFXINL void AfxAssimilateAtv4d(afxM3d const ltm, afxV4d const atv, afxUnit cnt, afxV4d const in[], afxV4d out[])
 {
     // inspired on AfxAssimilateAtv3d
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(atv);
     AFX_ASSERT(ltm);
     AFX_ASSERT(cnt);

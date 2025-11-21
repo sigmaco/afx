@@ -28,11 +28,11 @@
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
 #define _AMX_AUDIO_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 _AMX afxCmdId AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -62,7 +62,7 @@ _AMX afxCmdId AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope
 
 _AMX afxCmdId AmxCmdConcludeMixScope(afxMixContext mix)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -77,7 +77,7 @@ _AMX afxCmdId AmxCmdConcludeMixScope(afxMixContext mix)
 
 _AMX afxCmdId AmxCmdReverb(afxMixContext mix, afxUnit voice, afxReal wetMix, afxReal roomSiz, afxReal width, afxReal damp, afxReal dryMix)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -98,7 +98,7 @@ _AMX afxCmdId AmxCmdReverb(afxMixContext mix, afxUnit voice, afxReal wetMix, afx
 
 _AMX afxCmdId AmxCmdPhaser(afxMixContext mix, afxUnit voice, afxReal floor, afxReal ceil, afxReal rate, afxReal feedback, afxReal depth, afxReal phase, afxUnit stageCnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -121,7 +121,7 @@ _AMX afxCmdId AmxCmdPhaser(afxMixContext mix, afxUnit voice, afxReal floor, afxR
 
 _AMX afxCmdId AmxCmdGainer(afxMixContext mix, afxUnit voice, afxReal gain, afxReal pan, afxMask invChan)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -140,7 +140,7 @@ _AMX afxCmdId AmxCmdGainer(afxMixContext mix, afxUnit voice, afxReal gain, afxRe
 
 _AMX afxCmdId AmxCmdFlanger(afxMixContext mix, afxUnit voice, afxReal amount, afxReal rate, afxReal amplitude, afxReal feedback, afxReal delay, afxReal phase, afxUnit flt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -163,7 +163,7 @@ _AMX afxCmdId AmxCmdFlanger(afxMixContext mix, afxUnit voice, afxReal amount, af
 
 _AMX afxCmdId AmxCmdAnalog(afxMixContext mix, afxUnit voice, afxUnit type, afxUnit flt, afxReal cutoff, afxReal resonance, afxReal inertia, afxReal drive, afxUnit oversamp, afxReal start, afxReal end)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -188,7 +188,7 @@ _AMX afxCmdId AmxCmdAnalog(afxMixContext mix, afxUnit voice, afxUnit type, afxUn
 
 _AMX afxCmdId AmxCmdCompressor(afxMixContext mix, afxUnit voice, afxReal threshold, afxReal ratio, afxReal attack, afxReal release, afxReal makeup)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -209,7 +209,7 @@ _AMX afxCmdId AmxCmdCompressor(afxMixContext mix, afxUnit voice, afxReal thresho
 
 _AMX afxCmdId AmxCmdLineIn(afxMixContext mix, afxUnit voice, afxUnit line, afxMask chanMask, afxUnit latency, afxReal pan, afxReal vol)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -230,7 +230,7 @@ _AMX afxCmdId AmxCmdLineIn(afxMixContext mix, afxUnit voice, afxUnit line, afxMa
 
 _AMX afxCmdId AmxCmdRemoteIn(afxMixContext mix, afxUnit voice, afxUnit src, afxMask chanMask, afxReal pan, afxReal vol)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -250,7 +250,7 @@ _AMX afxCmdId AmxCmdRemoteIn(afxMixContext mix, afxUnit voice, afxUnit src, afxM
 
 _AMX afxCmdId AmxCmdSend(afxMixContext mix, afxUnit voice, afxBool muteSrc, afxReal amount, afxReal pan, afxUnit receiverSubmix)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -270,7 +270,7 @@ _AMX afxCmdId AmxCmdSend(afxMixContext mix, afxUnit voice, afxBool muteSrc, afxR
 
 _AMX afxCmdId AmxCmdResampleAudio(afxMixContext mix, amxAudio src, amxAudio dst, amxAudioPeriod const* srcp, amxAudioPeriod const* dstp)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -302,7 +302,7 @@ _AMX afxCmdId AmxCmdResampleAudio(afxMixContext mix, amxAudio src, amxAudio dst,
 
 _AMX afxCmdId AmxCmdFetchAudition(afxMixContext mix, afxUnit voice, afxUnit headIdx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.
@@ -319,7 +319,7 @@ _AMX afxCmdId AmxCmdFetchAudition(afxMixContext mix, afxUnit voice, afxUnit head
 
 _AMX afxCmdId AmxCmdDeclareTimelineBarrier(afxMixContext mix, afxReal time)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     // mix must be in the recording state.

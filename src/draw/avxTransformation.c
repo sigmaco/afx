@@ -18,11 +18,11 @@
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 _AVX afxCmdId AvxCmdUseVertexInput(afxDrawContext dctx, avxVertexInput vin)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -45,7 +45,7 @@ _AVX afxCmdId AvxCmdUseVertexInput(afxDrawContext dctx, avxVertexInput vin)
 
 _AVX afxCmdId AvxCmdBindVertexBuffers(afxDrawContext dctx, afxUnit basePin, afxUnit cnt, avxBufferedStream const streams[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
 #if AVX_VALIDATION_ENABLED
     // dctx must be a valid afxDrawContext handle.
@@ -127,7 +127,7 @@ _AVX afxCmdId AvxCmdBindVertexBuffers(afxDrawContext dctx, afxUnit basePin, afxU
 
 _AVX afxCmdId AvxCmdBindIndexBuffer(afxDrawContext dctx, avxBuffer buf, afxUnit32 offset, afxUnit32 range, afxUnit32 idxSiz)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
@@ -195,7 +195,7 @@ _AVX afxCmdId AvxCmdBindIndexBuffer(afxDrawContext dctx, avxBuffer buf, afxUnit3
 
 _AVX afxCmdId AvxCmdSwitchFrontFace(afxDrawContext dctx, afxBool cw)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -215,7 +215,7 @@ _AVX afxCmdId AvxCmdSwitchFrontFace(afxDrawContext dctx, afxBool cw)
 
 _AVX afxCmdId AvxCmdChangeCullMode(afxDrawContext dctx, avxCullMode mode)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -236,7 +236,7 @@ _AVX afxCmdId AvxCmdChangeCullMode(afxDrawContext dctx, avxCullMode mode)
 
 _AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUnit cnt, avxViewport const viewports[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -295,7 +295,7 @@ _AVX afxCmdId AvxCmdAdjustViewports(afxDrawContext dctx, afxUnit baseIdx, afxUni
 
 _AVX afxCmdId AvxCmdSetPrimitiveTopology(afxDrawContext dctx, avxTopology topology)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -315,7 +315,7 @@ _AVX afxCmdId AvxCmdSetPrimitiveTopology(afxDrawContext dctx, avxTopology topolo
 
 _AVX afxCmdId AvxCmdChangeFillModeEXT(afxDrawContext dctx, avxFillMode mode)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.

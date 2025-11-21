@@ -23,7 +23,7 @@
 
 _AFXINL void AfxV2dNdc(afxV2d v, afxV2d const from, afxV2d const total)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(from);
     AFX_ASSERT(total);
@@ -33,7 +33,7 @@ _AFXINL void AfxV2dNdc(afxV2d v, afxV2d const from, afxV2d const total)
 
 _AFXINL void AfxV2dUnndc(afxV2d v, afxV2d const from, afxV2d const total)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(from);
     AFX_ASSERT(total);

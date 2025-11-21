@@ -70,7 +70,7 @@ _AFXINL afxReal AfxSinf(afxReal radians)
 
 _AFXINL void AfxSinV2d(afxV2d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxSinf(in[0]);
@@ -79,7 +79,7 @@ _AFXINL void AfxSinV2d(afxV2d v, afxV2d const in)
 
 _AFXINL void AfxSinV3d(afxV3d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxSinf(in[0]);
@@ -89,7 +89,7 @@ _AFXINL void AfxSinV3d(afxV3d v, afxV3d const in)
 
 _AFXINL void AfxSinV4d(afxV4d v, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxSinf(in[0]);
@@ -114,7 +114,7 @@ _AFXINL afxReal AfxCosf(afxReal radians)
 
 _AFXINL void AfxCosV2d(afxV2d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxCosf(in[0]);
@@ -123,7 +123,7 @@ _AFXINL void AfxCosV2d(afxV2d v, afxV2d const in)
 
 _AFXINL void AfxCosV3d(afxV3d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxCosf(in[0]);
@@ -133,7 +133,7 @@ _AFXINL void AfxCosV3d(afxV3d v, afxV3d const in)
 
 _AFXINL void AfxCosV4d(afxV4d v, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxCosf(in[0]);
@@ -172,7 +172,7 @@ _AFXINL afxReal AfxTanf(afxReal radians)
 
 _AFXINL void AfxTanV2d(afxV2d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxTanf(in[0]);
@@ -181,7 +181,7 @@ _AFXINL void AfxTanV2d(afxV2d v, afxV2d const in)
 
 _AFXINL void AfxTanV3d(afxV3d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxTanf(in[0]);
@@ -191,7 +191,7 @@ _AFXINL void AfxTanV3d(afxV3d v, afxV3d const in)
 
 _AFXINL void AfxTanV4d(afxV4d v, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxTanf(in[0]);
@@ -232,7 +232,7 @@ _AFXINL afxReal AfxAcosf(afxReal x)
 
 _AFXINL void AfxAcosV2d(afxV2d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxAcosf(in[0]);
@@ -241,7 +241,7 @@ _AFXINL void AfxAcosV2d(afxV2d v, afxV2d const in)
 
 _AFXINL void AfxAcosV3d(afxV3d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxAcosf(in[0]);
@@ -251,7 +251,7 @@ _AFXINL void AfxAcosV3d(afxV3d v, afxV3d const in)
 
 _AFXINL void AfxAcosV4d(afxV4d v, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxAcosf(in[0]);
@@ -277,7 +277,7 @@ _AFXINL afxReal AfxAtanf(afxReal y_over_x)
 
 _AFXINL void AfxAtanV2d(afxV2d v, afxV2d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxAtanf(in[0]);
@@ -286,7 +286,7 @@ _AFXINL void AfxAtanV2d(afxV2d v, afxV2d const in)
 
 _AFXINL void AfxAtanV3d(afxV3d v, afxV3d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxAtanf(in[0]);
@@ -296,7 +296,7 @@ _AFXINL void AfxAtanV3d(afxV3d v, afxV3d const in)
 
 _AFXINL void AfxAtanV4d(afxV4d v, afxV4d const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(in);
     v[0] = AfxAtanf(in[0]);

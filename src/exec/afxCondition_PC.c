@@ -28,17 +28,17 @@
 #define _CONDITION_EVENT_ALL 1
 #endif
 
-AFX_STATIC_ASSERT(sizeof(cnd_t) <= sizeof(afxCondition), "");
+AFX_STATIC_ASSERT(sizeof(afxCondition) >= sizeof(cnd_t), "");
 
 _AFX void AfxDismantleCondition(afxCondition* cond)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     cnd_destroy((cnd_t*)cond);
 }
 
 _AFX afxError AfxDeployCondition(afxCondition* cond)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     switch (cnd_init((cnd_t*)cond))
     {
@@ -53,7 +53,7 @@ _AFX afxError AfxDeployCondition(afxCondition* cond)
 
 _AFX afxError AfxSignalCondition(afxCondition* cond)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     
     switch (cnd_signal((cnd_t*)cond))
     {
@@ -67,7 +67,7 @@ _AFX afxError AfxSignalCondition(afxCondition* cond)
 
 _AFX afxError AfxSignalCondition2(afxCondition* cond)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     
     switch (cnd_broadcast((cnd_t*)cond))
     {
@@ -81,7 +81,7 @@ _AFX afxError AfxSignalCondition2(afxCondition* cond)
 
 _AFX afxError AfxWaitCondition(afxCondition* cond, afxMutex* mtx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     switch (cnd_wait((cnd_t*)cond, (mtx_t*)mtx))
     {
@@ -95,7 +95,7 @@ _AFX afxError AfxWaitCondition(afxCondition* cond, afxMutex* mtx)
 
 _AFX afxError AfxWaitTimedCondition(afxCondition* cond, afxMutex* mtx, afxTimeSpec const* ts)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     switch (cnd_timedwait((cnd_t*)cond, (mtx_t*)mtx, (struct timespec const*)ts))
     {

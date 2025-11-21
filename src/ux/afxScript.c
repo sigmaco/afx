@@ -17,7 +17,7 @@
 #define _AUX_UX_C
 #define _AUX_SCRIPT_C
 #define _AUX_ENVIRONMENT_C
-#include "src/ux/impl/auxImplementation.h"
+#include "src/ux/auxIcd.h"
 #include "../impl/afxIoImplKit.h"
 #include "../qwadro_xss/src/xss.h"
 #include "qwadro/ux/afxScript.h"
@@ -225,7 +225,7 @@ _AFX afxError XssCall(xssVm vm, afxHandle method)
 
 _AFX void AfxGetScriptTime(afxScript xss, afxReal64* ct, afxReal64* dt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XSS, 1, &xss);
     afxClock currClock;
     AfxGetClock(&currClock);
@@ -239,7 +239,7 @@ _AFX void AfxGetScriptTime(afxScript xss, afxReal64* ct, afxReal64* dt)
 #if 0
 _AFX afxBool _AfxXssEvent(afxScript xss, afxEvent *ev)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XSS, 1, &xss);
 
     switch (ev->id)
@@ -283,7 +283,7 @@ _AFX afxBool _AfxXssEvent(afxScript xss, afxEvent *ev)
 
 _AFX afxError _AuxXssDtorCb(afxScript xss)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XSS, 1, &xss);
 
     if (xss->vm)
@@ -294,7 +294,7 @@ _AFX afxError _AuxXssDtorCb(afxScript xss)
 
 _AFX afxError _AuxXssCtorCb(afxScript xss, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XSS, 1, &xss);
 
     afxShell sh = args[0];
@@ -332,7 +332,7 @@ _AFX afxClassConfig const _AUX_XSS_CLASS_CONFIG =
 #if 0
 _AFX afxError AfxAcquireScript(afxString const* domain, afxString const* code, afxScript* script)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxShell sh;
     AfxGetShell(&sh);
@@ -391,7 +391,7 @@ _AFX afxError AfxAcquireScript(afxString const* domain, afxString const* code, a
 
 _AFX afxError AfxLoadScript(afxEnvironment env, afxString const* scope, afxUri const* uri)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(uri);
 
     afxString scope2;
@@ -457,7 +457,7 @@ _AFX afxError AfxLoadScript(afxEnvironment env, afxString const* scope, afxUri c
 #if 0
 _AFX afxResult AfxRunScript(afxScript xss, afxUri const* uri)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XSS, 1, &xss);
 
     if (uri)
@@ -501,7 +501,7 @@ _AFX afxResult AfxRunScript(afxScript xss, afxUri const* uri)
 
 _AFX afxResult AfxInjectScript(afxEnvironment env, afxString const* scope, afxString const* code)
 {
-    afxError err = 0;
+    afxError err = { 0 };
 
     afxString32 scope2;
     AfxMakeString32(&scope2, scope);

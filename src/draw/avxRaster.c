@@ -19,7 +19,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_RASTER_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
  // 1d               =   1 x w11 >> lod
  // 1d array         = img x w11 >> lod
@@ -31,7 +31,7 @@
 
 _AVXINL afxDrawSystem AvxGetRasterHost(avxRaster ras)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     afxDrawSystem dsys = AfxGetHost(ras);
@@ -42,7 +42,7 @@ _AVXINL afxDrawSystem AvxGetRasterHost(avxRaster ras)
 _AVXINL avxFormat AvxGetRasterFormat(avxRaster ras)
 {
 #if AVX_VALIDATION_ENABLED
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 #endif
@@ -51,7 +51,7 @@ _AVXINL avxFormat AvxGetRasterFormat(avxRaster ras)
 
 _AVXINL avxFormat AvxDescribeRasterFormat(avxRaster ras, avxFormatDescription* pfd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 #if AVX_VALIDATION_ENABLED
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
@@ -71,7 +71,7 @@ _AVXINL avxFormat AvxDescribeRasterFormat(avxRaster ras, avxFormatDescription* p
 _AVXINL avxRasterUsage AvxGetRasterUsage(avxRaster ras, avxRasterUsage mask)
 {
 #if AVX_VALIDATION_ENABLED
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 #endif//AVX_VALIDATION_ENABLED
@@ -81,7 +81,7 @@ _AVXINL avxRasterUsage AvxGetRasterUsage(avxRaster ras, avxRasterUsage mask)
 _AVXINL avxRasterFlags AvxGetRasterFlags(avxRaster ras, avxRasterFlags mask)
 {
 #if AVX_VALIDATION_ENABLED
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 #endif//AVX_VALIDATION_ENABLED
@@ -91,7 +91,7 @@ _AVXINL avxRasterFlags AvxGetRasterFlags(avxRaster ras, avxRasterFlags mask)
 _AVXINL void AvxGetRasterSwizzling(avxRaster ras, avxSwizzling* csw)
 {
 #if AVX_VALIDATION_ENABLED
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(csw);
@@ -101,7 +101,7 @@ _AVXINL void AvxGetRasterSwizzling(avxRaster ras, avxSwizzling* csw)
 
 _AVXINL avxRange AvxGetRasterExtent(avxRaster ras, afxUnit lodIdx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT_RANGE(ras->mipCnt, lodIdx, 1);
@@ -121,7 +121,7 @@ _AVXINL avxRange AvxGetRasterExtent(avxRaster ras, afxUnit lodIdx)
 _AVXINL void AvxDescribeRaster(avxRaster ras, avxRasterInfo* desc, avxSubrasterInfo* sub, avxExorasterInfo* exo)
 {
 #if AVX_VALIDATION_ENABLED
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(desc);
@@ -158,7 +158,7 @@ _AVXINL void AvxDescribeRaster(avxRaster ras, avxRasterInfo* desc, avxSubrasterI
 
 _AVXINL void _AvxSanitizeRasterRegion(avxRaster ras, afxUnit cnt, avxRasterRegion const raw[], avxRasterRegion san[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 #if AVX_VALIDATION_ENABLED
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
@@ -195,7 +195,7 @@ _AVXINL void _AvxSanitizeRasterRegion(avxRaster ras, afxUnit cnt, avxRasterRegio
 
 _AVXINL void _AvxSanitizeRasterCopy(avxRaster ras, avxRaster src, afxUnit cnt, avxRasterCopy const raw[], avxRasterCopy san[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 #if AVX_VALIDATION_ENABLED
     // src must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &src);
@@ -237,7 +237,7 @@ _AVXINL void _AvxSanitizeRasterCopy(avxRaster ras, avxRaster src, afxUnit cnt, a
 
 _AVX afxBool AvxQueryRasterArrangement(avxRaster ras, avxRasterRegion const* rgn, avxRasterArrangement* layout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
@@ -358,7 +358,7 @@ _AVX afxBool AvxQueryRasterArrangement(avxRaster ras, avxRasterRegion const* rgn
 
 _AVX afxError _AvxRasDtorCb(avxRaster ras)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
     if (ras->base)
@@ -368,7 +368,7 @@ _AVX afxError _AvxRasDtorCb(avxRaster ras)
     }
 
     afxDrawSystem dsys = AvxGetRasterHost(ras);
-    if (_AvxDsysGetImpl(dsys)->deallocRasCb(dsys, 1, &ras))
+    if (_AvxDsysGetDdi(dsys)->deallocRasCb(dsys, 1, &ras))
     {
         AfxThrowError();
     }
@@ -378,7 +378,7 @@ _AVX afxError _AvxRasDtorCb(avxRaster ras)
 
 _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
     afxDrawSystem dsys = AvxGetRasterHost(ras);
@@ -580,7 +580,7 @@ _AVX afxClassConfig const _AVX_RAS_CLASS_CONFIG =
 
 _AVX afxError AvxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo const info[], avxRaster rasters[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(rasters);
     AFX_ASSERT(info);
@@ -628,7 +628,7 @@ _AVX afxError AvxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo c
     }
 #endif//AVX_VALIDATION_ENABLED
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->rasCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->rasCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_RAS);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)rasters, (void const*[]) { dsys, info, NIL, NIL }))
@@ -639,7 +639,7 @@ _AVX afxError AvxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo c
 
     AFX_ASSERT_OBJECTS(afxFcc_RAS, cnt, rasters);
 
-    if (_AvxDsysGetImpl(dsys)->allocRasCb(dsys, cnt, info, rasters))
+    if (_AvxDsysGetDdi(dsys)->allocRasCb(dsys, cnt, info, rasters))
     {
         AfxDisposeObjects(cnt, rasters);
         AfxThrowError();
@@ -670,7 +670,7 @@ _AVX afxError AvxAcquireRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo c
 
 _AVX afxError AvxAcquireExternalRasters(afxDrawSystem dsys, afxUnit cnt, avxExorasterInfo const info[], avxRaster rasters[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(rasters);
     AFX_ASSERT(info);
@@ -718,7 +718,7 @@ _AVX afxError AvxAcquireExternalRasters(afxDrawSystem dsys, afxUnit cnt, avxExor
     }
 #endif//AVX_VALIDATION_ENABLED
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->rasCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->rasCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_RAS);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)rasters, (void const*[]) { dsys, info, NIL, info }))
@@ -729,7 +729,7 @@ _AVX afxError AvxAcquireExternalRasters(afxDrawSystem dsys, afxUnit cnt, avxExor
 
     AFX_ASSERT_OBJECTS(afxFcc_RAS, cnt, rasters);
 
-    if (_AvxDsysGetImpl(dsys)->allocRasCb(dsys, cnt, info, rasters))
+    if (_AvxDsysGetDdi(dsys)->allocRasCb(dsys, cnt, info, rasters))
     {
         AfxDisposeObjects(cnt, rasters);
         AfxThrowError();
@@ -761,7 +761,7 @@ _AVX afxError AvxAcquireExternalRasters(afxDrawSystem dsys, afxUnit cnt, avxExor
 
 _AVX afxError AvxReacquireRasters(afxDrawSystem dsys, afxUnit cnt, avxSubrasterInfo const info[], avxRaster rasters[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(rasters);
     AFX_ASSERT(info);
@@ -782,7 +782,7 @@ _AVX afxError AvxReacquireRasters(afxDrawSystem dsys, afxUnit cnt, avxSubrasterI
     if (err) return err;
 #endif//AVX_VALIDATION_ENABLED
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->rasCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->rasCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_RAS);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)rasters, (void const*[]) { dsys, NIL, info, NIL }))

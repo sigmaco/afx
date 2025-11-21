@@ -156,13 +156,13 @@ AFX_DEFINE_STRUCT(arxMaterialLayout)
 
 ARX afxError ArxAcquireMtds
 (
-    arxRenderContext rctx, 
+    arxScenario scio, 
     afxUnit cnt, 
     afxString const names[], 
     arxMaterialLayout const layouts[], 
     arxMtd mtds[]
 );
 
-ARX afxError ArxLoadMtd(arxRenderContext rctx, afxUri const* uri, arxMtd* pMtd);
+ARX afxError ArxLoadMtd(arxScenario scio, afxUri const* uri, arxMtd* pMtd);
 
 #endif//ARX_MATERIAL_H

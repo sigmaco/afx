@@ -58,7 +58,7 @@
 #include "qwadro/ux/afxShell.h"
 #if !0
 // ARX
-#include "qwadro/render/arxRenderContext.h"
+#include "qwadro/scene/arxScenario.h"
 // ASX
 #include "qwadro/sim/arxSimulation.h"
 #endif

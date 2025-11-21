@@ -21,7 +21,7 @@
 #define _AMX_BUFFER_C
 #define _AMX_VOICE_C
 //#define _AMX_MIX_SYSTEM_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 // This is the sound of Z.
 
@@ -91,7 +91,7 @@ afxSize minimumBytesPerFrame(amxFormat fmt, int numChans)
 
 void loadVoicingInfo(amxVoice vs, const amxVoicingInfo* info)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     // Load Playback Info Into Voice.
     // This function populates your voice state from a dequeued amxVoicingInfo.
 
@@ -188,7 +188,7 @@ afxSize bytesPerFrame(amxFormat fmt, int numChans)
 
 void fillResampleInput(amxVoice vs)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     vs->rs.in_len = 0;
     vs->rs.in_pos = 0;
 
@@ -315,7 +315,7 @@ afxSize amxProcessVoice(amxVoice vs, float* outBuf, afxSize outFrames, afxUnit s
 
 _AMX afxError AmxFeedVoice(amxTracker trax, afxUnit id, amxVoicingInfo const* info)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     amxVoice vox;
@@ -337,7 +337,7 @@ _AMX afxError AmxFeedVoice(amxTracker trax, afxUnit id, amxVoicingInfo const* in
 
 _AMX afxError AmxPurgeVoice(amxTracker trax, afxUnit id, afxFlags flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     amxVoice vox;
@@ -354,7 +354,7 @@ _AMX afxError AmxPurgeVoice(amxTracker trax, afxUnit id, afxFlags flags)
 
 _AMX afxError AmxBreakVoiceLoop(amxTracker trax, afxUnit id, afxFlags flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     amxVoice vox;
@@ -372,7 +372,7 @@ _AMX afxError AmxBreakVoiceLoop(amxTracker trax, afxUnit id, afxFlags flags)
 
 _AMX afxError AmxSwitchVoice(amxTracker trax, afxUnit id, afxFlags flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     amxVoice vox;
@@ -389,7 +389,7 @@ _AMX afxError AmxSwitchVoice(amxTracker trax, afxUnit id, afxFlags flags)
 
 _AMX afxError AmxSetVoiceSampleRate(amxTracker trax, afxUnit id, afxUnit sampRate)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     amxVoice vox;
@@ -407,7 +407,7 @@ _AMX afxError AmxSetVoiceSampleRate(amxTracker trax, afxUnit id, afxUnit sampRat
 
 _AMX afxError AmxSetVoiceFrequencyRatio(amxTracker trax, afxUnit id, afxReal ratio)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     amxVoice vox;
@@ -424,7 +424,7 @@ _AMX afxError AmxSetVoiceFrequencyRatio(amxTracker trax, afxUnit id, afxReal rat
 
 _AMX afxError AmxGetVoiceFrequencyRatio(amxTracker trax, afxUnit id, afxReal* ratio)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     amxVoice vox;
@@ -440,7 +440,7 @@ _AMX afxError AmxGetVoiceFrequencyRatio(amxTracker trax, afxUnit id, afxReal* ra
 
 _AMX afxError AmxQueryVoiceState(amxTracker trax, afxUnit id, amxBuffer* buf, afxUnit* bufQueued, afxUnit64* samplesPlayed)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
     amxVoice vox;
@@ -458,7 +458,7 @@ _AMX afxError AmxQueryVoiceState(amxTracker trax, afxUnit id, amxBuffer* buf, af
 #if 0
 _AMX afxError _AmxToggleVoice(amxVoice vox, amxVoiceState state)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VOX, 1, &vox);
 
     vox->offset = 0;
@@ -472,7 +472,7 @@ _AMX afxError _AmxToggleVoice(amxVoice vox, amxVoiceState state)
 
 _AMX void AmxTransformVoice(amxVoice vox, afxTransform const* t)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VOX, 1, &vox);
     AfxCopyTransform(&vox->t, t);
 
@@ -481,7 +481,7 @@ _AMX void AmxTransformVoice(amxVoice vox, afxTransform const* t)
 
 _AMX afxUnit AmxAccumulateVoiceSamples(amxVoice vox, afxUnit sampleCnt, afxUnit chCnt, afxUnit freq, afxUnit bufCap, afxReal output[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VOX, 1, &vox);
     
     amxAudio aud = vox->audio;
@@ -504,7 +504,7 @@ _AMX afxUnit AmxAccumulateVoiceSamples(amxVoice vox, afxUnit sampleCnt, afxUnit 
 
 _AMX afxError AmxRewindVoice(amxVoice vox)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VOX, 1, &vox);
 
     vox->offset = 0;
@@ -515,7 +515,7 @@ _AMX afxError AmxRewindVoice(amxVoice vox)
 
 _AMX afxBool AmxHasVoiceEnded(amxVoice vox)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VOX, 1, &vox);
 
     if (!(vox->flags & 0x1) && vox->offset >= vox->audio->sampCnt)
@@ -529,7 +529,7 @@ _AMX afxBool AmxHasVoiceEnded(amxVoice vox)
 
 _AMX afxError _AmxVoxDtorCb(amxVoice vox)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VOX, 1, &vox);
 
     amxTracker trax = AfxGetHost(vox);

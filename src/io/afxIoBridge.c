@@ -27,7 +27,7 @@
 
 _AFX afxDevice AfxGetIoBridgeDevice(afxIoBridge exu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
     afxDevice dev = AfxGetHost(exu);
     AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
@@ -36,7 +36,7 @@ _AFX afxDevice AfxGetIoBridgeDevice(afxIoBridge exu)
 
 _AFX afxDevLink AfxGetIoBridgeContext(afxIoBridge exu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
     afxDevLink ctx = exu->ctx;
     //AFX_ASSERT_OBJECTS(afxFcc_DEVK, 1, &ctx);
@@ -45,14 +45,14 @@ _AFX afxDevLink AfxGetIoBridgeContext(afxIoBridge exu)
 
 _AFX afxUnit AfxGetIoBridgePort(afxIoBridge exu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
     return exu->portId;
 }
 
 _AFX afxUnit AfxGetIoQueues(afxIoBridge exu, afxUnit baseQueIdx, afxUnit cnt, afxIoQueue queues[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // exu must be a valid afxIoBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
     // queues must be a valid pointer to the afxIoQueue handles.
@@ -76,7 +76,7 @@ _AFX afxUnit AfxGetIoQueues(afxIoBridge exu, afxUnit baseQueIdx, afxUnit cnt, af
 
 _AFX afxError _AfxWaitForEmptyIoQueue(afxIoBridge exu, afxUnit queIdx, afxTime timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // exu must be a valid afxIoBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
 
@@ -109,7 +109,7 @@ _AFX afxError _AfxWaitForEmptyIoQueue(afxIoBridge exu, afxUnit queIdx, afxTime t
 
 _AFX afxError _AfxWaitForIdleIoBridge(afxIoBridge exu, afxTime timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // exu must be a valid afxIoBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
     
@@ -131,7 +131,7 @@ _AFX afxError _AfxWaitForIdleIoBridge(afxIoBridge exu, afxTime timeout)
 
 _AFX afxError _AfxSubmitIoOperation(afxIoBridge exu, afxSubmission const* ctrl, afxUnit cnt, afxObject cmdbs[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
     AFX_ASSERT(cnt);
     AFX_ASSERT(cmdbs);
@@ -166,7 +166,7 @@ _AFX afxError _AfxSubmitIoOperation(afxIoBridge exu, afxSubmission const* ctrl, 
 
 _AFX afxError _AfxExuDtorCb(afxIoBridge exu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
 
     _AfxWaitForIdleIoBridge(exu, AFX_TIMEOUT_INFINITE);
@@ -200,7 +200,7 @@ _AFX afxError _AfxExuDtorCb(afxIoBridge exu)
 
 _AFX afxError _AfxExuCtorCb(afxIoBridge exu, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
 
     afxDevice dev = args[0];
@@ -294,7 +294,7 @@ _AFX afxClassConfig const _AFX_EXU_CLASS_CONFIG =
 
 _AFX afxError AfxAcquireIoBridge(afxIoBridgeConfig const* cfg, afxIoBridge* bridge)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     
     // Acquire bridges and queues
     afxUnit totalDqueCnt = 0;

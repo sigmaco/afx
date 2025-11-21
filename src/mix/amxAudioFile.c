@@ -19,7 +19,7 @@
 #define _AMX_MIX_C
 #define _AMX_BUFFER_C
 #define _AMX_AUDIO_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -68,7 +68,7 @@ AFX_STATIC_ASSERT(offsetof(ModHeader, signature) == 1080, "");
 
 int LoadModFile(afxMixSystem msys, afxUri const* uri, amxBuffer* sampBuf, amxBuffer* patBuf, amxBuffer* dataBuf)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     AFX_ASSERT(sampBuf);
     AFX_ASSERT(patBuf);

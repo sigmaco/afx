@@ -61,7 +61,7 @@ _AFX afxBool AfxWriteNextSeriesHeader(afxStream out, urdMark const* hdr)
 
 _AFX afxBool AfxReadNextSeriesHeader(afxStream in, urdMark* hdr)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(hdr);
     return !(AfxReadStream(in, sizeof(*hdr), 0, hdr));
@@ -74,7 +74,7 @@ _AFX afxBool AfxReadNextSeriesHeader(afxStream in, urdMark* hdr)
 _AFX afxBool AfxFetchNextStreamChunk(afxStream in, afxUnit32 id, urdMark* hdr)
 {
     // compatible with RwStreamFindChunk()
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(hdr);
     AFX_ASSERT(id);
@@ -142,7 +142,7 @@ _AFX afxBool AfxFetchNextStreamChunk(afxStream in, afxUnit32 id, urdMark* hdr)
 
 _AFX afxUnit32 AfxPullStreamChunk(afxStream in, urdMark* hdr)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(hdr);
     afxUnit32 id = AFX_INVALID_INDEX;
@@ -211,7 +211,7 @@ _AFX afxUnit32 AfxPullStreamChunk(afxStream in, urdMark* hdr)
 
 _AFX afxUnit AfxMeasureSerializableExtensions(afxObject obj)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(obj);
     afxUnit size = 0;
 
@@ -236,7 +236,7 @@ _AFX afxUnit AfxMeasureSerializableExtensions(afxObject obj)
 
 _AFX afxError AfxStoreSerializableExtensions(afxStream out, afxObject obj)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(obj);
 
@@ -288,7 +288,7 @@ _AFX afxError AfxStoreSerializableExtensions(afxStream out, afxObject obj)
 
 _AFX afxError AfxLoadSerializedExtensions(afxStream in, urdMark const* hdr, afxObject obj)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(hdr);
     AFX_ASSERT(obj);
@@ -361,7 +361,7 @@ _AFX afxError AfxLoadSerializedExtensions(afxStream in, urdMark const* hdr, afxO
 
 _AFX afxError AfxSkipSerializedExtensions(afxStream in, urdMark const* hdr)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(hdr);
     AFX_ASSERT(hdr->fcc == afxChunkId_EXTENSIONS);
@@ -390,7 +390,7 @@ _AFX afxError AfxSkipSerializedExtensions(afxStream in, urdMark const* hdr)
 
 _AFX afxError _AfxUrdDtorCb(afxUrd urd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_URD, 1, &urd);
 
     afxObjectStash const stashes[] =
@@ -414,7 +414,7 @@ _AFX afxError _AfxUrdDtorCb(afxUrd urd)
 
 _AFX afxError _AfxUrdCtorCb(afxUrd urd, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_URD, 1, &urd);
 
     afxStorage disk = args[0];
@@ -464,7 +464,7 @@ _AFX afxClassConfig _AfxUrdClsCfg =
 
 _AFX afxUrd AfxBuildUrd(afxUri const *path)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxUrd urd = NIL;
 
     afxStream file;
@@ -485,7 +485,7 @@ _AFX afxUrd AfxBuildUrd(afxUri const *path)
 
 _AFX afxError AfxAcquireUrd(afxUnit segCnt, afxFcc trunkId, void* resvd, afxUrd* urd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxUrd urd2 = NIL;
 
     afxClass* cls = 0;// (afxClass*)AfxGetUrdClass();
@@ -503,7 +503,7 @@ _AFX afxError AfxAcquireUrd(afxUnit segCnt, afxFcc trunkId, void* resvd, afxUrd*
 
 _AFX afxError AfxLoadUrd(afxStream in, afxFcc trunkId, afxUrd* urd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     afxResource rs;
@@ -541,7 +541,7 @@ _AFX afxError AfxLoadUrd(afxStream in, afxFcc trunkId, afxUrd* urd)
 
 _AFX afxError AfxOpenUrd(afxUri const* uri, afxFcc trunkId, afxUrd* urd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxStream iob;
     afxStreamInfo iobi = { 0 };

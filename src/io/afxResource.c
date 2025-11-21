@@ -22,7 +22,7 @@
 
 _AFXINL afxError AfxUnloadResource(afxResource res)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AfxAssertObject(res, afxFcc_RES);
     
     if (res->unload)
@@ -34,7 +34,7 @@ _AFXINL afxError AfxUnloadResource(afxResource res)
 
 _AFXINL afxError AfxLoadResource(afxResource res)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AfxAssertObject(res, afxFcc_RES);
 
     if (res->load)
@@ -46,7 +46,7 @@ _AFXINL afxError AfxLoadResource(afxResource res)
 
 _AFXINL afxError AfxRequestResource(afxResource res)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AfxAssertObject(res, afxFcc_RES);
     res->lastReqTime = AfxGetTimer();
 
@@ -58,14 +58,14 @@ _AFXINL afxError AfxRequestResource(afxResource res)
 
 _AFXINL afxBool AfxResourceIsReady(afxResource res)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AfxAssertObject(res, afxFcc_RES);
     return (res->state == AFX_RES_STATE_READY);
 }
 
 _AFXINL afxUnit AfxExcerptResourceName(afxResource res, afxUri *name)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AfxAssertObject(res, afxFcc_RES);
     AFX_ASSERT(name);
     return AfxPickUriObject(name, res->uri);
@@ -73,14 +73,14 @@ _AFXINL afxUnit AfxExcerptResourceName(afxResource res, afxUri *name)
 
 _AFXINL afxUri const* AfxGetResourceUri(afxResource res)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AfxAssertObject(res, afxFcc_RES);
     return res->uri;
 }
 
 _AFX afxBool _AfxResEventHandler(afxObject obj, afxEvent *ev)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxResource res = (void*)obj;
     AfxAssertObject(res, afxFcc_RES);
     (void)ev;
@@ -89,7 +89,7 @@ _AFX afxBool _AfxResEventHandler(afxObject obj, afxEvent *ev)
 
 _AFX afxBool _AfxResEventFilter(afxObject obj, afxObject watched, afxEvent *ev)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxResource res = (void*)obj;
     AfxAssertObject(res, afxFcc_RES);
     (void)watched;
@@ -99,7 +99,7 @@ _AFX afxBool _AfxResEventFilter(afxObject obj, afxObject watched, afxEvent *ev)
 
 _AFX afxError _AfxResDtor(afxResource res)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AfxEntry("res=%p", res);
     AfxAssertObject(res, afxFcc_RES);
 
@@ -112,7 +112,7 @@ _AFX afxError _AfxResDtor(afxResource res)
 _AFX afxError _AfxResCtor(void *cache, afxUnit idx, afxResource res, afxResourceParadigm const *paradigms)
 {
     AfxEntry("res=%p", res);
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AfxAssertObject(res, afxFcc_RES);
     afxResourceParadigm const *paradigm = &paradigms[idx];
     
@@ -141,7 +141,7 @@ _AFX afxError _AfxResCtor(void *cache, afxUnit idx, afxResource res, afxResource
 
 _AFXINL afxResource AfxAcquireResource(afxResourceSpecification const *spec)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxResource res;
 
     afxResourceParadigm paradigm = 

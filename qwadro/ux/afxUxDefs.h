@@ -73,8 +73,6 @@ typedef enum auxEventId
     auxEventId_WHEEL, // mouse wheel
     auxEventId_AXIS, // mouse motion
 
-    auxEventId_HOVER, // pointer enter/leave
-
     auxEventId_PLACEMENT,
     auxEventId_MOVE, // Window/widget's position changed.
     auxEventId_SIZE, // Window/widget's size changed.
@@ -85,11 +83,13 @@ typedef enum auxEventId
     auxEventId_CHECKED, // ex.: combobox (un)checked
     auxEventId_STYLE, // Window/widget's style has been changed.
     auxEventId_SHOW, // Window/widget was shown on screen.
+    auxEventId_PAINT,
 
     // cursor
-    auxEventId_CURS_IN, // Cursor enters window/widget's boundaries.
-    auxEventId_CURS_ON, // Cursor move.
-    auxEventId_CURS_OUT, // Cursor leaves window/widget's boundaries.
+    auxEventId_CURS_ENTER, // Cursor enters window/widget's boundaries.
+    auxEventId_CURS_MOTION, // Cursor move.
+    auxEventId_CURS_HOVER, // pointer enter/leave
+    auxEventId_CURS_LEAVE, // Cursor leaves window/widget's boundaries.
     auxEventId_HOVER_IN, // The cursor enters a hover window/widget.
     auxEventId_HOVER_ON, // The cursor moves inside a hover window/widget.
     auxEventId_HOVER_OUT, // The cursor leaves a hover window/widget.

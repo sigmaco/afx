@@ -42,6 +42,27 @@
 
 // our facade
 
+typedef enum afxAnchor
+{
+    afxAnchor_LEFT      = AFX_BITMASK(0),
+    afxAnchor_CENTER    = AFX_BITMASK(1),
+    afxAnchor_RIGHT     = AFX_BITMASK(2),
+    afxAnchor_TOP       = AFX_BITMASK(3),
+    afxAnchor_MIDDLE    = AFX_BITMASK(4),
+    afxAnchor_BOTTOM    = AFX_BITMASK(5),
+    afxAnchor_V         = (afxAnchor_LEFT | afxAnchor_CENTER | afxAnchor_RIGHT),
+    afxAnchor_H         = (afxAnchor_TOP | afxAnchor_MIDDLE | afxAnchor_BOTTOM),
+    afxAnchor_LT        = (afxAnchor_LEFT | afxAnchor_TOP),
+    afxAnchor_LM        = (afxAnchor_LEFT | afxAnchor_MIDDLE),
+    afxAnchor_LB        = (afxAnchor_LEFT | afxAnchor_BOTTOM),
+    afxAnchor_RT        = (afxAnchor_RIGHT | afxAnchor_TOP),
+    afxAnchor_RM        = (afxAnchor_RIGHT | afxAnchor_MIDDLE),
+    afxAnchor_RB        = (afxAnchor_RIGHT | afxAnchor_BOTTOM),
+    afxAnchor_CT        = (afxAnchor_CENTER | afxAnchor_TOP),
+    afxAnchor_CM        = (afxAnchor_CENTER | afxAnchor_MIDDLE),
+    afxAnchor_CB        = (afxAnchor_CENTER | afxAnchor_BOTTOM),
+} afxAnchor;
+
 typedef enum afxWindowFlag
 // Flags specifying behavior and characteristics for windows.
 {
@@ -54,6 +75,50 @@ typedef enum afxWindowFlag
     // The window can take full control of the display port.
     afxWindowFlag_IMMERSIVE     = AFX_BITMASK(3),
 } afxWindowFlags;
+
+typedef enum afxWindowEdge
+{
+    afxWindowEdge_L     = AFX_BITMASK(0),
+    afxWindowEdge_T     = AFX_BITMASK(1),
+    afxWindowEdge_R     = AFX_BITMASK(2),
+    afxWindowEdge_B     = AFX_BITMASK(3),
+    afxWindowEdge_LT    = (afxWindowEdge_L | afxWindowEdge_T),
+    afxWindowEdge_LB    = (afxWindowEdge_L | afxWindowEdge_B),
+    afxWindowEdge_RT    = (afxWindowEdge_R | afxWindowEdge_T),
+    afxWindowEdge_RB    = (afxWindowEdge_R | afxWindowEdge_B),
+} afxWindowEdge;
+
+typedef enum afxWindowState
+{
+    afxWindowState_RESIZING = 3,
+    afxWindowState_ACTIVATED = 4,
+    afxWindowState_MAXIMIZED = 1,
+    afxWindowState_FSE = 2,
+    afxWindowState_TILED_L = 5,
+    afxWindowState_TILED_R = 6,
+    afxWindowState_TILED_T = 7,
+    afxWindowState_TILED_B = 8,
+
+    afxWindowState_SUSPENDED,
+    afxWindowState_MINIMIZED
+} afxWindowState;
+
+AFX_DEFINE_STRUCT(afxWindowInfo)
+{
+    // The bitmask specifying behavior and characteristics of the window.
+    afxWindowFlags      flags;
+    // The event handler callback assigned to the window.
+    afxBool             (*eventCb)(afxWindow, auxEvent*);
+    afxRect             frame;
+        // The afxRect structure which will be filled with the geometry of the window surface.
+    afxRect             surface;
+    // The drawable surface for the window.
+    afxSurface          dout;
+    // A user-defined data.
+    void*               udd;
+    // An debugging string.
+    afxString           tag;
+};
 
 AFX_DEFINE_STRUCT(afxWindowConfig)
 // The strucuture specifying the configuration of a window.
@@ -70,6 +135,8 @@ AFX_DEFINE_STRUCT(afxWindowConfig)
     afxSurfaceConfig    dout;
     // Optional. The display port to which the window will be open on.
     afxDisplayPort      disp;
+    // 
+    afxAnchor           anchor;
     // The origin of the window. If display port is specified, it is related to the area covered by the display port, 
     // else case it is related to the desktop coordinate system (which can be negative).
     afxInt              x, y;
@@ -114,12 +181,12 @@ AUX afxBool AFX_WND_EVENT_HANDLER(afxWindow wnd, auxEvent *ev);
     Because surface coordinates are relative to the upper-left corner of a window's surface, the coordinates of the upper-left corner are (0,0).
 */
 
-AUX void            AfxGetWindowRect
+AUX afxBool         AfxGetWindowRect
 (
     // The handle of the afxWindow.
     afxWindow       wnd, 
-    // The afxRect structure which will be filled with the geometry of the window frame.
-    afxRect*        frame, 
+    // 
+    afxAnchor       anchor, 
     // The afxRect structure which will be filled with the geometry of the window surface.
     afxRect*        surface
 );
@@ -128,8 +195,10 @@ AUX afxError        AfxAdjustWindow
 (
     // The handle of the afxWindow.
     afxWindow       wnd, 
+    // 
+    afxAnchor       anchor,
     // The afxRect specifying the desired geometry for the window.
-    afxRect const*  area
+    afxRect const*  surface
 );
 
 /*
@@ -205,6 +274,19 @@ AUX afxUnit AfxFormatWindowTitle
 );
 
 /*
+    The AfxDamageWindow() function invalidates the specified rectangle or region in a window's surface (aka client area).
+    By calling this method, a redrawn request event will be provoked.
+*/
+
+AUX afxError AfxDamageWindow
+(
+    // The handle of the afxWindow to be redrawn.
+    afxWindow wnd,
+    // An optinal afxRect limiting an area of interest to be redrawn.
+    afxRect const* area
+);
+
+/*
     The AfxRedrawWindow() function updates the specified rectangle or region in a window's surface (aka client area).
 */
 
@@ -277,5 +359,10 @@ AUX void*           AfxGetWindowUdd
     // The handle of the afxWindow.
     afxWindow wnd
 );
+
+AUX afxError AfxCloseWindow(afxWindow wnd);
+AUX afxError AfxRestoreWindow(afxWindow wnd);
+AUX afxError AfxMaximizeWindow(afxWindow wnd);
+AUX afxError AfxMinimizeWindow(afxWindow wnd);
 
 #endif//AUX_WINDOW_H

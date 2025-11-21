@@ -107,7 +107,7 @@ AFX_DEFINE_UNION(_afxCmdLut)
 
 _AFX _afxCmdBatch* _AfxGetCmdBatch(afxIoContext ioc, afxUnit idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
     _afxCmdBatch* batch = NIL;
     afxBool valid = AfxGetPoolUnit(&ioc->batches, idx, (void**)&batch);
@@ -118,7 +118,7 @@ _AFX _afxCmdBatch* _AfxGetCmdBatch(afxIoContext ioc, afxUnit idx)
 
 _AFX _afxCmd* _AfxIocPushCmd(afxIoContext ioc, afxUnit id, afxUnit siz, afxCmdId* cmdId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
     AFX_ASSERT(siz >= sizeof(_afxCmdHdr));
 
@@ -137,28 +137,28 @@ _AFX _afxCmd* _AfxIocPushCmd(afxIoContext ioc, afxUnit id, afxUnit siz, afxCmdId
 #if 0
 _AFX afxUnit _AfxGetCommandStatus(afxIoContext ioc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
     return ioc->state;
 }
 
 _AFX afxUnit AfxGetCommandPort(afxIoContext ioc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
     return ioc->exuIdx;
 }
 
 _AFX afxUnit AfxGetCommandPool(afxIoContext ioc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
     return ioc->poolIdx;
 }
 
 _AFX afxError AfxExhaustIoContext(afxIoContext ioc, afxBool freeMem)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
 
     if (ioc->pimpl->exhaust)
@@ -221,7 +221,7 @@ _AFX afxError AfxExhaustIoContext(afxIoContext ioc, afxBool freeMem)
 
 _AFX afxError AfxRecordIoCommands(afxIoContext ioc, afxBool once, afxBool deferred, afxUnit* batchId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
     AFX_ASSERT(batchId);
 
@@ -344,7 +344,7 @@ _AFX afxError AfxRecordIoCommands(afxIoContext ioc, afxBool once, afxBool deferr
 
 _AFX afxError AfxDiscardIoCommands(afxIoContext ioc, afxBool freeRes)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
 
     if (ioc->pimpl->discard)
@@ -407,7 +407,7 @@ _AFX afxError AfxDiscardIoCommands(afxIoContext ioc, afxBool freeRes)
 
 _AFX afxError AfxCompileIoCommands(afxIoContext ioc, afxUnit batchId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
 
     // If there was an error during recording, the application will be notified by an unsuccessful return 
@@ -478,7 +478,7 @@ _AFX afxError AfxCompileIoCommands(afxIoContext ioc, afxUnit batchId)
 
 _AFX afxError AfxRecycleIoCommands(afxIoContext ioc, afxUnit batchId, afxBool freeRes)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
 
     if (batchId == AFX_INVALID_INDEX)
@@ -580,7 +580,7 @@ _AFX afxError AfxRecycleIoCommands(afxIoContext ioc, afxUnit batchId, afxBool fr
 
 _AFX afxBool AfxDoesIoCommandsExist(afxIoContext ioc, afxUnit batchId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
 
     if (batchId == AFX_INVALID_INDEX)
@@ -603,12 +603,12 @@ _AFX afxBool AfxDoesIoCommandsExist(afxIoContext ioc, afxUnit batchId)
 
 _AFX afxError _AfxIocDtorCb(afxIoContext ioc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
 
     AfxExhaustIoContext(ioc, TRUE);
 
-    AfxDismantleFutex(&ioc->cmdbReqLock);
+    AfxCleanUpFutex(&ioc->cmdbReqLock);
     AfxMakeChain(&ioc->cmdbRecycChain, ioc);
 
     AfxDismantleArena(&ioc->cmdArena);
@@ -619,7 +619,7 @@ _AFX afxError _AfxIocDtorCb(afxIoContext ioc)
 
 _AFX afxError _AfxIocCtorCb(afxIoContext ioc, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOC, 1, &ioc);
 
     afxIoBridge dexu = args[0];
@@ -631,7 +631,7 @@ _AFX afxError _AfxIocCtorCb(afxIoContext ioc, void** args, afxUnit invokeNo)
     ioc->poolIdx = AfxGetObjectId(ioc);
 
     ioc->cmdbLockedForReq = FALSE;
-    AfxDeployFutex(&ioc->cmdbReqLock);
+    AfxSetUpFutex(&ioc->cmdbReqLock);
     AfxMakeChain(&ioc->cmdbRecycChain, ioc);
 
     AfxMakeArena(&ioc->cmdArena, NIL, AfxHere());
@@ -668,7 +668,7 @@ _AFX afxClassConfig const _AFX_IOC_CLASS_CONFIG =
 #if 0
 _AFX afxError AfxAcquireIoContexts(afxIoCaps caps, afxMask exuMask, afxUnit cnt, afxIoContext contexts[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(contexts);
     AFX_ASSERT(cnt);
 
@@ -711,7 +711,7 @@ _AFX afxError AfxAcquireIoContexts(afxIoCaps caps, afxMask exuMask, afxUnit cnt,
 
 _AFX afxError AfxExecuteIoCommands(afxIoSystem dsys, afxSubmission* ctrl, afxUnit cnt, afxIoContext contexts[], afxUnit const batches[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxIoSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(contexts);

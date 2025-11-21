@@ -26,7 +26,7 @@
 
 _AFX afxError _AfxXquePopWork(afxIoQueue xque, afxStdWork* work)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
     AfxPopLink(&work->hdr.chain);
     AfxReclaimArena(&xque->workArena, work, work->hdr.siz);
@@ -35,7 +35,7 @@ _AFX afxError _AfxXquePopWork(afxIoQueue xque, afxStdWork* work)
 
 _AFX afxStdWork* _AfxXquePushWork(afxIoQueue xque, afxUnit id, afxUnit siz, afxCmdId* cmdId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
 
     afxStdWork* work = AfxRequestArena(&xque->workArena, siz, 1, NIL, 0);
@@ -52,14 +52,14 @@ _AFX afxStdWork* _AfxXquePushWork(afxIoQueue xque, afxUnit id, afxUnit siz, afxC
 
 _AFX afxUnit AfxGetIoQueuePort(afxIoQueue xque)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
     return xque->portId;
 }
 
 _AFX afxDevLink AfxGetIoQueueContext(afxIoQueue xque)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
     afxDevLink ctx = xque->ctx;
     AFX_ASSERT_OBJECTS(afxFcc_DEVK, 1, &ctx);
@@ -68,14 +68,14 @@ _AFX afxDevLink AfxGetIoQueueContext(afxIoQueue xque)
 
 _AFX afxError _AfxXqueDtorCb(afxIoQueue xque)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
 
     AfxDeregisterChainedClasses(&xque->classes);
 
     AfxDismantleMutex(&xque->workChnMtx);
     AfxDismantleArena(&xque->workArena);
-    AfxDismantleFutex(&xque->workArenaSlock);
+    AfxCleanUpFutex(&xque->workArenaSlock);
     AfxDismantleCondition(&xque->idleCnd);
     AfxDismantleMutex(&xque->idleCndMtx);
 
@@ -84,7 +84,7 @@ _AFX afxError _AfxXqueDtorCb(afxIoQueue xque)
 
 _AFX afxError _AfxXqueCtorCb(afxIoQueue xque, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_XQUE, 1, &xque);
 
     afxIoBridge exu = args[0];
@@ -98,7 +98,7 @@ _AFX afxError _AfxXqueCtorCb(afxIoQueue xque, void** args, afxUnit invokeNo)
 
     xque->immediate = 0;// !!spec->immedate;
 
-    AfxDeployFutex(&xque->workArenaSlock);
+    AfxSetUpFutex(&xque->workArenaSlock);
     AfxMakeArena(&xque->workArena, NIL, AfxHere());
 
     AfxDeployMutex(&xque->workChnMtx, AFX_MTX_PLAIN);

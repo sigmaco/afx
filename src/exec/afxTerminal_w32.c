@@ -46,7 +46,7 @@ WORD ch[] =
 
 _AFX afxResult AfxPrompt(afxString const* cur, afxString* buf)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AfxReport(0, cur->start, cur->len);
     int bufsize = AfxGetStringCapacity(buf, 0);
     int position = 0;
@@ -129,7 +129,7 @@ _AFX afxResult AfxPrintf(afxUnit32 color, afxChar const* msg, ...)
 
 _AFX afxResult AfxReleaseConsole(void)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxInt refCnt;
 
     if ((refCnt = --ttyRefCnt))
@@ -148,7 +148,7 @@ _AFX afxResult AfxReleaseConsole(void)
 }
 _AFX afxResult AfxReacquireConsole(void)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxInt refCnt;
 
     if ((refCnt = ++ttyRefCnt))

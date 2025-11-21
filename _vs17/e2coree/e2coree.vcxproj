@@ -158,6 +158,7 @@
     <ClInclude Include="..\..\qwadro\mix\amxVoice.h" />
     <ClInclude Include="..\..\qwadro\ux\afxFont.h" />
     <ClInclude Include="..\..\qwadro\ux\afxEnvironment.h" />
+    <ClInclude Include="..\..\qwadro\ux\afxLayout.h" />
     <ClInclude Include="..\..\qwadro\ux\afxScript.h" />
     <ClInclude Include="..\..\qwadro\ux\afxShell.h" />
     <ClInclude Include="..\..\qwadro\ux\afxTheme.h" />
@@ -165,13 +166,29 @@
     <ClInclude Include="..\..\qwadro\ux\afxWidget.h" />
     <ClInclude Include="..\..\qwadro\ux\afxWindow.h" />
     <ClInclude Include="..\..\qwadro\ux\auxPaint.h" />
-    <ClInclude Include="..\..\src\draw\ddi\avxImplementation.h" />
-    <ClInclude Include="..\..\src\draw\ddi\avxImpl_Context.h" />
-    <ClInclude Include="..\..\src\draw\ddi\avxImpl_Executor.h" />
-    <ClInclude Include="..\..\src\draw\ddi\avxImpl_Surface.h" />
-    <ClInclude Include="..\..\src\draw\ddi\avxImpl_Pipeline.h" />
-    <ClInclude Include="..\..\src\draw\ddi\avxImpl_System.h" />
-    <ClInclude Include="..\..\src\draw\ddi\avxImpl_Storage.h" />
+    <ClInclude Include="..\..\src\draw\avxContextImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxDeviceImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxIcd.h" />
+    <ClInclude Include="..\..\src\draw\avxSystemImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxSurfaceImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxBridgeImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxQueueImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxFenceImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxRasterImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxBufferImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxStorageImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxSamplerImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxCanvasImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxQueryPoolImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxCodebaseImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxVertexInputImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxPipelineImpl.h" />
+    <ClInclude Include="..\..\src\draw\avxLigatureImpl.h" />
+    <ClInclude Include="..\..\src\draw\dpu\avxDpuExecutor.h" />
+    <ClInclude Include="..\..\src\draw\dpu\avxDpuTransference.h" />
+    <ClInclude Include="..\..\src\exec\afxThreading.h" />
+    <ClInclude Include="..\..\src\hid\auxDisplayImpl.h" />
+    <ClInclude Include="..\..\src\hid\auxHidImpl.h" />
     <ClInclude Include="..\..\src\impl\afxExecImplKit.h" />
     <ClInclude Include="..\..\src\impl\afxIoImplKit.h" />
     <ClInclude Include="..\..\src\impl\xss\xss.h" />
@@ -187,14 +204,30 @@
     <ClInclude Include="..\..\src\impl\xss\xssUtils.h" />
     <ClInclude Include="..\..\src\impl\xss\xssValue.h" />
     <ClInclude Include="..\..\src\impl\xss\xssVm.h" />
-    <ClInclude Include="..\..\src\mix\ddi\amxImplementation.h" />
-    <ClInclude Include="..\..\src\mix\ddi\amxImpl_Audio.h" />
-    <ClInclude Include="..\..\src\mix\ddi\amxImpl_Executor.h" />
-    <ClInclude Include="..\..\src\mix\ddi\amxImpl_MixContext.h" />
-    <ClInclude Include="..\..\src\mix\ddi\amxImpl_Soundscape.h" />
-    <ClInclude Include="..\..\src\mix\ddi\amxImpl_System.h" />
-    <ClInclude Include="..\..\src\ux\impl\auxImplementation.h" />
-    <ClInclude Include="..\..\src\ux\impl\auxImpl_Shell.h" />
+    <ClInclude Include="..\..\src\mix\amxDeviceImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxSinkImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxIcd.h" />
+    <ClInclude Include="..\..\src\mix\amxBridgeImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxContextImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxTrackerImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxQueueImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxSoundImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxSoundscapeImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxSystemImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxStorageImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxAudioImpl.h" />
+    <ClInclude Include="..\..\src\mix\amxBufferImpl.h" />
+    <ClInclude Include="..\..\src\mix\mpu\amxMpuAudio.h" />
+    <ClInclude Include="..\..\src\mix\mpu\amxMpuContext.h" />
+    <ClInclude Include="..\..\src\mix\mpu\amxMpuExecutor.h" />
+    <ClInclude Include="..\..\src\mix\mpu\amxMpuSoundscape.h" />
+    <ClInclude Include="..\..\src\mix\mpu\amxMpuTransference.h" />
+    <ClInclude Include="..\..\src\ux\auxIcd.h" />
+    <ClInclude Include="..\..\src\ux\auxWindowImpl.h" />
+    <ClInclude Include="..\..\src\ux\auxWidgetImpl.h" />
+    <ClInclude Include="..\..\src\ux\auxEnvironmentImpl.h" />
+    <ClInclude Include="..\..\src\ux\auxFontImpl.h" />
+    <ClInclude Include="..\..\src\ux\auxShellImpl.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -218,7 +251,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\dep\rpmalloc\malloc.c" />
-    <ClCompile Include="..\..\dep\rpmalloc\rpmalloc.c" />
+    <ClCompile Include="..\..\dep\rpmalloc\rpmalloc.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\dep\tinycthread\tinycthread.c" />
     <ClCompile Include="..\..\src\base\afxManifest2.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -241,8 +279,11 @@
     <ClCompile Include="..\..\src\draw\afxDrawQueue.c" />
     <ClCompile Include="..\..\src\draw\afxDrawSystem.c" />
     <ClCompile Include="..\..\src\draw\afxSurface.c" />
+    <ClCompile Include="..\..\src\draw\avxIcd.c" />
+    <ClCompile Include="..\..\src\draw\avxSurfaceImpl.c" />
     <ClCompile Include="..\..\src\draw\avxBuffer.c" />
     <ClCompile Include="..\..\src\draw\avxBuffered.c" />
+    <ClCompile Include="..\..\src\draw\avxBufferIo.c" />
     <ClCompile Include="..\..\src\draw\avxCanvas.c" />
     <ClCompile Include="..\..\src\draw\avxClipping.c" />
     <ClCompile Include="..\..\src\draw\avxColor.c" />
@@ -268,16 +309,14 @@
     <ClCompile Include="..\..\src\draw\avxTxd.c" />
     <ClCompile Include="..\..\src\draw\avxVertexInput.c" />
     <ClCompile Include="..\..\src\draw\avxViewport.c" />
-    <ClCompile Include="..\..\src\draw\ddi\avxImplementation.c" />
-    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Buffer.c" />
-    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Canvas.c" />
-    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Context.c" />
-    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Executor.c" />
-    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Raster.c" />
-    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Surface.c" />
-    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Rasterization.c" />
-    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Transference.c" />
-    <ClCompile Include="..\..\src\draw\ddi\avxImpl_Transformation.c" />
+    <ClCompile Include="..\..\src\draw\dpu\avxDpuAllocation.c" />
+    <ClCompile Include="..\..\src\draw\dpu\avxDpuBufferIo.c" />
+    <ClCompile Include="..\..\src\draw\dpu\avxDpuContext.c" />
+    <ClCompile Include="..\..\src\draw\dpu\avxDpuExecutor.c" />
+    <ClCompile Include="..\..\src\draw\dpu\avxDpuPaint.c" />
+    <ClCompile Include="..\..\src\draw\dpu\avxDpuRasterIo.c" />
+    <ClCompile Include="..\..\src\draw\dpu\avxDpuRasterization.c" />
+    <ClCompile Include="..\..\src\draw\dpu\avxDpuTransformation.c" />
     <ClCompile Include="..\..\src\exec\afxDebug_w32.c" />
     <ClCompile Include="..\..\src\exec\afxProcess_W32.c" />
     <ClCompile Include="..\..\src\exec\afxSystemModules.c" />
@@ -382,6 +421,7 @@
     <ClCompile Include="..\..\src\mix\amxBuffer.c" />
     <ClCompile Include="..\..\src\mix\amxCodec.c" />
     <ClCompile Include="..\..\src\mix\amxEncoder.c" />
+    <ClCompile Include="..\..\src\mix\amxIcd.c" />
     <ClCompile Include="..\..\src\mix\amxTracker.c" />
     <ClCompile Include="..\..\src\mix\amxSound.c" />
     <ClCompile Include="..\..\src\mix\amxSoundscape.c" />
@@ -389,25 +429,25 @@
     <ClCompile Include="..\..\src\mix\amxVideo.c" />
     <ClCompile Include="..\..\src\mix\amxDecoder.c" />
     <ClCompile Include="..\..\src\mix\amxVoice.c" />
-    <ClCompile Include="..\..\src\mix\ddi\amxImplementation.c" />
-    <ClCompile Include="..\..\src\mix\ddi\amxImpl_Audio.c" />
-    <ClCompile Include="..\..\src\mix\ddi\amxImpl_Buffer.c" />
-    <ClCompile Include="..\..\src\mix\ddi\amxImpl_Executor.c" />
-    <ClCompile Include="..\..\src\mix\ddi\amxImpl_MixContext.c" />
-    <ClCompile Include="..\..\src\mix\ddi\amxImpl_Soundscape.c" />
-    <ClCompile Include="..\..\src\mix\ddi\amxImpl_Temp.c" />
+    <ClCompile Include="..\..\src\mix\mpu\amxMpuAudioIo.c" />
+    <ClCompile Include="..\..\src\mix\mpu\amxMpuBufferIo.c" />
+    <ClCompile Include="..\..\src\mix\mpu\amxMpuContext.c" />
+    <ClCompile Include="..\..\src\mix\mpu\amxMpuExecutor.c" />
+    <ClCompile Include="..\..\src\mix\mpu\amxMpuSoundscape.c" />
+    <ClCompile Include="..\..\src\mix\mpu\amxMpuTest.c" />
     <ClCompile Include="..\..\src\ux\afxFont.c" />
     <ClCompile Include="..\..\src\ux\afxEnvironment.c" />
+    <ClCompile Include="..\..\src\ux\afxLayout.c" />
     <ClCompile Include="..\..\src\ux\afxScript.c" />
     <ClCompile Include="..\..\src\ux\afxShell.c" />
     <ClCompile Include="..\..\src\ux\afxTheme.c" />
     <ClCompile Include="..\..\src\ux\afxWidget.c" />
     <ClCompile Include="..\..\src\ux\afxWindow.c" />
+    <ClCompile Include="..\..\src\ux\auxEnvironmentImpl.c" />
+    <ClCompile Include="..\..\src\ux\auxIcd.c" />
+    <ClCompile Include="..\..\src\ux\auxWidgetImpl.c" />
+    <ClCompile Include="..\..\src\ux\auxWindowImpl.c" />
     <ClCompile Include="..\..\src\ux\auxPaint.c" />
-    <ClCompile Include="..\..\src\ux\impl\auxImplementation.c" />
-    <ClCompile Include="..\..\src\ux\impl\auxImpl_Environment.c" />
-    <ClCompile Include="..\..\src\ux\impl\auxImpl_Widget.c" />
-    <ClCompile Include="..\..\src\ux\impl\auxImpl_Window.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="e2coree.rc" />
@@ -507,6 +547,8 @@
       <OmitFramePointers>false</OmitFramePointers>
       <ControlFlowGuard>Guard</ControlFlowGuard>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>-msse4.2 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link />
     <Link>
@@ -528,7 +570,8 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <OmitFramePointers>false</OmitFramePointers>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>-msse4.2 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link />
     <Link>
@@ -547,6 +590,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\;$(SolutionDir)..\..\;$(ProjectDir)..\..\;$(ProjectDir)..\..\..\;$(ProjectDir)..\..\..\qwadro;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalOptions>-msse4.2 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
@@ -561,7 +607,9 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\;$(SolutionDir)..\..\;$(ProjectDir)..\..\;$(ProjectDir)..\..\..\;$(ProjectDir)..\..\..\qwadro;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalOptions>-msse4.2 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>

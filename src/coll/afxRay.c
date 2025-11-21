@@ -24,7 +24,7 @@
 
 _AFXINL afxReal AfxRayIntersectsPlaneAt(afxRay const* ray, afxPlane plane, afxReal* T)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT2(ray, T);
     afxReal dot = AfxV3dDot(ray->normal, plane.uvwd);
 
@@ -39,7 +39,7 @@ _AFXINL afxReal AfxRayIntersectsPlaneAt(afxRay const* ray, afxPlane plane, afxRe
 
 _AFXINL afxReal AfxRayIntersectsSphere(afxRay const* ray, afxSphere const* sph)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT2(ray, sph);
     afxV3d o;
     AfxV3dSub(o, sph->xyzr, ray->origin);
@@ -49,7 +49,7 @@ _AFXINL afxReal AfxRayIntersectsSphere(afxRay const* ray, afxSphere const* sph)
 
 _AFXINL afxInt AfxRayIntersectsSphereAt(afxRay const* ray, afxSphere const* sph, afxReal* minT, afxReal* maxT)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT4(ray, sph, minT, maxT);
     afxInt rslt = 0;
     
@@ -78,7 +78,7 @@ _AFXINL afxInt AfxRayIntersectsSphereAt(afxRay const* ray, afxSphere const* sph,
 // Returns true if hit; if 'outT' is non-null, stores distance to hit
 _AFXINL afxBool AfxRaycastCapsule(afxRay const* ray, afxCapsule const cap, afxReal* outT)
 {
-    afxError err = NIL;    
+    afxError err = { 0 };    
 
     afxV3d a, b;
     AfxGetCapsuleEndpoints(cap, a, b);

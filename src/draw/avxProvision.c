@@ -19,11 +19,15 @@
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
+
+#ifdef _AFX_DEBUG
+#   define _AVX_DEBUG_BINDING_COMMANDS TRUE
+#endif
 
 _AVX afxCmdId AvxCmdExecuteCommands(afxDrawContext dctx, afxUnit cnt, afxDrawContext aux[], afxUnit const batches[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -48,7 +52,7 @@ _AVX afxCmdId AvxCmdExecuteCommands(afxDrawContext dctx, afxUnit cnt, afxDrawCon
 
 _AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, avxPipeline pip, avxVertexInput vin, afxFlags dynamics)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -90,7 +94,7 @@ _AVX afxCmdId AvxCmdBindPipeline(afxDrawContext dctx, avxPipeline pip, avxVertex
 
 _AVX afxCmdId AvxCmdUseLigature(afxDrawContext dctx, avxBus bus, avxLigature liga, afxFlags flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -105,6 +109,8 @@ _AVX afxCmdId AvxCmdUseLigature(afxDrawContext dctx, avxBus bus, avxLigature lig
     if (dctx->ligatures[bus].liga == liga)
         return dctx->ligatures[bus].bindCmdId;
 #endif
+
+    AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(UseLigature), sizeof(cmd->UseLigature), &cmdId);
@@ -123,7 +129,7 @@ _AVX afxCmdId AvxCmdUseLigature(afxDrawContext dctx, avxBus bus, avxLigature lig
 
 _AVX afxCmdId AvxCmdBindShadersEXT(afxDrawContext dctx, afxUnit cnt, avxShaderType const stages[], avxCodebase shaders[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -147,9 +153,10 @@ _AVX afxCmdId AvxCmdBindShadersEXT(afxDrawContext dctx, afxUnit cnt, avxShaderTy
 
     return cmdId;
 }
+
 _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, avxBus bus, afxUnit set, afxUnit pin, afxUnit cnt, avxBufferedMap const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -165,17 +172,85 @@ _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, avxBus bus, afxUnit set, af
     cmd->BindBuffers.pin = pin;
     cmd->BindBuffers.cnt = cnt;
 
+#ifdef _AVX_DEBUG_BINDING_COMMANDS // DEBUG
+    avxLigature liga = dctx->ligatures[bus].liga;
+    AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
+#endif//_AVX_DEBUG_BINDING_COMMANDS
+
     for (afxUnit i = 0; i < cnt; i++)
     {
-        avxBufferedMap const* map = maps ? &maps[i] : &(avxBufferedMap const) { 0 };
+        avxBufferedMap const* map = maps ? &maps[i] : &(avxBufferedMap const) { 0 };        
+        afxSize offset = map->offset;
+        afxUnit range = map->range;
+        avxBuffer buf = map->buf;
 
-        cmd->BindBuffers.maps[i].buf = map->buf;
-        cmd->BindBuffers.maps[i].offset = map->offset;
-        cmd->BindBuffers.maps[i].range = map->range;
+#ifdef _AVX_DEBUG_BINDING_COMMANDS // DEBUG
+        avxBufferUsage usage;
+        afxSize bufSiz;
+        if (buf)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
+            bufSiz = AvxGetBufferCapacity(buf, 0);
+            AFX_ASSERT_RANGE(bufSiz, offset, range);
+            usage = AvxGetBufferUsage(buf, NIL);
+        }
 
-        dctx->ligatures[bus].bindings[set][pin].buf.buf = map->buf;
-        dctx->ligatures[bus].bindings[set][pin].buf.offset = map->offset;
-        dctx->ligatures[bus].bindings[set][pin].buf.range = map->range;
+        avxLigament desc;
+        AvxDescribeLigament(liga, set, pin + i, 1, &desc);
+        switch (desc.type)
+        {
+        case avxShaderParam_UNIFORM:
+        {
+            if (buf)
+            {
+                AFX_ASSERT(usage & avxBufferUsage_UNIFORM);
+            }
+            break;
+        }
+        case avxShaderParam_STORAGE:
+            //case avxShaderParam_BUFFER:
+        {
+            if (buf)
+            {
+                AFX_ASSERT(usage & avxBufferUsage_STORAGE);
+            }
+            break;
+        }
+        case avxShaderParam_FETCH:
+        {
+            if (buf)
+            {
+                AFX_ASSERT(usage & avxBufferUsage_FETCH);
+            }
+            break;
+        }
+        case avxShaderParam_TSBO:
+        {
+            if (buf)
+            {
+                AFX_ASSERT(usage & avxBufferUsage_TENSOR);
+            }
+            break;
+        }
+        default:
+        {
+            AFX_ASSERT( (usage & avxBufferUsage_UNIFORM) ||
+                        (usage & avxBufferUsage_STORAGE) ||
+                        (usage & avxBufferUsage_FETCH) ||
+                        (usage & avxBufferUsage_TENSOR));
+            AfxThrowError();
+            break;
+        }
+        }
+#endif//_AVX_DEBUG_BINDING_COMMANDS
+
+        cmd->BindBuffers.maps[i].buf = buf;
+        cmd->BindBuffers.maps[i].offset = offset;
+        cmd->BindBuffers.maps[i].range = range;
+
+        dctx->ligatures[bus].bindings[set][pin].buf.buf = buf;
+        dctx->ligatures[bus].bindings[set][pin].buf.offset = offset;
+        dctx->ligatures[bus].bindings[set][pin].buf.range = range;
         dctx->ligatures[bus].bindings[set][pin].buf.bufBindCmdId = cmdId;
     }
     return cmdId;
@@ -183,7 +258,7 @@ _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, avxBus bus, afxUnit set, af
 
 _AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, avxBus bus, afxUnit set, afxUnit pin, afxUnit cnt, avxRaster const rasters[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -199,9 +274,49 @@ _AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, avxBus bus, afxUnit set, af
     cmd->BindRasters.pin = pin;
     cmd->BindRasters.cnt = cnt;
 
+#ifdef _AVX_DEBUG_BINDING_COMMANDS // DEBUG
+    avxLigature liga = dctx->ligatures[bus].liga;
+    AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
+#endif//_AVX_DEBUG_BINDING_COMMANDS
+
     for (afxUnit i = 0; i < cnt; i++)
     {
         avxRaster ras = rasters ? rasters[i] : NIL;
+
+#ifdef _AVX_DEBUG_BINDING_COMMANDS // DEBUG
+        if (ras)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
+        }
+
+        avxLigament desc;
+        AvxDescribeLigament(liga, set, pin + i, 1, &desc);
+        switch (desc.type)
+        {
+        case avxShaderParam_TEXTURE:
+        {
+            break;
+        }
+        case avxShaderParam_RASTER:
+        {
+            break;
+        }
+        case avxShaderParam_IMAGE:
+        {
+            break;
+        }
+        default:
+        {
+            AFX_ASSERT( (desc.type == avxShaderParam_TEXTURE) || 
+                        (desc.type == avxShaderParam_RASTER) || 
+                        (desc.type == avxShaderParam_IMAGE));
+            AfxThrowError();
+            break;
+        }
+        }
+
+#endif//_AVX_DEBUG_BINDING_COMMANDS
+
         cmd->BindRasters.rasters[i] = ras;
 
         dctx->ligatures[bus].bindings[set][pin].img.ras = ras;
@@ -212,7 +327,7 @@ _AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, avxBus bus, afxUnit set, af
 
 _AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, avxBus bus, afxUnit set, afxUnit pin, afxUnit cnt, avxSampler const samplers[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -228,9 +343,43 @@ _AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, avxBus bus, afxUnit set, a
     cmd->BindSamplers.pin = pin;
     cmd->BindSamplers.cnt = cnt;
 
+#ifdef _AVX_DEBUG_BINDING_COMMANDS // DEBUG
+    avxLigature liga = dctx->ligatures[bus].liga;
+    AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
+#endif//_AVX_DEBUG_BINDING_COMMANDS
+
     for (afxUnit i = 0; i < cnt; i++)
     {
         avxSampler samp = samplers ? samplers[i] : NIL;
+
+#ifdef _AVX_DEBUG_BINDING_COMMANDS // DEBUG
+        if (samp)
+        {
+            AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
+        }
+
+        avxLigament desc;
+        AvxDescribeLigament(liga, set, pin, 1, &desc);
+        switch (desc.type)
+        {
+        case avxShaderParam_TEXTURE:
+        {
+            break;
+        }
+        case avxShaderParam_SAMPLER:
+        {
+            break;
+        }
+        default:
+        {
+            AFX_ASSERT( (desc.type == avxShaderParam_TEXTURE) || 
+                        (desc.type == avxShaderParam_SAMPLER));
+            AfxThrowError();
+            break;
+        }
+        }
+#endif//_AVX_DEBUG_BINDING_COMMANDS
+
         cmd->BindSamplers.samplers[i] = samp;
 
         dctx->ligatures[bus].bindings[set][pin].img.samp = samp;
@@ -241,7 +390,7 @@ _AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, avxBus bus, afxUnit set, a
 
 _AVX afxCmdId AvxCmdPushConstants(afxDrawContext dctx, afxUnit offset, afxUnit siz, void const* value)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -263,7 +412,7 @@ _AVX afxCmdId AvxCmdPushConstants(afxDrawContext dctx, afxUnit offset, afxUnit s
 
 _AVX afxCmdId AvxCmdBindArgumentBuffersSIGMA(afxDrawContext dctx, afxUnit bufIdx, afxUnit cnt, avxBufferedMap buffers[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -391,7 +540,7 @@ _AVX afxCmdId AvxCmdBindArgumentBuffersSIGMA(afxDrawContext dctx, afxUnit bufIdx
 
 _AVX afxCmdId AvxCmdPushUniformsSIGMA(afxDrawContext dctx, avxBus bus, afxUnit set, afxUnit binding, void const* data, afxUnit dataSiz)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.

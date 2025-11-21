@@ -20,46 +20,68 @@
 #define _AVX_DRAW_C
 #define _AVX_FENCE_C
 #include "../impl/afxExecImplKit.h"
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
+
+_AVX _avxDdiFenc const _AVX_FENC_DDI =
+{
+
+};
 
 _AVX afxDrawSystem AvxGetFenceHost(avxFence fenc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
     afxDrawSystem dsys = AfxGetHost(fenc);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     return dsys;
 }
 
-_AVX afxBool AvxCheckForFenceSignaled(avxFence fenc)
+_AVX afxUnit64 AvxGetCompletedFenceValue(avxFence fenc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
-    return AfxLoadAtom32(&fenc->signaled);
+
+    // This method mimmicks the D3D12's one.
+    afxUnit64 value = (afxUnit64)AfxLoadAtom64(&fenc->value);
+    return value;
 }
 
-_AVX afxError AvxGetTimelineFenceCounter(avxFence fenc, afxUnit64* value)
+_AVX afxError AvxSignalFence(avxFence fenc, afxUnit64 value)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
-    AFX_ASSERT(fenc->flags & avxFenceFlag_TIMELINE);
-    AFX_ASSERT(value);
-    *value = (afxUnit64)AfxLoadAtom64(&fenc->value);
+    
+    // Also queued on D3D12
+    // ID3D12Fence::Signal. Use this method to set a fence value from the CPU side.
+    // Use ID3D12CommandQueue::Signal to set a fence from the GPU side.
+    
+    if (fenc->ddi->signalCb)
+        err = fenc->ddi->signalCb(fenc);
+    else
+        AfxStoreAtom64(&fenc->value, (afxInt64)value);
+
     return err;
 }
 
-_AVX afxError AvxSignalTimelineFence(avxFence fenc, afxUnit64 value)
+_AVX afxError AvxWaitForFence(avxFence fenc, afxUnit64 value, afxUnit64 timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
-    AFX_ASSERT(fenc->flags & avxFenceFlag_TIMELINE);
-    AfxStoreAtom64(&fenc->value, (afxInt64)value);
+    
+#if !0
+    if (fenc->ddi->waitCb)
+        err = fenc->ddi->waitCb(fenc, value, timeout);
+#else
+    if (!AfxLoadAtom64(&fenc->signaled))
+        AvxWaitForFences(AvxGetFenceHost(fenc), timeout, TRUE, 1, &fenc, &value);
+#endif
+
     return err;
 }
 
 _AVX afxError _AvxFencDtorCb(avxFence fenc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
     
     return err;
@@ -67,7 +89,7 @@ _AVX afxError _AvxFencDtorCb(avxFence fenc)
 
 _AVX afxError _AvxFencCtorCb(avxFence fenc, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FENC, 1, &fenc);
 
     afxDrawSystem dsys = args[0];
@@ -80,6 +102,8 @@ _AVX afxError _AvxFencCtorCb(avxFence fenc, void** args, afxUnit invokeNo)
 
     fenc->tag = info->tag;
     fenc->udd = info->udd;
+
+    fenc->ddi = &_AVX_FENC_DDI;
 
     return err;
 }
@@ -98,12 +122,12 @@ _AVX afxClassConfig const _AVX_FENC_CLASS_CONFIG =
 
 _AVX afxError AvxAcquireFences(afxDrawSystem dsys, afxUnit cnt, avxFenceInfo const info[], avxFence fences[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(cnt);
     AFX_ASSERT(fences);
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->fencCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->fencCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_FENC);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)fences, (void const*[]) { dsys, info }))
@@ -112,9 +136,9 @@ _AVX afxError AvxAcquireFences(afxDrawSystem dsys, afxUnit cnt, avxFenceInfo con
     return err;
 }
 
-_AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxUnit64 timeout, afxBool waitAll, afxUnit cnt, avxFence const fences[], afxUnit64 const values[])
+_AVX afxError _AvxDsysWaitForFencesCb(afxDrawSystem dsys, afxUnit64 timeout, afxBool waitAll, afxUnit cnt, avxFence const fences[], afxUnit64 const values[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(fences);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
@@ -204,18 +228,29 @@ _AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxUnit64 timeout, afxBool wa
         }
     }
 
-    //if (dsys->waitFencCb(dsys, waitAll, timeout, cnt, fences))
-        //AfxThrowError();
+    return err;
+}
+
+_AVX afxError AvxWaitForFences(afxDrawSystem dsys, afxUnit64 timeout, afxBool waitAll, afxUnit cnt, avxFence const fences[], afxUnit64 const values[])
+{
+    afxError err = { 0 };
+    AFX_ASSERT(fences);
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+    if (_AvxDsysGetDdi(dsys)->waitFencCb(dsys, timeout, waitAll, cnt, fences, values))
+        AfxThrowError();
 
     return err;
 }
 
 _AVX afxError AvxResetFences(afxDrawSystem dsys, afxUnit cnt, avxFence const fences[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(fences);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    
+
+    AfxThrowError();
+#if 0
     for (afxUnit i = 0; i < cnt; i++)
     {
         avxFence dfen = fences[i];
@@ -230,7 +265,7 @@ _AVX afxError AvxResetFences(afxDrawSystem dsys, afxUnit cnt, avxFence const fen
             AfxStoreAtom64(&dfen->signaled, 0);
         }
     }
-
+#endif
     //if (dsys->resetFencCb(dsys, cnt, fences))
         //AfxThrowError();
 

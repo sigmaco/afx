@@ -22,7 +22,7 @@
 
 _AFX afxUnit AfxGetCompressionPaddingSize(afxCompressionType type)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(type == NIL);
 
     switch (type)
@@ -39,7 +39,7 @@ _AFX afxUnit AfxGetCompressionPaddingSize(afxCompressionType type)
 
 _AFX afxBool AfxDecompressData(afxCompressionType type, afxBool fileIsByteReversed, afxUnit compressedBytesSiz, void *compressedBytes, afxInt stop0, afxInt stop1, afxInt stop2, void *decompressedBytes)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(type == NIL);
 
     switch (type)
@@ -98,7 +98,7 @@ _AFX void _AfxDecodeRle(afxStream stream, afxUnit len, afxUnit byteCnt, afxByte 
 
 _AFX afxError _AfxCdcCtor(afxCodec cdc, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_CDC, 1, &cdc);
 
     afxSystem sys = args[0];
@@ -108,7 +108,7 @@ _AFX afxError _AfxCdcCtor(afxCodec cdc, void** args, afxUnit invokeNo)
 
 _AFX afxError _AfxCdcDtor(afxCodec cdc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_CDC, 1, &cdc);
 
     //afxMmu mmu = AfxGetDrawSystemMmu();

@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_TXD_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 #ifdef _AVX_TXD_C
 
@@ -52,7 +52,7 @@ AFX_OBJECT(avxTxd)
 
 _AVX afxCmdId AvxCmdUseTxds(afxDrawContext dctx, afxUnit baseSlotIdx, afxUnit cnt, avxTxd txds[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     return 0;
@@ -60,7 +60,7 @@ _AVX afxCmdId AvxCmdUseTxds(afxDrawContext dctx, afxUnit baseSlotIdx, afxUnit cn
 
 _AVX afxCmdId AvxCmdBindTextures(afxDrawContext dctx, afxUnit txdIdx, afxUnit cnt, afxUnit const indices[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT(indices);
 
@@ -69,7 +69,7 @@ _AVX afxCmdId AvxCmdBindTextures(afxDrawContext dctx, afxUnit txdIdx, afxUnit cn
 
 _AVX afxError AvxAddTextures(avxTxd txd, afxUnit cnt, afxString const names[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TXD, 1, &txd);
 
     for (afxUnit i = 0; i < cnt; i++)
@@ -81,7 +81,7 @@ _AVX afxError AvxAddTextures(avxTxd txd, afxUnit cnt, afxString const names[])
 
         afxBool found = FALSE;
         _avxTxdTex* tex;
-        AFX_ITERATE_CHAIN(_avxTxdTex, tex, txd, &txd->texs)
+        AFX_ITERATE_CHAIN(tex, txd, &txd->texs)
         {
             if (AfxCompareStrings(n, 0, FALSE, 1, &tex->name.s, NIL))
             {
@@ -109,13 +109,13 @@ _AVX afxError AvxAddTextures(avxTxd txd, afxUnit cnt, afxString const names[])
 
 _AVX afxError AvxFindTextures(avxTxd txd, afxUnit cnt, afxString const names[], afxUnit indices[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TXD, 1, &txd);
 
     afxUnit foundCnt = 0;
     afxUnit i = 0;
     _avxTxdTex* tex;
-    AFX_ITERATE_CHAIN(_avxTxdTex, tex, txd, &txd->texs)
+    AFX_ITERATE_CHAIN(tex, txd, &txd->texs)
     {
         afxUnit sIdx;
         if (AfxCompareStrings(&tex->name.s, 0, FALSE, cnt, names, &sIdx))
@@ -133,13 +133,13 @@ _AVX afxError AvxFindTextures(avxTxd txd, afxUnit cnt, afxString const names[], 
 
 _AVX afxError AvxRequestTextures(avxTxd txd, afxUnit cnt, afxUnit indices[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TXD, 1, &txd);
 
     afxUnit foundCnt = 0;
     afxUnit i = 0;
     _avxTxdTex* tex;
-    AFX_ITERATE_CHAIN(_avxTxdTex, tex, txd, &txd->texs)
+    AFX_ITERATE_CHAIN(tex, txd, &txd->texs)
     {
         afxBool found = FALSE;
         for (afxUnit j = 0; j < cnt; j++)
@@ -175,7 +175,7 @@ _AVX afxError AvxRequestTextures(avxTxd txd, afxUnit cnt, afxUnit indices[])
 
 _AVX afxError _AvxTxdDtorCb(avxTxd txd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TXD, 1, &txd);
 
     return err;
@@ -183,7 +183,7 @@ _AVX afxError _AvxTxdDtorCb(avxTxd txd)
 
 _AVX afxError _AvxTxdCtorCb(avxTxd txd, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_TXD, 1, &txd);
 
     afxDrawSystem dsys = args[0];
@@ -210,10 +210,10 @@ _AVX afxClassConfig const _AVX_TXD_CLASS_CONFIG =
 
 _AVX afxError AvxAcquireTxd(afxDrawSystem dsys, avxTxdInfo const* info, avxTxd* txd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->txdCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->txdCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_TXD);
 
     if (AfxAcquireObjects(cls, 1, (afxObject*)txd, (void const*[]) { dsys, info }))
@@ -243,7 +243,7 @@ _AVX afxBool GetDirTexNamesCb(afxArray* files, afxUri const* path, afxUri const*
 
 _AVX afxError AvxOpenTxd(afxDrawSystem dsys, afxUri const* url, avxTxd* dict)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxUri urlBase;
     

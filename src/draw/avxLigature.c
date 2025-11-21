@@ -20,11 +20,11 @@
 #define _AVX_DRAW_C
 #define _AVX_LIGATURE_C
 #define _AVX_SHADER_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 _AVX afxDrawSystem AvxGetLigatureHost(avxLigature liga)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @liga must be a valid avxLigature handle.
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
     afxDrawSystem dsys = AfxGetHost(liga);
@@ -34,7 +34,7 @@ _AVX afxDrawSystem AvxGetLigatureHost(avxLigature liga)
 
 _AVX afxFlags AvxGetLigatureFlags(avxLigature liga, afxFlags mask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @liga must be a valid avxLigature handle.
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
     return (!mask) ? liga->flags : (liga->flags & mask);
@@ -42,7 +42,7 @@ _AVX afxFlags AvxGetLigatureFlags(avxLigature liga, afxFlags mask)
 
 _AVX afxUnit32 AvxGetLigatureHash(avxLigature liga, afxUnit set)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
     AFX_ASSERT_RANGE(liga->setCnt, set, 1);
     afxUnit crc = NIL;
@@ -58,32 +58,53 @@ _AVX afxUnit32 AvxGetLigatureHash(avxLigature liga, afxUnit set)
     return crc;
 }
 
-_AVX afxResult AvxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex first, afxUnit cnt, avxLigament decl[])
+_AVX afxResult AvxDescribeLigament(avxLigature liga, afxUnit set, afxIndex first, afxUnit cnt, avxLigament descs[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
-    AFX_ASSERT_RANGE(liga->totalEntryCnt, first, cnt);
-    AFX_ASSERT_RANGE(liga->setCnt, set, 1);
+    //AFX_ASSERT_RANGE(liga->totalEntryCnt, first, cnt);
+    //AFX_ASSERT_RANGE(liga->setCnt, set, 1);
     AFX_ASSERT(cnt);
-    AFX_ASSERT(decl);
+    AFX_ASSERT(descs);
     afxResult rslt = 0;
 
-    for (afxIndex i = 0; i < liga->setCnt; i++)
+    for (afxUnit setIdx = 0; setIdx < liga->setCnt; setIdx++)
     {
-        if (liga->sets[i].set == set)
+        _avxLigamentSet* pSet = &liga->sets[setIdx];
+
+        if (pSet->set == set)
         {
-            AFX_ASSERT_RANGE(liga->sets[i].entryCnt, first, cnt);
+            for (afxUnit k = 0; k < cnt; k++)
+            {
+                avxLigament* desc = &descs[k];
+                afxBool found = FALSE;
 
-            if (i >= cnt)
-                break;
+                //AFX_ASSERT_RANGE(pSet->entryCnt, first, cnt);
 
-            afxIndex resIdx = first + i;
-            decl[i].binding = liga->totalEntries[resIdx].binding;
-            decl[i].visibility = liga->totalEntries[resIdx].visibility;
-            decl[i].type = liga->totalEntries[resIdx].type;
-            decl[i].cnt = liga->totalEntries[resIdx].cnt;
-            decl[i].name = liga->totalEntries[resIdx].name;
-            ++rslt;
+                for (afxUnit absResIdx = 0; absResIdx < pSet->entryCnt; absResIdx++)
+                {
+                    _avxLigament* bind = &liga->totalEntries[pSet->baseEntry + absResIdx];
+                    afxIndex resIdx = bind->binding;
+
+                    if ((resIdx != first + k))
+                        continue;
+
+                    found = TRUE;
+
+                    desc->binding = bind->binding;
+                    desc->visibility = bind->visibility;
+                    desc->type = bind->type;
+                    desc->cnt = bind->cnt;
+                    desc->name = bind->name;
+                    ++rslt;
+
+                    if (rslt >= cnt)
+                        break;
+                }
+
+                if (!found)
+                    *desc = (avxLigament) { 0 };
+            }
         }
     }
     return rslt;
@@ -91,7 +112,7 @@ _AVX afxResult AvxGetLigatureEntry(avxLigature liga, afxUnit set, afxIndex first
 
 _AVX afxError _AvxLigaDtorCb(avxLigature liga)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
 
     afxObjectStash const stashes[] =
@@ -121,7 +142,7 @@ _AVX afxError _AvxLigaDtorCb(avxLigature liga)
 
 _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
 
     //afxDrawSystem dsys = args[0];
@@ -373,12 +394,12 @@ _AVX afxClassConfig const _AVX_LIGA_CLASS_CONFIG =
 
 _AVX afxError AvxAcquireLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureConfig const cfg[], avxLigature ligatures[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(cfg);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->ligaCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->ligaCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_LIGA);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)ligatures, (void const*[]) { dsys, cfg }))
@@ -401,7 +422,7 @@ _AVX afxError AvxAcquireLigatures(afxDrawSystem dsys, afxUnit cnt, avxLigatureCo
 
 _AVX afxError AvxConfigureLigature(afxDrawSystem dsys, avxLigatureConfig* cfg, avxCodebase codb, afxUnit progCnt, afxUnit progs[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(cfg);
 

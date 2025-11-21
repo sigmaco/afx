@@ -115,7 +115,7 @@ afxUnit64 AfxGetTicksPerSecond(void)
 
 _AFX afxTimeSpec* AfxMakeTimeSpec(afxTimeSpec* ts, afxUnit64 nsec)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ts);
 
     if (!nsec) *ts = (afxTimeSpec) { 0 };
@@ -136,7 +136,7 @@ _AFX afxTimeSpec* AfxMakeTimeSpec(afxTimeSpec* ts, afxUnit64 nsec)
 
 _AFX afxTimeSpec* AfxMakeTimeSpecInterval(afxTimeSpec* ts, afxTimeSpec const* start, afxTimeSpec const* end)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ts);
     AFX_ASSERT(start);
     AFX_ASSERT(end);
@@ -164,7 +164,7 @@ _AFX afxTimeSpec* AfxMakeTimeSpecInterval(afxTimeSpec* ts, afxTimeSpec const* st
 
 _AFX afxInt64 AfxGetTimeSpecDelta(afxTimeSpec const* start, afxTimeSpec const* end)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(start);
     AFX_ASSERT(end);
 
@@ -197,14 +197,14 @@ AFX_DEFINE_STRUCT(afxTimer)
 
 _AFX afxError AfxMakeTimer(afxTimer* timer)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(timer);
     return err;
 }
 
 _AFX afxError AfxFixTimerStep(afxTimer* timer, afxUnit stepsPerSec)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(timer);
     timer->stepsPerSec = (stepsPerSec > 0 && stepsPerSec < 5) ? 5 : stepsPerSec < 0 ? 0 : stepsPerSec;
     return err;
@@ -212,7 +212,7 @@ _AFX afxError AfxFixTimerStep(afxTimer* timer, afxUnit stepsPerSec)
 
 _AFX afxError AfxStepTimer(afxTimer* timer)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(timer);
     
     if (!timer->running)

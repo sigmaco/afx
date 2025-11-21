@@ -81,8 +81,8 @@
 #   endif
 #endif//__e2iridee__
 
+AFX_DEFINE_HANDLE(arxScenario);
 AFX_DEFINE_HANDLE(arxRenderContext);
-AFX_DEFINE_HANDLE(arxDrawInput);
 
 AFX_DEFINE_HANDLE(arxBuffer);
 

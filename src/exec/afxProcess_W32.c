@@ -91,7 +91,7 @@ void CreateIsolatedProcess(const char *application)
 
 _AFX afxError _AfxProcCtorCb(afxProcess proc, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PROC, 1, &proc);
 
     afxShell sh = args[0];
@@ -104,7 +104,7 @@ _AFX afxError _AfxProcCtorCb(afxProcess proc, void** args, afxUnit invokeNo)
 
 _AFX afxError _AfxProcDtorCb(afxProcess proc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PROC, 1, &proc);
 
     return err;
@@ -123,7 +123,7 @@ _AFX afxClassConfig const _AFX_PROC_CLASS_CONFIG =
 
 _AFX afxError AfxSpawnProcess(afxUnit reserved, afxProcessInfo const* info, afxUnit cnt, afxProcess procs[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(info);
 
     afxSystem sys;

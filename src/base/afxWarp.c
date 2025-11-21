@@ -28,14 +28,14 @@
 
 _AFXINL void AfxWhdReset(afxWarp* whd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     AfxWhdFill(whd, 1);
 }
 
 _AFXINL void AfxWhdFill(afxWarp* whd, afxUnit value)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     whd->w = value;
     whd->h = value;
@@ -44,7 +44,7 @@ _AFXINL void AfxWhdFill(afxWarp* whd, afxUnit value)
 
 _AFXINL void AfxWhdSet(afxWarp* whd, afxUnit x, afxUnit y, afxUnit z)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     whd->w = x;
     whd->h = y;
@@ -53,14 +53,14 @@ _AFXINL void AfxWhdSet(afxWarp* whd, afxUnit x, afxUnit y, afxUnit z)
 
 _AFXINL void AfxWhdCopy(afxWarp* whd, afxWarp const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     AfxWhdSet(whd, in.w, in.h, in.d);
 }
 
 _AFXINL void AfxWhdMin(afxWarp* whd, afxWarp const a, afxWarp const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     //AFX_ASSERT(a);
     //AFX_ASSERT(b);
@@ -71,7 +71,7 @@ _AFXINL void AfxWhdMin(afxWarp* whd, afxWarp const a, afxWarp const b)
 
 _AFXINL void AfxWhdMax(afxWarp* whd, afxWarp const a, afxWarp const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     //AFX_ASSERT(a);
     //AFX_ASSERT(b);
@@ -82,7 +82,7 @@ _AFXINL void AfxWhdMax(afxWarp* whd, afxWarp const a, afxWarp const b)
 
 _AFXINL void AfxWhdClamp(afxWarp* whd, afxWarp const in, afxWarp const min, afxWarp const max)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     //AFX_ASSERT(in);
     whd->w = AFX_CLAMP(in.w, min.w, max.w);
@@ -92,7 +92,7 @@ _AFXINL void AfxWhdClamp(afxWarp* whd, afxWarp const in, afxWarp const min, afxW
 
 _AFXINL void AfxWhdClampOffset(afxWarp* whd, afxWarp const origin, afxWarp const extent)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     //AFX_ASSERT(origin);
     whd->w = AFX_MIN(origin.x, extent.w - 1);
@@ -105,13 +105,13 @@ _AFXINL void AfxWhdClampOffset(afxWarp* whd, afxWarp const origin, afxWarp const
 
 _AFXINL afxBool AfxWhdAreEquals(afxWarp const whd, afxWarp const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (whd.w == other.x) || (whd.h == other.y) || (whd.d == other.d);
 }
 
 _AFXINL afxBool AfxWhdIsLessOrEqual(afxWarp const whd, afxWarp const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     //AFX_ASSERT(other);
     return (((whd.w <= other.x) && (whd.h <= other.y) && (whd.d <= other.d)) != 0);
@@ -119,7 +119,7 @@ _AFXINL afxBool AfxWhdIsLessOrEqual(afxWarp const whd, afxWarp const other)
 
 _AFXINL afxBool AfxWhdIsLessThan(afxWarp const whd, afxWarp const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     //AFX_ASSERT(other);
     return (((whd.w < other.x) && (whd.h < other.y) && (whd.d < other.d)) != 0);
@@ -127,14 +127,14 @@ _AFXINL afxBool AfxWhdIsLessThan(afxWarp const whd, afxWarp const other)
 
 _AFXINL afxBool AfxWhdIsZero(afxWarp const whd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     return (AFX_R(0) == (whd.w + whd.h + whd.d));
 }
 
 _AFXINL void AfxWhdAdd(afxWarp* whd, afxWarp const a, afxWarp const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     //AFX_ASSERT(a);
     //AFX_ASSERT(b);
@@ -145,7 +145,7 @@ _AFXINL void AfxWhdAdd(afxWarp* whd, afxWarp const a, afxWarp const b)
 
 _AFXINL void AfxWhdSub(afxWarp* whd, afxWarp const a, afxWarp const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     //AFX_ASSERT(a);
     //AFX_ASSERT(b);
@@ -156,7 +156,7 @@ _AFXINL void AfxWhdSub(afxWarp* whd, afxWarp const a, afxWarp const b)
 
 _AFXINL void AfxWhdDiv(afxWarp* whd, afxWarp const in, afxUnit div)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     //AFX_ASSERT(in);
     AFX_ASSERT(div);
@@ -167,7 +167,7 @@ _AFXINL void AfxWhdDiv(afxWarp* whd, afxWarp const in, afxUnit div)
 
 _AFXINL void AfxWhdMod(afxWarp* whd, afxWarp const in, afxUnit div)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     //AFX_ASSERT(in);
     AFX_ASSERT(div);
@@ -178,7 +178,7 @@ _AFXINL void AfxWhdMod(afxWarp* whd, afxWarp const in, afxUnit div)
 
 _AFXINL void AfxWhdScale(afxWarp* whd, afxWarp const in, afxUnit s)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     //AFX_ASSERT(in);
     whd->w = in.w * s;
@@ -188,7 +188,7 @@ _AFXINL void AfxWhdScale(afxWarp* whd, afxWarp const in, afxUnit s)
 
 _AFXINL void AfxWhdHalf(afxWarp* whd, afxWarp const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(whd);
     //AFX_ASSERT(in);
     whd->w = AFX_MAX(in.w ? 1 : 0, in.w >> 1);
@@ -198,21 +198,21 @@ _AFXINL void AfxWhdHalf(afxWarp* whd, afxWarp const in)
 
 _AFXINL afxUnit AfxWhdSum(afxWarp const whd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     return whd.w + whd.h + whd.d;
 }
 
 _AFXINL afxUnit AfxWhdMag(afxWarp const whd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     return whd.w * whd.h * whd.d;
 }
 
 _AFXINL afxUnit AfxWhdDot(afxWarp const whd, afxWarp const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     //AFX_ASSERT(other);
     return (whd.w * other.x) + (whd.h * other.y) + (whd.d * other.d);
@@ -220,7 +220,7 @@ _AFXINL afxUnit AfxWhdDot(afxWarp const whd, afxWarp const other)
 
 _AFXINL afxError _AfxAssertWhd(afxWarp total_, afxWarp base_, afxWarp range_, afxHere const hint)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(total_);
     //AFX_ASSERT(base_);
     //AFX_ASSERT(range_);

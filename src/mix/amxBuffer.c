@@ -18,13 +18,13 @@
 
 #define _AMX_MIX_C
 #define _AMX_BUFFER_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 extern unsigned char rawData[1095920];
 
 _AMX afxMixSystem AmxGetBufferHost(amxBuffer buf)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     afxMixSystem msys = AfxGetHost(buf);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
@@ -33,35 +33,35 @@ _AMX afxMixSystem AmxGetBufferHost(amxBuffer buf)
 
 _AMX void* AmxGetBufferUdd(amxBuffer buf)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_BUF, 1, &buf);
     return buf->udd;
 }
 
 _AMX afxSize AmxGetBufferAddress(amxBuffer buf, afxSize from)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     return buf->storage[0].hostedAlloc.addr + buf->storage[0].offset;
 }
 
 _AMX afxSize AmxGetBufferCapacity(amxBuffer buf, afxSize from)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     return AFX_MIN(buf->reqSiz, buf->reqSiz - from);
 }
 
 _AMX amxBufferUsage AmxGetBufferUsage(amxBuffer buf, amxBufferUsage mask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     return (!mask) ? buf->usage : (buf->usage & mask);
 }
 
 _AMX amxBufferFlags AmxGetBufferFlags(amxBuffer buf, amxBufferFlags mask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     return (!mask) ? buf->flags : (buf->flags & mask);
 }
@@ -70,7 +70,7 @@ _AMX amxBufferFlags AmxGetBufferFlags(amxBuffer buf, amxBufferFlags mask)
 
 _AMX void* AmxGetBufferMap(amxBuffer mbuf, afxSize offset, afxUnit range)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &mbuf);
 
     afxSize mappedOffset = mbuf->storage[0].mapOffset;
@@ -91,7 +91,7 @@ _AMX void* AmxGetBufferMap(amxBuffer mbuf, afxSize offset, afxUnit range)
 
 _AMX afxError AmxUnmapBuffer(amxBuffer buf, afxBool wait)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     AFX_ASSERT(AmxGetBufferFlags(buf, amxBufferFlag_RW));
 
@@ -112,7 +112,7 @@ _AMX afxError AmxUnmapBuffer(amxBuffer buf, afxBool wait)
 
 _AMX afxError AmxMapBuffer(amxBuffer buf, afxSize offset, afxUnit range, afxFlags flags, void** placeholder)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     AFX_ASSERT(AmxGetBufferFlags(buf, amxBufferFlag_RW));
     AFX_ASSERT_RANGE(buf->reqSiz, offset, range);
@@ -141,7 +141,7 @@ _AMX afxError AmxMapBuffer(amxBuffer buf, afxSize offset, afxUnit range, afxFlag
 
 _AMX afxError AmxCohereMappedBuffer(amxBuffer buf, afxSize offset, afxUnit range, afxFlags flags, afxBool discard)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     AFX_ASSERT_RANGE(buf->reqSiz, offset, range);
     AFX_ASSERT(AFX_TEST_ALIGNMENT(offset, AMX_BUFFER_ALIGNMENT));
@@ -165,7 +165,7 @@ _AMX afxError AmxCohereMappedBuffer(amxBuffer buf, afxSize offset, afxUnit range
 
 _AMX afxError AmxDumpBuffer(amxBuffer buf, afxUnit opCnt, amxBufferIo const ops[], void* dst, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     AFX_ASSERT(AmxGetBufferFlags(buf, amxBufferFlag_R));
     AFX_ASSERT(opCnt);
@@ -214,7 +214,7 @@ _AMX afxError AmxDumpBuffer(amxBuffer buf, afxUnit opCnt, amxBufferIo const ops[
 
 _AMX afxError AmxUpdateBuffer(amxBuffer buf, afxUnit opCnt, amxBufferIo const ops[], void const* src, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     AFX_ASSERT(AmxGetBufferFlags(buf, amxBufferFlag_W));
     AFX_ASSERT(opCnt);
@@ -265,7 +265,7 @@ _AMX afxError AmxUpdateBuffer(amxBuffer buf, afxUnit opCnt, amxBufferIo const op
 
 _AMX afxError AmxUploadBuffer(amxBuffer buf, afxUnit opCnt, amxBufferIo const ops[], afxStream in, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     AFX_ASSERT(AmxGetBufferFlags(buf, amxBufferFlag_W));
 
@@ -311,7 +311,7 @@ _AMX afxError AmxUploadBuffer(amxBuffer buf, afxUnit opCnt, amxBufferIo const op
 
 _AMX afxError AmxDownloadBuffer(amxBuffer buf, afxUnit opCnt, amxBufferIo const ops[], afxStream out, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &buf);
     AFX_ASSERT(AmxGetBufferFlags(buf, amxBufferFlag_R));
 
@@ -358,7 +358,7 @@ _AMX afxError AmxDownloadBuffer(amxBuffer buf, afxUnit opCnt, amxBufferIo const 
 
 _AMX afxError _AmxMbufDtorCb(amxBuffer mbuf)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MBUF, 1, &mbuf);
 
     if (!(mbuf->flags & amxBufferFlag_F))
@@ -607,7 +607,7 @@ _AMX afxClassConfig const _AMX_MBUF_CLASS_CONFIG =
 
 _AMX afxError AmxAcquireBuffers(afxMixSystem msys, afxUnit cnt, amxBufferInfo const infos[], amxBuffer buffers[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(buffers);
     AFX_ASSERT(infos);
@@ -624,7 +624,7 @@ _AMX afxError AmxAcquireBuffers(afxMixSystem msys, afxUnit cnt, amxBufferInfo co
 
 _AMX afxError AmxLoadBuffers(afxMixSystem msys, afxUnit cnt, afxUri const uris[], amxBuffer buffers[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(buffers);
     AFX_ASSERT(uris);
@@ -664,7 +664,7 @@ _AMX afxError AmxLoadBuffers(afxMixSystem msys, afxUnit cnt, afxUri const uris[]
 
 _AMX afxError AmxMapBuffers(afxMixSystem msys, afxUnit cnt, amxBufferedMap maps[], void** placeholders[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
@@ -831,7 +831,7 @@ _AMX afxError AmxMapBuffers(afxMixSystem msys, afxUnit cnt, amxBufferedMap maps[
 
 _AMX afxError AmxUnmapBuffers(afxMixSystem msys, afxUnit cnt, amxBufferedMap maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
@@ -952,7 +952,7 @@ _AMX afxError AmxUnmapBuffers(afxMixSystem msys, afxUnit cnt, amxBufferedMap map
 
 _AMX afxError AmxCohereMappedBuffers(afxMixSystem msys, afxBool discard, afxUnit cnt, amxBufferedMap const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 

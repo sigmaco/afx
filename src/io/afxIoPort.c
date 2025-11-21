@@ -26,14 +26,14 @@
 
 _AFX afxError _AfxXpuStdWorkCallbackCb(afxIoBridge exu, afxStdWork* work)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     work->Callback.f(exu, work->Callback.udd);
     return err;
 }
 
 _AFX afxError _AfxXpuStdWorkExecuteCb(afxIoBridge exu, afxStdWork* work)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     for (afxUnit i = 0; i < work->Execute.cmdbCnt; i++)
     {
@@ -52,7 +52,7 @@ _AFX afxStdWorkList _AfxStdXpuWorkCbVmt =
 
 _AFX afxBool _AfxExuStdIoProcCb(afxIoBridge exu, afxThread thr)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
     AFX_ASSERT_OBJECTS(afxFcc_THR, 1, &thr);
 
@@ -69,7 +69,7 @@ _AFX afxBool _AfxExuStdIoProcCb(afxIoBridge exu, afxThread thr)
         if (AfxTryLockMutex(&xque->workChnMtx))
         {
             afxStdWork* work;
-            AFX_ITERATE_CHAIN_B2F(afxStdWork, work, hdr.chain, &xque->workChn)
+            AFX_ITERATE_CHAIN_B2F(work, hdr.chain, &xque->workChn)
             {
                 AFX_ASSERT(xque->workChn.cnt);
                 AfxGetTime(&work->hdr.pullTime);
@@ -88,7 +88,7 @@ _AFX afxBool _AfxExuStdIoProcCb(afxIoBridge exu, afxThread thr)
 
 _AFX afxInt _AfxExuStdIoThreadProc(afxIoBridge exu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
 
     afxDevice ddev = AfxGetIoBridgeDevice(exu);
@@ -121,7 +121,7 @@ _AFX afxInt _AfxExuStdIoThreadProc(afxIoBridge exu)
 
 _AFX afxError _AfxExuStdIoPingCb(afxIoBridge exu, afxUnit queIdx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
     exu->schedCnt += 1;
     AfxSignalCondition(&exu->schedCnd);
@@ -130,7 +130,7 @@ _AFX afxError _AfxExuStdIoPingCb(afxIoBridge exu, afxUnit queIdx)
 
 _AFX afxError _AfxExuStdIoCtrlCb(afxIoBridge exu, afxInt code)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_EXU, 1, &exu);
 
     switch (code)

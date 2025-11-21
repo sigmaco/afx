@@ -21,7 +21,7 @@
 
 _AFXINL afxSphere* AfxMakeSphere(afxSphere* sph, afxV3d const centre, afxReal radius)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(sph);
     AFX_ASSERT(centre);
     AfxV4dSet(sph->xyzr, centre[0], centre[1], centre[2], radius);
@@ -30,14 +30,14 @@ _AFXINL afxSphere* AfxMakeSphere(afxSphere* sph, afxV3d const centre, afxReal ra
 
 _AFXINL void AfxGetSphereOrigin(afxSphere const sph, afxV4d centre)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(centre);
     AfxV4dSet(centre, sph.xyzr[0], sph.xyzr[1], sph.xyzr[2], 1);
 }
 
 _AFXINL afxBox AfxGetSphereAabb(afxSphere const sph)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // Calculate the AABB for this sphere
     afxReal r = sph.xyzr[AFX_SPHERE_RADIUS];
     return AFX_AABB(sph.xyzr[0] - r, sph.xyzr[1] - r, sph.xyzr[2] - r,
@@ -53,7 +53,7 @@ _AFXINL afxBox AfxGetSphereAabb(afxSphere const sph)
 
 _AFXINL afxUnit AfxDoesSphereIntersects(afxSphere* sph, afxUnit cnt, afxSphere const others[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(sph);
     AFX_ASSERT(!cnt || others);
 
@@ -85,7 +85,7 @@ _AFXINL afxUnit AfxDoesSphereIntersects(afxSphere* sph, afxUnit cnt, afxSphere c
 
 _AFXINL afxUnit AfxDoesSphereIntersectsAabbs(afxSphere* sph, afxUnit cnt, afxBox const boxes[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(sph);
     AFX_ASSERT(!cnt || boxes);
 
@@ -117,7 +117,7 @@ _AFXINL afxUnit AfxDoesSphereIntersectsAabbs(afxSphere* sph, afxUnit cnt, afxBox
 // Returns: -1 = outside, 0 = on surface, 1 = inside
 _AFXINL afxInt AfxTestSphereEnglobingPoint(afxSphere const* sph, afxV3d const point)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(sph);
     AFX_ASSERT(point);
 
@@ -139,7 +139,7 @@ _AFXINL afxInt AfxTestSphereEnglobingPoint(afxSphere const* sph, afxV3d const po
 // Returns: -1 = outside, 0 = on surface, 1 = inside
 _AFXINL afxInt AfxTestSphereEnglobingPoints(afxSphere const* sph, afxBool all, afxBool fully, afxUnit cnt, afxV3d const points[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(sph);
     AFX_ASSERT(points);
 

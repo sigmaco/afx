@@ -54,6 +54,8 @@
 #   define _AFX_ARRAY_VALIDATION_ENABLED TRUE
 #endif
 
+#define _AFX_USE_TYPEOF TRUE
+
 typedef enum afxArrayFlag
 {
     afxArrayFlag_STATIC = AFX_BITMASK(0),
@@ -96,12 +98,6 @@ AFX_DEFINE_STRUCT(afxArray)
 
 #define AfxArray(type_, cap_, initialVal_) AfxMakeArray((cap_), sizeof(type_), (initialVal_) ? ((type_ const[]){(initialVal_)}) : NIL)
 
-#define AFX_GET_ARRAY_UNIT(type_, arr_, idx_) \
-    ((type_*)((afxByte*)(arr_)->bytemap + (idx_) * (arr_)->pop))
-#define AFX_FOR_EACH_ARRAY_UNIT(type_, varName_, arr_) \
-    for (afxUnit i = 0; i < (arr_)->pop && ((varName_) = (type_*)((afxByte*)(arr_)->bytemap + i * (arr_)->unitSiz)); ++i)
-#define AFX_ITERATE_ARRAY(TYPE_, varName_, arr_) \
-    for (afxUnit varName_##Idx = 0; varName_##Idx < (arr_)->pop && ((varName_) = (TYPE_*)((afxByte*)(arr_)->bytemap + varName_##Idx * (arr_)->unitSiz)); ++varName_##Idx)
 
 /*
     The AfxMakeArray() function initializes an array directly using externally provided memory (or a null buffer for dynamic allocation).
@@ -300,9 +296,6 @@ AFXINL afxError AfxCopyArray
     afxUnit         toOffset
 );
 
-#define AFX_COPY_ARRAY(cnt_, src_, srcIdx_, srcType_, srcField_, dst_, dstIdx_, dstType_, dstField_) \
-    AfxCopyArray((cnt_), sizeof(((srcType_*)0)->srcField, (src_), (srcIdx_), offsetof(srcType_, srcField_), (dst_), (dstIdx_), offsetof(dstType_, dstField_)))
-
 /*
     The AfxDumpArray() function copies a range of units from the internal array into a destination buffer, 
     possibly skipping bytes via stride, and optionally starting from a byte offset inside each unit.
@@ -373,5 +366,37 @@ AFX afxError        AfxPushArrayUnique
 );
 
 // ELEMENT
+
+#define AFX_COPY_ARRAY(cnt_, src_, srcIdx_, srcType_, srcField_, dst_, dstIdx_, dstType_, dstField_) \
+    AfxCopyArray((cnt_), sizeof(((srcType_*)0)->srcField, (src_), (srcIdx_), offsetof(srcType_, srcField_), (dst_), (dstIdx_), offsetof(dstType_, dstField_)))
+
+#define AFX_ITERATE_ARRAY_TYPED(TYPE_, varName_, arr_) \
+    for (afxUnit varName_##Idx = 0; \
+         (arr_) && (varName_##Idx < (arr_)->pop) && \
+         (((varName_) = (TYPE_ *)((afxByte *)(arr_)->bytemap + (varName_##Idx * (arr_)->unitSiz))), TRUE); \
+         ++varName_##Iter)
+
+#if _AFX_USE_TYPEOF
+#define AFX_ITERATE_ARRAY(var_, arr_) \
+    for (afxUnit var_##Iter = 0; \
+         (var_##Iter < (arr_)->pop) && \
+         (((var_) = (AFX_TYPEOF(var_))((afxByte*)(arr_)->bytemap + (var_##Iter * (arr_)->unitSiz))), TRUE); \
+         ++var_##Iter)
+#else
+// Pure-C99 version that doesn’t rely on __typeof__ at all.
+#define AFX_ITERATE_ARRAY(var_, arr_) \
+    for (afxUnit var_##Iter = 0; \
+         (arr_) && (var_##Iter < (arr_)->pop) && \
+         (((var_) = (void *)((afxByte*)(arr_)->bytemap + (var_##Iter * (arr_)->unitSiz))), TRUE); \
+         ++var_##Idx)
+#endif
+
+#if defined(_AFX_USE_TYPEOF)
+#  define AFX_GET_ARRAY_ELEMENT(var_, arr_, idx_) \
+      ((var_) = ((AFX_TYPEOF(var_))((afxByte *)(arr_)->bytemap + ((idx_) * (arr_)->unitSiz))))
+#else
+#  define AFX_GET_ARRAY_ELEMENT(var_, arr_, idx_) \
+      ((var_) = ((void*)((afxByte *)(arr_)->bytemap + ((idx_) * (arr_)->unitSiz)))
+#endif
 
 #endif//AFX_ARRAY_H

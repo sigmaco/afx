@@ -128,7 +128,7 @@
 /// Vertex elements, the smallest unit of a vertex, represent entities such as position, normal, or color.
 /// Vertex components are one or more vertex elements stored contiguously (interleaved per vertex) in a single memory buffer.
 
-#include "qwadro/cad/arxMeshBlueprint.h"
+#include "qwadro/cad/arxMeshFactory.h"
 
 typedef enum arxMeshFlag
 {
@@ -260,7 +260,7 @@ AFX_DEFINE_STRUCT(arxMeshInfo)
     @return Must return an arxGeome handle of the provider.
 */
 
-ARX arxRenderContext ArxGetMeshHost
+ARX arxScenario ArxGetMeshHost
 (
     arxMesh msh
 );
@@ -551,8 +551,8 @@ ARX afxError ArxTransformMeshes
 ARX afxUnit ArxEnumerateMeshes
 // Returns any error ocurried, if any, or zero.
 (
-    // The arxRenderContext hosting the desired meshes.
-    arxRenderContext rctx, 
+    // The arxScenario hosting the desired meshes.
+    arxScenario scio, 
     // The number of the first mesh to be enumerated from.
     afxUnit first, 
     // The number of meshes to be enumerated. Must be greater than 0.
@@ -568,8 +568,8 @@ ARX afxUnit ArxEnumerateMeshes
 ARX afxError ArxBuildMeshes
 // Returns any error ocurried, if any, or zero.
 (
-    // The arxRenderContext to host the built meshes.
-    arxRenderContext rctx, 
+    // The arxScenario to host the built meshes.
+    arxScenario scio, 
     // The number of meshes to be compiled. Must be greater than 0.
     afxUnit cnt, 
     afxString const urns[], 
@@ -580,7 +580,7 @@ ARX afxError ArxBuildMeshes
 
 ARX afxBool ArxIdentifyMeshes
 (
-    arxRenderContext rctx, 
+    arxScenario scio, 
     afxUnit cnt, 
     afxString const ids[], 
     arxMesh meshes[]

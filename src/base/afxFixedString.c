@@ -18,7 +18,7 @@
 
 _AFX afxString* AfxMakeString4(afxString4 *s, afxString const* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(s);
     s->buf[0] = '\0';
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
@@ -31,7 +31,7 @@ _AFX afxString* AfxMakeString4(afxString4 *s, afxString const* src)
 
 _AFX afxString* AfxMakeString8(afxString8 *s, afxString const* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(s);
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
 
@@ -43,7 +43,7 @@ _AFX afxString* AfxMakeString8(afxString8 *s, afxString const* src)
 
 _AFX afxString* AfxMakeString16(afxString16 *s, afxString const* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(s);
     s->buf[0] = '\0';
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
@@ -56,7 +56,20 @@ _AFX afxString* AfxMakeString16(afxString16 *s, afxString const* src)
 
 _AFX afxString* AfxMakeString32(afxString32 *s, afxString const* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
+    AFX_ASSERT(s);
+    s->buf[0] = '\0';
+    AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
+
+    if (src)
+        AfxCopyString(&s->s, 0, src, 0);
+
+    return &s->s;
+}
+
+_AFX afxString* AfxMakeString64(afxString64 *s, afxString const* src)
+{
+    afxError err = { 0 };
     AFX_ASSERT(s);
     s->buf[0] = '\0';
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
@@ -69,7 +82,46 @@ _AFX afxString* AfxMakeString32(afxString32 *s, afxString const* src)
 
 _AFX afxString* AfxMakeString128(afxString128 *s, afxString const* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
+    AFX_ASSERT(s);
+    s->buf[0] = '\0';
+    AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
+
+    if (src)
+        AfxCopyString(&s->s, 0, src, 0);
+
+    return &s->s;
+}
+
+_AFX afxString* AfxMakeString256(afxString256 *s, afxString const* src)
+{
+    afxError err = { 0 };
+    AFX_ASSERT(s);
+    s->buf[0] = '\0';
+    AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
+
+    if (src)
+        AfxCopyString(&s->s, 0, src, 0);
+
+    return &s->s;
+}
+
+_AFX afxString* AfxMakeString512(afxString512 *s, afxString const* src)
+{
+    afxError err = { 0 };
+    AFX_ASSERT(s);
+    s->buf[0] = '\0';
+    AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
+
+    if (src)
+        AfxCopyString(&s->s, 0, src, 0);
+
+    return &s->s;
+}
+
+_AFX afxString* AfxMakeString1024(afxString1024 *s, afxString const* src)
+{
+    afxError err = { 0 };
     AFX_ASSERT(s);
     s->buf[0] = '\0';
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
@@ -82,7 +134,7 @@ _AFX afxString* AfxMakeString128(afxString128 *s, afxString const* src)
 
 _AFX afxString* AfxMakeString2048(afxString2048 *s, afxString const* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(s);
     s->buf[0] = '\0';
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);
@@ -95,7 +147,7 @@ _AFX afxString* AfxMakeString2048(afxString2048 *s, afxString const* src)
 
 _AFX afxString* AfxMakeString4096(afxString4096 *s, afxString const* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(s);
     s->buf[0] = '\0';
     AfxMakeString(&s->s, sizeof(s->buf), s->buf, 0);

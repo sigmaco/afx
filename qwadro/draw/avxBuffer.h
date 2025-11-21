@@ -344,7 +344,7 @@ AVX afxError AvxCohereMappedBuffers
     // The draw system providing the buffers.
     afxDrawSystem   dsys,
     // A boolean specifying that any host modification must be discarded.
-    afxBool         discard,
+    afxBool         invalidate,
     // The number of buffered maps.
     afxUnit         cnt,
     // An array of buffered map operations.
@@ -521,7 +521,7 @@ AVX afxError        AvxCohereMappedBuffer
     // The optional flags.
     afxFlags        flags,
     // A boolean specifying if any host modification should be discarded.
-    afxBool         discard
+    afxBool         invalidate
 );
 
 /*

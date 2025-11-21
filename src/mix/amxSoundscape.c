@@ -17,7 +17,7 @@
 // This software is part of Advanced Multimedia Extensions & Experiments.
 
 #define _AMX_SOUNDSCAPE_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 // É muito difícil inventar uma coisa quando ninguém inventou aquilo ainda.
 
@@ -25,7 +25,7 @@
 
 _AMX afxClass const* _AmxSndsGetSndClass(amxSoundscape snds)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SNDS, 1, &snds);
     afxClass const* cls = &snds->sndCls;
     AFX_ASSERT_CLASS(cls, afxFcc_SND);
@@ -34,7 +34,7 @@ _AMX afxClass const* _AmxSndsGetSndClass(amxSoundscape snds)
 
 _AMX afxError AmxSetAuditionRenderer(amxSoundscape snds, afxUnit exuIdx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SNDS, 1, &snds);
     
     snds->exuIdx = exuIdx;
@@ -44,7 +44,7 @@ _AMX afxError AmxSetAuditionRenderer(amxSoundscape snds, afxUnit exuIdx)
 
 _AMX afxError AmxUpdateAudient(amxSoundscape snds, afxTransform const* placement, afxV3d const velocity)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SNDS, 1, &snds);
 
     if (placement || velocity)
@@ -65,7 +65,7 @@ _AMX afxError AmxUpdateAudient(amxSoundscape snds, afxTransform const* placement
 
 _AMX afxError AmxRouteAudition(amxSoundscape snds, afxMixContext mix, afxUnit baseSmixIdx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SNDS, 1, &snds);
     afxMixContext curr = snds->mix;
 
@@ -91,7 +91,7 @@ _AMX afxError AmxRouteAudition(amxSoundscape snds, afxMixContext mix, afxUnit ba
 
 _AMX afxError _AmxSndsDtorCb(amxSoundscape snds)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SNDS, 1, &snds);
 
     if (snds->mix)

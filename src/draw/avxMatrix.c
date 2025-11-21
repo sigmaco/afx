@@ -17,7 +17,7 @@
 // This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
 // This software is part of Advanced Video Graphics Extensions & Experiments.
 
-//#include "qwadro/draw/ddi/avxImplementation.h"
+//#include "qwadro/draw/avxIcd.h"
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/draw/avxMatrix.h"
 #include "qwadro/math/afxMathDefs.h"
@@ -64,7 +64,7 @@ avxClipSpace const  AVX_CLIP_SPACE_D3D =
 
 _AVXINL void AfxComputeShadowM4d(afxM4d m, afxPlane const p, afxReal const lightPos[3])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(!AfxV3dIsZero(p.uvwd));
     AFX_ASSERT(!AfxV3dIsInfinite(p.uvwd));
@@ -113,7 +113,7 @@ _AVXINL void AfxComputeShadowM4d(afxM4d m, afxPlane const p, afxReal const light
 
 _AVXINL void AfxCubemapMatrix_Direct3D(afxM4d m, afxUnit face)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AfxM4dZero(m);
 
@@ -160,7 +160,7 @@ _AVXINL void AfxCubemapMatrix_Direct3D(afxM4d m, afxUnit face)
 
 _AVXINL void AfxCubemapMatrix_OpenGL(afxM4d m, afxUnit face)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AfxM4dZero(m);
 
@@ -207,7 +207,7 @@ _AVXINL void AfxCubemapMatrix_OpenGL(afxM4d m, afxUnit face)
 
 _AVXINL void AfxComputeLookToMatrix(afxM4d m, afxV3d const eye, afxV3d const dir, afxV3d const up, afxBool nonRh)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(!AfxV3dIsZero(dir));
     AFX_ASSERT(!AfxV3dIsInfinite(dir));
@@ -245,7 +245,7 @@ _AVXINL void AfxComputeLookToMatrix(afxM4d m, afxV3d const eye, afxV3d const dir
 
 _AVXINL void AfxComputeLookAtMatrix(afxM4d m, afxV3d const eye, afxV3d const target, afxV3d const up, afxBool nonRh)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(eye);
     AFX_ASSERT(target);
@@ -285,7 +285,7 @@ _AVXINL void AfxComputeLookAtMatrix(afxM4d m, afxV3d const eye, afxV3d const tar
 
 _AVXINL void AfxComputeOrthographicMatrix(afxM4d m, afxV2d const extent, afxReal near, afxReal far, afxBool nonRh, avxClipSpaceDepth clip)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(extent);
     AFX_ASSERT(!AfxRealIsEqual(extent[0], 0.0f, 0.00001f));
@@ -330,7 +330,7 @@ _AVXINL void AfxComputeOrthographicMatrix(afxM4d m, afxV2d const extent, afxReal
 
 _AVXINL void AfxComputeOffcenterOrthographicMatrix(afxM4d m, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxBool nonRh, avxClipSpaceDepth clip)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AfxM4dReset(m);
 
@@ -394,7 +394,7 @@ _AVXINL void AfxComputeOffcenterOrthographicMatrix(afxM4d m, afxReal left, afxRe
 _AVXINL void AfxComputeBoundingOrthographicMatrix(afxM4d m, afxBox const aabb, afxBool nonRh, avxClipSpaceDepth clip)
 {
     // Computa uma afxM4d de projeção ortográfica desde uma afxBox.
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     //AFX_ASSERT(aabb); // afxBox deve estar no view space.
 
@@ -405,7 +405,7 @@ _AVXINL void AfxComputeBoundingOrthographicMatrix(afxM4d m, afxBox const aabb, a
 _AVXINL void AfxComputeBasicOrthographicMatrix(afxM4d m, afxReal aspectRatio, afxReal scale, afxReal range, afxBool nonRh, avxClipSpaceDepth clip)
 {
     // Computa uma afxM4d de projeção ortográfica genérica.
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(aspectRatio); // w/h
     
@@ -426,7 +426,7 @@ _AVXINL void AfxComputeBasicOrthographicMatrix(afxM4d m, afxReal aspectRatio, af
 
 _AVXINL void AfxComputePerspectiveMatrix(afxM4d m, afxV2d const extent, afxReal near, afxReal far, afxBool nonRh, avxClipSpaceDepth clip)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(extent);
     AFX_ASSERT(!AfxRealIsEqual(extent[0], 0.0f, 0.00001f));
@@ -476,7 +476,7 @@ _AVXINL void AfxComputePerspectiveMatrix(afxM4d m, afxV2d const extent, afxReal 
 
 _AVXINL void AfxComputeFovPerspectiveMatrix(afxM4d m, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxBool nonRh, avxClipSpaceDepth clip)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(!AfxRealIsEqual(fovY, 0.0f, 0.00001f * 2.0f));
     AFX_ASSERT(!AfxRealIsEqual(aspectRatio, 0.0f, 0.00001f));
@@ -535,7 +535,7 @@ _AVXINL void AfxComputeFovPerspectiveMatrix(afxM4d m, afxReal fovY, afxReal aspe
 
 _AVXINL void AfxComputeOffcenterPerspectiveMatrix(afxM4d m, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxBool nonRh, avxClipSpaceDepth clip)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(!AfxRealIsEqual(right, left, 0.00001f));
     AFX_ASSERT(!AfxRealIsEqual(top, bottom, 0.00001f));
@@ -605,7 +605,7 @@ _AVXINL void AfxComputeOffcenterPerspectiveMatrix(afxM4d m, afxReal left, afxRea
 
 _AVXINL void AfxComputeBasicPerspectiveMatrix(afxM4d m, afxReal aspectRatio, afxReal range, afxBool nonRh, avxClipSpaceDepth clip)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AfxComputeFovPerspectiveMatrix(m, AFX_PI / 4.f, aspectRatio, 0.01f, range, nonRh, clip);
 }
@@ -615,7 +615,7 @@ _AVXINL void AfxComputeBasicPerspectiveMatrix(afxM4d m, afxReal aspectRatio, afx
 
 _AVXINL void AfxComputeRenderWareViewM4d(afxM4d m, afxM4d const cam)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(cam);
 
@@ -644,7 +644,7 @@ _AVXINL void AfxComputeRenderWareViewM4d(afxM4d m, afxM4d const cam)
 
 _AVXINL void AfxComputeRenderWareProjectionM4d(afxM4d m, avxViewport const* vp, afxBool perspective)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(vp);
     AFX_ASSERT(vp->maxDepth);
@@ -693,7 +693,7 @@ _AVXINL void AfxComputeRenderWareProjectionM4d(afxM4d m, avxViewport const* vp, 
 
 _AVXINL void AfxDecomposePerspectiveM4d(afxM4d m, afxV2d const extent, afxReal* near, afxReal* far)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
 
     // OpenGL
@@ -704,7 +704,7 @@ _AVXINL void AfxDecomposePerspectiveM4d(afxM4d m, afxV2d const extent, afxReal* 
 
 _AVXINL void AfxDecomposeFovPerspectiveM4d(afxM4d m, afxReal* fovY, afxReal* aspectRatio, afxReal* near, afxReal* far)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
 
     // OpenGL
@@ -716,7 +716,7 @@ _AVXINL void AfxDecomposeFovPerspectiveM4d(afxM4d m, afxReal* fovY, afxReal* asp
 
 _AVXINL void AfxDecomposeOffcenterPerspectiveM4d(afxM4d m, afxReal* left, afxReal* right, afxReal* top, afxReal* bottom, afxReal* near, afxReal* far)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
 
     // OpenGL
@@ -732,7 +732,7 @@ _AVXINL void AfxDecomposeOffcenterPerspectiveM4d(afxM4d m, afxReal* left, afxRea
 
 _AVXINL void AvxDoNdcCoordinates(afxUnit cnt, afxV4d const clipPos[], afxV4d ndcPos[], afxUnit srcStride, afxUnit dstStride)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_ALIGNMENT(srcStride, sizeof(afxReal));
     AFX_ASSERT(!srcStride || (srcStride >= sizeof(afxV3d)));
     AFX_ASSERT_ALIGNMENT(dstStride, sizeof(afxReal));

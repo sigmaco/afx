@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_RASTER_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
  // 1d               =   1 x w11 >> lod
  // 1d array         = img x w11 >> lod
@@ -33,7 +33,7 @@ AVX afxError _AfxFetchRasterFromTarga(avxRaster ras, afxUnit opCnt, avxRasterIo 
 
 _AVXINL void _AvxSanitizeRasterIo(avxRaster ras, afxSize bufCap, afxUnit cnt, avxRasterIo const raw[], avxRasterIo san[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 #if AVX_VALIDATION_ENABLED
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
@@ -70,7 +70,7 @@ _AVXINL void _AvxSanitizeRasterIo(avxRaster ras, afxSize bufCap, afxUnit cnt, av
 
 _AVX afxError AvxUpdateRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], void const* src, afxFlags flags, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 #if AVX_VALIDATION_ENABLED
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
@@ -96,7 +96,7 @@ _AVX afxError AvxUpdateRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const op
     afxDrawSystem dsys = AvxGetRasterHost(ras);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (_AvxDsysGetImpl(dsys)->transferCb(dsys, &transfer, opCnt, ops))
+    if (_AvxDsysGetDdi(dsys)->transferCb(dsys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
@@ -108,7 +108,7 @@ _AVX afxError AvxUpdateRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const op
 
 _AVX afxError AvxDumpRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], void* dst, afxFlags flags, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(opCnt);
@@ -134,7 +134,7 @@ _AVX afxError AvxDumpRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[
     afxDrawSystem dsys = AvxGetRasterHost(ras);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     
-    if (_AvxDsysGetImpl(dsys)->transferCb(dsys, &transfer, opCnt, ops))
+    if (_AvxDsysGetDdi(dsys)->transferCb(dsys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
@@ -148,7 +148,7 @@ _AVX afxError AvxDumpRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[
 
 _AVX afxError AvxCopyRaster(avxRaster ras, afxUnit opCnt, avxRasterCopy const ops[], avxRaster src, afxFlags flags, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     // @src must be a valid avxRaster handle.
@@ -184,7 +184,7 @@ _AVX afxError AvxCopyRaster(avxRaster ras, afxUnit opCnt, avxRasterCopy const op
     afxDrawSystem dsys = AvxGetRasterHost(ras);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (_AvxDsysGetImpl(dsys)->transferCb(dsys, &transfer, opCnt, ops))
+    if (_AvxDsysGetDdi(dsys)->transferCb(dsys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
@@ -196,7 +196,7 @@ _AVX afxError AvxCopyRaster(avxRaster ras, afxUnit opCnt, avxRasterCopy const op
 
 _AVX afxError AvxPackRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], avxBuffer buf, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     // @buf must be a valid avxBuffer handle.
@@ -224,7 +224,7 @@ _AVX afxError AvxPackRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[
     afxDrawSystem dsys = AvxGetRasterHost(ras);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (_AvxDsysGetImpl(dsys)->transferCb(dsys, &transfer, opCnt, ops))
+    if (_AvxDsysGetDdi(dsys)->transferCb(dsys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
@@ -236,7 +236,7 @@ _AVX afxError AvxPackRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[
 
 _AVX afxError AvxUnpackRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], avxBuffer buf, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     // @buf must be a valid avxBuffer handle.
@@ -263,7 +263,7 @@ _AVX afxError AvxUnpackRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const op
     afxDrawSystem dsys = AvxGetRasterHost(ras);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (_AvxDsysGetImpl(dsys)->transferCb(dsys, &transfer, opCnt, ops))
+    if (_AvxDsysGetDdi(dsys)->transferCb(dsys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
@@ -277,7 +277,7 @@ _AVX afxError AvxUnpackRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const op
 
 _AVX afxError AvxUploadRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], afxStream in, afxFlags flags, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     // @in must be a valid afxStream handle.
@@ -305,7 +305,7 @@ _AVX afxError AvxUploadRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const op
     afxDrawSystem dsys = AvxGetRasterHost(ras);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (_AvxDsysGetImpl(dsys)->transferCb(dsys, &transfer, opCnt, ops))
+    if (_AvxDsysGetDdi(dsys)->transferCb(dsys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
@@ -317,7 +317,7 @@ _AVX afxError AvxUploadRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const op
 
 _AVX afxError AvxDownloadRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], afxStream out, afxFlags flags, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     // @in must be a valid afxStream handle.
@@ -344,7 +344,7 @@ _AVX afxError AvxDownloadRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const 
     afxDrawSystem dsys = AvxGetRasterHost(ras);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (_AvxDsysGetImpl(dsys)->transferCb(dsys, &transfer, opCnt, ops))
+    if (_AvxDsysGetDdi(dsys)->transferCb(dsys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
@@ -358,7 +358,7 @@ _AVX afxError AvxDownloadRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const 
 
 _AVX afxError AvxPrintRaster(avxRaster ras, avxRasterIo const* iop, afxUnit lodCnt, afxUri const* uri, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
 
@@ -447,7 +447,7 @@ _AVX afxError AvxPrintRaster(avxRaster ras, avxRasterIo const* iop, afxUnit lodC
 
 _AVX afxError AvxReloadRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], afxUnit lodCnt, afxUri const* uri, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ras must be a valid avxRaster handle.
     AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
     AFX_ASSERT(uri);
@@ -545,7 +545,7 @@ _AVX afxError AvxReloadRaster(avxRaster ras, afxUnit opCnt, avxRasterIo const op
 
 _AVX afxError AvxLoadRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo const info[], afxUri const uri[], avxRasterFile tga[], avxRaster rasters[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(rasters);
     //AFX_ASSERT(info);
@@ -649,7 +649,7 @@ _AVX afxError AvxLoadRasters(afxDrawSystem dsys, afxUnit cnt, avxRasterInfo cons
 
 _AVX afxError AvxLoadSegmentedRaster(afxDrawSystem dsys, avxRasterInfo const* info, afxUri const* dir, afxUri const faces[], avxRaster* raster)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(faces);
     avxRaster ras;

@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_SHADER_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 #if 0 // VS
 
@@ -57,7 +57,7 @@ _AVX afxString const vtxFmtString[avxFormat_TOTAL] =
 };
 _AVX avxFormat AfxFindVertexFormat(afxString const *str)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(str);
 
     for (afxUnit i = 0; i < avxFormat_TOTAL; i++)
@@ -71,7 +71,7 @@ _AVX avxFormat AfxFindVertexFormat(afxString const *str)
 
 _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArray* fResources, afxString* pushConstsName)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     afxUri inc;
     afxChar buf[2048] = { 0 };
@@ -340,7 +340,7 @@ _AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArra
 
 _AVX afxError _AvxLoadGlScript(afxStream file, afxArray* fCode)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     afxStream inc;
     afxStreamInfo iobi = { 0 };
@@ -392,7 +392,7 @@ _AVX afxError _AvxLoadGlScript(afxStream file, afxArray* fCode)
 
 _AVX afxBool AvxGetProgram(avxCodebase shd, afxUnit unit, void** slot)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     _avxCodeBlock* slot2;
     afxBool rslt = AfxGetPoolUnit(&shd->codes, unit, (void**)&slot2);
@@ -403,7 +403,7 @@ _AVX afxBool AvxGetProgram(avxCodebase shd, afxUnit unit, void** slot)
 
 _AVX afxBool AvxFindPrograms(avxCodebase shd, afxUnit cnt, afxString const names[], afxUnit units[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     AFX_ASSERT(names);
     afxBool rslt = 0;
@@ -438,7 +438,7 @@ _AVX afxBool AvxFindPrograms(avxCodebase shd, afxUnit cnt, afxString const names
 
 _AVX afxDrawSystem AvxGetShaderHost(avxCodebase shd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     afxDrawSystem dsys = AfxGetHost(shd);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -447,7 +447,7 @@ _AVX afxDrawSystem AvxGetShaderHost(avxCodebase shd)
 
 _AVX afxBool AvxDoesShaderHavePushConstants(avxCodebase shd, afxUnit prog)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     _avxCodeBlock* slot;
@@ -459,7 +459,7 @@ _AVX afxBool AvxDoesShaderHavePushConstants(avxCodebase shd, afxUnit prog)
 
 _AVX afxError AvxSerializeShader(avxCodebase shd, afxUnit prog, afxStream ios)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &ios);
 
@@ -474,7 +474,7 @@ _AVX afxError AvxSerializeShader(avxCodebase shd, afxUnit prog, afxStream ios)
 
 _AVX afxError AvxDumpShaderCode(avxCodebase shd, afxUnit prog, afxArray* arr)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     _avxCodeBlock* slot;
@@ -493,7 +493,7 @@ _AVX afxError AvxDumpShaderCode(avxCodebase shd, afxUnit prog, afxArray* arr)
 
 _AVX afxError AvxPrintShader(avxCodebase shd, afxUnit prog, afxUri const *uri)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     _avxCodeBlock* slot;
@@ -524,7 +524,7 @@ _AVX afxError AvxPrintShader(avxCodebase shd, afxUnit prog, afxUri const *uri)
 
 _AVX afxUnit AvxQueryShaderIoChannels(avxCodebase shd, afxUnit prog, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     _avxCodeBlock* slot;
@@ -556,7 +556,7 @@ _AVX afxUnit AvxQueryShaderIoChannels(avxCodebase shd, afxUnit prog, afxUnit fir
 
 _AVX afxUnit AvxQueryShaderInterfaces(avxCodebase shd, afxUnit prog, afxUnit first, afxUnit cnt, avxShaderResource rsrc[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     _avxCodeBlock* slot;
@@ -585,7 +585,7 @@ _AVX afxUnit AvxQueryShaderInterfaces(avxCodebase shd, afxUnit prog, afxUnit fir
 
 _AVX avxShaderType AvxGetShaderStage(avxCodebase shd, afxUnit prog)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     _avxCodeBlock* slot;
@@ -597,7 +597,7 @@ _AVX avxShaderType AvxGetShaderStage(avxCodebase shd, afxUnit prog)
 
 _AVX afxString const* AfxGetShaderName(avxCodebase shd, afxUnit prog)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     _avxCodeBlock* slot;
@@ -609,7 +609,7 @@ _AVX afxString const* AfxGetShaderName(avxCodebase shd, afxUnit prog)
 
 _AVX afxError AvxRecompileShader(avxCodebase shd, afxUnit prog, afxString const* code)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     _avxCodeBlock* slot;
@@ -740,7 +740,7 @@ _AVX afxError AvxRecompileShader(avxCodebase shd, afxUnit prog, afxString const*
 
 _AVX afxError AvxRecompileShaderFromDisk(avxCodebase shd, afxUnit prog, afxUri const* uri)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     _avxCodeBlock* slot;
@@ -779,7 +779,7 @@ _AVX afxError AvxRecompileShaderFromDisk(avxCodebase shd, afxUnit prog, afxUri c
 
 _AVX afxError AvxCompileShader(avxCodebase shd, afxString const* prog, afxString const* code)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     afxUnit slotId;
@@ -820,7 +820,7 @@ _AVX afxError AvxCompileShader(avxCodebase shd, afxString const* prog, afxString
 
 _AVX afxError AvxCompileShaderFromDisk(avxCodebase shd, afxString const* prog, afxUri const* uri)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     afxUnit slotId;
@@ -863,7 +863,7 @@ _AVX afxError AvxCompileShaderFromDisk(avxCodebase shd, afxString const* prog, a
 
 _AVX afxError _AvxShdDtorCb(avxCodebase shd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     // Detach and free every code unit.
@@ -917,7 +917,7 @@ _AVX afxError _AvxShdDtorCb(avxCodebase shd)
 
 _AVX afxError _AvxShdCtorCb(avxCodebase shd, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
 
     afxDrawSystem dsys = args[0];
@@ -944,12 +944,12 @@ _AVX afxClassConfig const _AVX_SHD_CLASS_CONFIG =
 
 _AVX afxError AvxAcquireCodebases(afxDrawSystem dsys, afxUnit cnt, afxUri const urls[], avxCodebase codebases[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(codebases);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->shadCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->shadCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_SHD);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)codebases, (void const*[]) { dsys, urls }))

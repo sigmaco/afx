@@ -126,16 +126,25 @@ typedef afxUnit32   afxIndex32;
 typedef afxIndex32  afxIndex;
 
 // Bitwise NOT of 0 = all bits set (e.g. 0xFFFF or 0xFFFFFFFF).
-#define AFX_INVALID_INDEX ((afxUnit)(~((afxUnit)0)))
-#define AFX_INVALID_INDEX8 ((afxUnit8)(~((afxUnit8)0)))
-#define AFX_INVALID_INDEX16 ((afxUnit16)(~((afxUnit16)0)))
-#define AFX_INVALID_INDEX32 ((afxUnit32)(~((afxUnit32)0)))
+#ifdef _MSC_VER
+#define AFX_INVALID_INDEX64 AFX_U64_MAX
+#define AFX_INVALID_INDEX32 AFX_U32_MAX
+#define AFX_INVALID_INDEX16 AFX_U16_MAX
+#define AFX_INVALID_INDEX8 AFX_U8_MAX
+#define AFX_INVALID_INDEX AFX_INVALID_INDEX32
+#else
 #define AFX_INVALID_INDEX64 ((afxUnit64)(~((afxUnit64)0)))
+#define AFX_INVALID_INDEX32 ((afxUnit32)(~((afxUnit32)0)))
+#define AFX_INVALID_INDEX16 ((afxUnit16)(~((afxUnit16)0)))
+#define AFX_INVALID_INDEX8 ((afxUnit8)(~((afxUnit8)0)))
+#define AFX_INVALID_INDEX ((afxUnit)(~((afxUnit)0)))
+#endif
 
-AFX_STATIC_ASSERT(AFX_INVALID_INDEX == AFX_U32_MAX, "");
-AFX_STATIC_ASSERT(AFX_INVALID_INDEX8 == AFX_U8_MAX, "");
-AFX_STATIC_ASSERT(AFX_INVALID_INDEX16 == AFX_U16_MAX, "");
+AFX_STATIC_ASSERT(AFX_INVALID_INDEX64 == AFX_U64_MAX, "");
 AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_U32_MAX, "");
+AFX_STATIC_ASSERT(AFX_INVALID_INDEX16 == AFX_U16_MAX, "");
+AFX_STATIC_ASSERT(AFX_INVALID_INDEX8 == AFX_U8_MAX, "");
+AFX_STATIC_ASSERT(AFX_INVALID_INDEX == AFX_U32_MAX, "");
 
 #define AFX_IS_INDEX_INVALID(_var_) (((typeof(_var_))~(typeof(_var_))0) == (_var_))
 #define AFX_IS_INDEX_VALID(_var_) (((typeof(_var_))~(typeof(_var_))0) != (_var_))

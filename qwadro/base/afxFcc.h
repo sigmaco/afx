@@ -182,7 +182,8 @@ typedef enum afxFcc
     afxFcc_VDU      = AFX_MAKE_FCC('v', 'd', 'u', '\0'), // afxVdu
     afxFcc_DOUT     = AFX_MAKE_FCC('d', 'o', 'u', 't'), // afxSurface
     afxFcc_DIN      = AFX_MAKE_FCC('d', 'i', 'n', '\0'), // afxDrawInput
-    afxFcc_RCTX      = AFX_MAKE_FCC('r', 'w', 'e', '\0'), // arxRenderContext
+    afxFcc_RCTX     = AFX_MAKE_FCC('r', 'w', 'e', '\0'), // arxRenderContext
+    afxFcc_SCIO     = AFX_MAKE_FCC('s', 'c', 'i', 'o'), // arxScenario
     afxFcc_DDGE     = AFX_MAKE_FCC('d', 'd', 'g', 'e'), // afxDrawBridge
     afxFcc_DEXU     = AFX_MAKE_FCC('d', 'e', 'x', 'u'), // afxDrawBridge
     afxFcc_DQUE     = AFX_MAKE_FCC('d', 'q', 'u', 'e'), // afxDrawQueue
@@ -220,6 +221,7 @@ typedef enum afxFcc
     afxFcc_TYP      = AFX_MAKE_FCC('t', 'y', 'p', '\0'), // afxTypography
     afxFcc_FNT      = AFX_MAKE_FCC('f', 'n', 't', '\0'), // afxFont
     afxFcc_THEM     = AFX_MAKE_FCC('t', 'h', 'e', 'm'), // afxTheme
+    afxFcc_LAY      = AFX_MAKE_FCC('l', 'a', 'y', '\0'), // afxLayout
 
     afxFcc_DUNI     = AFX_MAKE_FCC('d', 'u', 'n', 'i'), // afxDrawableUniverse
     afxFcc_DMDL     = AFX_MAKE_FCC('d', 'm', 'd', 'l'), // sglDrawableModel
@@ -289,7 +291,7 @@ typedef enum afxFcc
     afxFcc_IMGH     = AFX_MAKE_FCC('i', 'm', 'g', 'h'), // AfxImageHub
     afxFcc_IMIO     = AFX_MAKE_FCC('i', 'm', 'i', 'o'), // AfxImageIoAssistent
     afxFcc_RAS      = AFX_MAKE_FCC('t', 'e', 'x', '\0'), // avxRaster
-    afxFcc_SURF     = AFX_MAKE_FCC('s', 'u', 'r', 'f'), // _avxDrawBin
+    afxFcc_SURF     = AFX_MAKE_FCC('s', 'u', 'r', 'f'), // _avxCanvasBin
     afxFcc_TEXB     = AFX_MAKE_FCC('t', 'e', 'x', 'b'), // afxTextureBlueprint
 
     afxFcc_MDL      = AFX_MAKE_FCC('m', 'd', 'l', '\0'), // arxModel
@@ -349,7 +351,14 @@ typedef enum afxFcc
 
     afxFcc_TER      = AFX_MAKE_FCC('t', 'e', 'r', '\0'), // arxTerrain
     
-    //afxFcc_DIN     = AFX_MAKE_FCC('d', 'i', 'n', '\0'), // arxDrawInput
+    afxFcc_CONS     = AFX_MAKE_FCC('c', 'o', 'n', 's'), // apxConstraint
+    afxFcc_JNT      = AFX_MAKE_FCC('j', 'n', 't', '\0'), // apxJoint
+    afxFcc_FLD      = AFX_MAKE_FCC('f', 'l', 'd', '\0'), // apxField
+    afxFcc_PAWN     = AFX_MAKE_FCC('p', 'a', 'w', 'n'), // apxPawn
+    afxFcc_COL      = AFX_MAKE_FCC('c', 'o', 'l', '\0'), // apxCollidable
+    afxFcc_COLL     = AFX_MAKE_FCC('c', 'o', 'l', 'l'), // apxCollider
+
+    //afxFcc_RCTX     = AFX_MAKE_FCC('d', 'i', 'n', '\0'), // arxRenderContext
     
     afxFcc_MAX_     = 0x7FFFFFFF
 } afxFcc;

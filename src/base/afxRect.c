@@ -28,14 +28,14 @@ afxLayeredRect const AFX_LAYERED_RECT_MAX = { { AFX_I32_MAX, AFX_I32_MAX, AFX_U3
 
 _AFXINL afxUnit AfxGetRectArea(afxRect const* rc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(rc);
     return (rc->w * rc->h);
 }
 
 _AFXINL afxUnit AfxMergeRects(afxRect* rc, afxRect const* a, afxRect const* b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(rc);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
@@ -52,7 +52,7 @@ _AFXINL afxUnit AfxMergeRects(afxRect* rc, afxRect const* a, afxRect const* b)
 
 _AFXINL afxUnit AfxIntersectRects(afxRect* rc, afxRect const* a, afxRect const* b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(rc);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
@@ -69,7 +69,7 @@ _AFXINL afxUnit AfxIntersectRects(afxRect* rc, afxRect const* a, afxRect const* 
 
 _AFXINL afxBool AfxAreRectsEqual(afxRect const* a, afxRect const* b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(a);
     AFX_ASSERT(b);
     return ((a->x == b->x) && (a->y == b->y) && (a->w == b->w) && (a->h == b->h));
@@ -77,7 +77,7 @@ _AFXINL afxBool AfxAreRectsEqual(afxRect const* a, afxRect const* b)
 
 _AFXINL afxBool AfxAreRectsOverlapping(afxRect const* a, afxRect const* b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(a);
     AFX_ASSERT(b);
 
@@ -103,7 +103,7 @@ _AFXINL afxBool AfxAreRectsOverlapping(afxRect const* a, afxRect const* b)
 _AFXINL afxBool AfxDoesRectContainBiased(afxRect const* a, afxRect const* b, afxInt tolX, afxInt tolY)
 // Compare if rectangle \a a contains rectangle \a b in coordinate, with specified tolerance allowed.
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(a);
     AFX_ASSERT(b);
     return  (b->x >= a->x - tolX) &&
@@ -115,7 +115,7 @@ _AFXINL afxBool AfxDoesRectContainBiased(afxRect const* a, afxRect const* b, afx
 _AFXINL afxBool AfxDoesRectContain(afxRect const* a, afxRect const* b)
 // This checks that all corners of b are inside a, i.e., b is entirely within a.
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(a);
     AFX_ASSERT(b);    
     return  (b->x >= a->x) &&
@@ -144,7 +144,7 @@ _AFXINL afxBool AfxDoRectsIntersect(afxRect const* a, afxRect const* b)
 
 _AFXINL void AfxExtractRectMargins(afxRect const* outer, afxRect const* inner, afxInt* left, afxInt* top, afxInt* right, afxInt* bottom)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(outer);
     AFX_ASSERT(inner);
     AFX_ASSERT(left);
@@ -163,7 +163,7 @@ _AFXINL void AfxExtractRectMargins(afxRect const* outer, afxRect const* inner, a
 
 _AFXINL void AfxFlipRect(afxRect const* rc, afxUnit height, afxRect* flipped)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(flipped);
     AFX_ASSERT(height);
     AFX_ASSERT(rc);
@@ -172,7 +172,7 @@ _AFXINL void AfxFlipRect(afxRect const* rc, afxUnit height, afxRect* flipped)
 
 _AFXINL afxUnit AfxScissorRect(afxRect const* rc, afxUnit maxW, afxUnit maxH, afxRect outsides[4])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(outsides);
     AFX_ASSERT(rc);
     afxUnit invRcCnt = 0;
@@ -204,7 +204,7 @@ _AFXINL afxUnit AfxScissorRect(afxRect const* rc, afxUnit maxW, afxUnit maxH, af
 
 _AFXINL afxUnit AfxClampRect(afxRect* rc, afxRect const* src, afxRect const* min, afxRect const* max)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(src);
     AFX_ASSERT(min);
     AFX_ASSERT(max);
@@ -219,7 +219,7 @@ _AFXINL afxUnit AfxClampRect(afxRect* rc, afxRect const* src, afxRect const* min
 
 _AFXINL void AfxAccumulateRects(afxRect* rc, afxUnit cnt, afxRect* in)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(in);
     AFX_ASSERT(rc);
     // Initialize to extreme values

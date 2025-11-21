@@ -108,11 +108,12 @@ AVX afxError        AvxResetFences
 // Return the draw system witch this fence belongs to.
 AVX afxDrawSystem   AvxGetFenceHost(avxFence fenc);
 
-// Return the status of this fence.
-AVX afxBool         AvxCheckForFenceSignaled(avxFence fenc);
+// Return the value/status of this fence.
 
-AVX afxError        AvxGetTimelineFenceCounter(avxFence fenc, afxUnit64* value);
+AVX afxUnit64       AvxGetCompletedFenceValue(avxFence fenc);
 
-AVX afxError        AvxSignalTimelineFence(avxFence fenc, afxUnit64 value);
+AVX afxError        AvxSignalFence(avxFence fenc, afxUnit64 value);
+
+AVX afxError        AvxWaitForFence(avxFence fenc, afxUnit64 value, afxUnit64 timeout);
 
 #endif//AVX_FENCE_H

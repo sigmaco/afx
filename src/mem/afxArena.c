@@ -222,7 +222,7 @@ _AFX void AfxLogArenaStats(afxArena* aren);
 
 _AFX afxSize AfxPushArenaCleanup(afxArena* aren, void(*action)(void *data, void*extra), void *data, void *extra)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(action);
     afxArenaCleanup *cleanups = aren->cleanups;
 
@@ -284,7 +284,7 @@ _AFX void _AfxArenDeallocBlockCleanupAction(void *data, void*extra)
 
 _AFX void* AfxRequestArena(afxArena* aren, afxSize size, afxUnit cnt, void const* src, afxUnit stride)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(aren);
 #ifdef _AFX_ARENA_VALIDATION_ENABLED
     AFX_ASSERT(aren->fcc == afxFcc_AREN);
@@ -438,7 +438,7 @@ _AFX char* AfxArenaDuplicateString(afxArena* aren, const char *string)
 
 _AFX void AfxReclaimArena(afxArena* aren, void *block, afxSize size)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(aren);
 #ifdef _AFX_ARENA_VALIDATION_ENABLED
     AFX_ASSERT(aren->fcc == afxFcc_AREN);
@@ -548,7 +548,7 @@ _AFX void AfxDumpArenaStats(afxArena* aren, afxStream out)
 
 _AFX void AfxGetArenaInfo(afxArena* aren, afxUnit* totalAllocated, afxUnit* unusedSpace, afxUnit* recycleSiz)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(aren);
 #ifdef _AFX_ARENA_VALIDATION_ENABLED
     AFX_ASSERT(aren->fcc == afxFcc_AREN);
@@ -600,7 +600,7 @@ _AFX void AfxLogArenaStats(afxArena* aren)
 
 _AFX afxError AfxMergeArenas(afxArena* dst, afxArena* src)
 {
-    afxError err = 0;
+    afxError err = { 0 };
     AFX_ASSERT(dst);
     AFX_ASSERT(src);
     AFX_ASSERT(dst != src);
@@ -778,7 +778,7 @@ _AFX afxError AfxAssumeArena(afxArena* dst, afxArena* src)
 
 _AFX void AfxExhaustArena(afxArena* aren)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(aren);
 #ifdef _AFX_ARENA_VALIDATION_ENABLED
     AFX_ASSERT(aren->fcc == afxFcc_AREN);
@@ -830,7 +830,7 @@ _AFX void AfxExhaustArena(afxArena* aren)
 
 _AFX void AfxDismantleArena(afxArena* aren)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(aren);
 #ifdef _AFX_ARENA_VALIDATION_ENABLED
     AFX_ASSERT(aren->fcc == afxFcc_AREN);
@@ -861,7 +861,7 @@ _AFX void AfxDismantleArena(afxArena* aren)
 
 _AFX afxError AfxMakeArena(afxArena* aren, afxArenaInfo const *spec, afxHere const hint)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(spec);
 
     afxUnit sysPagSiz = AfxGetMemoryPageSize();

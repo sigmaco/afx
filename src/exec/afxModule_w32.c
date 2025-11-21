@@ -37,21 +37,21 @@
 
 _AFX afxModuleFlags AfxTestModule(afxModule mdle, afxModuleFlags bitmask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
     return mdle->flags & bitmask;
 }
 
 _AFX void* AfxGetModuleIdd(afxModule mdle)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
     return mdle->osHandle;
 }
 
 _AFX void AfxGetDriverUri(afxModule icd, afxUri* uri)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     AFX_ASSERT(uri);
     afxUri name;
@@ -61,14 +61,14 @@ _AFX void AfxGetDriverUri(afxModule icd, afxUri* uri)
 
 _AFX afxManifest const* AfxGetModuleManifest(afxModule icd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     return &icd->etc;
 }
 
 _AFX void AfxGetModuleVersion(afxModule icd, afxUnit* verMajor, afxUnit* verMinor, afxUnit* verPatch)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     AFX_ASSERT(verMajor || verMinor || verPatch);
 
@@ -84,7 +84,7 @@ _AFX void AfxGetModuleVersion(afxModule icd, afxUnit* verMajor, afxUnit* verMino
 
 _AFX void AfxGetModuleInfo(afxModule icd, afxString* product, afxString* vendor, afxString* description)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     AFX_ASSERT(product || vendor || description);
 
@@ -100,7 +100,7 @@ _AFX void AfxGetModuleInfo(afxModule icd, afxString* product, afxString* vendor,
 
 _AFX afxUnit AfxFindSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const names[], void* addresses[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
     AFX_ASSERT(names);
     AFX_ASSERT(cnt);
@@ -166,7 +166,7 @@ _AFX afxUnit AfxFindSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const
 
 _AFX afxResult AfxFindModuleSymbols(afxModule mdle, afxUnit cnt, afxChar const *name[], void *syms[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
 
     AFX_ASSERT(cnt);
@@ -193,7 +193,7 @@ _AFX afxResult AfxFindModuleSymbols(afxModule mdle, afxUnit cnt, afxChar const *
 
 _AFX void* AfxFindModuleSymbol(afxModule mdle, afxChar const *name)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
     AFX_ASSERT(name);
     void *sym = NIL;
@@ -203,7 +203,7 @@ _AFX void* AfxFindModuleSymbol(afxModule mdle, afxChar const *name)
 
 _AFX afxUnit AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxUnit cnt, afxString const names[], void* addresses[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
     AFX_ASSERT(names);
     AFX_ASSERT(cnt);
@@ -272,7 +272,7 @@ _AFX afxUnit AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxUnit cn
 
 _AFX afxUnit AfxGetSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const names[], void* addresses[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
     AFX_ASSERT(addresses);
     AFX_ASSERT(names);
@@ -305,7 +305,7 @@ _AFX afxUnit AfxGetSymbolAddresses(afxModule mdle, afxUnit cnt, afxString const 
 
 _AFX void* AfxGetSymbolAddress(afxModule mdle, afxString const* name)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
     AFX_ASSERT(name);
     void *sym = NIL;
@@ -315,7 +315,7 @@ _AFX void* AfxGetSymbolAddress(afxModule mdle, afxString const* name)
 
 _AFX void AfxGetModulePath(afxModule mdle, afxUri* uri)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
     AFX_ASSERT(uri);
     AfxCopyUri(uri, &mdle->path.uri);
@@ -323,7 +323,7 @@ _AFX void AfxGetModulePath(afxModule mdle, afxUri* uri)
 
 _AFX afxError _AfxMdleDtorCb(afxModule mdle)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
 
     //if (mdle->osHandle != AfxApplicationGet()->e2coree->osHandle)
@@ -331,7 +331,7 @@ _AFX afxError _AfxMdleDtorCb(afxModule mdle)
     // objects will be released at class drop.
 
     afxDevice dev;
-    AFX_ITERATE_CHAIN(AFX_OBJ(afxDevice), dev, icd, &mdle->devices)
+    AFX_ITERATE_CHAIN(dev, icd, &mdle->devices)
     {
         AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
         while (AfxDisposeObjects(1, &dev));
@@ -353,7 +353,7 @@ _AFX afxError _AfxMdleDtorCb(afxModule mdle)
 
 _AFX afxError _AfxMdleCtorCb(afxModule mdle, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
 
     afxUri const* uri = AFX_CAST(afxUri const*, args[1]) + invokeNo;
@@ -426,7 +426,7 @@ _AFX afxClassConfig const _AFX_MDLE_CLASS_CONFIG =
 
 _AFX afxUnit AfxInvokeModules(afxUnit first, afxUnit cnt, afxBool(*f)(afxModule, void*), void *udd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
     afxSystem sys;
@@ -439,7 +439,7 @@ _AFX afxUnit AfxInvokeModules(afxUnit first, afxUnit cnt, afxBool(*f)(afxModule,
 
 _AFX afxUnit AfxEnumerateModules(afxUnit first, afxUnit cnt, afxModule executables[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cnt);
     AFX_ASSERT(executables);
     afxSystem sys;
@@ -452,7 +452,7 @@ _AFX afxUnit AfxEnumerateModules(afxUnit first, afxUnit cnt, afxModule executabl
 
 _AFX afxBool AfxFindModule(afxUri const* uri, afxModule* module)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool found = FALSE;
     AFX_ASSERT(uri);
     
@@ -499,7 +499,7 @@ _AFX afxBool AfxFindModule(afxUri const* uri, afxModule* module)
 
 _AFX afxBool _AfxFindAndLoadDllCb(void* udd, afxUnit diskId, afxUnit endpointIdx, afxUri const* path, afxUri const* osPath)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool next = TRUE;
 #ifdef AFX_ON_WINDOWS
     HMODULE hMod = LoadLibraryExA(AfxGetUriData(osPath, 0), NIL, NIL);
@@ -525,7 +525,7 @@ _AFX afxBool _AfxFindAndLoadDllCb(void* udd, afxUnit diskId, afxUnit endpointIdx
 
 _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(uri);
     if (!uri || AfxIsUriBlank(uri))
     {
@@ -631,7 +631,7 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
             AfxGetModuleInfo(mdle, &s.s, &providerName.s, &devDesc.s);
 
             afxDevice dev;
-            AFX_ITERATE_CHAIN(AFX_OBJ(afxDevice), dev, icd, &mdle->devices)
+            AFX_ITERATE_CHAIN(dev, icd, &mdle->devices)
             {
                 AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 
@@ -657,7 +657,7 @@ _AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* module
 
 _AFX afxError _AfxAttachDriver(afxModule mdle, afxUri const* manifest, void* udd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &mdle);
 
     if (!mdle->attached)
@@ -684,7 +684,7 @@ _AFX afxError _AfxAttachDriver(afxModule mdle, afxUri const* manifest, void* udd
                 AfxGetModuleInfo(mdle, &s.s, &providerName.s, &devDesc.s);
 
                 afxDevice dev;
-                AFX_ITERATE_CHAIN_B2F(AFX_OBJ(afxDevice), dev, icd, &mdle->devices)
+                AFX_ITERATE_CHAIN_B2F(dev, icd, &mdle->devices)
                 {
                     AFX_ASSERT_OBJECTS(afxFcc_DEV, 1, &dev);
 

@@ -23,7 +23,7 @@
 
 _AFXINL void AfxSetBiv3d(afxV3d biv, afxReal b01, afxReal b02, afxReal b12)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(biv);
     AfxV3dSet(biv, b01, b02, b12);
 }
@@ -43,21 +43,21 @@ _AFX afxRotor AFX_ROTOR_IDENTITY = { 0, 0, 0, 1 };
 
 _AFXINL void AfxResetRotor(afxRotor r)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     AfxV4dCopy(r, AFX_ROTOR_IDENTITY);
 }
 
 _AFXINL void AfxZeroRotor(afxRotor r)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     AfxV4dCopy(r, AFX_ROTOR_ZERO);
 }
 
 _AFXINL void AfxSetRotor(afxRotor r, afxReal b01, afxReal b02, afxReal b12, afxReal a)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     AfxV4dSet(r, b01, b02, b12, a);
 }
@@ -67,7 +67,7 @@ _AFXINL void AfxSetRotor(afxRotor r, afxReal b01, afxReal b02, afxReal b12, afxR
 
 _AFXINL void AfxMakeRotor(afxRotor r, afxV3d const from, afxV3d const to)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     AFX_ASSERT(from);
     AFX_ASSERT(to);
@@ -82,7 +82,7 @@ _AFXINL void AfxMakeRotor(afxRotor r, afxV3d const from, afxV3d const to)
 
 _AFXINL void AfxMakeRotorFromBiv3d(afxRotor r, afxV3d const plane, afxReal /*rad*/angle)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     AFX_ASSERT(plane);
     afxReal sina = AfxSinf(angle / 2.f);
@@ -96,7 +96,7 @@ _AFXINL void AfxMakeRotorFromBiv3d(afxRotor r, afxV3d const plane, afxReal /*rad
 
 _AFXINL void AfxMultiplyRotor(afxRotor r, afxRotor const a, afxRotor const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
@@ -113,7 +113,7 @@ _AFXINL void AfxMultiplyRotor(afxRotor r, afxRotor const a, afxRotor const b)
 
 _AFXINL void AfxRotateVectorByRotor(afxV3d v, afxRotor const p, afxV3d const x)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(v);
     AFX_ASSERT(p);
     AFX_ASSERT(x);
@@ -135,7 +135,7 @@ _AFXINL void AfxRotateVectorByRotor(afxV3d v, afxRotor const p, afxV3d const x)
 
 _AFXINL void AfxConjugateRotor(afxRotor r, afxRotor const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     AFX_ASSERT(in);
     AfxV4dNegAffine(r, in);
@@ -143,21 +143,21 @@ _AFXINL void AfxConjugateRotor(afxRotor r, afxRotor const in)
 
 _AFXINL afxReal afxMagRotorSq(afxRotor const r)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     return AfxV4dDot(r, r);
 }
 
 _AFXINL afxReal afxMagRotor(afxRotor const r)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     return AfxV4dMag(r);
 }
 
 _AFXINL void AfxNormalizeRotor(afxRotor r, afxRotor const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     AFX_ASSERT(in);
     afxReal l = afxMagRotor(r);
@@ -169,7 +169,7 @@ _AFXINL void AfxNormalizeRotor(afxRotor r, afxRotor const in)
 
 _AFXINL void AfxMakeM3dFromRotor(afxM3d m, afxRotor const r)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(m);
     AFX_ASSERT(r);
     afxV3d x, y, z;
@@ -183,7 +183,7 @@ _AFXINL void AfxMakeM3dFromRotor(afxM3d m, afxRotor const r)
 
 _AFXINL void AfxRotateRotor(afxRotor r, afxRotor const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     AFX_ASSERT(other);
     afxRotor t, i;
@@ -196,7 +196,7 @@ _AFXINL void AfxRotateRotor(afxRotor r, afxRotor const other)
 
 _AFXINL void AfxGeoRotor(afxRotor r, afxV3d const a, afxV3d const b)
 {    
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(r);
     AFX_ASSERT(a);
     AFX_ASSERT(b);

@@ -322,11 +322,11 @@ AVX afxError AvxPresentSurfaces
 ////////////////////////////////////////////////////////////////////////////////
 
 /*
-    The AvxDescribeSurface() method retrieves descriptive information about a drawing output context.
+    The AvxQuerySurfaceConfiguration() method retrieves descriptive information about a drawing output context.
     This is useful when you need to know the configuration before performing rendering or display operations.
 */
 
-AVX void AvxDescribeSurface
+AVX afxError AvxQuerySurfaceConfiguration
 (
     afxSurface dout,
     afxSurfaceConfig* cfg
@@ -420,6 +420,8 @@ AFX_DEFINE_STRUCT(avxModeSetting)
 
     afxUnit         outRate;
 
+    afxReal64       wwOverHw;
+
     // The rectangular region of pixels to present in the canvas being presented.
     // If empty, this region will be assumed to be the entire presentable canvas.
     afxRect         srcArea;
@@ -440,13 +442,13 @@ AFX_DEFINE_STRUCT(avxModeSetting)
 };
 
 /*
-    The AvxQuerySurfaceSettings() function is used to query various display settings or attributes for a specific drawing output context.
+    The AvxQuerySurfaceMode() function is used to query various display settings or attributes for a specific drawing output context.
     It provides information about the resolution, refresh rate, and possibly the scaling factors related to the physical aspect ratio
     of the display output. You would typically call this function when you need to retrieve the current display properties of a
     particular screen or rendering target.
 */
 
-AVX void AvxQuerySurfaceSettings
+AVX afxError AvxQuerySurfaceMode
 (
     // The drawing output context for which resolution details are queried.
     afxSurface dout,
@@ -456,12 +458,12 @@ AVX void AvxQuerySurfaceSettings
 );
 
 /*
-    The AvxChangeSurfaceSettings() function is used to change or reset the drawing resolution for a specific output device,
+    The AvxResetSurfaceMode() function is used to change or reset the drawing resolution for a specific output device,
     adjusting both the display resolution and potentially the refresh rate, while considering the aspect ratio and whether the
     change is in an exclusive fullscreen mode.
 */
 
-AVX afxError AvxChangeSurfaceSettings
+AVX afxError AvxResetSurfaceMode
 (
     // The drawing output context to be reset or configured.
     afxSurface dout,
@@ -507,9 +509,6 @@ AVX afxError AvxAdjustSurface
     // A boolean flag indicating whether to switch from/to fullscreen exclusive mode.
     afxBool fse
 );
-
-AVX afxError _AvxDoutAdjustNormalized(afxSurface dout, afxV3d const whd);
-AVX void _AvxDoutGetExtentNormalized(afxSurface dout, afxV3d whd); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 
 /*
     The AvxLockSurfaceBuffer() function is designed to request or reserve a buffer for future use. 

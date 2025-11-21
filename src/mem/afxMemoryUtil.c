@@ -195,7 +195,7 @@ _AFXINL void* AfxFillSSE(void* start, afxSize range, void const* pattern, afxSiz
 
 _AFXINL void AfxFillPattern(void* start, afxSize range, void const* pattern, afxSize patternSiz)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     if (!range) return;
     AFX_ASSERT((pattern && patternSiz) || !(pattern || patternSiz));
@@ -251,7 +251,7 @@ _AFXINL void AfxZeroSSE(void* start, afxSize range)
 
 _AFX void AfxZero(void* start, afxSize range)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     if (!range) return;
     AFX_ASSERT(start);
@@ -383,7 +383,7 @@ _AFXINL void AfxCopySSE(void* dst, void const* src, afxSize size)
 
 _AFX void AfxCopy(void* dst, void const* src, afxSize size)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     if (!size) return;
     AFX_ASSERT(src);
@@ -574,7 +574,7 @@ _AFXINL void AfxMoveSSE(void* dst, void const* src, afxSize size)
 
 _AFX void AfxMove(void* dst, void const* src, afxSize size)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     if (!size) return;
     AFX_ASSERT(src);
@@ -667,7 +667,7 @@ _AFX afxInt AfxCompareSSE(void const* a, void const* b, afxSize siz)
 
 _AFX afxInt AfxCompare(void const* a, void const* b, afxSize siz)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     afxInt rslt = 0;
 
     if (!siz) return 0;
@@ -769,7 +769,7 @@ _AFX void* AfxFindSSE(void const* start, afxSize range, afxInt c)
 
 _AFX void* AfxFind(void const* start, afxSize range, afxInt c)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     void* at = NIL;
 
     if (!range) return at;

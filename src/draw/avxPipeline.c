@@ -20,7 +20,7 @@
 #define _AVX_DRAW_C
 #define _AVX_PIPELINE_C
 #define _AVX_RASTERIZER_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 _AVX avxStencilConfig const AVX_STENCIL_INFO_DEFAULT =
 {
@@ -105,7 +105,7 @@ _AVX avxPipelineConfig const AVX_PIPELINE_BLUEPRINT_DEFAULT =
 
 _AVX afxError _AvxParseXmlPipelineBlueprint(afxXmlNode const* xmle, afxUnit specId, avxPipelineConfig* pipb, avxShaderType shaderStages[], afxUri shaderUris[], afxString shaderFns[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(pipb);
 
     avxPipelineConfig config = { 0 };
@@ -137,7 +137,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXmlNode const* xmle, afxUnit spec
     afxUnit sIdx;
 
     afxXmlAttr const* a;
-    AFX_ITERATE_CHAIN_B2F(afxXmlAttr const, a, elem, &xmle->attributes)
+    AFX_ITERATE_CHAIN_B2F(a, elem, &xmle->attributes)
     {
         if (!AfxCompareStrings(&a->name, 0, TRUE, ARRAY_SIZE(pipAttrNames), pipAttrNames, &sIdx))
             continue;
@@ -318,7 +318,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXmlNode const* xmle, afxUnit spec
     };
 
     afxXmlNode const* child;
-    AFX_ITERATE_CHAIN_B2F(afxXmlNode const, child, parent, &xmle->children)
+    AFX_ITERATE_CHAIN_B2F(child, parent, &xmle->children)
     {
         if (AfxCompareStrings(&child->name, 0, TRUE, 1, &AFX_STRING("Shader"), NIL))
         {
@@ -333,7 +333,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXmlNode const* xmle, afxUnit spec
                 AFX_STRING("fn")
             };
 
-            AFX_ITERATE_CHAIN_B2F(afxXmlAttr const, a, elem, &child->attributes)
+            AFX_ITERATE_CHAIN_B2F_B(a, elem, &child->attributes)
             {
                 if (!AfxCompareStrings(&a->name, 0, TRUE, ARRAY_SIZE(shdAttrNames), shdAttrNames, &sIdx))
                     continue;
@@ -425,7 +425,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXmlNode const* xmle, afxUnit spec
             afxBool front = FALSE;
             afxBool back = FALSE;
 
-            AFX_ITERATE_CHAIN_B2F(afxXmlAttr const, a, elem, &child->attributes)
+            AFX_ITERATE_CHAIN_B2F_B(a, elem, &child->attributes)
             {
                 if (!AfxCompareStrings(&a->name, 0, TRUE, ARRAY_SIZE(shdAttrNames), shdAttrNames, &sIdx))
                     continue;
@@ -521,7 +521,7 @@ _AVX afxError _AvxParseXmlPipelineBlueprint(afxXmlNode const* xmle, afxUnit spec
 
 _AVX afxDrawSystem AvxGetPipelineHost(avxPipeline pip)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @pip must be a valid avxPipeline handle.
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
     afxDrawSystem dsys = AfxGetHost(pip);
@@ -531,7 +531,7 @@ _AVX afxDrawSystem AvxGetPipelineHost(avxPipeline pip)
 
 _AVX avxBus AvxGetPipelineBus(avxPipeline pip)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @pip must be a valid avxPipeline handle.
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
     return pip->bus;
@@ -539,7 +539,7 @@ _AVX avxBus AvxGetPipelineBus(avxPipeline pip)
 
 _AVX afxFlags AvxGetPipelineFlags(avxPipeline pip, afxFlags mask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @pip must be a valid avxPipeline handle.
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
     return (!mask) ? pip->flags : (pip->flags & mask);
@@ -547,7 +547,7 @@ _AVX afxFlags AvxGetPipelineFlags(avxPipeline pip, afxFlags mask)
 
 _AVX afxBool AvxGetPipelineLigature(avxPipeline pip, avxLigature* ligature)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
     avxLigature liga = pip->liga;
     AFX_TRY_ASSERT_OBJECTS(afxFcc_LIGA, 1, &liga);
@@ -557,7 +557,7 @@ _AVX afxBool AvxGetPipelineLigature(avxPipeline pip, avxLigature* ligature)
 
 _AVX afxBool AvxGetPipelineVertexInput(avxPipeline pip, avxVertexInput* input)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
     avxVertexInput vin = pip->vin;
     AFX_TRY_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
@@ -567,7 +567,7 @@ _AVX afxBool AvxGetPipelineVertexInput(avxPipeline pip, avxVertexInput* input)
 
 _AVX void AvxDescribePipeline(avxPipeline pip, avxPipelineInfo* info)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
 
     info->tag = pip->tag;
@@ -580,7 +580,7 @@ _AVX void AvxDescribePipeline(avxPipeline pip, avxPipelineInfo* info)
 
 _AVX void AvxDescribePipelineTransformation(avxPipeline pip, avxTransformation* info)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
 
     info->transformationDisabled = pip->transformationDisabled;
@@ -606,7 +606,7 @@ _AVX void AvxDescribePipelineTransformation(avxPipeline pip, avxTransformation* 
 
 _AVX void AvxDescribePipelineRasterization(avxPipeline pip, avxRasterization* info)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
 
     info->fillMode = pip->fillMode;
@@ -655,7 +655,7 @@ _AVX void AvxDescribePipelineRasterization(avxPipeline pip, avxRasterization* in
 
 _AVX afxUnit AvxGetColorOutputs(avxPipeline pip, afxUnit first, afxUnit cnt, avxColorOutput channels[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_RAZR, 1, &pip);
     AFX_ASSERT_RANGE(pip->outCnt, first, cnt);
     AFX_ASSERT(channels);
@@ -669,7 +669,7 @@ _AVX afxUnit AvxGetColorOutputs(avxPipeline pip, afxUnit first, afxUnit cnt, avx
 
 _AVX afxUnit AvxGetMultisamplingMasks(avxPipeline pip, afxUnit first, afxUnit cnt, afxMask sampleMask[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_RAZR, 1, &pip);
     AFX_ASSERT_RANGE(pip->sampleLvl, first, cnt);
     AFX_ASSERT(sampleMask);
@@ -683,7 +683,7 @@ _AVX afxUnit AvxGetMultisamplingMasks(avxPipeline pip, afxUnit first, afxUnit cn
 
 _AVX afxBool AvxGetPipelineCodebase(avxPipeline pip, avxCodebase* codebase)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
     avxCodebase codb = pip->codb;
     AFX_TRY_ASSERT_OBJECTS(afxFcc_SHD, 1, &codb);
@@ -694,7 +694,7 @@ _AVX afxBool AvxGetPipelineCodebase(avxPipeline pip, avxCodebase* codebase)
 
 _AVX afxBool AvxGetPipelineShader(avxPipeline pip, avxShaderType stage, afxUnit* prog, afxString* func)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
     AFX_ASSERT_RANGE(avxShaderType_TOTAL, stage, 1);
     afxBool found = FALSE;
@@ -717,7 +717,7 @@ _AVX afxBool AvxGetPipelineShader(avxPipeline pip, avxShaderType stage, afxUnit*
 
 _AVX afxUnit AvxGetPipelinePrograms(avxPipeline pip, afxIndex first, afxUnit cnt, afxUnit progs[], afxString funcs[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
     AFX_ASSERT_RANGE(pip->stageCnt, first, cnt);
     AFX_ASSERT(progs || funcs);
@@ -736,7 +736,7 @@ _AVX afxUnit AvxGetPipelinePrograms(avxPipeline pip, afxIndex first, afxUnit cnt
 
 _AVX afxError AvxReprogramPipeline(avxPipeline pip, afxUnit cnt, avxShaderSpecialization const specs[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
     AFX_ASSERT(specs);
 
@@ -831,7 +831,7 @@ _AVX afxError AvxReprogramPipeline(avxPipeline pip, afxUnit cnt, avxShaderSpecia
 
 _AVX afxError _AvxPipDtorCb(avxPipeline pip)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
 
     for (afxUnit i = pip->stageCnt; i-- > 0;)
@@ -886,7 +886,7 @@ _AVX afxError _AvxPipDtorCb(avxPipeline pip)
 
 _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_PIP, 1, &pip);
 
     afxDrawSystem dsys = args[0];
@@ -1103,9 +1103,9 @@ _AVX afxClassConfig const _AVX_PIP_CLASS_CONFIG =
 
 _AVX afxError AvxAssemblePcxPipelines(afxDrawSystem dsys, afxUnit cnt, avxPipelineConfig const blueprints[], avxPipeline pipelines[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->pipCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->pipCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_PIP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)pipelines, (void const*[]) { dsys, (void*)blueprints, (void*)blueprints }))
@@ -1128,13 +1128,13 @@ _AVX afxError AvxAssemblePcxPipelines(afxDrawSystem dsys, afxUnit cnt, avxPipeli
 
 _AVX afxError AvxAssembleGfxPipelines(afxDrawSystem dsys, afxUnit cnt, avxPipelineConfig const cfg[], avxPipeline pipelines[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(pipelines);
     AFX_ASSERT(cfg);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->pipCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->pipCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_PIP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)pipelines, (void const*[]) { dsys, (void*)cfg, (void*)cfg }))
@@ -1253,7 +1253,7 @@ _AVX afxError AvxAssembleGfxPipelines(afxDrawSystem dsys, afxUnit cnt, avxPipeli
 
 _AVX afxError AvxLoadPipeline(afxDrawSystem dsys, avxVertexInput vin, afxUri const* uri, avxPipeline* pipeline)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_TRY_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
     AFX_ASSERT(uri && !AfxIsUriBlank(uri));

@@ -28,11 +28,11 @@
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
 #define _AMX_AUDIO_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 _AVX afxBool AmxIsCodecAcceptable(amxCodec mcdc, amxCodecFeatures const* features, amxCodecLimits const* limits)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @mcdc must be a valid amxCodec handle.
     AFX_ASSERT_OBJECTS(afxFcc_MCDC, 1, &mcdc);
     AFX_ASSERT(limits);
@@ -54,7 +54,7 @@ _AVX afxBool AmxIsCodecAcceptable(amxCodec mcdc, amxCodecFeatures const* feature
 
 _AMX afxError _AmxMcdcDtorCb(amxCodec mcdc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MCDC, 1, &mcdc);
 
 
@@ -64,7 +64,7 @@ _AMX afxError _AmxMcdcDtorCb(amxCodec mcdc)
 
 _AMX afxError _AmxMcdcCtorCb(amxCodec mcdc, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MCDC, 1, &mcdc);
 
     afxModule icd = args[0];
@@ -93,7 +93,7 @@ _AMX afxClassConfig const _AMX_MCDC_CLASS_CONFIG =
 
 _AMX afxUnit AmxEnumerateCodecs(afxUnit icd, afxUnit first, afxUnit cnt, amxCodec codecs[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(codecs);
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;
@@ -115,7 +115,7 @@ _AMX afxUnit AmxEnumerateCodecs(afxUnit icd, afxUnit first, afxUnit cnt, amxCode
 
 _AMX afxUnit AmxInvokeCodecs(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, amxCodec), afxUnit cnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
     afxUnit rslt = 0;
@@ -135,7 +135,7 @@ _AMX afxUnit AmxInvokeCodecs(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(
 
 _AMX afxUnit AmxEvokeCodecs(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, amxCodec), afxUnit cnt, amxCodec codecs[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(codecs);
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;
@@ -157,7 +157,7 @@ _AMX afxUnit AmxEvokeCodecs(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(v
 
 _AMX afxUnit AmxChooseCodecs(afxUnit icd, amxCodecFeatures const* features, amxCodecLimits const* limits, void const* caps, afxUnit maxCnt, afxUnit mcdcId[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(limits);
     AFX_ASSERT(features);
     afxUnit rslt = 0;
@@ -209,9 +209,9 @@ _AMX afxUnit AmxChooseCodecs(afxUnit icd, amxCodecFeatures const* features, amxC
     return rslt;
 }
 
-_AMX afxError _AmxRegisterCodecs(afxModule icd, afxUnit cnt, _amxCodecRegistration const infos[], amxCodec codecs[])
+_AMX afxError _AmxRegisterCodecs(afxModule icd, afxUnit cnt, _amxCodecReg const infos[], amxCodec codecs[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     AFX_ASSERT(codecs);
     AFX_ASSERT(infos);

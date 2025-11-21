@@ -103,7 +103,7 @@ _AFX afxResult PrimeThreadProc(afxThread thr, afxEvent* ev)
 #if 0
 _AFX afxBool SshProc(afxShell ssh, MSG const* msg)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
 
     AfxCallDevice((afxDevice)ssh, 3, msg);
@@ -113,7 +113,7 @@ _AFX afxBool SshProc(afxShell ssh, MSG const* msg)
 
 _AFX afxTime AfxDoSystemThreading(afxTime timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxSystem sys;
     AfxGetSystem(&sys);
@@ -214,7 +214,7 @@ _AFX void AfxStdAssertHookCallback(char const* exp, char const* file, int line)
 
 _AFX afxError MountHostVolumes()
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxUri32 urib2;
     AfxMakeUri32(&urib2, NIL);
@@ -251,7 +251,7 @@ _AFX afxError MountHostVolumes()
 
 _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxUri point;
     afxUri2048 location;
@@ -372,7 +372,7 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
 
 _AFX afxError _AfxSysDtor(afxSystem sys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     AfxDisposeObjects(1, &sys->e2coree);
@@ -397,7 +397,7 @@ _AFX afxError _AfxSysDtor(afxSystem sys)
 
 _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
 
     afxManifest* ini = args[0];
@@ -521,7 +521,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, void** args, afxUnit invokeNo)
 
 _AFX void AfxConfigureSystem(afxSystemConfig* config)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxSystemConfig cfg = { 0 };
 
     afxUri uri;

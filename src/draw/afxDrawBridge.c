@@ -25,11 +25,11 @@
 //#define _AVX_SURFACE_C
 //#define _AVX_DRAW_CONTEXT_C
 //#define _AVX_BUFFER_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 _AVX afxClass const* _AvxDexuGetDqueClass(afxDrawBridge dexu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     afxClass const* cls = &dexu->dqueCls;
@@ -39,7 +39,7 @@ _AVX afxClass const* _AvxDexuGetDqueClass(afxDrawBridge dexu)
 
 _AVX afxClass const* _AvxDexuGetDctxClass(afxDrawBridge dexu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     afxClass const* cls = &dexu->dctxCls;
@@ -49,7 +49,7 @@ _AVX afxClass const* _AvxDexuGetDctxClass(afxDrawBridge dexu)
 
 _AVX afxDrawSystem AvxGetBridgedDrawSystem(afxDrawBridge dexu, afxUnit* bridgeId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     afxDrawSystem dsys = AfxGetHost(dexu);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
@@ -59,7 +59,7 @@ _AVX afxDrawSystem AvxGetBridgedDrawSystem(afxDrawBridge dexu, afxUnit* bridgeId
 
 _AVX afxDrawDevice AvxGetBridgedDrawDevice(afxDrawBridge dexu, afxUnit* ddevId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     afxDrawDevice ddev = dexu->ddev;
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
@@ -69,7 +69,7 @@ _AVX afxDrawDevice AvxGetBridgedDrawDevice(afxDrawBridge dexu, afxUnit* ddevId)
 
 _AVX afxUnit AvxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cnt, afxDrawQueue queues[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     // queues must be a valid pointer to the afxDrawQueue handles.
@@ -84,14 +84,14 @@ _AVX afxUnit AvxGetDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx, afxUnit cn
 
 _AVX afxError AvxWaitForIdleDrawBridge(afxDrawBridge dexu, afxUnit64 timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 
-    if (dexu->pingCb)
-        dexu->pingCb(dexu, 0);
+    if (dexu->ddi->pingCb)
+        dexu->ddi->pingCb(dexu, 0);
 
-    if (!dexu->waitCb)
+    if (!dexu->ddi->waitCb)
     {
         afxClass const* dqueCls = _AvxDexuGetDqueClass(dexu);
 
@@ -108,7 +108,7 @@ _AVX afxError AvxWaitForIdleDrawBridge(afxDrawBridge dexu, afxUnit64 timeout)
             }
         }
     }
-    else if (dexu->waitCb(dexu, timeout))
+    else if (dexu->ddi->waitCb(dexu, timeout))
         AfxThrowError();
 
     return err;
@@ -116,7 +116,7 @@ _AVX afxError AvxWaitForIdleDrawBridge(afxDrawBridge dexu, afxUnit64 timeout)
 
 _AVX afxError _AvxDexuTransferVideoMemory(afxDrawBridge dexu, avxTransference* ctrl, afxUnit opCnt, void const* ops)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     AFX_ASSERT(opCnt);
@@ -168,7 +168,7 @@ _AVX afxError _AvxDexuTransferVideoMemory(afxDrawBridge dexu, avxTransference* c
 
 _AVX afxError _AvxDexuRemapBuffers(afxDrawBridge dexu, afxBool unmap, afxUnit cnt, _avxBufferRemapping const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     AFX_ASSERT(cnt);
@@ -229,7 +229,7 @@ _AVX afxError _AvxDexuRemapBuffers(afxDrawBridge dexu, afxBool unmap, afxUnit cn
 
 _AVX afxError _AvxDexuCohereMappedBuffers(afxDrawBridge dexu, afxBool discard, afxUnit cnt, avxBufferedMap const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     AFX_ASSERT(cnt);
@@ -282,7 +282,7 @@ _AVX afxError _AvxDexuCohereMappedBuffers(afxDrawBridge dexu, afxBool discard, a
 
 _AVX afxError _AvxDexuPresentBuffers(afxDrawBridge dexu, afxUnit cnt, avxPresentation presentations[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dexu must be a valid afxDrawBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
     AFX_ASSERT(cnt);
@@ -312,9 +312,14 @@ _AVX afxError _AvxDexuPresentBuffers(afxDrawBridge dexu, afxUnit cnt, avxPresent
     return err;
 }
 
+_AVX _avxDdiDexu const _AVX_DDI_DEXU =
+{
+    .pingCb = _AvxDexu_PingCb
+};
+
 _AVX afxError _AvxDexuDtorCb(afxDrawBridge dexu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 
     afxDrawSystem dsys = AvxGetBridgedDrawSystem(dexu, NIL);
@@ -344,7 +349,7 @@ _AVX afxError _AvxDexuDtorCb(afxDrawBridge dexu)
 
 _AVX afxError _AvxDexuCtorCb(afxDrawBridge dexu, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
 
     afxDrawSystem dsys = AFX_CAST(afxDrawSystem, args[0]);
@@ -364,7 +369,7 @@ _AVX afxError _AvxDexuCtorCb(afxDrawBridge dexu, void** args, afxUnit invokeNo)
     dexu->exuIdx = cfg->exuIdx;
     AFX_ASSERT(dexu->exuIdx == AfxGetObjectId(dexu));
 
-    dexu->pingCb = _AvxDexu_PingCb;
+    dexu->ddi = &_AVX_DDI_DEXU;
     dexu->workerProc = _AVX_DPU_THREAD_PROC;
     dexu->procCb = _AvxDpu_ProcCb;
 
@@ -433,7 +438,7 @@ _AVX afxClassConfig const _AVX_DEXU_CLASS_CONFIG =
 
 _AVX afxError _AvxDsysBridgeDevices(afxDrawSystem dsys, afxUnit cnt, _avxDexuAcquisition const configs[], afxDrawBridge bridges[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(configs);
     AFX_ASSERT(bridges);

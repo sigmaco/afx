@@ -16,7 +16,7 @@
 
 // This software is part of Advanced Video Graphics Extensions & Experiments.
 
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 avxOrigin const AVX_ORIGIN_ZERO = { 0, 0, 0 };
 avxOrigin const AVX_ORIGIN_MIN = { AFX_I32_MIN, AFX_I32_MIN, AFX_I32_MIN };
@@ -30,7 +30,7 @@ avxRange const AVX_RANGE_MAX = { AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX };
 
 _AVXINL avxRange AvxMinRange(avxRange const a, avxRange const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxRange const)
     { 
         .w = AFX_MIN(a.w, b.w), 
@@ -41,7 +41,7 @@ _AVXINL avxRange AvxMinRange(avxRange const a, avxRange const b)
 
 _AVXINL avxRange AvxMaxRange(avxRange const a, avxRange const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxRange const)
     {
         .w = AFX_MAX(a.w, b.w), 
@@ -52,7 +52,7 @@ _AVXINL avxRange AvxMaxRange(avxRange const a, avxRange const b)
 
 _AVXINL avxRange AvxClampRange(avxRange const in, avxRange const min, avxRange const max)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxRange const)
     {
         .w = AFX_CLAMP(in.w, min.w, max.w), 
@@ -63,7 +63,7 @@ _AVXINL avxRange AvxClampRange(avxRange const in, avxRange const min, avxRange c
 
 _AVXINL avxRange AvxLimitRange(avxOrigin const origin, avxRange const extent)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxRange const)
     {
         .w = AFX_MIN(origin.x, (afxInt)(extent.w - 1)), 
@@ -74,7 +74,7 @@ _AVXINL avxRange AvxLimitRange(avxOrigin const origin, avxRange const extent)
 
 _AVXINL afxBool AvxIsRangeEqual(avxRange const whd, avxRange const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return  (whd.w == other.w) || 
             (whd.h == other.h) || 
             (whd.d == other.d);
@@ -82,7 +82,7 @@ _AVXINL afxBool AvxIsRangeEqual(avxRange const whd, avxRange const other)
 
 _AVXINL afxBool AvxIsRangeLequal(avxRange const whd, avxRange const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     //AFX_ASSERT(other);
     return ((   (whd.w <= other.w) && 
@@ -92,7 +92,7 @@ _AVXINL afxBool AvxIsRangeLequal(avxRange const whd, avxRange const other)
 
 _AVXINL afxBool AvxIsRangeLess(avxRange const whd, avxRange const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     //AFX_ASSERT(other);
     return ((   (whd.w < other.w) && 
@@ -102,14 +102,14 @@ _AVXINL afxBool AvxIsRangeLess(avxRange const whd, avxRange const other)
 
 _AVXINL afxBool AvxIsRangeZero(avxRange const whd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     return (AFX_R(0) == (whd.w + whd.h + whd.d));
 }
 
 _AVXINL avxRange AvxAddRange(avxRange const a, avxRange const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxRange const) {
         .w = a.w + b.w,
         .h = a.h + b.h,
@@ -119,7 +119,7 @@ _AVXINL avxRange AvxAddRange(avxRange const a, avxRange const b)
 
 _AVXINL avxRange AvxSubtractRange(avxRange const a, avxRange const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxRange const) {
         .w = a.w - b.w,
         .h = a.h - b.h,
@@ -129,7 +129,7 @@ _AVXINL avxRange AvxSubtractRange(avxRange const a, avxRange const b)
 
 _AVXINL avxRange AvxDivideRange(avxRange const in, afxUnit div)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxRange const) {
         .w = in.w / div,
         .h = in.h / div,
@@ -139,7 +139,7 @@ _AVXINL avxRange AvxDivideRange(avxRange const in, afxUnit div)
 
 _AVXINL avxRange AvxModRange(avxRange const in, afxUnit div)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxRange const) {
         .w = in.w % div,
         .h = in.h % div,
@@ -149,7 +149,7 @@ _AVXINL avxRange AvxModRange(avxRange const in, afxUnit div)
 
 _AVXINL avxRange AvxScaleRange(avxRange const in, afxUnit s)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxRange const) {
         .w = in.w * s,
         .h = in.h * s,
@@ -159,7 +159,7 @@ _AVXINL avxRange AvxScaleRange(avxRange const in, afxUnit s)
 
 _AVXINL avxRange AvxHalfRange(avxRange const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxRange const) {
         .w = AFX_MAX(in.w ? 1 : 0, in.w >> 1),
         .h = AFX_MAX(in.h ? 1 : 0, in.h >> 1),
@@ -169,21 +169,21 @@ _AVXINL avxRange AvxHalfRange(avxRange const in)
 
 _AVXINL afxUnit AvxSumRange(avxRange const whd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     return whd.w + whd.h + whd.d;
 }
 
 _AVXINL afxUnit AvxMagRange(avxRange const whd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     return whd.w * whd.h * whd.d;
 }
 
 _AVXINL afxUnit AvxDotRange(avxRange const whd, avxRange const other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     //AFX_ASSERT(whd);
     //AFX_ASSERT(other);
     return (whd.w * other.w) + (whd.h * other.h) + (whd.d * other.d);
@@ -191,7 +191,7 @@ _AVXINL afxUnit AvxDotRange(avxRange const whd, avxRange const other)
 
 _AVXINL avxOrigin AvxClampOrigin(avxOrigin const origin, avxRange const max)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxOrigin) {
         .x = AFX_MIN(origin.x, (afxInt)(max.w - 1)),
         .y = AFX_MIN(origin.y, (afxInt)(max.h - 1)),
@@ -201,7 +201,7 @@ _AVXINL avxOrigin AvxClampOrigin(avxOrigin const origin, avxRange const max)
 
 _AVXINL avxOrigin AvxHalfOrigin(avxOrigin const in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (avxOrigin) {
         .x = in.x >> 1,
         .y = in.y >> 1,
@@ -211,7 +211,7 @@ _AVXINL avxOrigin AvxHalfOrigin(avxOrigin const in)
 
 _AVXINL void AfxMakeViewport(avxViewport* vp, afxReal x, afxReal y, afxReal w, afxReal h, afxReal minDepth, afxReal maxDepth)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(vp);
     AFX_ASSERT(w);
     AFX_ASSERT(h);
@@ -226,7 +226,7 @@ _AVXINL void AfxMakeViewport(avxViewport* vp, afxReal x, afxReal y, afxReal w, a
 
 _AVXINL void AvxFlipViewport(avxViewport* vp, avxViewport const* in, afxBool swapDepthRange)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(vp);
     AFX_ASSERT(in);
     avxViewport flipped = *in;
@@ -249,7 +249,7 @@ _AVXINL void AvxFlipViewport(avxViewport* vp, avxViewport const* in, afxBool swa
 
 _AVXINL void AvxViewportTransform(avxViewport const* vp, avxViewportFlags flags, afxUnit cnt, afxV4d const ndcPos[], afxV4d canvPos[], afxUnit dstStride, afxUnit srcStride)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(vp);
     AFX_ASSERT_ALIGNMENT(srcStride, sizeof(afxReal));
     AFX_ASSERT(!srcStride || (srcStride >= sizeof(afxV3d)));

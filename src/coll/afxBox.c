@@ -29,7 +29,7 @@ _AFX afxBox const AFX_AABB_VOID = { .min = { AFX_R32_MAX, AFX_R32_MAX, AFX_R32_M
 
 _AFXINL void AfxMakeAabb(afxBox* bb, afxUnit cnt, afxV3d const points[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
     AFX_ASSERT(!cnt || points);
 
@@ -48,7 +48,7 @@ _AFXINL void AfxMakeAabb(afxBox* bb, afxUnit cnt, afxV3d const points[])
 
 _AFXINL void AfxEmboxTriangles(afxBox* bb, afxUnit triCnt, afxV3d const vertices[], afxUnit const indices[], afxUnit idxStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(vertices);
     AFX_ASSERT(bb);
 
@@ -121,7 +121,7 @@ _AFXINL void AfxEmboxTriangles(afxBox* bb, afxUnit triCnt, afxV3d const vertices
 
 _AFXINL void AfxEmboxVectors(afxBox* bb, afxUnit cnt, afxV3d const vectors[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
     AFX_ASSERT(vectors);
 
@@ -139,7 +139,7 @@ _AFXINL void AfxEmboxVectors(afxBox* bb, afxUnit cnt, afxV3d const vectors[])
 
 _AFXINL void AfxEmboxPoints(afxBox* bb, afxUnit cnt, afxV4d const points[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
     AFX_ASSERT(points);
 
@@ -157,7 +157,7 @@ _AFXINL void AfxEmboxPoints(afxBox* bb, afxUnit cnt, afxV4d const points[])
 
 _AFXINL void AfxEmboxAabbs(afxBox* bb, afxUnit cnt, afxBox const boxes[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
     AFX_ASSERT(boxes);
 
@@ -176,7 +176,7 @@ _AFXINL void AfxEmboxAabbs(afxBox* bb, afxUnit cnt, afxBox const boxes[])
 
 _AFXINL void AfxEmboxSpheres(afxBox* bb, afxUnit cnt, afxSphere const spheres[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
     AFX_ASSERT(spheres);
 
@@ -193,7 +193,7 @@ _AFXINL void AfxEmboxSpheres(afxBox* bb, afxUnit cnt, afxSphere const spheres[])
 
 _AFXINL afxBool AfxGetAabbExtents(afxBox const* bb, afxV3d extent)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
     AFX_ASSERT(extent);
     // Calculate the bounding box extent: (max - min).
@@ -204,7 +204,7 @@ _AFXINL afxBool AfxGetAabbExtents(afxBox const* bb, afxV3d extent)
 
 _AFXINL afxReal AfxGetAabbCentre(afxBox const* bb, afxV4d centre)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
     AFX_ASSERT(centre);
     // (min + max) / 2
@@ -221,7 +221,7 @@ _AFXINL void AfxGetAabbCorners(afxBox const* bb, afxV3d vertices[AFX_NUM_BOX_COR
 {
     // The vertices are defined as 8 unique corner points.
 
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(vertices);
     AFX_ASSERT(bb);
 
@@ -241,7 +241,7 @@ _AFXINL afxUnit AsxGenerateIndexedLinesForAabbs(afxUnit cnt, afxBox const aabbs[
 // A line list means we're rendering edges, so each line connects 2 vertices, and we use pairs of indices to define each line segment.
 // For a cube (AABB), there are 12 edges, so we need 24 indices per AABB.
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(vertices);
     // vertices[] array must be capable of storing @cnt * 8 vertices.
     AFX_ASSERT(indices);
@@ -324,7 +324,7 @@ _AFXINL afxUnit AsxGenerateIndexedFacesForAabbs(afxUnit cnt, afxBox const aabbs[
 // Each triangle consists of 3 vertex indices, so you'll generate 36 indices per AABB.
 // Each AABB has 8 unique vertices(corners).
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(vertices);
     // vertices[] array must be capable of storing @cnt * 8 vertices.
     AFX_ASSERT(indices);
@@ -424,7 +424,7 @@ _AFXINL afxUnit AsxGenerateIndexedFacesForAabbs(afxUnit cnt, afxBox const aabbs[
 
 _AFXINL afxUnit AfxDoesAabbIncludeAtv3d(afxBox const* bb, afxUnit cnt, afxV3d const point[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
     AFX_ASSERT(point);
     afxUnit rslt = 0;
@@ -466,7 +466,7 @@ _AFXINL afxBool AfxIntersectAabbs(afxBox* bb, afxBox const a, afxBox const b)
 
 _AFXINL afxUnit AfxDoesAabbInclude(afxBox const* bb, afxUnit cnt, afxBox const other[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
     AFX_ASSERT(other);
     afxUnit rslt = 0;
@@ -487,7 +487,7 @@ _AFXINL afxUnit AfxDoesAabbInclude(afxBox const* bb, afxUnit cnt, afxBox const o
 
 afxBool AfxTestSphereBox(afxSphere const* bs, afxBox const* bb)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
 
     // test if a bounding box is fully inside a bounding sphere.
@@ -502,7 +502,7 @@ afxBool AfxTestSphereBox(afxSphere const* bs, afxBox const* bb)
 
 _AFXINL void AfxTransformAabb(afxBox const* bb, afxM4d const m, afxBox* to)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(bb);
     AFX_ASSERT(m);
     AFX_ASSERT(to);
@@ -512,7 +512,7 @@ _AFXINL void AfxTransformAabb(afxBox const* bb, afxM4d const m, afxBox* to)
 
 _AFXINL void AfxTransformObbs(afxM3d const ltm, afxV4d const atv, afxUnit cnt, afxBox const in[], afxBox out[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(atv);
     AFX_ASSERT(ltm);
     AFX_ASSERT(cnt);
@@ -554,7 +554,7 @@ _AFXINL void AfxTransformObbs(afxM3d const ltm, afxV4d const atv, afxUnit cnt, a
 
 _AFXINL void AfxCopyBoxes(afxUnit cnt, afxBox const in[], afxUnit inStride, afxBox out[], afxUnit outStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cnt);
     AFX_ASSERT(out);
     AFX_ASSERT(in);
@@ -592,7 +592,7 @@ _AFXINL void AfxCopyBoxes(afxUnit cnt, afxBox const in[], afxUnit inStride, afxB
 
 _AFXINL void AfxResetBoxes(afxUnit cnt, afxBox boxes[], afxUnit stride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(boxes);
     AFX_ASSERT(cnt);
 

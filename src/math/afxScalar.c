@@ -67,7 +67,7 @@ _AFXINL afxReal AfxNdcf(afxReal x, afxReal total)
 
 _AFXINL afxReal64 AfxUnndc(afxReal64 x, afxReal64 total)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(AFX_R(0) <= x);
     AFX_ASSERT(AFX_R(1) >= x);
     return x * total;
@@ -75,7 +75,7 @@ _AFXINL afxReal64 AfxUnndc(afxReal64 x, afxReal64 total)
 
 _AFXINL afxReal AfxUnndcf(afxReal x, afxReal total)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(AFX_R(0) <= x);
     AFX_ASSERT(AFX_R(1) >= x);
     return x * total;

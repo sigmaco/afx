@@ -19,7 +19,7 @@
 
 _AFXINL void AfxMakeChain(afxChain *ch, void *holder)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(ch);
     ch->holder = holder;
     ch->cnt = 0;
@@ -31,7 +31,7 @@ _AFXINL void AfxMakeChain(afxChain *ch, void *holder)
 
 _AFXINL void AfxSwapChains(afxChain *ch, afxChain *other)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @other must be a valid pointer a to afxChain.
     AFX_ASSERT(other);
     // @ch must be a valid pointer a to afxChain.
@@ -57,7 +57,7 @@ _AFXINL void AfxSwapChains(afxChain *ch, afxChain *other)
 
 _AFXINL void AfxAppendChain(afxChain* ch, afxChain* other)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     // @other must be a valid pointer a to afxChain.
     AFX_ASSERT(other);
     // @ch must be a valid pointer a to afxChain.
@@ -104,7 +104,7 @@ _AFXINL void AfxAppendChain(afxChain* ch, afxChain* other)
 
 _AFXINL void AfxPrependChain(afxChain* ch, afxChain* other)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     // @other must be a valid pointer a to afxChain.
     AFX_ASSERT(other);
     // @ch must be a valid pointer a to afxChain.
@@ -151,7 +151,7 @@ _AFXINL void AfxPrependChain(afxChain* ch, afxChain* other)
 
 _AFXINL afxUnit AfxGetChainLength(afxChain const *ch)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
     return ch->cnt;
@@ -159,7 +159,7 @@ _AFXINL afxUnit AfxGetChainLength(afxChain const *ch)
 
 _AFXINL void* AfxGetChainHolder(afxChain const *ch)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
     return ch->holder;
@@ -167,7 +167,7 @@ _AFXINL void* AfxGetChainHolder(afxChain const *ch)
 
 _AFXINL afxLink* AfxGetLastLink(afxChain const *ch)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
     return ch->anchor.next != &ch->anchor ? ch->anchor.next : NIL;
@@ -175,7 +175,7 @@ _AFXINL afxLink* AfxGetLastLink(afxChain const *ch)
 
 _AFXINL afxLink* AfxGetFirstLink(afxChain const *ch)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
     return ch->anchor.prev != &ch->anchor ? ch->anchor.prev : NIL;
@@ -183,7 +183,7 @@ _AFXINL afxLink* AfxGetFirstLink(afxChain const *ch)
 
 _AFXINL afxLink* AfxGetAnchor(afxChain *ch)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
     return &ch->anchor;
@@ -191,7 +191,7 @@ _AFXINL afxLink* AfxGetAnchor(afxChain *ch)
 
 _AFXINL afxLink const* AfxGetAnchorConst(afxChain const *ch)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
     return &ch->anchor;
@@ -199,7 +199,7 @@ _AFXINL afxLink const* AfxGetAnchorConst(afxChain const *ch)
 
 _AFXINL afxBool AfxIsChainEmpty(afxChain const *ch)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
     return (ch->anchor.next == &(ch->anchor)) || (ch->anchor.prev == &(ch->anchor));
@@ -207,7 +207,7 @@ _AFXINL afxBool AfxIsChainEmpty(afxChain const *ch)
 
 _AFXINL void AfxResetLink(afxLink *lnk)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lnk);
     lnk->next = lnk;
     lnk->prev = lnk;
@@ -216,7 +216,7 @@ _AFXINL void AfxResetLink(afxLink *lnk)
 
 _AFXINL afxUnit AfxLinkAhead(afxLink* lnk, afxLink* prev)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lnk);
     afxUnit lnkIdx;
 
@@ -242,7 +242,7 @@ _AFXINL afxUnit AfxLinkAhead(afxLink* lnk, afxLink* prev)
 
 _AFXINL afxUnit AfxLinkBehind(afxLink* lnk, afxLink* next)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lnk);
     afxUnit lnkIdx;
 
@@ -268,7 +268,7 @@ _AFXINL afxUnit AfxLinkBehind(afxLink* lnk, afxLink* next)
 
 _AFXINL afxUnit AfxPushLink(afxLink *lnk, afxChain *ch)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lnk);
     afxUnit lnkIdx;
 
@@ -292,7 +292,7 @@ _AFXINL afxUnit AfxPushLink(afxLink *lnk, afxChain *ch)
 
 _AFXINL afxUnit AfxPushBackLink(afxLink *lnk, afxChain *ch)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lnk);
     afxUnit lnkIdx;
 
@@ -315,7 +315,7 @@ _AFXINL afxUnit AfxPushBackLink(afxLink *lnk, afxChain *ch)
 
 _AFXINL void AfxPopLink(afxLink *lnk)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lnk);
 
     if (lnk->chain)
@@ -338,7 +338,7 @@ _AFXINL void AfxPopLink(afxLink *lnk)
 
 _AFXINL afxLink* AfxFindLastLink(afxChain const *ch, afxUnit idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
     //AFX_ASSERT(idx < ch->cnt);
@@ -360,7 +360,7 @@ _AFXINL afxLink* AfxFindLastLink(afxChain const *ch, afxUnit idx)
 
 _AFXINL afxLink* AfxFindFirstLink(afxChain const *ch, afxUnit idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
     //AFX_ASSERT(idx < ch->cnt);
@@ -382,7 +382,7 @@ _AFXINL afxLink* AfxFindFirstLink(afxChain const *ch, afxUnit idx)
 
 _AFXINL afxBool AfxFindLinkIndex(afxChain const *ch, afxLink *lnk, afxUnit *idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
 
@@ -405,7 +405,7 @@ _AFXINL afxBool AfxFindLinkIndex(afxChain const *ch, afxLink *lnk, afxUnit *idx)
 
 _AFXINL afxBool AfxFindLinkIndexB2F(afxChain const *ch, afxLink *lnk, afxUnit *idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @ch must be a valid pointer a to afxChain.
     AFX_ASSERT(ch);
 
@@ -428,21 +428,21 @@ _AFXINL afxBool AfxFindLinkIndexB2F(afxChain const *ch, afxLink *lnk, afxUnit *i
 
 _AFXINL void* AfxGetLinker(afxLink const *lnk)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lnk);
     return lnk->chain ? lnk->chain->holder : NIL;
 }
 
 _AFXINL afxChain* AfxGetChain(afxLink const *lnk)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lnk);
     return lnk->chain;
 }
 
 _AFXINL afxLink* AfxGetNextLink(afxLink const *lnk)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lnk);
     afxLink* n = lnk->next;
     return lnk->chain && &lnk->chain->anchor != n ? n : NIL;
@@ -450,7 +450,7 @@ _AFXINL afxLink* AfxGetNextLink(afxLink const *lnk)
 
 _AFXINL afxLink* AfxGetPrevLink(afxLink const *lnk)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lnk);
     afxLink* p = lnk->prev;
     return lnk->chain && &lnk->chain->anchor != p ? p : NIL;

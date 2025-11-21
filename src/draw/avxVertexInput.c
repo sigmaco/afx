@@ -18,11 +18,11 @@
 
 #define _AVX_DRAW_C
 #define _AVX_VERTEX_INPUT_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 _AVX afxDrawSystem AvxGetVertexInputHost(avxVertexInput vin)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @vin must be a valid avxVertexInput handle.
     AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
     afxDrawSystem dsys = AfxGetHost(vin);
@@ -32,7 +32,7 @@ _AVX afxDrawSystem AvxGetVertexInputHost(avxVertexInput vin)
 
 _AVX afxFlags AvxGetVertexInputFlags(avxVertexInput vin, afxFlags mask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @vin must be a valid avxVertexInput handle.
     AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
     return (!mask) ? vin->flags : (vin->flags & mask);
@@ -40,7 +40,7 @@ _AVX afxFlags AvxGetVertexInputFlags(avxVertexInput vin, afxFlags mask)
 
 _AVX afxUnit AvxDescribeVertexLayout(avxVertexInput vin, avxVertexLayout* layout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
     AFX_ASSERT(layout);
 
@@ -76,7 +76,7 @@ _AVX afxUnit AvxDescribeVertexLayout(avxVertexInput vin, avxVertexLayout* layout
 
 _AVX afxUnit AvxQueryVertexStride(avxVertexInput vin, afxUnit baseSrcIdx, afxUnit cnt, afxUnit vtxSrcSiz[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
 
     baseSrcIdx = AFX_MIN(baseSrcIdx, vin->binCnt - 1);
@@ -117,7 +117,7 @@ void AvxFetchVertices
     avxVertexData* outData
 )
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     afxUnit dstIdx = 0;
     afxUnit binCnt = vin->binCnt;
     avxVertexStream const* bins = vin->bins;
@@ -213,7 +213,7 @@ void AvxFetchIndexedVertices
     avxVertexData* outData
 )
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     afxUnit dstIdx = 0;
     afxUnit binCnt = vin->binCnt;
     avxVertexStream const* bins = vin->bins;
@@ -341,7 +341,7 @@ void AvxFetchIndexedVertices
 
 _AVX afxError _AvxVtxdDtorCb(avxVertexInput vin)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
     //afxDrawSystem dsys = AfxGetHost(vin);
 
@@ -371,7 +371,7 @@ _AVX afxError _AvxVtxdDtorCb(avxVertexInput vin)
 _AVX afxError _AvxVtxdCtorCb(avxVertexInput vin, void** args, afxUnit invokeNo)
 {
     (void)invokeNo;
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &vin);
 
     afxDrawSystem dsys = args[0];
@@ -555,13 +555,13 @@ _AVX afxClassConfig const _AVX_VIN_CLASS_CONFIG =
 
 _AVX afxError AvxAcquireVertexInputs(afxDrawSystem dsys, afxUnit cnt, avxVertexLayout const layouts[], avxVertexInput declarations[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(declarations);
     AFX_ASSERT(layouts);
     AFX_ASSERT(cnt);
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->vtxdCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->vtxdCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_VIN);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)declarations, (void const*[]) { dsys, layouts }))

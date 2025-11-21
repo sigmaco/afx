@@ -221,8 +221,36 @@ AFX_DEFINE_STRUCT(afxClass)
     void*           userData[4];
 };
 
-AFX afxError        AfxMountClass(afxClass* cls, afxClass *base, afxChain* provider, afxClassConfig const *spec);
-AFX afxError        AfxDismountClass(afxClass* cls);
+AFX afxError AfxMountClass
+(
+    afxClass* cls, 
+    afxClass *base, 
+    afxChain* provider, 
+    afxClassConfig const *spec
+);
+
+AFX afxError AfxDismountClass
+(
+    afxClass* cls
+);
+
+typedef enum afxClassLock
+{
+    afxClassLock_TRY    = AFX_BITMASK(0),
+    afxClassLock_SHARED = AFX_BITMASK(1)
+} afxClassLock;
+
+AFX afxError AfxLockClass
+(
+    afxClass* cls,
+    afxClassLock mode
+);
+
+AFX afxError AfxUnlockClass
+(
+    afxClass* cls, 
+    afxClassLock mode
+);
 
 AFX afxError        AfxInstallClassExtension(afxClass* cls, afxClassExtension* const ext);
 
@@ -242,15 +270,15 @@ AFX afxUnit         _AfxEnumerateObjectsUnlocked(afxClass const* cls, afxBool fr
 
 AFX afxUnit         AfxEvokeObjects(afxClass const* cls, afxBool(*f)(afxObject,void*), void* udd, afxUnit first, afxUnit cnt, afxObject objects[]);
 
-/// The AfxInvokeClassInstances2() function is used to apply the given callback function to all objects in the specified class.
-/// If any invocation of the callback function returns a failure status the interation is terminated. However, AfxInvokeClassInstances2 will still return successfully.
+/// The AfxInvokeObjects2() function is used to apply the given callback function to all objects in the specified class.
+/// If any invocation of the callback function returns a failure status the interation is terminated. However, AfxInvokeObjects2 will still return successfully.
 AFX afxUnit         AfxInvokeObjects(afxClass const* cls, afxBool(*f)(afxObject obj, void *udd), void* udd, afxUnit first, afxUnit cnt);
 
-/// The AfxInvokeClassInstances2() function is used to apply the given callback function to all objects in the specified class using another callback as filter.
+/// The AfxInvokeObjects2() function is used to apply the given callback function to all objects in the specified class using another callback as filter.
 /// If any invocation of the exec() callback function returns a failure status the iteration is terminated.
 /// If a invocation of the flt() callback function returns non-zero the object is passed to the exec() callback.
-/// However, AfxInvokeClassInstances2 will return count of objects that passed in flt() callback.
-AFX afxUnit         AfxInvokeClassInstances2(afxClass const* cls, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2, afxUnit first, afxUnit cnt);
+/// However, AfxInvokeObjects2 will return count of objects that passed in flt() callback.
+AFX afxUnit         AfxInvokeObjects2(afxClass const* cls, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2, afxUnit first, afxUnit cnt);
 
 AFX afxError        _AfxDeallocateObjects(afxClass* cls, afxUnit cnt, afxObject objects[]);
 AFX afxError        _AfxAllocateObjects(afxClass* cls, afxUnit cnt, afxObject objects[]);

@@ -90,7 +90,7 @@ AFX_DEFINE_STRUCT(akxInstanceConstants)
 AFX_DEFINE_STRUCT(akxRendererConfig)
 {
     void*    dinProc;
-    arxRenderContext rctx;
+    arxScenario scio;
     arxSimulation sim;
 };
 
@@ -98,7 +98,7 @@ AFX_OBJECT(arxRenderer)
 {
     void*               cachedSim;
     afxDrawSystem      cachedDsys;
-    arxRenderContext        rctx;
+    arxScenario        scio;
     
     arxCamera           activeCam;
     afxLayeredRect      drawArea;
@@ -209,9 +209,9 @@ ARX afxError    ArxBeginSceneCapture(arxRenderer scn, arxCamera cam, arxSimulati
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError    ArxAcquireRenderers(arxRenderContext rctx, afxUnit cnt, arxRenderer rnd[], akxRendererConfig const config[]);
+ARX afxError    ArxAcquireRenderers(arxScenario scio, afxUnit cnt, arxRenderer rnd[], akxRendererConfig const config[]);
 
 
-ARX void        ArxCmdRequestModel(arxRenderContext rctx, afxUnit id);
+ARX void        ArxCmdRequestModel(arxScenario scio, afxUnit id);
 
 #endif//AKX_RENDERER_H
