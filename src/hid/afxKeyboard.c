@@ -26,11 +26,11 @@
 #define _AUX_MOUSE_C
 #define _AUX_CONTROLLER_C
 #define _AUX_ENVIRONMENT_C
-#include "../ux/impl/auxImplementation.h"
+#include "../ux/auxIcd.h"
 
 _AUX afxError AfxEmulatePressedKeys(afxUnit seat, afxUnit cnt, afxKey const key[], afxUnit8 const pressure[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env))
@@ -64,7 +64,7 @@ _AUX afxError AfxEmulatePressedKeys(afxUnit seat, afxUnit cnt, afxKey const key[
 
 _AUX afxError AfxReleaseAllKeys(afxUnit seat)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env))
@@ -100,7 +100,7 @@ _AUX afxError AfxReleaseAllKeys(afxUnit seat)
 
 _AUX afxError AfxReleaseAllKeys2(afxMask seats)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env))
@@ -139,7 +139,7 @@ _AUX afxError AfxReleaseAllKeys2(afxMask seats)
 
 _AUX afxBool AfxWereKeysReleased(afxUnit seat, afxUnit cnt, afxKey const codes[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     afxEnvironment env;
@@ -161,7 +161,7 @@ _AUX afxBool AfxWereKeysReleased(afxUnit seat, afxUnit cnt, afxKey const codes[]
 
 _AUX afxMask AfxWereKeysReleased2(afxMask seats, afxUnit cnt, afxKey const codes[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxMask rslt = NIL;
 
     afxEnvironment env;
@@ -190,7 +190,7 @@ _AUX afxMask AfxWereKeysReleased2(afxMask seats, afxUnit cnt, afxKey const codes
 
 _AUX afxBool AfxWasKeyReleased(afxUnit seat, afxKey code)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     afxEnvironment env;
@@ -206,7 +206,7 @@ _AUX afxBool AfxWasKeyReleased(afxUnit seat, afxKey code)
 
 _AUX afxMask AfxWasKeyReleased2(afxMask seats, afxKey code)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxMask rslt = NIL;
 
     afxEnvironment env;
@@ -229,7 +229,7 @@ _AUX afxMask AfxWasKeyReleased2(afxMask seats, afxKey code)
 
 _AUX afxBool AfxWereKeysPressed(afxUnit seat, afxUnit cnt, afxKey const codes[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     afxEnvironment env;
@@ -251,7 +251,7 @@ _AUX afxBool AfxWereKeysPressed(afxUnit seat, afxUnit cnt, afxKey const codes[])
 
 _AUX afxMask AfxWereKeysPressed2(afxMask seats, afxUnit cnt, afxKey const codes[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxMask rslt = NIL;
 
     afxEnvironment env;
@@ -280,7 +280,7 @@ _AUX afxMask AfxWereKeysPressed2(afxMask seats, afxUnit cnt, afxKey const codes[
 
 _AUX afxBool AfxWasKeyPressed(afxUnit seat, afxKey code)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     afxEnvironment env;
@@ -296,7 +296,7 @@ _AUX afxBool AfxWasKeyPressed(afxUnit seat, afxKey code)
 
 _AUX afxMask AfxWasKeyPressed2(afxMask seats, afxKey code)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxMask rslt = NIL;
 
     afxEnvironment env;
@@ -319,7 +319,7 @@ _AUX afxMask AfxWasKeyPressed2(afxMask seats, afxKey code)
 
 _AUX afxBool AfxIsKeyPressed(afxUnit seat, afxKey code)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     afxEnvironment env;
@@ -335,7 +335,7 @@ _AUX afxBool AfxIsKeyPressed(afxUnit seat, afxKey code)
 
 _AUX afxMask AfxIsKeyPressed2(afxMask seats, afxKey code)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxMask rslt = NIL;
 
     afxEnvironment env;
@@ -357,7 +357,7 @@ _AUX afxMask AfxIsKeyPressed2(afxMask seats, afxKey code)
 
 _AUX afxReal AfxGetCombinedKeyPressure(afxUnit seat, afxKey lhs, afxKey rhs)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxReal pressure = 0.0;
 
     afxEnvironment env;
@@ -374,7 +374,7 @@ _AUX afxReal AfxGetCombinedKeyPressure(afxUnit seat, afxKey lhs, afxKey rhs)
 
 _AUX afxReal AfxGetKeyPressure(afxUnit seat, afxKey code)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxReal pressure = 0.0;
 
     afxEnvironment env;
@@ -390,7 +390,7 @@ _AUX afxReal AfxGetKeyPressure(afxUnit seat, afxKey code)
 
 _AUX afxResult AfxCountPressedKeys(afxUnit seat)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxResult c = 0;
 
     afxEnvironment env;
@@ -411,7 +411,7 @@ _AUX afxResult AfxCountPressedKeys(afxUnit seat)
 
 _AUX void AfxGetMouseMotion(afxUnit seat, afxV2d motion, afxV2d vel, afxV2d accel)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env))
@@ -442,7 +442,7 @@ _AUX void AfxGetMouseMotion(afxUnit seat, afxV2d motion, afxV2d vel, afxV2d acce
 
 _AUX afxReal AfxGetMouseWheelDelta(afxUnit seat)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env))
@@ -460,7 +460,7 @@ _AUX afxReal AfxGetMouseWheelDelta(afxUnit seat)
 
 _AUX afxBool AfxIsMousePressed(afxUnit seat, afxMouseButton mb)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     afxEnvironment env;
@@ -480,7 +480,7 @@ _AUX afxBool AfxIsMousePressed(afxUnit seat, afxMouseButton mb)
 
 _AUX afxBool AfxWasMousePressed(afxUnit seat, afxMouseButton mb)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     afxEnvironment env;
@@ -500,7 +500,7 @@ _AUX afxBool AfxWasMousePressed(afxUnit seat, afxMouseButton mb)
 
 _AUX afxBool AfxWasMouseReleased(afxUnit seat, afxMouseButton mb)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     afxEnvironment env;
@@ -520,7 +520,7 @@ _AUX afxBool AfxWasMouseReleased(afxUnit seat, afxMouseButton mb)
 
 _AUX afxMask AfxIsMousePressed2(afxMask seats, afxMouseButton mb)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxMask rslt = NIL;
 
     afxEnvironment env;
@@ -545,7 +545,7 @@ _AUX afxMask AfxIsMousePressed2(afxMask seats, afxMouseButton mb)
 
 _AUX afxMask AfxWasMousePressed2(afxMask seats, afxMouseButton mb)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxMask rslt = NIL;
 
     afxEnvironment env;
@@ -571,7 +571,7 @@ _AUX afxMask AfxWasMousePressed2(afxMask seats, afxMouseButton mb)
 
 _AUX afxMask AfxWasMouseReleased2(afxMask seats, afxMouseButton mb)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxMask rslt = NIL;
 
     afxEnvironment env;
@@ -597,7 +597,7 @@ _AUX afxMask AfxWasMouseReleased2(afxMask seats, afxMouseButton mb)
 
 _AUX afxBool AfxTestMouseMotionX(afxUnit seat, afxInt tolerance)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     afxEnvironment env;
@@ -616,7 +616,7 @@ _AUX afxBool AfxTestMouseMotionX(afxUnit seat, afxInt tolerance)
 
 _AUX afxBool AfxTestMouseMotionZ(afxUnit seat, afxInt tolerance)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool rslt = FALSE;
 
     afxEnvironment env;
@@ -635,7 +635,7 @@ _AUX afxBool AfxTestMouseMotionZ(afxUnit seat, afxInt tolerance)
 
 _AUX afxError AfxEmulateMouseMotion(afxUnit seat, afxV2d const motion)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     // TODO: Drop afxWindow parameter and call session's event handler, which should pass input event for windows.
 
@@ -706,7 +706,7 @@ _AUX afxError AfxEmulateMouseMotion(afxUnit seat, afxV2d const motion)
 
 _AUX afxError AfxEmulateMouseWheelAction(afxUnit seat, afxReal delta)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env))
@@ -733,7 +733,7 @@ _AUX afxError AfxEmulateMouseWheelAction(afxUnit seat, afxReal delta)
 
 _AUX afxError AfxEmulateMouseButtonActions(afxUnit seat, afxUnit cnt, afxMouseButton const butt[], afxBool const pressed[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env))
@@ -807,7 +807,7 @@ _AUX afxError AfxEmulateMouseButtonActions(afxUnit seat, afxUnit cnt, afxMouseBu
 
 _AUX afxError AfxReleaseMouseButtons(afxUnit seat)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env))
@@ -842,7 +842,7 @@ _AUX afxError AfxReleaseMouseButtons(afxUnit seat)
 
 _AUX afxError _AuxKbdDtorCb(afxKeyboard kbd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_KBD, 1, &kbd);
 
 
@@ -852,7 +852,7 @@ _AUX afxError _AuxKbdDtorCb(afxKeyboard kbd)
 
 _AUX afxResult _AuxKbdCtorCb(afxKeyboard kbd, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_KBD, 1, &kbd);
 
     afxEnvironment env = args[0];

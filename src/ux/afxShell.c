@@ -22,7 +22,7 @@
 #define _AUX_UX_C
 #define _AUX_SHELL_C
 #define _AUX_WINDOW_C
-#include "impl/auxImplementation.h"
+#include "auxIcd.h"
 
 AFX afxChain* _AfxGetSystemClassChain(void);
 
@@ -49,7 +49,7 @@ _AUX afxString const sigmaUxSignature = AFX_STRING(
 
 _AUX afxClass const* AfxGetKeyboardClass(afxShell ssh)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
     afxClass const* cls = &ssh->kbdCls;
     AFX_ASSERT_CLASS(cls, afxFcc_KBD);
@@ -58,7 +58,7 @@ _AUX afxClass const* AfxGetKeyboardClass(afxShell ssh)
 
 _AUX afxClass const* AfxGetControllerClass(afxShell ssh)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
     afxClass const* cls = &ssh->padCls;
     AFX_ASSERT_CLASS(cls, afxFcc_CTRL);
@@ -67,21 +67,21 @@ _AUX afxClass const* AfxGetControllerClass(afxShell ssh)
 
 _AUX void* AfxGetShellIdd(afxShell ssh)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
     return NIL;
 }
 
 _AUX afxBool AfxIsShellPrompt(afxShell ssh)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
     return ssh->dev.serving;
 }
 
 _AUX afxError _AuxSshDtorCb(afxShell ssh)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
 
     AfxDeregisterChainedClasses(&ssh->dev.classes);
@@ -91,7 +91,7 @@ _AUX afxError _AuxSshDtorCb(afxShell ssh)
 
 _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SSH, 1, &ssh);
 
     afxModule icd = args[0];
@@ -151,7 +151,7 @@ _AUX afxClassConfig const _AUX_SSH_CLASS_CONFIG =
 
 _AUX afxUnit AfxInvokeShells(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*,afxShell), afxUnit cnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
     afxUnit rslt = 0;
@@ -171,7 +171,7 @@ _AUX afxUnit AfxInvokeShells(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(
 
 _AUX afxUnit AfxEvokeShells(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*,afxShell), afxUnit cnt, afxShell shells[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(shells);
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;
@@ -190,7 +190,7 @@ _AUX afxUnit AfxEvokeShells(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(v
 
 _AUX afxUnit AfxEnumerateShells(afxUnit icd, afxUnit first, afxUnit cnt, afxShell shells[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(shells);
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;

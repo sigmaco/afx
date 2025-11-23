@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This software is part of Advanced User Experiences Extensions & Experiments.
+// This software is part of Advanced MMUX Extensions & Experiments.
 
   //////////////////////////////////////////////////////////////////////////////
  // Advanced User Experience                                                 //

@@ -18,7 +18,7 @@
 
 _AFX afxUnit AfxDecatalogStrings(afxStringBase strc, afxUnit cnt, afxString const strings[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     afxUnit rslt = 0;
 
     for (afxUnit i = 0; i < cnt; i++)
@@ -26,7 +26,7 @@ _AFX afxUnit AfxDecatalogStrings(afxStringBase strc, afxUnit cnt, afxString cons
         if (strings[i].len)
         {
             afxReferencedString* ref;
-            AFX_ITERATE_CHAIN(afxReferencedString, ref, strb, &strc->strings)
+            AFX_ITERATE_CHAIN(ref, strb, &strc->strings)
             {
                 if (AfxCompareStrings(&ref->str, 0, TRUE, 1, &strings[i], NIL))
                 {
@@ -46,7 +46,7 @@ _AFX afxUnit AfxDecatalogStrings(afxStringBase strc, afxUnit cnt, afxString cons
 
 _AFX afxUnit AfxCatalogStrings(afxStringBase strc, afxUnit cnt, afxString const in[], afxString out[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     afxUnit rslt = 0;
 
     for (afxUnit i = 0; i < cnt; i++)
@@ -56,7 +56,7 @@ _AFX afxUnit AfxCatalogStrings(afxStringBase strc, afxUnit cnt, afxString const 
             afxBool found = FALSE;
 
             afxReferencedString* ref;
-            AFX_ITERATE_CHAIN(afxReferencedString, ref, strb, &strc->strings)
+            AFX_ITERATE_CHAIN(ref, strb, &strc->strings)
             {
                 if (AfxCompareStrings(&ref->str, 0, FALSE, 1, &in[i], NIL))
                 {
@@ -101,7 +101,7 @@ _AFX afxUnit AfxCatalogStrings(afxStringBase strc, afxUnit cnt, afxString const 
 
 _AFX afxError _AfxStrcCtor(afxStringBase strc, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_STRB, 1, &strc);
     
     AfxMakeChain(&strc->strings, strc);
@@ -114,12 +114,12 @@ _AFX afxError _AfxStrcCtor(afxStringBase strc, void** args, afxUnit invokeNo)
 
 _AFX afxError _AfxStrcDtor(afxStringBase strc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_STRB, 1, &strc);
 
     afxUnit rslt = 0;
     afxReferencedString* ref;
-    AFX_ITERATE_CHAIN(afxReferencedString, ref, strb, &strc->strings)
+    AFX_ITERATE_CHAIN(ref, strb, &strc->strings)
     {
         AfxPopLink(&ref->strb);
         AfxDeallocate((void**)&ref, AfxHere());
@@ -142,7 +142,7 @@ _AFX afxClassConfig const _AFX_STRB_CLASS_CONFIG =
 
 _AFX afxError AfxAcquireStringCatalogs(afxUnit cnt, afxStringBase catalogs[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(catalogs);
     AFX_ASSERT(cnt);
 

@@ -21,11 +21,11 @@
 #define _AFX_SYSTEM_C
 #define _AUX_UX_C
 #define _AUX_HID_C
-#include "../ux/impl/auxImplementation.h"
+#include "../ux/auxIcd.h"
 
 _AUX afxClass const* AfxGetHidClass(void)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxSystem sys;
     AfxGetSystem(&sys);
     AFX_ASSERT_OBJECTS(afxFcc_SYS, 1, &sys);
@@ -40,27 +40,27 @@ _AUX afxClass const* AfxGetHidClass(void)
 
 _AUXINL void* AfxGetHidIdd(afxHid hid)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_HID, 1, &hid);
     return hid->idd;
 }
 
 _AUXINL afxBool AfxIsHidPrompt(afxHid hid)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_HID, 1, &hid);
     return hid->dev.serving;
 }
 
 _AUXINL afxUnit AfxGetHidPort(afxHid hid)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return hid->port;
 }
 
 _AUXINL afxResult AfxTestHidFlags(afxHid hid, afxHidFlag flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_HID, 1, &hid);
     AFX_ASSERT(flags);
     return (hid->flags & flags);
@@ -68,7 +68,7 @@ _AUXINL afxResult AfxTestHidFlags(afxHid hid, afxHidFlag flags)
 
 _AUX afxError _AuxHidDtorCb(afxHid hid)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_HID, 1, &hid);
 
     AfxDeregisterChainedClasses(&hid->dev.classes);
@@ -78,7 +78,7 @@ _AUX afxError _AuxHidDtorCb(afxHid hid)
 
 _AUX afxResult _AuxHidCtorCb(afxHid hid, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_HID, 1, &hid);
 
     afxModule icd = args[0];
@@ -111,7 +111,7 @@ _AUX afxClassConfig const _AUX_HID_CLASS_CONFIG =
 
 _AUX afxUnit AfxInvokeHids(afxUnit first, afxUnit cnt, afxBool(*f)(afxHid, void*), void *udd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
     afxClass const* cls = AfxGetHidClass();
@@ -121,7 +121,7 @@ _AUX afxUnit AfxInvokeHids(afxUnit first, afxUnit cnt, afxBool(*f)(afxHid, void*
 
 _AUX afxUnit AfxEvokeHids(afxBool(*flt)(afxHid, void*), void* fdd, afxUnit first, afxUnit cnt, afxHid hids[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(hids);
     AFX_ASSERT(flt);
     AFX_ASSERT(cnt);
@@ -132,7 +132,7 @@ _AUX afxUnit AfxEvokeHids(afxBool(*flt)(afxHid, void*), void* fdd, afxUnit first
 
 _AUX afxUnit AfxEnumerateHids(afxUnit first, afxUnit cnt, afxHid hids[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cnt);
     AFX_ASSERT(hids);
     afxClass const* cls = AfxGetHidClass();
@@ -142,7 +142,7 @@ _AUX afxUnit AfxEnumerateHids(afxUnit first, afxUnit cnt, afxHid hids[])
 
 _AUX afxBool AfxGetHid(afxUnit port, afxHid* hid)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxBool found = FALSE;
     afxUnit i = 0;
     afxHid hid2;
@@ -164,7 +164,7 @@ _AUX afxBool AfxGetHid(afxUnit port, afxHid* hid)
 
 _AUX afxError _AuxRegisterHids(afxModule icd, afxUnit cnt, afxHidInfo const infos[], afxHid hids[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
     AFX_ASSERT(hids);
 

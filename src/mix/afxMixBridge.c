@@ -21,11 +21,11 @@
 #define _AMX_MIX_BRIDGE_C
 #define _AMX_MIX_QUEUE_C
 #define _AMX_MIX_CONTEXT_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 _AMX afxClass const* _AmxMexuGetMqueClass(afxMixBridge mexu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     afxClass const* cls = &mexu->mqueCls;
@@ -35,7 +35,7 @@ _AMX afxClass const* _AmxMexuGetMqueClass(afxMixBridge mexu)
 
 _AMX afxMixSystem AmxGetBridgedMixSystem(afxMixBridge mexu, afxUnit* bridgeId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     afxMixSystem msys = AfxGetHost(mexu);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
@@ -45,7 +45,7 @@ _AMX afxMixSystem AmxGetBridgedMixSystem(afxMixBridge mexu, afxUnit* bridgeId)
 
 _AMX afxMixDevice AmxGetBridgedMixDevice(afxMixBridge mexu, afxUnit* mdevId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     afxMixDevice mdev = mexu->mdev;
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
@@ -55,7 +55,7 @@ _AMX afxMixDevice AmxGetBridgedMixDevice(afxMixBridge mexu, afxUnit* mdevId)
 
 _AMX afxUnit AmxGetMixQueues(afxMixBridge mexu, afxUnit baseQueIdx, afxUnit cnt, afxMixQueue queues[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     // queues must be a valid pointer to the afxMixQueue handles.
@@ -70,7 +70,7 @@ _AMX afxUnit AmxGetMixQueues(afxMixBridge mexu, afxUnit baseQueIdx, afxUnit cnt,
 
 _AMX afxError AmxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxUnit64 timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
@@ -104,7 +104,7 @@ _AMX afxError AmxWaitForEmptyMixQueue(afxMixBridge mexu, afxUnit queIdx, afxUnit
 
 _AMX afxError AmxWaitForIdleMixBridge(afxMixBridge mexu, afxUnit64 timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
@@ -123,7 +123,7 @@ _AMX afxError AmxWaitForIdleMixBridge(afxMixBridge mexu, afxUnit64 timeout)
 #if 0
 _AMX afxError _AmxMexuSubmitCallback(afxMixBridge mexu, afxError(*f)(void*, void*), void* udd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     AFX_ASSERT(f);
 
@@ -165,7 +165,7 @@ _AMX afxError _AmxMexuSubmitCallback(afxMixBridge mexu, afxError(*f)(void*, void
 
 _AMX afxError _AmxMexuExecuteMixCommands(afxMixBridge mexu, afxUnit frameCnt, afxUnit cnt, afxMixContext mixers[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
     for (afxUnit i = 0; i < cnt; i++)
@@ -184,7 +184,7 @@ _AMX afxError _AmxMexuExecuteMixCommands(afxMixBridge mexu, afxUnit frameCnt, af
 
 _AMX afxError _AmxMexuTransferMixMemory(afxMixBridge mexu, amxTransference* ctrl, afxUnit opCnt, void const* ops)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     AFX_ASSERT(opCnt);
@@ -236,7 +236,7 @@ _AMX afxError _AmxMexuTransferMixMemory(afxMixBridge mexu, amxTransference* ctrl
 
 _AMX afxError _AmxMexuRemapBuffers(afxMixBridge mexu, afxBool unmap, afxUnit cnt, _amxBufferRemapping const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     AFX_ASSERT(cnt);
@@ -298,7 +298,7 @@ _AMX afxError _AmxMexuRemapBuffers(afxMixBridge mexu, afxBool unmap, afxUnit cnt
 
 _AMX afxError _AmxMexuCohereMappedBuffers(afxMixBridge mexu, afxBool discard, afxUnit cnt, amxBufferedMap const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     AFX_ASSERT(cnt);
@@ -351,7 +351,7 @@ _AMX afxError _AmxMexuCohereMappedBuffers(afxMixBridge mexu, afxBool discard, af
 
 _AMX afxError _AmxMexuSinkBuffers(afxMixBridge mexu, afxUnit cnt, amxFlush presentations[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @mexu must be a valid afxMixBridge handle.
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
     AFX_ASSERT(cnt);
@@ -383,7 +383,7 @@ _AMX afxError _AmxMexuSinkBuffers(afxMixBridge mexu, afxUnit cnt, amxFlush prese
 
 _AMX afxError _AmxMexuDtorCb(afxMixBridge mexu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
     afxMixSystem msys = AmxGetBridgedMixSystem(mexu, NIL);
@@ -413,12 +413,12 @@ _AMX afxError _AmxMexuDtorCb(afxMixBridge mexu)
 
 _AMX afxError _AmxMexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
 
     afxMixSystem msys = AFX_CAST(afxMixSystem, args[0]);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    _amxMexuAcquisition const* cfg = AFX_CAST(_amxMexuAcquisition const*, args[1]) + invokeNo;
+    _amxMexuAcq const* cfg = AFX_CAST(_amxMexuAcq const*, args[1]) + invokeNo;
 
     if (!cfg)
     {
@@ -498,9 +498,9 @@ _AMX afxClassConfig const _AMX_MEXU_CLASS_CONFIG =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AMX afxError _AmxMsysBridgeDevices(afxMixSystem msys, afxUnit cnt, _amxMexuAcquisition const configs[], afxMixBridge bridges[])
+_AMX afxError _AmxMsysBridgeDevices(afxMixSystem msys, afxUnit cnt, _amxMexuAcq const configs[], afxMixBridge bridges[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(configs);
     AFX_ASSERT(bridges);

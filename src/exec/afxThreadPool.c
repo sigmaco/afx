@@ -20,7 +20,7 @@
 
 _AFX afxInt _AFX_THRP_PROC(afxThreadPool thrp)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_THRP, 1, &thrp);
     afxThreadedTask task;
 
@@ -54,7 +54,7 @@ _AFX afxInt _AFX_THRP_PROC(afxThreadPool thrp)
 
 _AFX afxInt AfxPushThreadedTask(afxThreadPool thrp, int flags, void(*f)(void*), void* arg)
 {
-    afxError err = 0;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_THRP, 1, &thrp);
     AFX_ASSERT(f);
 
@@ -97,7 +97,7 @@ _AFX afxInt AfxPushThreadedTask(afxThreadPool thrp, int flags, void(*f)(void*), 
 
 _AFX afxError _AfxThrpDtorCb(afxThreadPool thrp)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_THRP, 1, &thrp);
 
     if (AfxLockMutex(&(thrp->lock)))
@@ -147,7 +147,7 @@ _AFX afxError _AfxThrpDtorCb(afxThreadPool thrp)
 
 _AFX afxError _AfxThrpCtorCb(afxThreadPool thrp, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_THRP, 1, &thrp);
     (void)invokeNo;
 
@@ -262,7 +262,7 @@ _AFX afxClassConfig const _AFX_THRP_CLASS_CONFIG =
 
 _AFX afxError AfxBuildThreadPool(afxHere const hint, afxThreadPoolInfo const* info, afxThreadPool* pool)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(hint);
     AFX_ASSERT(info);
 

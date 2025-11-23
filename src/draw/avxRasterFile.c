@@ -16,7 +16,7 @@
 
 // This software is part of Advanced Video Graphics Extensions & Experiments.
 
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 static_assert(sizeof(avxFormat) == sizeof(afxUnit32), "");
 static_assert(sizeof(avxTgaFlags) == sizeof(afxUnit32), "");
@@ -89,7 +89,7 @@ void LoadRLERow(avxRasterFile* tga, afxStream kIst, afxByte* dst, afxUnit uiDest
 
 void Unpack4BitSourceRowPal(afxUnit w, afxUnit palBase, afxByte* src, afxByte* dst)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     // If width is odd, then assert, since that format is not supported.
     AFX_ASSERT(!(w & 0x1));
 
@@ -266,7 +266,7 @@ void DecodeRle8(afxUnit w, afxUnit h, afxByte const* in, afxByte* out)
 
 _AVX afxError AvxPrepareRasterFile(avxRasterFile* tga, avxRasterIo* iop, afxUnit lodCnt, avxFormat fmt, avxRasterFlags flags, afxUnit uddSiz)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(tga);
     AFX_ASSERT(iop);
     AFX_ASSERT(fmt);
@@ -359,7 +359,7 @@ _AVX afxError AvxPrepareRasterFile(avxRasterFile* tga, avxRasterIo* iop, afxUnit
 
 _AVX afxError AvxWriteRasterFile(avxRasterFile* tgai, void* udd, afxUnit uddSiz, afxStream out)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(!uddSiz || udd);
     AFX_ASSERT(tgai);
@@ -385,7 +385,7 @@ _AVX afxError AvxWriteRasterFile(avxRasterFile* tgai, void* udd, afxUnit uddSiz,
 
 _AVX afxError AvxReadRasterFile(avxRasterFile* info, afxStream in)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(info);
     afxUnit i;
@@ -612,7 +612,7 @@ _AVX afxError AvxReadRasterFile(avxRasterFile* info, afxStream in)
 
 _AVX afxError AvxDecodeRasterFile(avxRasterFile const* meta, afxStream in, void* dst)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(meta);
     AFX_ASSERT(meta->rowStride);

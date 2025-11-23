@@ -21,7 +21,7 @@
 
 _AFXINL afxSlab* _AfxFindSlabForPtr(afxSlabAllocator* mgr, void* p)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(mgr);
 #ifdef _AFX_SLAB_ALLOC_VALIDATION_ENABLED
     AFX_ASSERT(mgr->fcc == afxFcc_SLAB);
@@ -55,7 +55,7 @@ _AFXINL afxSlab* _AfxFindSlabForPtr(afxSlabAllocator* mgr, void* p)
 
 _AFX void* AfxPushSlabUnit(afxSlabAllocator* mgr)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(mgr);
 #ifdef _AFX_SLAB_ALLOC_VALIDATION_ENABLED
     AFX_ASSERT(mgr->fcc == afxFcc_SLAB);
@@ -147,7 +147,7 @@ _AFX void* AfxPushSlabUnit(afxSlabAllocator* mgr)
 
 _AFX afxError AfxPopSlabUnit(afxSlabAllocator* mgr, void* p)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(mgr);
 #ifdef _AFX_SLAB_ALLOC_VALIDATION_ENABLED
     AFX_ASSERT(mgr->fcc == afxFcc_SLAB);
@@ -202,7 +202,7 @@ _AFX afxError AfxPopSlabUnit(afxSlabAllocator* mgr, void* p)
 
 _AFX afxError AfxDismantleSlabAllocator(afxSlabAllocator* mgr)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(mgr);
 #ifdef _AFX_SLAB_ALLOC_VALIDATION_ENABLED
     AFX_ASSERT(mgr->fcc == afxFcc_SLAB);
@@ -231,7 +231,7 @@ _AFX afxError AfxDismantleSlabAllocator(afxSlabAllocator* mgr)
 
 _AFX afxError AfxDeploySlabAllocator(afxSlabAllocator* mgr, afxUnit unitSiz, afxUnit unitsPerSlab)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(mgr);
 #ifdef _AFX_SLAB_ALLOC_VALIDATION_ENABLED
     mgr->fcc = afxFcc_SLAB;

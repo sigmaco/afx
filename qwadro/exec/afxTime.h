@@ -21,9 +21,8 @@
 
 typedef afxInt64 afxTime;
 
-//#define AFX_TIME_INFINITE (afxTime)AFX_I64_MAX
-#define AFX_TIMEOUT_NONE (afxUnit64)0
-#define AFX_TIMEOUT_INFINITE (afxUnit64)AFX_U64_MAX
+#define AFX_TIMEOUT_IGNORED 0
+#define AFX_TIMEOUT_INFINITE AFX_U64_MAX
 
 AFX_DEFINE_STRUCT(afxTimeSpec)
 // Structure holding an interval broken down into seconds and nanoseconds.
@@ -36,18 +35,18 @@ AFX_STATIC_ASSERT(sizeof(afxInt32) == sizeof(long), "");
 AFX_STATIC_ASSERT(sizeof(afxTime) == sizeof(time_t), "");
 
 // nanoseconds per millisecond
-#define AFX_NSECS_PER_MSEC(millisecs_) ((1000000) * (millisecs_)) // 1 ms = 1'000'000 ns
+#define AFX_NANOSECS_PER_MILLISEC(millisecs_) ((1000000) * (millisecs_)) // 1 ms = 1'000'000 ns
 // nanoseconds per seconds
-#define AFX_NSECS_PER_SEC(secs_) ((1000000000) * (secs_)) // 1 s = 1'000'000'000 ns
+#define AFX_NANOSECS_PER_SEC(secs_) ((1000000000) * (secs_)) // 1 s = 1'000'000'000 ns
 
 // Get nanoseconds from seconds
-#define AFX_NSECS_PER_SECS(secs_) ((afxUnit64)(AFX_NSECS_PER_SEC(secs_)))
+#define AFX_NANOSECS_PER_SECS(secs_) ((afxUnit64)(AFX_NANOSECS_PER_SEC(secs_)))
 // Get seconds from nanoseconds
-#define AFX_SECS_PER_NSECS(nanosecs_) ((afxUnit32)((nanosecs_) / AFX_NSECS_PER_SEC(1)))
+#define AFX_SECS_PER_NANOSECS(nanosecs_) ((afxUnit32)((nanosecs_) / AFX_NANOSECS_PER_SEC(1)))
 // Get nanoseconds from milliseconds
-#define AFX_NSECS_PER_MSECS(millisecs_) ((afxUnit64)(AFX_NSECS_PER_MSEC(millisecs_)))
+#define AFX_NANOSECS_PER_MILLISECS(millisecs_) ((afxUnit64)(AFX_NANOSECS_PER_MILLISEC(millisecs_)))
 // Get millisecond from nanoseconds
-#define AFX_MSECS_PER_NSECS(nanosecs_) ((afxUnit32)((nanosecs_) / AFX_NSECS_PER_MSEC(1)))
+#define AFX_MILLISECS_PER_NANOSECS(nanosecs_) ((afxUnit32)((nanosecs_) / AFX_NANOSECS_PER_MILLISEC(1)))
 
 
 AFX afxTime AfxGetTime(afxTime *t);

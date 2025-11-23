@@ -24,12 +24,12 @@
 #define _AMX_MIX_DEVICE_C
 #define _AMX_MIX_SYSTEM_C
 #define _AMX_SINK_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 #include "qwadro/mix/afxSink.h"
 
 _AMX afxMixSystem AfxGetAudioSinkContext(afxSink sink)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
     afxMixSystem msys = AfxGetHost(sink);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
@@ -38,7 +38,7 @@ _AMX afxMixSystem AfxGetAudioSinkContext(afxSink sink)
 
 _AMX afxMixDevice AfxGetAudioSinkDevice(afxSink sink)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
     afxMixSystem msys = AfxGetAudioSinkContext(sink);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
@@ -49,7 +49,7 @@ _AMX afxMixDevice AfxGetAudioSinkDevice(afxSink sink)
 
 _AMX afxError AfxGetAudioSinkIdd(afxSink sink, afxUnit code, void* dst)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
     sink->getIddCb(sink, code, dst);
     return err;
@@ -57,7 +57,7 @@ _AMX afxError AfxGetAudioSinkIdd(afxSink sink, afxUnit code, void* dst)
 
 _AMX afxError AfxMuteAudioSink(afxSink sink, afxBool mute)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
 
     sink->muteReqCnt += !!mute;
@@ -67,7 +67,7 @@ _AMX afxError AfxMuteAudioSink(afxSink sink, afxBool mute)
 
 _AMX afxError AmxGetSinkTrack(afxSink sink, amxAudio* track)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // sink must be a valid afxSink handle.
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
     *track = sink->buffers[0];
@@ -77,7 +77,7 @@ _AMX afxError AmxGetSinkTrack(afxSink sink, amxAudio* track)
 _AMX afxError AmxLockSinkBuffer(afxSink sink, afxUnit64 timeout, afxUnit minFrameCnt, amxBufferedTrack* room)
 // Pull an available sink buffer
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // sink must be a valid afxSink handle.
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
     afxUnit bufIdx2 = AFX_INVALID_INDEX;
@@ -141,7 +141,7 @@ _AMX afxError AmxLockSinkBuffer(afxSink sink, afxUnit64 timeout, afxUnit minFram
 
 _AMX afxError AmxUnlockSinkBuffer(afxSink sink, afxFlags flags)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // sink must be a valid afxSink handle.
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
 #if 0
@@ -165,7 +165,7 @@ _AMX afxError AmxUnlockSinkBuffer(afxSink sink, afxFlags flags)
 
 _AMX afxError _AmxAsioDtorCb(afxSink sink)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
     afxMixDevice mdev = AfxGetAudioSinkDevice(sink);
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
@@ -196,7 +196,7 @@ _AMX afxError _AmxAsioDtorCb(afxSink sink)
 
 _AMX afxError _AmxAsioCtorCb(afxSink sink, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     AfxZero(sink, sizeof(sink[0]));
 
@@ -273,7 +273,7 @@ _AMX afxClassConfig const _AMX_ASIO_CLASS_CONFIG =
 
 _AMX afxError AfxConfigureAudioSink(afxMixSystem msys, afxSinkConfig* cfg)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(cfg);
     *cfg = (afxSinkConfig) { 0 };
@@ -287,7 +287,7 @@ _AMX afxError AfxConfigureAudioSink(afxMixSystem msys, afxSinkConfig* cfg)
 
 _AMX afxError AfxOpenAudioSink(afxMixSystem msys, afxSinkConfig const* cfg, afxSink* sink)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(cfg);
 

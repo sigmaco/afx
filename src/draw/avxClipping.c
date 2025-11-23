@@ -18,7 +18,7 @@
 // This software is part of Advanced Video Graphics Extensions & Experiments.
 
 #define _AVX_DRAW_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 /*
     Algorithm: Sutherland–Hodgman Clipping (Adapted for homogeneous 4D)

@@ -23,17 +23,17 @@
 #endif
 #include "../impl/afxExecImplKit.h"
 
-AFX_STATIC_ASSERT(sizeof(mtx_t) <= sizeof(afxMutex), "");
+AFX_STATIC_ASSERT(sizeof(afxMutex) >= sizeof(mtx_t), "");
 
 _AFX void AfxDismantleMutex(afxMutex* mtx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     mtx_destroy((mtx_t*)mtx);
 }
 
 _AFX afxError AfxDeployMutex(afxMutex* mtx, afxMutexType type)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     if (thrd_success != mtx_init((mtx_t*)mtx, (int)type))
         AfxThrowError();
@@ -45,7 +45,7 @@ _AFX afxError AfxDeployMutex(afxMutex* mtx, afxMutexType type)
 
 _AFX afxError AfxLockMutex(afxMutex* mtx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     if (thrd_success != mtx_lock((mtx_t*)mtx))
         AfxThrowError();
@@ -55,7 +55,7 @@ _AFX afxError AfxLockMutex(afxMutex* mtx)
 
 _AFX afxError AfxLockMutexTimed(afxMutex* mtx, afxTimeSpec const* ts)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     if (thrd_success != mtx_timedlock((mtx_t*)mtx, (struct timespec const*)ts))
         AfxThrowError();
@@ -65,13 +65,13 @@ _AFX afxError AfxLockMutexTimed(afxMutex* mtx, afxTimeSpec const* ts)
 
 _AFX afxBool AfxTryLockMutex(afxMutex* mtx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     return (thrd_success == mtx_trylock((mtx_t*)mtx));
 }
 
 _AFX afxError AfxUnlockMutex(afxMutex* mtx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     if (thrd_success != mtx_unlock((mtx_t*)mtx))
         AfxThrowError();

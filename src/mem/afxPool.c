@@ -23,7 +23,7 @@
 
 _AFXINL afxBool AfxIsAnValidPoolUnit(afxPool* pool, afxSize idx)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -54,7 +54,7 @@ _AFXINL afxBool AfxIsAnValidPoolUnit(afxPool* pool, afxSize idx)
 
 _AFX afxUnit AfxEnumeratePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, void *items[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -126,7 +126,7 @@ _AFX afxUnit AfxEnumeratePoolItems(afxPool const* pool, afxUnit first, afxUnit c
 
 _AFX afxUnit AfxInvokePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt, afxBool(*f)(void* item, void* udd), void *udd)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -197,7 +197,7 @@ _AFX afxUnit AfxInvokePoolItems(afxPool const* pool, afxUnit first, afxUnit cnt,
 
 _AFX afxBool AfxGetLinearPoolUnits(afxPool const* pool, afxUnit first, afxUnit cnt, void *ptr[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -217,7 +217,7 @@ _AFX afxBool AfxGetLinearPoolUnits(afxPool const* pool, afxUnit first, afxUnit c
 
 _AFX afxBool AfxGetPoolUnits(afxPool const* pool, afxUnit cnt, afxSize const idx[], void *ptr[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -237,7 +237,7 @@ _AFX afxBool AfxGetPoolUnits(afxPool const* pool, afxUnit cnt, afxSize const idx
 
 _AFX afxBool AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -276,7 +276,7 @@ _AFX afxBool AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr)
 #if 0
 _AFX afxBool AfxGetPoolItem(afxPool const* pool, afxSize idx, void **ptr)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AfxAssertType(pool, afxFcc_POOL);
     afxBool alloced = 0;
 
@@ -303,7 +303,7 @@ _AFX afxBool AfxGetPoolItem(afxPool const* pool, afxSize idx, void **ptr)
 
 _AFX afxError _AfxInflatePoolDir(afxPool* pool, afxUnit pagCnt)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -333,7 +333,7 @@ _AFX afxError _AfxInflatePoolDir(afxPool* pool, afxUnit pagCnt)
 
 _AFX afxError AfxTakePoolUnit(afxPool* pool, afxSize idx, void *val)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -419,7 +419,7 @@ _AFX afxError AfxTakePoolUnit(afxPool* pool, afxSize idx, void *val)
 
 _AFX afxError AfxFreePoolUnit(afxPool* pool, afxSize idx)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -460,7 +460,7 @@ _AFX afxError AfxFreePoolUnit(afxPool* pool, afxSize idx)
 
 _AFX afxBool AfxFindPoolUnit(afxPool* pool, void* unit2, afxUnit* idx, afxUnit* localIdx)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -507,7 +507,7 @@ _AFX afxBool AfxFindPoolUnit(afxPool* pool, void* unit2, afxUnit* idx, afxUnit* 
 
 _AFX afxError DeletePoolPage(afxPool* pool, afxUnit pagIdx)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -572,7 +572,7 @@ _AFX afxError DeletePoolPage(afxPool* pool, afxUnit pagIdx)
 
 _AFX afxError AfxReclaimPoolUnits(afxPool* pool, afxHere const dbg, afxUnit cnt, void* units[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -657,7 +657,7 @@ _AFX afxError AfxReclaimPoolUnits(afxPool* pool, afxHere const dbg, afxUnit cnt,
 
 _AFX afxError AfxRequestPoolUnitsAt(afxPool* pool, afxHere const dbg, afxUnit cnt, afxUnit const ids[], void* units[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -676,7 +676,7 @@ _AFX afxError AfxRequestPoolUnitsAt(afxPool* pool, afxHere const dbg, afxUnit cn
 
 _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxHere const dbg, afxUnit cnt, afxUnit ids[], void* units[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -838,7 +838,7 @@ _AFX afxError AfxRequestPoolUnits(afxPool* pool, afxHere const dbg, afxUnit cnt,
 
 _AFX afxError AfxSetUpPool(afxPool* pool, afxUnit unitSiz, afxUnit unitsPerPage, afxUnit memAlign)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
     AFX_ASSERT(unitSiz);
     AFX_ASSERT(unitSiz > sizeof(void*));
@@ -859,7 +859,7 @@ _AFX afxError AfxSetUpPool(afxPool* pool, afxUnit unitSiz, afxUnit unitsPerPage,
 
 _AFX afxError AfxExhaustPool(afxPool* pool, afxBool keepPages)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(pool);
 #ifdef _AFX_POOL_VALIDATION_ENABLED
     AFX_ASSERT(pool->fcc == afxFcc_POOL);
@@ -920,7 +920,7 @@ _AFX afxError AfxExhaustPool(afxPool* pool, afxBool keepPages)
 
 _AFX afxError AfxTestDictionarys(void)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
 
     afxPool pool;

@@ -50,16 +50,16 @@ AFX_DEFINE_STRUCT_ALIGNED(AFX_PTR_ALIGNMENT, afxFutex)
 };
 
 /*
-    The AfxDeployFutex() initializes a futex for subsequent use.
+    The AfxSetUpFutex() initializes a futex for subsequent use.
 */
 
-AFX afxError    AfxDeployFutex(afxFutex* ftx);
+AFX afxError    AfxSetUpFutex(afxFutex* ftx);
 
 /*
-    The AfxDismantleFutex() function cleans up the the futex by resetting its internal state.
+    The AfxCleanUpFutex() function cleans up the the futex by resetting its internal state.
 */
 
-AFX afxError    AfxDismantleFutex(afxFutex* ftx);
+AFX afxError    AfxCleanUpFutex(afxFutex* ftx);
 
 /*
     The AfxTryLockFutex() function attempts to acquire an lock on the futex. 

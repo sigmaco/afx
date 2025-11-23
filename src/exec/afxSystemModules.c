@@ -40,7 +40,7 @@ _AFX afxModule _e2coreeMdl = { NIL };
 
 _AFX afxError _AfxAttachCoreModule(afxModule* e2coree)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     if (_e2coreeMdl)
     {

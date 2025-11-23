@@ -67,7 +67,7 @@ AFX_STATIC_ASSERT(sizeof(afxFutex) >= sizeof(_afxFutex), "");
 
 _AFX afxBool AfxTryLockFutex(afxFutex* ftx, afxBool shared)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     _afxFutex* ftx2 = (_afxFutex*)ftx;
     //AfxAssertType(ftx, afxFcc_SLCK);
 
@@ -125,7 +125,7 @@ _AFX afxBool AfxTryLockFutex(afxFutex* ftx, afxBool shared)
 
 _AFX void AfxLockFutex(afxFutex* ftx, afxBool shared)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     _afxFutex* ftx2 = (_afxFutex*)ftx;
     //AfxAssertType(ftx, afxFcc_SLCK);
 
@@ -184,7 +184,7 @@ _AFX void AfxLockFutex(afxFutex* ftx, afxBool shared)
 
 _AFX void AfxUnlockFutex(afxFutex* ftx, afxBool shared)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     _afxFutex* ftx2 = (_afxFutex*)ftx;
     //AfxAssertType(ftx, afxFcc_SLCK);
 
@@ -233,9 +233,9 @@ _AFX void AfxUnlockFutex(afxFutex* ftx, afxBool shared)
 #endif
 }
 
-_AFX afxError AfxDismantleFutex(afxFutex* ftx)
+_AFX afxError AfxCleanUpFutex(afxFutex* ftx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     _afxFutex* ftx2 = (_afxFutex*)ftx;
     //AfxAssertType(ftx, afxFcc_SLCK);
 #ifdef _WIN32
@@ -256,9 +256,9 @@ _AFX afxError AfxDismantleFutex(afxFutex* ftx)
     return err;
 }
 
-_AFX afxError AfxDeployFutex(afxFutex* ftx)
+_AFX afxError AfxSetUpFutex(afxFutex* ftx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(ftx);
     _afxFutex* ftx2 = (_afxFutex*)ftx;
 #ifdef _WIN32

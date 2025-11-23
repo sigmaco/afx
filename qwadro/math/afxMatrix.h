@@ -93,15 +93,21 @@ AFXINL void     AfxM2dReset(afxM2d m);
 AFXINL void     AfxM3dReset(afxM3d m);
 AFXINL void     AfxM4dReset(afxM4d m);
 
-AFXINL void     AfxM2dSet(afxM2d m, afxV2d const x, afxV2d const y);
-AFXINL void     AfxM3dSet(afxM3d m, afxV3d const x, afxV3d const y, afxV3d const z);
-AFXINL void     AfxM4dSet(afxM4d m, afxV4d const x, afxV4d const y, afxV4d const z, afxV4d const w);
-AFXINL void     AfxM4dSetLinear(afxM4d m, afxV3d const x, afxV3d const y, afxV3d const z, afxV3d const w);
-AFXINL void     AfxM4dSetAffine(afxM4d m, afxV3d const x, afxV3d const y, afxV3d const z, afxV3d const w);
+AFXINL void     AfxM2dSet(afxM2d m, afxV2d const cx, afxV2d const cy);
+AFXINL void     AfxM3dSet(afxM3d m, afxV3d const cx, afxV3d const cy, afxV3d const cz);
+AFXINL void     AfxM4dSet(afxM4d m, afxV4d const cx, afxV4d const cy, afxV4d const cz, afxV4d const cw);
+AFXINL void     AfxM4dSetLinear(afxM4d m, afxV3d const cx, afxV3d const cy, afxV3d const cz, afxV3d const cw);
+AFXINL void     AfxM4dSetAffine(afxM4d m, afxV3d const cx, afxV3d const cy, afxV3d const cz, afxV3d const cw);
 
-AFXINL void     AfxM2dSetTransposed(afxM2d m, afxV2d const x, afxV2d const y); // Be carefull using it in Qwadro
-AFXINL void     AfxM3dSetTransposed(afxM3d m, afxV3d const x, afxV3d const y, afxV3d const z); // Be carefull using it in Qwadro
-AFXINL void     AfxM4dSetTransposed(afxM4d m, afxV4d const x, afxV4d const y, afxV4d const z, afxV4d const w);  // Be carefull using it in Qwadro
+AFXINL void     AfxM2dSetDiagonal(afxM2d m, afxReal xx, afxReal yy);
+AFXINL void     AfxM3dSetDiagonal(afxM3d m, afxReal xx, afxReal yy, afxReal zz);
+AFXINL void     AfxM4dSetDiagonal(afxM4d m, afxReal xx, afxReal yy, afxReal zz, afxReal ww);
+
+AFXINL void     AfxM2dSetTransposed(afxM2d m, afxV2d const rx, afxV2d const ry); // Be carefull using it in Qwadro
+AFXINL void     AfxM3dSetTransposed(afxM3d m, afxV3d const rx, afxV3d const ry, afxV3d const rz); // Be carefull using it in Qwadro
+AFXINL void     AfxM4dSetTransposed(afxM4d m, afxV4d const rx, afxV4d const ry, afxV4d const rz, afxV4d const rw);  // Be carefull using it in Qwadro
+AFXINL void     AfxM4dSetTransposedLinear(afxM4d m, afxV3d const rx, afxV3d const ry, afxV3d const rz, afxV3d const rw);
+AFXINL void     AfxM4dSetTransposedAffine(afxM4d m, afxV3d const rx, afxV3d const ry, afxV3d const rz, afxV3d const rw);
 
 AFXINL void     AfxM4dEnsureLinear(afxM4d m); // make affine and zero translation.
 AFXINL void     AfxM4dEnsureAffine(afxM4d m); // make affine.

@@ -20,6 +20,7 @@
 #define AFX_EXEC_IMPL_KIT_H
 
 #include "qwadro/exec/afxSystem.h"
+#include "../exec/afxThreading.h"
 
 #ifdef _AFX_CONTEXT_C
 AFX_OBJECT(afxDevLink)
@@ -132,17 +133,6 @@ AFX_OBJECT(afxDriver)
 #endif//_AFX_DRIVER_C
 #endif
 
-#ifdef _AFX_SEMAPHORE_C
-#ifdef _AFX_SEMAPHORE_IMPL
-AFX_OBJECT(_afxSemaphore)
-#else
-AFX_OBJECT(afxSemaphore)
-#endif
-{
-    afxUnit64            value;
-};
-#endif//_AFX_SEMAPHORE_C
-
 #ifdef _AFX_SERVICE_C
 AFX_OBJECT(afxService)
 {
@@ -169,63 +159,6 @@ AFX_OBJECT(afxService)
     void*           udd; // Arbitrary data that will be passed back to the client when calling afxReqWorkerFn.
 };
 #endif//_AFX_SERVICE_C
-
-#ifdef _AFX_THREAD_C
-AFX_OBJECT(afxThread)
-{
-    afxUnit              unitIdx;
-    afxUnit32            tid;
-    void*               osHandle;
-    //afxThreadProc       procCb;
-    void*               udd[4];
-
-    //afxUnit          affineProcUnitIdx; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
-    //afxUnit          affineThrUnitIdx; // if set bit set, only such processor will can run this thread.
-    afxClock            startClock;
-    afxClock            lastClock;
-    afxClock            execCntSwapClock;
-    afxUnit              lastExecCnt;
-    afxUnit              execNo;
-    afxBool             started;
-    afxBool             exited;
-    afxBool             running;
-    afxUnit              suspendCnt;
-    afxBool             isInFinish;
-    afxBool             finished;
-    afxBool             interruptionRequested;
-    afxInt              exitCode;
-
-    afxCondition        statusCnd;
-    afxMutex            statusCndMtx;
-
-    afxFutex            evSlock;
-    afxArena            evArena;
-    afxQueue            events;
-    afxInterlockedQueue events2;
-
-    afxChar const*      _file_;
-    afxSize             _line_;
-    afxChar const*      _func_;
-};
-#endif//_AFX_THREAD_C
-
-#ifdef _AFX_THREAD_POOL_C
-AFX_OBJECT(afxThreadPool)
-{
-    afxMutex lock;
-    afxCondition notify;
-    afxThread* threads;
-    afxThreadedTask* workQue;
-    afxInt thrCnt;
-    afxInt workQueCap;
-    afxInt head;
-    afxInt tail;
-    afxInt cnt;
-    afxBool shutdown;
-    afxInt started;
-};
-
-#endif//_AFX_THREAD_POOL_C
 
 #ifdef _AFX_SYSTEM_C
 AFX_OBJECT(afxSystem)
@@ -323,8 +256,6 @@ AFX_OBJECT(afxSystem)
 
 AFX afxClassConfig const _AFX_DEV_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_STRB_CLASS_CONFIG;
-AFX afxClassConfig const _AFX_THR_CLASS_CONFIG;
-AFX afxClassConfig const _AFX_THRP_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_MMU_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_SVC_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_CDC_CLASS_CONFIG;
@@ -333,10 +264,6 @@ AFX afxClassConfig const _AFX_FSYS_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_MDLE_CLASS_CONFIG;
 AFX afxClassConfig const _AFX_EXU_CLASS_CONFIG;
 
-AFX afxClass*           _AfxGetSemaphoreClass(afxDevLink ctx);
-
-AFX afxClassConfig const _AfxSemStdImplementation;
-
 AFX afxClass const*     _AfxSysGetIobClass(afxSystem sys);
 AFX afxClass const*     _AfxSysGetFsysClass(afxSystem sys);
 AFX afxClass const*     _AfxSysGetMmuClass(afxSystem sys);
@@ -344,8 +271,6 @@ AFX afxClass const*     _AfxSysGetMdleClass(afxSystem sys);
 AFX afxClass const*     _AfxSysGetSvcClass(afxSystem sys);
 AFX afxClass const*     _AfxSysGetStrbClass(afxSystem sys);
 AFX afxClass const*     _AfxSysGetProcClass(afxSystem sys);
-AFX afxClass const*     _AfxSysGetThrClass(afxSystem sys);
-AFX afxClass const*     _AfxSysGetThrpClass(afxSystem sys);
 AFX afxClass const*     _AfxSysGetDevClass(afxSystem sys);
 AFX afxClass const*     _AfxSysGetExuClass(afxSystem sys);
 

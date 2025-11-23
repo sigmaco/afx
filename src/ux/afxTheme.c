@@ -18,7 +18,7 @@
 
 #define _AUX_UX_C
 #define _AUX_THEME_C
-#include "src/ux/impl/auxImplementation.h"
+#include "src/ux/auxIcd.h"
 
 #ifdef _AUX_THEME_C
 #ifndef _AUX_THEME_IMPL
@@ -34,7 +34,7 @@ AFX_OBJECT(_auxTheme)
 
 _AUX afxError _AuxThemDtorCb(afxTheme them)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_THEM, 1, &them);
 
 
@@ -43,7 +43,7 @@ _AUX afxError _AuxThemDtorCb(afxTheme them)
 
 _AUX afxError _AuxThemCtorCb(afxTheme them, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_THEM, 1, &them);
 
     afxEnvironment env = args[0];
@@ -59,7 +59,7 @@ _AUX afxClassConfig const _AUX_THEM_CLASS_CONFIG =
 {
     .fcc = afxFcc_THEM,
     .name = "Theme",
-    .desc = "Multimedia UX Theme",
+    .desc = "UX Theme",
     .fixedSiz = sizeof(AFX_OBJECT(afxTheme)),
     .ctor = (void*)_AuxThemCtorCb,
     .dtor = (void*)_AuxThemDtorCb
@@ -69,7 +69,7 @@ _AUX afxClassConfig const _AUX_THEM_CLASS_CONFIG =
 
 _AUX afxError AfxAcquireThemes(afxUnit cnt, afxThemeInfo const info[], afxFont fonts[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env))
@@ -99,7 +99,7 @@ _AUX afxError AfxAcquireThemes(afxUnit cnt, afxThemeInfo const info[], afxFont f
 
 _AUX afxError AfxLoadThemes(afxUnit cnt, afxUri const uri[], afxTheme themes[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxUri uri2;
     AfxMakeUri(&uri2, 0, "//./z/video/font-256.tga", 0);

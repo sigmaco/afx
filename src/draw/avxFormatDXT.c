@@ -17,7 +17,7 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 // This software is part of Advanced Video Graphics Extensions & Experiments.
 
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 #pragma pack(push, 1)
 
@@ -51,7 +51,7 @@ typedef struct texel_block4x4 {
 
 inline void flip_block_s3tc(afxByte* BlockDst, afxByte const* BlockSrc, avxFormat fmt, afxBool HeightTwo)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     // There is no distinction between RGB and RGBA in DXT-compressed textures, it is used only to tell OpenGL how to interpret the data.
     // Moreover, in DXT1 (which does not contain an alpha channel), transparency can be emulated using Color0 and Color1 on a per-compression-block basis.
     // There is no difference in how textures with and without transparency are laid out in the file, so they can be flipped using the same method.

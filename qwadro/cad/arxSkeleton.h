@@ -39,7 +39,7 @@
 */
 
 #include "qwadro/cad/arxPose.h"
-#include "qwadro/render/arxPlacement.h"
+#include "qwadro/scene/arxPlacement.h"
 
 typedef enum arxJointType
 {
@@ -118,7 +118,7 @@ AFX_DEFINE_STRUCT(arxSkeletonInfo)
 
 ARX afxError    ArxAcquireSkeletons
 (
-    arxRenderContext rctx, 
+    arxScenario scio, 
     afxUnit cnt, 
     afxString const urns[], 
     arxSkeletonInfo const infos[], 
@@ -127,7 +127,7 @@ ARX afxError    ArxAcquireSkeletons
 
 ARX afxUnit     ArxEnumerateSkeletons
 (
-    arxRenderContext rctx, 
+    arxScenario scio, 
     afxUnit first, 
     afxUnit cnt, 
     arxSkeleton skeletons[]
@@ -135,7 +135,7 @@ ARX afxUnit     ArxEnumerateSkeletons
 
 ARX afxBool ArxIdentifySkeletons
 (
-    arxRenderContext rctx,
+    arxScenario scio,
     afxUnit cnt,
     afxString const ids[],
     arxSkeleton skeletons[]

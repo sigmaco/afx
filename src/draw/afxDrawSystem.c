@@ -30,21 +30,21 @@
 //#define _AVX_SURFACE_C
 //#define _AVX_DRAW_INPUT_C
 #define _AVX_BUFFER_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 #define _AUX_UX_C
-#include "src/ux/impl/auxImplementation.h"
+#include "src/ux/auxIcd.h"
 
-_AVX _avxDsysImpl const* _AvxDsysGetImpl(afxDrawSystem dsys)
+_AVX _avxDdiDsys const* _AvxDsysGetDdi(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
-    return dsys->pimpl;
+    return dsys->ddi;
 }
 
 _AVX afxMask _AvxDsysGetIoExuMask(afxDrawSystem dsys, afxMask* dedIoExuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     if (dedIoExuMask) *dedIoExuMask = dsys->dedIoExuMask;
@@ -53,7 +53,7 @@ _AVX afxMask _AvxDsysGetIoExuMask(afxDrawSystem dsys, afxMask* dedIoExuMask)
 
 _AVX afxDrawFeatures const* _AvxDsysAccessReqFeatures(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     return &dsys->requirements;
@@ -61,7 +61,7 @@ _AVX afxDrawFeatures const* _AvxDsysAccessReqFeatures(afxDrawSystem dsys)
 
 _AVX afxDrawLimits const* _AvxDsysAccessLimits(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     return dsys->limits;
@@ -69,7 +69,7 @@ _AVX afxDrawLimits const* _AvxDsysAccessLimits(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetDexuClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass const* cls = &dsys->dexuCls;
@@ -79,7 +79,7 @@ _AVX afxClass const* _AvxDsysGetDexuClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetFencClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass *cls = &dsys->fencCls;
@@ -89,7 +89,7 @@ _AVX afxClass const* _AvxDsysGetFencClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetDoutClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass const* cls = &dsys->doutCls;
@@ -99,7 +99,7 @@ _AVX afxClass const* _AvxDsysGetDoutClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetQrypClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass *cls = &dsys->qrypCls;
@@ -109,7 +109,7 @@ _AVX afxClass const* _AvxDsysGetQrypClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetVinClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass *cls = &dsys->vinCls;
@@ -119,7 +119,7 @@ _AVX afxClass const* _AvxDsysGetVinClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetRasClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass *cls = &dsys->rasCls;
@@ -129,7 +129,7 @@ _AVX afxClass const* _AvxDsysGetRasClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetBufClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass *cls = &dsys->bufCls;
@@ -139,7 +139,7 @@ _AVX afxClass const* _AvxDsysGetBufClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetSampClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass *cls = &dsys->sampCls;
@@ -149,7 +149,7 @@ _AVX afxClass const* _AvxDsysGetSampClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetPipClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass *cls = &dsys->pipCls;
@@ -159,7 +159,7 @@ _AVX afxClass const* _AvxDsysGetPipClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetCanvClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass *cls = &dsys->canvCls;
@@ -169,7 +169,7 @@ _AVX afxClass const* _AvxDsysGetCanvClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetShadClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass *cls = &dsys->shadCls;
@@ -179,7 +179,7 @@ _AVX afxClass const* _AvxDsysGetShadClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetLigaClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass *cls = &dsys->ligaCls;
@@ -189,7 +189,7 @@ _AVX afxClass const* _AvxDsysGetLigaClassCb_SW(afxDrawSystem dsys)
 
 _AVX afxClass const* _AvxDsysGetTxdClassCb_SW(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxClass const* cls = &dsys->txdCls;
@@ -197,7 +197,7 @@ _AVX afxClass const* _AvxDsysGetTxdClassCb_SW(afxDrawSystem dsys)
     return cls;
 }
 
-_AVX _avxDsysImpl const _AVX_DSYS_IMPL =
+_AVX _avxDdiDsys const _AVX_DDI_DSYS =
 {
     .fencCls = _AvxDsysGetFencClassCb_SW,
     .dexuCls = _AvxDsysGetDexuClassCb_SW,
@@ -222,11 +222,13 @@ _AVX _avxDsysImpl const _AVX_DSYS_IMPL =
     .deallocRasCb = _AvxDsysDeallocateRastersCb_SW,
     .allocBufCb = _AvxDsysAllocateBuffersCb_SW,
     .deallocBufCb = _AvxDsysDeallocateBuffersCb_SW,
+
+    .waitFencCb = _AvxDsysWaitForFencesCb,
 };
 
 _AVX afxModule AvxGetDrawSystemIcd(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxModule icd = AfxGetHost(dsys);
@@ -237,7 +239,7 @@ _AVX afxModule AvxGetDrawSystemIcd(afxDrawSystem dsys)
 
 _AVX void AvxGetEnabledDrawFeatures(afxDrawSystem dsys, afxDrawFeatures* features)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
@@ -249,7 +251,7 @@ _AVX void AvxGetEnabledDrawFeatures(afxDrawSystem dsys, afxDrawFeatures* feature
 
 _AVX avxClipSpaceDepth AvxGetOperationalClipSpaceDepth(afxDrawSystem dsys, afxReal* rangeEpsilon)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     if (rangeEpsilon) *rangeEpsilon = dsys->clipSpaceDepthRangeEpsilon;
@@ -258,7 +260,7 @@ _AVX avxClipSpaceDepth AvxGetOperationalClipSpaceDepth(afxDrawSystem dsys, afxRe
 
 _AVX afxUnit AvxTestForDrawExtensionsEnabled(afxDrawSystem dsys, afxUnit cnt, afxString const* exts, afxBool enabled[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     // @names must be an array of Qwadro strings specifying the wanted symbol's names.
@@ -295,7 +297,7 @@ _AVX afxUnit AvxTestForDrawExtensionsEnabled(afxDrawSystem dsys, afxUnit cnt, af
 
 _AVX afxUnit AvxResolveDrawSymbols(afxDrawSystem dsys, afxUnit cnt, afxString const names[], void* addresses[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     // @names must be an array of Qwadro strings specifying the wanted symbol's names.
@@ -304,15 +306,15 @@ _AVX afxUnit AvxResolveDrawSymbols(afxDrawSystem dsys, afxUnit cnt, afxString co
     AFX_ASSERT(addresses);
     afxUnit rslt = 0;
 
-    AFX_ASSERT(dsys->pimpl->getProcCb);
-    rslt = dsys->pimpl->getProcCb(dsys, cnt, names, addresses);
+    AFX_ASSERT(dsys->ddi->getProcCb);
+    rslt = dsys->ddi->getProcCb(dsys, cnt, names, addresses);
 
     return rslt;
 }
 
 _AVX afxBool AvxGetShaderStringBase(afxDrawSystem dsys, afxStringBase* base)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(base);
@@ -324,7 +326,7 @@ _AVX afxBool AvxGetShaderStringBase(afxDrawSystem dsys, afxStringBase* base)
 
 _AVX afxUnit AvxGetDrawBridges(afxDrawSystem dsys, afxUnit baseIdx, afxUnit cnt, afxDrawBridge bridges[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
@@ -349,7 +351,7 @@ _AVX afxUnit AvxGetDrawBridges(afxDrawSystem dsys, afxUnit baseIdx, afxUnit cnt,
 
 _AVX afxUnit AvxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, avxAptitude caps, afxMask exuMask, afxUnit first, afxUnit maxCnt, afxDrawBridge bridges[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     afxUnit found = 0;
@@ -404,7 +406,7 @@ _AVX afxUnit AvxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, avxAptitud
 
 _AVX afxError AvxWaitForDrawQueue(afxDrawSystem dsys, afxUnit64 timeout, afxUnit exuIdx, afxUnit queId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     
@@ -434,7 +436,7 @@ _AVX afxError AvxWaitForDrawQueue(afxDrawSystem dsys, afxUnit64 timeout, afxUnit
 
 _AVX afxError AvxWaitForDrawBridges(afxDrawSystem dsys, afxUnit64 timeout, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
@@ -458,11 +460,11 @@ _AVX afxError AvxWaitForDrawBridges(afxDrawSystem dsys, afxUnit64 timeout, afxMa
 
 _AVX afxError AvxWaitForDrawSystem(afxDrawSystem dsys, afxUnit64 timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    if (!dsys->pimpl->waitCb)
+    if (!dsys->ddi->waitCb)
     {
         afxUnit exuCnt = dsys->bridgeCnt;
         for (afxUnit exuIdx = 0; exuIdx < exuCnt; exuIdx++)
@@ -477,7 +479,7 @@ _AVX afxError AvxWaitForDrawSystem(afxDrawSystem dsys, afxUnit64 timeout)
             AvxWaitForIdleDrawBridge(dexu, timeout);
         }
     }
-    else if (dsys->pimpl->waitCb(dsys, timeout))
+    else if (dsys->ddi->waitCb(dsys, timeout))
         AfxThrowError();
 
     return err;
@@ -485,7 +487,7 @@ _AVX afxError AvxWaitForDrawSystem(afxDrawSystem dsys, afxUnit64 timeout)
 
 _AVX afxError _AvxDsysTransferCb_SW(afxDrawSystem dsys, avxTransference* ctrl, afxUnit opCnt, void const* ops)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(opCnt);
@@ -574,7 +576,7 @@ _AVX afxError _AvxDsysTransferCb_SW(afxDrawSystem dsys, avxTransference* ctrl, a
 
 _AVX afxError _AvxDsysRemapBuffersCb_SW(afxDrawSystem dsys, afxBool unmap, afxUnit cnt, _avxBufferRemapping const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(cnt);
@@ -641,7 +643,7 @@ _AVX afxError _AvxDsysRemapBuffersCb_SW(afxDrawSystem dsys, afxBool unmap, afxUn
 
 _AVX afxError _AvxDsysCohereMappedBuffersCb_SW(afxDrawSystem dsys, afxBool discard, afxUnit cnt, avxBufferedMap const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(cnt);
@@ -708,7 +710,7 @@ _AVX afxError _AvxDsysCohereMappedBuffersCb_SW(afxDrawSystem dsys, afxBool disca
 
 _AVX afxError _AvxDsysDtorCb(afxDrawSystem dsys)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
     //AvxWaitForDrawSystem(dsys, AFX_TIMEOUT_INFINITE);
@@ -757,7 +759,7 @@ _AVX afxError _AvxDsysDtorCb(afxDrawSystem dsys)
 
 _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     //AFX_ASSERT(spec);
 
@@ -780,7 +782,7 @@ _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
         return err;
     }
 
-    dsys->pimpl = &_AVX_DSYS_IMPL;
+    dsys->ddi = &_AVX_DDI_DSYS;
 
     dsys->running = FALSE;
 
@@ -982,7 +984,7 @@ _AVX afxClassConfig const _AVX_DSYS_CLASS_CONFIG =
 
 _AVX afxUnit AvxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cnt);
     AFX_ASSERT(f);
     afxUnit rslt = 0;
@@ -1001,7 +1003,7 @@ _AVX afxUnit AvxInvokeDrawSystems(afxUnit icd, afxUnit first, void *udd, afxBool
 
 _AVX afxUnit AvxEvokeDrawSystems(afxUnit icd, afxUnit first, void* udd, afxBool(*f)(void*, afxDrawSystem), afxUnit cnt, afxDrawSystem systems[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(systems);
     AFX_ASSERT(f);
     afxUnit rslt = 0;
@@ -1020,7 +1022,7 @@ _AVX afxUnit AvxEvokeDrawSystems(afxUnit icd, afxUnit first, void* udd, afxBool(
 
 _AVX afxUnit AvxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, afxDrawSystem systems[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(systems);
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;
@@ -1038,7 +1040,7 @@ _AVX afxUnit AvxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, af
 
 _AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
     AFX_ASSERT(cfg);
 
@@ -1136,7 +1138,7 @@ _AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
 
 _AVX afxError AvxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg, afxDrawSystem* system)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
     AFX_ASSERT(system);
     AFX_ASSERT(cfg);

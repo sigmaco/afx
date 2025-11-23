@@ -26,11 +26,11 @@
 #define _AVX_DRAW_BRIDGE_C
 #define _AVX_DRAW_QUEUE_C
 #define _AVX_DRAW_CONTEXT_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 _AVX _avxCmdBatch* _AvxGetCmdBatch(afxDrawContext dctx, afxUnit idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     _avxCmdBatch* batch = NIL;
     afxBool valid = AfxGetPoolUnit(&dctx->batches, idx, (void**)&batch);
@@ -41,7 +41,7 @@ _AVX _avxCmdBatch* _AvxGetCmdBatch(afxDrawContext dctx, afxUnit idx)
 
 _AVX _avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxCmdId* cmdId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT(siz >= sizeof(_avxCmdHdr));
 
@@ -59,28 +59,28 @@ _AVX _avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxC
 
 _AVX avxDrawContextState _AvxGetCommandStatus(afxDrawContext dctx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     return dctx->state;
 }
 
 _AVX afxUnit AvxGetCommandPort(afxDrawContext dctx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     return dctx->exuIdx;
 }
 
 _AVX afxUnit AvxGetCommandPool(afxDrawContext dctx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     return dctx->poolIdx;
 }
 
 _AVX afxError AvxTraverseDrawCommands(afxDrawContext dctx, afxCmdId(*f)(void* udd, void* cmd), void* udd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     return err;
@@ -88,7 +88,7 @@ _AVX afxError AvxTraverseDrawCommands(afxDrawContext dctx, afxCmdId(*f)(void* ud
 
 _AVX afxError AvxExhaustDrawContext(afxDrawContext dctx, afxBool freeMem)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     if (dctx->ddi->exhaust)
@@ -158,7 +158,7 @@ _AVX afxError AvxExhaustDrawContext(afxDrawContext dctx, afxBool freeMem)
 
 _AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool deferred, afxUnit* batchId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT(batchId);
 
@@ -199,7 +199,7 @@ _AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool d
 
     afxUnit cmdbId;
     _avxCmdBatch* cmdb;
-    AFX_ITERATE_CHAIN_B2F(_avxCmdBatch, cmdb, recyc, &dctx->cmdbRecycChain)
+    AFX_ITERATE_CHAIN_B2F(cmdb, recyc, &dctx->cmdbRecycChain)
     {
         AFX_ASSERT(cmdb->fcc == afxFcc_DCMD);
 
@@ -284,7 +284,7 @@ _AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool d
 
 _AVX afxError AvxDiscardDrawCommands(afxDrawContext dctx, afxBool freeRes)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     if (dctx->ddi->discard)
@@ -347,7 +347,7 @@ _AVX afxError AvxDiscardDrawCommands(afxDrawContext dctx, afxBool freeRes)
 
 _AVX afxError AvxCompileDrawCommands(afxDrawContext dctx, afxUnit batchId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     // If there was an error during recording, the application will be notified by an unsuccessful return 
@@ -418,7 +418,7 @@ _AVX afxError AvxCompileDrawCommands(afxDrawContext dctx, afxUnit batchId)
 
 _AVX afxError AvxRecycleDrawCommands(afxDrawContext dctx, afxUnit batchId, afxBool freeRes)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     if (batchId == AFX_INVALID_INDEX)
@@ -520,7 +520,7 @@ _AVX afxError AvxRecycleDrawCommands(afxDrawContext dctx, afxUnit batchId, afxBo
 
 _AVX afxBool AvxDoesDrawCommandsExist(afxDrawContext dctx, afxUnit batchId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     if (batchId == AFX_INVALID_INDEX)
@@ -543,14 +543,14 @@ _AVX afxBool AvxDoesDrawCommandsExist(afxDrawContext dctx, afxUnit batchId)
 
 _AVX afxError _AvxDctxDtorCb(afxDrawContext dctx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     AvxExhaustDrawContext(dctx, TRUE);
     AFX_ASSERT(dctx->objsToBeDisposed.pop == 0);
     AfxEmptyArray(&dctx->objsToBeDisposed, FALSE, FALSE);
 
-    AfxDismantleFutex(&dctx->cmdbReqLock);
+    AfxCleanUpFutex(&dctx->cmdbReqLock);
     AfxMakeChain(&dctx->cmdbRecycChain, dctx);
 
     AfxDismantleArena(&dctx->cmdArena);
@@ -561,7 +561,7 @@ _AVX afxError _AvxDctxDtorCb(afxDrawContext dctx)
 
 _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     afxDrawBridge dexu = args[0];
@@ -579,7 +579,7 @@ _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
     dctx->poolIdx = AfxGetObjectId(dctx);
 
     dctx->cmdbLockedForReq = FALSE;
-    AfxDeployFutex(&dctx->cmdbReqLock);
+    AfxSetUpFutex(&dctx->cmdbReqLock);
     AfxMakeChain(&dctx->cmdbRecycChain, dctx);
 
     AfxMakeArena(&dctx->cmdArena, NIL, AfxHere());
@@ -591,7 +591,7 @@ _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
     dctx->deferred = FALSE;
     dctx->once = FALSE;
     
-    dctx->ddi = &_AVX_DCTX_DDI;
+    dctx->ddi = &_AVX_DDI_DCTX;
     
     AfxSetUpPool(&dctx->batches, sizeof(_avxCmdBatch), 3, 0);
 
@@ -618,7 +618,7 @@ _AVX afxClassConfig const _AVX_DCTX_CLASS_CONFIG =
 
 _AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, avxContextInfo const* info, afxUnit cnt, afxDrawContext contexts[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(contexts);
     AFX_ASSERT(cnt);
@@ -662,7 +662,7 @@ _AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, avxContextInfo const* i
 
 _AVX afxError AvxExecuteDrawCommands(afxDrawSystem dsys, afxUnit cnt, avxSubmission submissions[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(submissions);
@@ -742,7 +742,7 @@ _AVX afxError AvxExecuteDrawCommands(afxDrawSystem dsys, afxUnit cnt, avxSubmiss
 
 _AVX afxError AvxPrepareDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBool once, afxBool deferred)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     AFX_ASSERT_RANGE(dctx->binCnt, bin, 1);
 
@@ -780,7 +780,7 @@ _AVX afxError AvxPrepareDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBo
 
     afxUnit cmdbId;
     _avxCmdBatch* cmdb;
-    AFX_ITERATE_CHAIN_B2F(_avxCmdBatch, cmdb, recyc, &dctx->cmdbRecycChain)
+    AFX_ITERATE_CHAIN_B2F(cmdb, recyc, &dctx->cmdbRecycChain)
     {
         AFX_ASSERT(cmdb->fcc == afxFcc_DCMD);
 
@@ -863,7 +863,7 @@ _AVX afxError AvxPrepareDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBo
 
 _AVX afxError AvxPurgeDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBool freeRes)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
     if (bin == AFX_INVALID_INDEX)

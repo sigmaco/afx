@@ -206,7 +206,7 @@ _AFXINL afxPlane AfxPlaneFromPoints(afxV4d a, afxV4d b, afxV4d c)
 
 _AFXINL void AfxMakePlane(afxPlane* p, afxV3d const normal, afxReal dist)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(p);
     AFX_ASSERT(normal);
     *p = AfxPlaneNormalize(AFX_PLANE(normal[0], normal[1], normal[2], dist));
@@ -214,7 +214,7 @@ _AFXINL void AfxMakePlane(afxPlane* p, afxV3d const normal, afxReal dist)
 
 _AFXINL void AfxMakePlaneFromTriangle(afxPlane* p, afxV3d const a, afxV3d const b, afxV3d const c)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(p);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
@@ -230,7 +230,7 @@ _AFXINL void AfxMakePlaneFromTriangle(afxPlane* p, afxV3d const a, afxV3d const 
 
 _AFXINL void AfxGetPlaneNormal(afxPlane* p, afxV3d normal)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(p);
     AFX_ASSERT(normal);
     AfxV3dCopy(normal, p->uvwd);
@@ -238,14 +238,14 @@ _AFXINL void AfxGetPlaneNormal(afxPlane* p, afxV3d normal)
 
 _AFXINL afxReal AfxGetPlaneOffset(afxPlane const* p)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(p);
     return p->uvwd[AFX_PLANE_DIST];
 }
 
 _AFXINL afxReal AfxFindPlaneDistance(afxPlane const* p, afxV3d const point)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(p);
     AFX_ASSERT(point);
     // Returns whether a point is in front of the plane.
@@ -254,7 +254,7 @@ _AFXINL afxReal AfxFindPlaneDistance(afxPlane const* p, afxV3d const point)
 
 _AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const* p, afxV3d const a, afxV3d const b)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(p);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
@@ -265,7 +265,7 @@ _AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const* p, afxV3d c
 
 _AFXINL afxBool AfxPlaneTestSpheres(afxPlane const* p, afxUnit cnt, afxSphere const spheres[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT2(p, spheres);
 
     for (afxUnit i = 0; i < cnt; i++)
@@ -280,7 +280,7 @@ _AFXINL afxBool AfxPlaneTestSpheres(afxPlane const* p, afxUnit cnt, afxSphere co
 
 _AFXINL afxResult AfxPlaneTestAabbs(afxPlane const* p, afxUnit cnt, afxBox const aabb[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT2(p, aabb);
 
     for (afxUnit i = 0; i < cnt; i++)
@@ -380,7 +380,7 @@ _AFXINL afxBool AfxIntersectPlanes(afxPlane const * p1, afxPlane const* p2, afxP
 
 _AFXINL void AfxCopyPlanes(afxUnit cnt, afxPlane const src[], afxPlane dst[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(src);
     AFX_ASSERT(dst);
     AFX_ASSERT(cnt);

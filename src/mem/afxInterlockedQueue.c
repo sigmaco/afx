@@ -18,7 +18,7 @@
 
 _AFXINL afxError AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxUnit unitSiz, afxUnit cap)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(ique);
 
 #ifdef _AFX_INTERLOCKED_QUEUE_VALIDATION_ENABLED
@@ -65,7 +65,7 @@ _AFXINL afxError AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxUnit un
 
 _AFXINL afxError AfxDismantleInterlockedQueue(afxInterlockedQueue* ique)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(ique);
 
     // Libera a memória reservado para a fila e redefine o estado interno.
@@ -92,7 +92,7 @@ _AFXINL afxError AfxDismantleInterlockedQueue(afxInterlockedQueue* ique)
 
 _AFXINL afxBool AfxPushInterlockedQueue(afxInterlockedQueue* ique, void* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(ique);
     AFX_ASSERT(src);
 
@@ -129,7 +129,7 @@ _AFXINL afxBool AfxPushInterlockedQueue(afxInterlockedQueue* ique, void* src)
 
 _AFXINL afxBool AfxPopInterlockedQueue(afxInterlockedQueue* ique, void* dst)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(ique);
     AFX_ASSERT(dst);
 
@@ -164,7 +164,7 @@ _AFXINL afxBool AfxPopInterlockedQueue(afxInterlockedQueue* ique, void* dst)
 
 _AFXINL afxBool AfxIsInterlockedQueueEmpty(afxInterlockedQueue* ique)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(ique);
     afxInt32 readPosn = AfxLoadAtom32(&ique->readPosn);
     afxInt32 seqDelta = AfxLoadAtom32(&ique->entrySeqIdx[readPosn & ique->queIdxMask]) - (readPosn + 1);

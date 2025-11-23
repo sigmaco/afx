@@ -19,13 +19,13 @@
 
 #define _AVX_DRAW_C
 #define _AVX_DRAW_CONTEXT_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 // Draw
 
 _AVX afxCmdId AvxCmdDraw(afxDrawContext dctx, afxUnit vtxCnt, afxUnit instCnt, afxUnit baseVtx, afxUnit baseInst)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -69,7 +69,7 @@ _AVX afxCmdId AvxCmdDraw(afxDrawContext dctx, afxUnit vtxCnt, afxUnit instCnt, a
 
 _AVX afxCmdId AvxCmdDrawIndirect(afxDrawContext dctx, avxBuffer buf, afxUnit32 offset, afxUnit32 drawCnt, afxUnit32 stride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -97,7 +97,7 @@ _AVX afxCmdId AvxCmdDrawIndirect(afxDrawContext dctx, avxBuffer buf, afxUnit32 o
 
 _AVX afxCmdId AvxCmdDrawIndirect2(afxDrawContext dctx, avxBuffer buf, afxUnit32 offset, avxBuffer cntBuf, afxUnit32 cntBufOff, afxUnit32 maxDrawCnt, afxUnit32 stride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -130,7 +130,7 @@ _AVX afxCmdId AvxCmdDrawIndirect2(afxDrawContext dctx, avxBuffer buf, afxUnit32 
 
 _AVX afxCmdId AvxCmdDrawIndexed(afxDrawContext dctx, afxUnit idxCnt, afxUnit instCnt, afxUnit baseIdx, afxUnit vtxOffset, afxUnit baseInst)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -156,7 +156,7 @@ _AVX afxCmdId AvxCmdDrawIndexed(afxDrawContext dctx, afxUnit idxCnt, afxUnit ins
 
 _AVX afxCmdId AvxCmdDrawIndexedIndirect(afxDrawContext dctx, avxBuffer buf, afxUnit32 offset, afxUnit32 drawCnt, afxUnit32 stride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -208,7 +208,7 @@ _AVX afxCmdId AvxCmdDrawIndexedIndirect(afxDrawContext dctx, avxBuffer buf, afxU
 
 _AVX afxCmdId AvxCmdDrawIndexedIndirect2(afxDrawContext dctx, avxBuffer buf, afxUnit32 offset, avxBuffer cntBuf, afxUnit32 cntBufOff, afxUnit32 maxDrawCnt, afxUnit32 stride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -240,7 +240,7 @@ _AVX afxCmdId AvxCmdDrawIndexedIndirect2(afxDrawContext dctx, avxBuffer buf, afx
 
 _AVX afxCmdId AvxCmdDispatch(afxDrawContext dctx, afxUnit w, afxUnit h, afxUnit d)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -261,7 +261,7 @@ _AVX afxCmdId AvxCmdDispatch(afxDrawContext dctx, afxUnit w, afxUnit h, afxUnit 
 
 _AVX afxCmdId AvxCmdDispatchIndirect(afxDrawContext dctx, avxBuffer buf, afxUnit32 offset)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -284,7 +284,7 @@ _AVX afxCmdId AvxCmdDispatchIndirect(afxDrawContext dctx, avxBuffer buf, afxUnit
 
 _AVX afxCmdId AvxCmdPushDebugScope(afxDrawContext dctx, afxString const* name, avxColor const color)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -308,7 +308,7 @@ _AVX afxCmdId AvxCmdPushDebugScope(afxDrawContext dctx, afxString const* name, a
 
 _AVX afxCmdId AvxCmdPopDebugScope(afxDrawContext dctx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -325,7 +325,7 @@ _AVX afxCmdId AvxCmdPopDebugScope(afxDrawContext dctx)
 
 _AVX afxCmdId AvxCmdMarkDebugStep(afxDrawContext dctx, afxString const* name, avxColor const color)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
@@ -349,7 +349,7 @@ _AVX afxCmdId AvxCmdMarkDebugStep(afxDrawContext dctx, afxString const* name, av
 
 _AVX afxError AvxCmdStampDebug(afxDrawContext dctx, afxM4d const v, afxV2d const at, afxString const* caption)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.

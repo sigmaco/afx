@@ -20,6 +20,7 @@
 #define AFX_VERTEX_H
 
 #include "qwadro/math/afxVector.h"
+#include "qwadro/math/afxReal16.h"
 
 AFXINL afxReal  AfxGetAngleBetweenV3d(afxV3d const v, afxV3d const other);
 

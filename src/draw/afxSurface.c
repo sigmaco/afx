@@ -25,11 +25,11 @@
 //#define _AVX_DRAW_DEVICE_C
 //#define _AVX_DRAW_SYSTEM_C
 #define _AVX_SURFACE_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 _AVX afxUnit _AvxDoutIsSuspended(afxSurface dout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AfxLockFutex(&dout->suspendSlock, TRUE);
     afxUnit suspendCnt = dout->suspendCnt;
@@ -39,7 +39,7 @@ _AVX afxUnit _AvxDoutIsSuspended(afxSurface dout)
 
 _AVX afxUnit _AvxDoutSuspendFunction(afxSurface dout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AfxLockFutex(&dout->suspendSlock, FALSE);
     afxUnit suspendCnt = ++dout->suspendCnt;
@@ -49,7 +49,7 @@ _AVX afxUnit _AvxDoutSuspendFunction(afxSurface dout)
 
 _AVX afxUnit _AvxDoutResumeFunction(afxSurface dout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AfxLockFutex(&dout->suspendSlock, FALSE);
     afxUnit suspendCnt = --dout->suspendCnt;
@@ -59,7 +59,7 @@ _AVX afxUnit _AvxDoutResumeFunction(afxSurface dout)
 
 _AVX afxError _AvxDoutFreeAllBuffers(afxSurface dout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
     if (dout->swaps)
@@ -80,7 +80,7 @@ _AVX afxError _AvxDoutFreeAllBuffers(afxSurface dout)
 
 _AVX afxDrawSystem AvxGetSurfaceHost(afxSurface dout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     afxDrawSystem dsys = AfxGetHost(dout);
@@ -90,7 +90,7 @@ _AVX afxDrawSystem AvxGetSurfaceHost(afxSurface dout)
 
 _AVX afxModule AvxGetSurfaceIcd(afxSurface dout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     afxDrawSystem dsys = AvxGetSurfaceHost(dout);
@@ -102,7 +102,7 @@ _AVX afxModule AvxGetSurfaceIcd(afxSurface dout)
 
 _AVX void* AvxGetSurfaceUdd(afxSurface dout, afxUnit slotIdx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     
     if (slotIdx >= ARRAY_SIZE(dout->udd))
@@ -113,9 +113,9 @@ _AVX void* AvxGetSurfaceUdd(afxSurface dout, afxUnit slotIdx)
     return dout->udd[slotIdx];
 }
 
-_AVX void AvxDescribeSurface(afxSurface dout, afxSurfaceConfig* cfg)
+_AVX afxError AvxQuerySurfaceConfiguration(afxSurface dout, afxSurfaceConfig* cfg)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AFX_ASSERT(cfg);
@@ -136,27 +136,33 @@ _AVX void AvxDescribeSurface(afxSurface dout, afxSurfaceConfig* cfg)
     cfg->tag = dout->tag;
     cfg->resolution = dout->resolution;
     cfg->refreshRate = dout->refreshRate;
+    return err;
 }
 
-_AVX void AvxQuerySurfaceSettings(afxSurface dout, avxModeSetting* mode)
+_AVX afxError AvxQuerySurfaceMode(afxSurface dout, avxModeSetting* mode)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AFX_ASSERT(mode);
 
     *mode = (avxModeSetting) { 0 };
-    mode->wrOverHr = dout->wpOverHp;
+    mode->wpOverHp = dout->wpOverHp;
     mode->refreshRate = dout->refreshRate;
     mode->resolution = dout->resolution;
     mode->wrOverHr = dout->wrOverHr;
     mode->exclusive = dout->fse;
     mode->outRate = dout->outRate;
+    mode->dstArea = dout->dstArea;
+    mode->persistent = dout->persistBlit;
+    mode->srcArea = dout->srcArea;
+    mode->wwOverHw = dout->wwOverHw;
+    return err;
 }
 
 _AVX afxReal64 AvxGetSurfaceArea(afxSurface dout, afxRect* area)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
@@ -169,7 +175,7 @@ _AVX afxReal64 AvxGetSurfaceArea(afxSurface dout, afxRect* area)
 _AVX void _AvxDoutGetExtentNormalized(afxSurface dout, afxV3d whd)
 // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AFX_ASSERT(whd);
@@ -178,24 +184,9 @@ _AVX void _AvxDoutGetExtentNormalized(afxSurface dout, afxV3d whd)
     AfxV3dSet(whd, AfxNdcf(whd2.w, dout->resolution.w), AfxNdcf(whd2.h, dout->resolution.h), (afxReal)1);
 }
 
-_AVX afxError _AvxDoutImplAdjustCb(afxSurface dout, afxRect const* area, afxBool fse)
-{
-    afxError err = AFX_ERR_NONE;
-    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-
-    dout->area.x = area->x;
-    dout->area.y = area->y;
-    dout->area.w = AFX_MAX(1, area->w);
-    dout->area.h = AFX_MAX(1, area->h);
-    dout->wwOverHw = (afxReal64)dout->area.w / (afxReal64)dout->area.h;
-    dout->ccfg.whd = AvxMaxRange(AVX_RANGE(1, 1, 1), AVX_RANGE(dout->area.w, dout->area.h, 1));
-
-    return err;
-}
-
 _AVX afxError AvxAdjustSurface(afxSurface dout, afxRect const* area, afxBool fse)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
@@ -208,10 +199,10 @@ _AVX afxError AvxAdjustSurface(afxSurface dout, afxRect const* area, afxBool fse
     AFX_ASSERT_EXTENT(dout->resolution.w, area->w);
     AFX_ASSERT_EXTENT(dout->resolution.h, area->h);
 
-    if (dout->pimpl->adjustCb(dout, &rc, fse))
+    if (dout->ddi->adjustCb(dout, &rc, fse))
         AfxThrowError();
 
-    if (dout->pimpl->regenCb(dout, TRUE))
+    if (dout->ddi->regenCb(dout, TRUE))
         AfxThrowError();
 
     ++dout->resizing; // temporarily lock it to avoid reentrance of platform hooks.
@@ -234,7 +225,7 @@ _AVX afxError AvxAdjustSurface(afxSurface dout, afxRect const* area, afxBool fse
 _AVX afxError _AvxDoutAdjustNormalized(afxSurface dout, afxV3d const whd)
 // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
     AFX_ASSERT4(whd, whd[0], whd[1], whd[2]);
@@ -249,17 +240,17 @@ _AVX afxError _AvxDoutAdjustNormalized(afxSurface dout, afxV3d const whd)
     return AvxAdjustSurface(dout, &whd2, dout->fse);
 }
 
-_AVX afxError AvxChangeSurfaceSettings(afxSurface dout, avxModeSetting const* mode)
+_AVX afxError AvxResetSurfaceMode(afxSurface dout, avxModeSetting const* mode)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
     AFX_ASSERT(mode);
 
-    if (dout->pimpl->modeSetCb)
+    if (dout->ddi->modeSetCb)
     {
-        if (dout->pimpl->modeSetCb(dout, mode))
+        if (dout->ddi->modeSetCb(dout, mode))
         {
             AfxThrowError();
         }
@@ -304,6 +295,9 @@ _AVX afxError AvxChangeSurfaceSettings(afxSurface dout, avxModeSetting const* mo
     if (whd.h > dout->resolution.h)
         whd.h = dout->resolution.h, readjust = TRUE;
 
+    dout->dstArea = mode->dstArea;
+    dout->srcArea = mode->srcArea;
+
     if (readjust)
         _AvxDoutAdjustNormalized(dout, whdNdc);
 
@@ -312,83 +306,9 @@ _AVX afxError AvxChangeSurfaceSettings(afxSurface dout, avxModeSetting const* mo
 
 // BUFFERIZATION ///////////////////////////////////////////////////////////////
 
-_AVX afxError _AvxDoutImplRegenBuffers(afxSurface dout, afxBool build)
-{
-    afxError err = AFX_ERR_NONE;
-    // @dout must be a valid afxSurface handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
-
-    AvxWaitForSurface(dout, 0);
-
-    afxDrawSystem dsys = AvxGetSurfaceHost(dout);
-
-    for (afxUnit i = 0; i < dout->swapCnt; i++)
-    {
-        _avxSurfaceSwap* slot = &dout->swaps[i];
-        ++slot->locked;
-
-        if (slot->canv)
-        {
-            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &slot->canv);
-            AfxDisposeObjects(1, &slot->canv);
-            AFX_ASSERT(!slot->canv);
-            slot->ras = NIL;
-        }
-
-        if (!build)
-            continue;
-
-        if (AvxAcquireCanvas(dsys, &dout->ccfg, 1, &slot->canv))
-        {
-            AfxThrowError();
-
-            // delete buffers?
-        }
-        else
-        {
-            avxCanvas canv = slot->canv;
-            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-#if 0
-            afxUnit objId = AfxGetObjectId(canv);
-            afxClass const* cls = _AvxDsysGetCanvClassCb_SW(dsys);
-
-            avxCanvas canv2 =NIL;
-            AfxEnumerateObjects(cls, objId, 1, (afxObject*)&canv2);
-            afxUnit objId2 = AfxGetObjectId(canv2);
-            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv2);
-            AFX_ASSERT(canv == canv2);
-#endif
-
-            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-            avxRaster ras;
-            AvxGetDrawBuffers(canv, 0, 1, &ras);
-            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-
-#if 0
-            avxCanvas canv3= NIL;
-            AfxEnumerateObjects(cls, objId, 1, (afxObject*)&canv3);
-            afxUnit objId3 = AfxGetObjectId(canv3);
-            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv3);
-            AFX_ASSERT(canv == canv3);
-            AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-#endif
-
-            AFX_ASSERT_OBJECTS(afxFcc_RAS, 1, &ras);
-            slot->ras = ras;
-
-            afxLayeredRect rc;
-            AvxGetCanvasExtent(canv, NIL, &rc);
-            slot->bounds = rc;
-        }
-
-        --slot->locked;
-    }
-    return err;
-}
-
 _AVX afxBool AvxGetSurfaceCanvas(afxSurface dout, afxUnit bufIdx, avxCanvas* canvas, afxLayeredRect* bounds)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
@@ -420,7 +340,7 @@ _AVX afxBool AvxGetSurfaceCanvas(afxSurface dout, afxUnit bufIdx, avxCanvas* can
 
 _AVX afxBool AvxGetSurfaceBuffer(afxSurface dout, afxUnit bufIdx, avxRaster* buffer)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
@@ -448,143 +368,14 @@ _AVX afxBool AvxGetSurfaceBuffer(afxSurface dout, afxUnit bufIdx, avxRaster* buf
 
 _AVX afxError AvxLockSurfaceBuffer(afxSurface dout, afxUnit64 timeout, afxMask exuMask, avxFence signal, afxUnit* bufIdx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
     afxUnit bufIdx2 = AFX_INVALID_INDEX;
 
-    if (dout->pimpl->lockCb)
-    {
-        err = dout->pimpl->lockCb(dout, timeout, exuMask, &bufIdx2, signal);
-
-        if (!err)
-        {
-            AFX_ASSERT(AFX_INVALID_INDEX != bufIdx2);
-            AFX_ASSERT_RANGE(dout->swapCnt, bufIdx2, 1);
-        }
-        else
-        {
-            AFX_ASSERT(AFX_INVALID_INDEX == bufIdx2);
-            bufIdx2 = AFX_INVALID_INDEX;
-        }
-        AFX_ASSERT(bufIdx);
-        *bufIdx = bufIdx2;
-        return err;
-    }
-
-    afxBool success = FALSE;
-    afxClock timeoutStart, last;
-    afxBool wait = (timeout != AFX_TIMEOUT_NONE);
-    afxBool finite = (timeout != AFX_TIMEOUT_INFINITE);
-
-    if (wait && finite)
-    {
-        AfxGetClock(&timeoutStart);
-        last = timeoutStart;
-    }
-
-    if (dout->bufReqPerSec)
-    {
-        // Target frames per second (FPS)
-
-        // Duration per frame in nanoseconds
-        afxInt64 bufGenPeriod = AFX_NSECS_PER_SEC(1) / dout->bufReqPerSec;
-
-        while (1)
-        {
-            AfxGetClock(&last);
-            afxInt64 elapsedTime = AfxGetNanosecondsElapsed(&dout->prevBufReqTime, &last);
-
-            if (elapsedTime >= bufGenPeriod) break;
-            else
-            {
-                if (!wait)
-                {
-                    err = afxError_TIMEOUT;
-                    *bufIdx = AFX_INVALID_INDEX;
-                    return err;
-                }
-                else
-                {
-                    if (!finite) continue;
-                    else
-                    {
-                        AfxGetClock(&last);
-                        afxInt64 elapsed = AfxGetNanosecondsElapsed(&timeoutStart, &last);
-
-                        if (elapsed > 0)
-                            timeout -= elapsed;
-                        else if (0 > elapsed)
-                            timeout = 0;
-
-                        if (timeout == 0)
-                        {
-                            err = afxError_TIMEOUT;
-                            *bufIdx = AFX_INVALID_INDEX;
-                            return err;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    while (1)
-    {
-        afxUnit lockedBufIdx = AFX_INVALID_INDEX;
-
-        if (AfxPopInterlockedQueue(&dout->freeBuffers, &lockedBufIdx))
-        {
-            _avxSurfaceSwap* swap = &dout->swaps[lockedBufIdx];
-            avxCanvas canv = swap->canv;
-
-            if (canv)
-            {
-                AFX_ASSERT_OBJECTS(afxFcc_CANV, 1, &canv);
-            }
-            AFX_ASSERT(swap->locked == 0);
-            ++swap->locked;
-            bufIdx2 = lockedBufIdx;
-            AFX_ASSERT(AFX_INVALID_INDEX != bufIdx2);
-            AFX_ASSERT_RANGE(dout->swapCnt, bufIdx2, 1);
-            AFX_ASSERT(bufIdx);
-            *bufIdx = bufIdx2;
-            success = TRUE;
-            AfxGetClock(&dout->prevBufReqTime);
-            break;
-        }
-
-        if (!wait)
-        {
-            err = afxError_TIMEOUT;
-            AFX_ASSERT(bufIdx);
-            *bufIdx = AFX_INVALID_INDEX;
-            break;
-        }
-        else
-        {
-            if (!finite) continue;
-            else
-            {
-                AfxGetClock(&last);
-                afxInt64 elapsed = AfxGetNanosecondsElapsed(&timeoutStart, &last);
-
-                if (elapsed > 0)
-                    timeout -= (timeout > elapsed) ? elapsed : 0;
-                else if (0 > elapsed)
-                    timeout = 0;
-
-                if (timeout == 0)
-                {
-                    err = afxError_TIMEOUT;
-                    AFX_ASSERT(bufIdx);
-                    *bufIdx = AFX_INVALID_INDEX;
-                    break;
-                }
-            }
-        }
-    }
+    AFX_ASSERT(dout->ddi->lockCb);
+    err = dout->ddi->lockCb(dout, exuMask, signal, timeout, &bufIdx2);
 
     if (!err)
     {
@@ -603,7 +394,7 @@ _AVX afxError AvxLockSurfaceBuffer(afxSurface dout, afxUnit64 timeout, afxMask e
 
 _AVX afxError AvxUnlockSurfaceBuffer(afxSurface dout, afxUnit bufIdx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
@@ -615,33 +406,16 @@ _AVX afxError AvxUnlockSurfaceBuffer(afxSurface dout, afxUnit bufIdx)
         return err;
     }
 
-    _avxSurfaceSwap* swap = &dout->swaps[bufIdx];
-    if (!swap->locked)
-    {
+    AFX_ASSERT(dout->ddi->unlockCb);
+    if (dout->ddi->unlockCb(dout, bufIdx))
         AfxThrowError();
-        return err;
-    }
-
-    if (dout->pimpl->unlockCb)
-    {
-        if (dout->pimpl->unlockCb(dout, bufIdx))
-            AfxThrowError();
-
-        return err;
-    }
-
-    if (!AfxPushInterlockedQueue(&dout->freeBuffers, (afxUnit[]) { bufIdx })) AfxThrowError();
-    else
-    {
-        --swap->locked;
-    }
 
     return err;
 }
 
 _AVX afxError AvxPrintSurfaceBuffer(afxSurface dout, afxUnit bufIdx, avxRasterIo const* op, afxUri const* uri, afxMask exuMask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
     afxLayeredRect area;
@@ -667,14 +441,14 @@ _AVX afxError AvxPrintSurfaceBuffer(afxSurface dout, afxUnit bufIdx, avxRasterIo
 
 _AVX afxError AvxWaitForSurface(afxSurface dout, afxUnit64 timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
     afxTimeSpec ts =
     {
-        .secs = AFX_SECS_PER_NSECS(timeout), // Convert nanoseconds to seconds
-        .nsecs = timeout % AFX_NSECS_PER_SEC(1) // Get the remainder in nanoseconds
+        .secs = AFX_SECS_PER_NANOSECS(timeout), // Convert nanoseconds to seconds
+        .nsecs = timeout % AFX_NANOSECS_PER_SEC(1) // Get the remainder in nanoseconds
     };
 
     AfxLockMutex(&dout->idleCndMtx);
@@ -687,14 +461,14 @@ _AVX afxError AvxWaitForSurface(afxSurface dout, afxUnit64 timeout)
 
 _AVX afxError AvxCallSurfaceEndpoint(afxSurface dout, afxUnit code, ...)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
     va_list ap;
     va_start(ap, code);
-    AFX_ASSERT(dout->pimpl);
-    AFX_ASSERT(dout->pimpl->ioctlCb);
-    afxError rslt = dout->pimpl->ioctlCb(dout, code, ap);
+    AFX_ASSERT(dout->ddi);
+    AFX_ASSERT(dout->ddi->ioctlCb);
+    afxError rslt = dout->ddi->ioctlCb(dout, code, ap);
     va_end(ap);
 
     return rslt;
@@ -702,7 +476,7 @@ _AVX afxError AvxCallSurfaceEndpoint(afxSurface dout, afxUnit code, ...)
 
 _AVX afxError _AvxDoutDtorCb(afxSurface dout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dout must be a valid afxSurface handle.
     AFX_ASSERT_OBJECTS(afxFcc_DOUT, 1, &dout);
 
@@ -727,7 +501,7 @@ _AVX afxError _AvxDoutDtorCb(afxSurface dout)
 
     AfxDismantleInterlockedQueue(&dout->freeBuffers);
 
-    AfxDismantleFutex(&dout->suspendSlock);
+    AfxCleanUpFutex(&dout->suspendSlock);
 
     AfxDismantleCondition(&dout->idleCnd);
     AfxDismantleMutex(&dout->idleCndMtx);
@@ -737,7 +511,7 @@ _AVX afxError _AvxDoutDtorCb(afxSurface dout)
 
 _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     AfxZero(dout, sizeof(dout[0]));
 
@@ -749,7 +523,7 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
     afxSurfaceConfig def = { 0 };
     AvxConfigureSurface(dsys, &def);
 
-    dout->pimpl = &_AVX_DOUT_DDI;
+    dout->ddi = &_AVX_DDI_DOUT;
 
     dout->udd[0] = cfg->udd[0];
     dout->udd[1] = cfg->udd[1];
@@ -795,13 +569,14 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
     dout->swapCnt = AFX_MAX(1, AFX_MIN(cfg->latency, def.latency)); // 2 or 3; double or triple buffered for via-memory presentation.
 
     dout->area = AFX_RECT(0, 0, dout->ccfg.whd.w, dout->ccfg.whd.h);
-    dout->dstArea = AFX_RECT_ZERO;
+    dout->dstArea = dout->area;
+    dout->srcArea = dout->area;
     dout->persistBlit = FALSE;
 
     dout->submCnt = 0;
     dout->lastPresentedBufIdx = AFX_INVALID_INDEX;
     dout->suspendCnt = 1;
-    AfxDeployFutex(&dout->suspendSlock);
+    AfxSetUpFutex(&dout->suspendSlock);
 
     AfxDeployMutex(&dout->idleCndMtx, AFX_MTX_PLAIN);
     AfxDeployCondition(&dout->idleCnd);
@@ -870,38 +645,38 @@ _AVX afxClassConfig const _AVX_DOUT_CLASS_CONFIG =
 
 _AVX afxUnit AvxEnumerateSurfaces(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxSurface outputs[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(!cnt || outputs);
-    afxClass const* cls = _AvxDsysGetImpl(dsys)->doutCls(dsys);
+    afxClass const* cls = _AvxDsysGetDdi(dsys)->doutCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)outputs);
 }
 
 _AVX afxUnit AvxEvokeSurfaces(afxDrawSystem dsys, afxBool(*f)(afxSurface, void*), void* udd, afxUnit first, afxUnit cnt, afxSurface outputs[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(outputs);
     AFX_ASSERT(f);
-    afxClass const* cls = _AvxDsysGetImpl(dsys)->doutCls(dsys);
+    afxClass const* cls = _AvxDsysGetDdi(dsys)->doutCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
     return AfxEvokeObjects(cls, (void*)f, udd, first, cnt, (afxObject*)outputs);
 }
 
 _AVX afxUnit AvxInvokeSurfaces(afxDrawSystem dsys, afxUnit first, afxUnit cnt, afxBool(*f)(afxSurface, void*), void *udd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(f);
-    afxClass const* cls = _AvxDsysGetImpl(dsys)->doutCls(dsys);
+    afxClass const* cls = _AvxDsysGetDdi(dsys)->doutCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
     return AfxInvokeObjects(cls, (void*)f, udd, first, cnt);
 }
 
 _AVX afxError AvxConfigureSurface(afxDrawSystem dsys, afxSurfaceConfig* cfg)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(cfg);
 
@@ -920,15 +695,24 @@ _AVX afxError AvxConfigureSurface(afxDrawSystem dsys, afxSurfaceConfig* cfg)
 
     AvxConfigureCanvas(dsys, &cfg->ccfg);
 
-    cfg->latency = 2;
-    cfg->presentMode = NIL;
-    cfg->presentAlpha = FALSE;
-    cfg->presentTransform = NIL;
-    cfg->doNotClip = FALSE;
-    cfg->resolution = AVX_RANGE(AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX);
-    cfg->resizable = TRUE;
-    cfg->refreshRate = 1;
-    cfg->exclusive = FALSE;
+    if (!cfg->latency)
+        cfg->latency = 2;
+
+    if (!(cfg->resolution.w * cfg->resolution.h * cfg->resolution.d))
+        cfg->resolution = AVX_RANGE(AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX);
+
+    if (!cfg->refreshRate)
+        cfg->refreshRate = 1;
+
+    //cfg->latency = 2;
+    //cfg->presentMode = NIL;
+    //cfg->presentAlpha = FALSE;
+    //cfg->presentTransform = NIL;
+    //cfg->doNotClip = FALSE;
+    //cfg->resolution = AVX_RANGE(AFX_U32_MAX, AFX_U32_MAX, AFX_U32_MAX);
+    //cfg->resizable = TRUE;
+    //cfg->refreshRate = 1;
+    //cfg->exclusive = FALSE;
 
     return err;
 }
@@ -936,7 +720,7 @@ _AVX afxError AvxConfigureSurface(afxDrawSystem dsys, afxSurfaceConfig* cfg)
 _AVX afxError AvxAcquireSurface(afxDrawSystem dsys, afxSurfaceConfig const* cfg, afxSurface* output)
 // file, window, desktop, widget, frameserver, etc; physical or virtual VDUs.
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(cfg);
 
@@ -946,7 +730,7 @@ _AVX afxError AvxAcquireSurface(afxDrawSystem dsys, afxSurfaceConfig const* cfg,
         return err;
     }
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->doutCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->doutCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_DOUT);
 
     afxSurface dout;
@@ -964,7 +748,7 @@ _AVX afxError AvxAcquireSurface(afxDrawSystem dsys, afxSurfaceConfig const* cfg,
 
 _AVX afxError AvxPresentSurfaces(afxDrawSystem dsys, afxUnit cnt, avxPresentation presentations[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(presentations);

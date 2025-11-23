@@ -39,11 +39,11 @@ ARX afxBool     ArxGetTerrainHeightAt(arxTerrain ter, afxReal x, afxReal z, afxR
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError    ArxAcquireTerrain(arxRenderContext rctx, arxTerrainConfig const* cfg, arxTerrain* terrain);
+ARX afxError    ArxAcquireTerrain(arxScenario scio, arxTerrainConfig const* cfg, arxTerrain* terrain);
 
-ARX afxError    ArxGenerateTerrain(arxRenderContext rctx, afxWarp const whd, arxTerrain* terrain);
+ARX afxError    ArxGenerateTerrain(arxScenario scio, afxWarp const whd, arxTerrain* terrain);
 
-ARX afxError    ArxGenerateHeightmappedTerrain(arxRenderContext rctx, afxUri const* uri, arxTerrain* terrain);
+ARX afxError    ArxGenerateHeightmappedTerrain(arxScenario scio, afxUri const* uri, arxTerrain* terrain);
 
 
 #endif//ARX_TERRAIN_H

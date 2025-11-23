@@ -57,13 +57,13 @@ AFX_DEFINE_STRUCT(avxSubmission)
     afxUnit             queCnt;
 
     afxFlags            flags;
-    afxSemaphore        waitSems;
+    avxFence            waitSems;
     afxUnit64           waitValues;
-    avxBusStage    waitStageMasks;
+    avxBusStage         waitStageMasks;
     afxUnit32           waitReserveds;
-    afxSemaphore        signalSems;
+    avxFence            signalSems;
     afxUnit64           signalValues;
-    avxBusStage    signalStageMasks;
+    avxBusStage         signalStageMasks;
     afxUnit32           signalReserveds;
 
     // An array of draw contexts that represent the individual drawing commands or operations to be executed. 
@@ -97,9 +97,9 @@ AFX_DEFINE_STRUCT(avxPresentation)
     // Fences are used to ensure synchronization, especially when working with GPUs. 
     // The function will wait for this fence to be signaled before beginning the presentation. 
     // This ensures that drawing commands are completed before the output is presented.
-    avxFence        waitOnDpu;
+    //avxFence        waitOnDpu;
     // The semaphore to wait for before issuing the present request.
-    afxSemaphore    wait;
+    avxFence        wait;
 
     // An handle to a afxDrawOuput object to be presented.
     afxSurface      dout;

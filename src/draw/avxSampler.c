@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_SAMPLER_C
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 void sample_bilinear(avxColor texture[], int width, int height, afxReal u, afxReal v, avxColor rslt)
 {
@@ -158,7 +158,7 @@ _AVX void AvxGetColorMatrix(avxColorMatrix cm, afxReal yOffset, afxReal uvOffset
         In full-range, we can typically skip rescaling Y, we you still need to subtract 128 from Cb/Cr (or U/V) because they’re still centered at 128.
     */
 
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(m);
 
     // yOffset = 0.0f;
@@ -310,7 +310,7 @@ _AVX void AvxComputeColorConversionMatrix(avxColorMatrix from, avxColorMatrix to
 
 _AVX afxDrawSystem AvxGetSamplerHost(avxSampler samp)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @samp must be a valid avxSampler handle.
     AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
     afxDrawSystem dsys = AfxGetHost(samp);
@@ -320,7 +320,7 @@ _AVX afxDrawSystem AvxGetSamplerHost(avxSampler samp)
 
 _AVX afxFlags AvxGetSamplerFlags(avxSampler samp, afxFlags mask)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // @samp must be a valid avxSampler handle.
     AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
     return (!mask) ? samp->flags : (samp->flags & mask);
@@ -328,7 +328,7 @@ _AVX afxFlags AvxGetSamplerFlags(avxSampler samp, afxFlags mask)
 
 _AVX afxBool AvxIsSamplerYuvCapable(avxSampler samp)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // samp must be a valid avxSampler handle.
     AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
     return samp->cfg.isYuv;
@@ -336,7 +336,7 @@ _AVX afxBool AvxIsSamplerYuvCapable(avxSampler samp)
 
 _AVX void AvxGetSamplerBorderColor(avxSampler samp, avxClearValue* val)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // samp must be a valid avxSampler handle.
     AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
     // val must be a valid pointer to a valid avxClearValue structure.
@@ -346,7 +346,7 @@ _AVX void AvxGetSamplerBorderColor(avxSampler samp, avxClearValue* val)
 
 _AVX void AvxDescribeSampler(avxSampler samp, avxSamplerConfig* desc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // samp must be a valid avxSampler handle.
     AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
     // desc must be a valid pointer to a valid avxSamplerConfig structure.
@@ -356,7 +356,7 @@ _AVX void AvxDescribeSampler(avxSampler samp, avxSamplerConfig* desc)
 
 _AVX afxError _AvxSampDtorCb(avxSampler samp)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
 
     return err;
@@ -364,7 +364,7 @@ _AVX afxError _AvxSampDtorCb(avxSampler samp)
 
 _AVX afxError _AvxSampCtorCb(avxSampler samp, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
 
     afxDrawSystem dsys = args[0];
@@ -505,7 +505,7 @@ _AVX afxClassConfig const _AVX_SAMP_CLASS_CONFIG =
 
 _AVX afxError AvxConfigureSampler(afxDrawSystem dsys, avxSamplerConfig* cfg)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
@@ -603,7 +603,7 @@ _AVX afxError AvxConfigureSampler(afxDrawSystem dsys, avxSamplerConfig* cfg)
 
 _AVX afxError AvxAcquireSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerConfig const cfg[], avxSampler samplers[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(cnt);
@@ -617,7 +617,7 @@ _AVX afxError AvxAcquireSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerConf
     afxBool bridgedFound = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_GFX | avxAptitude_PCX, NIL, 0, 1, &dexu);
     AFX_ASSERT(bridgedFound);
 
-    afxClass* cls = (afxClass*)_AvxDsysGetImpl(dsys)->sampCls(dsys);
+    afxClass* cls = (afxClass*)_AvxDsysGetDdi(dsys)->sampCls(dsys);
     AFX_ASSERT_CLASS(cls, afxFcc_SAMP);
 
     // There must have less than maxSamplerAllocCnt avxSampler objects currently created on the system.
@@ -657,7 +657,7 @@ struct findSampCb { afxUnit crc; avxSampler sampler; };
 
 _AVXINL afxBool _AvxFindSampCompareCb(avxSampler samp, struct findSampCb* udd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
 
     if (samp->crc == udd->crc)
@@ -670,7 +670,7 @@ _AVXINL afxBool _AvxFindSampCompareCb(avxSampler samp, struct findSampCb* udd)
 
 _AVXINL afxBool _AvxFindSampCb(avxSampler samp, struct findSampCb* udd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SAMP, 1, &samp);
 
     if (samp->crc == udd->crc)
@@ -683,7 +683,7 @@ _AVXINL afxBool _AvxFindSampCb(avxSampler samp, struct findSampCb* udd)
 
 _AVX afxBool AvxFindSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerConfig const cfg[], avxSampler samplers[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(samplers);
     AFX_ASSERT(cfg);

@@ -23,7 +23,7 @@
 
 _AFX void _DecodeCmdRead(afxIoBridge exu, afxStdCmd const* cmd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxStream iob = cmd->Read.iob;
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(AfxIsStreamReadable(iob));
@@ -61,7 +61,7 @@ _AFX afxStdCmdList _AfxIobStdDecodeVmt =
 
 _AFX afxError _XpuRollStreams(afxIoBridge exu, afxUnit cnt, afxStream streams[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     for (afxUnit i = 0; i < cnt; i++)
     {
@@ -76,7 +76,7 @@ _AFX afxError _XpuRollStreams(afxIoBridge exu, afxUnit cnt, afxStream streams[])
         }
 
         afxStdCmd* cmdHdr;
-        AFX_ITERATE_CHAIN_B2F(afxStdCmd, cmdHdr, hdr.script, &iob->commands)
+        AFX_ITERATE_CHAIN_B2F(cmdHdr, hdr.script, &iob->commands)
         {
             if (cmdHdr->hdr.id == NIL/*ZGL_CMD_END*/)
             {

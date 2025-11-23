@@ -20,7 +20,7 @@
 
 _AFX afxError AfxDoService(afxService svc, afxTime timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SVC, 1, &svc);
 
     return err;
@@ -86,7 +86,7 @@ _AFX void RequestJobWorker(afxWorkerFn in_fnJobWorker, afxJobType jobType, afxUn
 
 _AFX afxError _AfxSvcDtor(afxService svc)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SVC, 1, &svc);
 
     if (svc->workers)
@@ -116,7 +116,7 @@ _AFX afxError _AfxSvcDtor(afxService svc)
 
 _AFX afxError _AfxSvcCtor(afxService svc, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SVC, 1, &svc);
 
     afxServiceConfig const *config = ((afxServiceConfig const *)args[1]) + invokeNo;
@@ -175,7 +175,7 @@ _AFX afxClassConfig const _AFX_SVC_CLASS_CONFIG =
 
 _AFX afxError AfxAcquireServices(afxUnit cnt, afxServiceConfig const config[], afxService services[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxSystem sys;
     AfxGetSystem(&sys);

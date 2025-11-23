@@ -17,7 +17,7 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 // This software is part of Advanced Video Graphics Extensions & Experiments.
 
-#include "ddi/avxImplementation.h"
+#include "avxIcd.h"
 
 _AVX afxString const sigmaDrawSignature = AFX_STRING(
     "      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      \n"
@@ -303,14 +303,14 @@ afxChar const * const vtxFmtNames[] =
 #if 0
 _AVX afxUnit AfxVertexFormatGetSize(afxVertexFormat fmt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_RANGE(afxVertexFormat_TOTAL, fmt, 1);
     return vtxFmtSizes[fmt];
 }
 
 _AVX afxResult AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSiz, afxSize *vecSiz, afxSize *siz)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_RANGE(afxVertexFormat_TOTAL, fmt, 1);
 
     static struct { afxFormat subfmt; afxSize vecSiz; afxSize siz; afxSize subsiz; } list[] =
@@ -347,7 +347,7 @@ _AVX afxResult AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSi
 
 _AVX avxTopology AfxFindPrimitiveTopology(afxString const *str)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(str);
 
     for (afxUnit i = 0; i < avxTopology_TOTAL; i++)
@@ -361,7 +361,7 @@ _AVX avxTopology AfxFindPrimitiveTopology(afxString const *str)
 
 _AVX avxLogicOp AfxFindLogicOp(afxString const *str)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(str);
 
     for (afxUnit i = 0; i < avxLogicOp_TOTAL; i++)
@@ -375,7 +375,7 @@ _AVX avxLogicOp AfxFindLogicOp(afxString const *str)
 
 _AVX avxStencilOp AfxFindStencilOp(afxString const *str)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(str);
 
     for (afxUnit i = 0; i < avxStencilOp_TOTAL; i++)
@@ -389,7 +389,7 @@ _AVX avxStencilOp AfxFindStencilOp(afxString const *str)
 
 _AVX avxCompareOp AfxFindCompareOp(afxString const *str)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(str);
 
     for (afxUnit i = 0; i < avxCompareOp_TOTAL; i++)
@@ -403,7 +403,7 @@ _AVX avxCompareOp AfxFindCompareOp(afxString const *str)
 
 _AVX avxCullMode AfxFindCullMode(afxString const *str)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(str);
 
     for (afxUnit i = 0; i < avxCullMode_TOTAL; i++)
@@ -417,7 +417,7 @@ _AVX avxCullMode AfxFindCullMode(afxString const *str)
 
 _AVX avxFrontFace AfxFindFrontFace(afxString const *str)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(str);
 
     for (afxUnit i = 0; i < avxFrontFace_TOTAL; i++)
@@ -431,7 +431,7 @@ _AVX avxFrontFace AfxFindFrontFace(afxString const *str)
 
 _AVX avxFillMode AfxFindFillMode(afxString const *str)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(str);
 
     for (afxUnit i = 0; i < avxFillMode_TOTAL; i++)
@@ -445,7 +445,7 @@ _AVX avxFillMode AfxFindFillMode(afxString const *str)
 
 _AVX avxShaderType AfxFindShaderStage(afxString const *str)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(str);
 
     for (afxUnit i = 0; i < avxShaderType_TOTAL; i++)
@@ -459,7 +459,7 @@ _AVX avxShaderType AfxFindShaderStage(afxString const *str)
 
 _AVX afxString const* AfxStringifyShaderStage(avxShaderType ss, afxString *out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(ss < avxShaderType_TOTAL);
     AfxCopyString(out, 0, &shaderStageString[ss], 0);
     return out;
@@ -467,7 +467,7 @@ _AVX afxString const* AfxStringifyShaderStage(avxShaderType ss, afxString *out)
 
 _AVX afxString const* AfxStringifyFillMode(avxFillMode fm, afxString *out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(fm < avxFillMode_TOTAL);
     AfxCopyString(out, 0, &fillModeString[fm], 0);
     return out;
@@ -475,7 +475,7 @@ _AVX afxString const* AfxStringifyFillMode(avxFillMode fm, afxString *out)
 
 _AVX afxString const* AfxStringifyFrontFace(avxFrontFace ff, afxString *out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(ff < avxFrontFace_TOTAL);
     AfxCopyString(out, 0, &frontFaceString[ff], 0);
     return out;
@@ -483,7 +483,7 @@ _AVX afxString const* AfxStringifyFrontFace(avxFrontFace ff, afxString *out)
 
 _AVX afxString const* AfxStringifyCullMode(avxCullMode cm, afxString *out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cm < avxCullMode_TOTAL);
     AfxCopyString(out, 0, &cullModeString[cm], 0);
     return out;
@@ -491,7 +491,7 @@ _AVX afxString const* AfxStringifyCullMode(avxCullMode cm, afxString *out)
 
 _AVX afxString const* AfxStringifyCompareOp(avxCompareOp co, afxString *out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(co < avxCompareOp_TOTAL);
     AfxCopyString(out, 0, &compareOpString[co], 0);
     return out;
@@ -499,7 +499,7 @@ _AVX afxString const* AfxStringifyCompareOp(avxCompareOp co, afxString *out)
 
 _AVX afxString const* AfxStringifyStencilOp(avxStencilOp so, afxString *out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(so < avxStencilOp_TOTAL);
     AfxCopyString(out, 0, &stencilOpString[so], 0);
     return out;
@@ -507,7 +507,7 @@ _AVX afxString const* AfxStringifyStencilOp(avxStencilOp so, afxString *out)
 
 _AVX afxString const* AfxStringifyLogicOp(avxLogicOp lo, afxString *out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(lo < avxLogicOp_TOTAL);
     AfxCopyString(out, 0, &logicOpString[lo], 0);
     return out;
@@ -515,7 +515,7 @@ _AVX afxString const* AfxStringifyLogicOp(avxLogicOp lo, afxString *out)
 
 _AVX afxString const* AfxStringifyPrimitiveTopology(avxTopology pt, afxString *out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(pt < avxTopology_TOTAL);
     AfxCopyString(out, 0, &primTopologyString[pt], 0);
     return out;
@@ -524,7 +524,7 @@ _AVX afxString const* AfxStringifyPrimitiveTopology(avxTopology pt, afxString *o
 #if 0
 _AVX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxString *out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(fmt < afxVertexFormat_TOTAL);
     AfxCopyString(out, &vtxFmtString[fmt]);
     return out;

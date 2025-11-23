@@ -115,7 +115,7 @@ _AFXINL void AfxCopyClock(afxClock* clock, afxClock const* src)
 
 _AFX void AfxGetClock(afxClock* clock)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(clock);
 
     // Initialize the timer if necessary
@@ -283,7 +283,7 @@ _AFXINL afxReal64 AfxGetSecondsElapsed(afxClock const* prev, afxClock const* las
 
 _AFXINL void AfxGetClock(afxClock* clock)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(clock);
 #ifdef _WIN32
     // Get the frequency (ticks per second)
@@ -302,7 +302,7 @@ _AFXINL void AfxGetClock(afxClock* clock)
 
 _AFXINL afxInt64 AfxGetClockTicksElapsed(afxClock* prev, afxClock* last)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(prev);
     AFX_ASSERT(last);
 #ifdef _WIN32
@@ -323,7 +323,7 @@ _AFXINL afxInt64 AfxGetClockTicksElapsed(afxClock* prev, afxClock* last)
 
 _AFXINL afxInt64 AfxGetNanosecondsElapsed(afxClock* prev, afxClock* last)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(prev);
     AFX_ASSERT(last);
 #ifdef _WIN32
@@ -344,7 +344,7 @@ _AFXINL afxInt64 AfxGetNanosecondsElapsed(afxClock* prev, afxClock* last)
 
 _AFXINL afxInt64 AfxGetUltrasecondsElapsed(afxClock* prev, afxClock* last)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(prev);
     AFX_ASSERT(last);
 #ifdef _WIN32
@@ -365,7 +365,7 @@ _AFXINL afxInt64 AfxGetUltrasecondsElapsed(afxClock* prev, afxClock* last)
 
 _AFXINL afxInt64 AfxGetMillisecondsElapsed(afxClock* prev, afxClock* last)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(prev);
     AFX_ASSERT(last);
 #ifdef _WIN32
@@ -386,7 +386,7 @@ _AFXINL afxInt64 AfxGetMillisecondsElapsed(afxClock* prev, afxClock* last)
 
 _AFXINL afxReal64 AfxGetSecondsElapsed(afxClock* prev, afxClock* last)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(prev);
     AFX_ASSERT(last);
 #ifdef _WIN32

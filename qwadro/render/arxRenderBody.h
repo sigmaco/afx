@@ -23,7 +23,7 @@
 #include "qwadro/draw/afxDrawDefs.h"
 #include "qwadro/mem/afxArray.h"
 #include "qwadro/render/arxRenderable.h"
-#include "qwadro/sim/arxNode.h"
+#include "qwadro/scene/arxNode.h"
 
 
 

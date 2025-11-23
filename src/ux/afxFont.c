@@ -18,7 +18,7 @@
 
 #define _AUX_UX_C
 #define _AUX_FONT_C
-#include "src/ux/impl/auxImplementation.h"
+#include "src/ux/auxIcd.h"
 #include "dep/stb_truetype.h"
 
 // Unicode code point: U+FFFD
@@ -135,7 +135,7 @@ GlyphPage* get_glyph_page(GlyphPage* glyph_pages, int codepoint, stbtt_fontinfo*
 
 _AUX afxReal AfxMeasureTextWidth(afxFont fnt, afxReal fntHeight, afxString const* text)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FNT, 1, &fnt);
 
 
@@ -143,7 +143,7 @@ _AUX afxReal AfxMeasureTextWidth(afxFont fnt, afxReal fntHeight, afxString const
 
 _AUX void AfxQueryFontGlyph(afxFont fnt, afxReal fntHeight, afxUnit cnt, afxUnit codepointPairs[][2], auxGlyph glyphes[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FNT, 1, &fnt);
     AFX_ASSERT(codepointPairs);
     AFX_ASSERT(glyphes);
@@ -161,7 +161,7 @@ _AUX void AfxQueryFontGlyph(afxFont fnt, afxReal fntHeight, afxUnit cnt, afxUnit
 
 _AFX afxError AfxTranscribe(afxFont fnt, afxRect const* area, afxUnit col, afxUnit row, afxString const* text)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FNT, 1, &fnt);
 
     /*
@@ -264,7 +264,7 @@ _AFX afxError AfxTranscribe(afxFont fnt, afxRect const* area, afxUnit col, afxUn
 
 _AFX afxError AfxFlushDeviceFont(afxFont fnt, afxDrawContext dctx, avxViewport const* vp)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FNT, 1, &fnt);
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
@@ -294,7 +294,7 @@ _AFX afxError AfxFlushDeviceFont(afxFont fnt, afxDrawContext dctx, avxViewport c
 
 _AUX afxError _AuxFntDtorCb(afxFont fnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FNT, 1, &fnt);
 
     if (fnt->fntEnabled)
@@ -309,7 +309,7 @@ _AUX afxError _AuxFntDtorCb(afxFont fnt)
 
 _AUX afxError _AuxFntCtorCb(afxFont fnt, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_FNT, 1, &fnt);
 
     afxEnvironment env = args[0];
@@ -437,7 +437,7 @@ _AUX afxClassConfig const _AUX_FNT_CLASS_CONFIG =
 
 _AUX afxError AfxAcquireFonts(afxUnit cnt, afxFontConfig const cfg[], afxFont fonts[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env))

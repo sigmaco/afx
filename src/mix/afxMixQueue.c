@@ -21,11 +21,11 @@
 #define _AMX_MIX_BRIDGE_C
 #define _AMX_MIX_QUEUE_C
 #define _AMX_BUFFER_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 _AMX afxError _AmxMqueUnlockIoReqChain(afxMixQueue mque)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     AfxUnlockMutex(&mque->iorpChnMtx);
     return err;
@@ -33,7 +33,7 @@ _AMX afxError _AmxMqueUnlockIoReqChain(afxMixQueue mque)
 
 _AMX afxError _AmxMqueLockIoReqChain(afxMixQueue mque, afxUnit64 timeout)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
     if (timeout == 0)
@@ -56,7 +56,7 @@ _AMX afxError _AmxMqueLockIoReqChain(afxMixQueue mque, afxUnit64 timeout)
 
 _AMX afxError _AmxMquePopBlob(afxMixQueue mque, void* blob, afxUnit siz)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     AfxReclaimArena(&mque->iorpArena, blob, siz);
     return err;
@@ -64,7 +64,7 @@ _AMX afxError _AmxMquePopBlob(afxMixQueue mque, void* blob, afxUnit siz)
 
 _AMX void* _AmxMquePushBlob(afxMixQueue mque, afxUnit siz)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
     void* blob = AfxRequestArena(&mque->iorpArena, siz, 1, NIL, 0);
@@ -74,7 +74,7 @@ _AMX void* _AmxMquePushBlob(afxMixQueue mque, afxUnit siz)
 
 _AMX afxError _AmxMquePopIoReqPacket(afxMixQueue mque, _amxIoReqPacket* iorp)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     AFX_ASSERT(iorp);
     AfxPopLink(&iorp->hdr.chain);
@@ -84,7 +84,7 @@ _AMX afxError _AmxMquePopIoReqPacket(afxMixQueue mque, _amxIoReqPacket* iorp)
 
 _AMX afxError _AmxMquePushIoReqPacket(afxMixQueue mque, afxUnit id, afxUnit siz, afxCmdId* cmdId, _amxIoReqPacket** pIorp)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
     _amxIoReqPacket* iorp = AfxRequestArena(&mque->iorpArena, siz, 1, NIL, 0);
@@ -106,7 +106,7 @@ _AMX afxError _AmxMquePushIoReqPacket(afxMixQueue mque, afxUnit id, afxUnit siz,
 
 _AMX afxMixDevice AmxGetMixQueueDevice(afxMixQueue mque)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     afxMixBridge mexu = AfxGetHost(mque);
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
@@ -117,7 +117,7 @@ _AMX afxMixDevice AmxGetMixQueueDevice(afxMixQueue mque)
 
 _AMX afxMixSystem AmxGetMixQueueSystem(afxMixQueue mque)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     afxMixSystem msys = mque->msys;
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
@@ -126,7 +126,7 @@ _AMX afxMixSystem AmxGetMixQueueSystem(afxMixQueue mque)
 
 _AMX afxError _AmxMqueSubmitCallback(afxMixQueue mque, afxError(*f)(void*, void*), void* udd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mque must be a valid afxMixQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     AFX_ASSERT(f);
@@ -160,7 +160,7 @@ _AMX afxError _AmxMqueSubmitCallback(afxMixQueue mque, afxError(*f)(void*, void*
 
 _AMX afxError _AmxMqueExecuteMixCommands(afxMixQueue mque, afxUnit cnt, amxSubmission subms[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mque must be a valid afxMixQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     AFX_ASSERT(cnt);
@@ -217,7 +217,7 @@ _AMX afxError _AmxMqueExecuteMixCommands(afxMixQueue mque, afxUnit cnt, amxSubmi
 
 _AMX afxError _AmxMqueTransferResources(afxMixQueue mque, amxTransference const* ctrl, afxUnit opCnt, void const* ops)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mque must be a valid afxMixQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
     AFX_ASSERT(opCnt);
@@ -332,7 +332,7 @@ _AMX afxError _AmxMqueTransferResources(afxMixQueue mque, amxTransference const*
 
 _AMX afxError _AmxMqueRemapBuffers(afxMixQueue mque, afxUnit mapCnt, _amxBufferRemapping const maps[], afxUnit unmapCnt, _amxBufferRemapping const unmaps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mque must be a valid afxMixQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
@@ -414,7 +414,7 @@ _AMX afxError _AmxMqueRemapBuffers(afxMixQueue mque, afxUnit mapCnt, _amxBufferR
 
 _AMX afxError _AmxMqueCohereMappedBuffers(afxMixQueue mque, afxUnit flushCnt, amxBufferedMap const flushes[], afxUnit fetchCnt, amxBufferedMap const fetches[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mque must be a valid afxMixQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
@@ -494,12 +494,12 @@ _AMX afxError _AmxMqueCohereMappedBuffers(afxMixQueue mque, afxUnit flushCnt, am
 
 _AMX afxError _AmxMqueDtorCb(afxMixQueue mque)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
     AfxDismantleMutex(&mque->iorpChnMtx);
     AfxDismantleArena(&mque->iorpArena);
-    AfxDismantleFutex(&mque->iorpArenaSlock);
+    AfxCleanUpFutex(&mque->iorpArenaSlock);
     AfxDismantleCondition(&mque->idleCnd);
     AfxDismantleMutex(&mque->idleCndMtx);
 
@@ -508,12 +508,12 @@ _AMX afxError _AmxMqueDtorCb(afxMixQueue mque)
 
 _AMX afxError _AmxMqueCtorCb(afxMixQueue mque, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
 
     afxMixBridge mexu = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MEXU, 1, &mexu);
-    _amxMexuAcquisition const* cfg = AFX_CAST(_amxMexuAcquisition const*, args[1]);
+    _amxMexuAcq const* cfg = AFX_CAST(_amxMexuAcq const*, args[1]);
     AFX_ASSERT(cfg);
 
     mque->mdev = cfg->mdev;
@@ -523,7 +523,7 @@ _AMX afxError _AmxMqueCtorCb(afxMixQueue mque, void** args, afxUnit invokeNo)
 
     mque->immediate = 0;// !!spec->immedate;
 
-    AfxDeployFutex(&mque->iorpArenaSlock);
+    AfxSetUpFutex(&mque->iorpArenaSlock);
     AfxMakeArena(&mque->iorpArena, NIL, AfxHere());
 
     AfxDeployMutex(&mque->iorpChnMtx, AFX_MTX_PLAIN);

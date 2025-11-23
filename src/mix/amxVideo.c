@@ -18,7 +18,7 @@
 
 #define _AMX_MIX_C
 #define _AMX_VIDEO_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 AFX_OBJECT(amxVideo)
 {
@@ -46,7 +46,7 @@ AFX_OBJECT(amxVideo)
 
 _AMX afxError AmxBindVideoPicture(amxVideo vid, afxUnit bufIdx, avxRaster pic)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VID, 1, &vid);
 
     if (vid->bufs[bufIdx].pic)
@@ -62,7 +62,7 @@ _AMX afxError AmxBindVideoPicture(amxVideo vid, afxUnit bufIdx, avxRaster pic)
 
 _AMX afxError _AmxVidDtorCb(amxVideo vid)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VID, 1, &vid);
 
     afxMixSystem msys = AfxGetHost(vid);
@@ -102,7 +102,7 @@ _AMX afxClassConfig const _AMX_VID_CLASS_CONFIG =
 
 _AMX afxError AmxAcquireVideos(afxMixSystem msys, afxUnit cnt, amxVideoInfo const info[], amxVideo videos[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(videos);
     AFX_ASSERT(info);

@@ -42,7 +42,13 @@ AFX_DEFINE_STRUCT(afxFileDrop)
 AFX_DEFINE_STRUCT(afxShellFeatures)
 {
     afxBool8    windows;
+    afxBool8    placements;
     afxBool8    widgets;
+    afxBool8    themes;
+    afxBool8    fonts;
+    afxBool8    deviceFonts;
+    afxBool8    clipboard;
+    afxBool8    multiClipboards;
 };
 
 // SHELL HANDLING //////////////////////////////////////////////////////////////

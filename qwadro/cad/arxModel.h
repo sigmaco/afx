@@ -31,7 +31,7 @@
 
 #include "qwadro/cad/arxMeshIo.h"
 #include "qwadro/cad/arxPose.h"
-#include "qwadro/render/arxPlacement.h"
+#include "qwadro/scene/arxPlacement.h"
 #include "qwadro/cad/arxSkeleton.h"
 
 typedef enum arxModelFlag
@@ -230,7 +230,7 @@ ARX void ArxTransformModels
 
 ARX afxUnit ArxEnumerateModels
 (
-    arxRenderContext rctx, 
+    arxScenario scio, 
     afxUnit first, 
     afxUnit cnt, 
     arxModel models[]
@@ -238,7 +238,7 @@ ARX afxUnit ArxEnumerateModels
 
 ARX afxError ArxAssembleModels
 (
-    arxRenderContext rctx, 
+    arxScenario scio, 
     afxUnit cnt, 
     afxString const urns[], 
     arxModelBlueprint const blueprints[], 
@@ -247,7 +247,7 @@ ARX afxError ArxAssembleModels
 
 ARX afxError ArxLoadModel
 (
-    arxRenderContext rctx, 
+    arxScenario scio, 
     arxMtd mtd,
     arxSkeleton skl,
     afxString const* urn, 
@@ -257,7 +257,7 @@ ARX afxError ArxLoadModel
 
 ARX afxBool ArxIdentifyModels
 (
-    arxRenderContext rctx,
+    arxScenario scio,
     afxUnit cnt,
     afxString const ids[],
     arxModel models[]

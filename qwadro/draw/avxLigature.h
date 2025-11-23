@@ -191,7 +191,7 @@ AVX afxUnit32       AvxGetLigatureHash
     afxUnit set
 );
 
-AVX afxResult       AvxGetLigatureEntry
+AVX afxResult       AvxDescribeLigament
 (
     avxLigature liga, 
     afxUnit set, 

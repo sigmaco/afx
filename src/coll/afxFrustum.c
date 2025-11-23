@@ -33,7 +33,7 @@ _AFX afxV4d const AFX_V4D_LTF = { -1, 1, 1, 1 };
 
 _AFXINL void AfxGetFrustumCorners(afxFrustum* f, afxV3d vertices[AFX_NUM_BOX_CORNERS])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(vertices);
     AFX_ASSERT(f);
     AfxCopy(vertices, f->corners, sizeof(f->corners));
@@ -41,7 +41,7 @@ _AFXINL void AfxGetFrustumCorners(afxFrustum* f, afxV3d vertices[AFX_NUM_BOX_COR
 
 _AFXINL void AfxGetFrustumEdges(afxFrustum* f, afxV3d vertices[AFX_NUM_BOX_CORNERS], afxUnit indices[AFX_NUM_BOX_EDGE_VERTICES])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(vertices);
     AFX_ASSERT(f);
 
@@ -64,7 +64,7 @@ _AFXINL void AfxGetFrustumEdges(afxFrustum* f, afxV3d vertices[AFX_NUM_BOX_CORNE
 
 _AFXINL void AfxCopyFrustum(afxFrustum* f, afxFrustum const* in)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(f);
     AFX_ASSERT(in);
     afxUnit i;
@@ -79,7 +79,7 @@ _AFXINL void AfxCopyFrustum(afxFrustum* f, afxFrustum const* in)
 
 _AFXINL afxBool AfxDoesFrustumCullSpheres(afxFrustum const* f, afxUnit cnt, afxSphere const spheres[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(!cnt || spheres);
     AFX_ASSERT(f);
 
@@ -96,7 +96,7 @@ _AFXINL afxBool AfxDoesFrustumCullSpheres(afxFrustum const* f, afxUnit cnt, afxS
 
 _AFXINL afxResult AfxAabbTestPlanes(afxBox const* aabb, afxUnit cnt, afxPlane const planes[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT2(aabb, planes);
 
     for (afxUnit i = 0; i < cnt; i++)
@@ -153,7 +153,7 @@ _AFXINL afxResult AfxAabbTestPlanes(afxBox const* aabb, afxUnit cnt, afxPlane co
 
 _AFXINL afxBool AfxDoesFrustumCullAabbs(afxFrustum const* f, afxUnit cnt, afxBox const aabb[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(f);
     AFX_ASSERT(aabb);
 
@@ -226,7 +226,7 @@ _AFXINL afxBool AfxDoesFrustumCullAabbs(afxFrustum const* f, afxUnit cnt, afxBox
 
 _AFXINL afxBool AfxDoesFrustumCullFrustums(afxFrustum const* f, afxUnit cnt, afxFrustum const others[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(!cnt || others);
     AFX_ASSERT(f);
 
@@ -256,7 +256,7 @@ _AFXINL afxBool AfxDoesFrustumCullFrustums(afxFrustum const* f, afxUnit cnt, afx
 
 _AFXINL void AfxEmboxFrustum(afxBox* aabb, afxFrustum const* f)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(f);
     AFX_ASSERT(aabb);
     AfxEmboxPoints(aabb, afxCubeCorner_TOTAL, f->corners);
@@ -264,7 +264,7 @@ _AFXINL void AfxEmboxFrustum(afxBox* aabb, afxFrustum const* f)
 
 _AFXINL void AfxMakeFrustum(afxFrustum* f, afxM4d const pv, afxM4d const ipv)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(f);
     AFX_ASSERT(pv);
 

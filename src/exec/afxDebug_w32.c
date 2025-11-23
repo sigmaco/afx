@@ -693,6 +693,12 @@ _AFXINL afxResult _AfxDbgDetach(void)
 
 void sigHandler(int s)
 {
+    if (debugger.dump)
+    {
+        //fputs(msg, debugger.dump);
+        fflush(debugger.dump);
+    }
+
     switch (s)
     {
     case SIGTERM:
@@ -733,7 +739,7 @@ void sigHandler(int s)
 _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
 {
     (void)file;
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     
     AfxBeep(0, 0);
 
@@ -1020,7 +1026,7 @@ _AFXINL afxResult _AfxDbgAttach(afxChar const* file)
 
 _AFXINL void AfxCatchError_(afxError err_, afxHere const hint)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(err_);
     AFX_ASSERT(hint);
 
@@ -1033,7 +1039,7 @@ _AFXINL void AfxCatchError_(afxError err_, afxHere const hint)
 
 _AFX void AfxRaiseException(afxError errCode, afxHere const hint)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(errCode);
     AFX_ASSERT(hint);
 

@@ -28,7 +28,7 @@
 #define _AMX_TRACK_C
 #define _AMX_AUDIO_C
 #define _AMX_AUDIO_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 /*
     Audio Element	Role in Pipeline	                Graphics Analogy
@@ -51,7 +51,7 @@ AFX_DEFINE_STRUCT(_amxPlaying)
 
 _AMX _amxCmdBatch* _AmxGetCmdBatch(afxMixContext mix, afxUnit idx)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     _amxCmdBatch* batch = NIL;
     afxBool valid = AfxGetPoolUnit(&mix->batches, idx, (void**)&batch);
@@ -62,7 +62,7 @@ _AMX _amxCmdBatch* _AmxGetCmdBatch(afxMixContext mix, afxUnit idx)
 
 _AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdId* cmdId, _amxCmd** ppCmd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     AFX_ASSERT(siz >= sizeof(_amxCmdHdr));
 
@@ -82,28 +82,28 @@ _AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdI
 
 _AMX amxMixState AfxGetMixerState(afxMixContext mix)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     return mix->state;
 }
 
 _AMX afxUnit AfxGetMixerPort(afxMixContext mix)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     return mix->portId;
 }
 
 _AMX afxUnit AfxGetMixerPool(afxMixContext mix)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     return mix->poolIdx;
 }
 
 _AMX afxError AmxCmdPlayAudio(afxMixContext mix, afxUnit cnt, amxBufferedAudio const maps[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
     return err;
@@ -111,7 +111,7 @@ _AMX afxError AmxCmdPlayAudio(afxMixContext mix, afxUnit cnt, amxBufferedAudio c
 
 _AMX afxError AmxExhaustMixContext(afxMixContext mix, afxBool freeMem)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
     if (mix->ddi->exhaust)
@@ -182,7 +182,7 @@ _AMX afxError AmxExhaustMixContext(afxMixContext mix, afxBool freeMem)
 
 _AMX afxError AmxRecordMixCommands(afxMixContext mix, afxBool once, afxBool deferred, afxUnit* batchId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     AFX_ASSERT(batchId);
 
@@ -223,7 +223,7 @@ _AMX afxError AmxRecordMixCommands(afxMixContext mix, afxBool once, afxBool defe
 
     afxUnit cmdbId;
     _amxCmdBatch* cmdb;
-    AFX_ITERATE_CHAIN_B2F(_amxCmdBatch, cmdb, recyc, &mix->cmdbRecycChain)
+    AFX_ITERATE_CHAIN_B2F(cmdb, recyc, &mix->cmdbRecycChain)
     {
         AFX_ASSERT(cmdb->fcc == afxFcc_MCMD);
 
@@ -309,7 +309,7 @@ _AMX afxError AmxRecordMixCommands(afxMixContext mix, afxBool once, afxBool defe
 
 _AMX afxError AmxDiscardMixCommands(afxMixContext mix, afxBool freeRes)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
     if (mix->ddi->discard)
@@ -372,7 +372,7 @@ _AMX afxError AmxDiscardMixCommands(afxMixContext mix, afxBool freeRes)
 
 _AMX afxError AmxCompileMixCommands(afxMixContext mix, afxUnit batchId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
     // If there was an error during recording, the application will be notified by an unsuccessful return 
@@ -443,7 +443,7 @@ _AMX afxError AmxCompileMixCommands(afxMixContext mix, afxUnit batchId)
 
 _AMX afxError AmxRecycleMixCommands(afxMixContext mix, afxUnit batchId, afxBool freeRes)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
     if (batchId == AFX_INVALID_INDEX)
@@ -545,7 +545,7 @@ _AMX afxError AmxRecycleMixCommands(afxMixContext mix, afxUnit batchId, afxBool 
 
 _AMX afxBool AmxDoesMixCommandsExist(afxMixContext dctx, afxUnit batchId)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &dctx);
 
     if (batchId == AFX_INVALID_INDEX)
@@ -568,7 +568,7 @@ _AMX afxBool AmxDoesMixCommandsExist(afxMixContext dctx, afxUnit batchId)
 
 _AMX afxError _AmxMixResetCb(afxMixContext mix, afxBool freeMem, afxBool permanent)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(mix->state != amxMixState_PENDING);
     mix->disposable = !permanent;
 
@@ -580,12 +580,12 @@ _AMX afxError _AmxMixResetCb(afxMixContext mix, afxBool freeMem, afxBool permane
 
 _AMX afxError _AmxMixEndCb(afxMixContext mix)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
     return err;
 }
 
-_amxMctxDdi const _AMX_MCTX_DDI =
+_amxDdiMctx const _AMX_MCTX_DDI =
 {
     .compose = NIL,
     .compile = NIL,
@@ -596,7 +596,7 @@ _amxMctxDdi const _AMX_MCTX_DDI =
 
 _AMX afxError _AmxMixDtorCb(afxMixContext mix)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
     while (AfxLoadAtom32(&mix->submCnt))
@@ -606,7 +606,7 @@ _AMX afxError _AmxMixDtorCb(afxMixContext mix)
 
     AmxExhaustMixContext(mix, TRUE);
 
-    AfxDismantleFutex(&mix->cmdbReqLock);
+    AfxCleanUpFutex(&mix->cmdbReqLock);
     AfxMakeChain(&mix->cmdbRecycChain, mix);
 
     AfxDismantleArena(&mix->cmdArena);
@@ -617,7 +617,7 @@ _AMX afxError _AmxMixDtorCb(afxMixContext mix)
 
 _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 
     afxMixSystem msys = args[0];
@@ -646,7 +646,7 @@ _AMX afxError _AmxMixCtorCb(afxMixContext mix, void** args, afxUnit invokeNo)
     mix->routing = NIL;
 
     mix->cmdbLockedForReq = FALSE;
-    AfxDeployFutex(&mix->cmdbReqLock);
+    AfxSetUpFutex(&mix->cmdbReqLock);
     AfxMakeChain(&mix->cmdbRecycChain, mix);
 
     AfxMakeArena(&mix->cmdArena, NIL, AfxHere());
@@ -694,7 +694,7 @@ _AMX afxClassConfig const _AMX_MIX_CLASS_CONFIG =
 
 _AMX afxError AmxAcquireMixContext(afxMixSystem msys, afxMixConfig const* cfg, afxMixContext* mixer)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(mixer);
     AFX_ASSERT(cfg);
@@ -717,7 +717,7 @@ _AMX afxError AmxAcquireMixContext(afxMixSystem msys, afxMixConfig const* cfg, a
 
 _AMX afxError AmxExecuteMixCommands(afxMixContext mix, afxUnit cnt, amxSubmission const subms[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     // mctx must be a valid afxMixSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
 

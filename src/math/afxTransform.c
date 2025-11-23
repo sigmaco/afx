@@ -45,7 +45,7 @@ _AFXINL afxReal AfxDetTransform(afxTransform const* t)
 
 _AFXINL void AfxCopyTransform(afxTransform *t, afxTransform const* in)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(in);
     t->flags = in->flags;
@@ -56,21 +56,21 @@ _AFXINL void AfxCopyTransform(afxTransform *t, afxTransform const* in)
 
 _AFXINL void AfxResetTransform(afxTransform* t)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AfxCopyTransform(t, &AFX_TRANSFORM_IDENTITY);
 }
 
 _AFXINL void AfxZeroTransform(afxTransform* t)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AfxCopyTransform(t, &AFX_TRANSFORM_ZERO);
 }
 
 _AFXINL void AfxSetTransform(afxTransform* t, afxV3d const position, afxQuat const orientation, afxM3d const scaleShear, afxBool check)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(orientation);
     AFX_ASSERT(scaleShear);
@@ -94,7 +94,7 @@ _AFXINL void AfxSetTransform(afxTransform* t, afxV3d const position, afxQuat con
 
 _AFXINL void AfxMakeRigidTransform(afxTransform* t, afxV3d const pos, afxQuat const orient, afxBool check)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
 
     if (!(pos && orient))
     {
@@ -126,7 +126,7 @@ _AFXINL void AfxMakeRigidTransform(afxTransform* t, afxV3d const pos, afxQuat co
 
 _AFXINL void AfxMultiplyTransform(afxTransform *t, afxTransform const* a, afxTransform const* b)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
@@ -178,7 +178,7 @@ _AFXINL void AfxPostMultiplyTransform(afxTransform* t, afxTransform const* post)
 
 _AFXINL void AfxMixTransform(afxTransform *t, afxTransform const* a, afxTransform const* b, afxReal time)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(a);
     AFX_ASSERT(b);
@@ -208,7 +208,7 @@ _AFXINL void AfxMixTransform(afxTransform *t, afxTransform const* a, afxTransfor
 
 _AFXINL void AfxInvertTransform(afxTransform const* in, afxTransform* t)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(in);
 
@@ -273,7 +273,7 @@ _AFXINL void AfxClipTransformDofs(afxTransform *t, afxFlags allowedDOFs)
 {
     // Should be compatible with void ClipTransformDOFs(transform *Result, unsigned int AllowedDOFs)
 
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(allowedDOFs);
 
@@ -305,7 +305,7 @@ _AFX void AfxComputeCompositeTransformM4d(afxTransform const* t, afxM4d m)
 {
     // Should be compatible with void BuildCompositeTransform4x4
 
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(m);
 
@@ -333,7 +333,7 @@ _AFX void AfxComputeCompositeTransformM4dc(afxTransform const* t, afxM4r m)
 {
     // Should be compatible with void BuildCompositeTransform4x3
 
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(m);
 
@@ -358,7 +358,7 @@ _AFX void AfxComputeCompositeTransformM4dc(afxTransform const* t, afxM4r m)
 
 _AFXINL void AfxTransformArrayedAtv3d(afxTransform const* t, afxUnit cnt, afxV3d const in[], afxV3d out[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(cnt);
     AFX_ASSERT(in);
@@ -373,7 +373,7 @@ _AFXINL void AfxTransformArrayedAtv3d(afxTransform const* t, afxUnit cnt, afxV3d
 
 _AFXINL void AfxTransformArrayedLtv3d(afxTransform const* t, afxUnit cnt, afxV3d const in[], afxV3d out[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(cnt);
     AFX_ASSERT(in);
@@ -387,7 +387,7 @@ _AFXINL void AfxTransformArrayedLtv3d(afxTransform const* t, afxUnit cnt, afxV3d
 
 _AFXINL void AfxTransformArrayedLtv3dTransposed(afxTransform const* t, afxUnit cnt, afxV3d const in[], afxV3d out[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(t);
     AFX_ASSERT(cnt);
     AFX_ASSERT(in);
@@ -526,7 +526,7 @@ void BWPNC_Dispatch(afxTransform const* t, afxM4d const ParentWorld, afxM4d Worl
 
 _AFXINL void AfxAssimilateTransforms(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxUnit cnt, afxTransform const in[], afxTransform out[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ltm);
     AFX_ASSERT(iltm);
     AFX_ASSERT(atv);

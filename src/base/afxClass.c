@@ -40,11 +40,11 @@ _AFX afxChain* _AfxGetOrphanClasses(void)
 
 _AFX afxResult AfxExhaustChainedClasses(afxChain *provisions)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxResult cnt = 0;
 
     afxClass* cls;
-    AFX_ITERATE_CHAIN(afxClass, cls, host, provisions)
+    AFX_ITERATE_CHAIN(cls, host, provisions)
     {
         AFX_ASSERT(cls->fcc == afxFcc_CLS);
         
@@ -58,12 +58,12 @@ _AFX afxResult AfxExhaustChainedClasses(afxChain *provisions)
 
 _AFX afxResult AfxDeregisterChainedClasses(afxChain *provisions)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxResult cnt = 0;
 
 #if !0
     afxClass* cls;
-    AFX_ITERATE_CHAIN(afxClass, cls, host, provisions)
+    AFX_ITERATE_CHAIN(cls, host, provisions)
     {
         AFX_ASSERT(cls->fcc == afxFcc_CLS);
         ++cnt;
@@ -101,23 +101,61 @@ _AFX afxResult AfxDeregisterChainedClasses(afxChain *provisions)
     return cnt;
 }
 
+_AFX afxError _AfxUnlockClass(afxClass* cls, afxClassLock mode)
+{
+    afxError err = { 0 };
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
+    afxBool shared = (mode & afxClassLock_SHARED);
+    AfxUnlockFutex((void*)&cls->poolLock, shared);
+    return err;
+}
+
+_AFX afxError _AfxLockClass(afxClass* cls, afxClassLock mode)
+{
+    afxError err = { 0 };
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
+
+    afxBool shared = (mode & afxClassLock_SHARED);
+
+    if ((mode & afxClassLock_TRY))
+        AfxTryLockFutex((void*)&cls->poolLock, shared);
+    else
+        AfxLockFutex((void*)&cls->poolLock, shared);
+
+    return err;
+}
+
+_AFX afxError AfxUnlockClass(afxClass* cls, afxClassLock mode)
+{
+    afxError err = { 0 };
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
+    return _AfxUnlockClass(cls, mode);
+}
+
+_AFX afxError AfxLockClass(afxClass* cls, afxClassLock mode)
+{
+    afxError err = { 0 };
+    AFX_ASSERT(cls->fcc == afxFcc_CLS);
+    return _AfxLockClass(cls, mode);
+}
+
 _AFXINL afxArena* AfxGetClassArena(afxClass *cls)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     return &cls->arena;
 }
 
 _AFXINL afxClass* AfxGetSubclass(afxClass const *cls)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     return AfxGetLinker(&cls->subset);
 }
 
 _AFX afxUnit AfxGetSizeOfObject(afxClass const* cls, afxUnit* strictSize)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     
     if (strictSize)
@@ -130,7 +168,7 @@ _AFX afxUnit AfxGetSizeOfObject(afxClass const* cls, afxUnit* strictSize)
 
 _AFX afxUnit _AfxEnumerateObjectsUnlocked(afxClass const* cls, afxBool fromLast, afxUnit first, afxUnit cnt, afxObject objects[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxUnit rslt = 0;
 
@@ -165,7 +203,7 @@ _AFX afxUnit _AfxEnumerateObjectsUnlocked(afxClass const* cls, afxBool fromLast,
     {
         afxClass *superset;
         afxChain const *supersets = &cls->supersets;
-        AFX_ITERATE_CHAIN_B2F(afxClass, superset, subset, supersets)
+        AFX_ITERATE_CHAIN_B2F(superset, subset, supersets)
         {
             AFX_ASSERT(superset->fcc == afxFcc_CLS);
 
@@ -211,7 +249,7 @@ _AFX afxUnit _AfxEnumerateObjectsUnlocked(afxClass const* cls, afxBool fromLast,
 
 _AFX afxUnit _AfxEvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, afxBool(*flt)(afxObject, void*), void* fdd, afxUnit first, afxUnit cnt, afxObject objects[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxUnit rslt = 0;
 
@@ -251,7 +289,7 @@ _AFX afxUnit _AfxEvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, afx
     {
         afxClass *superset;
         afxChain const *supersets = &cls->supersets;
-        AFX_ITERATE_CHAIN_B2F(afxClass, superset, subset, supersets)
+        AFX_ITERATE_CHAIN_B2F(superset, subset, supersets)
         {
             AFX_ASSERT(superset->fcc == afxFcc_CLS);
 
@@ -297,7 +335,7 @@ _AFX afxUnit _AfxEvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, afx
 
 _AFX afxUnit AfxEnumerateObjects(afxClass const* cls, afxUnit first, afxUnit cnt, afxObject objects[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(!cnt || objects);
     afxUnit instCnt = 0;
@@ -305,7 +343,7 @@ _AFX afxUnit AfxEnumerateObjects(afxClass const* cls, afxUnit first, afxUnit cnt
     if (!objects)
     {
         afxChain const *supersets = &cls->supersets;
-        AFX_ITERATE_CHAIN_B2F(afxClass, cls, subset, supersets)
+        AFX_ITERATE_CHAIN_B2F(cls, subset, supersets)
         {
             AFX_ASSERT(cls->fcc == afxFcc_CLS);
             instCnt += cls->instCnt;
@@ -313,32 +351,32 @@ _AFX afxUnit AfxEnumerateObjects(afxClass const* cls, afxUnit first, afxUnit cnt
     }
     else if (cls->instCnt)
     {
-        AfxLockFutex((void*)&cls->poolLock, TRUE);
+        AfxLockClass(cls, afxClassLock_SHARED);
         instCnt = _AfxEnumerateObjectsUnlocked(cls, FALSE, first, cnt ? cnt : cls->instCnt, objects);
-        AfxUnlockFutex((void*)&cls->poolLock, TRUE);
+        AfxUnlockClass(cls, afxClassLock_SHARED);
     }
     return instCnt;
 }
 
 _AFX afxUnit AfxEvokeObjects(afxClass const* cls, afxBool(*f)(afxObject, void*), void* udd, afxUnit first, afxUnit cnt, afxObject objects[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     //AFX_ASSERT(cnt);
     afxUnit rslt = 0;
 
     if (cls->instCnt)
     {
-        AfxLockFutex((void*)&cls->poolLock, TRUE);
+        AfxLockClass(cls, afxClassLock_SHARED);
         rslt = _AfxEvokeObjectsUnlocked(cls, FALSE, f, udd, first, cnt ? cnt : cls->instCnt, objects);
-        AfxUnlockFutex((void*)&cls->poolLock, TRUE);
+        AfxUnlockClass(cls, afxClassLock_SHARED);
     }
     return rslt;
 }
 
 _AFX afxUnit _AfxInvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, afxBool(*f)(afxObject,void*), void* udd, afxBool(*f2)(afxObject,void*), void* udd2, afxUnit first, afxUnit cnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(f2);
     afxUnit rslt = 0;
@@ -380,9 +418,9 @@ _AFX afxUnit _AfxInvokeObjectsUnlocked(afxClass const* cls, afxBool fromLast, af
     return rslt;
 }
 
-_AFX afxUnit AfxInvokeClassInstances2(afxClass const* cls, afxBool(*f)(afxObject, void*), void* udd, afxBool(*f2)(afxObject, void*), void* udd2, afxUnit first, afxUnit cnt)
+_AFX afxUnit AfxInvokeObjects2(afxClass const* cls, afxBool(*f)(afxObject, void*), void* udd, afxBool(*f2)(afxObject, void*), void* udd2, afxUnit first, afxUnit cnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     //AFX_ASSERT(cnt);
     AFX_ASSERT(f);
@@ -391,16 +429,16 @@ _AFX afxUnit AfxInvokeClassInstances2(afxClass const* cls, afxBool(*f)(afxObject
 
     if (cls->instCnt)
     {
-        AfxLockFutex((void*)&cls->poolLock, TRUE);
+        AfxLockClass(cls, afxClassLock_SHARED);
         rslt = _AfxInvokeObjectsUnlocked(cls, FALSE, f, udd, f2, udd2, first, cnt ? cnt : cls->instCnt);
-        AfxUnlockFutex((void*)&cls->poolLock, TRUE);
+        AfxUnlockClass(cls, afxClassLock_SHARED);
     }
     return rslt;
 }
 
 _AFX afxUnit AfxInvokeObjects(afxClass const* cls, afxBool(*f)(afxObject obj, void *udd), void *udd, afxUnit first, afxUnit cnt)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     //AFX_ASSERT(cnt);
     AFX_ASSERT(f);
@@ -408,22 +446,22 @@ _AFX afxUnit AfxInvokeObjects(afxClass const* cls, afxBool(*f)(afxObject obj, vo
     
     if (cls->instCnt)
     {
-        AfxLockFutex((void*)&cls->poolLock, TRUE);
+        AfxLockClass(cls, afxClassLock_SHARED);
         rslt = _AfxInvokeObjectsUnlocked(cls, FALSE, NIL, NIL, f, udd, first, cnt ? cnt : cls->instCnt);
-        AfxUnlockFutex((void*)&cls->poolLock, TRUE);
+        AfxUnlockClass(cls, afxClassLock_SHARED);
     }
     return rslt;
 }
 
 _AFXINL afxBool AfxFindClassPluginSegment(afxClass const* cls, afxUnit extId, afxUnit* off, afxUnit* siz)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxBool rslt = FALSE;
 
     afxClassExtension* ext;
     afxChain const* extensions = &cls->extensions;
-    AFX_ITERATE_CHAIN_B2F(afxClassExtension, ext, cls, extensions)
+    AFX_ITERATE_CHAIN_B2F(ext, cls, extensions)
     {
         if (ext->extId == extId)
         {
@@ -438,7 +476,7 @@ _AFXINL afxBool AfxFindClassPluginSegment(afxClass const* cls, afxUnit extId, af
 
 _AFXINL void* AfxGetObjectExtra(afxObject obj, afxUnit pluginId)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     afxObjectBase* hdr = GET_OBJ_HDR(obj);
     AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     afxClass* cls = hdr->cls;
@@ -456,7 +494,7 @@ _AFXINL void* AfxGetObjectExtra(afxObject obj, afxUnit pluginId)
 
 _AFXINL void* AfxGetObjectIdd(afxObject obj, afxUnit offset)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     afxObjectBase const* hdr = GET_OBJ_HDR(obj);
     AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     afxClass const* cls = hdr->cls;
@@ -466,7 +504,7 @@ _AFXINL void* AfxGetObjectIdd(afxObject obj, afxUnit offset)
 
 _AFX afxError _AfxDeallocateObjects(afxClass *cls, afxUnit cnt, afxObject objects[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(objects);
     AFX_ASSERT(cnt);
@@ -490,7 +528,7 @@ _AFX afxError _AfxDeallocateObjects(afxClass *cls, afxUnit cnt, afxObject object
 
 _AFX afxError _AfxAllocateObjects(afxClass *cls, afxUnit cnt, afxObject objects[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(cnt);
 
@@ -526,7 +564,7 @@ _AFX afxError _AfxAllocateObjects(afxClass *cls, afxUnit cnt, afxObject objects[
 
 _AFX afxError _AfxAllocateClassInstancesAt(afxClass *cls, afxUnit subset, afxUnit cnt, afxObject objects[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(cnt);
 
@@ -569,7 +607,7 @@ _AFX afxError _AfxAllocateClassInstancesAt(afxClass *cls, afxUnit subset, afxUni
 
 _AFX afxError _AfxAllocateClassInstancesAt2(afxClass *cls, afxUnit first, afxUnit cnt, afxUnit const idMap[], afxObject objects[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(cnt);
 
@@ -615,7 +653,7 @@ _AFX afxError _AfxAllocateClassInstancesAt2(afxClass *cls, afxUnit first, afxUni
 
 _AFX afxError _AfxClsObjDtor(afxClass *cls, afxObject obj)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxClass* subset = AfxGetSubclass(cls);
 
@@ -640,7 +678,7 @@ _AFX afxError _AfxClsObjDtor(afxClass *cls, afxObject obj)
 
 _AFX afxError _AfxClsObjCtor(afxClass *cls, afxObject obj, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxClass* subset = AfxGetSubclass(cls);
 
@@ -666,7 +704,7 @@ _AFX afxError _AfxClsObjCtor(afxClass *cls, afxObject obj, void** args, afxUnit 
 
 _AFX afxError _AfxCleanUpObjects(afxClass *cls, afxUnit cnt, afxObject objects[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(objects);
     AFX_ASSERT(cnt);
@@ -734,7 +772,7 @@ _AFX afxError _AfxCleanUpObjects(afxClass *cls, afxUnit cnt, afxObject objects[]
 
         afxClassExtension* ext;
         afxChain const* extensions = &cls->extensions;
-        AFX_ITERATE_CHAIN(afxClassExtension, ext, cls, extensions)
+        AFX_ITERATE_CHAIN(ext, cls, extensions)
         {
             if (ext->dtorCb && ext->dtorCb(obj, AfxGetObjectExtra(obj, ext->extId), ext->objSiz))
                 AfxThrowError();
@@ -755,7 +793,7 @@ _AFX afxError _AfxCleanUpObjects(afxClass *cls, afxUnit cnt, afxObject objects[]
 
 _AFX afxError _AfxSetUpObjects(afxClass *cls, afxUnit cnt, afxObject objects[], void** udd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(cnt);
     AFX_ASSERT(objects);
@@ -819,7 +857,7 @@ _AFX afxError _AfxSetUpObjects(afxClass *cls, afxUnit cnt, afxObject objects[], 
         {
             afxClassExtension* ext;
             afxChain const* extensions = &cls->extensions;
-            AFX_ITERATE_CHAIN_B2F(afxClassExtension, ext, cls, extensions)
+            AFX_ITERATE_CHAIN_B2F(ext, cls, extensions)
             {
                 if (ext->ctorCb && ext->ctorCb(objects[i], AfxGetObjectExtra(objects[i], ext->extId), ext->objSiz))
                     AfxThrowError();
@@ -851,7 +889,7 @@ _AFX afxError _AfxSetUpObjects(afxClass *cls, afxUnit cnt, afxObject objects[], 
 
 _AFX afxUnit AfxExhaustClass(afxClass *cls)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     afxUnit rslt = 0;
 
@@ -869,7 +907,7 @@ _AFX afxUnit AfxExhaustClass(afxClass *cls)
 
 _AFX afxError AfxDismountClass(afxClass *cls)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
     if (!cls->fcc)
@@ -904,10 +942,10 @@ _AFX afxError AfxDismountClass(afxClass *cls)
     if (cls->fixedSiz) // only if dynamically allocated
     {
         AFX_ASSERT(0 == cls->pool.totalUsedCnt);        
-        AfxLockFutex(&cls->poolLock, FALSE);
+        AfxLockClass(cls, NIL);
         AfxExhaustPool(&cls->pool, FALSE);
-        AfxUnlockFutex(&cls->poolLock, FALSE);
-        AfxDismantleFutex(&cls->poolLock);
+        AfxUnlockClass(cls, NIL);
+        AfxCleanUpFutex(&cls->poolLock);
 
         if (cls->mmu)
             AfxDisposeObjects(1, (void*[]) { cls->mmu });
@@ -917,7 +955,7 @@ _AFX afxError AfxDismountClass(afxClass *cls)
 
     afxClassExtension* ext;
     afxChain const* extensions = &cls->extensions;
-    AFX_ITERATE_CHAIN_B2F(afxClassExtension, ext, cls, extensions)
+    AFX_ITERATE_CHAIN_B2F(ext, cls, extensions)
     {
         AfxPopLink(&ext->cls);
     }
@@ -945,14 +983,14 @@ _AFX afxError AfxDismountClass(afxClass *cls)
 
 _AFXINL afxError _AfxDummyObjDtor(afxObject obj)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     (void)obj;
     return err;
 }
 
 _AFXINL afxError _AfxDummyObjCtor(afxObject obj, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     (void)obj;
     (void)args;
     return err;
@@ -960,7 +998,7 @@ _AFXINL afxError _AfxDummyObjCtor(afxObject obj, void** args, afxUnit invokeNo)
 
 _AFX afxError AfxMountClass(afxClass* cls, afxClass* subset, afxChain* host, afxClassConfig const* cfg)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls);
     AFX_ASSERT(cfg);
 
@@ -995,7 +1033,7 @@ _AFX afxError AfxMountClass(afxClass* cls, afxClass* subset, afxChain* host, afx
         }
     }
 
-    //AfxDeployFutex(&cls->slock);
+    //AfxSetUpFutex(&cls->slock);
     //AfxLockFutex(&cls->slock);
 
     cls->fcc = afxFcc_CLS;
@@ -1036,7 +1074,7 @@ _AFX afxError AfxMountClass(afxClass* cls, afxClass* subset, afxChain* host, afx
 
         afxUnit unitSizAligned = AFX_ALIGN_SIZE(cls->fixedSiz + OBJ_HDR_SIZ, AFX_POOL_ALIGNMENT);
 
-        AfxDeployFutex(&cls->poolLock);
+        AfxSetUpFutex(&cls->poolLock);
         AfxLockFutex(&cls->poolLock, FALSE);
         AfxSetUpPool(&cls->pool, cls->fixedSiz ? unitSizAligned : 0, AFX_MAX(1, cls->unitsPerPage), AFX_POOL_ALIGNMENT);
         AfxUnlockFutex(&cls->poolLock, FALSE);
@@ -1068,7 +1106,7 @@ _AFX afxError AfxMountClass(afxClass* cls, afxClass* subset, afxChain* host, afx
 
 _AFX afxUnit AfxGetObjectId(afxObject obj)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     afxObjectBase* hdr = GET_OBJ_HDR(obj);
     AFX_ASSERT(hdr->fcc == afxFcc_OBJ);
     
@@ -1082,12 +1120,12 @@ _AFX afxUnit AfxGetObjectId(afxObject obj)
 
 _AFX afxError AfxAcquireObjects(afxClass *cls, afxUnit cnt, afxObject objects[], void const* udd[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(cnt);
     AFX_ASSERT(objects);
 
-    AfxLockFutex(&cls->poolLock, FALSE);
+    AfxLockClass(cls, NIL);
 
     afxPool* pool = &cls->pool;
 
@@ -1146,19 +1184,19 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxUnit cnt, afxObject objects[],
         }
     }
     
-    AfxUnlockFutex(&cls->poolLock, FALSE);
+    AfxUnlockClass(cls, NIL);
 
     return err;
 }
 
 _AFX afxError AfxAcquireObjects2(afxClass *cls, afxUnit first, afxUnit cnt, afxUnit const IdMap[], afxObject objects[], void const* udd[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(cnt);
     AFX_ASSERT(objects);
 
-    AfxLockFutex(&cls->poolLock, FALSE);
+    AfxLockClass(cls, NIL);
 
     afxPool* pool = &cls->pool;
 
@@ -1200,14 +1238,14 @@ _AFX afxError AfxAcquireObjects2(afxClass *cls, afxUnit first, afxUnit cnt, afxU
         }
     }
 
-    AfxUnlockFutex(&cls->poolLock, FALSE);
+    AfxUnlockClass(cls, NIL);
 
     return err;
 }
 
 _AFX afxError AfxReacquireObjects(afxUnit cnt, afxObject objects[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(objects);
     AFX_ASSERT(cnt);
 
@@ -1233,7 +1271,7 @@ _AFX afxError AfxReacquireObjects(afxUnit cnt, afxObject objects[])
 
 _AFX afxBool AfxDisposeObjects(afxUnit cnt, afxObject objects[])
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(objects);
     AFX_ASSERT(cnt);
     afxBool rslt = 0;
@@ -1265,7 +1303,7 @@ _AFX afxBool AfxDisposeObjects(afxUnit cnt, afxObject objects[])
                 AfxReportComment("Disposed &%p#%u,%.4s", obj, hdr->instIdx, &hdr->cls->objFcc);
             }
 
-            AfxLockFutex(&cls->poolLock, FALSE);
+            AfxLockClass(cls, NIL);
 
 #ifdef _AFX_DEBUG
             // Debugging
@@ -1284,7 +1322,7 @@ _AFX afxBool AfxDisposeObjects(afxUnit cnt, afxObject objects[])
             AFX_ASSERT(!poolUsedCnt || (cls->pool.totalUsedCnt == (poolUsedCnt - 1)));
 #endif
 
-            AfxUnlockFutex(&cls->poolLock, FALSE);
+            AfxUnlockClass(cls, NIL);
 
             ++rslt;
         }
@@ -1295,7 +1333,7 @@ _AFX afxBool AfxDisposeObjects(afxUnit cnt, afxObject objects[])
 
 _AFX afxUnit _AfxAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fcc)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(objects);
     AFX_ASSERT(cnt);
     afxUnit exceptions = 0;
@@ -1354,7 +1392,7 @@ _AFX afxUnit _AfxAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fc
 
 _AFX afxUnit _AfxTryAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fcc)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(objects);
     AFX_ASSERT(cnt);
     afxUnit exceptions = 0;
@@ -1395,14 +1433,14 @@ _AFX afxUnit _AfxTryAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc
 
 _AFX afxResult AfxWaitForObject(afxTime timeout, afxObject obj)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(obj);
     return 0;
 }
 
 _AFX afxError AfxInstallClassExtension(afxClass* cls, afxClassExtension* const ext)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
 
     // Make sure that the library has not been opened yet.
@@ -1446,14 +1484,14 @@ _AFX afxError AfxInstallClassExtension(afxClass* cls, afxClassExtension* const e
 
 afxResult _AfxObjAggrValidation(afxClass* cls, afxObject obj)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(obj);
     afxResult invalid = 0;
 
     afxClassExtension* ext;
     afxChain const* extensions = &cls->extensions;
-    AFX_ITERATE_CHAIN_B2F(afxClassExtension, ext, cls, extensions)
+    AFX_ITERATE_CHAIN_B2F(ext, cls, extensions)
     {
         afxUnit32 frontOfMemOff = ext->objOff - 4;
         afxUnit32 backOfMemOff = (ext->objOff + ext->objSiz + 3) & ~3;
@@ -1470,7 +1508,7 @@ afxResult _AfxObjAggrValidation(afxClass* cls, afxObject obj)
 
 afxError _AfxObjAggrCtor(afxClass* cls, afxObject obj)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(obj);
 
@@ -1482,7 +1520,7 @@ afxError _AfxObjAggrCtor(afxClass* cls, afxObject obj)
 
     afxClassExtension* ext;
     afxChain const* extensions = &cls->extensions;
-    AFX_ITERATE_CHAIN_B2F(afxClassExtension, ext, cls, extensions)
+    AFX_ITERATE_CHAIN_B2F(ext, cls, extensions)
     {
         if (ext->ctorCb(obj, AfxGetObjectExtra(obj, ext->extId), ext->objSiz))
         {
@@ -1510,7 +1548,7 @@ afxError _AfxObjAggrCtor(afxClass* cls, afxObject obj)
 
 afxError _AfxObjAggrDtor(afxClass* cls, afxObject obj)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(obj);
 
@@ -1526,7 +1564,7 @@ afxError _AfxObjAggrDtor(afxClass* cls, afxObject obj)
 
     afxClassExtension* ext;
     afxChain const* extensions = &cls->extensions;
-    AFX_ITERATE_CHAIN(afxClassExtension, ext, cls, extensions)
+    AFX_ITERATE_CHAIN(ext, cls, extensions)
     {
         if (ext->dtorCb && ext->dtorCb(obj, AfxGetObjectExtra(obj, ext->extId), ext->objSiz))
             AfxThrowError();
@@ -1536,7 +1574,7 @@ afxError _AfxObjAggrDtor(afxClass* cls, afxObject obj)
 
 afxError _AfxObjAggrCpy(afxClass* cls, void* dst, void const* src)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(cls->fcc == afxFcc_CLS);
     AFX_ASSERT(dst);
     AFX_ASSERT(src);
@@ -1559,7 +1597,7 @@ afxError _AfxObjAggrCpy(afxClass* cls, void* dst, void const* src)
 
     afxClassExtension* ext;
     afxChain const* extensions = &cls->extensions;
-    AFX_ITERATE_CHAIN_B2F(afxClassExtension, ext, cls, extensions)
+    AFX_ITERATE_CHAIN_B2F(ext, cls, extensions)
     {
         if (ext->cpyCb(dst, (void*)src, AfxGetObjectExtra(dst, ext->extId), ext->objSiz))
             AfxThrowError();

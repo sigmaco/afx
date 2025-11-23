@@ -20,11 +20,11 @@
 #define _AMX_SOUND_C
 #define _AMX_MIX_C
 //#define _AMX_MIX_SYSTEM_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 _AMX void AmxTransformSound(amxSound snd, afxTransform const* t)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
     AfxCopyTransform(&snd->t, t);
 
@@ -33,7 +33,7 @@ _AMX void AmxTransformSound(amxSound snd, afxTransform const* t)
 
 _AMX afxUnit AmxAccumulateSoundSamples(amxSound snd, afxUnit sampleCnt, afxUnit chCnt, afxUnit freq, afxUnit bufCap, afxReal output[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
     
     amxAudio aud = snd->audio;
@@ -55,7 +55,7 @@ _AMX afxUnit AmxAccumulateSoundSamples(amxSound snd, afxUnit sampleCnt, afxUnit 
 
 _AMX afxError AmxRewindSound(amxSound snd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
 
     snd->offset = 0;
@@ -65,7 +65,7 @@ _AMX afxError AmxRewindSound(amxSound snd)
 
 _AMX afxBool AmxHasSoundEnded(amxSound snd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
 
     if (!(snd->flags & 0x1) && snd->offset >= snd->audio->sampCnt)
@@ -77,7 +77,7 @@ _AMX afxBool AmxHasSoundEnded(amxSound snd)
 
 _AMX afxError _AmxSndDtorCb(amxSound snd)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
 
     amxSoundscape snds = AfxGetHost(snd);

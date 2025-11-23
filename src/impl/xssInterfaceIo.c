@@ -460,11 +460,11 @@ void _XsCamGet(xssVm vm)
 void _XsCamAcquire(xssVm vm)
 {
     afxUri uri;
-    arxRenderContext rctx = XssPullInstance(vm, 1);
+    arxScenario scio = XssPullInstance(vm, 1);
     afxV3d v;
     XssPullReal3(vm, 2, v);
     arxCamera cam;
-    ArxAcquireCameras(rctx, 1, &cam);
+    ArxAcquireCameras(scio, 1, &cam);
     ArxTranslateCamera(cam, v);
     XssPushInstance(vm, 0, cam);
 }

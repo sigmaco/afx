@@ -22,7 +22,7 @@
 
 _AFX afxError AfxDeployRing(afxRing* ring, afxUnit unitSiz, afxUnit32 cap)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     ring->cap = cap;
     ring->readIdx = 0;
     ring->writeIdx = 0;
@@ -68,7 +68,7 @@ _AFX afxUnit32 AfxGetRingNbWritableItems(afxRing* ring)
 
 _AFX void AfxIncrementRingWriteIndex(afxRing* ring, afxUnit32 itemCnt)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(AfxGetRingNbWritableItems(ring) >= itemCnt);
     ring->writeIdx = (ring->writeIdx + itemCnt) % ring->cap;
     AfxAddAtom32(&ring->readableItemCnt, itemCnt);
@@ -89,7 +89,7 @@ _AFX void const* AfxGetRingReadPtr(afxRing* ring)
 // Peek at any item between the read and write pointer without advancing the read pointer.
 _AFX void const* AfxPeekRing(afxRing* ring, afxUnit32 offset)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT((afxUnit32)ring->readableItemCnt > offset);
     afxUnit32 readIdx = (ring->readIdx + offset) % ring->cap;
     return &ring->data[readIdx * ring->unitSiz];
@@ -97,7 +97,7 @@ _AFX void const* AfxPeekRing(afxRing* ring, afxUnit32 offset)
 
 _AFX void AfxIncrementRingReadIndex(afxRing* ring, afxUnit32 itemCnt)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT((afxUnit32)ring->readableItemCnt >= ring->cap);
     ring->readIdx = (ring->readIdx + itemCnt) % ring->cap;
     AfxSubAtom32(&ring->readableItemCnt, itemCnt);

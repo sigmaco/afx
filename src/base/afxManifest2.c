@@ -86,7 +86,7 @@ _AFXINL afxUnit AfxCountInitializationRecords(afxManifest const* ini, afxUnit se
 
 _AFX afxBool AfxFindInitializationSection(afxManifest const* ini, afxString const* name, afxUnit* secIdx)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ini);
     AFX_ASSERT(name);
     afxBool rslt = FALSE;
@@ -106,7 +106,7 @@ _AFX afxBool AfxFindInitializationSection(afxManifest const* ini, afxString cons
 
 _AFX afxBool AfxFindInitializationRecord(afxManifest const* ini, afxUnit secIdx, afxString const* name, afxUnit* recIdx)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ini);
     AFX_ASSERT(name);
     afxBool rslt = FALSE;
@@ -128,7 +128,7 @@ _AFX afxBool AfxFindInitializationRecord(afxManifest const* ini, afxUnit secIdx,
 
 _AFX afxBool AfxGetManifestString(afxManifest const* ini, afxUnit secIdx, afxUnit recIdx, afxString* value)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ini);
     AFX_ASSERT_RANGE(ini->pageCnt, secIdx, 1);
     AFX_ASSERT_RANGE(ini->pages[secIdx].keyCnt, recIdx, 1);
@@ -143,7 +143,7 @@ _AFX afxBool AfxGetManifestString(afxManifest const* ini, afxUnit secIdx, afxUni
 
 _AFX afxBool AfxGetManifestUri(afxManifest const* ini, afxUnit secIdx, afxUnit recIdx, afxUri* uri)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ini);
     AFX_ASSERT_RANGE(ini->pageCnt, secIdx, 1);
     AFX_ASSERT_RANGE(ini->pages[secIdx].keyCnt, recIdx, 1);
@@ -161,7 +161,7 @@ _AFX afxBool AfxGetManifestUri(afxManifest const* ini, afxUnit secIdx, afxUnit r
 
 _AFX afxBool AfxGetManifestNat(afxManifest const* ini, afxUnit secIdx, afxUnit recIdx, afxUnit* value)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ini);
     AFX_ASSERT_RANGE(ini->pageCnt, secIdx, 1);
     AFX_ASSERT_RANGE(ini->pages[secIdx].keyCnt, recIdx, 1);
@@ -211,7 +211,7 @@ _AFXINL _afxIniRecord* _AfxIniGetRecord(afxManifest const* ini, afxString const*
 
 _AFX afxError AfxDeployManifest(afxManifest* ini)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     ini->pageCnt = 0;
     
     if (AfxAllocate(8 * sizeof(ini->pages[0]), 0, AfxHere(), (void**)&ini->pages))
@@ -246,7 +246,7 @@ _AFX void AfxDismantleManifest(afxManifest* ini)
 
 _AFX afxError AfxLoadInitializationFile(afxManifest* ini, afxUri const* uri)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     FILE* f;
 
     if (!(f = fopen(AfxGetUriData(uri, 0), "r"))) AfxThrowError();
@@ -379,7 +379,7 @@ _AFX afxError AfxLoadInitializationFile(afxManifest* ini, afxUri const* uri)
 
 _AFX afxError AfxStoreInitializationFile(afxManifest const* ini, afxUri const* uri)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     FILE* f;
     
     if (!(f = fopen(AfxGetUriData(uri, 0), "w+"))) AfxThrowError();
@@ -411,7 +411,7 @@ _AFX afxError AfxStoreInitializationFile(afxManifest const* ini, afxUri const* u
 
 _AFX afxError AfxSetInitializationString(afxManifest* ini, afxString const* sec, afxString const* key, afxString* value)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     _afxIniPage* pag;
 
     if ((!(pag = _AfxIniFindPage(ini, sec))) && (!(pag = _AfxIniCreatePage(ini, sec)))) AfxThrowError();

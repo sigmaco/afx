@@ -28,7 +28,7 @@
 
 #include "qwadro/coll/afxFrustum.h"
 #include "qwadro/sim/arxEngine.h"
-#include "qwadro/render/arxBuffer.h"
+#include "qwadro/scene/arxBuffer.h"
 #include "qwadro/sim/arxSampleContext.h"
 
 AFX_DEFINE_STRUCT(arxSimulationConfig)
@@ -42,24 +42,15 @@ AFX_DEFINE_STRUCT(arxSimulationConfig)
     afxString const*    extensions;
     void*               udd;
 
-    afxBox              extent;
-
-    afxV3d              right;
-    afxV3d              up;
-    afxV3d              back;
-    afxV3d              origin;
-    afxReal             unitsPerMeter;
-    afxReal             allowedLodErrFadingFactor;
-
     afxDrawSystem       dsys;
-    arxRenderContext        rctx;
+    arxScenario        scio;
 
 };
 
 ASX afxModule       ArxGetSimulationIcd(arxSimulation sim);
 
 ASX afxDrawSystem   ArxGetSimulationDrawSystem(arxSimulation sim);
-ASX arxRenderContext    ArxGetSimulationDrawInput(arxSimulation sim);
+ASX arxScenario    ArxGetSimulationDrawInput(arxSimulation sim);
 
 // DRAW BRIDGES AND QUEUES.
 
@@ -73,16 +64,8 @@ ASX afxError        ArxWaitForSimulation(arxSimulation sim, afxTime timeout);
 
 ASX afxError        ArxStepSimulation(arxSimulation sim);
 
-ASX afxUnit         ArxRecenterAllCapstanClocks(arxSimulation sim, afxReal dCurrentClock);
-
-ASX void            ArxQuerySimulationErrorTolerance(arxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler);
-
-ASX void            ArxComputeSimilarity(arxSimulation sim, afxReal unitsPerMeter, afxV3d const right, afxV3d const up, afxV3d const back, afxV3d const origin, afxM3d ltm, afxM3d iltm, afxV3d atv);
-
 
 ASX afxError        ArxExecuteSampleCommands(arxSimulation sim, asxSubmission* ctrl, afxUnit cnt, arxContext contexts[]);
-
-ASX afxError        ArxCullBodies(arxSimulation sim, afxFrustum const* f, afxArray* pvs);
 
 ////////////////////////////////////////////////////////////////////////////////
 

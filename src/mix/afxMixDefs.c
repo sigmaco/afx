@@ -20,7 +20,7 @@
 #define _AMX_AUDIO_C
 #define _AMX_MIX_C
 //#define _AMX_MIX_SYSTEM_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 AFX_DEFINE_STRUCT(amxListener) // Listener information.
 {
@@ -51,7 +51,7 @@ AMXINL afxReal AfxFromDecibel(afxReal dB)
 
 AMXINL void AmxResetListener(amxListener* lis)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(lis);
     lis->scalingFactor = (afxReal32)1;
     lis->spatialized = TRUE;
@@ -59,7 +59,7 @@ AMXINL void AmxResetListener(amxListener* lis)
 
 AMXINL void AmxSetRamp(amxRamp* ramp, afxReal prev, afxReal next)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ramp);
     ramp->prev = (afxReal32)prev;
     ramp->next = (afxReal32)next;
@@ -67,14 +67,14 @@ AMXINL void AmxSetRamp(amxRamp* ramp, afxReal prev, afxReal next)
 
 AMXINL void AmxResetRamp(amxRamp* ramp)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ramp);
     AmxSetRamp(ramp, 1, 1);
 }
 
 AMXINL void AmxCopyRamp(amxRamp* ramp, amxRamp const* in)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ramp);
     AFX_ASSERT(in);
     ramp->prev = in->prev;
@@ -83,7 +83,7 @@ AMXINL void AmxCopyRamp(amxRamp* ramp, amxRamp const* in)
 
 AMXINL void AmxScaleRamp(amxRamp* ramp, amxRamp const* rhs)
 {
-    afxError err = NIL;
+    afxError err = { 0 };
     AFX_ASSERT(ramp);
     AFX_ASSERT(rhs);
     ramp->prev *= rhs->prev;

@@ -129,7 +129,7 @@ void xssFreeVM(xssVm vm)
 
 xssVm xssCreateVm(LunaConfiguration const* config)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     LunaReallocateFn reallocate = defaultReallocate;
     void* userData = NULL;
@@ -176,7 +176,7 @@ xssVm xssCreateVm(LunaConfiguration const* config)
 
 afxError xssDestroyVm(xssVm vm)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
 
     ASSERT(vm->methodNames.count > 0, "VM appears to have already been freed.");
 
@@ -891,7 +891,7 @@ static Value importModule(xssVm vm, Value name)
 #else
   afxUri2048 uri;
   AfxMakeUri2048(&uri, NIL);
-  afxError err = 0;
+  afxError err = { 0 };
   ObjString* nameString = AS_STRING(name);
   //AfxMakeUri(&uri, nameString->value, 0);
   AfxFormatUri(&uri.uri, "code/%.*s.xs", nameString->length, nameString->value);

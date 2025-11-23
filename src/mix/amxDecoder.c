@@ -18,7 +18,7 @@
 
 #define _AMX_MIX_C
 #define _AMX_VIDEO_C
-#include "ddi/amxImplementation.h"
+#include "amxIcd.h"
 
 AFX_OBJECT(amxDecoder)
 {
@@ -27,7 +27,7 @@ AFX_OBJECT(amxDecoder)
 
 _AMX afxError _AmxMdecDtorCb(amxDecoder mdec)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDEC, 1, &mdec);
 
     afxMixSystem msys = AfxGetHost(mdec);
@@ -67,7 +67,7 @@ _AMX afxClassConfig const _AMX_MDEC_CLASS_CONFIG =
 
 _AMX afxError AmxAcquireDecoders(afxMixSystem msys, afxUnit cnt, amxDecoderConfig const cfgs[], amxDecoder decoders[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     AFX_ASSERT(decoders);
     AFX_ASSERT(cfgs);

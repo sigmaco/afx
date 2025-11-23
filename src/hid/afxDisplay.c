@@ -26,13 +26,13 @@
 //#define _AVX_SURFACE_C
 //#define _AVX_DRAW_CONTEXT_C
 //#define _AVX_BUFFER_C
-#include "../draw/ddi/avxImplementation.h"
+#include "../draw/avxIcd.h"
 #define _AUX_UX_C
-#include "../ux/impl/auxImplementation.h"
+#include "../ux/auxIcd.h"
 
 _AVX afxReal64 AvxFindPhysicalAspectRatio(afxUnit screenWidth, afxUnit screenHeight)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(screenWidth);
     AFX_ASSERT(screenHeight);
     afxReal64 ratio, div = (afxReal64)screenWidth / (afxReal64)screenHeight;
@@ -49,7 +49,7 @@ _AVX afxReal64 AvxFindPhysicalAspectRatio(afxUnit screenWidth, afxUnit screenHei
 
 _AVX afxError _AvxVduDtorCb(afxDisplay vdu)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VDU, 1, &vdu);
 
     _AFX_DEV_CLASS_CONFIG.dtor(&vdu->dev);
@@ -59,7 +59,7 @@ _AVX afxError _AvxVduDtorCb(afxDisplay vdu)
 
 _AVX afxError _AvxVduCtorCb(afxDisplay vdu, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_VDU, 1, &vdu);
 
     afxModule icd = AFX_CAST(afxModule, args[0]);
@@ -106,7 +106,7 @@ _AVX afxClassConfig const _AVX_VDU_CLASS_CONFIG =
 
 _AVX afxError _AvxRegisterDisplays(afxModule icd, afxUnit cnt, avxDisplayInfo const infos[], afxDisplay displays[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(displays);
     AFX_ASSERT(infos);
     AFX_ASSERT(cnt);
@@ -132,7 +132,7 @@ _AVX afxError _AvxRegisterDisplays(afxModule icd, afxUnit cnt, avxDisplayInfo co
 
 _AVX afxUnit AfxEnumerateDisplays(afxModule icd, afxUnit first, afxUnit cnt, afxDisplay displays[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(displays);
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;
@@ -146,7 +146,7 @@ _AVX afxUnit AfxEnumerateDisplays(afxModule icd, afxUnit first, afxUnit cnt, afx
 
 _AVX afxUnit AfxEnumerateDisplays2(afxUnit dIcd, afxUnit first, afxUnit cnt, afxDisplay displays[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(displays);
     AFX_ASSERT(cnt);
     afxUnit rslt = 0;

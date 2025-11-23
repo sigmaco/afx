@@ -25,7 +25,7 @@
 
 _AFX afxError _AfxStdStreamWriteCb(afxStream iob, void const* const src, afxUnit32 siz)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(siz);
     AFX_ASSERT(src);
@@ -61,7 +61,7 @@ _AFX afxError _AfxStdStreamWriteCb(afxStream iob, void const* const src, afxUnit
 
 _AFX afxError _AfxStdStreamReadCb(afxStream iob, void *dst, afxUnit32 siz)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(siz);
     AFX_ASSERT(dst);
@@ -90,7 +90,7 @@ _AFX afxIobImpl const stdStreamImpl =
 
 _AFXINL void Reverse32(afxUnit cnt, void* data)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(data);
     AFX_ASSERT(cnt);
     afxUnit32* p = data;
@@ -106,7 +106,7 @@ _AFXINL void Reverse32(afxUnit cnt, void* data)
 
 _AFXINL void const* AfxGetStreamBuffer(afxStream const iob, afxSize offset)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT_RANGE(iob->bufCap, offset, 1);
 
@@ -124,56 +124,56 @@ _AFXINL void const* AfxGetStreamBuffer(afxStream const iob, afxSize offset)
 
 _AFXINL afxSize AfxGetStreamRoom(afxStream const iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     return iob->bufCap - iob->length;
 }
 
 _AFXINL afxSize AfxGetStreamLength(afxStream const iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     return iob->length;
 }
 
 _AFXINL afxUnit AfxGetStreamCapacity(afxStream const iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     return iob->bufCap;
 }
 
 _AFXINL afxBool AfxIsStreamReadOnly(afxStream const iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     return AfxTestFlags(iob->flags, (afxIoFlag_R | ~afxIoFlag_W));
 }
 
 _AFXINL afxBool AfxIsStreamReadable(afxStream const iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     return AfxTestFlags(iob->flags, afxIoFlag_R);
 }
 
 _AFXINL afxBool AfxIsStreamWriteable(afxStream const iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     return AfxTestFlags(iob->flags, afxIoFlag_W);
 }
 
 _AFXINL afxBool AfxStreamIsSeekable(afxStream const iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     return AfxTestFlags(iob->flags, afxIoFlag_X);
 }
 
 _AFXINL afxBool AfxHasStreamReachedEnd(afxStream iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     
     if (iob->pimpl->eos)
@@ -186,7 +186,7 @@ _AFXINL afxBool AfxHasStreamReachedEnd(afxStream iob)
 
 _AFXINL afxError AfxSeekStream(afxStream iob, afxSize offset, afxSeekOrigin origin)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     //AFX_ASSERT(AfxTestFlags(iob->flags, afxIoFlag_X));
     AFX_ASSERT_RANGE(3, afxSeekOrigin_BEGIN, afxSeekOrigin_END);
@@ -255,7 +255,7 @@ _AFXINL afxError AfxSeekStream(afxStream iob, afxSize offset, afxSeekOrigin orig
 
 _AFXINL afxError AfxRewindStream(afxStream iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
 
     if (AfxSeekStream(iob, 0, afxSeekOrigin_BEGIN))
@@ -271,7 +271,7 @@ _AFXINL afxError AfxRewindStream(afxStream iob)
 
 _AFXINL afxError AfxRecedeStream(afxStream iob, afxUnit range)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     //AFX_ASSERT(AfxTestFlags(iob->flags, afxIoFlag_X));
     
@@ -291,7 +291,7 @@ _AFXINL afxError AfxRecedeStream(afxStream iob, afxUnit range)
 
 _AFXINL afxError AfxAdvanceStream(afxStream iob, afxUnit range)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     //AFX_ASSERT(AfxTestFlags(iob->flags, afxIoFlag_X));
     
@@ -311,7 +311,7 @@ _AFXINL afxError AfxAdvanceStream(afxStream iob, afxUnit range)
 
 _AFXINL afxSize AfxMeasureStream(afxStream iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     //AFX_ASSERT(AfxTestFlags(iob->flags, afxIoFlag_X));
     
@@ -329,7 +329,7 @@ _AFXINL afxSize AfxMeasureStream(afxStream iob)
 
 _AFXINL afxSize AfxAskStreamPosn(afxStream iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
 
     if (iob->pimpl->tell)
@@ -342,7 +342,7 @@ _AFXINL afxSize AfxAskStreamPosn(afxStream iob)
 
 _AFX afxError AfxBufferizeStream(afxStream iob, afxUnit bufCap, void* buf)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(!buf || bufCap); // if a buf is specified, it must have a capacity specified too.
 
@@ -432,7 +432,7 @@ _AFX afxError AfxBufferizeStream(afxStream iob, afxUnit bufCap, void* buf)
 
 _AFX afxError AfxWriteStream(afxStream iob, afxUnit range, afxUnit rate, void const* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(AfxIsStreamWriteable(iob));
     AFX_ASSERT(range);
@@ -495,7 +495,7 @@ _AFX afxError AfxWriteStream(afxStream iob, afxUnit range, afxUnit rate, void co
 
 _AFX afxError AfxWriteStreamAt(afxStream iob, afxSize offset, afxUnit range, afxUnit rate, void const* src)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(AfxIsStreamWriteable(iob));
     AFX_ASSERT(range);
@@ -511,7 +511,7 @@ _AFX afxError AfxWriteStreamAt(afxStream iob, afxSize offset, afxUnit range, afx
 
 _AFX afxError AfxWriteStream2(afxStream out, afxUnit range, afxUnit stride, void const* src, afxUnit srcStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(AfxIsStreamWriteable(out));
     AFX_ASSERT(range);
@@ -565,7 +565,7 @@ _AFX afxError AfxWriteStream2(afxStream out, afxUnit range, afxUnit stride, void
 
 _AFX afxError AfxWriteStreamAt2(afxStream out, afxSize offset, afxUnit range, afxUnit stride, void const* src, afxUnit srcStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(AfxIsStreamWriteable(out));
     AFX_ASSERT(range);
@@ -581,7 +581,7 @@ _AFX afxError AfxWriteStreamAt2(afxStream out, afxSize offset, afxUnit range, af
 
 _AFX afxError AfxWrite(afxStream out, afxUnit cnt, afxUnit siz, void const* src, afxUnit srcStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(AfxIsStreamWriteable(out));
     AFX_ASSERT(srcStride);
@@ -674,7 +674,7 @@ _AFX afxError AfxWrite(afxStream out, afxUnit cnt, afxUnit siz, void const* src,
 
 _AFX afxError AfxWriteAt(afxStream out, afxSize offset, afxUnit cnt, afxUnit siz, void const* src, afxUnit srcStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(AfxIsStreamWriteable(out));
     AFX_ASSERT(cnt);
@@ -691,7 +691,7 @@ _AFX afxError AfxWriteAt(afxStream out, afxSize offset, afxUnit cnt, afxUnit siz
 
 _AFX afxError AfxReadStream(afxStream iob, afxUnit range, afxUnit rate, void *dst)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(AfxIsStreamReadable(iob));
     afxUnit clampedOffRange = range;
@@ -757,7 +757,7 @@ _AFX afxError AfxReadStream(afxStream iob, afxUnit range, afxUnit rate, void *ds
 
 _AFX afxError AfxReadStreamAt(afxStream iob, afxSize offset, afxUnit range, afxUnit rate, void *dst)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(AfxIsStreamReadable(iob));
     AFX_ASSERT(range);
@@ -773,7 +773,7 @@ _AFX afxError AfxReadStreamAt(afxStream iob, afxSize offset, afxUnit range, afxU
 
 _AFX afxError AfxReadStream2(afxStream in, afxUnit range, afxUnit stride, void* dst, afxUnit dstStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     AFX_ASSERT(dstStride);
@@ -914,7 +914,7 @@ _AFX afxError AfxReadStream2(afxStream in, afxUnit range, afxUnit stride, void* 
 
 _AFX afxError AfxRead(afxStream in, afxUnit cnt, afxUnit siz, void* dst, afxUnit dstStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     AFX_ASSERT(dstStride);
@@ -1007,7 +1007,7 @@ _AFX afxError AfxRead(afxStream in, afxUnit cnt, afxUnit siz, void* dst, afxUnit
 
 _AFX afxError AfxReadAt(afxStream in, afxSize offset, afxUnit cnt, afxUnit siz, void *dst, afxUnit dstStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     AFX_ASSERT(cnt);
@@ -1024,7 +1024,7 @@ _AFX afxError AfxReadAt(afxStream in, afxSize offset, afxUnit cnt, afxUnit siz, 
 
 _AFX afxError AfxReadReversed(afxStream in, afxUnit cnt, afxUnit siz, void* dst, afxUnit dstStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     AFX_ASSERT(cnt);
@@ -1041,7 +1041,7 @@ _AFX afxError AfxReadReversed(afxStream in, afxUnit cnt, afxUnit siz, void* dst,
 
 _AFX afxError AfxReadReversedAt(afxStream in, afxSize offset, afxUnit cnt, afxUnit siz, void *dst, afxUnit dstStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     AFX_ASSERT(cnt);
@@ -1058,7 +1058,7 @@ _AFX afxError AfxReadReversedAt(afxStream in, afxSize offset, afxUnit cnt, afxUn
 
 _AFX afxError AfxReadStreamAt2(afxStream in, afxSize offset, afxUnit range, afxUnit stride, void* dst, afxUnit dstStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     AFX_ASSERT(range);
@@ -1074,7 +1074,7 @@ _AFX afxError AfxReadStreamAt2(afxStream in, afxSize offset, afxUnit range, afxU
 
 _AFX afxError AfxReadStreamReversed(afxStream in, afxUnit range, afxUnit rate, void* dst)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     AFX_ASSERT(range);
@@ -1090,7 +1090,7 @@ _AFX afxError AfxReadStreamReversed(afxStream in, afxUnit range, afxUnit rate, v
 
 _AFX afxError AfxReadStreamReversedAt(afxStream in, afxSize offset, afxUnit range, afxUnit rate, void* dst)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     AFX_ASSERT(range);
@@ -1106,7 +1106,7 @@ _AFX afxError AfxReadStreamReversedAt(afxStream in, afxSize offset, afxUnit rang
 
 _AFX afxError AfxDoStreamOutput(afxStream out, afxUnit stride, afxUnit cnt, void const* src, afxUnit srcStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(AfxIsStreamWriteable(out));
     //AFX_ASSERT(range);
@@ -1154,7 +1154,7 @@ _AFX afxError AfxDoStreamOutput(afxStream out, afxUnit stride, afxUnit cnt, void
 
 _AFX afxError AfxDoStreamOutputAt(afxStream out, afxSize offset, afxUnit stride, afxUnit cnt, void const* src, afxUnit srcStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(AfxIsStreamWriteable(out));
     AFX_ASSERT(stride);
@@ -1171,7 +1171,7 @@ _AFX afxError AfxDoStreamOutputAt(afxStream out, afxSize offset, afxUnit stride,
 
 _AFX afxError AfxDoStreamInput(afxStream in, afxUnit stride, afxUnit cnt, void* dst, afxUnit dstStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     //AFX_ASSERT(range);
@@ -1217,7 +1217,7 @@ _AFX afxError AfxDoStreamInput(afxStream in, afxUnit stride, afxUnit cnt, void* 
 
 _AFX afxError AfxDoStreamInputAt(afxStream in, afxSize offset, afxUnit stride, afxUnit cnt, void* dst, afxUnit dstStride)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
     AFX_ASSERT(AfxIsStreamReadable(in));
     AFX_ASSERT(stride);
@@ -1234,7 +1234,7 @@ _AFX afxError AfxDoStreamInputAt(afxStream in, afxSize offset, afxUnit stride, a
 
 _AFX afxError AfxMergeStream(afxStream out, afxStream in, afxSize base, afxUnit range, afxUnit rate)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(AfxIsStreamWriteable(out));
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
@@ -1313,7 +1313,7 @@ _AFX afxError AfxMergeStream(afxStream out, afxStream in, afxSize base, afxUnit 
 
 _AFX afxError AfxCopyStream(afxStream in, afxSize base, afxUnit range, afxUnit rate, afxStream out)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &out);
     AFX_ASSERT(AfxIsStreamWriteable(out));
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &in);
@@ -1389,7 +1389,7 @@ _AFX afxError AfxCopyStream(afxStream in, afxSize base, afxUnit range, afxUnit r
 
 _AFX afxStream AfxForkStream(afxStream parent, afxSize offset, afxUnit range)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AfxAssertObjects(1, &parent, afxFcc_IOB);
     AFX_ASSERT_RANGE(parent->idd.m.bufCap, offset, range);
 
@@ -1410,7 +1410,7 @@ _AFX afxStream AfxForkStream(afxStream parent, afxSize offset, afxUnit range)
 
 _AFX afxBool AfxResetStream(afxStream iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
 
     if (iob->pimpl->dtor)
@@ -1427,7 +1427,7 @@ _AFX afxBool AfxResetStream(afxStream iob)
 
 _AFX afxError AfxReopenStream(afxStream iob, afxUnit bufCap, void* start, afxSize len)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
     AFX_ASSERT(!start || (len || bufCap));
     AFX_ASSERT(!len || start); // if a length is specified, it must have a start.
@@ -1462,7 +1462,7 @@ _AFX afxError AfxReopenStream(afxStream iob, afxUnit bufCap, void* start, afxSiz
 
 _AFX afxResult _AfxIosDtorCb(afxStream iob)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
 
     AfxResetStream(iob);
@@ -1481,7 +1481,7 @@ _AFX afxResult _AfxIosDtorCb(afxStream iob)
 
 _AFX afxError _AfxIosCtorCb(afxStream iob, void** args, afxUnit invokeNo)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_IOB, 1, &iob);
 
     afxStreamInfo const* info = ((afxStreamInfo const*)args[1]) + invokeNo;
@@ -1537,7 +1537,7 @@ _AFX afxClassConfig const _AFX_IOB_CLASS_CONFIG =
 
 _AFX afxError AfxAcquireImplementedStream(afxIobImpl const* pimpl, afxUnit cnt, afxStreamInfo const infos[], afxStream streams[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(streams);
     AFX_ASSERT(infos);
     AFX_ASSERT(pimpl);
@@ -1568,7 +1568,7 @@ _AFX afxError AfxAcquireImplementedStream(afxIobImpl const* pimpl, afxUnit cnt, 
 
 _AFX afxError AfxAcquireStream(afxUnit cnt, afxStreamInfo const infos[], afxStream streams[])
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(infos);
     AFX_ASSERT(streams);
     AFX_ASSERT(cnt);
@@ -1592,7 +1592,7 @@ _AFX afxError AfxAcquireStream(afxUnit cnt, afxStreamInfo const infos[], afxStre
 
 _AFX afxError AfxOpenStream(afxUnit bufCap, void* start, afxUnit len, afxIoFlags flags, afxStream* stream)
 {
-    afxError err = AFX_ERR_NONE;
+    afxError err = { 0 };
     AFX_ASSERT(!start || (bufCap || len));
     AFX_ASSERT(!len || start); // if a data length is specified, it must have a pointer specified too.
     
