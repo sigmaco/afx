@@ -302,75 +302,75 @@ _AFXINL void AfxV4dMultiply(afxV4d v, afxV4d const a, afxV4d const b)
 
 // Mad
 
-_AFXINL void AfxV2dMad(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c)
+_AFXINL void AfxV2dMad(afxV2d v, afxV2d const add, afxV2d const mul, afxV2d const f)
 {
     afxError err = { 0 };
     AFX_ASSERT(v);
-    AFX_ASSERT(a);
-    AFX_ASSERT(b);
-    AFX_ASSERT(c);
-    v[0] = (a[0] * b[0]) + c[0];
-    v[1] = (a[1] * b[1]) + c[1];
+    AFX_ASSERT(add);
+    AFX_ASSERT(mul);
+    AFX_ASSERT(f);
+    v[0] = add[0] + (mul[0] * f[0]);
+    v[1] = add[1] + (mul[1] * f[1]);
 }
 
-_AFXINL void AfxV3dMad(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c)
+_AFXINL void AfxV3dMad(afxV3d v, afxV3d const add, afxV3d const mul, afxV3d const f)
 {
     afxError err = { 0 };
     AFX_ASSERT(v);
-    AFX_ASSERT(a);
-    AFX_ASSERT(b);
-    AFX_ASSERT(c);
-    v[0] = (a[0] * b[0]) + c[0];
-    v[1] = (a[1] * b[1]) + c[1];
-    v[2] = (a[2] * b[2]) + c[2];
+    AFX_ASSERT(add);
+    AFX_ASSERT(mul);
+    AFX_ASSERT(f);
+    v[0] = add[0] + (mul[0] * f[0]);
+    v[1] = add[1] + (mul[1] * f[1]);
+    v[2] = add[2] + (mul[2] * f[2]);
 }
 
-_AFXINL void AfxV4dMad(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c)
+_AFXINL void AfxV4dMad(afxV4d v, afxV4d const add, afxV4d const mul, afxV4d const f)
 {
     afxError err = { 0 };
     AFX_ASSERT(v);
-    AFX_ASSERT(a);
-    AFX_ASSERT(b);
-    AFX_ASSERT(c);
-    v[0] = (a[0] * b[0]) + c[0];
-    v[1] = (a[1] * b[1]) + c[1];
-    v[2] = (a[2] * b[2]) + c[2];
-    v[3] = (a[3] * b[3]) + c[3];
+    AFX_ASSERT(add);
+    AFX_ASSERT(mul);
+    AFX_ASSERT(f);
+    v[0] = add[0] + (mul[0] * f[0]);
+    v[1] = add[1] + (mul[1] * f[1]);
+    v[2] = add[2] + (mul[2] * f[2]);
+    v[3] = add[3] + (mul[3] * f[3]);
 }
 
 // AddScaled
 
-_AFXINL void AfxV2dMads(afxV2d v, afxReal lambda, afxV2d const b, afxV2d const c)
+_AFXINL void AfxV2dMads(afxV2d v, afxV2d const add, afxV2d const mul, afxReal lambda)
 {
     afxError err = { 0 };
     AFX_ASSERT(v);
-    AFX_ASSERT(b);
-    AFX_ASSERT(c);
-    v[0] = (lambda * b[0]) + c[0];
-    v[1] = (lambda * b[1]) + c[1];
+    AFX_ASSERT(mul);
+    AFX_ASSERT(add);
+    v[0] = add[0] + (mul[0] * lambda);
+    v[1] = add[1] + (mul[1] * lambda);
 }
 
-_AFXINL void AfxV3dMads(afxV3d v, afxReal lambda, afxV3d const b, afxV3d const c)
+_AFXINL void AfxV3dMads(afxV3d v, afxV3d const add, afxV3d const mul, afxReal lambda)
 {
     afxError err = { 0 };
     AFX_ASSERT(v);
-    AFX_ASSERT(b);
-    AFX_ASSERT(c);
-    v[0] = (lambda * b[0]) + c[0];
-    v[1] = (lambda * b[1]) + c[1];
-    v[2] = (lambda * b[2]) + c[2];
+    AFX_ASSERT(mul);
+    AFX_ASSERT(add);
+    v[0] = add[0] + (mul[0] * lambda);
+    v[1] = add[1] + (mul[1] * lambda);
+    v[2] = add[2] + (mul[2] * lambda);
 }
 
-_AFXINL void AfxV4dMads(afxV4d v, afxReal lambda, afxV4d const b, afxV4d const c)
+_AFXINL void AfxV4dMads(afxV4d v, afxV4d const add, afxV4d const mul, afxReal lambda)
 {
     afxError err = { 0 };
     AFX_ASSERT(v);
-    AFX_ASSERT(b);
-    AFX_ASSERT(c);
-    v[0] = (lambda * b[0]) + c[0];
-    v[1] = (lambda * b[1]) + c[1];
-    v[2] = (lambda * b[2]) + c[2];
-    v[3] = (lambda * b[3]) + c[3];
+    AFX_ASSERT(mul);
+    AFX_ASSERT(add);
+    v[0] = add[0] + (mul[0] * lambda);
+    v[1] = add[1] + (mul[1] * lambda);
+    v[2] = add[2] + (mul[2] * lambda);
+    v[3] = add[3] + (mul[3] * lambda);
 }
 
 // Resub

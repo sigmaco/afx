@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 _AFXINL afxError AfxMakeArray(afxArray* arr, afxUnit unitSiz, afxUnit cap, void* buf, afxUnit pop)
 {

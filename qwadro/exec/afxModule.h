@@ -21,8 +21,8 @@
 #define AFX_MODULE_H
 
 #include "qwadro/base/afxObject.h"
-#include "qwadro/io/afxUri.h"
-#include "qwadro/base/afxManifest.h"
+#include "qwadro/base/afxUri.h"
+#include "qwadro/etc/afxManifest.h"
 
 typedef enum afxModuleFlags
 {

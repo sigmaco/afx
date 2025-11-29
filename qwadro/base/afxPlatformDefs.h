@@ -118,7 +118,7 @@
 #define DLLIMPORT __declspec(dllimport)
 #define DLLEXPORT __declspec(dllexport)
 
-#if (defined(_MSC_VER) && !defined(__clang__))
+#if (defined(_MSC_VER)/* && !defined(__clang__)*/)
 #   define INLINE __forceinline
 #else
 #   define INLINE inline __attribute__((always_inline))
@@ -128,7 +128,7 @@
 
 #define AFXCALL __cdecl
 
-#if (defined(_MSC_VER) && !defined(__clang__))
+#if (defined(_MSC_VER)/* && !defined(__clang__)*/)
 #  define AFX_ALIGNED(...) __declspec(align(__VA_ARGS__))
 #else
 #  define AFX_ALIGNED(...) __attribute__((aligned(__VA_ARGS__)))

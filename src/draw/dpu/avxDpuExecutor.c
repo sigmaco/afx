@@ -46,8 +46,8 @@ _AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, _avxIoReqPacket* work)
     {
         afxDrawContext dctx = work->Execute.cmdbs[i].dctx;
         AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-        afxUnit batchId = work->Execute.cmdbs[i].batchId;
-        _avxCmdBatch* cmdb = _AvxGetCmdBatch(dctx, batchId);
+        afxUnit batchId = dctx->batchId;
+        _avxCmdBatch* cmdb = _AvxDctxGetCmdBatch(dctx, batchId);
 
         if (!cmdb)
         {
@@ -58,11 +58,11 @@ _AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, _avxIoReqPacket* work)
         //AFX_ASSERT(cmdb->state == avxDrawContextState_PENDING);
         _AvxDpuRollContext(dpu, dctx, batchId);
         
-        // Must be disposed because _AvxDqueExecuteDrawCommands() reacquires it.
+        // Must be disposed because AvxSubmitDrawCommands() reacquires it.
         AfxDecAtom32(&cmdb->submCnt);
-        AvxRecycleDrawCommands(dctx, batchId, FALSE);
+        AvxRecycleDrawCommands(dctx, /*batchId,*/ FALSE);
 #if 0
-        AFX_ASSERT(!AvxDoesDrawCommandsExist(dctx, batchId));
+        AFX_ASSERT(!AvxDoesDrawCommandsExist_(dctx, batchId));
         AfxReportf(0, AfxHere(),"%d dpu %d", batchId, dpu->exuIdx);
 #endif
         AfxDisposeObjects(1, &dctx);

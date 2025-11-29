@@ -747,7 +747,7 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_CANV_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_CANV =
 {
     .fcc = afxFcc_CANV,
     .name = "Canvas",

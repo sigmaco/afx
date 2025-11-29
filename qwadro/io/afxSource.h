@@ -19,7 +19,7 @@
 #ifndef AFX_SOURCE_H
 #define AFX_SOURCE_H
 
-#include "qwadro/io/afxUri.h"
+#include "qwadro/base/afxUri.h"
 
 /**
     The afxSource structure allows the game to provide audio files to fill the external sources.

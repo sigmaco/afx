@@ -20,8 +20,8 @@
 #include "qwadro/base/afxString.h"
 #include "qwadro/base/afxFixedString.h"
 #include "qwadro/mem/afxArray.h"
-#include "qwadro/io/afxUri.h"
-#include "qwadro/base/afxManifest.h"
+#include "qwadro/base/afxUri.h"
+#include "qwadro/etc/afxManifest.h"
 #include "qwadro/base/afxClass.h"
 #include "qwadro/exec/afxSemaphore.h"
 

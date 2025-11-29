@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 #define _AFX_ENFORCE_CLEAN_POOL_ALLOCATION (FALSE)
 #define _AFX_POOL_ZERO_ON_REQUISITION (FALSE)

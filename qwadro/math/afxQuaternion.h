@@ -156,6 +156,12 @@ AFXINL void AfxQuatDiv(afxQuat q, afxQuat const in, afxReal dividend);
 
 AFXINL void AfxQuatMultiply(afxQuat q, afxQuat const a, afxQuat const b); // q = a * b
 
+// q = add + (mul * f)
+AFXINL void AfxQuatMad(afxQuat q, afxQuat const add, afxQuat const mul, afxQuat const f);
+
+// q = add + (mul * lambda)
+AFXINL void AfxQuatMads(afxQuat q, afxQuat const add, afxQuat const mul, afxReal lambda);
+
 ////////////////////////////////////////////////////////////////////////////////
 
 /// Computes the dot product of two quaternions.
@@ -282,13 +288,19 @@ AFXINL void AfxQuatFromTangentM3d(afxQuat q, afxM3d const tbn);
 
 AFXINL void AfxQuatFromTangentFrame(afxQuat q, afxV3d const normal, afxV3d const tangent, afxV3d const bitangent);
 
-AFXINL void AfxQuatFromAngularVelocity(afxQuat q, afxV3d const rot);
+AFXINL void AfxQuatFromAngularVelocity(afxQuat q, afxV3d const vel);
 
 /// Updating the dynamical state of a rigid body is referred to as integration. 
 /// If you represent the orientation of this body with a quaternion, you will need to know how to update it. 
 /// Here is a sample function for integrating a quaternion with a given angular velocity and time step.
 
 AFXINL void AfxQuatIntegrate(afxQuat q, afxQuat const in, afxV3d const omega, afxReal dt);
+
+/*
+    The AfxQuatIntegrateEULER function for first-order (explicit Euler) quaternion integration.
+*/
+
+AFXINL void AfxQuatIntegrateEULER(afxQuat q, afxQuat const in, afxV3d const omega, afxReal dt);
 
 ////////////////////////////////////////////////////////////////////////////////
 

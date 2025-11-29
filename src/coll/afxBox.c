@@ -188,7 +188,7 @@ _AFXINL void AfxEmboxSpheres(afxBox* bb, afxUnit cnt, afxSphere const spheres[])
     {
         AfxEmboxAabbs(bb, 1, (afxBox[]) { AfxGetSphereAabb(spheres[i]) });
     }
-    bb->max[3] = (bb->min[3] = AFX_R(1));
+    bb->max[3] = (bb->min[3] = AFX_REAL(1));
 }
 
 _AFXINL afxBool AfxGetAabbExtents(afxBox const* bb, afxV3d extent)

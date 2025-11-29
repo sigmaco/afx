@@ -18,7 +18,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_CODEC_C
-#include "../impl/afxIoImplKit.h"
+#include "afxIoDDK.h"
 
 _AFX afxUnit AfxGetCompressionPaddingSize(afxCompressionType type)
 {

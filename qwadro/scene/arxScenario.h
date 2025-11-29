@@ -104,32 +104,136 @@ ARX void*           ArxGetScenarioUdd(arxScenario scio);
 
 ARX void            ArxGetClipSpaceInfo(arxScenario scio, avxClipSpaceDepth* depth, afxBool* leftHanded);
 
-ARX void            ArxComputeLookToMatrices(arxScenario scio, afxV3d const eye, afxV3d const dir, afxM4d v, afxM4d iv);
-ARX void            ArxComputeLookAtMatrices(arxScenario scio, afxV3d const eye, afxV3d const target, afxM4d v, afxM4d iv);
+ARX void ArxComputeLookToMatrices
+(
+    arxScenario scio, 
+    afxV3d const eye, 
+    afxV3d const dir, 
+    afxM4d v, 
+    afxM4d iv
+);
 
-ARX void            ArxComputeBasicOrthographicMatrices(arxScenario scio, afxReal aspectRatio, afxReal scale, afxReal range, afxM4d p, afxM4d ip);
-ARX void            ArxComputeOrthographicMatrices(arxScenario scio, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
-ARX void            ArxComputeOffcenterOrthographicMatrices(arxScenario scio, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
-ARX void            ArxComputeBoundingOrthographicMatrices(arxScenario scio, afxBox const aabb, afxM4d p, afxM4d ip);
+ARX void ArxComputeLookAtMatrices
+(
+    arxScenario scio, 
+    afxV3d const eye, 
+    afxV3d const target, 
+    afxM4d v, 
+    afxM4d iv
+);
 
-ARX void            ArxComputeFovMatrices(arxScenario scio, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxM4d p, afxM4d ip);
-ARX void            ArxComputeFrustrumMatrices(arxScenario scio, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
-ARX void            ArxComputeBasicPerspectiveMatrices(arxScenario scio, afxReal aspectRatio, afxReal range, afxM4d p, afxM4d ip);
-ARX void            ArxComputePerspectiveMatrices(arxScenario scio, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+ARX void ArxComputeBasicOrthographicMatrices
+(
+    arxScenario scio, 
+    afxReal aspectRatio, 
+    afxReal scale, 
+    afxReal range, 
+    afxM4d p, 
+    afxM4d ip
+);
+
+ARX void ArxComputeOrthographicMatrices
+(
+    arxScenario scio, 
+    afxV2d const extent, 
+    afxReal near, 
+    afxReal far, 
+    afxM4d p, 
+    afxM4d ip
+);
+
+ARX void ArxComputeOffcenterOrthographicMatrices
+(
+    arxScenario scio, 
+    afxReal left, 
+    afxReal right, 
+    afxReal bottom, 
+    afxReal top, 
+    afxReal near, 
+    afxReal far, 
+    afxM4d p, 
+    afxM4d ip
+);
+
+ARX void ArxComputeBoundingOrthographicMatrices
+(
+    arxScenario scio, 
+    afxBox const aabb, 
+    afxM4d p, 
+    afxM4d ip
+);
+
+ARX void ArxComputeFovMatrices
+(
+    arxScenario scio, 
+    afxReal fovY, 
+    afxReal aspectRatio, 
+    afxReal near, 
+    afxReal far, 
+    afxM4d p, 
+    afxM4d ip
+);
+
+ARX void ArxComputeFrustrumMatrices
+(
+    arxScenario scio, 
+    afxReal left, 
+    afxReal right, 
+    afxReal bottom, 
+    afxReal top, 
+    afxReal near, 
+    afxReal far, 
+    afxM4d p, 
+    afxM4d ip
+);
+
+ARX void ArxComputeBasicPerspectiveMatrices
+(
+    arxScenario scio, 
+    afxReal aspectRatio, 
+    afxReal range, 
+    afxM4d p, 
+    afxM4d ip
+);
+
+ARX void ArxComputePerspectiveMatrices
+(
+    arxScenario scio, 
+    afxV2d const extent, 
+    afxReal near, 
+    afxReal far, 
+    afxM4d p, 
+    afxM4d ip
+);
 
 ARX afxError        ArxUplinkTxds(arxScenario scio, afxUnit baseSlot, afxUnit slotCnt, afxUri const uris[]);
 
 ARX void            ArxQueryLodErrorTolerance(arxScenario scio, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler);
 
-ARX void            ArxComputeSimilarity(arxScenario scio, afxReal unitsPerMeter, afxV3d const right, afxV3d const up, afxV3d const back, afxV3d const origin, afxM3d ltm, afxM3d iltm, afxV3d atv);
+ARX void ArxComputeSimilarity
+(
+    arxScenario scio, 
+    afxReal unitsPerMeter, 
+    afxV3d const right, 
+    afxV3d const up, 
+    afxV3d const back, 
+    afxV3d const origin, 
+    afxM3d ltm, 
+    afxM3d iltm, 
+    afxV3d atv
+);
 
-ARX afxError        ArxCullBodies(arxScenario scio, afxFrustum const* f, afxArray* pvs);
+ARX afxError ArxCullBodies(arxScenario scio, afxFrustum const* f, afxArray* pvs);
 
-ARX afxUnit         ArxRecenterAllCapstanClocks(arxScenario scio, afxReal dCurrentClock);
+ARX afxUnit ArxRecenterAllCapstanClocks(arxScenario scio, afxReal dCurrentClock);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError ArxConfigureScenario(afxUnit icd, arxScenarioConfig* cfg);
+ARX afxError ArxConfigureScenario
+(
+    afxUnit icd, 
+    arxScenarioConfig* cfg
+);
 
 ARX afxError ArxAcquireScenario
 (

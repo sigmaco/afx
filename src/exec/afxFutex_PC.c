@@ -44,7 +44,7 @@
 #   endif
 #endif
 
-#include "../impl/afxExecImplKit.h"
+#include "afxSystemDDK.h"
 
 AFX_DEFINE_STRUCT_ALIGNED(AFX_PTR_ALIGNMENT, _afxFutex)
 {

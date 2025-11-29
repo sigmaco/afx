@@ -16,7 +16,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_THREAD_POOL_C
-#include "src/impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 _AFX afxInt _AFX_THRP_PROC(afxThreadPool thrp)
 {

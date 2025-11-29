@@ -196,51 +196,53 @@ _AVX afxCmdId AvxCmdBindBuffers(afxDrawContext dctx, avxBus bus, afxUnit set, af
         }
 
         avxLigament desc;
-        AvxDescribeLigament(liga, set, pin + i, 1, &desc);
-        switch (desc.type)
+        if (AvxDescribeLigament(liga, set, pin + i, 1, &desc))
         {
-        case avxShaderParam_UNIFORM:
-        {
-            if (buf)
+            switch (desc.type)
             {
-                AFX_ASSERT(usage & avxBufferUsage_UNIFORM);
-            }
-            break;
-        }
-        case avxShaderParam_STORAGE:
-            //case avxShaderParam_BUFFER:
-        {
-            if (buf)
+            case avxShaderParam_UNIFORM:
             {
-                AFX_ASSERT(usage & avxBufferUsage_STORAGE);
+                if (buf)
+                {
+                    AFX_ASSERT(usage & avxBufferUsage_UNIFORM);
+                }
+                break;
             }
-            break;
-        }
-        case avxShaderParam_FETCH:
-        {
-            if (buf)
+            case avxShaderParam_STORAGE:
+                //case avxShaderParam_BUFFER:
             {
-                AFX_ASSERT(usage & avxBufferUsage_FETCH);
+                if (buf)
+                {
+                    AFX_ASSERT(usage & avxBufferUsage_STORAGE);
+                }
+                break;
             }
-            break;
-        }
-        case avxShaderParam_TSBO:
-        {
-            if (buf)
+            case avxShaderParam_FETCH:
             {
-                AFX_ASSERT(usage & avxBufferUsage_TENSOR);
+                if (buf)
+                {
+                    AFX_ASSERT(usage & avxBufferUsage_FETCH);
+                }
+                break;
             }
-            break;
-        }
-        default:
-        {
-            AFX_ASSERT( (usage & avxBufferUsage_UNIFORM) ||
-                        (usage & avxBufferUsage_STORAGE) ||
-                        (usage & avxBufferUsage_FETCH) ||
-                        (usage & avxBufferUsage_TENSOR));
-            AfxThrowError();
-            break;
-        }
+            case avxShaderParam_TSBO:
+            {
+                if (buf)
+                {
+                    AFX_ASSERT(usage & avxBufferUsage_TENSOR);
+                }
+                break;
+            }
+            default:
+            {
+                AFX_ASSERT((usage & avxBufferUsage_UNIFORM) ||
+                    (usage & avxBufferUsage_STORAGE) ||
+                    (usage & avxBufferUsage_FETCH) ||
+                    (usage & avxBufferUsage_TENSOR));
+                AfxThrowError();
+                break;
+            }
+            }
         }
 #endif//_AVX_DEBUG_BINDING_COMMANDS
 
@@ -290,31 +292,32 @@ _AVX afxCmdId AvxCmdBindRasters(afxDrawContext dctx, avxBus bus, afxUnit set, af
         }
 
         avxLigament desc;
-        AvxDescribeLigament(liga, set, pin + i, 1, &desc);
-        switch (desc.type)
+        if (AvxDescribeLigament(liga, set, pin + i, 1, &desc))
         {
-        case avxShaderParam_TEXTURE:
-        {
-            break;
+            switch (desc.type)
+            {
+            case avxShaderParam_TEXTURE:
+            {
+                break;
+            }
+            case avxShaderParam_RASTER:
+            {
+                break;
+            }
+            case avxShaderParam_IMAGE:
+            {
+                break;
+            }
+            default:
+            {
+                AFX_ASSERT((desc.type == avxShaderParam_TEXTURE) ||
+                    (desc.type == avxShaderParam_RASTER) ||
+                    (desc.type == avxShaderParam_IMAGE));
+                AfxThrowError();
+                break;
+            }
+            }
         }
-        case avxShaderParam_RASTER:
-        {
-            break;
-        }
-        case avxShaderParam_IMAGE:
-        {
-            break;
-        }
-        default:
-        {
-            AFX_ASSERT( (desc.type == avxShaderParam_TEXTURE) || 
-                        (desc.type == avxShaderParam_RASTER) || 
-                        (desc.type == avxShaderParam_IMAGE));
-            AfxThrowError();
-            break;
-        }
-        }
-
 #endif//_AVX_DEBUG_BINDING_COMMANDS
 
         cmd->BindRasters.rasters[i] = ras;
@@ -359,24 +362,26 @@ _AVX afxCmdId AvxCmdBindSamplers(afxDrawContext dctx, avxBus bus, afxUnit set, a
         }
 
         avxLigament desc;
-        AvxDescribeLigament(liga, set, pin, 1, &desc);
-        switch (desc.type)
+        if (AvxDescribeLigament(liga, set, pin, 1, &desc))
         {
-        case avxShaderParam_TEXTURE:
-        {
-            break;
-        }
-        case avxShaderParam_SAMPLER:
-        {
-            break;
-        }
-        default:
-        {
-            AFX_ASSERT( (desc.type == avxShaderParam_TEXTURE) || 
-                        (desc.type == avxShaderParam_SAMPLER));
-            AfxThrowError();
-            break;
-        }
+            switch (desc.type)
+            {
+            case avxShaderParam_TEXTURE:
+            {
+                break;
+            }
+            case avxShaderParam_SAMPLER:
+            {
+                break;
+            }
+            default:
+            {
+                AFX_ASSERT((desc.type == avxShaderParam_TEXTURE) ||
+                    (desc.type == avxShaderParam_SAMPLER));
+                AfxThrowError();
+                break;
+            }
+            }
         }
 #endif//_AVX_DEBUG_BINDING_COMMANDS
 

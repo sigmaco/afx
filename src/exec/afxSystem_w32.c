@@ -32,7 +32,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
-#include "../impl/afxExecImplKit.h"
+#include "afxSystemDDK.h"
 
 afxUnit const sizeOfSys = sizeof(AFX_OBJ(afxSystem));
 afxUnit const sizeOfSysAligned = AFX_ALIGN_SIZE(sizeof(AFX_OBJ(afxSystem)), AFX_SIMD_ALIGNMENT);

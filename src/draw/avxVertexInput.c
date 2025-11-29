@@ -541,7 +541,7 @@ _AVX afxError _AvxVtxdCtorCb(avxVertexInput vin, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_VIN_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_VIN =
 {
     .fcc = afxFcc_VIN,
     .name = "VertexInput",

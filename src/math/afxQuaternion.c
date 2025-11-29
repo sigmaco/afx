@@ -21,8 +21,8 @@
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxVector.h"
 
-_AFX afxQuat const AFX_QUAT_ZERO = { AFX_R(0), AFX_R(0), AFX_R(0), AFX_R(0) };
-_AFX afxQuat const AFX_QUAT_IDENTITY = { AFX_R(0), AFX_R(0), AFX_R(0), AFX_R(1) };
+_AFX afxQuat const AFX_QUAT_ZERO = { AFX_REAL(0), AFX_REAL(0), AFX_REAL(0), AFX_REAL(0) };
+_AFX afxQuat const AFX_QUAT_IDENTITY = { AFX_REAL(0), AFX_REAL(0), AFX_REAL(0), AFX_REAL(1) };
 
 ////////////////////////////////////////////////////////////////////////////////
 // Initialization                                                             //
@@ -200,11 +200,11 @@ _AFXINL void AfxQuatRotationFromAxis(afxQuat q, afxV3d const axis, afxReal phi)
     afxError err = { 0 };
     AFX_ASSERT(q);
     AFX_ASSERT(axis); // radians
-    afxReal s = AfxSinf(phi * AFX_R(0.5));
+    afxReal s = AfxSinf(phi * AFX_REAL(0.5));
     q[0] = axis[0] * s;
     q[1] = axis[1] * s;
     q[2] = axis[2] * s;
-    q[3] = AfxCosf(phi * AFX_R(0.5));
+    q[3] = AfxCosf(phi * AFX_REAL(0.5));
     AfxQuatNormalize(q, q); // reduz erros causados por AfxSinf() e AfxCosf().
 }
 
@@ -396,6 +396,16 @@ _AFXINL void AfxQuatMultiply(afxQuat q, afxQuat const a, afxQuat const b)
 #endif
 }
 
+_AFXINL void AfxQuatMad(afxQuat q, afxQuat const add, afxQuat const mul, afxQuat const f)
+{
+    AfxV4dMad(q, add, mul, f);
+}
+
+_AFXINL void AfxQuatMads(afxQuat q, afxQuat const add, afxQuat const mul, afxReal lambda)
+{
+    AfxV4dMads(q, add, mul, lambda);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Algebra                                                                    //
 ////////////////////////////////////////////////////////////////////////////////
@@ -480,7 +490,7 @@ _AFXINL void AfxQuatLerp(afxQuat q, afxQuat const a, afxQuat const b, afxReal pe
     AFX_ASSERT(b);
     AFX_ASSERT(q);
 
-    afxReal f = AFX_R(1) - percent;
+    afxReal f = AFX_REAL(1) - percent;
     
     if (AfxQuatDot(a, b) < 0.f)
     {
@@ -507,22 +517,22 @@ _AFXINL void AfxQuatSlerp(afxQuat q, afxQuat const a, afxQuat const b, afxReal p
     AFX_ASSERT(b);
     AFX_ASSERT(q);
 
-    if (AfxRealIsEquivalent(percent, AFX_R(0))) AfxQuatCopy(q, a);
+    if (AfxRealIsEquivalent(percent, AFX_REAL(0))) AfxQuatCopy(q, a);
     else
     {
-        if (AfxRealIsEquivalent(percent, AFX_R(1))) AfxQuatCopy(q, b);
+        if (AfxRealIsEquivalent(percent, AFX_REAL(1))) AfxQuatCopy(q, b);
         else
         {
             // if they are close q parallel, use LERP, This avoids div/0. At small angles, the slerp a lerp are the same.
             afxReal dot = AfxQuatDot(a, b);
 
-            if (AfxRealIsEquivalent(dot, AFX_R(1))) AfxQuatLerp(q, a, q, percent);
+            if (AfxRealIsEquivalent(dot, AFX_REAL(1))) AfxQuatLerp(q, a, q, percent);
             else
             {
                 // if dot is negative, they are "pointing" away from one another, use the shortest arc instead (reverse end a start)
                 // This has the effect of changing the direction of travel around the sphere beginning with "end" a going the b way around the sphere.
 
-                if (dot < AFX_R(0))
+                if (dot < AFX_REAL(0))
                 {
                     afxQuat neg;
                     AfxQuatNeg(neg, a);
@@ -532,9 +542,9 @@ _AFXINL void AfxQuatSlerp(afxQuat q, afxQuat const a, afxQuat const b, afxReal p
                 else
                 {
                     // keep the dot product in the range that acos canv handle (shouldn't get here)
-                    dot = AfxClampd(dot, AFX_R(-1), AFX_R(1));
+                    dot = AfxClampd(dot, AFX_REAL(-1), AFX_REAL(1));
                     afxReal theta = AfxAcosf(dot); // the angle between start a end in radians
-                    afxReal s = AfxSinf(theta), f1 = AfxSinf((AFX_R(1) - percent) * theta) / s, f2 = AfxSinf(percent * theta) / s; // compute negative a positive
+                    afxReal s = AfxSinf(theta), f1 = AfxSinf((AFX_REAL(1) - percent) * theta) / s, f2 = AfxSinf(percent * theta) / s; // compute negative a positive
 
                     // mul & add
                     q[3] = f1 * a[3] + f2 * b[3];
@@ -739,53 +749,116 @@ _AFXINL void AfxQuatHead(afxQuat q, afxV3d const from, afxV3d const to)
     q[2] = from[0] * h[1] - from[1] * h[0];
 }
 
-_AFXINL void AfxQuatFromAngularVelocity(afxQuat q, afxV3d const rot)
+_AFXINL void AfxQuatFromAngularVelocity(afxQuat q, afxV3d const vel)
 {
     afxError err = { 0 };
-    AFX_ASSERT(rot);
+    AFX_ASSERT(vel);
     AFX_ASSERT(q);
 
     // Compatible with AngularVelocityToQuaternion(q, rot)
 
     afxV4d n;
-    afxReal mag = AfxV3dMag(rot);
-    AfxV3dScale(n, rot, 1.0 / mag);
+    afxReal mag = AfxV3dMag(vel);
+    AfxV3dScale(n, vel, 1.0 / mag);
     afxReal halfSq = mag * 0.5f;
     AfxV3dScale(q, n, AfxSinf(halfSq));
     q[3] = AfxCosf(halfSq);
 }
 
+/*
+    The AfxQuatIntegrate function uses exponential map to compute deltaq = exp(0.5 w dt).
+    This is a closed-form integration.The code computes rotation magnitude and forms a quaternion exponential.
+    This is the exact solution of the quaternion ODE for constant angular velocity during dt.
+    
+    Pros:
+    Much more accurate
+    Stable even for large dt
+    No need to normalize each step
+
+    Cons:
+    Slightly slower
+    More code
+
+    This function should be prefered over EULER variant when:
+        dt is moderate or irregular
+        angular velocities are high
+        you want numerically stable integration (e.g., rigid-body sims, spacecraft attitude)
+        you want physically correct results regardless of step size
+*/
+
 _AFXINL void AfxQuatIntegrate(afxQuat q, afxQuat const in, afxV3d const omega, afxReal dt)
 {
-    // Should be compatible with physicsforgames.blogspot.com/2010/02/quaternions.html
-
     afxError err = { 0 };
     AFX_ASSERT(q);
     AFX_ASSERT(in);
     AFX_ASSERT(omega);
 
-    afxQuat deltaQ;
     afxV3d theta;
     AfxV3dScale(theta, omega, dt * 0.5f);
-
     afxReal thetaMagSq = AfxV3dSq(theta);
-    afxReal s;
+    afxReal w, s;
 
-    if (thetaMagSq * thetaMagSq / 24.f < /*MACHINE_SMALL_FLOAT*/AFX_EPSILON)
+    if (thetaMagSq * thetaMagSq / 24.f < AFX_EPSILON)
     {
-        deltaQ[3] = 1.f - thetaMagSq / 2.f;
-        s = 1.f - thetaMagSq / 6.f;
+        // small-angle Taylor series
+        w = 1.0f - thetaMagSq * 0.5f;
+        s = 1.0f - thetaMagSq / 6.0f;
     }
     else
     {
-        afxReal thetaMag = sqrt(thetaMagSq);
-        deltaQ[3] = cos(thetaMag);
+        afxReal thetaMag = AfxSqrt(thetaMagSq);
+        w = AfxCos(thetaMag);
         s = AfxSinf(thetaMag) / thetaMag;
     }
 
+    afxQuat deltaQ;
+    // delta quaternion (rotation over this timestep)
     AfxV3dScale(deltaQ, theta, s);
+    deltaQ[3] = w;
 
+    // Integrate.
     AfxQuatMultiply(q, deltaQ, in);
+}
+
+/*
+    The AfxQuatIntegrateEULER function for first-order (explicit Euler) quaternion integration.
+    This uses the quaternion differential equation and integrates it using explicit Euler.
+    This is the simplest possible method.
+
+    Pros: fast, small code
+    Cons: low accuracy for large rotations or large dt, 
+    not stable for high angular velocities (requires normalization).
+
+    This method is accurate only when: |w|dt<<1
+
+    This function is mathematically equivalent to AfxQuatIntegrate using exponential map for small dt.
+
+    This function should be prefered over EXP-MAP variant when:
+        dt is very small (e.g., physics running at 1000 Hz)
+        angular velocities are small
+        you want maximum speed
+        some accuracy loss is acceptable
+*/
+
+_AFXINL void AfxQuatIntegrateEULER(afxQuat q, afxQuat const in, afxV3d const omega, afxReal dt)
+{
+    afxError err = { 0 };
+    AFX_ASSERT(q);
+    AFX_ASSERT(in);
+    AFX_ASSERT(omega);
+
+    afxQuat wq;
+    AfxQuatSet(wq, omega[0], omega[1], omega[2], 0);
+    // dq = 0.5 * (wq * q)
+    afxQuat dq;
+    AfxQuatMultiply(dq, wq, q);
+    AfxQuatScale(dq, dq, 0.5);
+
+    // integrate
+    AfxV4dMads(q, q, dq, dt);
+
+    // renormalize
+    AfxQuatNormalize(q, q);
 }
 
 // Utils

@@ -24,7 +24,7 @@
 #define AFX_FILE_H
 
 #include "qwadro/io/afxStream.h"
-#include "qwadro/io/afxUri.h"
+#include "qwadro/base/afxUri.h"
 
 typedef enum afxFileFlag
 {

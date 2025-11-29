@@ -19,7 +19,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
-#include "src/impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 #define _AVX_DRAW_C
 #include "src/draw/avxIcd.h"
 #define _AMX_MIX_C
@@ -605,12 +605,12 @@ _AFX afxError AfxBootstrapSystem(afxSystemConfig const *config)
 
     AfxMakeChain(&sys->avxIcdChain, sys);
 
-    afxClassConfig ddevClsCfg = _AVX_DDEV_CLASS_CONFIG;
+    afxClassConfig ddevClsCfg = _AVX_CLASS_CONFIG_DDEV;
     ddevClsCfg.ctor = NIL;
     ddevClsCfg.dtor = NIL;
     AfxMountClass(&sys->ddevCls, (afxClass*)_AfxSysGetDevClass(sys), &sys->classes, &ddevClsCfg);
 
-    afxClassConfig dsysClsCfg = _AVX_DSYS_CLASS_CONFIG;
+    afxClassConfig dsysClsCfg = _AVX_CLASS_CONFIG_DSYS;
     dsysClsCfg.ctor = NIL;
     dsysClsCfg.dtor = NIL;
     AfxMountClass(&sys->dsysCls, NIL, &sys->classes, &dsysClsCfg);

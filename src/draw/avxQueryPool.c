@@ -40,7 +40,7 @@ AVX afxResult AvxGetQueryResults(avxQueryPool qryp, avxQueryResultFlags flags, a
     afxDrawSystem dsys = AvxGetQueryPoolHost(qryp);
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     AFX_ASSERT(_AvxDsysGetDdi(dsys)->getQrypRslt);
-    return _AvxDsysGetDdi(dsys)->getQrypRslt(dsys, qryp, baseSlot, slotCnt, dst, dstCap, stride, flags);
+    return _AvxDsysGetDdi(dsys)->getQrypRslt(dsys, qryp, flags, baseSlot, slotCnt, dstCap, dst, stride);
 }
 
 AVX void AvxResetQueries(avxQueryPool qryp, afxUnit baseSlot, afxUnit slotCnt)
@@ -85,7 +85,7 @@ _AVX afxError _AvxQrypCtorCb(avxQueryPool qryp, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_QRYP_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_QRYP =
 {
     .fcc = afxFcc_QRYP,
     .name = "QueryPool",
@@ -106,7 +106,136 @@ _AVX afxError AfxAcquireQueryPools(afxDrawSystem dsys, afxUnit cnt, avxQueryPool
     AFX_ASSERT_CLASS(cls, afxFcc_QRYP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)pools, (void const*[]) { dsys, cfg }))
+    {
         AfxThrowError();
+    }
+    return err;
+}
 
+_AVX afxError _AvxDsysResetQrypCb_SW(afxDrawSystem dsys, avxQueryPool qryp, afxUnit base, afxUnit cnt)
+{
+    afxError err = { 0 };
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+    afxError queErr;
+    afxBool queued = FALSE;
+
+    afxMask dedIoExuMask;
+    afxMask ioExuMask = _AvxDsysGetIoExuMask(dsys, &dedIoExuMask);
+    afxUnit exuIdx = 0;
+    afxDrawBridge dexu;
+    afxUnit exuCnt;
+
+    // Firstly, try to put them in a dedicated queue.
+    if (dedIoExuMask)
+    {
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, dedIoExuMask, 0, 0, NIL);
+        AFX_ASSERT(exuCnt);
+        exuIdx = 0;
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, dedIoExuMask, exuIdx++, 1, &dexu))
+        {
+            queErr = _AvxDexuResetQueries(dexu, qryp, base, cnt);
+            err = queErr;
+
+            if (!queErr)
+            {
+                queued = TRUE;
+                break; // while
+            }
+
+            if (queErr == afxError_TIMEOUT || queErr == afxError_BUSY)
+                continue; // while
+
+            AfxThrowError();
+        }
+    }
+
+    // If we can not put them in a dedicated queue, try to put them in a shared one.
+    if (!queued)
+    {
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, ioExuMask, 0, 0, NIL);
+        AFX_ASSERT(exuCnt);
+        exuIdx = 0;
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, ioExuMask, exuIdx++, 1, &dexu))
+        {
+            queErr = _AvxDexuResetQueries(dexu, qryp, base, cnt);
+            err = queErr;
+
+            if (!queErr)
+            {
+                queued = TRUE;
+                break; // while
+            }
+
+            if (queErr == afxError_TIMEOUT || queErr == afxError_BUSY)
+                continue; // while
+
+            AfxThrowError();
+        }
+    }
+    return err;
+}
+
+_AVX afxResult _AvxDsysGetQrypRsltCb_SW(afxDrawSystem dsys, avxQueryPool qryp, avxQueryResultFlags flags, afxUnit base, afxUnit cnt, afxSize dstCap, void* dst, afxSize stride)
+{
+    afxError err = { 0 };
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+
+    afxError queErr;
+    afxBool queued = FALSE;
+
+    afxMask dedIoExuMask;
+    afxMask ioExuMask = _AvxDsysGetIoExuMask(dsys, &dedIoExuMask);
+    afxUnit exuIdx = 0;
+    afxDrawBridge dexu;
+    afxUnit exuCnt;
+
+    // Firstly, try to put them in a dedicated queue.
+    if (dedIoExuMask)
+    {
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, dedIoExuMask, 0, 0, NIL);
+        AFX_ASSERT(exuCnt);
+        exuIdx = 0;
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, dedIoExuMask, exuIdx++, 1, &dexu))
+        {
+            queErr = _AvxDexuQueryResults(dexu, qryp, flags, base, cnt, dstCap, dst, stride);
+            err = queErr;
+
+            if (!queErr)
+            {
+                queued = TRUE;
+                break; // while
+            }
+
+            if (queErr == afxError_TIMEOUT || queErr == afxError_BUSY)
+                continue; // while
+
+            AfxThrowError();
+        }
+    }
+
+    // If we can not put them in a dedicated queue, try to put them in a shared one.
+    if (!queued)
+    {
+        exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, ioExuMask, 0, 0, NIL);
+        AFX_ASSERT(exuCnt);
+        exuIdx = 0;
+        while (AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, avxAptitude_DMA, ioExuMask, exuIdx++, 1, &dexu))
+        {
+            queErr = _AvxDexuQueryResults(dexu, qryp, flags, base, cnt, dstCap, dst, stride);
+            err = queErr;
+
+            if (!queErr)
+            {
+                queued = TRUE;
+                break; // while
+            }
+
+            if (queErr == afxError_TIMEOUT || queErr == afxError_BUSY)
+                continue; // while
+
+            AfxThrowError();
+        }
+    }
     return err;
 }

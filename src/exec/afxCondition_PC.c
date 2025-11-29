@@ -21,7 +21,7 @@
 #else
 #include "../../dep/c11threads/c11threads.h"
 #endif
-#include "../impl/afxExecImplKit.h"
+#include "afxSystemDDK.h"
 
 #if defined(_TTHREAD_WIN32_)
 #define _CONDITION_EVENT_ONE 0

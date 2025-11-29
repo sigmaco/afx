@@ -25,7 +25,7 @@
 
 #include "qwadro/draw/avxRaster.h"
 #include "qwadro/draw/avxFormat.h"
-#include "qwadro/io/afxUri.h"
+#include "qwadro/base/afxUri.h"
 #include "qwadro/draw/avxSampler.h"
 #include "qwadro/base/afxWarp.h"
 //#include "qwadro/draw/avxTransference.h"

@@ -68,10 +68,10 @@ AFX_DEFINE_HANDLE(arxContext);
 
 AFX_DEFINE_HANDLE(arxEntity);
 AFX_DEFINE_HANDLE(arxNode);
-AFX_DEFINE_HANDLE(arxBody);
-AFX_DEFINE_HANDLE(arxBodyPart);
+AFX_DEFINE_HANDLE(arxPuppet);
+AFX_DEFINE_HANDLE(arxPuppetLink);
 AFX_DEFINE_HANDLE(arxCapstan);
-AFX_DEFINE_HANDLE(arxMotion);
+AFX_DEFINE_HANDLE(arxGesture);
 AFX_DEFINE_HANDLE(arxAnimation);
 
 

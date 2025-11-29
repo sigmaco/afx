@@ -21,7 +21,7 @@
 #else
 #include "../../dep/c11threads/c11threads.h"
 #endif
-#include "../impl/afxExecImplKit.h"
+#include "afxSystemDDK.h"
 
 AFX_STATIC_ASSERT(sizeof(afxMutex) >= sizeof(mtx_t), "");
 

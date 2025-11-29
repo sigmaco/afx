@@ -29,7 +29,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_MMU_C
-#include "../impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 #ifdef _AFX_DEBUG
 #   define _AFX_TEST_COPY_RANGE

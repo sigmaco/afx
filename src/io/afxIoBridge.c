@@ -21,8 +21,8 @@
 #define _AFX_IO_BRIDGE_C
 #define _AFX_IO_QUEUE_C
 #define _AFX_DRAW_OUTPUT_C
-#include "../impl/afxIoImplKit.h"
-#include "../impl/afxExecImplKit.h"
+#include "afxIoDDK.h"
+#include "../exec/afxSystemDDK.h"
 #include "qwadro/io/afxIoBridge.h"
 
 _AFX afxDevice AfxGetIoBridgeDevice(afxIoBridge exu)

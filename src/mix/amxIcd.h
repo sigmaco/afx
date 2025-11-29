@@ -16,24 +16,24 @@
 
 // This software is part of Advanced Multimedia Extensions & Experiments.
 
-#ifndef AMX_IMPLEMENTATION_H
-#define AMX_IMPLEMENTATION_H
+#ifndef AMX_ICD_H
+#define AMX_ICD_H
 
-#include "../impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 #include "qwadro/mix/afxMixSystem.h"
-#include "amxAudioImpl.h"
-#include "amxContextImpl.h"
+#include "amxAudioDDK.h"
+#include "amxContextDDK.h"
 #include "mpu/amxMpuAudio.h"
 #include "mpu/amxMpuExecutor.h"
 #include "mpu/amxMpuContext.h"
 #include "mpu/amxMpuSoundscape.h"
 #include "mpu/amxMpuTransference.h"
-#include "amxSoundscapeImpl.h"
-#include "amxSystemImpl.h"
-#include "amxSinkImpl.h"
-#include "amxDeviceImpl.h"
-#include "amxAudioImpl.h"
-#include "amxTrackerImpl.h"
+#include "amxSoundscapeDDK.h"
+#include "amxSystemDDK.h"
+#include "amxSinkDDK.h"
+#include "amxDeviceDDK.h"
+#include "amxAudioDDK.h"
+#include "amxTrackerDDK.h"
 
 AFX_DEFINE_STRUCT(_amxMsysImpl)
 {
@@ -62,4 +62,4 @@ AMX afxError _AmxRegisterMixDevices(afxModule icd, afxUnit cnt, _amxMdevReg cons
 
 AMX afxError _AmxRegisterAudioServices(afxModule icd, afxUnit cnt, afxMixDeviceInfo const infos[], afxDevice devices[]);
 
-#endif//AMX_IMPLEMENTATION_H
+#endif//AMX_ICD_H

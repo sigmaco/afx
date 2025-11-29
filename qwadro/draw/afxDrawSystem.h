@@ -211,26 +211,26 @@ AVX afxUnit AvxEvokeDrawSystems
 ////////////////////////////////////////////////////////////////////////////////
 
 /*
-    The AvxGetDrawSystemIcd() function retrieves the ICD (Installable Client Driver) running a specific drawing system. 
+    The AvxGetSystemIcd() function retrieves the ICD (Installable Client Driver) running a specific drawing system. 
     This allows the application to determine which implementation is being used for the drawing system and to perform 
     further actions with the corresponding driver or module.
 */
 
-AVX afxModule       AvxGetDrawSystemIcd
+AVX afxModule       AvxGetSystemIcd
 (
     // The drawing system for which the ICD is being queried.
     afxDrawSystem   dsys
 );
 
 /*
-    The AvxResolveDrawSymbols() function retrieves the address of a device-specific function that allows you to 
+    The AvxResolveSystemSymbols() function retrieves the address of a device-specific function that allows you to 
     dynamically load Vulkan function pointers for a device object at runtime. It is part of Qwadro's extensible and 
     dynamic approach, enabling developers to load Qwadro functions based on their needs, instead of hardcoding everything.
 
     Returns the number of procedures found and retrieved.
 */
 
-AVX afxUnit         AvxResolveDrawSymbols
+AVX afxUnit         AvxResolveSystemSymbols
 (
     // The established drawing system.
     afxDrawSystem   dsys, 
@@ -376,13 +376,13 @@ AVX afxError        AvxWaitForDrawQueue
     afxUnit         queId
 );
 
-AVX void AvxGetEnabledDrawFeatures
+AVX void AvxGetEnabledSystemFeatures
 (
     afxDrawSystem dsys, 
     afxDrawFeatures* features
 );
 
-AVX afxUnit AvxTestForDrawExtensionsEnabled
+AVX afxUnit AvxTestForEnabledSystemExtensions
 (
     afxDrawSystem dsys, 
     afxUnit cnt, 
@@ -390,7 +390,7 @@ AVX afxUnit AvxTestForDrawExtensionsEnabled
     afxBool enabled[]
 );
 
-AVX avxClipSpaceDepth AvxGetOperationalClipSpaceDepth
+AVX avxClipSpaceDepth AvxGetSystemClipSpaceDepth
 (
     afxDrawSystem dsys,
     afxReal* rangeEpsilon

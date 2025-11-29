@@ -49,7 +49,7 @@
 // Front facing and cull mode should not have effect no point and lines.
 
 #include "qwadro/draw/afxDrawDefs.h"
-#include "qwadro/io/afxUri.h"
+#include "qwadro/base/afxUri.h"
 #include "qwadro/base/afxFixedString.h"
 #include "qwadro/draw/avxFormat.h"
 #include "qwadro/draw/avxColor.h"

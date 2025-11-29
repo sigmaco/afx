@@ -17,11 +17,11 @@
 #ifndef AFX_SYSTEM_H
 #define AFX_SYSTEM_H
 
-#include "qwadro/io/afxUri.h"
+#include "qwadro/base/afxUri.h"
 #include "qwadro/mem/afxArena.h"
 #include "qwadro/base/afxClass.h"
 #include "qwadro/exec/afxTime.h"
-#include "qwadro/io/afxResource.h"
+#include "qwadro/etc/afxResource.h"
 #include "qwadro/mem/afxPool.h"
 // provided classes
 #include "qwadro/mem/afxMemory.h"

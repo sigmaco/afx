@@ -45,7 +45,7 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx, afxUnit batch
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
-    _avxCmdBatch* cmdb = _AvxGetCmdBatch(dctx, batchId);
+    _avxCmdBatch* cmdb = _AvxDctxGetCmdBatch(dctx, batchId);
 
     if (!cmdb)
     {
@@ -112,11 +112,3 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx, afxUnit batch
     }
     return err;
 }
-
-_AVX _avxDdiDctx const _AVX_DDI_DCTX =
-{
-    .compose = NIL,
-    .discard = NIL,
-    .compile = NIL,
-    .recycle = NIL,
-};

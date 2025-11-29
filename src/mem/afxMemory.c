@@ -29,7 +29,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_MMU_C
-#include "../impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 #define _AFX_VALIDATE_MEMSEG
 #define _AFX_VALIDATE_MEMSEG_EXTREMES TRUE

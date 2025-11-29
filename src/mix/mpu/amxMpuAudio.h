@@ -19,6 +19,6 @@
 #ifndef AMX_IMPL___AUDIO_H
 #define AMX_IMPL___AUDIO_H
 
-#include "../amxAudioImpl.h"
+#include "../amxAudioDDK.h"
 
 #endif//AMX_IMPL___AUDIO_H

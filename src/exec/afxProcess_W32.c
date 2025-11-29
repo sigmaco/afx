@@ -19,7 +19,7 @@
 #include <Windows.h>
 
 #define _AFX_CORE_C
-#include "../impl/afxExecImplKit.h"
+#include "afxSystemDDK.h"
 
 AFX_OBJECT(afxProcess)
 {

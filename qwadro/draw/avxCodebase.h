@@ -24,7 +24,7 @@
 #define AVX_CODEBASE_H
 
 #include "qwadro/draw/avxFormat.h"
-#include "qwadro/io/afxXml.h"
+#include "qwadro/etc/afxXml.h"
 #include "qwadro/base/afxFixedString.h"
 
 typedef enum avxShaderParam
@@ -105,12 +105,21 @@ AVX avxShaderType   AvxGetShaderStage
 
 AVX afxString const* AfxGetShaderName(avxCodebase shd, afxUnit prog);
 
-AVX afxUnit         AvxQueryShaderIoChannels
+AVX afxUnit         AvxQueryShaderIns
 (
     avxCodebase shd, 
     afxUnit prog,
     afxUnit first, 
     afxUnit cnt, 
+    avxShaderIoChannel channels[]
+);
+
+AVX afxUnit         AvxQueryShaderOuts
+(
+    avxCodebase shd,
+    afxUnit prog,
+    afxUnit first,
+    afxUnit cnt,
     avxShaderIoChannel channels[]
 );
 

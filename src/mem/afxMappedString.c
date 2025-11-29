@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 _AFX afxUnit AfxDecatalogStrings(afxStringBase strc, afxUnit cnt, afxString const strings[])
 {

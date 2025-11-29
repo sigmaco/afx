@@ -54,8 +54,8 @@
 #include "qwadro/io/afxFile.h"
 #include "qwadro/io/afxStream.h"
 #include "qwadro/io/afxStreamOps.h"
-#include "qwadro/io/afxUrd.h"
-#include "qwadro/io/afxUri.h"
+#include "qwadro/etc/afxUrd.h"
+#include "qwadro/base/afxUri.h"
 
 #define AFX_FS_SYM_LEN  (8)
 #define AFX_FS_DIR_LEN  (1024 + 1 + AFX_FS_SYM_LEN + 1)

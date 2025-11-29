@@ -15,7 +15,7 @@
  */
 
 //#define _AFX_SYSTEM_C
-#include "src/impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 #define OBJ_HDR_SIZ     AFX_ALIGN_SIZE(sizeof(afxObjectBase), AFX_SIMD_ALIGNMENT)
 #define GET_OBJ_HDR(obj_) ((void*)(((afxByte*)obj_) - OBJ_HDR_SIZ))
@@ -251,7 +251,7 @@ _AFXINL afxError AfxDeallocateInstanceData(afxObject obj, afxUnit cnt, afxObject
     return err;
 }
 
-_AFX void AfxResetEventHandler(afxObject obj, afxBool(*handler)(afxObject,afxEvent*))
+_AFX void AfxInstallEventHandler(afxObject obj, afxBool(*handler)(afxObject,afxEvent*))
 {
     afxError err = { 0 };
     afxObjectBase* hdr = GET_OBJ_HDR(obj);

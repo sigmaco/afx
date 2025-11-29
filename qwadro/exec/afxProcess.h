@@ -20,7 +20,7 @@
 #define AFX_PROCESS_H
 
 #include "qwadro/exec/afxThread.h"
-#include "qwadro/io/afxUri.h"
+#include "qwadro/base/afxUri.h"
 
 AFX_DEFINE_HANDLE(afxProcess);
 

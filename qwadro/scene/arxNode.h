@@ -79,7 +79,7 @@ typedef enum arxNodeFlag
 
     // Node has a persistent arxPose attached.
     arxNodeFlag_POSE    = AFX_BITMASK(5),
-    // Node has a arxBody attached.
+    // Node has a arxPuppet attached.
     arxNodeFlag_BODY    = AFX_BITMASK(6),
     // Node has custom callback attached.
     arxNodeFlag_CUSTOM  = AFX_BITMASK(7),
@@ -122,7 +122,7 @@ ARX afxError ArxAcquireJunctionNode(arxScenario scio, arxNode parent, arxModel s
 ARX afxError ArxAcquireCrossfadeNode(arxScenario scio, arxNode parent, arxNode a, arxNode b, afxReal weightNone, afxReal weightAll, arxTrackMask* trackMask, arxNode* node);
 ARX afxError ArxAcquireCallbackNode(arxScenario scio, arxNode parent, afxError(*sample)(void*, afxReal, arxPose, afxUnit, afxUnit const*), void(*setClock)(void*, afxReal), void(*motionVectors)(void*, afxReal, afxReal*, afxReal*, afxBool), void* udd, arxNode* node);
 ARX afxError ArxAcquirePoseNode(arxScenario scio, arxNode parent, arxPose pose, arxNode* node);
-ARX afxError ArxAcquireAnimationNode(arxScenario scio, arxNode parent, arxBody bod, afxReal fillThreshold, arxNode* node);
+ARX afxError ArxAcquireAnimationNode(arxScenario scio, arxNode parent, arxPuppet bod, afxReal fillThreshold, arxNode* node);
 ARX afxError ArxAcquirePlacementNode(arxScenario scio, arxNode parent, arxPlacement plce, arxNode* node);
 
 ARX afxError ArxCaptureNodes(arxScenario scio, afxBool(*node)(arxNode nod, void *udd), afxArray* pvs);

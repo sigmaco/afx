@@ -196,7 +196,7 @@ _AVX afxError _AvxTxdCtorCb(avxTxd txd, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_TXD_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_TXD =
 {
     .fcc = afxFcc_TXD,
     .name = "Txd",

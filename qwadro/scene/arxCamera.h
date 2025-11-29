@@ -193,10 +193,47 @@ ARX void ArxSetCameraOrigin
     afxV3d const origin
 );
 
-/// Get the world-space vector that points to the camera's left/right, down/up, near/far direction.
-ARX void            ArxGetCameraDirectionX(arxCamera cam, afxV3d left, afxV3d right);
-ARX void            ArxGetCameraDirectionY(arxCamera cam, afxV3d down, afxV3d up);
-ARX void            ArxGetCameraDirectionZ(arxCamera cam, afxV3d near, afxV3d far);
+/*
+    The ArxGetCameraDirectionX() retrieves the camera's X-axis direction vectors in world space.
+*/
+
+ARX void ArxGetCameraDirectionX
+(
+    // The camera whose orientation is queried.
+    arxCamera cam, 
+    // Output vector pointing to the camera's left in world space.
+    afxV3d left, 
+    // Output vector pointing to the camera's right in world space.
+    afxV3d right
+);
+
+/*
+    The ArxGetCameraDirectionY() retrieves the camera's Y-axis direction vectors in world space.
+*/
+
+ARX void ArxGetCameraDirectionY
+(
+    // The camera whose orientation is queried.
+    arxCamera cam, 
+    // Output vector pointing downward relative to the camera.
+    afxV3d down, 
+    // Output vector pointing upward relative to the camera.
+    afxV3d up
+);
+
+/*
+    The ArxGetCameraDirectionZ() retrieves the camera's Z-axis direction vectors in world space.
+*/
+
+ARX void ArxGetCameraDirectionZ
+(
+    // The camera whose position/orientation is queried.
+    arxCamera cam, 
+    // Output vector pointing toward the "near" (forward) direction.
+    afxV3d near, 
+    // Output vector pointing toward the "far" (backward) direction.
+    afxV3d far
+);
 
 /*
     The ArxGetCameraFov() method retrieves the current vertical field of view (FOV) of the specified camera, in radians.
@@ -329,12 +366,12 @@ ARX void ArxGetCameraDisplacement
 ARX afxReal         ArxGetCameraDistance(arxCamera cam);
 ARX void            ArxSetCameraDistance(arxCamera cam, afxReal distance);
 
-/// These methods are useful to make a camera orbit on a specific target. 
-/// Note that elevation is measured as rotation about the X(right) axis (hence, it is negative if it is above the horizontal, positive if it is below), 
-/// azimuth is measured as rotation about the Y(up) axis, and, and roll is measured as rotation about the Z(back) axis.
-/// The EAR vector has the elevation as its first component, azimuth as its second, and roll as its third (all three are in radians). 
-
 /*
+    The ArxOrbitCamera() method makes a camera orbit on a specific target. 
+    Note that elevation is measured as rotation about the X (right) axis (hence, it is negative if it is above the horizontal, positive if it is below), 
+    azimuth is measured as rotation about the Y (up) axis, and, and roll is measured as rotation about the Z (back) axis.
+    The EAR vector has the elevation as its first component, azimuth as its second, and roll as its third (all three are in radians). 
+
     Elevation   X (Right)   Rotates the camera up/down. Negative means looking above the horizontal (tilt up), positive means below (tilt down).
     Azimuth     Y (Up)      Rotates the camera left/right horizontally. Commonly used to orbit around a target.
     Roll        Z (Back)    Rotates the camera around its forward axis, like tilting the head sideways.
@@ -350,39 +387,174 @@ ARX void            ArxSetCameraDistance(arxCamera cam, afxReal distance);
     This abstraction is designed for 3D editors, RTS cams, or 3rd-person views where orientation is more 
     intuitive to manage than raw matrices or quaternions.
 */
-ARX void            ArxOrbitCamera(arxCamera cam, afxV3d const elevAzimRoll);
-ARX void            ArxGetCameraOrbit(arxCamera cam, afxV3d elevAzimRoll);
 
-/// Take the explicit control over what the Z projection range is,  and whether or not there is a far clipping plane.
-ARX avxClipSpaceDepth ArxGetCameraDepthRange(arxCamera cam, afxReal* epsilon);
+ARX void ArxOrbitCamera
+(
+    arxCamera cam, 
+    afxV3d const elevAzimRoll
+);
 
-/// You must reset the camera's aspect ratios any time the display device, resolution, or window size changes.
-ARX void            ArxAdjustCameraAspectRatio(arxCamera cam, afxReal physAspectRatio, afxV2d const screenExtent, afxV2d const windowExtent);
+ARX void ArxGetCameraOrbit
+(
+    arxCamera cam, 
+    afxV3d elevAzimRoll
+);
 
-/// For picking 3D objects with the mouse, it's necessary to be able to take a point on the screen and figure out where it would be in world-space. Qwadro can do this for you automatically like this:
+/*
+    The ArxGetCameraDepthRange() method retrieves the camera's clip-space depth configuration.
 
-ARX void            ArxFindWorldCoordinates(arxCamera cam, afxV2d const wh, afxV3d const screenPoint, afxV4d worldPoint);
+    This function returns the camera's current clip-space depth mode
+    (e.g., [0,1], [-1,1], reversed-Z, infinite-far, etc.) and allows you
+    to query the Z-range epsilon; a small value used internally to avoid
+    precision artifacts when a far clipping plane is removed.
+*/
 
-/// Do a ray-based object picking returning the world position and the normal of a target.
-/// Note that the MouseY must be "pre-flipped" to align with the standard 3D alignment of the Y-axis as going up.
-/// curY = (wndHeight - 1) - curY;
-ARX void            ArxGetCameraPickingRay(arxCamera cam, afxV2d const wh, afxV2d const cursor, afxV4d origin, afxV3d normal);
+ARX avxClipSpaceDepth ArxGetCameraDepthRange
+(
+    // The camera whose depth configuration is being queried.
+    arxCamera cam, 
+    // Optional output pointer that receives the epsilon value used for depth range calculations. 
+    // May be NULL if not needed.
+    afxReal* epsilon
+);
 
-/// Use this method to project a single point from world space to window space.
-ARX void            ArxFindScreenCoordinates(arxCamera cam, afxV2d const wh, afxV4d const worldPoint, afxV3d screenPoint);
+/*
+    The ArxAdjustCameraAspectRatio() updates the camera's aspect ratio to match the current display configuration.
 
-/// Transforms a 2D vector of movement into the appropriate 3D vector in world space. 
-ARX void            ArxComputeCameraRelativePlanarBases(arxCamera cam, afxBool screenOrthogonal, afxV3d const planeNormal, afxV4d const pointOnPlane, afxV3d xBasis, afxV3d yBasis);
-/// The result from GetRelativePlanarBases is two vectors, one which is the world-space vector along which X motion should be interpreted (ex., horizontal movement via the keyboard or analog stick), 
-/// and the other is for Y. These vectors are unit length, but they are only orthogonal in world space if you pass false for the second parameter. 
-/// If you pass true, this instructs Qwadro to create non-orthgonal bases such that vertical motion (Y motion) will be mapped to a direction in world space which makes the character appear to move directly upwards on the screen, 
-/// which is actually not the direction orthogonal to perfect horizontal motion (unless the character is at the very center of the screen).
+    You must call this whenever the display device, window size, resolution,
+    or rendering surface changes. This ensures that the camera's projection
+    matrix maintains correct proportions and avoids stretching or distortion.
+*/
 
-ARX afxBool         ArxProcessCameraInteraction(arxCamera cam, afxUnit port, afxReal64 speed, afxReal64 dt);
+ARX void ArxAdjustCameraAspectRatio
+(
+    // The camera whose aspect ratio should be updated.
+    arxCamera cam, 
+    // The physical aspect ratio of the display device.
+    afxReal physAspectRatio, 
+    // The pixel dimensions of the active framebuffer or screen.
+    afxV2d const screenExtent, 
+    // The pixel dimensions of the application window.
+    afxV2d const windowExtent
+);
 
-////////////////////////////////////////////////////////////////////////////////
+/*
+    The ArxFindWorldCoordinates() method converts a screen-space position to its corresponding world-space location.
+
+    This function is useful for tasks such as object picking or determining
+    where a pixel on the screen lies in the 3D scene. Qwadro automatically
+    performs the required unprojection from clip space to world space.
+*/
+
+ARX void ArxFindWorldCoordinates
+(
+    // The camera used for the transformation.
+    arxCamera cam, 
+    // The window or framebuffer dimensions (width, height).
+    afxV2d const wh, 
+    // The input point in screen space. Typically:
+    // screenPoint.x = cursor X, screenPoint.y = cursor Y, screenPoint.z = depth (0=near, 1=far)
+    afxV3d const screenPoint, 
+    // Output world-space position (homogeneous vec4).
+    afxV4d worldPoint
+);
+
+/*
+    The ArxGetCameraPickingRay() method produces a world-space ray suitable for object picking or intersection tests.
+
+    This converts a 2D cursor coordinate into:
+        origin --- the camera-space (or world-space) point where the ray starts  
+        normal --- a normalized direction vector pointing forward into the scene
+
+    IMPORTANT: The input cursor Y value *must be pre-flipped* to match
+    standard 3D coordinates where +Y goes up:
+    flippedY = (wndHeight - 1) - cursorY;
+*/
+
+ARX void ArxGetCameraPickingRay
+(
+    // The camera issuing the ray.
+    arxCamera cam, 
+    // The window or framebuffer dimensions (width, height).
+    afxV2d const wh, 
+    // The cursor position (X, pre-flipped Y).
+    afxV2d const cursor, 
+    // Output: world-space origin of the ray (vec4).
+    afxV4d origin, 
+    // Output: normalized world-space direction of the ray (vec3).
+    afxV3d normal
+);
+
+/*
+    The ArxFindScreenCoordinates() method projects a world-space point into screen coordinates.
+    
+    This is the reverse of ArxFindWorldCoordinates() and is commonly used 
+    for UI hit-tests, rendering labels, HUD elements, or debugging aids.
+*/
+
+ARX void ArxFindScreenCoordinates
+(
+    // The camera performing the projection.
+    arxCamera cam, 
+    // The window or framebuffer dimensions (width, height).
+    afxV2d const wh, 
+    // The world-space location (vec4).
+    afxV4d const worldPoint, 
+    // Output point in screen space (x, y, depth).
+    afxV3d screenPoint
+);
+
+/*
+    The ArxComputeCameraRelativePlanarBases() computes camera-relative 3D basis vectors for interpreting 2D movement input.
+
+    This function converts a 2D movement vector (e.g., WASD input, analog stick,
+    virtual joystick, or drag vector) into two world-space directions lying on
+    (or projected onto) a specified plane. These directions can then be multiplied
+    by user input to produce correct world-space motion.
+
+    ArxComputeCameraRelativePlanarBases produces two normalized world-space vectors:
+        xBasis --- the 3D direction corresponding to horizontal input (X-axis input).
+        yBasis --- the 3D direction corresponding to vertical input (Y-axis input).
+
+    These are always unit length, but their orthogonality depends on the screenOrthogonal flag:
+        When screenOrthogonal == false (standard planar movement):
+            The resulting xBasis and yBasis are orthogonal in world space.
+            The bases represent the true camera-relative directions constrained to the plane.
+            Useful for physics, consistent traversal, character movement, or navigation on a surface.
+        When screenOrthogonal == true (screen-aligned motion):
+            The Y-movement basis is adjusted so the character appears to move straight up the screen,
+            even if this is not the world-space direction orthogonal to horizontal movement.
+            As a result, xBasis and yBasis are no longer orthogonal in world space.
+            This is typically used for:
+                Top-down or isometric control feel
+                Twin-stick shooters
+                Pointer-driven movement where screen direction is prioritized over world-space geometry
+
+    This behavior compensates for perspective distortion:
+    Unless the player is exactly at the center of the screen, "up on the screen" is not perfectly perpendicular 
+    to "right on the screen" in world space. Qwadro resolves this by intentionally breaking world-space 
+    orthogonality to preserve screen-space intuitiveness.
+*/
+
+ARX void ArxComputeCameraRelativePlanarBases
+(
+    // The camera whose orientation is used to derive the bases.
+    arxCamera cam, 
+    // If true, generate screen-orthogonal bases (see notes below).
+    afxBool screenOrthogonal, 
+    // The normal vector of the plane onto which movement will be constrained.
+    afxV3d const planeNormal, 
+    // A point lying on the constraint plane.
+    afxV4d const pointOnPlane, 
+    // Output: world-space basis vector corresponding to +X motion.
+    afxV3d xBasis, 
+    // Output: world-space basis vector corresponding to +Y motion.
+    afxV3d yBasis
+);
 
 ARX afxError ArxAdjustCamera(arxCamera cam, avxViewport const* vp);
+
+////////////////////////////////////////////////////////////////////////////////
 
 AFX_DEFINE_STRUCT(arxCameraConfig)
 {
@@ -392,16 +564,43 @@ AFX_DEFINE_STRUCT(arxCameraConfig)
 
 ARX afxError        ArxAcquireCameras
 (
-    arxScenario   scio, 
+    arxScenario     scio, 
     afxUnit         cnt, 
     arxCamera       cameras[]
 );
 
-ARX afxReal64       ArxFindAllowedCameraLodError
+/*
+    The ArxFindAllowedCameraLodError() function converts an acceptable LOD error measured in screen 
+    pixels into an equivalent world-space geometric error allowed at a given distance from the camera.
+    This is used for:
+        mesh LOD selection
+        terrain tessellation
+        impostor switching
+        error-metric based simplification
+    It answers the question: "If I want at most errInPixels pixels of screen-space deviation, 
+    how much geometric deviation (in world units) is allowed at distance d?"
+
+    It converts a maximum screen-space error (in pixels) into the corresponding
+    world-space geometric error allowed at a given camera distance.
+
+    This is typically used for LOD systems: if a mesh or surface deviates from
+    the ideal by less than the returned error value, that deviation will appear
+    smaller than 'errInPixels' from the camera's viewpoint.
+
+    If the allowed world-space deviation is 0.08 units, any LOD or tessellation 
+    error <= 0.08 will be visually indistinguishable within the desired pixel tolerance.
+*/
+
+ARX afxReal64 ArxFindAllowedCameraLodError
+// Returns the allowed world-space geometric error at 'distanceFromCam'.
 (
+    // Maximum pixel deviation allowed on screen.
     afxReal64 errInPixels, 
+    // Height of the viewport in pixels.
     afxInt vpHeightInPixels, 
+    // Vertical field of view (radians).
     afxReal64 fovY, 
+    // Distance from the camera to the object/surface.
     afxReal64 distanceFromCam
 );
 

@@ -80,26 +80,6 @@ AFXINL void     AfxV2dMultiply(afxV2d v, afxV2d const a, afxV2d const b); // v =
 AFXINL void     AfxV3dMultiply(afxV3d v, afxV3d const a, afxV3d const b); // v = a * b
 AFXINL void     AfxV4dMultiply(afxV4d v, afxV4d const a, afxV4d const b); // v = a * b
 
-// vector-multiply-add (accumulate)
-// A common operation that performs (A * B) + C, combining multiplication and addition in a single step. 
-// It is often used in shaders and numerical algorithms to reduce computation time.
-// Efficient calculation in shaders, physics simulations, and financial models.
-// v = a * b + c
-
-AFXINL void     AfxV2dMad(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c); // v = a * b + c
-AFXINL void     AfxV3dMad(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c); // v = a * b + c
-AFXINL void     AfxV4dMad(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c); // v = a * b + c
-
-// scalar-multiply-add (accumulate)
-// A common operation that performs (A * B) + C, combining multiplication and addition in a single step. 
-// It is often used in shaders and numerical algorithms to reduce computation time.
-// Efficient calculation in shaders, physics simulations, and financial models.
-// v = a + b * lambda
-
-AFXINL void     AfxV2dMads(afxV2d v, afxReal lambda, afxV2d const b, afxV2d const c); // v = lambda * b + c
-AFXINL void     AfxV3dMads(afxV3d v, afxReal lambda, afxV3d const b, afxV3d const c); // v = lambda * b + c
-AFXINL void     AfxV4dMads(afxV4d v, afxReal lambda, afxV4d const b, afxV4d const c); // v = lambda * b + c
-
 // Scales (or multiplies) a vector or scalar by a constant factor.
 // Resizing objects, scaling forces, enlarging or shrinking vectors.
 // v = a * lambda
@@ -107,6 +87,28 @@ AFXINL void     AfxV4dMads(afxV4d v, afxReal lambda, afxV4d const b, afxV4d cons
 AFXINL void     AfxV2dScale(afxV2d v, afxV2d const a, afxReal lambda); // v = a * lambda
 AFXINL void     AfxV3dScale(afxV3d v, afxV3d const a, afxReal lambda); // v = a * lambda
 AFXINL void     AfxV4dScale(afxV4d v, afxV4d const a, afxReal lambda); // v = a * lambda
+
+// vector-multiply-add (accumulate)
+// A common operation that performs (A * B) + C, combining multiplication and addition in a single step. 
+// It is often used in shaders and numerical algorithms to reduce computation time.
+// Efficient calculation in shaders, physics simulations, and financial models.
+
+// v = add + (mul * f)
+
+AFXINL void     AfxV2dMad(afxV2d v, afxV2d const add, afxV2d const mul, afxV2d const f); // v = add + (mul * f)
+AFXINL void     AfxV3dMad(afxV3d v, afxV3d const add, afxV3d const mul, afxV3d const f); // v = add + (mul * f)
+AFXINL void     AfxV4dMad(afxV4d v, afxV4d const add, afxV4d const mul, afxV4d const f); // v = add + (mul * f)
+
+// scalar-multiply-add (accumulate)
+// A common operation that performs (A * B) + C, combining multiplication and addition in a single step. 
+// It is often used in shaders and numerical algorithms to reduce computation time.
+// Efficient calculation in shaders, physics simulations, and financial models.
+
+// v = add + (mul * lambda)
+
+AFXINL void     AfxV2dMads(afxV2d v, afxV2d const add, afxV2d const mul, afxReal lambda); // v = add + (mul * lambda)
+AFXINL void     AfxV3dMads(afxV3d v, afxV3d const add, afxV3d const mul, afxReal lambda); // v = add + (mul * lambda)
+AFXINL void     AfxV4dMads(afxV4d v, afxV4d const add, afxV4d const mul, afxReal lambda); // v = add + (mul * lambda)
 
 // reverse subtract
 // v = c - (a * b)

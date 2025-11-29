@@ -19,7 +19,7 @@
 #define _AFX_DRIVER_C
 #define _AFX_DEVICE_C
 #define _AFX_CONTEXT_C
-#include "../impl/afxExecImplKit.h"
+#include "afxSystemDDK.h"
 
 afxString devTypeString[] =
 {

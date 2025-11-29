@@ -35,18 +35,21 @@ AFX_STATIC_ASSERT(sizeof(afxInt32) == sizeof(long), "");
 AFX_STATIC_ASSERT(sizeof(afxTime) == sizeof(time_t), "");
 
 // nanoseconds per millisecond
-#define AFX_NANOSECS_PER_MILLISEC(millisecs_) ((1000000) * (millisecs_)) // 1 ms = 1'000'000 ns
-// nanoseconds per seconds
-#define AFX_NANOSECS_PER_SEC(secs_) ((1000000000) * (secs_)) // 1 s = 1'000'000'000 ns
-
-// Get nanoseconds from seconds
-#define AFX_NANOSECS_PER_SECS(secs_) ((afxUnit64)(AFX_NANOSECS_PER_SEC(secs_)))
-// Get seconds from nanoseconds
-#define AFX_SECS_PER_NANOSECS(nanosecs_) ((afxUnit32)((nanosecs_) / AFX_NANOSECS_PER_SEC(1)))
 // Get nanoseconds from milliseconds
-#define AFX_NANOSECS_PER_MILLISECS(millisecs_) ((afxUnit64)(AFX_NANOSECS_PER_MILLISEC(millisecs_)))
+#define AFX_NANOSECS_PER_MILLISECS(millisecs_) ((1000000) * (millisecs_)) // 1 ms = 1'000'000 ns
+
 // Get millisecond from nanoseconds
-#define AFX_MILLISECS_PER_NANOSECS(nanosecs_) ((afxUnit32)((nanosecs_) / AFX_NANOSECS_PER_MILLISEC(1)))
+// Pass 1 to get 1:1 constant milliseconds per nanosecond.
+#define AFX_MILLISECS_PER_NANOSECS(nanosecs_) ((afxUnit32)((nanosecs_) / AFX_NANOSECS_PER_MILLISECS(1)))
+
+// nanoseconds per seconds
+// Get nanoseconds from seconds
+// Pass 1 second to get 1:1 constant nanoseconds per second.
+#define AFX_NANOSECS_PER_SECS(secs_) ((1000000000) * (secs_)) // 1 s = 1'000'000'000 ns
+
+// second per nanoseconds
+// Get seconds per nanoseconds
+#define AFX_SECS_PER_NANOSECS(nanosecs_) ((afxUnit32)((nanosecs_) / AFX_NANOSECS_PER_SECS(1)))
 
 
 AFX afxTime AfxGetTime(afxTime *t);
