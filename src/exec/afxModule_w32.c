@@ -33,7 +33,7 @@
 #define _AFX_SYSTEM_C
 #define _AFX_DRIVER_C
 #define _AFX_DEVICE_C
-#include "../impl/afxExecImplKit.h"
+#include "afxSystemDDK.h"
 
 _AFX afxModuleFlags AfxTestModule(afxModule mdle, afxModuleFlags bitmask)
 {

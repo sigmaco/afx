@@ -21,7 +21,7 @@
 #define _AVX_DRAW_CONTEXT_C
 #include "avxIcd.h"
 
-_AVX afxCmdId AvxCmdDeclareDependency(afxDrawContext dctx, avxBusStage dstStage, avxPipelineAccess dstAcc)
+_AVX afxCmdId AvxCmdDeclareDependency(afxDrawContext dctx, avxBusStage dstStage, avxBusAccess dstAcc)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
@@ -34,7 +34,7 @@ _AVX afxCmdId AvxCmdDeclareDependency(afxDrawContext dctx, avxBusStage dstStage,
     return cmdId;
 }
 
-_AVX afxCmdId AvxCmdDeclareBarrier(afxDrawContext dctx, avxBusStage dstStage, avxPipelineAccess dstAcc)
+_AVX afxCmdId AvxCmdDeclareBarrier(afxDrawContext dctx, avxBusStage dstStage, avxBusAccess dstAcc)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);

@@ -43,7 +43,7 @@
 
 #include <math.h>
 #include "qwadro/exec/afxDebug.h"
-#include "qwadro/math/afxSimd.h"
+#include "qwadro/base/afxSimd.h"
 //#include <stdalign.h>
 
 #ifdef AFX_ON_WINDOWS
@@ -57,7 +57,7 @@
 #   define AFXCALLV 
 #endif
 
-#define AFX_R(x_)   (x_)
+#define AFX_REAL(x_)   (x_)
 
 #ifndef AFX_PI
 #   define AFX_PI (3.14159265358979323846)

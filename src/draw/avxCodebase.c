@@ -20,376 +20,6 @@
 #define _AVX_SHADER_C
 #include "avxIcd.h"
 
-#if 0 // VS
-
-struct inVtx
-{
-    vec3 position @0;
-    vec3 normal @1;
-    vec2 uv @2;
-};
-
-struct outRslt
-{
-    vec4 position;
-}
-
-outRslt main(int vtxIdx, int instIdx, inVtx in)
-{
-    outRslt r;
-    return r;
-}
-#endif
-
-_AVX afxString const vtxFmtString[avxFormat_TOTAL] =
-{
-    AFX_STRING(""),
-    [avxFormat_R32f] = AFX_STRING("float"),
-    [avxFormat_RG32f] = AFX_STRING("vec2"),
-    [avxFormat_RGB32f] = AFX_STRING("vec3"),
-    [avxFormat_RGBA32f] = AFX_STRING("vec4"),
-    AFX_STRING("mat2"),
-    AFX_STRING("mat3"),
-    AFX_STRING("mat4"),
-
-    //AFX_STRING("V4B"),
-    //AFX_STRING("v8B"),
-};
-_AVX avxFormat AfxFindVertexFormat(afxString const *str)
-{
-    afxError err = { 0 };
-    AFX_ASSERT(str);
-
-    for (afxUnit i = 0; i < avxFormat_TOTAL; i++)
-    {
-        if (AfxCompareStrings(str, 0, TRUE, 1, &vtxFmtString[i], NIL))
-            return (avxFormat)i;
-    }
-
-    return (avxFormat)-1;
-}
-
-_AVX afxError _AvxScanGlScript(afxString const* code, afxArray* fInOuts, afxArray* fResources, afxString* pushConstsName)
-{
-    afxError err = { 0 };
-
-    afxUri inc;
-    afxChar buf[2048] = { 0 };
-    //afxUnit baseChar;
-    afxString4096 src;
-    AfxMakeString4096(&src, NIL);
-
-    static afxString const keywords[] =
-    {
-        AFX_STRING("IN"),
-        AFX_STRING("OUT"),
-        AFX_STRING("UNIFORM"),
-        AFX_STRING("TEXTURE"),
-        AFX_STRING("BUFFER"),
-        AFX_STRING("FETCH"),
-        AFX_STRING("PUSH"),
-    };
-
-    // Shared among cases.
-    afxUnit location = 0;
-    afxUnit set = 0, binding = 0, resCnt = 1;
-
-    afxUnit base = 0, strStep = 0;
-    afxString line;
-    while (1)
-    {
-        line = AfxExcerptStringLine(code, base);
-
-        if (!line.len) break;
-
-        strStep = line.len;
-        base += strStep;
-
-        afxUnit keywIdx;
-        afxString excerpt = AfxFindSubstrings(&line, 0, FALSE, ARRAY_SIZE(keywords), keywords, &keywIdx);
-
-        if (!excerpt.len)
-            continue;
-
-        switch (keywIdx)
-        {
-        case 0: // IN
-        {
-            afxString32 fmtName = { 0 };
-            afxString32 varName = { 0 };
-            afxUnit fnd = AfxScanString(&line, "IN(%u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &location, fmtName.buf, varName.buf);
-
-            if (fnd == 3)
-            {
-                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-
-                AfxMakeString(&fmtName.s, 0, fmtName.buf, 0);
-                AfxMakeString(&varName.s, 0, varName.buf, 0);
-
-                avxFormat fmt = AfxFindVertexFormat(&fmtName.s);
-
-                afxUnit idx;
-                avxShaderIoChannel* decl;
-
-                if (!(decl = AfxPushArrayUnits(fInOuts, 1, &idx, NIL, 0))) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(location < 16); // hardcoded limitation
-                    decl->location = location;
-                    AFX_ASSERT(fmt < avxFormat_TOTAL);
-                    decl->fmt = fmt;
-                    AfxMakeString16(&decl->semantic, &varName.s);
-                }
-            }
-            break;
-        }
-        case 1: // OUT
-        {
-            afxString32 fmtName = { 0 };
-            afxString32 varName = { 0 };
-            afxUnit fnd = AfxScanString(&line, "OUT(%u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &location, fmtName.buf, varName.buf);
-
-            if (fnd == 3)
-            {
-                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-
-                AfxMakeString(&fmtName.s, 0, fmtName.buf, 0);
-                AfxMakeString(&varName.s, 0, varName.buf, 0);
-                avxFormat fmt = AfxFindVertexFormat(&fmtName.s);
-
-                afxUnit idx;
-                avxShaderIoChannel* decl;
-
-                if (!(decl = AfxPushArrayUnits(fInOuts, 1, &idx, NIL, 0))) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(location < 16); // hardcoded limitation
-                    decl->location = location;
-                    AFX_ASSERT(fmt < avxFormat_TOTAL);
-                    decl->fmt = fmt;
-                    AfxMakeString16(&decl->semantic, &varName.s);
-                }
-            }
-            break;
-        }
-        case 2: // UNIFORM
-        {
-            afxString32 varName = { 0 };
-            afxString32 layoutName = { 0 };
-            afxUnit fnd = AfxScanString(&line, "UNIFORM(%u, %u, %32[A-Za-z0-9_], %32[A-Za-z0-9_] )", &set, &binding, layoutName.buf, varName.buf);
-
-            if (fnd == 4)
-            {
-                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-
-                AfxMakeString(&varName.s, 0, varName.buf, 0);
-
-                avxShaderParam resType = avxShaderParam_UNIFORM;
-
-                afxUnit idx;
-                avxShaderResource *decl;
-
-                if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(set < AVX_MAX_LIGAMENT_SETS);
-                    decl->set = set;
-                    AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
-                    decl->binding = binding;
-                    AFX_ASSERT(resType < avxShaderParam_TOTAL);
-                    decl->type = resType;
-                    AFX_ASSERT(decl->type != avxShaderParam_OUT);
-                    AFX_ASSERT(resCnt);
-                    decl->cnt = AFX_MAX(resCnt, 1);
-                    AfxMakeString16(&decl->name, &varName.s);
-                }
-            }
-            break;
-        }
-        case 3: // TEXTURE
-        {
-            afxString32 varName = { 0 };
-            afxString32 typeName = { 0 };
-            afxUnit fnd = AfxScanString(&line, "TEXTURE(%u, %u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &set, &binding, typeName.buf, varName.buf);
-
-            if (fnd == 4)
-            {
-                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-
-                AfxMakeString(&typeName.s, 0, typeName.buf, 0);
-                AfxMakeString(&varName.s, 0, varName.buf, 0);
-
-                avxShaderParam resType = 0;
-
-                if ((AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("sampler1D"), NIL)) ||
-                    (AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("sampler2D"), NIL)) ||
-                    (AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("sampler3D"), NIL)) ||
-                    (AfxCompareStrings(&typeName.s, 0, FALSE, 1, &AFX_STRING("samplerCube"), NIL))
-                    )
-                {
-                    resType = avxShaderParam_TEXTURE;
-                }
-
-                afxUnit idx;
-                avxShaderResource *decl;
-
-                if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(set < AVX_MAX_LIGAMENT_SETS);
-                    decl->set = set;
-                    AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
-                    decl->binding = binding;
-                    AFX_ASSERT(resType < avxShaderParam_TOTAL);
-                    decl->type = resType;
-                    AFX_ASSERT(decl->type != avxShaderParam_OUT);
-                    AFX_ASSERT(resCnt);
-                    decl->cnt = AFX_MAX(resCnt, 1);
-                    AfxMakeString16(&decl->name, &varName.s);
-                }
-            }
-            break;
-        }
-        case 4: // BUFFER
-        {
-            afxString32 varName = { 0 };
-            afxString32 layoutName = { 0 };
-            afxString32 accessName = { 0 };
-            afxUnit fnd = AfxScanString(&line, "BUFFER(%u, %u, %32[A-Za-z0-9], %32[A-Za-z0-9], %32[A-Za-z0-9_] )", &set, &binding, layoutName.buf, accessName.buf, varName.buf);
-
-            if (fnd == 5)
-            {
-                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-
-                AfxMakeString(&accessName.s, 0, accessName.buf, 0);
-                AfxMakeString(&varName.s, 0, varName.buf, 0);
-
-                avxShaderParam resType = avxShaderParam_BUFFER;
-
-                afxUnit idx;
-                avxShaderResource *decl;
-
-                if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(set < AVX_MAX_LIGAMENT_SETS);
-                    decl->set = set;
-                    AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
-                    decl->binding = binding;
-                    AFX_ASSERT(resType < avxShaderParam_TOTAL);
-                    decl->type = resType;
-                    AFX_ASSERT(decl->type != avxShaderParam_OUT);
-                    AFX_ASSERT(resCnt);
-                    decl->cnt = AFX_MAX(resCnt, 1);
-                    AfxMakeString16(&decl->name, &varName.s);
-                }
-            }
-            break;
-        }
-        case 5: // FETCH
-        {
-            afxString32 varName = { 0 };
-            afxUnit fnd = AfxScanString(&line, "FETCH(%u, %u, %32[A-Za-z0-9_] )", &set, &binding, varName.buf);
-
-            if (fnd == 3)
-            {
-                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-
-                AfxMakeString(&varName.s, 0, varName.buf, 0);
-
-                avxShaderParam resType = avxShaderParam_FETCH;
-
-                afxUnit idx;
-                avxShaderResource *decl;
-
-                if (!(decl = AfxPushArrayUnits(fResources, 1, &idx, NIL, 0))) AfxThrowError();
-                else
-                {
-                    AFX_ASSERT(set < AVX_MAX_LIGAMENT_SETS);
-                    decl->set = set;
-                    AFX_ASSERT(binding < AVX_MAX_LIGAMENTS);
-                    decl->binding = binding;
-                    AFX_ASSERT(resType < avxShaderParam_TOTAL);
-                    decl->type = resType;
-                    AFX_ASSERT(decl->type != avxShaderParam_OUT);
-                    AFX_ASSERT(resCnt);
-                    decl->cnt = AFX_MAX(resCnt, 1);
-                    AfxMakeString16(&decl->name, &varName.s);
-                }
-            }
-            break;
-        }
-        case 6: // PUSH
-        {
-            afxString32 varName = { 0 };
-            afxUnit fnd = AfxScanString(&line, "PUSH(%32[A-Za-z0-9_] )", varName.buf);
-
-            if (fnd == 1)
-            {
-                AfxMakeUri(&inc, ARRAY_SIZE(buf), buf, 0);
-                AfxMakeString(&varName.s, 0, varName.buf, 0);
-                AfxCopyString(pushConstsName, 0, &varName.s, 0);
-            }
-            break;
-        }
-        default: AfxThrowError(); break;
-        }
-    }
-    return err;
-}
-
-_AVX afxError _AvxLoadGlScript(afxStream file, afxArray* fCode)
-{
-    afxError err = { 0 };
-
-    afxStream inc;
-    afxStreamInfo iobi = { 0 };
-    iobi.usage = afxIoUsage_FILE;
-    iobi.flags = afxIoFlag_READABLE;
-    AfxAcquireStream(1, &iobi, &inc);
-
-    afxChar buf[2048] = { 0 };
-    afxUnit baseChar;
-    afxString4096 src;
-    AfxMakeString4096(&src, NIL);
-    afxString2048 line;
-    AfxMakeString2048(&line, NIL);
-
-    while (!AfxReadFileLine(file, &line.s))
-    {
-        afxString excerpt =AfxFindSubstring(&line.s, 0, FALSE, &AFX_STRING("#include "));
-
-        if (excerpt.len)
-        {
-            afxBool fnd = AfxScanString(&line.s, "#include <%128[^>]>\n", buf);
-
-            afxUri incUri;
-            AfxMakeUri(&incUri, 0, buf, 0);
-
-            if (AfxReopenFile(inc, &incUri, afxFileFlag_R)) AfxThrowError();
-            else
-            {
-                //afxChar* room = AfxPushArrayUnits(&bp->codes, line.s.len + 3, &baseChar, NIL);
-                //AfxDumpString(&AFX_STRING("// "), 0, 3, room);
-                //AfxDumpString(&line.s, 0, line.s.len, &room[3]);
-
-                if (_AvxLoadGlScript(inc, fCode))
-                    AfxThrowError();
-            }
-            continue;
-        }
-
-        void* room = AfxPushArrayUnits(fCode, line.s.len, &baseChar, NIL, 0);
-        AfxDumpString(&line.s, 0, line.s.len, room);
-    }
-    AfxDisposeObjects(1, &inc);
-    return err;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// SHADER                                                                     //
-////////////////////////////////////////////////////////////////////////////////
-
 _AVX afxBool AvxGetProgram(avxCodebase shd, afxUnit unit, void** slot)
 {
     afxError err = { 0 };
@@ -522,7 +152,7 @@ _AVX afxError AvxPrintShader(avxCodebase shd, afxUnit prog, afxUri const *uri)
     return err;
 }
 
-_AVX afxUnit AvxQueryShaderIoChannels(avxCodebase shd, afxUnit prog, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[])
+_AVX afxUnit AvxQueryShaderIns(avxCodebase shd, afxUnit prog, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[])
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
@@ -531,19 +161,51 @@ _AVX afxUnit AvxQueryShaderIoChannels(avxCodebase shd, afxUnit prog, afxUnit fir
     if (!AvxGetProgram(shd, prog, (void**)&slot))
         return afxError_NOT_FOUND;
 
-    AFX_ASSERT_RANGE(slot->ioDeclCnt, first, cnt);
+    AFX_ASSERT_RANGE(slot->inCnt, first, cnt);
     AFX_ASSERT(cnt);
     afxUnit hitCnt = 0;
 
-    cnt = AFX_MIN(slot->ioDeclCnt, cnt);
-    first = AFX_MIN(first, slot->ioDeclCnt - 1);
+    cnt = AFX_MIN(slot->inCnt, cnt);
+    first = AFX_MIN(first, slot->inCnt - 1);
 
     // if channels is not specified, it must return the total of declarations.
 
-    if (!channels) hitCnt = slot->ioDeclCnt;
+    if (!channels) hitCnt = slot->inCnt;
     else
     {
-        avxShaderIoChannel const* ins = slot->ioDecls;
+        avxShaderIoChannel const* ins = slot->ins;
+
+        for (afxUnit i = 0; i < cnt; i++)
+        {
+            AfxCopy(&channels[i], &ins[first + i], sizeof(channels[0]));
+            hitCnt++;
+        }
+    }
+    return hitCnt;
+}
+
+_AVX afxUnit AvxQueryShaderOuts(avxCodebase shd, afxUnit prog, afxUnit first, afxUnit cnt, avxShaderIoChannel channels[])
+{
+    afxError err = { 0 };
+    AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &shd);
+
+    _avxCodeBlock* slot;
+    if (!AvxGetProgram(shd, prog, (void**)&slot))
+        return afxError_NOT_FOUND;
+
+    AFX_ASSERT_RANGE(slot->outCnt, first, cnt);
+    AFX_ASSERT(cnt);
+    afxUnit hitCnt = 0;
+
+    cnt = AFX_MIN(slot->outCnt, cnt);
+    first = AFX_MIN(first, slot->outCnt - 1);
+
+    // if channels is not specified, it must return the total of declarations.
+
+    if (!channels) hitCnt = slot->outCnt;
+    else
+    {
+        avxShaderIoChannel const* ins = slot->outs;
 
         for (afxUnit i = 0; i < cnt; i++)
         {
@@ -628,9 +290,14 @@ _AVX afxError AvxRecompileShader(avxCodebase shd, afxUnit prog, afxString const*
                 .var = (void**)&slot->resDecls
             },
             {
-                .cnt = slot->ioDeclCnt,
-                .siz = sizeof(slot->ioDecls[0]),
-                .var = (void**)&slot->ioDecls
+                .cnt = slot->inCnt,
+                .siz = sizeof(slot->ins[0]),
+                .var = (void**)&slot->ins
+            },
+            {
+                .cnt = slot->outCnt,
+                .siz = sizeof(slot->outs[0]),
+                .var = (void**)&slot->outs
             },
             {
                 .cnt = slot->codeLen,
@@ -644,7 +311,8 @@ _AVX afxError AvxRecompileShader(avxCodebase shd, afxUnit prog, afxString const*
 
         slot->codeLen = 0;
         AFX_ASSERT(slot->code == NIL);
-        AFX_ASSERT(slot->ioDecls == NIL);
+        AFX_ASSERT(slot->ins == NIL);
+        AFX_ASSERT(slot->outs == NIL);
         AFX_ASSERT(slot->resDecls == NIL);
     }
 
@@ -662,21 +330,24 @@ _AVX afxError AvxRecompileShader(avxCodebase shd, afxUnit prog, afxString const*
 
     AfxMakeString32(&slot->pushConstName, NIL);
 
-    afxArray fInOuts, fResources;
-    AfxMakeArray(&fInOuts, sizeof(avxShaderIoChannel), 16, NIL, 0);
+    afxArray fIns, fOuts, fResources;
+    AfxMakeArray(&fIns, sizeof(avxShaderIoChannel), 16, NIL, 0);
+    AfxMakeArray(&fOuts, sizeof(avxShaderIoChannel), 16, NIL, 0);
     AfxMakeArray(&fResources, sizeof(avxShaderResource), 16, NIL, 0); // if data is reallocated, autoreference by strings will be broken YYYYYYYYYY
 
     if (code && code->len)
     {
-        _AvxScanGlScript(code, &fInOuts, &fResources, &slot->pushConstName.s);
+        _AvxScanGlScript(code, &fIns, &fOuts, &fResources, &slot->pushConstName.s);
         slot->codeLen = code->len + 1; // keep code in memory
     }
     else AfxThrowError();
 
     slot->resDeclCnt = fResources.pop;
     slot->resDecls = NIL;
-    slot->ioDeclCnt = fInOuts.pop;
-    slot->ioDecls = NIL;
+    slot->inCnt = fIns.pop;
+    slot->ins = NIL;
+    slot->outCnt = fOuts.pop;
+    slot->outs = NIL;
 
     afxObjectStash stashs[] =
     {
@@ -686,9 +357,14 @@ _AVX afxError AvxRecompileShader(avxCodebase shd, afxUnit prog, afxString const*
             .var = (void**)&slot->resDecls
         },
         {
-            .cnt = slot->ioDeclCnt,
-            .siz = sizeof(slot->ioDecls[0]),
-            .var = (void**)&slot->ioDecls
+            .cnt = slot->inCnt,
+            .siz = sizeof(slot->ins[0]),
+            .var = (void**)&slot->ins
+        },
+        {
+            .cnt = slot->outCnt,
+            .siz = sizeof(slot->outs[0]),
+            .var = (void**)&slot->outs
         },
         {
             .cnt = slot->codeLen,
@@ -719,11 +395,18 @@ _AVX afxError AvxRecompileShader(avxCodebase shd, afxUnit prog, afxString const*
             AfxMakeString16(&slot->resDecls[j].name, &decl->name.s);
         }
 
-        for (afxUnit i = 0; i < slot->ioDeclCnt; i++)
+        for (afxUnit i = 0; i < slot->inCnt; i++)
         {
-            avxShaderIoChannel* ioBp = AfxGetArrayUnit(&fInOuts, i);
-            slot->ioDecls[i] = *ioBp;
-            AfxMakeString16(&slot->ioDecls[i].semantic, &ioBp->semantic.s);
+            avxShaderIoChannel* ioBp = AfxGetArrayUnit(&fIns, i);
+            slot->ins[i] = *ioBp;
+            AfxMakeString16(&slot->ins[i].semantic, &ioBp->semantic.s);
+        }
+
+        for (afxUnit i = 0; i < slot->outCnt; i++)
+        {
+            avxShaderIoChannel* ioBp = AfxGetArrayUnit(&fOuts, i);
+            slot->outs[i] = *ioBp;
+            AfxMakeString16(&slot->outs[i].semantic, &ioBp->semantic.s);
         }
 
         slot->topology = avxTopology_TRI_LIST;
@@ -732,7 +415,8 @@ _AVX afxError AvxRecompileShader(avxCodebase shd, afxUnit prog, afxString const*
             AfxThrowError();
     }
 
-    AfxEmptyArray(&fInOuts, FALSE, FALSE);
+    AfxEmptyArray(&fIns, FALSE, FALSE);
+    AfxEmptyArray(&fOuts, FALSE, FALSE);
     AfxEmptyArray(&fResources, FALSE, FALSE);
 
     return err;
@@ -887,9 +571,14 @@ _AVX afxError _AvxShdDtorCb(avxCodebase shd)
                         .var = (void**)&slot->resDecls
                     },
                     {
-                        .cnt = slot->ioDeclCnt,
-                        .siz = sizeof(slot->ioDecls[0]),
-                        .var = (void**)&slot->ioDecls
+                        .cnt = slot->inCnt,
+                        .siz = sizeof(slot->ins[0]),
+                        .var = (void**)&slot->ins
+                    },
+                    {
+                        .cnt = slot->outCnt,
+                        .siz = sizeof(slot->outs[0]),
+                        .var = (void**)&slot->outs
                     },
                     {
                         .cnt = slot->codeLen,
@@ -903,7 +592,8 @@ _AVX afxError _AvxShdDtorCb(avxCodebase shd)
 
                 slot->codeLen = 0;
                 AFX_ASSERT(slot->code == NIL);
-                AFX_ASSERT(slot->ioDecls == NIL);
+                AFX_ASSERT(slot->ins == NIL);
+                AFX_ASSERT(slot->outs == NIL);
                 AFX_ASSERT(slot->resDecls == NIL);
             }
         }
@@ -930,7 +620,7 @@ _AVX afxError _AvxShdCtorCb(avxCodebase shd, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_SHD_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_CODB =
 {
     .fcc = afxFcc_SHD,
     .name = "Shader",

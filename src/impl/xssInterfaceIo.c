@@ -3,7 +3,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_SCRIPT_C
-#include "afxIoImplKit.h"
+#include "../exec/afxSystemDDK.h"
 #include "../qwadro_xss/src/xss.h"
 #include "qwadro/ux/afxScript.h"
 

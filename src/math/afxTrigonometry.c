@@ -355,8 +355,8 @@ _AFXINL void AfxBarycentricV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d 
     AfxFillV2d(gv, g);
 
     afxV2d tmp;
-    AfxV2dMad(tmp, p10, fv, a);
-    AfxV2dMad(v, p20, gv, tmp);
+    AfxV2dMad(tmp, a, p10, fv);
+    AfxV2dMad(v, tmp, p20, gv);
 }
 
 _AFXINL void AfxBarycentricV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c, afxReal f, afxReal g)
@@ -378,8 +378,8 @@ _AFXINL void AfxBarycentricV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d 
     AfxFillV3d(gv, g);
 
     afxV3d tmp;
-    AfxV3dMad(tmp, p10, fv, a);
-    AfxV3dMad(v, p20, gv, tmp);
+    AfxV3dMad(tmp, a, p10, fv);
+    AfxV3dMad(v, tmp, p20, gv);
 }
 
 _AFXINL void AfxBarycentricV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c, afxReal f, afxReal g)
@@ -401,8 +401,8 @@ _AFXINL void AfxBarycentricV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d 
     AfxFillV4d(gv, g);
 
     afxV4d tmp;
-    AfxV4dMad(tmp, p10, fv, a);
-    AfxV4dMad(v, p20, gv, tmp);
+    AfxV4dMad(tmp, a, p10, fv);
+    AfxV4dMad(v, tmp, p20, gv);
 }
 
 // BaryCentric2
@@ -419,8 +419,8 @@ _AFXINL void AfxBarycentricV2d2(afxV2d v, afxV2d const a, afxV2d const b, afxV2d
     AfxV2dSub(p20, c, a);
 
     afxV2d tmp;
-    AfxV2dMad(tmp, p10, f, a);
-    AfxV2dMad(v, p20, g, tmp);
+    AfxV2dMad(tmp, a, p10, f);
+    AfxV2dMad(v, tmp, p20, g);
 }
 
 _AFXINL void AfxBarycentricV3d2(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c, afxV3d const f, afxV3d const g)
@@ -435,8 +435,8 @@ _AFXINL void AfxBarycentricV3d2(afxV3d v, afxV3d const a, afxV3d const b, afxV3d
     AfxV3dSub(p20, c, a);
 
     afxV3d tmp;
-    AfxV3dMad(tmp, p10, f, a);
-    AfxV3dMad(v, p20, g, tmp);
+    AfxV3dMad(tmp, a, p10, f);
+    AfxV3dMad(v, tmp, p20, g);
 }
 
 _AFXINL void AfxBarycentricV4d2(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c, afxV4d const f, afxV4d const g)
@@ -451,6 +451,6 @@ _AFXINL void AfxBarycentricV4d2(afxV4d v, afxV4d const a, afxV4d const b, afxV4d
     AfxV4dSub(p20, c, a);
 
     afxV4d tmp;
-    AfxV4dMad(tmp, p10, f, a);
-    AfxV4dMad(v, p20, g, tmp);
+    AfxV4dMad(tmp, a, p10, f);
+    AfxV4dMad(v, tmp, p20, g);
 }

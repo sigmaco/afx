@@ -199,7 +199,7 @@ ARX afxError    ArxEndSceneRendering(arxRenderer rnd, afxDrawContext dctx);
 
 ARX afxError    ArxRendererSetStar(arxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
 
-ARX afxError    ArxCmdDrawBodies(afxDrawContext dctx, arxRenderer rnd, afxReal dt, afxUnit cnt, arxBody bodies[]);
+ARX afxError    ArxCmdDrawBodies(afxDrawContext dctx, arxRenderer rnd, afxReal dt, afxUnit cnt, arxPuppet bodies[]);
 
 ARX afxError    AkxTestDrawIndexed(arxRenderer rnd, afxDrawContext dctx);
 

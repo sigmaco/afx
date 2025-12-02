@@ -55,25 +55,23 @@ AFX_DEFINE_STRUCT(avxSubmission)
     afxMask             exuMask;
     afxUnit             baseQueIdx;
     afxUnit             queCnt;
-
     afxFlags            flags;
-    avxFence            waitSems;
-    afxUnit64           waitValues;
-    avxBusStage         waitStageMasks;
-    afxUnit32           waitReserveds;
-    avxFence            signalSems;
-    afxUnit64           signalValues;
-    avxBusStage         signalStageMasks;
-    afxUnit32           signalReserveds;
 
     // An array of draw contexts that represent the individual drawing commands or operations to be executed. 
     // Each afxDrawContext could contain specific information about a set of drawing commands, such as commands 
     // for rendering objects, setting up shaders, and managing resources.
     afxDrawContext      dctx;
-    afxUnit             batchId;
 
+    avxFence            wait;
+    afxUnit64           waitValue;
+    avxBusStage         waitStageMask;
+    afxUnit32           waitReserved;
     // A fence which will be signaled when the operation have completed execution.
-    avxFence            fence;
+    avxFence            signal;
+    afxUnit64           signalValue;
+    avxBusStage         signalStageMask;
+    afxUnit32           signalReserved;
+
 };
 
 AFX_DEFINE_STRUCT(avxPresentation)
@@ -83,6 +81,17 @@ AFX_DEFINE_STRUCT(avxPresentation)
     afxMask         exuMask;
     afxUnit         baseQueIdx;
     afxUnit         queCnt;
+
+    // An handle to a afxDrawOuput object to be presented.
+    afxSurface      dout;
+    // An index to a swapchain buffer specifying which buffers to present. 
+    // This indicate which buffer is to be shown.
+    afxUnit         bufIdx;
+
+    // The number of hint regions.
+    afxUnit         hintCnt;
+    // Four regions that has changed since the last present to the swapchain.
+    afxRect         hintRcs[4];
 
     // The frame identifier.
     afxUnit64       frameId;
@@ -100,24 +109,14 @@ AFX_DEFINE_STRUCT(avxPresentation)
     //avxFence        waitOnDpu;
     // The semaphore to wait for before issuing the present request.
     avxFence        wait;
-
-    // An handle to a afxDrawOuput object to be presented.
-    afxSurface      dout;
-
-    // An index to a swapchain buffer specifying which buffers to present. 
-    // This indicate which buffer is to be shown.
-    afxUnit         bufIdx;
-
-    // The number of hint regions.
-    afxUnit         hintCnt;
-    // Four regions that has changed since the last present to the swapchain.
-    afxRect         hintRcs[4];
+    afxUnit64       waitValue;
 
     // An array of fences to signal after the presentation is completed. 
     // Once the presentation is done, these fences are signaled, allowing the system to continue processing other tasks 
     // that depend on the completion of the presentation. This is useful for synchronization with other parts of the 
     // rendering pipeline or application logic.
     avxFence        signal;
+    afxUnit64       signalValue;
 };
 
 AFX_DEFINE_STRUCT(avxTransference)
@@ -129,11 +128,16 @@ AFX_DEFINE_STRUCT(avxTransference)
     afxUnit         queCnt;
 
     // A semaphore upon which to wait on before the operation begin execution.
-    afxSemaphore    wait;
+    avxFence    wait;
+    afxUnit64   waitValue;
+    avxBusStage waitStageMask;
+    afxUnit32   waitReserved;
     // A semaphore which will be signaled when the operation have completed execution.
-    afxSemaphore    signal;
     // A fence which will be signaled when the operation have completed execution.
-    avxFence        fence;
+    avxFence    signal;
+    afxUnit64   signalValue;
+    avxBusStage signalStageMask;
+    afxUnit32   signalReserved;
 
     union
     {

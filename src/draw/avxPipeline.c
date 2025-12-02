@@ -572,7 +572,7 @@ _AVX void AvxDescribePipeline(avxPipeline pip, avxPipelineInfo* info)
 
     info->tag = pip->tag;
     info->udd = pip->udd;
-
+    info->bus = pip->bus;
     info->stageCnt = pip->stageCnt;
     info->liga = pip->liga;
     info->vin = pip->vin;
@@ -1045,9 +1045,11 @@ _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
 
     if (!err)
     {
-        if ((pip->codb = pipb->codb))
+        avxCodebase codb = pipb->codb;
+        pip->codb = codb;
+
+        if (codb)
         {
-            pip->codb = pipb->codb;
             AFX_ASSERT_OBJECTS(afxFcc_SHD, 1, &pip->codb);
             AfxReacquireObjects(1, &pip->codb);
         }
@@ -1065,16 +1067,21 @@ _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
 
         if (!err)
         {
-            if (pip->isUserLiga = !!(pip->liga = pipb->liga))
+            avxLigature liga = pipb->liga;
+            pip->liga = liga;
+            pip->isUserLiga = !!(liga);
+
+            if (liga)
             {
-                pip->liga = pipb->liga;
                 AFX_ASSERT_OBJECTS(afxFcc_LIGA, 1, &pip->liga);
                 AfxReacquireObjects(1, &pip->liga);
             }
 
-            if ((pip->vin = pipb->vin))
+            avxVertexInput vin = pipb->vin;
+            pip->vin = vin;
+
+            if (vin)
             {
-                pip->vin = pipb->vin;
                 AFX_ASSERT_OBJECTS(afxFcc_VIN, 1, &pip->vin);
                 AfxReacquireObjects(1, &pip->vin);
             }
@@ -1089,7 +1096,7 @@ _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_PIP_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_PIP =
 {
     .fcc = afxFcc_PIP,
     .name = "Pipeline",

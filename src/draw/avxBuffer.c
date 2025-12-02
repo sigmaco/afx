@@ -355,7 +355,7 @@ _AVX afxError _AvxBufCtorCb(avxBuffer buf, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_BUF_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_BUF =
 {
     .fcc = afxFcc_BUF,
     .name = "Buffer",

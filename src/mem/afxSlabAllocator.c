@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 //#define _AFX_SLAB_LINK_HEADER TRUE
 //#define AFX_SLAB_DOUBLY_LINKED TRUE

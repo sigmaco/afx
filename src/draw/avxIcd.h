@@ -21,11 +21,11 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 // This software is part of Advanced Video Graphics Extensions & Experiments.
 
-#ifndef AVX_IMPLEMENTATION_H
-#define AVX_IMPLEMENTATION_H
+#ifndef AVX_ICD_H
+#define AVX_ICD_H
 
-#include "../impl/afxExecImplKit.h"
-#include "../impl/afxIoImplKit.h"
+#include "../exec/afxSystemDDK.h"
+#include "../io/afxIoDDK.h"
 
 #ifdef _AFX_DEBUG
 // hardcoded validation controls
@@ -34,21 +34,10 @@
 #define AVX_FEATURE_VALIDATION_ENABLED TRUE
 #endif
 
-#include "avxSystemImpl.h"
-#include "avxDeviceImpl.h"
-#include "avxContextImpl.h"
-#include "dpu/avxDpuExecutor.h"
-#include "avxPipelineImpl.h"
-#include "avxQueryPoolImpl.h"
-#include "avxCodebaseImpl.h"
-#include "avxLigatureImpl.h"
-#include "avxVertexInputImpl.h"
-#include "avxSamplerImpl.h"
-#include "avxCanvasImpl.h"
-#include "avxSurfaceImpl.h"
-#include "avxRasterImpl.h"
-#include "avxBufferImpl.h"
+#include "avxSystemDDK.h"
+#include "avxDeviceDDK.h"
 #include "dpu/avxDpuTransference.h"
+#include "dpu/avxDpuExecutor.h"
 
 AFX_DEFINE_STRUCT(_avxDsysImp)
 {
@@ -67,4 +56,4 @@ AVX afxBool _AvxGetIcd(afxUnit icdIdx, afxModule* driver);
 
 AVX avxFormatDescription const _AvxStdPfds[avxFormat_TOTAL];
 
-#endif//AVX_IMPLEMENTATION_H
+#endif//AVX_ICD_H

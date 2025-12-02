@@ -20,17 +20,17 @@
  // Advanced User Experience                                                 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef AUX_IMPLEMENTATION_H
-#define AUX_IMPLEMENTATION_H
+#ifndef AUX_ICD_H
+#define AUX_ICD_H
 
 #include "qwadro/ux/afxShell.h"
-#include "auxEnvironmentImpl.h"
-#include "../hid/auxHidImpl.h"
-#include "auxFontImpl.h"
-#include "auxWidgetImpl.h"
-#include "auxWindowImpl.h"
-#include "auxShellImpl.h"
-#include "../hid/auxDisplayImpl.h"
+#include "auxEnvironmentDDK.h"
+#include "../hid/auxHidDDK.h"
+#include "auxFontDDK.h"
+#include "auxWidgetDDK.h"
+#include "auxWindowDDK.h"
+#include "auxShellDDK.h"
+#include "../hid/auxDisplayDDK.h"
 
 AFX_DEFINE_STRUCT(_afxShellImpl)
 {
@@ -58,4 +58,4 @@ AUX afxError _AuxImplementShell(afxModule icd, _afxShellImpl const* cfg);
 
 AUX afxBool _AuxGetIcd(afxUnit icdIdx, afxModule* driver);
 
-#endif//AUX_IMPLEMENTATION_H
+#endif//AUX_ICD_H

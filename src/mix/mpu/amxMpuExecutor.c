@@ -477,7 +477,7 @@ _AMX afxInt _AMX_MPU_THREAD_PROC(afxMixBridge mexu)
         AfxLockMutex(&mexu->schedCndMtx);
 
         while (!mexu->schedCnt)
-            AfxWaitTimedCondition(&mexu->schedCnd, &mexu->schedCndMtx, (afxTimeSpec[]) { { .nsecs = AFX_NANOSECS_PER_MILLISEC(16) } });
+            AfxWaitTimedCondition(&mexu->schedCnd, &mexu->schedCndMtx, (afxTimeSpec[]) { { .nsecs = AFX_NANOSECS_PER_MILLISECS(16) } });
 
         mexu->schedCnt = 0;
         AfxUnlockMutex(&mexu->schedCndMtx);

@@ -104,7 +104,7 @@ _AVXINL afxBool AvxIsRangeZero(avxRange const whd)
 {
     afxError err = { 0 };
     //AFX_ASSERT(whd);
-    return (AFX_R(0) == (whd.w + whd.h + whd.d));
+    return (AFX_REAL(0) == (whd.w + whd.h + whd.d));
 }
 
 _AVXINL avxRange AvxAddRange(avxRange const a, avxRange const b)

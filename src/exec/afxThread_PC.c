@@ -18,7 +18,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_THREAD_C
-#include "src/impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 #ifdef AFX_ON_WINDOWS
 #   include <combaseapi.h>
@@ -75,13 +75,13 @@ _AFX afxUnit32 AfxGetTid(void)
 _AFX afxBool AfxSleepNanoseconds(afxUnit64 nsecs, afxUnit64* remaining)
 {
     struct timespec tsi = { 0 }, tsr = { 0 };
-    tsi.tv_sec = nsecs / AFX_NANOSECS_PER_SEC(1);
-    tsi.tv_nsec = nsecs % AFX_NANOSECS_PER_SEC(1);
+    tsi.tv_sec = nsecs / AFX_NANOSECS_PER_SECS(1);
+    tsi.tv_nsec = nsecs % AFX_NANOSECS_PER_SECS(1);
     afxBool rslt = !(thrd_sleep(&tsi, &tsr));
 
     if (remaining)
     {
-        *remaining = tsr.tv_sec * AFX_NANOSECS_PER_SEC(1) + tsr.tv_nsec;
+        *remaining = tsr.tv_sec * AFX_NANOSECS_PER_SECS(1) + tsr.tv_nsec;
     }
     return rslt;
 }

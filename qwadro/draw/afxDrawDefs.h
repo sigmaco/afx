@@ -176,6 +176,8 @@ typedef enum avxFrontFace
 } avxFrontFace;
 
 typedef enum avxFillMode
+// avxFillMode applies only to primitives with triangle topology.
+// Lines and points are always rasterized as lines and points.
 {
     avxFillMode_FACE,
     avxFillMode_LINE,

@@ -338,11 +338,14 @@ typedef enum afxFcc
     afxFcc_BOD      = AFX_MAKE_FCC('b', 'o', 'd', '\0'), // arxBody
     afxFcc_AMUS     = AFX_MAKE_FCC('a', 'm', 'u', 's'), // akxAnimus
     afxFcc_MOTO     = AFX_MAKE_FCC('m', 'o', 't', '\0'), // arxCapstan
-    afxFcc_BODC     = AFX_MAKE_FCC('p', 'u', 'p', '\0'), // arxBodyControl
+    afxFcc_PUP      = AFX_MAKE_FCC('p', 'u', 'p', '\0'), // arxPuppet
+    afxFcc_BODC     = AFX_MAKE_FCC('b', 'o', 'd', 'c'), // arxBodyControl
     afxFcc_BODP     = AFX_MAKE_FCC('b', 'o', 'd', 'p'), // arxBodyPart
+    afxFcc_PUPL     = AFX_MAKE_FCC('p', 'u', 'p', 'l'), // arxPuppetLink
     afxFcc_ANI      = AFX_MAKE_FCC('a', 'n', 'i', '\0'), // arxAnimation
     afxFcc_ANIK     = AFX_MAKE_FCC('a', 'n', 'i', 'k'), // arxInstancedAnimation
     afxFcc_MOT      = AFX_MAKE_FCC('m', 'o', 't', '\0'), // arxMotion
+    afxFcc_GES      = AFX_MAKE_FCC('g', 'e', 's', '\0'), // arxGesture
     afxFcc_MOTV     = AFX_MAKE_FCC('m', 'o', 't', 'v'), // arxMotive
     afxFcc_CUR      = AFX_MAKE_FCC('c', 'u', 'r', '\0'), // arxCurve
     afxFcc_RND      = AFX_MAKE_FCC('r', 'n', 'd', '\0'), // arxRenderer

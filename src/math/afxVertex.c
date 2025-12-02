@@ -82,9 +82,9 @@ _AFXINL void AfxHermiteV2d(afxV2d v, afxV2d const posA, afxV2d const tanA, afxV2
     AfxFillV2d(tb, t3 - t2);
 
     AfxV2dMultiply(v, pa, posA);
-    AfxV2dMad(v, ta, ta, v);
-    AfxV2dMad(v, pb, pb, v);
-    AfxV2dMad(v, tb, tb, v);
+    AfxV2dMad(v, v, ta, ta);
+    AfxV2dMad(v, v, pb, pb);
+    AfxV2dMad(v, v, tb, tb);
 }
 
 _AFXINL void AfxHermiteV3d(afxV3d v, afxV3d const posA, afxV3d const tanA, afxV3d const posB, afxV3d const tanB, afxReal t)
@@ -106,9 +106,9 @@ _AFXINL void AfxHermiteV3d(afxV3d v, afxV3d const posA, afxV3d const tanA, afxV3
     AfxFillV3d(tb, t3 - t2);
 
     AfxV3dMultiply(v, pa, posA);
-    AfxV3dMad(v, ta, ta, v);
-    AfxV3dMad(v, pb, pb, v);
-    AfxV3dMad(v, tb, tb, v);
+    AfxV3dMad(v, v, ta, ta);
+    AfxV3dMad(v, v, pb, pb);
+    AfxV3dMad(v, v, tb, tb);
 }
 
 _AFXINL void AfxHermiteV4d(afxV4d v, afxV4d const posA, afxV4d const tanA, afxV4d const posB, afxV4d const tanB, afxReal t)
@@ -130,9 +130,9 @@ _AFXINL void AfxHermiteV4d(afxV4d v, afxV4d const posA, afxV4d const tanA, afxV4
     AfxFillV4d(tb, t3 - t2);
 
     AfxV4dMultiply(v, pa, posA);
-    AfxV4dMad(v, ta, ta, v);
-    AfxV4dMad(v, pb, pb, v);
-    AfxV4dMad(v, tb, tb, v);
+    AfxV4dMad(v, v, ta, ta);
+    AfxV4dMad(v, v, pb, pb);
+    AfxV4dMad(v, v, tb, tb);
 }
 
 /// Catmull-Rom splines are a family of cubic interpolating splines formulated such that the tangent at each point Pi is calculated using the previous and next point on the spline, T(Pi + 1 - Pi - 1).
@@ -159,9 +159,9 @@ _AFXINL void AfxCatmullV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d cons
     AfxFillV2d(pd, (t3 - t2) * 0.5f);
 
     AfxV2dMultiply(v, pa, a);
-    AfxV2dMad(v, pb, b, v);
-    AfxV2dMad(v, pc, c, v);
-    AfxV2dMad(v, pd, d, v);
+    AfxV2dMad(v, v, pb, b);
+    AfxV2dMad(v, v, pc, c);
+    AfxV2dMad(v, v, pd, d);
 }
 
 _AFXINL void AfxCatmullV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c, afxV3d const d, afxReal t)
@@ -183,9 +183,9 @@ _AFXINL void AfxCatmullV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d cons
     AfxFillV3d(pd, (t3 - t2) * 0.5f);
 
     AfxV3dMultiply(v, pa, a);
-    AfxV3dMad(v, pb, b, v);
-    AfxV3dMad(v, pc, c, v);
-    AfxV3dMad(v, pd, d, v);
+    AfxV3dMad(v, v, pb, b);
+    AfxV3dMad(v, v, pc, c);
+    AfxV3dMad(v, v, pd, d);
 }
 
 _AFXINL void AfxCatmullV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c, afxV4d const d, afxReal t)
@@ -207,9 +207,9 @@ _AFXINL void AfxCatmullV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d cons
     AfxFillV4d(pd, (t3 - t2) * 0.5f);
 
     AfxV4dMultiply(v, pa, a);
-    AfxV4dMad(v, pb, b, v);
-    AfxV4dMad(v, pc, c, v);
-    AfxV4dMad(v, pd, d, v);
+    AfxV4dMad(v, v, pb, b);
+    AfxV4dMad(v, v, pc, c);
+    AfxV4dMad(v, v, pd, d);
 }
 
 // Reflect
@@ -288,7 +288,7 @@ _AFXINL void AfxRefractV2d(afxV2d v, afxV2d const incident, afxV2d const normal,
         // R = refracIdx * dot + sqrt(R)
 
         AfxV2dSqrt(R, R);
-        AfxV2dMad(R, riv, dot, R);
+        AfxV2dMad(R, R, riv, dot);
 
         // v = refracIdx * incident - normal * R
         AfxV2dMultiply(v, riv, incident);
@@ -326,7 +326,7 @@ _AFXINL void AfxRefractV3d(afxV3d v, afxV3d const incident, afxV3d const normal,
         // R = refracIdx * dot + sqrt(R)
 
         AfxV3dSqrt(R, R);
-        AfxV3dMad(R, riv, dot, R);
+        AfxV3dMad(R, R, riv, dot);
 
         // v = refracIdx * incident - normal * R
         AfxV3dMultiply(v, riv, incident);
@@ -364,7 +364,7 @@ _AFXINL void AfxRefractV4d(afxV4d v, afxV3d const incident, afxV3d const normal,
         // R = refracIdx * dot + sqrt(R)
 
         AfxV4dSqrt(R, R);
-        AfxV4dMad(R, riv, dot, R);
+        AfxV4dMad(R, R, riv, dot);
 
         // v = refracIdx * incident - normal * R
         AfxV4dMultiply(v, riv, incident);

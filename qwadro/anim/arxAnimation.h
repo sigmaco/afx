@@ -22,16 +22,16 @@
 
 // Qwadro armazena animações em partes baseadas em quão muitos modelos estão envolvidos numa animação.
 // Assim sendo, uma arxAnimation é a moção de um conjunto de arxModel's animando sobre tempo.
-// A arxAnimation contém um ou mais arxMotion's, cada do qual correspondendo à moção de um modelo específico (desde que uma animação pode envolver múltiplos modelos, se o autor assim escolher).
-// O arxMotion é constituído de curvas, cada da qual especifica a translação, rotação e escala de uma junta no akxSkeleton do correspondente arxModel.
+// A arxAnimation contém um ou mais arxGesture's, cada do qual correspondendo à moção de um modelo específico (desde que uma animação pode envolver múltiplos modelos, se o autor assim escolher).
+// O arxGesture é constituído de curvas, cada da qual especifica a translação, rotação e escala de uma junta no akxSkeleton do correspondente arxModel.
 
 #include "qwadro/sim/arxSimDefs.h"
 #include "qwadro/anim/arxCurve.h"
 #include "qwadro/math/afxTransform.h"
 #include "qwadro/base/afxFixedString.h"
-#include "qwadro/anim/arxMotion.h"
+#include "qwadro/anim/arxGesture.h"
 #include "qwadro/cad/arxPose.h"
-#include "qwadro/anim/arxBody.h"
+#include "qwadro/anim/arxPuppet.h"
 #include "qwadro/anim/arxCapstan.h"
 
 typedef enum arxAnimationFlag
@@ -45,7 +45,7 @@ AFX_DEFINE_STRUCT(arxAnimationBlueprint)
     afxReal         timeStep;
     afxReal         oversampling;
     afxUnit         motSlotCnt;
-    arxMotion*      motions;
+    arxGesture*      motions;
     // TODO make motions' names a animation property to ease portability of motions.
     afxString32     id;
 };
@@ -54,13 +54,13 @@ ARX afxBool     ArxGetAnimationUrn(arxAnimation ani, afxString* id);
 
 ARX afxBool     ArxFindMotion(arxAnimation ani, afxString const* id, afxUnit *motIdx);
 
-ARX afxError    ArxGetMotions(arxAnimation ani, afxUnit first, afxUnit cnt, arxMotion motions[]);
+ARX afxError    ArxGetMotions(arxAnimation ani, afxUnit first, afxUnit cnt, arxGesture motions[]);
 
-ARX afxError    ArxRelinkMotions(arxAnimation ani, afxUnit baseSlot, afxUnit slotCnt, arxMotion motions[]);
+ARX afxError    ArxRelinkMotions(arxAnimation ani, afxUnit baseSlot, afxUnit slotCnt, arxGesture motions[]);
 
-ARX afxUnit     ArxPerformAnimation(arxAnimation ani, afxReal startTime, afxUnit iterCnt, afxUnit cnt, arxBody bodies[]);
+ARX afxUnit     ArxPerformAnimation(arxAnimation ani, afxReal startTime, afxUnit iterCnt, afxUnit cnt, arxPuppet bodies[]);
 
-//ARX afxUnit    ArxPerformAnimationBinding(arxAnimation ani, afxReal startTime, afxUnit iterCnt, struct arxInstancedAnimation *binding, afxUnit cnt, arxBody bodies[]);
+//ARX afxUnit    ArxPerformAnimationBinding(arxAnimation ani, afxReal startTime, afxUnit iterCnt, struct arxInstancedAnimation *binding, afxUnit cnt, arxPuppet bodies[]);
 
 ARX afxError    ArxArchiveAnimation(arxAnimation ani, afxUri const* uri);
 

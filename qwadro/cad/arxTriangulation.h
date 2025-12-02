@@ -22,7 +22,7 @@
 #include "qwadro/mem/afxArray.h"
 #include "qwadro/coll/afxBox.h"
 #include "qwadro/base/afxObject.h"
-#include "qwadro/io/afxUrd.h"
+#include "qwadro/etc/afxUrd.h"
 #include "qwadro/math/afxVertex.h"
 #include "qwadro/base/afxFixedString.h"
 #include "qwadro/sim/arxSimDefs.h"

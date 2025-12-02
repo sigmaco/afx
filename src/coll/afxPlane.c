@@ -114,7 +114,7 @@ _AFXINL afxPlane AfxPlaneIntersectLine(afxPlane p, afxV4d start, afxV4d end)
 
     afxV4d pnt;
     AfxV4dSub(pnt, end, start);
-    AfxV4dMad(pnt, pnt, AFX_V4D(vt, vt, vt, vt), start);
+    AfxV4dMad(pnt, start, pnt, AFX_V4D(vt, vt, vt, vt));
 }
 
 _AFXINL void AfxPlaneIntersectPlane(afxPlane a, afxPlane b, afxV4d start, afxV4d end)
@@ -142,7 +142,7 @@ _AFXINL void AfxPlaneIntersectPlane(afxPlane a, afxPlane b, afxV4d start, afxV4d
     AfxV3dCross(V3, V1, a.uvwd);
 
     // Multiply V3 by P2W and add to Point
-    AfxV4dMad(Point, V3, AFX_V4D(b.uvwd[3], b.uvwd[3], b.uvwd[3], b.uvwd[3]), Point);
+    AfxV4dMad(Point, Point, V3, AFX_V4D(b.uvwd[3], b.uvwd[3], b.uvwd[3], b.uvwd[3]));
 
     afxV4d LinePoint1;
     // Divide Point by LengthSq to get LinePoint1
@@ -162,9 +162,9 @@ _AFXINL afxPlane AfxPlaneTransform(afxPlane p, afxM4d const m)
     afxV4d a, b;
     afxPlane t;
     AfxV4dMultiply(a,   AFX_V4D(p.uvwd[3], p.uvwd[3], p.uvwd[3], p.uvwd[3]), m[3]);
-    AfxV4dMad(b,        AFX_V4D(p.uvwd[2], p.uvwd[2], p.uvwd[2], p.uvwd[2]), m[2], a);
-    AfxV4dMad(a,        AFX_V4D(p.uvwd[1], p.uvwd[1], p.uvwd[1], p.uvwd[1]), m[1], b);
-    AfxV4dMad(t.uvwd,      AFX_V4D(p.uvwd[0], p.uvwd[0], p.uvwd[0], p.uvwd[0]), m[0], a);
+    AfxV4dMad(b, a,        AFX_V4D(p.uvwd[2], p.uvwd[2], p.uvwd[2], p.uvwd[2]), m[2]);
+    AfxV4dMad(a, b,        AFX_V4D(p.uvwd[1], p.uvwd[1], p.uvwd[1], p.uvwd[1]), m[1]);
+    AfxV4dMad(t.uvwd, a,      AFX_V4D(p.uvwd[0], p.uvwd[0], p.uvwd[0], p.uvwd[0]), m[0]);
     return t;
 }
 

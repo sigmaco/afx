@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "src/impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 _AFX afxString const qwadroSignature = AFX_STRING(
     "      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      \n"

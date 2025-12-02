@@ -79,11 +79,11 @@ _AVX afxError _AvxImplementDrawSystem(afxModule icd, _avxDsysImp const* cfg)
 
     afxBool dsysMounted = FALSE, ddevMounted = FALSE;
 
-    afxClassConfig ddevCls2 = cfg->ddevCls.fcc ? cfg->ddevCls : _AVX_DDEV_CLASS_CONFIG;
+    afxClassConfig ddevCls2 = cfg->ddevCls.fcc ? cfg->ddevCls : _AVX_CLASS_CONFIG_DDEV;
     AFX_ASSERT(ddevCls2.fcc == afxFcc_DDEV);
-    AFX_ASSERT(ddevCls2.fixedSiz >= _AVX_DDEV_CLASS_CONFIG.fixedSiz);
+    AFX_ASSERT(ddevCls2.fixedSiz >= _AVX_CLASS_CONFIG_DDEV.fixedSiz);
     if ((ddevCls2.fcc != afxFcc_DDEV) ||
-        (_AVX_DDEV_CLASS_CONFIG.fixedSiz > ddevCls2.fixedSiz))
+        (_AVX_CLASS_CONFIG_DDEV.fixedSiz > ddevCls2.fixedSiz))
     {
         AfxThrowError();
         return err;
@@ -96,11 +96,11 @@ _AVX afxError _AvxImplementDrawSystem(afxModule icd, _avxDsysImp const* cfg)
 
     ddevMounted = TRUE;
 
-    afxClassConfig dsysCls2 = cfg->dsysCls.fcc ? cfg->dsysCls : _AVX_DSYS_CLASS_CONFIG;
+    afxClassConfig dsysCls2 = cfg->dsysCls.fcc ? cfg->dsysCls : _AVX_CLASS_CONFIG_DSYS;
     AFX_ASSERT(dsysCls2.fcc == afxFcc_DSYS);
-    AFX_ASSERT(dsysCls2.fixedSiz >= _AVX_DSYS_CLASS_CONFIG.fixedSiz);
+    AFX_ASSERT(dsysCls2.fixedSiz >= _AVX_CLASS_CONFIG_DSYS.fixedSiz);
     if ((dsysCls2.fcc != afxFcc_DSYS) ||
-        (_AVX_DSYS_CLASS_CONFIG.fixedSiz > dsysCls2.fixedSiz))
+        (_AVX_CLASS_CONFIG_DSYS.fixedSiz > dsysCls2.fixedSiz))
     {
         AfxThrowError();
         AfxDismountClass(&icd->icd.ddevCls);

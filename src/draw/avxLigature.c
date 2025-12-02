@@ -380,7 +380,7 @@ _AVX afxError _AvxLigaCtorCb(avxLigature liga, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_LIGA_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_LIGA =
 {
     .fcc = afxFcc_LIGA,
     .name = "Ligature",

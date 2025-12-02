@@ -26,6 +26,7 @@
 #include "qwadro/render/arxRenderBody.h"
 #include "qwadro/render/arxRenderModel.h"
 #include "qwadro/render/arxRenderTerrain.h"
+#include "qwadro/render/arxWireframe.h"
 #include "qwadro/scene/arxSky.h"
 #include "qwadro/render/arxRenderer.h"
 #include "qwadro/scene/arxBuffer.h"
@@ -33,10 +34,25 @@
 
 // RenderLayer and Scene are currently available to help organize this mess.
 
+typedef enum arxSceneMode
+{
+    // Classic wireframe mode; drawing lines.
+    arxSceneMode_WIRE       = AFX_BITMASK(0),
+    // Modern wireframe mode; drawing line-shaped faces.
+    arxSceneMode_WIRE_BARY  = AFX_BITMASK(1),
+    // Classic solid mode; drawing faces.
+    arxSceneMode_FACE       = AFX_BITMASK(10),
+    arxSceneMode_TEXTURED   = AFX_BITMASK(11),
+    arxSceneMode_COLORED    = AFX_BITMASK(12),
+} arxSceneMode;
+
 AFX_DEFINE_STRUCT(arxRenderConfiguration)
 {
-    afxUnit frameCnt;
-    arxSimulation sim;
+    afxUnit         frameCnt;
+    arxSimulation   sim;
+
+    void*           udd;
+    afxString       tag;
 };
 
 ARX afxError ArxConfigureRenderContext
@@ -53,6 +69,17 @@ ARX afxError ArxAcquireRenderContext
 );
 
 ////////////////////////////////////////////////////////////////////////////////
+
+ARX afxDrawSystem ArxGetRenderDrawSystem
+(
+    arxRenderContext rctx
+);
+
+
+ARX void* ArxGetRenderContextUdd
+(
+    arxRenderContext rctx
+);
 
 ARX afxError ArxStageMaterials
 (
@@ -99,7 +126,7 @@ ARX afxError ArxCmdRenderBodies
     arxRenderContext rctx, 
     afxM4d m, 
     afxUnit cnt, 
-    arxBody bodies[]
+    arxPuppet bodies[]
 );
 
 ARX afxError ArxCmdRenderNode
@@ -115,6 +142,28 @@ ARX afxError ArxCmdRenderTerrain
     arxTerrain ter
 );
 
+AFX_DEFINE_STRUCT(arxNextFrameInfo)
+{
+    afxUnit64   predictedDisplayTime;
+    afxUnit64   predictedDisplayPeriod;
+    afxBool     shouldRender;
+    afxUnit64   frameId;
+    afxUnit     frameIdx;
+    avxFence    frameReady;
+    afxUnit64   frameReadyNextValue;
+    avxFence    frameAvail;
+    afxUnit64   frameAvailNextValue;
+};
+
+// ArxWaitFrame throttles the application frame loop in order to synchronize application frame submissions with the display.
+
+ARX afxError ArxWaitFrame
+(
+    arxRenderContext rctx,
+    void* param,
+    arxNextFrameInfo* nextInfo
+);
+
 /*
     Start of a new rendering frame.
     Prepares the system for rendering a new frame.
@@ -128,8 +177,7 @@ ARX afxError ArxCmdRenderTerrain
 ARX afxError ArxBeginFrame
 (
     arxRenderContext rctx, 
-    void* param, 
-    afxUnit* frameIdx
+    void* param
 );
 
 /*
@@ -148,24 +196,15 @@ ARX afxError ArxEndFrame
     afxUnit* perSecFrame
 );
 
-AFX_DEFINE_STRUCT(arxNextFrameInfo)
-{
-    afxUnit64   predictedDisplayTime;
-    afxUnit64   predictedDisplayPeriod;
-    afxBool     shouldRender;
-    afxUnit64   frameId;
-    afxUnit     frameIdx;
-    avxFence    frameReady;
-    avxFence    vbufReady;
-};
-
-// ArxWaitFrame throttles the application frame loop in order to synchronize application frame submissions with the display.
-
-ARX afxError ArxWaitFrame
+ARX afxError ArxCancelFrame
 (
-    arxRenderContext rctx, 
-    void* param,
-    arxNextFrameInfo* nextInfo
+    arxRenderContext rctx
+);
+
+ARX afxError ArxAdvanceFrame
+(
+    arxRenderContext rctx,
+    afxUnit* nextFrameIdx
 );
 
 AFX_DEFINE_STRUCT(arxSceneScope)
@@ -193,7 +232,13 @@ ARX afxError ArxEndScene
     afxUnit id
 );
 
-ARX afxError ArxCmdUseRenderTechnique
+ARX afxError ArxAdvanceSceneLayer
+(
+    arxRenderContext rctx, 
+    arxSceneMode mode
+);
+
+ARX afxError ArxUseRenderTechnique
 (
     arxRenderContext rctx, 
     arxTechnique dtec, 
@@ -202,15 +247,23 @@ ARX afxError ArxCmdUseRenderTechnique
     afxFlags dynamics
 );
 
-ARX afxError ArxCmdUseCamera
+ARX afxError ArxUseCamera
 (
     arxRenderContext rctx, 
     arxCamera cam, 
     afxRect const* drawArea
 );
 
+ARX afxError ArxPostConstants
+(
+    arxRenderContext rctx, 
+    afxUnit offset, 
+    afxUnit siz, 
+    void const* value
+);
+
 /*
-    The ArxCmdPostUniform() function uploads a block of uniform data and binds it to a specified descriptor set/binding.
+    The ArxPostUniform() function uploads a block of uniform data and binds it to a specified descriptor set/binding.
     Automatically handles allocation, copy, and bind. No need for user to handle buffer pointers manually if @src is specified,
     which also handles stride between elements; useful for posting arrays of structures with padding.
     @src can be NULL if you just want to reserve space and write manually.
@@ -221,11 +274,11 @@ ARX afxError ArxCmdUseCamera
 
         UniformBlock ubo = ...;
 
-        void* dst = ArxCmdPostUniform(rctx, 0, 1, sizeof(ubo), &ubo, sizeof(ubo));
+        void* dst = ArxPostUniform(rctx, 0, 1, sizeof(ubo), &ubo, sizeof(ubo));
     }
 */
 
-ARX void*   ArxCmdPostUniform
+ARX void*   ArxPostUniform
 // Returns an output pointer to write data into the mapped buffer.
 (
     // Drawing context with per-frame data.
@@ -245,7 +298,7 @@ ARX void*   ArxCmdPostUniform
 );
 
 /*
-    The ArxCmdPostVertices() function uploads vertex data to a dynamic vertex buffer for the current frame.
+    The ArxPostVertices() function uploads vertex data to a dynamic vertex buffer for the current frame.
     @vtxCnt * @vtxSiz bytes will be copied from @src (with srcStride for each vertex).
     Returns a pointer to the mapped buffer region (if user wants to write manually).
 
@@ -258,11 +311,11 @@ ARX void*   ArxCmdPostUniform
 
         Vertex vertices[100] = ...;
 
-        ArxCmdPostVertices(rctx, 100, sizeof(Vertex), vertices, sizeof(Vertex));
+        ArxPostVertices(rctx, 100, sizeof(Vertex), vertices, sizeof(Vertex));
     }
 */
 
-ARX void*   ArxCmdPostVertices
+ARX void*   ArxPostVertices
 (
     // Drawing context with per-frame data.
     arxRenderContext rctx, 
@@ -273,13 +326,13 @@ ARX void*   ArxCmdPostVertices
 );
 
 /*
-    The ArxCmdPostVertexIndices() function uploads vertex index data to a dynamic vertex index buffer for the current frame.
+    The ArxPostVertexIndices() function uploads vertex index data to a dynamic vertex index buffer for the current frame.
     @idxCnt * @idxSiz bytes will be copied from @src (with srcStride for each vertex index).
     Returns a pointer to the mapped buffer region (if user wants to write manually).
     @srcStride allows for tightly or loosely packed indices.
 */
 
-ARX void*   ArxCmdPostVertexIndices
+ARX void*   ArxPostVertexIndices
 (
     // Drawing context with per-frame data.
     arxRenderContext rctx, 

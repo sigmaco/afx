@@ -19,7 +19,7 @@
 #ifndef AMX_IMPL___SOUNDSCAPE_H
 #define AMX_IMPL___SOUNDSCAPE_H
 
-#include "../amxSoundscapeImpl.h"
+#include "../amxSoundscapeDDK.h"
 
 // Spherical Harmonics (SN3D + ACN).
 // Spherical Harmonics module: Real-valued, SN3D-normalized, ACN channel ordering

@@ -24,7 +24,7 @@
 #include "qwadro/exec/afxAtomic.h"
 #include "qwadro/base/afxObject.h"
 #include "qwadro/mem/afxMemory.h"
-#include "qwadro/io/afxUri.h"
+#include "qwadro/base/afxUri.h"
 #include "qwadro/mem/afxRing.h"
 
 #define AFX_DEFAULT_IOB_SIZE 512

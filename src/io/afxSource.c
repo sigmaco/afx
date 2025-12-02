@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
-#include "../impl/afxIoImplKit.h"
+#include "afxIoDDK.h"
 
 
 _AFXINL void AfxMakeSource(afxSource *src)

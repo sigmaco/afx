@@ -26,7 +26,7 @@
 #define _AFX_FILE_C
 #define _AFX_STREAM_C
 #define _AFX_STORAGE_C
-#include "../impl/afxIoImplKit.h"
+#include "../exec/afxSystemDDK.h"
 #if 0
 AFX_OBJECT(afxFile)
 {

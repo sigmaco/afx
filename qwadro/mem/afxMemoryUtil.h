@@ -26,7 +26,7 @@
 #include "qwadro/base/afxChain.h"
 #include "qwadro/base/afxFcc.h"
 #include "qwadro/exec/afxFutex.h"
-#include "qwadro/io/afxUri.h"
+#include "qwadro/base/afxUri.h"
 
 AFX void        AfxZero(void* start, afxSize range);
 AFX void*       AfxFind(void const* start, afxSize range, afxInt c);

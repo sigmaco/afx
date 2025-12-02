@@ -74,6 +74,6 @@ ARX afxCmdId            AvxCmdUseDrawTechniqueSIGMA(afxDrawContext dctx, arxTech
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ARX afxError            ArxLoadDrawTechnique(arxScenario scio, afxUri const* uri, arxTechnique* technique);
+ARX afxError            ArxLoadRenderTechnique(arxScenario scio, afxUri const* uri, arxTechnique* technique);
 
 #endif//ARX_TECHNIQUE_H

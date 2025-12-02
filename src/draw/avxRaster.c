@@ -566,7 +566,7 @@ _AVX afxError _AvxRasCtorCb(avxRaster ras, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_RAS_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_RAS =
 {
     .fcc = afxFcc_RAS,
     .name = "Raster",

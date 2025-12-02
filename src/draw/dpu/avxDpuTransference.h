@@ -24,7 +24,8 @@
 #ifndef AVX_IMPL___TRANSFERENCE_H
 #define AVX_IMPL___TRANSFERENCE_H
 
-#include "../avxStorageImpl.h"
+#include "avxDpuExecutor.h"
+#include "../avxRasterDDK.h"
 
 AVXINL void _AvxDpuUpdateRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], afxByte const* src);
 AVXINL void _AvxDpuDumpRaster(avxDpu* dpu, avxRaster ras, afxUnit opCnt, avxRasterIo const ops[], afxByte* dst);

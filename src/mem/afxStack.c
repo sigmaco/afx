@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "../impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 _AFX afxBool _AfxStackEnsureRoom(afxStack* stak, afxUnit requiredUnits)
 {

@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "src/impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 afxChar const* errorMsg[] =
 {

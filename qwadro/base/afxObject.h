@@ -127,7 +127,7 @@ AFX_DEFINE_STRUCT(afxObjectStash)
     void**  var;
 };
 
-AFX void                AfxResetEventHandler(afxObject obj, afxBool(*handler)(afxObject obj,afxEvent*));
+AFX void                AfxInstallEventHandler(afxObject obj, afxBool(*handler)(afxObject obj,afxEvent*));
 
 AFX afxBool             AfxNotifyObject(afxObject obj, afxEvent *ev);
 AFX afxError            AfxConnectObjects(afxObject obj, afxBool(*handler)(afxObject obj, afxObject watched, afxEvent *ev), afxUnit cnt, afxObject watcheds[]);

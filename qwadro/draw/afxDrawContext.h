@@ -179,9 +179,7 @@ AVX afxError        AvxRecordDrawCommands
     // A flag specifying a one-time submission batch.
     afxBool         once, 
     // A flag specifying a inlineable batch.
-    afxBool         deferred, 
-    // A variable to hold the unique identifier for the batch.
-    afxUnit*        batchId
+    afxBool         deferred
 );
 
 /// Reset a draw context to the initial state.
@@ -198,9 +196,7 @@ AVX afxError        AvxDiscardDrawCommands
 AVX afxError        AvxCompileDrawCommands
 (
     // The draw context recording commands.
-    afxDrawContext  dctx,
-    // The batch which commands will be compiled into.
-    afxUnit         batchId
+    afxDrawContext  dctx
 );
 
 /*
@@ -215,20 +211,18 @@ AVX afxError        AvxRecycleDrawCommands
 (
     // The draw context that holds the commands.
     afxDrawContext  dctx, 
-    // The unique identifier for the draw batch.
-    afxUnit         batchId, 
     // A flag that indicates whether all or most of the resources owned by the batch should be reclaimed by the system.
     afxBool         freeRes
 );
 
-AVX afxBool AvxDoesDrawCommandsExist(afxDrawContext dctx, afxUnit batchId);
+AVX afxBool AvxDoesDrawCommandsExist_(afxDrawContext dctx);
 
 
 
-AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool deferred, afxUnit* batchId);
+AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool deferred);
 AVX afxError AvxDiscardDrawCommands(afxDrawContext dctx, afxBool freeRes);
-AVX afxError AvxCompileDrawCommands(afxDrawContext dctx, afxUnit batchId);
-AVX afxError AvxRecycleDrawCommands(afxDrawContext dctx, afxUnit batchId, afxBool freeRes);
+AVX afxError AvxCompileDrawCommands(afxDrawContext dctx);
+AVX afxError AvxRecycleDrawCommands(afxDrawContext dctx, afxBool freeRes);
 
 // Resets and restarts a command bin, and make it as the active recording stream.
 AVX afxError AvxCommenceDrawCommands(afxDrawContext dctx, afxUnit bin, afxBool once, afxBool deferred);

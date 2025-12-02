@@ -24,7 +24,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include "src/impl/afxExecImplKit.h"
+#include "../exec/afxSystemDDK.h"
 
 #if !0
 

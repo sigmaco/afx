@@ -45,7 +45,7 @@
 #include "qwadro/draw/avxColor.h"
 #include "qwadro/base/afxChain.h"
 #include "qwadro/base/afxObject.h"
-#include "qwadro/io/afxUri.h"
+#include "qwadro/base/afxUri.h"
 #include "qwadro/math/afxTransform.h"
 #include "qwadro/ux/afxFont.h"
 #include "qwadro/ux/afxTheme.h"

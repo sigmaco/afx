@@ -19,8 +19,8 @@
 #define _AFX_IO_BRIDGE_C
 #define _AFX_IO_QUEUE_C
 #define _AFX_IO_CONTEXT_C
-#include "../impl/afxIoImplKit.h"
-#include "../impl/afxExecImplKit.h"
+#include "afxIoDDK.h"
+#include "../exec/afxSystemDDK.h"
 
 #ifndef _AFX_CORE_C
 AFX_DECLARE_STRUCT(_afxIocDdi);

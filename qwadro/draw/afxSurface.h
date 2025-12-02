@@ -608,6 +608,14 @@ AVX afxBool AvxGetSurfaceBuffer
     avxRaster* buffer
 );
 
+AVX afxBool AvxGetSurfaceFence
+(
+    afxSurface dout, 
+    afxUnit bufIdx, 
+    avxFence* fence, 
+    afxUnit64* nextValue
+);
+
 /*
     The AvxPrintSurfaceBuffer() function is designed to "print" or "export" the contents of a drawing output context buffer to an external resource.
     Depending on the library or framework, "printing" could mean saving the rendered buffer to a file, sending it to a printer,

@@ -19,7 +19,6 @@
 
 #define _AVX_DRAW_C
 #define _AVX_FENCE_C
-#include "../impl/afxExecImplKit.h"
 #include "avxIcd.h"
 
 _AVX _avxDdiFenc const _AVX_FENC_DDI =
@@ -56,7 +55,7 @@ _AVX afxError AvxSignalFence(avxFence fenc, afxUnit64 value)
     // Use ID3D12CommandQueue::Signal to set a fence from the GPU side.
     
     if (fenc->ddi->signalCb)
-        err = fenc->ddi->signalCb(fenc);
+        err = fenc->ddi->signalCb(fenc, value);
     else
         AfxStoreAtom64(&fenc->value, (afxInt64)value);
 
@@ -96,6 +95,8 @@ _AVX afxError _AvxFencCtorCb(avxFence fenc, void** args, afxUnit invokeNo)
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     avxFenceInfo const* info = ((avxFenceInfo const*)args[1]) + invokeNo;
 
+    fenc->waitQueuedCnt = 0;
+    fenc->signalQueuedCnt = 0;
     fenc->signaled = info->initialVal;
     fenc->value = info->initialVal;
     fenc->flags = info->flags;
@@ -108,7 +109,7 @@ _AVX afxError _AvxFencCtorCb(avxFence fenc, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_FENC_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_FENC =
 {
     .fcc = afxFcc_FENC,
     .name = "Fence",
@@ -136,7 +137,7 @@ _AVX afxError AvxAcquireFences(afxDrawSystem dsys, afxUnit cnt, avxFenceInfo con
     return err;
 }
 
-_AVX afxError _AvxDsysWaitForFencesCb(afxDrawSystem dsys, afxUnit64 timeout, afxBool waitAll, afxUnit cnt, avxFence const fences[], afxUnit64 const values[])
+_AVX afxError _AvxDsysWaitForFencesCb_SW(afxDrawSystem dsys, afxUnit64 timeout, afxBool waitAll, afxUnit cnt, avxFence const fences[], afxUnit64 const values[])
 {
     afxError err = { 0 };
     AFX_ASSERT(fences);

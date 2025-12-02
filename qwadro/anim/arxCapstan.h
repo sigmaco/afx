@@ -27,11 +27,11 @@
 // Terminology: Motive is an animating force or underlying purpose; intention;
 // Terminology: Puppet is a movable model of a person or animal that is used in entertainment and is typically moved either by strings controlled from above or by a hand inside it.
 
-// There are two primary objects involved in the run-time animation layer : the arxBody and the arxCapstan.
+// There are two primary objects involved in the run-time animation layer : the arxPuppet and the arxCapstan.
 // Together, they represent the two ends of the animation process.
-// The arxBody represents the state of a single model that may have some number of animations affecting it, 
+// The arxPuppet represents the state of a single model that may have some number of animations affecting it, 
 // whereas the arxCapstan represents the state of an animation that may be affecting some number of models.
-// When your engine creates a new animating entity in the game world, you create a arxBody to accompany it.
+// When your engine creates a new animating entity in the game world, you create a arxPuppet to accompany it.
 // When you want to play an animation on such an instance, you create a arxCapstan.
 
 // Essential part of our machinima.
@@ -106,7 +106,7 @@ ARX afxBool         ArxCapstanIsActive(arxCapstan caps);
 
 ARX afxBool         ArxCapstanHasEffect(arxCapstan caps);
 
-ARX void*           ArxGetCapstanUdd(arxCapstan caps, afxUnit idx);
+ARX void*           ArxGetCapstanUdd(arxCapstan caps);
 
 ARX void            ArxSetCapstanTargetState(arxCapstan caps, afxReal currGlobalTime, afxReal targetGlobalTime, afxReal localTime, afxInt currIterIdx);
 

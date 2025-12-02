@@ -491,7 +491,7 @@ _AVX afxError _AvxSampCtorCb(avxSampler samp, void** args, afxUnit invokeNo)
     return err;
 }
 
-_AVX afxClassConfig const _AVX_SAMP_CLASS_CONFIG =
+_AVX afxClassConfig const _AVX_CLASS_CONFIG_SAMP =
 {
     .fcc = afxFcc_SAMP,
     .name = "Sampler",
