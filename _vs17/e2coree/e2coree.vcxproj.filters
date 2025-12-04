@@ -714,6 +714,15 @@
     <ClInclude Include="..\..\qwadro\io\afxStreamOps.h">
       <Filter>qwadro\io</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\qwadro\mix\amxBuffered.h">
+      <Filter>qwadro\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\mix\amxMixage.h">
+      <Filter>qwadro\mix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\qwadro\draw\avxBus.h">
+      <Filter>qwadro\draw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md">
@@ -1307,6 +1316,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\draw\avxCodebaseDDK.c">
       <Filter>qwadro\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\draw\avxTransformationEXT.c">
+      <Filter>qwadro\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\amxBufferIo.c">
+      <Filter>qwadro\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\amxBuffered.c">
+      <Filter>qwadro\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\amxContextDDK.c">
+      <Filter>qwadro\mix</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

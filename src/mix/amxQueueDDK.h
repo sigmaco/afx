@@ -93,23 +93,33 @@ AFX_DEFINE_UNION(_amxIoReqPacket)
     {
         _amxIoReqPacketHdr hdr;
 
-        afxSemaphore    wait;
-        afxSemaphore    signal;
-        //avxFence        fence;
         afxUnit         cmdbCnt;
         struct
         {
+            amxFence    wait;
+            afxUnit64   waitValue;
+            amxBusStage waitStageMask;
+            afxUnit32   waitReserved;
+            amxFence    signal;
+            afxUnit64   signalValue;
+            amxBusStage signalStageMask;
+            afxUnit32   signalReserved;
+
             afxMixContext mctx;
-            afxUnit batchId;
         } AFX_SIMD cmdbs[];
     } Execute;
     struct
     {
         _amxIoReqPacketHdr hdr;
 
-        afxSemaphore    wait;
-        afxSemaphore    signal;
-        //avxFence        fence;
+        amxFence    wait;
+        afxUnit64   waitValue;
+        amxBusStage waitStageMask;
+        afxUnit32   waitReserved;
+        amxFence    signal;
+        afxUnit64   signalValue;
+        amxBusStage signalStageMask;
+        afxUnit32   signalReserved;
 
         union
         {
@@ -144,10 +154,18 @@ AFX_DEFINE_UNION(_amxIoReqPacket)
     {
         _amxIoReqPacketHdr hdr;
 
-        afxSemaphore    wait;
         afxUnit         opCnt;
         struct
         {
+            amxFence    wait;
+            afxUnit64   waitValue;
+            amxBusStage waitStageMask;
+            afxUnit32   waitReserved;
+            amxFence    signal;
+            afxUnit64   signalValue;
+            amxBusStage signalStageMask;
+            afxUnit32   signalReserved;
+
             afxSink     sink;
             afxUnit     bufIdx;
         } AFX_SIMD      ops[];
@@ -194,7 +212,7 @@ AFX_DEFINE_UNION(_amxIoReqPacket)
         afxBool waitAll;
         afxUnit64 timeout;
         afxUnit cnt;
-        /*amxFence*/void* fences[];
+        amxFence fences[];
     } WaitForFences;
 };
 

@@ -62,7 +62,7 @@ AFX_OBJECT(afxSink)
     void*       udd; // user-defined data
     afxBool     (*getIddCb)(afxSink, afxUnit, void*);
 
-    afxError    (*lockCb)(afxSink asi, afxUnit64 timeout, afxUnit minFrameCnt, amxBufferedTrack* room);
+    afxError    (*lockCb)(afxSink asi, afxUnit64 timeout, afxMask exuMask, afxUnit minFrameCnt, amxBufferedTrack* room);
     afxError    (*unlockCb)(afxSink asi, afxFlags flags);
     void        (*flushCb)(afxSink asi);
     afxError    (*pushCb)(afxSink asio, amxAudio buf, amxAudioPeriod const* seg);

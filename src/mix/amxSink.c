@@ -27,7 +27,7 @@
 #include "amxIcd.h"
 #include "qwadro/mix/afxSink.h"
 
-_AMX afxMixSystem AfxGetAudioSinkContext(afxSink sink)
+_AMX afxMixSystem AmxGetSinkHost(afxSink sink)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
@@ -40,14 +40,14 @@ _AMX afxMixDevice AfxGetAudioSinkDevice(afxSink sink)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
-    afxMixSystem msys = AfxGetAudioSinkContext(sink);
+    afxMixSystem msys = AmxGetSinkHost(sink);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxMixDevice mdev = AfxGetHost(sink);
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
     return mdev;
 }
 
-_AMX afxError AfxGetAudioSinkIdd(afxSink sink, afxUnit code, void* dst)
+_AMX afxError AmxGetSinkIdd(afxSink sink, afxUnit code, void* dst)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ASIO, 1, &sink);
@@ -74,7 +74,7 @@ _AMX afxError AmxGetSinkTrack(afxSink sink, amxAudio* track)
     return err;
 }
 
-_AMX afxError AmxLockSinkBuffer(afxSink sink, afxUnit64 timeout, afxUnit minFrameCnt, amxBufferedTrack* room)
+_AMX afxError AmxLockSinkBuffer(afxSink sink, afxUnit64 timeout, afxMask exuMask, afxUnit minFrameCnt, amxBufferedTrack* room)
 // Pull an available sink buffer
 {
     afxError err = { 0 };
@@ -85,7 +85,7 @@ _AMX afxError AmxLockSinkBuffer(afxSink sink, afxUnit64 timeout, afxUnit minFram
 #if !0
     if (sink->lockCb)
     {
-        if (!(err = sink->lockCb(sink, timeout, minFrameCnt, room)))
+        if (!(err = sink->lockCb(sink, timeout, exuMask, minFrameCnt, room)))
         {
             //AFX_ASSERT(AFX_INVALID_INDEX != bufIdx2);
             //AFX_ASSERT_RANGE(sink->latency, bufIdx2, 1);
@@ -170,8 +170,8 @@ _AMX afxError _AmxAsioDtorCb(afxSink sink)
     afxMixDevice mdev = AfxGetAudioSinkDevice(sink);
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
 
-    AfxDismantleInterlockedQueue(&sink->freeBuffers);
-    AfxDismantleInterlockedQueue(&sink->readyBuffers);
+    AfxExhaustInterlockedQueue(&sink->freeBuffers);
+    AfxExhaustInterlockedQueue(&sink->readyBuffers);
 
     // Dispose all acquired buffer objects.
     AfxDisposeObjects(sink->latency, sink->buffers);
@@ -225,37 +225,40 @@ _AMX afxError _AmxAsioCtorCb(afxSink sink, void** args, afxUnit invokeNo)
         }
     };
 
-    if (AfxAllocateInstanceData(sink, ARRAY_SIZE(stashs), stashs)) AfxThrowError();
-    else
+    if (AfxAllocateInstanceData(sink, ARRAY_SIZE(stashs), stashs))
     {
-        AfxZero(sink->buffers, sizeof(sink->buffers[0]) * sink->latency);
-
-        AfxDeployInterlockedQueue(&sink->freeBuffers, sizeof(afxUnit), sink->latency);
-        AfxDeployInterlockedQueue(&sink->readyBuffers, sizeof(afxUnit), sink->latency);
-
-        amxAudioInfo audi = { 0 };
-        audi.chanCnt = sink->chanCnt;
-        audi.fmt = sink->fmt;
-        audi.freq = sink->freq;
-        audi.sampCnt = sink->freq * AFX_MAX(1, sink->latency);
-        audi.segCnt = 1;
-        audi.udd = sink;
-
-        if (AmxAcquireAudios(msys, 1, &audi, &sink->buffers[0]))
-        {
-            AfxThrowError();
-            // Dispose all objects acquire up to this iteration.
-            //AfxDisposeObjects(1, &sink->buffers[0]);
-        }
-
-        // Enqueue our buffer into the queue of disponible buffers.
-        AfxPushInterlockedQueue(&sink->freeBuffers, (afxUnit[]) { 0 });
-        
-        audio_ringbuffer_init(&sink->rb, (void*)AmxGetBufferAddress(AmxGetAudioBuffer(sink->buffers[0]), 0), 4, sink->freq, 2);
-
-        if (err)
-            AfxDeallocateInstanceData(sink, ARRAY_SIZE(stashs), stashs);
+        AfxThrowError();
+        return err;
     }
+
+    AfxZero(sink->buffers, sizeof(sink->buffers[0]) * sink->latency);
+
+    AfxMakeInterlockedQueue(&sink->freeBuffers, sizeof(afxUnit), sink->latency);
+    AfxMakeInterlockedQueue(&sink->readyBuffers, sizeof(afxUnit), sink->latency);
+
+    amxAudioInfo audi = { 0 };
+    audi.chanCnt = sink->chanCnt;
+    audi.fmt = sink->fmt;
+    audi.freq = sink->freq;
+    audi.sampCnt = sink->freq * AFX_MAX(1, sink->latency);
+    audi.segCnt = 1;
+    audi.udd = sink;
+
+    if (AmxAcquireAudios(msys, 1, &audi, &sink->buffers[0]))
+    {
+        AfxThrowError();
+        // Dispose all objects acquire up to this iteration.
+        //AfxDisposeObjects(1, &sink->buffers[0]);
+    }
+
+    // Enqueue our buffer into the queue of disponible buffers.
+    AfxPushInterlockedQueue(&sink->freeBuffers, (afxUnit[]) { 0 });
+        
+    audio_ringbuffer_init(&sink->rb, (void*)AmxGetBufferAddress(AmxGetAudioBuffer(sink->buffers[0]), 0), 4, sink->freq, 2);
+
+    if (err)
+        AfxDeallocateInstanceData(sink, ARRAY_SIZE(stashs), stashs);
+    
     return err;
 }
 

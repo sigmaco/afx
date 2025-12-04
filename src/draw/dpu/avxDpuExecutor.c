@@ -46,26 +46,171 @@ _AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, _avxIoReqPacket* work)
     {
         afxDrawContext dctx = work->Execute.cmdbs[i].dctx;
         AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-        afxUnit batchId = dctx->batchId;
-        _avxCmdBatch* cmdb = _AvxDctxGetCmdBatch(dctx, batchId);
 
-        if (!cmdb)
-        {
-            AfxThrowError();
-            return err;
-        }
+        AFX_ASSERT( (dctx->state == avxContextStatus_PENDING) ||
+                    (dctx->state == avxContextStatus_INTERNAL_EXECUTING));
 
-        //AFX_ASSERT(cmdb->state == avxDrawContextState_PENDING);
-        _AvxDpuRollContext(dpu, dctx, batchId);
+        _AvxDpuRollContext(dpu, dctx);
         
         // Must be disposed because AvxSubmitDrawCommands() reacquires it.
-        AfxDecAtom32(&cmdb->submCnt);
-        AvxRecycleDrawCommands(dctx, /*batchId,*/ FALSE);
-#if 0
-        AFX_ASSERT(!AvxDoesDrawCommandsExist_(dctx, batchId));
-        AfxReportf(0, AfxHere(),"%d dpu %d", batchId, dpu->exuIdx);
-#endif
         AfxDisposeObjects(1, &dctx);
+    }
+    return err;
+}
+
+_AVX afxError _AvxDpuWork_TransferCb(avxDpu* dpu, _avxIoReqPacket* work)
+{
+    afxError err = { 0 };
+
+    switch (work->Transfer.srcFcc)
+    {
+    case NIL:
+    {
+        switch (work->Transfer.dstFcc)
+        {
+        case afxFcc_BUF: // raw to buf
+        {
+            avxBuffer buf = work->Transfer.dst.buf;
+            _AvxUpdateBuffer(buf,   work->Transfer.opCnt, 
+                                    work->Transfer.bufOps, 
+                                    work->Transfer.src.src);
+            AfxDisposeObjects(1, &buf);
+            break;
+        }
+        case afxFcc_RAS: // raw to ras
+        {
+            avxRaster ras = work->Transfer.dst.ras;
+            _AvxDpuUpdateRaster(dpu, ras,   work->Transfer.opCnt, 
+                                            work->Transfer.rasOps, 
+                                            work->Transfer.src.src);
+            AfxDisposeObjects(1, &ras);
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+        break;
+    }
+    case afxFcc_RAS:
+    {
+        avxRaster ras = work->Transfer.src.ras;
+
+        switch (work->Transfer.dstFcc)
+        {
+        case NIL: // ras to raw
+        {
+            _AvxDpuDumpRaster(dpu, ras, work->Transfer.opCnt, 
+                                        work->Transfer.rasOps, 
+                                        work->Transfer.dst.dst);
+            AfxDisposeObjects(1, &ras);
+
+            break;
+        }
+        case afxFcc_BUF: // ras to buf
+        {
+            avxBuffer buf = work->Transfer.dst.buf;
+            _AvxDpuPackRaster(dpu, ras, work->Transfer.opCnt, 
+                                        work->Transfer.rasOps, 
+                                        work->Transfer.dst.buf);
+
+            AfxDisposeObjects(1, &buf);
+
+            break;
+        }
+        case afxFcc_IOB: // ras to iob
+        {
+            afxStream iob = work->Transfer.dst.iob;
+            _AvxDpuDownloadRaster(dpu, ras, work->Transfer.opCnt, 
+                                            work->Transfer.rasOps, iob);
+
+            AfxDisposeObjects(1, &iob);
+
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+
+        AfxDisposeObjects(1, &ras);
+
+        break;
+    }
+    case afxFcc_BUF:
+    {
+        avxBuffer buf = work->Transfer.src.buf;
+
+        switch (work->Transfer.dstFcc)
+        {
+        case NIL: // buf to raw
+        {
+            _AvxDumpBuffer(buf, work->Transfer.opCnt, work->Transfer.bufOps, work->Transfer.dst.dst);
+
+            break;
+        }
+        case afxFcc_BUF: // buf to buf
+        {
+            avxBuffer buf2 = work->Transfer.dst.buf;
+            _AvxCopyBuffer(buf2, work->Transfer.opCnt, work->Transfer.bufCpyOps, buf);
+
+            AfxDisposeObjects(1, &buf2);
+
+            break;
+        }
+        case afxFcc_RAS: // buf to ras
+        {
+            avxRaster ras = work->Transfer.dst.ras;
+            _AvxDpuUnpackRaster(dpu, ras, work->Transfer.opCnt, work->Transfer.rasOps, buf);
+
+            AfxDisposeObjects(1, &ras);
+
+            break;
+        }
+        case afxFcc_IOB: // buf to iob
+        {
+            afxStream iob = work->Transfer.dst.iob;
+            _AvxDownloadBuffer(buf, work->Transfer.opCnt, work->Transfer.bufOps, iob);
+
+            AfxDisposeObjects(1, &iob);
+
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+
+        AfxDisposeObjects(1, &buf);
+
+        break;
+    }
+    case afxFcc_IOB:
+    {
+        afxStream iob = work->Transfer.src.iob;
+
+        switch (work->Transfer.dstFcc)
+        {
+        case afxFcc_BUF: // iob to buf
+        {
+            avxBuffer buf = work->Transfer.dst.buf;
+            _AvxUploadBuffer(buf, work->Transfer.opCnt, work->Transfer.bufOps, iob);
+
+            AfxDisposeObjects(1, &buf);
+
+            break;
+        }
+        case afxFcc_RAS: // iob to ras
+        {
+            avxRaster ras = work->Transfer.dst.ras;
+            _AvxDpuUploadRaster(dpu, ras, work->Transfer.opCnt, work->Transfer.rasOps, iob);
+
+            AfxDisposeObjects(1, &ras);
+
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+
+        AfxDisposeObjects(1, &iob);
+
+        break;
+    }
+    default: AfxThrowError(); break;
     }
     return err;
 }
@@ -74,6 +219,7 @@ _AVX _avxIoReqLut const _AVX_DPU_IORP_VMT =
 {
     .Callback = _AvxDpuWork_CallbackCb,
     .Execute = _AvxDpuWork_ExecuteCb,
+    .Transfer = _AvxDpuWork_TransferCb
 };
 
 _AVX afxBool _PullDque(afxDrawQueue dque, avxDpu* dpu)

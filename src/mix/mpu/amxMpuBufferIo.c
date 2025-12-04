@@ -78,7 +78,7 @@ _AMX afxError _AmxCopyBuffer(amxBuffer buf, amxBufferCopy const* op, amxBuffer d
     AFX_ASSERT(dst);
     AFX_ASSERT(op);
 
-    AfxCopy(&dst->storage[0].hostedAlloc.bytemap[op->to], &buf->storage[0].hostedAlloc.bytemap[op->from], op->range);
+    AfxCopy(&dst->storage[0].hostedAlloc.bytemap[op->dstOffset], &buf->storage[0].hostedAlloc.bytemap[op->srcOffset], op->range);
 
     return err;
 }

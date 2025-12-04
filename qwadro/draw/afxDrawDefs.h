@@ -333,6 +333,8 @@ typedef enum avxShaderType
     avxShaderType_TESS_CTRL,
     avxShaderType_TESS_EVAL,
     avxShaderType_COMPUTE,
+    avxShaderType_TASK,
+    avxShaderType_MESH,
 
     avxShaderType_TOTAL
 } avxShaderType;

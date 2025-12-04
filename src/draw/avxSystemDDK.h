@@ -160,6 +160,7 @@ AFX_OBJECT(afxDrawSystem)
 
     afxClass            dexuCls;
     afxClass            fencCls;
+    afxClass            dctxCls;
 
     afxStringBase       shdStrb;
 
@@ -187,9 +188,9 @@ AVX _avxDdiDsys const* _AvxDsysGetDdi(afxDrawSystem dsys);
 AVX afxMask _AvxDsysGetIoExuMask(afxDrawSystem dsys, afxMask* dedIoExuMask);
 
 AVX afxClass const* _AvxDsysGetDexuClassCb_SW(afxDrawSystem dsys);
+AVX afxClass const* _AvxDsysGetDctxClassCb_SW(afxDrawSystem dsys);
 
 AVX afxClass const* _AvxDsysGetDoutClassCb_SW(afxDrawSystem dsys);
-AVX afxClass const* _AvxDsysGetDinClassCb_SW(afxDrawSystem dsys);
 
 AVX afxClass const* _AvxDsysGetFencClassCb_SW(afxDrawSystem dsys);
 AVX afxClass const* _AvxDsysGetBufClassCb_SW(afxDrawSystem dsys);
@@ -219,8 +220,8 @@ AVX afxClass const* _AvxDsysGetShadClassCb_SW(afxDrawSystem dsys);
 AVX afxClass const* _AvxDsysGetLigaClassCb_SW(afxDrawSystem dsys);
 AVX afxClass const* _AvxDsysGetTxdClassCb_SW(afxDrawSystem dsys);
 
-AVX afxDrawFeatures const* _AvxDsysAccessReqFeatures(afxDrawSystem dsys);
-AVX afxDrawLimits const* _AvxDsysAccessLimits(afxDrawSystem dsys);
+AVX afxDrawFeatures const* _AvxDsysGetReqFeatures(afxDrawSystem dsys);
+AVX afxDrawLimits const* _AvxDsysGetLimits(afxDrawSystem dsys);
 
 AVX afxClassConfig const _AVX_CLASS_CONFIG_TXD;
 

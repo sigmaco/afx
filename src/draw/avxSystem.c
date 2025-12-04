@@ -51,7 +51,7 @@ _AVX afxMask _AvxDsysGetIoExuMask(afxDrawSystem dsys, afxMask* dedIoExuMask)
     return dsys->ioExuMask;
 }
 
-_AVX afxDrawFeatures const* _AvxDsysAccessReqFeatures(afxDrawSystem dsys)
+_AVX afxDrawFeatures const* _AvxDsysGetReqFeatures(afxDrawSystem dsys)
 {
     afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
@@ -59,12 +59,22 @@ _AVX afxDrawFeatures const* _AvxDsysAccessReqFeatures(afxDrawSystem dsys)
     return &dsys->requirements;
 }
 
-_AVX afxDrawLimits const* _AvxDsysAccessLimits(afxDrawSystem dsys)
+_AVX afxDrawLimits const* _AvxDsysGetLimits(afxDrawSystem dsys)
 {
     afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
     return dsys->limits;
+}
+
+_AVX afxClass const* _AvxDsysGetDctxClassCb_SW(afxDrawSystem dsys)
+{
+    afxError err = { 0 };
+    // @dsys must be a valid afxDrawSystem handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    afxClass const* cls = &dsys->dctxCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
+    return cls;
 }
 
 _AVX afxClass const* _AvxDsysGetDexuClassCb_SW(afxDrawSystem dsys)
@@ -629,6 +639,10 @@ _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
         AFX_ASSERT(txdClsCfg.fcc == afxFcc_TXD);
         AfxMountClass(&dsys->txdCls, NIL, classes, &txdClsCfg); // req RAS
 
+        afxClassConfig dctxClsCfg = cfg->dctxClsCfg ? *cfg->dctxClsCfg : _AVX_CLASS_CONFIG_DCTX;
+        AFX_ASSERT(dctxClsCfg.fcc == afxFcc_DCTX);
+        AfxMountClass(&dsys->dctxCls, NIL, classes, &dctxClsCfg);
+
         afxClassConfig dexuClsCfg = cfg->dexuClsCfg ? *cfg->dexuClsCfg : _AVX_CLASS_CONFIG_DEXU;
         AFX_ASSERT(dexuClsCfg.fcc == afxFcc_DEXU);
         AfxMountClass(&dsys->dexuCls, NIL, classes, &dexuClsCfg);
@@ -1010,7 +1024,7 @@ _AVX afxError AvxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg
         bridgeCfg[bridgeCnt].exuIdx = bridgeCnt;
         bridgeCfg[bridgeCnt].minQueCnt = minQueCnt;
         bridgeCfg[bridgeCnt].dqueClsCfg = &_AVX_CLASS_CONFIG_DQUE;
-        bridgeCfg[bridgeCnt].dctxClsCfg = &_AVX_CLASS_CONFIG_DCTX;
+        //bridgeCfg[bridgeCnt].dctxClsCfg = &_AVX_CLASS_CONFIG_DCTX;
         ++bridgeCnt;
     }
 

@@ -28,17 +28,6 @@
 #define _AVX_DRAW_CONTEXT_C
 #include "avxIcd.h"
 
-_AVX _avxCmdBatch* _AvxDctxGetCmdBatch(afxDrawContext dctx, afxUnit idx)
-{
-    afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    _avxCmdBatch* batch = NIL;
-    afxBool valid = AfxGetPoolUnit(&dctx->batches, idx, (void**)&batch);
-    if ((!valid) || (!batch)) return NIL;
-    AFX_ASSERT(batch->fcc == afxFcc_DCMD);
-    return batch;
-}
-
 _AVX _avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxCmdId* cmdId)
 {
     afxError err = { 0 };
@@ -57,25 +46,35 @@ _AVX _avxCmd* _AvxDctxPushCmd(afxDrawContext dctx, afxUnit id, afxUnit siz, afxC
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX avxDrawContextState _AvxDctxGetStatus(afxDrawContext dctx)
+_AVX afxClass const* _AvxDctxGetDctxClass(afxDrawContext dctx)
+{
+    afxError err = { 0 };
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    afxClass const* cls = &dctx->dctxCls;
+    AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
+    return cls;
+}
+
+_AVX avxContextStatus _AvxDctxGetStatus(afxDrawContext dctx)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     return dctx->state;
 }
 
-_AVX afxUnit AvxGetCommandPort(afxDrawContext dctx)
+_AVX afxMask AvxGetCommandPort(afxDrawContext dctx)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    return dctx->exuIdx;
+    return dctx->exuMask;
 }
 
-_AVX afxUnit AvxGetCommandPool(afxDrawContext dctx)
+_AVX afxDrawContext AvxGetCommandPool(afxDrawContext dctx)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    return dctx->poolIdx;
+    return dctx->pool;
 }
 
 _AVX afxError AvxTraverseDrawCommands(afxDrawContext dctx, afxCmdId(*f)(void* udd, void* cmd), void* udd)
@@ -86,10 +85,68 @@ _AVX afxError AvxTraverseDrawCommands(afxDrawContext dctx, afxCmdId(*f)(void* ud
     return err;
 }
 
+_AVX afxError AvxPrepareDrawCommands(afxDrawContext dctx, afxBool purge, avxCmdFlags flags)
+{
+    afxError err = { 0 };
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must not be in the PENDING state.
+    AFX_ASSERT(dctx->state != avxContextStatus_PENDING);
+
+    AFX_ASSERT(dctx->ddi->prepare);
+    if (dctx->ddi->prepare(dctx, purge, flags))
+    {
+        AfxThrowError();
+    }
+    else
+    {
+        AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+        AFX_ASSERT(AfxIsChainEmpty(&dctx->commands));
+    }
+
+    return err;
+}
+
+_AVX afxError AvxCompileDrawCommands(afxDrawContext dctx)
+{
+    afxError err = { 0 };
+    // dctx must be a valid afxDrawContext handle.
+    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be in the RECORDING state.
+    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    // If dctx is a prime context, there must not be an active draw scope.
+    AFX_ASSERT(!dctx->inDrawScope || (dctx->cmdFlags & avxCmdFlag_DEFERRED));
+    // Any and every query activated during the recording of dctx must have been deactivated.
+    // TODO: Do it.
+    // If dctx is a aux context, there must not be any remaining BeginDebugUtilsLabelEXT command recorded to dctx that has not previously been ended by a call to EndDebugUtilsLabelEXT.
+    // TODO: Do it.
+
+    AFX_ASSERT(dctx->ddi->compile);
+    if (dctx->ddi->compile(dctx))
+    {
+        AfxThrowError();
+        
+        // If there was an error during recording, the application will be notified by an unsuccessful return 
+        // code returned by AfxCompileDrawCommands, and the draw context will be moved to the invalid state.
+
+        AFX_ASSERT(dctx->state == avxContextStatus_INVALID);
+    }
+    else
+    {
+        // The draw context must have been in the recording state, and, if successful, is moved to the executable state.
+        AFX_ASSERT(dctx->state == avxContextStatus_EXECUTABLE);
+        //AFX_ASSERT(AfxIsChainEmpty(&dctx->commands));
+    }
+    return err;
+}
+
 _AVX afxError AvxExhaustDrawContext(afxDrawContext dctx, afxBool freeMem)
 {
     afxError err = { 0 };
+    // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+    // dctx must be a pool context.
+    AFX_ASSERT(!dctx->pool || (dctx->pool == dctx));
 
     AFX_ASSERT(dctx->ddi->exhaust);
     if (dctx->ddi->exhaust(dctx, freeMem))
@@ -98,131 +155,11 @@ _AVX afxError AvxExhaustDrawContext(afxDrawContext dctx, afxBool freeMem)
     }
     else
     {
-        AFX_ASSERT(AfxIsChainEmpty(&dctx->commands));
-        AFX_ASSERT(dctx->batches.totalUsedCnt == 0);
-    }
-    return err;
-}
-
-_AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool deferred)
-{
-    afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-
-    AFX_ASSERT(dctx->ddi->compose);
-    if (dctx->ddi->compose(dctx, once, deferred))
-    {
-        AfxThrowError();
-    }
-    else
-    {
-        //AFX_ASSERT(dctx->state == avxDrawContextState_EXECUTABLE);
-        AFX_ASSERT(AfxIsChainEmpty(&dctx->commands));
-    }
-
-    return err;
-}
-
-_AVX afxError AvxDiscardDrawCommands(afxDrawContext dctx, afxBool freeRes)
-{
-    afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-
-    AFX_ASSERT(dctx->ddi->discard);
-    if (dctx->ddi->discard(dctx, freeRes))
-    {
-        AfxThrowError();
-    }
-    else
-    {
-        //AFX_ASSERT(dctx->state == avxDrawContextState_EXECUTABLE);
+        //AFX_ASSERT(dctx->state == avxContextStatus_INITIAL);
         AFX_ASSERT(AfxIsChainEmpty(&dctx->commands));
     }
     return err;
 }
-
-_AVX afxError AvxCompileDrawCommands(afxDrawContext dctx)
-{
-    afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-
-    // If there was an error during recording, the application will be notified by an unsuccessful return 
-    // code returned by AfxEndCommandBuffer, and the draw context will be moved to the invalid state.
-    // The draw context must have been in the recording state, and, if successful, is moved to the executable state.
-
-    AFX_ASSERT(dctx->ddi->compile);
-    if (dctx->ddi->compile(dctx))
-    {
-        AfxThrowError();
-    }
-    else
-    {
-        //AFX_ASSERT(dctx->state == avxDrawContextState_EXECUTABLE);
-        AFX_ASSERT(AfxIsChainEmpty(&dctx->commands));
-    }
-    return err;
-}
-
-_AVX afxError AvxRecycleDrawCommands(afxDrawContext dctx, afxBool freeRes)
-{
-    afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-
-
-    AFX_ASSERT(dctx->ddi->recycle);
-    if (dctx->ddi->recycle(dctx, freeRes))
-    {
-        AfxThrowError();
-    }
-    return err;
-}
-
-_AVX afxBool AvxDoesDrawCommandsExist_(afxDrawContext dctx)
-{
-    afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-
-    afxUnit batchId = dctx->batchId;
-    if (batchId == AFX_INVALID_INDEX)
-    {
-        AFX_ASSERT(batchId != AFX_INVALID_INDEX);
-        AfxThrowError();
-        return FALSE;
-    }
-
-    // AVX assumes the compilation when ICD does not take the front.
-
-    AfxLockFutex(&dctx->cmdbReqLock, FALSE);
-
-    _avxCmdBatch* batch = _AvxDctxGetCmdBatch(dctx, batchId);
-
-    AfxUnlockFutex(&dctx->cmdbReqLock, FALSE);
-
-    return !!batch;
-}
-
-#if 0
-_AVX afxError AvxAcquireAuxContexts(afxDrawContext dctx, avxContextInfo const* info, afxUnit cnt, afxDrawContext contexts[])
-{
-    afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
-    AFX_ASSERT(contexts);
-    AFX_ASSERT(cnt);
-
-    afxClass* cls = (afxClass*)_AvxDexuGetDctxClass(dctx);
-    AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
-
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)contexts, (void const*[]) { dexu, info }))
-    {
-        AfxThrowError();
-        return err;
-    }
-
-    AFX_ASSERT_OBJECTS(afxFcc_DCTX, cnt, contexts);
-
-    return err;
-}
-#endif
 
 _AVX afxError _AvxDctxDtorCb(afxDrawContext dctx)
 {
@@ -233,11 +170,11 @@ _AVX afxError _AvxDctxDtorCb(afxDrawContext dctx)
     AFX_ASSERT(dctx->objsToBeDisposed.pop == 0);
     AfxEmptyArray(&dctx->objsToBeDisposed, FALSE, FALSE);
 
-    AfxCleanUpFutex(&dctx->cmdbReqLock);
-    AfxMakeChain(&dctx->cmdbRecycChain, dctx);
+    AfxExhaustInterlockedQueue(&dctx->recycQue);
 
     AfxDismantleArena(&dctx->cmdArena);
-    AfxExhaustPool(&dctx->batches, TRUE);
+
+    AfxDeregisterChainedClasses(&dctx->classes);
 
     return err;
 }
@@ -247,41 +184,70 @@ _AVX afxError _AvxDctxCtorCb(afxDrawContext dctx, void** args, afxUnit invokeNo)
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
-    afxDrawBridge dexu = args[0];
-    AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-    AFX_ASSERT(args[1]);
-    avxContextInfo const* info = AFX_CAST(avxContextInfo const*, args[1]);
-    
-    afxDrawSystem dsys = AfxGetHost(dexu);
+    afxDrawSystem dsys = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    afxDrawContext pool = AFX_CAST(afxDrawContext, args[1]);
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_DCTX, 1, &pool);
+    AFX_ASSERT(args[2]);
+    avxContextInfo const* info = AFX_CAST(avxContextInfo const*, args[2]);
+    afxClassConfig const* pDctxClsCfg = NIL;/* AFX_CAST(afxClassConfig const*, args[3]);*/
 
-    afxDrawDevice ddev = AvxGetBridgedDrawDevice(dexu, NIL);
-    AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
-
-    dctx->exuIdx = dexu->exuIdx;
-    dctx->poolIdx = AfxGetObjectId(dctx);
-
-    dctx->cmdbLockedForReq = FALSE;
-    AfxSetUpFutex(&dctx->cmdbReqLock);
-    AfxMakeChain(&dctx->cmdbRecycChain, dctx);
-
-    AfxMakeArena(&dctx->cmdArena, NIL, AfxHere());
-
-    dctx->devLimits = _AvxDdevGetLimits(ddev);
-    dctx->enabledFeatures = _AvxDsysAccessReqFeatures(dsys);
-
-    dctx->transient = FALSE;
-    dctx->deferred = FALSE;
-    dctx->once = FALSE;
-    
     dctx->ddi = &_AVX_DDI_DCTX;
-    
-    AfxSetUpPool(&dctx->batches, sizeof(_avxCmdBatch), 3, 0);
+    dctx->udd = info->udd;
+    dctx->tag = info->tag;
+    dctx->devLimits = _AvxDsysGetLimits(dsys);
+    dctx->enabledFeatures = _AvxDsysGetReqFeatures(dsys);
 
+    AfxMakeChain(&dctx->classes, dctx);
+
+    if (!pool)
+    {
+        dctx->pool = dctx;
+
+        dctx->caps = info->caps;
+        dctx->exuMask = info->exuMask;
+
+        afxClassConfig dctxClsCfg = pDctxClsCfg ? *pDctxClsCfg : _AVX_CLASS_CONFIG_DCTX;
+        AFX_ASSERT(dctxClsCfg.fcc == afxFcc_DCTX);
+        dctxClsCfg.unitsPerPage = AFX_OR(AFX_MIN(info->auxCnt, 32), dctxClsCfg.unitsPerPage);
+        AfxMountClass(&dctx->dctxCls, NIL, &dctx->classes, &dctxClsCfg);
+
+        // FIXME: Interlocked queue can not be zero.
+        AfxMakeInterlockedQueue(&dctx->recycQue, sizeof(afxDrawContext), AFX_MAX(AFX_MIN(info->recycCap, 32), 1));
+    }
+    else
+    {
+        AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &pool);
+        
+        // If there is a base, the base must be its own base.
+        // Effectively, a aux context can only be acquired from a base context.
+        // By allowing it to be itself, we allow the code to proceed normally avoid testing against NIL.
+        if (pool->pool && (pool->pool != pool))
+        {
+            AfxThrowError();
+            return err;
+        }
+        dctx->pool = pool;
+
+        dctx->caps = (pool->caps & info->caps);
+        dctx->exuMask = (pool->exuMask & info->exuMask);
+
+        // FIXME: Interlocked queue can not be zero.
+        AfxMakeInterlockedQueue(&dctx->recycQue, sizeof(afxDrawContext), 1);
+    }
+
+
+    dctx->flags = info->flags;
+    dctx->cmdFlags = info->cmdFlags;
+    dctx->state = avxContextStatus_INITIAL;
 
     AfxMakeChain(&dctx->commands, dctx);
+    AfxMakeArena(&dctx->cmdArena, NIL, AfxHere());
 
     AfxMakeArray(&dctx->objsToBeDisposed, sizeof(afxObject), 4, NIL, 0);
+
+    dctx->inVideoCoding = FALSE;
+    dctx->inDrawScope = FALSE;
 
     return err;
 }
@@ -299,47 +265,125 @@ _AVX afxClassConfig const _AVX_CLASS_CONFIG_DCTX =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, avxContextInfo const* info, afxUnit cnt, afxDrawContext contexts[])
+_AVX afxError AvxAcquireDrawContexts(afxDrawSystem dsys, afxDrawContext pool, avxContextInfo const* info, afxUnit cnt, afxDrawContext contexts[])
 {
     afxError err = { 0 };
+    // dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
+    // contexts must be a valid pointer to an array of @cnt * afxDrawContext handles.
     AFX_ASSERT(contexts);
+    // @info must be a valid pointer to a valid avxContextInfo structure.
+    AFX_ASSERT(info);
+    // @cnt must be greater than 0.
     AFX_ASSERT(cnt);
 
-    afxUnit exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, info->caps, info->exuMask, 0, 0, NIL);
+    AFX_ASSERT(32 >= info->auxCnt);
+    AFX_ASSERT(32 >= info->recycCap);
 
-    if (!exuCnt)
+    afxClass* cls;
+
+    if (!pool)
     {
+        cls = (afxClass*)_AvxDsysGetDctxClassCb_SW(dsys);
+        AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
+        if (AfxAcquireObjects(cls, cnt, (afxObject*)contexts, (void const*[]) { dsys, pool, info }))
+        {
+            AfxThrowError();
+            return err;
+        }
+
+        AFX_ASSERT_OBJECTS(afxFcc_DCTX, cnt, contexts);
+        return err;
+    }
+
+    // If @pool is not NIL, @pool must be a valid afxDrawContext handle.
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_DCTX, 1, &pool);
+
+    if (pool->pool != pool)
+    {
+        AFX_ASSERT(pool->pool != pool);
         AfxThrowError();
         return err;
     }
 
-    for (afxUnit exuIter = 0; exuIter < exuCnt; exuIter++)
+    afxBool once = (info->cmdFlags & avxCmdFlag_ONCE);
+    afxBool deferred = (info->cmdFlags & avxCmdFlag_DEFERRED);
+
+    afxUnit recycCnt = 0;
+    while (1)
     {
-        afxDrawBridge dexu;
-        if (!AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, info->caps, info->exuMask, exuIter, 1, &dexu))
+        // Firstly, try recycling contexts.
+
+        afxDrawContext aux;
+        if (AfxPopInterlockedQueue(&pool->recycQue, &aux))
         {
-            AfxThrowError();
-            continue;
+            AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &aux);
+            AFX_ASSERT(aux->submCnt == 0);
+            AFX_ASSERT(aux->submQueMask == 0);
+
+            AvxPrepareDrawCommands(aux, TRUE, info->cmdFlags);
+
+            AfxMakeChain(&aux->commands, aux);
+
+            AFX_ASSERT(AfxLoadAtom32(&aux->submCnt) == 0);
+            aux->submCnt = 0;
+            aux->submQueMask = NIL;
+
+            aux->flags = info->flags ? (pool->flags & info->flags) : pool->flags;
+            aux->cmdFlags = info->cmdFlags ? (pool->cmdFlags & info->cmdFlags) : pool->cmdFlags;
+            aux->exuMask = info->exuMask ? (pool->exuMask & info->exuMask) : pool->exuMask;
+            aux->caps = info->caps ? (pool->caps & info->caps) : pool->caps;
+
+            contexts[recycCnt] = aux;
+
+            ++recycCnt;
+            if (recycCnt >= cnt)
+                break;
         }
+    }
 
-        afxDrawQueue dque;
-        afxUnit nextQueIdx = 0;
-        AvxGetDrawQueues(dexu, nextQueIdx, 1, &dque);
-        AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
-
-        afxClass* cls = (afxClass*)_AvxDexuGetDctxClass(dexu);
+    afxUnit remainCnt = (cnt - recycCnt);
+    if (remainCnt)
+    {
+        cls = (afxClass*)_AvxDctxGetDctxClass(pool);
         AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
-
-        if (AfxAcquireObjects(cls, cnt, (afxObject*)contexts, (void const*[]) { dexu, info }))
+        if (AfxAcquireObjects(cls, remainCnt, (afxObject*)&contexts[recycCnt], (void const*[]) { dsys, pool, info }))
         {
             AfxThrowError();
+
+            // If acquisition failed, dispose all recycled contexts.
+            // TODO: Recycle it.
+            AfxDisposeObjects(recycCnt, contexts);
             return err;
         }
     }
 
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, cnt, contexts);
+    return err;
+}
 
+_AVX afxError AvxRecycleDrawContexts(afxBool freeRes, afxUnit cnt, afxDrawContext contexts[])
+{
+    afxError err = { 0 };
+
+    for (afxUnit iter = 0; iter < cnt; iter++)
+    {
+        afxDrawContext dctx = contexts[iter];
+        if (!dctx) continue;
+        AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+        AFX_ASSERT(dctx->state != avxContextStatus_PENDING);
+
+        AFX_ASSERT(dctx->ddi->recycle);
+        if (dctx->ddi->recycle(dctx, freeRes))
+        {
+            AfxThrowError();
+        }
+        else
+        {
+            AFX_ASSERT(dctx->state == avxContextStatus_INITIAL);
+            AFX_ASSERT(AfxIsChainEmpty(&dctx->commands));
+        }
+    }
     return err;
 }
 
@@ -369,6 +413,21 @@ _AVX afxError AvxExecuteDrawCommands(afxDrawSystem dsys, afxUnit cnt, avxSubmiss
             continue;
         }
         AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
+
+        AFX_ASSERT(!(dctx->cmdFlags & avxCmdFlag_DEFERRED));
+
+        if (dctx->state != avxContextStatus_EXECUTABLE)
+        {
+            if ((dctx->state == avxContextStatus_PENDING) ||
+                (dctx->state == avxContextStatus_INTERNAL_EXECUTING))
+            {
+                if (!(dctx->cmdFlags & avxCmdFlag_SHARED))
+                {
+                    AFX_ASSERT(!(dctx->cmdFlags & avxCmdFlag_SHARED));
+                    AfxThrowError();
+                }
+            }
+        }
 
         afxMask exuMask = subm->exuMask;
         afxUnit exuCnt = AvxChooseDrawBridges(dsys, AFX_INVALID_INDEX, NIL, exuMask, 0, 0, NIL);
@@ -421,7 +480,7 @@ _AVX afxError AvxExecuteDrawCommands(afxDrawSystem dsys, afxUnit cnt, avxSubmiss
     return err;
 }
 
-
+#if 0
 
 _AVX afxError AvxPrepareDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBool once, afxBool deferred)
 {
@@ -437,7 +496,7 @@ _AVX afxError AvxPrepareDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBo
         }
         else
         {
-            //AFX_ASSERT(dctx->state == avxDrawContextState_EXECUTABLE);
+            //AFX_ASSERT(dctx->state == avxContextStatus_EXECUTABLE);
             AFX_ASSERT(AfxIsChainEmpty(&dctx->commands));
         }
 
@@ -532,8 +591,8 @@ _AVX afxError AvxPrepareDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBo
         cmdb->inDrawScope = FALSE;
         cmdb->inVideoCoding = FALSE;
 
-        dctx->state = avxDrawContextState_RECORDING;
-        AFX_ASSERT(dctx->state == avxDrawContextState_RECORDING);
+        dctx->state = avxContextStatus_RECORDING;
+        AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
 
     }
 
@@ -643,3 +702,4 @@ _AVX afxError AvxPurgeDrawCommandsNEXT(afxDrawContext dctx, afxUnit bin, afxBool
     AfxUnlockFutex(&dctx->cmdbReqLock, FALSE);
     return err;
 }
+#endif

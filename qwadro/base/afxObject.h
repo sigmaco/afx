@@ -170,19 +170,19 @@ AFX afxError    AfxAcquireObjects(afxClass* cls, afxUnit cnt, afxObject objects[
     As a whole system, handles are shareable, where they can be reacquired across the system.
 */
 
-AFX afxError    AfxReacquireObjects(afxUnit cnt, afxObject objects[]);
+AFX afxError    AfxReacquireObjects(afxHere const dbg, afxUnit cnt, afxObject objects[]);
 
 /*
     As every handle is shareable and things not being created, the function to get rid of it is the AfxDisposeObjects().
     This function can destroy the object when the reference counter is decremented to zero, and deallocate its storage if the pool is ready to free the page backing such object.
 */
 
-AFX afxBool     AfxDisposeObjects(afxUnit cnt, afxObject objects[]);
+AFX afxBool     AfxDisposeObjects(afxHere const dbg, afxUnit cnt, afxObject objects[]);
 
 #ifndef _AFX_MANAGER_C
 //#   define AfxAcquireObjects(_mgr_,_cnt_,_objects_,_udd_) AfxAcquireObjects((_mgr_),(_cnt_),(afxObject*)(_objects_), ((_udd_)) )
-#   define AfxReacquireObjects(_cnt_,_objects_) AfxReacquireObjects((_cnt_),(afxObject*)(_objects_))
-#   define AfxDisposeObjects(_cnt_,_objects_) AfxDisposeObjects((_cnt_),(afxObject*)(_objects_))
+#   define AfxReacquireObjects(_cnt_,_objects_) AfxReacquireObjects(AfxHere(), (_cnt_),(afxObject*)(_objects_))
+#   define AfxDisposeObjects(_cnt_,_objects_) AfxDisposeObjects(AfxHere(), (_cnt_),(afxObject*)(_objects_))
 #endif
 
 AFX afxUnit      _AfxAssertObjects(afxUnit cnt, afxObject const objects[], afxFcc fcc); // returns the number of exceptions (if any); expects valid handles only.

@@ -898,7 +898,7 @@ _AFX afxUnit AfxExhaustClass(afxClass *cls)
         afxObject obj;
         while (_AfxEnumerateObjectsUnlocked(cls, TRUE, 0, 1, &obj))
         {
-            while (TRUE != AfxDisposeObjects(1, &obj));
+            while (TRUE != AfxDisposeObjects(AfxHere(), 1, &obj));
             ++rslt;
         }
     }
@@ -948,7 +948,7 @@ _AFX afxError AfxDismountClass(afxClass *cls)
         AfxCleanUpFutex(&cls->poolLock);
 
         if (cls->mmu)
-            AfxDisposeObjects(1, (void*[]) { cls->mmu });
+            AfxDisposeObjects(AfxHere(), 1, (void*[]) { cls->mmu });
     }
 
     AfxDismantleArena(&cls->arena);
@@ -1085,7 +1085,7 @@ _AFX afxError AfxMountClass(afxClass* cls, afxClass* subset, afxChain* host, afx
         {
             AFX_ASSERT_OBJECTS(afxFcc_MMU, 1, &cfg->mmu);
 
-            if (AfxReacquireObjects(1, (void*[]) { cls->mmu }))
+            if (AfxReacquireObjects(AfxHere(), 1, (void*[]) { cls->mmu }))
                 AfxThrowError();
         }
     }
@@ -1243,7 +1243,7 @@ _AFX afxError AfxAcquireObjects2(afxClass *cls, afxUnit first, afxUnit cnt, afxU
     return err;
 }
 
-_AFX afxError AfxReacquireObjects(afxUnit cnt, afxObject objects[])
+_AFX afxError AfxReacquireObjects(afxHere const dbg, afxUnit cnt, afxObject objects[])
 {
     afxError err = { 0 };
     AFX_ASSERT(objects);
@@ -1269,7 +1269,7 @@ _AFX afxError AfxReacquireObjects(afxUnit cnt, afxObject objects[])
     return err;
 }
 
-_AFX afxBool AfxDisposeObjects(afxUnit cnt, afxObject objects[])
+_AFX afxBool AfxDisposeObjects(afxHere const dbg, afxUnit cnt, afxObject objects[])
 {
     afxError err = { 0 };
     AFX_ASSERT(objects);

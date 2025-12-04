@@ -74,21 +74,17 @@
 #include "qwadro/draw/avxProvision.h"
 #include "qwadro/draw/afxDrawBridge.h"
 
-typedef enum avxScheduleFlag
+typedef enum avxCmdFlag
 {
-    // specifies that each recording of the command stream will only be submitted once, 
-    // and the command stream will be reset and recorded again between each submission.
-    avxScheduleFlag_ONCE,
-
-    // specifies that a secondary command stream is considered to be entirely inside a draw scope.
-    // If this is a primary command stream, then this bit is ignored.
-    avxScheduleFlag_DRAW_SCOPED,
-
-    // specifies that a command stream can be resubmitted to any queue of the same queue family while it is in the pending state, 
-    // and recorded into multiple primary command streams.
-    avxScheduleFlag_SIMULTANEOUS,
-    // NOTE: Are ONCE and SIMULTANEOUS mutually exclusive? How AVX will queue it?
-} avxScheduleFlags;
+    // Commands will be submitted once only and then automatically invalidated.
+    avxCmdFlag_ONCE = AFX_BITMASK(0),
+    // Commands will be side-loaded (inlined) by a front context.
+    avxCmdFlag_DEFERRED = AFX_BITMASK(1),
+    // Commands are considered entirely inside a drawing scope (to be used by a front context).
+    avxCmdFlag_SCOPED = AFX_BITMASK(2),
+    // Commands will be shared across more than one DPU concurrently.
+    avxCmdFlag_SHARED = AFX_BITMASK(3)
+} avxCmdFlags;
 
 typedef enum avxContextFlag
 {
@@ -103,15 +99,15 @@ typedef enum avxContextFlag
 
 AFX_DEFINE_STRUCT(avxContextInfo)
 {
-    avxContextFlags flags;
-    avxAptitude       caps;
-    // The execution unit (in Mantle, this refers to a specific GPU hardware unit or execution engine).
-    // NOTE 1 mentions that, in Mantle, unlike Vulkan, you specify queue capabilities rather than the execution unit index.
+    avxAptitude     caps;
     afxMask         exuMask;
-    afxBool         once;
-    afxBool         deferred;
-    afxUnit         binCnt;
-    afxUnit         rollCnt;
+    avxContextFlags flags;
+    avxCmdFlags     cmdFlags;
+    afxUnit         auxCnt;
+    // The capacity of recycle queue.
+    afxUnit         recycCap;
+    void*           udd;
+    afxString       tag;
 };
 
 /*
@@ -125,16 +121,36 @@ AFX_DEFINE_STRUCT(avxContextInfo)
 // NOTE 1: In Mantle, unlike Vulkan, we specify the queue capabilites instead of exuIdx.
 // NOTE 2: In Mantle and Vulkan, we specify optimization hints (like ONE_TIME) when we starts recording a context (with a Begin() function);
 
-AVX afxError        AvxAcquireDrawContexts
+AVX afxError AvxAcquireDrawContexts
 (
     // The draw system to provide the drawing contexts.
-    afxDrawSystem   dsys,
+    afxDrawSystem dsys,
+    // An optional base context to provide a shared command pool.
+    afxDrawContext pool,
     // The information specifying the operation context.
     avxContextInfo const* info,
     // The count of the draw contexts wanted to be allocated.
-    afxUnit         cnt,
+    afxUnit cnt,
     // An array of draw contexts to be allocated.
-    afxDrawContext  contexts[]
+    afxDrawContext contexts[]
+);
+
+/*
+    The AvxRecycleDrawContexts() function recycles draw contexts, releasing resources or allowing for reuse.
+    This function is used to opportunistically try to recycle draw contexts (potentially preserving allocations) or destroy it.
+
+    A flag can be used to indicate whether all or most of the resources owned by the context should be reclaimed by the system.
+    If this flag is not set, then the draw context may hold onto memory resources and reuse them when recording commands.
+*/
+
+AVX afxError AvxRecycleDrawContexts
+(
+    // A flag that indicates whether all or most of the resources owned by the batch should be reclaimed by the system.
+    afxBool freeRes,
+    // The number of contexts to be disposed.
+    afxUnit cnt,
+    // The draw context that holds the commands.
+    afxDrawContext contexts[]
 );
 
 /*
@@ -145,97 +161,64 @@ AVX afxError        AvxAcquireDrawContexts
     and using a fence for synchronization, the function ensures that commands are executed efficiently and correctly.
 */
 
-AVX afxError        AvxExecuteDrawCommands
+AVX afxError AvxExecuteDrawCommands
 (
     // The draw system where the draw commands will be executed.
-    afxDrawSystem   dsys,
+    afxDrawSystem dsys,
 
     // The number of draw contexts to be executed.
     // This tells the function how many contexts in the @contexts array should be processed.
-    afxUnit         cnt,
+    afxUnit cnt,
 
     // A control structure that might define various parameters related to how the draw commands are submitted, 
     // such as synchronization or execution order. This encapsulate details like submission flags, 
     // command queues, or context properties that manage how and when the draw commands are executed.
-    avxSubmission   submissions[]
+    avxSubmission submissions[]
 );
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxUnit     AvxGetCommandPort(afxDrawContext dctx);
-
-AVX afxUnit     AvxGetCommandPool(afxDrawContext dctx);
-
-AVX afxError        AvxExhaustDrawContext
+AVX afxMask AvxGetCommandPort
 (
-    afxDrawContext  dctx,
-    afxBool         freeMem
+    afxDrawContext dctx
 );
 
-AVX afxError        AvxRecordDrawCommands
+AVX afxDrawContext AvxGetCommandPool
 (
-    // The draw context which the batch will be allocated from.
-    afxDrawContext  dctx, 
-    // A flag specifying a one-time submission batch.
-    afxBool         once, 
-    // A flag specifying a inlineable batch.
-    afxBool         deferred
-);
-
-/// Reset a draw context to the initial state.
-/// Any primary draw context that is in the recording or executable state and has @dctx recorded into it, becomes invalid.
-
-AVX afxError        AvxDiscardDrawCommands
-(
-    afxDrawContext  dctx,
-    afxBool         freeRes
-);
-
-/// Finish recording a draw context.
-
-AVX afxError        AvxCompileDrawCommands
-(
-    // The draw context recording commands.
-    afxDrawContext  dctx
+    afxDrawContext dctx
 );
 
 /*
-    The AvxRecycleDrawCommands() function recycles draw batches, releasing resources or allowing for reuse.
-    This function is used to opportunistically try to recycle draw batches (potentially preserving allocations) or destroy it.
-
-    A flag can be used to indicate whether all or most of the resources owned by the batch should be reclaimed by the system.
-    If this flag is not set, then the draw batch may hold onto memory resources and reuse them when recording commands.
+    Exhausting a draw context recycles all of the resources from all of the auxiliary contexts allocated from the pool context back to the pool context. All draw contexts that have been allocated from the pool context are put in the initial state.
 */
 
-AVX afxError        AvxRecycleDrawCommands
+AVX afxError AvxExhaustDrawContext
 (
-    // The draw context that holds the commands.
-    afxDrawContext  dctx, 
-    // A flag that indicates whether all or most of the resources owned by the batch should be reclaimed by the system.
-    afxBool         freeRes
+    afxDrawContext dctx,
+    afxBool freeMem
 );
 
-AVX afxBool AvxDoesDrawCommandsExist_(afxDrawContext dctx);
+/*
+    Reset a draw context to the initial state.
+    Any primary draw context that is in the recording or executable state and has @dctx recorded into it, becomes invalid.
+*/
 
+AVX afxError AvxPrepareDrawCommands
+(
+    // The draw context which the batch will be allocated from.
+    afxDrawContext dctx, 
+    afxBool purge,
+    avxCmdFlags flags
+);
 
+/*
+    Finish recording a draw context.
+*/
 
-AVX afxError AvxRecordDrawCommands(afxDrawContext dctx, afxBool once, afxBool deferred);
-AVX afxError AvxDiscardDrawCommands(afxDrawContext dctx, afxBool freeRes);
-AVX afxError AvxCompileDrawCommands(afxDrawContext dctx);
-AVX afxError AvxRecycleDrawCommands(afxDrawContext dctx, afxBool freeRes);
-
-// Resets and restarts a command bin, and make it as the active recording stream.
-AVX afxError AvxCommenceDrawCommands(afxDrawContext dctx, afxUnit bin, afxBool once, afxBool deferred);
-
-// Selects a command bin again as the active recording stream.
-AVX afxError AvxResumeDrawCommands(afxDrawContext dctx, afxUnit bin);
-
-// Embeds the commands in the specified bin into the active command stream.
-AVX afxError AvxEmbedDrawCommands(afxDrawContext dctx, afxUnit bin);
-
-// Cleans all commands in a bin, potentially liberating resources.
-AVX afxError AvxPurgeDrawCommands(afxDrawContext dctx, afxUnit bin, afxBool freeRes);
-
-// Execute will push all active primary (non-deferred) streams.
+AVX afxError AvxCompileDrawCommands
+(
+    // The draw context recording commands.
+    afxDrawContext dctx
+);
 
 #endif//AVX_DRAW_CONTEXT_H

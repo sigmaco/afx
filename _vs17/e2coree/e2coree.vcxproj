@@ -52,6 +52,7 @@
     <ClInclude Include="..\..\qwadro\draw\afxSurface.h" />
     <ClInclude Include="..\..\qwadro\draw\avxBuffer.h" />
     <ClInclude Include="..\..\qwadro\draw\avxBuffered.h" />
+    <ClInclude Include="..\..\qwadro\draw\avxBus.h" />
     <ClInclude Include="..\..\qwadro\draw\avxCanvas.h" />
     <ClInclude Include="..\..\qwadro\draw\avxColor.h" />
     <ClInclude Include="..\..\qwadro\draw\avxDrawing.h" />
@@ -147,8 +148,10 @@
     <ClInclude Include="..\..\qwadro\mix\amxAudio.h" />
     <ClInclude Include="..\..\qwadro\mix\amxAudioFile.h" />
     <ClInclude Include="..\..\qwadro\mix\amxBuffer.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxBuffered.h" />
     <ClInclude Include="..\..\qwadro\mix\amxCodec.h" />
     <ClInclude Include="..\..\qwadro\mix\amxEncoder.h" />
+    <ClInclude Include="..\..\qwadro\mix\amxMixage.h" />
     <ClInclude Include="..\..\qwadro\mix\amxTracker.h" />
     <ClInclude Include="..\..\qwadro\mix\amxSound.h" />
     <ClInclude Include="..\..\qwadro\mix\amxSoundscape.h" />
@@ -311,6 +314,7 @@
     <ClCompile Include="..\..\src\draw\avxSynchronization.c" />
     <ClCompile Include="..\..\src\draw\avxTransference.c" />
     <ClCompile Include="..\..\src\draw\avxTransformation.c" />
+    <ClCompile Include="..\..\src\draw\avxTransformationEXT.c" />
     <ClCompile Include="..\..\src\draw\avxTxd.c" />
     <ClCompile Include="..\..\src\draw\avxVertexInput.c" />
     <ClCompile Include="..\..\src\draw\avxViewport.c" />
@@ -417,6 +421,9 @@
     <ClCompile Include="..\..\src\mem\afxRing.c" />
     <ClCompile Include="..\..\src\mem\afxSlabAllocator.c" />
     <ClCompile Include="..\..\src\mem\afxStack.c" />
+    <ClCompile Include="..\..\src\mix\amxBuffered.c" />
+    <ClCompile Include="..\..\src\mix\amxBufferIo.c" />
+    <ClCompile Include="..\..\src\mix\amxContextDDK.c" />
     <ClCompile Include="..\..\src\mix\amxMixage.c" />
     <ClCompile Include="..\..\src\mix\amxBridge.c" />
     <ClCompile Include="..\..\src\mix\amxContext.c" />

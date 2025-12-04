@@ -535,7 +535,7 @@ _AMX afxError _AmxVoxDtorCb(amxVoice vox)
     amxTracker trax = AfxGetHost(vox);
     AFX_ASSERT_OBJECTS(afxFcc_TRAX, 1, &trax);
 
-    AfxDismantleInterlockedQueue(&vox->bufQue);
+    AfxExhaustInterlockedQueue(&vox->bufQue);
 
     return err;
 }
@@ -576,7 +576,7 @@ _AMX afxError _AmxVoxCtorCb(amxVoice vox, void** args, afxUnit invokeNo)
 #endif
 
     // triple-buffered
-    AfxDeployInterlockedQueue(&vox->bufQue, sizeof(amxVoicingInfo), 3);
+    AfxMakeInterlockedQueue(&vox->bufQue, sizeof(amxVoicingInfo), 3);
 
     vox->rs.needs_more_input = 1;
     vox->rs.ratio = 1;

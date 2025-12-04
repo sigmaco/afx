@@ -378,8 +378,8 @@ _AVX afxError _AvxSampCtorCb(avxSampler samp, void** args, afxUnit invokeNo)
     samp->crc = 0;
     //AfxAccumulateCrc32(&samp->crc, cfg, yuv ? sizeof(avxYuvSamplerInfo) : sizeof(avxSamplerConfig));
 
-    afxDrawLimits const* limits = _AvxDsysAccessLimits(dsys);
-    afxDrawFeatures const* features = _AvxDsysAccessReqFeatures(dsys);
+    afxDrawLimits const* limits = _AvxDsysGetLimits(dsys);
+    afxDrawFeatures const* features = _AvxDsysGetReqFeatures(dsys);
 
     // magFlt, minFlt and mipFlt must be a valid avxTexelFilter value.
     AFX_ASSERT(samp->cfg.magnify < avxTexelFilter_TOTAL);
@@ -509,8 +509,8 @@ _AVX afxError AvxConfigureSampler(afxDrawSystem dsys, avxSamplerConfig* cfg)
     // dsys must be a valid afxDrawSystem handle.
     AFX_ASSERT_OBJECTS(afxFcc_DSYS, 1, &dsys);
 
-    afxDrawLimits const* limits = _AvxDsysAccessLimits(dsys);
-    afxDrawFeatures const* features = _AvxDsysAccessReqFeatures(dsys);
+    afxDrawLimits const* limits = _AvxDsysGetLimits(dsys);
+    afxDrawFeatures const* features = _AvxDsysGetReqFeatures(dsys);
     AFX_ASSERT(limits);
 
     if (features->samplerFilterMinMax == FALSE)
@@ -621,7 +621,7 @@ _AVX afxError AvxAcquireSamplers(afxDrawSystem dsys, afxUnit cnt, avxSamplerConf
     AFX_ASSERT_CLASS(cls, afxFcc_SAMP);
 
     // There must have less than maxSamplerAllocCnt avxSampler objects currently created on the system.
-    afxDrawLimits const* limits = _AvxDsysAccessLimits(dsys);
+    afxDrawLimits const* limits = _AvxDsysGetLimits(dsys);
     AFX_ASSERT(limits->maxSamplerAllocCnt > cls->instCnt);
 
     afxBool rslt = 0;

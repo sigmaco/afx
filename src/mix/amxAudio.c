@@ -160,7 +160,7 @@ _AMX afxError AmxUpdateAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[]
     afxMixSystem msys = AmxGetAudioHost(aud);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
-    if (_AmxMsysGetImpl(msys)->transferCb(msys, &transfer, opCnt, ops))
+    if (_AmxMsysGetDdi(msys)->transferCb(msys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
@@ -195,7 +195,7 @@ _AMX afxError AmxDumpAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[], 
     afxMixSystem msys = AmxGetAudioHost(aud);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
-    if (_AmxMsysGetImpl(msys)->transferCb(msys, &transfer, opCnt, ops))
+    if (_AmxMsysGetDdi(msys)->transferCb(msys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
@@ -229,7 +229,7 @@ _AMX afxError AmxUploadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops[]
     afxMixSystem msys = AmxGetAudioHost(aud);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
-    if (_AmxMsysGetImpl(msys)->transferCb(msys, &transfer, opCnt, ops))
+    if (_AmxMsysGetDdi(msys)->transferCb(msys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;
@@ -261,7 +261,7 @@ _AMX afxError AmxDownloadAudio(amxAudio aud, afxUnit opCnt, amxAudioIo const ops
     afxMixSystem msys = AmxGetAudioHost(aud);
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
-    if (_AmxMsysGetImpl(msys)->transferCb(msys, &transfer, opCnt, ops))
+    if (_AmxMsysGetDdi(msys)->transferCb(msys, &transfer, opCnt, ops))
     {
         AfxThrowError();
         return err;

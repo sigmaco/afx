@@ -751,7 +751,7 @@ _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
         //AfxSetUpFutex(&thr->evSlock);
         //AfxMakeArena(NIL, &thr->evArena, NIL, AfxHere());
 
-        //AfxDeployInterlockedQueue(&thr->events2, sizeof(afxPostedEvent), AFX_MIN_THREAD_EVENT_CAPACITY);
+        //AfxMakeInterlockedQueue(&thr->events2, sizeof(afxPostedEvent), AFX_MIN_THREAD_EVENT_CAPACITY);
 
         thr->tid = 0;
 

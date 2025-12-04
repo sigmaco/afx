@@ -34,26 +34,47 @@
 
 #define _YIELD_WITH_SLEEP_AFTER_BRIDGE_PROC TRUE
 
-_AMX afxError _AmxSpuWork_CallbackCb(amxMpu* mpu, _amxIoReqPacket* work)
+_AMX afxError _AmxMpuWork_CallbackCb(amxMpu* mpu, _amxIoReqPacket* work)
 {
     afxError err = { 0 };
     return work->Callback.f(mpu, work->Callback.udd);
 }
 
-_AMX afxError _AmxSpuWork_ExecuteCb(amxMpu* mpu, _amxIoReqPacket* work)
+_AMX afxError _AmxMpuWork_ExecuteCb(amxMpu* mpu, _amxIoReqPacket* work)
 {
     afxError err = { 0 };
+    afxUnit cnt = work->Execute.cmdbCnt;
 
-    for (afxUnit i = 0; i < work->Execute.cmdbCnt; i++)
+    for (afxUnit i = 0; i < cnt; i++)
     {
-        afxMixContext mix = work->Execute.cmdbs[i].mctx;
-        AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-        //_SpuRollMixer(mpu, mix);
+        afxMixContext mctx = work->Execute.cmdbs[i].mctx;
+        AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
+        afxUnit batchId = mctx->batchId;
+        _amxCmdBatch* cmdb = _AmxMctxGetCmdBatch(mctx, batchId);
+
+        if (!cmdb)
+        {
+            AfxThrowError();
+            return err;
+        }
+
+        //AFX_ASSERT(cmdb->state == amxMixState_PENDING);
+        _AmxMpuRollMixContexts(mpu, mctx);
+
+        // Must be disposed because AmxSubmitMixCommands() reacquires it.
+        AfxDecAtom32(&cmdb->submCnt);
+        AmxRecycleMixCommands(mctx, /*batchId,*/ FALSE);
+#if 0
+        AFX_ASSERT(!AmxDoesMixCommandsExist_(dctx, batchId));
+        AfxReportf(0, AfxHere(), "%d dpu %d", batchId, dpu->exuIdx);
+#endif
+        AfxDisposeObjects(1, &mctx);
     }
+
     return err;
 }
 
-_AMX afxError _AmxSpuWork_SinkCb(amxMpu* mpu, _amxIoReqPacket* work)
+_AMX afxError _AmxMpuWork_SinkCb(amxMpu* mpu, _amxIoReqPacket* work)
 {
     afxError err = { 0 };
 
@@ -61,7 +82,7 @@ _AMX afxError _AmxSpuWork_SinkCb(amxMpu* mpu, _amxIoReqPacket* work)
     return err;
 }
 
-_AMX afxError _AmxSpuWork_RemapCb(amxMpu* mpu, _amxIoReqPacket* work)
+_AMX afxError _AmxMpuWork_RemapCb(amxMpu* mpu, _amxIoReqPacket* work)
 {
     afxError err = { 0 };
 
@@ -72,7 +93,7 @@ _AMX afxError _AmxSpuWork_RemapCb(amxMpu* mpu, _amxIoReqPacket* work)
     return err;
 }
 
-_AMX afxError _AmxSpuWork_TransferCb(amxMpu* mpu, _amxIoReqPacket* work)
+_AMX afxError _AmxMpuWork_TransferCb(amxMpu* mpu, _amxIoReqPacket* work)
 {
     afxError err = { 0 };
 
@@ -82,7 +103,7 @@ _AMX afxError _AmxSpuWork_TransferCb(amxMpu* mpu, _amxIoReqPacket* work)
     {
         switch (work->Transfer.dstFcc)
         {
-        case afxFcc_MBUF: // raw to mbuf
+        case afxFcc_BUF: // raw to mbuf
         {
             amxBuffer buf = work->Transfer.dst.buf;
 
@@ -132,7 +153,7 @@ _AMX afxError _AmxSpuWork_TransferCb(amxMpu* mpu, _amxIoReqPacket* work)
 
             break;
         }
-        case afxFcc_MBUF: // raw to mbuf
+        case afxFcc_MBUF: // wav to mbuf
         {
             amxBuffer buf = work->Transfer.dst.buf;
 
@@ -183,7 +204,7 @@ _AMX afxError _AmxSpuWork_TransferCb(amxMpu* mpu, _amxIoReqPacket* work)
 
             break;
         }
-        case afxFcc_MBUF: // raw to mbuf
+        case afxFcc_MBUF: // mbuf to mbuf
         {
             amxBuffer buf2 = work->Transfer.dst.buf;
 
@@ -197,14 +218,14 @@ _AMX afxError _AmxSpuWork_TransferCb(amxMpu* mpu, _amxIoReqPacket* work)
 
             break;
         }
-        case afxFcc_AUD: // iob to wav
+        case afxFcc_AUD: // buf to wav
         {
             amxAudio aud = work->Transfer.dst.aud;
 
             for (afxUnit i = 0; i < work->Transfer.opCnt; i++)
             {
                 //amxAudioIo const* op = &work->Transfer.wavOps[i];
-                //_AmxUnpackAudio(aud, op, buf);
+                //_AmxPackAudio(aud, op, buf);
                 AfxThrowError();
             }
 
@@ -212,14 +233,14 @@ _AMX afxError _AmxSpuWork_TransferCb(amxMpu* mpu, _amxIoReqPacket* work)
 
             break;
         }
-        case afxFcc_IOB: // iob to buf
+        case afxFcc_IOB: // buf to iob
         {
             afxStream iob = work->Transfer.dst.iob;
 
             for (afxUnit i = 0; i < work->Transfer.opCnt; i++)
             {
                 amxBufferIo const* op = &work->Transfer.bufOps[i];
-                _AmxUploadBuffer(buf, op, iob);
+                _AmxDownloadBuffer(buf, op, iob);
             }
 
             AfxDisposeObjects(1, &iob);
@@ -239,7 +260,7 @@ _AMX afxError _AmxSpuWork_TransferCb(amxMpu* mpu, _amxIoReqPacket* work)
 
         switch (work->Transfer.dstFcc)
         {
-        case afxFcc_MBUF: // raw to mbuf
+        case afxFcc_MBUF: // iob to mbuf
         {
             amxBuffer buf = work->Transfer.dst.buf;
 
@@ -281,11 +302,11 @@ _AMX afxError _AmxSpuWork_TransferCb(amxMpu* mpu, _amxIoReqPacket* work)
 
 _AMX _amxIoReqLut const _AMX_MPU_IORP_VMT =
 {
-    .Callback = _AmxSpuWork_CallbackCb,
-    .Execute = _AmxSpuWork_ExecuteCb,
-    .Sink = _AmxSpuWork_SinkCb,
-    .Transfer = _AmxSpuWork_TransferCb,
-    //.Remap = _AmxSpuWork_RemapCb,
+    .Callback = _AmxMpuWork_CallbackCb,
+    .Execute = _AmxMpuWork_ExecuteCb,
+    .Sink = _AmxMpuWork_SinkCb,
+    .Transfer = _AmxMpuWork_TransferCb,
+    //.Remap = _AmxMpuWork_RemapCb,
 };
 
 _AMX afxBool _AmxMpu_ProcCb(amxMpu* mpu)
@@ -325,7 +346,7 @@ _AMX afxBool _AmxMpu_ProcCb(amxMpu* mpu)
         //if (!frameCnt) continue;
 
         amxBufferedTrack room;
-        if (!AmxLockSinkBuffer(sink, 0, 512, &room))
+        if (!AmxLockSinkBuffer(sink, 0, NIL, 512, &room))
         {
             afxUnit i = 0;
             amxVoice vox;
@@ -336,7 +357,7 @@ _AMX afxBool _AmxMpu_ProcCb(amxMpu* mpu)
                 if (vox->playing2 && !vox->paused)
                 {
                     //amxProcessVoice(vox, &trax->tracks[0].aud.aud->buf->storage[0].hostedAlloc.bytemap[sink->rb.capacity % audio_ringbuffer_writable(&sink->rb)], frameCnt);
-                    amxProcessVoice(vox, (afxReal*)room.offset, room.frameCnt, 2);
+                    amxProcessVoice(vox, (afxReal*)room.offset, room.frameCnt, 1);
                 }
             }
             AmxUnlockSinkBuffer(sink, NIL);

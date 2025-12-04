@@ -76,6 +76,6 @@ AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, _avxIoReqPacket* work);
 AVX afxInt   _AVX_DPU_THREAD_PROC(afxDrawBridge dexu);
 AVX afxBool  _AvxDpu_ProcCb(avxDpu* dpu);
 
-AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx, afxUnit batchId);
+AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx);
 
 #endif//AVX_IMPL___EXECUTOR_H

@@ -69,11 +69,11 @@ AFX_DEFINE_STRUCT(afxInterlockedQueue)
 
 /// Inicializa a fila afxInterlockedQueue e aloca memória para o número especificado de entradas.
 /// O número de entradas não é mutável após inicialização.
-AFX afxError    AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxUnit unitSiz, afxUnit cap);
+AFX afxError    AfxMakeInterlockedQueue(afxInterlockedQueue* ique, afxUnit unitSiz, afxUnit cap);
 
 /// Libera a memória reservado para a fila e redefine o estado interno.
 /// A fila deve estar vazia quando esta função for chamada.
-AFX afxError    AfxDismantleInterlockedQueue(afxInterlockedQueue* ique);
+AFX afxError    AfxExhaustInterlockedQueue(afxInterlockedQueue* ique);
 
 /// Checa se há um valor disponível para ser pipocado
 AFX afxBool     AfxIsInterlockedQueueEmpty(afxInterlockedQueue* ique);

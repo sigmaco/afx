@@ -894,8 +894,8 @@ _AVX afxError _AvxPipCtorCb(avxPipeline pip, void** args, afxUnit invokeNo)
     avxPipelineConfig const *pipb = ((avxPipelineConfig const*)args[1]) + invokeNo;
     avxPipelineConfig const *razb = ((avxPipelineConfig const*)args[2]) + invokeNo;
     
-    afxDrawLimits const* limits = _AvxDsysAccessLimits(dsys);
-    afxDrawFeatures const* enabledFeatures = _AvxDsysAccessReqFeatures(dsys);
+    afxDrawLimits const* limits = _AvxDsysGetLimits(dsys);
+    afxDrawFeatures const* enabledFeatures = _AvxDsysGetReqFeatures(dsys);
 
     // GRAPHICS STATE SETTING
 

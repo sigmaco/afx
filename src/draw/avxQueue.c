@@ -312,7 +312,17 @@ _AVX afxError AvxSubmitDrawCommands(afxDrawQueue dque, afxUnit cnt, avxSubmissio
             afxDrawContext dctx = subms[i].dctx;
             AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
             AfxReacquireObjects(1, &dctx);
-            //batch->state = avxDrawContextState_PENDING;
+            AFX_ASSERT(!(dctx->cmdFlags & avxCmdFlag_DEFERRED));
+            
+            if (dctx->state != avxContextStatus_INTERNAL_EXECUTING)
+            {
+                if (dctx->state = avxContextStatus_EXECUTABLE)
+                    dctx->state = avxContextStatus_PENDING;
+            }
+            else
+            {
+                AFX_ASSERT(dctx->cmdFlags & avxCmdFlag_SHARED);
+            }
 
             iorp->Execute.cmdbs[i].dctx = dctx;
 
@@ -814,7 +824,7 @@ _AVX afxClassConfig const _AVX_CLASS_CONFIG_DQUE =
 {
     .fcc = afxFcc_DQUE,
     .name = "DrawQueue",
-    .desc = "Draw Submission Queue",
+    .desc = "Draw Device Queue",
     .fixedSiz = sizeof(AFX_OBJECT(afxDrawQueue)),
     .ctor = (void*)_AvxDqueCtorCb,
     .dtor = (void*)_AvxDqueDtorCb

@@ -154,9 +154,9 @@ AFX_DEFINE_STRUCT(afxSinkInterface)
 };
 
 AMX afxMixDevice    AfxGetAudioSinkDevice(afxSink sink);
-AMX afxMixSystem    AfxGetAudioSinkContext(afxSink sink);
+AMX afxMixSystem    AmxGetSinkHost(afxSink sink);
 
-AMX afxError        AfxGetAudioSinkIdd(afxSink sink, afxUnit code, void* dst);
+AMX afxError        AmxGetSinkIdd(afxSink sink, afxUnit code, void* dst);
 
 // Connection
 
@@ -184,9 +184,26 @@ AFX_DEFINE_STRUCT(amxBufferedAudio)
     afxUnit     loopCnt;
 };
 
-AMX afxError        AmxGetSinkTrack(afxSink sink, amxAudio* track);
-AMX afxError        AmxLockSinkBuffer(afxSink sink, afxUnit64 timeout, afxUnit minFrameCnt, amxBufferedTrack* room);
-AMX afxError        AmxUnlockSinkBuffer(afxSink sink, afxFlags flags);
+AMX afxError        AmxGetSinkTrack
+(
+    afxSink sink, 
+    amxAudio* track
+);
+
+AMX afxError        AmxLockSinkBuffer
+(
+    afxSink sink, 
+    afxUnit64 timeout, 
+    afxMask exuMask, 
+    afxUnit minFrameCnt, 
+    amxBufferedTrack* room
+);
+
+AMX afxError        AmxUnlockSinkBuffer
+(
+    afxSink sink, 
+    afxFlags flags
+);
 
 ////////////////////////////////////////////////////////////////////////////////
 
