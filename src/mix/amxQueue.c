@@ -188,21 +188,22 @@ _AMX afxError _AmxMqueExecuteMixCommands(afxMixQueue mque, afxUnit cnt, amxSubmi
 
         for (afxUnit i = 0; i < cnt; i++)
         {
-            iorp->Execute.signal = subms[i].signalSems;
-            iorp->Execute.wait = subms[i].waitSems;
-            iorp->Execute.hdr.completionFence = subms[i].fence;
             iorp->Execute.cmdbCnt = 1;
 
             afxMixContext mctx = subms[i].mctx;
             AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
-            _amxCmdBatch* batch = _AmxGetCmdBatch(mctx, subms[i].batchId);
-
             AfxReacquireObjects(1, &mctx);
-            AfxIncAtom32(&batch->submCnt);
-            //batch->state = amxMixContextState_PENDING;
+            //mctx->state = amxMixContextState_PENDING;
 
             iorp->Execute.cmdbs[i].mctx = mctx;
-            iorp->Execute.cmdbs[i].batchId = subms[i].batchId;
+            iorp->Execute.cmdbs[i].wait = subms[i].wait;
+            iorp->Execute.cmdbs[i].waitValue = subms[i].waitValue;
+            iorp->Execute.cmdbs[i].waitReserved = subms[i].waitReserved;
+            iorp->Execute.cmdbs[i].waitStageMask = subms[i].waitStageMask;
+            iorp->Execute.cmdbs[i].signal = subms[i].signal;
+            iorp->Execute.cmdbs[i].signalValue = subms[i].signalValue;
+            iorp->Execute.cmdbs[i].signalReserved = subms[i].signalReserved;
+            iorp->Execute.cmdbs[i].signalStageMask = subms[i].signalStageMask;
         }
     }
 
@@ -250,6 +251,15 @@ _AMX afxError _AmxMqueTransferResources(afxMixQueue mque, amxTransference const*
     if (!err)
     {
         AFX_ASSERT(iorp);
+
+        iorp->Transfer.wait = ctrl->wait;
+        iorp->Transfer.waitValue = ctrl->waitValue;
+        iorp->Transfer.waitReserved = ctrl->waitReserved;
+        iorp->Transfer.waitStageMask = ctrl->waitStageMask;
+        iorp->Transfer.signal = ctrl->signal;
+        iorp->Transfer.signalValue = ctrl->signalValue;
+        iorp->Transfer.signalReserved = ctrl->signalReserved;
+        iorp->Transfer.signalStageMask = ctrl->signalStageMask;
 
         iorp->Transfer.srcFcc = ctrl->srcFcc;
         iorp->Transfer.dstFcc = ctrl->dstFcc;
@@ -314,10 +324,21 @@ _AMX afxError _AmxMqueTransferResources(afxMixQueue mque, amxTransference const*
         default: AfxThrowError(); break;
         }
 
-        amxAudioIo const* riops = ops;
-        for (afxUnit i = 0; i < opCnt; i++)
+        if ((ctrl->dstFcc == afxFcc_AUD) || (ctrl->srcFcc == afxFcc_AUD))
         {
-            iorp->Transfer.wavOps[i] = riops[i];
+            amxAudioIo const* riops = ops;
+            for (afxUnit i = 0; i < opCnt; i++)
+            {
+                iorp->Transfer.wavOps[i] = riops[i];
+            }
+        }
+        else
+        {
+            amxBufferIo const* riops = ops;
+            for (afxUnit i = 0; i < opCnt; i++)
+            {
+                iorp->Transfer.bufOps[i] = riops[i];
+            }
         }
     }
 
@@ -540,7 +561,7 @@ _AMX afxClassConfig const _AMX_MQUE_CLASS_CONFIG =
 {
     .fcc = afxFcc_MQUE,
     .name = "MixQueue",
-    .desc = "Mix Device Submission Queue",
+    .desc = "Mix Device Queue",
     .fixedSiz = sizeof(AFX_OBJECT(afxMixQueue)),
     .ctor = (void*)_AmxMqueCtorCb,
     .dtor = (void*)_AmxMqueDtorCb

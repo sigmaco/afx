@@ -18,7 +18,7 @@
  // ADVANCED RENDERWARE EXTENSIONS & EXPERIMENTS                             //
 //////////////////////////////////////////////////////////////////////////////
 
-// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+// This file is part of Acceleration for RenderWare on Qwadro.
 
 /*
     A scene is a observation of a simulation.

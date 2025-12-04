@@ -212,6 +212,53 @@ _AFXINL void AfxMakePlane(afxPlane* p, afxV3d const normal, afxReal dist)
     *p = AfxPlaneNormalize(AFX_PLANE(normal[0], normal[1], normal[2], dist));
 }
 
+/*
+    The AfxMakePlaneFromPointNormal() function constructs a plane from a point on the plane and a normal vector.
+    The plane equation is: n * x + d = 0;
+    Where: d = - n * p;
+    
+    The caller must ensure n is normalized.
+
+    p->uvwd[0..2] = normalized normal
+    p->uvwd[3]    = distance term
+*/
+
+_AFXINL void AfxMakePlaneFromPointNormal(afxPlane *p, const afxV3d point, const afxV3d normal)
+{
+    afxError err = { 0 };
+    AFX_ASSERT(p);
+
+#ifdef _AFX_PLANE_CHECK_DEGENERACY
+    if (AfxV3dSq(normal) < 1e-12f)
+    {
+        p->uvwd[0] = p->uvwd[1] = p->uvwd[2] = 0.0f;
+        p->uvwd[3] = 0.0f;
+        return;
+    }
+#else
+    // Normalize the input normal
+    AfxV3dNormalize(p->uvwd, normal);
+#endif
+
+    // d = -dot(n, point)
+    p->uvwd[AFX_PLANE_DIST] = -AfxV3dDot(p->uvwd, point);
+}
+
+/*
+    The AfxMakePlaneFromTriangle() function constructs a plane from three points in the form:
+        n * x + d = 0;
+
+    Where:
+        n is the normalized plane normal
+        d is the distance term
+
+    Given points a, b, c, the normal is computed as:
+        n = normalize( (b - a) X (c - a) )
+    And the plane distance is:
+        d = - dot(n, a)
+    This is a standard plane-from-triangle computation.
+*/
+
 _AFXINL void AfxMakePlaneFromTriangle(afxPlane* p, afxV3d const a, afxV3d const b, afxV3d const c)
 {
     afxError err = { 0 };
@@ -223,8 +270,25 @@ _AFXINL void AfxMakePlaneFromTriangle(afxPlane* p, afxV3d const a, afxV3d const 
     afxV3d ba, ca;
     AfxV3dSub(ba, b, a);
     AfxV3dSub(ca, c, a);
+
+    // Compute normal
     AfxV3dCross(p->uvwd, ba, ca);
+
+#ifndef _AFX_PLANE_DONT_CHECK_DEGENERACY
+    // Check degeneracy (optional)
+    if (AfxV3dSq(p->uvwd) < 1e-12f)
+    {
+        // Default normal (0,0,0) and distance = 0
+        p->uvwd[0] = p->uvwd[1] = p->uvwd[2] = 0.0f;
+        p->uvwd[3] = 0.0f;
+        return;
+    }
+#endif
+
+    // Normalize
     AfxV3dNormalize(p->uvwd, p->uvwd);
+
+    // Distance term
     p->uvwd[AFX_PLANE_DIST] = -AfxV3dDot(p->uvwd, a);
 }
 
@@ -236,7 +300,7 @@ _AFXINL void AfxGetPlaneNormal(afxPlane* p, afxV3d normal)
     AfxV3dCopy(normal, p->uvwd);
 }
 
-_AFXINL afxReal AfxGetPlaneOffset(afxPlane const* p)
+_AFXINL afxReal AfxGetPlaneDistance(afxPlane const* p)
 {
     afxError err = { 0 };
     AFX_ASSERT(p);

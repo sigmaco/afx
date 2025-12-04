@@ -37,16 +37,6 @@ _AVX afxClass const* _AvxDexuGetDqueClass(afxDrawBridge dexu)
     return cls;
 }
 
-_AVX afxClass const* _AvxDexuGetDctxClass(afxDrawBridge dexu)
-{
-    afxError err = { 0 };
-    // dexu must be a valid afxDrawBridge handle.
-    AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-    afxClass const* cls = &dexu->dctxCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_DCTX);
-    return cls;
-}
-
 _AVX afxDrawSystem AvxGetBridgedDrawSystem(afxDrawBridge dexu, afxUnit* bridgeId)
 {
     afxError err = { 0 };
@@ -470,10 +460,6 @@ _AVX afxError _AvxDexuCtorCb(afxDrawBridge dexu, void** args, afxUnit invokeNo)
     afxClassConfig dqueClsCfg = cfg->dqueClsCfg ? *cfg->dqueClsCfg : _AVX_CLASS_CONFIG_DQUE;
     AFX_ASSERT(dqueClsCfg.fcc == afxFcc_DQUE);
     AfxMountClass(&dexu->dqueCls, NIL, &dexu->classes, &dqueClsCfg);
-
-    afxClassConfig dctxClsCfg = cfg->dctxClsCfg ? *cfg->dctxClsCfg : _AVX_CLASS_CONFIG_DCTX;
-    AFX_ASSERT(dctxClsCfg.fcc == afxFcc_DCTX);
-    AfxMountClass(&dexu->dctxCls, NIL, &dexu->classes, &dctxClsCfg);
 
     afxClass* dqueCls = (afxClass*)_AvxDexuGetDqueClass(dexu);
     AFX_ASSERT_CLASS(dqueCls, afxFcc_DQUE);

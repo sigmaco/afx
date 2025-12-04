@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+// This file is part of Acceleration for RenderWare on Qwadro.
 
 #ifndef ARX_PUPPET_H
 #define ARX_PUPPET_H
@@ -116,7 +116,7 @@ AFX_DEFINE_STRUCT(arxPuppetInfo)
 
 ARX afxError    ArxSpawnBodies(arxModel proto, afxUnit cnt, arxPuppet pup[]);
 
-ARX afxError    ArxInvokePuppets(arxScenario scio, arxModel mdl, afxUnit cnt, arxPuppet puppets[]);
+ARX afxError    ArxAcquirePuppets(arxScenario scio, arxModel mdl, afxUnit cnt, arxPuppet puppets[]);
 
 ARX afxUnit     ArxPerformManipulatedPose(arxPose pose, afxReal startTime, afxReal duration, afxUnit iterCnt, arxTrackMask* modelMask, afxUnit cnt, arxPuppet puppets[]);
 

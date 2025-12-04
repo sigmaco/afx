@@ -18,7 +18,7 @@
 // This software is part of Advanced Multimedia Extensions & Experiments.
 
 #define _AMX_MIX_C
-//#define _AMX_MIX_BRIDGE_C
+#define _AMX_MIX_BRIDGE_C
 //#define _AMX_MIX_SYSTEM_C
 //#define _AMX_MIX_QUEUE_C
 #define _AMX_BUFFER_C
@@ -469,7 +469,7 @@ _AMX void _AmxSpuCmd_FetchAudition(amxMpu* mpu, _amxCmd const* cmd)
     afxError err = { 0 };
     //cmd->Audit();
     afxMixSystem msys = mpu->msys;
-    afxMixContext mix = mpu->mix;
+    afxMixContext mctx = mpu->mix;
 #if 0
     amxSound snd;
     afxUnit i = 0;
@@ -478,7 +478,7 @@ _AMX void _AmxSpuCmd_FetchAudition(amxMpu* mpu, _amxCmd const* cmd)
         AFX_ASSERT_OBJECTS(afxFcc_SND, 1, &snd);
 
         
-        //AfxResampleAudio(snd->audio, mix->latency, mix->chanCnt, mix->freq, sizeof(mpu->bufA), mpu->bufA);
+        //AfxResampleAudio(snd->audio, mctx->latency, mctx->chanCnt, mctx->freq, sizeof(mpu->bufA), mpu->bufA);
 
     }
 #endif
@@ -499,18 +499,18 @@ _AMX _amxCmdLut _AMX_SPU_CMD_VMT =
     .ConcludeMixScope = (void*)_AmxSpuCmd_ConcludeMixScope,
 };
 
-_AMXINL void _MixModulusLocalClock(afxMixContext mix)
+_AMXINL void _MixModulusLocalClock(afxMixContext mctx)
 {
     afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    afxReal t = mix->motor.localClock / mix->motor.localDur;
-    afxInt currIterIdx = mix->motor.currIterIdx;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
+    afxReal t = mctx->motor.localClock / mctx->motor.localDur;
+    afxInt currIterIdx = mctx->motor.currIterIdx;
     afxInt i = currIterIdx + (afxInt)t;
 
-    if (mix->motor.localClock < 0.0)
+    if (mctx->motor.localClock < 0.0)
         --i;
 
-    afxInt iterCnt = mix->motor.iterCnt;
+    afxInt iterCnt = mctx->motor.iterCnt;
 
     if (iterCnt)
     {
@@ -526,26 +526,26 @@ _AMXINL void _MixModulusLocalClock(afxMixContext mix)
 
     if (j)
     {
-        mix->motor.currIterIdx = j + currIterIdx;
-        mix->motor.localClock = mix->motor.localClock - (afxReal64)j * mix->motor.localDur;
+        mctx->motor.currIterIdx = j + currIterIdx;
+        mctx->motor.localClock = mctx->motor.localClock - (afxReal64)j * mctx->motor.localDur;
     }
 }
 
-_AMXINL afxReal _MixLocalClock(afxMixContext mix, afxReal* clamped)
+_AMXINL afxReal _MixLocalClock(afxMixContext mctx, afxReal* clamped)
 {
     afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
-    afxInt currIterIdx = mix->motor.currIterIdx;
-    afxInt iterCnt = mix->motor.iterCnt;
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
+    afxInt currIterIdx = mctx->motor.currIterIdx;
+    afxInt iterCnt = mctx->motor.iterCnt;
 
-    if (mix->motor.dtLocalClockPending != 0.0)
+    if (mctx->motor.dtLocalClockPending != 0.0)
     {
         // process pending local clock
 
         while (1)
         {
-            afxReal t = mix->motor.speed * mix->motor.dtLocalClockPending + mix->motor.localClock;
-            mix->motor.localClock = t;
+            afxReal t = mctx->motor.speed * mctx->motor.dtLocalClockPending + mctx->motor.localClock;
+            mctx->motor.localClock = t;
 
             if (1) // [!]
             {
@@ -554,7 +554,7 @@ _AMXINL afxReal _MixLocalClock(afxMixContext mix, afxReal* clamped)
             }
             else
             {
-                if (t < mix->motor.localDur)
+                if (t < mctx->motor.localDur)
                     break; // avoid modulus
 
                 if (iterCnt)
@@ -563,20 +563,20 @@ _AMXINL afxReal _MixLocalClock(afxMixContext mix, afxReal* clamped)
                         break; // avoid modulus
                 }
             }
-            _MixModulusLocalClock(mix);
+            _MixModulusLocalClock(mctx);
             break;
         }
-        mix->motor.dtLocalClockPending = 0.0; // reset pending local clock
+        mctx->motor.dtLocalClockPending = 0.0; // reset pending local clock
     }
 
-    afxReal localClock = mix->motor.localClock;
+    afxReal localClock = mctx->motor.localClock;
 
     if (clamped)
     {
         if (localClock < 0.0)
             *clamped = 0.0;
-        else if (localClock > mix->motor.localDur)
-            *clamped = mix->motor.localDur;
+        else if (localClock > mctx->motor.localDur)
+            *clamped = mctx->motor.localDur;
         else
             *clamped = localClock;
     }
@@ -584,32 +584,32 @@ _AMXINL afxReal _MixLocalClock(afxMixContext mix, afxReal* clamped)
 }
 
 #if 0
-_AMXINL void AfxQueryMixState(afxMixContext mix, arxCapstanState* state)
+_AMXINL void AfxQueryMixState(afxMixContext mctx, arxCapstanState* state)
 {
     afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
 
     afxReal localClockRaw, localClockClamped;
-    localClockRaw = _MixLocalClock(mix, &localClockClamped);
-    afxReal speed = mix->motor.speed;
+    localClockRaw = _MixLocalClock(mctx, &localClockClamped);
+    afxReal speed = mctx->motor.speed;
     afxInt iterCnt = state->iterCnt;
-    afxInt currIterIdx = mix->motor.currIterIdx;
-    afxReal localDur = mix->motor.localDur;
+    afxInt currIterIdx = mctx->motor.currIterIdx;
+    afxReal localDur = mctx->motor.localDur;
 
     AFX_ASSERT(state);
-    state->active = 1;// (mix->motor.flags & arxCapstanFlag_ACTIVE) == arxCapstanFlag_ACTIVE;
+    state->active = 1;// (mctx->motor.flags & arxCapstanFlag_ACTIVE) == arxCapstanFlag_ACTIVE;
     state->speed = speed;
     state->iterCnt = iterCnt;
     state->currIterIdx = currIterIdx;
-    state->currWeight = mix->motor.currWeight;
-    state->effectiveWeight = state->active ? /*curve ease multiplier*/1.f * mix->motor.currWeight : 0.f;
+    state->currWeight = mctx->motor.currWeight;
+    state->effectiveWeight = state->active ? /*curve ease multiplier*/1.f * mctx->motor.currWeight : 0.f;
     state->localClockRaw = localClockRaw;
     state->localClockClamped = localClockClamped;
     state->localDur = localDur;
 
     // determine iteration state
 #if 0
-    if (mix->motor.flags & arxCapstanFlag_FORCE_CLAMPLED_LOOPS)
+    if (mctx->motor.flags & arxCapstanFlag_FORCE_CLAMPLED_LOOPS)
     {
         state->overflow = FALSE;
         state->underflow = FALSE;
@@ -647,7 +647,7 @@ _AMXINL void AfxQueryMixState(afxMixContext mix, arxCapstanState* state)
         {
             state->dur = -(localDur / speed) * iterCnt;
 
-            if (mix->motor.currIterIdx < 0)
+            if (mctx->motor.currIterIdx < 0)
                 state->durLeft = 0.0;
             else
                 state->durLeft = -(1.0 / speed * localDur) * (afxReal)currIterIdx - 1.0 / speed * localClockRaw;
@@ -655,10 +655,10 @@ _AMXINL void AfxQueryMixState(afxMixContext mix, arxCapstanState* state)
     }
 }
 
-void _SetUpSampleContext(arxSampleContext* ctx, afxMixContext mix)
+void _SetUpSampleContext(arxSampleContext* ctx, afxMixContext mctx)
 {
     arxCapstanState ms;
-    AfxQueryMixState(mix, &ms);
+    AfxQueryMixState(mctx, &ms);
     ctx->localClock = ms.localClockClamped;
     ctx->localDur = ms.localDur;
     ctx->frameIdx = 0;//Binding->ca.Binding->ID.Animation->dur / ctx->LocalClock;
@@ -667,74 +667,87 @@ void _SetUpSampleContext(arxSampleContext* ctx, afxMixContext mix)
 }
 #endif
 
-_AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mix)
+_AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mctx)
 {
     afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
+    AFX_ASSERT(mctx->state == amxMixState_PENDING);
 
-    if (mix->state == amxMixState_PENDING)
+    // step mixer
+    afxReal64 curTime, lastTime;
+    AfxGetThreadTime(&curTime, &lastTime);
+    afxReal dt = curTime - mctx->motor.localClock;
+    mctx->motor.localClock = curTime;
+    mctx->motor.dtLocalClockPending += dt;
+#if 0
+    arxSampleContext sampCtx;
+    _SetUpSampleContext(&sampCtx, mctx);
+    mpu->sampCtx = sampCtx;
+#endif
+    mpu->queuedFrameCnt = mctx->queuedFrameCnt;
+
+    afxUnit batchId = mctx->batchId;
+    _amxCmdBatch* cmdb = _AmxMctxGetCmdBatch(mctx, batchId);
+
+    if (!cmdb)
     {
-        AFX_ASSERT(mix->state == amxMixState_PENDING);
-
-        // step mixer
-        afxReal64 curTime, lastTime;
-        AfxGetThreadTime(&curTime, &lastTime);
-        afxReal dt = curTime - mix->motor.localClock;
-        mix->motor.localClock = curTime;
-        mix->motor.dtLocalClockPending += dt;
-#if 0
-        arxSampleContext sampCtx;
-        _SetUpSampleContext(&sampCtx, mix);
-        mpu->sampCtx = sampCtx;
-#endif
-        mpu->queuedFrameCnt = mix->queuedFrameCnt;
-
-        _amxCmd* cmdHdr;
-        AFX_ITERATE_CHAIN_B2F(cmdHdr, hdr.script, &mix->commands)
-        {
-            if (cmdHdr->hdr.id == NIL)
-                break;
-
-            if (mix->state != amxMixState_PENDING)
-            {
-                AfxThrowError();
-                break;
-            }
-            _AMX_SPU_CMD_VMT.f[cmdHdr->hdr.id](mpu, cmdHdr);
-        }
-
-        mix->current_sample_time += mpu->queuedFrameCnt;
-        mix->queuedFrameCnt -= mpu->queuedFrameCnt;
-        mpu->queuedFrameCnt = 0;
-
-#if 0
-        if (!err)
-        {
-            mix->state = amxMixState_EXECUTABLE;
-        }
-
-        if (err || mix->m.disposable)
-        {
-            AFX_ASSERT(mix->m.portId == mpu->portId);
-            mix->m.state = avxDrawContextState_INVALID;
-            afxMixQueue mque = AfxGetHost(mix);
-            AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-
-            afxUnit poolIdx = mix->m.poolIdx;
-
-            AfxLockFutex(&mque->m.cmdbReqLock);
-
-            if (AfxPushQueue(&mque->m.cmdbRecycQue, &mix))
-            {
-                AfxDisposeObjects(1, (void**)&mix);
-            }
-
-            AfxUnlockFutex(&mque->m.cmdbReqLock);
-        }
-#endif
+        AfxThrowError();
+        return err;
     }
-    //AfxDecAtom32(&mix->submCnt);
-    //AfxDisposeObjects(1, &mix);
+
+    afxMixBridge mexu = mpu->mexu;
+    _amxCmdLut const* cmdVmt = /*mpu->cmdVmt*/ &_AMX_SPU_CMD_VMT;
+    afxCmdId lastId = 0; // DBG
+
+    _amxCmd* cmdHdr;
+    AFX_ITERATE_CHAIN_B2F(cmdHdr, hdr.script, &cmdb->commands)
+    {
+#ifdef _AFX_DEBUG
+        lastId = cmdHdr->hdr.id;
+#endif
+        if (cmdHdr->hdr.id == NIL)
+            break;
+
+        if (mctx->state != amxMixState_PENDING)
+        {
+            AfxThrowError();
+            break;
+        }
+        AFX_ASSERT(cmdVmt->f[cmdHdr->hdr.id]);
+        cmdVmt->f[cmdHdr->hdr.id](mpu, cmdHdr);
+    }
+
+    mctx->current_sample_time += mpu->queuedFrameCnt;
+    mctx->queuedFrameCnt -= mpu->queuedFrameCnt;
+    mpu->queuedFrameCnt = 0;
+
+#if 0
+    if (!err)
+    {
+        mctx->state = amxMixState_EXECUTABLE;
+    }
+
+    if (err || mctx->m.disposable)
+    {
+        AFX_ASSERT(mctx->m.portId == mpu->portId);
+        mctx->m.state = avxContextStatus_INVALID;
+        afxMixQueue mque = AfxGetHost(mctx);
+        AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
+
+        afxUnit poolIdx = mctx->m.poolIdx;
+
+        AfxLockFutex(&mque->m.cmdbReqLock);
+
+        if (AfxPushQueue(&mque->m.cmdbRecycQue, &mctx))
+        {
+            AfxDisposeObjects(1, (void**)&mctx);
+        }
+
+        AfxUnlockFutex(&mque->m.cmdbReqLock);
+    }
+#endif
+    //AfxDecAtom32(&mctx->submCnt);
+    //AfxDisposeObjects(1, &mctx);
     return err;
 }
 

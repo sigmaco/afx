@@ -15,7 +15,7 @@
  */
 
 // This section is part of SIGMA Simulation Infrastructure.
-// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+// This file is part of Acceleration for RenderWare on Qwadro.
 
 // A computer simulation (or "sim") is an attempt to model a real-life or hypothetical situation on a computer so that it can be studied to see how the system works. 
 // By changing variables in the simulation, predictions may be made about the behaviour of the system. 

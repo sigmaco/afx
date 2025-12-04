@@ -16,7 +16,7 @@
 
 #include "../exec/afxSystemDDK.h"
 
-_AFXINL afxError AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxUnit unitSiz, afxUnit cap)
+_AFXINL afxError AfxMakeInterlockedQueue(afxInterlockedQueue* ique, afxUnit unitSiz, afxUnit cap)
 {
     afxError err = { 0 };
     AFX_ASSERT(ique);
@@ -63,7 +63,7 @@ _AFXINL afxError AfxDeployInterlockedQueue(afxInterlockedQueue* ique, afxUnit un
     return err;
 }
 
-_AFXINL afxError AfxDismantleInterlockedQueue(afxInterlockedQueue* ique)
+_AFXINL afxError AfxExhaustInterlockedQueue(afxInterlockedQueue* ique)
 {
     afxError err = { 0 };
     AFX_ASSERT(ique);

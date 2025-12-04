@@ -15,7 +15,7 @@
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
-// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+// This file is part of Acceleration for RenderWare on Qwadro.
 
   //////////////////////////////////////////////////////////////////////////////
  // QWADRO DEVICE-AWARE CAMERA                                               //

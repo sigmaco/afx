@@ -35,8 +35,10 @@
 #include "qwadro/mix/amxDecoder.h"
 #include "qwadro/mix/afxSink.h"
 #include "qwadro/mix/afxMixContext.h"
+#include "qwadro/mix/amxMixage.h"
 #include "qwadro/mix/amxSoundscape.h"
 #include "qwadro/mix/amxBuffer.h"
+#include "qwadro/mix/amxBuffered.h"
 #include "qwadro/mix/amxTracker.h"
 
 #define AMX_MAX_BRIDGES_PER_SYSTEM (32)

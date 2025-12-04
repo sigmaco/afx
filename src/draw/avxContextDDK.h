@@ -26,34 +26,34 @@
 
 #include "avxFenceDDK.h"
 
-typedef enum avxDrawContextState
+typedef enum avxContextStatus
 /// Each draw context is always in one of the following states
 {
     // When a draw context is allocated, it is in the initial state.
     // Some commands are able to reset a draw context (or a set of command buffers) back to this state from any of the executable, recording or invalid state.
     // Command buffers in the initial state canv only be moved to the recording state, or freed.
-    avxDrawContextState_INITIAL,
+    avxContextStatus_INITIAL,
 
     // BeginCmdBuffer() changes the state of a draw context from the initial state to the recording state.
     // Once a draw context is in the recording state, AvxCmd* commands canv be used to record to the draw context.
-    avxDrawContextState_RECORDING,
+    avxContextStatus_RECORDING,
 
     // AfxCompileCmdBuffer() ends the recording of a draw context, and moves it from the recording state to the executable state.
     // Executable command buffers canv be submitted, reset, or recorded to another draw context.
-    avxDrawContextState_EXECUTABLE,
+    avxContextStatus_EXECUTABLE,
 
     // Queue submission of a draw context changes the state of a draw context from the executable state to the pending state.
     // Whilst in the pending state, applications must not attempt to modify the draw context in any way - as the device may be processing the commands recorded to it.
     // Once execution of a draw context completes, the draw context either reverts back to the executable state, or if it was recorded with ONCE flag, it moves to the invalid state.
     // A synchronization command should be used to detect when this occurs.
-    avxDrawContextState_PENDING,
+    avxContextStatus_PENDING,
 
     // Some operations, such as modifying or deleting a resource that was used in a command recorded to a draw context, will transition the state of that draw context into the invalid state.
     // Command buffers in the invalid state canv only be reset or freed.
-    avxDrawContextState_INVALID,
+    avxContextStatus_INVALID,
 
-    avxDrawContextState_INTERNAL_EXECUTING,
-} avxDrawContextState;
+    avxContextStatus_INTERNAL_EXECUTING,
+} avxContextStatus;
 
 AFX_DEFINE_STRUCT(_avxCmdHdr)
 {
@@ -381,6 +381,113 @@ AFX_DEFINE_UNION(_avxCmd)
         
         avxFillMode mode;
     } SetFillModeEXT;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        afxUnit firstCounterBuffer;
+        afxUnit counterBufferCount;
+        struct
+        {
+            avxBuffer cntBuf;
+            afxSize cntBufOff;
+        } srcs[];
+    } BeginTransformFeedbackEXT;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        afxUnit firstCntBuf;
+        afxUnit cnterBufCnt;
+        struct
+        {
+            avxBuffer cntBuf;
+            afxSize cntBufOff;
+        } srcs[];
+    } EndTransformFeedbackEXT;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        avxQueryPool qryp;
+        afxUnit query;
+        afxBool precise;
+        afxUnit index;
+    } BeginQueryIndexedEXT;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        avxQueryPool qryp;
+        afxUnit query;
+        afxUnit index;
+    } EndQueryIndexedEXT;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        afxUnit firstBinding;
+        afxUnit bindingCount;
+        struct
+        {
+            avxBuffer buf;
+            afxSize offset;
+            afxSize range;
+        } srcs[];
+    } BindTransformFeedbackBuffersEXT;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        afxUnit instCnt;
+        afxUnit firstInst;
+        avxBuffer cnterBuf;
+        afxSize cnterBufOffset;
+        afxUnit cnterOffset;
+        afxUnit vtxStride;
+    } DrawIndirectByteCountEXT;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        // The number of local workgroups to dispatch in the X dimension.
+        afxUnit w;
+        // The number of local workgroups to dispatch in the Y dimension.
+        afxUnit h;
+        // The number of local workgroups to dispatch in the Z dimension.
+        afxUnit d;
+    } DrawMeshTasksEXT;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        // The buffer containing draw parameters.
+        avxBuffer buf;
+        // The byte offset into buffer where parameters begin.
+        afxSize offset;
+        // The number of draws to execute, and can be zero.
+        afxUnit drawCnt;
+        // The byte stride between successive sets of draw parameters.
+        afxUnit stride;
+    } DrawMeshTasksIndirectEXT;
+    struct
+    {
+        _avxCmdHdr hdr;
+
+        // The buffer containing draw parameters.
+        avxBuffer buf;
+        // The byte offset into buffer where parameters begin.
+        afxSize offset;
+        // The buffer containing the draw count.
+        avxBuffer cntBuf;
+        // The byte offset into countBuffer where the draw count begins.
+        afxSize cntBufOffset;
+        // The maximum number of draws that will be executed. 
+        // The actual number of executed draw calls is the minimum of the count specified in @cntBuf and @maxDrawCnt.
+        afxUnit maxDrawCnt;
+        // The byte stride between successive sets of draw parameters.
+        afxUnit stride;
+    } DrawMeshTasksIndirectCountEXT;
     struct
     {
         _avxCmdHdr hdr;
@@ -719,6 +826,16 @@ AFX_DEFINE_UNION(_avxCmdLut)
         void* BindIndexBuffer;
         void* SetPrimitiveTopology;
 
+        void* BeginTransformFeedbackEXT;
+        void* EndTransformFeedbackEXT;
+        void* BeginQueryIndexedEXT;
+        void* EndQueryIndexedEXT;
+        void* BindTransformFeedbackBuffersEXT;
+        void* DrawIndirectByteCountEXT;
+        void* DrawMeshTasksEXT;
+        void* DrawMeshTasksIndirectEXT;
+        void* DrawMeshTasksIndirectCountEXT;
+
         // RASTERIZATION OPERATIOS
         void* EnableDepthBias;
         void* SetDepthBias;
@@ -777,11 +894,10 @@ AFX_DECLARE_STRUCT(_avxDdiDctx);
 #else
 AFX_DEFINE_STRUCT(_avxDdiDctx)
 {
-    afxError(*compose)(afxDrawContext, afxBool once, afxBool deferred);
+    afxError(*exhaust)(afxDrawContext, afxBool freeMem);
+    afxError(*prepare)(afxDrawContext, afxBool purge, avxCmdFlags);
     afxError(*compile)(afxDrawContext);
     afxError(*recycle)(afxDrawContext, afxBool freeMem);
-    afxError(*discard)(afxDrawContext, afxBool freeMem);
-    afxError(*exhaust)(afxDrawContext, afxBool freeMem);
 };
 #endif
 
@@ -844,34 +960,29 @@ AFX_OBJECT(afxDrawContext)
     void*               udd;
     // Debugging tag.
     afxString           tag;
-
-    avxDrawContextState state;
-    afxBool             once; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
-    afxBool             deferred;
-    afxPool             batches;
-    afxUnit             batchId;
-
-    afxUnit         exuIdx;
-    afxUnit         poolIdx;
-    // Is short-lived? That is, does not recycle batches, etc.
-    afxBool         transient;
-    afxChain        cmdbRecycChain;
-    afxFutex        cmdbReqLock;
-    afxBool         cmdbLockedForReq;
-
     afxDrawLimits const* devLimits; // dbg copies
-    afxDrawFeatures const* enabledFeatures; // dbg copies
+    afxDrawFeatures const*enabledFeatures; // dbg copies
 
-    afxChain        commands;
-    afxArena        cmdArena; // owned by dsys data for specific port
+    avxAptitude         caps;
+    afxMask             exuMask;
+    afxAtom32           submCnt; // number of submissions
+    afxMask64           submQueMask; // one for each queue where this dctx was submitted into.
 
+    // Is short-lived? That is, does not recycle batches, etc.
+    //afxBool             transient;
+    avxContextFlags     flags;
+    afxDrawContext      pool;
+    afxChain            classes;
+    afxClass            dctxCls;
+    afxInterlockedQueue recycQue;
+    avxCmdFlags         cmdFlags;
+    avxContextStatus state;
+    afxArena            cmdArena; // owned by dsys data for specific port
+    afxChain            commands;
 
-    afxChain        ioCmds;
-    afxChain        drawCmds;
-    afxChain        dispatchCmds;
-
-    afxUnit binCnt;
-    afxUnit rollCnt;
+    afxChain            ioCmds;
+    afxChain            drawCmds;
+    afxChain            dispatchCmds;
 
     struct
     {
@@ -960,10 +1071,11 @@ AVX afxError _AvxDctxImplEndCb(afxDrawContext dctx);
 AVX afxError _AvxDctxRecycleCb(afxDrawContext dctx, afxBool freeRes);
 AVX afxError _AvxDctxCompileCb(afxDrawContext dctx);
 AVX afxError _AvxDctxDiscardCb(afxDrawContext dctx, afxBool freeRes);
-AVX afxError _AvxDctxComposeCb(afxDrawContext dctx, afxBool once, afxBool deferred);
+AVX afxError _AvxDctxPrepareCb(afxDrawContext dctx, afxBool purge, avxCmdFlags flags);
 AVX afxError _AvxDctxExhaustCb(afxDrawContext dctx, afxBool freeMem);
 
-AVX avxDrawContextState    _AvxDctxGetStatus(afxDrawContext dctx);
+AVX afxClass const*     _AvxDctxGetDctxClass(afxDrawContext dctx);
+AVX avxContextStatus _AvxDctxGetStatus(afxDrawContext dctx);
 
 AVX afxClassConfig const _AVX_CLASS_CONFIG_DCTX;
 AVX _avxDdiDctx const _AVX_DDI_DCTX;

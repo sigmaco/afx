@@ -538,7 +538,7 @@ _AVX afxError _AvxDoutDtorCb(afxSurface dout)
 
     AfxDeallocateInstanceData(dout, ARRAY_SIZE(stashs), stashs);
 
-    AfxDismantleInterlockedQueue(&dout->freeBuffers);
+    AfxExhaustInterlockedQueue(&dout->freeBuffers);
 
     AfxCleanUpFutex(&dout->suspendSlock);
 
@@ -637,7 +637,7 @@ _AVX afxError _AvxDoutCtorCb(afxSurface dout, void** args, afxUnit invokeNo)
     }
     AfxZero(dout->swaps, sizeof(dout->swaps[0]) * dout->swapCnt);
 
-    AfxDeployInterlockedQueue(&dout->freeBuffers, sizeof(afxUnit), dout->swapCnt);
+    AfxMakeInterlockedQueue(&dout->freeBuffers, sizeof(afxUnit), dout->swapCnt);
 
     for (afxUnit i = 0; i < dout->swapCnt; i++)
         AfxPushInterlockedQueue(&dout->freeBuffers, (afxUnit[]) { i });

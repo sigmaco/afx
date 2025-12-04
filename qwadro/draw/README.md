@@ -1,54 +1,118 @@
-```
+![Logo](doc/qwadro-banner-2048x520-bg-t.png)
 
-          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
-         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
-         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
-         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
-         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
-         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
-          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+# Advanced Video Graphics Extensions & Experiments (AVX)
+A subproject of **Acceleration Frameworks Extensions & Experiments** (**AFX**)
 
-                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+## Overview
 
-                                   Public Test Build
-                               (c) 2017 SIGMA FEDERATION
-                             <https://sigmaco.org/qwadro/>
+**Advanced Video Graphics Extensions & Experiments** (**AVX**) is a subproject extending the  
+**Acceleration Frameworks Extensions & Experiments** (**AFX**) ecosystem with a complete, scalable,  
+hardware-accelerated video graphics foundation.
 
-```
+AVX achieves this by defining and establishing the **Qwadro Video Graphics Infrastructure**, 
+a unified, device-agnostic, low-level video graphics subsystem that standardizes how accelerated video graphics  
+devices are discovered, negotiated, initialized, and operated within the AFX ecosystem.
 
-## Qwadro Video Graphics Infrastructure
-The **Qwadro Video Graphics Infrastructure** (**VGI**) is the foundation of the Draw I/O System that was developed to encapsulates some of the low-level tasks that encompasses most of the code for device discovery, solicitation and enumeration, swap-chain creation, and presentation that are needed by device driver interfaces (DDI) and implementations to Draw I/O System. VGI provides a common framework for future graphics components. VGI defines a DDI that manages low-level shared tasks independently from the drawing mechanism runtime. The tasks implemented with VGI will be handled by the VGI DDI.
+AVX provides the **infrastructure and device-driver interfaces** required to build rendering runtimes on top of a stable, explicit, cross-platform  
+foundation.
 
-## The AVX Specification .
-The **Acceleration for Video Experimentals** and the **Advanced Video Extensions for Qwadro** comprehends an data-oriented API specification where the common things are (relatively) easy, and the super powerful low-level optimizations are optional. This new API was firstly idealized to be easy as OpenGL but still trying to be powerful close to Vulkan, Direct3D e Metal. Unlike other low-level APIs, Draw I/O System follows a rapid application development (RAD) philosophy, where it delivers utilities to speed up and automate operations, still allowing the users to do it their own way if they want.
+Alongside AVX exists the **AUX** subproject:
 
-The first reference implementation of the Qwadro Draw I/O System, SIGMA GL/2, was strongely inspired on paradigms of that was supposed to be OpenGL 5 based on expectations of developers toward Direct3D 12 and its facilities. This was an effort by SIGMA to offer a high-performance real-time intiutive 3D drawing API. The Video Graphics Infrastructure was later developed to merge the SIGMA GL/2 into the Qwadro Execution Ecosystem as the Draw I/O System.
+## Advanced MMUX Extensions & Experiments (AUX)
 
-Because SIGMA GL/2 was first designed around the creation of a decent API based on OpenGL capabilities, unlikely in Vulkan, certain features are mutually exclusive, such as super/multisamples and mip levels, coming to be integrated under the generic denomination "level of detail (LOD)". Also rasters (images or textures) can only be 3D or layered, not both at same time. This makes the API straightforward to handle rasters.
+**Advanced MMUX Extensions & Experiments** (**AUX**) is a second AFX subproject focusing on the  
+system-integration side of GPU acceleration.
 
-The SIGMA Technology Group introduced its own abstractions, not directly mirroring any of today's native APIs. One reason is because no single API is available on all systems, and also because many concepts (such as extremely low-level memory handling) are not idiomatic to users not accustomed to the heat of metal. Although certain features inherited from several APIs (up to Glide, really), they have been reworked to look and feel more like Vulkan, while most of dialect used in Draw I/O System is inherited from the OpenGL/Vulkan (blue/red) side of the force, becoming the purple side of the force.
+AUX provides a shell and desktop-environment intercommunication layer that eliminates the  
+historical issues developers face when trying to interface video graphics runtimes with the host system.
 
-An example of abstraction in Draw I/O System is the lack of an entity known as "framebuffer". This (problematic) name was inherited from a no longer existent hardware component of the emergent days of computer graphics. This term causes confusion still now because actually this entity is not a buffer. Due to this fact, in Qwadro, its equivalent is a "canvas", which is an object that arranges surfaces, capable of being bound with rasters (de facto, the buffer), where a drawing is made on it.
+Instead of requiring applications or runtimes to manually deal with platform-specific windowing  
+systems, surface creation APIs, or environment hooks, AUX offers:
 
-## Draw I/O Device
-In Draw I/O System, **draw devices** (**DDEV**) are logical. You probably will not seen the name of your GPU there, but a custom name. Wrappers broken the concept of handling a real device, so we adopted it as a fact. You can install custom device drivers in Qwadro, like in early days of computer graphics where you could download and install device drivers directly in root directory of your application.
-These custom device drivers obviously will be wrappers. But you can write your own so no relying on the only driver to X platform or Y API. Could have even drivers using combined physical devices at once.
+- A unified, platform-independent interface for context and surface creation  
+- A strict communication channel between the AFX ecosystem and the system shell  
+- A mechanism to “hook up” to the GPU without touching OS-specific APIs  
+- A clean environment for graphics runtimes built on top of AVX/VGI
 
-As aforementioned, Draw I/O System works on the "bring your own driver" model. We are living in a new war of APIs after Metal, Direct3D 12 and Vulkan emerged. Platform holders does not want to have such another API. SIGMA chose to replicate a model from the ancient times of hardware-accelerated computer graphics, where people looked for better driver implementations, including those based on existing common APIs or APIs specific to the installed VGA; the installable client driver (ICD) or, its more minimalist version, the mini client driver (MCD).
+Together, AVX handles the GPU, and AUX handles the shell.
 
-Despite the device driver implementation, Draw I/O System is planned to use only a extended version of the OpenGL Shading Language (GLSL) as native shading language to foster knowledge propagation.
+## AVX: Goals and Capabilities
+
+AVX provides:
+
+- A unified cross-platform model for GPU device discovery  
+- A well-defined DDI (Device Driver Interface)  
+- Standardized memory, buffer, and surface allocation  
+- Swap-chain and presentation primitives  
+- Predictable, low-level behavior independent of OS or window system  
+- The foundation for building new rendering frontends  
+- Backend flexibility (OpenGL-based, Vulkan-based, ICD-native, software renderer, etc.)
+
+### Capability Source
+
+AVX's expressiveness is inspired by the full set of capabilities historically exposed through  
+OpenGL's evolution. AVX is by design a OpenGL frontend; the never reached OpenGL 5.
+Its API, structure, and semantics are fully independent.
+
+AVX runtimes may be backed by:
+
+- Native ICD implementations  
+- A VGI-to-Vulkan backend  
+- A VGI-to-OpenGL backend  
+- A research/experimental backend  
+- Software fallback backends  
+
+## AUX: Goals and Capabilities
+
+AUX solves the long-standing pain of "hooking up" a graphics runtime to the system shell.
+
+AUX provides:
+
+- A unified context and surface creation model  
+- Strict lifecycle management for surfaces, windows, and GPU contexts  
+- A platform-agnostic bridge to desktop environments  
+- A guaranteed, consistent path for linking AFX/AVX runtimes with host systems  
+- A replacement for legacy platform APIs (WGL, GLX, Wayland protocols, etc.)  
+- Full integration with VGI's device-management process
+
+This allows rendering runtimes to rely on AUX instead of:
+
+- Window system APIs
+- Platform display servers
+- OS-dependent GPU acquisition APIs
+- Ad-hoc event loop integration
+
+## Why AVX + AUX?
+
+Together, AVX and AUX provide a complete solution:
+
+- **AUX** handles the system shell; surfaces, windows, contexts  
+- **AVX** handles the GPU; devices, memory, presentation  
+- **VGI** bridges both; unified infrastructure  
+- **AFX** binds it all together; extensible acceleration platform  
+
+The result is a modern, clean, deterministic ecosystem for graphics acceleration.
+
+## Features Summary
+
+| Component | Description |
+|----------|-------------|
+| **AVX** | Hardware-accelerated graphics subsystem for AFX |
+| **AUX** | Shell/desktop intercommunication subsystem |
+| **VGI** | Unified low-level infrastructure created by AVX |
+| **DDI** | Strict driver interface for GPU/ICD implementations |
+| **Backend Flexibility** | Vulkan, GL, ICD-native, or software |
+| **Surface & Context Uniformity** | Provided through AUX |
 
 ## Contribution
 
-Special thanks to Markus Tavenrath, Christoph Kubisch, Alfonse Reinheart, Evgeny Makarov and NVIDIA guys for contributing with their techniques and knowledge in hardware-accelerated 3D design.
+Special thanks to Markus Tavenrath, Christoph Kubisch, Alfonse Reinheart, Evgeny Makarov and NVIDIA guys for contributing with their knowledge in hardware-accelerated 3D design.
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated. For details, see the "[Contributing Guidelines][contribute-guide]".
-
-You can also contribute or address to any doubt or difficult although by join the SIGMA FEDERATION's gathering point on Discord.
+You can also contribute or address to any doubt or difficult although by join the SIGMA's gathering point on Discord.
 
 [![SIGMA Discord Server](https://discord.com/api/guilds/349379672351571969/widget.png?style=banner2)](https://sigmaco.org/discord)
 
-The SIGMA FEDERATION thanks [all the contributors][contributors] by their individual and collective involvements in the development of this project.
+The SIGMA thanks [all the contributors][contributors] by their individual and collective involvements in the development of this project.
 
 [![all-contributors](https://contrib.rocks/image?repo=sigmaco/afx&columns=16)][contributors]
 
@@ -58,6 +122,6 @@ This project is published under [Qwadro License][license].
 
 Qwadro is, and its portions are, (c) 2017 SIGMA FEDERATION. All rights reserved; to its elaborators and collaborators.
 
-[license]: https://github.com/sigmaco/qwadro/blob/master/LICENSE.txt
+[license]: https://github.com/sigmaco/afx/blob/master/LICENSE
 [contributors]: https://github.com/sigmaco/afx/graphs/contributors
 [contribute-guide]: https://github.com/sigmaco/afx/blob/master/docs/CONTRIBUTING.md

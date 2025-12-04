@@ -146,7 +146,7 @@ AMX afxClass const* _AmxMsysGetViddClass(afxMixSystem msys);
 AMX afxClass const* _AmxMsysGetMencClass(afxMixSystem msys);
 AMX afxClass const* _AmxMsysGetMdecClass(afxMixSystem msys);
 
-AMX _amxDdiMsys const* _AmxMsysGetImpl(afxMixSystem msys);
+AMX _amxDdiMsys const* _AmxMsysGetDdi(afxMixSystem msys);
 AMX afxMask _AmxMsysGetIoExuMask(afxMixSystem msys, afxMask* dedIoExuMask);
 
 AMX afxClassConfig const _AMX_MCDC_CLASS_CONFIG;

@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+// This file is part of Acceleration for RenderWare on Qwadro.
 
 #ifndef ASX_POSE_OPS_H
 #define ASX_POSE_OPS_H
@@ -25,9 +25,9 @@ ASX afxCmdId AsxCmdCopyPose(arxContext ctx, arxPose src, afxUnit from, arxPose d
 
 ASX afxCmdId AsxCmdApplyRootMotionVectors(arxContext ctx, arxPose pose, afxV3d const translation, afxV3d const rotation);
 
-ASX afxCmdId AsxCmdSampleBodyAnimationsAcceleratedLOD(arxContext ctx, arxPuppet bod, afxUnit pivotCnt, afxM4d const offset, arxPose scratch, arxPlacement plce, afxReal allowedErr);
-ASX afxCmdId AsxCmdSampleSingleBodyAnimationLODSparse(arxContext ctx, arxPuppet bod, arxCapstan moto, afxUnit basePivotIdx, afxUnit pivotCnt, arxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray);
-ASX afxCmdId AsxCmdSampleBodyAnimationsLODSparse(arxContext ctx, arxPuppet bod, afxUnit basePivotIdx, afxUnit pivotCnt, arxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray);
+ASX afxCmdId AsxCmdSamplePuppetAnimationsAcceleratedLOD(arxContext ctx, arxPuppet bod, afxUnit pivotCnt, afxM4d const offset, arxPose scratch, arxPlacement plce, afxReal allowedErr);
+ASX afxCmdId AsxCmdSampleSinglePuppetAnimationLODSparse(arxContext ctx, arxPuppet bod, arxCapstan moto, afxUnit basePivotIdx, afxUnit pivotCnt, arxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray);
+ASX afxCmdId AsxCmdSamplePuppetAnimationsLODSparse(arxContext ctx, arxPuppet bod, afxUnit basePivotIdx, afxUnit pivotCnt, arxPose pose, afxReal allowedErr, afxUnit const* sparseBoneArray);
 
 // MODEL OPS
 

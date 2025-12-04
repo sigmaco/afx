@@ -33,7 +33,7 @@ AFX_DEFINE_STRUCT(_avxDexuAcq)
     afxUnit                 exuIdx;
     afxUnit                 minQueCnt;
     afxClassConfig const*   dqueClsCfg;
-    afxClassConfig const*   dctxClsCfg;
+    //afxClassConfig const*   dctxClsCfg;
 };
 
 AFX_DECLARE_STRUCT(avxDpu);
@@ -66,7 +66,7 @@ AFX_OBJECT(afxDrawBridge)
     afxChain            classes;
     afxClass            dqueCls;
     // one command pool per bridge to avoid thread interation.
-    afxClass            dctxCls;
+    //afxClass            dctxCls;
 
     // DPU
     afxCondition        schedCnd; // signaled when some task is scheduled to this bridge.
@@ -84,7 +84,6 @@ AFX_OBJECT(afxDrawBridge)
 AVX afxClassConfig const _AVX_CLASS_CONFIG_DEXU;
 
 //AVX afxUnit _AvxCountDrawQueues(afxDrawBridge dexu, afxUnit baseQueIdx);
-AVX afxClass const* _AvxDexuGetDctxClass(afxDrawBridge dexu);
 AVX afxClass const* _AvxDexuGetDqueClass(afxDrawBridge dexu);
 
 AVX afxError _AvxDexuRemapBuffers(afxDrawBridge dexu, afxBool unmap, afxUnit cnt, _avxBufferRemapping const maps[]);

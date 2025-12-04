@@ -21,6 +21,15 @@
 
 #include "qwadro/mix/afxMixSystem.h"
 
+typedef enum amxMixState
+{
+    amxMixState_INITIAL,
+    amxMixState_RECORDING,
+    amxMixState_EXECUTABLE,
+    amxMixState_PENDING,
+    amxMixState_INVALID
+} amxMixState;
+
 AFX_DECLARE_UNION(_amxCmd);
 
 #ifndef _AMX_MIX_C
@@ -28,9 +37,9 @@ AFX_DECLARE_STRUCT(_amxDdiMctx);
 #else
 AFX_DEFINE_STRUCT(_amxDdiMctx)
 {
-    afxError(*compose)(afxMixContext, afxBool once, afxBool deferred, afxUnit* bid);
-    afxError(*compile)(afxMixContext, afxUnit bid);
-    afxError(*recycle)(afxMixContext, afxUnit bid, afxBool freeMem);
+    afxError(*compose)(afxMixContext, afxBool once, afxBool deferred);
+    afxError(*compile)(afxMixContext);
+    afxError(*recycle)(afxMixContext, afxBool freeMem);
     afxError(*discard)(afxMixContext, afxBool freeMem);
     afxError(*exhaust)(afxMixContext, afxBool freeMem);
 };
@@ -64,6 +73,7 @@ AFX_OBJECT(afxMixContext)
     afxBool     disposable; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
     
     afxPool     batches;
+    afxUnit     batchId;
     afxChain    cmdbRecycChain;
     afxFutex    cmdbReqLock;
     afxBool     cmdbLockedForReq;
@@ -143,6 +153,7 @@ AFX_DEFINE_UNION(_amxCmdLut)
         void* Send;
         void* FetchAudition;
         void* ResampleAudio;
+        void* ResampleBufferedAudio;
         void* TransposeAudio;
         void* UpdateAudio;
         void* CommenceMixScope;
@@ -179,6 +190,7 @@ AFX_DEFINE_UNION(_amxCmd)
     struct
     {
         _amxCmdHdr hdr;
+
         afxUnit voice;
         afxReal wetMix;
         afxReal roomSiz;
@@ -189,6 +201,7 @@ AFX_DEFINE_UNION(_amxCmd)
     struct
     {
         _amxCmdHdr hdr;
+
         afxUnit voice;
         afxReal floor;
         afxReal ceil;
@@ -201,6 +214,7 @@ AFX_DEFINE_UNION(_amxCmd)
     struct
     {
         _amxCmdHdr hdr;
+
         afxUnit voice;
         afxReal gain;
         afxReal pan;
@@ -209,6 +223,7 @@ AFX_DEFINE_UNION(_amxCmd)
     struct
     {
         _amxCmdHdr hdr;
+
         afxUnit voice;
         afxReal amount;
         afxReal rate;
@@ -221,6 +236,7 @@ AFX_DEFINE_UNION(_amxCmd)
     struct
     {
         _amxCmdHdr hdr;
+
         afxUnit voice;
         afxUnit type;
         afxUnit flt;
@@ -235,6 +251,7 @@ AFX_DEFINE_UNION(_amxCmd)
     struct
     {
         _amxCmdHdr hdr;
+
         afxUnit voice;
         afxReal threshold;
         afxReal ratio;
@@ -245,6 +262,7 @@ AFX_DEFINE_UNION(_amxCmd)
     struct
     {
         _amxCmdHdr hdr;
+
         afxUnit voice;
         afxUnit line;
         afxMask chanMask;
@@ -255,6 +273,7 @@ AFX_DEFINE_UNION(_amxCmd)
     struct
     {
         _amxCmdHdr hdr;
+
         afxUnit voice;
         afxUnit src;
         afxMask chanMask;
@@ -264,6 +283,7 @@ AFX_DEFINE_UNION(_amxCmd)
     struct
     {
         _amxCmdHdr hdr;
+
         afxUnit voice;
         afxBool muteSrc;
         afxReal amount;
@@ -273,6 +293,7 @@ AFX_DEFINE_UNION(_amxCmd)
     struct
     {
         _amxCmdHdr hdr;
+
         afxUnit voice;
         afxUnit headIdx;
     } FetchAudition;
@@ -297,19 +318,30 @@ AFX_DEFINE_UNION(_amxCmd)
     {
         _amxCmdHdr hdr;
 
+        amxBufferedAudio src;
+        amxBufferedAudio dst;
+        amxAudioPeriod srcp;
+        amxAudioPeriod dstp;
+    } ResampleBufferedAudio;
+    struct
+    {
+        _amxCmdHdr hdr;
+
         amxAudio buf;
         void const* src;
         amxAudioIo op;
     } UpdateAudio;
 };
 
-AMX afxError _AmxMixPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdId* cmdId, _amxCmd** ppCmd);
-AMX _amxCmdBatch* _AmxGetCmdBatch(afxMixContext mix, afxUnit idx);
+AMX afxError _AmxMctxPushCmd(afxMixContext mix, afxUnit id, afxUnit siz, afxCmdId* cmdId, _amxCmd** ppCmd);
+AMX _amxCmdBatch* _AmxMctxGetCmdBatch(afxMixContext mix, afxUnit idx);
 AMX afxError _AmxMixResetCb(afxMixContext mix, afxBool freeMem, afxBool permanent);
 AMX afxError _AmxMixEndCb(afxMixContext mix);
 
 AMX afxClassConfig const _AMX_MIX_CLASS_CONFIG;
 
 AMX _amxDdiMctx const _AMX_MCTX_DDI;
+
+AMX amxMixState _AmxMctxGetStatus(afxMixContext mix);
 
 #endif//AMX_CONTEXT_DDK_H

@@ -34,7 +34,7 @@
 #define _AUX_UX_C
 #include "src/ux/auxIcd.h"
 
-_AMX _amxDdiMsys const* _AmxMsysGetImpl(afxMixSystem msys)
+_AMX _amxDdiMsys const* _AmxMsysGetDdi(afxMixSystem msys)
 {
     afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.

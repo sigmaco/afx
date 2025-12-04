@@ -59,12 +59,50 @@ AFXINL afxPlane     AfxPlaneFromPoints(afxV4d a, afxV4d b, afxV4d c);
 
 AFXINL void         AfxMakePlane(afxPlane* p, afxV3d const normal, afxReal dist);
 
-AFXINL void         AfxMakePlaneFromTriangle(afxPlane* p, afxV3d const a, afxV3d const b, afxV3d const c);
+/*
+    The AfxMakePlaneFromPointNormal() function constructs a plane from a point on the plane and a normal vector.
+    The plane equation is: n * x + d = 0;
+    Where: d = - n * p;
+
+    The caller must ensure n is normalized.
+
+    p->uvwd[0..2] = normalized normal
+    p->uvwd[3]    = distance term
+*/
+
+AFXINL void AfxMakePlaneFromPointNormal
+(
+    afxPlane *p, 
+    afxV3d const point, 
+    afxV3d const normal
+);
+
+/*
+    The AfxMakePlaneFromTriangle() function constructs a plane from three points in the form:
+        n * x + d = 0;
+
+    Where:
+        n is the normalized plane normal
+        d is the distance term
+
+    Given points a, b, c, the normal is computed as:
+        n = normalize( (b - a) X (c - a) )
+    And the plane distance is:
+        d = - dot(n, a)
+    This is a standard plane-from-triangle computation.
+*/
+
+AFXINL void         AfxMakePlaneFromTriangle
+(
+    afxPlane* p, 
+    afxV3d const a, 
+    afxV3d const b, 
+    afxV3d const c
+);
 
 AFXINL void         AfxGetPlaneNormal(afxPlane* p, afxV3d normal);
 
-AFXINL afxReal      AfxGetPlaneOffset(afxPlane const* p); // aka GetPlaneDistance
-#define AfxGetPlaneDistance AfxGetPlaneOffset
+AFXINL afxReal      AfxGetPlaneDistance(afxPlane const* p); // aka GetPlaneDistance
 
 AFXINL afxReal      AfxFindPlaneDistance(afxPlane const* p, afxV3d const point);
 

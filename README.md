@@ -3,14 +3,73 @@
 ## Acceleration Frameworks Extensions & Experiments (AFX)
 The **Acceleration Frameworks Extensions & Experiments** (**AFX**) is the standard implementation for **Qwadro** API specification. Qwadro is a name for a familiy of standards specifying software engineering infrastructured designed by SIGMA Technology Group as an ISO C17 open standard, low-level data-oriented, federated execution ecosystem that offers a set of acceleration building blocks to edify system softwares targeting computer simulations and multimedia user experiences. It is essentially a set of software infrastructures whose middlewares, libraries, drivers and engines developed on the Qwadro relies on.
 
+Despite the name, AFX is not an application framework, it is designed to be the bedrock for other Qwadro modules. AFX is designed to provide primitive host interoperability, such as I/O, file, memory, threading, etc, to other Qwadro components. This is why every other infrastructure is an extension of it at first. An user application can be entirely built with the AFX to avoid completely interfacing the host, but AFX does not want to drive the user application. Inevitably the user would be required to set up its event loops with Qwadro methodology. The AFX will handle only events associated to its API objects. If the user had created a window out of MMUX infrastructure, the AFX will ignore it completely.
+
+Qwadro is low-level, hardcore, and is highly experimental in this phase (this project is actually bootstrapping its own specification). Any and every user will be forced to be familiar with how computers work. It is by nature a middleware doing its way to provide a virtualized host platform. An user looking for ways of making games without a game engine (or game engines/frameworks written in C) should proceed to look for [Raylib](https://github.com/raysan5/raylib) or any similar project.
+
+Qwadro started inside the RenderWare as part of a discontinued project of public, open game engine. At some point, the RenderWare platform has been hooked inside Qwadro. Later, it has been spun off to its own independent existence as it became more and more low-level, generalized and capable. This new, independent phase is called "Engineering Phase II". Because of this initial entanglement, certain names are kept familiar to RenderWare, and a new project of ammendment to the Qwadro, called ARX, is being developed to fulfill the total decouplement of RenderWare from Qwadro ecosystem.
+
 ## Advanced Video Graphics Extensions & Experiments (AVX)
-The **Advanced Video Graphics Extensions & Experiments** (**AVX**) is an amendment to AFX providing the **Qwadro Video Graphics Infrastructure**, which is the foundation for the Draw I/O System that has been developed to encapsulates some of the low-level tasks that encompasses functionality for device discovery, solicitation and enumeration, swap-chain creation, and presentation that are needed by device driver interfaces (DDI) and implementations to the Draw I/O System. VGI provides a common framework for future graphics components. It also defines a DDI that manages low-level shared tasks independently from the drawing mechanism runtime. The tasks implemented with VGI will be handled by the VGI DDI.
+A modern, sanitized, redefined, orthogonal architectural refactory of OpenGL.
+
+Advanced Video Graphics Extensions & Experiments (AVX) is a modern amendment to AFX, designed by SIGMA Technology Group to redefine and stabilize the OpenGL API. Part of this has been previously known as SIGMA GL/2.
+Instead of introducing an entirely new graphics API, AVX reorganizes, sanitizes, and future-proofs the existing GL model by providing:
+- A unified low-level graphics foundation (Qwadro Video Graphics Infrastructure)
+- A platform-agnostic runtime for device enumeration, presentation, and swap-chain management
+- A consistent, deterministic context-handling layer via the AUX project
+- A standardized, ICD-compatible driver interface model
+
+AVX is not "another Vulkan" wrapper. Instead, it is what OpenGL 5 should have been; a modernized, strict, predictable environment that preserves GL's strengths while eliminating decades of historical design debt.
+
+### Motivation
+
+OpenGL has faced long-standing issues:
+- Inconsistent or proprietary context creation
+- Undefined behavior across vendors
+- Extension fragmentation
+- Lack of strict state management
+- Weak separation between the driver runtime and low-level tasks
+
+AVX addresses these problems by introducing **Video Graphics Infrastructure**, a strict low-level interface that driver implementers target, while higher layers sit cleanly on top.
+
+### Qwadro Video Graphics Infrastructure
+Based on DXGI, Qwadro Video Graphics Infrastructure is the foundation layer for AVX. 
+This infrastructure provides:
+- Unified device discovery & enumeration
+- Vendor-agnostic surface, buffer, and memory interfaces
+- Swap-chain creation and management
+- Presentation scheduling
+- Synchronization and fence primitives
+- A standardized DDI (Device Driver Interface) for all low-level tasks
+
+This layer is designed to be deterministic, cross-platform, and free from legacy GL ambiguities.
+
+#### Qwadro Draw I/O System
+Qwadro Draw I/O System is a hybrid model of client-server and host-device cooperative design. It is a modernized, modular replacement for traditional GL "bootstrapping", responsible for:
+- Device initialization
+- Capability solicitation
+- Rendering surface allocation
+- State and pipeline preparation
+- Bridging the OpenGL-like front-end to the VGI DDI
+
+Instead of deeply mixing state handling with driver logic, AVX isolates the GL runtime from the low-level backend.
 
 ## Advanced Multimedia Extensions & Experiments (AMX)
 The **Advanced Multimedia Extensions & Experiments** (**AMX**) is an amendment to AFX providing the **Qwadro Media Synthesis Infrastructure**, which is the foundation for the Media I/O System that has been developed to encompasses functionality for device discovery, solicitation and enumeration, as well as equipments and technologies that support the creation, processing, distribution, and playback of audio content generated by sound synthesis that are needed by device driver interfaces (DDI) and implementations to the Sound I/O System. It also defines a DDI that manages low-level shared tasks independently from the drawing mechanism runtime. The tasks implemented with MSI will be handled by the MSI DDI.
 
 ## Advanced Multimedia UX Extensions & Experiments (AUX)
 The **Advanced Multimedia UX Extensions & Experiments** (**AUX**) is an amendment to AFX providing the **Qwadro Multimedia UX Infrastructure** (**MMUX**), which is the foundation for the User I/O System that has been developed to enhance usability and the user experience in multimedia user interfaces (MMUIs) with shell environments. MMUX manages how windows are opened, closed, resized, and arranged on the screen, contributing to a smooth and organized workflow. It offers options for users to customize themes, layouts, and toolbars to suit their preferences, enhancing personal usability and facilitating user interactions, making complex tasks easier to perform through intuitive designs.
+
+The historic nightmare of OpenGL context creation is resolved through AUX, a companion specification to AVX.
+
+AUX provides:
+- A uniform context interface for all operating systems
+- A shell into Qwadro (VGI’s systems layer)
+- Predictable and strict context lifecycle rules
+- Plug-and-play ICD compatibility
+With AUX, developers no longer rely on WGL, GLX, CGL, EGL, or platform-specific hacks.
+
+## Contribution
 
 The **SIGMA FEDERATION** and all members shall not be held liable to any person or entity for any reason related to the adoption or implementation of, nor adherence to the recommendations in, nor any other use of this project nor any accompanying software.
 
@@ -22,8 +81,6 @@ There are several strange names in AFX, AVX, AMX and AUX. It is because these pr
 There is some semantics inherited from RenderWare still present. For example, you will see avxRaster, afxQuat, afxV3d, afxV4d.
 
 > E no Qwadro é assim: o que funciona está bugado, e o que não está bugado não funciona.
-
-## Contribution
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated. For details, see the "[Contributing Guidelines][contribute-guide]".
 

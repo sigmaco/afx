@@ -36,19 +36,19 @@ AVX afxCmdId            AvxCmdChangeFillModeEXT
 AFX afxCmdId AvxCmdBeginTransformFeedbackEXT
 (
     afxDrawContext dctx,
-    afxUnit firstCounterBuffer,
-    afxUnit counterBufferCount,
-    avxBuffer const cnterBuffers[],
-    afxSize const cnterBufferOffsets[]
+    afxUnit firstCntBuf,
+    afxUnit cntBufCnt,
+    avxBuffer const cntBufs[],
+    afxSize const cntBufOffsets[]
 );
 
 AFX afxCmdId AvxCmdEndTransformFeedbackEXT
 (
     afxDrawContext dctx,
     afxUnit firstCntBuf,
-    afxUnit cnterBufCnt,
-    avxBuffer const cnterBuffers[],
-    afxSize const cnterBufOffsets[]
+    afxUnit cntBufCnt,
+    avxBuffer const cntBufs[],
+    afxSize const cntBufOffsets[]
 );
 
 AFX afxCmdId AvxCmdBeginQueryIndexedEXT
@@ -71,8 +71,8 @@ AFX afxCmdId AvxCmdEndQueryIndexedEXT
 AFX afxCmdId AvxCmdBindTransformFeedbackBuffersEXT
 (
     afxDrawContext dctx,
-    afxUnit firstBinding,
-    afxUnit bindingCount,
+    afxUnit first,
+    afxUnit cnt,
     avxBuffer const buffers[],
     afxSize const offsets[],
     afxSize const ranges[]
@@ -83,9 +83,9 @@ AFX afxCmdId AvxCmdDrawIndirectByteCountEXT
     afxDrawContext dctx,
     afxUnit instCnt,
     afxUnit firstInst,
-    avxBuffer cnterBuf,
-    afxSize cnterBufOffset,
-    afxUnit cnterOffset,
+    avxBuffer cntBuf,
+    afxSize cntBufOffset,
+    afxUnit cntOffset,
     afxUnit vtxStride
 );
 
@@ -142,7 +142,7 @@ AVX afxCmdId AvxCmdDrawMeshTasksIndirectEXT
     @cntBufOffset and use this as the draw count.
 */
 
-AVX void AvxCmdDrawMeshTasksIndirectCountEXT
+AVX afxCmdId AvxCmdDrawMeshTasksIndirectCountEXT
 (
     afxDrawContext dctx,
     // The buffer containing draw parameters.

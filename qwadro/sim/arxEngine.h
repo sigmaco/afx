@@ -19,7 +19,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 // This section is part of SIGMA High Performance Cosputing Infrastructure.
-// This file is part of Advanced Renderware Extensions & Experiments for Qwadro.
+// This file is part of Acceleration for RenderWare on Qwadro.
 
 #ifndef ASX_ENGINE_H
 #define ASX_ENGINE_H

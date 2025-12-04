@@ -40,25 +40,32 @@ _AVX _avxCmdLut const _AVX_DPU_CMD_VMT =
     .CopyBuffer = _AvxDpuCmd_CopyBufferCb
 };
 
-_AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx, afxUnit batchId)
+_AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
-    _avxCmdBatch* cmdb = _AvxDctxGetCmdBatch(dctx, batchId);
-
-    if (!cmdb)
+    switch (dctx->state)
     {
+    case avxContextStatus_PENDING:
+    {
+        AfxIncAtom32(&dctx->submCnt);
+        dctx->state = avxContextStatus_INTERNAL_EXECUTING;
+        break;
+    }
+    case avxContextStatus_INTERNAL_EXECUTING:
+    {
+        AFX_ASSERT((dctx->cmdFlags & avxCmdFlag_SHARED));
+        AfxIncAtom32(&dctx->submCnt);
+        break;
+    }
+    default:
+    {
+        AFX_ASSERT( (dctx->state == avxContextStatus_PENDING) ||
+                    (dctx->state == avxContextStatus_INTERNAL_EXECUTING));
         AfxThrowError();
         return err;
     }
-
-    //AFX_ASSERT(cmdb->state == avxDrawContextState_PENDING);
-
-    //if (cmdb->state != avxDrawContextState_PENDING)
-    {
-        //AfxThrowError();
-        //return err;
     }
 
     afxDrawBridge dexu = dpu->dexu;
@@ -66,16 +73,18 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx, afxUnit batch
     afxCmdId lastId = 0; // DBG
 
     _avxCmd *cmdHdr;
-    AFX_ITERATE_CHAIN_B2F(cmdHdr, hdr.script, &cmdb->commands)
+    AFX_ITERATE_CHAIN_B2F(cmdHdr, hdr.script, &dctx->commands)
     {
+#ifdef _AFX_DEBUG
         lastId = cmdHdr->hdr.id;
+#endif
 
         if (cmdHdr->hdr.id == NIL/*ZGL_CMD_END*/)
         {
             break;
         }
 
-        //if (cmdb->state != avxDrawContextState_PENDING)
+        //if (cmdb->state != avxContextStatus_PENDING)
         {
             //AfxThrowError();
             //break;
@@ -85,30 +94,35 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx, afxUnit batch
         cmdVmt->f[cmdHdr->hdr.id](dpu, cmdHdr);
     }
 
-    if (!err)
+    switch (dctx->state)
     {
-        //cmdb->state = avxDrawContextState_EXECUTABLE;
-    }
-
-    if (err || cmdb->once)
+    case avxContextStatus_INTERNAL_EXECUTING:
     {
-        //AFX_ASSERT(dctx->portId == dpu->portId);
-        //cmdb->state = avxDrawContextState_INVALID;
-
-        afxDrawBridge dexu = AfxGetHost(dctx);
-        AFX_ASSERT_OBJECTS(afxFcc_DEXU, 1, &dexu);
-#if 0
-        //afxUnit poolIdx = dctx->poolIdx;
-
-        AfxLockFutex(&dque->cmdbReqLock);
-
-        if (AfxPushQueue(&dque->cmdbRecycQue, &dctx))
+        if (0 == AfxDecAtom32(&dctx->submCnt))
         {
-            AfxDisposeObjects(1, (void**)&dctx);
+            if (dctx->cmdFlags & avxCmdFlag_ONCE)
+            {
+                dctx->state = avxContextStatus_INVALID;
+                AvxPrepareDrawCommands(dctx, FALSE, NIL);
+            }
+            else
+            {
+                dctx->state = avxContextStatus_EXECUTABLE;
+            }
         }
-
-        AfxUnlockFutex(&dque->cmdbReqLock);
-#endif
+        else
+        {
+            AFX_ASSERT((dctx->cmdFlags & avxCmdFlag_SHARED));
+        }
+        break;
     }
+    default:
+    {
+        AFX_ASSERT((dctx->state == avxContextStatus_INTERNAL_EXECUTING));
+        AfxThrowError();
+        return err;
+    }
+    }
+
     return err;
 }
