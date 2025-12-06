@@ -26,34 +26,34 @@
 
 #include "avxFenceDDK.h"
 
-typedef enum avxContextStatus
+typedef enum avxContextState
 /// Each draw context is always in one of the following states
 {
     // When a draw context is allocated, it is in the initial state.
     // Some commands are able to reset a draw context (or a set of command buffers) back to this state from any of the executable, recording or invalid state.
     // Command buffers in the initial state canv only be moved to the recording state, or freed.
-    avxContextStatus_INITIAL,
+    avxContextState_INITIAL,
 
     // BeginCmdBuffer() changes the state of a draw context from the initial state to the recording state.
     // Once a draw context is in the recording state, AvxCmd* commands canv be used to record to the draw context.
-    avxContextStatus_RECORDING,
+    avxContextState_RECORDING,
 
     // AfxCompileCmdBuffer() ends the recording of a draw context, and moves it from the recording state to the executable state.
     // Executable command buffers canv be submitted, reset, or recorded to another draw context.
-    avxContextStatus_EXECUTABLE,
+    avxContextState_EXECUTABLE,
 
     // Queue submission of a draw context changes the state of a draw context from the executable state to the pending state.
     // Whilst in the pending state, applications must not attempt to modify the draw context in any way - as the device may be processing the commands recorded to it.
     // Once execution of a draw context completes, the draw context either reverts back to the executable state, or if it was recorded with ONCE flag, it moves to the invalid state.
     // A synchronization command should be used to detect when this occurs.
-    avxContextStatus_PENDING,
+    avxContextState_PENDING,
 
     // Some operations, such as modifying or deleting a resource that was used in a command recorded to a draw context, will transition the state of that draw context into the invalid state.
     // Command buffers in the invalid state canv only be reset or freed.
-    avxContextStatus_INVALID,
+    avxContextState_INVALID,
 
-    avxContextStatus_INTERNAL_EXECUTING,
-} avxContextStatus;
+    avxContextState_INTERNAL_EXECUTING,
+} avxContextState;
 
 AFX_DEFINE_STRUCT(_avxCmdHdr)
 {
@@ -765,20 +765,20 @@ AFX_DEFINE_UNION(_avxCmd)
 
         afxString2048 label;
         afxV4d color;
-    } PushDebugScope;
+    } CommenceDebugScope;
     struct
     {
         _avxCmdHdr hdr;
 
         afxInt nothing;
-    } PopDebugScope;
+    } ConcludeDebugScope;
     struct
     {
         _avxCmdHdr hdr;
 
         afxString2048 label;
         afxV4d color;
-    } MarkDebugStep;
+    } MarkDebugMilestone;
 };
 
 AFX_DEFINE_UNION(_avxCmdLut)
@@ -878,9 +878,9 @@ AFX_DEFINE_UNION(_avxCmdLut)
         void* ResetQueries;
         void* QueryTimestamp;
 
-        void* PushDebugScope;
-        void* PopDebugScope;
-        void* MarkDebugStep;
+        void* CommenceDebugScope;
+        void* ConcludeDebugScope;
+        void* MarkDebugMilestone;
     };
     void(*f[])(void*, _avxCmd const*);
 };
@@ -960,8 +960,8 @@ AFX_OBJECT(afxDrawContext)
     void*               udd;
     // Debugging tag.
     afxString           tag;
-    afxDrawLimits const* devLimits; // dbg copies
-    afxDrawFeatures const*enabledFeatures; // dbg copies
+    avxLimits const* devLimits; // dbg copies
+    avxFeatures const*enabledFeatures; // dbg copies
 
     avxAptitude         caps;
     afxMask             exuMask;
@@ -976,7 +976,7 @@ AFX_OBJECT(afxDrawContext)
     afxClass            dctxCls;
     afxInterlockedQueue recycQue;
     avxCmdFlags         cmdFlags;
-    avxContextStatus state;
+    avxContextState    state;
     afxArena            cmdArena; // owned by dsys data for specific port
     afxChain            commands;
 
@@ -1043,6 +1043,7 @@ AFX_OBJECT(afxDrawContext)
         afxBool         inDrawScope;
         _avxCmd*        inDrawScopeCmd;
         afxBool         inVideoCoding;
+        afxUnit         dbgUtilOpenLabelCnt;
         afxBool         xfbActive;
 
         avxCanvas           canv;
@@ -1075,7 +1076,7 @@ AVX afxError _AvxDctxPrepareCb(afxDrawContext dctx, afxBool purge, avxCmdFlags f
 AVX afxError _AvxDctxExhaustCb(afxDrawContext dctx, afxBool freeMem);
 
 AVX afxClass const*     _AvxDctxGetDctxClass(afxDrawContext dctx);
-AVX avxContextStatus _AvxDctxGetStatus(afxDrawContext dctx);
+AVX avxContextState _AvxDctxGetStatus(afxDrawContext dctx);
 
 AVX afxClassConfig const _AVX_CLASS_CONFIG_DCTX;
 AVX _avxDdiDctx const _AVX_DDI_DCTX;

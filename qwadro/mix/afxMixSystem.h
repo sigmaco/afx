@@ -43,17 +43,17 @@
 
 #define AMX_MAX_BRIDGES_PER_SYSTEM (32)
 
-AFX_DEFINE_STRUCT(afxMixSystemConfig)
+AFX_DEFINE_STRUCT(amxSystemConfig)
 // The system-wide settings and parameters.
 {
     afxUnit             verMajor;
     afxUnit             verMinor;
     // The functions to be capable on bridged devices.
-    amxAptitude          caps;
+    amxAptitude         caps;
     // The acceleration to be available on bridged devices.
     afxAcceleration     accel;
     // The features to be enabled.
-    afxMixFeatures      features;
+    amxFeatures         features;
     // The number of system extensions to be enabled.
     afxUnit             extCnt;
     // An array of Qwadro strings containing the names of extensions to enable for the desired system.
@@ -63,7 +63,7 @@ AFX_DEFINE_STRUCT(afxMixSystemConfig)
     // The number of bridged devices' execution ports.
     afxUnit             exuCnt;
     // An array of configurations for each bridged device.
-    afxMixBridgeConfig  exus[AMX_MAX_BRIDGES_PER_SYSTEM];
+    amxBridgeConfig     exus[AMX_MAX_BRIDGES_PER_SYSTEM];
     // User-defined data attached to the system.
     void*               udd;
     // Debugging string attached to the system.
@@ -77,7 +77,7 @@ AMX afxError AmxConfigureMixSystem
     afxUnit icd,
 
     // A configuration structure that holds the parameters required to establish and configure the mixing system.
-    afxMixSystemConfig* cfg
+    amxSystemConfig* cfg
 );
 
 /*
@@ -94,7 +94,7 @@ AMX afxError AmxEstablishMixSystem
     afxUnit icd, 
 
     // A configuration structure that holds the parameters required to establish and configure the mixing system.
-    afxMixSystemConfig const* cfg, 
+    amxSystemConfig const* cfg, 
 
     // A pointer to an afxMixSystem where the created mixing system will be stored. 
     // The function will populate this pointer with the reference to the newly established mixing system.
@@ -326,8 +326,12 @@ AMX afxError AmxWaitForMixQueue
     afxUnit queIdx
 );
 
-AMX void AmxGetEnabledDrawFeatures(afxMixSystem msys, afxMixFeatures* features);
+AMX void AmxGetEnabledMixFeatures
+(
+    afxMixSystem msys, 
+    amxFeatures* features
+);
 
-AMX afxError        AfxSinkAudioSignal(afxMixSystem msys, void* ctrl, afxSink sink, amxAudio aud, amxAudioPeriod const* seg);
+AMX afxError AfxSinkAudioSignal(afxMixSystem msys, void* ctrl, afxSink sink, amxAudio aud, amxAudioPeriod const* seg);
 
 #endif//AMX_MIX_SYSTEM_H

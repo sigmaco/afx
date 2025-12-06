@@ -707,7 +707,7 @@ afxBool audio_apply_layout(amxAudio a, amxAudioLayout desiredLayout, afxUnit bas
 }
 
 
-_AMX afxError _AmxSpu_ResampleI16I16(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
+_AMX afxError _AmxMpu_ResampleI16I16(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
 {
     afxError err = { 0 };
 
@@ -775,7 +775,7 @@ _AMX afxError _AmxSpu_ResampleI16I16(amxMpu* mpu, amxAudio src, amxAudio dst, am
     return err;
 }
 
-_AMX afxError _AmxSpu_ResampleF32F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
+_AMX afxError _AmxMpu_ResampleF32F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
 {
     afxError err = { 0 };
 
@@ -843,7 +843,7 @@ _AMX afxError _AmxSpu_ResampleF32F32(amxMpu* mpu, amxAudio src, amxAudio dst, am
     return err;
 }
 
-_AMX afxError _AmxSpu_ResampleF32I16(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
+_AMX afxError _AmxMpu_ResampleF32I16(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
 {
     // Float-to-Short Resampling
 
@@ -914,7 +914,7 @@ _AMX afxError _AmxSpu_ResampleF32I16(amxMpu* mpu, amxAudio src, amxAudio dst, am
     return err;
 }
 
-_AMX afxError _AmxSpu_ResampleI16F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
+_AMX afxError _AmxMpu_ResampleI16F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
 {
     // Short-to-Float Resampling
 
@@ -984,7 +984,7 @@ _AMX afxError _AmxSpu_ResampleI16F32(amxMpu* mpu, amxAudio src, amxAudio dst, am
     return err;
 }
 
-_AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
+_AMX afxError _AmxMpu_ResampleWave(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op)
 {
     afxError err = { 0 };
 
@@ -1014,14 +1014,14 @@ _AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, amxAudio src, amxAudio dst, amxA
         case amxFormat_M32f:
         case amxFormat_S32f:
         {
-            if (_AmxSpu_ResampleF32F32(mpu, src, dst, op))
+            if (_AmxMpu_ResampleF32F32(mpu, src, dst, op))
                 AfxThrowError();
             break;
         }
         case amxFormat_S16i:
         case amxFormat_M16i:
         {
-            if (_AmxSpu_ResampleF32I16(mpu, src, dst, op))
+            if (_AmxMpu_ResampleF32I16(mpu, src, dst, op))
                 AfxThrowError();
             break;
         }
@@ -1037,14 +1037,312 @@ _AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, amxAudio src, amxAudio dst, amxA
         case amxFormat_M32f:
         case amxFormat_S32f:
         {
-            if (_AmxSpu_ResampleI16F32(mpu, src, dst, op))
+            if (_AmxMpu_ResampleI16F32(mpu, src, dst, op))
                 AfxThrowError();
             break;
         }
         case amxFormat_S16i:
         case amxFormat_M16i:
         {
-            if (_AmxSpu_ResampleI16I16(mpu, src, dst, op))
+            if (_AmxMpu_ResampleI16I16(mpu, src, dst, op))
+                AfxThrowError();
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+        break;
+    }
+    default: AfxThrowError(); break;
+    }
+    return err;
+}
+
+_AMXINL void* get_sample_ptr_bufaud(amxBufferedAudio const* a, afxUnit z, afxUnit h, afxUnit w)
+{
+    // Segment-aware Sample Access
+    // A function to get a pointer to a specific sample given segment, channel, and sample index.
+    // Access a specific sample, regardless of layout:
+
+    amxFormatDescription fd;
+    AmxDescribeFormats(1, &a->fmt, &fd);
+    afxUnit srcLen = a->range / (a->h * fd.stride);
+
+    afxUnit sampleSize = fd.stride; // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    afxUnit segmentLength = srcLen; // assuming sampCnt per segment
+    afxUnit samplesPerChan = segmentLength;
+
+    // Total offset = segment offset + channel offset + sample offset
+    afxUnit segOffset = z * a->h * samplesPerChan * sampleSize;
+    afxUnit chanOffset = h * samplesPerChan * sampleSize;
+    afxUnit sampOffset = w * sampleSize;
+
+    return (uint8_t*)(a->buf ? a->buf->storage[0].hostedAlloc.bytemap : 0) + a->offset + segOffset + chanOffset + sampOffset;
+}
+
+afxBool audio_apply_layout_(amxBufferedAudio const* a, amxAudioLayout desiredLayout, afxUnit z, afxUnit d)
+{
+    // Data-level layout normalization operation, performed within the audio object itself, 
+    // to make the buffer's internal layout match a preferred structure (e.g. deinterleaved/planar layout).
+
+    // The function assumes segment-major layout: segments contain frames of [channels × samples].
+
+    amxFormatDescription fd;
+    AmxDescribeFormats(1, &a->fmt, &fd);
+    afxUnit w = a->w;
+
+    afxUnit sampPerSeg = w / d;
+
+    afxSize const tempBufSize = 4096;
+    afxByte tempBuf[4096]; // 16x 256
+
+    if (!a || !tempBuf || d == 0) return FALSE;
+    //if (baseSeg + segCnt > a->segCnt) return FALSE;
+
+    afxUnit h = a->h;
+    //afxUnit sampCnt = a->sampCnt;
+    afxSize sampleSize = fd.stride;
+
+    if (h == 1 || fd.stride == h && desiredLayout == amxAudioLayout_PLANAR)
+        return TRUE; // already planar
+    if (fd.stride == 1 && desiredLayout == amxAudioLayout_INTERLEAVED)
+        return TRUE; // already interleaved
+
+    // Determine max sample frames that fit into tempBuf
+    afxSize frameBytes = h * sampleSize;
+    afxUnit maxFramesPerPass = (tempBufSize / frameBytes);
+    if (maxFramesPerPass == 0) return FALSE; // buffer too small even for 1 frame
+
+    uint8_t* temp = (uint8_t*)tempBuf;
+
+    for (afxUnit seg = z; seg < z + d; ++seg)
+    {
+        afxUnit remainingFrames = sampPerSeg;
+        afxUnit baseFrame = 0;
+
+        while (remainingFrames > 0)
+        {
+            afxUnit passFrames = (remainingFrames > maxFramesPerPass) ? maxFramesPerPass : remainingFrames;
+
+            // Process layout
+            if (desiredLayout == amxAudioLayout_PLANAR)
+            {
+                // Interleaved >> Planar
+                for (afxUnit chan = 0; chan < h; ++chan)
+                {
+                    for (afxUnit f = 0; f < passFrames; ++f)
+                    {
+                        afxSize srcIndex = ((seg * w + baseFrame + f) * h + chan);
+                        afxSize dstIndex = chan * passFrames + f;
+
+                        AfxCopy(&temp[dstIndex * sampleSize],
+                            (uint8_t*)get_sample_ptr_bufaud(a, 0, 0, 0) + srcIndex * sampleSize,
+                            sampleSize);
+                    }
+                }
+
+                // Copy rearranged block back to destination
+                for (afxUnit chan = 0; chan < h; ++chan)
+                {
+                    for (afxUnit f = 0; f < passFrames; ++f)
+                    {
+                        afxSize dstIndex = ((seg * h + chan) * sampPerSeg + baseFrame + f);
+                        afxSize srcIndex = chan * passFrames + f;
+
+                        AfxCopy((uint8_t*)get_sample_ptr_bufaud(a, 0, 0, 0) + dstIndex * sampleSize,
+                            &temp[srcIndex * sampleSize],
+                            sampleSize);
+                    }
+                }
+            }
+            else if (desiredLayout == amxAudioLayout_INTERLEAVED)
+            {
+                // Planar >> Interleaved
+                for (afxUnit chan = 0; chan < h; ++chan)
+                {
+                    for (afxUnit f = 0; f < passFrames; ++f)
+                    {
+                        afxSize srcIndex = ((seg * h + chan) * sampPerSeg + baseFrame + f);
+                        afxSize dstIndex = f * h + chan;
+
+                        AfxCopy(&temp[dstIndex * sampleSize],
+                            (uint8_t*)get_sample_ptr_bufaud(a, 0, 0, 0) + srcIndex * sampleSize,
+                            sampleSize);
+                    }
+                }
+
+                // Copy back to interleaved layout
+                for (afxUnit f = 0; f < passFrames; ++f)
+                {
+                    for (afxUnit chan = 0; chan < h; ++chan)
+                    {
+                        afxSize srcIndex = f * h + chan;
+                        afxSize dstIndex = ((seg * w + baseFrame + f) * h + chan);
+
+                        AfxCopy((uint8_t*)get_sample_ptr_bufaud(a, 0, 0, 0) + dstIndex * sampleSize,
+                            &temp[srcIndex * sampleSize],
+                            sampleSize);
+                    }
+                }
+            }
+
+            baseFrame += passFrames;
+            remainingFrames -= passFrames;
+        }
+    }
+
+    // Update layout metadata
+    //a->fmtStride = (desiredLayout == amxAudioLayout_PLANAR) ? chanCnt : 1;
+    return TRUE;
+}
+
+_AMX afxError _AmxMpu_ResampleBufferedAudioI16F32(amxMpu* mpu, amxBufferedAudio const* src, amxBufferedAudio const* dst, amxAudioInterference const* op)
+{
+    // Short-to-Float Resampling
+
+    afxError err = { 0 };
+
+    amxFormatDescription srcfd, dstfd;
+    AmxDescribeFormats(1, &src->fmt, &srcfd);
+    AmxDescribeFormats(1, &dst->fmt, &dstfd);
+    afxUnit srcLen = src->w;
+    afxUnit dstLen = dst->w;
+    srcLen = op->src.w;
+    dstLen = op->dst.w;
+
+    // Calculate the ratio between the output and input sample rates
+    afxReal rateRatio = (afxReal)op->dstFreq / op->srcFreq;
+    // Calculate the number of samples in the output buffer
+    afxInt outputLen = (afxInt)(srcLen * rateRatio);
+    outputLen = AFX_MIN(outputLen, dstLen - op->dst.x);
+
+    //audio_apply_layout_(src, amxAudioLayout_PLANAR, op->src.baseSeg, op->src.segCnt);
+    //audio_apply_layout_(dst, amxAudioLayout_PLANAR, op->dst.baseSeg, op->dst.segCnt);
+
+    for (afxUnit z = 0; z < op->dst.d; z++)
+    {
+        afxUnit zz = z + op->dst.z;
+
+        // Loop over the channels for the destination data
+        for (afxUnit y = 0; y < op->dst.h; y++)
+        {
+            afxUnit yy = y + op->dst.y;
+
+            afxReal32* dstData = get_sample_ptr_bufaud(dst, zz, yy, op->dst.x);
+
+            // Loop over the destination channels only
+            // Check if the current channel is within the source's channel count
+            //if (yy >= op->src.y && yy < op->src.y + op->src.h)
+            {
+                afxInt16 const* srcData = get_sample_ptr_bufaud(src, op->src.z + z, op->src.y + y, op->src.x);
+
+                // Now loop over the samples for each channel
+                for (afxUnit x = 0; x < outputLen; x++)
+                {
+                    // Loop by sample for the current channel
+                    // Calculate corresponding index in the source data
+                    afxReal srcIndex = x / rateRatio;
+                    afxUnit indexFloor = (afxUnit)srcIndex;
+                    afxUnit indexCeil = (indexFloor + 1 < op->src.w) ? indexFloor + 1 : indexFloor;
+
+                    // Linear interpolation weights
+                    afxReal weightCeil = srcIndex - indexFloor;
+                    afxReal weightFloor = 1.0f - weightCeil;
+
+                    // Calculate source sample indices based on the base sample and channel index
+                    afxUnit srcIndexFloor = (indexFloor);
+                    afxUnit srcIndexCeil = (indexCeil);
+
+                    // Perform linear interpolation and scale from short to float
+                    afxReal resultSample = weightFloor * (srcData[srcIndexFloor] / 32768.0f) + weightCeil * (srcData[srcIndexCeil] / 32768.0f);
+
+                    // Store the result in the destination data, using the base sample and channel index for destination
+                    afxUnit dstIndex = (x);
+                    dstData[dstIndex] = resultSample;
+                }
+            }
+#if 0
+            else
+            {
+                // If the destination channel does not have a corresponding source channel, just zero it out
+                for (afxUnit x = 0; x < outputLen; x++)
+                {
+                    // Loop by sample for the current channel
+                    afxUnit dstIndex = (x);
+                    dstData[dstIndex] = 0.0f;  // Zero out missing channels
+                }
+            }
+#endif
+        }
+    }
+
+    //audio_apply_layout_(src, amxAudioLayout_INTERLEAVED, op->src.baseSeg, op->src.segCnt);
+    //audio_apply_layout_(dst, amxAudioLayout_INTERLEAVED, op->dst.baseSeg, op->dst.segCnt);
+
+    return err;
+}
+
+_AMX afxError _AmxMpu_ResampleBufferedAudio(amxMpu* mpu, amxBufferedAudio const* src, amxBufferedAudio const* dst, amxAudioInterference const* op)
+{
+    afxError err = { 0 };
+
+    if (dst->sampRate == src->sampRate && op->dstFreq == op->srcFreq && op->dstFreq == dst->sampRate && src->fmt == dst->fmt)
+    {
+        // Just copy it.
+#if 0
+        amxAudioCopy cop;
+        _AmxSanitizeAudioPeriod(src, &op->src, &cop.src);
+        cop.dstBaseChan = op->dst.baseChan;
+        cop.dstBaseSamp = op->dst.baseSamp;
+        _AmxSanitizeAudioCopy(src, dst, &cop, &cop);
+
+        if (_AmxCopyAudio(src, dst, &cop))
+#endif
+            AfxThrowError();
+
+        return err;
+    }
+
+    switch (src->fmt)
+    {
+    case amxFormat_M32f:
+    case amxFormat_S32f:
+    {
+        switch (dst->fmt)
+        {
+        case amxFormat_M32f:
+        case amxFormat_S32f:
+        {
+            //if (_AmxMpu_ResampleF32F32(mpu, src, dst, op))
+                AfxThrowError();
+            break;
+        }
+        case amxFormat_S16i:
+        case amxFormat_M16i:
+        {
+            //if (_AmxMpu_ResampleF32I16(mpu, src, dst, op))
+                AfxThrowError();
+            break;
+        }
+        default: AfxThrowError(); break;
+        }
+        break;
+    }
+    case amxFormat_S16i:
+    case amxFormat_M16i:
+    {
+        switch (dst->fmt)
+        {
+        case amxFormat_M32f:
+        case amxFormat_S32f:
+        {
+            if (_AmxMpu_ResampleBufferedAudioI16F32(mpu, src, dst, op))
+                AfxThrowError();
+            break;
+        }
+        case amxFormat_S16i:
+        case amxFormat_M16i:
+        {
+            //if (_AmxMpu_ResampleI16I16(mpu, src, dst, op))
                 AfxThrowError();
             break;
         }
@@ -1071,7 +1369,7 @@ typedef enum amxWaveType
     amxWaveType_SAWTOOTH
 } amxWaveType;
 
-_AMX void _AmxGenerateSineWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateSineWave(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate a sine wave PCM signal
 {
     afxError err = { 0 };
@@ -1084,7 +1382,7 @@ _AMX void _AmxGenerateSineWave(afxReal32* out, afxUnit sampleCnt, afxUnit sample
     //afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples
-    num_samples = AFX_MIN(num_samples, sampleCnt);
+    num_samples = AFX_MIN(num_samples, sampleCap);
     afxReal sample;
 
     //afxReal32* out = &aud->buf->storage[0].hostedAlloc.f32[chIdx * aud->sampCnt];
@@ -1097,7 +1395,7 @@ _AMX void _AmxGenerateSineWave(afxReal32* out, afxUnit sampleCnt, afxUnit sample
     }
 }
 
-_AMX void _AmxGenerateSquareWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateSquareWave(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate a square wave PCM signal
 {
     afxError err = { 0 };
@@ -1112,7 +1410,7 @@ _AMX void _AmxGenerateSquareWave(afxReal32* out, afxUnit sampleCnt, afxUnit samp
     //afxInt sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples
-    num_samples = AFX_MIN(num_samples, sampleCnt);
+    num_samples = AFX_MIN(num_samples, sampleCap);
     afxReal sample;
 
     //afxReal32* out = &aud->buf->storage[0].hostedAlloc.f32[chIdx * aud->sampCnt];
@@ -1133,7 +1431,7 @@ _AMX void _AmxGenerateSquareWave(afxReal32* out, afxUnit sampleCnt, afxUnit samp
     }
 }
 
-_AMX void _AmxGenerateTriangleWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateTriangleWave(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate a triangle wave PCM signal
 {
     afxError err = { 0 };
@@ -1148,7 +1446,7 @@ _AMX void _AmxGenerateTriangleWave(afxReal32* out, afxUnit sampleCnt, afxUnit sa
     //afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AFX_MIN(num_samples, sampleCnt);
+    num_samples = AFX_MIN(num_samples, sampleCap);
     afxReal sample;
 
     //afxReal32* out = &aud->buf->storage[0].hostedAlloc.f32[chIdx * aud->sampCnt];
@@ -1172,7 +1470,7 @@ _AMX void _AmxGenerateTriangleWave(afxReal32* out, afxUnit sampleCnt, afxUnit sa
     }
 }
 
-_AMX void _AmxGenerateSawtoothWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateSawtoothWave(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate a sawtooth wave PCM signal
 {
     afxError err = { 0 };
@@ -1186,7 +1484,7 @@ _AMX void _AmxGenerateSawtoothWave(afxReal32* out, afxUnit sampleCnt, afxUnit sa
     //afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AFX_MIN(num_samples, sampleCnt);
+    num_samples = AFX_MIN(num_samples, sampleCap);
     afxReal sample;
 
     //afxReal32* out = &aud->buf->storage[0].hostedAlloc.f32[chIdx * aud->sampCnt];
@@ -1201,7 +1499,7 @@ _AMX void _AmxGenerateSawtoothWave(afxReal32* out, afxUnit sampleCnt, afxUnit sa
     }
 }
 
-_AMX void _AmxGenerateWhiteNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateWhiteNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate a static (white noise) wave PCM signal
 {
     afxError err = { 0 };
@@ -1219,7 +1517,7 @@ _AMX void _AmxGenerateWhiteNoise(afxReal32* out, afxUnit sampleCnt, afxUnit samp
     //afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AFX_MIN(num_samples, sampleCnt);
+    num_samples = AFX_MIN(num_samples, sampleCap);
     afxReal sample;
 
     //afxReal32* out = &aud->buf->storage[0].hostedAlloc.f32[chIdx * aud->sampCnt];
@@ -1231,7 +1529,7 @@ _AMX void _AmxGenerateWhiteNoise(afxReal32* out, afxUnit sampleCnt, afxUnit samp
     }
 }
 
-_AMX void _AmxGeneratePinkNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGeneratePinkNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate pink noise (Voss-McCartney algorithm)
 {
     afxError err = { 0 };
@@ -1250,7 +1548,7 @@ _AMX void _AmxGeneratePinkNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampl
     //afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AFX_MIN(num_samples, sampleCnt);
+    num_samples = AFX_MIN(num_samples, sampleCap);
     afxReal sample;
 
     //afxReal32* out = &aud->buf->storage[0].hostedAlloc.f32[chIdx * aud->sampCnt];
@@ -1281,7 +1579,7 @@ _AMX void _AmxGeneratePinkNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampl
     }
 }
 
-_AMX void _AmxGenerateBrownianNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateBrownianNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate brownian noise (integrated white noise)
 {
     afxError err = { 0 };
@@ -1295,7 +1593,7 @@ _AMX void _AmxGenerateBrownianNoise(afxReal32* out, afxUnit sampleCnt, afxUnit s
     //afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AFX_MIN(num_samples, sampleCnt);
+    num_samples = AFX_MIN(num_samples, sampleCap);
     afxReal sample;
 
     //afxReal32* out = &aud->buf->storage[0].hostedAlloc.f32[chIdx * aud->sampCnt];
@@ -1315,7 +1613,7 @@ _AMX void _AmxGenerateBrownianNoise(afxReal32* out, afxUnit sampleCnt, afxUnit s
     }
 }
 
-_AMX void _AmxGenerateBlueNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateBlueNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate blue noise (Blue Noise Generation (High-Pass Filtered White Noise))
 {
     afxError err = { 0 };
@@ -1331,7 +1629,7 @@ _AMX void _AmxGenerateBlueNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampl
     //afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AFX_MIN(num_samples, sampleCnt);
+    num_samples = AFX_MIN(num_samples, sampleCap);
     afxReal sample;
 
     //afxReal32* out = &aud->buf->storage[0].hostedAlloc.f32[chIdx * aud->sampCnt];
@@ -1355,7 +1653,7 @@ _AMX void _AmxGenerateBlueNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampl
     }
 }
 
-_AMX void _AmxGenerateVioletNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
+_AMX void _AmxGenerateVioletNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur)
 // Function to generate violet noise (Violet Noise Generation (Aggressive High-Pass Filtered White Noise))
 {
     afxError err = { 0 };
@@ -1373,7 +1671,7 @@ _AMX void _AmxGenerateVioletNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sam
     //afxUnit sampleRate = aud->freq;
 
     int num_samples = (int)(sampleRate * dur);  // Total number of samples --- wavelength
-    num_samples = AFX_MIN(num_samples, sampleCnt);
+    num_samples = AFX_MIN(num_samples, sampleCap);
     afxReal sample;
 
     //afxReal32* out = &aud->buf->storage[0].hostedAlloc.f32[chIdx * aud->sampCnt];
@@ -1536,26 +1834,46 @@ _AMX afxError _AmxCopyAudio(amxAudio src, amxAudio dst, amxAudioCopy const* op)
     case amxFormat_M32f:
     case amxFormat_S32f:
     {
-        afxReal32* out = &dst->buf->storage[0].hostedAlloc.f32[op->dstBaseSeg * dst->chanCnt + op2.dstBaseChan * dst->sampCnt + op2.dstBaseSamp];
-        afxReal32 const* in = &src->buf->storage[0].hostedAlloc.f32[op2.src.baseSeg * src->chanCnt + op2.src.baseChan * src->sampCnt + op2.src.baseSamp];
+        afxReal32* out = &dst->buf->storage[0].hostedAlloc.f32[
+            op->dstBaseSeg * dst->chanCnt * dst->sampCnt +
+                op2.dstBaseChan * dst->sampCnt +
+                op2.dstBaseSamp
+        ];
+
+        afxReal32 const* in = &src->buf->storage[0].hostedAlloc.f32[
+            op2.src.baseSeg * src->chanCnt * src->sampCnt +
+                op2.src.baseChan * src->sampCnt +
+                op2.src.baseSamp
+        ];
 
         for (afxUnit k = 0; k < segCnt; k++)
             for (afxUnit i = 0; i < chanCnt; i++)
                 for (afxUnit j = 0; j < sampCnt; j++)
-                    out[k * dst->segCnt + i * dst->sampCnt + j] = in[k * src->segCnt + i * src->sampCnt + j];
+                    out[k * dst->chanCnt * dst->sampCnt + i * dst->sampCnt + j] =
+                    in[k * src->chanCnt * src->sampCnt + i * src->sampCnt + j];
 
         break;
     }
     case amxFormat_S16i:
     case amxFormat_M16i:
     {
-        afxInt16* out = &dst->buf->storage[0].hostedAlloc.i16[op->dstBaseSeg * dst->chanCnt + op2.dstBaseChan * dst->sampCnt + op2.dstBaseSamp];
-        afxInt16 const* in = &src->buf->storage[0].hostedAlloc.i16[op2.src.baseSeg * src->chanCnt + op2.src.baseChan * src->sampCnt + op2.src.baseSamp];
+        afxReal16* out = &dst->buf->storage[0].hostedAlloc.f32[
+            op->dstBaseSeg * dst->chanCnt * dst->sampCnt +
+                op2.dstBaseChan * dst->sampCnt +
+                op2.dstBaseSamp
+        ];
+
+        afxReal16 const* in = &src->buf->storage[0].hostedAlloc.f32[
+            op2.src.baseSeg * src->chanCnt * src->sampCnt +
+                op2.src.baseChan * src->sampCnt +
+                op2.src.baseSamp
+        ];
 
         for (afxUnit k = 0; k < segCnt; k++)
             for (afxUnit i = 0; i < chanCnt; i++)
                 for (afxUnit j = 0; j < sampCnt; j++)
-                    out[k * dst->segCnt + i * dst->sampCnt + j] = in[k * src->segCnt + i * src->sampCnt + j];
+                    out[k * dst->chanCnt * dst->sampCnt + i * dst->sampCnt + j] =
+                    in[k * src->chanCnt * src->sampCnt + i * src->sampCnt + j];
 
         break;
     }
@@ -1587,26 +1905,46 @@ _AMX afxError _AmxTransposeAudio(amxAudio src, amxAudio dst, amxAudioCopy const*
     case amxFormat_M32f:
     case amxFormat_S32f:
     {
-        afxReal32* out = &dst->buf->storage[0].hostedAlloc.f32[op->dstBaseSeg * dst->chanCnt + op2.dstBaseChan * dst->sampCnt + op2.dstBaseSamp];
-        afxReal32 const* in = &src->buf->storage[0].hostedAlloc.f32[op2.src.baseSeg * src->chanCnt + op2.src.baseChan * src->sampCnt + op2.src.baseSamp];
+        afxReal32* out = &dst->buf->storage[0].hostedAlloc.f32[
+            op->dstBaseSeg * dst->chanCnt * dst->sampCnt +
+                op2.dstBaseChan * dst->sampCnt +
+                op2.dstBaseSamp
+        ];
+
+        afxReal32 const* in = &src->buf->storage[0].hostedAlloc.f32[
+            op2.src.baseSeg * src->chanCnt * src->sampCnt +
+                op2.src.baseChan * src->sampCnt +
+                op2.src.baseSamp
+        ];
 
         for (afxUnit k = 0; k < segCnt; k++)
             for (afxUnit i = 0; i < chanCnt; i++)
                 for (afxUnit j = 0; j < sampCnt; j++)
-                    out[k * dst->segCnt + i * dst->sampCnt + j] = in[k * src->segCnt + i * src->sampCnt + j];
+                    out[k * dst->chanCnt * dst->sampCnt + i * dst->sampCnt + j] =
+                    in[k * src->chanCnt * src->sampCnt + i * src->sampCnt + j];
 
         break;
     }
     case amxFormat_S16i:
     case amxFormat_M16i:
     {
-        afxInt16* out = &dst->buf->storage[0].hostedAlloc.i16[op->dstBaseSeg * dst->chanCnt + op2.dstBaseChan * dst->sampCnt + op2.dstBaseSamp];
-        afxInt16 const* in = &src->buf->storage[0].hostedAlloc.i16[op2.src.baseSeg * src->chanCnt + op2.src.baseChan * src->sampCnt + op2.src.baseSamp];
+        afxReal16* out = &dst->buf->storage[0].hostedAlloc.f32[
+            op->dstBaseSeg * dst->chanCnt * dst->sampCnt +
+                op2.dstBaseChan * dst->sampCnt +
+                op2.dstBaseSamp
+        ];
+
+        afxReal16 const* in = &src->buf->storage[0].hostedAlloc.f32[
+            op2.src.baseSeg * src->chanCnt * src->sampCnt +
+                op2.src.baseChan * src->sampCnt +
+                op2.src.baseSamp
+        ];
 
         for (afxUnit k = 0; k < segCnt; k++)
             for (afxUnit i = 0; i < chanCnt; i++)
                 for (afxUnit j = 0; j < sampCnt; j++)
-                    out[k * dst->segCnt + i * dst->sampCnt + j] = in[k * src->segCnt + i * src->sampCnt + j];
+                    out[k * dst->chanCnt * dst->sampCnt + i * dst->sampCnt + j] =
+                    in[k * src->chanCnt * src->sampCnt + i * src->sampCnt + j];
 
         break;
     }

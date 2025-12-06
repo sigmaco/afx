@@ -46,6 +46,7 @@ AFX_OBJECT(afxThread)
     //afxThreadProc       procCb;
     void*               udd[4];
 
+    afxThreadUsage      usage;
     //afxUnit          affineProcUnitIdx; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
     //afxUnit          affineThrUnitIdx; // if set bit set, only such processor will can run this thread.
     afxClock            startClock;
@@ -74,6 +75,14 @@ AFX_OBJECT(afxThread)
     afxChar const*      _file_;
     afxSize             _line_;
     afxChar const*      _func_;
+
+#ifdef _WIN32
+#ifdef _INC_WINDOWS
+    HANDLE              hAvrt;
+    DWORD               avrtIdx;
+    //AVRT_PRIORITY       avrtPrio;
+#endif
+#endif
 };
 #endif//_AFX_THREAD_C
 

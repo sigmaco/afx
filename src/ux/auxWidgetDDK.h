@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      Q W A D R O   U S E R   I / O   S Y S T E M
+ *         Q W A D R O   M U L T I M E D I A   U X   I N F R A S T R U C T U R E
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -136,20 +136,20 @@ AFX_DEFINE_UNION(_auxGuiElem)
 
         afxString2048 label;
         afxV4d color;
-    } PushDebugScope;
+    } CommenceDebugScope;
     struct
     {
         _auxGuiElemHdr hdr;
 
         afxInt nothing;
-    } PopDebugScope;
+    } ConcludeDebugScope;
     struct
     {
         _auxGuiElemHdr hdr;
 
         afxString2048 label;
         afxV4d color;
-    } MarkDebugStep;
+    } MarkDebugMilestone;
 };
 
 AFX_DEFINE_UNION(_auxGuiElemLut)
@@ -169,9 +169,9 @@ AFX_DEFINE_UNION(_auxGuiElemLut)
         void* Disable;
         void* Separator;
         void* TextInputInlined;
-        void* PushDebugScope;
-        void* PopDebugScope;
-        void* MarkDebugStep;
+        void* CommenceDebugScope;
+        void* ConcludeDebugScope;
+        void* MarkDebugMilestone;
     };
     void(*f[])(void*, _auxGuiElem const*);
 };

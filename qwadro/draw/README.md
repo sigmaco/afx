@@ -1,43 +1,30 @@
 ![Logo](doc/qwadro-banner-2048x520-bg-t.png)
 
-# Advanced Video Graphics Extensions & Experiments (AVX)
-A subproject of **Acceleration Frameworks Extensions & Experiments** (**AFX**)
+# Accelerated Video Graphics Extensions (AVX)
+Video graphics extensions for Qwadro **Acceleration Framework Experimental** (**AFX**)
 
 ## Overview
+**AVX**, alphabetism and initalism for **Accelerated Video Graphics Extensions**, is an amendment to the **Acceleration Framework Experimental** (**AFX**) extending the Qwadro Execution Ecosystem with a complete, scalable, hardware-accelerated video graphics foundation.
 
-**Advanced Video Graphics Extensions & Experiments** (**AVX**) is a subproject extending the  
-**Acceleration Frameworks Extensions & Experiments** (**AFX**) ecosystem with a complete, scalable,  
-hardware-accelerated video graphics foundation.
+AVX achieves this by defining and establishing the **Qwadro Video Graphics Infrastructure**, a unified, device-agnostic, low-level video graphics subsystem that standardizes how accelerated video graphics devices are discovered, negotiated, initialized, and operated within the AFX ecosystem.
 
-AVX achieves this by defining and establishing the **Qwadro Video Graphics Infrastructure**, 
-a unified, device-agnostic, low-level video graphics subsystem that standardizes how accelerated video graphics  
-devices are discovered, negotiated, initialized, and operated within the AFX ecosystem.
-
-AVX provides the **infrastructure and device-driver interfaces** required to build rendering runtimes on top of a stable, explicit, cross-platform  
+AVX provides the **infrastructure** and **device-driver** interfaces required to build rendering runtimes on top of a stable, explicit, cross-platform  
 foundation.
 
-Alongside AVX exists the **AUX** subproject:
+Alongside AVX exists the **Accelerated MMUX Experimental** (**AUX**) amendment. AUX is another amendment for AFX focusing on the system-wide integration side of the user experience.
 
-## Advanced MMUX Extensions & Experiments (AUX)
+AUX provides a shells and desktop-environment intercommunication layers that eliminates the historical issues developers face when trying to interface video graphics runtimes with the host system.
 
-**Advanced MMUX Extensions & Experiments** (**AUX**) is a second AFX subproject focusing on the  
-system-integration side of GPU acceleration.
-
-AUX provides a shell and desktop-environment intercommunication layer that eliminates the  
-historical issues developers face when trying to interface video graphics runtimes with the host system.
-
-Instead of requiring applications or runtimes to manually deal with platform-specific windowing  
-systems, surface creation APIs, or environment hooks, AUX offers:
+Instead of requiring applications or runtimes to manually deal with platform-specific windowing systems, surface creation APIs, or environment hooks, AUX offers:
 
 - A unified, platform-independent interface for context and surface creation  
 - A strict communication channel between the AFX ecosystem and the system shell  
-- A mechanism to “hook up” to the GPU without touching OS-specific APIs  
+- A mechanism to "hook up" to the GPU without touching OS-specific APIs  
 - A clean environment for graphics runtimes built on top of AVX/VGI
 
 Together, AVX handles the GPU, and AUX handles the shell.
 
 ## AVX: Goals and Capabilities
-
 AVX provides:
 
 - A unified cross-platform model for GPU device discovery  
@@ -49,9 +36,10 @@ AVX provides:
 - Backend flexibility (OpenGL-based, Vulkan-based, ICD-native, software renderer, etc.)
 
 ### Capability Source
+AVX's expressiveness is inspired by the full set of capabilities historically exposed through OpenGL Core's evolution. 
 
-AVX's expressiveness is inspired by the full set of capabilities historically exposed through  
-OpenGL's evolution. AVX is by design a OpenGL frontend; the never reached OpenGL 5.
+AVX is by design a Vulkan-flavored OpenGL Core frontend; the never reached OpenGL Core 5. 
+
 Its API, structure, and semantics are fully independent.
 
 AVX runtimes may be backed by:
@@ -62,9 +50,8 @@ AVX runtimes may be backed by:
 - A research/experimental backend  
 - Software fallback backends  
 
-## AUX: Goals and Capabilities
-
-AUX solves the long-standing pain of "hooking up" a graphics runtime to the system shell.
+## MMUX interoperability
+The AVX partnership with AUX solves the long-standing pain of "hooking up" a graphics runtime to the system shell.
 
 AUX provides:
 
@@ -81,8 +68,6 @@ This allows rendering runtimes to rely on AUX instead of:
 - Platform display servers
 - OS-dependent GPU acquisition APIs
 - Ad-hoc event loop integration
-
-## Why AVX + AUX?
 
 Together, AVX and AUX provide a complete solution:
 
@@ -102,7 +87,7 @@ The result is a modern, clean, deterministic ecosystem for graphics acceleration
 | **VGI** | Unified low-level infrastructure created by AVX |
 | **DDI** | Strict driver interface for GPU/ICD implementations |
 | **Backend Flexibility** | Vulkan, GL, ICD-native, or software |
-| **Surface & Context Uniformity** | Provided through AUX |
+| **Surface Uniformity** | Provided through AUX |
 
 ## Contribution
 

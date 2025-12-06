@@ -105,6 +105,7 @@ _AVX void _AvxBeginDrawQueueDebugScope(afxDrawQueue dque, afxString const* name,
     afxError err = { 0 };
     // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
+    AfxThrowError();
 }
 
 _AVX void _AvxEndDrawQueueDebugScope(afxDrawQueue dque)
@@ -112,6 +113,7 @@ _AVX void _AvxEndDrawQueueDebugScope(afxDrawQueue dque)
     afxError err = { 0 };
     // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
+    AfxThrowError();
 }
 
 _AVX void _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, avxColor const color)
@@ -119,6 +121,7 @@ _AVX void _AvxPushDrawQueueDebugLabel(afxDrawQueue dque, afxString const* name, 
     afxError err = { 0 };
     // dque must be a valid afxDrawQueue handle.
     AFX_ASSERT_OBJECTS(afxFcc_DQUE, 1, &dque);
+    AfxThrowError();
 }
 
 _AVX afxError AvxWaitForEmptyDrawQueue(afxDrawQueue dque, afxUnit64 timeout)
@@ -314,10 +317,10 @@ _AVX afxError AvxSubmitDrawCommands(afxDrawQueue dque, afxUnit cnt, avxSubmissio
             AfxReacquireObjects(1, &dctx);
             AFX_ASSERT(!(dctx->cmdFlags & avxCmdFlag_DEFERRED));
             
-            if (dctx->state != avxContextStatus_INTERNAL_EXECUTING)
+            if (dctx->state != avxContextState_INTERNAL_EXECUTING)
             {
-                if (dctx->state = avxContextStatus_EXECUTABLE)
-                    dctx->state = avxContextStatus_PENDING;
+                if (dctx->state = avxContextState_EXECUTABLE)
+                    dctx->state = avxContextState_PENDING;
             }
             else
             {

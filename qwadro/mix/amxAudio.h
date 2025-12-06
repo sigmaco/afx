@@ -205,6 +205,9 @@ AFX_DEFINE_STRUCT(amxAudioPeriod)
     afxUnit         chanCnt; // H
 
     afxUnit         segCnt;
+
+    afxUnit x, y, z;
+    afxUnit w, h, d;
 };
 
 AFX_DEFINE_STRUCT(amxAudioCopy)

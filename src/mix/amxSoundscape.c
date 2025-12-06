@@ -73,7 +73,7 @@ _AMX afxError AmxRouteAudition(amxSoundscape snds, afxMixContext mix, afxUnit ba
     {
         if (curr)
         {
-            AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &snds->mix);
+            AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &snds->mix);
             AfxDisposeObjects(1, &snds->mix);
         }
 
@@ -82,7 +82,7 @@ _AMX afxError AmxRouteAudition(amxSoundscape snds, afxMixContext mix, afxUnit ba
 
         if (mix)
         {
-            AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+            AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
             AfxReacquireObjects(1, &mix);
         }
     }
@@ -96,7 +96,7 @@ _AMX afxError _AmxSndsDtorCb(amxSoundscape snds)
 
     if (snds->mix)
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &snds->mix);
+        AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &snds->mix);
         AmxRouteAudition(snds, NIL, 0);
     }
     

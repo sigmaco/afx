@@ -136,7 +136,7 @@ _AUX afxClass const* _AuxIcdGetEnvClass(afxModule icd)
     return cls;
 }
 
-_AUX afxError _AuxRegisterShells(afxModule icd, afxUnit cnt, afxShellInfo const infos[], afxShell shells[])
+_AUX afxError _AuxRegisterShells(afxModule icd, afxUnit cnt, _auxShellAcq const infos[], afxShell shells[])
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);

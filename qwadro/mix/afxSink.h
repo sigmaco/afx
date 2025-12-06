@@ -177,11 +177,9 @@ AFX_DEFINE_STRUCT(amxBufferedAudio)
     amxBuffer   buf;
     afxSize     offset;
     afxUnit     range;
-    afxUnit     chCnt;
-    afxUnit     sampCnt;
+    amxFormat   fmt;
     afxUnit     sampRate;
-    //afxSize     frames; // sampCnt / chCnt
-    afxUnit     loopCnt;
+    afxUnit     w, h, d;
 };
 
 AMX afxError        AmxGetSinkTrack

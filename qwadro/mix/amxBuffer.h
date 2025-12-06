@@ -19,7 +19,7 @@
 #ifndef AMX_BUFFER_H
 #define AMX_BUFFER_H
 
-#include "qwadro/mix/afxMixDefs.h"
+#include "qwadro/mix/amxFormat.h"
 
 #define AMX_BUFFER_ALIGNMENT 16
 #define AMX_ALIGN_BUFFERED(siz_) AFX_ALIGN_SIZE((siz_), AMX_BUFFER_ALIGNMENT)

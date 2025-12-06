@@ -16,18 +16,17 @@
 
 //#define USE_C11_THREADS
 
-#define _AFX_CORE_C
-#define _AFX_THREAD_C
-#include "../exec/afxSystemDDK.h"
-
-#ifdef AFX_ON_WINDOWS
+#ifdef _WIN32
+#   include <Windows.h>
 #   include <combaseapi.h>
+#include <avrt.h>
+#pragma comment(lib, "avrt")
 #else
 #   include <unistd.h>
 #   include <time.h>
 #endif
 
-#ifdef AFX_ON_WINDOWS
+#ifdef _WIN32
 #   define W32_INIT_COM
 #endif
 
@@ -38,6 +37,10 @@
 #else
 #include "../../dep/c11threads/c11threads.h"
 #endif
+
+#define _AFX_CORE_C
+#define _AFX_THREAD_C
+#include "../exec/afxSystemDDK.h"
 
 AFX_THREAD_LOCAL afxUnit32 _currTid = 0;
 AFX_THREAD_LOCAL afxUnit32 _currThrObjId = 0;
@@ -483,6 +486,43 @@ _AFX int _AfxExecTxuCb(void** v)
 
     AfxUnlockMutex(&thr->statusCndMtx);
 
+    /*
+        What happens if you need a high priority (16 or higher)
+        but don't have admin privileges in the process?
+        Enter the Multimedia Class Scheduler.
+    */
+
+#ifdef _WIN32
+    if (thr->usage & afxThreadUsage_DRAW | afxThreadUsage_MIX)
+    {
+#if 0
+        DWORD avrtIdx = 0;
+        HANDLE hAvrt = AvSetMmThreadCharacteristics(L"Pro Audio", &avrtIdx);
+        AVRT_PRIORITY avrtPrio = AVRT_PRIORITY_HIGH;
+
+        AvSetMmThreadPriority(hAvrt, avrtPrio);
+
+        thr->hAvrt = hAvrt;
+        thr->avrtIdx = avrtIdx;
+        //thr->avrtPrio = avrtPrio;
+#else
+#if !0
+        SetThreadPriority(thr->osHandle, THREAD_PRIORITY_ABOVE_NORMAL);
+#else
+        SetThreadPriority(thr->osHandle, THREAD_PRIORITY_HIGHEST);
+#endif
+#endif
+    }
+    else
+    {
+#if 0
+        thr->hAvrt = 0;
+        thr->avrtIdx = 0;
+        //thr->avrtPrio = 0;
+#endif
+    }
+#endif
+
     AfxReportf(1, NIL, "Starting %u on thread execution unit #%u...", thr->tid, AfxGetObjectId(thr));
 
     // START ANY STATE
@@ -576,6 +616,18 @@ _AFX int _AfxExecTxuCb(void** v)
     thr->isInFinish = TRUE;
     _AfxDeinitMmu(thr);
 
+#ifdef _WIN32
+#if 0
+    if (thr->hAvrt)
+    {
+        AvRevertMmThreadCharacteristics(thr->hAvrt);
+        thr->hAvrt = 0;
+        thr->avrtIdx = 0;
+        //thr->avrtPrio = 0;
+    }
+#endif
+#endif
+
 #ifdef W32_INIT_COM
     CoUninitialize();
 #endif
@@ -619,32 +671,34 @@ _AFX afxError AfxRunThread(afxThread thr, afxInt(*proc)(void* arg), void* arg)
         {
             AFX_ASSERT(!thr->osHandle);
             
-            if (thrd_success != thrd_create((thrd_t*)&thr->osHandle, (void*)_AfxExecTxuCb, (void*[]) { thr, proc, arg })) AfxThrowError();
-            else
+            if (thrd_success != thrd_create((thrd_t*)&thr->osHandle, (void*)_AfxExecTxuCb, (void*[]) { thr, proc, arg }))
             {
-                // we have to set the real OS handle from outside the thread proc.
-                AFX_ASSERT(thr->osHandle);
-                AfxSignalCondition(&thr->statusCnd);
-                AfxLockMutex(&thr->statusCndMtx);
+                AfxThrowError();
+                return err;
+            }
 
-                while (!thr->tid) // we have to wait for the thread register its own TID.
-                    AfxWaitCondition(&thr->statusCnd, &thr->statusCndMtx);
+            // we have to set the real OS handle from outside the thread proc.
+            AFX_ASSERT(thr->osHandle);
+            AfxSignalCondition(&thr->statusCnd);
+            AfxLockMutex(&thr->statusCndMtx);
 
-                AfxUnlockMutex(&thr->statusCndMtx);
-                AFX_ASSERT(thr->tid);
+            while (!thr->tid) // we have to wait for the thread register its own TID.
+                AfxWaitCondition(&thr->statusCnd, &thr->statusCndMtx);
 
-                //AFX_ASSERT(GetThreadId(thr->osHandle) == thr->tid);
-                AFX_ASSERT(thr->osHandle == thr->osHandle);
+            AfxUnlockMutex(&thr->statusCndMtx);
+            AFX_ASSERT(thr->tid);
+
+            //AFX_ASSERT(GetThreadId(thr->osHandle) == thr->tid);
+            AFX_ASSERT(thr->osHandle == thr->osHandle);
 
 
 #ifdef AFX_ON_WINDOWS
-                afxString s;
-                AfxMakeString(&s, 0, thr->_func_, 0);
-                _AfxRenameThreadW32(thr->tid, &s);
+            afxString s;
+            AfxMakeString(&s, 0, thr->_func_, 0);
+            _AfxRenameThreadW32(thr->tid, &s);
 #endif
                 
-                AfxReportMessage("Running... %p#%u --- %s:%i", thr, thr->tid, _AfxDbgTrimFilename((char const *const)thr->_file_), (int)thr->_line_);
-            }
+            AfxReportMessage("Running... %p#%u --- %s:%i", thr, thr->tid, _AfxDbgTrimFilename((char const *const)thr->_file_), (int)thr->_line_);
         }
     }
     return err;
@@ -659,7 +713,7 @@ _AFX afxError _AfxThrDtorCb(afxThread thr)
     // Note that deleting a Thread object will not stop the execution of the thread it manages.Deleting a running Thread(i.e.isFinished() returns false) will result in a program crash.Wait for the finished() signal before deleting the QThread.
     // Since 6.3, it is allowed to delete a Thread instance created by a call to Thread::create() even if the corresponding thread is still running.In such a case, framework will post an interruption request to that thread(via requestInterruption()); will ask the thread's event loop (if any) to quit (via quit()); and will block until the thread has finished.
     
-    afxResult exitCode;    
+    afxResult exitCode;
     do AfxRequestThreadInterruption(thr);
     while (!AfxWaitForThreadExit(thr, &exitCode));
 
@@ -713,6 +767,7 @@ _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
     thr->isInFinish = FALSE;
     thr->interruptionRequested = FALSE;
     thr->exitCode = 0;
+    thr->usage = cfg->usage;
 
     AfxDeployMutex(&thr->statusCndMtx, AFX_MTX_PLAIN);
     AfxDeployCondition(&thr->statusCnd);
@@ -745,56 +800,72 @@ _AFX afxError _AfxThrCtorCb(afxThread thr, void** args, afxUnit invokeNo)
     // This allows you to connect to its signals, move Objects to the thread, choose the new thread's priority and so on.
     // The function f will be called in the new thread.
 
-    if (AfxMakeQueue(&thr->events, sizeof(afxEvent), AFX_MAX(AFX_MIN_THREAD_EVENT_CAPACITY, cfg->minEventCap), NIL, 0)) AfxThrowError();
-    else
+    if (AfxMakeQueue(&thr->events, sizeof(afxEvent), AFX_MAX(AFX_MIN_THREAD_EVENT_CAPACITY, cfg->minEventCap), NIL, 0))
     {
-        //AfxSetUpFutex(&thr->evSlock);
-        //AfxMakeArena(NIL, &thr->evArena, NIL, AfxHere());
+        AfxThrowError();
+        AfxDismantleCondition(&thr->statusCnd);
+        AfxDismantleMutex(&thr->statusCndMtx);
+        return err;
+    }
 
-        //AfxMakeInterlockedQueue(&thr->events2, sizeof(afxPostedEvent), AFX_MIN_THREAD_EVENT_CAPACITY);
+    //AfxSetUpFutex(&thr->evSlock);
+    //AfxMakeArena(NIL, &thr->evArena, NIL, AfxHere());
 
-        thr->tid = 0;
+    //AfxMakeInterlockedQueue(&thr->events2, sizeof(afxPostedEvent), AFX_MIN_THREAD_EVENT_CAPACITY);
 
-        if (cfg->tid != 0)
+    thr->tid = 0;
+
+    if (cfg->tid != 0)
+    {
+        afxThread curr;
+
+        if (AfxSystemIsExecuting() && 
+            AfxFindThread(cfg->tid, &curr))
         {
-            afxThread curr;
+            AfxThrowError();
+            AfxDismantleQueue(&thr->events);
+            AfxDismantleCondition(&thr->statusCnd);
+            AfxDismantleMutex(&thr->statusCndMtx);
+            return err;
+        }
 
-            if (AfxSystemIsExecuting() && AfxFindThread(cfg->tid, &curr)) AfxThrowError();
-            else
-            {
-                void*osHandle2;
+        void*osHandle2;
 
-                if (!(osHandle2 = (void*)OpenThread(THREAD_QUERY_INFORMATION, NIL, cfg->tid)))
-                    AfxThrowError();
-                else
-                {
-                    thr->osHandle = osHandle2;
-                    thr->tid = cfg->tid;
+        if (!(osHandle2 = (void*)OpenThread(THREAD_QUERY_INFORMATION, NIL, cfg->tid)))
+        {
+            AfxThrowError();
+            AfxDismantleQueue(&thr->events);
+            AfxDismantleCondition(&thr->statusCnd);
+            AfxDismantleMutex(&thr->statusCndMtx);
+            return err;
+        }
 
-                    if (thr->tid == AfxGetTid()) // is current thread
-                    {
+        thr->osHandle = osHandle2;
+        thr->tid = cfg->tid;
+
+        if (thr->tid == AfxGetTid()) // is current thread
+        {
 #ifdef W32_INIT_COM
-                        if (S_OK != CoInitializeEx(NULL, COINIT_MULTITHREADED))
-                            AfxThrowError();
+            if (S_OK != CoInitializeEx(NULL, COINIT_MULTITHREADED))
+            {
+                AfxThrowError();
+                AfxDismantleQueue(&thr->events);
+                AfxDismantleCondition(&thr->statusCnd);
+                AfxDismantleMutex(&thr->statusCndMtx);
+                return err;
+            }
 #endif
-                        _currTid = AfxGetTid();
-                        _currThr = thr;
-                        _currThrObjId = AfxGetObjectId(thr);
+            _currTid = AfxGetTid();
+            _currThr = thr;
+            _currThrObjId = AfxGetObjectId(thr);
 
-                        if (thr->tid == AfxGetPrimeTid()) // is prime thread
-                        {
-                            AFX_ASSERT(AfxIsPrimeThread());
-                            AfxRunThread(thr, NIL, NIL);
-                        }
-                    }
-                }
+            if (thr->tid == AfxGetPrimeTid()) // is prime thread
+            {
+                AFX_ASSERT(AfxIsPrimeThread());
+                AfxRunThread(thr, NIL, NIL);
             }
         }
     }
-
-    if (err)
-        AfxDismantleQueue(&thr->events);
-
     return err;
 }
 

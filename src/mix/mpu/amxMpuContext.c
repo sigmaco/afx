@@ -120,7 +120,7 @@ void doom_audio_update(ResampleState* state, int16_t const* doom_buf)
     state->needs_more_input = FALSE;
 }
 
-_AMX afxError _AmxSpuLoadAudio(amxMpu* mpu, amxAudio src, amxAudio dst, afxUnit chIdx, afxUnit baseSamp, afxUnit sampCnt, amxMixFactor fac, afxReal constant)
+_AMX afxError _AmxMpuLoadAudio(amxMpu* mpu, amxAudio src, amxAudio dst, afxUnit chIdx, afxUnit baseSamp, afxUnit sampCnt, amxMixFactor fac, afxReal constant)
 {
     afxError err = { 0 };
     afxReal32* out = &dst->buf->storage[0].hostedAlloc.f32[chIdx * dst->sampCnt + baseSamp];
@@ -231,7 +231,7 @@ _AMX afxError _AmxSpuLoadAudio(amxMpu* mpu, amxAudio src, amxAudio dst, afxUnit 
     return err;
 }
 
-_AMX afxError _AmxSpu_StoreAudio(amxMpu* mpu, amxAudio src, amxAudio dst, afxUnit chIdx, afxUnit baseSamp, afxUnit sampCnt, amxMixOp op)
+_AMX afxError _AmxMpu_StoreAudio(amxMpu* mpu, amxAudio src, amxAudio dst, afxUnit chIdx, afxUnit baseSamp, afxUnit sampCnt, amxMixOp op)
 {
     afxError err = { 0 };
     afxReal32* out = &dst->buf->storage[0].hostedAlloc.f32[chIdx * dst->sampCnt + baseSamp];
@@ -289,7 +289,7 @@ _AMX afxError _AmxSpu_StoreAudio(amxMpu* mpu, amxAudio src, amxAudio dst, afxUni
     return err;
 }
 
-_AMX afxError _AmxSpuCmd_CommenceMixScope(amxMpu* mpu, _amxCmd const* cmd)
+_AMX afxError _AmxMpuCmd_CommenceMixScope(amxMpu* mpu, _amxCmd const* cmd)
 {
     afxError err = { 0 };
 
@@ -349,7 +349,7 @@ _AMX afxError _AmxSpuCmd_CommenceMixScope(amxMpu* mpu, _amxCmd const* cmd)
             op.src.chanCnt = 1;
             op.src.segCnt = 1;
 
-            _AmxSpu_ResampleWave(mpu, cmd->CommenceMixScope.sink, mpu->a, &op);
+            _AmxMpu_ResampleWave(mpu, cmd->CommenceMixScope.sink, mpu->a, &op);
             break;
         }
         case amxLoadOp_DONT_CARE:
@@ -362,7 +362,7 @@ _AMX afxError _AmxSpuCmd_CommenceMixScope(amxMpu* mpu, _amxCmd const* cmd)
     return err;
 }
 
-_AMX afxError _AmxSpuCmd_ConcludeMixScope(amxMpu* mpu, _amxCmd const* cmd)
+_AMX afxError _AmxMpuCmd_ConcludeMixScope(amxMpu* mpu, _amxCmd const* cmd)
 {
     afxError err = { 0 };
 
@@ -405,7 +405,7 @@ _AMX afxError _AmxSpuCmd_ConcludeMixScope(amxMpu* mpu, _amxCmd const* cmd)
                 op.dst.sampCnt = sinkSampCnt;
                 op.dst.chanCnt = 1;
                 op.dst.segCnt = 1;
-                _AmxSpu_ResampleWave(mpu, mpu->a, out, &op);
+                _AmxMpu_ResampleWave(mpu, mpu->a, out, &op);
                 break;
             }
             case amxStoreOp_MERGE:
@@ -434,7 +434,23 @@ _AMX afxError _AmxSpuCmd_ConcludeMixScope(amxMpu* mpu, _amxCmd const* cmd)
     return err;
 }
 
-_AMX afxError _AmxSpuCmd_UpdateAudio(amxMpu* mpu, _amxCmd const* cmd)
+_AMX afxError _AmxMpuCmd_ResampleBufferedAudio(amxMpu* mpu, _amxCmd const* cmd)
+{
+    afxError err = { 0 };
+    
+    amxAudioInterference ait = { 0 };
+    ait.dst = cmd->ResampleBufferedAudio.dstp;
+    ait.src = cmd->ResampleBufferedAudio.srcp;
+    ait.dstFreq = cmd->ResampleBufferedAudio.dst.sampRate;
+    ait.srcFreq = cmd->ResampleBufferedAudio.src.sampRate;
+
+    if (_AmxMpu_ResampleBufferedAudio(mpu, &cmd->ResampleBufferedAudio.src, &cmd->ResampleBufferedAudio.dst, &ait))
+        AfxThrowError();
+
+    return err;
+}
+
+_AMX afxError _AmxMpuCmd_UpdateAudio(amxMpu* mpu, _amxCmd const* cmd)
 {
     afxError err = { 0 };
     
@@ -444,17 +460,17 @@ _AMX afxError _AmxSpuCmd_UpdateAudio(amxMpu* mpu, _amxCmd const* cmd)
     return err;
 }
 
-_AMX afxError _AmxSpuCmd_ResampleWave(amxMpu* mpu, _amxCmd const* cmd)
+_AMX afxError _AmxMpuCmd_ResampleWave(amxMpu* mpu, _amxCmd const* cmd)
 {
     afxError err = { 0 };
 
-    //if (_AmxSpu_ResampleWave(mpu, cmd->ResampleAudio.src, cmd->ResampleAudio.dst, &cmd->ResampleAudio.srci, &cmd->ResampleAudio.dsti))
+    //if (_AmxMpu_ResampleWave(mpu, cmd->ResampleAudio.src, cmd->ResampleAudio.dst, &cmd->ResampleAudio.srci, &cmd->ResampleAudio.dsti))
         AfxThrowError();
 
     return err;
 }
 
-_AMX afxError _AmxSpuCmd_TransposeAudio(amxMpu* mpu, _amxCmd const* cmd)
+_AMX afxError _AmxMpuCmd_TransposeAudio(amxMpu* mpu, _amxCmd const* cmd)
 {
     afxError err = { 0 };
 
@@ -464,7 +480,7 @@ _AMX afxError _AmxSpuCmd_TransposeAudio(amxMpu* mpu, _amxCmd const* cmd)
     return err;
 }
 
-_AMX void _AmxSpuCmd_FetchAudition(amxMpu* mpu, _amxCmd const* cmd)
+_AMX void _AmxMpuCmd_FetchAudition(amxMpu* mpu, _amxCmd const* cmd)
 {
     afxError err = { 0 };
     //cmd->Audit();
@@ -484,25 +500,26 @@ _AMX void _AmxSpuCmd_FetchAudition(amxMpu* mpu, _amxCmd const* cmd)
 #endif
 }
 
-_AMX void _AmxSpuCmd_Reverb(amxMpu* mpu, _amxCmd const* cmd)
+_AMX void _AmxMpuCmd_Reverb(amxMpu* mpu, _amxCmd const* cmd)
 {
     //_SpuReverb(mpu, cmd->Reverb.wetMix, cmd->Reverb.roomSiz, cmd->Reverb.width, cmd->Reverb.damp, cmd->Reverb.dryMix);
 }
 
 _AMX _amxCmdLut _AMX_SPU_CMD_VMT =
 {
-    .Reverb = (void*)_AmxSpuCmd_Reverb,
-    .UpdateAudio = (void*)_AmxSpuCmd_UpdateAudio,
-    .FetchAudition = (void*)_AmxSpuCmd_FetchAudition,
-    .TransposeAudio = (void*)_AmxSpuCmd_TransposeAudio,
-    .CommenceMixScope = (void*)_AmxSpuCmd_CommenceMixScope,
-    .ConcludeMixScope = (void*)_AmxSpuCmd_ConcludeMixScope,
+    .Reverb = (void*)_AmxMpuCmd_Reverb,
+    .UpdateAudio = (void*)_AmxMpuCmd_UpdateAudio,
+    .FetchAudition = (void*)_AmxMpuCmd_FetchAudition,
+    .TransposeAudio = (void*)_AmxMpuCmd_TransposeAudio,
+    .CommenceMixScope = (void*)_AmxMpuCmd_CommenceMixScope,
+    .ConcludeMixScope = (void*)_AmxMpuCmd_ConcludeMixScope,
+    .ResampleBufferedAudio = (void*)_AmxMpuCmd_ResampleBufferedAudio,
 };
 
 _AMXINL void _MixModulusLocalClock(afxMixContext mctx)
 {
     afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mctx);
     afxReal t = mctx->motor.localClock / mctx->motor.localDur;
     afxInt currIterIdx = mctx->motor.currIterIdx;
     afxInt i = currIterIdx + (afxInt)t;
@@ -534,7 +551,7 @@ _AMXINL void _MixModulusLocalClock(afxMixContext mctx)
 _AMXINL afxReal _MixLocalClock(afxMixContext mctx, afxReal* clamped)
 {
     afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mctx);
     afxInt currIterIdx = mctx->motor.currIterIdx;
     afxInt iterCnt = mctx->motor.iterCnt;
 
@@ -587,7 +604,7 @@ _AMXINL afxReal _MixLocalClock(afxMixContext mctx, afxReal* clamped)
 _AMXINL void AfxQueryMixState(afxMixContext mctx, arxCapstanState* state)
 {
     afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mctx);
 
     afxReal localClockRaw, localClockClamped;
     localClockRaw = _MixLocalClock(mctx, &localClockClamped);
@@ -670,8 +687,33 @@ void _SetUpSampleContext(arxSampleContext* ctx, afxMixContext mctx)
 _AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mctx)
 {
     afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
-    AFX_ASSERT(mctx->state == amxMixState_PENDING);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mctx);
+
+    switch (mctx->state)
+    {
+    case amxContextState_PENDING:
+    {
+        AfxIncAtom32(&mctx->submCnt);
+        mctx->state = amxContextState_INTERNAL_EXECUTING;
+        break;
+    }
+    case amxContextState_INTERNAL_EXECUTING:
+    {
+        AFX_ASSERT((mctx->cmdFlags & avxCmdFlag_SHARED));
+        AfxIncAtom32(&mctx->submCnt);
+        break;
+    }
+    default:
+    {
+        AFX_ASSERT( (mctx->state == amxContextState_PENDING) ||
+                    (mctx->state == amxContextState_INTERNAL_EXECUTING));
+        AfxThrowError();
+        return err;
+    }
+    }
+
+    afxMixBridge mexu = mpu->mexu;
+    _amxCmdLut const* cmdVmt = /*mpu->cmdVmt*/ &_AMX_SPU_CMD_VMT;
 
     // step mixer
     afxReal64 curTime, lastTime;
@@ -686,21 +728,9 @@ _AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mctx)
 #endif
     mpu->queuedFrameCnt = mctx->queuedFrameCnt;
 
-    afxUnit batchId = mctx->batchId;
-    _amxCmdBatch* cmdb = _AmxMctxGetCmdBatch(mctx, batchId);
-
-    if (!cmdb)
-    {
-        AfxThrowError();
-        return err;
-    }
-
-    afxMixBridge mexu = mpu->mexu;
-    _amxCmdLut const* cmdVmt = /*mpu->cmdVmt*/ &_AMX_SPU_CMD_VMT;
-    afxCmdId lastId = 0; // DBG
-
     _amxCmd* cmdHdr;
-    AFX_ITERATE_CHAIN_B2F(cmdHdr, hdr.script, &cmdb->commands)
+    afxCmdId lastId = 0; // DBG
+    AFX_ITERATE_CHAIN_B2F(cmdHdr, hdr.script, &mctx->commands)
     {
 #ifdef _AFX_DEBUG
         lastId = cmdHdr->hdr.id;
@@ -708,46 +738,56 @@ _AMX afxError _AmxMpuRollMixContexts(amxMpu* mpu, afxMixContext mctx)
         if (cmdHdr->hdr.id == NIL)
             break;
 
-        if (mctx->state != amxMixState_PENDING)
+#if 0
+        if (mctx->state != amxContextState_PENDING)
         {
             AfxThrowError();
             break;
         }
-        AFX_ASSERT(cmdVmt->f[cmdHdr->hdr.id]);
-        cmdVmt->f[cmdHdr->hdr.id](mpu, cmdHdr);
+#endif
+        if (!cmdVmt->f[cmdHdr->hdr.id])
+        {
+            AFX_ASSERT(cmdVmt->f[cmdHdr->hdr.id]);
+        }
+        else
+        {
+            cmdVmt->f[cmdHdr->hdr.id](mpu, cmdHdr);
+        }
     }
 
     mctx->current_sample_time += mpu->queuedFrameCnt;
     mctx->queuedFrameCnt -= mpu->queuedFrameCnt;
     mpu->queuedFrameCnt = 0;
 
-#if 0
-    if (!err)
+    switch (mctx->state)
     {
-        mctx->state = amxMixState_EXECUTABLE;
-    }
-
-    if (err || mctx->m.disposable)
+    case amxContextState_INTERNAL_EXECUTING:
     {
-        AFX_ASSERT(mctx->m.portId == mpu->portId);
-        mctx->m.state = avxContextStatus_INVALID;
-        afxMixQueue mque = AfxGetHost(mctx);
-        AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &mque);
-
-        afxUnit poolIdx = mctx->m.poolIdx;
-
-        AfxLockFutex(&mque->m.cmdbReqLock);
-
-        if (AfxPushQueue(&mque->m.cmdbRecycQue, &mctx))
+        if (0 == AfxDecAtom32(&mctx->submCnt))
         {
-            AfxDisposeObjects(1, (void**)&mctx);
+            if (mctx->cmdFlags & amxCmdFlag_ONCE)
+            {
+                mctx->state = amxContextState_INVALID;
+                AmxPrepareMixCommands(mctx, FALSE, NIL);
+            }
+            else
+            {
+                mctx->state = amxContextState_EXECUTABLE;
+            }
         }
-
-        AfxUnlockFutex(&mque->m.cmdbReqLock);
+        else
+        {
+            AFX_ASSERT((mctx->cmdFlags & amxCmdFlag_SHARED));
+        }
+        break;
     }
-#endif
-    //AfxDecAtom32(&mctx->submCnt);
-    //AfxDisposeObjects(1, &mctx);
+    default:
+    {
+        AFX_ASSERT((mctx->state == amxContextState_INTERNAL_EXECUTING));
+        AfxThrowError();
+        return err;
+}
+    }
     return err;
 }
 

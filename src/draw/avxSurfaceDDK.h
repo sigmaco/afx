@@ -80,6 +80,7 @@ AFX_DEFINE_STRUCT(afxVideoEndpoint)
 AFX_DEFINE_STRUCT(_avxSurfaceSwap)
 {
     afxBool         locked;
+    afxMask         exuMask;
     avxFence        fenc;
     afxUnit64       fencNextValue;
     // Locked canvas is an attempt to avoid crashes and busy-waits while readjustments.

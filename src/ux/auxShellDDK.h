@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      Q W A D R O   U S E R   I / O   S Y S T E M
+ *                  Q W A D R O   M M U X   I N F R A S T R U C T U R E         
  *
  *                                   Public Test Build
  *                               (c) 2017 SIGMA FEDERATION
@@ -29,7 +29,7 @@
 #include "qwadro/ux/afxShell.h"
 //#include "qwadro/../../dep_/vgl1/vgl1.h"
 
-AFX_DEFINE_STRUCT(afxShellInfo)
+AFX_DEFINE_STRUCT(_auxShellAcq)
 {
     afxDeviceInfo           dev;
     afxClassConfig const*   kbdClsCfg;

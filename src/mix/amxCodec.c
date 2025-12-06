@@ -69,7 +69,7 @@ _AMX afxError _AmxMcdcCtorCb(amxCodec mcdc, void** args, afxUnit invokeNo)
 
     afxModule icd = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-    //afxMixConfig const* cfg = ((afxMixConfig const *)args[1]) + invokeNo;
+    //amxContextConfig const* cfg = ((amxContextConfig const *)args[1]) + invokeNo;
     //AFX_ASSERT(cfg);
 
 

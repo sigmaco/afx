@@ -82,7 +82,7 @@ AFX_DEFINE_STRUCT(_avxDdiDsys)
 AFX_DEFINE_STRUCT(_avxDsysAcq)
 {
     afxUnit             bridgeCnt;
-    afxDrawFeatures     reqFeatures;
+    avxFeatures     reqFeatures;
     afxUnit             reqExtCnt;
     afxString const*    reqExts;
     void*               udd;
@@ -137,8 +137,8 @@ AFX_OBJECT(afxDrawSystem)
     afxMask             gfxExuMask;
     afxMask             videoExuMask;
 
-    afxDrawFeatures     requirements;
-    afxDrawLimits const*limits;
+    avxFeatures     requirements;
+    avxLimits const*limits;
 
     //afxChain classes;
 
@@ -220,8 +220,8 @@ AVX afxClass const* _AvxDsysGetShadClassCb_SW(afxDrawSystem dsys);
 AVX afxClass const* _AvxDsysGetLigaClassCb_SW(afxDrawSystem dsys);
 AVX afxClass const* _AvxDsysGetTxdClassCb_SW(afxDrawSystem dsys);
 
-AVX afxDrawFeatures const* _AvxDsysGetReqFeatures(afxDrawSystem dsys);
-AVX afxDrawLimits const* _AvxDsysGetLimits(afxDrawSystem dsys);
+AVX avxFeatures const* _AvxDsysGetReqFeatures(afxDrawSystem dsys);
+AVX avxLimits const* _AvxDsysGetLimits(afxDrawSystem dsys);
 
 AVX afxClassConfig const _AVX_CLASS_CONFIG_TXD;
 

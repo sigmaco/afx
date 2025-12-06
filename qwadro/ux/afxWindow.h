@@ -134,7 +134,8 @@ AFX_DEFINE_STRUCT(afxWindowConfig)
     // The configuration of the drawable surface.
     afxSurfaceConfig    dout;
     // Optional. The display port to which the window will be open on.
-    afxDisplayPort      disp;
+    afxDisplay          disp;
+    afxUnit             dport;
     // 
     afxAnchor           anchor;
     // The origin of the window. If display port is specified, it is related to the area covered by the display port, 
@@ -191,13 +192,33 @@ AUX afxBool         AfxGetWindowRect
     afxRect*        surface
 );
 
+/*
+    AfxAdjustWindow adjusts the position and size of a window (afxWindow) according to:
+     - An optional display (afxDisplay)
+     - A display port (afxUnit), usually representing a specific monitor/viewport inside the display
+     - An anchor (afxAnchor) such as LEFT, CENTER, MIDDLE, BOTTOM, etc.
+     - A desired surface/geometry (afxRect const* surface)
+    
+    If a valid display handle is provided, the window's geometry is interpreted relative to the display port 
+    (i.e., relative to the monitor or workspace area).
+
+    If the display is not valid, the adjustment is done in the window's parent coordinate space or a default 
+    global coordinate space (depending on the framework's rules).
+*/
+
 AUX afxError        AfxAdjustWindow
 (
     // The handle of the afxWindow.
-    afxWindow       wnd, 
-    // 
+    afxWindow       wnd,
+    // An optional afxDisplay handle.
+    afxDisplay      disp,
+    // When afxDisplay is used, a port (a specific monitor/viewport) inside the display must be specified.
+    afxUnit         dport,
+    // The anchor determining how the geometry will be positioned.
     afxAnchor       anchor,
-    // The afxRect specifying the desired geometry for the window.
+    // The geometry (x, y, width, height) desired for the window.
+    // If a valid afxDisplay handle is provided, the geometry is interpreted relative to the display port 
+    // (i.e., relative to the monitor or workspace area).
     afxRect const*  surface
 );
 

@@ -21,26 +21,28 @@
 
 #include "qwadro/mix/afxMixSystem.h"
 
-typedef enum amxMixState
+typedef enum amxContextState
 {
-    amxMixState_INITIAL,
-    amxMixState_RECORDING,
-    amxMixState_EXECUTABLE,
-    amxMixState_PENDING,
-    amxMixState_INVALID
-} amxMixState;
+    amxContextState_INITIAL,
+    amxContextState_RECORDING,
+    amxContextState_EXECUTABLE,
+    amxContextState_PENDING,
+    amxContextState_INVALID,
+    amxContextState_INTERNAL_EXECUTING
+} amxContextState;
 
 AFX_DECLARE_UNION(_amxCmd);
+
+AFX_DECLARE_STRUCT(_amxIddMctx);
 
 #ifndef _AMX_MIX_C
 AFX_DECLARE_STRUCT(_amxDdiMctx);
 #else
 AFX_DEFINE_STRUCT(_amxDdiMctx)
 {
-    afxError(*compose)(afxMixContext, afxBool once, afxBool deferred);
+    afxError(*prepare)(afxMixContext, afxBool purge, amxCmdFlags);
     afxError(*compile)(afxMixContext);
     afxError(*recycle)(afxMixContext, afxBool freeMem);
-    afxError(*discard)(afxMixContext, afxBool freeMem);
     afxError(*exhaust)(afxMixContext, afxBool freeMem);
 };
 #endif
@@ -65,43 +67,39 @@ AFX_OBJECT(_amxMixContext)
 AFX_OBJECT(afxMixContext)
 #endif
 {
-    _amxDdiMctx const*ddi;
-    afxString   tag;
-    void*       udd;
-    afxUnit     portId;
-    afxUnit     poolIdx;
-    afxBool     disposable; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
-    
-    afxPool     batches;
-    afxUnit     batchId;
-    afxChain    cmdbRecycChain;
-    afxFutex    cmdbReqLock;
-    afxBool     cmdbLockedForReq;
+    _amxDdiMctx const*  ddi;
+    _amxIddMctx*        idd;
+    // User-defined data.
+    void*               udd;
+    // Debugging tag.
+    afxString           tag;
+    amxLimits const* devLimits; // dbg copies
+    amxFeatures const*enabledFeatures; // dbg copies
 
-    amxMixState state;
-    afxChain    commands;
-    afxArena    cmdArena; // owned by msys data for specific port
+    amxAptitude         caps;
+    afxMask             exuMask;
+    afxAtom32           submCnt; // number of submissions
+    afxMask64           submQueMask; // one for each queue where this dctx was submitted into.
 
-    afxAtom32   submCnt; // number of submissions
-    afxMask64   submQueMask; // one for each queue where this dctx was submitted into.
+    amxContextFlags     flags;
+    afxMixContext       pool;
+    afxChain            classes;
+    afxClass            mctxCls;
+    afxInterlockedQueue recycQue;
+    amxCmdFlags         cmdFlags;
+    amxContextState     state;
+    afxArena            cmdArena; // owned by dsys data for specific port
+    afxChain            commands;
 
-    //afxUnit     latency; // samples per audio frame (256, 512, 1024, or 2048).
-    //afxUnit     chanCnt; // 2 --- stereo
-    //afxUnit     freq; // 48kHz --- sample rate
-    //afxUnit     bps; // 32-bit --- bits per sample
-
+    // leftovers
     afxUnit     frameIdx;
-
     afxBool     disabled; // suspend processing
-
     afxReal     spanning; // 0 --- center
     afxReal     volume; // 0.000 dB
     afxReal     width; // 0.000 %
     afxReal     delay; // 0.000 ms --- unable in a master or send track
-
     afxBool     muted; // suspend routing the output to the endpoint.
     afxSink     routing;
-
     afxUnit     queuedFrameCnt;
     afxUnit64   current_sample_time;
     struct
@@ -338,10 +336,10 @@ AMX _amxCmdBatch* _AmxMctxGetCmdBatch(afxMixContext mix, afxUnit idx);
 AMX afxError _AmxMixResetCb(afxMixContext mix, afxBool freeMem, afxBool permanent);
 AMX afxError _AmxMixEndCb(afxMixContext mix);
 
-AMX afxClassConfig const _AMX_MIX_CLASS_CONFIG;
+AMX afxClassConfig const _AMX_MCTX_CLASS_CONFIG;
 
 AMX _amxDdiMctx const _AMX_MCTX_DDI;
 
-AMX amxMixState _AmxMctxGetStatus(afxMixContext mix);
+AMX amxContextState _AmxMctxGetStatus(afxMixContext mix);
 
 #endif//AMX_CONTEXT_DDK_H

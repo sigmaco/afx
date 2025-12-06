@@ -32,7 +32,7 @@
 //extern afxChain* _AfxGetSystemClassChain(void);
 AFX afxChain* _AfxGetSystemClassChain(void);
 
-afxDrawLimits const AVX_STD_DRAW_LIMITS =
+avxLimits const AVX_STD_DRAW_LIMITS =
 {
     // buffer and raster storage
     .minBufMapAlign = AVX_BUFFER_ALIGNMENT,
@@ -166,7 +166,7 @@ afxDrawLimits const AVX_STD_DRAW_LIMITS =
 // DRAW DEVICE HANDLING                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxDrawLimits const* _AvxDdevGetLimits(afxDrawDevice ddev)
+_AVX avxLimits const* _AvxDdevGetLimits(afxDrawDevice ddev)
 {
     afxError err = { 0 };
     // @ddev must be a valid afxDrawDevice handle.
@@ -190,7 +190,7 @@ _AVX void* _AvxGetDrawDeviceIdd(afxDrawDevice ddev)
     return ddev->idd;
 }
 
-_AVX void AvxQueryDrawDeviceLimits(afxDrawDevice ddev, afxDrawLimits* limits)
+_AVX void AvxQueryDrawDeviceLimits(afxDrawDevice ddev, avxLimits* limits)
 {
     afxError err = { 0 };
     // @ddev must be a valid afxDrawDevice handle.
@@ -204,7 +204,7 @@ _AVX void AfxLogDrawDeviceLimits(afxDrawDevice ddev)
     afxError err = { 0 };
     // @ddev must be a valid afxDrawDevice handle.
     AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
-    afxDrawLimits limits;
+    avxLimits limits;
     AvxQueryDrawDeviceLimits(ddev, &limits);
 
     afxChar buf[AFX_U16_MAX];
@@ -399,7 +399,7 @@ _AVX void AfxLogDrawDeviceLimits(afxDrawDevice ddev)
 #endif
 }
 
-_AVX void AvxQueryDrawDeviceFeatures(afxDrawDevice ddev, afxDrawFeatures* features)
+_AVX void AvxQueryDrawDeviceFeatures(afxDrawDevice ddev, avxFeatures* features)
 {
     afxError err = { 0 };
     // @ddev must be a valid afxDrawDevice handle.
@@ -408,7 +408,7 @@ _AVX void AvxQueryDrawDeviceFeatures(afxDrawDevice ddev, afxDrawFeatures* featur
     *features = ddev->features;
 }
 
-_AVX void AvxQueryDrawCapabilities(afxDrawDevice ddev, afxDrawPortInfo* caps)
+_AVX void AvxQueryDrawCapabilities(afxDrawDevice ddev, avxPortInfo* caps)
 {
     afxError err = { 0 };
     // @ddev must be a valid afxDrawDevice handle.
@@ -426,7 +426,7 @@ _AVX void AvxQueryDrawCapabilities(afxDrawDevice ddev, afxDrawPortInfo* caps)
     }
 }
 
-_AVX afxBool AvxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawFeatures const* features, afxDrawLimits const* limits)
+_AVX afxBool AvxIsDrawDeviceAcceptable(afxDrawDevice ddev, avxFeatures const* features, avxLimits const* limits)
 {
     afxError err = { 0 };
     // @ddev must be a valid afxDrawDevice handle.
@@ -793,7 +793,7 @@ _AVX afxUnit AvxEvokeDrawDevices(afxUnit icd, afxUnit first, void* udd, afxBool(
     return rslt;
 }
 
-_AVX afxUnit AvxChooseDrawDevices(afxUnit icd, afxDrawFeatures const* features, afxDrawLimits const* limits, afxDrawPortInfo const* caps, afxUnit maxCnt, afxUnit ddevId[])
+_AVX afxUnit AvxChooseDrawDevices(afxUnit icd, avxFeatures const* features, avxLimits const* limits, avxPortInfo const* caps, afxUnit maxCnt, afxUnit ddevId[])
 {
     afxError err = { 0 };
     //AFX_ASSERT(limits);

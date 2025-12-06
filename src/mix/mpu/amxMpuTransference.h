@@ -40,22 +40,23 @@ AMX afxError _AmxDownloadAudio(amxAudio aud, amxAudioIo const* op, afxStream iob
 AMX void _AmxSanitizeAudioPeriod(amxAudio aud, amxAudioPeriod const* raw, amxAudioPeriod* san);
 AMX void _AmxSanitizeAudioCopy(amxAudio src, amxAudio dst, amxAudioCopy const* raw, amxAudioCopy* san);
 
-AMX afxError _AmxSpu_ResampleI16I16(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
-AMX afxError _AmxSpu_ResampleF32F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
-AMX afxError _AmxSpu_ResampleF32I16(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
-AMX afxError _AmxSpu_ResampleI16F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
-AMX afxError _AmxSpu_ResampleWave(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
+AMX afxError _AmxMpu_ResampleI16I16(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
+AMX afxError _AmxMpu_ResampleF32F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
+AMX afxError _AmxMpu_ResampleF32I16(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
+AMX afxError _AmxMpu_ResampleI16F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
+AMX afxError _AmxMpu_ResampleWave(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
+AMX afxError _AmxMpu_ResampleBufferedAudio(amxMpu* mpu, amxBufferedAudio const* src, amxBufferedAudio const* dst, amxAudioInterference const* op);
 
-AMX void _AmxGenerateSineWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGenerateSquareWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGenerateTriangleWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGenerateSawtoothWave(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGenerateWhiteNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGeneratePinkNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGenerateBrownianNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGenerateBlueNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGenerateVioletNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
-AMX void _AmxGenerateGrayNoise(afxReal32* out, afxUnit sampleCnt, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateSineWave(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateSquareWave(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateTriangleWave(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateSawtoothWave(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateWhiteNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGeneratePinkNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateBrownianNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateBlueNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateVioletNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
+AMX void _AmxGenerateGrayNoise(afxReal32* out, afxUnit sampleCap, afxUnit sampleRate, afxReal amplitude, afxReal freq, afxReal dur);
 
 AMX afxError _AmxFillBuffer(amxBuffer buf, afxSize offset, afxSize range, afxUnit stride, afxUnit sampleCnt, afxUnit sampleRate, amxFormat fmt, afxReal amplitude, afxReal freq, afxReal dur);
 AMX afxError _AmxDumpBuffer(amxBuffer buf, amxBufferIo const* op, void* dst);

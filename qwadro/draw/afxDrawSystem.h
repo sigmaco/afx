@@ -69,7 +69,7 @@ AFX_DEFINE_STRUCT(avxEvent)
     void*       udd[1];
 };
 
-AFX_DEFINE_STRUCT(afxDrawSystemConfig)
+AFX_DEFINE_STRUCT(avxSystemConfig)
 // The system-wide settings and parameters prefered/required for acquisition.
 {
     afxUnit             verMajor;
@@ -79,7 +79,7 @@ AFX_DEFINE_STRUCT(afxDrawSystemConfig)
     // The acceleration to be available on bridged devices.
     afxAcceleration     accel;
     // The features to be enabled.
-    afxDrawFeatures     features;
+    avxFeatures     features;
     // The number of system extensions to be enabled.
     afxUnit             extCnt;
     // An array of Qwadro strings containing the names of extensions to enable for the desired system.
@@ -89,7 +89,7 @@ AFX_DEFINE_STRUCT(afxDrawSystemConfig)
     // The number of bridged devices' execution ports.
     afxUnit             exuCnt;
     // An array of configurations for each bridged device.
-    afxDrawBridgeConfig exus[AVX_MAX_BRIDGES_PER_SYSTEM];
+    avxBridgeConfig exus[AVX_MAX_BRIDGES_PER_SYSTEM];
     // User-defined data attached to the system.
     void*               udd;
     // Debugging string attached to the system.
@@ -101,7 +101,7 @@ AVX afxError AvxConfigureDrawSystem
     // The Id of the installable client driver.
     afxUnit icd,
     // A pointer to a system configuration structure.
-    afxDrawSystemConfig* cfg
+    avxSystemConfig* cfg
 );
 
 /*
@@ -118,7 +118,7 @@ AVX afxError AvxEstablishDrawSystem
     afxUnit icd,
 
     // A configuration structure that holds the parameters required to establish and configure the drawing system.
-    afxDrawSystemConfig const* cfg,
+    avxSystemConfig const* cfg,
 
     // A pointer to an afxDrawSystem where the created drawing system will be stored. 
     // The function will populate this pointer with the reference to the newly established drawing system.
@@ -379,7 +379,7 @@ AVX afxError        AvxWaitForDrawQueue
 AVX void AvxGetEnabledSystemFeatures
 (
     afxDrawSystem dsys, 
-    afxDrawFeatures* features
+    avxFeatures* features
 );
 
 AVX afxUnit AvxTestForEnabledSystemExtensions

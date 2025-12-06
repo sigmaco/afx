@@ -45,8 +45,8 @@ _AVX afxError _AvxDctxExhaustCb(afxDrawContext dctx, afxBool freeMem)
         afxDrawContext aux;
         for (afxUnit i = 0; AfxEnumerateObjects(&dctx->dctxCls, i, 1, (void**)&aux); i++)
         {
-            AFX_ASSERT(aux->state != avxContextStatus_RECORDING);
-            AFX_ASSERT(aux->state != avxContextStatus_PENDING);
+            AFX_ASSERT(aux->state != avxContextState_RECORDING);
+            AFX_ASSERT(aux->state != avxContextState_PENDING);
 #if 0
             while (AfxLoadAtom32(&aux->submCnt))
             {
@@ -108,8 +108,8 @@ _AVX afxError _AvxDctxPrepareCb(afxDrawContext dctx, afxBool purge, avxCmdFlags 
     dctx->inDrawScope = FALSE;
     dctx->inVideoCoding = FALSE;
 
-    dctx->state = avxContextStatus_RECORDING;
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    dctx->state = avxContextState_RECORDING;
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
 
     return err;
 }
@@ -121,8 +121,8 @@ _AVX afxError _AvxDctxCompileCb(afxDrawContext dctx)
 
     // AVX assumes the compilation when ICD does not take the front.
     
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
-    dctx->state = avxContextStatus_EXECUTABLE;
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
+    dctx->state = avxContextState_EXECUTABLE;
 
     return err;
 }

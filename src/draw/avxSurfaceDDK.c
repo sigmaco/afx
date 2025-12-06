@@ -258,6 +258,7 @@ _AVX afxError _AvxDoutImplLockBufferCb(afxSurface dout, afxMask exuMask, avxFenc
             //swap->lockedCanv = canv;
             AFX_ASSERT(swap->locked == 0);
             ++swap->locked;
+            swap->exuMask = exuMask;
             swap->fencNextValue = AvxGetCompletedFenceValue(swap->fenc) + 1;
             bufIdx2 = lockedBufIdx;
             AFX_ASSERT(AFX_INVALID_INDEX != bufIdx2);

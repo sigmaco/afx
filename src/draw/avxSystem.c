@@ -51,7 +51,7 @@ _AVX afxMask _AvxDsysGetIoExuMask(afxDrawSystem dsys, afxMask* dedIoExuMask)
     return dsys->ioExuMask;
 }
 
-_AVX afxDrawFeatures const* _AvxDsysGetReqFeatures(afxDrawSystem dsys)
+_AVX avxFeatures const* _AvxDsysGetReqFeatures(afxDrawSystem dsys)
 {
     afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
@@ -59,7 +59,7 @@ _AVX afxDrawFeatures const* _AvxDsysGetReqFeatures(afxDrawSystem dsys)
     return &dsys->requirements;
 }
 
-_AVX afxDrawLimits const* _AvxDsysGetLimits(afxDrawSystem dsys)
+_AVX avxLimits const* _AvxDsysGetLimits(afxDrawSystem dsys)
 {
     afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
@@ -250,7 +250,7 @@ _AVX afxModule AvxGetSystemIcd(afxDrawSystem dsys)
     return icd;
 }
 
-_AVX void AvxGetEnabledSystemFeatures(afxDrawSystem dsys, afxDrawFeatures* features)
+_AVX void AvxGetEnabledSystemFeatures(afxDrawSystem dsys, avxFeatures* features)
 {
     afxError err = { 0 };
     // @dsys must be a valid afxDrawSystem handle.
@@ -391,7 +391,7 @@ _AVX afxUnit AvxChooseDrawBridges(afxDrawSystem dsys, afxUnit ddevId, avxAptitud
 
         if (caps)
         {
-            afxDrawPortInfo capsi;
+            avxPortInfo capsi;
             AvxQueryDrawCapabilities(ddev, &capsi);
             
             if ((capsi.capabilities & caps) != caps)
@@ -708,7 +708,7 @@ _AVX afxError _AvxDsysCtorCb(afxDrawSystem dsys, void** args, afxUnit invokeNo)
         afxDrawDevice ddev = AvxGetBridgedDrawDevice(dexu, NIL);
         AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
 
-        afxDrawPortInfo capsi;
+        avxPortInfo capsi;
         AvxQueryDrawCapabilities(ddev, &capsi);
 
         if ((capsi.capabilities & avxAptitude_DMA) == avxAptitude_DMA)
@@ -832,7 +832,7 @@ _AVX afxUnit AvxEnumerateDrawSystems(afxUnit icd, afxUnit first, afxUnit cnt, af
     }
 }
 
-_AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
+_AVX afxError AvxConfigureDrawSystem(afxUnit icd, avxSystemConfig* cfg)
 {
     afxError err = { 0 };
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
@@ -869,7 +869,7 @@ _AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
             {
                 AFX_ASSERT_OBJECTS(afxFcc_DDEV, 1, &ddev);
 
-                afxDrawPortInfo capsi;
+                avxPortInfo capsi;
                 AvxQueryDrawCapabilities(ddev, &capsi);
 
                 if (caps && !(caps & capsi.capabilities))
@@ -894,7 +894,7 @@ _AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
 
         for (afxUnit i = 0; i < exuCnt; i++)
         {
-            afxDrawPortInfo capsi = { 0 };
+            avxPortInfo capsi = { 0 };
             capsi.acceleration = cfg->exus[i].acceleration ? cfg->exus[i].acceleration : accel;
             capsi.capabilities = cfg->exus[i].capabilities ? cfg->exus[i].capabilities : caps;
             capsi.minQueCnt = cfg->exus[i].minQueCnt;
@@ -930,7 +930,7 @@ _AVX afxError AvxConfigureDrawSystem(afxUnit icd, afxDrawSystemConfig* cfg)
     return err;
 }
 
-_AVX afxError AvxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg, afxDrawSystem* system)
+_AVX afxError AvxEstablishDrawSystem(afxUnit icd, avxSystemConfig const* cfg, afxDrawSystem* system)
 {
     afxError err = { 0 };
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
@@ -972,7 +972,7 @@ _AVX afxError AvxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg
 
     for (afxUnit i = 0; i < cfg->exuCnt; i++)
     {
-        afxDrawBridgeConfig const* exuCfg = &cfg->exus[i];
+        avxBridgeConfig const* exuCfg = &cfg->exus[i];
 
         afxUnit bridgeIdx = AFX_INVALID_INDEX;
 
@@ -1016,7 +1016,7 @@ _AVX afxError AvxEstablishDrawSystem(afxUnit icd, afxDrawSystemConfig const* cfg
         bridgeCfg[bridgeCnt].ddev = ddev;
 
         afxUnit minQueCnt = AFX_CLAMP(exuCfg->minQueCnt, 1, AVX_MAX_QUEUES_PER_BRIDGE);
-        afxDrawPortInfo capsi2 = { 0 };
+        avxPortInfo capsi2 = { 0 };
         capsi2.capabilities = exuCfg->capabilities;
         capsi2.acceleration = exuCfg->acceleration;
         capsi2.minQueCnt = minQueCnt;

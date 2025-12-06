@@ -553,7 +553,7 @@ _AVX afxError _AvxCanvCtorCb(avxCanvas canv, void** args, afxUnit invokeNo)
     canv->tag = cfg->tag;
     canv->udd = cfg->udd;
 
-    afxDrawLimits const* limits = _AvxDsysGetLimits(dsys);
+    avxLimits const* limits = _AvxDsysGetLimits(dsys);
     // @whd must be less than or equal to maxCanvasWhd
     AFX_ASSERT_CAPACITY(limits->maxCanvasWhd.w, cfg->whd.w);
     AFX_ASSERT_CAPACITY(limits->maxCanvasWhd.h, cfg->whd.h);
@@ -796,7 +796,7 @@ _AVX afxError AvxConfigureCanvas(afxDrawSystem dsys, avxCanvasConfig* cfg)
     cfg2.udd = cfg->udd;
     cfg2.tag = cfg->tag;
 
-    afxDrawLimits const* limits = _AvxDsysGetLimits(dsys);
+    avxLimits const* limits = _AvxDsysGetLimits(dsys);
     // @whd must be less than or equal to limits(maxCanvasWhd).
     cfg2.whd.w = AFX_MAX(1, AFX_MIN(limits->maxCanvasWhd.w, cfg->whd.w));
     cfg2.whd.h = AFX_MAX(1, AFX_MIN(limits->maxCanvasWhd.h, cfg->whd.h));

@@ -317,7 +317,7 @@ _AMX afxError amxIcdHook(afxModule icd, afxUri const* manifest)
         return err;
     }
 
-    static afxMixFeatures features = { 0 };
+    static amxFeatures features = { 0 };
 
     // In Qwadro AFX, I used to name things based on bad experiences solving issues.
     // Vaio has been named after a bad experience making way for interop with a mix system.
