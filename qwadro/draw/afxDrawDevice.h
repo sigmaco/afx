@@ -40,7 +40,7 @@
 #include "qwadro/draw/afxSurface.h"
 #include "qwadro/hid/afxDisplay.h"
 
-AFX_DEFINE_STRUCT(afxDrawFeatures)
+AFX_DEFINE_STRUCT(avxFeatures)
 /**
     Draw features are various capabilities or functionalities that are provided by draw devices to facilitate the drawing and rendering 
     of objects. These features are essential for creating and controlling the visual output in graphical applications, 
@@ -172,7 +172,7 @@ AFX_DEFINE_STRUCT(afxDrawFeatures)
     afxFcc*  extra;
 };
 
-AFX_DEFINE_STRUCT(afxDrawLimits)
+AFX_DEFINE_STRUCT(avxLimits)
 /**
     Draw limits are various constraints or maximum values that can impact how objects are drawn or rendered. 
     These limits are typically defined by the graphics hardware, drivers, or the graphics API itself. 
@@ -336,13 +336,13 @@ AVX afxUnit AvxChooseDrawDevices
     afxUnit icd, 
 
     // A structure that specifies the features that the drawing devices must support.
-    afxDrawFeatures const* features, 
+    avxFeatures const* features, 
 
     // A structure that defines the limits that the drawing devices should meet.
-    afxDrawLimits const* limits, 
+    avxLimits const* limits, 
 
     // The operations or features that the device must supports.
-    afxDrawPortInfo const* caps,
+    avxPortInfo const* caps,
 
     // The maximum number of devices to be selected and returned in the @ddevIds array.
     afxUnit maxCnt, 
@@ -442,7 +442,7 @@ AVX afxBool AvxIsDrawDevicePrompt
 
 /*
     The AvxQueryDrawDeviceFeatures() function is a way to query and retrieve detailed information about 
-    features of a specific drawing device. The afxDrawFeatures structure holds the queried features, and after calling this function, 
+    features of a specific drawing device. The avxFeatures structure holds the queried features, and after calling this function, 
     you can access the capabilities of the device to make informed decisions about rendering or utilizing the device's features.
 */
 
@@ -451,8 +451,8 @@ AVX void AvxQueryDrawDeviceFeatures
     // A handle for a drawing device to query for its features.
     afxDrawDevice ddev,
 
-    // A pointer to a afxDrawFeatures structure where the results will be stored.
-    afxDrawFeatures* features
+    // A pointer to a avxFeatures structure where the results will be stored.
+    avxFeatures* features
 );
 
 /*
@@ -468,8 +468,8 @@ AVX void AvxQueryDrawDeviceLimits
     // The device to query for its limits.
     afxDrawDevice ddev, 
 
-    // A afxDrawLimits structure where the device's limits will be stored.
-    afxDrawLimits* limits
+    // A avxLimits structure where the device's limits will be stored.
+    avxLimits* limits
 );
 
 /*
@@ -483,11 +483,11 @@ AVX afxBool AvxIsDrawDeviceAcceptable
     // The device you are considering for use in your application.
     afxDrawDevice ddev, 
     
-    // A afxDrawFeatures structure containing the required features that the drawing device must support.
-    afxDrawFeatures const* features, 
+    // A avxFeatures structure containing the required features that the drawing device must support.
+    avxFeatures const* features, 
 
-    // A afxDrawLimits structure containing the hardware limits that the drawing device should meet or exceed.
-    afxDrawLimits const* limits
+    // A avxLimits structure containing the hardware limits that the drawing device should meet or exceed.
+    avxLimits const* limits
 );
 
 AVX void AvxQueryDrawCapabilities
@@ -495,7 +495,7 @@ AVX void AvxQueryDrawCapabilities
     // The drawing device to query.
     afxDrawDevice ddev, 
 
-    afxDrawPortInfo* caps
+    avxPortInfo* caps
 );
 
 // Query draw port support for presentation.

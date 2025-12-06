@@ -26,7 +26,7 @@ _AVX afxCmdId AvxCmdChangeFillModeEXT(afxDrawContext dctx, avxFillMode mode)
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -52,7 +52,7 @@ _AFX afxCmdId AvxCmdBeginTransformFeedbackEXT
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BeginTransformFeedbackEXT), sizeof(cmd->BeginTransformFeedbackEXT) + (cntBufCnt * sizeof(cmd->BeginTransformFeedbackEXT.srcs[0])), &cmdId);
@@ -81,7 +81,7 @@ _AFX afxCmdId AvxCmdEndTransformFeedbackEXT
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(EndTransformFeedbackEXT), sizeof(cmd->EndTransformFeedbackEXT) + (cntBufCnt * sizeof(cmd->EndTransformFeedbackEXT.srcs[0])), &cmdId);
@@ -110,7 +110,7 @@ _AFX afxCmdId AvxCmdBeginQueryIndexedEXT
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BeginQueryIndexedEXT), sizeof(cmd->BeginQueryIndexedEXT), &cmdId);
@@ -134,7 +134,7 @@ _AFX afxCmdId AvxCmdEndQueryIndexedEXT
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(EndQueryIndexedEXT), sizeof(cmd->EndQueryIndexedEXT), &cmdId);
@@ -159,7 +159,7 @@ _AFX afxCmdId AvxCmdBindTransformFeedbackBuffersEXT
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(BindTransformFeedbackBuffersEXT), sizeof(cmd->BindTransformFeedbackBuffersEXT) + (cnt * sizeof(cmd->BindTransformFeedbackBuffersEXT.srcs[0])), &cmdId);
@@ -191,7 +191,7 @@ _AFX afxCmdId AvxCmdDrawIndirectByteCountEXT
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(DrawIndirectByteCountEXT), sizeof(cmd->DrawIndirectByteCountEXT), &cmdId);
@@ -220,7 +220,7 @@ _AVX afxCmdId AvxCmdDrawMeshTasksEXT
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(DrawMeshTasksEXT), sizeof(cmd->DrawMeshTasksEXT), &cmdId);
@@ -248,7 +248,7 @@ _AVX afxCmdId AvxCmdDrawMeshTasksIndirectEXT
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(DrawMeshTasksIndirectEXT), sizeof(cmd->DrawMeshTasksIndirectEXT), &cmdId);
@@ -282,7 +282,7 @@ _AVX afxCmdId AvxCmdDrawMeshTasksIndirectCountEXT
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
 
     afxCmdId cmdId;
     _avxCmd* cmd = _AvxDctxPushCmd(dctx, _AVX_CMD_ID(DrawMeshTasksIndirectCountEXT), sizeof(cmd->DrawMeshTasksIndirectCountEXT), &cmdId);

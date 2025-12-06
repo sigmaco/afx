@@ -242,7 +242,8 @@ typedef enum afxFcc
     afxFcc_MOUT     = AFX_MAKE_FCC('m', 'o', 'u', 't'), // afxMixOutput
     afxFcc_MIN      = AFX_MAKE_FCC('m', 'i', 'n', '\0'), // afxMixInput
     afxFcc_ASIO     = AFX_MAKE_FCC('a', 's', 'i', 'o'), // afxSink
-    afxFcc_MIX      = AFX_MAKE_FCC('m', 'i', 'x', '\0'), // afxMixContext
+    afxFcc_MIX      = AFX_MAKE_FCC('m', 'i', 'x', '\0'), // afxMixer
+    afxFcc_MCTX     = AFX_MAKE_FCC('m', 'c', 't', 'x'), // afxMixContext
     afxFcc_MCMD     = AFX_MAKE_FCC('m', 'c', 'm', 'd'), // amxMixCmd
     afxFcc_MSES     = AFX_MAKE_FCC('m', 's', 'e', 's'), // amxTracker
     afxFcc_MCDC     = AFX_MAKE_FCC('m', 'c', 'd', 'c'), // amxCodec

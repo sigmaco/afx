@@ -108,6 +108,7 @@ _AVX void* AvxGetSurfaceUdd(afxSurface dout, afxUnit slotIdx)
     if (slotIdx >= ARRAY_SIZE(dout->udd))
     {
         AfxThrowError();
+        err = afxError_OUT_OF_RANGE;
         return NIL;
     }
     return dout->udd[slotIdx];
@@ -351,6 +352,7 @@ _AVX afxError AvxUnlockSurfaceBuffer(afxSurface dout, afxUnit bufIdx)
     if (!(bufIdx < dout->swapCnt))
     {
         AfxThrowError();
+        err = afxError_OUT_OF_RANGE;
         return err;
     }
 
@@ -374,6 +376,7 @@ _AVX afxBool AvxGetSurfaceCanvas(afxSurface dout, afxUnit bufIdx, avxCanvas* can
     if (bufIdx >= dout->swapCnt)
     {
         AfxThrowError();
+        err = afxError_OUT_OF_RANGE;
     }
     else
     {
@@ -433,6 +436,7 @@ _AVX afxBool AvxGetSurfaceFence(afxSurface dout, afxUnit bufIdx, avxFence* fence
     if (bufIdx >= dout->swapCnt)
     {
         AfxThrowError();
+        err = afxError_OUT_OF_RANGE;
     }
     else
     {

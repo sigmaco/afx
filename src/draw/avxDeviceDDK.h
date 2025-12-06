@@ -31,8 +31,8 @@ AFX_DEFINE_STRUCT(_avxDdevReg)
     afxDeviceInfo       dev;
     afxAcceleration     acceleration;
     avxAptitude         capabilities;
-    afxDrawFeatures     features;
-    afxDrawLimits       limits;
+    avxFeatures     features;
+    avxLimits       limits;
     afxUnit             minQueCnt; // usually 3
     afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
     afxBool             nonRhCoords;
@@ -65,8 +65,8 @@ AFX_OBJECT(afxDrawDevice)
 
     afxAcceleration     acceleration;
     avxAptitude         capabilities;
-    afxDrawFeatures     features;
-    afxDrawLimits       limits;
+    avxFeatures     features;
+    avxLimits       limits;
     afxUnit             minQueCnt; // usually 3
     afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
     afxString128        desc; // before port extintion
@@ -85,6 +85,6 @@ AVX afxClassConfig const _AVX_CLASS_CONFIG_DDEV;
 
 AVX void*           _AvxGetDrawDeviceIdd(afxDrawDevice ddev);
 
-AVX afxDrawLimits const* _AvxDdevGetLimits(afxDrawDevice ddev);
+AVX avxLimits const* _AvxDdevGetLimits(afxDrawDevice ddev);
 
 #endif//AVX_DEVICE_DDK_H

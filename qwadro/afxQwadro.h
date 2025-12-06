@@ -55,7 +55,7 @@
 // AMX
 #include "qwadro/mix/afxMixSystem.h"
 // AUX
-#include "qwadro/ux/afxShell.h"
+#include "qwadro/ux/afxEnvironment.h"
 #if !0
 // ARX
 #include "qwadro/scene/arxScenario.h"

@@ -101,7 +101,7 @@ _AFX afxError _XpuRollStreams(afxIoBridge exu, afxUnit cnt, afxStream streams[])
         if (err || mix->m.disposable)
         {
             AFX_ASSERT(mix->m.portId == spu->portId);
-            mix->m.state = avxContextStatus_INVALID;
+            mix->m.state = avxContextState_INVALID;
             afxMixQueue sque = AfxGetHost(mix);
             AFX_ASSERT_OBJECTS(afxFcc_MQUE, 1, &sque);
 

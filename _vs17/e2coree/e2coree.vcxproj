@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\qwadro\qwadro\mix\amxFormat.h" />
     <ClInclude Include="..\..\qwadro\afxQwadro.h" />
     <ClInclude Include="..\..\qwadro\base\afxChain.h" />
     <ClInclude Include="..\..\qwadro\base\afxClass.h" />
@@ -250,7 +251,7 @@
     <None Include="..\..\src\impl\xss\xssOptRandom.xss.inc" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\go-horse.txt" />
+    <Text Include="..\..\src\go-horse.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dep\c11threads\c11threads_win32.c">
@@ -424,6 +425,7 @@
     <ClCompile Include="..\..\src\mix\amxBuffered.c" />
     <ClCompile Include="..\..\src\mix\amxBufferIo.c" />
     <ClCompile Include="..\..\src\mix\amxContextDDK.c" />
+    <ClCompile Include="..\..\src\mix\amxFormat.c" />
     <ClCompile Include="..\..\src\mix\amxMixage.c" />
     <ClCompile Include="..\..\src\mix\amxBridge.c" />
     <ClCompile Include="..\..\src\mix\amxContext.c" />

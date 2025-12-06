@@ -48,7 +48,7 @@ _AMX afxError _AmxMsrcCtorCb(amxSource msrc, void** args, afxUnit invokeNo)
 
     afxMixSystem msys = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
-    //afxMixConfig const* cfg = ((afxMixConfig const *)args[1]) + invokeNo;
+    //amxContextConfig const* cfg = ((amxContextConfig const *)args[1]) + invokeNo;
     //AFX_ASSERT(cfg);
 
 

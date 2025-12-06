@@ -45,19 +45,19 @@ typedef enum amxAptitude
     amxAptitude_VAIO      = AFX_BITMASK(5),
 } amxAptitude;
 
-AFX_DEFINE_STRUCT(afxMixPortInfo)
+AFX_DEFINE_STRUCT(amxPortInfo)
 {
-    amxAptitude      capabilities;
+    amxAptitude     capabilities;
     afxAcceleration acceleration;
     afxUnit         minQueCnt; // usually 3
     afxUnit         maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
 };
 
-AFX_DEFINE_STRUCT(afxMixBridgeConfig)
+AFX_DEFINE_STRUCT(amxBridgeConfig)
 {
     afxUnit         mdevId;
     afxAcceleration acceleration;
-    amxAptitude      capabilities; // specifies capabilities of queues in a port.
+    amxAptitude     capabilities; // specifies capabilities of queues in a port.
     afxUnit         minQueCnt;
     afxReal const*  queuePriority;
 };

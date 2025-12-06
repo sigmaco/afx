@@ -47,8 +47,8 @@ _AVX afxError _AvxDpuWork_ExecuteCb(avxDpu* dpu, _avxIoReqPacket* work)
         afxDrawContext dctx = work->Execute.cmdbs[i].dctx;
         AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
 
-        AFX_ASSERT( (dctx->state == avxContextStatus_PENDING) ||
-                    (dctx->state == avxContextStatus_INTERNAL_EXECUTING));
+        AFX_ASSERT( (dctx->state == avxContextState_PENDING) ||
+                    (dctx->state == avxContextState_INTERNAL_EXECUTING));
 
         _AvxDpuRollContext(dpu, dctx);
         

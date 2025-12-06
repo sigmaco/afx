@@ -80,7 +80,7 @@ _AMX afxError AmxDescribeMixDevice(afxMixDevice mdev, afxMixDeviceInfo* desc)
     return err;
 }
 
-_AMX void AmxQueryMixDeviceLimits(afxMixDevice mdev, afxMixLimits* limits)
+_AMX void AmxQueryMixDeviceLimits(afxMixDevice mdev, amxLimits* limits)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
@@ -88,7 +88,7 @@ _AMX void AmxQueryMixDeviceLimits(afxMixDevice mdev, afxMixLimits* limits)
     *limits = mdev->limits;
 }
 
-_AMX void AmxQueryMixDeviceFeatures(afxMixDevice mdev, afxMixFeatures* features)
+_AMX void AmxQueryMixDeviceFeatures(afxMixDevice mdev, amxFeatures* features)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
@@ -96,7 +96,7 @@ _AMX void AmxQueryMixDeviceFeatures(afxMixDevice mdev, afxMixFeatures* features)
     *features = mdev->features;
 }
 
-_AMX void AmxQueryMixCapabilities(afxMixDevice mdev, afxMixPortInfo* caps)
+_AMX void AmxQueryMixCapabilities(afxMixDevice mdev, amxPortInfo* caps)
 {
     afxError err = { 0 };
     // @mdev must be a valid afxMixDevice handle.
@@ -114,7 +114,7 @@ _AMX void AmxQueryMixCapabilities(afxMixDevice mdev, afxMixPortInfo* caps)
     }
 }
 
-_AMX afxBool AmxIsMixDeviceAcceptable(afxMixDevice mdev, afxMixFeatures const* features, afxMixLimits const* limits)
+_AMX afxBool AmxIsMixDeviceAcceptable(afxMixDevice mdev, amxFeatures const* features, amxLimits const* limits)
 {
     afxError err = { 0 };
     // @mdev must be a valid afxMixDevice handle.
@@ -266,7 +266,7 @@ _AMX afxUnit AmxEnumerateMixDevices(afxUnit icd, afxUnit first, afxUnit cnt, afx
     return rslt;
 }
 
-_AMX afxUnit AmxChooseMixDevices(afxUnit icd, afxMixFeatures const* features, afxMixLimits const* limits, afxMixPortInfo const* caps, afxUnit maxCnt, afxUnit mdevId[])
+_AMX afxUnit AmxChooseMixDevices(afxUnit icd, amxFeatures const* features, amxLimits const* limits, amxPortInfo const* caps, afxUnit maxCnt, afxUnit mdevId[])
 {
     afxError err = { 0 };
     //AFX_ASSERT(limits);

@@ -33,14 +33,14 @@
 #define AFX_MAX_AUDITION_HEADS 8
 #define AFX_MAX_AUDIO_CHANNELS 32
 
-AFX_DEFINE_STRUCT(afxMixFeatures)
+AFX_DEFINE_STRUCT(amxFeatures)
 {
-    afxBool8    eax;
-    afxBool8    hrtf;
-    afxBool8    ambisonics;
+    afxBool8 eax;
+    afxBool8 hrtf;
+    afxBool8 ambisonics;
 };
 
-AFX_DEFINE_STRUCT(afxMixLimits)
+AFX_DEFINE_STRUCT(amxLimits)
 {
     afxUnit maxHeadCnt; // audition heads are listeners in Qwadro parlance. At least AFX_MAX_AUDIO_HEADS.
     afxUnit maxSrcCnt;
@@ -71,13 +71,20 @@ AFX_DEFINE_STRUCT(afxMixDeviceInfo)
  // MIX DEVICE HANDLING ///////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-AMX afxError AmxDescribeMixDevice(afxMixDevice mdev, afxMixDeviceInfo* desc);
+AMX afxError AmxDescribeMixDevice
+(
+    afxMixDevice mdev, 
+    afxMixDeviceInfo* desc
+);
 
-AMX afxBool AmxIsMixDevicePrompt(afxMixDevice mdev);
+AMX afxBool AmxIsMixDevicePrompt
+(
+    afxMixDevice mdev
+);
 
 /*
     The AmxQueryMixDeviceFeatures() function is a way to query and retrieve detailed information about
-    features of a specific mixing device. The afxMixFeatures structure holds the queried features, and after calling this function,
+    features of a specific mixing device. The amxFeatures structure holds the queried features, and after calling this function,
     you can access the capabilities of the device to make informed decisions about rendering or utilizing the device's features.
 */
 
@@ -86,8 +93,8 @@ AMX void AmxQueryMixDeviceFeatures
     // A handle for a mixing device to query for its features.
     afxMixDevice mdev, 
 
-    // A pointer to a afxMixFeatures structure where the results will be stored.
-    afxMixFeatures* features
+    // A pointer to a amxFeatures structure where the results will be stored.
+    amxFeatures* features
 );
 
 /*
@@ -103,8 +110,8 @@ AMX void AmxQueryMixDeviceLimits
     // The device to query for its limits.
     afxMixDevice mdev, 
 
-    // A afxMixLimits structure where the device's limits will be stored.
-    afxMixLimits* limits
+    // A amxLimits structure where the device's limits will be stored.
+    amxLimits* limits
 );
 
 /*
@@ -113,16 +120,16 @@ AMX void AmxQueryMixDeviceLimits
     would be considered acceptable for the application. If it fails to meet either one, the device would not be considered acceptable.
 */
 
-AVX afxBool AmxIsMixDeviceAcceptable
+AMX afxBool AmxIsMixDeviceAcceptable
 (
     // The device you are considering for use in your application.
     afxMixDevice mdev,
 
-    // A afxMixFeatures structure containing the required features that the mixing device must support.
-    afxMixFeatures const* features,
+    // A amxFeatures structure containing the required features that the mixing device must support.
+    amxFeatures const* features,
 
-    // A afxMixLimits structure containing the hardware limits that the mixing device should meet or exceed.
-    afxMixLimits const* limits
+    // A amxLimits structure containing the hardware limits that the mixing device should meet or exceed.
+    amxLimits const* limits
 );
 
 /*
@@ -139,7 +146,7 @@ AMX void AmxQueryMixCapabilities
     // The mixing device to query.
     afxMixDevice mdev, 
 
-    afxMixPortInfo* caps
+    amxPortInfo* caps
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -243,13 +250,13 @@ AVX afxUnit AmxChooseMixDevices
     afxUnit icd,
 
     // A structure that specifies the features that the mixing devices must support.
-    afxMixFeatures const* features,
+    amxFeatures const* features,
 
     // A structure that defines the limits that the mixing devices should meet.
-    afxMixLimits const* limits,
+    amxLimits const* limits,
 
     // The operations or features that the device must supports.
-    afxMixPortInfo const* caps,
+    amxPortInfo const* caps,
 
     // The maximum number of devices to be selected and returned in the @ddevIds array.
     afxUnit maxCnt,

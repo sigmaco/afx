@@ -34,9 +34,9 @@ _AMX afxCmdId AmxCmdCommenceMixScope(afxMixContext mix, amxMixScope const* scope
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -64,9 +64,9 @@ _AMX afxCmdId AmxCmdConcludeMixScope(afxMixContext mix)
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -79,9 +79,9 @@ _AMX afxCmdId AmxCmdReverb(afxMixContext mix, afxUnit voice, afxReal wetMix, afx
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -100,9 +100,9 @@ _AMX afxCmdId AmxCmdPhaser(afxMixContext mix, afxUnit voice, afxReal floor, afxR
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -123,9 +123,9 @@ _AMX afxCmdId AmxCmdGainer(afxMixContext mix, afxUnit voice, afxReal gain, afxRe
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -142,9 +142,9 @@ _AMX afxCmdId AmxCmdFlanger(afxMixContext mix, afxUnit voice, afxReal amount, af
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -165,9 +165,9 @@ _AMX afxCmdId AmxCmdAnalog(afxMixContext mix, afxUnit voice, afxUnit type, afxUn
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -190,9 +190,9 @@ _AMX afxCmdId AmxCmdCompressor(afxMixContext mix, afxUnit voice, afxReal thresho
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -211,9 +211,9 @@ _AMX afxCmdId AmxCmdLineIn(afxMixContext mix, afxUnit voice, afxUnit line, afxMa
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -232,9 +232,9 @@ _AMX afxCmdId AmxCmdRemoteIn(afxMixContext mix, afxUnit voice, afxUnit src, afxM
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -252,9 +252,9 @@ _AMX afxCmdId AmxCmdSend(afxMixContext mix, afxUnit voice, afxBool muteSrc, afxR
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -272,9 +272,9 @@ _AMX afxCmdId AmxCmdResampleAudio(afxMixContext mix, amxAudio src, amxAudio dst,
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     amxAudioInfo srcd, dstd;
     AmxDescribeAudio(src, &srcd);
@@ -304,9 +304,9 @@ _AMX afxCmdId AmxCmdResampleBufferedAudio(afxMixContext mix, amxBufferedAudio co
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -325,9 +325,9 @@ _AMX afxCmdId AmxCmdFetchAudition(afxMixContext mix, afxUnit voice, afxUnit head
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;
@@ -342,9 +342,9 @@ _AMX afxCmdId AmxCmdDeclareTimelineBarrier(afxMixContext mix, afxReal time)
 {
     afxError err = { 0 };
     // mix must be a valid afxMixContext handle.
-    AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+    AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
     // mix must be in the recording state.
-    AFX_ASSERT(mix->state == amxMixState_RECORDING);
+    AFX_ASSERT(mix->state == amxContextState_RECORDING);
 
     afxCmdId cmdId;
     _amxCmd* cmd;

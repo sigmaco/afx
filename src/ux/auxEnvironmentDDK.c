@@ -28,32 +28,36 @@ _AUX afxUnit64 _AfxEnvPollInputCb(afxEnvironment env, afxFlags flags, afxUnit64 
     return 0;
 }
 
-_AUX afxBool _AfxEnvHasClipboardContentCb(afxEnvironment env, afxUnit slot, afxFlags flags)
+_AUX afxBool _AfxEnvHasClipboardContentCb(afxEnvironment env, afxUnit seat, afxUnit slot, afxFlags flags)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
-    return env->clipb.s.len;
+    AFX_ASSERT_RANGE(env->seatCnt, seat, 1);
+    return env->seats[seat].clipb.s.len;
 }
 
-_AUX afxUnit _AfxEnvGetClipboardContentCb(afxEnvironment env, afxUnit slot, afxFlags flags, afxString* buf)
+_AUX afxUnit _AfxEnvGetClipboardContentCb(afxEnvironment env, afxUnit seat, afxUnit slot, afxFlags flags, afxString* buf)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
-    return AfxCopyString(buf, 0, &env->clipb.s, 0);
+    AFX_ASSERT_RANGE(env->seatCnt, seat, 1);
+    return AfxCopyString(buf, 0, &env->seats[seat].clipb.s, 0);
 }
 
-_AUX afxError _AfxEnvSetClipboardContentCb(afxEnvironment env, afxUnit slot, afxFlags flags, afxString const* buf)
+_AUX afxError _AfxEnvSetClipboardContentCb(afxEnvironment env, afxUnit seat, afxUnit slot, afxFlags flags, afxString const* buf)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
-    AfxCopyString(&env->clipb.s, 0, buf, 0);
+    AFX_ASSERT_RANGE(env->seatCnt, seat, 1);
+    AfxCopyString(&env->seats[seat].clipb.s, 0, buf, 0);
     return err;
 }
 
-_AUX afxError _AfxEnvFocusWindowCb(afxEnvironment env, afxWindow wnd, afxFlags flags)
+_AUX afxError _AfxEnvFocusWindowCb(afxEnvironment env, afxUnit seat, afxWindow wnd, afxFlags flags)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
+    AFX_ASSERT_RANGE(env->seatCnt, seat, 1);
 
     afxWindow curr = env->focusedWnd;
 

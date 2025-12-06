@@ -16,7 +16,7 @@
 
 // This software is part of Advanced Multimedia Extensions & Experiments.
 
-// It is too hard to invent something when there is nothing to be copied. — Veryzon
+// It is hard to invent something when there is nothing to be copied.
 
 #define _AFX_CORE_C
 //#define _AFX_DEVICE_C
@@ -60,7 +60,7 @@ _AMX afxModule AmxGetMixSystemIcd(afxMixSystem msys)
     return mdle;
 }
 
-_AMX void AmxGetEnabledDrawFeatures(afxMixSystem msys, afxMixFeatures* features)
+_AMX void AmxGetEnabledMixFeatures(afxMixSystem msys, amxFeatures* features)
 {
     afxError err = { 0 };
     // @msys must be a valid afxMixSystem handle.
@@ -107,7 +107,7 @@ _AMX afxClass const* _AmxMsysGetMixClass(afxMixSystem msys)
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
     afxClass const* cls = &msys->mixCls;
-    AFX_ASSERT_CLASS(cls, afxFcc_MIX);
+    AFX_ASSERT_CLASS(cls, afxFcc_MCTX);
     return cls;
 }
 
@@ -219,7 +219,7 @@ _AMX afxUnit AmxChooseMixBridges(afxMixSystem msys, afxUnit mdevId, amxAptitude 
 
         if (caps)
         {
-            afxMixPortInfo capsi;
+            amxPortInfo capsi;
             AmxQueryMixCapabilities(mdev, &capsi);
 
             if ((capsi.capabilities & caps) != caps)
@@ -646,8 +646,8 @@ _AMX afxError _AmxMsysCtorCb(afxMixSystem msys, void** args, afxUnit invokeNo)
         AFX_ASSERT(clsCfg.fcc == afxFcc_MENC);
         AfxMountClass(&msys->mencCls, NIL, classes, &clsCfg);
 
-        clsCfg = cfg->mixClsCfg ? *cfg->mixClsCfg : _AMX_MIX_CLASS_CONFIG;
-        AFX_ASSERT(clsCfg.fcc == afxFcc_MIX);
+        clsCfg = cfg->mixClsCfg ? *cfg->mixClsCfg : _AMX_MCTX_CLASS_CONFIG;
+        AFX_ASSERT(clsCfg.fcc == afxFcc_MCTX);
         AfxMountClass(&msys->mixCls, NIL, classes, &clsCfg);
 
         clsCfg = cfg->traxClsCfg ? *cfg->traxClsCfg : _AMX_TRAX_CLASS_CONFIG;
@@ -743,7 +743,7 @@ _AMX afxError _AmxMsysCtorCb(afxMixSystem msys, void** args, afxUnit invokeNo)
         afxMixDevice mdev = AmxGetBridgedMixDevice(mexu, NIL);
         AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
 
-        afxMixPortInfo capsi;
+        amxPortInfo capsi;
         AmxQueryMixCapabilities(mdev, &capsi);
 
         if ((capsi.capabilities & amxAptitude_DMA) == amxAptitude_DMA)
@@ -856,7 +856,7 @@ _AMX afxUnit AmxInvokeMixSystems(afxUnit icd, afxUnit first, void *udd, afxBool(
     return rslt;
 }
 
-_AMX afxError AmxConfigureMixSystem(afxUnit icd, afxMixSystemConfig* cfg)
+_AMX afxError AmxConfigureMixSystem(afxUnit icd, amxSystemConfig* cfg)
 {
     afxError err = { 0 };
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
@@ -893,7 +893,7 @@ _AMX afxError AmxConfigureMixSystem(afxUnit icd, afxMixSystemConfig* cfg)
             {
                 AFX_ASSERT_OBJECTS(afxFcc_MDEV, 1, &mdev);
 
-                afxMixPortInfo capsi;
+                amxPortInfo capsi;
                 AmxQueryMixCapabilities(mdev, &capsi);
 
                 if (caps && !(caps & capsi.capabilities))
@@ -918,7 +918,7 @@ _AMX afxError AmxConfigureMixSystem(afxUnit icd, afxMixSystemConfig* cfg)
 
         for (afxUnit i = 0; i < exuCnt; i++)
         {
-            afxMixPortInfo capsi = { 0 };
+            amxPortInfo capsi = { 0 };
             capsi.acceleration = cfg->exus[i].acceleration ? cfg->exus[i].acceleration : accel;
             capsi.capabilities = cfg->exus[i].capabilities ? cfg->exus[i].capabilities : caps;
             capsi.minQueCnt = cfg->exus[i].minQueCnt;
@@ -953,7 +953,7 @@ _AMX afxError AmxConfigureMixSystem(afxUnit icd, afxMixSystemConfig* cfg)
     return err;
 }
 
-_AMX afxError AmxEstablishMixSystem(afxUnit icd, afxMixSystemConfig const* cfg, afxMixSystem* system)
+_AMX afxError AmxEstablishMixSystem(afxUnit icd, amxSystemConfig const* cfg, afxMixSystem* system)
 {
     afxError err = { 0 };
     AFX_ASSERT(icd != AFX_INVALID_INDEX);
@@ -995,7 +995,7 @@ _AMX afxError AmxEstablishMixSystem(afxUnit icd, afxMixSystemConfig const* cfg, 
 
     for (afxUnit i = 0; i < cfg->exuCnt; i++)
     {
-        afxMixBridgeConfig const* exuCfg = &cfg->exus[i];
+        amxBridgeConfig const* exuCfg = &cfg->exus[i];
 
         afxUnit bridgeIdx = AFX_INVALID_INDEX;
 
@@ -1039,7 +1039,7 @@ _AMX afxError AmxEstablishMixSystem(afxUnit icd, afxMixSystemConfig const* cfg, 
         bridgeCfg[bridgeCnt].mdev = mdev;
 
         afxUnit minQueCnt = AFX_CLAMP(exuCfg->minQueCnt, 1, AMX_MAX_QUEUES_PER_BRIDGE);;
-        afxMixPortInfo capsi2 = { 0 };
+        amxPortInfo capsi2 = { 0 };
         capsi2.capabilities = exuCfg->capabilities;
         capsi2.acceleration = exuCfg->acceleration;
         capsi2.minQueCnt = minQueCnt;
@@ -1047,7 +1047,7 @@ _AMX afxError AmxEstablishMixSystem(afxUnit icd, afxMixSystemConfig const* cfg, 
         bridgeCfg[bridgeCnt].exuIdx = bridgeCnt;
         bridgeCfg[bridgeCnt].minQueCnt = minQueCnt;
         bridgeCfg[bridgeCnt].mqueClsCfg = &_AMX_MQUE_CLASS_CONFIG;
-        bridgeCfg[bridgeCnt].mixClsCfg = &_AMX_MIX_CLASS_CONFIG;
+        bridgeCfg[bridgeCnt].mixClsCfg = &_AMX_MCTX_CLASS_CONFIG;
         ++bridgeCnt;
     }
 

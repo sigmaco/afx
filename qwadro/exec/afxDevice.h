@@ -72,6 +72,22 @@ typedef enum afxDeviceStatus
     afxDeviceStatus_ALL         = afxDeviceStatus_ACTIVE | afxDeviceStatus_DISABLED | afxDeviceStatus_AUSENT | afxDeviceStatus_UNPLUGGED, // Includes devices in all states.
 } afxDeviceStatus;
 
+typedef enum afxVendorId
+{
+    afxVendorId_SIGMA   = AFX_MAKE_FCC('S', 'I', 'G', '\0'),
+    afxVendorId_STG     = AFX_MAKE_FCC('S', 'T', 'G', '\0'),
+    afxVendorId_QWADRO  = AFX_MAKE_FCC('Q', 'W', '\0', '\0'),
+    afxVendorId_ENGITECH= AFX_MAKE_FCC('E', 'N', 'G', '\0'),
+    afxVendorId_ELITE   = AFX_MAKE_FCC('E', 'L', 'I', 'T'),
+    afxVendorId_DAL     = AFX_MAKE_FCC('D', 'A', 'L', '\0'),
+    afxVendorId_MAGOTA  = AFX_MAKE_FCC('M', 'A', 'G', 'O'),
+    afxVendorId_AYO     = AFX_MAKE_FCC('A', 'Y', 'O', '\0'),
+    afxVendorId_PRODATA = AFX_MAKE_FCC('P', 'R', 'O', 'D'),
+    afxVendorId_INTEL   = AFX_MAKE_FCC('I', 'N', 'T', 'L'),
+    afxVendorId_AMD     = AFX_MAKE_FCC('A', 'M', 'D', '\0'),
+    afxVendorId_NVIDIA  = AFX_MAKE_FCC('N', 'V', '\0', '\0'),
+} afxVendorId;
+
 AFX_DEFINE_STRUCT(afxDeviceInfo)
 {
     afxString           urn; // device URN

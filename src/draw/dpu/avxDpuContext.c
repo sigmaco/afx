@@ -47,13 +47,13 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
 
     switch (dctx->state)
     {
-    case avxContextStatus_PENDING:
+    case avxContextState_PENDING:
     {
         AfxIncAtom32(&dctx->submCnt);
-        dctx->state = avxContextStatus_INTERNAL_EXECUTING;
+        dctx->state = avxContextState_INTERNAL_EXECUTING;
         break;
     }
-    case avxContextStatus_INTERNAL_EXECUTING:
+    case avxContextState_INTERNAL_EXECUTING:
     {
         AFX_ASSERT((dctx->cmdFlags & avxCmdFlag_SHARED));
         AfxIncAtom32(&dctx->submCnt);
@@ -61,8 +61,8 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
     }
     default:
     {
-        AFX_ASSERT( (dctx->state == avxContextStatus_PENDING) ||
-                    (dctx->state == avxContextStatus_INTERNAL_EXECUTING));
+        AFX_ASSERT( (dctx->state == avxContextState_PENDING) ||
+                    (dctx->state == avxContextState_INTERNAL_EXECUTING));
         AfxThrowError();
         return err;
     }
@@ -83,12 +83,13 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
         {
             break;
         }
-
-        //if (cmdb->state != avxContextStatus_PENDING)
+#if 0
+        if (cmdb->state != avxContextState_PENDING)
         {
-            //AfxThrowError();
-            //break;
+            AfxThrowError();
+            break;
         }
+#endif
 
         AFX_ASSERT(cmdVmt->f[cmdHdr->hdr.id]);
         cmdVmt->f[cmdHdr->hdr.id](dpu, cmdHdr);
@@ -96,18 +97,18 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
 
     switch (dctx->state)
     {
-    case avxContextStatus_INTERNAL_EXECUTING:
+    case avxContextState_INTERNAL_EXECUTING:
     {
         if (0 == AfxDecAtom32(&dctx->submCnt))
         {
             if (dctx->cmdFlags & avxCmdFlag_ONCE)
             {
-                dctx->state = avxContextStatus_INVALID;
+                dctx->state = avxContextState_INVALID;
                 AvxPrepareDrawCommands(dctx, FALSE, NIL);
             }
             else
             {
-                dctx->state = avxContextStatus_EXECUTABLE;
+                dctx->state = avxContextState_EXECUTABLE;
             }
         }
         else
@@ -118,7 +119,7 @@ _AVX afxError _AvxDpuRollContext(avxDpu* dpu, afxDrawContext dctx)
     }
     default:
     {
-        AFX_ASSERT((dctx->state == avxContextStatus_INTERNAL_EXECUTING));
+        AFX_ASSERT((dctx->state == avxContextState_INTERNAL_EXECUTING));
         AfxThrowError();
         return err;
     }

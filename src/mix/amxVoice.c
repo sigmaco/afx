@@ -23,7 +23,7 @@
 //#define _AMX_MIX_SYSTEM_C
 #include "amxIcd.h"
 
-// This is the sound of Z.
+// This is the sound of Z; the sound that creates a new dimension.
 
 typedef enum amxVoiceState
 {

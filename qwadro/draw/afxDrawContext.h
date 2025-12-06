@@ -97,7 +97,7 @@ typedef enum avxContextFlag
     avxContextFlag_PROTECTED    = AFX_BITMASK(2),
 } avxContextFlags;
 
-AFX_DEFINE_STRUCT(avxContextInfo)
+AFX_DEFINE_STRUCT(avxContextConfig)
 {
     avxAptitude     caps;
     afxMask         exuMask;
@@ -128,7 +128,7 @@ AVX afxError AvxAcquireDrawContexts
     // An optional base context to provide a shared command pool.
     afxDrawContext pool,
     // The information specifying the operation context.
-    avxContextInfo const* info,
+    avxContextConfig const* info,
     // The count of the draw contexts wanted to be allocated.
     afxUnit cnt,
     // An array of draw contexts to be allocated.

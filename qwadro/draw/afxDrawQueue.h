@@ -165,7 +165,7 @@ AFX_DEFINE_STRUCT(avxTransference)
 
 AVX afxDrawSystem   AvxGetDrawQueueDock(afxDrawQueue dque);
 
-AVX afxError        AvxWaitForEmptyDrawQueue
+AVX afxError AvxWaitForEmptyDrawQueue
 (
     afxDrawQueue dque, 
     afxUnit64 timeout
@@ -175,7 +175,7 @@ AVX afxError        AvxWaitForEmptyDrawQueue
 /// Close a queue debug label region.
 /// Insert a label into a queue.
 
-AVX void            AvxBeginDrawQueueDebugScope
+AVX void AvxBeginDrawQueueDebugScope
 (
     afxDrawSystem dsys, 
     afxUnit exuIdx, 
@@ -184,7 +184,7 @@ AVX void            AvxBeginDrawQueueDebugScope
     avxColor const color
 );
 
-AVX void            AvxPushDrawQueueDebugLabel
+AVX void AvxPushDrawQueueDebugLabel
 (
     afxDrawSystem dsys, 
     afxUnit exuIdx, 
@@ -193,7 +193,7 @@ AVX void            AvxPushDrawQueueDebugLabel
     avxColor const color
 );
 
-AVX void            AvxEndDrawQueueDebugScope
+AVX void AvxEndDrawQueueDebugScope
 (
     afxDrawSystem dsys, 
     afxUnit exuIdx, 

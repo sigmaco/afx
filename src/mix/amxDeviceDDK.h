@@ -32,8 +32,8 @@ AFX_DEFINE_STRUCT(_amxMdevReg)
     afxDeviceInfo       dev;
     afxAcceleration     acceleration;
     amxAptitude          capabilities;
-    afxMixFeatures      features;
-    afxMixLimits        limits;
+    amxFeatures      features;
+    amxLimits        limits;
     afxUnit             minQueCnt; // usually 3
     afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
 };
@@ -51,8 +51,8 @@ AFX_OBJECT(afxMixDevice)
     AFX_OBJ(afxDevice)  dev;
     afxAcceleration     acceleration;
     amxAptitude          capabilities;
-    afxMixFeatures      features;
-    afxMixLimits        limits;
+    amxFeatures      features;
+    amxLimits        limits;
     afxUnit             minQueCnt; // usually 3
     afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
     afxString128        desc; // before port extintion

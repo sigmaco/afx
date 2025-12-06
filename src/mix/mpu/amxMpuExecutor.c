@@ -48,26 +48,14 @@ _AMX afxError _AmxMpuWork_ExecuteCb(amxMpu* mpu, _amxIoReqPacket* work)
     for (afxUnit i = 0; i < cnt; i++)
     {
         afxMixContext mctx = work->Execute.cmdbs[i].mctx;
-        AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
-        afxUnit batchId = mctx->batchId;
-        _amxCmdBatch* cmdb = _AmxMctxGetCmdBatch(mctx, batchId);
+        AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mctx);
+        
+        AFX_ASSERT( (mctx->state == amxContextState_PENDING) ||
+                    (mctx->state == amxContextState_INTERNAL_EXECUTING));
 
-        if (!cmdb)
-        {
-            AfxThrowError();
-            return err;
-        }
-
-        //AFX_ASSERT(cmdb->state == amxMixState_PENDING);
         _AmxMpuRollMixContexts(mpu, mctx);
 
         // Must be disposed because AmxSubmitMixCommands() reacquires it.
-        AfxDecAtom32(&cmdb->submCnt);
-        AmxRecycleMixCommands(mctx, /*batchId,*/ FALSE);
-#if 0
-        AFX_ASSERT(!AmxDoesMixCommandsExist_(dctx, batchId));
-        AfxReportf(0, AfxHere(), "%d dpu %d", batchId, dpu->exuIdx);
-#endif
         AfxDisposeObjects(1, &mctx);
     }
 
@@ -395,8 +383,8 @@ _AMX afxBool _AmxMpu_ProcCb(amxMpu* mpu)
     afxClass* mixCls = (afxClass*)_AmxMsysGetMixClass(AfxGetHost(mexu));
     while (AfxEnumerateObjects(mixCls, j++, 1, (afxObject*)&mix2))
     {
-        AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix2);
-        (mix2->state == amxMixState_PENDING);
+        AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix2);
+        (mix2->state == amxContextState_PENDING);
 
         afxUnit k = 0;
         amxVoice vox;

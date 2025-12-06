@@ -96,7 +96,7 @@ _AUX afxError _AuxSshCtorCb(afxShell ssh, void** args, afxUnit invokeNo)
 
     afxModule icd = args[0];
     AFX_ASSERT_OBJECTS(afxFcc_MDLE, 1, &icd);
-    afxShellInfo const* info = ((afxShellInfo const *)args[1]) + invokeNo;
+    _auxShellAcq const* info = ((_auxShellAcq const *)args[1]) + invokeNo;
     AFX_ASSERT(info);
 
     if (_AFX_DEV_CLASS_CONFIG.ctor(&ssh->dev, (void*[]) { icd, (void*)&info->dev }, 0)) AfxThrowError();

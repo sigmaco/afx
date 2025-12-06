@@ -49,7 +49,7 @@ AFX_DEFINE_STRUCT(_amxDdiMsys)
 AFX_DEFINE_STRUCT(__amxMsysAcq)
 {
     afxUnit             bridgeCnt;
-    afxMixFeatures      reqFeatures;
+    amxFeatures      reqFeatures;
     afxUnit             reqExtCnt;
     afxString const*    reqExts;
     void*               udd;
@@ -90,8 +90,8 @@ AFX_OBJECT(afxMixSystem)
     afxMask             dedCfxExuMask;
     afxMask             gfxExuMask;
     afxMask             videoExuMask;
-    afxMixFeatures      requirements;
-    afxMixLimits const* limits;
+    amxFeatures      requirements;
+    amxLimits const* limits;
 
     //afxChain            classes;
     afxClass            mexuCls;

@@ -73,7 +73,7 @@ typedef enum avxAptitude
     avxAptitude_RTX      = AFX_BITMASK(5),
 } avxAptitude;
 
-AFX_DEFINE_STRUCT(afxDrawPortInfo)
+AFX_DEFINE_STRUCT(avxPortInfo)
 {
     avxAptitude         capabilities;
     afxAcceleration     acceleration;
@@ -81,7 +81,7 @@ AFX_DEFINE_STRUCT(afxDrawPortInfo)
     afxUnit             maxQueCnt; // the count of queues in this port. Each port must support at least one queue.
 };
 
-AFX_DEFINE_STRUCT(afxDrawBridgeConfig)
+AFX_DEFINE_STRUCT(avxBridgeConfig)
 {
     afxUnit             ddevId;
     afxAcceleration     acceleration;
@@ -90,19 +90,19 @@ AFX_DEFINE_STRUCT(afxDrawBridgeConfig)
     afxReal const*      queuePriority;
 };
 
-AVX afxDrawSystem   AvxGetBridgedDrawSystem
+AVX afxDrawSystem AvxGetBridgedDrawSystem
 (
     afxDrawBridge dexu, 
     afxUnit* bridgeId
 );
 
-AVX afxDrawDevice   AvxGetBridgedDrawDevice
+AVX afxDrawDevice AvxGetBridgedDrawDevice
 (
     afxDrawBridge dexu, 
     afxUnit* ddevId
 );
 
-AVX afxUnit         AvxGetDrawQueues
+AVX afxUnit AvxGetDrawQueues
 (
     afxDrawBridge dexu, 
     afxUnit baseQueIdx, 
@@ -110,7 +110,7 @@ AVX afxUnit         AvxGetDrawQueues
     afxDrawQueue queues[]
 );
 
-AVX afxError        AvxWaitForIdleDrawBridge
+AVX afxError AvxWaitForIdleDrawBridge
 (
     afxDrawBridge dexu, 
     afxUnit64 timeout

@@ -46,18 +46,51 @@
 #include "qwadro/mix/amxAudio.h"
 #include "qwadro/mix/amxVoice.h"
 
-AFX_DEFINE_STRUCT(afxMixConfig)
+typedef enum amxCmdFlag
 {
-    afxFlags    flags;
-    afxString   tag;
-    void*       udd;
+    // Commands will be submitted once only and then automatically invalidated.
+    amxCmdFlag_ONCE = AFX_BITMASK(0),
+    // Commands will be side-loaded (inlined) by a front context.
+    amxCmdFlag_DEFERRED = AFX_BITMASK(1),
+    // Commands are considered entirely inside a mixing scope (to be used by a front context).
+    amxCmdFlag_SCOPED = AFX_BITMASK(2),
+    // Commands will be shared across more than one MPU concurrently.
+    amxCmdFlag_SHARED = AFX_BITMASK(3)
+} amxCmdFlags;
+
+typedef enum amxContextFlag
+{
+    amxContextFlag_TRANSIENT = AFX_BITMASK(0),
+    amxContextFlag_MONOLITHIC = AFX_BITMASK(1)
+} amxContextFlags;
+
+AFX_DEFINE_STRUCT(amxContextConfig)
+{
+    amxAptitude     caps;
+    afxMask         exuMask;
+    amxContextFlags flags;
+    amxCmdFlags     cmdFlags;
+    afxUnit         auxCnt;
+    // The capacity of recycle queue.
+    afxUnit         recycCap;
+    void*           udd;
+    afxString       tag;
 };
 
-AMX afxError AmxAcquireMixContext
+AMX afxError AmxAcquireMixContexts
 (
     afxMixSystem msys,
-    afxMixConfig const* mcfg,
-    afxMixContext* context
+    afxMixContext pool,
+    amxContextConfig const* info,
+    afxUnit cnt,
+    afxMixContext contexts[]
+);
+
+AMX afxError AmxRecycleMixContexts
+(
+    afxBool freeRes, 
+    afxUnit cnt, 
+    afxMixContext contexts[]
 );
 
 AMX afxError AmxExecuteMixCommands
@@ -69,12 +102,12 @@ AMX afxError AmxExecuteMixCommands
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AMX afxUnit AmxGetCommandPort
+AMX afxMask AmxGetCommandPort
 (
     afxMixContext mix
 );
 
-AMX afxUnit AmxGetCommandPool
+AMX afxMixContext AmxGetCommandPool
 (
     afxMixContext mix
 );
@@ -85,34 +118,18 @@ AMX afxError AmxExhaustMixContext
     afxBool freeMem
 );
 
-AMX afxError AmxRecordMixCommands
+AMX afxError AmxPrepareMixCommands
 (
     // The mix context which the batch will be allocated from.
     afxMixContext mctx,
-    // A flag specifying a one-time submission batch.
-    afxBool once,
-    // A flag specifying a inlineable batch.
-    afxBool deferred
-);
-
-AMX afxError AmxDiscardMixCommands
-(
-    afxMixContext mctx,
-    afxBool freeRes
+    afxBool purge,
+    amxCmdFlags flags
 );
 
 AMX afxError AmxCompileMixCommands
 (
     // The mix context recording commands.
     afxMixContext mctx
-);
-
-AMX afxError AmxRecycleMixCommands
-(
-    // The mix context that holds the commands.
-    afxMixContext mctx,
-    // A flag that indicates whether all or most of the resources owned by the batch should be reclaimed by the system.
-    afxBool freeRes
 );
 
 #endif//AMX_MIX_CONTEXT_H

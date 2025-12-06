@@ -20,6 +20,7 @@
 #define _AMX_MIX_C
 #define _AMX_MIX_BRIDGE_C
 #define _AMX_MIX_QUEUE_C
+#define _AMX_MIX_CONTEXT_C
 #define _AMX_BUFFER_C
 #include "amxIcd.h"
 
@@ -158,7 +159,7 @@ _AMX afxError _AmxMqueSubmitCallback(afxMixQueue mque, afxError(*f)(void*, void*
     return err;
 }
 
-_AMX afxError _AmxMqueExecuteMixCommands(afxMixQueue mque, afxUnit cnt, amxSubmission subms[])
+_AMX afxError _AmxMqueSubmitMixCommands(afxMixQueue mque, afxUnit cnt, amxSubmission subms[])
 {
     afxError err = { 0 };
     // mque must be a valid afxMixQueue handle.
@@ -191,9 +192,19 @@ _AMX afxError _AmxMqueExecuteMixCommands(afxMixQueue mque, afxUnit cnt, amxSubmi
             iorp->Execute.cmdbCnt = 1;
 
             afxMixContext mctx = subms[i].mctx;
-            AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mctx);
+            AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mctx);
             AfxReacquireObjects(1, &mctx);
-            //mctx->state = amxMixContextState_PENDING;
+            AFX_ASSERT(!(mctx->cmdFlags & amxCmdFlag_DEFERRED));
+
+            if (mctx->state != amxContextState_INTERNAL_EXECUTING)
+            {
+                if (mctx->state = amxContextState_EXECUTABLE)
+                    mctx->state = amxContextState_PENDING;
+            }
+            else
+            {
+                AFX_ASSERT(mctx->cmdFlags & amxCmdFlag_SHARED);
+            }
 
             iorp->Execute.cmdbs[i].mctx = mctx;
             iorp->Execute.cmdbs[i].wait = subms[i].wait;

@@ -124,7 +124,7 @@ _AMX afxError AmxStartTracker(amxTracker trax, afxBool resume)
         AFX_ASSERT_OBJECTS(afxFcc_MSYS, 1, &msys);
 
         AfxPushLink(&trax->executor, &msys->activeTrackers);
-        //trax->state = amxMixState_PENDING;
+        //trax->state = amxContextState_PENDING;
         trax->motor.localClock = 0;
         trax->motor.localDur = 1;
         trax->motor.iterCnt = 1;

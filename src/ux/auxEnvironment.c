@@ -83,13 +83,14 @@ _AUX afxClass const* _AuxEnvGetXssClass(afxEnvironment env)
     return cls;
 }
 
-_AUX afxBool AfxGetFocusedWindow(afxWindow* window)
+_AUX afxBool AfxGetFocusedWindow(afxUnit seat, afxWindow* window)
 {
     afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env)) return afxError_NOT_READY;
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
+    AFX_ASSERT_RANGE(env->seatCnt, seat, 1);
 
     afxWindow wnd = env->focusedWnd;
     if (window) *window = wnd;
@@ -97,15 +98,16 @@ _AUX afxBool AfxGetFocusedWindow(afxWindow* window)
     return !!wnd;
 }
 
-_AUX afxError AfxFocusWindow(afxWindow wnd, afxFlags flags)
+_AUX afxError AfxFocusWindow(afxUnit seat, afxWindow wnd, afxFlags flags)
 {
     afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env)) return afxError_NOT_READY;
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
+    AFX_ASSERT_RANGE(env->seatCnt, seat, 1);
 
-    return env->ddi->focusCb(env, wnd, flags);
+    return env->ddi->focusCb(env, seat, wnd, flags);
 }
 
 _AUX afxError AfxDrawBackgroundEXT(afxDrawContext dctx, afxFlags flags)
@@ -154,43 +156,46 @@ _AUX afxBool AfxGetEnvironmentAudio(afxMixSystem* system, afxSink* sink)
     return !!msys;
 }
 
-_AUX afxBool AfxHasClipboardContent(afxUnit slot, afxFlags flags)
+_AUX afxBool AfxHasClipboardContent(afxUnit seat, afxUnit slot, afxFlags flags)
 {
     afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
+    AFX_ASSERT_RANGE(env->seatCnt, seat, 1);
 
-    return env->ddi->hasClipboardCb(env, slot, flags);
+    return env->ddi->hasClipboardCb(env, seat, slot, flags);
 }
 
-_AUX afxUnit AfxGetClipboardContent(afxUnit slot, afxFlags flags, afxString* buf)
+_AUX afxUnit AfxGetClipboardContent(afxUnit seat, afxUnit slot, afxFlags flags, afxString* buf)
 {
     afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env)) return 0;
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
+    AFX_ASSERT_RANGE(env->seatCnt, seat, 1);
 
-    return env->ddi->getClipboardCb(env, slot, flags, buf);
+    return env->ddi->getClipboardCb(env, seat, slot, flags, buf);
 }
 
-_AUX afxError AfxSetClipboardContent(afxUnit slot, afxFlags flags, afxString const* text)
+_AUX afxError AfxSetClipboardContent(afxUnit seat, afxUnit slot, afxFlags flags, afxString const* text)
 {
     afxError err = { 0 };
 
     afxEnvironment env;
     if (!AfxGetEnvironment(&env)) return err;
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
+    AFX_ASSERT_RANGE(env->seatCnt, seat, 1);
 
-    if (env->ddi->setClipboardCb(env, slot, flags, text))
+    if (env->ddi->setClipboardCb(env, seat, slot, flags, text))
         AfxThrowError();
 
     return err;
 }
 
-_AUX afxBool AfxGetCursorPlacement(afxRect* rc, afxWindow wnd, afxRect* onFrame, afxRect* onSurface)
+_AUX afxBool AfxGetCursorPlacement(afxUnit seat, afxRect* rc, afxWindow wnd, afxRect* onFrame, afxRect* onSurface)
 {
     afxError err = { 0 };
     AFX_ASSERT(!wnd || (onFrame || onSurface));
@@ -200,10 +205,11 @@ _AUX afxBool AfxGetCursorPlacement(afxRect* rc, afxWindow wnd, afxRect* onFrame,
     afxEnvironment env;
     if (!AfxGetEnvironment(&env)) return FALSE;
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
+    AFX_ASSERT_RANGE(env->seatCnt, seat, 1);
 
     if (env->ddi->getCurs)
     {
-        return env->ddi->getCurs(env, rc, wnd, onFrame, onSurface);
+        return env->ddi->getCurs(env, seat, rc, wnd, onFrame, onSurface);
     }
     else
     {
@@ -283,59 +289,13 @@ _AUX afxError AfxTakeFullscreen(afxWindow wnd, afxBool fullscreen)
     return err;
 }
 
-_AUX afxError AfxCloseEnvironment(void)
-{
-    afxError err = { 0 };
-
-    afxEnvironment env;
-    if (AfxGetEnvironment(&env))
-    {
-        AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
-
-        AfxExhaustChainedClasses(&env->classes);
-
-        gActiveEnv = NIL;
-    }
-    return err;
-}
-
-_AUX afxError AfxOpenEnvironment(afxEnvironment env, afxUri const* host, afxAuthMethod method, afxString const* credential)
-{
-    afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
-    
-    afxEnvironment curr;
-    if (AfxGetEnvironment(&curr))
-    {
-        AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &curr);
-        AfxCloseEnvironment();
-    }
-
-    if (!gActiveEnv)
-    {
-        gActiveEnv = env;
-    }
-    return err;
-}
-
-_AUX afxError AfxStepEnvironment(afxEnvironment env, void const* set, void* get)
-{
-    afxError err = { 0 };
-    AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
-
-    afxShell ssh = AfxGetHost(env);
-    //ssh->step(ssh, env, set, get);
-
-    return err;
-}
-
 _AUX afxBool AFX_ENV_EVENT_HANDLER(afxEnvironment env, auxEvent *ev)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_ENV, 1, &env);
 
     afxWindow focusedWnd = NIL;
-    AfxGetFocusedWindow(&focusedWnd);
+    AfxGetFocusedWindow(ev->seat, &focusedWnd);
 
     switch (ev->id)
     {
@@ -383,6 +343,11 @@ _AUX afxError _AuxEnvCtorCb(afxEnvironment env, void** args, afxUnit invokeNo)
     AfxInstallEventHandler(env, (void*)AFX_ENV_EVENT_HANDLER);
 
     env->ddi = &_AUX_DDI_ENV;
+    env->idd = NIL;
+    env->udd = cfg->udd;
+    env->tag = cfg->tag;
+
+    AfxMakeString512(&env->name, &cfg->name);
 
     {
         AfxMakeChain(&env->classes, env);
@@ -400,13 +365,6 @@ _AUX afxError _AuxEnvCtorCb(afxEnvironment env, void** args, afxUnit invokeNo)
         AfxMountClass(&env->xssCls, NIL, &env->classes, &xssClsCfg);
     }
 
-    AfxMakeString4096(&env->clipb, NIL);
-
-    env->focusedWnd = NIL;
-    env->cursCapturedOn = NIL;
-
-    env->idd = NIL;
-
     afxUnit dwmCnt = 1;
 
     for (afxUnit i = 0; i < dwmCnt; i++)
@@ -420,10 +378,15 @@ _AUX afxError _AuxEnvCtorCb(afxEnvironment env, void** args, afxUnit invokeNo)
         dwm->refreshRate = 1;
     }
 
-    env->seatCnt = 1;
+    env->focusedWnd = NIL;
+    env->cursCapturedOn = NIL;
+
+    env->seatCnt = AFX_MAX(AFX_MIN(AFX_MAX_USERS_PER_ENVIRONMENT, cfg->seatCnt), 1);
 
     for (afxUnit i = 0; i < env->seatCnt; i++)
     {
+        AfxMakeString4096(&env->seats[i].clipb, NIL);
+
         env->seats[i].hidNo;
         AfxZero(&env->seats[i], sizeof(env->seats[0]));
         env->seats[i].buttonCnt = AFX_MB_TOTAL;
@@ -468,7 +431,7 @@ _AUX afxError _AuxEnvCtorCb(afxEnvironment env, void** args, afxUnit invokeNo)
 
             if (sdevId != AFX_INVALID_INDEX)
             {
-                afxMixSystemConfig sccfg;
+                amxSystemConfig sccfg;
                 AmxConfigureMixSystem(sdevId, &sccfg);
 
                 if (AmxEstablishMixSystem(sdevId, &sccfg, &ssys))
@@ -559,7 +522,7 @@ _AUX afxClassConfig const _AUX_ENV_CLASS_CONFIG =
 {
     .fcc = afxFcc_ENV,
     .name = "Environment",
-    .desc = "UX Environment",
+    .desc = "MMUX Environment",
     .fixedSiz = sizeof(AFX_OBJECT(afxEnvironment)),
     .ctor = (void*)_AuxEnvCtorCb,
     .dtor = (void*)_AuxEnvDtorCb,
@@ -646,11 +609,14 @@ _AUX afxError AfxAcquireEnvironment(afxUnit icd, afxEnvironmentConfig const* cfg
     cfg2.dsys = cfg->dsys;
     cfg2.seatCnt = cfg->seatCnt;
     cfg2.seats = cfg->seats;
-    cfg2.username = cfg->username;
     cfg2.ddevId = cfg->ddevId;
     cfg2.sdevId = cfg->sdevId;
     cfg2.soutIdx = cfg->soutIdx;
     cfg2.msys = cfg->msys;
+
+    cfg2.tag = cfg->tag;
+    cfg2.udd = cfg->udd;
+    cfg2.name = cfg->name;
 
     afxClass* cls = (afxClass*)_AuxIcdGetEnvClass(driver);
     AFX_ASSERT_CLASS(cls, afxFcc_ENV);

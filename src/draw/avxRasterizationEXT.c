@@ -26,7 +26,7 @@ _AVX afxCmdId AvxCmdAdjustCurtainsSIGMA(afxDrawContext dctx, afxUnit baseIdx, af
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a video coding scope.
     AFX_ASSERT(!dctx->inVideoCoding);
 
@@ -66,7 +66,7 @@ _AVX afxCmdId AvxCmdSetRasterizationSamplesEXT(afxDrawContext dctx, afxUnit samp
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
@@ -85,7 +85,7 @@ _AVX afxCmdId AvxCmdSetSampleMaskEXT(afxDrawContext dctx, afxUnit sampleLvl, afx
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
@@ -105,7 +105,7 @@ _AVX afxCmdId AvxCmdSwitchAlphaToCoverageEXT(afxDrawContext dctx, afxBool enable
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
@@ -124,7 +124,7 @@ _AVX afxCmdId AvxCmdSwitchAlphaToOneEXT(afxDrawContext dctx, afxBool enable)
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
@@ -143,7 +143,7 @@ _AVX afxCmdId AvxCmdSwitchColorBlendingEXT(afxDrawContext dctx, afxUnit first, a
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
@@ -164,7 +164,7 @@ _AVX afxCmdId AvxCmdChangeColorBlendEquationEXT(afxDrawContext dctx, afxUnit fir
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
@@ -186,7 +186,7 @@ _AVX afxCmdId AvxCmdSetColorWriteMaskEXT(afxDrawContext dctx, afxUnit first, afx
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
@@ -207,7 +207,7 @@ _AVX afxCmdId AvxCmdSwitchLogicOpEXT(afxDrawContext dctx, afxBool enabled)
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
@@ -226,7 +226,7 @@ _AVX afxCmdId AvxCmdSetDepthClampEnableEXT(afxDrawContext dctx, afxBool enabled)
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.
@@ -245,7 +245,7 @@ _AVX afxCmdId AvxCmdDiscardRectanglesEXT(afxDrawContext dctx, afxUnit first, afx
     // dctx must be a valid afxDrawContext handle.
     AFX_ASSERT_OBJECTS(afxFcc_DCTX, 1, &dctx);
     // dctx must be in the recording state.
-    AFX_ASSERT(dctx->state == avxContextStatus_RECORDING);
+    AFX_ASSERT(dctx->state == avxContextState_RECORDING);
     // This command must only be called outside of a draw scope instance.
     AFX_ASSERT(dctx->inDrawScope);
     // This command must only be called outside of a video coding scope.

@@ -1,5 +1,5 @@
 Esta lista foi criada para ajudar a entender e/ou resolver problemas oriundos da qualidade do código.
-Uma vez que tudo foi inicialmente prototipado com Go Horse, que é igual a forma errado só que mais rápida,
+Uma vez que tudo foi inicialmente prototipado com Go Horse, que é igual a forma errada só que mais rápida,
 há uma caralhada de problemas.
 
 // POSSÍVEIS PROBLEMAS

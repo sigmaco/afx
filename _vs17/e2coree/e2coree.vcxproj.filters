@@ -723,6 +723,9 @@
     <ClInclude Include="..\..\qwadro\draw\avxBus.h">
       <Filter>qwadro\draw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\qwadro\qwadro\mix\amxFormat.h">
+      <Filter>qwadro\mix</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md">
@@ -751,7 +754,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\go-horse.txt">
+    <Text Include="..\..\src\go-horse.txt">
       <Filter>qwadro</Filter>
     </Text>
   </ItemGroup>
@@ -1327,6 +1330,9 @@
       <Filter>qwadro\mix</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\mix\amxContextDDK.c">
+      <Filter>qwadro\mix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mix\amxFormat.c">
       <Filter>qwadro\mix</Filter>
     </ClCompile>
   </ItemGroup>

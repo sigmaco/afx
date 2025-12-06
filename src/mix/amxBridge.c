@@ -171,7 +171,7 @@ _AMX afxError _AmxMexuExecuteMixCommands(afxMixBridge mexu, afxUnit frameCnt, af
     for (afxUnit i = 0; i < cnt; i++)
     {
         afxMixContext mix = mixers[i];
-        AFX_ASSERT_OBJECTS(afxFcc_MIX, 1, &mix);
+        AFX_ASSERT_OBJECTS(afxFcc_MCTX, 1, &mix);
         
         AfxReacquireObjects(1, &mix);
 
@@ -447,8 +447,8 @@ _AMX afxError _AmxMexuCtorCb(afxMixBridge mexu, void** args, afxUnit invokeNo)
     AFX_ASSERT(mqueClsCfg.fcc == afxFcc_MQUE);
     AfxMountClass(&mexu->mqueCls, NIL, &mexu->classes, &mqueClsCfg);
 
-    afxClassConfig mctxClsCfg = cfg->mixClsCfg ? *cfg->mixClsCfg : _AMX_MIX_CLASS_CONFIG;
-    AFX_ASSERT(mctxClsCfg.fcc == afxFcc_MIX);
+    afxClassConfig mctxClsCfg = cfg->mixClsCfg ? *cfg->mixClsCfg : _AMX_MCTX_CLASS_CONFIG;
+    AFX_ASSERT(mctxClsCfg.fcc == afxFcc_MCTX);
     //AfxMountClass(&mexu->mctxCls, NIL, &mexu->classes, &mctxClsCfg);
 
     afxClass* mqueCls = (afxClass*)_AmxMexuGetMqueClass(mexu);

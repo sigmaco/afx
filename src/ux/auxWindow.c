@@ -683,10 +683,11 @@ _AUX afxError _AfxWndAdjustCb(afxWindow wnd, afxAnchor anchor, afxRect* c)
     return err;
 }
 
-_AUX afxError AfxAdjustWindow(afxWindow wnd, afxAnchor anchor, afxRect const* surface)
+_AUX afxError AfxAdjustWindow(afxWindow wnd, afxDisplay disp, afxUnit dport, afxAnchor anchor, afxRect const* surface)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
+    AFX_TRY_ASSERT_OBJECTS(afxFcc_VDU, 1, &disp);
     AFX_ASSERT(surface);
 
     // Modifier operations must be restricted to the owner thread.
@@ -751,7 +752,7 @@ _AUX afxError AfxAdjustWindow(afxWindow wnd, afxAnchor anchor, afxRect const* su
     return err;
 }
 
-_AUX afxError _AuxAdjustWindowFromNdc(afxWindow wnd, afxAnchor anchor, afxV2d const offset, afxV2d const extent)
+_AUX afxError _AuxAdjustWindowFromNdc(afxWindow wnd, afxDisplay disp, afxUnit dport, afxAnchor anchor, afxV2d const offset, afxV2d const extent)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
@@ -770,13 +771,13 @@ _AUX afxError _AuxAdjustWindowFromNdc(afxWindow wnd, afxAnchor anchor, afxV2d co
     rc.w = (afxUnit)AfxUnndcf(extent[0], dwm->res.w);
     rc.h = (afxUnit)AfxUnndcf(extent[1], dwm->res.h);
 
-    if (AfxAdjustWindow(wnd, anchor, &rc))
+    if (AfxAdjustWindow(wnd, disp, dport, anchor, &rc))
         AfxThrowError();
 
     return err;
 }
 
-_AUX afxError _AuxAdjustWindowSurfaceFromNdc(afxWindow wnd, afxAnchor anchor, afxV2d const offset, afxV2d const extent)
+_AUX afxError _AuxAdjustWindowSurfaceFromNdc(afxWindow wnd, afxDisplay disp, afxUnit dport, afxAnchor anchor, afxV2d const offset, afxV2d const extent)
 {
     afxError err = { 0 };
     AFX_ASSERT_OBJECTS(afxFcc_WND, 1, &wnd);
@@ -794,7 +795,7 @@ _AUX afxError _AuxAdjustWindowSurfaceFromNdc(afxWindow wnd, afxAnchor anchor, af
     rc.w = (afxUnit)AfxUnndcf(extent[0], dwm->res.w);
     rc.h = (afxUnit)AfxUnndcf(extent[1], dwm->res.h);
 
-    if (AfxAdjustWindow(wnd, anchor, &rc))
+    if (AfxAdjustWindow(wnd, disp, dport, anchor, &rc))
         AfxThrowError();
 
     return err;

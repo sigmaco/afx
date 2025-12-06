@@ -422,7 +422,7 @@ _AMX afxError _AmxAudDtorCb(amxAudio aud)
 
     return err;
 }
-AMX afxError _AmxSpu_ResampleI16F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
+AMX afxError _AmxMpu_ResampleI16F32(amxMpu* mpu, amxAudio src, amxAudio dst, amxAudioInterference const* op);
 _AMX afxError _AmxAudCtorCb(amxAudio aud, void** args, afxUnit invokeNo)
 {
     afxResult err = NIL;
